@@ -1,0 +1,54 @@
+name: daily-check
+
+# Daily verification + public-source scan. This workflow never edits public
+# data: scan/diff results land in artifacts and data/review-queue.json is only
+# regenerated locally after human review.
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # 01:00 UTC = 09:00 UTC+8, daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate offers schema
+        run: python -m crawler.cli validate data/offers.json
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Scan official public sources
+        id: scan
+        run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json
+
+      - name: Snapshot current offers
+        if: always()
+        run: python -m crawler.cli snapshot --input data/offers.json --dir data/snapshots
+
+      - name: Diff current offers against review queue
+        if: always()
+        run: python -m crawler.cli diff --previous data/offers.json --current data/offers.json --out data/review-queue.json
+
+      - name: Build check (embedded page data must be current)
+        run: python scripts/build_static.py --check
+
+      - name: Upload scan evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-scan
+          path: |
+            data/snapshots/
+            data/review-queue.json
+          if-no-files-found: error

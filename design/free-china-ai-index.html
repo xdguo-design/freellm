@@ -1,0 +1,1407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free AI Index — free models, trials, IDEs and download links</title>
+  <meta name="description" content="Find free AI models, limited-time trials, free coding IDEs, downloadable open weights and low-cost plans with official sources, quotas, expiry dates and setup commands." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="author" content="Free AI Index" />
+  <meta name="theme-color" content="#1744E8" />
+  <meta name="keywords" content="free AI models, free AI API, free coding IDE, AI trials, open weights, cheap coding plans" />
+  <link rel="canonical" href="/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Free AI Index — free models, trials, IDEs and download links" />
+  <meta property="og:description" content="A verified index of free and limited-time-free AI offers, with quotas, expiry dates, official sources and setup commands." />
+  <meta property="og:url" content="/" />
+  <meta property="og:site_name" content="Free AI Index" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Free AI Index — free models, trials, IDEs and download links" />
+  <meta name="twitter:description" content="Compare free models, free coding IDEs, open weights and low-cost AI plans with official links." />
+  <link rel="icon" href="data:," />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type":"WebSite","name":"Free AI Index","description":"An evidence-led index of free, trial, downloadable and low-cost AI offers.","url":"/"},
+      {"@type":"CollectionPage","name":"Free AI Index","description":"Free AI models, coding IDEs, open weights and limited-time plans with official access paths.","url":"/"}
+    ]
+  }
+  </script>
+  <!-- ItemList and FAQ are rewritten from data/offers.json at runtime; the content below is the build-time fallback. -->
+  <script type="application/ld+json" id="ld-dynamic">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type":"ItemList","name":"Free and limited-time-free AI offers","itemListElement":[
+        {"@type":"ListItem","position":1,"name":"CodeBuddy · Personal trial"},
+        {"@type":"ListItem","position":2,"name":"Qoder · Experience plan"},
+        {"@type":"ListItem","position":3,"name":"TraeCode CN · Personal plan"},
+        {"@type":"ListItem","position":4,"name":"Baidu Comate · Auto-Free mode"},
+        {"@type":"ListItem","position":5,"name":"Doubao Seed Code · Coding Plan Lite"},
+        {"@type":"ListItem","position":6,"name":"GLM Coding Plan"},
+        {"@type":"ListItem","position":7,"name":"LongCat API · status check"},
+        {"@type":"ListItem","position":8,"name":"LongCat-2.0 · open weights"},
+        {"@type":"ListItem","position":9,"name":"Qwen3-4B · open weights"},
+        {"@type":"ListItem","position":10,"name":"GLM-4.7-Flash · open weights"},
+        {"@type":"ListItem","position":11,"name":"SenseNova · free status pending"},
+        {"@type":"ListItem","position":12,"name":"DeepSeek API · low cost, not free"}
+      ]},
+      {"@type":"FAQPage","mainEntity":[
+        {"@type":"Question","name":"What does “free” mean here?","acceptedAnswer":{"@type":"Answer","text":"Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free."}},
+        {"@type":"Question","name":"Do free AI offers expire?","acceptedAnswer":{"@type":"Answer","text":"Trials and promotions can expire or renew at a paid price. Check the validity field and the linked official source before subscribing."}},
+        {"@type":"Question","name":"Can I download the models?","acceptedAnswer":{"@type":"Answer","text":"Downloadable entries link to official model cards or repositories and include a starter command. Free weights do not mean free inference infrastructure."}},
+        {"@type":"Question","name":"Why compare cheap plans with free offers?","acceptedAnswer":{"@type":"Answer","text":"A low-cost plan can be more reliable than a fragile free quota. The directory keeps free, trial, promotion, open-weight and pay-as-you-go categories separate."}}
+      ]}
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --ink: #101113;
+      --muted: #65707a;
+      --line: #d7dce1;
+      --paper: #f5f7f8;
+      --panel: #ffffff;
+      --blue: #1744e8;
+      --blue-soft: #e9edff;
+      --yellow: #ffd51f;
+      --green: #b8f1cc;
+      --green-ink: #0b5f35;
+      --orange: #ff8a24;
+      --red-soft: #ffe4dc;
+      --red-ink: #9d351f;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --sans: "DM Sans", "Segoe UI", sans-serif;
+      --display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(16,17,19,.035) 1px, transparent 1px) 0 0 / 24px 24px,
+        var(--paper);
+      font-family: var(--sans);
+      font-size: 15px;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+
+    .app { min-height: 100vh; display: grid; grid-template-columns: 230px minmax(0, 1fr); }
+    .sidebar {
+      min-height: 100vh;
+      padding: 22px 16px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,.72);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .brand {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 10px;
+      align-items: center;
+      text-decoration: none;
+    }
+    .brand-mark {
+      height: 54px;
+      padding: 6px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--blue);
+      font: 800 14px/1 var(--display);
+      letter-spacing: -.05em;
+      text-align: center;
+    }
+    .brand-name { font: 800 18px/1.05 var(--display); letter-spacing: -.045em; }
+    .brand-sub { margin-top: 5px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .side-label { color: var(--muted); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .13em; margin: 0 10px 10px; }
+    .side-nav { display: grid; gap: 4px; }
+    .side-nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 11px 10px;
+      color: var(--muted);
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+    .side-nav button:hover, .side-nav button.active { background: var(--ink); color: white; }
+    .side-nav b { font: 11px var(--mono); opacity: .72; }
+    .side-note {
+      margin-top: auto;
+      padding: 14px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .side-note strong { display: block; margin-bottom: 5px; font: 12px var(--mono); }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #21a65a; margin-right: 5px; }
+
+    main { min-width: 0; }
+    .topbar {
+      min-height: 78px;
+      padding: 16px 30px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .crumb { color: var(--muted); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .local-clock { text-align: right; font: 11px var(--mono); }
+    .local-clock span { color: var(--muted); display: block; margin-top: 3px; }
+    .content { max-width: 1500px; margin: 0 auto; padding: 30px; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(270px, .6fr);
+      gap: 36px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+    h1 { max-width: 800px; margin: 0; font: 800 clamp(42px, 6vw, 86px)/.91 var(--display); letter-spacing: -.075em; text-wrap: balance; }
+    .hero-copy { max-width: 610px; margin-top: 22px; color: #4e5962; font-size: 17px; line-height: 1.45; }
+    .hero-copy b { color: var(--ink); }
+    .hero-side { border-left: 3px solid var(--ink); padding-left: 18px; }
+    .hero-side .big { font: 800 48px/.9 var(--display); letter-spacing: -.07em; }
+    .hero-side p { margin: 8px 0 0; color: var(--muted); line-height: 1.35; }
+
+    .notice {
+      border: 2px solid var(--ink);
+      background: var(--yellow);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .notice strong { font: 800 17px var(--display); letter-spacing: -.03em; }
+    .notice span { font-size: 13px; }
+    .notice a { font-weight: 800; white-space: nowrap; }
+    .ide-highlight { margin: 18px 0 25px; padding: 18px; border: 2px solid var(--blue); background: linear-gradient(135deg, #e9edff 0%, #fff 72%); display: grid; grid-template-columns: .95fr 1.35fr; gap: 18px; }
+    .ide-kicker { color: var(--blue); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .13em; }
+    .ide-highlight h2 { max-width: 430px; margin-top: 8px; font-size: 32px; }
+    .ide-highlight p { max-width: 480px; margin: 12px 0 15px; color: #4e5962; line-height: 1.5; }
+    .ide-highlight p strong { color: var(--ink); }
+    .highlight-button { border: 1px solid var(--ink); padding: 9px 12px; color: white; background: var(--blue); font-weight: 850; }
+    .highlight-button:hover { background: var(--ink); }
+    .ide-highlight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .ide-highlight-card { min-height: 108px; padding: 13px; border: 1px solid var(--ink); background: rgba(255,255,255,.76); display: flex; flex-direction: column; justify-content: space-between; }
+    .ide-highlight-card b { color: var(--blue); font: 11px var(--mono); }
+    .ide-highlight-card strong { font: 800 19px/.95 var(--display); letter-spacing: -.04em; }
+    .ide-highlight-card span { color: var(--muted); font-size: 12px; }
+
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 16px; }
+    .search { position: relative; }
+    .search input {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 15px 0 43px;
+      border: 1px solid var(--ink);
+      background: white;
+      outline: none;
+    }
+    .search input:focus { box-shadow: 4px 4px 0 var(--blue); }
+    .search::before { content: "⌕"; position: absolute; left: 15px; top: 8px; font-size: 28px; z-index: 1; }
+    .sort { min-height: 48px; padding: 0 12px; border: 1px solid var(--ink); background: white; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 23px; }
+    .tab {
+      padding: 9px 12px;
+      border: 1px solid var(--ink);
+      background: transparent;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .tab:hover, .tab.active { color: white; background: var(--ink); }
+    .tab em { color: var(--muted); font: 10px var(--mono); font-style: normal; margin-left: 7px; }
+    .tab.active em { color: #c9ced3; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 26px; }
+    .summary { min-height: 128px; padding: 15px; border: 1px solid var(--ink); background: white; display: flex; flex-direction: column; justify-content: space-between; }
+    .summary:nth-child(2) { background: var(--blue); color: white; }
+    .summary:nth-child(3) { background: #dff7e7; }
+    .summary-label { font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+    .summary-value { font: 800 34px/.9 var(--display); letter-spacing: -.07em; }
+    .summary-detail { color: var(--muted); font-size: 12px; }
+    .summary:nth-child(2) .summary-detail { color: #d8deff; }
+
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 20px 0 9px; }
+    h2 { margin: 0; font: 800 25px/1 var(--display); letter-spacing: -.055em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 12px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--ink); background: white; }
+    .table-head, .offer {
+      min-width: 900px;
+      display: grid;
+      grid-template-columns: 1.25fr 1.1fr 1.2fr .95fr .8fr 1.05fr 28px;
+      align-items: center;
+      column-gap: 12px;
+    }
+    .table-head { padding: 10px 14px; background: var(--ink); color: white; font: 10px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+    .offer { padding: 14px; border-top: 1px solid var(--line); transition: background .15s ease; }
+    .offer:hover { background: #f0f3ff; }
+    .offer.hidden { display: none; }
+    .offer-error { padding: 26px 18px; background: var(--red-soft); color: var(--red-ink); line-height: 1.55; }
+    .offer-error code { font-family: var(--mono); }
+    .provider { display: flex; gap: 10px; align-items: center; min-width: 0; }
+    .provider-mark { flex: 0 0 34px; height: 34px; display: grid; place-items: center; background: var(--blue); color: white; font: 800 14px var(--display); }
+    .provider-name { min-width: 0; font-weight: 850; }
+    .provider-name small { display: block; color: var(--muted); margin-top: 3px; font: 10px var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .model { font-weight: 750; }
+    .model small, .cell small { display: block; color: var(--muted); margin-top: 3px; font-size: 11px; line-height: 1.25; }
+    .cell { min-width: 0; line-height: 1.2; }
+    .badge { display: inline-flex; width: fit-content; padding: 4px 7px; font: 10px var(--mono); font-weight: 800; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+    .badge.free { background: var(--green); color: var(--green-ink); }
+    .badge.trial { background: var(--yellow); color: #5a4b00; }
+    .badge.promo { background: var(--red-soft); color: var(--red-ink); }
+    .badge.open { background: var(--blue-soft); color: #2442a1; }
+    .badge.pending { background: #eef0f2; color: #59626a; }
+    .row-arrow { width: 28px; height: 28px; border: 1px solid var(--ink); background: white; font-size: 19px; line-height: 1; }
+    .row-arrow:hover { color: white; background: var(--ink); }
+
+    .bottom-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 12px; margin-top: 28px; }
+    .compare-panel, .download-panel { border: 1px solid var(--ink); background: white; padding: 18px; }
+    .compare-panel { background: var(--ink); color: white; }
+    .compare-panel .section-head p { color: #b4bec6; }
+    .compare-table { margin-top: 14px; border-top: 1px solid #3f474d; }
+    .compare-row { display: grid; grid-template-columns: 1.15fr .9fr .9fr .7fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid #3f474d; align-items: center; font-size: 12px; }
+    .compare-row.head { color: #aeb9c1; font: 10px var(--mono); text-transform: uppercase; }
+    .saving { color: var(--green); font-weight: 850; }
+    .compare-note { margin-top: 12px; color: #b4bec6; font-size: 11px; line-height: 1.45; }
+    .download-list { margin: 15px 0 0; display: grid; gap: 9px; }
+    .download-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+    .download-item strong { display: block; }
+    .download-item small { display: block; color: var(--muted); margin-top: 3px; font: 10px var(--mono); }
+    .download-item a { padding: 7px 9px; background: var(--blue); color: white; text-decoration: none; font: 10px var(--mono); white-space: nowrap; }
+
+    .footer { margin: 26px 0 5px; padding-top: 14px; border-top: 1px solid var(--ink); display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
+    .drawer-backdrop { position: fixed; inset: 0; background: rgba(16,17,19,.32); z-index: 4; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer { position: fixed; z-index: 5; top: 0; right: 0; width: min(520px, 100vw); height: 100vh; padding: 24px; overflow: auto; background: #fff; border-left: 2px solid var(--ink); transform: translateX(100%); transition: transform .2s ease; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-top { display: flex; justify-content: space-between; gap: 14px; align-items: start; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+    .drawer h3 { margin: 0; font: 800 37px/.92 var(--display); letter-spacing: -.065em; }
+    .close { border: 1px solid var(--ink); background: white; width: 35px; height: 35px; font-size: 20px; }
+    .drawer-meta { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0; }
+    .detail-block { border-top: 1px solid var(--line); padding: 15px 0; }
+    .detail-label { margin-bottom: 8px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+    .detail-value { line-height: 1.5; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail-box { padding: 11px; background: var(--paper); }
+    .detail-box strong { display: block; font: 10px var(--mono); text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .source-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .source-links a { padding: 8px 10px; border: 1px solid var(--ink); text-decoration: none; font-weight: 800; }
+    .source-links a:hover { color: white; background: var(--ink); }
+    .primary-source { display: inline-flex; padding: 10px 12px; background: var(--blue); color: white; text-decoration: none; font-weight: 850; }
+    .primary-source:hover { background: var(--ink); }
+    .codebox { position: relative; padding: 14px; background: #111315; color: #d5f4df; overflow: auto; font: 11px/1.6 var(--mono); }
+    .copy { position: absolute; top: 8px; right: 8px; border: 1px solid #79838b; color: white; background: #2a3035; padding: 5px 8px; font: 10px var(--mono); }
+    .copy.copied { background: var(--green); color: var(--green-ink); border-color: var(--green); }
+    .seo-copy { margin-top: 28px; border-top: 2px solid var(--ink); padding-top: 22px; }
+    .seo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .seo-grid > div { border: 1px solid var(--line); background: white; padding: 15px; }
+    .seo-grid h3 { margin: 0 0 7px; font: 800 18px/.95 var(--display); letter-spacing: -.04em; }
+    .seo-grid p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .faq-list { margin-top: 12px; border-top: 1px solid var(--line); }
+    .faq-list details { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.56); }
+    .faq-list summary { padding: 14px 0; cursor: pointer; font-weight: 850; list-style: none; }
+    .faq-list summary::-webkit-details-marker { display: none; }
+    .faq-list summary::after { content: '+'; float: right; font: 20px var(--mono); }
+    .faq-list details[open] summary::after { content: '−'; }
+    .faq-list details p { max-width: 780px; margin: 0 0 15px; color: var(--muted); line-height: 1.55; }
+
+    @media (max-width: 1050px) {
+      .app { grid-template-columns: 190px minmax(0, 1fr); }
+      .content, .topbar { padding-left: 22px; padding-right: 22px; }
+      .hero { grid-template-columns: 1fr; gap: 20px; }
+      .hero-side { border-left: 0; border-top: 2px solid var(--ink); padding: 12px 0 0; }
+      .seo-grid { grid-template-columns: 1fr 1fr; }
+      .ide-highlight { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar { min-height: auto; padding: 13px 16px; border-right: 0; border-bottom: 1px solid var(--line); display: block; }
+      .brand { display: inline-grid; vertical-align: middle; }
+      .side-label, .side-note { display: none; }
+      .side-nav { display: inline-flex; margin-left: 16px; vertical-align: middle; gap: 3px; }
+      .side-nav button { width: auto; padding: 9px 8px; }
+      .side-nav button span { display: none; }
+      .side-nav b { opacity: 1; }
+      .topbar { min-height: 55px; padding: 11px 16px; }
+      .content { padding: 22px 16px; }
+      .local-clock { display: none; }
+      .toolbar { grid-template-columns: 1fr; }
+      .summary-grid, .bottom-grid { grid-template-columns: 1fr; }
+      .seo-grid { grid-template-columns: 1fr; }
+      .ide-highlight-grid { grid-template-columns: 1fr; }
+      .notice { align-items: start; flex-direction: column; gap: 7px; }
+      .footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Direction 3 prototype assumptions:
+    - English-first because the primary audience is outside China; Chinese appears in the source/status details.
+    - “Free” is always qualified: permanent, trial, promotion, open weights, or free web/IDE access.
+    - A VPN is never presented as a free method. The page shows the provider’s official access path and account region.
+    - Provider marks are honest initials in this prototype. Replace them with verified official logo assets before production.
+  -->
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#top">
+        <div class="brand-mark">FREE<br>AI</div>
+        <div><div class="brand-name">Free AI Index</div><div class="brand-sub">index / verified deals</div></div>
+      </a>
+      <div>
+        <p class="side-label">Browse</p>
+        <nav class="side-nav" aria-label="Browse categories">
+          <button class="active" data-filter="all"><span>All offers</span><b>12</b></button>
+          <button data-filter="ide"><span>Free IDEs</span><b>04</b></button>
+          <button data-filter="download"><span>Download models</span><b>03</b></button>
+          <button data-filter="coding"><span>Coding plans</span><b>03</b></button>
+          <button data-filter="compare"><span>Price compare</span><b>↗</b></button>
+        </nav>
+      </div>
+      <div>
+        <p class="side-label">Rules</p>
+        <div class="side-note">
+          <strong><span class="status-dot"></span>Verified-first</strong>
+          Every offer links to an official page. When a “free” claim cannot be verified, it is marked pending instead of being promoted as free.
+        </div>
+      </div>
+    </aside>
+
+    <main id="top">
+      <header class="topbar">
+        <div class="crumb">/ global developer index / 06 Sep 2026</div>
+        <div class="local-clock" id="clock">Local time <span>Detecting timezone…</span></div>
+      </header>
+
+      <div class="content">
+        <section class="hero">
+          <div>
+            <h1>Free AI.<br><span style="color:var(--blue)">Clear terms.</span></h1>
+            <p class="hero-copy">A practical index of <b>free models, limited-time trials, free coding tools, open weights and low-cost plans</b> that developers can actually evaluate before the quota disappears.</p>
+          </div>
+          <div class="hero-side"><div class="big">12</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
+        </section>
+
+        <div class="notice"><div><strong>Free does not mean unlimited.</strong> <span>We label the exact mechanism: permanent quota, trial credits, first-month promotion, free IDE or downloadable weights.</span></div><a href="#methodology">How we label it →</a></div>
+
+        <section class="ide-highlight" aria-labelledby="ide-highlight-title">
+          <div>
+            <div class="ide-kicker">China highlight / free AI IDEs</div>
+            <h2 id="ide-highlight-title">The strongest deal is often the IDE, not a naked API key.</h2>
+            <p>China-market coding tools increasingly bundle <strong>model access, code completion, agent loops and editor integrations</strong> into a free or ¥0 personal tier. For overseas developers, this can be more useful than a small standalone API quota.</p>
+            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse 4 free IDEs →</button>
+          </div>
+          <div class="ide-highlight-grid" id="ideHighlightGrid" aria-label="Free IDE highlights">
+            <div class="ide-highlight-card"><b>01 / FREE PLAN</b><strong>CodeBuddy</strong><span>500 credits / month · 5,000 completions</span></div>
+            <div class="ide-highlight-card"><b>02 / ¥0 PERSONAL</b><strong>TraeCode CN</strong><span>IDE, plugin and CLI access · quota varies by mode</span></div>
+            <div class="ide-highlight-card"><b>03 / AUTO-FREE</b><strong>Baidu Comate</strong><span>150k tokens / hour in the free fallback mode</span></div>
+            <div class="ide-highlight-card"><b>04 / TRIAL</b><strong>Qoder</strong><span>14-day Pro trial · 300 credits for new users</span></div>
+          </div>
+        </section>
+
+        <div class="toolbar">
+          <label class="search"><input id="search" type="search" placeholder="Search model, provider, IDE, capability…" aria-label="Search offers"></label>
+          <select class="sort" id="sort" aria-label="Sort offers"><option value="free">Sort: free first</option><option value="fresh">Sort: recently checked</option><option value="name">Sort: A–Z</option></select>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-filter="all">All offers <em>12</em></button>
+          <button class="tab" data-filter="free">Free forever <em>02</em></button>
+          <button class="tab" data-filter="ide">Free IDEs <em>04</em></button>
+          <button class="tab" data-filter="download">Downloadable <em>03</em></button>
+          <button class="tab" data-filter="coding">Cheap coding <em>03</em></button>
+        </div>
+
+        <section class="summary-grid" aria-label="Offer summary">
+          <div class="summary"><div class="summary-label">Free forever</div><div class="summary-value" id="summaryFreeForever">02</div><div class="summary-detail">No subscription required · still rate-limited</div></div>
+          <div class="summary"><div class="summary-label">Best coding price</div><div class="summary-value">¥9.9</div><div class="summary-detail">Doubao Seed Code · first-month Lite plan</div></div>
+          <div class="summary"><div class="summary-label">Open weights</div><div class="summary-value" id="summaryOpenWeights">03</div><div class="summary-detail">Download links + a first command to run</div></div>
+        </section>
+
+        <section id="offers">
+          <div class="section-head"><div><h2>Offers worth opening</h2><p>Each row answers “how free?”, “for how long?” and “what do I need?”</p></div><p id="resultCount">Showing 12 offers</p></div>
+          <div class="table-wrap">
+            <div class="table-head"><div>Provider / product</div><div>Model / role</div><div>Free mechanism</div><div>Validity</div><div>Access</div><div>Checked</div><div></div></div>
+            <div id="offerRows" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <div class="bottom-grid" id="compare">
+          <section class="compare-panel">
+            <div class="section-head"><div><h2>Is China actually cheaper?</h2><p>Same model · same token unit · different endpoint</p></div><span class="badge free">LIVE RULE</span></div>
+            <div class="compare-table">
+              <div class="compare-row head"><div>Offer</div><div>China route</div><div>International</div><div>Saving</div></div>
+              <div class="compare-row"><div>Qwen3-Max input<br><small>per 1M tokens</small></div><div>$0.861</div><div>$1.20</div><div class="saving">28%</div></div>
+              <div class="compare-row"><div>Qwen3-Max output<br><small>per 1M tokens</small></div><div>$3.441</div><div>$6.00</div><div class="saving">43%</div></div>
+            </div>
+            <p class="compare-note">This is an endpoint comparison, not a VPN trick. China pricing may require a China-region account and creates separate data-residency considerations. Always check the official price page before subscribing.</p>
+          </section>
+
+          <section class="download-panel" id="downloads">
+            <div class="section-head"><div><h2>Download & run locally</h2><p>Weights are free. GPU time is not.</p></div></div>
+            <div class="download-list" id="downloadList">
+              <div class="download-item"><div><strong>LongCat-2.0</strong><small>GitHub + Hugging Face · SGLang path</small></div><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">Open repo ↗</a></div>
+              <div class="download-item"><div><strong>Qwen3-4B</strong><small>Hugging Face · small local model</small></div><a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noreferrer">Open model ↗</a></div>
+              <div class="download-item"><div><strong>GLM-4.7-Flash</strong><small>Hugging Face + ModelScope</small></div><a href="https://huggingface.co/zai-org/GLM-4.7-Flash" target="_blank" rel="noreferrer">Open model ↗</a></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="seo-copy" id="faq" aria-labelledby="faq-title">
+          <div class="section-head"><div><h2 id="faq-title">How this free AI index works</h2><p>Short, explicit answers for developers, search engines and AI assistants.</p></div></div>
+          <div class="seo-grid">
+            <div><h3>Free forever</h3><p>A recurring free quota or free IDE mode. It can still be rate-limited, region-limited or subject to provider rules.</p></div>
+            <div><h3>Trial or promo</h3><p>A one-time trial or first-month price. The renewal price and expiry are shown beside the offer so the discount is not mistaken for permanent access.</p></div>
+            <div><h3>Open weights</h3><p>Official model weights can be downloaded. Hosting, GPU memory, storage and network egress may still cost money.</p></div>
+            <div><h3>Direct official action</h3><p>Open any row to get the provider’s registration, product, download or model-card link plus a copyable setup command.</p></div>
+          </div>
+          <div class="faq-list">
+            <details><summary>What does “free” mean here?</summary><p>Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free.</p></details>
+            <details><summary>Do free AI offers expire?</summary><p>Trials and promotions can expire or renew at a paid price. Check the validity field and the linked official source before subscribing.</p></details>
+            <details><summary>Can I download the models?</summary><p>Downloadable entries link to official model cards or repositories and include a starter command. Free weights do not mean free inference infrastructure.</p></details>
+            <details><summary>Why compare cheap plans with free offers?</summary><p>A low-cost plan can be more reliable than a fragile free quota. The directory keeps free, trial, promotion, open-weight and pay-as-you-go categories separate.</p></details>
+          </div>
+        </section>
+
+        <div class="footer" id="methodology"><span>Official sources only · Free status separated by mechanism</span><span id="lastChecked">Last checked: 06 Sep 2026 · Data is subject to change</span></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="backdrop"></div>
+  <aside class="drawer" id="drawer" aria-label="Offer details" aria-hidden="true">
+    <div class="drawer-top"><div><div class="crumb" id="drawerKicker">Offer details</div><h3 id="drawerTitle">Select an offer</h3></div><button class="close" id="closeDrawer" aria-label="Close details">×</button></div>
+    <div class="drawer-meta" id="drawerBadges"></div>
+    <div class="detail-block"><div class="detail-label">Why is this free / cheap?</div><div class="detail-value" id="drawerWhy">Select a row to inspect the mechanism, expiry and access path.</div></div>
+    <div class="detail-grid detail-block"><div class="detail-box"><strong>Free mechanism</strong><span id="drawerMechanism">—</span></div><div class="detail-box"><strong>Validity</strong><span id="drawerValidity">—</span></div><div class="detail-box"><strong>Access</strong><span id="drawerAccess">—</span></div><div class="detail-box"><strong>Last checked</strong><span id="lastChecked">06 Sep 2026</span></div></div>
+    <div class="detail-block" id="timeWindowBlock" hidden><div class="detail-label">Provider clock → your clock</div><div class="detail-value" id="timeWindowCopy"></div></div>
+    <div class="detail-block"><div class="detail-label">Setup command</div><div class="codebox"><button class="copy" id="copyCommand">Copy</button><code id="drawerCommand"># Select a downloadable model</code></div></div>
+    <div class="detail-block"><div class="detail-label">Official action</div><a class="primary-source" id="drawerRegister" href="#" target="_blank" rel="noreferrer noopener">Register / open official page ↗</a></div>
+    <div class="detail-block"><div class="detail-label">Official links</div><div class="source-links" id="drawerLinks"></div></div>
+    <div class="detail-block"><div class="detail-label">Important</div><div class="detail-value">A free web or IDE plan is not the same as a free API. Open weights are free to download, but storage, GPU memory, inference time and network egress may cost money.</div></div>
+  </aside>
+
+  <script type="application/json" id="offer-data">
+  [
+  {
+    "id": "codebuddy",
+    "order": 1,
+    "date": "2026-09-06",
+    "name": "CodeBuddy Tencent Cloud CodeBuddy",
+    "providerMark": "CB",
+    "provider": "CodeBuddy",
+    "providerMeta": "Tencent Cloud · China",
+    "model": "Personal trial",
+    "modelMeta": "AI coding IDE",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "kicker": "FREE IDE",
+    "badges": [
+      "FREE IDE",
+      "500 credits / month"
+    ],
+    "freeSummary": "500 credits / month · 5,000 completions",
+    "validitySummary": "Monthly / free plan",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official pricing",
+    "title": "CodeBuddy · Personal trial",
+    "why": "The official personal experience plan is priced at ¥0 and includes a monthly credit allowance plus code completion. It is a tool subscription, not an unrestricted API key.",
+    "mechanism": "500 credits / month; 5,000 code completions",
+    "validity": "Monthly free plan",
+    "access": "China account",
+    "command": "Download the CodeBuddy IDE from the official product page.",
+    "register": "https://www.codebuddy.cn/",
+    "registerLabel": "Register / open CodeBuddy",
+    "links": [
+      [
+        "Official pricing",
+        "https://www.codebuddy.cn/docs/ide/Account/pricing"
+      ],
+      [
+        "Product",
+        "https://www.codebuddy.cn/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account",
+    "freeMechanism": "monthly_quota",
+    "quota": "500 credits / month; 5,000 code completions",
+    "renewal": "No paid renewal for the listed personal plan",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.codebuddy.cn/docs/ide/Account/pricing"
+    ],
+    "evidence": "Official personal experience plan is priced at ¥0 with monthly credits and code completion.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "A free IDE plan is not an unrestricted API key."
+  },
+  {
+    "id": "qoder",
+    "order": 2,
+    "date": "2026-09-06",
+    "name": "Qoder AI coding IDE",
+    "providerMark": "Q",
+    "provider": "Qoder",
+    "providerMeta": "Alibaba ecosystem · global",
+    "model": "Experience plan",
+    "modelMeta": "IDE / CLI / JetBrains",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "kicker": "FREE IDE",
+    "badges": [
+      "TRIAL",
+      "14 days + 300 credits"
+    ],
+    "freeSummary": "Basic model messages + 14-day Pro trial",
+    "validitySummary": "14 days / 300 trial credits",
+    "accessSummary": "International",
+    "checkedSummary": "Today / official docs",
+    "title": "Qoder · Experience plan",
+    "why": "New users can receive a one-time 14-day Pro trial with 300 credits. The free experience plan continues with basic-model messages after the trial.",
+    "mechanism": "Basic-model messages; one-time Pro trial",
+    "validity": "14-day Pro trial; 300 credits",
+    "access": "International product",
+    "command": "Download Qoder from the official site, then sign in to claim the trial.",
+    "register": "https://qoder.com/",
+    "registerLabel": "Register / open Qoder",
+    "links": [
+      [
+        "Official pricing",
+        "https://docs.qoder.com/zh/account/pricing"
+      ],
+      [
+        "Download",
+        "https://qoder.com/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "International product",
+    "freeMechanism": "trial",
+    "quota": "300 trial credits; basic-model messages",
+    "renewal": "Trial terms may change; check the official account page",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://docs.qoder.com/zh/account/pricing"
+    ],
+    "evidence": "Official pricing documentation describes a free experience plan and one-time 14-day Pro trial with 300 credits.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Trial and renewal conditions can change."
+  },
+  {
+    "id": "trae",
+    "order": 3,
+    "date": "2026-09-06",
+    "name": "TRAE TraeCode China AI IDE",
+    "providerMark": "T",
+    "provider": "TraeCode CN",
+    "providerMeta": "ByteDance · China",
+    "model": "Personal plan",
+    "modelMeta": "IDE / plugin / CLI",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "kicker": "FREE IDE",
+    "badges": [
+      "¥0 PLAN",
+      "IDE / CLI"
+    ],
+    "freeSummary": "Personal version is free; quota varies by mode",
+    "validitySummary": "Ongoing / subject to limits",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official pricing",
+    "title": "TraeCode CN · Personal plan",
+    "why": "The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.",
+    "mechanism": "Free personal plan; mode-dependent quota",
+    "validity": "Ongoing, subject to limits",
+    "access": "China account",
+    "command": "Open the official download center and choose your Windows or macOS installer.",
+    "register": "https://www.trae.cn/",
+    "registerLabel": "Register / download TRAE",
+    "links": [
+      [
+        "Official pricing",
+        "https://www.trae.cn/pricing"
+      ],
+      [
+        "Download",
+        "https://www.trae.cn/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account",
+    "freeMechanism": "permanent",
+    "quota": "Personal plan; mode-dependent quota",
+    "renewal": "No paid renewal stated for the personal plan",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.trae.cn/pricing"
+    ],
+    "evidence": "Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Do not turn a mode-dependent quota into a fixed token claim."
+  },
+  {
+    "id": "comate",
+    "order": 4,
+    "date": "2026-09-06",
+    "name": "Baidu Comate AI coding assistant",
+    "providerMark": "BC",
+    "provider": "Baidu Comate",
+    "providerMeta": "Baidu · China",
+    "model": "Personal free mode",
+    "modelMeta": "IDE / plugins",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "kicker": "FREE IDE",
+    "badges": [
+      "AUTO-FREE",
+      "150k tokens / hour"
+    ],
+    "freeSummary": "150k tokens / hour in free fallback mode",
+    "validitySummary": "Ongoing / limited mode",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official pricing",
+    "title": "Baidu Comate · Auto-Free mode",
+    "why": "The official pricing page lists a free Auto-Free fallback mode. It is designed to continue serving after model quota is unavailable, with a separate hourly limit.",
+    "mechanism": "150,000 tokens / hour in Auto-Free mode",
+    "validity": "Ongoing while the free mode is offered",
+    "access": "China account",
+    "command": "Install the standalone IDE or the VS Code / JetBrains extension from the official page.",
+    "register": "https://comate.baidu.com/zh",
+    "registerLabel": "Register / open Comate",
+    "links": [
+      [
+        "Official pricing",
+        "https://comate.baidu.com/zh/pricing/payment?type=vip"
+      ],
+      [
+        "Product",
+        "https://comate.baidu.com/zh"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account",
+    "freeMechanism": "permanent",
+    "quota": "150,000 tokens / hour in Auto-Free mode",
+    "renewal": "Free fallback mode is subject to provider rules",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://comate.baidu.com/zh/pricing/payment?type=vip"
+    ],
+    "evidence": "Official pricing page lists a free Auto-Free fallback mode with a separate hourly token limit.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Auto-Free is a product mode, not an unrestricted API quota."
+  },
+  {
+    "id": "doubao",
+    "order": 5,
+    "date": "2026-09-06",
+    "name": "Doubao Seed Code Coding Plan",
+    "providerMark": "豆",
+    "provider": "Doubao Seed Code",
+    "providerMeta": "Volcengine · China",
+    "model": "Coding Plan Lite",
+    "modelMeta": "Agentic coding model",
+    "type": [
+      "coding",
+      "promo"
+    ],
+    "productType": "coding_plan",
+    "kicker": "CHEAP CODING",
+    "badges": [
+      "FIRST MONTH",
+      "¥9.9 → ¥40"
+    ],
+    "freeSummary": "¥9.9 first month · ¥40 renewal",
+    "validitySummary": "1 month / then renews",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official article",
+    "title": "Doubao Seed Code · Coding Plan Lite",
+    "why": "This is a first-month promotion, not a free plan. The renewal price is shown next to the promotional price so overseas users do not mistake it for permanent access.",
+    "mechanism": "First month ¥9.9; renewal ¥40 / month",
+    "validity": "First month only; renews after",
+    "access": "China account / Volcengine Ark",
+    "command": "Configure the official coding endpoint in your supported coding tool after subscribing.",
+    "register": "https://www.volcengine.com/activity/codingplan",
+    "registerLabel": "Register / open Coding Plan",
+    "links": [
+      [
+        "Official announcement",
+        "https://developer.volcengine.com/articles/7575446945372897322"
+      ],
+      [
+        "Coding Plan",
+        "https://www.volcengine.com/activity/codingplan"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account / Volcengine Ark",
+    "freeMechanism": "first_month_promo",
+    "quota": "Coding Plan Lite; first month promotional price",
+    "renewal": "¥40 / month after the first month",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://developer.volcengine.com/articles/7575446945372897322"
+    ],
+    "evidence": "Official Volcengine announcement describes the first-month price and renewal price.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "This is a paid promotion, not a free plan."
+  },
+  {
+    "id": "glm",
+    "order": 6,
+    "date": "2026-09-06",
+    "name": "GLM Coding Plan Zhipu",
+    "providerMark": "GLM",
+    "provider": "GLM Coding Plan",
+    "providerMeta": "Zhipu AI · China",
+    "model": "GLM-5.2 / GLM-4.7",
+    "modelMeta": "Coding tools only",
+    "type": [
+      "coding",
+      "promo"
+    ],
+    "productType": "coding_plan",
+    "kicker": "CHEAP CODING",
+    "badges": [
+      "OFF-PEAK",
+      "5-HOUR RESET"
+    ],
+    "freeSummary": "Quota multiplier changes by provider time",
+    "validitySummary": "5-hour windows / weekly limit",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official FAQ",
+    "title": "GLM Coding Plan",
+    "why": "The official FAQ documents time-dependent quota consumption. The product converts the provider’s UTC+8 window into the visitor’s local time rather than claiming that every midnight is cheaper.",
+    "mechanism": "High / non-peak quota multipliers",
+    "validity": "5-hour windows + weekly limit",
+    "access": "China account; supported tools only",
+    "command": "Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.",
+    "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
+    "registerLabel": "Register / open GLM Coding",
+    "timeWindow": "Provider peak: 14:00–18:00 UTC+8. Use the remaining window for the lower multiplier; the exact promotion can change.",
+    "links": [
+      [
+        "Official FAQ",
+        "https://docs.bigmodel.cn/cn/coding-plan/faq"
+      ],
+      [
+        "Quick start",
+        "https://docs.bigmodel.cn/cn/coding-plan/quick-start"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account; supported tools only",
+    "freeMechanism": "first_month_promo",
+    "quota": "Time-dependent quota multipliers; 5-hour windows",
+    "renewal": "Plan and time windows are provider-controlled",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://docs.bigmodel.cn/cn/coding-plan/faq"
+    ],
+    "evidence": "Official FAQ documents peak and non-peak quota consumption by provider time.",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Never describe this as a universal local-midnight discount."
+  },
+  {
+    "id": "longcat-api",
+    "order": 7,
+    "date": "2026-09-06",
+    "name": "LongCat Meituan API",
+    "providerMark": "LC",
+    "provider": "LongCat API",
+    "providerMeta": "Meituan · global login",
+    "model": "LongCat-2.0",
+    "modelMeta": "OpenAI / Anthropic compatible",
+    "type": [
+      "coding",
+      "promo"
+    ],
+    "productType": "api",
+    "kicker": "VERIFY BEFORE FREE",
+    "badges": [
+      "VERIFY",
+      "OPENAI / ANTHROPIC"
+    ],
+    "freeSummary": "Official API exists; no free quota confirmed",
+    "validitySummary": "Unknown / do not call free",
+    "accessSummary": "Email / phone",
+    "checkedSummary": "Today / official docs",
+    "title": "LongCat API · status check",
+    "why": "LongCat has a public API platform and supports non-mainland email or phone login. The official docs confirm API access but do not confirm a free quota, so it stays out of the free list.",
+    "mechanism": "Paid API status; free quota not confirmed",
+    "validity": "Unknown",
+    "access": "Non-mainland email or phone login",
+    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+    "register": "https://longcat.ai/platform/",
+    "registerLabel": "Register / open LongCat",
+    "links": [
+      [
+        "API docs",
+        "https://longcat.ai/platform/docs/zh/"
+      ],
+      [
+        "FAQ",
+        "https://longcat.ai/platform/docs/zh/faq"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Non-mainland email or phone login",
+    "freeMechanism": "not_confirmed",
+    "quota": "Free quota not confirmed",
+    "renewal": "Unknown",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.ai/platform/docs/zh/faq"
+    ],
+    "evidence": "Official docs confirm the API platform but do not confirm a durable free quota.",
+    "status": "needs_review",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Do not promote as free without a public quota rule."
+  },
+  {
+    "id": "longcat-download",
+    "order": 8,
+    "date": "2026-09-06",
+    "name": "LongCat 2.0 Meituan open weights",
+    "providerMark": "LC",
+    "provider": "LongCat-2.0",
+    "providerMeta": "Meituan · open weights",
+    "model": "1.6T MoE / 48B active",
+    "modelMeta": "Local deployment",
+    "type": [
+      "download"
+    ],
+    "productType": "open_weights",
+    "kicker": "DOWNLOAD MODEL",
+    "badges": [
+      "OPEN WEIGHTS",
+      "MIT LICENSE"
+    ],
+    "freeSummary": "Weights are free; compute is not",
+    "validitySummary": "MIT license / check model card",
+    "accessSummary": "Global",
+    "checkedSummary": "Today / official GitHub",
+    "title": "LongCat-2.0 · open weights",
+    "why": "The official repository links the model for local deployment. “Free” means the weights are available; a 1.6T-parameter model still requires serious GPU or hosted infrastructure.",
+    "mechanism": "Downloadable weights; local inference",
+    "validity": "Model license applies",
+    "access": "Global download path",
+    "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0",
+    "register": "https://github.com/meituan-longcat/LongCat-2.0",
+    "registerLabel": "Open LongCat model",
+    "links": [
+      [
+        "Official GitHub",
+        "https://github.com/meituan-longcat/LongCat-2.0"
+      ],
+      [
+        "Hugging Face",
+        "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Global download path",
+    "freeMechanism": "open_weights",
+    "quota": "Downloadable weights",
+    "renewal": "Model license applies",
+    "phoneRequired": "no",
+    "cardRequired": "no",
+    "commercialUse": "check MIT and model card terms",
+    "sourceUrls": [
+      "https://github.com/meituan-longcat/LongCat-2.0"
+    ],
+    "evidence": "Official repository links the model for local deployment and documents the license.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Weights free does not mean GPU, storage or inference free."
+  },
+  {
+    "id": "qwen-download",
+    "order": 9,
+    "date": "2026-09-06",
+    "name": "Qwen3 4B Alibaba open weights",
+    "providerMark": "Q",
+    "provider": "Qwen3-4B",
+    "providerMeta": "Alibaba · Hugging Face",
+    "model": "Small local model",
+    "modelMeta": "Text generation",
+    "type": [
+      "download"
+    ],
+    "productType": "open_weights",
+    "kicker": "DOWNLOAD MODEL",
+    "badges": [
+      "OPEN WEIGHTS",
+      "SMALLER LOCAL RUN"
+    ],
+    "freeSummary": "Open weights; local inference path",
+    "validitySummary": "Model license / check card",
+    "accessSummary": "Global",
+    "checkedSummary": "Today / official HF card",
+    "title": "Qwen3-4B · open weights",
+    "why": "The official Hugging Face model card provides a direct model repository. This is a more realistic local starting point than trillion-parameter models for a developer laptop or a small cloud GPU.",
+    "mechanism": "Downloadable model weights",
+    "validity": "Model license applies",
+    "access": "Global download path",
+    "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download Qwen/Qwen3-4B --local-dir ./Qwen3-4B",
+    "register": "https://huggingface.co/Qwen/Qwen3-4B",
+    "registerLabel": "Open Qwen model",
+    "links": [
+      [
+        "Official model card",
+        "https://huggingface.co/Qwen/Qwen3-4B"
+      ],
+      [
+        "Qwen GitHub",
+        "https://github.com/QwenLM/Qwen3"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Global download path",
+    "freeMechanism": "open_weights",
+    "quota": "Downloadable model weights",
+    "renewal": "Model license applies",
+    "phoneRequired": "no",
+    "cardRequired": "no",
+    "commercialUse": "check model card license",
+    "sourceUrls": [
+      "https://huggingface.co/Qwen/Qwen3-4B"
+    ],
+    "evidence": "Official Hugging Face model card provides the model repository and download path.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Local inference still needs compatible hardware or hosted compute."
+  },
+  {
+    "id": "glm-download",
+    "order": 10,
+    "date": "2026-09-06",
+    "name": "GLM 4.7 Flash Zhipu open weights",
+    "providerMark": "GLM",
+    "provider": "GLM-4.7-Flash",
+    "providerMeta": "Zhipu · open weights",
+    "model": "30B-A3B",
+    "modelMeta": "Local coding / reasoning",
+    "type": [
+      "download"
+    ],
+    "productType": "open_weights",
+    "kicker": "DOWNLOAD MODEL",
+    "badges": [
+      "OPEN WEIGHTS",
+      "HF + MODELSCOPE"
+    ],
+    "freeSummary": "Hugging Face + ModelScope links",
+    "validitySummary": "Model license / check card",
+    "accessSummary": "Global",
+    "checkedSummary": "Today / official GitHub",
+    "title": "GLM-4.7-Flash · open weights",
+    "why": "The official Zhipu repository lists GLM-4.7-Flash download links for Hugging Face and ModelScope. The page surfaces both because international users often have better access to Hugging Face.",
+    "mechanism": "Downloadable model weights",
+    "validity": "Model license applies",
+    "access": "Global download path",
+    "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download zai-org/GLM-4.7-Flash --local-dir ./GLM-4.7-Flash",
+    "register": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+    "registerLabel": "Open GLM model",
+    "links": [
+      [
+        "Official GitHub",
+        "https://github.com/zai-org/GLM-4.5"
+      ],
+      [
+        "Hugging Face",
+        "https://huggingface.co/zai-org"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Global download path",
+    "freeMechanism": "open_weights",
+    "quota": "Downloadable model weights",
+    "renewal": "Model license applies",
+    "phoneRequired": "no",
+    "cardRequired": "no",
+    "commercialUse": "check model card license",
+    "sourceUrls": [
+      "https://huggingface.co/zai-org/GLM-4.7-Flash"
+    ],
+    "evidence": "Official Zhipu repository and model card provide Hugging Face and ModelScope download paths.",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Verify the exact license on the current model card before commercial use."
+  },
+  {
+    "id": "sensecore",
+    "order": 11,
+    "date": "2026-09-06",
+    "name": "SenseTime SenseNova API",
+    "providerMark": "商汤",
+    "provider": "SenseNova",
+    "providerMeta": "SenseTime · China",
+    "model": "Model-as-a-Service",
+    "modelMeta": "API / experience center",
+    "type": [
+      "free"
+    ],
+    "productType": "api",
+    "kicker": "VERIFY BEFORE FREE",
+    "badges": [
+      "VERIFY",
+      "API CONFIRMED"
+    ],
+    "freeSummary": "API confirmed; free quota not confirmed",
+    "validitySummary": "Unknown / check account",
+    "accessSummary": "China account",
+    "checkedSummary": "Today / official docs",
+    "title": "SenseNova · free status pending",
+    "why": "SenseTime’s official documentation confirms the Model-as-a-Service API and experience center. A public, durable free-quota rule was not confirmed, so the directory keeps it visible but does not call it free.",
+    "mechanism": "API / experience center; free quota pending",
+    "validity": "Unknown",
+    "access": "China account",
+    "command": "Open the official SenseCore console and check the current account offer.",
+    "register": "https://console.sensecore.cn/",
+    "registerLabel": "Register / open SenseCore",
+    "links": [
+      [
+        "API docs",
+        "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+      ],
+      [
+        "Experience center",
+        "https://console.sensecore.cn/micro/help/docs/model-as-a-service/AI_Studio/User_Guide/Experienc/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China account",
+    "freeMechanism": "not_confirmed",
+    "quota": "Free quota pending confirmation",
+    "renewal": "Unknown",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+    ],
+    "evidence": "Official documentation confirms the API and experience center but not a durable public free quota.",
+    "status": "needs_review",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Keep visible for discovery but do not label as free until confirmed."
+  },
+  {
+    "id": "deepseek",
+    "order": 12,
+    "date": "2026-09-06",
+    "name": "DeepSeek API official",
+    "providerMark": "DS",
+    "provider": "DeepSeek API",
+    "providerMeta": "DeepSeek · official API",
+    "model": "DeepSeek V4 Flash",
+    "modelMeta": "OpenAI-compatible endpoint",
+    "type": [
+      "free"
+    ],
+    "productType": "payg",
+    "kicker": "LOW COST",
+    "badges": [
+      "PAYG",
+      "INTERNATIONAL API"
+    ],
+    "freeSummary": "Very low unit price; not a free quota",
+    "validitySummary": "Pay-as-you-go / no expiry",
+    "accessSummary": "International API",
+    "checkedSummary": "Today / official pricing",
+    "title": "DeepSeek API · low cost, not free",
+    "why": "DeepSeek is useful as a cost benchmark, but it is not a free quota entry. The directory keeps low-cost pay-as-you-go offers visible without calling them free.",
+    "mechanism": "Pay-as-you-go API pricing",
+    "validity": "Balance-based",
+    "access": "Official international API",
+    "command": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\"",
+    "register": "https://platform.deepseek.com/",
+    "registerLabel": "Register / open DeepSeek",
+    "links": [
+      [
+        "Official pricing",
+        "https://api-docs.deepseek.com/quick_start/pricing"
+      ],
+      [
+        "API docs",
+        "https://api-docs.deepseek.com/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Official international API",
+    "freeMechanism": "not_confirmed",
+    "quota": "Pay-as-you-go API pricing",
+    "renewal": "Balance-based",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://api-docs.deepseek.com/quick_start/pricing"
+    ],
+    "evidence": "Official pricing documents a pay-as-you-go API; no free quota is represented here.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-06",
+    "checkedBy": "manual",
+    "notes": "Low cost is intentionally separate from free."
+  }
+]
+  </script>
+
+  <script>
+    let offerIndex = {};
+    let rows = [];
+    const embeddedOfferData = JSON.parse(document.getElementById('offer-data').textContent || '[]');
+    const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+    const summaryMarkup = value => {
+      const parts = String(value || '').split(' / ');
+      return `${escapeHtml(parts[0])}${parts.length > 1 ? `<small>${escapeHtml(parts.slice(1).join(' / '))}</small>` : ''}`;
+    };
+    const pad = value => String(value).padStart(2, '0');
+    const rowBadgeClass = badge => {
+      const text = String(badge || '');
+      if (text.includes('FREE')) return 'free';
+      if (text.includes('TRIAL')) return 'trial';
+      if (text.includes('VERIFY')) return 'pending';
+      if (text.includes('FIRST') || text.includes('OFF')) return 'promo';
+      return 'open';
+    };
+    const rowArticleMarkup = item => `<article class=${JSON.stringify('offer')} data-type="${escapeHtml((item.type || []).join(' '))}" data-name="${escapeHtml(item.name)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="model">${escapeHtml(item.model)}<small>${escapeHtml(item.modelMeta)}</small></div><div class="cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><small>${escapeHtml(item.freeSummary)}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${summaryMarkup(item.checkedSummary)}</div><button class="row-arrow" aria-label="Open details">→</button></article>`;
+    const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const updateStructuredData = items => {
+      const node = document.getElementById('ld-dynamic');
+      if (!node) return;
+      const faq = [...document.querySelectorAll('.faq-list details')].map(detail => ({
+        '@type': 'Question',
+        name: detail.querySelector('summary').textContent.trim(),
+        acceptedAnswer: { '@type': 'Answer', text: detail.querySelector('p').textContent.trim() }
+      }));
+      node.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          { '@type': 'ItemList', name: 'Free and limited-time-free AI offers', itemListElement: items.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.title })) },
+          { '@type': 'FAQPage', mainEntity: faq }
+        ]
+      }, null, 2);
+    };
+    const renderOffers = items => {
+      offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
+      const container = document.getElementById('offerRows');
+      container.innerHTML = items.map(rowArticleMarkup).join('');
+      rows = [...container.querySelectorAll('.offer')];
+
+      const ideItems = items.filter(item => item.type.includes('ide'));
+      const downloadItems = items.filter(item => item.type.includes('download'));
+      const codingItems = items.filter(item => item.type.includes('coding'));
+      const freeForeverItems = items.filter(item => item.type.includes('free') && !item.type.includes('ide'));
+
+      document.querySelector('.hero-side .big').textContent = items.length;
+      document.querySelector('.side-nav [data-filter="all"] b').textContent = items.length;
+      document.querySelector('.side-nav [data-filter="ide"] b').textContent = pad(ideItems.length);
+      document.querySelector('.side-nav [data-filter="download"] b').textContent = pad(downloadItems.length);
+      document.querySelector('.side-nav [data-filter="coding"] b').textContent = pad(codingItems.length);
+      document.querySelector('.tabs [data-filter="all"] em').textContent = pad(items.length);
+      document.querySelector('.tabs [data-filter="free"] em').textContent = pad(freeForeverItems.length);
+      document.querySelector('.tabs [data-filter="ide"] em').textContent = pad(ideItems.length);
+      document.querySelector('.tabs [data-filter="download"] em').textContent = pad(downloadItems.length);
+      document.querySelector('.tabs [data-filter="coding"] em').textContent = pad(codingItems.length);
+      document.getElementById('summaryFreeForever').textContent = pad(freeForeverItems.length);
+      document.getElementById('summaryOpenWeights').textContent = pad(downloadItems.length);
+
+      document.getElementById('ideHighlightButton').textContent = `Browse ${ideItems.length} free IDEs →`;
+      document.getElementById('ideHighlightGrid').innerHTML = ideItems.slice(0, 4).map((item, index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${escapeHtml(item.badges?.[0] || 'FREE')}</b><strong>${escapeHtml(item.provider)}</strong><span>${escapeHtml(item.freeSummary)}</span></div>`).join('');
+
+      document.getElementById('downloadList').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(item.provider)}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(item.registerLabel || 'Open')} ↗</a></div>`).join('');
+
+      const latest = items.map(item => item.lastVerifiedAt).filter(Boolean).sort().at(-1);
+      if (latest) document.getElementById('lastChecked').textContent = `Last checked: ${formatDate(latest)} · Data is subject to change`;
+
+      updateStructuredData(items);
+    };
+    const showDataError = () => {
+      const container = document.getElementById('offerRows');
+      container.innerHTML = '<div class="offer-error"><strong>Offer data unavailable.</strong> The directory could not load <code>data/offers.json</code> and this page has no embedded fallback. Serve the site over HTTP (or run <code>python scripts/build_static.py</code>) and reload.</div>';
+      document.getElementById('resultCount').textContent = 'Showing 0 offers';
+    };
+    const loadOffers = async () => {
+      if (location.protocol !== 'file:') {
+        try {
+          const response = await fetch(document.body.dataset.offersUrl || '../data/offers.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`offers.json returned ${response.status}`);
+          const data = await response.json();
+          if (Array.isArray(data) && data.length) {
+            offerDataSource = 'network';
+            return data;
+          }
+        } catch (error) {
+          console.warn(`offers.json unavailable (${error.message}); falling back to embedded data.`);
+          offerDataSource = 'embedded-fallback';
+        }
+      }
+      return embeddedOfferData;
+    };
+    const drawer = document.getElementById('drawer');
+    const backdrop = document.getElementById('backdrop');
+    const openDrawer = (key) => {
+      const item = offerIndex[key]; if (!item) return;
+      const drawerBadgeClass = badge => {
+        const text = String(badge || '');
+        if (text.includes('FREE') || text.includes('OPEN')) return 'free';
+        if (text.includes('VERIFY')) return 'pending';
+        if (text.includes('FIRST') || text.includes('OFF')) return 'promo';
+        return 'open';
+      };
+      document.getElementById('drawerKicker').textContent = item.kicker;
+      document.getElementById('drawerTitle').textContent = item.title;
+      document.getElementById('drawerBadges').innerHTML = (item.badges || []).map((badge, index) => `<span class="badge ${index === 0 ? drawerBadgeClass(badge) : 'pending'}">${escapeHtml(badge)}</span>`).join('');
+      document.getElementById('drawerWhy').textContent = item.why;
+      document.getElementById('drawerMechanism').textContent = item.mechanism;
+      document.getElementById('drawerValidity').textContent = item.validity;
+      document.getElementById('drawerAccess').textContent = item.access;
+      document.getElementById('drawerCommand').textContent = item.command;
+      const register = document.getElementById('drawerRegister');
+      register.href = item.register;
+      register.textContent = `${item.registerLabel || 'Register / open official page'} ↗`;
+      const timeWindowBlock = document.getElementById('timeWindowBlock');
+      timeWindowBlock.hidden = !item.timeWindow;
+      if (item.timeWindow) {
+        const local = Intl.DateTimeFormat().resolvedOptions().timeZone || 'your timezone';
+        document.getElementById('timeWindowCopy').textContent = `${item.timeWindow} Your browser timezone: ${local}. Convert the window before scheduling heavy work.`;
+      }
+      document.getElementById('drawerLinks').innerHTML = (item.links || []).map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(label)} ↗</a>`).join('');
+      drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
+    };
+    const closeDrawer = () => { drawer.classList.remove('open'); backdrop.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+    document.querySelector('.table-wrap').addEventListener('click', e => {
+      const button = e.target.closest('.row-arrow');
+      if (button) openDrawer(button.closest('.offer').dataset.detail);
+    });
+    document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    document.getElementById('copyCommand').addEventListener('click', async e => {
+      const text = document.getElementById('drawerCommand').textContent;
+      try { await navigator.clipboard.writeText(text); e.currentTarget.textContent = 'Copied'; e.currentTarget.classList.add('copied'); setTimeout(() => { e.currentTarget.textContent = 'Copy'; e.currentTarget.classList.remove('copied'); }, 1300); } catch { e.currentTarget.textContent = 'Select manually'; }
+    });
+
+    let activeFilter = 'all';
+    const applyFilters = () => {
+      const query = document.getElementById('search').value.trim().toLowerCase();
+      let visible = 0;
+      rows.forEach(row => {
+        const types = row.dataset.type.split(' ');
+        const matchesFilter = activeFilter === 'all' || (activeFilter === 'free' ? types.includes('free') && !types.includes('ide') : types.includes(activeFilter));
+        const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
+        const show = matchesFilter && matchesQuery;
+        row.classList.toggle('hidden', !show); if (show) visible++;
+      });
+      document.getElementById('resultCount').textContent = `Showing ${visible} offer${visible === 1 ? '' : 's'}`;
+    };
+    const setFilter = (filter) => {
+      activeFilter = filter;
+      document.querySelectorAll('[data-filter]').forEach(el => el.classList.toggle('active', el.dataset.filter === filter));
+      if (filter === 'compare') document.getElementById('compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      else applyFilters();
+    };
+    document.querySelectorAll('[data-filter]').forEach(el => el.addEventListener('click', () => setFilter(el.dataset.filter)));
+    document.getElementById('search').addEventListener('input', () => {
+      if (document.getElementById('search').value.trim()) {
+        activeFilter = 'all';
+        document.querySelectorAll('[data-filter]').forEach(el => el.classList.toggle('active', el.dataset.filter === 'all'));
+      }
+      applyFilters();
+    });
+    const initialQuery = new URLSearchParams(location.search).get('q');
+    if (initialQuery) document.getElementById('search').value = initialQuery;
+    document.getElementById('sort').addEventListener('change', e => {
+      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? a.dataset.name.localeCompare(b.dataset.name) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
+      const wrap = document.getElementById('offerRows'); sorted.forEach(row => wrap.appendChild(row));
+    });
+    const clock = document.getElementById('clock');
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
+    clock.innerHTML = `Local time <span>${tz} · <b>${new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date())}</b></span>`;
+    let offerDataSource = 'embedded';
+    loadOffers().then(items => {
+      if (Array.isArray(items) && items.length) {
+        renderOffers(items);
+        document.body.dataset.dataSource = offerDataSource;
+        applyFilters();
+      } else {
+        showDataError();
+      }
+    });
+  </script>
+</body>
+</html>
