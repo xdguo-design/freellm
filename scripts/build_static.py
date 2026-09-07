@@ -13,6 +13,27 @@ from crawler.schema import validate_offers
 
 START = '<script type="application/json" id="offer-data">'
 END = "</script>"
+LD_START = '<script type="application/ld+json" id="ld-dynamic">'
+
+
+def update_static_item_list(html: str, data: list[dict]) -> str:
+    start = html.find(LD_START)
+    if start < 0:
+        return html
+    content_start = start + len(LD_START)
+    end = html.find(END, content_start)
+    if end < 0:
+        raise SystemExit("Missing JSON-LD script closing tag in static HTML")
+    try:
+        structured = json.loads(html[content_start:end])
+    except json.JSONDecodeError as error:
+        raise SystemExit(f"Invalid static JSON-LD: {error}") from error
+    structured["@graph"][0]["itemListElement"] = [
+        {"@type": "ListItem", "position": index, "name": offer["title"]}
+        for index, offer in enumerate(data, start=1)
+    ]
+    replacement = "\n  " + json.dumps(structured, ensure_ascii=False, indent=2) + "\n  "
+    return html[:content_start] + replacement + html[end:]
 
 
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
@@ -30,6 +51,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
         raise SystemExit(f"Missing JSON script closing tag in {html_path}")
     replacement = "\n  " + json.dumps(data, ensure_ascii=False, indent=2) + "\n  "
     updated = html[:content_start] + replacement + html[end:]
+    updated = update_static_item_list(updated, data)
     if check:
         if updated != html:
             print(f"stale: {html_path} does not contain the current offers JSON")

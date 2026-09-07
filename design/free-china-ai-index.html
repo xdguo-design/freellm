@@ -33,36 +33,188 @@
   <!-- ItemList and FAQ are rewritten from data/offers.json at runtime; the content below is the build-time fallback. -->
   <script type="application/ld+json" id="ld-dynamic">
   {
-    "@context": "https://schema.org",
-    "@graph": [
-      {"@type":"ItemList","name":"Free and limited-time-free AI offers","itemListElement":[
-        {"@type":"ListItem","position":1,"name":"CodeBuddy · Personal trial"},
-        {"@type":"ListItem","position":2,"name":"Qoder · Experience plan"},
-        {"@type":"ListItem","position":3,"name":"TraeCode CN · Personal plan"},
-        {"@type":"ListItem","position":4,"name":"Baidu Comate · Auto-Free mode"},
-        {"@type":"ListItem","position":5,"name":"Doubao Seed Code · Coding Plan Lite"},
-        {"@type":"ListItem","position":6,"name":"GLM Coding Plan"},
-        {"@type":"ListItem","position":7,"name":"LongCat API · status check"},
-        {"@type":"ListItem","position":8,"name":"LongCat-2.0 · open weights"},
-        {"@type":"ListItem","position":9,"name":"Qwen3-4B · open weights"},
-        {"@type":"ListItem","position":10,"name":"GLM-4.7-Flash · open weights"},
-        {"@type":"ListItem","position":11,"name":"SenseNova · free status pending"},
-        {"@type":"ListItem","position":12,"name":"DeepSeek API · low cost, not free"},
-        {"@type":"ListItem","position":13,"name":"OpenCode Zen · free model pool"},
-        {"@type":"ListItem","position":14,"name":"GitHub Copilot · Free plan"},
-        {"@type":"ListItem","position":15,"name":"Cursor · Hobby free plan"},
-        {"@type":"ListItem","position":16,"name":"Amazon Q Developer · Free tier"},
-        {"@type":"ListItem","position":17,"name":"Google Antigravity · Individual free plan"},
-        {"@type":"ListItem","position":18,"name":"通义千问 · 阿里云百炼新人免费额度"}
-      ]},
-      {"@type":"FAQPage","mainEntity":[
-        {"@type":"Question","name":"What does “free” mean here?","acceptedAnswer":{"@type":"Answer","text":"Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free."}},
-        {"@type":"Question","name":"Do free AI offers expire?","acceptedAnswer":{"@type":"Answer","text":"Trials and promotions can expire or renew at a paid price. Check the validity field and the linked official source before subscribing."}},
-        {"@type":"Question","name":"Can I download the models?","acceptedAnswer":{"@type":"Answer","text":"Downloadable entries link to official model cards or repositories and include a starter command. Free weights do not mean free inference infrastructure."}},
-        {"@type":"Question","name":"Why compare cheap plans with free offers?","acceptedAnswer":{"@type":"Answer","text":"A low-cost plan can be more reliable than a fragile free quota. The directory keeps free, trial, promotion, open-weight and pay-as-you-go categories separate."}}
-      ]}
-    ]
-  }
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      "name": "Free and limited-time-free AI offers",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "CodeBuddy · Personal trial"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Qoder · Experience plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "TraeCode CN · Personal plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Baidu Comate · Auto-Free mode"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Doubao Seed Code · Coding Plan Lite"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "GLM Coding Plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "LongCat API · status check"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "LongCat-2.0 · open weights"
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "name": "Qwen3-4B · open weights"
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "name": "GLM-4.7-Flash · open weights"
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "name": "SenseNova · free status pending"
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "name": "DeepSeek API · low cost, not free"
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "name": "OpenCode Zen · free model pool"
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "name": "GitHub Copilot · Free plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "name": "Cursor · Hobby free plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "name": "Amazon Q Developer · Free tier"
+        },
+        {
+          "@type": "ListItem",
+          "position": 17,
+          "name": "Google Antigravity · Individual free plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 18,
+          "name": "通义千问 · 阿里云百炼新人免费额度"
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "name": "Keenable · Search API free quota"
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "name": "TinyFish · Search + Fetch free tier"
+        },
+        {
+          "@type": "ListItem",
+          "position": 21,
+          "name": "TinyFish · Agent + Browser metered"
+        },
+        {
+          "@type": "ListItem",
+          "position": 22,
+          "name": "Tavily · Web APIs free credits"
+        },
+        {
+          "@type": "ListItem",
+          "position": 23,
+          "name": "Exa · Search and Agent free credits"
+        },
+        {
+          "@type": "ListItem",
+          "position": 24,
+          "name": "You.com · Search and Contents free tier"
+        },
+        {
+          "@type": "ListItem",
+          "position": 25,
+          "name": "Firecrawl · Search and scrape free plan"
+        },
+        {
+          "@type": "ListItem",
+          "position": 26,
+          "name": "Brave Search API · free monthly credits"
+        },
+        {
+          "@type": "ListItem",
+          "position": 27,
+          "name": "Browserbase · free browser and web APIs"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does “free” mean here?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do free AI offers expire?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Trials and promotions can expire or renew at a paid price. Check the validity field and the linked official source before subscribing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I download the models?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Downloadable entries link to official model cards or repositories and include a starter command. Free weights do not mean free inference infrastructure."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why compare cheap plans with free offers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A low-cost plan can be more reliable than a fragile free quota. The directory keeps free, trial, promotion, open-weight and pay-as-you-go categories separate."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
   <style>
     :root {
@@ -257,6 +409,15 @@
       column-gap: 12px;
     }
     .table-head { padding: 10px 14px; background: var(--ink); color: white; font: 10px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
+    .empty-state { padding: 34px 18px; text-align: center; display: grid; gap: 8px; justify-items: center; }
+    .empty-state[hidden] { display: none; }
+    .empty-state strong { font-size: 15px; }
+    .empty-state p { color: var(--muted); font-size: 13px; }
+    .empty-state button {
+      border: 1px solid var(--ink); background: var(--ink); color: white;
+      padding: 9px 14px; font: 700 12px var(--sans); cursor: pointer;
+    }
+    .empty-state button:hover { background: white; color: var(--ink); }
     .offer { padding: 14px; border-top: 1px solid var(--line); transition: background .15s ease; }
     .offer:hover { background: #f0f3ff; }
     .offer.hidden { display: none; }
@@ -311,6 +472,15 @@
     .source-links { display: flex; flex-wrap: wrap; gap: 8px; }
     .source-links a { padding: 8px 10px; border: 1px solid var(--ink); text-decoration: none; font-weight: 800; }
     .source-links a:hover { color: white; background: var(--ink); }
+    .signal-list { display: grid; gap: 9px; }
+    .signal-item { padding: 11px; border: 1px solid var(--line); background: var(--paper); }
+    .signal-item-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .signal-platform { font: 800 12px var(--display); }
+    .signal-label { color: var(--blue); font: 800 12px var(--mono); text-align: right; }
+    .signal-excerpt { margin: 8px 0 0; color: var(--muted); line-height: 1.45; }
+    .signal-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--muted); font: 10px var(--mono); }
+    .signal-foot a { color: var(--blue); text-decoration: none; }
+    .signal-empty { padding: 12px; border: 1px dashed var(--line); color: var(--muted); line-height: 1.5; }
     .primary-source { display: inline-flex; padding: 10px 12px; background: var(--blue); color: white; text-decoration: none; font-weight: 850; }
     .primary-source:hover { background: var(--ink); }
     .codebox { position: relative; padding: 14px; background: #111315; color: #d5f4df; overflow: auto; font: 11px/1.6 var(--mono); }
@@ -342,9 +512,9 @@
       .sidebar { min-height: auto; padding: 13px 16px; border-right: 0; border-bottom: 1px solid var(--line); display: block; }
       .brand { display: inline-grid; vertical-align: middle; }
       .side-label, .side-note { display: none; }
-      .side-nav { display: inline-flex; margin-left: 16px; vertical-align: middle; gap: 3px; }
-      .side-nav button { width: auto; padding: 9px 8px; }
-      .side-nav button span { display: none; }
+      .side-nav { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 0; }
+      .side-nav button { width: auto; padding: 8px 10px; gap: 6px; }
+      .side-nav button span { display: inline; font-size: 12px; }
       .side-nav b { opacity: 1; }
       .topbar { min-height: 55px; padding: 11px 16px; }
       .content { padding: 22px 16px; }
@@ -375,10 +545,17 @@
       <div>
         <p class="side-label">Browse</p>
         <nav class="side-nav" aria-label="Browse categories">
-          <button class="active" data-filter="all"><span>All offers</span><b>18</b></button>
+          <button class="active" data-filter="all"><span>All offers</span><b>27</b></button>
           <button data-filter="ide"><span>Free IDEs</span><b>08</b></button>
           <button data-filter="download"><span>Download models</span><b>03</b></button>
           <button data-filter="coding"><span>Coding plans</span><b>08</b></button>
+          <button data-filter="search"><span>Search APIs</span><b>08</b></button>
+          <button data-filter="fetch"><span>Fetch APIs</span><b>05</b></button>
+          <button data-filter="extract"><span>Extract APIs</span><b>03</b></button>
+          <button data-filter="crawl"><span>Crawl APIs</span><b>02</b></button>
+          <button data-filter="map"><span>Map APIs</span><b>02</b></button>
+          <button data-filter="browser"><span>Browser APIs</span><b>03</b></button>
+          <button data-filter="agent"><span>Agent APIs</span><b>04</b></button>
           <button data-filter="compare"><span>Price compare</span><b>↗</b></button>
         </nav>
       </div>
@@ -403,7 +580,7 @@
             <h1>Free AI.<br><span style="color:var(--blue)">Clear terms.</span></h1>
             <p class="hero-copy">A practical index of <b>free models, limited-time trials, free coding tools, open weights and low-cost plans</b> that developers can actually evaluate before the quota disappears.</p>
           </div>
-          <div class="hero-side"><div class="big">18</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
+          <div class="hero-side"><div class="big">27</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
         </section>
 
         <div class="notice"><div><strong>Free does not mean unlimited.</strong> <span>We label the exact mechanism: permanent quota, trial credits, first-month promotion, free IDE or downloadable weights.</span></div><a href="#methodology">How we label it →</a></div>
@@ -428,24 +605,36 @@
           <select class="sort" id="sort" aria-label="Sort offers"><option value="free">Sort: free first</option><option value="fresh">Sort: recently checked</option><option value="name">Sort: A–Z</option></select>
         </div>
         <div class="tabs" role="tablist">
-          <button class="tab active" data-filter="all">All offers <em>18</em></button>
-          <button class="tab" data-filter="free">Free forever <em>02</em></button>
+          <button class="tab active" data-filter="all">All offers <em>27</em></button>
+          <button class="tab" data-filter="free">Free forever <em>12</em></button>
           <button class="tab" data-filter="ide">Free IDEs <em>08</em></button>
           <button class="tab" data-filter="download">Downloadable <em>03</em></button>
           <button class="tab" data-filter="coding">Cheap coding <em>08</em></button>
+          <button class="tab" data-filter="search">Search <em>08</em></button>
+          <button class="tab" data-filter="fetch">Fetch <em>05</em></button>
+          <button class="tab" data-filter="extract">Extract <em>03</em></button>
+          <button class="tab" data-filter="crawl">Crawl <em>02</em></button>
+          <button class="tab" data-filter="map">Map <em>02</em></button>
+          <button class="tab" data-filter="browser">Browser <em>03</em></button>
+          <button class="tab" data-filter="agent">Agent <em>04</em></button>
         </div>
 
         <section class="summary-grid" aria-label="Offer summary">
-          <div class="summary"><div class="summary-label">Free forever</div><div class="summary-value" id="summaryFreeForever">02</div><div class="summary-detail">No subscription required · still rate-limited</div></div>
+          <div class="summary"><div class="summary-label">Free forever</div><div class="summary-value" id="summaryFreeForever">12</div><div class="summary-detail">No subscription required · still rate-limited</div></div>
           <div class="summary"><div class="summary-label">Best coding price</div><div class="summary-value">¥9.9</div><div class="summary-detail">Doubao Seed Code · first-month Lite plan</div></div>
           <div class="summary"><div class="summary-label">Open weights</div><div class="summary-value" id="summaryOpenWeights">03</div><div class="summary-detail">Download links + a first command to run</div></div>
         </section>
 
         <section id="offers">
-          <div class="section-head"><div><h2>Offers worth opening</h2><p>Each row answers “how free?”, “for how long?” and “what do I need?”</p></div><p id="resultCount">Showing 12 offers</p></div>
+          <div class="section-head"><div><h2>Offers worth opening</h2><p>Each row answers “how free?”, “for how long?” and “what do I need?”</p></div><p id="resultCount">Showing 27 offers</p></div>
           <div class="table-wrap">
             <div class="table-head"><div>Provider / product</div><div>Model / role</div><div>Free mechanism</div><div>Validity</div><div>Access</div><div>Checked</div><div></div></div>
             <div id="offerRows" aria-live="polite"></div>
+            <div id="emptyState" class="empty-state" hidden>
+              <strong>No offers match your search.</strong>
+              <p>Try a shorter keyword, or reset the search and filters.</p>
+              <button type="button" id="resetFilters">Clear search &amp; filters</button>
+            </div>
           </div>
         </section>
 
@@ -496,11 +685,17 @@
     <div class="drawer-top"><div><div class="crumb" id="drawerKicker">Offer details</div><h3 id="drawerTitle">Select an offer</h3></div><button class="close" id="closeDrawer" aria-label="Close details">×</button></div>
     <div class="drawer-meta" id="drawerBadges"></div>
     <div class="detail-block"><div class="detail-label">Why is this free / cheap?</div><div class="detail-value" id="drawerWhy">Select a row to inspect the mechanism, expiry and access path.</div></div>
-    <div class="detail-grid detail-block"><div class="detail-box"><strong>Free mechanism</strong><span id="drawerMechanism">—</span></div><div class="detail-box"><strong>Validity</strong><span id="drawerValidity">—</span></div><div class="detail-box"><strong>Access</strong><span id="drawerAccess">—</span></div><div class="detail-box"><strong>Last checked</strong><span id="lastChecked">06 Sep 2026</span></div></div>
+    <div class="detail-grid detail-block"><div class="detail-box"><strong>Free mechanism</strong><span id="drawerMechanism">—</span></div><div class="detail-box"><strong>Validity</strong><span id="drawerValidity">—</span></div><div class="detail-box"><strong>Access</strong><span id="drawerAccess">—</span></div><div class="detail-box"><strong>Last checked</strong><span id="drawerLastChecked">—</span></div></div>
+    <div class="detail-block"><div class="detail-label">How to use</div><div class="detail-value" id="drawerUsageGuide">Select an offer to see the setup path.</div></div>
+    <div class="detail-grid detail-block"><div class="detail-box"><strong>Prerequisites</strong><span id="drawerPrerequisites">—</span></div><div class="detail-box"><strong>Steps</strong><span id="drawerSteps">—</span></div><div class="detail-box"><strong>Endpoint</strong><span id="drawerEndpoint">—</span></div><div class="detail-box"><strong>Capabilities</strong><span id="drawerCapabilities">—</span></div></div>
     <div class="detail-block" id="timeWindowBlock" hidden><div class="detail-label">Provider clock → your clock</div><div class="detail-value" id="timeWindowCopy"></div></div>
     <div class="detail-block"><div class="detail-label">Setup command</div><div class="codebox"><button class="copy" id="copyCommand">Copy</button><code id="drawerCommand"># Select a downloadable model</code></div></div>
+    <div class="detail-block"><div class="detail-label">First request / install example</div><div class="codebox"><button class="copy" id="copyExample">Copy</button><code id="drawerExample"># Select an offer</code></div></div>
+    <div class="detail-block"><div class="detail-label">Quota protection</div><div class="detail-value" id="drawerQuotaGuard">—</div></div>
+    <div class="detail-block"><div class="detail-label">Common issues</div><div class="detail-value" id="drawerCommonIssues">—</div></div>
     <div class="detail-block"><div class="detail-label">Official action</div><a class="primary-source" id="drawerRegister" href="#" target="_blank" rel="noreferrer noopener">Register / open official page ↗</a></div>
     <div class="detail-block"><div class="detail-label">Official links</div><div class="source-links" id="drawerLinks"></div></div>
+    <div class="detail-block"><div class="detail-label">External platform signals</div><div class="signal-list" id="drawerSignals"><div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div></div></div>
     <div class="detail-block"><div class="detail-label">Important</div><div class="detail-value">A free web or IDE plan is not the same as a free API. Open weights are free to download, but storage, GPU memory, inference time and network egress may cost money.</div></div>
   </aside>
 
@@ -521,6 +716,23 @@
       "free"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装并使用 CodeBuddy 个人体验版",
+      "prerequisites": [
+        "中国账号"
+      ],
+      "steps": [
+        "打开官方产品页并下载安装",
+        "登录后选择个人体验计划并查看额度"
+      ],
+      "examples": {
+        "action": "打开 https://www.codebuddy.cn/ 并下载安装 CodeBuddy"
+      },
+      "docsUrl": "https://www.codebuddy.cn/docs/ide/Account/pricing"
+    },
     "kicker": "FREE IDE",
     "badges": [
       "FREE IDE",
@@ -581,6 +793,23 @@
       "free"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装 Qoder 并使用 Pro 试用额度",
+      "prerequisites": [
+        "Qoder 账号"
+      ],
+      "steps": [
+        "打开官方产品页并安装 Qoder",
+        "登录后启用 Pro 试用并在账户页查看 credits"
+      ],
+      "examples": {
+        "action": "打开 https://docs.qoder.com/zh/account/pricing 并下载安装 Qoder"
+      },
+      "docsUrl": "https://docs.qoder.com/zh/account/pricing"
+    },
     "kicker": "FREE IDE",
     "badges": [
       "TRIAL",
@@ -641,6 +870,23 @@
       "free"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装 Trae 中国版个人计划",
+      "prerequisites": [
+        "中国账号"
+      ],
+      "steps": [
+        "打开官方定价页并下载客户端",
+        "登录后选择个人计划并查看当前模式额度"
+      ],
+      "examples": {
+        "action": "打开 https://www.trae.cn/pricing 并下载安装 Trae"
+      },
+      "docsUrl": "https://www.trae.cn/pricing"
+    },
     "kicker": "FREE IDE",
     "badges": [
       "¥0 PLAN",
@@ -701,6 +947,23 @@
       "free"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "在 Comate 中启用 Auto-Free 模式",
+      "prerequisites": [
+        "百度账号"
+      ],
+      "steps": [
+        "打开官方产品页并安装插件或客户端",
+        "登录后选择 Auto-Free 模式并查看小时额度"
+      ],
+      "examples": {
+        "action": "打开 https://comate.baidu.com/zh 并进入 Auto-Free 模式"
+      },
+      "docsUrl": "https://comate.baidu.com/zh/pricing/payment?type=vip"
+    },
     "kicker": "FREE IDE",
     "badges": [
       "AUTO-FREE",
@@ -761,6 +1024,24 @@
       "promo"
     ],
     "productType": "coding_plan",
+    "capabilities": [
+      "coding_plan"
+    ],
+    "usageGuide": {
+      "summary": "开通豆包 Seed Code Lite 编码计划",
+      "prerequisites": [
+        "中国账号",
+        "确认首月和续费价格"
+      ],
+      "steps": [
+        "打开官方活动页并登录",
+        "购买首月计划后在支持的编码工具中使用"
+      ],
+      "examples": {
+        "action": "打开 https://developer.volcengine.com/articles/7575446945372897322 查看开通入口"
+      },
+      "docsUrl": "https://developer.volcengine.com/articles/7575446945372897322"
+    },
     "kicker": "CHEAP CODING",
     "badges": [
       "FIRST MONTH",
@@ -821,6 +1102,24 @@
       "promo"
     ],
     "productType": "coding_plan",
+    "capabilities": [
+      "coding_plan"
+    ],
+    "usageGuide": {
+      "summary": "开通 GLM Coding Plan 并按时间窗口使用",
+      "prerequisites": [
+        "支持的编码工具",
+        "中国账号"
+      ],
+      "steps": [
+        "打开官方 FAQ 并确认套餐规则",
+        "在支持的工具中登录并查看当前 5 小时窗口"
+      ],
+      "examples": {
+        "action": "打开 https://docs.bigmodel.cn/cn/coding-plan/quick-start 并按官方步骤配置"
+      },
+      "docsUrl": "https://docs.bigmodel.cn/cn/coding-plan/faq"
+    },
     "kicker": "CHEAP CODING",
     "badges": [
       "OFF-PEAK",
@@ -882,6 +1181,27 @@
       "promo"
     ],
     "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "通过 LongCat 官方平台调用模型 API",
+      "prerequisites": [
+        "LongCat 账号",
+        "确认 API 资格和计费规则"
+      ],
+      "steps": [
+        "打开官方平台并完成登录",
+        "创建凭据后设置环境变量并发送请求"
+      ],
+      "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://longcat.ai/platform/docs/zh/"
+    },
     "kicker": "VERIFY BEFORE FREE",
     "badges": [
       "VERIFY",
@@ -942,6 +1262,23 @@
       "download"
     ],
     "productType": "open_weights",
+    "capabilities": [
+      "open_weights"
+    ],
+    "usageGuide": {
+      "summary": "下载 LongCat-2.0 权重并在本地运行",
+      "prerequisites": [
+        "满足模型许可证和硬件要求"
+      ],
+      "steps": [
+        "打开官方模型仓库并下载权重",
+        "按照仓库说明安装依赖并启动推理服务"
+      ],
+      "examples": {
+        "shell": "git clone https://github.com/meituan-longcat/LongCat-2.0"
+      },
+      "docsUrl": "https://github.com/meituan-longcat/LongCat-2.0"
+    },
     "kicker": "DOWNLOAD MODEL",
     "badges": [
       "OPEN WEIGHTS",
@@ -1001,6 +1338,24 @@
       "download"
     ],
     "productType": "open_weights",
+    "capabilities": [
+      "open_weights"
+    ],
+    "usageGuide": {
+      "summary": "下载 Qwen3-4B 权重并使用本地推理工具",
+      "prerequisites": [
+        "安装本地推理运行时",
+        "确认模型许可证"
+      ],
+      "steps": [
+        "打开官方模型卡并下载权重",
+        "使用 Ollama、vLLM 或模型卡命令启动"
+      ],
+      "examples": {
+        "shell": "ollama run qwen3:4b"
+      },
+      "docsUrl": "https://huggingface.co/Qwen/Qwen3-4B"
+    },
     "kicker": "DOWNLOAD MODEL",
     "badges": [
       "OPEN WEIGHTS",
@@ -1060,6 +1415,24 @@
       "download"
     ],
     "productType": "open_weights",
+    "capabilities": [
+      "open_weights"
+    ],
+    "usageGuide": {
+      "summary": "下载 GLM-4.7-Flash 权重并按模型卡运行",
+      "prerequisites": [
+        "安装模型卡要求的运行环境",
+        "确认模型许可证"
+      ],
+      "steps": [
+        "打开官方模型卡并下载权重",
+        "执行模型卡提供的本地启动命令"
+      ],
+      "examples": {
+        "shell": "git clone https://huggingface.co/zai-org/GLM-4.7-Flash"
+      },
+      "docsUrl": "https://huggingface.co/zai-org/GLM-4.7-Flash"
+    },
     "kicker": "DOWNLOAD MODEL",
     "badges": [
       "OPEN WEIGHTS",
@@ -1119,6 +1492,27 @@
       "free"
     ],
     "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "通过 SenseCore 控制台确认并调用 Model-as-a-Service API",
+      "prerequisites": [
+        "SenseCore 账号",
+        "确认模型和地区可用性"
+      ],
+      "steps": [
+        "打开官方控制台并完成登录",
+        "在文档确认 Endpoint 后创建凭据并发送请求"
+      ],
+      "endpoint": "https://api.sensecore.cn/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${SENSECORE_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.sensecore.cn/v1/chat/completions --header 'Authorization: Bearer ${SENSECORE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+    },
     "kicker": "VERIFY BEFORE FREE",
     "badges": [
       "VERIFY",
@@ -1178,6 +1572,27 @@
       "free"
     ],
     "productType": "payg",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用 DeepSeek PAYG API 并控制余额消耗",
+      "prerequisites": [
+        "DeepSeek 平台账号",
+        "充值前确认当前价格"
+      ],
+      "steps": [
+        "打开官方平台创建 API Key",
+        "设置消费上限后发送一条最小请求"
+      ],
+      "endpoint": "https://api.deepseek.com/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DEEPSEEK_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+    },
     "kicker": "LOW COST",
     "badges": [
       "PAYG",
@@ -1238,6 +1653,26 @@
       "free"
     ],
     "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 OpenCode Zen 中选择官方列出的模型",
+      "prerequisites": [
+        "OpenCode 账号或支持的客户端"
+      ],
+      "steps": [
+        "打开官方 Zen 文档并确认当前模型列表",
+        "按 Provider 文档配置凭据后选择模型发送请求"
+      ],
+      "endpoint": "https://opencode.ai/zen/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Provider-specific API key",
+      "examples": {
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://dev.opencode.ai/docs/zen/"
+    },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
       "LIMITED-TIME FREE",
@@ -1304,6 +1739,23 @@
       "coding"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装 GitHub Copilot 并使用 Free 计划",
+      "prerequisites": [
+        "GitHub 账号"
+      ],
+      "steps": [
+        "打开官方计划页并确认 Free 资格",
+        "在支持的编辑器中安装 Copilot、登录并查看月度额度"
+      ],
+      "examples": {
+        "action": "打开 https://github.com/features/copilot/plans 并按官方步骤安装扩展"
+      },
+      "docsUrl": "https://github.com/features/copilot/plans"
+    },
     "kicker": "GLOBAL FREE IDE",
     "badges": [
       "FREE IDE",
@@ -1366,6 +1818,23 @@
       "coding"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装 Cursor 并使用 Hobby 免费计划",
+      "prerequisites": [
+        "Cursor 账号"
+      ],
+      "steps": [
+        "打开官方定价页并下载安装 Cursor",
+        "登录后选择 Hobby 并查看账户中的使用限制"
+      ],
+      "examples": {
+        "action": "打开 https://cursor.com/downloads 并下载安装 Cursor"
+      },
+      "docsUrl": "https://cursor.com/pricing"
+    },
     "kicker": "GLOBAL FREE IDE",
     "badges": [
       "FREE IDE",
@@ -1432,6 +1901,23 @@
       "coding"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "用 Builder ID 开通 Amazon Q Developer Free",
+      "prerequisites": [
+        "Builder ID 或 AWS 账号"
+      ],
+      "steps": [
+        "打开官方入门页并完成登录",
+        "安装 IDE/CLI 扩展后查看每月 Agent 和资源查询额度"
+      ],
+      "examples": {
+        "action": "打开 https://aws.amazon.com/q/developer/getting-started/ 并按官方步骤配置 Builder ID"
+      },
+      "docsUrl": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"
+    },
     "kicker": "GLOBAL FREE IDE",
     "badges": [
       "FREE TIER",
@@ -1498,6 +1984,24 @@
       "coding"
     ],
     "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "安装 Google Antigravity Individual 计划",
+      "prerequisites": [
+        "Google 账号",
+        "确认产品地区可用"
+      ],
+      "steps": [
+        "打开官方计划页并下载安装",
+        "登录后使用 Tab/命令能力并关注每周限频"
+      ],
+      "examples": {
+        "action": "打开 https://antigravity.google/docs/ide/extensions/ 并按官方安装说明配置"
+      },
+      "docsUrl": "https://antigravity.google/pricing"
+    },
     "kicker": "GLOBAL FREE IDE",
     "badges": [
       "$0 / MONTH",
@@ -1564,6 +2068,27 @@
       "api"
     ],
     "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在北京地域使用阿里云百炼 Qwen 新用户额度",
+      "prerequisites": [
+        "阿里云账号",
+        "北京地域 Model Studio 资格"
+      ],
+      "steps": [
+        "打开免费额度文档并创建对应地域的 API Key",
+        "开启额度耗尽停止设置后发送最小请求"
+      ],
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions --header 'Authorization: Bearer ${DASHSCOPE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://help.aliyun.com/zh/model-studio/new-free-quota"
+    },
     "kicker": "NEW USER FREE QUOTA",
     "badges": [
       "90 DAYS",
@@ -1608,18 +2133,1138 @@
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
     "notes": "Use a regular API key for the new-user quota, not a Token Plan dedicated key. Turn on the stop switch when the free quota is exhausted to avoid accidental charges."
+  },
+  {
+    "id": "keenable-search-free",
+    "order": 19,
+    "date": "2026-09-07",
+    "name": "Keenable Search API",
+    "providerMark": "KE",
+    "provider": "Keenable",
+    "providerMeta": "Web search infrastructure · Global",
+    "model": "Search + Fetch",
+    "modelMeta": "Web infrastructure",
+    "type": [
+      "web",
+      "search",
+      "fetch",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "WEB SEARCH",
+    "badges": [
+      "100K FREE / MONTH",
+      "$4 / 1K REQUESTS"
+    ],
+    "freeSummary": "100,000 requests / month · no card",
+    "validitySummary": "Monthly quota; overage metered",
+    "accessSummary": "Global · cloud only",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "Keenable · Search API free quota",
+    "why": "Keenable publishes a monthly free request allowance and a simple per-request price after the free allowance.",
+    "mechanism": "100,000 Search/Fetch requests per month; $4 per 1,000 requests after the free allowance",
+    "validity": "Recurring monthly quota; pricing and limits can change",
+    "access": "Global cloud access; no payment card required for the free quota",
+    "command": "Install the official CLI or call the MCP endpoint with the optional API key.",
+    "register": "https://keenable.ai/console",
+    "registerLabel": "Open Keenable console",
+    "links": [
+      [
+        "Official pricing",
+        "https://keenable.ai/pricing"
+      ],
+      [
+        "CLI quickstart",
+        "https://docs.keenable.ai/cli"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; cloud-only free tier",
+    "freeMechanism": "monthly_quota",
+    "quota": "100,000 requests / month; $4 / 1,000 requests after quota",
+    "renewal": "Free request allowance resets monthly; overage is pay-as-you-go",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://keenable.ai/pricing",
+      "https://docs.keenable.ai/cli"
+    ],
+    "evidence": "Official pricing lists 100K free requests per month and $4 per 1,000 requests; official CLI docs show Search and Fetch usage.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Set a spending limit before using metered requests.",
+    "providerId": "keenable",
+    "productId": "keenable-web",
+    "offerVariant": "search-fetch-free",
+    "capabilities": [
+      "search",
+      "fetch"
+    ],
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "monthly_quota",
+      "amount": 100000,
+      "unit": "requests",
+      "period": "month"
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": 100000,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": [
+        {
+          "capability": "search",
+          "unit": "1000 requests",
+          "price": "$4"
+        },
+        {
+          "capability": "fetch",
+          "unit": "1000 requests",
+          "price": "$4"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "使用 Keenable Search 或 Fetch 获取网页结果",
+      "prerequisites": [
+        "Keenable 账号或 keyless 公共入口",
+        "可选 KEENABLE_API_KEY"
+      ],
+      "steps": [
+        "打开官方 CLI 文档并安装 keenable-cli",
+        "设置可选 API Key 或使用 keyless 入口",
+        "执行 Search 或 Fetch 并设置消费上限"
+      ],
+      "endpoint": "https://api.keenable.ai/mcp",
+      "method": "POST",
+      "authentication": "Optional Authorization: Bearer ${KEENABLE_API_KEY}",
+      "examples": {
+        "shell": "keenable search 'latest AI news' --api-key ${KEENABLE_API_KEY}"
+      },
+      "quotaGuard": [
+        "每月免费额度用尽后会按请求计费",
+        "生产环境设置消费上限"
+      ],
+      "commonIssues": [
+        {
+          "problem": "keyless 请求被限速",
+          "solution": "设置 KEENABLE_API_KEY 或降低调用频率"
+        }
+      ],
+      "docsUrl": "https://docs.keenable.ai/cli"
+    }
+  },
+  {
+    "id": "tinyfish-search-fetch-free",
+    "order": 20,
+    "date": "2026-09-07",
+    "name": "TinyFish Search + Fetch",
+    "providerMark": "TF",
+    "provider": "TinyFish",
+    "providerMeta": "Web access APIs · Global",
+    "model": "Search + Fetch",
+    "modelMeta": "Agent web primitives",
+    "type": [
+      "web",
+      "search",
+      "fetch",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE WEB ACCESS",
+    "badges": [
+      "SEARCH + FETCH FREE",
+      "30 RPM SEARCH"
+    ],
+    "freeSummary": "Search 30 / min · Fetch 150 URLs / min",
+    "validitySummary": "Free while service rules continue",
+    "accessSummary": "Global · no card",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "TinyFish · Search + Fetch free tier",
+    "why": "TinyFish keeps Search and Fetch free and limits them by rate instead of deducting wallet balance.",
+    "mechanism": "Search is free at 30 requests/minute and 500/hour; Fetch is free at 150 URLs/minute and 1,000/day",
+    "validity": "Free access subject to published rate and daily limits",
+    "access": "Global access; no payment card required",
+    "command": "Create a TinyFish account, use the Search or Fetch API, and keep Agent/Browser calls disabled until needed.",
+    "register": "https://future.tinyfish.io/",
+    "registerLabel": "Open TinyFish",
+    "links": [
+      [
+        "Official pricing",
+        "https://future.tinyfish.io/pricing"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; rate-limited free Search and Fetch",
+    "freeMechanism": "permanent",
+    "quota": "Search 30 requests/minute and 500/hour; Fetch 150 URLs/minute and 1,000/day",
+    "renewal": "No wallet deduction for Search and Fetch; limits are provider-controlled",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://future.tinyfish.io/pricing"
+    ],
+    "evidence": "Official pricing lists free Search and Fetch with separate per-minute, hourly and daily limits and states no card is required.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Search and Fetch are free independently of wallet balance; Agent and Browser are separate paid capabilities.",
+    "providerId": "tinyfish",
+    "productId": "tinyfish-web",
+    "offerVariant": "search-fetch-free",
+    "capabilities": [
+      "search",
+      "fetch"
+    ],
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "rate_limited",
+      "amount": null,
+      "unit": null,
+      "period": null
+    },
+    "limits": {
+      "requestsPerMinute": 30,
+      "requestsPerHour": 500,
+      "urlsPerMinute": 150,
+      "urlsPerDay": 1000,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "usageGuide": {
+      "summary": "使用 TinyFish 的免费 Search 和 Fetch 原语",
+      "prerequisites": [
+        "TinyFish 账号",
+        "确认 Search/Fetch 限频"
+      ],
+      "steps": [
+        "打开官方价格页并创建账号",
+        "配置 Search 或 Fetch API 访问凭据",
+        "在每分钟和每日限制内发送请求"
+      ],
+      "endpoint": "https://api.tinyfish.io/search",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.tinyfish.io/search --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+      },
+      "quotaGuard": [
+        "Search 控制在 30 requests/minute 和 500/hour",
+        "Fetch 控制在 150 URLs/minute 和 1,000/day"
+      ],
+      "commonIssues": [
+        {
+          "problem": "请求被限频",
+          "solution": "降低并发并等待下一限频窗口"
+        }
+      ],
+      "docsUrl": "https://future.tinyfish.io/pricing"
+    }
+  },
+  {
+    "id": "tinyfish-agent-browser-metered",
+    "order": 21,
+    "date": "2026-09-07",
+    "name": "TinyFish Agent + Browser",
+    "providerMark": "TF",
+    "provider": "TinyFish",
+    "providerMeta": "Web execution APIs · Global",
+    "model": "Agent + Browser",
+    "modelMeta": "Metered web execution",
+    "type": [
+      "web",
+      "agent",
+      "browser",
+      "payg"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "METERED WEB EXECUTION",
+    "badges": [
+      "$0.016 / STEP",
+      "$0.002 / MINUTE"
+    ],
+    "freeSummary": "No free execution quota listed",
+    "validitySummary": "Pay as you go",
+    "accessSummary": "Global · wallet funded",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "TinyFish · Agent + Browser metered",
+    "why": "TinyFish separates paid web execution from its free Search and Fetch primitives.",
+    "mechanism": "Agent $0.016 per step; Browser $0.002 per minute",
+    "validity": "Pay-as-you-go while wallet funds are available",
+    "access": "Global; wallet is used for Agent and Browser",
+    "command": "Fund the TinyFish wallet only after configuring a spending limit, then start an Agent or Browser run.",
+    "register": "https://future.tinyfish.io/",
+    "registerLabel": "Open TinyFish",
+    "links": [
+      [
+        "Official pricing",
+        "https://future.tinyfish.io/pricing"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; paid Agent and Browser",
+    "freeMechanism": "not_confirmed",
+    "quota": "Agent $0.016 / step; Browser $0.002 / minute",
+    "renewal": "No subscription or monthly minimum; wallet-funded usage",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://future.tinyfish.io/pricing"
+    ],
+    "evidence": "Official pricing lists Agent and Browser as wallet-metered products with step and minute prices.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Keep Search/Fetch and Agent/Browser as separate offers so paid execution is not hidden by a free badge.",
+    "providerId": "tinyfish",
+    "productId": "tinyfish-web",
+    "offerVariant": "agent-browser-metered",
+    "capabilities": [
+      "agent",
+      "browser"
+    ],
+    "pricingModel": "metered_paid",
+    "freePolicy": null,
+    "limits": {
+      "concurrency": 5,
+      "sessionMinutes": null
+    },
+    "billing": {
+      "walletRequired": true,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": [
+        {
+          "capability": "agent",
+          "unit": "step",
+          "price": "$0.016"
+        },
+        {
+          "capability": "browser",
+          "unit": "minute",
+          "price": "$0.002"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "启动 TinyFish Agent 或 Browser 付费任务",
+      "prerequisites": [
+        "TinyFish 账号",
+        "已设置钱包消费上限"
+      ],
+      "steps": [
+        "打开官方价格页并确认 Agent/Browser 单位价格",
+        "为钱包充值或配置可接受的支付方式",
+        "创建任务或浏览器会话并在完成后主动关闭"
+      ],
+      "endpoint": "https://api.tinyfish.io/agent",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.tinyfish.io/agent --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"task\":\"Open the official homepage\"}'"
+      },
+      "quotaGuard": [
+        "Agent 按 step 计费",
+        "Browser 按 minute 计费并在任务结束后关闭会话"
+      ],
+      "commonIssues": [
+        {
+          "problem": "钱包余额不足",
+          "solution": "停止任务并检查钱包设置，不要默认开启自动充值"
+        }
+      ],
+      "docsUrl": "https://future.tinyfish.io/pricing"
+    }
+  },
+  {
+    "id": "tavily-web-free-credits",
+    "order": 22,
+    "date": "2026-09-07",
+    "name": "Tavily Web APIs",
+    "providerMark": "TA",
+    "provider": "Tavily",
+    "providerMeta": "AI web search and extraction · Global",
+    "model": "Search / Extract / Crawl / Map",
+    "modelMeta": "Web infrastructure",
+    "type": [
+      "web",
+      "search",
+      "extract",
+      "crawl",
+      "map",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE API CREDITS",
+    "badges": [
+      "1,000 CREDITS / MONTH",
+      "NO CARD"
+    ],
+    "freeSummary": "1,000 API credits / month",
+    "validitySummary": "Monthly credits; advanced calls cost more",
+    "accessSummary": "Global · API key",
+    "checkedSummary": "07 Sep 2026 / official docs",
+    "title": "Tavily · Web APIs free credits",
+    "why": "Tavily exposes Search, Extract, Crawl and Map behind one credit model with a recurring no-card free tier.",
+    "mechanism": "1,000 free API credits each month; basic Search costs 1 credit and advanced Search costs 2",
+    "validity": "Credits reset on the first day of each month; free requests stop when exhausted",
+    "access": "Global; API key required and no card required for the free tier",
+    "command": "Set TAVILY_API_KEY and call the official Search endpoint.",
+    "register": "https://app.tavily.com/",
+    "registerLabel": "Create Tavily API key",
+    "links": [
+      [
+        "Credits and pricing",
+        "https://docs.tavily.com/documentation/api-credits"
+      ],
+      [
+        "API introduction",
+        "https://docs.tavily.com/documentation/api-reference/introduction"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "monthly_quota",
+    "quota": "1,000 API credits / month; Search 1 basic or 2 advanced credits",
+    "renewal": "Credits reset monthly; requests stop after free credits are exhausted",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://docs.tavily.com/documentation/api-credits",
+      "https://docs.tavily.com/documentation/api-reference/introduction"
+    ],
+    "evidence": "Official docs list 1,000 monthly free credits, no card, and endpoint-specific credit costs.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Use basic Search for low-cost tests; Extract, Crawl and Research consume credits by successful pages or request depth.",
+    "providerId": "tavily",
+    "productId": "tavily-web",
+    "offerVariant": "free-credits",
+    "capabilities": [
+      "search",
+      "extract",
+      "crawl",
+      "map"
+    ],
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "monthly_credits",
+      "amount": 1000,
+      "unit": "credits",
+      "period": "month"
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "creditsPerMonth": 1000,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": [
+        {
+          "capability": "search",
+          "unit": "credit",
+          "price": "$0.008"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "用 Tavily Search 获取实时网页结果",
+      "prerequisites": [
+        "注册 Tavily",
+        "创建 TAVILY_API_KEY"
+      ],
+      "steps": [
+        "在 Tavily 控制台创建 API Key",
+        "设置 TAVILY_API_KEY 环境变量",
+        "使用 basic Search 发送第一条请求"
+      ],
+      "endpoint": "https://api.tavily.com/search",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${TAVILY_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.tavily.com/search --header 'Content-Type: application/json' --header 'Authorization: Bearer ${TAVILY_API_KEY}' --data '{\"query\":\"latest AI news\",\"search_depth\":\"basic\",\"max_results\":5}'"
+      },
+      "quotaGuard": [
+        "basic Search 每次 1 credit",
+        "额度耗尽后请求会停止，升级或 PAYG 前先确认账单"
+      ],
+      "commonIssues": [
+        {
+          "problem": "免费额度不足",
+          "solution": "降低 search_depth 并等待下月额度重置"
+        }
+      ],
+      "docsUrl": "https://docs.tavily.com/documentation/api-reference/introduction"
+    }
+  },
+  {
+    "id": "exa-web-free-credits",
+    "order": 23,
+    "date": "2026-09-07",
+    "name": "Exa Search + Agent APIs",
+    "providerMark": "EX",
+    "provider": "Exa",
+    "providerMeta": "AI search and research APIs · Global",
+    "model": "Search / Contents / Agent",
+    "modelMeta": "Web infrastructure",
+    "type": [
+      "web",
+      "search",
+      "extract",
+      "agent",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE CREDITS",
+    "badges": [
+      "$10 / MONTH",
+      "10 SEARCH QPS"
+    ],
+    "freeSummary": "$10 credits / month · $20 signup credits",
+    "validitySummary": "Monthly credits; PAYG after upgrade",
+    "accessSummary": "Global · no payment method",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "Exa · Search and Agent free credits",
+    "why": "Exa provides monthly dollar credits with access to Search, Contents and Agent endpoints and publishes separate QPS and unit prices.",
+    "mechanism": "$20 signup credits plus $10 credits each month; Search $7/1,000 requests and Contents $1/1,000 pages",
+    "validity": "Monthly credits; usage stops or requires PAYG when credits are exhausted",
+    "access": "Global; no payment method required for Starter",
+    "command": "Create an Exa API key, set EXA_API_KEY, and send a Search request.",
+    "register": "https://dashboard.exa.ai/",
+    "registerLabel": "Create Exa API key",
+    "links": [
+      [
+        "Official pricing",
+        "https://exa.ai/pricing"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "monthly_quota",
+    "quota": "$20 signup credits + $10 credits / month; Search $7 / 1,000 requests",
+    "renewal": "$10 credits renew monthly; PAYG requires a payment method",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://exa.ai/pricing"
+    ],
+    "evidence": "Official pricing lists $20 signup credits, $10 monthly credits, no payment method, 10 QPS and endpoint prices.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Monthly credits are dollar-denominated; compare the endpoint unit before comparing raw request counts.",
+    "providerId": "exa",
+    "productId": "exa-web",
+    "offerVariant": "starter-free-credits",
+    "capabilities": [
+      "search",
+      "extract",
+      "agent"
+    ],
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "monthly_credits",
+      "amount": 10,
+      "unit": "USD credits",
+      "period": "month"
+    },
+    "limits": {
+      "requestsPerSecond": 10,
+      "concurrency": 50
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": [
+        {
+          "capability": "search",
+          "unit": "1000 requests",
+          "price": "$7"
+        },
+        {
+          "capability": "extract",
+          "unit": "1000 pages",
+          "price": "$1"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "使用 Exa Search 获取面向 Agent 的网页结果",
+      "prerequisites": [
+        "Exa 账号",
+        "创建 EXA_API_KEY"
+      ],
+      "steps": [
+        "打开 Exa Dashboard 创建 API Key",
+        "设置 EXA_API_KEY 环境变量",
+        "调用官方 Search endpoint 并监控美元 credits"
+      ],
+      "endpoint": "https://api.exa.ai/search",
+      "method": "POST",
+      "authentication": "x-api-key: ${EXA_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.exa.ai/search --header 'x-api-key: ${EXA_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"type\":\"auto\",\"numResults\":5}'"
+      },
+      "quotaGuard": [
+        "按美元 credits 而不是请求次数扣减",
+        "10 QPS 是 Starter 的 Search 限制"
+      ],
+      "commonIssues": [
+        {
+          "problem": "credits 下降过快",
+          "solution": "减少结果数并确认没有启用更高成本的 Agent/Deep Search"
+        }
+      ],
+      "docsUrl": "https://exa.ai/pricing"
+    }
+  },
+  {
+    "id": "you-web-free-tier",
+    "order": 24,
+    "date": "2026-09-07",
+    "name": "You.com Web APIs",
+    "providerMark": "YO",
+    "provider": "You.com",
+    "providerMeta": "Web Search and Contents APIs · Global",
+    "model": "Search + Contents",
+    "modelMeta": "Web infrastructure",
+    "type": [
+      "web",
+      "search",
+      "fetch",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE SEARCH",
+    "badges": [
+      "100 QUERIES / DAY",
+      "$100 CREDITS"
+    ],
+    "freeSummary": "100 Search queries / day + $100 credits",
+    "validitySummary": "Daily free tier; PAYG API prices",
+    "accessSummary": "Global · API key or keyless tier",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "You.com · Search and Contents free tier",
+    "why": "You.com combines a keyless daily Search tier with a separate dollar credit allowance and low-cost Contents extraction.",
+    "mechanism": "100 Web Search queries/day, $100 new-account credits, Search $5/1,000 calls and Contents $1/1,000 pages",
+    "validity": "Daily Search limit; credits and pricing follow account terms",
+    "access": "Global; free Search can run without credentials, full APIs use a key",
+    "command": "Use the keyless Search tier for evaluation or create a YOU_API_KEY for the full API set.",
+    "register": "https://you.com/",
+    "registerLabel": "Open You.com API docs",
+    "links": [
+      [
+        "Official pricing",
+        "https://about.you.com/pricing"
+      ],
+      [
+        "Quickstart",
+        "https://you.com/docs/quickstart"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "daily_quota",
+    "quota": "100 queries / day; $100 new-account credits; Search $5 / 1,000 calls",
+    "renewal": "Daily free Search limit resets daily; credit terms are account-controlled",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://about.you.com/pricing",
+      "https://you.com/docs/quickstart"
+    ],
+    "evidence": "Official pricing lists 100 daily Search queries, $100 free credits, $5/1,000 Search calls and $1/1,000 Contents pages.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Keyless free Search and keyed full APIs are separate access paths.",
+    "providerId": "you-com",
+    "productId": "you-web",
+    "offerVariant": "search-contents-free-tier",
+    "capabilities": [
+      "search",
+      "fetch"
+    ],
+    "pricingModel": "daily_quota",
+    "freePolicy": {
+      "type": "daily_quota",
+      "amount": 100,
+      "unit": "queries",
+      "period": "day"
+    },
+    "limits": {
+      "requestsPerDay": 100,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": [
+        {
+          "capability": "search",
+          "unit": "1000 calls",
+          "price": "$5"
+        },
+        {
+          "capability": "fetch",
+          "unit": "1000 pages",
+          "price": "$1"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "使用 You.com Search 或 Contents API",
+      "prerequisites": [
+        "Search 评估可使用免费层",
+        "完整 API 需要 YOU_API_KEY"
+      ],
+      "steps": [
+        "打开官方 Quickstart 并选择 keyless Search 或 API key 路径",
+        "设置 YOU_API_KEY（如果使用完整 API）",
+        "发送 Search 请求并记录每日用量"
+      ],
+      "endpoint": "https://api.you.com/v1/search",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${YOU_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.you.com/v1/search --header 'Authorization: Bearer ${YOU_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+      },
+      "quotaGuard": [
+        "keyless Search 控制在 100 queries/day",
+        "Contents 按 pages 计费，不要把页面数当成请求数"
+      ],
+      "commonIssues": [
+        {
+          "problem": "keyless 工具能力不足",
+          "solution": "创建 API key 后使用完整工具集"
+        }
+      ],
+      "docsUrl": "https://you.com/docs/quickstart"
+    }
+  },
+  {
+    "id": "firecrawl-web-free-credits",
+    "order": 25,
+    "date": "2026-09-07",
+    "name": "Firecrawl Web APIs",
+    "providerMark": "FC",
+    "provider": "Firecrawl",
+    "providerMeta": "Search, scrape and crawl APIs · Global",
+    "model": "Search / Scrape / Crawl / Agent",
+    "modelMeta": "Web infrastructure",
+    "type": [
+      "web",
+      "search",
+      "fetch",
+      "extract",
+      "crawl",
+      "map",
+      "browser",
+      "agent",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE CREDITS",
+    "badges": [
+      "1,000 CREDITS / MONTH",
+      "10 RPM"
+    ],
+    "freeSummary": "1,000 credits / month · 500 searches or 1,000 pages",
+    "validitySummary": "Monthly free credits",
+    "accessSummary": "Global · no card",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "Firecrawl · Search and scrape free plan",
+    "why": "Firecrawl uses one credit balance across Search, Scrape, Crawl, Map and browser interaction with explicit free limits.",
+    "mechanism": "1,000 credits/month; Search costs 2 credits per 10 results, scrape/crawl/map cost 1 credit per page",
+    "validity": "Monthly credits reset under the free plan; pay-as-you-go is a paid-plan feature",
+    "access": "Global; no card required",
+    "command": "Create a Firecrawl API key and call the Search or Scrape endpoint within the monthly credit limit.",
+    "register": "https://www.firecrawl.dev/",
+    "registerLabel": "Start Firecrawl",
+    "links": [
+      [
+        "Official pricing",
+        "https://www.firecrawl.dev/pricing"
+      ],
+      [
+        "API docs",
+        "https://docs.firecrawl.dev"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "monthly_quota",
+    "quota": "1,000 credits / month; 500 searches or 1,000 pages scraped; 10 requests/minute",
+    "renewal": "Free credits reset monthly; free plan does not auto-charge overage",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.firecrawl.dev/pricing",
+      "https://docs.firecrawl.dev"
+    ],
+    "evidence": "Official pricing lists 1,000 credits/month, 500 searches or 1,000 pages, 2 concurrent requests and a 10/minute free rate limit.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Agent has a separate preview allowance of 5 daily runs; do not equate it with Search credits.",
+    "providerId": "firecrawl",
+    "productId": "firecrawl-web",
+    "offerVariant": "free-credits",
+    "capabilities": [
+      "search",
+      "fetch",
+      "extract",
+      "crawl",
+      "map",
+      "browser",
+      "agent"
+    ],
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "monthly_credits",
+      "amount": 1000,
+      "unit": "credits",
+      "period": "month"
+    },
+    "limits": {
+      "requestsPerMinute": 10,
+      "concurrency": 2,
+      "agentRunsPerDay": 5
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "usageGuide": {
+      "summary": "用 Firecrawl Search 或 Scrape 获取网页内容",
+      "prerequisites": [
+        "注册 Firecrawl",
+        "创建 FIRECRAWL_API_KEY"
+      ],
+      "steps": [
+        "打开官方 API 文档创建 API Key",
+        "设置 FIRECRAWL_API_KEY 环境变量",
+        "先用 Search 或 Scrape 验证返回内容并监控 credits"
+      ],
+      "endpoint": "https://api.firecrawl.dev/v2/search",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${FIRECRAWL_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.firecrawl.dev/v2/search --header 'Authorization: Bearer ${FIRECRAWL_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"limit\":5}'"
+      },
+      "quotaGuard": [
+        "Search 每 10 个结果消耗 2 credits",
+        "免费层 10 requests/minute 和 2 concurrent requests"
+      ],
+      "commonIssues": [
+        {
+          "problem": "credits 消耗过快",
+          "solution": "减少结果数并分别核对 Search、Scrape、Crawl 的计费单位"
+        }
+      ],
+      "docsUrl": "https://docs.firecrawl.dev"
+    }
+  },
+  {
+    "id": "brave-search-free-credits",
+    "order": 26,
+    "date": "2026-09-07",
+    "name": "Brave Search API",
+    "providerMark": "BR",
+    "provider": "Brave Search",
+    "providerMeta": "Independent web search index · Global",
+    "model": "Web Search",
+    "modelMeta": "Search API",
+    "type": [
+      "web",
+      "search",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE MONTHLY CREDITS",
+    "badges": [
+      "$5 CREDITS / MONTH",
+      "50 QPS"
+    ],
+    "freeSummary": "$5 free credits / month",
+    "validitySummary": "Monthly credits; Search $5 / 1,000",
+    "accessSummary": "Global · API key",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "Brave Search API · free monthly credits",
+    "why": "Brave Search applies $5 of free credits every month to its Search API and publishes a 50 QPS capacity.",
+    "mechanism": "$5 free credits/month at $5 per 1,000 Search requests",
+    "validity": "Free credits are automatically applied monthly under account terms",
+    "access": "Global; API key and account required",
+    "command": "Create a Brave Search API key and send a Web Search request.",
+    "register": "https://brave.com/search/api/",
+    "registerLabel": "Open Brave Search API",
+    "links": [
+      [
+        "Official API page",
+        "https://brave.com/search/api/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "monthly_quota",
+    "quota": "$5 free credits / month; $5 / 1,000 requests; 50 QPS",
+    "renewal": "Free credits apply monthly; usage beyond credits is paid",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://brave.com/search/api/"
+    ],
+    "evidence": "Official API page lists $5 free monthly credits, $5/1,000 requests and 50 queries per second.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "The free amount is dollar-denominated; one month of free credits is roughly 1,000 standard requests at the listed price.",
+    "providerId": "brave-search",
+    "productId": "brave-search-api",
+    "offerVariant": "monthly-free-credits",
+    "capabilities": [
+      "search"
+    ],
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "monthly_credits",
+      "amount": 5,
+      "unit": "USD credits",
+      "period": "month"
+    },
+    "limits": {
+      "requestsPerSecond": 50,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": [
+        {
+          "capability": "search",
+          "unit": "1000 requests",
+          "price": "$5"
+        }
+      ]
+    },
+    "usageGuide": {
+      "summary": "调用 Brave Search API 获取实时搜索结果",
+      "prerequisites": [
+        "Brave Search API 账号",
+        "创建 BRAVE_API_KEY"
+      ],
+      "steps": [
+        "打开官方 API 页面并创建 API Key",
+        "设置 BRAVE_API_KEY 环境变量",
+        "发送 Web Search 请求并监控月度 credits"
+      ],
+      "endpoint": "https://api.search.brave.com/res/v1/web/search",
+      "method": "GET",
+      "authentication": "X-Subscription-Token: ${BRAVE_API_KEY}",
+      "examples": {
+        "curl": "curl --request GET 'https://api.search.brave.com/res/v1/web/search?q=latest%20AI%20news' --header 'Accept: application/json' --header 'X-Subscription-Token: ${BRAVE_API_KEY}'"
+      },
+      "quotaGuard": [
+        "按 50 QPS 以内调用",
+        "超过每月 $5 credits 后确认付费设置"
+      ],
+      "commonIssues": [
+        {
+          "problem": "返回 401",
+          "solution": "确认 X-Subscription-Token 使用的是 Brave API key"
+        }
+      ],
+      "docsUrl": "https://brave.com/search/api/"
+    }
+  },
+  {
+    "id": "browserbase-free-tier",
+    "order": 27,
+    "date": "2026-09-07",
+    "name": "Browserbase Web APIs",
+    "providerMark": "BB",
+    "provider": "Browserbase",
+    "providerMeta": "Browser, Search and Fetch infrastructure · Global",
+    "model": "Browser + Search + Fetch + Agent",
+    "modelMeta": "Browser infrastructure",
+    "type": [
+      "web",
+      "browser",
+      "search",
+      "fetch",
+      "agent",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "kicker": "FREE BROWSER INFRA",
+    "badges": [
+      "1 BROWSER HOUR",
+      "1,000 SEARCH + FETCH"
+    ],
+    "freeSummary": "1 browser hour + 1,000 Search + 1,000 Fetch calls",
+    "validitySummary": "Free plan; 15-minute sessions",
+    "accessSummary": "Global · 3 concurrent browsers",
+    "checkedSummary": "07 Sep 2026 / official pricing",
+    "title": "Browserbase · free browser and web APIs",
+    "why": "Browserbase packages browser runtime with free Search, Fetch and Agent allowances in one free plan.",
+    "mechanism": "1 browser hour, 3 Agent runs, 1,000 Search calls and 1,000 Fetch calls; 3 concurrent browsers",
+    "validity": "Free plan allowances subject to current pricing rules; sessions capped at 15 minutes",
+    "access": "Global; free plan with 3 concurrent browsers",
+    "command": "Create a Browserbase project, set BROWSERBASE_API_KEY, and start a short browser session.",
+    "register": "https://www.browserbase.com/",
+    "registerLabel": "Start Browserbase",
+    "links": [
+      [
+        "Official pricing",
+        "https://www.browserbase.com/pricing"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global API access",
+    "freeMechanism": "monthly_quota",
+    "quota": "1 browser hour; 3 Agent runs; 1,000 Search calls; 1,000 Fetch calls; 3 concurrent browsers",
+    "renewal": "Free plan limits are account-controlled; paid usage requires plan rules",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.browserbase.com/pricing"
+    ],
+    "evidence": "Official pricing lists free browser hours, Agent runs, Search calls, Fetch calls, concurrency and session duration.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Browser hours, Search calls and Fetch calls are separate units and should not be compared as equivalent requests.",
+    "providerId": "browserbase",
+    "productId": "browserbase-web",
+    "offerVariant": "free-plan",
+    "capabilities": [
+      "search",
+      "fetch",
+      "browser",
+      "agent"
+    ],
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "monthly_quota",
+      "amount": 1,
+      "unit": "browser hours",
+      "period": "month"
+    },
+    "limits": {
+      "browserHours": 1,
+      "searchCalls": 1000,
+      "fetchCalls": 1000,
+      "agentRuns": 3,
+      "concurrency": 3,
+      "sessionMinutes": 15
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "usageGuide": {
+      "summary": "用 Browserbase 免费层启动浏览器并调用 Search/Fetch",
+      "prerequisites": [
+        "Browserbase 账号",
+        "创建项目和 API Key"
+      ],
+      "steps": [
+        "打开官方价格页创建项目",
+        "设置 BROWSERBASE_API_KEY 和项目 ID",
+        "启动不超过 15 分钟的浏览器会话并主动关闭"
+      ],
+      "endpoint": "https://api.browserbase.com/v1/sessions",
+      "method": "POST",
+      "authentication": "x-bb-api-key: ${BROWSERBASE_API_KEY}",
+      "examples": {
+        "curl": "curl --request POST https://api.browserbase.com/v1/sessions --header 'x-bb-api-key: ${BROWSERBASE_API_KEY}' --header 'Content-Type: application/json' --data '{\"projectId\":\"${BROWSERBASE_PROJECT_ID}\"}'"
+      },
+      "quotaGuard": [
+        "免费层只有 1 browser hour 和 15-minute session cap",
+        "Search、Fetch 和 Agent 各自消耗不同单位"
+      ],
+      "commonIssues": [
+        {
+          "problem": "会话超过时长",
+          "solution": "拆分任务并在完成后调用关闭会话接口"
+        }
+      ],
+      "docsUrl": "https://www.browserbase.com/pricing"
+    }
   }
 ]
   </script>
 
   <script>
     let offerIndex = {};
+    let signalIndex = {};
     let rows = [];
     const embeddedOfferData = JSON.parse(document.getElementById('offer-data').textContent || '[]');
     const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+    const safeExternalHref = value => /^https:\/\//i.test(String(value || '')) ? String(value) : '#';
     const summaryMarkup = value => {
       const parts = String(value || '').split(' / ');
       return `${escapeHtml(parts[0])}${parts.length > 1 ? `<small>${escapeHtml(parts.slice(1).join(' / '))}</small>` : ''}`;
+    };
+    const localTodayIso = () => {
+      const now = new Date();
+      return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    };
+    const checkedMarkup = item => {
+      const source = String(item.checkedSummary || '').split(' / ').slice(1).join(' / ');
+      const label = item.date ? (item.date === localTodayIso() ? 'Today' : formatDate(item.date)) : String(item.checkedSummary || '').split(' / ')[0];
+      return `${escapeHtml(label)}${source ? `<small>${escapeHtml(source)}</small>` : ''}`;
     };
     const pad = value => String(value).padStart(2, '0');
     const rowBadgeClass = badge => {
@@ -1630,7 +3275,12 @@
       if (text.includes('FIRST') || text.includes('OFF')) return 'promo';
       return 'open';
     };
-    const rowArticleMarkup = item => `<article class=${JSON.stringify('offer')} data-type="${escapeHtml((item.type || []).join(' '))}" data-name="${escapeHtml(item.name)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="model">${escapeHtml(item.model)}<small>${escapeHtml(item.modelMeta)}</small></div><div class="cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><small>${escapeHtml(item.freeSummary)}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${summaryMarkup(item.checkedSummary)}</div><button class="row-arrow" aria-label="Open details">→</button></article>`;
+    const rowArticleMarkup = item => {
+      const tokens = [...new Set([...(item.type || []), ...(item.capabilities || []), item.productType].filter(Boolean))];
+      const searchText = JSON.stringify([item.provider, item.name, item.product, item.model, item.endpoint, ...(item.capabilities || []), item.usageGuide?.summary, item.usageGuide?.steps?.join(' ')].filter(Boolean));
+      const capabilityLabel = (item.capabilities || []).join(' · ');
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(item.provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="model">${escapeHtml(item.model)}<small>${escapeHtml(item.modelMeta)}</small></div><div class="cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><small>${escapeHtml(item.freeSummary)}</small><small>${escapeHtml(capabilityLabel)}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${checkedMarkup(item)}</div><button class="row-arrow" aria-label="Open details">→</button></article>`;
+    };
     const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
       const node = document.getElementById('ld-dynamic');
@@ -1654,21 +3304,28 @@
       container.innerHTML = items.map(rowArticleMarkup).join('');
       rows = [...container.querySelectorAll('.offer')];
 
-      const ideItems = items.filter(item => item.type.includes('ide'));
-      const downloadItems = items.filter(item => item.type.includes('download'));
-      const codingItems = items.filter(item => item.type.includes('coding'));
-      const freeForeverItems = items.filter(item => item.type.includes('free') && !item.type.includes('ide'));
+      const itemTokens = item => new Set([...(item.type || []), ...(item.capabilities || [])]);
+      const ideItems = items.filter(item => itemTokens(item).has('ide') || itemTokens(item).has('free_ide'));
+      const downloadItems = items.filter(item => itemTokens(item).has('download') || itemTokens(item).has('open_weights'));
+      const codingItems = items.filter(item => itemTokens(item).has('coding'));
+      const freeForeverItems = items.filter(item => itemTokens(item).has('free') && !itemTokens(item).has('ide') && !itemTokens(item).has('free_ide'));
+      const capabilityItems = capability => items.filter(item => itemTokens(item).has(capability));
+      const setCount = (filter, count, selector) => document.querySelectorAll(`[data-filter="${filter}"] ${selector}`).forEach(node => { node.textContent = pad(count); });
 
       document.querySelector('.hero-side .big').textContent = items.length;
-      document.querySelector('.side-nav [data-filter="all"] b').textContent = items.length;
-      document.querySelector('.side-nav [data-filter="ide"] b').textContent = pad(ideItems.length);
-      document.querySelector('.side-nav [data-filter="download"] b').textContent = pad(downloadItems.length);
-      document.querySelector('.side-nav [data-filter="coding"] b').textContent = pad(codingItems.length);
-      document.querySelector('.tabs [data-filter="all"] em').textContent = pad(items.length);
-      document.querySelector('.tabs [data-filter="free"] em').textContent = pad(freeForeverItems.length);
-      document.querySelector('.tabs [data-filter="ide"] em').textContent = pad(ideItems.length);
-      document.querySelector('.tabs [data-filter="download"] em').textContent = pad(downloadItems.length);
-      document.querySelector('.tabs [data-filter="coding"] em').textContent = pad(codingItems.length);
+      setCount('all', items.length, 'b');
+      setCount('all', items.length, 'em');
+      setCount('ide', ideItems.length, 'b');
+      setCount('ide', ideItems.length, 'em');
+      setCount('download', downloadItems.length, 'b');
+      setCount('download', downloadItems.length, 'em');
+      setCount('coding', codingItems.length, 'b');
+      setCount('coding', codingItems.length, 'em');
+      setCount('free', freeForeverItems.length, 'em');
+      ['search', 'fetch', 'extract', 'crawl', 'map', 'browser', 'agent'].forEach(capability => {
+        setCount(capability, capabilityItems(capability).length, 'b');
+        setCount(capability, capabilityItems(capability).length, 'em');
+      });
       document.getElementById('summaryFreeForever').textContent = pad(freeForeverItems.length);
       document.getElementById('summaryOpenWeights').textContent = pad(downloadItems.length);
 
@@ -1704,6 +3361,44 @@
       }
       return embeddedOfferData;
     };
+    const loadCommunitySignals = async () => {
+      if (location.protocol === 'file:') return [];
+      try {
+        const response = await fetch('../data/community-signals.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`community-signals.json returned ${response.status}`);
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.warn(`community-signals.json unavailable (${error.message}); showing no public rating.`);
+        return [];
+      }
+    };
+    const indexCommunitySignals = signals => signals.reduce((index, signal) => {
+      if (!signal || !signal.offerId) return index;
+      (index[signal.offerId] ||= []).push(signal);
+      return index;
+    }, {});
+    const renderCommunitySignals = signals => {
+      if (!signals.length) return '<div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div>';
+      return signals.map(signal => {
+        const platform = escapeHtml(signal.sourcePlatform || 'External platform');
+        const label = escapeHtml(signal.rawLabel || `${signal.sourceType || 'signal'} · original value`);
+        const excerpt = signal.excerpt ? `<p class="signal-excerpt">${escapeHtml(signal.excerpt)}</p>` : '';
+        const captured = escapeHtml(signal.capturedAt || 'capture time unavailable');
+        const sourceUrl = safeExternalHref(signal.sourceUrl);
+        const source = sourceUrl === '#' ? 'Source link unavailable' : `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer noopener">Open source ↗</a>`;
+        return `<article class="signal-item"><div class="signal-item-top"><strong class="signal-platform">${platform}</strong><span class="signal-label">${label}</span></div>${excerpt}<div class="signal-foot"><span>${captured}</span>${source}</div></article>`;
+      }).join('');
+    };
+    const guideListText = value => Array.isArray(value) && value.length ? value.join(' · ') : '—';
+    const guideExampleText = guide => {
+      const examples = guide?.examples || {};
+      const first = Object.entries(examples)[0];
+      return first ? `${first[0]}: ${first[1]}` : 'No executable example provided.';
+    };
+    const guideIssuesText = issues => Array.isArray(issues) && issues.length
+      ? issues.map(issue => `${issue.problem}: ${issue.solution}`).join(' · ')
+      : '—';
     const drawer = document.getElementById('drawer');
     const backdrop = document.getElementById('backdrop');
     const openDrawer = (key) => {
@@ -1722,7 +3417,17 @@
       document.getElementById('drawerMechanism').textContent = item.mechanism;
       document.getElementById('drawerValidity').textContent = item.validity;
       document.getElementById('drawerAccess').textContent = item.access;
+      document.getElementById('drawerLastChecked').textContent = item.date ? formatDate(item.date) : '—';
       document.getElementById('drawerCommand').textContent = item.command;
+      const guide = item.usageGuide || {};
+      document.getElementById('drawerUsageGuide').textContent = guide.summary || 'Usage guide pending review.';
+      document.getElementById('drawerPrerequisites').textContent = guideListText(guide.prerequisites);
+      document.getElementById('drawerSteps').textContent = guideListText(guide.steps);
+      document.getElementById('drawerEndpoint').textContent = guide.endpoint || guide.docsUrl || 'Install/action path';
+      document.getElementById('drawerCapabilities').textContent = guideListText(item.capabilities);
+      document.getElementById('drawerExample').textContent = guideExampleText(guide);
+      document.getElementById('drawerQuotaGuard').textContent = guideListText(guide.quotaGuard);
+      document.getElementById('drawerCommonIssues').textContent = guideIssuesText(guide.commonIssues);
       const register = document.getElementById('drawerRegister');
       register.href = item.register;
       register.textContent = `${item.registerLabel || 'Register / open official page'} ↗`;
@@ -1733,6 +3438,7 @@
         document.getElementById('timeWindowCopy').textContent = `${item.timeWindow} Your browser timezone: ${local}. Convert the window before scheduling heavy work.`;
       }
       document.getElementById('drawerLinks').innerHTML = (item.links || []).map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(label)} ↗</a>`).join('');
+      document.getElementById('drawerSignals').innerHTML = renderCommunitySignals(signalIndex[item.id] || []);
       drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
     };
     const closeDrawer = () => { drawer.classList.remove('open'); backdrop.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
@@ -1743,23 +3449,30 @@
     document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
     backdrop.addEventListener('click', closeDrawer);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
-    document.getElementById('copyCommand').addEventListener('click', async e => {
-      const text = document.getElementById('drawerCommand').textContent;
-      try { await navigator.clipboard.writeText(text); e.currentTarget.textContent = 'Copied'; e.currentTarget.classList.add('copied'); setTimeout(() => { e.currentTarget.textContent = 'Copy'; e.currentTarget.classList.remove('copied'); }, 1300); } catch { e.currentTarget.textContent = 'Select manually'; }
-    });
+    const bindCopyButton = (buttonId, sourceId) => {
+      document.getElementById(buttonId).addEventListener('click', async e => {
+        const button = e.currentTarget;
+        const text = document.getElementById(sourceId).textContent;
+        try { await navigator.clipboard.writeText(text); button.textContent = 'Copied'; button.classList.add('copied'); setTimeout(() => { button.textContent = 'Copy'; button.classList.remove('copied'); }, 1300); } catch { button.textContent = 'Select manually'; }
+      });
+    };
+    bindCopyButton('copyCommand', 'drawerCommand');
+    bindCopyButton('copyExample', 'drawerExample');
 
     let activeFilter = 'all';
+    let filterBeforeSearch = null;
     const applyFilters = () => {
       const query = document.getElementById('search').value.trim().toLowerCase();
       let visible = 0;
       rows.forEach(row => {
         const types = row.dataset.type.split(' ');
         const matchesFilter = activeFilter === 'all' || (activeFilter === 'free' ? types.includes('free') && !types.includes('ide') : types.includes(activeFilter));
-        const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
+        const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.dataset.search.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
         const show = matchesFilter && matchesQuery;
         row.classList.toggle('hidden', !show); if (show) visible++;
       });
       document.getElementById('resultCount').textContent = `Showing ${visible} offer${visible === 1 ? '' : 's'}`;
+      document.getElementById('emptyState').hidden = visible > 0;
     };
     const setFilter = (filter) => {
       activeFilter = filter;
@@ -1767,25 +3480,42 @@
       if (filter === 'compare') document.getElementById('compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
       else applyFilters();
     };
-    document.querySelectorAll('[data-filter]').forEach(el => el.addEventListener('click', () => setFilter(el.dataset.filter)));
+    document.querySelectorAll('[data-filter]').forEach(el => el.addEventListener('click', () => {
+      filterBeforeSearch = null;
+      setFilter(el.dataset.filter);
+    }));
     document.getElementById('search').addEventListener('input', () => {
-      if (document.getElementById('search').value.trim()) {
-        activeFilter = 'all';
-        document.querySelectorAll('[data-filter]').forEach(el => el.classList.toggle('active', el.dataset.filter === 'all'));
+      const hasQuery = Boolean(document.getElementById('search').value.trim());
+      if (hasQuery) {
+        if (filterBeforeSearch === null) filterBeforeSearch = activeFilter;
+        setFilter('all');
+      } else {
+        if (filterBeforeSearch !== null) {
+          const restore = filterBeforeSearch;
+          filterBeforeSearch = null;
+          if (restore !== 'compare' && restore !== activeFilter) { setFilter(restore); return; }
+        }
+        applyFilters();
       }
-      applyFilters();
+    });
+    document.getElementById('resetFilters').addEventListener('click', () => {
+      document.getElementById('search').value = '';
+      filterBeforeSearch = null;
+      setFilter('all');
     });
     const initialQuery = new URLSearchParams(location.search).get('q');
     if (initialQuery) document.getElementById('search').value = initialQuery;
     document.getElementById('sort').addEventListener('change', e => {
-      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? a.dataset.name.localeCompare(b.dataset.name) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
+      const byName = row => `${row.dataset.provider || row.dataset.name}\n${row.dataset.name}`;
+      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
       const wrap = document.getElementById('offerRows'); sorted.forEach(row => wrap.appendChild(row));
     });
     const clock = document.getElementById('clock');
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
     clock.innerHTML = `Local time <span>${tz} · <b>${new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date())}</b></span>`;
     let offerDataSource = 'embedded';
-    loadOffers().then(items => {
+    loadOffers().then(async items => {
+      signalIndex = indexCommunitySignals(await loadCommunitySignals());
       if (Array.isArray(items) && items.length) {
         renderOffers(items);
         document.body.dataset.dataSource = offerDataSource;

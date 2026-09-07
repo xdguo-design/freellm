@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free AI Index · Dark Console</title>
+  <style>
+    :root { --bg:#0b0e10; --panel:#11171a; --line:#263238; --ink:#e8f0ef; --muted:#849399; --lime:#c8ff42; --cyan:#63e6ff; --amber:#ffca5c; --mono:"Cascadia Code",Consolas,monospace; --sans:"Segoe UI",sans-serif; }
+    * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--ink); font:14px var(--sans); }
+    .shell { min-height:100vh; display:grid; grid-template-columns:250px 1fr; }
+    aside { padding:22px 18px; border-right:1px solid var(--line); background:#0d1214; }
+    .logo { display:flex; gap:12px; align-items:center; padding-bottom:32px; border-bottom:1px solid var(--line); }
+    .mark { width:34px; height:34px; display:grid; place-items:center; color:#0b0e10; background:var(--lime); font-weight:900; }
+    .logo strong { display:block; font-size:16px; } .logo small, .label, .meta { color:var(--muted); font:10px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
+    nav { margin-top:28px; display:grid; gap:5px; } nav a { padding:11px 12px; color:var(--muted); text-decoration:none; } nav a.active, nav a:hover { color:var(--bg); background:var(--lime); }
+    .aside-note { margin-top:45vh; padding:13px; border:1px solid var(--line); color:var(--muted); line-height:1.5; } .aside-note b { color:var(--cyan); display:block; margin-bottom:6px; font:11px var(--mono); }
+    main { min-width:0; padding:24px clamp(20px,4vw,64px); }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:15px; padding-bottom:18px; border-bottom:1px solid var(--line); } .top .meta { color:var(--cyan); }
+    .pulse { display:flex; gap:8px; align-items:center; color:var(--muted); font:11px var(--mono); } .dot { width:7px; height:7px; border-radius:50%; background:var(--lime); box-shadow:0 0 12px var(--lime); }
+    .hero { display:grid; grid-template-columns:1fr 330px; gap:35px; align-items:end; padding:70px 0 44px; } h1 { max-width:760px; margin:0; font-size:clamp(42px,7vw,92px); line-height:.92; letter-spacing:-.08em; } .hero p { max-width:600px; margin:22px 0 0; color:var(--muted); font-size:17px; line-height:1.5; }
+    .terminal { padding:18px; border:1px solid var(--line); background:#0a0d0e; font:12px/1.7 var(--mono); } .terminal .green { color:var(--lime); } .terminal .blue { color:var(--cyan); } .terminal .dim { color:var(--muted); }
+    .bar { display:flex; gap:12px; margin-bottom:14px; } input { flex:1; min-width:0; padding:14px; border:1px solid var(--line); outline:0; background:var(--panel); color:var(--ink); font:13px var(--mono); } input:focus { border-color:var(--lime); } select { padding:0 12px; border:1px solid var(--line); background:var(--panel); color:var(--ink); }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:20px 0 34px; } .stat { padding:15px; border:1px solid var(--line); background:var(--panel); } .stat b { display:block; margin-top:14px; color:var(--lime); font:28px var(--mono); } .stat span { color:var(--muted); font:10px var(--mono); text-transform:uppercase; }
+    .head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; } h2 { margin:0; font:18px var(--mono); } .head span { color:var(--muted); font:11px var(--mono); }
+    .table { border:1px solid var(--line); } .row { display:grid; grid-template-columns:1.25fr 1fr .8fr .7fr; gap:14px; align-items:center; padding:16px; border-top:1px solid var(--line); } .row:first-child { border-top:0; color:var(--muted); font:10px var(--mono); text-transform:uppercase; } .row strong { display:block; } .row small { color:var(--muted); } .tag { display:inline-block; padding:4px 7px; color:var(--bg); background:var(--lime); font:10px var(--mono); } .check { color:var(--cyan); font:12px var(--mono); }
+    @media (max-width:800px) { .shell { grid-template-columns:1fr; } aside { min-height:auto; border-right:0; border-bottom:1px solid var(--line); } nav { display:flex; overflow:auto; margin-top:18px; } .aside-note { display:none; } .hero { grid-template-columns:1fr; padding-top:42px; } .stats { grid-template-columns:repeat(2,1fr); } .row { min-width:700px; } .table { overflow:auto; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside><div class="logo"><div class="mark">FA</div><div><strong>Free AI Index</strong><small>research console</small></div></div><nav><a class="active" href="#">Overview <span>17</span></a><a href="#">Free models</a><a href="#">Coding tools</a><a href="#">Open weights</a><a href="#">Change log</a></nav><div class="aside-note"><b>SCAN POLICY</b>Official claims stay separate from peer discovery. Every candidate carries a source and check time.</div></aside>
+    <main><div class="top"><span class="meta">INDEX / PUBLIC / 2026.09.07</span><div class="pulse"><i class="dot"></i> sources operational</div></div><section class="hero"><div><h1>Free models,<br><em>without the fog.</em></h1><p>A live evidence desk for free tiers, trials, downloadable weights and coding plans. Search the offer, inspect the source, then decide.</p></div><div class="terminal"><div class="green">$ free-ai-index status</div><div class="dim">official sources ........ 41</div><div class="dim">peer documents ........ 12</div><div class="blue">review queue ........... 06</div></div></section><div class="bar"><input aria-label="Search offers" placeholder="search model, provider, quota..." /><select aria-label="Filter"><option>All types</option><option>Free forever</option><option>Trial</option></select></div><div class="stats"><div class="stat"><span>listed offers</span><b>17</b></div><div class="stat"><span>free / recurring</span><b>08</b></div><div class="stat"><span>downloadable</span><b>04</b></div><div class="stat"><span>needs review</span><b>06</b></div></div><div class="head"><h2>RECENT EVIDENCE</h2><span>sorted by last checked</span></div><div class="table"><div class="row"><span>offer</span><span>mechanism</span><span>region</span><span>state</span></div><div class="row"><div><strong>Qwen3-4B</strong><small>Alibaba Cloud · open weights</small></div><div><span class="tag">downloadable</span><br><small>Apache 2.0 · 4B</small></div><div>global</div><div class="check">verified</div></div><div class="row"><div><strong>GitHub Copilot Free</strong><small>GitHub · coding agent</small></div><div><span class="tag">monthly quota</span><br><small>2,000 completions</small></div><div>global</div><div class="check">verified</div></div><div class="row"><div><strong>FreeLLM peer note</strong><small>Devansh-365/freellm · peer discovery</small></div><div><span class="tag" style="background:var(--amber)">review</span><br><small>claim needs official source</small></div><div>unknown</div><div class="check" style="color:var(--amber)">pending</div></div></div></main>
+  </div>
+</body>
+</html>
