@@ -39,22 +39,94 @@ class StaticContractTests(unittest.TestCase):
 
     def test_page_has_required_data_hooks(self):
         for needle in (
-            'id="offer-data"', 'id="offerRows"', 'id="ld-dynamic"',
+            'id="offer-data"', 'id="catalog-offer-rows"', 'id="catalog-search"',
+            'id="catalog-sort"', 'id="catalog-result-count"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
-            'id="ideHighlightGrid"', 'id="downloadList"', 'id="lastChecked"',
+            'id="studentList"', 'id="catalog-download-list"', 'id="catalog-last-checked"',
             'assets/free-method-night-window.png', "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.html)
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
 
+    def test_catalog_cards_override_legacy_table_grid(self):
+        self.assertIn(
+            '.offer-grid .offer { grid-template-columns: minmax(0, 1fr);',
+            self.html,
+        )
+        self.assertIn('.offer-card-metric p > small { display: block;', self.html)
+
+    def test_offer_cards_load_company_icons_with_initial_fallback(self):
+        for needle in (
+            'provider-icon-img',
+            'iconHostFromUrl',
+            'PROVIDER_ICON_HOSTS',
+            "'qwen-download': 'www.aliyun.com'",
+            "'glm-download': 'bigmodel.cn'",
+            'PROVIDER_ICON_ASSETS',
+            "'qwen-download': 'https://github.com/QwenLM.png?size=128'",
+            "'glm-download': 'https://github.com/zai-org.png?size=128'",
+            'providerIconHost',
+            'hydrateProviderIcons',
+            'data-icon-host',
+            'www.google.com/s2/favicons',
+            'provider-mark-fallback',
+            'resource-logo img',
+            'hunyuan-mark img',
+        ):
+            self.assertIn(needle, self.html)
+
+    def test_offer_card_header_and_detail_buttons_share_one_layout(self):
+        self.assertIn('.offer-card-top { display: flex;', self.html)
+        self.assertIn('.row-arrow { width: 38px; height: 38px;', self.html)
+        self.assertIn('border-radius: 50%;', self.html)
+        self.assertIn('type="button" class="row-arrow"', self.html)
+
+    def test_page_has_locale_routing_hooks(self):
+        for needle in (
+            'SUPPORTED_LOCALES',
+            'resolveLocale',
+            'applyLocale',
+            'data-i18n',
+            'data-locale-toggle',
+            'free-ai-index-locale',
+            'URLSearchParams',
+            '?lang=',
+        ):
+            self.assertIn(needle, self.html)
+
+    def test_locale_switch_updates_url_and_document_language(self):
+        for needle in (
+            'document.documentElement.lang',
+            'history.replaceState',
+            'localStorage.setItem',
+            'navigator.languages',
+            'zh-CN',
+            'data-i18n-placeholder',
+        ):
+            self.assertIn(needle, self.html)
+
+    def test_catalog_compare_surfaces_cheapest_routes(self):
+        for needle in (
+            'id="catalog-compare"',
+            '最便宜的入口先看',
+            '北京区 · 新用户',
+            '¥0<small>免费额度</small>',
+            '有效期 90 天',
+            '¥9.9<small>首月 / 月</small>',
+            '后续续费 ¥40 / 月',
+            '权重免费',
+        ):
+            self.assertIn(needle, self.html)
+
     def test_page_uses_free_method_categories(self):
-        for name in ("free_quota", "credits", "ide", "promo", "web", "download_lowcost"):
+        for name in ("free_quota", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
         self.assertTrue(ASSET_PATH.is_file())
         self.assertGreater(ASSET_PATH.stat().st_size, 1000)
+        catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
-            self.assertNotIn(f'data-filter="{name}"', self.html)
+            self.assertNotIn(f'data-filter="{name}"', catalog_html)
 
     def test_page_has_adsense_site_verification_script(self):
         self.assertIn(
@@ -201,12 +273,14 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertEqual(self.visible_offers(page), 27)
-        self.assertEqual(page.locator(".hero-side .big").inner_text(), "27")
-        self.assertEqual(page.locator(".tabs [data-filter='free_quota'] em").inner_text(), "08")
-        self.assertEqual(page.locator("#summaryFreeQuota").inner_text(), "08")
-        self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
-        self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 4)
-        self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
+        self.assertEqual(page.locator("#heroCount").inner_text(), "27")
+        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "08")
+        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "08")
+        self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), "08")
+        self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
+        self.assertEqual(page.locator("#studentList .student-item").count(), 2)
+        self.assertEqual(page.locator(".offer .provider-icon-img").count(), 27)
+        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), 27)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_file_protocol_search_filter_and_drawer(self):
@@ -214,13 +288,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click("#ideHighlightButton")
+        page.click(".category-card[data-filter='ide']")
         self.assertEqual(self.visible_offers(page), 8)
 
-        page.fill("#search", "Qwen3")
+        page.fill("#catalog-search", "Qwen3")
         self.assertEqual(self.visible_offers(page), 1)
 
-        page.fill("#search", "")
+        page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         register = page.locator("#drawerRegister")
@@ -235,7 +309,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click("[data-filter='web']")
+        page.click(".filter-strip [data-filter='web']")
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search and Fetch", page.locator("#drawerTitle").inner_text())
@@ -254,6 +328,30 @@ class BrowserPageTests(unittest.TestCase):
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
         self.assertEqual(len(item_list), 27)
         self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
+        self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_locale_query_switches_shell_language(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=en#catalog-offers")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+        self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
+        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "Models")
+        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
+
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+        self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
+        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "模型库")
+        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
+        self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_locale_toggle_updates_query_and_preserves_hash(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+        page.click("[data-locale-toggle]")
+        self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
+        self.assertTrue(page.url.endswith("?lang=en#catalog-offers"), page.url)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_http_protocol_falls_back_to_embedded_when_json_missing(self):
@@ -286,7 +384,7 @@ class BrowserPageTests(unittest.TestCase):
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_selector(".offer-error")
             self.assertIn("Offer data unavailable", page.locator(".offer-error").inner_text())
-            self.assertEqual(page.locator("#resultCount").inner_text(), "Showing 0 offers")
+            self.assertEqual(page.locator("#catalog-result-count").inner_text(), "Showing 0 offers")
 
 
 if __name__ == "__main__":

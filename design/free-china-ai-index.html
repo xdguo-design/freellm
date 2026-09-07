@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Free AI Index — 免费 AI 模型、Qwen、豆包、IDE 和试用汇总</title>
-  <meta name="description" content="Find verified free AI models, Qwen and Doubao quotas, free coding IDEs, downloadable open weights and limited-time trials with official registration links, expiry dates and setup commands." />
-  <meta name="keywords" content="免费 AI, 免费大模型, Qwen, 通义千问, Doubao, 豆包, 免费 IDE, 代码助手, AI API, 开源模型, 免费额度, free AI, coding IDE, open weights" />
+  <meta name="description" content="Find verified free AI models, Qwen and Doubao quotas, free coding IDEs, student offers, downloadable open weights and limited-time trials with official registration links, expiry dates and setup commands." />
+  <meta name="keywords" content="免费 AI, 免费大模型, Qwen, 通义千问, Doubao, 豆包, 免费 IDE, 学生优惠, 学生计划, 代码助手, AI API, 开源模型, 免费额度, free AI, coding IDE, open weights" />
   <link rel="canonical" href="/" />
   <!-- Open Graph images should be added as og:image tags -->
   <meta property="og:type" content="website" />
@@ -443,6 +443,7 @@
     .category-label.category-promo { background: var(--yellow); color: #5a4b00; }
     .category-label.category-credits { background: #ffe4dc; color: var(--red-ink); }
     .category-label.category-ide { background: var(--green); color: var(--green-ink); }
+    .category-label.category-student { background: #e5f7eb; color: var(--green-ink); }
     .category-label.category-web { background: #edf0ff; color: #2442a1; }
     .category-label.category-download_lowcost { background: #eef0f2; color: #59626a; }
     .category-cell small { display: block; margin-top: 6px; color: var(--muted); font-size: 10px; line-height: 1.25; }
@@ -453,8 +454,23 @@
     .badge.promo { background: var(--red-soft); color: var(--red-ink); }
     .badge.open { background: var(--blue-soft); color: #2442a1; }
     .badge.pending { background: #eef0f2; color: #59626a; }
-    .row-arrow { width: 28px; height: 28px; border: 1px solid var(--ink); background: white; font-size: 19px; line-height: 1; }
-    .row-arrow:hover { color: white; background: var(--ink); }
+    .offer-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .row-arrow {
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid #b9cdf6;
+      border-radius: 50%;
+      color: var(--blue);
+      background: white;
+      font: 700 22px/1 var(--sans);
+      transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+    .row-arrow:hover { color: white; background: var(--blue); border-color: var(--blue); transform: translateX(2px); }
+    .row-arrow:focus-visible { outline: 3px solid rgba(23,68,232,.24); outline-offset: 2px; }
 
     .bottom-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 12px; margin-top: 28px; }
     .compare-panel, .download-panel { border: 1px solid var(--ink); background: white; padding: 18px; }
@@ -552,8 +568,9 @@
 
     /* Catalog A: one reading path, one visual rhythm. */
     body { font-family: var(--sans); font-synthesis: none; line-height: 1.55; }
+    html, body { max-width: 100%; overflow-x: hidden; }
     .legacy-app { display: none; }
-    .catalog-app { display: block; min-height: 100vh; }
+    .catalog-app { display: block; min-width: 0; min-height: 100vh; }
     .catalog-app main { min-width: 0; }
     .catalog-header { min-height: 78px; padding: 14px clamp(18px, 4vw, 58px); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.88); display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center; position: sticky; top: 0; z-index: 3; backdrop-filter: blur(12px); }
     .catalog-header .brand { display: grid; grid-template-columns: 45px auto; gap: 10px; align-items: center; text-decoration: none; }
@@ -625,6 +642,9 @@
     .student-item { min-height: 125px; padding: 15px; border: 1px solid var(--ink); background: rgba(255,255,255,.66); display: flex; flex-direction: column; justify-content: space-between; }
     .student-item strong { font: 800 20px/.98 var(--display); }
     .student-item span { color: #36513f; font: 11px var(--mono); }
+    .student-item small { margin-top: 8px; color: #36513f; font-size: 12px; line-height: 1.45; }
+    .student-item a { margin-top: 12px; color: var(--ink); font: 800 11px var(--mono); text-decoration: none; }
+    .student-item a:hover { color: var(--blue); }
     .offers-section { margin-top: 70px; }
     .offers-heading { align-items: end; }
     .offers-heading h2 { max-width: 610px; }
@@ -641,7 +661,12 @@
     .offer-grid .offer:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--line); background: white; }
     .offer-grid .offer.hidden { display: none; }
     .offer-grid .provider { align-items: start; }
-    .offer-grid .provider-mark { flex-basis: 38px; height: 38px; }
+    .offer-grid .provider-mark { flex-basis: 38px; height: 38px; position: relative; overflow: hidden; }
+    .offer-grid .provider-mark .provider-mark-fallback { transition: opacity .16s ease; }
+    .offer-grid .provider-mark .provider-icon-img { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 7px; object-fit: contain; opacity: 0; background: white; transition: opacity .16s ease; }
+    .offer-grid .provider-mark.has-image { background: white; }
+    .offer-grid .provider-mark.has-image .provider-mark-fallback { opacity: 0; }
+    .offer-grid .provider-mark.has-image .provider-icon-img { opacity: 1; }
     .offer-grid .provider-name { font-size: 15px; }
     .offer-grid .provider-name small { font-size: 10px; }
     .offer-card-model { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
@@ -651,9 +676,11 @@
     .offer-card-metric { min-width: 0; }
     .offer-card-metric label { display: block; color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
     .offer-card-metric p { margin: 6px 0 0; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+    .offer-card-metric p > small { display: block; margin-top: 3px; line-height: 1.35; }
     .offer-card-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    .offer-card-footer small { color: var(--muted); font: 10px var(--mono); }
-    .offer-grid .row-arrow { width: 30px; height: 30px; }
+    .offer-card-footer small { color: var(--muted); font: 10px/1.4 var(--mono); }
+    .offer-card-footer small small { display: block; margin-top: 2px; }
+    .offer-grid .row-arrow { width: 38px; height: 38px; }
     .student-mini { margin-top: 6px; color: var(--green-ink); font: 10px var(--mono); }
     .utility-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; margin-top: 70px; }
     .utility-grid .compare-panel, .utility-grid .download-panel { min-height: 310px; padding: 20px; border: 1px solid var(--ink); }
@@ -662,6 +689,7 @@
     .utility-grid .section-heading > p, .utility-grid .compare-panel .section-heading p { color: #b4bec6; }
     .utility-grid .download-panel { background: white; }
     .utility-grid .download-list { margin-top: 20px; }
+    .compare-row > div, .download-item > div { min-width: 0; }
     .utility-grid .download-item { padding: 12px 0 0; }
     .catalog-faq { margin-top: 70px; }
     .catalog-faq .seo-grid { grid-template-columns: repeat(4, 1fr); }
@@ -699,6 +727,222 @@
       .offers-heading > p { white-space: normal; }
       .catalog-faq .seo-grid { grid-template-columns: 1fr; }
     }
+
+    /* Reference image prototype: soft catalog / blue-purple product home. */
+    .catalog-app {
+      --navy: #13213f;
+      --blue-bright: #2368f4;
+      --purple: #6d45f5;
+      --sky: #eef5ff;
+      color: var(--navy);
+      background:
+        radial-gradient(circle at 86% 13%, rgba(170, 197, 255, .42), transparent 25%),
+        radial-gradient(circle at 15% 28%, rgba(229, 240, 255, .85), transparent 24%),
+        linear-gradient(180deg, #fbfdff 0%, #ffffff 29%, #ffffff 100%);
+    }
+    .catalog-app main { background: transparent; }
+    .catalog-header { min-height: 72px; padding: 11px clamp(22px, 5vw, 92px); border-color: rgba(190, 204, 229, .46); background: rgba(255,255,255,.88); box-shadow: 0 1px 18px rgba(43, 88, 170, .04); }
+    .catalog-header .brand { grid-template-columns: 36px auto; gap: 9px; }
+    .catalog-header .brand-mark { width: 36px; height: 36px; border: 0; border-radius: 10px; background: linear-gradient(145deg, #4b8dff, #5531e9); box-shadow: 0 8px 16px rgba(60, 92, 231, .24); display: grid; place-items: center; color: white; font-size: 19px; }
+    .catalog-header .brand-name { color: var(--navy); font: 850 20px/1 var(--display); letter-spacing: -.04em; }
+    .catalog-header .brand-sub { display: none; }
+    .top-nav { gap: clamp(20px, 3.2vw, 43px); }
+    .top-nav a { color: var(--navy); font: 700 14px var(--sans); }
+    .top-nav a:hover { color: var(--blue-bright); }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .locale-toggle { padding: 8px 11px; border: 1px solid #cbd9f2; border-radius: 999px; color: #2f4d85; background: white; font: 800 11px var(--sans); cursor: pointer; white-space: nowrap; }
+    .locale-toggle:hover, .locale-toggle:focus-visible { color: white; border-color: var(--blue-bright); background: var(--blue-bright); outline: none; }
+    .header-submit { padding: 10px 19px; border: 1px solid var(--blue-bright); border-radius: 11px; color: var(--blue-bright); background: white; font: 800 13px var(--sans); text-decoration: none; white-space: nowrap; }
+    .header-submit:hover { color: white; background: var(--blue-bright); }
+    .catalog-header .local-clock { display: none; }
+    .profile-dot { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #cbd6e5 0 45%, #6f83a6 46% 100%); font: 800 10px var(--mono); }
+    .profile-chevron { color: #43526e; font-size: 20px; line-height: 1; transform: translateY(-3px); }
+    .catalog-content { max-width: 1500px; padding: 42px clamp(22px, 5vw, 92px) 72px; }
+    .catalog-hero { grid-template-columns: minmax(0, 1.02fr) minmax(500px, .98fr); gap: clamp(30px, 5vw, 82px); padding: 12px 0 38px; }
+    .catalog-hero-copy { max-width: 670px; align-self: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #cfe0ff; border-radius: 999px; color: #2368f4; background: rgba(238, 246, 255, .9); font: 800 13px var(--sans); }
+    .hero-badge span { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; color: white; background: var(--blue-bright); font-size: 12px; }
+    .catalog-hero h1 { max-width: 710px; margin: 24px 0 0; color: #102044; font: 850 clamp(54px, 6vw, 92px)/1.1 var(--display); letter-spacing: -.065em; }
+    .catalog-hero h1 span { display: inline; color: transparent; background: linear-gradient(100deg, #2268f4 20%, #6f39ec 90%); -webkit-background-clip: text; background-clip: text; }
+    .catalog-hero .hero-copy { max-width: none; margin: 12px 0 26px; color: #21345b; font: 700 clamp(23px, 2.1vw, 31px)/1.35 var(--sans); letter-spacing: -.04em; }
+    .hero-search { width: min(100%, 680px); min-height: 64px; display: flex; align-items: center; padding: 4px 5px 4px 18px; border: 1.5px solid #bad2ff; border-radius: 18px; background: rgba(255,255,255,.95); box-shadow: 0 0 0 4px rgba(198, 220, 255, .3), 0 12px 30px rgba(68, 120, 229, .1); }
+    .hero-search > span { color: #4c618d; font-size: 29px; line-height: 1; transform: rotate(-20deg); }
+    .hero-search input { min-width: 0; min-height: 54px; flex: 1; padding: 0 12px; border: 0; box-shadow: none; color: var(--navy); background: transparent; font-size: 16px; }
+    .hero-search input:focus { box-shadow: none; }
+    .hero-search button { min-width: 104px; min-height: 54px; border: 0; border-radius: 14px; color: white; background: linear-gradient(120deg, #2874ff, #4d42eb); font: 800 16px var(--sans); cursor: pointer; box-shadow: 0 8px 14px rgba(55, 96, 232, .25); }
+    .hot-searches { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-top: 18px; color: #687895; font-size: 13px; }
+    .hot-searches button { padding: 8px 15px; border: 0; border-radius: 999px; color: #31466d; background: #eef4ff; font: 700 12px var(--sans); cursor: pointer; }
+    .hot-searches button:hover { color: white; background: var(--blue-bright); }
+    .hero-intel { min-height: 318px; position: relative; padding: 24px 29px 22px; overflow: visible; border: 1px solid rgba(205, 218, 242, .85); border-radius: 21px; background: rgba(255,255,255,.9); box-shadow: 0 20px 46px rgba(77, 119, 214, .16); }
+    .hero-intel::before { content: ''; position: absolute; z-index: -1; inset: -16px 42px 28px 150px; border-radius: 18px; background: linear-gradient(120deg, rgba(208,231,255,.6), rgba(228,220,255,.7)); transform: rotate(4deg); }
+    .hero-intel::after { content: var(--hero-note, '好的 AI\A应该被更多人\A轻松使用'); white-space: pre; position: absolute; right: -112px; top: 25px; width: 145px; min-height: 226px; padding: 24px 17px; border-radius: 16px; color: #182a50; background: linear-gradient(155deg, rgba(255,255,255,.96), rgba(246,250,255,.82)); box-shadow: 0 16px 35px rgba(85, 120, 205, .13); font: 800 17px/1.75 var(--display); transform: rotate(4deg); }
+    .hero-intel-head, .hero-intel-main, .intel-pills, .editor-head, .editor-model, .trend > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .hero-intel-head strong { color: #17274b; font: 850 22px var(--display); }
+    .hero-intel-head > span { color: #6a7897; font: 12px var(--sans); }
+    .hero-intel-main { align-items: flex-end; margin-top: 26px; padding-right: 74px; }
+    .hero-intel-main > div:first-child { display: grid; grid-template-columns: auto auto; align-items: baseline; column-gap: 10px; }
+    .hero-intel-main > div:first-child > b { color: #122349; font: 900 61px/.9 var(--display); letter-spacing: -.06em; }
+    .hero-intel-main > div:first-child > strong { color: #142752; font-size: 16px; }
+    .hero-intel-main p { grid-column: 1 / -1; margin: 8px 0 0; color: #4e6085; font-size: 13px; }
+    .mini-chart { height: 116px; min-width: 164px; position: relative; display: flex; align-items: end; gap: 8px; padding: 0 0 28px; }
+    .mini-chart::after { content: ''; position: absolute; left: 0; right: 0; bottom: 27px; border-bottom: 1px solid #dce5f8; }
+    .mini-chart i { width: 13px; position: relative; z-index: 1; display: block; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, #6ea8ff, #6c3de9); }
+    .mini-chart i:nth-child(-n+3) { background: linear-gradient(180deg, #cae2ff, #8eb4f5); }
+    .mini-chart small { position: absolute; right: 0; bottom: 0; color: #6c7893; font-size: 11px; white-space: nowrap; }
+    .mini-chart small b { color: #6540e9; }
+    .intel-pills { gap: 10px; margin-top: 25px; padding-right: 56px; }
+    .intel-pills > div { min-width: 0; flex: 1; display: grid; grid-template-columns: 34px 1fr; column-gap: 7px; align-items: center; padding: 11px 10px; border-radius: 11px; background: #f6fbff; }
+    .intel-pills > div:nth-child(2) { background: #fff7f7; }
+    .intel-pills > div:nth-child(3) { background: #f7f4ff; }
+    .intel-pills span { width: 32px; height: 32px; grid-row: span 2; display: grid; place-items: center; border-radius: 50%; color: #18a66f; background: #dff8ed; font-size: 21px; }
+    .intel-pills > div:nth-child(2) span { color: #ef553d; background: #ffe2df; }
+    .intel-pills > div:nth-child(3) span { color: #7044e8; background: #e9ddff; }
+    .intel-pills b { color: #26406d; font-size: 12px; }
+    .intel-pills small { color: #74809a; font-size: 10px; }
+    .hero-intel-note { display: none; }
+    .catalog-filter-bar { display: flex; align-items: center; gap: 0; margin: 7px 0 31px; padding: 12px 16px; border: 1px solid #dbe4f3; border-radius: 14px; background: rgba(255,255,255,.8); box-shadow: 0 7px 22px rgba(85, 111, 157, .05); }
+    .catalog-filter-bar > div { min-width: 150px; padding: 5px 20px; border-right: 1px solid #e8edf6; color: #5d6d8e; font-size: 13px; }
+    .catalog-filter-bar > div:first-child { padding-left: 4px; }
+    .catalog-filter-bar > div b { margin-right: 13px; color: #22375f; }
+    .filter-current { color: #263b65; }
+    .filter-chevron { float: right; color: #7383a2; }
+    .catalog-filter-bar .sort { min-height: 38px; margin-left: auto; border: 1px solid #dbe4f3; border-radius: 10px; color: #31456d; background: white; font-size: 12px; }
+    .category-section { padding-top: 0; }
+    .section-heading h2 { color: #182a50; font: 850 clamp(27px, 3vw, 36px)/1.1 var(--display); letter-spacing: -.06em; }
+    .section-heading > p { color: #7b88a2; }
+    .category-grid { display: flex; gap: 8px; padding: 6px 0 0; overflow-x: auto; }
+    .category-card { min-width: 145px; min-height: 76px; flex: 1; position: relative; padding: 13px 14px; border: 1px solid transparent; border-radius: 12px; color: #273a61; background: transparent; display: grid; grid-template-columns: 28px 1fr; grid-template-rows: 1fr auto; align-items: center; column-gap: 8px; box-shadow: none; transition: color .16s ease, background .16s ease, box-shadow .16s ease; }
+    .category-card:hover, .category-card.active, .category-card.category-card-active { transform: none; color: #fff; background: linear-gradient(120deg, #2c72f4, #443de6); box-shadow: 0 8px 18px rgba(48, 93, 223, .2); }
+    .category-card strong { margin: 0; font: 800 15px var(--sans); letter-spacing: -.02em; }
+    .category-card b { position: static; grid-column: 2; justify-self: start; color: #7e8ca8; font: 11px var(--mono); }
+    .category-card.active b, .category-card.category-card-active b { color: #e6ebff; }
+    .category-card > span:not(.category-index):not(.category-icon) { display: none; }
+    .category-icon { grid-row: 1 / span 2; width: 28px; height: 28px; display: grid; place-items: center; color: #4b638f; font: 700 22px var(--sans); }
+    .category-card.active .category-icon, .category-card.category-card-active .category-icon { color: white; }
+    .category-card-yellow, .category-card-student, .category-card-dark { color: #273a61; background: transparent; }
+    .category-card-more { min-width: 120px; }
+    .featured-section { margin-top: 55px; }
+    .section-more { color: var(--blue-bright); font-size: 13px; text-decoration: none; }
+    .hot-layout { display: grid; grid-template-columns: minmax(0, 3.15fr) minmax(260px, .92fr); gap: 16px; align-items: stretch; }
+    .featured-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 11px; }
+    .featured-card.resource-card { min-height: 296px; position: relative; padding: 19px 18px; border: 1px solid #e0e7f2; border-radius: 13px; background: rgba(255,255,255,.92); box-shadow: 0 7px 20px rgba(65, 100, 164, .06); }
+    .featured-card.resource-card:hover { transform: translateY(-3px); box-shadow: 0 15px 28px rgba(65, 100, 164, .12); }
+    .resource-logo { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; color: #5141db; background: #e9edff; font-size: 25px; font-weight: 900; }
+    .resource-logo img { width: 100%; height: 100%; padding: 7px; border-radius: inherit; object-fit: contain; background: white; }
+    .logo-seed { color: #26364f; background: radial-gradient(circle at 50% 35%, #f6cdb8, #9f7f72); }
+    .logo-trae { color: white; background: #ff504b; font-size: 24px; }
+    .logo-cursor { color: white; background: #171717; }
+    .featured-card-top { align-items: start; }
+    .resource-status { padding: 5px 7px; border-radius: 6px; font: 10px var(--sans); white-space: nowrap; }
+    .status-free { color: #11945f; background: #e2f8ed; }
+    .status-trial { color: #ee4a45; background: #fff0ef; }
+    .status-download { color: #168c64; background: #e6f8ef; }
+    .featured-card.resource-card h3 { margin: 16px 0 2px; color: #172747; font: 850 18px/1.1 var(--sans); letter-spacing: -.03em; }
+    .resource-card > small { color: #8491ab; font-size: 11px; }
+    .featured-card.resource-card p { min-height: 52px; margin: 15px 0 12px; color: #60718f; font-size: 12px; line-height: 1.55; }
+    .resource-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; border-radius: 10px; background: #f5f8fc; color: #73819d; font-size: 10px; line-height: 1.45; }
+    .resource-meta b { color: #354a73; font-size: 10px; font-weight: 700; }
+    .featured-card.resource-card > a { width: 34px; height: 34px; position: absolute; right: 15px; bottom: 15px; display: grid; place-items: center; margin: 0; border: 1px solid #c9dcff; border-radius: 50%; color: #2a6df3; background: white; font: 23px var(--sans); text-decoration: none; }
+    .editor-pick { min-height: 296px; padding: 18px 17px 14px; border: 1px solid #e0e7f2; border-radius: 14px; background: rgba(255,255,255,.96); box-shadow: 0 7px 20px rgba(65, 100, 164, .06); }
+    .editor-head strong { color: #202e4e; font: 850 18px var(--display); }
+    .editor-head > span { font-size: 19px; }
+    .editor-head a { margin-left: auto; color: #2d6df1; font-size: 11px; text-decoration: none; }
+    .editor-model { justify-content: flex-start; margin-top: 21px; }
+    .hunyuan-mark { width: 45px; height: 45px; display: grid; place-items: center; border-radius: 50%; color: #3578dd; background: radial-gradient(circle at 35% 30%, #b9ecff, #2773d9 68%, #263ce6); font-size: 31px; }
+    .hunyuan-mark img { width: 31px; height: 31px; border-radius: 9px; object-fit: contain; background: white; }
+    .editor-model strong { color: #1d2f53; font: 800 14px var(--sans); }
+    .editor-model small { align-self: end; margin-left: -46px; transform: translate(56px, 15px); color: #8793a9; font-size: 10px; }
+    .editor-pick blockquote { margin: 18px 0 11px; color: #60708d; font-size: 12px; line-height: 1.65; }
+    .tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
+    .tag-row span { padding: 5px 8px; border-radius: 5px; color: #60718e; background: #eef3fb; font-size: 10px; }
+    .trend { margin-top: 13px; padding-top: 10px; border-top: 1px solid #edf1f7; }
+    .trend > div:first-child b { color: #546887; font-size: 10px; }
+    .trend > div:first-child strong { color: #6e41ed; font-size: 12px; }
+    .trend-line { height: 30px; display: flex; align-items: end; gap: 4px; }
+    .trend-line i { flex: 1; height: 40%; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, #8054fa, #c8baff); }
+    .trend-line i:nth-child(2) { height: 58%; }.trend-line i:nth-child(3) { height: 45%; }.trend-line i:nth-child(4) { height: 70%; }.trend-line i:nth-child(5) { height: 61%; }.trend-line i:nth-child(6) { height: 85%; }.trend-line i:nth-child(7) { height: 100%; }
+    .editor-checked { display: flex; align-items: center; gap: 6px; margin-top: 9px; color: #647697; font-size: 10px; }
+    .editor-checked:first-letter { color: #159b63; }
+    .editor-checked span { margin-left: auto; color: #7182a2; font-size: 19px; }
+    .student-panel, .utility-grid .compare-panel, .utility-grid .download-panel { border-color: #dfe7f3; border-radius: 14px; box-shadow: 0 8px 22px rgba(65, 100, 164, .06); }
+    .student-panel { background: #effaf4; }
+    .offers-section { margin-top: 58px; }
+    .filter-strip { gap: 8px; padding-bottom: 12px; border-color: #e1e8f3; }
+    .filter-chip { border-color: #d6e0ef; border-radius: 999px; color: #536582; background: #fff; font-size: 12px; }
+    .filter-chip:hover, .filter-chip.active { color: white; border-color: var(--blue-bright); background: var(--blue-bright); }
+    .offer-grid { gap: 12px; }
+    .offer-grid .offer { grid-template-columns: minmax(0, 1fr); border-color: #e0e7f2; border-radius: 14px; box-shadow: 0 6px 18px rgba(65, 100, 164, .05); }
+    .offer-grid .offer:hover { transform: translateY(-2px); border-color: #bcd1f7; box-shadow: 0 14px 28px rgba(65, 100, 164, .1); }
+    .catalog-faq { margin-top: 58px; }
+    .catalog-app .footer { border-color: #e4eaf3; color: #8290a8; }
+    .cheap-lane { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 18px 0 16px; }
+    .cheap-card { min-height: 146px; padding: 15px; border: 1px solid rgba(214, 226, 255, .18); border-radius: 12px; background: linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04)); }
+    .cheap-card.is-best { border-color: rgba(115, 171, 255, .82); background: linear-gradient(145deg, rgba(44, 117, 244, .34), rgba(104, 65, 236, .22)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+    .cheap-card-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #b5c8e8; font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    .cheap-card-label b { padding: 4px 7px; border-radius: 999px; color: #102044; background: #dff7eb; font: 800 10px var(--sans); letter-spacing: 0; text-transform: none; }
+    .cheap-card-price { margin: 11px 0 2px; color: white; font: 900 34px/.95 var(--display); letter-spacing: -.06em; }
+    .cheap-card-price small { margin-left: 4px; color: #c4d3ed; font: 700 11px var(--sans); letter-spacing: 0; }
+    .cheap-card h3 { margin: 8px 0 4px; color: white; font: 800 14px var(--sans); }
+    .cheap-card p { margin: 0; color: #bac8df; font-size: 11px; line-height: 1.45; }
+    .cheap-card a { display: inline-block; margin-top: 9px; color: #9fc5ff; font-size: 10px; text-decoration: none; }
+    .cheap-card a:hover { color: white; text-decoration: underline; }
+    .cheap-disclaimer { margin: 0 0 12px; color: #c2cde0; font-size: 11px; line-height: 1.5; }
+    .cheap-disclaimer strong { color: #fff; }
+    .utility-grid .compare-panel .compare-table { margin-top: 0; }
+
+    @media (max-width: 760px) {
+      .cheap-lane { grid-template-columns: 1fr; }
+      .cheap-card { min-height: 0; }
+    }
+
+    @media (max-width: 1200px) {
+      .catalog-header { padding-left: 30px; padding-right: 30px; }
+      .catalog-content { padding-left: 30px; padding-right: 30px; }
+      .hero-intel::after { right: -50px; transform: scale(.82) rotate(4deg); transform-origin: right top; }
+      .featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 980px) {
+      .catalog-header { grid-template-columns: auto 1fr auto; }
+      .top-nav { grid-column: auto; grid-row: auto; }
+      .catalog-hero { grid-template-columns: 1fr; }
+      .hero-intel { max-width: 720px; }
+      .hero-intel::after { right: -90px; }
+      .hot-layout { grid-template-columns: 1fr; }
+      .editor-pick { min-height: auto; }
+    }
+    @media (max-width: 700px) {
+      .catalog-header { grid-template-columns: auto 1fr auto; padding: 10px 16px; }
+      .catalog-header .brand-name { font-size: 17px; }
+      .top-nav { display: none; }
+      .header-submit { padding: 8px 10px; font-size: 11px; }
+      .profile-dot, .profile-chevron { display: none; }
+      .catalog-content { padding: 28px 16px 48px; }
+      .catalog-hero { padding-top: 0; }
+      .catalog-hero h1 { font-size: clamp(46px, 13vw, 68px); }
+      .catalog-hero .hero-copy { font-size: 20px; }
+      .hero-search { min-height: 56px; padding-left: 12px; }
+      .hero-search input { font-size: 13px; }
+      .hero-search button { min-width: 75px; min-height: 46px; font-size: 13px; }
+      .hero-intel { min-height: 300px; padding: 20px 17px; }
+      .hero-intel::after { display: none; }
+      .hero-intel-main { padding-right: 0; }
+      .hero-intel-main > div:first-child > b { font-size: 52px; }
+      .mini-chart { min-width: 136px; gap: 5px; }
+      .intel-pills { padding-right: 0; gap: 5px; }
+      .intel-pills > div { padding: 8px 5px; grid-template-columns: 26px 1fr; }
+      .intel-pills span { width: 26px; height: 26px; font-size: 17px; }
+      .intel-pills b { font-size: 10px; }
+      .intel-pills small { font-size: 8px; }
+      .catalog-filter-bar { align-items: stretch; flex-wrap: wrap; gap: 8px; padding: 10px; }
+      .catalog-filter-bar > div { min-width: calc(50% - 4px); padding: 5px 9px; border: 0; border-bottom: 1px solid #edf1f7; }
+      .catalog-filter-bar .sort { min-width: 100%; margin-left: 0; }
+      .section-heading { display: flex; }
+      .category-grid { margin-right: -16px; padding-right: 16px; }
+      .category-card { min-width: 126px; }
+      .featured-grid { grid-template-columns: 1fr; }
+      .featured-card.resource-card { min-height: 265px; }
+      .catalog-faq .seo-grid { grid-template-columns: 1fr; }
+    }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
@@ -709,38 +953,39 @@
     - English-first because the primary audience is outside China; Chinese appears in the source/status details.
     - “Free” is always qualified: permanent, trial, promotion, open weights, or free web/IDE access.
     - A VPN is never presented as a free method. The page shows the provider’s official access path and account region.
-    - Provider marks are honest initials in this prototype. Replace them with verified official logo assets before production.
+    - Provider marks load the first official source domain favicon, with initials retained as a resilient fallback when an icon cannot be fetched.
   -->
   <div class="app catalog-app">
     <main id="catalog-top">
       <header class="catalog-header">
-        <a class="brand" href="#catalog-top"><div class="brand-mark">FREE<br>AI</div><div><div class="brand-name">Free AI Index</div><div class="brand-sub">an evidence-led catalog</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a href="#categories">分类</a><a href="#catalog-offers">全部入口</a><a href="#student-offers">学生优惠</a><a href="#catalog-methodology">标注规则</a></nav>
-        <div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div>
+        <a class="brand" href="#catalog-top"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">Free AI Index</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
+        <nav class="top-nav" aria-label="Page sections"><a href="#categories">模型库</a><a href="#catalog-offers">开发工具</a><a href="#catalog-offers">API 服务</a><a href="#catalog-compare">榜单</a></nav>
+        <div class="header-actions"><a class="header-submit" href="#catalog-offers">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
         <section class="catalog-hero">
-          <div class="catalog-hero-copy"><div class="hero-kicker">Free AI index / 2026.09.07</div><h1>免费的，<br><span>先看条件。</span></h1><p class="hero-copy">一个把免费 AI 按获得方式重新整理的目录。先选你要的路径，再看额度、有效期、地区和官方来源。</p><div class="hero-actions"><a class="hero-cta" href="#categories">浏览 7 类入口 <span>→</span></a><span class="hero-footnote"><span class="status-dot"></span><b id="heroCount">27</b> 条已核验 / 待核验入口</span></div></div>
-          <div class="hero-visual"><img src="assets/free-method-night-window.png" alt=""><div class="hero-visual-caption"><span>01 / visual index</span><strong>夜间优惠也要看证据</strong></div></div>
+          <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 真实免费</div><h1>发现真正好用的<span>免费 AI</span></h1><p class="hero-copy">模型、API、IDE 与限时试用，一站比较</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 Qwen、豆包、Cursor" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 API</button><button type="button">AI IDE</button></div></div>
+          <div class="hero-intel"><div class="hero-intel-head"><strong>今日 AI 情报</strong><span>▣ &nbsp;2026 年 9 月 7 日</span></div><div class="hero-intel-main"><div><b id="heroCount">27</b><strong>个优质资源</strong><p>通过人工核验，确认可免费使用</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
         </section>
-        <section class="search-deck" aria-label="Search the catalog"><div class="search-deck-copy"><div class="eyebrow">Start with a question</div><h2>你想怎么免费？</h2><p>不要先按厂商找，先按使用方式找。</p></div><label class="search search-deck-input"><span>⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、产品或免费方式，例如 Qwen / 豆包" aria-label="Search offers"></label><select class="sort" id="catalog-sort" aria-label="Sort offers"><option value="free">排序：免费优先</option><option value="fresh">排序：最近核验</option><option value="name">排序：A–Z</option></select></section>
-        <section id="categories" class="category-section" aria-labelledby="categories-title"><div class="section-heading"><div><div class="eyebrow">01 / choose a lane</div><h2 id="categories-title">按免费方式浏览</h2></div><p>分类可以重叠，一条 offer 可能同时属于多个入口。</p></div><div class="category-grid">
-          <button class="category-card category-card-wide" data-filter="free_quota" aria-pressed="false"><span class="category-index">A / recurring</span><strong>免费额度</strong><span>按日、周、月或持续提供</span><b data-category-count="free_quota">—</b></button>
-          <button class="category-card category-card-wide" data-filter="credits" aria-pressed="false"><span class="category-index">B / one-off</span><strong>积分 / 次数</strong><span>新人积分、体验次数和试用</span><b data-category-count="credits">—</b></button>
-          <button class="category-card" data-filter="ide" aria-pressed="false"><span class="category-index">C / tool</span><strong>免费 IDE</strong><span>打开就能写代码</span><b data-category-count="ide">—</b></button>
-          <button class="category-card category-card-yellow" data-filter="promo" aria-pressed="false"><span class="category-index">D / timing</span><strong>时段 / 限时优惠</strong><span>首月、夜间、地区和汇率</span><b data-category-count="promo">—</b></button>
-          <button class="category-card category-card-student" data-filter="student" aria-pressed="false"><span class="category-index">E / education</span><strong>学生优惠</strong><span>需要教育身份验证</span><b data-category-count="student">—</b></button>
-          <button class="category-card" data-filter="web" aria-pressed="false"><span class="category-index">F / web</span><strong>网页 / Web 工具</strong><span>网页产品或 Web API</span><b data-category-count="web">—</b></button>
-          <button class="category-card category-card-dark" data-filter="download_lowcost" aria-pressed="false"><span class="category-index">G / local</span><strong>下载 / 低成本</strong><span>开源权重和 pay-as-you-go</span><b data-category-count="download_lowcost">—</b></button>
+        <section class="catalog-filter-bar" aria-label="Catalog tools"><div><b>免费方式</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>能力</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>中文支持</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>更新时间</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><select class="sort" id="catalog-sort" aria-label="Sort offers"><option value="free">综合排序</option><option value="fresh">最近核验</option><option value="name">A–Z</option></select></section>
+        <section id="categories" class="category-section" aria-labelledby="categories-title"><div class="section-heading"><div><div class="eyebrow">Browse by purpose</div><h2 id="categories-title">找到适合你的 AI 工具</h2></div><p>分类可以重叠，一条资源可能同时属于多个入口。</p></div><div class="category-grid">
+          <button class="category-card category-card-active" data-filter="all" aria-pressed="true"><span class="category-icon">⊞</span><strong>全部</strong><b data-category-count="all">27</b></button>
+          <button class="category-card" data-filter="free_quota" aria-pressed="false"><span class="category-icon">⬡</span><strong>大模型</strong><b data-category-count="free_quota">—</b></button>
+          <button class="category-card" data-filter="ide" aria-pressed="false"><span class="category-icon">&lt;/&gt;</span><strong>AI IDE</strong><b data-category-count="ide">—</b></button>
+          <button class="category-card" data-filter="web" aria-pressed="false"><span class="category-icon">▧</span><strong>图像视频</strong><b data-category-count="web">—</b></button>
+          <button class="category-card" data-filter="credits" aria-pressed="false"><span class="category-icon">↗</span><strong>API 服务</strong><b data-category-count="credits">—</b></button>
+          <button class="category-card" data-filter="download_lowcost" aria-pressed="false"><span class="category-icon">◎</span><strong>开源模型</strong><b data-category-count="download_lowcost">—</b></button>
+          <button class="category-card category-card-more" data-filter="student" aria-pressed="false"><span class="category-icon">•••</span><strong>更多分类</strong><b data-category-count="student">—</b></button>
         </div></section>
-        <section class="featured-section" aria-labelledby="featured-title"><div class="section-heading"><div><div class="eyebrow">02 / quick orientation</div><h2 id="featured-title">从这三条路开始</h2></div><p>信息少一点，先帮助你做选择。</p></div><div class="featured-grid">
-          <article class="featured-card"><div class="featured-card-top"><span class="eyebrow">Free quota</span><span class="featured-number" id="featuredQuotaCount">—</span></div><h3>想接 API？</h3><p>看每月额度、频率限制和是否需要付款方式。</p><a href="#catalog-offers" data-filter="free_quota">看免费额度 →</a></article>
-          <article class="featured-card featured-card-blue"><div class="featured-card-top"><span class="eyebrow">Free IDE</span><span class="featured-number" id="featuredIdeCount">—</span></div><h3>想马上写代码？</h3><p>IDE 往往把模型、补全、Agent 和编辑器放在一个免费入口里。</p><a href="#catalog-offers" data-filter="ide">看免费 IDE →</a></article>
-          <article class="featured-card featured-card-yellow"><div class="featured-card-top"><span class="eyebrow">Student / timed</span><span class="featured-number" id="featuredPromoCount">—</span></div><h3>想找价格差？</h3><p>学生资格、首月活动和时段规则，都要和续费或适用地区一起看。</p><a href="#student-offers" data-filter="student">看学生优惠 →</a></article>
-        </div></section>
+        <section class="featured-section" aria-labelledby="featured-title"><div class="section-heading"><div><div class="eyebrow">Popular this week</div><h2 id="featured-title">🔥 本周热门</h2></div><a class="section-more" href="#catalog-offers">查看更多 →</a></div><div class="hot-layout"><div class="featured-grid">
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-qwen"><img src="https://www.google.com/s2/favicons?domain=help.aliyun.com&amp;sz=64" alt="阿里云图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>通义千问 Qwen3</h3><small>阿里云百炼</small><p>强大的中文多模态大模型，支持对话、文生图、代码等能力。</p><div class="resource-meta"><span>免费额度<br><b>每月 1000 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-seed"><img src="https://www.google.com/s2/favicons?domain=www.volcengine.com&amp;sz=64" alt="火山引擎图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>豆包 Seed</h3><small>字节跳动</small><p>全能的对话与创作助手，支持文本、图像、音视频等模态生成。</p><div class="resource-meta"><span>免费额度<br><b>每月 500 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-trae"><img src="https://www.google.com/s2/favicons?domain=www.trae.cn&amp;sz=64" alt="Trae 图标" loading="lazy"></span><span class="resource-status status-trial">限时试用</span></div><h3>Trae</h3><small>字节跳动</small><p>基于 AI 的新一代开发 IDE，内置 Agent 能力，提升开发效率。</p><div class="resource-meta"><span>免费额度<br><b>限时 30 天 Pro 体验</b></span><span>支持平台<br><b>Windows / macOS</b></span></div><a href="#catalog-offers" data-filter="ide" aria-label="查看免费 IDE">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-cursor"><img src="https://www.google.com/s2/favicons?domain=cursor.com&amp;sz=64" alt="Cursor 图标" loading="lazy"></span><span class="resource-status status-download">开源可下载</span></div><h3>Cursor</h3><small>Anysphere</small><p>广受欢迎的 AI 编程工具，深度理解代码，支持多种模型接入。</p><div class="resource-meta"><span>免费方案<br><b>开源版可下载 (MIT)</b></span><span>支持平台<br><b>Windows / macOS / Linux</b></span></div><a href="#catalog-offers" data-filter="ide" aria-label="查看 Cursor">→</a></article>
+         </div><aside class="editor-pick"><div class="editor-head"><span>👑</span><strong>编辑精选</strong><a href="#catalog-offers">查看更多 →</a></div><div class="editor-model"><div class="hunyuan-mark"><img src="https://www.google.com/s2/favicons?domain=hunyuan.tencent.com&amp;sz=64" alt="腾讯混元图标" loading="lazy"></div><strong>混元 Hunyuan</strong><small>腾讯</small></div><blockquote>“ 中文理解与创作能力出色，支持长文对话、联网搜索、图像生成等多种能力。 ”</blockquote><div class="tag-row"><span>大语言模型</span><span>多模态</span><span>中文强</span></div><div class="trend"><div><b>热度趋势（近 7 天）</b><strong>+62%</strong></div><div class="trend-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="editor-checked">● 已于今日 17:19 核验 <span>›</span></div></aside></div></section>
         <section id="student-offers" class="student-panel" aria-labelledby="student-title"><div class="student-panel-copy"><div class="eyebrow">03 / education access</div><h2 id="student-title">学生优惠单独看</h2><p>学生优惠不是永久免费额度：通常需要学校邮箱或教育身份验证，资格、地区和有效期以官方页面为准。</p><button class="student-button" data-filter="student">筛选学生优惠 →</button></div><div class="student-list" id="studentList"><div class="student-item"><strong>GitHub Copilot Student</strong><span>需要 GitHub Education 验证</span></div><div class="student-item"><strong>Cursor Student</strong><span>官方学生计划 · 资格以页面为准</span></div></div></section>
         <section id="catalog-offers" class="offers-section"><div class="section-heading offers-heading"><div><div class="eyebrow">04 / all verified paths</div><h2>找到现在能打开的入口</h2><p>产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。</p></div><p id="catalog-result-count">Showing 27 offers</p></div><div class="filter-strip" role="tablist" aria-label="Offer filters"><button class="filter-chip active" data-filter="all" aria-pressed="true">全部 <em>27</em></button><button class="filter-chip" data-filter="free_quota" aria-pressed="false">免费额度 <em>—</em></button><button class="filter-chip" data-filter="credits" aria-pressed="false">积分 / 次数 <em>—</em></button><button class="filter-chip" data-filter="ide" aria-pressed="false">免费 IDE <em>—</em></button><button class="filter-chip" data-filter="promo" aria-pressed="false">限时优惠 <em>—</em></button><button class="filter-chip" data-filter="student" aria-pressed="false">学生优惠 <em>—</em></button><button class="filter-chip" data-filter="web" aria-pressed="false">网页 / Web <em>—</em></button><button class="filter-chip" data-filter="download_lowcost" aria-pressed="false">下载 / 低成本 <em>—</em></button></div><div class="table-wrap catalog-list-wrap"><div class="table-head"><div>产品</div><div>免费方式</div><div>额度 / 价格</div><div>有效期</div><div>地区</div><div>核验</div><div></div></div><div id="catalog-offer-rows" class="offer-grid" aria-live="polite"></div><div id="catalog-empty-state" class="empty-state" hidden><strong>没有匹配的入口。</strong><p>换个关键词，或清空搜索和筛选。</p><button type="button" id="catalog-reset-filters">清空搜索和筛选</button></div></div></section>
-        <div class="utility-grid"><section class="compare-panel" id="catalog-compare"><div class="section-heading"><div><div class="eyebrow">05 / price lens</div><h2>中国区一定更便宜吗？</h2><p>同一个模型、同一个 token 单位、不同 endpoint。</p></div><span class="badge free">LIVE RULE</span></div><div class="compare-table"><div class="compare-row head"><div>Offer</div><div>中国区</div><div>国际区</div><div>节省</div></div><div class="compare-row"><div>Qwen3-Max input<br><small>per 1M tokens</small></div><div>$0.861</div><div>$1.20</div><div class="saving">28%</div></div><div class="compare-row"><div>Qwen3-Max output<br><small>per 1M tokens</small></div><div>$3.441</div><div>$6.00</div><div class="saving">43%</div></div></div><p class="compare-note">这是 endpoint 对比，不是 VPN 技巧。中国区价格可能要求中国账号，并带来数据驻留差异；订阅前请回到官方价格页。</p></section><section class="download-panel" id="catalog-downloads"><div class="section-heading"><div><div class="eyebrow">06 / local lane</div><h2>下载到本地</h2><p>权重免费，GPU 时间不一定免费。</p></div></div><div class="download-list" id="catalog-download-list"><div class="download-item"><div><strong>LongCat-2.0</strong><small>GitHub + Hugging Face</small></div><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开 ↗</a></div></div></section></div>
+        <div class="utility-grid"><section class="compare-panel" id="catalog-compare"><div class="section-heading"><div><div class="eyebrow">05 / cheapest first</div><h2>最便宜的入口先看</h2><p>先免费，再看首购价；地区、新用户、有效期和续费同时展示。</p></div><span class="badge free">LIVE RULE</span></div><div class="cheap-lane" aria-label="Cheapest verified routes"><article class="cheap-card is-best"><div class="cheap-card-label"><span>北京区 · 新用户</span><b>优先看</b></div><div class="cheap-card-price">¥0<small>免费额度</small></div><h3>阿里云百炼 · 部分模型</h3><p>仅中国（北京）部署范围可用；新用户有效期 90 天，额度用完后按官方价格计费。</p><a href="https://help.aliyun.com/en/model-studio/new-free-quota" target="_blank" rel="noreferrer">看免费额度规则 ↗</a></article><article class="cheap-card"><div class="cheap-card-label"><span>火山方舟 · 首购</span><b>¥9.90 起</b></div><div class="cheap-card-price">¥9.9<small>首月 / 月</small></div><h3>豆包 Coding Plan Lite</h3><p>首月优惠价；后续续费 ¥40 / 月，限量活动以官方页面当前状态为准。</p><a href="https://www.volcengine.com/L/L7N-ZPzoyHE/" target="_blank" rel="noreferrer">看官方方案 ↗</a></article><article class="cheap-card"><div class="cheap-card-label"><span>下载 · 自托管</span><b>权重免费</b></div><div class="cheap-card-price">¥0<small>模型权重</small></div><h3>LongCat-2.0</h3><p>下载权重不等于推理免费；存储、GPU、流量和部署时间另算。</p><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开开源入口 ↗</a></article></div><p class="cheap-disclaimer"><strong>结论：</strong>如果你在北京且符合新用户条件，先用 ¥0 免费额度；不符合时，再看 ¥9.9 首月方案。¥0 和 ¥9.9 都不是无条件的长期月费。</p><div class="compare-table"><div class="compare-row head"><div>价格视角</div><div>中国区 / 北京</div><div>国际区</div><div>判断</div></div><div class="compare-row"><div>阿里云部分模型<br><small>新用户免费额度</small></div><div>¥0 · 90 天</div><div>通常无同等免费额度</div><div class="saving">先看</div></div><div class="compare-row"><div>豆包 Coding Plan Lite<br><small>首购 / 后续续费</small></div><div>¥9.9 / ¥40 月</div><div>不适用</div><div class="saving">低价</div></div></div><p class="compare-note">北京不代表所有产品都更便宜：这里展示的是已核验的“免费额度 / 首购优惠 / 开源权重”入口，不把不同模型的 token 单价混成一个总榜。订阅前请回到官方价格页。</p></section><section class="download-panel" id="catalog-downloads"><div class="section-heading"><div><div class="eyebrow">06 / local lane</div><h2>下载到本地</h2><p>权重免费，GPU 时间不一定免费。</p></div></div><div class="download-list" id="catalog-download-list"><div class="download-item"><div><strong>LongCat-2.0</strong><small>GitHub + Hugging Face</small></div><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开 ↗</a></div></div></section></div>
         <section class="seo-copy catalog-faq" id="catalog-faq" aria-labelledby="catalog-faq-title"><div class="section-heading"><div><div class="eyebrow">07 / how to read it</div><h2 id="catalog-faq-title">这不是“全都免费”榜单</h2><p>我们把免费、试用、优惠、学生资格和低价入口分开写。</p></div></div><div class="seo-grid"><div><h3>免费额度</h3><p>周期性额度仍可能有速率、地区或付款方式限制。</p></div><div><h3>学生优惠</h3><p>需要教育身份验证，优惠期限和适用地区以官方页面为准。</p></div><div><h3>开源权重</h3><p>可以下载模型，但存储、GPU、推理和流量可能收费。</p></div><div><h3>官方入口</h3><p>每条 offer 都保留来源、更新时间和可复制的使用路径。</p></div></div><div class="faq-list"><details><summary>什么才算免费？</summary><p>页面会区分持续额度、一次性积分、首月优惠、学生计划、免费 IDE、网页工具、开源权重和低成本 pay-as-you-go。</p></details><details><summary>学生优惠是永久免费吗？</summary><p>不是。学生优惠通常需要教育身份验证，可能有地区、学校、期限或续费条件。</p></details><details><summary>夜间优惠一定存在吗？</summary><p>只有官方来源明确说明时间窗口时才会展示，传闻不会被写成免费活动。</p></details></div></section>
         <div class="footer" id="catalog-methodology"><span>Official sources only · Free status separated by mechanism</span><span id="catalog-last-checked">Last checked: 07 Sep 2026 · Data is subject to change</span></div>
       </div>
@@ -3476,6 +3721,167 @@
     let offerIndex = {};
     let signalIndex = {};
     let rows = [];
+    let loadedOffers = [];
+    const SUPPORTED_LOCALES = Object.freeze({ en: 'en', zh: 'zh-CN' });
+    const LOCALE_STORAGE_KEY = 'free-ai-index-locale';
+    const LOCALE_QUERY_PREFIX = '?lang=';
+    const LOCALE_COPY = Object.freeze({
+      en: Object.freeze({
+        pageTitle: 'Free AI Index — Free AI models, Qwen, Doubao, IDEs and trials',
+        pageDescription: 'Compare verified free AI models, free coding IDEs, student offers, downloadable open weights and limited-time trials with official access paths.',
+        brandSub: 'Verified free AI resources',
+        navCatalog: 'Models', navTools: 'Developer tools', navApi: 'API services', navRank: 'Compare', submit: 'Submit a resource',
+        verified: 'Verified daily · genuinely free', heroTitle: 'Find truly useful <span>free AI</span>', heroTitleAccent: 'free AI', heroCopy: 'Models, APIs, IDEs and limited trials compared in one place', searchPlaceholder: 'Search models, platforms or capabilities, e.g. Qwen, Doubao, Cursor', searchLabel: 'Search offers', search: 'Search', hot: 'Popular searches:', freeApi: 'Free API',
+        intelTitle: 'Today in AI', resourceCount: 'quality resources', checked: 'Human-checked and confirmed free to use', trend: 'vs. last week', forever: 'Free forever', longTerm: 'Long-term access', trial: 'Limited trial', grabChance: 'Use it while it lasts', openWeights: 'Downloadable weights', useFreely: 'Use freely', heroNote: 'Good AI\nshould be easier\nfor more people to use',
+        method: 'Free method', capability: 'Capability', chinese: 'Chinese support', updated: 'Last checked', all: 'All', browse: 'Browse by purpose', categoryCopy: 'Categories can overlap; one resource may belong to multiple paths.', allOffers: 'All', largeModels: 'Large models', ide: 'Free IDE', credits: 'Credits / uses', promo: 'Timed / regional deal', web: 'Web tools', download_lowcost: 'Download / low cost', imageVideo: 'Image / video', apiServices: 'API services', openModels: 'Open models', more: 'More categories',
+        popular: 'Popular this week', moreLink: 'See more →', permanent: 'Free forever', limitedTrial: 'Limited trial', downloadable: 'Downloadable', freeQuota: 'Free quota', freePlan: 'Free plan', supportedPlatforms: 'Supported platforms', excellent: 'Excellent', featured: 'Editor pick', checkedToday: 'Checked today', qwenFeatured: 'A powerful Chinese multimodal model for chat, image generation and code.', seedFeatured: 'An all-purpose conversation and creation assistant with text, image, audio and video generation.', traeFeatured: 'A new AI coding IDE with built-in agent capabilities to improve development speed.', cursorFeatured: 'A popular AI coding tool that understands code deeply and supports multiple model providers.', quotaLabel: 'Free quota', monthlyTokensQwen: '10M tokens / month', monthlyTokensSeed: '5M tokens / month', chineseSupport: 'Chinese support', trial30: '30-day Pro trial', platforms: 'Windows / macOS', openEdition: 'Open edition available (MIT)', platformsLinux: 'Windows / macOS / Linux', editorQuote: '“ Strong Chinese understanding and creative capabilities, with long-context chat, web search and image generation. ”', largeLanguage: 'Large language model', multimodal: 'Multimodal', chineseStrong: 'Strong Chinese', trend7: 'Trend (7 days)',
+        education: '03 / education access', studentTitle: 'Student offers, separately', studentCopy: 'Student offers are not always permanent free quota: school email or education verification is usually required. Check the eligibility, region and expiry on the official page.', studentFilter: 'Show student offers →', educationVerify: 'Requires GitHub Education verification', officialStudent: 'Official student plan · eligibility is defined by the provider', openStudent: 'Open official student page ↗', noStudent: 'No verified student offer yet', pendingStudent: 'Waiting for an official source update',
+        offersEyebrow: '04 / all verified paths', offersTitle: 'Find an entrance that works now', offersCopy: 'Product, free method, quota, validity, region and verification status in one card.', showing: 'Showing', offer: 'offer', offers: 'offers', noMatch: 'No matching entrance.', resetCopy: 'Try another keyword, or clear search and filters.', reset: 'Clear search and filters', product: 'Product', amountPrice: 'Quota / price', validity: 'Validity', region: 'Region', verification: 'Verification', officialSource: 'Official source →', openDetails: 'Open details',
+        cheapestEyebrow: '05 / cheapest first', cheapestTitle: 'See the cheapest entrances first', cheapestCopy: 'Start with free access, then compare first-purchase prices; region, new-user status, validity and renewal are shown together.', liveRule: 'LIVE RULE', beFirst: 'Start here', firstPurchase: 'First purchase', selfHosted: 'Self-hosted', modelWeights: 'Model weights', conclusion: 'Conclusion:', comparePriceView: 'Price view', chinaBeijing: 'China / Beijing', international: 'International', judgment: 'Verdict', startHere: 'Start here', lowPrice: 'Low price', noteBeijing: 'Beijing does not mean every product is cheaper: this section shows verified free quota, first-purchase and open-weight paths, not one blended token-price ranking. Return to the official pricing page before subscribing.', newUserRegion: 'New user · Beijing', firstPurchaseRegion: 'Volcano Ark · first purchase', fromPrice: 'From ¥9.90', selfHostedRegion: 'Download · self-hosted', weightsFree: 'Free weights', aliModels: 'Alibaba Cloud · selected models', aliModelsCopy: 'Available in the China / Beijing deployment scope; new-user access lasts 90 days and then follows official pricing.', freeQuotaRule: 'See free quota rules ↗', codingPlanTitle: 'Doubao Coding Plan Lite', firstMonthCopy: 'First-month offer; renewal is ¥40 / month. Current limits follow the official promotion.', officialPlan: 'See official plan ↗', longcatTitle: 'LongCat-2.0', weightsCopy: 'Free weights do not mean free inference; storage, GPU, traffic and deployment time are separate costs.', openSourceEntry: 'Open source entry ↗', conclusionCopy: 'If you are in Beijing and qualify as a new user, start with the ¥0 quota; otherwise compare the ¥9.9 first-month plan. Neither is an unconditional permanent monthly price.', noEquivalentQuota: 'Usually no equivalent free quota', renewalPrice: '¥9.9 / ¥40 per month', notApplicable: 'Not applicable',
+        localLane: '06 / local lane', downloadLocal: 'Download locally', weightsNote: 'Weights may be free; GPU time may not be.', open: 'Open ↗', howToRead: '07 / how to read it', faqTitle: 'This is not a “everything is free” ranking', faqCopy: 'Free quota, trials, promotions, student eligibility and low-cost paths are listed separately.', recurringQuota: 'Free quota', studentDiscount: 'Student offer', openWeight: 'Open weights', officialEntry: 'Official entry', recurringQuotaCopy: 'Recurring quota can still have rate, region or payment-method limits.', studentDiscountCopy: 'Education verification is required; region, term and renewal conditions follow the provider.', openWeightCopy: 'Weights can be downloaded, but storage, GPU, inference and network egress may cost money.', officialEntryCopy: 'Every offer keeps its source, update date and a copyable usage path.', faqFree: 'What counts as free?', faqStudent: 'Are student offers permanent free?', faqNight: 'Are night discounts always available?', sortDefault: 'Overall', sortFresh: 'Recently checked', sortName: 'A–Z', footerSources: 'Official sources only · Free status separated by mechanism', footerData: 'Data is subject to change',
+        localeToggle: '中文', localTime: 'Local time', detecting: 'Detecting timezone…', sourceLanguage: 'English'
+      }),
+      'zh-CN': Object.freeze({
+        pageTitle: 'Free AI Index — 免费 AI 模型、Qwen、豆包、IDE 和试用汇总',
+        pageDescription: '一站比较经过核验的免费 AI 模型、免费编码 IDE、学生优惠、可下载权重和限时试用入口。',
+        brandSub: '已核验的免费 AI 资源', navCatalog: '模型库', navTools: '开发工具', navApi: 'API 服务', navRank: '榜单', submit: '提交资源',
+        verified: '每日核验 · 真实免费', heroTitle: '发现真正好用的<span>免费 AI</span>', heroTitleAccent: '免费 AI', heroCopy: '模型、API、IDE 与限时试用，一站比较', searchPlaceholder: '搜索模型、平台或功能，例如 Qwen、豆包、Cursor', searchLabel: '搜索资源', search: '搜索', hot: '热门搜索：', freeApi: '免费 API',
+        intelTitle: '今日 AI 情报', resourceCount: '个优质资源', checked: '通过人工核验，确认可免费使用', trend: '较上周', forever: '永久免费', longTerm: '长期可用', trial: '限时试用', grabChance: '把握机会', openWeights: '开源可下载', useFreely: '自由使用', heroNote: '好的 AI\n应该被更多人\n轻松使用',
+        method: '免费方式', capability: '能力', chinese: '中文支持', updated: '更新时间', all: '全部', browse: '找到适合你的 AI 工具', categoryCopy: '分类可以重叠，一条资源可能同时属于多个入口。', allOffers: '全部', largeModels: '大模型', ide: '免费 IDE', credits: '积分 / 次数', promo: '时段 / 限时优惠', web: '网页工具', download_lowcost: '下载 / 低成本', imageVideo: '图像视频', apiServices: 'API 服务', openModels: '开源模型', more: '更多分类',
+        popular: '本周热门', moreLink: '查看更多 →', permanent: '永久免费', limitedTrial: '限时试用', downloadable: '开源可下载', freeQuota: '免费额度', freePlan: '免费方案', supportedPlatforms: '支持平台', excellent: '优秀', featured: '编辑精选', checkedToday: '已于今日核验', qwenFeatured: '强大的中文多模态大模型，支持对话、文生图、代码等能力。', seedFeatured: '全能的对话与创作助手，支持文本、图像、音视频等模态生成。', traeFeatured: '基于 AI 的新一代开发 IDE，内置 Agent 能力，提升开发效率。', cursorFeatured: '广受欢迎的 AI 编程工具，深度理解代码，支持多种模型接入。', quotaLabel: '免费额度', monthlyTokensQwen: '每月 1000 万 tokens', monthlyTokensSeed: '每月 500 万 tokens', chineseSupport: '中文支持', trial30: '限时 30 天 Pro 体验', platforms: 'Windows / macOS', openEdition: '开源版可下载 (MIT)', platformsLinux: 'Windows / macOS / Linux', editorQuote: '“ 中文理解与创作能力出色，支持长文对话、联网搜索、图像生成等多种能力。 ”', largeLanguage: '大语言模型', multimodal: '多模态', chineseStrong: '中文强', trend7: '热度趋势（近 7 天）',
+        education: '03 / education access', studentTitle: '学生优惠单独看', studentCopy: '学生优惠不是永久免费额度：通常需要学校邮箱或教育身份验证，资格、地区和有效期以官方页面为准。', studentFilter: '筛选学生优惠 →', educationVerify: '需要 GitHub Education 验证', officialStudent: '官方学生计划 · 资格以页面为准', openStudent: '打开官方学生页 ↗', noStudent: '暂无已核验学生优惠', pendingStudent: '等待官方来源更新',
+        offersEyebrow: '04 / all verified paths', offersTitle: '找到现在能打开的入口', offersCopy: '产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。', showing: '找到', offer: '条资源', offers: '条资源', noMatch: '没有匹配的入口。', resetCopy: '换个关键词，或清空搜索和筛选。', reset: '清空搜索和筛选', product: '产品', amountPrice: '额度 / 价格', validity: '有效期', region: '地区', verification: '核验', officialSource: '官方来源 →', openDetails: '打开详情',
+        cheapestEyebrow: '05 / cheapest first', cheapestTitle: '最便宜的入口先看', cheapestCopy: '先免费，再看首购价；地区、新用户、有效期和续费同时展示。', liveRule: 'LIVE RULE', beFirst: '优先看', firstPurchase: '首购', selfHosted: '自托管', modelWeights: '模型权重', conclusion: '结论：', comparePriceView: '价格视角', chinaBeijing: '中国区 / 北京', international: '国际区', judgment: '判断', startHere: '先看', lowPrice: '低价', noteBeijing: '北京不代表所有产品都更便宜：这里展示的是已核验的“免费额度 / 首购优惠 / 开源权重”入口，不把不同模型的 token 单价混成一个总榜。订阅前请回到官方价格页。', newUserRegion: '北京区 · 新用户', firstPurchaseRegion: '火山方舟 · 首购', fromPrice: '¥9.90 起', selfHostedRegion: '下载 · 自托管', weightsFree: '权重免费', aliModels: '阿里云百炼 · 部分模型', aliModelsCopy: '仅中国（北京）部署范围可用；新用户有效期 90 天，额度用完后按官方价格计费。', freeQuotaRule: '看免费额度规则 ↗', codingPlanTitle: '豆包 Coding Plan Lite', firstMonthCopy: '首月优惠价；后续续费 ¥40 / 月，限量活动以官方页面当前状态为准。', officialPlan: '看官方方案 ↗', longcatTitle: 'LongCat-2.0', weightsCopy: '下载权重不等于推理免费；存储、GPU、流量和部署时间另算。', openSourceEntry: '打开开源入口 ↗', conclusionCopy: '如果你在北京且符合新用户条件，先用 ¥0 免费额度；不符合时，再看 ¥9.9 首月方案。¥0 和 ¥9.9 都不是无条件的长期月费。', noEquivalentQuota: '通常无同等免费额度', renewalPrice: '¥9.9 / ¥40 月', notApplicable: '不适用',
+        localLane: '06 / local lane', downloadLocal: '下载到本地', weightsNote: '权重免费，GPU 时间不一定免费。', open: '打开 ↗', howToRead: '07 / how to read it', faqTitle: '这不是“全都免费”榜单', faqCopy: '我们把免费、试用、优惠、学生资格和低价入口分开写。', recurringQuota: '免费额度', studentDiscount: '学生优惠', openWeight: '开源权重', officialEntry: '官方入口', recurringQuotaCopy: '周期性额度仍可能有速率、地区或付款方式限制。', studentDiscountCopy: '需要教育身份验证，优惠期限和适用地区以官方页面为准。', openWeightCopy: '可以下载模型，但存储、GPU、推理和流量可能收费。', officialEntryCopy: '每条 offer 都保留来源、更新时间和可复制的使用路径。', faqFree: '什么才算免费？', faqStudent: '学生优惠是永久免费吗？', faqNight: '夜间优惠一定存在吗？', sortDefault: '综合排序', sortFresh: '最近核验', sortName: 'A–Z', footerSources: 'OFFICIAL SOURCES ONLY · FREE STATUS SEPARATED BY MECHANISM', footerData: '数据会变化，请以官方页面为准',
+        localeToggle: 'EN', localTime: '本地时间', detecting: '正在检测时区…', sourceLanguage: '简体中文'
+      })
+    });
+    let currentLocale = 'en';
+    const localeText = key => LOCALE_COPY[currentLocale]?.[key] || LOCALE_COPY.en[key] || key;
+    const normalizeLocale = value => {
+      const text = String(value || '').toLowerCase();
+      if (text === 'zh' || text.startsWith('zh-')) return SUPPORTED_LOCALES.zh;
+      if (text === 'en' || text.startsWith('en-')) return SUPPORTED_LOCALES.en;
+      return '';
+    };
+    const readStoredLocale = () => {
+      try { return normalizeLocale(localStorage.getItem(LOCALE_STORAGE_KEY)); } catch (error) { return ''; }
+    };
+    const resolveLocale = (source = window.location) => {
+      const url = new URL(source.href || source, window.location.href);
+      const explicit = normalizeLocale(url.searchParams.get('lang'));
+      if (explicit) return explicit;
+      const pathMatch = url.pathname.match(/(?:^|\/)(zh|en)(?:\/|$)/i);
+      const pathLocale = normalizeLocale(pathMatch?.[1]);
+      if (pathLocale) return pathLocale;
+      const stored = readStoredLocale();
+      if (stored) return stored;
+      const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
+      return languages.some(language => normalizeLocale(language) === SUPPORTED_LOCALES.zh) ? SUPPORTED_LOCALES.zh : SUPPORTED_LOCALES.en;
+    };
+    const setNodeText = (selector, key) => document.querySelectorAll(selector).forEach(node => { node.textContent = localeText(key); });
+    const setNodeHtml = (selector, key) => document.querySelectorAll(selector).forEach(node => { node.innerHTML = localeText(key); });
+    const setLeadingText = (selector, key) => document.querySelectorAll(selector).forEach(node => {
+      const textNode = [...node.childNodes].find(child => child.nodeType === Node.TEXT_NODE);
+      if (textNode) textNode.nodeValue = `${localeText(key)} `;
+    });
+    const setNodeAttribute = (selector, attribute, key) => document.querySelectorAll(selector).forEach(node => node.setAttribute(attribute, localeText(key)));
+    const updateLocaleUrl = locale => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', locale === SUPPORTED_LOCALES.zh ? 'zh-CN' : 'en');
+      history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    };
+    const updateClock = () => {
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
+      const time = new Intl.DateTimeFormat(currentLocale, { hour: '2-digit', minute: '2-digit' }).format(new Date());
+      const clock = document.getElementById('catalog-clock');
+      if (clock) clock.innerHTML = `${localeText('localTime')} <span>${timeZone} · <b>${time}</b></span>`;
+    };
+    const updateLocaleMeta = () => {
+      document.documentElement.lang = currentLocale;
+      document.title = localeText('pageTitle');
+      document.querySelector('meta[name="description"]')?.setAttribute('content', localeText('pageDescription'));
+      document.querySelector('meta[property="og:locale"]')?.setAttribute('content', currentLocale === 'en' ? 'en_US' : 'zh_CN');
+    };
+    const applyLocale = locale => {
+      currentLocale = normalizeLocale(locale) || SUPPORTED_LOCALES.en;
+      updateLocaleMeta();
+      document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = localeText(node.dataset.i18n); });
+      setNodeText('.catalog-header .brand-sub', 'brandSub');
+      ['navCatalog', 'navTools', 'navApi', 'navRank'].forEach((key, index) => setNodeText(`.top-nav a:nth-child(${index + 1})`, key));
+      setNodeText('.header-submit', 'submit');
+      setNodeHtml('.hero-badge', 'verified');
+      setNodeHtml('.catalog-hero h1', 'heroTitle');
+      setNodeText('.catalog-hero .hero-copy', 'heroCopy');
+      setNodeAttribute('#catalog-search', 'placeholder', 'searchPlaceholder');
+      setNodeAttribute('#catalog-search', 'aria-label', 'searchLabel');
+      setNodeText('.hero-search button', 'search');
+      setNodeText('.hot-searches > span', 'hot');
+      setNodeText('.hot-searches button:nth-of-type(3)', 'freeApi');
+      setNodeText('.hero-intel-head strong', 'intelTitle');
+      setNodeHtml('.hero-intel-head > span', 'intelTitle');
+      const intelDate = new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
+      document.querySelector('.hero-intel-head > span').innerHTML = `▣ &nbsp;${intelDate}`;
+      setNodeText('.hero-intel-main > div:first-child > strong', 'resourceCount');
+      setNodeText('.hero-intel-main p', 'checked');
+      setNodeHtml('.mini-chart small', 'trend');
+      setNodeText('.intel-pills > div:nth-child(1) b', 'forever'); setNodeText('.intel-pills > div:nth-child(1) small', 'longTerm');
+      setNodeText('.intel-pills > div:nth-child(2) b', 'trial'); setNodeText('.intel-pills > div:nth-child(2) small', 'grabChance');
+      setNodeText('.intel-pills > div:nth-child(3) b', 'openWeights'); setNodeText('.intel-pills > div:nth-child(3) small', 'useFreely');
+      setNodeHtml('.hero-intel-note', 'heroNote');
+      ['method', 'capability', 'chinese', 'updated'].forEach((key, index) => setNodeText(`.catalog-filter-bar > div:nth-child(${index + 1}) b`, key));
+      setNodeText('.catalog-filter-bar .filter-current', 'all');
+      setNodeAttribute('#catalog-search', 'data-i18n-placeholder', 'searchPlaceholder');
+      setNodeText('#catalog-sort option[value="free"]', 'sortDefault'); setNodeText('#catalog-sort option[value="fresh"]', 'sortFresh'); setNodeText('#catalog-sort option[value="name"]', 'sortName');
+      setNodeText('.category-section .eyebrow', 'browse'); setNodeText('#categories-title', 'browse'); setNodeText('.category-section .section-heading > p', 'categoryCopy');
+      ['allOffers', 'largeModels', 'ide', 'imageVideo', 'apiServices', 'openModels', 'more'].forEach((key, index) => setNodeText(`.category-card:nth-child(${index + 1}) strong`, key));
+      setNodeText('.featured-section .eyebrow', 'popular'); setNodeText('#featured-title', 'popular'); setNodeText('.featured-section .section-more', 'moreLink');
+      setNodeText('.featured-card:nth-child(1) .resource-status', 'permanent'); setNodeText('.featured-card:nth-child(2) .resource-status', 'permanent'); setNodeText('.featured-card:nth-child(3) .resource-status', 'limitedTrial'); setNodeText('.featured-card:nth-child(4) .resource-status', 'downloadable');
+      setNodeText('.featured-card:nth-child(1) p', 'qwenFeatured'); setNodeText('.featured-card:nth-child(2) p', 'seedFeatured'); setNodeText('.featured-card:nth-child(3) p', 'traeFeatured'); setNodeText('.featured-card:nth-child(4) p', 'cursorFeatured');
+      [1, 2].forEach(index => { setLeadingText(`.featured-card:nth-child(${index}) .resource-meta span:nth-child(1)`, 'quotaLabel'); setNodeText(`.featured-card:nth-child(${index}) .resource-meta span:nth-child(1) b`, index === 1 ? 'monthlyTokensQwen' : 'monthlyTokensSeed'); setLeadingText(`.featured-card:nth-child(${index}) .resource-meta span:nth-child(2)`, 'chineseSupport'); setNodeText(`.featured-card:nth-child(${index}) .resource-meta span:nth-child(2) b`, 'excellent'); });
+      setLeadingText('.featured-card:nth-child(3) .resource-meta span:nth-child(1)', 'quotaLabel'); setNodeText('.featured-card:nth-child(3) .resource-meta span:nth-child(1) b', 'trial30'); setLeadingText('.featured-card:nth-child(3) .resource-meta span:nth-child(2)', 'supportedPlatforms'); setNodeText('.featured-card:nth-child(3) .resource-meta span:nth-child(2) b', 'platforms');
+      setLeadingText('.featured-card:nth-child(4) .resource-meta span:nth-child(1)', 'freePlan'); setNodeText('.featured-card:nth-child(4) .resource-meta span:nth-child(1) b', 'openEdition'); setLeadingText('.featured-card:nth-child(4) .resource-meta span:nth-child(2)', 'supportedPlatforms'); setNodeText('.featured-card:nth-child(4) .resource-meta span:nth-child(2) b', 'platformsLinux');
+      setNodeText('.editor-head strong', 'featured'); setNodeText('.editor-head a', 'moreLink'); setNodeText('.editor-pick blockquote', 'editorQuote'); ['largeLanguage', 'multimodal', 'chineseStrong'].forEach((key, index) => setNodeText(`.editor-pick .tag-row span:nth-child(${index + 1})`, key)); setNodeText('.trend > div:first-child b', 'trend7'); setNodeText('.editor-checked', 'checkedToday');
+      document.querySelector('.hero-intel')?.style.setProperty('--hero-note', currentLocale === SUPPORTED_LOCALES.en ? '"Good AI\\Ashould be easier\\Afor more people to use"' : '"好的 AI\\A应该被更多人\\A轻松使用"');
+      setNodeText('.student-panel .eyebrow', 'education'); setNodeText('#student-title', 'studentTitle'); setNodeText('.student-panel-copy > p', 'studentCopy'); setNodeText('.student-button', 'studentFilter'); setNodeText('.student-item:nth-child(1) span', 'educationVerify'); setNodeText('.student-item:nth-child(2) span', 'officialStudent');
+      setNodeText('.offers-section .eyebrow', 'offersEyebrow'); setNodeText('.offers-section h2', 'offersTitle'); setNodeText('.offers-heading > div > p', 'offersCopy');
+      setNodeText('.table-head > div:nth-child(1)', 'product'); setNodeText('.table-head > div:nth-child(2)', 'method'); setNodeText('.table-head > div:nth-child(3)', 'amountPrice'); setNodeText('.table-head > div:nth-child(4)', 'validity'); setNodeText('.table-head > div:nth-child(5)', 'region'); setNodeText('.table-head > div:nth-child(6)', 'verification');
+      ['allOffers', 'freeQuota', 'credits', 'ide', 'promo', 'studentDiscount', 'web', 'download_lowcost'].forEach((key, index) => setLeadingText(`.filter-chip:nth-child(${index + 1})`, key));
+      setNodeText('#catalog-empty-state strong', 'noMatch'); setNodeText('#catalog-empty-state p', 'resetCopy'); setNodeText('#catalog-reset-filters', 'reset');
+      setNodeText('.compare-panel .eyebrow', 'cheapestEyebrow'); setNodeText('.compare-panel h2', 'cheapestTitle'); setNodeText('.compare-panel .section-heading p', 'cheapestCopy'); setNodeText('.compare-panel .badge', 'liveRule');
+      setNodeText('.cheap-card:nth-child(1) .cheap-card-label span', 'newUserRegion'); setNodeText('.cheap-card:nth-child(1) .cheap-card-label b', 'beFirst'); setNodeText('.cheap-card:nth-child(1) .cheap-card-price small', 'freeQuota'); setNodeText('.cheap-card:nth-child(1) h3', 'aliModels'); setNodeText('.cheap-card:nth-child(1) p', 'aliModelsCopy'); setNodeText('.cheap-card:nth-child(1) a', 'freeQuotaRule');
+      setNodeText('.cheap-card:nth-child(2) .cheap-card-label span', 'firstPurchaseRegion'); setNodeText('.cheap-card:nth-child(2) .cheap-card-label b', 'fromPrice'); setNodeText('.cheap-card:nth-child(2) .cheap-card-price small', 'firstPurchase'); setNodeText('.cheap-card:nth-child(2) h3', 'codingPlanTitle'); setNodeText('.cheap-card:nth-child(2) p', 'firstMonthCopy'); setNodeText('.cheap-card:nth-child(2) a', 'officialPlan');
+      setNodeText('.cheap-card:nth-child(3) .cheap-card-label span', 'selfHostedRegion'); setNodeText('.cheap-card:nth-child(3) .cheap-card-label b', 'weightsFree'); setNodeText('.cheap-card:nth-child(3) .cheap-card-price small', 'modelWeights'); setNodeText('.cheap-card:nth-child(3) h3', 'longcatTitle'); setNodeText('.cheap-card:nth-child(3) p', 'weightsCopy'); setNodeText('.cheap-card:nth-child(3) a', 'openSourceEntry');
+      setNodeHtml('.cheap-disclaimer', 'conclusionCopy');
+      ['comparePriceView', 'chinaBeijing', 'international', 'judgment'].forEach((key, index) => setNodeText(`.compare-row.head > div:nth-child(${index + 1})`, key));
+      setLeadingText('.compare-row:nth-child(2) > div:first-child', 'aliModels'); setNodeText('.compare-row:nth-child(2) > div:first-child small', 'freeQuota'); setNodeText('.compare-row:nth-child(2) > div:nth-child(2)', 'firstMonthCopy'); setNodeText('.compare-row:nth-child(2) > div:nth-child(3)', 'noEquivalentQuota'); setNodeText('.compare-row:nth-child(2) > div:nth-child(4)', 'startHere');
+      setLeadingText('.compare-row:nth-child(3) > div:first-child', 'codingPlanTitle'); setNodeText('.compare-row:nth-child(3) > div:first-child small', 'firstPurchase'); setNodeText('.compare-row:nth-child(3) > div:nth-child(2)', 'renewalPrice'); setNodeText('.compare-row:nth-child(3) > div:nth-child(3)', 'notApplicable'); setNodeText('.compare-row:nth-child(3) > div:nth-child(4)', 'lowPrice');
+      setNodeText('.compare-note', 'noteBeijing');
+      setNodeText('.download-panel .eyebrow', 'localLane'); setNodeText('.download-panel h2', 'downloadLocal'); setNodeText('.download-panel .section-heading p', 'weightsNote');
+      setNodeText('.catalog-faq .eyebrow', 'howToRead'); setNodeText('#catalog-faq-title', 'faqTitle'); setNodeText('.catalog-faq .section-heading p', 'faqCopy');
+      ['recurringQuota', 'studentDiscount', 'openWeight', 'officialEntry'].forEach((key, index) => setNodeText(`.catalog-faq .seo-grid > div:nth-child(${index + 1}) h3`, key));
+      ['recurringQuotaCopy', 'studentDiscountCopy', 'openWeightCopy', 'officialEntryCopy'].forEach((key, index) => setNodeText(`.catalog-faq .seo-grid > div:nth-child(${index + 1}) p`, key));
+      ['faqFree', 'faqStudent', 'faqNight'].forEach((key, index) => setNodeText(`.catalog-faq .faq-list details:nth-child(${index + 1}) summary`, key));
+      setNodeText('.catalog-app .footer > span:first-child', 'footerSources'); setNodeText('.catalog-app .footer > span:last-child', 'footerData');
+      const toggle = document.querySelector('[data-locale-toggle]');
+      if (toggle) { toggle.textContent = localeText('localeToggle'); toggle.setAttribute('aria-label', currentLocale === 'en' ? 'Switch to Chinese' : '切换到英文'); }
+      updateClock();
+      if (loadedOffers.length) { renderOffers(loadedOffers); applyFilters(); }
+    };
+    const installLocaleToggle = () => {
+      const actions = document.querySelector('.header-actions');
+      if (!actions || actions.querySelector('[data-locale-toggle]')) return;
+      const toggle = document.createElement('button');
+      toggle.type = 'button'; toggle.className = 'locale-toggle'; toggle.dataset.localeToggle = ''; toggle.dataset.i18n = 'localeToggle';
+      toggle.addEventListener('click', () => {
+        const next = currentLocale === SUPPORTED_LOCALES.en ? SUPPORTED_LOCALES.zh : SUPPORTED_LOCALES.en;
+        try { localStorage.setItem(LOCALE_STORAGE_KEY, next); } catch (error) { /* local storage can be unavailable */ }
+        updateLocaleUrl(next); applyLocale(next);
+      });
+      actions.insertBefore(toggle, actions.firstChild);
+    };
+    installLocaleToggle();
+    applyLocale(resolveLocale());
     const embeddedOfferData = JSON.parse(document.getElementById('offer-data').textContent || '[]');
     const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
     const safeExternalHref = value => /^https:\/\//i.test(String(value || '')) ? String(value) : '#';
@@ -3489,8 +3895,76 @@
     };
     const checkedMarkup = item => {
       const source = String(item.checkedSummary || '').split(' / ').slice(1).join(' / ');
-      const label = item.date ? (item.date === localTodayIso() ? 'Today' : formatDate(item.date)) : String(item.checkedSummary || '').split(' / ')[0];
+      const label = item.date ? (item.date === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(item.date)) : String(item.checkedSummary || '').split(' / ')[0];
       return `${escapeHtml(label)}${source ? `<small>${escapeHtml(source)}</small>` : ''}`;
+    };
+    const iconHostFromUrl = value => {
+      try {
+        const url = new URL(String(value || ''));
+        return /^https?:$/i.test(url.protocol) ? url.hostname.toLowerCase() : '';
+      } catch (error) {
+        return '';
+      }
+    };
+    const PROVIDER_ICON_HOSTS = Object.freeze({
+      codebuddy: 'cloud.tencent.com',
+      qoder: 'qoder.com',
+      trae: 'www.trae.cn',
+      comate: 'comate.baidu.com',
+      doubao: 'www.volcengine.com',
+      glm: 'bigmodel.cn',
+      'longcat-api': 'www.meituan.com',
+      'longcat-download': 'www.meituan.com',
+      'qwen-download': 'www.aliyun.com',
+      'glm-download': 'bigmodel.cn',
+      sensecore: 'www.sensetime.com',
+      deepseek: 'www.deepseek.com',
+      'opencode-zen-free': 'opencode.ai',
+      'github-copilot-free': 'github.com',
+      'cursor-hobby': 'cursor.com',
+      'amazon-q-free': 'aws.amazon.com',
+      'google-antigravity-free': 'google.com',
+      'aliyun-qwen-free-quota': 'www.aliyun.com',
+      'keenable-search-free': 'keenable.ai',
+      'tinyfish-search-fetch-free': 'tinyfish.ai',
+      'tinyfish-agent-browser-metered': 'tinyfish.ai',
+      'tavily-web-free-credits': 'tavily.com',
+      'exa-web-free-credits': 'exa.ai',
+      'you-web-free-tier': 'you.com',
+      'firecrawl-web-free-credits': 'firecrawl.dev',
+      'brave-search-free-credits': 'brave.com',
+      'browserbase-free-tier': 'browserbase.com'
+    });
+    const PROVIDER_ICON_ASSETS = Object.freeze({
+      qwen: 'https://github.com/QwenLM.png?size=128',
+      glm: 'https://github.com/zai-org.png?size=128',
+      'qwen-download': 'https://github.com/QwenLM.png?size=128',
+      'glm-download': 'https://github.com/zai-org.png?size=128'
+    });
+    const providerIconAsset = item => PROVIDER_ICON_ASSETS[item.providerId] || PROVIDER_ICON_ASSETS[item.id] || '';
+    const providerIconHost = item => PROVIDER_ICON_HOSTS[item.providerId] || PROVIDER_ICON_HOSTS[item.id] || iconHostFromUrl(item.register) || iconHostFromUrl(item.sourceUrls?.[0]);
+    const providerIconMarkup = item => {
+      const host = providerIconHost(item);
+      const asset = providerIconAsset(item);
+      const fallback = `<span class="provider-mark-fallback">${escapeHtml(item.providerMark)}</span>`;
+      if (!host && !asset) return fallback;
+      const faviconService = host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=64` : '';
+      const imageUrl = asset || faviconService;
+      return `${fallback}<img class="provider-icon-img" src="${escapeHtml(imageUrl)}" data-icon-host="${escapeHtml(host || '')}" data-icon-asset="${escapeHtml(asset)}" alt="${escapeHtml(item.provider)} 图标" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
+    };
+    const hydrateProviderIcons = container => {
+      container.querySelectorAll('.provider-mark .provider-icon-img').forEach(image => {
+        const mark = image.closest('.provider-mark');
+        image.addEventListener('load', () => mark.classList.add('has-image'), { once: true });
+        image.addEventListener('error', () => {
+          if (image.dataset.fallbackTried === 'true' || !image.dataset.iconHost) {
+            image.remove();
+            return;
+          }
+          image.dataset.fallbackTried = 'true';
+          image.src = `https://${image.dataset.iconHost}/favicon.ico`;
+        });
+      });
     };
     const pad = value => String(value).padStart(2, '0');
     const rowBadgeClass = badge => {
@@ -3502,12 +3976,7 @@
       return 'open';
     };
     const categoryNames = {
-      free_quota: '免费额度',
-      credits: '积分 / 次数',
-      ide: '免费 IDE',
-      promo: '时段 / 限时优惠',
-      web: '网页直用',
-      download_lowcost: '可下载 / 低成本'
+      free_quota: 'freeQuota', credits: 'credits', ide: 'ide', promo: 'promo', student: 'studentDiscount', web: 'web', download_lowcost: 'download_lowcost'
     };
     const offerTokens = item => new Set([...(item.type || []), ...(item.capabilities || []), item.productType].filter(Boolean));
     const offerCategories = item => {
@@ -3516,6 +3985,8 @@
       const isIde = item.productType === 'free_ide' || tokens.has('ide') || tokens.has('free_ide');
       const isWeb = item.productType === 'web_infrastructure' || tokens.has('web');
       const isDownloadOrLowCost = item.productType === 'open_weights' || item.productType === 'payg' || tokens.has('download') || tokens.has('payg');
+      const isStudent = tokens.has('student') || Boolean(item.studentSummary);
+      if (isStudent) categories.push('student');
       if (['daily_quota', 'weekly_quota', 'monthly_quota', 'permanent'].includes(item.freeMechanism) && !isIde && !isDownloadOrLowCost) categories.push('free_quota');
       if (['trial', 'limited_time_free'].includes(item.freeMechanism)) categories.push('credits');
       if (isIde) categories.push('ide');
@@ -3531,14 +4002,16 @@
       const searchText = JSON.stringify([item.provider, item.name, item.product, item.model, item.endpoint, item.freeSummary, item.freeMechanism, item.validity, item.access, ...(item.capabilities || []), item.usageGuide?.summary, item.usageGuide?.steps?.join(' ')].filter(Boolean));
       const capabilityLabel = (item.capabilities || []).join(' · ');
       const primary = primaryCategory(item);
-      const categoryLabel = categoryNames[primary];
-      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(item.provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="category-cell"><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span><small>${escapeHtml(categories.slice(1).map(category => categoryNames[category]).join(' · '))}</small></div><div class="cell mechanism-cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><strong>${escapeHtml(item.freeSummary || item.mechanism)}</strong><small>${escapeHtml(capabilityLabel || item.modelMeta || '')}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${checkedMarkup(item)}</div><button class="row-arrow" aria-label="打开 ${escapeHtml(item.title || item.provider)} 详情">→</button></article>`;
+      const categoryLabel = localeText(categoryNames[primary]) || localeText('verification');
+      const studentMarkup = item.studentSummary ? `<div class="student-mini">${escapeHtml(item.studentSummary)}</div>` : '';
+      const alternateLabels = categories.slice(1).map(category => localeText(categoryNames[category])).filter(Boolean).join(' · ');
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(item.provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(item.provider)} 图标">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(item.title || item.provider)}">→</button></div><div class="offer-card-model"><strong>${escapeHtml(item.model || item.name)}</strong><small>${escapeHtml(item.modelMeta || alternateLabels || '')}</small></div><div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0] || 'OPEN')}</span><br>${escapeHtml(item.freeSummary || item.mechanism || 'See official terms')}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(item.validitySummary)}<small>${escapeHtml(item.accessSummary || item.access || 'See official terms')}</small></p></div></div><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small><span>${escapeHtml(localeText('officialSource'))}</span></div></article>`;
     };
-    const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString(currentLocale, { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
       const node = document.getElementById('ld-dynamic');
       if (!node) return;
-      const faq = [...document.querySelectorAll('.faq-list details')].map(detail => ({
+      const faq = [...document.querySelectorAll('.catalog-faq .faq-list details')].map(detail => ({
         '@type': 'Question',
         name: detail.querySelector('summary').textContent.trim(),
         acceptedAnswer: { '@type': 'Answer', text: detail.querySelector('p').textContent.trim() }
@@ -3552,47 +4025,46 @@
       }, null, 2);
     };
     const renderOffers = items => {
+      loadedOffers = items;
       offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
-      const container = document.getElementById('offerRows');
+      const container = document.getElementById('catalog-offer-rows');
       container.innerHTML = items.map(rowArticleMarkup).join('');
+      hydrateProviderIcons(container);
       rows = [...container.querySelectorAll('.offer')];
 
       const countCategory = category => items.filter(item => offerCategories(item).includes(category)).length;
-      const setCount = (filter, count, selector) => document.querySelectorAll(`[data-filter="${filter}"] ${selector}`).forEach(node => { node.textContent = pad(count); });
+      const setCount = (filter, count) => {
+        document.querySelectorAll(`.catalog-app [data-filter="${filter}"] em`).forEach(node => { node.textContent = pad(count); });
+        document.querySelectorAll(`.catalog-app [data-category-count="${filter}"]`).forEach(node => { node.textContent = pad(count); });
+      };
 
-      document.querySelector('.hero-side .big').textContent = items.length;
-      setCount('all', items.length, 'b');
-      setCount('all', items.length, 'em');
-      ['free_quota', 'credits', 'ide', 'promo', 'web', 'download_lowcost'].forEach(category => {
-        setCount(category, countCategory(category), 'b');
-        setCount(category, countCategory(category), 'em');
-      });
-      document.getElementById('summaryFreeQuota').textContent = pad(countCategory('free_quota'));
-      document.getElementById('summaryCredits').textContent = pad(countCategory('credits'));
-      document.getElementById('summaryIde').textContent = pad(countCategory('ide'));
-      document.getElementById('summaryPromo').textContent = pad(countCategory('promo'));
-      document.getElementById('summaryWeb').textContent = pad(countCategory('web'));
+      document.getElementById('heroCount').textContent = items.length;
+      setCount('all', items.length);
+      ['free_quota', 'credits', 'ide', 'promo', 'student', 'web', 'download_lowcost'].forEach(category => setCount(category, countCategory(category)));
+      const featuredQuotaCount = document.getElementById('featuredQuotaCount');
+      const featuredIdeCount = document.getElementById('featuredIdeCount');
+      const featuredStudentCount = document.getElementById('featuredStudentCount');
+      if (featuredQuotaCount) featuredQuotaCount.textContent = pad(countCategory('free_quota'));
+      if (featuredIdeCount) featuredIdeCount.textContent = pad(countCategory('ide'));
+      if (featuredStudentCount) featuredStudentCount.textContent = pad(countCategory('student'));
+
+      const studentItems = items.filter(item => offerCategories(item).includes('student'));
+      document.getElementById('studentList').innerHTML = studentItems.length
+        ? studentItems.map(item => `<article class="student-item"><strong>${escapeHtml(item.title || item.name)}</strong><span>${escapeHtml(item.studentEligibility || (currentLocale === SUPPORTED_LOCALES.zh ? '需要教育身份验证' : 'Education verification required'))}</span><small>${escapeHtml(item.studentSummary || (currentLocale === SUPPORTED_LOCALES.zh ? '资格和期限以官方页面为准' : 'Eligibility and expiry follow the official page'))}</small><a href="${escapeHtml(item.studentSourceUrls?.[0] || item.register)}" target="_blank" rel="noreferrer noopener">${escapeHtml(localeText('openStudent'))}</a></article>`).join('')
+        : `<div class="student-item"><strong>${escapeHtml(localeText('noStudent'))}</strong><span>${escapeHtml(localeText('pendingStudent'))}</span></div>`;
 
       const downloadItems = items.filter(item => offerCategories(item).includes('download_lowcost'));
-      document.getElementById('ideHighlightButton').textContent = `查看 ${countCategory('ide')} 个免费 IDE →`;
-      document.getElementById('ideHighlightGrid').innerHTML = [
-        ['FREE QUOTA', '免费额度', '按日、周、月或持续提供'],
-        ['CREDITS', '积分 / 次数', '新人体验，先用后看续费'],
-        ['FREE IDE', '免费 IDE', '下载即用，模型和用量写清楚'],
-        ['NIGHT DEAL', '时段优惠', '按来源和浏览器时区核验']
-      ].map(([kicker, title, detail], index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${kicker}</b><strong>${title}</strong><span>${detail}</span></div>`).join('');
-
-      document.getElementById('downloadList').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(item.provider)}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(item.registerLabel || 'Open')} ↗</a></div>`).join('');
+      document.getElementById('catalog-download-list').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(item.provider)}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(item.registerLabel || localeText('open'))}</a></div>`).join('');
 
       const latest = items.map(item => item.lastVerifiedAt).filter(Boolean).sort().at(-1);
-      if (latest) document.getElementById('lastChecked').textContent = `Last checked: ${formatDate(latest)} · Data is subject to change`;
+      if (latest) document.getElementById('catalog-last-checked').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `最后核验：${formatDate(latest)} · ${localeText('footerData')}` : `Last checked: ${formatDate(latest)} · ${localeText('footerData')}`;
 
       updateStructuredData(items);
     };
     const showDataError = () => {
-      const container = document.getElementById('offerRows');
+      const container = document.getElementById('catalog-offer-rows');
       container.innerHTML = '<div class="offer-error"><strong>Offer data unavailable.</strong> The directory could not load <code>data/offers.json</code> and this page has no embedded fallback. Serve the site over HTTP (or run <code>python scripts/build_static.py</code>) and reload.</div>';
-      document.getElementById('resultCount').textContent = 'Showing 0 offers';
+      document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `0 ${localeText('offer')}` : `${localeText('showing')} 0 ${localeText('offers')}`;
     };
     const loadOffers = async () => {
       if (location.protocol !== 'file:') {
@@ -3712,7 +4184,7 @@
     let activeFilter = 'all';
     let filterBeforeSearch = null;
     const applyFilters = () => {
-      const query = document.getElementById('search').value.trim().toLowerCase();
+      const query = document.getElementById('catalog-search').value.trim().toLowerCase();
       let visible = 0;
       rows.forEach(row => {
         const categories = row.dataset.category.split(' ').filter(Boolean);
@@ -3721,25 +4193,27 @@
         const show = matchesFilter && matchesQuery;
         row.classList.toggle('hidden', !show); if (show) visible++;
       });
-      document.getElementById('resultCount').textContent = `Showing ${visible} offer${visible === 1 ? '' : 's'}`;
-      document.getElementById('emptyState').hidden = visible > 0;
+      document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh
+        ? `${visible} ${localeText('offer')}`
+        : `${localeText('showing')} ${visible} ${visible === 1 ? localeText('offer') : localeText('offers')}`;
+      document.getElementById('catalog-empty-state').hidden = visible > 0;
     };
     const setFilter = (filter) => {
       activeFilter = filter;
-      document.querySelectorAll('[data-filter]').forEach(el => {
+      document.querySelectorAll('.catalog-app [data-filter]').forEach(el => {
         const isActive = el.dataset.filter === filter;
         el.classList.toggle('active', isActive);
         if (el.tagName === 'BUTTON') el.setAttribute('aria-pressed', String(isActive));
       });
-      if (filter === 'compare') document.getElementById('compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (filter === 'compare') document.getElementById('catalog-compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
       else applyFilters();
     };
-    document.querySelectorAll('[data-filter]').forEach(el => el.addEventListener('click', () => {
+    document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {
       filterBeforeSearch = null;
       setFilter(el.dataset.filter);
     }));
-    document.getElementById('search').addEventListener('input', () => {
-      const hasQuery = Boolean(document.getElementById('search').value.trim());
+    document.getElementById('catalog-search').addEventListener('input', () => {
+      const hasQuery = Boolean(document.getElementById('catalog-search').value.trim());
       if (hasQuery) {
         if (filterBeforeSearch === null) filterBeforeSearch = activeFilter;
         setFilter('all');
@@ -3752,19 +4226,29 @@
         applyFilters();
       }
     });
-    document.getElementById('resetFilters').addEventListener('click', () => {
-      document.getElementById('search').value = '';
+    document.querySelectorAll('.hot-searches button').forEach(button => button.addEventListener('click', () => {
+      const input = document.getElementById('catalog-search');
+      input.value = button.textContent.trim();
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      input.focus();
+    }));
+    document.querySelector('.hero-search button')?.addEventListener('click', () => {
+      document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('catalog-reset-filters').addEventListener('click', () => {
+      document.getElementById('catalog-search').value = '';
       filterBeforeSearch = null;
       setFilter('all');
     });
     const initialQuery = new URLSearchParams(location.search).get('q');
-    if (initialQuery) document.getElementById('search').value = initialQuery;
-    document.getElementById('sort').addEventListener('change', e => {
+    if (initialQuery) document.getElementById('catalog-search').value = initialQuery;
+    document.getElementById('catalog-sort').addEventListener('change', e => {
       const byName = row => `${row.dataset.provider || row.dataset.name}\n${row.dataset.name}`;
       const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
-      const wrap = document.getElementById('offerRows'); sorted.forEach(row => wrap.appendChild(row));
+      const wrap = document.getElementById('catalog-offer-rows'); sorted.forEach(row => wrap.appendChild(row));
     });
-    const clock = document.getElementById('clock');
+    const clock = document.getElementById('catalog-clock');
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
     clock.innerHTML = `Local time <span>${tz} · <b>${new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date())}</b></span>`;
     let offerDataSource = 'embedded';
