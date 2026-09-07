@@ -95,6 +95,12 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, self.html)
 
+    def test_page_exposes_public_contact_email(self):
+        self.assertIn('href="mailto:xdguo0527@gmail.com"', self.html)
+        self.assertIn('data-footer-contact-label', self.html)
+        self.assertIn("contactLabel: 'Contact'", self.html)
+        self.assertIn("contactLabel: '联系我'", self.html)
+
     def test_locale_switch_updates_url_and_document_language(self):
         for needle in (
             'document.documentElement.lang',
