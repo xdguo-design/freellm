@@ -44,6 +44,13 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
 
+    def test_page_has_adsense_site_verification_script(self):
+        self.assertIn(
+            'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239',
+            self.html,
+        )
+        self.assertIn('crossorigin="anonymous"', self.html)
+
     def test_web_groups_and_usage_guide_hooks_exist(self):
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
             self.assertIn(f'data-filter="{name}"', self.html)
