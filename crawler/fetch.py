@@ -122,3 +122,74 @@ def fetch_public_page(url: str, allowed_domains: list[str], timeout: int = 15, m
         return {"url": url, "status": "failed", "reason": str(error), "checkedAt": checked_at}
     finally:
         socket.setdefaulttimeout(previous_socket_timeout)
+
+
+def fetch_public_text_resource(
+    url: str,
+    allowed_domains: list[str],
+    timeout: int = 8,
+    max_bytes: int = 200_000,
+) -> dict[str, object]:
+    """Fetch bounded public text or JSON without executing the response."""
+    checked_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    if not _allowed_host(url, allowed_domains):
+        return {
+            "url": url,
+            "status": "rejected",
+            "reason": "only HTTPS URLs on an allowed public domain are supported",
+            "checkedAt": checked_at,
+        }
+
+    request = Request(
+        url,
+        headers={
+            "User-Agent": USER_AGENT,
+            "Accept": "text/*,application/json,application/xml",
+        },
+    )
+    previous_socket_timeout = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(timeout)
+    try:
+        with DIRECT_OPENER.open(request, timeout=timeout) as response:
+            content_type = response.headers.get_content_type()
+            executable_content_types = {
+                "application/ecmascript",
+                "application/javascript",
+                "application/x-javascript",
+                "text/ecmascript",
+                "text/javascript",
+            }
+            if not (
+                content_type.startswith("text/") and content_type not in executable_content_types
+                or content_type in {"application/json", "application/xml"}
+            ):
+                return {
+                    "url": url,
+                    "status": "rejected",
+                    "reason": f"unsupported content type: {content_type}",
+                    "checkedAt": checked_at,
+                }
+            body = read_limited(response, max_bytes)
+            if len(body) > max_bytes:
+                return {
+                    "url": url,
+                    "status": "source_limit",
+                    "reason": "response exceeds maximum size",
+                    "bytes": len(body),
+                    "checkedAt": checked_at,
+                }
+            charset = response.headers.get_content_charset() or "utf-8"
+            return {
+                "url": url,
+                "status": "ok",
+                "contentType": content_type,
+                "content": body.decode(charset, errors="replace"),
+                "bytes": len(body),
+                "checkedAt": checked_at,
+            }
+    except HTTPError as error:
+        return {"url": url, "status": "failed", "reason": f"HTTP {error.code}", "checkedAt": checked_at}
+    except (URLError, TimeoutError, ValueError, OSError) as error:
+        return {"url": url, "status": "failed", "reason": str(error), "checkedAt": checked_at}
+    finally:
+        socket.setdefaulttimeout(previous_socket_timeout)

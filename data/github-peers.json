@@ -1,0 +1,74 @@
+[
+  {
+    "id": "devansh-freellm",
+    "owner": "Devansh-365",
+    "repo": "freellm",
+    "repoUrl": "https://github.com/Devansh-365/freellm",
+    "kind": "gateway",
+    "discoveryQueries": [
+      "free llm gateway",
+      "openai compatible free models"
+    ],
+    "allowedHosts": [
+      "github.com",
+      "api.github.com",
+      "raw.githubusercontent.com"
+    ],
+    "enabled": true,
+    "notes": "Peer discovery only; provider quotas require official verification."
+  },
+  {
+    "id": "awesome-free-llm-apis",
+    "owner": "mnfst",
+    "repo": "awesome-free-llm-apis",
+    "repoUrl": "https://github.com/mnfst/awesome-free-llm-apis",
+    "kind": "directory",
+    "discoveryQueries": [
+      "permanent free llm api",
+      "free ai api directory"
+    ],
+    "allowedHosts": [
+      "github.com",
+      "api.github.com",
+      "raw.githubusercontent.com"
+    ],
+    "enabled": true,
+    "notes": "Use as discovery input; verify every provider with an official source."
+  },
+  {
+    "id": "open-free-llm-api",
+    "owner": "open-free-llm-api",
+    "repo": "awesome-freellm-apis",
+    "repoUrl": "https://github.com/open-free-llm-api/awesome-freellm-apis",
+    "kind": "directory",
+    "discoveryQueries": [
+      "free llm api keys",
+      "free model endpoints"
+    ],
+    "allowedHosts": [
+      "github.com",
+      "api.github.com",
+      "raw.githubusercontent.com"
+    ],
+    "enabled": true,
+    "notes": "Use as discovery input; provider terms must be rechecked."
+  },
+  {
+    "id": "tashfeenahmed-freellmapi",
+    "owner": "tashfeenahmed",
+    "repo": "freellmapi",
+    "repoUrl": "https://github.com/tashfeenahmed/freellmapi",
+    "kind": "gateway",
+    "discoveryQueries": [
+      "free llm provider gateway",
+      "free model endpoints gateway"
+    ],
+    "allowedHosts": [
+      "github.com",
+      "api.github.com",
+      "raw.githubusercontent.com"
+    ],
+    "enabled": true,
+    "notes": "Peer discovery only; do not treat gateway claims as provider evidence."
+  }
+]
