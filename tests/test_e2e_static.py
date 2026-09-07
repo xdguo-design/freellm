@@ -16,6 +16,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+ROBOTS_PATH = ROOT / "robots.txt"
+SITEMAP_PATH = ROOT / "sitemap.xml"
 
 
 def read_offers() -> list:
@@ -50,6 +52,14 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('crossorigin="anonymous"', self.html)
+
+    def test_seo_files_point_search_engines_to_canonical_site(self):
+        robots = ROBOTS_PATH.read_text(encoding="utf-8")
+        sitemap = SITEMAP_PATH.read_text(encoding="utf-8")
+        self.assertIn("User-agent: *", robots)
+        self.assertIn("Allow: /", robots)
+        self.assertIn("Sitemap: https://freellm.top/sitemap.xml", robots)
+        self.assertIn("<loc>https://freellm.top/</loc>", sitemap)
 
     def test_web_groups_and_usage_guide_hooks_exist(self):
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
