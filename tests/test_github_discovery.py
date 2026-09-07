@@ -7,6 +7,7 @@ from unittest.mock import patch
 from crawler.github_discovery import (
     extract_peer_document_evidence,
     fetch_github_document,
+    fetch_github_json,
     select_document_paths,
     discover_github_repositories,
     scan_github_peer,
@@ -51,6 +52,16 @@ class GitHubRegistryTests(unittest.TestCase):
 
 
 class GitHubDocumentFetchTests(unittest.TestCase):
+    @patch("crawler.fetch.fetch_public_text_resource")
+    def test_fetch_github_json_allows_bounded_large_tree_indexes(self, fetch_text):
+        fetch_text.return_value = {
+            "status": "ok",
+            "content": "{}",
+        }
+
+        self.assertEqual(fetch_github_json("https://api.github.com/repos/owner/repo"), {})
+        self.assertEqual(fetch_text.call_args.kwargs["max_bytes"], 2_000_000)
+
     def test_fetch_github_document_accepts_markdown(self):
         result = fetch_github_document(
             "https://raw.githubusercontent.com/owner/repo/main/README.md",

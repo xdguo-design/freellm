@@ -11,6 +11,8 @@ npx skills add <owner>/<repo> --skill free-ai-index-workflow
 ## 触发示例
 
 - `按完整工作流扫描 GitHub 同类产品并核验免费模型`
+
+固定同行扫描源：`https://github.com/tashfeenahmed/freellmapi`。它只产生 `needs_review` 发现线索，不能绕过官方核验直接发布。
 - `把官方核验、外部平台评分和页面改版串起来`
 - `跑完整 Free AI Index research pipeline，但不要自动发布`
 

@@ -174,9 +174,9 @@ def fetch_github_document(
 def fetch_github_json(
     url: str,
     timeout: int = 8,
-    max_bytes: int = 200_000,
+    max_bytes: int = 2_000_000,
 ) -> dict:
-    """Fetch and parse one bounded public GitHub API response."""
+    """Fetch one bounded public GitHub API response, including large tree indexes."""
     from .fetch import fetch_public_text_resource
 
     response = fetch_public_text_resource(

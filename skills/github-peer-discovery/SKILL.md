@@ -46,6 +46,8 @@ python -m crawler.cli discover --providers data/providers.json --github-peers da
 
 命令只把同行文档线索加入审核队列，不覆盖 `data/offers.json`。运行后检查 coverage 中的官方来源、peer 文档、失败数和候选数。
 
+本项目固定扫描源包含 `https://github.com/tashfeenahmed/freellmapi`。它是 GitHub 同行发现数据源，只用于发现 Provider、模型和官方文档线索；README、docs 或网关目录中的免费额度声明必须回到 Provider 官方来源核验，不能直接发布。
+
 ## 反模式
 
 - 把 GitHub README、博客、issue 或搜索结果当作 Provider 的当前价格和额度证明。

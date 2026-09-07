@@ -17,6 +17,7 @@ python -m crawler.cli discover --providers data/providers.json --github-peers da
 ## 触发示例
 
 - `扫描 Devansh-365/freellm 的 README、docs 和模型/provider 线索`
+- `扫描 tashfeenahmed/freellmapi 的 README、docs/providers 和模型/provider 线索`
 - `找 GitHub 上同类免费 LLM gateway，并生成审核队列`
 - `梳理这些竞品的网站结构，给我三个不复制品牌的视觉方向`
 

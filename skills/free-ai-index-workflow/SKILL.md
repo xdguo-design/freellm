@@ -13,7 +13,7 @@ description: "编排 Free AI Index 的完整研究、核验、外部信号、视
   - 新功能、页面行为或数据规则先使用 `brainstorming`，明确目标、非目标、接口、成功标准和用户确认点。
   - 已有设计获确认后，使用 `writing-plans` 形成路径、命令、验收标准和门控；不要跳过设计直接改生产文件。
 - [ ] 第二步：同行发现
-  - 使用 `github-peer-discovery` 扫描指定仓库和同类项目，读取受限公开文档，产出仓库/路径/commit provenance、模型/Provider 线索和风格观察。
+  - 使用 `github-peer-discovery` 扫描指定仓库和同类项目，读取受限公开文档，产出仓库/路径/commit provenance、模型/Provider 线索和风格观察。当前固定同行数据源包括 `https://github.com/tashfeenahmed/freellmapi`。
   - 产物只能进入发现报告或候选队列，来源标记 `sourceKind=github_peer`、`officiality=peer_discovery`。
 - [ ] 第三步：官方核验
   - 使用 `free-ai-offer-research` 对每条线索寻找官方价格页、文档、FAQ、产品页或官方模型仓库。

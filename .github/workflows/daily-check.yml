@@ -34,7 +34,7 @@ jobs:
 
       - name: Discover new official offer candidates
         if: always()
-        run: python -m crawler.cli discover --providers data/providers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --max-links 5 --max-pages 100 --timeout 8
+        run: python -m crawler.cli discover --providers data/providers.json --github-peers data/github-peers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --max-links 5 --max-pages 100 --github-max-repositories 20 --github-max-files 80 --timeout 8
 
       - name: Validate external community signals
         if: always()

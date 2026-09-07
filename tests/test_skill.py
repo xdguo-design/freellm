@@ -57,6 +57,17 @@ class SkillTests(unittest.TestCase):
         ):
             self.assertIn(needle, text)
 
+    def test_freellmapi_is_a_fixed_peer_data_source(self):
+        peer_text = Path("data/github-peers.json").read_text(encoding="utf-8")
+        discovery_skill = Path("skills/github-peer-discovery/SKILL.md").read_text(encoding="utf-8")
+        offer_skill = Path("skills/free-ai-offer-research/SKILL.md").read_text(encoding="utf-8")
+        workflow = Path(".github/workflows/daily-check.yml").read_text(encoding="utf-8")
+
+        self.assertIn("https://github.com/tashfeenahmed/freellmapi", peer_text)
+        self.assertIn("tashfeenahmed/freellmapi", discovery_skill)
+        self.assertIn("tashfeenahmed/freellmapi", offer_skill)
+        self.assertIn("--github-peers data/github-peers.json", workflow)
+
     def test_community_signals_skill_forbids_local_scoring_and_requires_attribution(self):
         root = Path("skills/model-community-signals")
         skill = root.joinpath("SKILL.md")
@@ -96,6 +107,7 @@ class SkillTests(unittest.TestCase):
             "needs_review",
             "不自动发布",
             "用户选择",
+            "tashfeenahmed/freellmapi",
         ):
             self.assertIn(needle, text)
 

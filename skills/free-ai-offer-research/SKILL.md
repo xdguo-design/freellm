@@ -104,6 +104,8 @@ For each peer, the registry must contain official pricing or plan pages, product
 Load `data/github-peers.json` for same-category project discovery, including `Devansh-365/freellm`. GitHub repositories are discovery inputs, not official provider evidence. Preserve `repository`, `path`, `commitSha` and `officiality: peer_discovery` as commit/path provenance, and keep every derived candidate at `needs_review` until an official source passes the publication gate.
 Records from this layer use `sourceKind=github_peer` and remain review-only.
 
+The fixed peer data sources also include `tashfeenahmed/freellmapi` (`https://github.com/tashfeenahmed/freellmapi`). Scan its bounded README/docs/provider documentation during discovery, but treat every provider, model, quota and free-tier statement as a peer lead only. It must be rechecked against an official source before entering `data/offers.json`.
+
 Run the peer scan together with the official scan:
 
 ```text

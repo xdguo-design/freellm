@@ -35,3 +35,4 @@ python -m crawler.cli diff --previous data/offers.json --current data/offers.jso
 - 单次抓取失败只记录来源不可用，不标记过期；连续失联、明确截止日期和价格/额度变化进入人工审核。
 - 每个免费额度、首月促销、夜间优惠、IDE 免费层和开放权重作为独立候选保存，避免一个供应商的多个权益相互覆盖。
 - 每日生成 `data/coverage.json`，公开供应商数、来源成功数、失败数、漏扫供应商和过期候选数；目录只承诺“已注册供应商范围内的覆盖”，不声称找到互联网中的全部模型。
+- 固定同行数据源包含 `https://github.com/tashfeenahmed/freellmapi`；其内容只进入 `needs_review` 候选，不能绕过官方核验直接发布。
