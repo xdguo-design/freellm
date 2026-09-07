@@ -44,6 +44,33 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
 
+    def test_page_has_adsense_site_verification_script(self):
+        self.assertIn(
+            'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239',
+            self.html,
+        )
+        self.assertIn('crossorigin="anonymous"', self.html)
+
+    def test_web_groups_and_usage_guide_hooks_exist(self):
+        for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
+            self.assertIn(f'data-filter="{name}"', self.html)
+        for hook in ("drawerUsageGuide", "drawerPrerequisites", "drawerSteps", "drawerEndpoint", "drawerExample", "drawerQuotaGuard", "drawerCommonIssues"):
+            self.assertIn(f'id="{hook}"', self.html)
+        self.assertIn('"id": "tinyfish-search-fetch-free"', self.html)
+
+    def test_page_has_external_signal_hooks_without_local_scoring(self):
+        for needle in (
+            "community-signals.json",
+            'id="drawerSignals"',
+            "External platform signals",
+            "No public rating found",
+            "sourcePlatform",
+            "sourceType",
+        ):
+            self.assertIn(needle, self.html)
+        self.assertNotIn("composite score", self.html.lower())
+        self.assertNotIn("本站评分", self.html)
+
     def test_hardcoded_offers_are_gone(self):
         self.assertNotIn("const offers = {", self.html)
         self.assertNotIn("slice(0, 4)", self.html)
@@ -69,6 +96,12 @@ class DailyWorkflowTests(unittest.TestCase):
     def test_workflow_validates_scans_diffs_and_uploads(self):
         for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "upload-artifact", "if: always()"):
             self.assertIn(needle, self.text)
+
+    def test_workflow_ingests_external_signals_without_publishing_them_as_offers(self):
+        self.assertIn("crawler.cli signals", self.text)
+        self.assertIn("data/community-signals.json", self.text)
+        self.assertIn("community-signals", self.text)
+        self.assertNotIn("综合推荐分", self.text)
 
     def test_workflow_never_pushes_public_data(self):
         self.assertNotIn("git push", self.text)
@@ -149,8 +182,8 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertEqual(self.visible_offers(page), 18)
-        self.assertEqual(page.locator(".hero-side .big").inner_text(), "18")
+        self.assertEqual(self.visible_offers(page), 27)
+        self.assertEqual(page.locator(".hero-side .big").inner_text(), "27")
         self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
         self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 8)
         self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
@@ -162,7 +195,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
         page.click("#ideHighlightButton")
-        self.assertEqual(self.visible_offers(page), 4)
+        self.assertEqual(self.visible_offers(page), 8)
 
         page.fill("#search", "Qwen3")
         self.assertEqual(self.visible_offers(page), 1)
@@ -177,13 +210,29 @@ class BrowserPageTests(unittest.TestCase):
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
         self.assertEqual(len(page.problems), 0, page.problems)
 
+    def test_web_offer_drawer_shows_usage_guide(self):
+        page = self.new_page()
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+
+        page.click("[data-filter='search']")
+        page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
+        page.wait_for_selector("#drawer.open")
+        self.assertIn("Search and Fetch", page.locator("#drawerTitle").inner_text())
+        self.assertNotEqual(page.locator("#drawerUsageGuide").inner_text().strip(), "")
+        self.assertIn("TinyFish", page.locator("#drawerPrerequisites").inner_text())
+        self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
+        self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
+        self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
+        self.assertEqual(len(page.problems), 0, page.problems)
+
     def test_http_protocol_prefers_network_json(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        self.assertEqual(self.visible_offers(page), 18)
+        self.assertEqual(self.visible_offers(page), 27)
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
-        self.assertEqual(len(item_list), 18)
+        self.assertEqual(len(item_list), 27)
         self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
         self.assertEqual(len(page.problems), 0, page.problems)
 
@@ -197,7 +246,7 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), 18)
+            self.assertEqual(self.visible_offers(page), 27)
             self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_missing_data_shows_readable_error(self):

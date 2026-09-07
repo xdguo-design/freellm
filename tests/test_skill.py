@@ -26,6 +26,79 @@ class SkillTests(unittest.TestCase):
         self.assertIn("coverage report", text)
         self.assertIn("不直接发布", text)
 
+    def test_skill_requires_github_peer_discovery_safety_and_provenance(self):
+        text = self.root.joinpath("SKILL.md").read_text(encoding="utf-8")
+        for needle in (
+            "data/github-peers.json",
+            "github_peer",
+            "needs_review",
+            "不执行仓库脚本",
+            "commit/path provenance",
+            "--github-peers",
+        ):
+            self.assertIn(needle, text)
+
+    def test_github_peer_discovery_skill_has_workflow_references_and_style_boundary(self):
+        root = Path("skills/github-peer-discovery")
+        skill = root.joinpath("SKILL.md")
+        self.assertLess(len(skill.read_text(encoding="utf-8").splitlines()), 500)
+        for name in ("README.md", "references/discovery-checklist.md", "references/style-reference-checklist.md", "references/report-template.md"):
+            self.assertTrue(root.joinpath(name).exists())
+        text = skill.read_text(encoding="utf-8")
+        for needle in (
+            "github-peer-discovery",
+            "Devansh-365/freellm",
+            "commitSha",
+            "sourceKind=github_peer",
+            "needs_review",
+            "不执行仓库脚本",
+            "网站风格",
+            "不复制",
+        ):
+            self.assertIn(needle, text)
+
+    def test_community_signals_skill_forbids_local_scoring_and_requires_attribution(self):
+        root = Path("skills/model-community-signals")
+        skill = root.joinpath("SKILL.md")
+        self.assertLess(len(skill.read_text(encoding="utf-8").splitlines()), 500)
+        for name in ("README.md", "references/source-policy.md", "references/report-template.md"):
+            self.assertTrue(root.joinpath(name).exists())
+        text = skill.read_text(encoding="utf-8")
+        for needle in (
+            "model-community-signals",
+            "sourcePlatform",
+            "sourceType",
+            "sourceUrl",
+            "capturedAt",
+            "不自评分",
+            "不跨平台换算",
+            "needs_review",
+            "不登录",
+            "不抓取私人内容",
+        ):
+            self.assertIn(needle, text)
+
+    def test_workflow_orchestrator_chains_research_signals_design_and_release_gates(self):
+        root = Path("skills/free-ai-index-workflow")
+        skill = root.joinpath("SKILL.md")
+        self.assertLess(len(skill.read_text(encoding="utf-8").splitlines()), 500)
+        for name in ("README.md", "references/handoff-contract.md", "references/approval-gates.md", "references/runbook.md"):
+            self.assertTrue(root.joinpath(name).exists())
+        text = skill.read_text(encoding="utf-8")
+        for needle in (
+            "free-ai-index-workflow",
+            "github-peer-discovery",
+            "free-ai-offer-research",
+            "model-community-signals",
+            "huashu-design",
+            "tdd-master",
+            "frontend-code-review",
+            "needs_review",
+            "不自动发布",
+            "用户选择",
+        ):
+            self.assertIn(needle, text)
+
 
 if __name__ == "__main__":
     unittest.main()

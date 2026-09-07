@@ -13,6 +13,7 @@ from crawler.discovery import (
     merge_candidates,
     scan_provider_sources,
     validate_provider_registry,
+    matched_keywords,
 )
 from crawler.cli import main as cli_main
 
@@ -45,6 +46,14 @@ class DiscoveryTests(unittest.TestCase):
             self.assertIn(provider_id, ids)
 
         self.assertEqual(validate_provider_registry(providers), [])
+
+    def test_web_infrastructure_mvp_providers_are_registered(self):
+        providers = json.loads(Path("data/providers.json").read_text(encoding="utf-8"))
+        ids = {item["id"] for item in providers}
+        self.assertTrue({
+            "keenable", "tinyfish", "tavily", "exa",
+            "you-com", "firecrawl", "brave-search", "browserbase",
+        } <= ids)
 
     def test_discover_cli_writes_candidate_queue(self):
         providers = [{
@@ -303,6 +312,12 @@ class DiscoveryTests(unittest.TestCase):
         failures = [result for result in results if result["status"] != "ok"]
         self.assertEqual(len(failures), 1)
         self.assertEqual(failures[0]["changeType"], "source_unavailable")
+
+    def test_web_keywords_find_rate_limit_and_quickstart_pages(self):
+        text = "Search API quickstart, 30 RPM, wallet, auto reload, fetch URL"
+        self.assertIn("quickstart", matched_keywords(text))
+        self.assertIn("rate_limit", matched_keywords(text))
+        self.assertIn("wallet", matched_keywords(text))
 
 
 if __name__ == "__main__":

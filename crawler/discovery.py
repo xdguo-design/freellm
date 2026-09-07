@@ -28,7 +28,33 @@ DISCOVERY_KEYWORDS = (
     "优惠",
     "夜间",
     "非高峰",
+    "search",
+    "fetch",
+    "extract",
+    "crawl",
+    "map",
+    "browser",
+    "agent",
+    "contents",
+    "api key",
+    "rate limit",
+    "rpm",
+    "concurrency",
+    "wallet",
+    "auto reload",
+    "no credit card",
+    "quickstart",
+    "quick start",
+    "curl",
+    "sdk",
 )
+DISCOVERY_KEYWORD_ALIASES = {
+    "rate_limit": ("rate limit", "rate_limit", "rpm"),
+    "quickstart": ("quickstart", "quick start"),
+    "api_key": ("api key", "api_key"),
+    "auto_reload": ("auto reload", "auto_reload"),
+    "no_card": ("no credit card", "no card"),
+}
 
 
 def _now_iso() -> str:
@@ -62,7 +88,11 @@ def _host_allowed(url: str, domains: list[str]) -> bool:
 
 def matched_keywords(text: str) -> list[str]:
     lowered = text.lower()
-    return [keyword for keyword in DISCOVERY_KEYWORDS if keyword.lower() in lowered]
+    matches = [keyword for keyword in DISCOVERY_KEYWORDS if keyword.lower() in lowered]
+    for canonical, aliases in DISCOVERY_KEYWORD_ALIASES.items():
+        if any(alias in lowered for alias in aliases) and canonical not in matches:
+            matches.append(canonical)
+    return matches
 
 
 class _DiscoveryLinkParser(HTMLParser):
@@ -238,6 +268,7 @@ def build_coverage_report(
     stale_after_days: int = 7,
 ) -> dict:
     timestamp = now or _now_iso()
+    successful_statuses = {"ok", "needs_review"}
     failed = [
         {
             "providerId": result.get("providerId") or result.get("offerId"),
@@ -245,8 +276,15 @@ def build_coverage_report(
             "reason": result.get("reason", "unknown source failure"),
         }
         for result in scan_results
-        if result.get("status") != "ok"
+        if result.get("status") not in successful_statuses
     ]
+    official_sources = [result for result in scan_results if result.get("sourceKind") != "github_peer"]
+    peer_sources = [result for result in scan_results if result.get("sourceKind") == "github_peer"]
+    peer_repositories = {
+        str(result.get("repository"))
+        for result in peer_sources
+        if result.get("repository")
+    }
     seen_provider_ids = {result.get("providerId") or result.get("offerId") for result in scan_results}
     provider_ids = {provider.get("id") for provider in providers}
     cutoff = (_parse_timestamp(timestamp) or datetime.now(timezone.utc)) - timedelta(days=stale_after_days)
@@ -261,6 +299,11 @@ def build_coverage_report(
         "sourceCount": len(scan_results),
         "successfulSourceCount": len(scan_results) - len(failed),
         "failedSourceCount": len(failed),
+        "officialSourceCount": len(official_sources),
+        "peerSourceCount": len(peer_sources),
+        "successfulPeerSourceCount": sum(1 for result in peer_sources if result.get("status") in successful_statuses),
+        "failedPeerSourceCount": sum(1 for result in peer_sources if result.get("status") not in successful_statuses),
+        "peerRepositoryCount": len(peer_repositories),
         "failedSources": failed,
         "missingProviderIds": sorted(provider_ids - seen_provider_ids),
         "candidateCount": len(candidates),
@@ -312,7 +355,7 @@ def build_candidates(scan_results: list[dict], existing: list[dict] | None = Non
     candidates: list[dict] = []
     seen: set[tuple[str, str]] = set()
     for result in scan_results:
-        if result.get("status") != "ok":
+        if result.get("status") not in {"ok", "needs_review"}:
             continue
         if result.get("sourceKind") == "discovery":
             continue
@@ -329,8 +372,7 @@ def build_candidates(scan_results: list[dict], existing: list[dict] | None = Non
         if not keywords:
             continue
         seen.add(key)
-        candidates.append(
-            {
+        candidate = {
                 "id": _candidate_id(provider_id, canonical_url),
                 "providerId": provider_id,
                 "sourceUrl": canonical_url,
@@ -342,7 +384,20 @@ def build_candidates(scan_results: list[dict], existing: list[dict] | None = Non
                 "lastSeenAt": timestamp,
                 "seenCount": 1,
             }
-        )
+        for field in (
+            "sourceKind",
+            "officiality",
+            "repository",
+            "path",
+            "commitSha",
+            "officialLinks",
+            "mentionedProviders",
+            "mentionedModels",
+            "evidenceHash",
+        ):
+            if field in result:
+                candidate[field] = result[field]
+        candidates.append(candidate)
     return merge_candidates(existing or [], candidates, now=timestamp)
 
 

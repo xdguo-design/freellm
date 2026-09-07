@@ -1,6 +1,7 @@
 import unittest
+from unittest.mock import patch
 
-from crawler.fetch import extract_evidence, extract_page_links, fetch_public_page, read_limited
+from crawler.fetch import extract_evidence, extract_page_links, fetch_public_page, fetch_public_text_resource, read_limited
 
 
 class FetchTests(unittest.TestCase):
@@ -35,6 +36,39 @@ class FetchTests(unittest.TestCase):
                 return self.chunks.pop(0) if self.chunks else b""
 
         self.assertEqual(read_limited(ChunkedBody(), 7), b"12345678")
+
+    def test_text_resource_rejects_executable_javascript_content_type(self):
+        class Headers:
+            def get_content_type(self):
+                return "application/javascript"
+
+            def get_content_charset(self):
+                return "utf-8"
+
+        class Response:
+            headers = Headers()
+
+            def __init__(self):
+                self.reads = 0
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, size):
+                self.reads += 1
+                return b"fetch('/secret')" if self.reads == 1 else b""
+
+        with patch("crawler.fetch.DIRECT_OPENER.open", return_value=Response()) as opener:
+            result = fetch_public_text_resource(
+                "https://raw.githubusercontent.com/owner/repo/main/script.js",
+                ["raw.githubusercontent.com"],
+            )
+
+        self.assertEqual(result["status"], "rejected")
+        opener.assert_called_once()
 
 
 if __name__ == "__main__":

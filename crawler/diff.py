@@ -5,7 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 KEY_FIELDS = (
-    "productType", "freeMechanism", "quota", "validity", "renewal", "availability",
+    "productType", "capabilities", "pricingModel", "freePolicy", "limits", "billing",
+    "usageGuide", "freeMechanism", "quota", "validity", "renewal", "availability",
     "phoneRequired", "cardRequired", "officialActionUrl", "sourceUrls", "status",
 )
 

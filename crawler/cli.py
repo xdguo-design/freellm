@@ -8,8 +8,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .diff import build_review_queue, compare_offers
+from .community_signals import merge_signals, validate_signals
 from .discovery import build_candidates, build_coverage_report, merge_candidates, scan_provider_sources, validate_provider_registry
 from .fetch import fetch_public_page
+from .github_discovery import fetch_github_document, fetch_github_json, scan_github_peer, validate_peer_registry
 from .schema import validate_offers
 
 
@@ -50,6 +52,9 @@ def main(argv: list[str] | None = None) -> int:
     discover.add_argument("--scan-out", default=None)
     discover.add_argument("--max-links", type=int, default=20)
     discover.add_argument("--max-pages", type=int, default=100)
+    discover.add_argument("--github-peers", default=None)
+    discover.add_argument("--github-max-repositories", type=int, default=20)
+    discover.add_argument("--github-max-files", type=int, default=80)
     discover.add_argument("--timeout", type=int, default=8)
 
     coverage = commands.add_parser("coverage")
@@ -57,6 +62,10 @@ def main(argv: list[str] | None = None) -> int:
     coverage.add_argument("--scan", action="append", required=True)
     coverage.add_argument("--candidates", required=True)
     coverage.add_argument("--out", required=True)
+
+    signals = commands.add_parser("signals")
+    signals.add_argument("--input", required=True)
+    signals.add_argument("--out", required=True)
 
     args = parser.parse_args(argv)
     if args.command == "validate":
@@ -107,12 +116,34 @@ def main(argv: list[str] | None = None) -> int:
             max_links_per_provider=args.max_links,
             max_total_pages=args.max_pages,
         )
+        github_scan = []
+        if args.github_peers:
+            peers = _read_json(args.github_peers)
+            peer_registry_errors = validate_peer_registry(peers)
+            if peer_registry_errors:
+                print("invalid GitHub peer registry:")
+                print("\n".join(f"- {error}" for error in peer_registry_errors))
+                return 1
+            enabled_peers = [peer for peer in peers if peer.get("enabled")]
+            for peer in enabled_peers[:args.github_max_repositories]:
+                github_scan.extend(
+                    scan_github_peer(
+                        peer,
+                        fetch_json=lambda url: fetch_github_json(url, timeout=args.timeout),
+                        fetch_document=lambda url: fetch_github_document(url, timeout=args.timeout),
+                        max_files=args.github_max_files,
+                    )
+                )
+            discovered_scan.extend(github_scan)
         if args.scan_out:
             _write_json(args.scan_out, discovered_scan)
         discovered = build_candidates(discovered_scan)
         candidates = merge_candidates(existing, discovered)
         _write_json(args.out, candidates)
         print(f"discover: {len(candidates)} candidates")
+        if args.github_peers:
+            peer_documents = sum(1 for result in github_scan if result.get("path"))
+            print(f"github peer documents: {peer_documents}")
         return 0
     if args.command == "coverage":
         providers = _read_json(args.providers)
@@ -127,6 +158,25 @@ def main(argv: list[str] | None = None) -> int:
         report = build_coverage_report(providers, scan_results, _read_json(args.candidates))
         _write_json(args.out, report)
         print(f"coverage: {report['successfulSourceCount']}/{report['sourceCount']} sources healthy")
+        return 0
+    if args.command == "signals":
+        incoming = _read_json(args.input)
+        errors = validate_signals(incoming)
+        if errors:
+            print("invalid community signals:")
+            print("\n".join(f"- {error}" for error in errors))
+            return 1
+        existing = _read_json(args.out) if Path(args.out).exists() else []
+        existing_errors = validate_signals(existing)
+        if existing_errors:
+            print("invalid existing community signals:")
+            print("\n".join(f"- {error}" for error in existing_errors))
+            return 1
+        captured_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+        merged = merge_signals(existing, incoming, captured_at=captured_at)
+        _write_json(args.out, merged)
+        rejected_count = sum(1 for record in incoming if validate_signals([record]))
+        print(f"signals: {len(merged)} records, {rejected_count} rejected")
         return 0
     return 2
 

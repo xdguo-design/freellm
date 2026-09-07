@@ -19,6 +19,7 @@
 python -m crawler.cli validate data/offers.json
 python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
 python -m crawler.cli discover --providers data/providers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --max-links 5 --max-pages 100 --timeout 8
+python -m crawler.cli discover --providers data/providers.json --github-peers data/github-peers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --github-max-repositories 20 --github-max-files 80 --timeout 8
 python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
 python -m crawler.cli diff --previous data/offers.json --current data/offers.json --out data/review-queue.json
 ```
