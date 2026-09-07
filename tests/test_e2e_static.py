@@ -44,6 +44,7 @@ class StaticContractTests(unittest.TestCase):
 
     def test_hardcoded_offers_are_gone(self):
         self.assertNotIn("const offers = {", self.html)
+        self.assertNotIn("slice(0, 4)", self.html)
         static_articles = re.findall(r'<article class="offer" data-type="(?!")', self.html)
         self.assertEqual(static_articles, [])
 
@@ -149,8 +150,8 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), 17)
         self.assertEqual(page.locator(".hero-side .big").inner_text(), "17")
         self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
-        self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 4)
-        self.assertIn("Browse 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
+        self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 8)
+        self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_file_protocol_search_filter_and_drawer(self):

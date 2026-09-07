@@ -412,9 +412,9 @@
             <div class="ide-kicker">China highlight / free AI IDEs</div>
             <h2 id="ide-highlight-title">The strongest deal is often the IDE, not a naked API key.</h2>
             <p>China-market coding tools increasingly bundle <strong>model access, code completion, agent loops and editor integrations</strong> into a free or ¥0 personal tier. For overseas developers, this can be more useful than a small standalone API quota.</p>
-            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse 8 free IDEs →</button>
+            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse all 8 free IDEs →</button>
           </div>
-          <div class="ide-highlight-grid" id="ideHighlightGrid" aria-label="Free IDE highlights">
+          <div class="ide-highlight-grid" id="ideHighlightGrid" aria-label="All free IDE highlights">
             <div class="ide-highlight-card"><b>01 / FREE PLAN</b><strong>CodeBuddy</strong><span>500 credits / month · 5,000 completions</span></div>
             <div class="ide-highlight-card"><b>02 / ¥0 PERSONAL</b><strong>TraeCode CN</strong><span>IDE, plugin and CLI access · quota varies by mode</span></div>
             <div class="ide-highlight-card"><b>03 / AUTO-FREE</b><strong>Baidu Comate</strong><span>150k tokens / hour in the free fallback mode</span></div>
@@ -1611,8 +1611,8 @@
       document.getElementById('summaryFreeForever').textContent = pad(freeForeverItems.length);
       document.getElementById('summaryOpenWeights').textContent = pad(downloadItems.length);
 
-      document.getElementById('ideHighlightButton').textContent = `Browse ${ideItems.length} free IDEs →`;
-      document.getElementById('ideHighlightGrid').innerHTML = ideItems.slice(0, 4).map((item, index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${escapeHtml(item.badges?.[0] || 'FREE')}</b><strong>${escapeHtml(item.provider)}</strong><span>${escapeHtml(item.freeSummary)}</span></div>`).join('');
+      document.getElementById('ideHighlightButton').textContent = `Browse all ${ideItems.length} free IDEs →`;
+      document.getElementById('ideHighlightGrid').innerHTML = ideItems.map((item, index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${escapeHtml(item.badges?.[0] || 'FREE')}</b><strong>${escapeHtml(item.provider)}</strong><span>${escapeHtml(item.freeSummary)}</span></div>`).join('');
 
       document.getElementById('downloadList').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(item.provider)}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(item.registerLabel || 'Open')} ↗</a></div>`).join('');
 
