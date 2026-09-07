@@ -575,7 +575,7 @@
           <button data-filter="credits" aria-pressed="false"><span>Credits / uses</span><b>—</b></button>
           <button data-filter="ide" aria-pressed="false"><span>Free IDEs</span><b>—</b></button>
           <button data-filter="promo" aria-pressed="false"><span>Timed / region deals</span><b>—</b></button>
-          <button data-filter="web" aria-pressed="false"><span>Use on the web</span><b>—</b></button>
+          <button data-filter="web" aria-pressed="false"><span>Web / 网页工具</span><b>—</b></button>
           <button data-filter="download_lowcost" aria-pressed="false"><span>Download / low cost</span><b>—</b></button>
           <button data-filter="compare" aria-pressed="false"><span>Price compare</span><b>↗</b></button>
         </nav>
@@ -635,7 +635,7 @@
           <button class="tab" data-filter="credits" aria-pressed="false">积分 / 次数 <em>—</em></button>
           <button class="tab" data-filter="ide" aria-pressed="false">免费 IDE <em>—</em></button>
           <button class="tab" data-filter="promo" aria-pressed="false">时段 / 限时优惠 <em>—</em></button>
-          <button class="tab" data-filter="web" aria-pressed="false">网页直用 <em>—</em></button>
+          <button class="tab" data-filter="web" aria-pressed="false">网页 / Web 工具 <em>—</em></button>
           <button class="tab" data-filter="download_lowcost" aria-pressed="false">可下载 / 低成本 <em>—</em></button>
         </div>
 
@@ -644,7 +644,7 @@
           <div class="summary"><div class="summary-label">Credits / uses</div><div class="summary-value" id="summaryCredits">—</div><div class="summary-detail">积分、次数或一次性体验</div></div>
           <div class="summary"><div class="summary-label">Free IDEs</div><div class="summary-value" id="summaryIde">—</div><div class="summary-detail">代码补全、对话与 Agent 工具</div></div>
           <div class="summary"><div class="summary-label">Timed deals</div><div class="summary-value" id="summaryPromo">—</div><div class="summary-detail">首月、夜间、地区或汇率优惠</div></div>
-          <div class="summary"><div class="summary-label">Use on web</div><div class="summary-value" id="summaryWeb">—</div><div class="summary-detail">无需 API，打开网页先试</div></div>
+          <div class="summary"><div class="summary-label">Web tools</div><div class="summary-value" id="summaryWeb">—</div><div class="summary-detail">网页产品或 Web API 入口</div></div>
         </section>
 
         <section id="offers">
@@ -3312,7 +3312,7 @@
       const isIde = item.productType === 'free_ide' || tokens.has('ide') || tokens.has('free_ide');
       const isWeb = item.productType === 'web_infrastructure' || tokens.has('web');
       const isDownloadOrLowCost = item.productType === 'open_weights' || item.productType === 'payg' || tokens.has('download') || tokens.has('payg');
-      if (['daily_quota', 'weekly_quota', 'monthly_quota', 'permanent'].includes(item.freeMechanism) && !isIde && !isWeb) categories.push('free_quota');
+      if (['daily_quota', 'weekly_quota', 'monthly_quota', 'permanent'].includes(item.freeMechanism) && !isIde && !isDownloadOrLowCost) categories.push('free_quota');
       if (['trial', 'limited_time_free'].includes(item.freeMechanism)) categories.push('credits');
       if (isIde) categories.push('ide');
       if (item.freeMechanism === 'first_month_promo' || item.timeWindow || tokens.has('promo')) categories.push('promo');

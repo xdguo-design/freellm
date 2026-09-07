@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
+ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
 ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
@@ -50,6 +51,8 @@ class StaticContractTests(unittest.TestCase):
     def test_page_uses_free_method_categories(self):
         for name in ("free_quota", "credits", "ide", "promo", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
+        self.assertTrue(ASSET_PATH.is_file())
+        self.assertGreater(ASSET_PATH.stat().st_size, 1000)
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
             self.assertNotIn(f'data-filter="{name}"', self.html)
 
@@ -199,6 +202,8 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertEqual(self.visible_offers(page), 27)
         self.assertEqual(page.locator(".hero-side .big").inner_text(), "27")
+        self.assertEqual(page.locator(".tabs [data-filter='free_quota'] em").inner_text(), "08")
+        self.assertEqual(page.locator("#summaryFreeQuota").inner_text(), "08")
         self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
         self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 4)
         self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())

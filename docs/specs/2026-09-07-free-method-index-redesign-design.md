@@ -40,11 +40,11 @@
 
 新增纯前端分类函数，不改 `data/offers.json` 的事实字段：
 
-- `free_quota`：`freeMechanism` 为 `daily_quota`、`weekly_quota`、`monthly_quota` 或 `permanent`，且不是 IDE / web-only。
+- `free_quota`：`freeMechanism` 为 `daily_quota`、`weekly_quota`、`monthly_quota` 或 `permanent`，且不是 IDE / 下载权重 / 低价 pay-as-you-go；Web API 可同时落入此类和 Web 工具类。
 - `credits`：`freeMechanism` 为 `trial`、`limited_time_free`，或记录具有明确一次性 credits / 次数描述。
 - `ide`：`productType === free_ide` 或 token 包含 `ide`。
 - `promo`：`freeMechanism === first_month_promo`、存在 `timeWindow`，或 `type` 包含 `promo`。
-- `web`：`productType === web_infrastructure` 且记录明确提供网页入口，或新增 `web_use` token。
+- `web`：`productType === web_infrastructure` 或记录明确提供网页入口 / `web_use` token；UI 文案使用“网页 / Web 工具”，不把 API 误称为网页产品。
 - `download_lowcost`：`productType === open_weights` 或 `productType === payg`。
 
 分类可重叠；列表按当前筛选展示，统计使用去重后的 offer 数量。证据状态、`lastVerifiedAt`、地区和有效期始终来自原始数据，不在 UI 层推断新的免费承诺。
