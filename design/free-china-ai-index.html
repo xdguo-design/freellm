@@ -322,20 +322,26 @@
     .crumb { color: var(--muted); font: 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
     .local-clock { text-align: right; font: 11px var(--mono); }
     .local-clock span { color: var(--muted); display: block; margin-top: 3px; }
-    .content { max-width: 1500px; margin: 0 auto; padding: 30px; }
+    .content { max-width: 1540px; margin: 0 auto; padding: 34px 36px 42px; }
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(270px, .6fr);
-      gap: 36px;
-      align-items: end;
-      margin-bottom: 26px;
+      grid-template-columns: minmax(0, 7fr) minmax(420px, 5fr);
+      gap: 28px;
+      align-items: stretch;
+      margin-bottom: 22px;
     }
-    h1 { max-width: 800px; margin: 0; font: 800 clamp(42px, 6vw, 86px)/.91 var(--display); letter-spacing: -.075em; text-wrap: balance; }
-    .hero-copy { max-width: 610px; margin-top: 22px; color: #4e5962; font-size: 17px; line-height: 1.45; }
+    .hero-kicker { margin-bottom: 14px; color: var(--blue); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .14em; }
+    h1 { max-width: 800px; margin: 0; font: 800 clamp(42px, 6vw, 82px)/.91 var(--display); letter-spacing: -.075em; text-wrap: balance; }
+    .hero-copy { max-width: 650px; margin: 22px 0 0; color: #4e5962; font-size: 17px; line-height: 1.5; }
     .hero-copy b { color: var(--ink); }
-    .hero-side { border-left: 3px solid var(--ink); padding-left: 18px; }
-    .hero-side .big { font: 800 48px/.9 var(--display); letter-spacing: -.07em; }
-    .hero-side p { margin: 8px 0 0; color: var(--muted); line-height: 1.35; }
+    .hero-side { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 112px; gap: 14px; align-items: end; }
+    .hero-art { min-height: 254px; position: relative; overflow: hidden; border: 1px solid var(--ink); background: #071124; }
+    .hero-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(7,17,36,.32), transparent 38%); }
+    .hero-art img { display: block; width: 100%; height: 100%; min-height: 254px; object-fit: cover; object-position: 70% center; }
+    .hero-art-tag { position: absolute; z-index: 1; left: 12px; bottom: 11px; padding: 5px 7px; color: white; background: rgba(7,17,36,.82); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; }
+    .hero-count { border-left: 3px solid var(--ink); padding: 0 0 8px 15px; }
+    .hero-count .big { font: 800 52px/.9 var(--display); letter-spacing: -.07em; }
+    .hero-count p { margin: 9px 0 0; color: var(--muted); line-height: 1.35; font-size: 12px; }
 
     .notice {
       border: 2px solid var(--ink);
@@ -345,7 +351,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
     .notice strong { font: 800 17px var(--display); letter-spacing: -.03em; }
     .notice span { font-size: 13px; }
@@ -388,24 +394,27 @@
     .tab em { color: var(--muted); font: 10px var(--mono); font-style: normal; margin-left: 7px; }
     .tab.active em { color: #c9ced3; }
 
-    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 26px; }
-    .summary { min-height: 128px; padding: 15px; border: 1px solid var(--ink); background: white; display: flex; flex-direction: column; justify-content: space-between; }
+    .summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 26px; }
+    .summary { min-height: 118px; padding: 14px; border: 1px solid var(--ink); background: white; display: flex; flex-direction: column; justify-content: space-between; }
     .summary:nth-child(2) { background: var(--blue); color: white; }
     .summary:nth-child(3) { background: #dff7e7; }
+    .summary:nth-child(4) { background: var(--yellow); }
+    .summary:nth-child(5) { background: #edf0ff; }
     .summary-label { font: 11px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
     .summary-value { font: 800 34px/.9 var(--display); letter-spacing: -.07em; }
     .summary-detail { color: var(--muted); font-size: 12px; }
     .summary:nth-child(2) .summary-detail { color: #d8deff; }
+    .summary:nth-child(4) .summary-detail { color: #5a4b00; }
 
     .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 20px 0 9px; }
     h2 { margin: 0; font: 800 25px/1 var(--display); letter-spacing: -.055em; }
     .section-head p { margin: 0; color: var(--muted); font-size: 12px; }
     .table-wrap { overflow-x: auto; border: 1px solid var(--ink); background: white; }
     .table-head, .offer {
-      min-width: 900px;
+      min-width: 980px;
       display: grid;
-      grid-template-columns: 1.25fr 1.1fr 1.2fr .95fr .8fr 1.05fr 28px;
-      align-items: center;
+      grid-template-columns: 1.35fr 1.05fr 1.25fr .9fr .9fr .9fr 28px;
+      align-items: start;
       column-gap: 12px;
     }
     .table-head { padding: 10px 14px; background: var(--ink); color: white; font: 10px var(--mono); text-transform: uppercase; letter-spacing: .09em; }
@@ -418,7 +427,7 @@
       padding: 9px 14px; font: 700 12px var(--sans); cursor: pointer;
     }
     .empty-state button:hover { background: white; color: var(--ink); }
-    .offer { padding: 14px; border-top: 1px solid var(--line); transition: background .15s ease; }
+    .offer { padding: 15px 14px; border-top: 1px solid var(--line); transition: background .15s ease; }
     .offer:hover { background: #f0f3ff; }
     .offer.hidden { display: none; }
     .offer-error { padding: 26px 18px; background: var(--red-soft); color: var(--red-ink); line-height: 1.55; }
@@ -427,9 +436,17 @@
     .provider-mark { flex: 0 0 34px; height: 34px; display: grid; place-items: center; background: var(--blue); color: white; font: 800 14px var(--display); }
     .provider-name { min-width: 0; font-weight: 850; }
     .provider-name small { display: block; color: var(--muted); margin-top: 3px; font: 10px var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .model { font-weight: 750; }
+    .model { font-weight: 750; line-height: 1.25; }
     .model small, .cell small { display: block; color: var(--muted); margin-top: 3px; font-size: 11px; line-height: 1.25; }
     .cell { min-width: 0; line-height: 1.2; }
+    .category-label { display: inline-flex; padding: 4px 6px; background: var(--blue-soft); color: #2442a1; font: 10px var(--mono); font-weight: 800; line-height: 1.2; }
+    .category-label.category-promo { background: var(--yellow); color: #5a4b00; }
+    .category-label.category-credits { background: #ffe4dc; color: var(--red-ink); }
+    .category-label.category-ide { background: var(--green); color: var(--green-ink); }
+    .category-label.category-web { background: #edf0ff; color: #2442a1; }
+    .category-label.category-download_lowcost { background: #eef0f2; color: #59626a; }
+    .category-cell small { display: block; margin-top: 6px; color: var(--muted); font-size: 10px; line-height: 1.25; }
+    .mechanism-cell strong { display: block; margin-top: 6px; font-size: 12px; line-height: 1.25; }
     .badge { display: inline-flex; width: fit-content; padding: 4px 7px; font: 10px var(--mono); font-weight: 800; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
     .badge.free { background: var(--green); color: var(--green-ink); }
     .badge.trial { background: var(--yellow); color: #5a4b00; }
@@ -503,7 +520,8 @@
       .app { grid-template-columns: 190px minmax(0, 1fr); }
       .content, .topbar { padding-left: 22px; padding-right: 22px; }
       .hero { grid-template-columns: 1fr; gap: 20px; }
-      .hero-side { border-left: 0; border-top: 2px solid var(--ink); padding: 12px 0 0; }
+      .hero-side { grid-template-columns: minmax(0, 1fr) 120px; }
+      .summary-grid { grid-template-columns: repeat(3, 1fr); }
       .seo-grid { grid-template-columns: 1fr 1fr; }
       .ide-highlight { grid-template-columns: 1fr; }
     }
@@ -520,11 +538,16 @@
       .content { padding: 22px 16px; }
       .local-clock { display: none; }
       .toolbar { grid-template-columns: 1fr; }
-      .summary-grid, .bottom-grid { grid-template-columns: 1fr; }
+      .summary-grid, .bottom-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .seo-grid { grid-template-columns: 1fr; }
       .ide-highlight-grid { grid-template-columns: 1fr; }
       .notice { align-items: start; flex-direction: column; gap: 7px; }
       .footer { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .summary-grid { grid-template-columns: 1fr; }
+      .hero-side { grid-template-columns: 1fr; }
+      .hero-count { border-left: 0; border-top: 2px solid var(--ink); padding: 12px 0 0; }
     }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
@@ -545,20 +568,16 @@
         <div><div class="brand-name">Free AI Index</div><div class="brand-sub">index / verified deals</div></div>
       </a>
       <div>
-        <p class="side-label">Browse</p>
-        <nav class="side-nav" aria-label="Browse categories">
-          <button class="active" data-filter="all"><span>All offers</span><b>27</b></button>
-          <button data-filter="ide"><span>Free IDEs</span><b>08</b></button>
-          <button data-filter="download"><span>Download models</span><b>03</b></button>
-          <button data-filter="coding"><span>Coding plans</span><b>08</b></button>
-          <button data-filter="search"><span>Search APIs</span><b>08</b></button>
-          <button data-filter="fetch"><span>Fetch APIs</span><b>05</b></button>
-          <button data-filter="extract"><span>Extract APIs</span><b>03</b></button>
-          <button data-filter="crawl"><span>Crawl APIs</span><b>02</b></button>
-          <button data-filter="map"><span>Map APIs</span><b>02</b></button>
-          <button data-filter="browser"><span>Browser APIs</span><b>03</b></button>
-          <button data-filter="agent"><span>Agent APIs</span><b>04</b></button>
-          <button data-filter="compare"><span>Price compare</span><b>↗</b></button>
+        <p class="side-label">Browse by free method</p>
+        <nav class="side-nav" aria-label="Browse free methods">
+          <button class="active" data-filter="all" aria-pressed="true"><span>All offers</span><b>27</b></button>
+          <button data-filter="free_quota" aria-pressed="false"><span>Free quota</span><b>—</b></button>
+          <button data-filter="credits" aria-pressed="false"><span>Credits / uses</span><b>—</b></button>
+          <button data-filter="ide" aria-pressed="false"><span>Free IDEs</span><b>—</b></button>
+          <button data-filter="promo" aria-pressed="false"><span>Timed / region deals</span><b>—</b></button>
+          <button data-filter="web" aria-pressed="false"><span>Use on the web</span><b>—</b></button>
+          <button data-filter="download_lowcost" aria-pressed="false"><span>Download / low cost</span><b>—</b></button>
+          <button data-filter="compare" aria-pressed="false"><span>Price compare</span><b>↗</b></button>
         </nav>
       </div>
       <div>
@@ -579,58 +598,59 @@
       <div class="content">
         <section class="hero">
           <div>
-            <h1>Free AI.<br><span style="color:var(--blue)">Clear terms.</span></h1>
-            <p class="hero-copy">A practical index of <b>free models, limited-time trials, free coding tools, open weights and low-cost plans</b> that developers can actually evaluate before the quota disappears.</p>
+            <div class="hero-kicker">Free AI index / find the right free lane</div>
+            <h1>先看免费方式。<br><span style="color:var(--blue)">再选模型。</span></h1>
+            <p class="hero-copy">把 AI 产品按“怎么获得免费”分开：<b>免费额度、积分次数、免费 IDE、时段优惠、网页直用和可下载模型</b>。每个入口都带有效期、地区、官方来源和核验状态。</p>
           </div>
-          <div class="hero-side"><div class="big">27</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
+          <div class="hero-side">
+            <div class="hero-art"><img src="assets/free-method-night-window.png" alt=""><span class="hero-art-tag">night window / verified deals</span></div>
+            <div class="hero-count"><div class="big">27</div><p>条可打开的 offer<br>免费、试用、优惠分开标注</p></div>
+          </div>
         </section>
 
-        <div class="notice"><div><strong>Free does not mean unlimited.</strong> <span>We label the exact mechanism: permanent quota, trial credits, first-month promotion, free IDE or downloadable weights.</span></div><a href="#methodology">How we label it →</a></div>
+        <div class="notice"><div><strong>免费不等于无限。</strong> <span>我们会写清楚是额度、积分、首月优惠、免费 IDE、网页直用还是开源权重；夜间活动和区域价格只在有来源时展示。</span></div><a href="#methodology">查看标注规则 →</a></div>
 
         <section class="ide-highlight" aria-labelledby="ide-highlight-title">
           <div>
-            <div class="ide-kicker">China highlight / free AI IDEs</div>
-            <h2 id="ide-highlight-title">The strongest deal is often the IDE, not a naked API key.</h2>
-            <p>China-market coding tools increasingly bundle <strong>model access, code completion, agent loops and editor integrations</strong> into a free or ¥0 personal tier. For overseas developers, this can be more useful than a small standalone API quota.</p>
-            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse all 8 free IDEs →</button>
+            <div class="ide-kicker">Start here / choose a free method</div>
+            <h2 id="ide-highlight-title">先决定你要的是额度、工具，还是夜间优惠。</h2>
+            <p>免费 API 适合接入，免费 IDE 适合马上写代码，网页产品适合先试用。限时和区域优惠会单独标注，不把一次性活动混进永久免费。</p>
+            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">查看免费 IDE →</button>
           </div>
           <div class="ide-highlight-grid" id="ideHighlightGrid" aria-label="All free IDE highlights">
-            <div class="ide-highlight-card"><b>01 / FREE PLAN</b><strong>CodeBuddy</strong><span>500 credits / month · 5,000 completions</span></div>
-            <div class="ide-highlight-card"><b>02 / ¥0 PERSONAL</b><strong>TraeCode CN</strong><span>IDE, plugin and CLI access · quota varies by mode</span></div>
-            <div class="ide-highlight-card"><b>03 / AUTO-FREE</b><strong>Baidu Comate</strong><span>150k tokens / hour in the free fallback mode</span></div>
-            <div class="ide-highlight-card"><b>04 / TRIAL</b><strong>Qoder</strong><span>14-day Pro trial · 300 credits for new users</span></div>
+            <div class="ide-highlight-card"><b>01 / FREE QUOTA</b><strong>免费额度</strong><span>按日、周、月或持续提供</span></div>
+            <div class="ide-highlight-card"><b>02 / CREDITS</b><strong>积分 / 次数</strong><span>新人体验，先用后看续费</span></div>
+            <div class="ide-highlight-card"><b>03 / FREE IDE</b><strong>免费 IDE</strong><span>下载即用，模型和用量写清楚</span></div>
+            <div class="ide-highlight-card"><b>04 / NIGHT DEAL</b><strong>时段优惠</strong><span>按来源和浏览器时区核验</span></div>
           </div>
         </section>
 
         <div class="toolbar">
-          <label class="search"><input id="search" type="search" placeholder="Search model, provider or IDE… try Qwen / Doubao" aria-label="Search offers"></label>
-          <select class="sort" id="sort" aria-label="Sort offers"><option value="free">Sort: free first</option><option value="fresh">Sort: recently checked</option><option value="name">Sort: A–Z</option></select>
+          <label class="search"><input id="search" type="search" placeholder="搜索模型、产品或免费方式，例如 Qwen / 豆包" aria-label="Search offers"></label>
+          <select class="sort" id="sort" aria-label="Sort offers"><option value="free">排序：免费优先</option><option value="fresh">排序：最近核验</option><option value="name">排序：A–Z</option></select>
         </div>
         <div class="tabs" role="tablist">
-          <button class="tab active" data-filter="all">All offers <em>27</em></button>
-          <button class="tab" data-filter="free">Free forever <em>12</em></button>
-          <button class="tab" data-filter="ide">Free IDEs <em>08</em></button>
-          <button class="tab" data-filter="download">Downloadable <em>03</em></button>
-          <button class="tab" data-filter="coding">Cheap coding <em>08</em></button>
-          <button class="tab" data-filter="search">Search <em>08</em></button>
-          <button class="tab" data-filter="fetch">Fetch <em>05</em></button>
-          <button class="tab" data-filter="extract">Extract <em>03</em></button>
-          <button class="tab" data-filter="crawl">Crawl <em>02</em></button>
-          <button class="tab" data-filter="map">Map <em>02</em></button>
-          <button class="tab" data-filter="browser">Browser <em>03</em></button>
-          <button class="tab" data-filter="agent">Agent <em>04</em></button>
+          <button class="tab active" data-filter="all" aria-pressed="true">全部 <em>27</em></button>
+          <button class="tab" data-filter="free_quota" aria-pressed="false">免费额度 <em>—</em></button>
+          <button class="tab" data-filter="credits" aria-pressed="false">积分 / 次数 <em>—</em></button>
+          <button class="tab" data-filter="ide" aria-pressed="false">免费 IDE <em>—</em></button>
+          <button class="tab" data-filter="promo" aria-pressed="false">时段 / 限时优惠 <em>—</em></button>
+          <button class="tab" data-filter="web" aria-pressed="false">网页直用 <em>—</em></button>
+          <button class="tab" data-filter="download_lowcost" aria-pressed="false">可下载 / 低成本 <em>—</em></button>
         </div>
 
         <section class="summary-grid" aria-label="Offer summary">
-          <div class="summary"><div class="summary-label">Free forever</div><div class="summary-value" id="summaryFreeForever">12</div><div class="summary-detail">No subscription required · still rate-limited</div></div>
-          <div class="summary"><div class="summary-label">Best coding price</div><div class="summary-value">¥9.9</div><div class="summary-detail">Doubao Seed Code · first-month Lite plan</div></div>
-          <div class="summary"><div class="summary-label">Open weights</div><div class="summary-value" id="summaryOpenWeights">03</div><div class="summary-detail">Download links + a first command to run</div></div>
+          <div class="summary"><div class="summary-label">Free quota</div><div class="summary-value" id="summaryFreeQuota">—</div><div class="summary-detail">按日 / 周 / 月或持续额度</div></div>
+          <div class="summary"><div class="summary-label">Credits / uses</div><div class="summary-value" id="summaryCredits">—</div><div class="summary-detail">积分、次数或一次性体验</div></div>
+          <div class="summary"><div class="summary-label">Free IDEs</div><div class="summary-value" id="summaryIde">—</div><div class="summary-detail">代码补全、对话与 Agent 工具</div></div>
+          <div class="summary"><div class="summary-label">Timed deals</div><div class="summary-value" id="summaryPromo">—</div><div class="summary-detail">首月、夜间、地区或汇率优惠</div></div>
+          <div class="summary"><div class="summary-label">Use on web</div><div class="summary-value" id="summaryWeb">—</div><div class="summary-detail">无需 API，打开网页先试</div></div>
         </section>
 
         <section id="offers">
-          <div class="section-head"><div><h2>Offers worth opening</h2><p>Each row answers “how free?”, “for how long?” and “what do I need?”</p></div><p id="resultCount">Showing 27 offers</p></div>
+          <div class="section-head"><div><h2>按免费方式找入口</h2><p>每一行都回答：怎么免费、能用多久、需要什么条件？</p></div><p id="resultCount">Showing 27 offers</p></div>
           <div class="table-wrap">
-            <div class="table-head"><div>Provider / product</div><div>Model / role</div><div>Free mechanism</div><div>Validity</div><div>Access</div><div>Checked</div><div></div></div>
+            <div class="table-head"><div>产品 / 提供方</div><div>免费方式</div><div>额度 / 价格</div><div>有效期</div><div>地区</div><div>核验</div><div></div></div>
             <div id="offerRows" aria-live="polite"></div>
             <div id="emptyState" class="empty-state" hidden>
               <strong>No offers match your search.</strong>
@@ -3277,11 +3297,38 @@
       if (text.includes('FIRST') || text.includes('OFF')) return 'promo';
       return 'open';
     };
+    const categoryNames = {
+      free_quota: '免费额度',
+      credits: '积分 / 次数',
+      ide: '免费 IDE',
+      promo: '时段 / 限时优惠',
+      web: '网页直用',
+      download_lowcost: '可下载 / 低成本'
+    };
+    const offerTokens = item => new Set([...(item.type || []), ...(item.capabilities || []), item.productType].filter(Boolean));
+    const offerCategories = item => {
+      const tokens = offerTokens(item);
+      const categories = [];
+      const isIde = item.productType === 'free_ide' || tokens.has('ide') || tokens.has('free_ide');
+      const isWeb = item.productType === 'web_infrastructure' || tokens.has('web');
+      const isDownloadOrLowCost = item.productType === 'open_weights' || item.productType === 'payg' || tokens.has('download') || tokens.has('payg');
+      if (['daily_quota', 'weekly_quota', 'monthly_quota', 'permanent'].includes(item.freeMechanism) && !isIde && !isWeb) categories.push('free_quota');
+      if (['trial', 'limited_time_free'].includes(item.freeMechanism)) categories.push('credits');
+      if (isIde) categories.push('ide');
+      if (item.freeMechanism === 'first_month_promo' || item.timeWindow || tokens.has('promo')) categories.push('promo');
+      if (isWeb) categories.push('web');
+      if (isDownloadOrLowCost) categories.push('download_lowcost');
+      return categories;
+    };
+    const primaryCategory = item => offerCategories(item)[0] || 'credits';
     const rowArticleMarkup = item => {
-      const tokens = [...new Set([...(item.type || []), ...(item.capabilities || []), item.productType].filter(Boolean))];
-      const searchText = JSON.stringify([item.provider, item.name, item.product, item.model, item.endpoint, ...(item.capabilities || []), item.usageGuide?.summary, item.usageGuide?.steps?.join(' ')].filter(Boolean));
+      const tokens = [...offerTokens(item)];
+      const categories = offerCategories(item);
+      const searchText = JSON.stringify([item.provider, item.name, item.product, item.model, item.endpoint, item.freeSummary, item.freeMechanism, item.validity, item.access, ...(item.capabilities || []), item.usageGuide?.summary, item.usageGuide?.steps?.join(' ')].filter(Boolean));
       const capabilityLabel = (item.capabilities || []).join(' · ');
-      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(item.provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="model">${escapeHtml(item.model)}<small>${escapeHtml(item.modelMeta)}</small></div><div class="cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><small>${escapeHtml(item.freeSummary)}</small><small>${escapeHtml(capabilityLabel)}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${checkedMarkup(item)}</div><button class="row-arrow" aria-label="Open details">→</button></article>`;
+      const primary = primaryCategory(item);
+      const categoryLabel = categoryNames[primary];
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(item.provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="provider"><div class="provider-mark">${escapeHtml(item.providerMark)}</div><div class="provider-name">${escapeHtml(item.provider)}<small>${escapeHtml(item.providerMeta)}</small></div></div><div class="category-cell"><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span><small>${escapeHtml(categories.slice(1).map(category => categoryNames[category]).join(' · '))}</small></div><div class="cell mechanism-cell"><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0])}</span><strong>${escapeHtml(item.freeSummary || item.mechanism)}</strong><small>${escapeHtml(capabilityLabel || item.modelMeta || '')}</small></div><div class="cell">${summaryMarkup(item.validitySummary)}</div><div class="cell">${escapeHtml(item.accessSummary)}</div><div class="cell">${checkedMarkup(item)}</div><button class="row-arrow" aria-label="打开 ${escapeHtml(item.title || item.provider)} 详情">→</button></article>`;
     };
     const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
@@ -3306,33 +3353,30 @@
       container.innerHTML = items.map(rowArticleMarkup).join('');
       rows = [...container.querySelectorAll('.offer')];
 
-      const itemTokens = item => new Set([...(item.type || []), ...(item.capabilities || [])]);
-      const ideItems = items.filter(item => itemTokens(item).has('ide') || itemTokens(item).has('free_ide'));
-      const downloadItems = items.filter(item => itemTokens(item).has('download') || itemTokens(item).has('open_weights'));
-      const codingItems = items.filter(item => itemTokens(item).has('coding'));
-      const freeForeverItems = items.filter(item => itemTokens(item).has('free') && !itemTokens(item).has('ide') && !itemTokens(item).has('free_ide'));
-      const capabilityItems = capability => items.filter(item => itemTokens(item).has(capability));
+      const countCategory = category => items.filter(item => offerCategories(item).includes(category)).length;
       const setCount = (filter, count, selector) => document.querySelectorAll(`[data-filter="${filter}"] ${selector}`).forEach(node => { node.textContent = pad(count); });
 
       document.querySelector('.hero-side .big').textContent = items.length;
       setCount('all', items.length, 'b');
       setCount('all', items.length, 'em');
-      setCount('ide', ideItems.length, 'b');
-      setCount('ide', ideItems.length, 'em');
-      setCount('download', downloadItems.length, 'b');
-      setCount('download', downloadItems.length, 'em');
-      setCount('coding', codingItems.length, 'b');
-      setCount('coding', codingItems.length, 'em');
-      setCount('free', freeForeverItems.length, 'em');
-      ['search', 'fetch', 'extract', 'crawl', 'map', 'browser', 'agent'].forEach(capability => {
-        setCount(capability, capabilityItems(capability).length, 'b');
-        setCount(capability, capabilityItems(capability).length, 'em');
+      ['free_quota', 'credits', 'ide', 'promo', 'web', 'download_lowcost'].forEach(category => {
+        setCount(category, countCategory(category), 'b');
+        setCount(category, countCategory(category), 'em');
       });
-      document.getElementById('summaryFreeForever').textContent = pad(freeForeverItems.length);
-      document.getElementById('summaryOpenWeights').textContent = pad(downloadItems.length);
+      document.getElementById('summaryFreeQuota').textContent = pad(countCategory('free_quota'));
+      document.getElementById('summaryCredits').textContent = pad(countCategory('credits'));
+      document.getElementById('summaryIde').textContent = pad(countCategory('ide'));
+      document.getElementById('summaryPromo').textContent = pad(countCategory('promo'));
+      document.getElementById('summaryWeb').textContent = pad(countCategory('web'));
 
-      document.getElementById('ideHighlightButton').textContent = `Browse all ${ideItems.length} free IDEs →`;
-      document.getElementById('ideHighlightGrid').innerHTML = ideItems.map((item, index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${escapeHtml(item.badges?.[0] || 'FREE')}</b><strong>${escapeHtml(item.provider)}</strong><span>${escapeHtml(item.freeSummary)}</span></div>`).join('');
+      const downloadItems = items.filter(item => offerCategories(item).includes('download_lowcost'));
+      document.getElementById('ideHighlightButton').textContent = `查看 ${countCategory('ide')} 个免费 IDE →`;
+      document.getElementById('ideHighlightGrid').innerHTML = [
+        ['FREE QUOTA', '免费额度', '按日、周、月或持续提供'],
+        ['CREDITS', '积分 / 次数', '新人体验，先用后看续费'],
+        ['FREE IDE', '免费 IDE', '下载即用，模型和用量写清楚'],
+        ['NIGHT DEAL', '时段优惠', '按来源和浏览器时区核验']
+      ].map(([kicker, title, detail], index) => `<div class="ide-highlight-card"><b>${pad(index + 1)} / ${kicker}</b><strong>${title}</strong><span>${detail}</span></div>`).join('');
 
       document.getElementById('downloadList').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(item.provider)}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(item.registerLabel || 'Open')} ↗</a></div>`).join('');
 
@@ -3467,8 +3511,8 @@
       const query = document.getElementById('search').value.trim().toLowerCase();
       let visible = 0;
       rows.forEach(row => {
-        const types = row.dataset.type.split(' ');
-        const matchesFilter = activeFilter === 'all' || (activeFilter === 'free' ? types.includes('free') && !types.includes('ide') : types.includes(activeFilter));
+        const categories = row.dataset.category.split(' ').filter(Boolean);
+        const matchesFilter = activeFilter === 'all' || categories.includes(activeFilter);
         const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.dataset.search.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
         const show = matchesFilter && matchesQuery;
         row.classList.toggle('hidden', !show); if (show) visible++;
@@ -3478,7 +3522,11 @@
     };
     const setFilter = (filter) => {
       activeFilter = filter;
-      document.querySelectorAll('[data-filter]').forEach(el => el.classList.toggle('active', el.dataset.filter === filter));
+      document.querySelectorAll('[data-filter]').forEach(el => {
+        const isActive = el.dataset.filter === filter;
+        el.classList.toggle('active', isActive);
+        if (el.tagName === 'BUTTON') el.setAttribute('aria-pressed', String(isActive));
+      });
       if (filter === 'compare') document.getElementById('compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
       else applyFilters();
     };

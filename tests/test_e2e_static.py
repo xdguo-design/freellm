@@ -41,10 +41,17 @@ class StaticContractTests(unittest.TestCase):
             'id="offer-data"', 'id="offerRows"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
             'id="ideHighlightGrid"', 'id="downloadList"', 'id="lastChecked"',
+            'assets/free-method-night-window.png', "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.html)
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
+
+    def test_page_uses_free_method_categories(self):
+        for name in ("free_quota", "credits", "ide", "promo", "web", "download_lowcost"):
+            self.assertIn(f'data-filter="{name}"', self.html)
+        for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
+            self.assertNotIn(f'data-filter="{name}"', self.html)
 
     def test_page_has_adsense_site_verification_script(self):
         self.assertIn(
@@ -61,9 +68,7 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("Sitemap: https://freellm.top/sitemap.xml", robots)
         self.assertIn("<loc>https://freellm.top/</loc>", sitemap)
 
-    def test_web_groups_and_usage_guide_hooks_exist(self):
-        for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
-            self.assertIn(f'data-filter="{name}"', self.html)
+    def test_web_usage_guide_hooks_exist(self):
         for hook in ("drawerUsageGuide", "drawerPrerequisites", "drawerSteps", "drawerEndpoint", "drawerExample", "drawerQuotaGuard", "drawerCommonIssues"):
             self.assertIn(f'id="{hook}"', self.html)
         self.assertIn('"id": "tinyfish-search-fetch-free"', self.html)
@@ -195,7 +200,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), 27)
         self.assertEqual(page.locator(".hero-side .big").inner_text(), "27")
         self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
-        self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 8)
+        self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 4)
         self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
         self.assertEqual(len(page.problems), 0, page.problems)
 
@@ -225,7 +230,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click("[data-filter='search']")
+        page.click("[data-filter='web']")
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search and Fetch", page.locator("#drawerTitle").inner_text())
