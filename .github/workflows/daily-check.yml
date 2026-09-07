@@ -30,7 +30,15 @@ jobs:
 
       - name: Scan official public sources
         id: scan
-        run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json
+        run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
+
+      - name: Discover new official offer candidates
+        if: always()
+        run: python -m crawler.cli discover --providers data/providers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --max-links 5 --max-pages 100 --timeout 8
+
+      - name: Build source coverage report
+        if: always()
+        run: python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
 
       - name: Snapshot current offers
         if: always()
@@ -50,5 +58,7 @@ jobs:
           name: daily-scan
           path: |
             data/snapshots/
+            data/candidates.json
+            data/coverage.json
             data/review-queue.json
           if-no-files-found: error

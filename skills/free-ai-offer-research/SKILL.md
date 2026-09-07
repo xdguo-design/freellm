@@ -60,3 +60,17 @@ description: "抓取、核验和比较公开的免费 AI、免费 IDE、限时�
 - `references/offer-schema.md` — 第三步加载，规范字段和分类。
 - `references/review-checklist.md` — 第六步加载，执行发布前人工核验。
 - `references/report-template.md` — 第五步加载，组织最终输出。
+
+## Automated discovery and coverage gate
+
+For every full scan, load the provider registry from `data/providers.json` and run:
+
+```text
+python -m crawler.cli discover --providers data/providers.json --out data/candidates.json
+```
+
+Discovery may find candidates automatically, but it must not directly publish them to `data/offers.json`. Every candidate starts as `needs_review` and keeps its official source URL, evidence, matched keywords, first-seen time and last-seen time.
+
+The daily job must also produce a coverage report. Coverage means the number of registered providers and official sources scanned, successful and failed sources, missing providers, stale candidates and pending review items. A source failure is `source_unavailable`, never `expired`; a single failed request must not delete or downgrade an existing offer.
+
+The publication gate requires an official pricing page, FAQ, documentation page, announcement or official model repository. Promotions, new-user credits, night-rate rules and free IDE quotas are separate benefits even when they belong to the same provider. The public directory is complete only relative to the registered provider set, so the page and reports must expose coverage instead of claiming that every model on the internet was found.

@@ -64,7 +64,7 @@ class DailyWorkflowTests(unittest.TestCase):
         self.assertNotIn("pip install", self.text)
 
     def test_workflow_validates_scans_diffs_and_uploads(self):
-        for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli diff", "upload-artifact", "if: always()"):
+        for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "upload-artifact", "if: always()"):
             self.assertIn(needle, self.text)
 
     def test_workflow_never_pushes_public_data(self):

@@ -18,6 +18,14 @@ class SkillTests(unittest.TestCase):
         self.assertIn("人工审核", text)
         self.assertIn("free-ai-offer-research", text)
 
+    def test_skill_requires_discovery_coverage_and_publish_gate(self):
+        text = self.root.joinpath("SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("data/providers.json", text)
+        self.assertIn("data/candidates.json", text)
+        self.assertIn("crawler.cli discover", text)
+        self.assertIn("coverage report", text)
+        self.assertIn("不直接发布", text)
+
 
 if __name__ == "__main__":
     unittest.main()
