@@ -41,6 +41,8 @@ class StaticContractTests(unittest.TestCase):
             'id="ideHighlightGrid"', 'id="downloadList"', 'id="lastChecked"',
         ):
             self.assertIn(needle, self.html)
+        self.assertIn('"id": "doubao"', self.html)
+        self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
 
     def test_hardcoded_offers_are_gone(self):
         self.assertNotIn("const offers = {", self.html)
@@ -147,8 +149,8 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertEqual(self.visible_offers(page), 17)
-        self.assertEqual(page.locator(".hero-side .big").inner_text(), "17")
+        self.assertEqual(self.visible_offers(page), 18)
+        self.assertEqual(page.locator(".hero-side .big").inner_text(), "18")
         self.assertEqual(page.locator(".tabs [data-filter='ide'] em").inner_text(), "08")
         self.assertEqual(page.locator("#ideHighlightGrid .ide-highlight-card").count(), 8)
         self.assertIn("Browse all 8 free IDEs", page.locator("#ideHighlightButton").inner_text())
@@ -179,9 +181,9 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        self.assertEqual(self.visible_offers(page), 17)
+        self.assertEqual(self.visible_offers(page), 18)
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
-        self.assertEqual(len(item_list), 17)
+        self.assertEqual(len(item_list), 18)
         self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
         self.assertEqual(len(page.problems), 0, page.problems)
 
@@ -195,7 +197,7 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), 17)
+            self.assertEqual(self.visible_offers(page), 18)
             self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_missing_data_shows_readable_error(self):

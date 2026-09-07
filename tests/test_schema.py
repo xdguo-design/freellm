@@ -26,6 +26,16 @@ class SchemaTests(unittest.TestCase):
             "google-antigravity-free",
         }.issubset(offer_ids))
 
+    def test_doubao_and_qwen_are_explicitly_discoverable(self):
+        offers = json.loads(Path("data/offers.json").read_text(encoding="utf-8"))
+        doubao = next(offer for offer in offers if offer["id"] == "doubao")
+        qwen = next(offer for offer in offers if offer["id"] == "aliyun-qwen-free-quota")
+        self.assertIn("豆包", doubao["name"])
+        self.assertIn("通义千问", qwen["providerMeta"])
+        self.assertEqual(qwen["freeMechanism"], "trial")
+        self.assertIn("90 days", qwen["validity"])
+        self.assertIn("bailian.console.aliyun.com", qwen["register"])
+
     def test_invalid_product_type_is_rejected(self):
         errors = validate_offer({"id": "x", "productType": "unknown"})
         self.assertTrue(any("productType" in error for error in errors))
