@@ -36,6 +36,7 @@ class DiscoveryTests(unittest.TestCase):
             "minimax",
             "moonshot-kimi",
             "china-ai-ides",
+            "opencode",
         }:
             self.assertIn(provider_id, ids)
 

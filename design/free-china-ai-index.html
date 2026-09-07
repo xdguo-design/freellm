@@ -47,7 +47,8 @@
         {"@type":"ListItem","position":9,"name":"Qwen3-4B · open weights"},
         {"@type":"ListItem","position":10,"name":"GLM-4.7-Flash · open weights"},
         {"@type":"ListItem","position":11,"name":"SenseNova · free status pending"},
-        {"@type":"ListItem","position":12,"name":"DeepSeek API · low cost, not free"}
+        {"@type":"ListItem","position":12,"name":"DeepSeek API · low cost, not free"},
+        {"@type":"ListItem","position":13,"name":"OpenCode Zen · free model pool"}
       ]},
       {"@type":"FAQPage","mainEntity":[
         {"@type":"Question","name":"What does “free” mean here?","acceptedAnswer":{"@type":"Answer","text":"Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free."}},
@@ -1216,6 +1217,71 @@
     "lastVerifiedAt": "2026-09-06",
     "checkedBy": "manual",
     "notes": "Low cost is intentionally separate from free."
+  },
+  {
+    "id": "opencode-zen-free",
+    "order": 13,
+    "date": "2026-09-07",
+    "name": "OpenCode Zen free models",
+    "providerMark": "OC",
+    "provider": "OpenCode Zen",
+    "providerMeta": "OpenCode · International",
+    "model": "Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "modelMeta": "Hosted coding models",
+    "type": [
+      "coding",
+      "free"
+    ],
+    "productType": "api",
+    "kicker": "GLOBAL FREE MODELS",
+    "badges": [
+      "LIMITED-TIME FREE",
+      "OPEN SOURCE CLI"
+    ],
+    "freeSummary": "Selected Zen models · input, output and cache listed as Free",
+    "validitySummary": "Limited time / model pool can change",
+    "accessSummary": "Global / OpenCode account",
+    "checkedSummary": "Today / official OpenCode docs",
+    "title": "OpenCode Zen · free model pool",
+    "why": "OpenCode's official Zen documentation lists selected hosted coding models at Free input, output and cache pricing for a limited time. This is a provider-hosted free model pool, not a claim that every upstream model is free everywhere.",
+    "mechanism": "Selected Zen models free for a limited time",
+    "validity": "Limited time; verify the official Zen page before use",
+    "access": "Global OpenCode account; regional availability may vary",
+    "command": "curl -fsSL https://opencode.ai/install | bash\nopencode",
+    "register": "https://opencode.ai/",
+    "registerLabel": "OpenCode / sign in",
+    "links": [
+      [
+        "Official Zen pricing",
+        "https://dev.opencode.ai/docs/zen/"
+      ],
+      [
+        "Providers",
+        "https://opencode.ai/docs/providers"
+      ],
+      [
+        "Install",
+        "https://opencode.ai/docs"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; provider and model availability may vary by region",
+    "freeMechanism": "limited_time_free",
+    "quota": "Selected models at Free input, output and cache pricing",
+    "renewal": "No subscription required for the listed free Zen models; availability can change",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check OpenCode and each model's terms",
+    "sourceUrls": [
+      "https://dev.opencode.ai/docs/zen/",
+      "https://opencode.ai/docs/providers"
+    ],
+    "evidence": "Official OpenCode Zen documentation lists Big Pickle, MiMo-V2.5 Free, Ling 3.0 Flash Fin Free, Nemotron and Muse Spark models at Free pricing.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked."
   }
 ]
   </script>
