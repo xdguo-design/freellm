@@ -3,7 +3,7 @@
 | 字段 | 规则 |
 |---|---|
 | `productType` | `free_ide`、`api`、`coding_plan`、`open_weights`、`payg` |
-| `freeMechanism` | `permanent`、`monthly_quota`、`daily_quota`、`trial`、`first_month_promo`、`limited_time_free`、`open_weights`、`not_confirmed` |
+| `freeMechanism` | `permanent`、`monthly_quota`、`daily_quota`、`weekly_quota`、`trial`、`first_month_promo`、`limited_time_free`、`open_weights`、`not_confirmed` |
 | `status` | `verified`、`changed`、`expired`、`unavailable`、`needs_review` |
 | `confidence` | `high`、`medium`、`low` |
 | `phoneRequired` / `cardRequired` | `yes`、`no`、`unknown` |

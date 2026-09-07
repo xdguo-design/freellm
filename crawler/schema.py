@@ -14,7 +14,7 @@ REQUIRED_FIELDS = {
     "sourceUrls", "evidence", "status", "confidence", "lastVerifiedAt",
 }
 PRODUCT_TYPES = {"free_ide", "api", "coding_plan", "open_weights", "payg"}
-MECHANISMS = {"permanent", "monthly_quota", "daily_quota", "trial", "first_month_promo", "limited_time_free", "open_weights", "not_confirmed"}
+MECHANISMS = {"permanent", "monthly_quota", "daily_quota", "weekly_quota", "trial", "first_month_promo", "limited_time_free", "open_weights", "not_confirmed"}
 STATUSES = {"verified", "changed", "expired", "unavailable", "needs_review"}
 CONFIDENCES = {"high", "medium", "low"}
 REQUIREMENT_VALUES = {"yes", "no", "unknown"}

@@ -16,6 +16,16 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual(opencode["freeMechanism"], "limited_time_free")
         self.assertIn("opencode.ai", opencode["register"])
 
+    def test_global_coding_peers_are_in_the_directory(self):
+        offers = json.loads(Path("data/offers.json").read_text(encoding="utf-8"))
+        offer_ids = {offer["id"] for offer in offers}
+        self.assertTrue({
+            "github-copilot-free",
+            "cursor-hobby",
+            "amazon-q-free",
+            "google-antigravity-free",
+        }.issubset(offer_ids))
+
     def test_invalid_product_type_is_rejected(self):
         errors = validate_offer({"id": "x", "productType": "unknown"})
         self.assertTrue(any("productType" in error for error in errors))

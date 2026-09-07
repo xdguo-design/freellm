@@ -18,7 +18,7 @@ from crawler.cli import main as cli_main
 
 
 class DiscoveryTests(unittest.TestCase):
-    def test_provider_registry_covers_major_china_offer_sources(self):
+    def test_provider_registry_covers_china_and_global_peer_sources(self):
         providers = json.loads(Path("data/providers.json").read_text(encoding="utf-8"))
         ids = {provider["id"] for provider in providers}
 
@@ -37,6 +37,10 @@ class DiscoveryTests(unittest.TestCase):
             "moonshot-kimi",
             "china-ai-ides",
             "opencode",
+            "github-copilot",
+            "cursor",
+            "amazon-q-developer",
+            "google-antigravity",
         }:
             self.assertIn(provider_id, ids)
 

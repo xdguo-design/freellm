@@ -168,11 +168,58 @@
     "id": "opencode",
     "name": "OpenCode",
     "aliases": ["OpenCode", "OpenCode Zen", "OpenCode Go", "AI coding agent"],
+    "region": "global",
     "allowedDomains": ["opencode.ai", "dev.opencode.ai"],
     "discoveryUrls": [
       "https://opencode.ai/docs/providers",
       "https://dev.opencode.ai/docs/zen/",
       "https://dev.opencode.ai/docs/go/"
+    ]
+  },
+  {
+    "id": "github-copilot",
+    "name": "GitHub Copilot",
+    "aliases": ["GitHub Copilot", "Copilot Free", "Copilot CLI"],
+    "region": "global",
+    "allowedDomains": ["github.com", "docs.github.com"],
+    "discoveryUrls": [
+      "https://github.com/features/copilot/plans",
+      "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-self"
+    ]
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "aliases": ["Cursor", "Cursor Hobby", "Cursor AI"],
+    "region": "global",
+    "allowedDomains": ["cursor.com", "prod.cursor.com"],
+    "discoveryUrls": [
+      "https://cursor.com/pricing",
+      "https://prod.cursor.com/help/account-and-billing/pricing"
+    ]
+  },
+  {
+    "id": "amazon-q-developer",
+    "name": "Amazon Q Developer",
+    "aliases": ["Amazon Q", "Q Developer", "AWS AI coding assistant"],
+    "region": "global",
+    "allowedDomains": ["aws.amazon.com", "docs.aws.amazon.com"],
+    "discoveryUrls": [
+      "https://aws.amazon.com/q/developer/pricing/",
+      "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html",
+      "https://aws.amazon.com/q/developer/getting-started/"
+    ]
+  },
+  {
+    "id": "google-antigravity",
+    "name": "Google Antigravity",
+    "aliases": ["Antigravity", "Antigravity CLI", "Google coding agent"],
+    "region": "global",
+    "allowedDomains": ["antigravity.google", "cloud.google.com"],
+    "discoveryUrls": [
+      "https://antigravity.google/pricing",
+      "https://antigravity.google/docs/plans",
+      "https://antigravity.google/docs/ide/extensions/"
     ]
   }
 ]

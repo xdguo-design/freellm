@@ -48,7 +48,11 @@
         {"@type":"ListItem","position":10,"name":"GLM-4.7-Flash · open weights"},
         {"@type":"ListItem","position":11,"name":"SenseNova · free status pending"},
         {"@type":"ListItem","position":12,"name":"DeepSeek API · low cost, not free"},
-        {"@type":"ListItem","position":13,"name":"OpenCode Zen · free model pool"}
+        {"@type":"ListItem","position":13,"name":"OpenCode Zen · free model pool"},
+        {"@type":"ListItem","position":14,"name":"GitHub Copilot · Free plan"},
+        {"@type":"ListItem","position":15,"name":"Cursor · Hobby free plan"},
+        {"@type":"ListItem","position":16,"name":"Amazon Q Developer · Free tier"},
+        {"@type":"ListItem","position":17,"name":"Google Antigravity · Individual free plan"}
       ]},
       {"@type":"FAQPage","mainEntity":[
         {"@type":"Question","name":"What does “free” mean here?","acceptedAnswer":{"@type":"Answer","text":"Every entry is qualified as a recurring quota, one-time trial, first-month promotion, free IDE mode, downloadable weights or low-cost pay-as-you-go. We do not present an unconfirmed quota as free."}},
@@ -370,10 +374,10 @@
       <div>
         <p class="side-label">Browse</p>
         <nav class="side-nav" aria-label="Browse categories">
-          <button class="active" data-filter="all"><span>All offers</span><b>12</b></button>
-          <button data-filter="ide"><span>Free IDEs</span><b>04</b></button>
+          <button class="active" data-filter="all"><span>All offers</span><b>17</b></button>
+          <button data-filter="ide"><span>Free IDEs</span><b>08</b></button>
           <button data-filter="download"><span>Download models</span><b>03</b></button>
-          <button data-filter="coding"><span>Coding plans</span><b>03</b></button>
+          <button data-filter="coding"><span>Coding plans</span><b>08</b></button>
           <button data-filter="compare"><span>Price compare</span><b>↗</b></button>
         </nav>
       </div>
@@ -398,7 +402,7 @@
             <h1>Free AI.<br><span style="color:var(--blue)">Clear terms.</span></h1>
             <p class="hero-copy">A practical index of <b>free models, limited-time trials, free coding tools, open weights and low-cost plans</b> that developers can actually evaluate before the quota disappears.</p>
           </div>
-          <div class="hero-side"><div class="big">12</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
+          <div class="hero-side"><div class="big">17</div><p>offers surfaced today<br>with free status, expiry and setup path separated.</p></div>
         </section>
 
         <div class="notice"><div><strong>Free does not mean unlimited.</strong> <span>We label the exact mechanism: permanent quota, trial credits, first-month promotion, free IDE or downloadable weights.</span></div><a href="#methodology">How we label it →</a></div>
@@ -408,7 +412,7 @@
             <div class="ide-kicker">China highlight / free AI IDEs</div>
             <h2 id="ide-highlight-title">The strongest deal is often the IDE, not a naked API key.</h2>
             <p>China-market coding tools increasingly bundle <strong>model access, code completion, agent loops and editor integrations</strong> into a free or ¥0 personal tier. For overseas developers, this can be more useful than a small standalone API quota.</p>
-            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse 4 free IDEs →</button>
+            <button class="highlight-button" id="ideHighlightButton" data-filter="ide">Browse 8 free IDEs →</button>
           </div>
           <div class="ide-highlight-grid" id="ideHighlightGrid" aria-label="Free IDE highlights">
             <div class="ide-highlight-card"><b>01 / FREE PLAN</b><strong>CodeBuddy</strong><span>500 credits / month · 5,000 completions</span></div>
@@ -423,11 +427,11 @@
           <select class="sort" id="sort" aria-label="Sort offers"><option value="free">Sort: free first</option><option value="fresh">Sort: recently checked</option><option value="name">Sort: A–Z</option></select>
         </div>
         <div class="tabs" role="tablist">
-          <button class="tab active" data-filter="all">All offers <em>12</em></button>
+          <button class="tab active" data-filter="all">All offers <em>17</em></button>
           <button class="tab" data-filter="free">Free forever <em>02</em></button>
-          <button class="tab" data-filter="ide">Free IDEs <em>04</em></button>
+          <button class="tab" data-filter="ide">Free IDEs <em>08</em></button>
           <button class="tab" data-filter="download">Downloadable <em>03</em></button>
-          <button class="tab" data-filter="coding">Cheap coding <em>03</em></button>
+          <button class="tab" data-filter="coding">Cheap coding <em>08</em></button>
         </div>
 
         <section class="summary-grid" aria-label="Offer summary">
@@ -1282,6 +1286,267 @@
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
     "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked."
+  },
+  {
+    "id": "github-copilot-free",
+    "order": 14,
+    "date": "2026-09-07",
+    "name": "GitHub Copilot Free",
+    "providerMark": "GH",
+    "provider": "GitHub Copilot",
+    "providerMeta": "GitHub · International",
+    "model": "Copilot Free models",
+    "modelMeta": "IDE extension / CLI / GitHub",
+    "type": [
+      "ide",
+      "free",
+      "coding"
+    ],
+    "productType": "free_ide",
+    "kicker": "GLOBAL FREE IDE",
+    "badges": [
+      "FREE IDE",
+      "2,000 COMPLETIONS / MONTH"
+    ],
+    "freeSummary": "2,000 completions + 50 chat/agent requests per month",
+    "validitySummary": "Monthly / recurring free plan",
+    "accessSummary": "Global GitHub personal account",
+    "checkedSummary": "Today / official GitHub plans",
+    "title": "GitHub Copilot · Free plan",
+    "why": "GitHub's official Free plan provides a recurring monthly allowance for code completions and chat/agent use across supported editors, GitHub and Copilot CLI. It is a limited free developer plan, not unlimited model access.",
+    "mechanism": "2,000 code completions and 50 chat/agent requests per month",
+    "validity": "Monthly limits reset each month; plan rules can change",
+    "access": "Global personal GitHub account",
+    "command": "code --install-extension GitHub.copilot\ncode --install-extension GitHub.copilot-chat",
+    "register": "https://github.com/features/copilot",
+    "registerLabel": "Open GitHub Copilot",
+    "links": [
+      [
+        "Official plans",
+        "https://github.com/features/copilot/plans"
+      ],
+      [
+        "Setup guide",
+        "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-self"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; supported editor and account availability applies",
+    "freeMechanism": "monthly_quota",
+    "quota": "2,000 completions + 50 chat/agent requests per month",
+    "renewal": "Free plan renews monthly; no paid renewal listed for the Free tier",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check GitHub Copilot terms for your use case",
+    "sourceUrls": [
+      "https://github.com/features/copilot/plans",
+      "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-self"
+    ],
+    "evidence": "GitHub's official plans page lists the Free plan at $0 with 2,000 completions and 50 chat requests per month; it also documents Copilot CLI and supported editor access.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "International peer entry; monthly allowance and available models should be rechecked because GitHub updates the plan."
+  },
+  {
+    "id": "cursor-hobby",
+    "order": 15,
+    "date": "2026-09-07",
+    "name": "Cursor Hobby",
+    "providerMark": "CU",
+    "provider": "Cursor",
+    "providerMeta": "Anysphere · International",
+    "model": "Cursor Auto / Composer",
+    "modelMeta": "AI coding editor",
+    "type": [
+      "ide",
+      "free",
+      "coding"
+    ],
+    "productType": "free_ide",
+    "kicker": "GLOBAL FREE IDE",
+    "badges": [
+      "FREE IDE",
+      "LIMITED USAGE"
+    ],
+    "freeSummary": "Free Hobby plan · limited Agent, Chat and Tab usage",
+    "validitySummary": "Recurring free plan / limited usage",
+    "accessSummary": "Global Cursor account",
+    "checkedSummary": "Today / official Cursor pricing",
+    "title": "Cursor · Hobby free plan",
+    "why": "Cursor's official pricing and plan documentation list a $0 Hobby plan with access to core editor features, limited Agent requests and limited Tab completions. The exact cap is not presented as a fixed public number, so this entry does not invent one.",
+    "mechanism": "Free Hobby plan with limited Agent, Chat and Tab usage",
+    "validity": "Recurring free plan; limits are account/dashboard dependent",
+    "access": "Global Cursor account",
+    "command": "Download the official Cursor desktop app from the Cursor downloads page.",
+    "register": "https://cursor.com/",
+    "registerLabel": "Open / download Cursor",
+    "links": [
+      [
+        "Official pricing",
+        "https://cursor.com/pricing"
+      ],
+      [
+        "Pricing and plans",
+        "https://prod.cursor.com/help/account-and-billing/pricing"
+      ],
+      [
+        "Download",
+        "https://cursor.com/downloads"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global; account and regional availability may vary",
+    "freeMechanism": "monthly_quota",
+    "quota": "Limited Agent requests, Chat and Tab completions; exact cap not publicly fixed",
+    "renewal": "No paid renewal for the Hobby Free plan",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Cursor terms and model terms",
+    "sourceUrls": [
+      "https://cursor.com/pricing",
+      "https://prod.cursor.com/help/account-and-billing/pricing"
+    ],
+    "evidence": "Official Cursor pricing lists Hobby as Free with limited Agent requests and access to Composer; Cursor's plan documentation confirms limited Agent, Chat and Tab features.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator."
+  },
+  {
+    "id": "amazon-q-free",
+    "order": 16,
+    "date": "2026-09-07",
+    "name": "Amazon Q Developer Free",
+    "providerMark": "AQ",
+    "provider": "Amazon Q Developer",
+    "providerMeta": "AWS · International",
+    "model": "Amazon Q Developer",
+    "modelMeta": "IDE plugin / CLI",
+    "type": [
+      "ide",
+      "free",
+      "coding"
+    ],
+    "productType": "free_ide",
+    "kicker": "GLOBAL FREE IDE",
+    "badges": [
+      "FREE TIER",
+      "50 AGENTIC REQUESTS / MONTH"
+    ],
+    "freeSummary": "50 agentic requests + 25 AWS resource queries per month",
+    "validitySummary": "Perpetual free tier / monthly limits",
+    "accessSummary": "Global where AWS Q is supported",
+    "checkedSummary": "Today / official AWS pricing",
+    "title": "Amazon Q Developer · Free tier",
+    "why": "AWS documents a perpetual Amazon Q Developer Free tier with monthly limits for IDE and CLI use. The official pricing page lists 50 agentic requests per month and 25 AWS resource queries per account.",
+    "mechanism": "50 agentic requests and 25 AWS resource queries per month",
+    "validity": "Perpetual free tier with monthly limits",
+    "access": "Use an AWS Builder ID for personal IDE/CLI access; supported regions and sign-in method apply",
+    "command": "Install Amazon Q Developer from the official AWS getting-started page, then sign in with an AWS Builder ID.",
+    "register": "https://aws.amazon.com/q/developer/getting-started/",
+    "registerLabel": "Install / open Amazon Q",
+    "links": [
+      [
+        "Official pricing",
+        "https://aws.amazon.com/q/developer/pricing/"
+      ],
+      [
+        "Free and Pro tiers",
+        "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"
+      ],
+      [
+        "Getting started",
+        "https://aws.amazon.com/q/developer/getting-started/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Supported AWS regions; Builder ID is required for personal IDE/CLI free access",
+    "freeMechanism": "monthly_quota",
+    "quota": "50 agentic requests per month; 25 AWS resource queries per month per account",
+    "renewal": "Perpetual Free tier; no paid renewal unless upgrading to Pro",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check AWS terms and the Free tier data-use settings",
+    "sourceUrls": [
+      "https://aws.amazon.com/q/developer/pricing/",
+      "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"
+    ],
+    "evidence": "AWS's official pricing page lists a zero-cost Free tier with 50 agentic requests per month; AWS documentation calls the Free tier perpetual and shows IDE/CLI access for personal Builder IDs.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Free-tier content may be used for service improvement unless the applicable opt-out is configured; review AWS privacy settings."
+  },
+  {
+    "id": "google-antigravity-free",
+    "order": 17,
+    "date": "2026-09-07",
+    "name": "Google Antigravity Individual",
+    "providerMark": "GA",
+    "provider": "Google Antigravity",
+    "providerMeta": "Google · International",
+    "model": "Gemini / selected agent models",
+    "modelMeta": "Agent-first IDE / CLI",
+    "type": [
+      "ide",
+      "free",
+      "coding"
+    ],
+    "productType": "free_ide",
+    "kicker": "GLOBAL FREE IDE",
+    "badges": [
+      "$0 / MONTH",
+      "WEEKLY RATE LIMITS"
+    ],
+    "freeSummary": "$0 individual plan · unlimited tab completions and command requests",
+    "validitySummary": "Free individual plan / weekly rate limits",
+    "accessSummary": "Personal Google account",
+    "checkedSummary": "Today / official Antigravity pricing",
+    "title": "Google Antigravity · Individual free plan",
+    "why": "Google Antigravity's official pricing page lists a $0 Individual plan with unlimited tab completions and command requests, subject to basic weekly rate limits. Google has positioned it as the migration path for former consumer Gemini Code Assist and Gemini CLI users.",
+    "mechanism": "Free individual plan with weekly rate limits",
+    "validity": "Free while the Individual plan and public availability continue; rate limits may change",
+    "access": "Personal Google account; product availability and sign-in region apply",
+    "command": "Download Google Antigravity from the official product page and sign in with a personal Google account.",
+    "register": "https://antigravity.google/",
+    "registerLabel": "Open / download Antigravity",
+    "links": [
+      [
+        "Official pricing",
+        "https://antigravity.google/pricing"
+      ],
+      [
+        "Plans documentation",
+        "https://antigravity.google/docs/plans/"
+      ],
+      [
+        "IDE extensions",
+        "https://antigravity.google/docs/ide/extensions/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global subject to product availability and Google account region",
+    "freeMechanism": "weekly_quota",
+    "quota": "Unlimited tab completions and command requests; basic weekly rate limits",
+    "renewal": "No paid renewal for the $0 Individual plan",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Google Antigravity terms and model terms",
+    "sourceUrls": [
+      "https://antigravity.google/pricing",
+      "https://antigravity.google/docs/plans/",
+      "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals"
+    ],
+    "evidence": "Official Antigravity pricing lists the Individual plan at $0/month with unlimited tab completions, unlimited command requests and basic weekly rate limits; Google documents migration from consumer Gemini Code Assist and Gemini CLI.",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-07",
+    "checkedBy": "manual",
+    "notes": "Google's consumer coding products changed in 2026; keep this entry under frequent recheck."
   }
 ]
   </script>

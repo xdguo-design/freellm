@@ -11,6 +11,7 @@ description: "抓取、核验和比较公开的免费 AI、免费 IDE、限时�
 
 - [ ] 第一步：确认任务范围
   - 判断是单个产品核验、全量来源扫描、变化比较还是新增条目。
+  - 全量扫描默认覆盖“中国优先 + 国际同类”两组：国内模型/IDE、国际 coding agent/IDE、免费 API、开放权重和低价计划；不能因为站点主打中国而跳过海外传统工具。
   - 优先使用用户给出的官方页面；没有官方来源时，将结果标为 `needs_review`。
 - [ ] 第二步：收集来源
   - 加载 `references/source-policy.md`。
@@ -23,6 +24,8 @@ description: "抓取、核验和比较公开的免费 AI、免费 IDE、限时�
 - [ ] 第四步：核验分类
   - 区分免费 IDE、免费 API、网页试用、首月促销、开放权重和低价按量付费。
   - 免费 IDE 不等同于免费 API；模型权重免费不等同于 GPU、存储和推理免费。
+  - 对 OpenCode、Copilot、Cursor、Amazon Q、Antigravity 这类 coding agent/IDE，必须先确认产品本身是否有官方 $0 计划或周期额度；“开源客户端 + 用户自带付费 API”不能单独标为免费模型。
+  - 同类产品按功能族一起检查：CLI coding agent、IDE 扩展、编辑器内置助手和官方模型托管池分别记录，不能只收录一个代表产品。
   - 解析失败、页面动态化、规则不完整或地区条件不明时设置 `needs_review`。
 - [ ] 第五步：生成结果
   - 加载 `references/report-template.md`。
@@ -74,3 +77,13 @@ Discovery may find candidates automatically, but it must not directly publish th
 The daily job must also produce a coverage report. Coverage means the number of registered providers and official sources scanned, successful and failed sources, missing providers, stale candidates and pending review items. A source failure is `source_unavailable`, never `expired`; a single failed request must not delete or downgrade an existing offer.
 
 The publication gate requires an official pricing page, FAQ, documentation page, announcement or official model repository. Promotions, new-user credits, night-rate rules and free IDE quotas are separate benefits even when they belong to the same provider. The public directory is complete only relative to the registered provider set, so the page and reports must expose coverage instead of claiming that every model on the internet was found.
+
+## Global peer coverage rule
+
+The directory is China-first, not China-only. The global peer set must be maintained in `data/providers.json` and reviewed as a group whenever a new coding agent or IDE is found. The initial peer families are:
+
+- hosted coding agents / CLI: OpenCode, Amazon Q Developer, Google Antigravity;
+- editor-integrated assistants: GitHub Copilot Free, Cursor Hobby;
+- local/open-source clients: only publish them when the offer includes a clearly free official model, quota or downloadable weights; client software alone is not a free model offer.
+
+For each peer, the registry must contain official pricing or plan pages, product/download pages and at least one discovery URL. A product enters public `data/offers.json` only after the same evidence gate as Chinese entries: mechanism, quota unit, validity, renewal, region, registration/download URL and official evidence. If a product has been deprecated or its free rule is unclear, keep it as `needs_review` or `unavailable` rather than presenting stale free claims.
