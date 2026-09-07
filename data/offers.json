@@ -595,7 +595,7 @@
     "providerMeta": "GitHub · International",
     "model": "Copilot Free models",
     "modelMeta": "IDE extension / CLI / GitHub",
-    "type": ["ide", "free", "coding"],
+    "type": ["ide", "free", "coding", "student"],
     "productType": "free_ide",
     "capabilities": ["free_ide"],
     "usageGuide": {"summary": "安装 GitHub Copilot 并使用 Free 计划", "prerequisites": ["GitHub 账号"], "steps": ["打开官方计划页并确认 Free 资格", "在支持的编辑器中安装 Copilot、登录并查看月度额度"], "examples": {"action": "打开 https://github.com/features/copilot/plans 并按官方步骤安装扩展"}, "docsUrl": "https://github.com/features/copilot/plans"},
@@ -628,7 +628,10 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
-    "notes": "International peer entry; monthly allowance and available models should be rechecked because GitHub updates the plan."
+    "studentSummary": "Verified students can activate Copilot Student through GitHub Education.",
+    "studentEligibility": "GitHub Education verification; school email or official dated enrollment proof",
+    "notes": "International peer entry; monthly allowance and available models should be rechecked because GitHub updates the plan. Student access is a separate verified benefit.",
+    "studentSourceUrls": ["https://github.com/education/students", "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-students"]
   },
   {
     "id": "cursor-hobby",
@@ -640,7 +643,7 @@
     "providerMeta": "Anysphere · International",
     "model": "Cursor Auto / Composer",
     "modelMeta": "AI coding editor",
-    "type": ["ide", "free", "coding"],
+    "type": ["ide", "free", "coding", "student"],
     "productType": "free_ide",
     "capabilities": ["free_ide"],
     "usageGuide": {"summary": "安装 Cursor 并使用 Hobby 免费计划", "prerequisites": ["Cursor 账号"], "steps": ["打开官方定价页并下载安装 Cursor", "登录后选择 Hobby 并查看账户中的使用限制"], "examples": {"action": "打开 https://cursor.com/downloads 并下载安装 Cursor"}, "docsUrl": "https://cursor.com/pricing"},
@@ -658,7 +661,7 @@
     "command": "Download the official Cursor desktop app from the Cursor downloads page.",
     "register": "https://cursor.com/",
     "registerLabel": "Open / download Cursor",
-    "links": [["Official pricing", "https://cursor.com/pricing"], ["Pricing and plans", "https://prod.cursor.com/help/account-and-billing/pricing"], ["Download", "https://cursor.com/downloads"]],
+    "links": [["Official pricing", "https://cursor.com/pricing"], ["Pricing and plans", "https://prod.cursor.com/help/account-and-billing/pricing"], ["Students", "https://cursor.com/en-US/students"], ["Download", "https://cursor.com/downloads"]],
     "originCountry": "International",
     "availability": "Global; account and regional availability may vary",
     "freeMechanism": "monthly_quota",
@@ -667,13 +670,16 @@
     "phoneRequired": "unknown",
     "cardRequired": "no",
     "commercialUse": "Check Cursor terms and model terms",
-    "sourceUrls": ["https://cursor.com/pricing", "https://prod.cursor.com/help/account-and-billing/pricing"],
-    "evidence": "Official Cursor pricing lists Hobby as Free with limited Agent requests and access to Composer; Cursor's plan documentation confirms limited Agent, Chat and Tab features.",
+    "sourceUrls": ["https://cursor.com/pricing", "https://prod.cursor.com/help/account-and-billing/pricing", "https://cursor.com/en-US/students"],
+    "evidence": "Official Cursor pricing lists Hobby as Free with limited Agent requests and access to Composer; Cursor's plan documentation confirms limited Agent, Chat and Tab features. Cursor also maintains an official Students page for its student program.",
     "status": "verified",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
-    "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator."
+    "studentSummary": "Official student program; eligibility and discount terms are shown after verification.",
+    "studentEligibility": "Student verification; availability and terms can vary by institution or region",
+    "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator. Student program terms should be checked on the official Students page.",
+    "studentSourceUrls": ["https://cursor.com/en-US/students"]
   },
   {
     "id": "amazon-q-free",

@@ -549,6 +549,156 @@
       .hero-side { grid-template-columns: 1fr; }
       .hero-count { border-left: 0; border-top: 2px solid var(--ink); padding: 12px 0 0; }
     }
+
+    /* Catalog A: one reading path, one visual rhythm. */
+    body { font-family: var(--sans); font-synthesis: none; line-height: 1.55; }
+    .legacy-app { display: none; }
+    .catalog-app { display: block; min-height: 100vh; }
+    .catalog-app main { min-width: 0; }
+    .catalog-header { min-height: 78px; padding: 14px clamp(18px, 4vw, 58px); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.88); display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: center; position: sticky; top: 0; z-index: 3; backdrop-filter: blur(12px); }
+    .catalog-header .brand { display: grid; grid-template-columns: 45px auto; gap: 10px; align-items: center; text-decoration: none; }
+    .catalog-header .brand-mark { height: 45px; font-size: 12px; }
+    .catalog-header .brand-name { font-size: 17px; }
+    .catalog-header .brand-sub { font-size: 9px; }
+    .top-nav { display: flex; justify-content: center; gap: clamp(16px, 3vw, 38px); }
+    .top-nav a { color: var(--muted); font: 11px var(--mono); text-decoration: none; }
+    .top-nav a:hover { color: var(--blue); }
+    .catalog-content { max-width: 1460px; margin: 0 auto; padding: 42px clamp(18px, 4vw, 58px) 60px; }
+    .catalog-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr); gap: clamp(28px, 5vw, 76px); padding: 8px 0 38px; align-items: center; }
+    .catalog-hero-copy { max-width: 600px; }
+    .hero-kicker, .eyebrow, .category-index { color: var(--blue); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
+    .catalog-hero h1 { margin: 16px 0 0; max-width: 600px; font: 850 clamp(58px, 8vw, 112px)/.95 var(--display); letter-spacing: -.055em; text-wrap: balance; }
+    .catalog-hero h1 span { color: var(--blue); }
+    .catalog-hero .hero-copy { max-width: 510px; margin: 24px 0 0; color: #4e5962; font-size: 18px; line-height: 1.8; text-wrap: pretty; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 27px; }
+    .hero-cta { display: inline-flex; gap: 14px; align-items: center; padding: 13px 16px; color: white; background: var(--blue); text-decoration: none; font-weight: 850; }
+    .hero-cta:hover { background: var(--ink); }
+    .hero-footnote { color: var(--muted); font: 11px var(--mono); }
+    .hero-footnote b { color: var(--ink); }
+    .hero-visual { min-height: 370px; position: relative; overflow: hidden; border: 1px solid var(--ink); background: #071124; }
+    .hero-visual img { display: block; width: 100%; height: 100%; min-height: 370px; object-fit: cover; object-position: 65% center; }
+    .hero-visual-caption { position: absolute; left: 18px; right: 18px; bottom: 16px; display: flex; justify-content: space-between; align-items: end; gap: 12px; color: white; }
+    .hero-visual-caption span { font: 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .hero-visual-caption strong { padding: 8px 10px; background: var(--yellow); color: var(--ink); font: 800 13px var(--display); }
+    .search-deck { display: grid; grid-template-columns: 1.1fr 2.2fr auto; gap: 14px; align-items: center; margin: 6px 0 50px; padding: 16px 18px; border: 1px solid var(--ink); background: white; }
+    .search-deck-copy h2 { margin-top: 5px; font-size: 24px; }
+    .search-deck-copy p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .search-deck-input { display: flex; align-items: center; min-height: 53px; border: 1px solid var(--line); }
+    .search-deck-input span { padding: 0 0 0 15px; color: var(--blue); font-size: 24px; }
+    .search-deck-input input { min-height: 50px; border: 0; box-shadow: none; }
+    .search-deck-input input:focus { box-shadow: none; }
+    .search-deck .sort { min-height: 53px; border-color: var(--line); }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 22px; margin-bottom: 16px; }
+    .section-heading h2 { margin-top: 8px; font-size: clamp(28px, 3vw, 40px); letter-spacing: -.06em; }
+    .section-heading > p { max-width: 300px; margin: 0; color: var(--muted); font-size: 12px; text-align: right; }
+    .category-section { padding-top: 4px; }
+    .category-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .category-card { min-height: 155px; position: relative; padding: 15px; border: 1px solid var(--ink); background: white; text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+    .category-card:hover, .category-card.active { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--blue); }
+    .category-card.active { background: #f6f8ff; }
+    .category-card-wide { grid-column: span 2; }
+    .category-card strong { margin-top: auto; font: 800 25px/.98 var(--display); letter-spacing: -.04em; }
+    .category-card > span:not(.category-index) { color: var(--muted); font-size: 12px; }
+    .category-card > b { position: absolute; top: 13px; right: 14px; font: 700 22px var(--mono); }
+    .category-card-yellow { background: var(--yellow); }
+    .category-card-student { background: #e5f7eb; }
+    .category-card-dark { color: white; background: var(--ink); }
+    .category-card-dark > span:not(.category-index) { color: #bdc6cd; }
+    .category-card-dark .category-index { color: var(--green); }
+    .featured-section { margin-top: 64px; }
+    .featured-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .featured-card { min-height: 235px; padding: 19px; border: 1px solid var(--ink); background: white; display: flex; flex-direction: column; }
+    .featured-card-blue { color: white; background: var(--blue); }
+    .featured-card-blue .eyebrow, .featured-card-blue p { color: #e1e6ff; }
+    .featured-card-yellow { background: var(--yellow); }
+    .featured-card-top { display: flex; justify-content: space-between; gap: 12px; }
+    .featured-number { font: 700 13px var(--mono); }
+    .featured-card h3 { margin: 38px 0 0; font: 800 29px/.98 var(--display); letter-spacing: -.04em; }
+    .featured-card p { max-width: 30ch; margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .featured-card a { margin-top: auto; color: inherit; font: 800 12px var(--mono); text-decoration: none; }
+    .student-panel { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; margin-top: 64px; padding: 22px; border: 1px solid var(--ink); background: #e5f7eb; }
+    .student-panel h2 { margin-top: 8px; font-size: 35px; }
+    .student-panel-copy p { max-width: 46ch; margin: 12px 0 18px; color: #36513f; line-height: 1.7; }
+    .student-button { padding: 10px 12px; border: 1px solid var(--ink); background: var(--ink); color: white; font-weight: 800; }
+    .student-button:hover { background: var(--blue); }
+    .student-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; }
+    .student-item { min-height: 125px; padding: 15px; border: 1px solid var(--ink); background: rgba(255,255,255,.66); display: flex; flex-direction: column; justify-content: space-between; }
+    .student-item strong { font: 800 20px/.98 var(--display); }
+    .student-item span { color: #36513f; font: 11px var(--mono); }
+    .offers-section { margin-top: 70px; }
+    .offers-heading { align-items: end; }
+    .offers-heading h2 { max-width: 610px; }
+    .offers-heading > p { white-space: nowrap; }
+    .filter-strip { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 17px; padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+    .filter-chip { padding: 9px 11px; border: 1px solid var(--ink); background: white; font-weight: 800; }
+    .filter-chip:hover, .filter-chip.active { color: white; background: var(--ink); }
+    .filter-chip em { margin-left: 6px; color: var(--muted); font: 10px var(--mono); font-style: normal; }
+    .filter-chip.active em { color: var(--green); }
+    .catalog-list-wrap { overflow: visible; border: 0; background: transparent; }
+    .catalog-list-wrap .table-head { display: none; }
+    .offer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .offer-grid .offer { min-width: 0; min-height: 245px; padding: 17px; border: 1px solid var(--ink); background: white; display: grid; grid-template-rows: auto auto 1fr auto; gap: 13px; align-items: initial; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+    .offer-grid .offer:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--line); background: white; }
+    .offer-grid .offer.hidden { display: none; }
+    .offer-grid .provider { align-items: start; }
+    .offer-grid .provider-mark { flex-basis: 38px; height: 38px; }
+    .offer-grid .provider-name { font-size: 15px; }
+    .offer-grid .provider-name small { font-size: 10px; }
+    .offer-card-model { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .offer-card-model strong { max-width: 70%; font: 800 22px/.98 var(--display); letter-spacing: -.035em; }
+    .offer-card-model > small { color: var(--muted); font: 10px var(--mono); text-align: right; }
+    .offer-card-metrics { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .offer-card-metric { min-width: 0; }
+    .offer-card-metric label { display: block; color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .offer-card-metric p { margin: 6px 0 0; font-size: 12px; line-height: 1.35; overflow-wrap: anywhere; }
+    .offer-card-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .offer-card-footer small { color: var(--muted); font: 10px var(--mono); }
+    .offer-grid .row-arrow { width: 30px; height: 30px; }
+    .student-mini { margin-top: 6px; color: var(--green-ink); font: 10px var(--mono); }
+    .utility-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; margin-top: 70px; }
+    .utility-grid .compare-panel, .utility-grid .download-panel { min-height: 310px; padding: 20px; border: 1px solid var(--ink); }
+    .utility-grid .compare-panel { background: var(--ink); }
+    .utility-grid .section-heading h2 { color: white; }
+    .utility-grid .section-heading > p, .utility-grid .compare-panel .section-heading p { color: #b4bec6; }
+    .utility-grid .download-panel { background: white; }
+    .utility-grid .download-list { margin-top: 20px; }
+    .utility-grid .download-item { padding: 12px 0 0; }
+    .catalog-faq { margin-top: 70px; }
+    .catalog-faq .seo-grid { grid-template-columns: repeat(4, 1fr); }
+    .catalog-faq .seo-grid > div { min-height: 145px; }
+    .catalog-app .footer { margin-top: 45px; }
+
+    @media (max-width: 980px) {
+      .catalog-header { grid-template-columns: auto 1fr; }
+      .catalog-header .local-clock { grid-column: 2; grid-row: 1; }
+      .top-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; }
+      .catalog-hero { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 300px; }
+      .hero-visual img { min-height: 300px; }
+      .search-deck { grid-template-columns: 1fr 1.6fr; }
+      .search-deck .sort { grid-column: 2; }
+      .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .featured-grid, .student-panel, .utility-grid { grid-template-columns: 1fr; }
+      .catalog-faq .seo-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .catalog-header { gap: 12px; }
+      .catalog-header .local-clock { display: none; }
+      .top-nav { gap: 14px; }
+      .catalog-content { padding-top: 26px; }
+      .catalog-hero h1 { font-size: clamp(52px, 16vw, 78px); }
+      .catalog-hero .hero-copy { font-size: 16px; line-height: 1.75; }
+      .hero-visual { min-height: 240px; }
+      .hero-visual img { min-height: 240px; }
+      .search-deck { grid-template-columns: 1fr; margin-bottom: 40px; }
+      .search-deck .sort { grid-column: auto; }
+      .category-grid, .offer-grid, .student-list { grid-template-columns: 1fr; }
+      .category-card-wide { grid-column: auto; }
+      .section-heading { display: block; }
+      .section-heading > p { margin-top: 8px; text-align: left; }
+      .offers-heading > p { white-space: normal; }
+      .catalog-faq .seo-grid { grid-template-columns: 1fr; }
+    }
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
@@ -561,7 +711,43 @@
     - A VPN is never presented as a free method. The page shows the provider’s official access path and account region.
     - Provider marks are honest initials in this prototype. Replace them with verified official logo assets before production.
   -->
-  <div class="app">
+  <div class="app catalog-app">
+    <main id="catalog-top">
+      <header class="catalog-header">
+        <a class="brand" href="#catalog-top"><div class="brand-mark">FREE<br>AI</div><div><div class="brand-name">Free AI Index</div><div class="brand-sub">an evidence-led catalog</div></div></a>
+        <nav class="top-nav" aria-label="Page sections"><a href="#categories">分类</a><a href="#catalog-offers">全部入口</a><a href="#student-offers">学生优惠</a><a href="#catalog-methodology">标注规则</a></nav>
+        <div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div>
+      </header>
+      <div class="catalog-content">
+        <section class="catalog-hero">
+          <div class="catalog-hero-copy"><div class="hero-kicker">Free AI index / 2026.09.07</div><h1>免费的，<br><span>先看条件。</span></h1><p class="hero-copy">一个把免费 AI 按获得方式重新整理的目录。先选你要的路径，再看额度、有效期、地区和官方来源。</p><div class="hero-actions"><a class="hero-cta" href="#categories">浏览 7 类入口 <span>→</span></a><span class="hero-footnote"><span class="status-dot"></span><b id="heroCount">27</b> 条已核验 / 待核验入口</span></div></div>
+          <div class="hero-visual"><img src="assets/free-method-night-window.png" alt=""><div class="hero-visual-caption"><span>01 / visual index</span><strong>夜间优惠也要看证据</strong></div></div>
+        </section>
+        <section class="search-deck" aria-label="Search the catalog"><div class="search-deck-copy"><div class="eyebrow">Start with a question</div><h2>你想怎么免费？</h2><p>不要先按厂商找，先按使用方式找。</p></div><label class="search search-deck-input"><span>⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、产品或免费方式，例如 Qwen / 豆包" aria-label="Search offers"></label><select class="sort" id="catalog-sort" aria-label="Sort offers"><option value="free">排序：免费优先</option><option value="fresh">排序：最近核验</option><option value="name">排序：A–Z</option></select></section>
+        <section id="categories" class="category-section" aria-labelledby="categories-title"><div class="section-heading"><div><div class="eyebrow">01 / choose a lane</div><h2 id="categories-title">按免费方式浏览</h2></div><p>分类可以重叠，一条 offer 可能同时属于多个入口。</p></div><div class="category-grid">
+          <button class="category-card category-card-wide" data-filter="free_quota" aria-pressed="false"><span class="category-index">A / recurring</span><strong>免费额度</strong><span>按日、周、月或持续提供</span><b data-category-count="free_quota">—</b></button>
+          <button class="category-card category-card-wide" data-filter="credits" aria-pressed="false"><span class="category-index">B / one-off</span><strong>积分 / 次数</strong><span>新人积分、体验次数和试用</span><b data-category-count="credits">—</b></button>
+          <button class="category-card" data-filter="ide" aria-pressed="false"><span class="category-index">C / tool</span><strong>免费 IDE</strong><span>打开就能写代码</span><b data-category-count="ide">—</b></button>
+          <button class="category-card category-card-yellow" data-filter="promo" aria-pressed="false"><span class="category-index">D / timing</span><strong>时段 / 限时优惠</strong><span>首月、夜间、地区和汇率</span><b data-category-count="promo">—</b></button>
+          <button class="category-card category-card-student" data-filter="student" aria-pressed="false"><span class="category-index">E / education</span><strong>学生优惠</strong><span>需要教育身份验证</span><b data-category-count="student">—</b></button>
+          <button class="category-card" data-filter="web" aria-pressed="false"><span class="category-index">F / web</span><strong>网页 / Web 工具</strong><span>网页产品或 Web API</span><b data-category-count="web">—</b></button>
+          <button class="category-card category-card-dark" data-filter="download_lowcost" aria-pressed="false"><span class="category-index">G / local</span><strong>下载 / 低成本</strong><span>开源权重和 pay-as-you-go</span><b data-category-count="download_lowcost">—</b></button>
+        </div></section>
+        <section class="featured-section" aria-labelledby="featured-title"><div class="section-heading"><div><div class="eyebrow">02 / quick orientation</div><h2 id="featured-title">从这三条路开始</h2></div><p>信息少一点，先帮助你做选择。</p></div><div class="featured-grid">
+          <article class="featured-card"><div class="featured-card-top"><span class="eyebrow">Free quota</span><span class="featured-number" id="featuredQuotaCount">—</span></div><h3>想接 API？</h3><p>看每月额度、频率限制和是否需要付款方式。</p><a href="#catalog-offers" data-filter="free_quota">看免费额度 →</a></article>
+          <article class="featured-card featured-card-blue"><div class="featured-card-top"><span class="eyebrow">Free IDE</span><span class="featured-number" id="featuredIdeCount">—</span></div><h3>想马上写代码？</h3><p>IDE 往往把模型、补全、Agent 和编辑器放在一个免费入口里。</p><a href="#catalog-offers" data-filter="ide">看免费 IDE →</a></article>
+          <article class="featured-card featured-card-yellow"><div class="featured-card-top"><span class="eyebrow">Student / timed</span><span class="featured-number" id="featuredPromoCount">—</span></div><h3>想找价格差？</h3><p>学生资格、首月活动和时段规则，都要和续费或适用地区一起看。</p><a href="#student-offers" data-filter="student">看学生优惠 →</a></article>
+        </div></section>
+        <section id="student-offers" class="student-panel" aria-labelledby="student-title"><div class="student-panel-copy"><div class="eyebrow">03 / education access</div><h2 id="student-title">学生优惠单独看</h2><p>学生优惠不是永久免费额度：通常需要学校邮箱或教育身份验证，资格、地区和有效期以官方页面为准。</p><button class="student-button" data-filter="student">筛选学生优惠 →</button></div><div class="student-list" id="studentList"><div class="student-item"><strong>GitHub Copilot Student</strong><span>需要 GitHub Education 验证</span></div><div class="student-item"><strong>Cursor Student</strong><span>官方学生计划 · 资格以页面为准</span></div></div></section>
+        <section id="catalog-offers" class="offers-section"><div class="section-heading offers-heading"><div><div class="eyebrow">04 / all verified paths</div><h2>找到现在能打开的入口</h2><p>产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。</p></div><p id="catalog-result-count">Showing 27 offers</p></div><div class="filter-strip" role="tablist" aria-label="Offer filters"><button class="filter-chip active" data-filter="all" aria-pressed="true">全部 <em>27</em></button><button class="filter-chip" data-filter="free_quota" aria-pressed="false">免费额度 <em>—</em></button><button class="filter-chip" data-filter="credits" aria-pressed="false">积分 / 次数 <em>—</em></button><button class="filter-chip" data-filter="ide" aria-pressed="false">免费 IDE <em>—</em></button><button class="filter-chip" data-filter="promo" aria-pressed="false">限时优惠 <em>—</em></button><button class="filter-chip" data-filter="student" aria-pressed="false">学生优惠 <em>—</em></button><button class="filter-chip" data-filter="web" aria-pressed="false">网页 / Web <em>—</em></button><button class="filter-chip" data-filter="download_lowcost" aria-pressed="false">下载 / 低成本 <em>—</em></button></div><div class="table-wrap catalog-list-wrap"><div class="table-head"><div>产品</div><div>免费方式</div><div>额度 / 价格</div><div>有效期</div><div>地区</div><div>核验</div><div></div></div><div id="catalog-offer-rows" class="offer-grid" aria-live="polite"></div><div id="catalog-empty-state" class="empty-state" hidden><strong>没有匹配的入口。</strong><p>换个关键词，或清空搜索和筛选。</p><button type="button" id="catalog-reset-filters">清空搜索和筛选</button></div></div></section>
+        <div class="utility-grid"><section class="compare-panel" id="catalog-compare"><div class="section-heading"><div><div class="eyebrow">05 / price lens</div><h2>中国区一定更便宜吗？</h2><p>同一个模型、同一个 token 单位、不同 endpoint。</p></div><span class="badge free">LIVE RULE</span></div><div class="compare-table"><div class="compare-row head"><div>Offer</div><div>中国区</div><div>国际区</div><div>节省</div></div><div class="compare-row"><div>Qwen3-Max input<br><small>per 1M tokens</small></div><div>$0.861</div><div>$1.20</div><div class="saving">28%</div></div><div class="compare-row"><div>Qwen3-Max output<br><small>per 1M tokens</small></div><div>$3.441</div><div>$6.00</div><div class="saving">43%</div></div></div><p class="compare-note">这是 endpoint 对比，不是 VPN 技巧。中国区价格可能要求中国账号，并带来数据驻留差异；订阅前请回到官方价格页。</p></section><section class="download-panel" id="catalog-downloads"><div class="section-heading"><div><div class="eyebrow">06 / local lane</div><h2>下载到本地</h2><p>权重免费，GPU 时间不一定免费。</p></div></div><div class="download-list" id="catalog-download-list"><div class="download-item"><div><strong>LongCat-2.0</strong><small>GitHub + Hugging Face</small></div><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开 ↗</a></div></div></section></div>
+        <section class="seo-copy catalog-faq" id="catalog-faq" aria-labelledby="catalog-faq-title"><div class="section-heading"><div><div class="eyebrow">07 / how to read it</div><h2 id="catalog-faq-title">这不是“全都免费”榜单</h2><p>我们把免费、试用、优惠、学生资格和低价入口分开写。</p></div></div><div class="seo-grid"><div><h3>免费额度</h3><p>周期性额度仍可能有速率、地区或付款方式限制。</p></div><div><h3>学生优惠</h3><p>需要教育身份验证，优惠期限和适用地区以官方页面为准。</p></div><div><h3>开源权重</h3><p>可以下载模型，但存储、GPU、推理和流量可能收费。</p></div><div><h3>官方入口</h3><p>每条 offer 都保留来源、更新时间和可复制的使用路径。</p></div></div><div class="faq-list"><details><summary>什么才算免费？</summary><p>页面会区分持续额度、一次性积分、首月优惠、学生计划、免费 IDE、网页工具、开源权重和低成本 pay-as-you-go。</p></details><details><summary>学生优惠是永久免费吗？</summary><p>不是。学生优惠通常需要教育身份验证，可能有地区、学校、期限或续费条件。</p></details><details><summary>夜间优惠一定存在吗？</summary><p>只有官方来源明确说明时间窗口时才会展示，传闻不会被写成免费活动。</p></details></div></section>
+        <div class="footer" id="catalog-methodology"><span>Official sources only · Free status separated by mechanism</span><span id="catalog-last-checked">Last checked: 07 Sep 2026 · Data is subject to change</span></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="app legacy-app">
     <aside class="sidebar">
       <a class="brand" href="#top">
         <div class="brand-mark">FREE<br>AI</div>
@@ -1758,7 +1944,8 @@
     "type": [
       "ide",
       "free",
-      "coding"
+      "coding",
+      "student"
     ],
     "productType": "free_ide",
     "capabilities": [
@@ -1822,7 +2009,13 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
-    "notes": "International peer entry; monthly allowance and available models should be rechecked because GitHub updates the plan."
+    "studentSummary": "Verified students can activate Copilot Student through GitHub Education.",
+    "studentEligibility": "GitHub Education verification; school email or official dated enrollment proof",
+    "notes": "International peer entry; monthly allowance and available models should be rechecked because GitHub updates the plan. Student access is a separate verified benefit.",
+    "studentSourceUrls": [
+      "https://github.com/education/students",
+      "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-students"
+    ]
   },
   {
     "id": "cursor-hobby",
@@ -1837,7 +2030,8 @@
     "type": [
       "ide",
       "free",
-      "coding"
+      "coding",
+      "student"
     ],
     "productType": "free_ide",
     "capabilities": [
@@ -1884,6 +2078,10 @@
         "https://prod.cursor.com/help/account-and-billing/pricing"
       ],
       [
+        "Students",
+        "https://cursor.com/en-US/students"
+      ],
+      [
         "Download",
         "https://cursor.com/downloads"
       ]
@@ -1898,14 +2096,20 @@
     "commercialUse": "Check Cursor terms and model terms",
     "sourceUrls": [
       "https://cursor.com/pricing",
-      "https://prod.cursor.com/help/account-and-billing/pricing"
+      "https://prod.cursor.com/help/account-and-billing/pricing",
+      "https://cursor.com/en-US/students"
     ],
-    "evidence": "Official Cursor pricing lists Hobby as Free with limited Agent requests and access to Composer; Cursor's plan documentation confirms limited Agent, Chat and Tab features.",
+    "evidence": "Official Cursor pricing lists Hobby as Free with limited Agent requests and access to Composer; Cursor's plan documentation confirms limited Agent, Chat and Tab features. Cursor also maintains an official Students page for its student program.",
     "status": "verified",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-07",
     "checkedBy": "manual",
-    "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator."
+    "studentSummary": "Official student program; eligibility and discount terms are shown after verification.",
+    "studentEligibility": "Student verification; availability and terms can vary by institution or region",
+    "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator. Student program terms should be checked on the official Students page.",
+    "studentSourceUrls": [
+      "https://cursor.com/en-US/students"
+    ]
   },
   {
     "id": "amazon-q-free",
