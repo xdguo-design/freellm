@@ -1,3 +1,20 @@
 User-agent: *
 Allow: /
+
+# OpenAI ChatGPT search indexer — required to appear in ChatGPT search results
+User-agent: OAI-SearchBot
+Allow: /
+
+# OpenAI on-demand fetcher — fetches pages when a ChatGPT user asks about them
+User-agent: ChatGPT-User
+Allow: /
+
+# OpenAI training crawler — set to Disallow: / to opt out of training while keeping search
+User-agent: GPTBot
+Allow: /
+
+# Perplexity search and answer engine
+User-agent: PerplexityBot
+Allow: /
+
 Sitemap: https://freellm.top/sitemap.xml

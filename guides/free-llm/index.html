@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free-LLM — 免费 AI 与 LLM API 开放目录 · Free AI Index</title>
+  <meta name="description" content="参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。">
+  <link rel="canonical" href="https://freellm.top/guides/free-llm/">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="Free-LLM — 免费 AI 与 LLM API 开放目录 · Free AI Index">
+<meta property="og:description" content="参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。">
+<meta property="og:url" content="https://freellm.top/guides/free-llm/">
+<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+<meta property="og:image:alt" content="Free-LLM — 免费 AI 与 LLM API 开放目录 · Free AI Index">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free-LLM — 免费 AI 与 LLM API 开放目录 · Free AI Index">
+<meta name="twitter:description" content="参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。">
+<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Free-LLM — 免费 AI 与 LLM API 开放目录", "description": "参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。", "url": "https://freellm.top/guides/free-llm/", "inLanguage": "zh-CN", "dateModified": "2026-09-07", "isBasedOn": "https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md", "publisher": {"@type": "Organization", "name": "Free AI Index", "url": "https://freellm.top/"}}</script>
+  <style>
+    :root { color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --blue: #1744e8; --soft: #f5f7fb; --green: #e6f7ee; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--soft); }
+    * { box-sizing: border-box; }
+    body { max-width: 1180px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; }
+    a { color: var(--blue); }
+    header, main, footer { background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 34px); margin-bottom: 18px; }
+    header { color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }
+    header a { color: white; }
+    header h1 { max-width: 760px; margin: 22px 0 8px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.06em; }
+    header p { max-width: 780px; margin: 8px 0; color: #dbe6ff; }
+    .crumb, .eyebrow { font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .source { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); font-size: 13px; }
+    main { display: grid; gap: 28px; }
+    section + section { padding-top: 26px; border-top: 1px solid var(--line); }
+    h2 { margin: 0 0 8px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.04em; }
+    h3 { margin: 22px 0 6px; font-size: 20px; }
+    p { max-width: 860px; }
+    .lead { font-size: 17px; color: #3d4b63; }
+    .steps, .link-list { padding-left: 1.4em; }
+    .steps li { margin: 8px 0; }
+    .callout { padding: 16px 18px; border-left: 4px solid var(--blue); background: var(--soft); }
+    .callout.green { border-left-color: #1a9a5a; background: var(--green); }
+    pre { overflow-x: auto; margin: 12px 0; padding: 18px; border-radius: 10px; background: #101827; color: #e9f0ff; font: 13px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 12px 0 20px; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: #53627b; background: var(--soft); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    tr:last-child td { border-bottom: 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    footer { color: var(--muted); font-size: 13px; }
+    footer strong { color: var(--ink); }
+    @media (max-width: 620px) { body { padding: 10px 8px 38px; } header, main, footer { border-radius: 12px; padding: 18px; } header h1 { font-size: 42px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crumb"><a href="https://freellm.top/">Free AI Index</a> / 使用指南</div>
+    <h1>Free-LLM — 免费 AI 与 LLM API 开放目录</h1>
+    <p>来自多个提供商的免费 LLM API、试用额度和本地 / 自托管工具，帮助你几秒钟内发现、比较并开始接入。</p>
+    <div class="source">
+      <span>参考来源：<a href="https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md" target="_blank" rel="noopener noreferrer">README.zh-CN.md ↗</a></span>
+      <span>仓库：<a href="https://github.com/nejib1/Free-LLM" target="_blank" rel="noopener noreferrer">nejib1/Free-LLM ↗</a></span>
+      <span>许可证：MIT License</span>
+    </div>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / why this exists</div>
+      <h2>为什么需要这个项目</h2>
+      <p class="lead">找一个免费 LLM API，不应该翻遍十几个更新日志，为了对比速率限制去注册五个不同平台，或者猜测哪个提供商这个月还有免费额度。</p>
+      <p>这是一份参考型目录：把提供商、模型、限制条件、获取 Key 的入口和接入方式集中到一起。社区维护、信用卡透明、可复制的代码示例和并排比较，是 README 中最值得保留的使用路径。</p>
+      <div class="callout green"><strong>重要：</strong>免费额度、地区、验证要求和服务条款会变化。下方内容来自参考 README 的整理快照，实际使用前请打开每行的官方链接再次确认。</div>
+    </section>
+    <section>
+      <div class="eyebrow">02 / start here</div>
+      <h2>三步上手</h2>
+      <ol class="steps">
+        <li><strong>选一个提供商：</strong>先看下方 Provider Directory；新手可以优先尝试 Groq、Google AI Studio 等清晰标注免费层的入口。</li>
+        <li><strong>获取 API Key：</strong>打开 Quick Reference 中对应的官方控制台或密钥页面，确认是否需要邮箱、手机或银行卡。</li>
+        <li><strong>接入代码：</strong>把 Base URL 与模型 ID 填入下面的 OpenAI 兼容示例，并根据官方限制控制速率和用量。</li>
+      </ol>
+      <p class="meta">完整提供商详情和社区备注请查看原始项目及各 Provider 官方文档。</p>
+    </section>
+    <section>
+      <div class="eyebrow">03 / quick start</div>
+      <h2>Quick Start — 30 秒接入免费 API</h2>
+      <p>大多数提供商提供 OpenAI 兼容接口。接受 <code>baseURL</code> 与 <code>apiKey</code> 的工具通常只需要替换这两项。</p>
+      <h3>Python（OpenAI SDK）</h3>
+      <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url=&quot;https://api.groq.com/openai/v1&quot;,
+    api_key=&quot;GROQ_API_KEY&quot;,  # 在官方控制台获取
+)
+
+response = client.chat.completions.create(
+    model=&quot;llama-3.3-70b-versatile&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}],
+)
+print(response.choices[0].message.content)</code></pre>
+      <h3>编程助手</h3>
+      <ul class="link-list">
+        <li><strong>Claude Code：</strong>配置 <code>ANTHROPIC_BASE_URL</code> 与 <code>ANTHROPIC_AUTH_TOKEN</code>。</li>
+        <li><strong>Cursor：</strong>Settings → Models → Add Model。</li>
+        <li><strong>Codex CLI：</strong>配置 <code>OPENAI_BASE_URL</code> 与 <code>OPENAI_API_KEY</code>。</li>
+      </ul>
+    </section>
+    <section>
+      <div class="eyebrow">04 / provider directory</div>
+      <h2>Provider Directory</h2>
+      <h3>⚡ 永久免费额度</h3>
+      <p>持续免费访问，通常会限速，但不以一次性试用为前提。</p>
+      <div class="table-wrap"><table><thead><tr><th>提供商</th><th>需要信用卡？</th><th>速率限制</th><th>每日限额</th><th>月度 / 其他额度</th><th>主要模型</th></tr></thead><tbody><tr><td><a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a></td><td>否</td><td>5–30 RPM（因模型而异）</td><td>9,000 RPD（Flash）</td><td>完全免费</td><td>Gemini 3.1 Pro / Flash</td></tr><tr><td><a href="https://console.mistral.ai/" target="_blank" rel="noopener noreferrer">Mistral ↗</a></td><td>需手机验证</td><td>1 request/second</td><td>—</td><td>Free</td><td>Mistral 7B / Mixtral</td></tr><tr><td><a href="https://huggingface.co/inference-api/serverless" target="_blank" rel="noopener noreferrer">Hugging Face Inference ↗</a></td><td>否</td><td>300 requests/hour</td><td>按月度 credits</td><td>$0.10/月路由 credits</td><td>Llama / Qwen / Gemma</td></tr><tr><td><a href="https://cohere.com/" target="_blank" rel="noopener noreferrer">Cohere ↗</a></td><td>否</td><td>20 requests/minute</td><td>—</td><td>1,000 requests/month</td><td>Command R / R7B / A</td></tr><tr><td><a href="https://build.nvidia.com/explore/discover" target="_blank" rel="noopener noreferrer">NVIDIA NIM ↗</a></td><td>需手机验证</td><td>40 requests/minute</td><td>—</td><td>—</td><td>按模型而定</td></tr><tr><td><a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer">Groq ↗</a></td><td>否</td><td>30 RPM</td><td>14,400 requests/day</td><td>Free forever</td><td>Qwen / Llama / Whisper</td></tr><tr><td><a href="https://z.ai/" target="_blank" rel="noopener noreferrer">Z.AI (GLM) ↗</a></td><td>需注册</td><td>约 1 request/second</td><td>约 1,000/day</td><td>持续免费层</td><td>GLM Flash</td></tr><tr><td><a href="https://www.coze.com/" target="_blank" rel="noopener noreferrer">Coze ↗</a></td><td>需注册</td><td>因模型而异</td><td>按 token 计算</td><td>每日重置</td><td>GPT / Gemini</td></tr><tr><td><a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare Workers AI ↗</a></td><td>否</td><td>因模型而异</td><td>10,000 neurons/day</td><td>约 300,000 neurons/month</td><td>Llama / Mistral / Qwen</td></tr><tr><td><a href="https://llm7.io/" target="_blank" rel="noopener noreferrer">LLM7.io ↗</a></td><td>否</td><td>30 RPM / 120 RPM</td><td>最多 5M tokens/day</td><td>Free, no billing</td><td>DeepSeek / Qwen</td></tr><tr><td><a href="https://endpoints.ai.cloud.ovh.net/" target="_blank" rel="noopener noreferrer">OVH AI Endpoints ↗</a></td><td>需注册</td><td>2 RPM / 400 RPM</td><td>未公布</td><td>Beta access</td><td>Qwen3Guard / SDXL</td></tr><tr><td><a href="https://ollama.com/cloud" target="_blank" rel="noopener noreferrer">Ollama Cloud ↗</a></td><td>否</td><td>Light usage tier</td><td>会话周期重置</td><td>每周重置</td><td>GPT-OSS / Qwen / DeepSeek</td></tr><tr><td><a href="https://portal.nousresearch.com/" target="_blank" rel="noopener noreferrer">Nous Portal ↗</a></td><td>否</td><td>未完整公布</td><td>未公布</td><td>$0/month</td><td>Hermes 4</td></tr><tr><td><a href="https://experiments.hetzner.com/inference" target="_blank" rel="noopener noreferrer">Hetzner Inference API ↗</a></td><td>否</td><td>按 token 限制</td><td>500M input / 5M output</td><td>实验阶段免费</td><td>Qwen3.6</td></tr><tr><td><a href="https://pollinations.ai/" target="_blank" rel="noopener noreferrer">Pollinations.ai ↗</a></td><td>否</td><td>匿名约 1 request/15s</td><td>合理使用范围</td><td>Free</td><td>GPT / Mistral 类模型</td></tr><tr><td><a href="https://siliconflow.com/pricing" target="_blank" rel="noopener noreferrer">SiliconFlow ↗</a></td><td>需手机验证</td><td>按模型固定限制</td><td>需登录确认</td><td>免费模型</td><td>见官方模型页</td></tr><tr><td><a href="https://modelscope.cn/" target="_blank" rel="noopener noreferrer">ModelScope ↗</a></td><td>需手机验证</td><td>500 requests/day/model</td><td>2,000 requests/day</td><td>Free</td><td>见官方模型页</td></tr><tr><td><a href="https://www.aionlabs.ai/pricing/" target="_blank" rel="noopener noreferrer">Aion Labs ↗</a></td><td>否</td><td>未公布</td><td>每日 token allowance</td><td>Free</td><td>见官方页面</td></tr><tr><td><a href="https://inference.net/" target="_blank" rel="noopener noreferrer">Inference.net ↗</a></td><td>否</td><td>30 RPM（合理使用）</td><td>Fair use</td><td>Fair use</td><td>DeepSeek / Llama</td></tr></tbody></table></div>
+      <h3>💰 可续期额度</h3>
+      <p>定期续期的免费额度，不是一次性用完即止。</p>
+      <div class="table-wrap"><table><thead><tr><th>提供商</th><th>需要信用卡？</th><th>速率限制</th><th>免费额度</th><th>主要模型</th></tr></thead><tbody><tr><td><a href="https://openrouter.ai/" target="_blank" rel="noopener noreferrer">OpenRouter ↗</a></td><td>否</td><td>20 requests/minute</td><td>50 requests/day（充值后更高）</td><td>Gemini / Llama / NVIDIA</td></tr><tr><td><a href="https://venice.ai/" target="_blank" rel="noopener noreferrer">Venice.ai ↗</a></td><td>需注册</td><td>10 RPM</td><td>Limited daily usage</td><td>Llama 405B / Dolphin</td></tr><tr><td><a href="https://requesty.ai/" target="_blank" rel="noopener noreferrer">Requesty ↗</a></td><td>否</td><td>60 RPM</td><td>200 requests/day</td><td>Free models</td></tr><tr><td><a href="https://console.x.ai/" target="_blank" rel="noopener noreferrer">Grok (xAI) ↗</a></td><td>需注册</td><td>视额度而定</td><td>$25 one-time signup credit</td><td>Grok 2</td></tr></tbody></table></div>
+      <h3>🎁 一次性试用额度</h3>
+      <p>注册后获得一次性 credits 或金额，用完为止；部分平台可能要求注册或充值。</p>
+      <div class="table-wrap"><table><thead><tr><th>提供商</th><th>注册要求</th><th>额度</th><th>有效期</th></tr></thead><tbody><tr><td><a href="https://together.ai/" target="_blank" rel="noopener noreferrer">Together.AI ↗</a></td><td>需注册</td><td>需先充值最低 $5</td><td>—</td></tr><tr><td><a href="https://replicate.com/" target="_blank" rel="noopener noreferrer">Replicate ↗</a></td><td>需注册</td><td>少量试用额度</td><td>一次性</td></tr><tr><td><a href="https://fireworks.ai/" target="_blank" rel="noopener noreferrer">Fireworks AI ↗</a></td><td>需注册</td><td>$1</td><td>一次性</td></tr><tr><td><a href="https://cloud.sambanova.ai/" target="_blank" rel="noopener noreferrer">SambaNova Cloud ↗</a></td><td>需注册</td><td>$5</td><td>3 个月</td></tr><tr><td><a href="https://app.hyperbolic.xyz/" target="_blank" rel="noopener noreferrer">Hyperbolic ↗</a></td><td>需注册</td><td>$1</td><td>一次性</td></tr><tr><td><a href="https://tokenfactory.nebius.com/" target="_blank" rel="noopener noreferrer">Nebius Token Factory ↗</a></td><td>需注册</td><td>$1，需银行卡</td><td>一次性</td></tr><tr><td><a href="https://cerebras.ai/inference" target="_blank" rel="noopener noreferrer">Cerebras ↗</a></td><td>需注册</td><td>$5</td><td>30 天</td></tr><tr><td><a href="https://novita.ai/" target="_blank" rel="noopener noreferrer">Novita AI ↗</a></td><td>需注册</td><td>$0.50</td><td>一次性</td></tr><tr><td><a href="https://console.scaleway.com/generative-api/models" target="_blank" rel="noopener noreferrer">Scaleway Generative APIs ↗</a></td><td>需注册</td><td>1M tokens</td><td>一次性</td></tr><tr><td><a href="https://bailian.console.alibabacloud.com/" target="_blank" rel="noopener noreferrer">Qwen / Alibaba ↗</a></td><td>需注册</td><td>每模型 1M tokens</td><td>一次性</td></tr><tr><td><a href="https://docs.ai21.com/" target="_blank" rel="noopener noreferrer">AI21 Labs ↗</a></td><td>需注册</td><td>$10</td><td>3 个月</td></tr><tr><td><a href="https://console.upstage.ai/" target="_blank" rel="noopener noreferrer">Upstage ↗</a></td><td>需注册</td><td>$10</td><td>3 个月</td></tr><tr><td><a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer">DeepSeek ↗</a></td><td>需注册</td><td>5M tokens</td><td>30 天</td></tr><tr><td><a href="https://www.cerebrium.ai/" target="_blank" rel="noopener noreferrer">Cerebrium ↗</a></td><td>需注册</td><td>$30</td><td>一次性</td></tr><tr><td><a href="https://deepinfra.com/" target="_blank" rel="noopener noreferrer">DeepInfra ↗</a></td><td>需注册</td><td>$5</td><td>一次性，90 天过期</td></tr></tbody></table></div>
+    </section>
+    <section>
+      <div class="eyebrow">05 / local and self-hosted</div>
+      <h2>本地 / 自托管</h2>
+      <p>本地运行可以获得更强的隐私和可控性，但“模型权重免费”不等于 GPU、存储和推理基础设施免费。</p>
+      <div class="table-wrap"><table><thead><tr><th>工具</th><th>类型</th><th>亮点</th></tr></thead><tbody><tr><td><a href="https://ollama.com/" target="_blank" rel="noopener noreferrer">Ollama ↗</a></td><td>CLI + API</td><td>100+ 模型、GPU 加速、OpenAI 兼容</td></tr><tr><td><a href="https://lmstudio.ai/" target="_blank" rel="noopener noreferrer">LM Studio ↗</a></td><td>桌面 GUI</td><td>GGUF 模型、模型浏览器、离线使用</td></tr><tr><td><a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp ↗</a></td><td>C/C++ 引擎</td><td>运行 GGUF，依赖少</td></tr><tr><td><a href="https://gpt4all.io/" target="_blank" rel="noopener noreferrer">GPT4All ↗</a></td><td>桌面应用</td><td>纯 CPU 运行、开源</td></tr><tr><td><a href="https://jan.ai/" target="_blank" rel="noopener noreferrer">Jan.ai ↗</a></td><td>桌面应用</td><td>注重隐私、100% 离线</td></tr><tr><td><a href="https://github.com/LostRuins/koboldcpp" target="_blank" rel="noopener noreferrer">KoboldCpp ↗</a></td><td>单文件应用</td><td>创意写作、支持 GGUF</td></tr><tr><td><a href="https://github.com/Mozilla-Ocho/llamafile" target="_blank" rel="noopener noreferrer">llamafile ↗</a></td><td>跨平台</td><td>llama.cpp + Cosmopolitan Libc</td></tr><tr><td><a href="https://github.com/oobabooga/text-generation-webui" target="_blank" rel="noopener noreferrer">Text Generation WebUI ↗</a></td><td>Gradio 界面</td><td>高度可定制</td></tr><tr><td><a href="https://www.bentoml.com/" target="_blank" rel="noopener noreferrer">BentoML ↗</a></td><td>推理平台</td><td>部署任意 AI/ML 模型</td></tr></tbody></table></div>
+    </section>
+    <section>
+      <div class="eyebrow">06 / quick reference</div>
+      <h2>Quick Reference — Base URL 与 API Key 速查</h2>
+      <p>下面列出 README 中的代表性入口。Base URL、模型 ID 和 Key 获取地址应以提供商官方文档为准。</p>
+      <div class="table-wrap"><table><thead><tr><th>提供商</th><th>Base URL</th></tr></thead><tbody><tr><td><a href="https://openrouter.ai/" target="_blank" rel="noopener noreferrer">OpenRouter ↗</a></td><td>https://openrouter.ai/api/v1</td></tr><tr><td><a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a></td><td>https://generativelanguage.googleapis.com/v1beta</td></tr><tr><td><a href="https://console.mistral.ai/" target="_blank" rel="noopener noreferrer">Mistral ↗</a></td><td>https://api.mistral.ai/v1</td></tr><tr><td><a href="https://huggingface.co/inference-api/serverless" target="_blank" rel="noopener noreferrer">Hugging Face ↗</a></td><td>https://router.huggingface.co/v1</td></tr><tr><td><a href="https://fireworks.ai/" target="_blank" rel="noopener noreferrer">Fireworks AI ↗</a></td><td>https://api.fireworks.ai/inference/v1</td></tr><tr><td><a href="https://build.nvidia.com/explore/discover" target="_blank" rel="noopener noreferrer">NVIDIA NIM ↗</a></td><td>https://integrate.api.nvidia.com/v1</td></tr><tr><td><a href="https://cerebras.ai/inference" target="_blank" rel="noopener noreferrer">Cerebras ↗</a></td><td>https://api.cerebras.ai/v1</td></tr><tr><td><a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer">Groq ↗</a></td><td>https://api.groq.com/openai/v1</td></tr><tr><td><a href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer">DeepSeek ↗</a></td><td>https://api.deepseek.com/v1</td></tr><tr><td><a href="https://z.ai/" target="_blank" rel="noopener noreferrer">Z.AI (GLM) ↗</a></td><td>https://api.z.ai/api/paas/v4</td></tr><tr><td><a href="https://www.coze.com/" target="_blank" rel="noopener noreferrer">Coze ↗</a></td><td>https://api.coze.com/v1</td></tr><tr><td><a href="https://siliconflow.com/pricing" target="_blank" rel="noopener noreferrer">SiliconFlow ↗</a></td><td>https://api.siliconflow.com/v1</td></tr><tr><td><a href="https://modelscope.cn/" target="_blank" rel="noopener noreferrer">ModelScope ↗</a></td><td>https://api-inference.modelscope.cn/v1</td></tr><tr><td><a href="https://ollama.com/cloud" target="_blank" rel="noopener noreferrer">Ollama Cloud ↗</a></td><td>https://ollama.com/v1</td></tr></tbody></table></div>
+      <p class="meta">需要更完整的列表时，请直接查看 <a href="https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md" target="_blank" rel="noopener noreferrer">原始中文 README ↗</a>。</p>
+    </section>
+    <section>
+      <div class="eyebrow">07 / guides and community</div>
+      <h2>使用指南与社区功能</h2>
+      <ul class="link-list">
+        <li>2026 年最佳免费 LLM API：主流选择横向对比。</li>
+        <li>Gemini vs ChatGPT（免费版）：了解免费版的实际使用边界。</li>
+        <li>如何使用 OpenRouter：附代码的配置教程。</li>
+        <li>OpenRouter 替代方案、Ollama 本地模型和终极免费 LLM API 指南。</li>
+        <li>社区用户可以提交新的提供商、建议编辑、投票或举报已变化的免费状态。</li>
+      </ul>
+      <div class="callout"><strong>来源边界：</strong>本页面借鉴并展示参考 README 的信息结构与部分目录内容；本站自己的 Offer 仍以官方证据和 `data/offers.json` 为准。</div>
+    </section>
+  </main>
+  <footer>
+    <p><strong>免责声明：</strong>免费服务可能受地区、账户类型、速率限制、有效期和 Provider 条款影响。不要把免费试用当作生产系统的稳定推理基础设施。</p>
+    <p>参考项目内容按其仓库声明的 <strong>MIT License</strong> 使用，并保留来源与许可说明。<a href="https://freellm.top/">返回 Free AI Index 首页 →</a></p>
+  </footer>
+</body>
+</html>

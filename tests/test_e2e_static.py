@@ -17,12 +17,19 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
 ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+SIGNALS_PATH = ROOT / "data" / "community-signals.json"
 ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
+ADS_PATH = ROOT / "ads.txt"
+GUIDE_PATH = ROOT / "guides" / "free-llm" / "index.html"
 
 
 def read_offers() -> list:
     return json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
+
+
+def read_signals() -> list:
+    return json.loads(SIGNALS_PATH.read_text(encoding="utf-8"))
 
 
 def embedded_offer_data(html: str):
@@ -48,6 +55,14 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, self.html)
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
+
+    def test_external_signals_are_available_for_current_offer_set(self):
+        offer_ids = {offer["id"] for offer in read_offers()}
+        signals = read_signals()
+        self.assertGreater(len(signals), 0)
+        self.assertTrue({signal["offerId"] for signal in signals} <= offer_ids)
+        for needle in ("renderSignalSummary", "offer-card-signal", "signalIndex[item.id]"):
+            self.assertIn(needle, self.html)
 
     def test_catalog_cards_override_legacy_table_grid(self):
         self.assertIn(
@@ -95,11 +110,56 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, self.html)
 
+    def test_homepage_exposes_chinese_static_seo_metadata(self):
+        self.assertIn('<html lang="zh-CN">', self.html)
+        self.assertIn(
+            '<meta name="description" content="FreeLLM 整理可核验的免费 AI 模型、API、编程 IDE、学生优惠和开源权重',
+            self.html,
+        )
+        self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.html)
+        self.assertIn('<meta property="og:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
+        self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
+        self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
+
+    def test_page_exposes_crawlable_internal_seo_links(self):
+        self.assertIn("const offerHref = `/offers/${encodeURIComponent(item.id)}/`;", self.html)
+        self.assertIn('class="offer-detail-link"', self.html)
+        for slug in ("free-quota", "free-ide", "api", "promo", "student", "web", "open-weights"):
+            self.assertIn(f'href="/category/{slug}/"', self.html)
+
+    def test_page_exposes_free_llm_guide_link(self):
+        self.assertIn('href="/guides/free-llm/"', self.html)
+        self.assertTrue(GUIDE_PATH.is_file())
+        guide = GUIDE_PATH.read_text(encoding="utf-8")
+        self.assertIn("Free-LLM — 免费 AI 与 LLM API 开放目录", guide)
+        self.assertIn("MIT License", guide)
+
     def test_page_exposes_public_contact_email(self):
         self.assertIn('href="mailto:xdguo0527@gmail.com"', self.html)
         self.assertIn('data-footer-contact-label', self.html)
         self.assertIn("contactLabel: 'Contact'", self.html)
         self.assertIn("contactLabel: '联系我'", self.html)
+
+    def test_model_context_window_is_structured_and_rendered(self):
+        offers = read_offers()
+        model_offers = [offer for offer in offers if offer.get("contextWindow")]
+        self.assertGreaterEqual(len(model_offers), 3)
+        self.assertTrue(any(offer["id"] == "qwen-download" for offer in model_offers))
+        self.assertTrue(all(offer["productType"] in {"api", "open_weights", "coding_plan"} for offer in model_offers))
+        for needle in ("contextWindow", "renderModelContext", "drawerContextWindow", "contextWindowLabel"):
+            self.assertIn(needle, self.html)
+
+    def test_english_locale_covers_catalog_static_and_offer_copy(self):
+        for needle in (
+            "guideNav",
+            "doubaoSearch",
+            "qwenFeaturedTitle",
+            "localizedOfferText",
+            "hasChineseText",
+            "registerLabelEn",
+            "category-seo-links a:nth-child(7)",
+        ):
+            self.assertIn(needle, self.html)
 
     def test_locale_switch_updates_url_and_document_language(self):
         for needle in (
@@ -148,6 +208,13 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("Allow: /", robots)
         self.assertIn("Sitemap: https://freellm.top/sitemap.xml", robots)
         self.assertIn("<loc>https://freellm.top/</loc>", sitemap)
+
+    def test_ads_txt_declares_current_adsense_publisher(self):
+        self.assertTrue(ADS_PATH.is_file())
+        self.assertIn(
+            "google.com, pub-2461062743308239, DIRECT, f08c47fec0942fa0",
+            ADS_PATH.read_text(encoding="utf-8"),
+        )
 
     def test_web_usage_guide_hooks_exist(self):
         for hook in ("drawerUsageGuide", "drawerPrerequisites", "drawerSteps", "drawerEndpoint", "drawerExample", "drawerQuotaGuard", "drawerCommonIssues"):
