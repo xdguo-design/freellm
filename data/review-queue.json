@@ -1,1 +1,106 @@
-[]
+[
+  {
+    "id": "sensenova-deepseek-v4-flash",
+    "providerId": "sensenova",
+    "provider": "SenseNova",
+    "model": "deepseek-v4-flash",
+    "name": "deepseek-v4-flash",
+    "capabilities": [
+      "chat",
+      "long_context"
+    ],
+    "register": "https://console.sensecore.cn/",
+    "docsUrl": null,
+    "apiEndpoint": "https://token.sensenova.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：1M",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "sensenova-6-8-flash-lite",
+    "providerId": "sensenova",
+    "provider": "SenseNova",
+    "model": "sensenova-6.8-flash-lite",
+    "name": "sensenova-6.8-flash-lite",
+    "capabilities": [
+      "chat",
+      "long_context"
+    ],
+    "register": "https://console.sensecore.cn/",
+    "docsUrl": null,
+    "apiEndpoint": "https://token.sensenova.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：200K",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "sensenova-glm-5-2",
+    "providerId": "sensenova",
+    "provider": "SenseNova",
+    "model": "glm-5.2",
+    "name": "glm-5.2",
+    "capabilities": [
+      "chat",
+      "long_context"
+    ],
+    "register": "https://console.sensecore.cn/",
+    "docsUrl": null,
+    "apiEndpoint": "https://token.sensenova.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：1M",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "sensenova-kimi-k3",
+    "providerId": "sensenova",
+    "provider": "SenseNova",
+    "model": "kimi-k3",
+    "name": "kimi-k3",
+    "capabilities": [
+      "chat",
+      "long_context",
+      "vision"
+    ],
+    "register": "https://console.sensecore.cn/",
+    "docsUrl": null,
+    "apiEndpoint": "https://token.sensenova.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：1M",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "sensenova-deepseek-v4-pro",
+    "providerId": "sensenova",
+    "provider": "SenseNova",
+    "model": "deepseek-v4-pro",
+    "name": "deepseek-v4-pro",
+    "capabilities": [
+      "chat",
+      "long_context",
+      "vision"
+    ],
+    "register": "https://console.sensecore.cn/",
+    "docsUrl": null,
+    "apiEndpoint": "https://token.sensenova.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：1M",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "agnes-2-5-flash",
+    "providerId": "agnes-ai",
+    "provider": "Agnes AI",
+    "model": "agnes-2.5-flash",
+    "name": "agnes-2.5-flash",
+    "capabilities": [
+      "chat",
+      "long_context"
+    ],
+    "register": "https://agnes-ai.com/",
+    "docsUrl": null,
+    "apiEndpoint": "https://api.agnes-ai.cn/v1/chat/completions",
+    "freeSummary": "截图标注上下文/额度：1M",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-08"
+  }
+]

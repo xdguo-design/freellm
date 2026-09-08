@@ -98,8 +98,27 @@ def guide_url() -> str:
     return "/guides/free-llm/"
 
 
+OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
+CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
+
+
 GUIDE_SOURCE_URL = "https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md"
 GUIDE_REPOSITORY_URL = "https://github.com/nejib1/Free-LLM"
+
+OPENAI_ALTERNATIVE_ROWS = [
+    ("groq-free", "Groq", "OpenAI-compatible API with per-model RPM, RPD and TPM limits.", "https://console.groq.com/docs/openai"),
+    ("cerebras-free", "Cerebras", "$5 free credits after account creation; current terms belong to the official pricing page.", "https://inference-docs.cerebras.ai/quickstart"),
+    ("hf-inference-free", "Hugging Face Inference Providers", "Free tier included; monthly credits and provider availability can change.", "https://huggingface.co/docs/inference-providers/index"),
+    ("siliconflow-free-models", "SiliconFlow", "Selected models may be listed at ¥0; login, region and model limits vary.", "https://docs.siliconflow.cn/cn/userguide/quickstart"),
+    ("modelscope-api-inference-free", "ModelScope", "Registered users can access API-Inference with dynamic rate limits.", "https://modelscope.cn/docs/model-service/API-Inference/intro"),
+    ("longcat-api", "LongCat API", "OpenAI-compatible endpoint is documented; a permanent free quota is not confirmed.", "https://longcat.ai/platform/docs/zh/faq"),
+]
+
+CLAUDE_CODE_ALTERNATIVE_ROWS = [
+    ("glm", "GLM Coding Plan", "Dedicated coding endpoint documented for Claude Code, Cursor and Cline; quota uses provider time windows.", "https://docs.bigmodel.cn/cn/coding-plan/faq"),
+    ("longcat-api", "LongCat API", "OpenAI / Anthropic-compatible workflow; account access and any free quota must be checked before use.", "https://longcat.ai/platform/docs/zh/faq"),
+    ("groq-free", "Groq", "OpenAI-compatible coding API with a published free rate-limit table; Claude Code requires a compatible adapter or endpoint.", "https://console.groq.com/docs/openai"),
+]
 
 GUIDE_PERMANENT_ROWS = [
     [("Google AI Studio", "https://aistudio.google.com/"), "否", "5–30 RPM（因模型而异）", "9,000 RPD（Flash）", "完全免费", "Gemini 3.1 Pro / Flash"],
@@ -707,8 +726,203 @@ print(response.choices[0].message.content)'''
 '''
 
 
+def _offer_by_id(offers: list[dict], offer_id: str) -> dict:
+    for offer in offers:
+        if offer.get("id") == offer_id:
+            return offer
+    raise ValueError(f"SEO guide references missing offer: {offer_id}")
+
+
+def _special_guide_rows(offers: list[dict], site_url: str, rows: list[tuple[str, str, str, str]]) -> str:
+    rendered = []
+    for offer_id, label, fit, source_url in rows:
+        offer = _offer_by_id(offers, offer_id)
+        detail = _absolute(site_url, offer_url(offer))
+        rendered.append(
+            f'''<tr>
+              <td><a href="{_esc(offer_url(offer))}">{_esc(label)}</a><small>{_esc(offer.get("model") or offer.get("name"))}</small></td>
+              <td>{_esc(fit)}</td>
+              <td><a href="{_esc(source_url)}" target="_blank" rel="noopener noreferrer">Official source ↗</a><br><a href="{_esc(detail)}">FreeLLM record ↗</a></td>
+            </tr>'''
+        )
+    return "".join(rendered)
+
+
+def render_special_guide_page(
+    offers: list[dict],
+    site_url: str,
+    path: str,
+    title: str,
+    description: str,
+    eyebrow: str,
+    lead: str,
+    caution: str,
+    rows: list[tuple[str, str, str, str]],
+    setup_heading: str,
+    setup_html: str,
+    related_html: str,
+) -> str:
+    page_url = _absolute(site_url, path)
+    table_rows = _special_guide_rows(offers, site_url, rows)
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": title,
+        "description": description,
+        "url": page_url,
+        "inLanguage": "en",
+        "dateModified": "2026-09-08",
+        "isPartOf": {"@type": "WebSite", "name": "Free AI Index", "url": _absolute(site_url, "/")},
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Free AI Index", "item": _absolute(site_url, "/")},
+                {"@type": "ListItem", "position": 2, "name": title, "item": page_url},
+            ],
+        },
+    }
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{_esc(title)}</title>
+  <meta name="description" content="{_esc(description)}">
+  <link rel="canonical" href="{_esc(page_url)}">
+  {_social_meta(site_url, path, title, description, "article")}
+  {_analytics_script()}
+  <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  <style>
+    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; --green: #e6f7ee; }}
+    * {{ box-sizing: border-box; }}
+    body {{ max-width: 1080px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
+    a {{ color: var(--blue); }}
+    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }}
+    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
+    header a {{ color: white; }}
+    h1 {{ max-width: 820px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }}
+    h2 {{ margin: 0 0 10px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.03em; }}
+    h3 {{ margin: 24px 0 6px; font-size: 19px; }}
+    p {{ max-width: 860px; }}
+    .crumb, .eyebrow, th {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
+    .lead {{ max-width: 800px; color: #dbe6ff; font-size: 17px; }}
+    .callout {{ margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }}
+    section + section {{ padding-top: 28px; border-top: 1px solid var(--line); }}
+    .table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 16px 0 8px; }}
+    table {{ width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; }}
+    th, td {{ padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }}
+    th {{ color: var(--muted); background: var(--soft); }}
+    tr:last-child td {{ border-bottom: 0; }}
+    td small {{ display: block; margin-top: 4px; color: var(--muted); }}
+    pre {{ overflow-x: auto; padding: 18px; border-radius: 10px; background: #101827; color: #e9f0ff; font: 13px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }}
+    .notice {{ padding: 16px 18px; border-left: 4px solid #1a9a5a; background: var(--green); }}
+    .link-list {{ padding-left: 1.3em; }}
+    footer {{ color: var(--muted); font-size: 13px; }}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / Guides</div>
+    <h1>{_esc(title)}</h1>
+    <p class="lead">{_esc(lead)}</p>
+    <div class="callout">{_esc(caution)}</div>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / verified paths</div>
+      <h2>Verified options and their limits</h2>
+      <p>Each row links to a FreeLLM record and an official provider source. Quotas, regions, account requirements and prices can change, so verify the provider page before relying on an offer.</p>
+      <div class="table-wrap"><table><thead><tr><th>Provider / model</th><th>What the current record says</th><th>Next step</th></tr></thead><tbody>{table_rows}</tbody></table></div>
+    </section>
+    <section>
+      <div class="eyebrow">02 / setup</div>
+      <h2>{_esc(setup_heading)}</h2>
+      {setup_html}
+    </section>
+    <section>
+      <div class="eyebrow">03 / related pages</div>
+      <h2>Continue exploring</h2>
+      {related_html}
+    </section>
+  </main>
+  <footer>
+    <p><strong>Last checked:</strong> 8 September 2026. Free access is always subject to provider terms, region, quota and account eligibility.</p>
+    <p><a href="{_esc(_absolute(site_url, '/'))}">Return to Free AI Index →</a></p>
+  </footer>
+</body>
+</html>
+'''
+
+
+def render_openai_alternatives_page(offers: list[dict], site_url: str) -> str:
+    return render_special_guide_page(
+        offers,
+        site_url,
+        "/guides/free-openai-api-alternatives/",
+        "Free OpenAI API Alternatives — OpenAI-Compatible Free API Options | FreeLLM",
+        "Compare verified OpenAI-compatible API alternatives with free tiers, credits, rate limits and official setup links.",
+        "OpenAI-compatible API guide",
+        "Compare practical OpenAI API alternatives for prototypes and developer tools, with free access conditions and limits shown next to the official source.",
+        "Important: OpenAI's official API is not presented as permanently free on this page. The entries below are independent providers or OpenAI-compatible endpoints.",
+        OPENAI_ALTERNATIVE_ROWS,
+        "Quick start with an OpenAI-compatible SDK",
+        '''<p>Most compatible providers use the OpenAI SDK shape. Replace the base URL and API key, then use the model ID listed in the provider documentation.</p>
+      <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.groq.com/openai/v1",
+    api_key="YOUR_PROVIDER_KEY",
+)
+
+response = client.chat.completions.create(
+    model="openai/gpt-oss-20b",
+    messages=[{"role": "user", "content": "Hello"}],
+)</code></pre>
+      <p>Do not copy a model ID or quota from a different provider. The official source link in each row is the authority.</p>''',
+        '''<ul class="link-list">
+        <li><a href="/guides/free-llm/">Free LLM and API quick-start guide</a></li>
+        <li><a href="/category/api/">Browse all verified AI API services</a></li>
+        <li><a href="/offers/groq-free/">Groq free plan details</a></li>
+        <li><a href="/offers/hf-inference-free/">Hugging Face free inference details</a></li>
+      </ul>''',
+    )
+
+
+def render_claude_code_alternatives_page(offers: list[dict], site_url: str) -> str:
+    return render_special_guide_page(
+        offers,
+        site_url,
+        "/guides/claude-code-free-alternatives/",
+        "Free Claude Code Alternatives — Coding Models and Plans | FreeLLM",
+        "Compare verified coding plans and API paths that can work with Claude Code or compatible coding tools, with region and quota notes.",
+        "Claude Code compatibility guide",
+        "Find coding-focused plans and API paths for Claude Code workflows, then verify the exact adapter, endpoint and quota rules in the official documentation.",
+        "Important: these are third-party options and are not Claude's official free service. Claude Code compatibility, authentication and quota rules depend on the provider and the supported tool path.",
+        CLAUDE_CODE_ALTERNATIVE_ROWS,
+        "Configure a coding tool safely",
+        '''<p>Claude Code integrations commonly use <code>ANTHROPIC_BASE_URL</code> and <code>ANTHROPIC_AUTH_TOKEN</code>, but the exact endpoint and authentication requirements are provider-specific.</p>
+      <pre><code>export ANTHROPIC_BASE_URL="YOUR_PROVIDER_ENDPOINT"
+export ANTHROPIC_AUTH_TOKEN="YOUR_PROVIDER_TOKEN"
+
+# Follow the provider's official Claude Code or coding-plan quick start.
+# Confirm region, quota window and supported tools before use.</code></pre>
+      <p>GLM Coding Plan has a dedicated coding endpoint documented for Claude Code, Cursor and Cline. Start from its official FAQ and quick start rather than guessing an API URL.</p>''',
+        '''<ul class="link-list">
+        <li><a href="/offers/glm/">GLM Coding Plan details</a></li>
+        <li><a href="/category/free-ide/">Browse free AI coding IDEs</a></li>
+        <li><a href="/category/api/">Browse AI API services</a></li>
+        <li><a href="/guides/free-openai-api-alternatives/">OpenAI-compatible API alternatives</a></li>
+      </ul>''',
+    )
+
+
 def render_sitemap(offers: list[dict], categories: list[str], site_url: str) -> str:
-    paths = ["/", guide_url()] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
+    paths = [
+        "/",
+        guide_url(),
+        OPENAI_ALTERNATIVES_GUIDE_PATH,
+        CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
+    ] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
     urls = "\n".join(f"  <url><loc>{_esc(_absolute(site_url, path))}</loc></url>" for path in paths)
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -726,6 +940,8 @@ def _expected_files(offers: list[dict], site_url: str) -> tuple[dict[Path, str],
     files: dict[Path, str] = {
         Path("sitemap.xml"): render_sitemap(offers, categories, site_url),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
+        Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
+        Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
     }
     for offer in offers:
         files[Path("offers") / _slug(offer["id"]) / "index.html"] = render_offer_page(offer, offers, site_url)
@@ -759,7 +975,8 @@ def _clean_previous_pages(output_root: Path) -> None:
     for relative in _read_manifest(output_root):
         path = (output_root / relative).resolve()
         root = output_root.resolve()
-        if root not in path.parents or path.name != "index.html" or path.parent.name not in {"offers", "category", "free-llm"}:
+        relative_path = path.relative_to(root)
+        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) != 3 or relative_path.parts[0] not in {"offers", "category", "guides"}:
             continue
         if path.is_file():
             path.unlink()
@@ -790,7 +1007,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         path = output_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
-    manifest = {"files": [path.as_posix() for path in files if path.parts and (path.parts[0] in {"offers", "category"} or path.parts[:2] == ("guides", "free-llm"))]}
+    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides"}]}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=len(files))
     print(f"built SEO output: {result.offer_count} offers, {result.category_count} categories, {result.page_count} files")

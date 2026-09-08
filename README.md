@@ -1,8 +1,23 @@
-# FreeLLM · 中国免费 AI 资源索引
+# FreeLLM · 免费 AI 资源索引 / Free AI Index
 
-一个面向中文用户的免费 AI 资源目录，整理免费模型、免费额度、免费 IDE、API、开放权重和相关工具。
+<div align="center">
 
-## 在线展示
+**🌐 在线站点 / Live Site: [freellm.top](https://freellm.top/)**
+
+一个面向中文用户的免费 AI 资源目录。
+An evidence-led directory of free, trial, and low-cost AI offers.
+
+**[中文](#中文) | [English](#english)**
+
+</div>
+
+---
+
+## 中文
+
+FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额度、免费 IDE、API、开放权重和相关工具，每个条目都记录平台、限制条件、地区、注册要求和官方入口，使用前以官方页面为准。
+
+### 在线展示
 
 - 站点首页：[freellm.top](https://freellm.top/)
 - Vercel 预览：[freellm-omega.vercel.app](https://freellm-omega.vercel.app/)
@@ -10,39 +25,38 @@
 
 ![FreeLLM 首页预览](freellm-01-hero.png)
 
-## 当前内容
+### 当前内容
 
-- 36 个已整理的 AI 服务和模型条目
-- 按免费额度、学生优惠、免费 IDE、API、开放权重等场景筛选
-- 记录平台、限制条件、地区、注册要求和官方入口
-- 展示来自 GitHub、Hugging Face 等平台的公开外部信号（例如 Stars、Likes、Downloads）
+- **38 个**已整理的 AI 服务和模型条目
+- **7 个**分类：[免费额度](https://freellm.top/category/free-quota/)、[学生优惠](https://freellm.top/category/student/)、[免费 IDE](https://freellm.top/category/free-ide/)、[AI API](https://freellm.top/category/api/)、[开放权重](https://freellm.top/category/open-weights/)、[试用与促销](https://freellm.top/category/promo/)、[Web 与浏览器 AI](https://freellm.top/category/web/)
+- **3 个**中文指南页：[免费 LLM API 开放目录指南](https://freellm.top/guides/free-llm/)、[免费 OpenAI API 替代品](https://freellm.top/guides/free-openai-api-alternatives/)、[Claude Code 免费替代品](https://freellm.top/guides/claude-code-free-alternatives/)
+- 展示来自 GitHub、Hugging Face 等平台的公开外部信号（Stars、Likes、Downloads）
 - 外部信号只作为原始公开数据展示，不伪造本站评分，也不把不同平台的数据强行合并成一个分数
 
-## SEO 页面
+### 自动化
 
-- 首页：`/`
-- 资源详情页：`/offers/<offer-id>/`（当前 36 个）
-- 分类页：`/category/<slug>/`（当前 7 个）
-- 中文 API 指南页：`/guides/free-llm/`
-- 页面由 `data/offers.json` 自动生成，统一更新 sitemap 和站内链接；指南页参考 [Free-LLM 中文 README](https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md)，使用前仍需以 Provider 官方页面为准
+| Workflow | 频率 | 作用 |
+| --- | --- | --- |
+| `daily-check` | 每天 01:00 UTC | 校验 offers schema，扫描公开来源；结果只写入 artifacts 和 `data/review-queue.json`，不直接改公开数据 |
+| `automated-discovery-pr` | 每周一 03:00 UTC | 运行受限范围的自动发现流水线，以 Pull Request 形式提交候选条目 |
 
-生成或检查 SEO 页面：
+`crawler/` 目录包含数据抓取、发现、diff 与 schema 校验模块；新条目经过人工审核后才会进入正式目录。
 
-```powershell
-python scripts/build_seo_pages.py
-python scripts/build_seo_pages.py --check
-```
-
-## 项目结构
+### 项目结构
 
 ```text
 data/offers.json                 资源目录数据
 data/providers.json              平台与提供商信息
 data/community-signals.json      外部公开信号快照
+data/review-queue.json           待人工审核的发现候选
+crawler/                         抓取 / 发现 / diff / schema 模块
+scripts/build_static.py          静态页面构建
+scripts/build_seo_pages.py       SEO 详情页 / 分类页 / 指南页生成
 design/free-china-ai-index.html  网站页面
 offers/<id>/index.html            资源详情页（生成文件）
 category/<slug>/index.html        分类页（生成文件）
-guides/free-llm/index.html         Free-LLM 中文指南页（生成文件）
+guides/*/index.html               指南页（生成文件）
+docs/specs/                       设计与实施记录
 ads.txt                          Google AdSense 授权声明
 robots.txt                       搜索引擎抓取规则
 sitemap.xml                      站点地图
@@ -50,35 +64,87 @@ llms.txt                         面向 AI/搜索系统的站点说明
 vercel.json                      Vercel 路由配置
 ```
 
-## 本地运行
-
-直接启动静态服务器：
+### 本地运行
 
 ```powershell
 python -m http.server 8000
 ```
 
-然后打开 <http://localhost:8000/design/free-china-ai-index.html>。
+然后打开 <http://localhost:8000/design/free-china-ai-index.html>。如需本地行为与线上根路径一致，可使用 `npx vercel dev`。
 
-如果希望本地行为与线上根路径一致，可以使用 Vercel CLI：
-
-```powershell
-npx vercel dev
-```
-
-## 验证
+### 验证与构建
 
 ```powershell
 pytest -q
 python scripts/build_static.py --check
+python scripts/build_seo_pages.py --check
 ```
 
-## 发布
+### 发布
 
-生产站点部署在 Vercel，根路径会指向 `design/free-china-ai-index.html`。更新页面或数据后，应先通过验证，再发布生产版本并检查首页、`/ads.txt`、`/robots.txt` 和 `/sitemap.xml`。
+生产站点部署在 Vercel，根路径指向 `design/free-china-ai-index.html`。更新页面或数据后，应先通过验证，再发布生产版本并检查首页、`/ads.txt`、`/robots.txt` 和 `/sitemap.xml`。
 
-Google AdSense 是否显示广告还取决于 AdSense 审核、流量、广告填充和页面策略；代码中已包含 AdSense 脚本，`ads.txt` 用于声明授权发布商。
-
-## 数据说明
+### 数据说明
 
 目录内容和外部信号会随官方平台状态变化。使用前请通过条目中的官方链接再次确认额度、地区限制、服务条款和隐私政策。
+
+---
+
+## English
+
+FreeLLM ([freellm.top](https://freellm.top/)) is a curated directory of free AI models, free tiers, free coding IDEs, APIs, open-weight models, and related tools. Every entry records the platform, limits, region restrictions, sign-up requirements, and the official link — always confirm details on the official page before use.
+
+### Live
+
+- Homepage: [freellm.top](https://freellm.top/)
+- Vercel preview: [freellm-omega.vercel.app](https://freellm-omega.vercel.app/)
+- GitHub repo: [xdguo-design/freellm](https://github.com/xdguo-design/freellm)
+
+### What's inside
+
+- **38** curated AI services and models
+- **7** categories: [free quota](https://freellm.top/category/free-quota/), [student offers](https://freellm.top/category/student/), [free coding IDEs](https://freellm.top/category/free-ide/), [AI API services](https://freellm.top/category/api/), [open-weight models](https://freellm.top/category/open-weights/), [trials & promotions](https://freellm.top/category/promo/), [web & browser AI](https://freellm.top/category/web/)
+- **3** guide pages: [Free-LLM guide](https://freellm.top/guides/free-llm/), [free OpenAI API alternatives](https://freellm.top/guides/free-openai-api-alternatives/), [free Claude Code alternatives](https://freellm.top/guides/claude-code-free-alternatives/)
+- Public external signals from GitHub, Hugging Face, and similar platforms (Stars, Likes, Downloads), shown as raw public data — no fabricated site-wide scores, no merging of different platforms into one number
+
+### Automation
+
+| Workflow | Schedule | Purpose |
+| --- | --- | --- |
+| `daily-check` | Daily at 01:00 UTC | Validates the offers schema and scans public sources; results land in artifacts and `data/review-queue.json` only — public data is never edited directly |
+| `automated-discovery-pr` | Mondays at 03:00 UTC | Runs a bounded discovery pipeline and submits candidates as a pull request |
+
+The `crawler/` package contains the fetching, discovery, diff, and schema-validation modules; new entries enter the directory only after human review.
+
+### Project layout
+
+See the [Chinese section](#中文) for the full tree. Key paths:
+
+- `data/offers.json` — the catalog data
+- `crawler/` — fetching / discovery / diff / schema modules
+- `scripts/` — static build and SEO page generation
+- `offers/`, `category/`, `guides/` — generated HTML pages
+
+### Local development
+
+```bash
+python -m http.server 8000
+```
+
+Then open <http://localhost:8000/design/free-china-ai-index.html>. For root-path parity with production, use `npx vercel dev`.
+
+### Verify & build
+
+```bash
+pytest -q
+python scripts/build_static.py --check
+python scripts/build_seo_pages.py --check
+```
+
+### Deployment
+
+The production site is deployed on Vercel; the root path serves `design/free-china-ai-index.html`. After changing pages or data, run the checks, deploy, and verify the homepage, `/ads.txt`, `/robots.txt`, and `/sitemap.xml`.
+
+### Data disclaimer
+
+Catalog content and external signals change as providers update their platforms. Always re-check quotas, regional restrictions, terms of service, and privacy policies via the official links in each entry.

@@ -95,6 +95,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert (tmp_path / "offers" / "agnes-ai-free" / "index.html").is_file()
     assert (tmp_path / "category" / "free-ide" / "index.html").is_file()
     assert (tmp_path / "guides" / "free-llm" / "index.html").is_file()
+    assert (tmp_path / "guides" / "free-openai-api-alternatives" / "index.html").is_file()
+    assert (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").is_file()
 
     detail = (tmp_path / "offers" / "codebuddy" / "index.html").read_text(encoding="utf-8")
     assert '<html lang="zh-CN">' in detail
@@ -136,13 +138,27 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in guide
     assert '<script defer src="/_vercel/insights/script.js"></script>' in guide
 
+    openai_guide = (tmp_path / "guides" / "free-openai-api-alternatives" / "index.html").read_text(encoding="utf-8")
+    assert "OpenAI API alternatives" in openai_guide
+    assert "OpenAI&#x27;s official API is not presented as permanently free" in openai_guide
+    assert '<link rel="canonical" href="https://freellm.top/guides/free-openai-api-alternatives/"' in openai_guide
+    assert "https://console.groq.com/docs/openai" in openai_guide
+
+    claude_guide = (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").read_text(encoding="utf-8")
+    assert "Free Claude Code Alternatives" in claude_guide
+    assert "not Claude&#x27;s official free service" in claude_guide
+    assert '<link rel="canonical" href="https://freellm.top/guides/claude-code-free-alternatives/"' in claude_guide
+    assert "https://docs.bigmodel.cn/cn/coding-plan/faq" in claude_guide
+
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://freellm.top/" in sitemap
     assert "https://freellm.top/offers/codebuddy/" in sitemap
     assert "https://freellm.top/offers/agnes-ai-free/" in sitemap
     assert "https://freellm.top/category/free-ide/" in sitemap
     assert "https://freellm.top/guides/free-llm/" in sitemap
-    assert sitemap.count("<loc>") == 2 + result.offer_count + result.category_count
+    assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
+    assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
+    assert sitemap.count("<loc>") == 4 + result.offer_count + result.category_count
 
 
 def test_build_site_check_detects_stale_output(tmp_path):

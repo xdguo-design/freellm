@@ -58,6 +58,13 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('"id": "agnes-ai-free"', self.html)
         self.assertIn('"id": "stepfun-limited-time-free"', self.html)
 
+    def test_seo_guides_are_linked_from_the_homepage(self):
+        for href in (
+            '/guides/free-openai-api-alternatives/',
+            '/guides/claude-code-free-alternatives/',
+        ):
+            self.assertIn(f'href="{href}"', self.html)
+
     def test_external_signals_are_available_for_current_offer_set(self):
         offer_ids = {offer["id"] for offer in read_offers()}
         signals = read_signals()
