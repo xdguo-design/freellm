@@ -802,12 +802,12 @@
     "id": "sensecore",
     "order": 11,
     "date": "2026-09-06",
-    "name": "SenseTime SenseNova API",
+    "name": "SenseTime SenseNova Token Plan",
     "providerMark": "商汤",
     "provider": "SenseNova",
     "providerMeta": "SenseTime · China",
-    "model": "Model-as-a-Service",
-    "modelMeta": "API / experience center",
+    "model": "SenseNova 6.8 Flash Lite · SenseNova U1 Fast",
+    "modelMeta": "Token Plan 公测免费模型 · OpenAI 兼容接口",
     "type": [
       "free"
     ],
@@ -816,67 +816,98 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "通过 SenseCore 控制台确认并调用 Model-as-a-Service API",
+      "summary": "注册 SenseNova Token Plan，用 OpenAI 兼容接口调用公测免费模型",
       "prerequisites": [
-        "SenseCore 账号",
-        "确认模型和地区可用性"
+        "SenseNova 平台账号（手机号注册）",
+        "在控制台创建 API Key"
       ],
       "steps": [
-        "打开官方控制台并完成登录",
-        "在文档确认 Endpoint 后创建凭据并发送请求"
+        "打开 platform.sensenova.cn/token-plan 领取 Free 公测档",
+        "在控制台创建 API Key（每个账号最多 20 个）",
+        "用 OpenAI 兼容接口调用免费模型，base URL 为 https://token.sensenova.cn/v1"
       ],
-      "endpoint": "https://api.sensecore.cn/v1/chat/completions",
+      "endpoint": "https://token.sensenova.cn/v1/chat/completions",
       "method": "POST",
-      "authentication": "Authorization: Bearer ${SENSECORE_API_KEY}",
+      "authentication": "Authorization: Bearer ${SENSENOVA_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.sensecore.cn/v1/chat/completions --header 'Authorization: Bearer ${SENSECORE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://token.sensenova.cn/v1/chat/completions --header 'Authorization: Bearer ${SENSENOVA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+      "docsUrl": "https://www.sensenova.cn/token-plan"
     },
-    "kicker": "VERIFY BEFORE FREE",
+    "kicker": "PUBLIC BETA FREE",
     "badges": [
-      "VERIFY",
-      "API CONFIRMED"
+      "FREE BETA",
+      "API CONFIRMED",
+      "NO CARD"
     ],
-    "freeSummary": "API confirmed; free quota not confirmed",
-    "validitySummary": "Unknown / check account",
+    "freeSummary": "公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡",
+    "validitySummary": "限时免费公测；付费档位（Lite/Pro）标注即将上线",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official docs",
-    "title": "SenseNova · free status pending",
-    "why": "SenseTime’s official documentation confirms the Model-as-a-Service API and experience center. A public, durable free-quota rule was not confirmed, so the directory keeps it visible but does not call it free.",
-    "mechanism": "API / experience center; free quota pending",
-    "validity": "Unknown",
+    "checkedSummary": "2026-09-08 / official Token Plan page",
+    "title": "SenseNova · Token Plan 公测免费",
+    "why": "商汤官方 Token Plan 页面显示：公测期 Free 档免费，配额为 60,000 积分 / 5 小时，最多 20 个 API Key，提供 OpenAI 兼容接口。官方页面当前列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast 两个模型；2026 年 5 月发布时的公开报道覆盖 6.7 Flash-Lite、U1 Fast、DeepSeek V4 Flash 且描述各模型配额独立计数。积分规则与特殊模型排除项以控制台实际显示为准。",
+    "mechanism": "Token Plan 公测免费配额（积分制，每 5 小时刷新）",
+    "validity": "限时免费公测；付费档位标注即将上线",
     "access": "China account",
-    "command": "Open the official SenseCore console and check the current account offer.",
-    "register": "https://console.sensecore.cn/",
-    "registerLabel": "Register / open SenseCore",
+    "command": "在 platform.sensenova.cn/token-plan 领取 Free 公测档，创建 API Key 后用 OpenAI 兼容接口调用免费模型。",
+    "register": "https://platform.sensenova.cn/token-plan",
+    "registerLabel": "领取 Token Plan 免费配额",
     "links": [
       [
-        "API docs",
-        "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+        "Token Plan 官方页面",
+        "https://www.sensenova.cn/token-plan"
       ],
       [
-        "Experience center",
-        "https://console.sensecore.cn/micro/help/docs/model-as-a-service/AI_Studio/User_Guide/Experienc/"
+        "控制台创建 API Key",
+        "https://platform.sensenova.cn/console/keys"
+      ],
+      [
+        "SenseCore MaaS 文档",
+        "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
       ]
     ],
     "originCountry": "China",
     "availability": "China account",
-    "freeMechanism": "not_confirmed",
-    "quota": "Free quota pending confirmation",
-    "renewal": "Unknown",
-    "phoneRequired": "unknown",
-    "cardRequired": "unknown",
+    "freeMechanism": "trial",
+    "quota": "60,000 积分 / 5 小时（Free 档，公测期免费；特殊模型除外）",
+    "renewal": "每 5 小时刷新（公测期）",
+    "phoneRequired": "yes",
+    "cardRequired": "no",
     "commercialUse": "check provider terms",
     "sourceUrls": [
+      "https://www.sensenova.cn/token-plan",
       "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
     ],
-    "evidence": "Official documentation confirms the API and experience center but not a durable public free quota.",
-    "status": "needs_review",
+    "evidence": "Official Token Plan page (checked 2026-09-08) shows a free public-beta tier with 60,000 credits per 5 hours and an OpenAI-compatible endpoint; May 2026 launch coverage reports phone-number sign-up and per-model independent quotas.",
+    "status": "verified",
     "confidence": "medium",
     "lastVerifiedAt": "2026-09-06",
     "checkedBy": "manual",
-    "notes": "Keep visible for discovery but do not label as free until confirmed."
+    "notes": "公测期限时免费；积分到账、模型 ID 与特殊模型排除规则以控制台为准。",
+    "freeSummaryEn": "Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "trial",
+      "amount": 60000,
+      "unit": "credits",
+      "period": "5h"
+    },
+    "freeModels": [
+      {
+        "model": "sensenova-6.8-flash-lite",
+        "label": "SenseNova 6.8 Flash Lite",
+        "quota": "60,000 积分 / 5 小时",
+        "note": "轻量多模态；模型 ID 以控制台为准",
+        "sourceUrl": "https://www.sensenova.cn/token-plan"
+      },
+      {
+        "model": "sensenova-u1-fast",
+        "label": "SenseNova U1 Fast",
+        "quota": "60,000 积分 / 5 小时",
+        "note": "信息图与图文生成；模型 ID 以控制台为准",
+        "sourceUrl": "https://www.sensenova.cn/token-plan"
+      }
+    ]
   },
   {
     "id": "deepseek",
@@ -3294,7 +3325,45 @@
     ],
     "evidence": "官方价格页列出 PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 价格为「免费」；官方快速开始文档给出 Base URL https://api.siliconflow.cn/v1。",
     "confidence": "high",
-    "notes": "China-first entry. Embedding/reranker and OCR models at ¥0 complement paid chat models on the same platform."
+    "notes": "China-first entry. Embedding/reranker and OCR models at ¥0 complement paid chat models on the same platform.",
+    "freeModels": [
+      {
+        "model": "PaddleOCR-VL-1.5",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
+      {
+        "model": "tencent/Hunyuan-MT-7B",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
+      {
+        "model": "BAAI/bge-m3",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
+      {
+        "model": "BAAI/bge-reranker-v2-m3",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
+      {
+        "model": "BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
+      {
+        "model": "Kwai-Kolors",
+        "quota": "¥0（官方价目表标注免费）",
+        "note": "价目表可随时调整，用前重查",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      }
+    ]
   },
   {
     "date": "2026-09-07",
@@ -3591,6 +3660,26 @@
     "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
     "confidence": "high",
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
-    "notes": "Do not describe Step Plan subscriptions as free. Keep STEP_API_KEY out of public code and verify the official pricing page before use."
+    "notes": "Do not describe Step Plan subscriptions as free. Keep STEP_API_KEY out of public code and verify the official pricing page before use.",
+    "freeModels": [
+      {
+        "model": "step-audio-r1.1",
+        "quota": "限免中（官方定价页标注）",
+        "note": "以官方定价页为准",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "step-1x-edit",
+        "quota": "限免中（官方定价页标注）",
+        "note": "以官方定价页为准",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "step-2x-large",
+        "quota": "限免中（官方定价页标注）",
+        "note": "以官方定价页为准",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      }
+    ]
   }
 ]

@@ -7,6 +7,7 @@ from scripts.build_seo_pages import (
     categorize_offer,
     category_url,
     guide_url,
+    models_url,
     offer_url,
 )
 
@@ -30,6 +31,10 @@ def test_offer_and_category_urls_are_stable_crawlable_paths():
 
 def test_guide_url_is_stable():
     assert guide_url() == "/guides/free-llm/"
+
+
+def test_models_url_is_stable():
+    assert models_url() == "/models/"
 
 
 def test_offer_categories_match_existing_catalog_semantics():
@@ -94,6 +99,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert (tmp_path / "offers" / "codebuddy" / "index.html").is_file()
     assert (tmp_path / "offers" / "agnes-ai-free" / "index.html").is_file()
     assert (tmp_path / "category" / "free-ide" / "index.html").is_file()
+    assert (tmp_path / "models" / "index.html").is_file()
     assert (tmp_path / "guides" / "free-llm" / "index.html").is_file()
     assert (tmp_path / "guides" / "free-openai-api-alternatives" / "index.html").is_file()
     assert (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").is_file()
@@ -158,7 +164,43 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/guides/free-llm/" in sitemap
     assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
-    assert sitemap.count("<loc>") == 4 + result.offer_count + result.category_count
+    assert "https://freellm.top/models/" in sitemap
+    assert sitemap.count("<loc>") == 5 + result.offer_count + result.category_count
+
+
+def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    offers = read_offers()
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+
+    assert '<html lang="zh-CN">' in page
+    assert "全部免费 AI 模型与 API 一览" in page
+    assert "All Free AI Models" in page
+    assert '<link rel="canonical" href="https://freellm.top/models/"' in page
+    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in page
+    assert 'window.va = window.va || function ()' in page
+    assert "注册领取 Register ↗" in page
+    assert "最后核验 last checked" in page
+
+    # Every offer appears with its detail link and official registration URL.
+    for offer in offers:
+        assert offer_url(offer) in page
+        if offer.get("register"):
+            assert f'href="{offer["register"]}"' in page
+
+    # Category sections use bilingual headers from the shared definitions.
+    assert "免费额度 <span lang=\"en\">Free AI quota</span>" in page
+    assert "开源权重模型 <span lang=\"en\">Open-weight AI models</span>" in page
+
+    # Structured data lists every offer for crawlers.
+    assert '"@type": "CollectionPage"' in page
+    assert '"numberOfItems": %d' % len(offers) in page
+
+    # The homepage and category pages link to the directory for crawl depth.
+    homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+    assert 'href="/models/"' in homepage
+    category = (tmp_path / "category" / "free-ide" / "index.html").read_text(encoding="utf-8")
+    assert "https://freellm.top/models/" in category
 
 
 def test_build_site_check_detects_stale_output(tmp_path):
@@ -168,3 +210,43 @@ def test_build_site_check_detects_stale_output(tmp_path):
     sitemap = tmp_path / "sitemap.xml"
     sitemap.write_text(sitemap.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     assert not build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top", check=True)
+
+
+def test_sensecore_offer_lists_token_plan_free_models():
+    offers = {offer["id"]: offer for offer in read_offers()}
+
+    sensecore = offers["sensecore"]
+    assert sensecore["status"] == "verified"
+    assert sensecore["cardRequired"] == "no"
+    assert sensecore["register"] == "https://platform.sensenova.cn/token-plan"
+    assert sensecore["usageGuide"]["endpoint"] == "https://token.sensenova.cn/v1/chat/completions"
+    models = [entry["model"] for entry in sensecore["freeModels"]]
+    assert models == ["sensenova-6.8-flash-lite", "sensenova-u1-fast"]
+    assert all(entry["quota"].strip() for entry in sensecore["freeModels"])
+    assert "https://www.sensenova.cn/token-plan" in sensecore["sourceUrls"]
+
+
+def test_multi_model_offers_expose_free_models_lists():
+    offers = {offer["id"]: offer for offer in read_offers()}
+
+    stepfun_models = [entry["model"] for entry in offers["stepfun-limited-time-free"]["freeModels"]]
+    assert stepfun_models == ["step-audio-r1.1", "step-1x-edit", "step-2x-large"]
+    siliconflow_models = offers["siliconflow-free-models"]["freeModels"]
+    assert len(siliconflow_models) == 6
+    assert all(entry["quota"].strip() for entry in siliconflow_models)
+
+
+def test_offer_page_renders_per_model_free_quota_table():
+    from scripts.build_seo_pages import render_offer_page
+
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+    html = render_offer_page(by_id["sensecore"], offers, "https://freellm.top")
+
+    assert "免费模型逐个看" in html
+    assert "sensenova-6.8-flash-lite" in html
+    assert "sensenova-u1-fast" in html
+    assert "60,000 积分 / 5 小时" in html
+
+    plain = render_offer_page(by_id["doubao"], offers, "https://freellm.top")
+    assert "免费模型逐个看" not in plain

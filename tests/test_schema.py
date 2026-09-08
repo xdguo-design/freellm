@@ -142,6 +142,31 @@ class SchemaTests(unittest.TestCase):
             if offer["productType"] == "coding_plan":
                 self.assertEqual(offer["capabilities"], ["coding_plan"], offer["id"])
 
+    def test_free_models_per_model_quota_list_is_accepted(self):
+        offer = valid_offer()
+        offer["freeModels"] = [
+            {
+                "model": "sensenova-6.8-flash-lite",
+                "label": "SenseNova 6.8 Flash Lite",
+                "quota": "60,000 积分 / 5 小时",
+                "note": "轻量多模态",
+                "sourceUrl": "https://www.sensenova.cn/token-plan",
+            },
+        ]
+        self.assertEqual(validate_offer(offer), [])
+
+    def test_free_models_reject_missing_quota_and_insecure_source(self):
+        offer = valid_offer()
+        offer["freeModels"] = [{"model": "some-model", "quota": " ", "sourceUrl": "http://example.com/plan"}]
+        errors = validate_offer(offer)
+        self.assertIn("freeModels entry must contain a non-empty quota", errors)
+        self.assertIn("freeModels sourceUrl must be an https URL without credentials", errors)
+
+    def test_free_models_must_be_a_non_empty_list(self):
+        offer = valid_offer()
+        offer["freeModels"] = []
+        self.assertIn("freeModels must be a non-empty list", validate_offer(offer))
+
 
 if __name__ == "__main__":
     unittest.main()

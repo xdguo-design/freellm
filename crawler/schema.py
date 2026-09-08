@@ -112,6 +112,26 @@ def _validate_structured_offer_fields(offer: dict) -> list[str]:
     if "freePolicy" in offer and offer["freePolicy"] is not None and not isinstance(offer["freePolicy"], dict):
         errors.append("freePolicy must be an object or null")
 
+    free_models = offer.get("freeModels")
+    if free_models is not None:
+        if not isinstance(free_models, list) or not free_models:
+            errors.append("freeModels must be a non-empty list")
+        else:
+            for entry in free_models:
+                if not isinstance(entry, dict):
+                    errors.append("freeModels entries must be objects")
+                    continue
+                for field in ("model", "quota"):
+                    value = entry.get(field)
+                    if not isinstance(value, str) or not value.strip():
+                        errors.append(f"freeModels entry must contain a non-empty {field}")
+                for field in ("label", "contextWindow", "note"):
+                    if field in entry and (not isinstance(entry[field], str) or not entry[field].strip()):
+                        errors.append(f"freeModels {field} must be a non-empty string")
+                source = entry.get("sourceUrl")
+                if source is not None and not _https_url(source):
+                    errors.append("freeModels sourceUrl must be an https URL without credentials")
+
     limits = offer.get("limits")
     if limits is not None:
         if not isinstance(limits, dict):

@@ -98,6 +98,13 @@ def guide_url() -> str:
     return "/guides/free-llm/"
 
 
+def models_url() -> str:
+    return "/models/"
+
+
+MODELS_PAGE_PATH = "/models/"
+
+
 OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
 CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
 
@@ -347,6 +354,18 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str) -> str:
       <h2>上下文窗口</h2>
       <p>{_esc(context_summary)}.{source_markup}</p>
     </section>'''
+    free_models = offer.get("freeModels") or []
+    free_models_markup = ""
+    if free_models:
+        rows = "".join(
+            f'''<tr><td><code>{_esc(entry.get("model"))}</code>{f'<br><small class="muted">{_esc(entry["label"])}</small>' if entry.get("label") else ""}</td><td>{_esc(entry.get("quota"))}</td><td>{_esc(entry.get("note") or "—")}</td></tr>'''
+            for entry in free_models
+        )
+        free_models_markup = f'''<section>
+      <h2>免费模型逐个看</h2>
+      <div class="table-wrap"><table><thead><tr><th>模型 / Model</th><th>免费额度</th><th>备注</th></tr></thead><tbody>{rows}</tbody></table></div>
+      <p class="muted">额度以官方页面和控制台实时显示为准；公测或限免额度可能随时调整。</p>
+    </section>'''
     schema = {
         "@context": "https://schema.org",
         "@graph": [
@@ -391,6 +410,11 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str) -> str:
     .fact strong, .fact span {{ display: block; }}
     .fact strong {{ font-size: .78rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }}
     pre {{ overflow-x: auto; padding: 14px; background: #172033; color: #f5f7fb; border-radius: 8px; }}
+    .table-wrap {{ overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; }}
+    th, td {{ padding: 9px 10px; border-bottom: 1px solid #dfe5ef; text-align: left; vertical-align: top; }}
+    th {{ font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }}
+    code {{ background: #eef2f9; padding: 2px 6px; border-radius: 5px; }}
     .muted {{ color: #68748a; }}
     @media (max-width: 600px) {{ body {{ padding: 14px 10px 40px; }} header, main, footer {{ padding: 18px; }} }}
   </style>
@@ -417,6 +441,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str) -> str:
       </div>
     </section>
     {context_window_markup}
+    {free_models_markup}
     <section>
       <h2>如何使用</h2>
       <p>{_esc(guide.get('summary') or offer.get('command'))}</p>
@@ -512,7 +537,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
   </main>
   <footer>
     <p>资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</p>
-    <p><a href="{_esc(_absolute(site_url, '/'))}">返回 FreeLLM 免费 AI 资源索引</a></p>
+    <p><a href="{_esc(_absolute(site_url, '/'))}">返回 FreeLLM 免费 AI 资源索引</a> · <a href="{_esc(_absolute(site_url, MODELS_PAGE_PATH))}">全部模型双语一览 / All models (bilingual)</a></p>
   </footer>
 </body>
 </html>
@@ -916,12 +941,199 @@ export ANTHROPIC_AUTH_TOKEN="YOUR_PROVIDER_TOKEN"
     )
 
 
+def _models_page_sections(offers: list[dict]) -> list[tuple[tuple[str, str, str, str] | None, list[dict]]]:
+    """Group offers under their first matching category; uncategorized offers land in Other."""
+    grouped: dict[str, list[dict]] = {}
+    for offer in sorted(offers, key=lambda item: (item.get("order", 10**9), item.get("id", ""))):
+        categories = categorize_offer(offer)
+        key = categories[0] if categories else "_other"
+        grouped.setdefault(key, []).append(offer)
+    sections: list[tuple[tuple[str, str, str, str] | None, list[dict]]] = []
+    for category in CATEGORY_DEFINITIONS:
+        matching = grouped.pop(category, [])
+        if matching:
+            definition = CATEGORY_DEFINITIONS[category]
+            sections.append(((definition["name_zh"], definition["name"], definition["description_zh"], definition["description"]), matching))
+    other = grouped.pop("_other", [])
+    if other:
+        sections.append((("其他资源", "Other resources", "尚未归入主分类的核验资源。", "Verified resources not yet grouped under a main category."), other))
+    return sections
+
+
+def _model_card(offer: dict) -> str:
+    register_url = offer.get("register") or ""
+    register_markup = (
+        f'<a class="btn" href="{_esc(register_url)}" target="_blank" rel="nofollow noopener">注册领取 Register ↗</a>'
+        if register_url
+        else ""
+    )
+    badges = "".join(f'<span class="badge">{_esc(badge)}</span>' for badge in (offer.get("badges") or [])[:3])
+    return f'''<article class="model-card">
+      <div class="card-head">
+        <span class="mark">{_esc(str(offer.get("providerMark") or offer.get("provider") or "?")[:2].upper())}</span>
+        <div>
+          <h3><a href="{_esc(offer_url(offer))}">{_esc(offer.get("title") or offer.get("name"))}</a></h3>
+          <p class="provider">{_esc(offer.get("provider"))}{(" · " + _esc(offer.get("providerMeta"))) if offer.get("providerMeta") else ""}</p>
+        </div>
+      </div>
+      <p class="model">{_esc(offer.get("model") or "")}{(" · " + _esc(offer.get("modelMeta"))) if offer.get("modelMeta") else ""}</p>
+      <dl class="facts">
+        <div><dt>免费额度 Free</dt><dd>{_esc(offer.get("freeSummary") or offer.get("mechanism") or "—")}</dd></div>
+        <div><dt>访问条件 Access</dt><dd>{_esc(offer.get("accessSummary") or offer.get("access") or "—")}</dd></div>
+        <div><dt>有效期 Validity</dt><dd>{_esc(offer.get("validitySummary") or offer.get("validity") or "—")}</dd></div>
+      </dl>
+      {f'<div class="badges">{badges}</div>' if badges else ''}
+      <div class="actions">
+        {register_markup}
+        <a class="ghost" href="{_esc(offer_url(offer))}">详情 Details</a>
+      </div>
+    </article>'''
+
+
+def render_models_page(offers: list[dict], site_url: str) -> str:
+    """Bilingual (Chinese / English) directory of every verified offer with a
+    registration CTA, so one shareable URL serves both language communities."""
+    path = MODELS_PAGE_PATH
+    page_url = _absolute(site_url, path)
+    total = len(offers)
+    title = f"全部免费 AI 模型与 API 一览 · All Free AI Models & APIs | FreeLLM"
+    description = (
+        f"FreeLLM 收录的全部 {total} 个免费 AI 模型、API 与工具，附官方注册入口、免费条件与最后核验日期。"
+        f" All {total} verified free AI models, APIs and developer tools on FreeLLM with official registration links."
+    )
+    social_meta = _social_meta(site_url, path, title, description, "website")
+    checked_dates = sorted({offer.get("lastVerifiedAt") for offer in offers if offer.get("lastVerifiedAt")})
+    last_checked = checked_dates[-1] if checked_dates else "2026-09-08"
+    sections_markup = ""
+    for definition, matching in _models_page_sections(offers):
+        name_zh, name_en, description_zh, description_en = definition
+        cards = "".join(_model_card(offer) for offer in matching)
+        sections_markup += f'''<section>
+      <h2>{_esc(name_zh)} <span lang="en">{_esc(name_en)}</span> <small>{len(matching)}</small></h2>
+      <p class="section-desc">{_esc(description_zh)} / {_esc(description_en)}</p>
+      <div class="card-grid">{cards}</div>
+    </section>'''
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": title,
+        "description": description,
+        "url": page_url,
+        "inLanguage": ["zh-CN", "en"],
+        "dateModified": last_checked,
+        "isPartOf": {"@type": "WebSite", "name": "Free AI Index", "url": _absolute(site_url, "/")},
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": total,
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": index,
+                    "name": offer.get("title") or offer.get("name"),
+                    "url": _absolute(site_url, offer_url(offer)),
+                }
+                for index, offer in enumerate(offers, start=1)
+            ],
+        },
+    }
+    category_links = "".join(
+        f'<a class="tag" href="{_esc(category_url(category))}">{_esc(CATEGORY_DEFINITIONS[category]["name_zh"])} {_esc(CATEGORY_DEFINITIONS[category]["name"])}</a>'
+        for category in CATEGORY_DEFINITIONS
+    )
+    return f'''<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{_esc(title)}</title>
+  <meta name="description" content="{_esc(description)}">
+  <link rel="canonical" href="{_esc(page_url)}">
+  {social_meta}
+  {_analytics_script()}
+  <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  <style>
+    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; --green: #e6f7ee; }}
+    * {{ box-sizing: border-box; }}
+    body {{ max-width: 1180px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
+    a {{ color: var(--blue); }}
+    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }}
+    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
+    header a {{ color: white; }}
+    h1 {{ max-width: 860px; margin: 22px 0 10px; font-size: clamp(32px, 5.5vw, 56px); line-height: 1.08; letter-spacing: -.05em; }}
+    h2 {{ margin: 0 0 6px; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.03em; }}
+    h2 small {{ color: var(--muted); font-size: 15px; font-weight: 400; }}
+    h2 [lang="en"] {{ color: #9db4d8; font-weight: 500; font-size: .62em; margin-left: 6px; }}
+    p {{ max-width: 880px; }}
+    .crumb, .eyebrow {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
+    .lead {{ max-width: 840px; color: #dbe6ff; font-size: 17px; }}
+    .stats {{ display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); font-size: 13px; color: #dbe6ff; }}
+    .callout {{ margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); font-size: 14px; }}
+    main {{ display: grid; gap: 30px; }}
+    section + section {{ padding-top: 26px; border-top: 1px solid var(--line); }}
+    .section-desc {{ margin: 0 0 14px; color: var(--muted); font-size: 14px; }}
+    .card-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }}
+    .model-card {{ display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: white; }}
+    .card-head {{ display: flex; gap: 10px; align-items: flex-start; }}
+    .mark {{ flex: 0 0 auto; display: inline-flex; width: 34px; height: 34px; border-radius: 9px; background: #e9efff; color: var(--blue); align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }}
+    .card-head h3 {{ margin: 0; font-size: 16px; line-height: 1.35; }}
+    .card-head a {{ color: var(--ink); text-decoration: none; }}
+    .card-head a:hover {{ color: var(--blue); }}
+    .provider {{ margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }}
+    .model {{ margin: 0; color: #3d4b63; font-size: 13px; }}
+    .facts {{ margin: 0; display: grid; gap: 6px; }}
+    .facts div {{ display: grid; grid-template-columns: 112px 1fr; gap: 8px; font-size: 12.5px; }}
+    .facts dt {{ color: var(--muted); }}
+    .facts dd {{ margin: 0; }}
+    .badges {{ display: flex; flex-wrap: wrap; gap: 6px; }}
+    .badge {{ border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; font-size: 11.5px; color: #3d4b63; background: var(--soft); }}
+    .actions {{ margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 4px; }}
+    .btn {{ display: inline-block; background: var(--blue); color: white; border-radius: 9px; padding: 8px 14px; text-decoration: none; font-size: 13.5px; font-weight: 600; }}
+    .btn:hover {{ background: #0f34c4; }}
+    .ghost {{ font-size: 13px; color: var(--muted); }}
+    .tags {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+    .tag {{ display: inline-block; padding: 3px 10px; border-radius: 999px; background: #e9efff; text-decoration: none; font-size: 12.5px; }}
+    footer {{ color: var(--muted); font-size: 13px; }}
+    footer strong {{ color: var(--ink); }}
+    @media (max-width: 620px) {{ body {{ padding: 10px 8px 38px; }} header, main, footer {{ border-radius: 12px; padding: 18px; }} .facts div {{ grid-template-columns: 96px 1fr; }} }}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / 全部模型 All models</div>
+    <h1>全部免费 AI 模型与 API 一览 <span lang="en">All Free AI Models &amp; APIs</span></h1>
+    <p class="lead">FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：注册入口直达官方，免费条件与最后核验日期逐条标注。 Every verified free AI model, API and tool on FreeLLM — each card links straight to the official registration page, with free-tier conditions and last-checked dates.</p>
+    <div class="stats">
+      <span><strong>{total}</strong> 个资源 offers</span>
+      <span>每周人工核验 verified weekly</span>
+      <span>最后核验 last checked: {last_checked}</span>
+      <span>注册链接均指向官方所有 registration links point to official sites</span>
+    </div>
+    <div class="callout">免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。 Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.</div>
+  </header>
+  <main>
+    {sections_markup}
+    <section>
+      <h2>按分类浏览 <span lang="en">Browse by category</span></h2>
+      <p class="section-desc">每个分类有独立页面，收录同一资源的深度信息。 Each category has its own page with the full verified records.</p>
+      <div class="tags">{category_links}</div>
+    </section>
+  </main>
+  <footer>
+    <p><strong>免责声明 Disclaimer：</strong>免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖任何资源前请核对官方来源。 Free access may be affected by region, account type, rate limits, validity or provider terms; always verify official sources before relying on an offer.</p>
+    <p><a href="{_esc(_absolute(site_url, '/'))}">返回 FreeLLM 免费 AI 资源索引 →</a> · <a href="{_esc(_absolute(site_url, guide_url()))}">免费 LLM 接入指南 Free LLM guide</a></p>
+  </footer>
+</body>
+</html>
+'''
+
+
 def render_sitemap(offers: list[dict], categories: list[str], site_url: str) -> str:
     paths = [
         "/",
         guide_url(),
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
+        MODELS_PAGE_PATH,
     ] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
     urls = "\n".join(f"  <url><loc>{_esc(_absolute(site_url, path))}</loc></url>" for path in paths)
     return f'''<?xml version="1.0" encoding="UTF-8"?>
@@ -939,6 +1151,7 @@ def _expected_files(offers: list[dict], site_url: str) -> tuple[dict[Path, str],
     ]
     files: dict[Path, str] = {
         Path("sitemap.xml"): render_sitemap(offers, categories, site_url),
+        Path("models") / "index.html": render_models_page(offers, site_url),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
@@ -976,7 +1189,7 @@ def _clean_previous_pages(output_root: Path) -> None:
         path = (output_root / relative).resolve()
         root = output_root.resolve()
         relative_path = path.relative_to(root)
-        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) != 3 or relative_path.parts[0] not in {"offers", "category", "guides"}:
+        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) != 3 or relative_path.parts[0] not in {"offers", "category", "guides", "models"}:
             continue
         if path.is_file():
             path.unlink()
@@ -1007,7 +1220,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         path = output_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
-    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides"}]}
+    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models"}]}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=len(files))
     print(f"built SEO output: {result.offer_count} offers, {result.category_count} categories, {result.page_count} files")

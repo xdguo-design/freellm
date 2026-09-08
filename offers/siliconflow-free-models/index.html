@@ -35,6 +35,11 @@
     .fact strong, .fact span { display: block; }
     .fact strong { font-size: .78rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
     pre { overflow-x: auto; padding: 14px; background: #172033; color: #f5f7fb; border-radius: 8px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid #dfe5ef; text-align: left; vertical-align: top; }
+    th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
+    code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
     .muted { color: #68748a; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
@@ -61,6 +66,11 @@
       </div>
     </section>
     
+    <section>
+      <h2>免费模型逐个看</h2>
+      <div class="table-wrap"><table><thead><tr><th>模型 / Model</th><th>免费额度</th><th>备注</th></tr></thead><tbody><tr><td><code>PaddleOCR-VL-1.5</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>tencent/Hunyuan-MT-7B</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-m3</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-reranker-v2-m3</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>Kwai-Kolors</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr></tbody></table></div>
+      <p class="muted">额度以官方页面和控制台实时显示为准；公测或限免额度可能随时调整。</p>
+    </section>
     <section>
       <h2>如何使用</h2>
       <p>Call the models listed at ¥0 on the official price list via the SiliconFlow API</p>
