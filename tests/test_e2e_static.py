@@ -121,6 +121,11 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
+    def test_homepage_includes_vercel_web_analytics(self):
+        self.assertIn('window.va = window.va || function ()', self.html)
+        self.assertIn('window.vaq = window.vaq || []', self.html)
+        self.assertIn('<script defer src="/_vercel/insights/script.js"></script>', self.html)
+
     def test_page_exposes_crawlable_internal_seo_links(self):
         self.assertIn("const offerHref = `/offers/${encodeURIComponent(item.id)}/`;", self.html)
         self.assertIn('class="offer-detail-link"', self.html)

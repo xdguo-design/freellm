@@ -21,6 +21,11 @@ SHARE_IMAGE_PATH = "/freellm-01-hero.png"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MANIFEST_NAME = ".seo-pages-manifest.json"
 
+VERCEL_ANALYTICS_SCRIPT = '''<script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>'''
+
 CATEGORY_DEFINITIONS = {
     "free-quota": {
         "name": "Free AI quota",
@@ -251,6 +256,10 @@ def _social_meta(site_url: str, page_url: str, title: str, description: str, og_
     )
 
 
+def _analytics_script() -> str:
+    return VERCEL_ANALYTICS_SCRIPT
+
+
 def _list(items: list[object], empty: str = "Not specified") -> str:
     if not items:
         return f"<p>{_esc(empty)}</p>"
@@ -272,12 +281,20 @@ def _related_links(offer: dict, offers: list[dict]) -> str:
         candidate
         for candidate in offers
         if candidate.get("id") != offer.get("id") and categories.intersection(categorize_offer(candidate))
-    ][:4]
-    if not related:
-        return '<li><a href="/">浏览全部免费 AI 资源</a></li>'
+    ]
+    # Prioritize same category, then other matching pages; limit to a reasonable
+    # number so off-topic pages don't dilute the signal.
+    same_cat = [c for c in related if categories.intersection(categorize_offer(c))]
+    other = [c for c in related if c not in same_cat]
+    candidates = same_cat + other[:max(0, 6 - len(same_cat))]
+    best = candidates[:6] if candidates else []
+    if not best:
+        related_url = category_url(categories.pop()) if categories else "/"
+        related_label = CATEGORY_DEFINITIONS.get(categories.pop() if categories else "free-quota", {}).get("name_zh", "全部免费 AI 资源")
+        return f'<li><a href="{_esc(related_url)}">浏览更多{related_label}</a></li>'
     return "".join(
-        f'<li><a href="{_esc(offer_url(candidate))}">{_esc(candidate.get("title") or candidate.get("name"))}</a></li>'
-        for candidate in related
+        f'<li><a href="{_esc(offer_url(candidate))}">{_esc(candidate.get("provider") or candidate.get("title") or candidate.get("name"))}</a></li>'
+        for candidate in best
     )
 
 
@@ -339,6 +356,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str) -> str:
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {social_meta}
+  {_analytics_script()}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   <style>
     :root {{ color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }}
@@ -447,6 +465,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {social_meta}
+  {_analytics_script()}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   <style>
     :root {{ color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }}
@@ -538,6 +557,7 @@ print(response.choices[0].message.content)'''
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article')}
+  {_analytics_script()}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   <style>
     :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --blue: #1744e8; --soft: #f5f7fb; --green: #e6f7ee; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--soft); }}
@@ -652,6 +672,30 @@ print(response.choices[0].message.content)'''
         <li>社区用户可以提交新的提供商、建议编辑、投票或举报已变化的免费状态。</li>
       </ul>
       <div class="callout"><strong>来源边界：</strong>本页面借鉴并展示参考 README 的信息结构与部分目录内容；本站自己的 Offer 仍以官方证据和 `data/offers.json` 为准。</div>
+    </section>
+    <section>
+      <div class="eyebrow">08 / free coding IDEs on Free AI Index</div>
+      <h2>精选免费编程 IDE 与试用计划</h2>
+      <p class="lead">想要本地开发工具而不是 API 调用，下面这些产品提供长期免费额度或一次性试用，可以直接从目录页查阅具体限制。</p>
+      <ul class="link-list">
+        <li><a href="{_esc(category_url('free-ide'))}">全部免费 AI 编程 IDE</a> — Cursor、Trae、GitHub Copilot、CodeBuddy 等IDE产品集合。</li>
+        <li><a href="{_esc(offer_url({'id':'cursor-hobby','provider':'Cursor'}))}">Cursor Hobby 免费方案</a> — 每月恢复额度的个人免费计划。</li>
+        <li><a href="{_esc(offer_url({'id':'github-copilot-free','provider':'GitHub'}))}">GitHub Copilot 免费版</a> — 学生或开源维护者的永久免费路径。</li>
+        <li><a href="{_esc(offer_url({'id':'amazon-q-free','provider':'Amazon Q Developer'}))}">Amazon Q Developer 免费层</a> — 以 AWS 账户绑定的独立免费 IDE。</li>
+        <li><a href="{_esc(offer_url({'id':'google-antigravity-free','provider':'Google Antigravity'}))}">Google Antigravity 个人免费版</a> — Google 出品的独立编程工具免费额度。</li>
+        <li><a href="{_esc(category_url('promo'))}">AI 试用与优惠活动</a> — 限时试用、首月优惠等短期免费入口。</li>
+      </ul>
+    </section>
+    <section>
+      <div class="eyebrow">09 / open-weight downloads</div>
+      <h2>开源权重模型下载</h2>
+      <p class="lead">本地运行模型的前提条件不只是权重免费，还需要 GPU、显存和网络出站带宽。下面三个下载入口附有官方仓库和安装命令。</p>
+      <ul class="link-list">
+        <li><a href="{_esc(category_url('open-weights'))}">全部开源权重模型目录</a> — 按权重和参数规模组织的下载清单。</li>
+        <li><a href="{_esc(offer_url({'id':'qwen-download','provider':'Qwen / Alibaba'}))}">Qwen3-4B 开源权重下载</a> — 阿里通义千问的中量级中文优先模型。</li>
+        <li><a href="{_esc(offer_url({'id':'glm-download','provider':'Zhipu AI'}))}">GLM-4.7-Flash 开源权重下载</a> — 智谱 AI 的中量级推理模型。</li>
+        <li><a href="{_esc(offer_url({'id':'longcat-download','provider':'LongCat'}))}">LongCat-2.0 开源权重下载</a> — 长上下文窗口的中文优先开源模型。</li>
+      </ul>
     </section>
   </main>
   <footer>

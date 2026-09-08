@@ -65,6 +65,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<link rel="canonical" href="https://freellm.top/offers/codebuddy/"' in detail
     assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in detail
     assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in detail
+    assert 'window.va = window.va || function ()' in detail
+    assert '<script defer src="/_vercel/insights/script.js"></script>' in detail
     assert 'data-offer-id="codebuddy"' in detail
     assert "https://www.codebuddy.cn/" in detail
     assert "/category/free-ide/" in detail
@@ -80,6 +82,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<link rel="canonical" href="https://freellm.top/category/free-ide/"' in category
     assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in category
     assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in category
+    assert '<script defer src="/_vercel/insights/script.js"></script>' in category
     assert "/offers/codebuddy/" in category
     assert 'href="https://freellm.top/"' in category
 
@@ -92,6 +95,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<link rel="canonical" href="https://freellm.top/guides/free-llm/"' in guide
     assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in guide
     assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in guide
+    assert '<script defer src="/_vercel/insights/script.js"></script>' in guide
 
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://freellm.top/" in sitemap
