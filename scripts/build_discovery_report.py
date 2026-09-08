@@ -26,6 +26,26 @@ def build_discovery_report(candidates: list[dict]) -> str:
         return "\n".join(lines) + "\n"
 
     for index, candidate in enumerate(candidates, start=1):
+        if candidate.get("sourceKind") == "third_party_directory":
+            provider = _text(candidate.get("directoryProvider"), "unknown provider")
+            model = _text(candidate.get("model"), "unknown model")
+            source_url = _text(candidate.get("sourceUrl"), "source URL unavailable")
+            lines.extend([
+                f"### {index}. {provider} · {model}",
+                "",
+                "- Source kind: third-party directory (discovery only)",
+                f"- Status: `{_text(candidate.get('status'), 'needs_review')}`",
+                f"- Source: [{source_url}]({source_url})",
+                f"- Directory provider: {provider}",
+                f"- Model: {model}",
+                f"- Context: {_text(candidate.get('context'))}",
+                f"- Rate limit: {_text(candidate.get('rateLimit'))}",
+                f"- Directory status: {_text(candidate.get('directoryStatus'))}",
+                f"- Evidence: {_text(candidate.get('evidence'))}",
+                f"- Seen count: {_text(candidate.get('seenCount'), '1')}",
+                "",
+            ])
+            continue
         repository = _text(candidate.get("repository"), "unknown repository")
         path = _text(candidate.get("path"), "document path unavailable")
         source_url = _text(candidate.get("sourceUrl"), "source URL unavailable")
@@ -49,6 +69,7 @@ def build_discovery_report(candidates: list[dict]) -> str:
         "",
         "- Confirm the provider owns or officially endorses the source.",
         "- Confirm the free mechanism, quota, region, expiry, payment behavior and model IDs.",
+        "- Treat third-party directory rows as leads only; verify each model against the provider's official documentation.",
         "- Add only verified evidence to `data/offers.json`; do not copy secrets or execute repository code.",
     ])
     return "\n".join(lines) + "\n"

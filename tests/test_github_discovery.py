@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from crawler.discovery import build_coverage_report
 from crawler.github_discovery import (
     extract_peer_document_evidence,
     fetch_github_document,
@@ -270,6 +271,23 @@ class GitHubRepositoryScanTests(unittest.TestCase):
         self.assertEqual(report["successfulPeerSourceCount"], 1)
         self.assertEqual(report["failedPeerSourceCount"], 1)
         self.assertEqual(report["peerRepositoryCount"], 2)
+
+    def test_coverage_report_separates_third_party_directory_sources(self):
+        report = build_coverage_report(
+            providers=[{"id": "official-a"}],
+            scan_results=[
+                {"providerId": "official-a", "url": "https://official.example/docs", "sourceKind": "official", "status": "ok"},
+                {"providerId": "freellm-net", "url": "https://freellm.net/models/", "sourceKind": "third_party_directory", "status": "ok"},
+                {"providerId": "freellm-net", "url": "https://freellm.net/llms.txt", "sourceKind": "third_party_directory", "status": "failed"},
+            ],
+            candidates=[],
+            now="2026-09-08T00:00:00+00:00",
+        )
+
+        self.assertEqual(report["officialSourceCount"], 1)
+        self.assertEqual(report["thirdPartySourceCount"], 2)
+        self.assertEqual(report["successfulThirdPartySourceCount"], 1)
+        self.assertEqual(report["failedThirdPartySourceCount"], 1)
 
     def test_discover_cli_can_append_github_peer_scan_results(self):
         providers = [{

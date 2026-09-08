@@ -278,8 +278,19 @@ def build_coverage_report(
         for result in scan_results
         if result.get("status") not in successful_statuses
     ]
-    official_sources = [result for result in scan_results if result.get("sourceKind") != "github_peer"]
-    peer_sources = [result for result in scan_results if result.get("sourceKind") == "github_peer"]
+    peer_sources = [
+        result
+        for result in scan_results
+        if result.get("sourceKind") in {"github_peer", "github_global"}
+    ]
+    third_party_sources = [
+        result for result in scan_results if result.get("sourceKind") == "third_party_directory"
+    ]
+    official_sources = [
+        result
+        for result in scan_results
+        if result.get("sourceKind") not in {"github_peer", "github_global", "third_party_directory"}
+    ]
     peer_repositories = {
         str(result.get("repository"))
         for result in peer_sources
@@ -304,6 +315,9 @@ def build_coverage_report(
         "successfulPeerSourceCount": sum(1 for result in peer_sources if result.get("status") in successful_statuses),
         "failedPeerSourceCount": sum(1 for result in peer_sources if result.get("status") not in successful_statuses),
         "peerRepositoryCount": len(peer_repositories),
+        "thirdPartySourceCount": len(third_party_sources),
+        "successfulThirdPartySourceCount": sum(1 for result in third_party_sources if result.get("status") in successful_statuses),
+        "failedThirdPartySourceCount": sum(1 for result in third_party_sources if result.get("status") not in successful_statuses),
         "failedSources": failed,
         "missingProviderIds": sorted(provider_ids - seen_provider_ids),
         "candidateCount": len(candidates),
@@ -398,6 +412,21 @@ def build_candidates(scan_results: list[dict], existing: list[dict] | None = Non
             "mentionedProviders",
             "mentionedModels",
             "evidenceHash",
+            "directoryProvider",
+            "directoryProviderSlug",
+            "model",
+            "modelId",
+            "modelSlug",
+            "directoryUrl",
+            "directoryFree",
+            "directoryNoCard",
+            "directoryVerified",
+            "directoryStatus",
+            "context",
+            "modality",
+            "rateLimit",
+            "tierType",
+            "directoryReferences",
         ):
             if field in result:
                 candidate[field] = result[field]

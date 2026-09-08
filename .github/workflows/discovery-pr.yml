@@ -32,6 +32,8 @@ jobs:
           --global-queries data/discovery-queries.json
           --global-max-repositories 40
           --github-max-files 40
+          --third-party-sources data/third-party-discovery-sources.json
+          --third-party-max-models 305
           --out data/candidates.json
           --scan-out data/snapshots/discovery-global-scan.json
           --max-links 5

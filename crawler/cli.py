@@ -10,7 +10,8 @@ from pathlib import Path
 from .diff import build_review_queue, compare_offers
 from .community_signals import merge_signals, validate_signals
 from .discovery import build_candidates, build_coverage_report, merge_candidates, scan_provider_sources, validate_provider_registry
-from .fetch import fetch_public_page
+from .fetch import fetch_public_page, fetch_public_text_resource
+from .freellm_net_discovery import discover_freellm_net_sources, validate_source_registry
 from .github_discovery import (
     discover_global_github_sources,
     fetch_github_document,
@@ -64,6 +65,8 @@ def main(argv: list[str] | None = None) -> int:
     discover.add_argument("--github-max-files", type=int, default=80)
     discover.add_argument("--global-queries", default=None)
     discover.add_argument("--global-max-repositories", type=int, default=20)
+    discover.add_argument("--third-party-sources", default=None)
+    discover.add_argument("--third-party-max-models", type=int, default=305)
     discover.add_argument("--timeout", type=int, default=8)
 
     report = commands.add_parser("report")
@@ -160,6 +163,25 @@ def main(argv: list[str] | None = None) -> int:
                     fetch_document=lambda url: fetch_github_document(url, timeout=args.timeout),
                     max_repositories=args.global_max_repositories,
                     max_files=args.github_max_files,
+                )
+            )
+        if args.third_party_sources:
+            third_party_sources = _read_json(args.third_party_sources)
+            source_registry_errors = validate_source_registry(third_party_sources)
+            if source_registry_errors:
+                print("invalid third-party source registry:")
+                print("\n".join(f"- {error}" for error in source_registry_errors))
+                return 1
+            discovered_scan.extend(
+                discover_freellm_net_sources(
+                    third_party_sources,
+                    fetcher=lambda url, domains: fetch_public_text_resource(
+                        url,
+                        domains,
+                        timeout=args.timeout,
+                        max_bytes=2_000_000,
+                    ),
+                    max_models=args.third_party_max_models,
                 )
             )
         if args.scan_out:
