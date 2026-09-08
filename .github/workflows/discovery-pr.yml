@@ -1,0 +1,61 @@
+name: automated-discovery-pr
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # Monday 03:00 UTC: bounded weekly global discovery
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate discovery configuration
+        run: |
+          python -m crawler.cli validate data/offers.json
+          python -m unittest discover -s tests -v
+
+      - name: Discover unknown public sources
+        run: >-
+          python -m crawler.cli discover
+          --providers data/providers.json
+          --github-peers data/github-peers.json
+          --global-queries data/discovery-queries.json
+          --global-max-repositories 40
+          --github-max-files 40
+          --out data/candidates.json
+          --scan-out data/snapshots/discovery-global-scan.json
+          --max-links 5
+          --max-pages 100
+          --timeout 8
+
+      - name: Build candidate review report
+        run: python -m crawler.cli report --candidates data/candidates.json --out docs/discovery-latest.md
+
+      - name: Open one batch review PR when the queue changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+          BRANCH: automation/discovery-${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -f data/candidates.json
+          git add docs/discovery-latest.md
+          if git diff --cached --quiet; then
+            echo "No candidate changes; no PR created."
+            exit 0
+          fi
+          git commit -m "chore: update automated discovery queue"
+          git push --set-upstream origin "$BRANCH"
+          gh pr create --base "$BASE_BRANCH" --head "$BRANCH" --title "Automated AI discovery candidates" --body-file docs/discovery-latest.md

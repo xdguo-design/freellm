@@ -316,8 +316,53 @@ def discover_github_repositories(
                 "default_branch": item.get("default_branch", "main"),
                 "description": item.get("description", ""),
                 "stars": item.get("stargazers_count", 0),
+                "query": query,
             })
     return repositories
+
+
+def discover_global_github_sources(
+    queries: list[str],
+    fetch_json,
+    fetch_document,
+    max_repositories: int = 20,
+    max_files: int = 40,
+) -> list[dict]:
+    """Discover unknown AI offer sources from bounded public GitHub searches."""
+    repositories = discover_github_repositories(
+        queries,
+        fetch_json=fetch_json,
+        max_repositories=max_repositories,
+    )
+    records: list[dict] = []
+    for repository in repositories:
+        full_name = str(repository.get("full_name") or "")
+        if full_name.count("/") != 1:
+            continue
+        owner, repo = full_name.split("/", 1)
+        peer = {
+            "id": "github-global",
+            "owner": owner,
+            "repo": repo,
+            "enabled": True,
+            "allowedHosts": sorted(DEFAULT_GITHUB_HOSTS),
+        }
+        peer_records = scan_github_peer(
+            peer,
+            fetch_json=fetch_json,
+            fetch_document=fetch_document,
+            max_files=max_files,
+        )
+        for record in peer_records:
+            record.update({
+                "sourceKind": "github_global",
+                "query": repository.get("query", ""),
+                "repositoryDescription": repository.get("description", ""),
+                "repositoryStars": repository.get("stars", 0),
+                "repositoryUrl": repository.get("html_url", ""),
+            })
+            records.append(record)
+    return records
 
 
 def scan_github_peer(

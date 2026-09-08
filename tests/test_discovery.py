@@ -16,9 +16,107 @@ from crawler.discovery import (
     matched_keywords,
 )
 from crawler.cli import main as cli_main
+from scripts.build_discovery_report import build_discovery_report
 
 
 class DiscoveryTests(unittest.TestCase):
+    def test_global_discovery_queries_cover_unknown_offer_surfaces(self):
+        queries = json.loads(Path("data/discovery-queries.json").read_text(encoding="utf-8"))
+
+        self.assertGreaterEqual(len(queries), 8)
+        joined = " ".join(queries).lower()
+        for keyword in ("free", "api", "openai-compatible", "image", "video", "coding", "rate", "catalog"):
+            self.assertIn(keyword, joined)
+        self.assertTrue(all(isinstance(query, str) and query.strip() for query in queries))
+
+    def test_global_github_discovery_scans_unknown_repository_docs(self):
+        from crawler.github_discovery import discover_global_github_sources
+
+        search_url = "https://api.github.com/search/repositories?q=free+AI+API&per_page=30"
+        repo_url = "https://api.github.com/repos/newco/free-api"
+        commit_url = "https://api.github.com/repos/newco/free-api/commits/main"
+        tree_url = "https://api.github.com/repos/newco/free-api/git/trees/main?recursive=1"
+        raw_url = "https://raw.githubusercontent.com/newco/free-api/abc123/README.md"
+
+        json_pages = {
+            search_url: {
+                "items": [{
+                    "full_name": "newco/free-api",
+                    "html_url": "https://github.com/newco/free-api",
+                    "default_branch": "main",
+                    "description": "OpenAI-compatible free API gateway",
+                    "stargazers_count": 42,
+                }]
+            },
+            repo_url: {"default_branch": "main"},
+            commit_url: {"sha": "abc123"},
+            tree_url: {"tree": [{"type": "blob", "path": "README.md"}]},
+        }
+
+        def fetch_json(url):
+            return json_pages[url]
+
+        def fetch_document(url):
+            self.assertEqual(url, raw_url)
+            return {
+                "status": "ok",
+                "content": "Free API with OpenAI-compatible endpoint and rate limit. See https://newco.ai/docs/pricing",
+                "bytes": 104,
+            }
+
+        records = discover_global_github_sources(
+            ["free AI API"],
+            fetch_json=fetch_json,
+            fetch_document=fetch_document,
+            max_repositories=1,
+            max_files=3,
+        )
+
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["sourceKind"], "github_global")
+        self.assertEqual(records[0]["repository"], "newco/free-api")
+        self.assertEqual(records[0]["path"], "README.md")
+        self.assertEqual(records[0]["commitSha"], "abc123")
+        self.assertEqual(records[0]["query"], "free AI API")
+        self.assertIn("OpenAI-compatible", records[0]["evidence"])
+
+    def test_global_candidates_merge_and_report(self):
+        candidates = build_candidates([
+            {
+                "providerId": "github-global",
+                "url": "https://raw.githubusercontent.com/newco/free-api/abc123/README.md",
+                "sourceKind": "github_global",
+                "repository": "newco/free-api",
+                "path": "README.md",
+                "commitSha": "abc123",
+                "query": "free AI API",
+                "mentionedModels": ["agnes-2.5-flash"],
+                "evidence": "OpenAI-compatible free API with rate limit",
+                "matchedKeywords": ["api_key", "rate_limit"],
+                "status": "ok",
+            },
+            {
+                "providerId": "github-global",
+                "url": "https://raw.githubusercontent.com/newco/free-api/def456/README.md",
+                "sourceKind": "github_global",
+                "repository": "newco/free-api",
+                "path": "README.md",
+                "commitSha": "def456",
+                "query": "free multimodal API",
+                "mentionedModels": ["agnes-video-v2.0"],
+                "evidence": "Free multimodal API with video model",
+                "matchedKeywords": ["free"],
+                "status": "ok",
+            },
+        ], now="2026-09-08T00:00:00+00:00")
+
+        self.assertEqual(len(candidates), 2)
+        self.assertTrue(all(item["sourceKind"] == "github_global" for item in candidates))
+        report = build_discovery_report(candidates)
+        self.assertIn("2 candidates", report)
+        self.assertIn("newco/free-api", report)
+        self.assertIn("README.md", report)
+        self.assertIn("needs_review", report)
     def test_provider_registry_covers_china_and_global_peer_sources(self):
         providers = json.loads(Path("data/providers.json").read_text(encoding="utf-8"))
         ids = {provider["id"] for provider in providers}

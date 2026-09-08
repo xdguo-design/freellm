@@ -11,8 +11,15 @@ from .diff import build_review_queue, compare_offers
 from .community_signals import merge_signals, validate_signals
 from .discovery import build_candidates, build_coverage_report, merge_candidates, scan_provider_sources, validate_provider_registry
 from .fetch import fetch_public_page
-from .github_discovery import fetch_github_document, fetch_github_json, scan_github_peer, validate_peer_registry
+from .github_discovery import (
+    discover_global_github_sources,
+    fetch_github_document,
+    fetch_github_json,
+    scan_github_peer,
+    validate_peer_registry,
+)
 from .schema import validate_offers
+from scripts.build_discovery_report import build_discovery_report
 
 
 def _read_json(path: str | Path):
@@ -55,7 +62,13 @@ def main(argv: list[str] | None = None) -> int:
     discover.add_argument("--github-peers", default=None)
     discover.add_argument("--github-max-repositories", type=int, default=20)
     discover.add_argument("--github-max-files", type=int, default=80)
+    discover.add_argument("--global-queries", default=None)
+    discover.add_argument("--global-max-repositories", type=int, default=20)
     discover.add_argument("--timeout", type=int, default=8)
+
+    report = commands.add_parser("report")
+    report.add_argument("--candidates", required=True)
+    report.add_argument("--out", required=True)
 
     coverage = commands.add_parser("coverage")
     coverage.add_argument("--providers", required=True)
@@ -135,6 +148,20 @@ def main(argv: list[str] | None = None) -> int:
                     )
                 )
             discovered_scan.extend(github_scan)
+        if args.global_queries:
+            global_queries = _read_json(args.global_queries)
+            if not isinstance(global_queries, list) or not all(isinstance(query, str) for query in global_queries):
+                print("invalid global discovery queries: expected a JSON list of strings")
+                return 1
+            discovered_scan.extend(
+                discover_global_github_sources(
+                    global_queries,
+                    fetch_json=lambda url: fetch_github_json(url, timeout=args.timeout),
+                    fetch_document=lambda url: fetch_github_document(url, timeout=args.timeout),
+                    max_repositories=args.global_max_repositories,
+                    max_files=args.github_max_files,
+                )
+            )
         if args.scan_out:
             _write_json(args.scan_out, discovered_scan)
         discovered = build_candidates(discovered_scan)
@@ -144,6 +171,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.github_peers:
             peer_documents = sum(1 for result in github_scan if result.get("path"))
             print(f"github peer documents: {peer_documents}")
+        return 0
+    if args.command == "report":
+        candidates = _read_json(args.candidates)
+        if not isinstance(candidates, list):
+            print("invalid candidates: expected a JSON list")
+            return 1
+        Path(args.out).write_text(build_discovery_report(candidates), encoding="utf-8")
+        print(f"report: {len(candidates)} candidates")
         return 0
     if args.command == "coverage":
         providers = _read_json(args.providers)
