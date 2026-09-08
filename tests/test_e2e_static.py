@@ -123,6 +123,14 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
+    def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
+        self.assertIn(
+            '<title>FreeLLM — 免费 AI 模型、API、IDE 与额度索引</title>',
+            self.html,
+        )
+        self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
+        self.assertIn('<h1>FreeLLM：发现真正好用的<span>免费 AI</span></h1>', self.html)
+
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
         self.assertIn('window.vaq = window.vaq || []', self.html)
