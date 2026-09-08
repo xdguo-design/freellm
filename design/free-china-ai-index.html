@@ -229,6 +229,11 @@
           "@type": "ListItem",
           "position": 37,
           "name": "Agnes AI · Free/default multimodal API"
+        },
+        {
+          "@type": "ListItem",
+          "position": 38,
+          "name": "StepFun · Limited-time free API models"
         }
       ]
     },
@@ -4708,6 +4713,110 @@
     "confidence": "medium",
     "confidenceReason": "The API and model IDs are documented by official Agnes sources, but rate limits and availability are explicitly changeable.",
     "notes": "Keep the API key in an environment variable such as AGNES_API_KEY; never publish a real key. Use the official model catalog for current image and video payload formats."
+  },
+  {
+    "date": "2026-09-08",
+    "lastVerifiedAt": "2026-09-08",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check StepFun and each model's official terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "id": "stepfun-limited-time-free",
+    "order": 38,
+    "name": "StepFun limited-time free models",
+    "providerMark": "ST",
+    "provider": "StepFun",
+    "providerMeta": "StepFun 阶跃星辰 · China",
+    "providerMetaEn": "StepFun · China",
+    "model": "step-audio-r1.1 · step-1x-edit · step-2x-large",
+    "modelMeta": "Official API models marked limited free",
+    "type": [
+      "api",
+      "free"
+    ],
+    "usageGuide": {
+      "summary": "通过 StepFun 开放平台 API 调用官方定价页标注为限免中的模型；其他模型按量计费",
+      "summaryEn": "Call StepFun models marked limited free on the official pricing page; other models are pay-as-you-go",
+      "prerequisites": [
+        "StepFun account",
+        "StepFun API key"
+      ],
+      "steps": [
+        "Create a StepFun Open Platform account and API key",
+        "Use the OpenAI-compatible chat endpoint with a currently limited-free model ID",
+        "Recheck the official pricing page before use because the limited-free label may change"
+      ],
+      "endpoint": "https://api.stepfun.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "API key via Authorization: Bearer header",
+      "examples": {
+        "curl": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://platform.stepfun.com/docs/zh/quickstart/overview"
+    },
+    "kicker": "LIMITED-TIME FREE API",
+    "badges": [
+      "LIMITED-TIME FREE",
+      "CHINA API",
+      "RECHECK PRICING"
+    ],
+    "freeSummary": "StepFun 官方定价页当前将 step-audio-r1.1、step-1x-edit、step-2x-large 标注为限免中",
+    "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
+    "validitySummary": "Limited-time offer; model availability and free status can change",
+    "accessSummary": "StepFun Open Platform account and API key",
+    "checkedSummary": "2026-09-08 / official StepFun pricing and API docs",
+    "title": "StepFun · Limited-time free API models",
+    "titleZh": "StepFun · 限时免费 API 模型",
+    "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
+    "whyEn": "StepFun's official pricing page marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free, while its API docs provide an OpenAI-compatible chat endpoint. This entry covers only those limited-free models, not Step Plan subscriptions or other paid models.",
+    "mechanism": "Selected models temporarily marked limited free on the official API pricing page",
+    "mechanismEn": "Selected models temporarily marked limited free on the official API pricing page",
+    "validity": "Limited-time status; recheck the official pricing page before relying on it",
+    "access": "StepFun Open Platform account and API key; China and international platform availability may differ",
+    "command": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://platform.stepfun.com/",
+    "registerLabel": "StepFun 开放平台",
+    "registerLabelEn": "Open StepFun Platform",
+    "links": [
+      [
+        "定价与限速（官方文档）",
+        "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      ],
+      [
+        "快速开始（官方文档）",
+        "https://platform.stepfun.com/docs/zh/quickstart/overview"
+      ],
+      [
+        "对话补全 API（官方文档）",
+        "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "StepFun Open Platform; region and account requirements may vary",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": null,
+      "unit": "model",
+      "period": "while officially marked limited free"
+    },
+    "quota": "The official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free; no fixed request quota is stated on the captured page",
+    "renewal": "No fixed renewal window; limited-free status can end or change",
+    "sourceUrls": [
+      "https://platform.stepfun.com/docs/zh/guides/pricing/details",
+      "https://platform.stepfun.com/docs/zh/quickstart/overview",
+      "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
+    ],
+    "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
+    "confidence": "high",
+    "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
+    "notes": "Do not describe Step Plan subscriptions as free. Keep STEP_API_KEY out of public code and verify the official pricing page before use."
   }
 ]
   </script>

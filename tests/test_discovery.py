@@ -140,6 +140,7 @@ class DiscoveryTests(unittest.TestCase):
             "cursor",
             "amazon-q-developer",
             "google-antigravity",
+            "stepfun",
         }:
             self.assertIn(provider_id, ids)
 

@@ -42,6 +42,23 @@ def test_offer_categories_match_existing_catalog_semantics():
     assert "student" in categorize_offer(offers["github-copilot-free"])
 
 
+def test_stepfun_offer_covers_official_limited_free_models_and_api():
+    offers = {offer["id"]: offer for offer in read_offers()}
+
+    stepfun = offers["stepfun-limited-time-free"]
+    assert stepfun["provider"] == "StepFun"
+    assert stepfun["productType"] == "api"
+    assert stepfun["freeMechanism"] == "limited_time_free"
+    assert set(("api", "free")) <= set(stepfun["type"])
+    for model_id in ("step-audio-r1.1", "step-1x-edit", "step-2x-large"):
+        assert model_id in stepfun["model"]
+    assert stepfun["usageGuide"]["endpoint"] == "https://api.stepfun.com/v1/chat/completions"
+    assert stepfun["usageGuide"]["docsUrl"] == "https://platform.stepfun.com/docs/zh/quickstart/overview"
+    assert "https://platform.stepfun.com/docs/zh/guides/pricing/details" in stepfun["sourceUrls"]
+    assert "${STEP_API_KEY}" in stepfun["usageGuide"]["examples"]["curl"]
+    assert "api" in categorize_offer(stepfun)
+
+
 def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     offers = {offer["id"]: offer for offer in read_offers()}
 

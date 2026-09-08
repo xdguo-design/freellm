@@ -56,6 +56,7 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('"id": "doubao"', self.html)
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
         self.assertIn('"id": "agnes-ai-free"', self.html)
+        self.assertIn('"id": "stepfun-limited-time-free"', self.html)
 
     def test_external_signals_are_available_for_current_offer_set(self):
         offer_ids = {offer["id"] for offer in read_offers()}
