@@ -42,6 +42,27 @@ def test_offer_categories_match_existing_catalog_semantics():
     assert "student" in categorize_offer(offers["github-copilot-free"])
 
 
+def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
+    offers = {offer["id"]: offer for offer in read_offers()}
+
+    agnes = offers["agnes-ai-free"]
+    assert agnes["provider"] == "Agnes AI"
+    assert agnes["productType"] == "api"
+    assert set(("api", "free")) <= set(agnes["type"])
+    assert "model_api" in agnes["capabilities"]
+    for model_id in (
+        "agnes-2.5-flash",
+        "agnes-image-2.1-flash",
+        "agnes-video-v2.0",
+    ):
+        assert model_id in agnes["model"]
+    assert agnes["usageGuide"]["endpoint"] == "https://apihub.agnes-ai.com/v1/chat/completions"
+    assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.com/en/docs/overview"
+    assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
+    assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
+    assert "api" in categorize_offer(agnes)
+
+
 def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_path):
     result = build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     offers = read_offers()
@@ -54,6 +75,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert result.offer_count == len(offers)
     assert result.category_count == len(non_empty_categories)
     assert (tmp_path / "offers" / "codebuddy" / "index.html").is_file()
+    assert (tmp_path / "offers" / "agnes-ai-free" / "index.html").is_file()
     assert (tmp_path / "category" / "free-ide" / "index.html").is_file()
     assert (tmp_path / "guides" / "free-llm" / "index.html").is_file()
 
@@ -100,6 +122,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://freellm.top/" in sitemap
     assert "https://freellm.top/offers/codebuddy/" in sitemap
+    assert "https://freellm.top/offers/agnes-ai-free/" in sitemap
     assert "https://freellm.top/category/free-ide/" in sitemap
     assert "https://freellm.top/guides/free-llm/" in sitemap
     assert sitemap.count("<loc>") == 2 + result.offer_count + result.category_count

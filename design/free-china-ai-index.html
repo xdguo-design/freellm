@@ -224,6 +224,11 @@
           "@type": "ListItem",
           "position": 36,
           "name": "ModelScope · API-Inference free calls"
+        },
+        {
+          "@type": "ListItem",
+          "position": 37,
+          "name": "Agnes AI · Free/default multimodal API"
         }
       ]
     },
@@ -4604,6 +4609,105 @@
     "evidence": "官方文档：「API-Inference面向ModelScope注册用户免费提供」「免费推理API由阿里云提供算力支持，要求您的ModelScope账号必须首先绑定阿里云账号…对应云账号需已通过实名认证」「魔粒扣减分为三档：轻量模型（0.5 魔粒/次），主流模型（1 魔粒/次），旗舰模型（2 魔粒/次）」。",
     "confidence": "high",
     "notes": "China-first entry. Matches the freellmapi peer lead that ModelScope free inference 'needs Aliyun cn binding'; now verified against official ModelScope docs."
+  },
+  {
+    "date": "2026-09-08",
+    "lastVerifiedAt": "2026-09-08",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Agnes AI and each model's official terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "id": "agnes-ai-free",
+    "order": 37,
+    "name": "Agnes AI Free/default API",
+    "providerMark": "AG",
+    "provider": "Agnes AI",
+    "providerMeta": "Agnes AI · Global",
+    "providerMetaEn": "Agnes AI · Global",
+    "model": "agnes-2.5-flash · agnes-1.5-flash · agnes-2.0-flash · agnes-image-2.0-flash · agnes-image-2.1-flash · agnes-video-v2.0",
+    "modelMeta": "Text · image · video via OpenAI-compatible API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "usageGuide": {
+      "summary": "通过 Agnes AI 的 OpenAI 兼容 API 调用文本、图片和视频模型；免费/default 层受速率限制",
+      "summaryEn": "Call Agnes AI text, image and video models through its OpenAI-compatible API; free/default access is rate limited",
+      "prerequisites": [
+        "Agnes AI account",
+        "Agnes AI API key"
+      ],
+      "steps": [
+        "Create an Agnes AI account and API key in the official console",
+        "Send a request to the OpenAI-compatible endpoint with one of the listed model IDs",
+        "Check the official model catalog for current rate limits and image/video request formats"
+      ],
+      "endpoint": "https://apihub.agnes-ai.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "API key via Authorization: Bearer header",
+      "examples": {
+        "curl": "curl https://apihub.agnes-ai.com/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://agnes-ai.com/en/docs/overview"
+    },
+    "kicker": "FREE API",
+    "badges": [
+      "FREE / DEFAULT",
+      "TEXT · IMAGE · VIDEO",
+      "RATE LIMITED"
+    ],
+    "freeSummary": "Free/default API access for selected Agnes models with public rate limits",
+    "freeSummaryEn": "Free/default API access for selected Agnes models with public rate limits",
+    "validitySummary": "Ongoing while the official free/default program is available; limits can change",
+    "accessSummary": "Agnes AI account and API key",
+    "checkedSummary": "2026-09-08 / official Agnes docs and model catalog",
+    "title": "Agnes AI · Free/default multimodal API",
+    "titleZh": "Agnes AI · 免费/默认多模态 API",
+    "why": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方模型目录列出文本、图片和视频模型，并给出 free/default 层的公开速率限制。它适合作为一个可直接试用的多模态 API 入口，但不是无限免费承诺。",
+    "whyEn": "Agnes AI documents an OpenAI-compatible API, and its official model catalog lists text, image and video models with public free/default rate limits. It is a practical multimodal API entry point, not an unlimited-free promise.",
+    "mechanism": "Free/default access with endpoint and model-specific rate limits",
+    "mechanismEn": "Free/default access with endpoint- and model-specific rate limits",
+    "validity": "Ongoing while the official program remains available; current limits and model availability may change",
+    "access": "Agnes AI account and API key; check the official console for regional and account eligibility",
+    "command": "curl https://apihub.agnes-ai.com/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://agnes-ai.com/",
+    "registerLabel": "Agnes AI 官方入口",
+    "registerLabelEn": "Open Agnes AI",
+    "links": [
+      [
+        "API 概览（官方文档）",
+        "https://agnes-ai.com/en/docs/overview"
+      ],
+      [
+        "模型目录与速率限制（官方）",
+        "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
+      ]
+    ],
+    "originCountry": "Global",
+    "availability": "Global; account, model and regional availability may vary",
+    "freeMechanism": "permanent",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "rate_limited",
+      "amount": null,
+      "unit": "requests",
+      "period": "model-specific"
+    },
+    "quota": "Free/default public limits are model-specific; the official catalog currently lists text 20 executable RPM, image 20/10/1/1 executable RPM by resolution, and video 1 executable RPM",
+    "renewal": "No fixed quota window is stated; access is governed by current model-specific rate limits",
+    "sourceUrls": [
+      "https://agnes-ai.com/en/docs/overview",
+      "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
+    ],
+    "evidence": "Agnes 官方文档说明其提供 OpenAI 兼容 API，API Hub Base URL 为 https://apihub.agnes-ai.com/v1；AgnesAI-Labs 官方模型目录列出 agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash 和 agnes-video-v2.0，并记录 Free/default 层的模型级速率限制。目录同时注明限额和可用性可能变化。",
+    "confidence": "medium",
+    "confidenceReason": "The API and model IDs are documented by official Agnes sources, but rate limits and availability are explicitly changeable.",
+    "notes": "Keep the API key in an environment variable such as AGNES_API_KEY; never publish a real key. Use the official model catalog for current image and video payload formats."
   }
 ]
   </script>
