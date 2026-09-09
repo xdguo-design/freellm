@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free OpenAI-Compatible APIs | 免费 OpenAI 兼容 API · FreeLLM</title>
+  <meta name="description" content="Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links. 整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。">
+  <link rel="canonical" href="https://freellm.top/guides/free-openai-compatible-apis/">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Free OpenAI-Compatible APIs | 免费 OpenAI 兼容 API · FreeLLM">
+<meta property="og:description" content="Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links. 整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。">
+<meta property="og:url" content="https://freellm.top/guides/free-openai-compatible-apis/">
+<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+<meta property="og:image:alt" content="Free OpenAI-Compatible APIs | 免费 OpenAI 兼容 API · FreeLLM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free OpenAI-Compatible APIs | 免费 OpenAI 兼容 API · FreeLLM">
+<meta name="twitter:description" content="Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links. 整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。">
+<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Free OpenAI-Compatible APIs | 免费 OpenAI 兼容 API · FreeLLM", "description": "Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links. 整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。", "url": "https://freellm.top/guides/free-openai-compatible-apis/", "inLanguage": ["zh-CN", "en"], "isPartOf": {"@type": "WebSite", "name": "FreeLLM", "url": "https://freellm.top/"}, "mainEntity": {"@type": "ItemList", "numberOfItems": 16, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "LongCat-2.0 · API + open weights", "url": "https://freellm.top/offers/longcat-2-0/"}, {"@type": "ListItem", "position": 2, "name": "SenseNova · Token Plan 公测免费", "url": "https://freellm.top/offers/sensecore/"}, {"@type": "ListItem", "position": 3, "name": "DeepSeek API · low cost, not free", "url": "https://freellm.top/offers/deepseek/"}, {"@type": "ListItem", "position": 4, "name": "OpenCode Zen · free model pool", "url": "https://freellm.top/offers/opencode-zen-free/"}, {"@type": "ListItem", "position": 5, "name": "通义千问 · 阿里云百炼新人免费额度", "url": "https://freellm.top/offers/aliyun-qwen-free-quota/"}, {"@type": "ListItem", "position": 6, "name": "Google AI Studio · Gemini API free tier", "url": "https://freellm.top/offers/google-ai-studio-free/"}, {"@type": "ListItem", "position": 7, "name": "Groq · free plan rate limits", "url": "https://freellm.top/offers/groq-free/"}, {"@type": "ListItem", "position": 8, "name": "Cerebras · free inference credits", "url": "https://freellm.top/offers/cerebras-free/"}, {"@type": "ListItem", "position": 9, "name": "OpenRouter · free model variants", "url": "https://freellm.top/offers/openrouter-free/"}, {"@type": "ListItem", "position": 10, "name": "Mistral · La Plateforme free mode", "url": "https://freellm.top/offers/mistral-free-mode/"}, {"@type": "ListItem", "position": 11, "name": "Cohere · free trial API key", "url": "https://freellm.top/offers/cohere-trial-key/"}, {"@type": "ListItem", "position": 12, "name": "Hugging Face · Inference Providers free tier", "url": "https://freellm.top/offers/hf-inference-free/"}, {"@type": "ListItem", "position": 13, "name": "SiliconFlow · ¥0 listed models", "url": "https://freellm.top/offers/siliconflow-free-models/"}, {"@type": "ListItem", "position": 14, "name": "ModelScope · API-Inference free calls", "url": "https://freellm.top/offers/modelscope-api-inference-free/"}, {"@type": "ListItem", "position": 15, "name": "Agnes AI · Free/default multimodal API", "url": "https://freellm.top/offers/agnes-ai-free/"}, {"@type": "ListItem", "position": 16, "name": "StepFun · Limited-time free API models", "url": "https://freellm.top/offers/stepfun-limited-time-free/"}]}}</script>
+  <style>
+    :root { color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; }
+    * { box-sizing: border-box; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    a { color: var(--blue); }
+    header, main, footer { background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }
+    header { color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }
+    header a { color: white; }
+    h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }
+    h2 { margin: 0 0 10px; font-size: clamp(24px, 4vw, 34px); }
+    p { max-width: 900px; }
+    .crumb, .eyebrow, th { font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .lead { max-width: 840px; color: #dbe6ff; font-size: 17px; }
+    .callout { margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }
+    section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 16px 0 8px; }
+    table { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); background: var(--soft); }
+    tr:last-child td { border-bottom: 0; }
+    td small { display: block; margin-top: 4px; color: var(--muted); }
+    .link-list { padding-left: 1.3em; }
+    footer { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body data-static-locale="true">
+  <header>
+    <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / Guides</div>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">免费 OpenAI 兼容 API</span><span lang="en">Free OpenAI-Compatible APIs</span></h1>
+    <p class="lead"><span lang="zh-CN">如果你的工具支持 OpenAI SDK，通常只需要替换 base URL、API key 和模型 ID。</span><span lang="en">If your tool supports the OpenAI SDK shape, you usually only need to replace the base URL, API key and model ID.</span></p>
+    <div class="callout"><span lang="zh-CN">数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。</span><span lang="en">Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.</span></div>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / verified directory</div>
+      <h2><span lang="zh-CN">可用入口和关键参数</span><span lang="en">Available entries and key parameters</span></h2>
+      <p><span lang="zh-CN">当前页面收录 16 条记录。每条记录都能回到 FreeLLM 详情或目录来源。</span><span lang="en">This page contains 16 records. Each row links back to a FreeLLM detail page or directory source.</span></p>
+      <div class="table-wrap"><table><thead><tr><th>Provider / model</th><th>Free terms</th><th>Access</th><th>Official links</th></tr></thead><tbody><tr>
+      <td><a href="/offers/longcat-2-0/"><strong><span lang="zh-CN">LongCat-2.0 · API + open weights</span><span lang="en">LongCat-2.0 · API + open weights</span></strong></a><small><span lang="zh-CN">LongCat-2.0</span><span lang="en">LongCat-2.0</span></small></td>
+      <td><span lang="zh-CN">API 免费额度未确认；权重免费，算力不免费</span><span lang="en">API access plus downloadable open weights</span></td>
+      <td><span lang="zh-CN">API Email / phone；权重 Global</span><span lang="en">API email / phone; weights global download path</span></td>
+      <td><a href="https://longcat.ai/platform/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/longcat-2-0/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/sensecore/"><strong><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></strong></a><small><span lang="zh-CN">SenseNova 6.8 Flash Lite · SenseNova U1 Fast</span><span lang="en">SenseNova 6.8 Flash Lite · SenseNova U1 Fast</span></small></td>
+      <td><span lang="zh-CN">公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡</span><span lang="en">Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required</span></td>
+      <td><span lang="zh-CN">China account</span><span lang="en">China account</span></td>
+      <td><a href="https://platform.sensenova.cn/token-plan" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/sensecore/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/deepseek/"><strong><span lang="zh-CN">DeepSeek API · low cost, not free</span><span lang="en">DeepSeek API · low cost, not free</span></strong></a><small><span lang="zh-CN">DeepSeek V4 Flash</span><span lang="en">DeepSeek V4 Flash</span></small></td>
+      <td><span lang="zh-CN">Very low unit price; not a free quota</span><span lang="en">Very low unit price; not a free quota</span></td>
+      <td><span lang="zh-CN">International API</span><span lang="en">International API</span></td>
+      <td><a href="https://platform.deepseek.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/deepseek/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/opencode-zen-free/"><strong><span lang="zh-CN">OpenCode Zen · free model pool</span><span lang="en">OpenCode Zen · free model pool</span></strong></a><small><span lang="zh-CN">Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark</span><span lang="en">Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark</span></small></td>
+      <td><span lang="zh-CN">Selected Zen models · input, output and cache listed as Free</span><span lang="en">Selected Zen models · input, output and cache listed as Free</span></td>
+      <td><span lang="zh-CN">Global / OpenCode account</span><span lang="en">Global / OpenCode account</span></td>
+      <td><a href="https://opencode.ai/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/opencode-zen-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/aliyun-qwen-free-quota/"><strong><span lang="zh-CN">通义千问 · 阿里云百炼新人免费额度</span><span lang="en">Offer details</span></strong></a><small><span lang="zh-CN">Qwen models · qwen-max and more</span><span lang="en">Qwen models · qwen-max and more</span></small></td>
+      <td><span lang="zh-CN">New-user free quota · usually 1,000,000 tokens per model</span><span lang="en">New-user free quota · usually 1,000,000 tokens per model</span></td>
+      <td><span lang="zh-CN">Beijing region models</span><span lang="en">Beijing region models</span></td>
+      <td><a href="https://bailian.console.aliyun.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/aliyun-qwen-free-quota/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/google-ai-studio-free/"><strong><span lang="zh-CN">Google AI Studio · Gemini API free tier</span><span lang="en">Google AI Studio · Gemini API free tier</span></strong></a><small><span lang="zh-CN">Gemini 3.8 Flash (gemini-3.8-flash) and other Gemini models on the free tier</span><span lang="en">Gemini 3.8 Flash (gemini-3.8-flash) and other Gemini models on the free tier</span></small></td>
+      <td><span lang="zh-CN">Free tier: input, output and context caching listed as Free of charge</span><span lang="en">Free tier: input, output and context caching listed as Free of charge</span></td>
+      <td><span lang="zh-CN">Google account; availability may vary by region</span><span lang="en">Google account; availability may vary by region</span></td>
+      <td><a href="https://aistudio.google.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/google-ai-studio-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/groq-free/"><strong><span lang="zh-CN">Groq · free plan rate limits</span><span lang="en">Groq · free plan rate limits</span></strong></a><small><span lang="zh-CN">gpt-oss-120b / gpt-oss-20b · qwen3.x-27b · groq/compound · llama-prompt-guard · whisper-large-v3</span><span lang="en">gpt-oss-120b / gpt-oss-20b · qwen3.x-27b · groq/compound · llama-prompt-guard · whisper-large-v3</span></small></td>
+      <td><span lang="zh-CN">Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)</span><span lang="en">Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)</span></td>
+      <td><span lang="zh-CN">Groq account; rate limits apply at organization level</span><span lang="en">Groq account; rate limits apply at organization level</span></td>
+      <td><a href="https://console.groq.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/groq-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/cerebras-free/"><strong><span lang="zh-CN">Cerebras · free inference credits</span><span lang="en">Cerebras · free inference credits</span></strong></a><small><span lang="zh-CN">All Cerebras-powered hosted models while free credits last</span><span lang="en">All Cerebras-powered hosted models while free credits last</span></small></td>
+      <td><span lang="zh-CN">Free trial: $5 in free credits after account creation</span><span lang="en">Free trial: $5 in free credits after account creation</span></td>
+      <td><span lang="zh-CN">Cerebras account</span><span lang="en">Cerebras account</span></td>
+      <td><a href="https://cloud.cerebras.ai/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/cerebras-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/openrouter-free/"><strong><span lang="zh-CN">OpenRouter · free model variants</span><span lang="en">OpenRouter · free model variants</span></strong></a><small><span lang="zh-CN">Model variants whose ID ends in :free (free model variants)</span><span lang="en">Model variants whose ID ends in :free (free model variants)</span></small></td>
+      <td><span lang="zh-CN">:free variants: 20 req/min; 50 req/day (under 10 credits purchased) or 1000 req/day (10+ credits)</span><span lang="en">free variants: 20 req/min; 50 req/day (under 10 credits purchased) or 1000 req/day (10+ credits)</span></td>
+      <td><span lang="zh-CN">OpenRouter account; daily caps depend on lifetime credit purchases</span><span lang="en">OpenRouter account; daily caps depend on lifetime credit purchases</span></td>
+      <td><a href="https://openrouter.ai/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/openrouter-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/mistral-free-mode/"><strong><span lang="zh-CN">Mistral · La Plateforme free mode</span><span lang="en">Mistral · La Plateforme free mode</span></strong></a><small><span lang="zh-CN">Mistral API models under free mode rate limits</span><span lang="en">Mistral API models under free mode rate limits</span></small></td>
+      <td><span lang="zh-CN">Free mode (default): lowest rate limits, intended for evaluation and prototyping</span><span lang="en">Free mode (default): lowest rate limits, intended for evaluation and prototyping</span></td>
+      <td><span lang="zh-CN">Mistral account</span><span lang="en">Mistral account</span></td>
+      <td><a href="https://console.mistral.ai/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/mistral-free-mode/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/cohere-trial-key/"><strong><span lang="zh-CN">Cohere · free trial API key</span><span lang="en">Cohere · free trial API key</span></strong></a><small><span lang="zh-CN">Command chat models (trial key rate limits)</span><span lang="en">Command chat models (trial key rate limits)</span></small></td>
+      <td><span lang="zh-CN">Trial API key: free, rate-limited, not permitted for production or commercial use</span><span lang="en">Trial API key: free, rate-limited, not permitted for production or commercial use</span></td>
+      <td><span lang="zh-CN">Cohere personal account</span><span lang="en">Cohere personal account</span></td>
+      <td><a href="https://dashboard.cohere.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/cohere-trial-key/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/hf-inference-free/"><strong><span lang="zh-CN">Hugging Face · Inference Providers free tier</span><span lang="en">Hugging Face · Inference Providers free tier</span></strong></a><small><span lang="zh-CN">Open models served via multi-provider inference (chat, embeddings, image and more)</span><span lang="en">Open models served via multi-provider inference (chat, embeddings, image and more)</span></small></td>
+      <td><span lang="zh-CN">Generous free tier included; additional credits for PRO users and organizations</span><span lang="en">Generous free tier included; additional credits for PRO users and organizations</span></td>
+      <td><span lang="zh-CN">Hugging Face account</span><span lang="en">Hugging Face account</span></td>
+      <td><a href="https://huggingface.co/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/hf-inference-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/siliconflow-free-models/"><strong><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></strong></a><small><span lang="zh-CN">PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI bge-m3 / bge-reranker-v2-m3 / bge-large · Kwai-Kolors (¥0 listed)</span><span lang="en">PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI bge-m3 / bge-reranker-v2-m3 / bge-large · Kwai-Kolors (¥0 listed)</span></small></td>
+      <td><span lang="zh-CN">Selected models listed at ¥0 (free) on the official price list, plus paid models</span><span lang="en">Selected models listed at ¥0 (free) on the official price list, plus paid models</span></td>
+      <td><span lang="zh-CN">SiliconFlow account; China registration</span><span lang="en">SiliconFlow account; China registration</span></td>
+      <td><a href="https://cloud.siliconflow.cn/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/siliconflow-free-models/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/modelscope-api-inference-free/"><strong><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></strong></a><small><span lang="zh-CN">Hosted open models (LLM · MLLM · text-to-image) marked with the API-Inference badge</span><span lang="en">Hosted open models (LLM · MLLM · text-to-image) marked with the API-Inference badge</span></small></td>
+      <td><span lang="zh-CN">API-Inference is free for registered users; dynamic rate limits and 魔粒 (MoLi) deduction apply</span><span lang="en">API-Inference is free for registered users; dynamic rate limits and MoLi deduction apply</span></td>
+      <td><span lang="zh-CN">ModelScope account + Aliyun binding + real-name verification</span><span lang="en">ModelScope account + Aliyun binding + real-name verification</span></td>
+      <td><a href="https://modelscope.cn/my/myaccesstoken" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/modelscope-api-inference-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/agnes-ai-free/"><strong><span lang="zh-CN">Agnes AI · 免费/默认多模态 API</span><span lang="en">Agnes AI · Free/default multimodal API</span></strong></a><small><span lang="zh-CN">agnes-2.5-flash · agnes-1.5-flash · agnes-2.0-flash · agnes-image-2.0-flash · agnes-image-2.1-flash · agnes-video-v2.0</span><span lang="en">agnes-2.5-flash · agnes-1.5-flash · agnes-2.0-flash · agnes-image-2.0-flash · agnes-image-2.1-flash · agnes-video-v2.0</span></small></td>
+      <td><span lang="zh-CN">Free/default API access for selected Agnes models with public rate limits</span><span lang="en">Free/default API access for selected Agnes models with public rate limits</span></td>
+      <td><span lang="zh-CN">Agnes AI account and API key</span><span lang="en">Agnes AI account and API key</span></td>
+      <td><a href="https://agnes-ai.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/agnes-ai-free/">FreeLLM record ↗</a></td>
+    </tr><tr>
+      <td><a href="/offers/stepfun-limited-time-free/"><strong><span lang="zh-CN">StepFun · 限时免费 API 模型</span><span lang="en">StepFun · Limited-time free API models</span></strong></a><small><span lang="zh-CN">step-audio-r1.1 · step-1x-edit · step-2x-large</span><span lang="en">step-audio-r1.1 · step-1x-edit · step-2x-large</span></small></td>
+      <td><span lang="zh-CN">StepFun 官方定价页当前将 step-audio-r1.1、step-1x-edit、step-2x-large 标注为限免中</span><span lang="en">StepFun&#x27;s official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free</span></td>
+      <td><span lang="zh-CN">StepFun Open Platform account and API key</span><span lang="en">StepFun Open Platform account and API key</span></td>
+      <td><a href="https://platform.stepfun.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/stepfun-limited-time-free/">FreeLLM record ↗</a></td>
+    </tr></tbody></table></div>
+    </section>
+    <section>
+      <div class="eyebrow">02 / related pages</div>
+      <h2><span lang="zh-CN">继续浏览</span><span lang="en">Continue exploring</span></h2>
+      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">免费 OpenAI 兼容 API</span><span lang="en">Free OpenAI-Compatible APIs</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 OpenAI 兼容 API</span><span lang="en">Free OpenAI-Compatible APIs</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">免费 OpenAI 兼容 API</span><span lang="en">Free OpenAI-Compatible APIs</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">免费 OpenAI 兼容 API</span><span lang="en">Free OpenAI-Compatible APIs</span></a></li></ul>
+    </section>
+  </main>
+  <footer>
+    <p><strong><span lang="zh-CN">免责声明</span><span lang="en">Disclaimer</span>：</strong><span lang="zh-CN">免费访问不代表无限制或适合生产环境，请在使用前核对官方来源。</span><span lang="en">Free access does not mean unlimited or production-ready; verify the official source before use.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 首页 →</span><span lang="en">Return to FreeLLM home →</span></a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1773 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open-Weight AI Models | 开源权重模型 · FreeLLM</title>
+  <meta name="description" content="Browse open-weight models by model and provider, with context, modality, status and directory sources. 按模型和厂商浏览开放权重模型，查看上下文、模态、状态和目录来源。">
+  <link rel="canonical" href="https://freellm.top/guides/open-weight-models/">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Open-Weight AI Models | 开源权重模型 · FreeLLM">
+<meta property="og:description" content="Browse open-weight models by model and provider, with context, modality, status and directory sources. 按模型和厂商浏览开放权重模型，查看上下文、模态、状态和目录来源。">
+<meta property="og:url" content="https://freellm.top/guides/open-weight-models/">
+<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+<meta property="og:image:alt" content="Open-Weight AI Models | 开源权重模型 · FreeLLM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Open-Weight AI Models | 开源权重模型 · FreeLLM">
+<meta name="twitter:description" content="Browse open-weight models by model and provider, with context, modality, status and directory sources. 按模型和厂商浏览开放权重模型，查看上下文、模态、状态和目录来源。">
+<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Open-Weight AI Models | 开源权重模型 · FreeLLM", "description": "Browse open-weight models by model and provider, with context, modality, status and directory sources. 按模型和厂商浏览开放权重模型，查看上下文、模态、状态和目录来源。", "url": "https://freellm.top/guides/open-weight-models/", "inLanguage": ["zh-CN", "en"], "isPartOf": {"@type": "WebSite", "name": "FreeLLM", "url": "https://freellm.top/"}, "mainEntity": {"@type": "ItemList", "numberOfItems": 239, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "agnes-1.5-flash", "url": "https://freellm.net/models/agnes-ai/agnes-1-5-flash"}, {"@type": "ListItem", "position": 2, "name": "agnes-2.0-flash", "url": "https://freellm.net/models/agnes-ai/agnes-2-0-flash"}, {"@type": "ListItem", "position": 3, "name": "agnes-image-2.0-flash", "url": "https://freellm.net/models/agnes-ai/agnes-image-2-0-flash"}, {"@type": "ListItem", "position": 4, "name": "agnes-image-2.1-flash", "url": "https://freellm.net/models/agnes-ai/agnes-image-2-1-flash"}, {"@type": "ListItem", "position": 5, "name": "agnes-video-v2.0", "url": "https://freellm.net/models/agnes-ai/agnes-video-v2-0"}, {"@type": "ListItem", "position": 6, "name": "LongCat-2.0", "url": "https://freellm.net/models/cline/cline-free-longcat-2-0"}, {"@type": "ListItem", "position": 7, "name": "Muse Spark 1.3 Contributor", "url": "https://freellm.net/models/cline/cline-free-muse-spark-1-3-contributor"}, {"@type": "ListItem", "position": 8, "name": "Solar Pro 4", "url": "https://freellm.net/models/cline/cline-free-solar-pro4"}, {"@type": "ListItem", "position": 9, "name": "deepseek-v4-flash", "url": "https://freellm.net/models/cline/deepseek-deepseek-v4-flash"}, {"@type": "ListItem", "position": 10, "name": "laguna-s-2.1:free", "url": "https://freellm.net/models/cline/poolside-laguna-s-2-1"}, {"@type": "ListItem", "position": 11, "name": "glm-5.3-flash", "url": "https://freellm.net/models/cline/z-ai-glm-5-3-flash"}, {"@type": "ListItem", "position": 12, "name": "@cf/aisingapore/gemma-sea-lion-v4-27b-it", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it"}, {"@type": "ListItem", "position": 13, "name": "@cf/baai/bge-base-en-v1.5", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-base-en-v1-5"}, {"@type": "ListItem", "position": 14, "name": "@cf/baai/bge-large-en-v1.5", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-large-en-v1-5"}, {"@type": "ListItem", "position": 15, "name": "@cf/baai/bge-m3", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-m3"}, {"@type": "ListItem", "position": 16, "name": "@cf/baai/bge-small-en-v1.5", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-small-en-v1-5"}, {"@type": "ListItem", "position": 17, "name": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b"}, {"@type": "ListItem", "position": 18, "name": "@cf/google/embeddinggemma-300m", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-google-embeddinggemma-300m"}, {"@type": "ListItem", "position": 19, "name": "@cf/google/gemma-2b-it-lora", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-2b-it-lora"}, {"@type": "ListItem", "position": 20, "name": "@cf/google/gemma-4-26b-a4b-it", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it"}, {"@type": "ListItem", "position": 21, "name": "@cf/google/gemma-7b-it-lora", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-7b-it-lora"}, {"@type": "ListItem", "position": 22, "name": "@cf/ibm-granite/granite-4.0-h-micro", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro"}, {"@type": "ListItem", "position": 23, "name": "@cf/meta/llama-3.1-8b-instruct-fp8", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8"}, {"@type": "ListItem", "position": 24, "name": "@cf/meta/llama-3.2-1b-instruct", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct"}, {"@type": "ListItem", "position": 25, "name": "@cf/meta/llama-3.2-3b-instruct", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct"}, {"@type": "ListItem", "position": 26, "name": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast"}, {"@type": "ListItem", "position": 27, "name": "@cf/meta/llama-4-scout-17b-16e-instruct", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct"}, {"@type": "ListItem", "position": 28, "name": "@cf/meta/llama-guard-3-8b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-guard-3-8b"}, {"@type": "ListItem", "position": 29, "name": "@cf/meta-llama/llama-2-7b-chat-hf-lora", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora"}, {"@type": "ListItem", "position": 30, "name": "@cf/mistral/mistral-7b-instruct-v0.2-lora", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora"}, {"@type": "ListItem", "position": 31, "name": "@cf/mistralai/mistral-small-3.1-24b-instruct", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct"}, {"@type": "ListItem", "position": 32, "name": "@cf/moondream/moondream3.1-9B-A2B", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b"}, {"@type": "ListItem", "position": 33, "name": "@cf/moonshotai/kimi-k2.6", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-6"}, {"@type": "ListItem", "position": 34, "name": "@cf/moonshotai/kimi-k2.7-code", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code"}, {"@type": "ListItem", "position": 35, "name": "@cf/nvidia/nemotron-3-120b-a12b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b"}, {"@type": "ListItem", "position": 36, "name": "@cf/openai/gpt-oss-120b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-120b"}, {"@type": "ListItem", "position": 37, "name": "@cf/openai/gpt-oss-20b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-20b"}, {"@type": "ListItem", "position": 38, "name": "@cf/pfnet/plamo-embedding-1b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b"}, {"@type": "ListItem", "position": 39, "name": "@cf/qwen/qwen2.5-coder-32b-instruct", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct"}, {"@type": "ListItem", "position": 40, "name": "@cf/qwen/qwen3-30b-a3b-fp8", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8"}, {"@type": "ListItem", "position": 41, "name": "@cf/qwen/qwen3.8-27b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-8-27b"}, {"@type": "ListItem", "position": 42, "name": "@cf/qwen/qwen3-embedding-0.6b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b"}, {"@type": "ListItem", "position": 43, "name": "@cf/qwen/qwq-32b", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwq-32b"}, {"@type": "ListItem", "position": 44, "name": "@cf/zai-org/glm-4.7-flash", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-4-7-flash"}, {"@type": "ListItem", "position": 45, "name": "@cf/zai-org/glm-5.2", "url": "https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-5-2"}, {"@type": "ListItem", "position": 46, "name": "Mistral 7B", "url": "https://freellm.net/models/cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1"}, {"@type": "ListItem", "position": 47, "name": "Mixtral 8x7B", "url": "https://freellm.net/models/glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1"}, {"@type": "ListItem", "position": 48, "name": "Gemini 2.5 Flash", "url": "https://freellm.net/models/google-gemini/gemini-2-5-flash"}, {"@type": "ListItem", "position": 49, "name": "Gemini 2.5 Flash-Lite", "url": "https://freellm.net/models/google-gemini/gemini-2-5-flash-lite"}, {"@type": "ListItem", "position": 50, "name": "Gemini 2.5 Pro", "url": "https://freellm.net/models/google-gemini/gemini-2-5-pro"}, {"@type": "ListItem", "position": 51, "name": "Gemini 3.1 Flash-Lite", "url": "https://freellm.net/models/google-gemini/gemini-3-1-flash-lite"}, {"@type": "ListItem", "position": 52, "name": "Gemini 3.5 Flash", "url": "https://freellm.net/models/google-gemini/gemini-3-5-flash"}, {"@type": "ListItem", "position": 53, "name": "Gemini 3.5 Flash-Lite", "url": "https://freellm.net/models/google-gemini/gemini-3-5-flash-lite"}, {"@type": "ListItem", "position": 54, "name": "Gemini 3.6 Flash", "url": "https://freellm.net/models/google-gemini/gemini-3-6-flash"}, {"@type": "ListItem", "position": 55, "name": "Gemini 3.7 Flash", "url": "https://freellm.net/models/google-gemini/gemini-3-7-flash"}, {"@type": "ListItem", "position": 56, "name": "Gemini 3.8 Flash", "url": "https://freellm.net/models/google-gemini/gemini-3-8-flash"}, {"@type": "ListItem", "position": 57, "name": "Gemma 4 26B A4B", "url": "https://freellm.net/models/google-gemini/gemma-4-26b-a4b"}, {"@type": "ListItem", "position": 58, "name": "Gemma 4 26B A4B IT", "url": "https://freellm.net/models/google-gemini/gemma-4-26b-a4b-it"}, {"@type": "ListItem", "position": 59, "name": "Gemma 4 31B", "url": "https://freellm.net/models/google-gemini/gemma-4-31b"}, {"@type": "ListItem", "position": 60, "name": "Gemma 4 31B IT", "url": "https://freellm.net/models/google-gemini/gemma-4-31b-it"}, {"@type": "ListItem", "position": 61, "name": "allam-2-7b", "url": "https://freellm.net/models/groq/allam-2-7b"}, {"@type": "ListItem", "position": 62, "name": "groq/compound", "url": "https://freellm.net/models/groq/groq-compound"}, {"@type": "ListItem", "position": 63, "name": "groq/compound-mini", "url": "https://freellm.net/models/groq/groq-compound-mini"}, {"@type": "ListItem", "position": 64, "name": "whisper-large-v3", "url": "https://freellm.net/models/groq/whisper-large-v3"}, {"@type": "ListItem", "position": 65, "name": "whisper-large-v3-turbo", "url": "https://freellm.net/models/groq/whisper-large-v3-turbo"}, {"@type": "ListItem", "position": 66, "name": "Meta-Llama-3.1-8B-Instruct", "url": "https://freellm.net/models/hugging-face/meta-llama-3-1-8b-instruct"}, {"@type": "ListItem", "position": 67, "name": "Codestral (latest)", "url": "https://freellm.net/models/llm7-io/codestral-latest"}, {"@type": "ListItem", "position": 68, "name": "DeepSeek V4 Flash 0731", "url": "https://freellm.net/models/llm7-io/deepseek-v4-flash-0731"}, {"@type": "ListItem", "position": 69, "name": "Gemini 3.1 Flash Lite", "url": "https://freellm.net/models/llm7-io/gemini-3-1-flash-lite"}, {"@type": "ListItem", "position": 70, "name": "Gemma 4 31B IT", "url": "https://freellm.net/models/llm7-io/gemma4-31b"}, {"@type": "ListItem", "position": 71, "name": "minimax-m2.7", "url": "https://freellm.net/models/llm7-io/minimax-m2-7"}, {"@type": "ListItem", "position": 72, "name": "mistral-Nemo-Instruct-2407", "url": "https://freellm.net/models/llm7-io/mistral-nemo-instruct-2407"}, {"@type": "ListItem", "position": 73, "name": "deepseek-ai/DeepSeek-V4-Flash", "url": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-flash"}, {"@type": "ListItem", "position": 74, "name": "deepseek-ai/DeepSeek-V4-Pro", "url": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro"}, {"@type": "ListItem", "position": 75, "name": "deepseek-ai/DeepSeek-V4-Pro-0813", "url": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro-0813"}, {"@type": "ListItem", "position": 76, "name": "early-access/EA-29B-A4B", "url": "https://freellm.net/models/modelscope/early-access-ea-29b-a4b"}, {"@type": "ListItem", "position": 77, "name": "MedAIBase/AntAngelMed", "url": "https://freellm.net/models/modelscope/medaibase-antangelmed"}, {"@type": "ListItem", "position": 78, "name": "meituan-longcat/LongCat-Flash-Lite", "url": "https://freellm.net/models/modelscope/meituan-longcat-longcat-flash-lite"}, {"@type": "ListItem", "position": 79, "name": "MiniMax/MiniMax-M1-80k", "url": "https://freellm.net/models/modelscope/minimax-minimax-m1-80k"}, {"@type": "ListItem", "position": 80, "name": "MiniMax-M3", "url": "https://freellm.net/models/modelscope/minimax-minimax-m3"}, {"@type": "ListItem", "position": 81, "name": "mistralai/Mistral-Large-Instruct-2407", "url": "https://freellm.net/models/modelscope/mistralai-mistral-large-instruct-2407"}, {"@type": "ListItem", "position": 82, "name": "MusePublic/Qwen-Image-Edit", "url": "https://freellm.net/models/modelscope/musepublic-qwen-image-edit"}, {"@type": "ListItem", "position": 83, "name": "opencompass/CompassJudger-1-32B-Instruct", "url": "https://freellm.net/models/modelscope/opencompass-compassjudger-1-32b-instruct"}, {"@type": "ListItem", "position": 84, "name": "OpenGVLab/InternVL3_5-241B-A28B", "url": "https://freellm.net/models/modelscope/opengvlab-internvl3-5-241b-a28b"}, {"@type": "ListItem", "position": 85, "name": "PaddlePaddle/ERNIE-4.5-0.3B-PT", "url": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-0-3b-pt"}, {"@type": "ListItem", "position": 86, "name": "PaddlePaddle/ERNIE-4.5-21B-A3B-PT", "url": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt"}, {"@type": "ListItem", "position": 87, "name": "PaddlePaddle/ERNIE-4.5-300B-A47B-PT", "url": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt"}, {"@type": "ListItem", "position": 88, "name": "PaddlePaddle/ERNIE-4.5-VL-28B-A3B-PT", "url": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt"}, {"@type": "ListItem", "position": 89, "name": "Qwen/Qwen-Image-Edit", "url": "https://freellm.net/models/modelscope/qwen-qwen-image-edit"}, {"@type": "ListItem", "position": 90, "name": "Qwen/Qwen3-14B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-14b"}, {"@type": "ListItem", "position": 91, "name": "Qwen/Qwen3-235B-A22B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b"}, {"@type": "ListItem", "position": 92, "name": "Qwen/Qwen3-235B-A22B-Instruct-2507", "url": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-instruct-2507"}, {"@type": "ListItem", "position": 93, "name": "Qwen/Qwen3-235B-A22B-Thinking-2507", "url": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-thinking-2507"}, {"@type": "ListItem", "position": 94, "name": "Qwen/Qwen3-30B-A3B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b"}, {"@type": "ListItem", "position": 95, "name": "Qwen/Qwen3-30B-A3B-Thinking-2507", "url": "https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b-thinking-2507"}, {"@type": "ListItem", "position": 96, "name": "Qwen/Qwen3-4B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-4b"}, {"@type": "ListItem", "position": 97, "name": "Qwen/Qwen3.5-122B-A10B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-5-122b-a10b"}, {"@type": "ListItem", "position": 98, "name": "Qwen/Qwen3.5-397B-A17B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-5-397b-a17b"}, {"@type": "ListItem", "position": 99, "name": "Qwen/Qwen3.8-27B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-8-27b"}, {"@type": "ListItem", "position": 100, "name": "Qwen/Qwen3.8-Flash-Next", "url": "https://freellm.net/models/modelscope/qwen-qwen3-8-flash-next"}, {"@type": "ListItem", "position": 101, "name": "Qwen/Qwen3-8B", "url": "https://freellm.net/models/modelscope/qwen-qwen3-8b"}, {"@type": "ListItem", "position": 102, "name": "Qwen/Qwen3-Coder-30B-A3B-Instruct", "url": "https://freellm.net/models/modelscope/qwen-qwen3-coder-30b-a3b-instruct"}, {"@type": "ListItem", "position": 103, "name": "Qwen/Qwen3-Next-80B-A3B-Instruct", "url": "https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-instruct"}, {"@type": "ListItem", "position": 104, "name": "Qwen/Qwen3-Next-80B-A3B-Thinking", "url": "https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-thinking"}, {"@type": "ListItem", "position": 105, "name": "Qwen/Qwen3-VL-235B-A22B-Instruct", "url": "https://freellm.net/models/modelscope/qwen-qwen3-vl-235b-a22b-instruct"}, {"@type": "ListItem", "position": 106, "name": "Qwen/Qwen3-VL-8B-Instruct", "url": "https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-instruct"}, {"@type": "ListItem", "position": 107, "name": "Qwen/Qwen3-VL-8B-Thinking", "url": "https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-thinking"}, {"@type": "ListItem", "position": 108, "name": "Shanghai_AI_Laboratory/Intern-S1", "url": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1"}, {"@type": "ListItem", "position": 109, "name": "Shanghai_AI_Laboratory/Intern-S1-mini", "url": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1-mini"}, {"@type": "ListItem", "position": 110, "name": "Shanghai_AI_Laboratory/Intern-S2-Preview", "url": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s2-preview"}, {"@type": "ListItem", "position": 111, "name": "stepfun-ai/Step-3.5-Flash", "url": "https://freellm.net/models/modelscope/stepfun-ai-step-3-5-flash"}, {"@type": "ListItem", "position": 112, "name": "stepfun-ai/Step-3.7-Flash", "url": "https://freellm.net/models/modelscope/stepfun-ai-step-3-7-flash"}, {"@type": "ListItem", "position": 113, "name": "Tencent-Hunyuan/Hy3", "url": "https://freellm.net/models/modelscope/tencent-hunyuan-hy3"}, {"@type": "ListItem", "position": 114, "name": "XGenerationLab/XiYanSQL-QwenCoder-32B-2412", "url": "https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412"}, {"@type": "ListItem", "position": 115, "name": "XGenerationLab/XiYanSQL-QwenCoder-32B-2504", "url": "https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504"}, {"@type": "ListItem", "position": 116, "name": "GLM-4.7-FlashX", "url": "https://freellm.net/models/modelscope/zhipuai-glm-4-7-flash"}, {"@type": "ListItem", "position": 117, "name": "GLM-5.1", "url": "https://freellm.net/models/modelscope/zhipuai-glm-5-2"}, {"@type": "ListItem", "position": 118, "name": "01-ai/yi-large", "url": "https://freellm.net/models/nvidia-nim/01-ai-yi-large"}, {"@type": "ListItem", "position": 119, "name": "adept/fuyu-8b", "url": "https://freellm.net/models/nvidia-nim/adept-fuyu-8b"}, {"@type": "ListItem", "position": 120, "name": "ai21labs/jamba-1.5-large-instruct", "url": "https://freellm.net/models/nvidia-nim/ai21labs-jamba-1-5-large-instruct"}, {"@type": "ListItem", "position": 121, "name": "aisingapore/sea-lion-7b-instruct", "url": "https://freellm.net/models/nvidia-nim/aisingapore-sea-lion-7b-instruct"}, {"@type": "ListItem", "position": 122, "name": "bigcode/starcoder2-15b", "url": "https://freellm.net/models/nvidia-nim/bigcode-starcoder2-15b"}, {"@type": "ListItem", "position": 123, "name": "databricks/dbrx-instruct", "url": "https://freellm.net/models/nvidia-nim/databricks-dbrx-instruct"}, {"@type": "ListItem", "position": 124, "name": "deepseek-ai/deepseek-coder-6.7b-instruct", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct"}, {"@type": "ListItem", "position": 125, "name": "deepseek-ai/deepseek-v4-flash", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash"}, {"@type": "ListItem", "position": 126, "name": "deepseek-ai/deepseek-v4-flash-0731", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash-0731"}, {"@type": "ListItem", "position": 127, "name": "deepseek-ai/deepseek-v4-pro", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro"}, {"@type": "ListItem", "position": 128, "name": "deepseek-ai/deepseek-v4-pro-0813", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro-0813"}, {"@type": "ListItem", "position": 129, "name": "google/codegemma-1.1-7b", "url": "https://freellm.net/models/nvidia-nim/google-codegemma-1-1-7b"}, {"@type": "ListItem", "position": 130, "name": "google/codegemma-7b", "url": "https://freellm.net/models/nvidia-nim/google-codegemma-7b"}, {"@type": "ListItem", "position": 131, "name": "google/deplot", "url": "https://freellm.net/models/nvidia-nim/google-deplot"}, {"@type": "ListItem", "position": 132, "name": "google/diffusiongemma-26b-a4b-it", "url": "https://freellm.net/models/nvidia-nim/google-diffusiongemma-26b-a4b-it"}, {"@type": "ListItem", "position": 133, "name": "google/gemma-2b", "url": "https://freellm.net/models/nvidia-nim/google-gemma-2b"}, {"@type": "ListItem", "position": 134, "name": "Gemma 4 31B IT", "url": "https://freellm.net/models/nvidia-nim/google-gemma-4-31b-it"}, {"@type": "ListItem", "position": 135, "name": "google/recurrentgemma-2b", "url": "https://freellm.net/models/nvidia-nim/google-recurrentgemma-2b"}, {"@type": "ListItem", "position": 136, "name": "ibm/granite-3.0-3b-a800m-instruct", "url": "https://freellm.net/models/nvidia-nim/ibm-granite-3-0-3b-a800m-instruct"}, {"@type": "ListItem", "position": 137, "name": "ibm/granite-3.0-8b-instruct", "url": "https://freellm.net/models/nvidia-nim/ibm-granite-3-0-8b-instruct"}, {"@type": "ListItem", "position": 138, "name": "ibm/granite-34b-code-instruct", "url": "https://freellm.net/models/nvidia-nim/ibm-granite-34b-code-instruct"}, {"@type": "ListItem", "position": 139, "name": "ibm/granite-8b-code-instruct", "url": "https://freellm.net/models/nvidia-nim/ibm-granite-8b-code-instruct"}, {"@type": "ListItem", "position": 140, "name": "meta/codellama-70b", "url": "https://freellm.net/models/nvidia-nim/meta-codellama-70b"}, {"@type": "ListItem", "position": 141, "name": "meta/llama-3.2-11b-vision-instruct", "url": "https://freellm.net/models/nvidia-nim/meta-llama-3-2-11b-vision-instruct"}, {"@type": "ListItem", "position": 142, "name": "meta/llama-3.2-90b-vision-instruct", "url": "https://freellm.net/models/nvidia-nim/meta-llama-3-2-90b-vision-instruct"}, {"@type": "ListItem", "position": 143, "name": "meta/llama-guard-4-12b", "url": "https://freellm.net/models/nvidia-nim/meta-llama-guard-4-12b"}, {"@type": "ListItem", "position": 144, "name": "meta/llama2-70b", "url": "https://freellm.net/models/nvidia-nim/meta-llama2-70b"}, {"@type": "ListItem", "position": 145, "name": "Muse Glimmer 30B", "url": "https://freellm.net/models/nvidia-nim/meta-muse-glimmer-30b"}, {"@type": "ListItem", "position": 146, "name": "microsoft/kosmos-2", "url": "https://freellm.net/models/nvidia-nim/microsoft-kosmos-2"}, {"@type": "ListItem", "position": 147, "name": "microsoft/phi-3.5-moe-instruct", "url": "https://freellm.net/models/nvidia-nim/microsoft-phi-3-5-moe-instruct"}, {"@type": "ListItem", "position": 148, "name": "microsoft/phi-3-vision-128k-instruct", "url": "https://freellm.net/models/nvidia-nim/microsoft-phi-3-vision-128k-instruct"}, {"@type": "ListItem", "position": 149, "name": "minimaxai/minimax-m3", "url": "https://freellm.net/models/nvidia-nim/minimaxai-minimax-m3"}, {"@type": "ListItem", "position": 150, "name": "mistralai/codestral-22b-instruct-v0.1", "url": "https://freellm.net/models/nvidia-nim/mistralai-codestral-22b-instruct-v0-1"}, {"@type": "ListItem", "position": 151, "name": "mistralai/mistral-7b-instruct-v0.3", "url": "https://freellm.net/models/nvidia-nim/mistralai-mistral-7b-instruct-v0-3"}, {"@type": "ListItem", "position": 152, "name": "mistralai/mistral-large-2-instruct", "url": "https://freellm.net/models/nvidia-nim/mistralai-mistral-large-2-instruct"}, {"@type": "ListItem", "position": 153, "name": "mistralai/mistral-large-3-675b-instruct-2512", "url": "https://freellm.net/models/nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512"}, {"@type": "ListItem", "position": 154, "name": "mistralai/mistral-nemotron", "url": "https://freellm.net/models/nvidia-nim/mistralai-mistral-nemotron"}, {"@type": "ListItem", "position": 155, "name": "mistralai/mixtral-8x22b-v0.1", "url": "https://freellm.net/models/nvidia-nim/mistralai-mixtral-8x22b-v0-1"}, {"@type": "ListItem", "position": 156, "name": "moonshotai/kimi-k2.6", "url": "https://freellm.net/models/nvidia-nim/moonshotai-kimi-k2-6"}, {"@type": "ListItem", "position": 157, "name": "Kimi K3", "url": "https://freellm.net/models/nvidia-nim/moonshotai-kimi-k3"}, {"@type": "ListItem", "position": 158, "name": "nv-mistralai/mistral-nemo-12b-instruct", "url": "https://freellm.net/models/nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct"}, {"@type": "ListItem", "position": 159, "name": "nvidia/cosmos-reason2-8b", "url": "https://freellm.net/models/nvidia-nim/nvidia-cosmos-reason2-8b"}, {"@type": "ListItem", "position": 160, "name": "nvidia/embed-qa-4", "url": "https://freellm.net/models/nvidia-nim/nvidia-embed-qa-4"}, {"@type": "ListItem", "position": 161, "name": "nvidia/ising-calibration-1.5-31b", "url": "https://freellm.net/models/nvidia-nim/nvidia-ising-calibration-1-5-31b"}, {"@type": "ListItem", "position": 162, "name": "nvidia/llama-3.1-nemoguard-8b-content-safety", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety"}, {"@type": "ListItem", "position": 163, "name": "nvidia/llama-3.1-nemoguard-8b-topic-control", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control"}, {"@type": "ListItem", "position": 164, "name": "nvidia/llama-3.1-nemotron-51b-instruct", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct"}, {"@type": "ListItem", "position": 165, "name": "nvidia/llama-3.1-nemotron-70b-instruct", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct"}, {"@type": "ListItem", "position": 166, "name": "Llama 3.1 Nemotron Safety Guard 8B v3", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3"}, {"@type": "ListItem", "position": 167, "name": "nvidia/llama-3.1-nemotron-ultra-253b-v1", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1"}, {"@type": "ListItem", "position": 168, "name": "nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1"}, {"@type": "ListItem", "position": 169, "name": "nvidia/llama-3.2-nv-embedqa-1b-v1", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1"}, {"@type": "ListItem", "position": 170, "name": "nvidia/llama-nemotron-embed-vl-1b-v2", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2"}, {"@type": "ListItem", "position": 171, "name": "nvidia/llama3-chatqa-1.5-70b", "url": "https://freellm.net/models/nvidia-nim/nvidia-llama3-chatqa-1-5-70b"}, {"@type": "ListItem", "position": 172, "name": "nvidia/mistral-nemo-minitron-8b-8k-instruct", "url": "https://freellm.net/models/nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct"}, {"@type": "ListItem", "position": 173, "name": "nvidia/nemotron-3.5-content-safety", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-content-safety"}, {"@type": "ListItem", "position": 174, "name": "nvidia/nemotron-3.5-lightning-30b-a3b", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b"}, {"@type": "ListItem", "position": 175, "name": "nvidia/nemotron-3-embed-1b", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-embed-1b"}, {"@type": "ListItem", "position": 176, "name": "Nemotron 3 Nano Omni 30B A3B Reasoning", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning"}, {"@type": "ListItem", "position": 177, "name": "Nemotron 3 Super 120B A12B", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-super-120b-a12b"}, {"@type": "ListItem", "position": 178, "name": "Nemotron 3 Ultra 550B A55B", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b"}, {"@type": "ListItem", "position": 179, "name": "nvidia/nemotron-4-340b-instruct", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-instruct"}, {"@type": "ListItem", "position": 180, "name": "nvidia/nemotron-4-340b-reward", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-reward"}, {"@type": "ListItem", "position": 181, "name": "nvidia/nemotron-nano-3-30b-a3b", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-nano-3-30b-a3b"}, {"@type": "ListItem", "position": 182, "name": "nvidia/nemotron-parse", "url": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse"}, {"@type": "ListItem", "position": 183, "name": "nvidia/neva-22b", "url": "https://freellm.net/models/nvidia-nim/nvidia-neva-22b"}, {"@type": "ListItem", "position": 184, "name": "nvidia/nv-embedqa-mistral-7b-v2", "url": "https://freellm.net/models/nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2"}, {"@type": "ListItem", "position": 185, "name": "nvidia/nvclip", "url": "https://freellm.net/models/nvidia-nim/nvidia-nvclip"}, {"@type": "ListItem", "position": 186, "name": "nvidia/riva-translate-4b-instruct", "url": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct"}, {"@type": "ListItem", "position": 187, "name": "nvidia/riva-translate-4b-instruct-v1.1", "url": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1"}, {"@type": "ListItem", "position": 188, "name": "nvidia/riva-translate-4b-instruct-v2", "url": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v2"}, {"@type": "ListItem", "position": 189, "name": "nvidia/vila", "url": "https://freellm.net/models/nvidia-nim/nvidia-vila"}, {"@type": "ListItem", "position": 190, "name": "GPT OSS 20B", "url": "https://freellm.net/models/nvidia-nim/openai-gpt-oss-20b"}, {"@type": "ListItem", "position": 191, "name": "poolside/laguna-xs-2.1", "url": "https://freellm.net/models/nvidia-nim/poolside-laguna-xs-2-1"}, {"@type": "ListItem", "position": 192, "name": "snowflake/arctic-embed-l", "url": "https://freellm.net/models/nvidia-nim/snowflake-arctic-embed-l"}, {"@type": "ListItem", "position": 193, "name": "writer/palmyra-creative-122b", "url": "https://freellm.net/models/nvidia-nim/writer-palmyra-creative-122b"}, {"@type": "ListItem", "position": 194, "name": "writer/palmyra-fin-70b-32k", "url": "https://freellm.net/models/nvidia-nim/writer-palmyra-fin-70b-32k"}, {"@type": "ListItem", "position": 195, "name": "writer/palmyra-med-70b", "url": "https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b"}, {"@type": "ListItem", "position": 196, "name": "writer/palmyra-med-70b-32k", "url": "https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b-32k"}, {"@type": "ListItem", "position": 197, "name": "zyphra/zamba2-7b-instruct", "url": "https://freellm.net/models/nvidia-nim/zyphra-zamba2-7b-instruct"}, {"@type": "ListItem", "position": 198, "name": "deepseek-v4-flash", "url": "https://freellm.net/models/ollama-cloud/deepseek-v4-flash"}, {"@type": "ListItem", "position": 199, "name": "deepseek-v4-pro", "url": "https://freellm.net/models/ollama-cloud/deepseek-v4-pro"}, {"@type": "ListItem", "position": 200, "name": "Gemma 4 31B IT", "url": "https://freellm.net/models/ollama-cloud/gemma4-31b"}, {"@type": "ListItem", "position": 201, "name": "gpt-oss:120b", "url": "https://freellm.net/models/ollama-cloud/gpt-oss-120b"}, {"@type": "ListItem", "position": 202, "name": "gpt-oss:20b", "url": "https://freellm.net/models/ollama-cloud/gpt-oss-20b"}, {"@type": "ListItem", "position": 203, "name": "minimax-m3", "url": "https://freellm.net/models/ollama-cloud/minimax-m3"}, {"@type": "ListItem", "position": 204, "name": "Nemotron 3 Nano 30B A3B", "url": "https://freellm.net/models/ollama-cloud/nemotron-3-nano-30b"}, {"@type": "ListItem", "position": 205, "name": "Nemotron 3 Super 120B A12B", "url": "https://freellm.net/models/ollama-cloud/nemotron-3-super"}, {"@type": "ListItem", "position": 206, "name": "nemotron-3-ultra", "url": "https://freellm.net/models/ollama-cloud/nemotron-3-ultra"}, {"@type": "ListItem", "position": 207, "name": "big-pickle", "url": "https://freellm.net/models/opencode/big-pickle"}, {"@type": "ListItem", "position": 208, "name": "DeepSeek V4 Flash", "url": "https://freellm.net/models/opencode/deepseek-v4-flash-free"}, {"@type": "ListItem", "position": 209, "name": "Ling 3.0 Flash Fin", "url": "https://freellm.net/models/opencode/ling-3-0-flash-fin-free"}, {"@type": "ListItem", "position": 210, "name": "MiMo-V2.5", "url": "https://freellm.net/models/opencode/mimo-v2-5-free"}, {"@type": "ListItem", "position": 211, "name": "Nemotron 3.5 Lightning 30B A3B", "url": "https://freellm.net/models/opencode/nemotron-3-5-lightning-free"}, {"@type": "ListItem", "position": 212, "name": "Nemotron 3 Ultra 550B A55B", "url": "https://freellm.net/models/opencode/nemotron-3-ultra-free"}, {"@type": "ListItem", "position": 213, "name": "Cohere: North Mini Code (free)", "url": "https://freellm.net/models/openrouter/cohere-north-mini-code"}, {"@type": "ListItem", "position": 214, "name": "Dots Studio: Dots3-Note Preview (free)", "url": "https://freellm.net/models/openrouter/dots-studio-dots-3-note-preview"}, {"@type": "ListItem", "position": 215, "name": "Google: Gemma 4 26B A4B (free)", "url": "https://freellm.net/models/openrouter/google-gemma-4-26b-a4b-it"}, {"@type": "ListItem", "position": 216, "name": "Google: Gemma 4 31B (free)", "url": "https://freellm.net/models/openrouter/google-gemma-4-31b-it"}, {"@type": "ListItem", "position": 217, "name": "Google: Lyria 3 Clip Preview", "url": "https://freellm.net/models/openrouter/google-lyria-3-clip-preview"}, {"@type": "ListItem", "position": 218, "name": "Google: Lyria 3 Pro Preview", "url": "https://freellm.net/models/openrouter/google-lyria-3-pro-preview"}, {"@type": "ListItem", "position": 219, "name": "inclusionAI: Ling 3.0 Flash Fin (free)", "url": "https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-fin"}, {"@type": "ListItem", "position": 220, "name": "inclusionAI: Ling 3.0 Flash Sante (free)", "url": "https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-sante"}, {"@type": "ListItem", "position": 221, "name": "LiquidAI: LFM2.5-2.6B (free)", "url": "https://freellm.net/models/openrouter/liquid-lfm-2-5-2-6b"}, {"@type": "ListItem", "position": 222, "name": "Nex AGI: Nex-N2.5-Mini (free)", "url": "https://freellm.net/models/openrouter/nex-agi-nex-n2-5-mini"}, {"@type": "ListItem", "position": 223, "name": "Nex AGI: Nex-N2.5-Pro (free)", "url": "https://freellm.net/models/openrouter/nex-agi-nex-n2-5-pro"}, {"@type": "ListItem", "position": 224, "name": "NVIDIA: Nemotron 3.5 Content Safety (free)", "url": "https://freellm.net/models/openrouter/nvidia-nemotron-3-5-content-safety"}, {"@type": "ListItem", "position": 225, "name": "NVIDIA: Nemotron 3.5 Lightning (free)", "url": "https://freellm.net/models/openrouter/nvidia-nemotron-3-5-lightning"}, {"@type": "ListItem", "position": 226, "name": "NVIDIA: Nemotron 3 Nano Omni (free)", "url": "https://freellm.net/models/openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning"}, {"@type": "ListItem", "position": 227, "name": "NVIDIA: Nemotron 3 Super (free)", "url": "https://freellm.net/models/openrouter/nvidia-nemotron-3-super-120b-a12b"}, {"@type": "ListItem", "position": 228, "name": "NVIDIA: Nemotron 3 Ultra (free)", "url": "https://freellm.net/models/openrouter/nvidia-nemotron-3-ultra-550b-a55b"}, {"@type": "ListItem", "position": 229, "name": "Free Models Router", "url": "https://freellm.net/models/openrouter/openrouter-free"}, {"@type": "ListItem", "position": 230, "name": "Poolside: Laguna S 2.1 (free)", "url": "https://freellm.net/models/openrouter/poolside-laguna-s-2-1"}, {"@type": "ListItem", "position": 231, "name": "Poolside: Laguna XS 2.1 (free)", "url": "https://freellm.net/models/openrouter/poolside-laguna-xs-2-1"}, {"@type": "ListItem", "position": 232, "name": "Thinking Machines: Inkling (free)", "url": "https://freellm.net/models/openrouter/thinkingmachines-inkling"}, {"@type": "ListItem", "position": 233, "name": "Thinking Machines: Inkling Small (free)", "url": "https://freellm.net/models/openrouter/thinkingmachines-inkling-small"}, {"@type": "ListItem", "position": 234, "name": "Meta-Llama-3_3-70B-Instruct", "url": "https://freellm.net/models/ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct"}, {"@type": "ListItem", "position": 235, "name": "GLM-4.5-Air", "url": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-air"}, {"@type": "ListItem", "position": 236, "name": "GLM-4.5-Flash", "url": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash"}, {"@type": "ListItem", "position": 237, "name": "GLM-4.5-Flash (retirement announced)", "url": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash-retirement-announced"}, {"@type": "ListItem", "position": 238, "name": "GLM-4.6V-Flash", "url": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-6v-flash"}, {"@type": "ListItem", "position": 239, "name": "GLM-4.7-Flash", "url": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-7-flash"}]}}</script>
+  <style>
+    :root { color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; }
+    * { box-sizing: border-box; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    a { color: var(--blue); }
+    header, main, footer { background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }
+    header { color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }
+    header a { color: white; }
+    h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }
+    h2 { margin: 0 0 10px; font-size: clamp(24px, 4vw, 34px); }
+    p { max-width: 900px; }
+    .crumb, .eyebrow, th { font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .lead { max-width: 840px; color: #dbe6ff; font-size: 17px; }
+    .callout { margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }
+    section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 16px 0 8px; }
+    table { width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); background: var(--soft); }
+    tr:last-child td { border-bottom: 0; }
+    td small { display: block; margin-top: 4px; color: var(--muted); }
+    .link-list { padding-left: 1.3em; }
+    footer { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body data-static-locale="true">
+  <header>
+    <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / Guides</div>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">开源权重模型</span><span lang="en">Open-Weight AI Models</span></h1>
+    <p class="lead"><span lang="zh-CN">权重免费不等于推理基础设施免费；请同时评估显存、存储、许可证和部署方式。</span><span lang="en">Free weights do not make inference infrastructure free; also evaluate VRAM, storage, licensing and deployment.</span></p>
+    <div class="callout"><span lang="zh-CN">数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。</span><span lang="en">Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.</span></div>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / verified directory</div>
+      <h2><span lang="zh-CN">可用入口和关键参数</span><span lang="en">Available entries and key parameters</span></h2>
+      <p><span lang="zh-CN">当前页面收录 239 条记录。每条记录都能回到 FreeLLM 详情或目录来源。</span><span lang="en">This page contains 239 records. Each row links back to a FreeLLM detail page or directory source.</span></p>
+      <div class="table-wrap"><table><thead><tr><th>Provider</th><th>Model</th><th>Context window</th><th>Max output</th><th>Modality</th><th>Source</th></tr></thead><tbody><tr>
+      <td>Agnes AI</td>
+      <td><strong>agnes-1.5-flash</strong><small>agnes-ai/agnes-1-5-flash</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text, vision</td>
+      <td><a href="https://freellm.net/models/agnes-ai/agnes-1-5-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Agnes AI</td>
+      <td><strong>agnes-2.0-flash</strong><small>agnes-ai/agnes-2-0-flash</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text, vision, image, reasoning</td>
+      <td><a href="https://freellm.net/models/agnes-ai/agnes-2-0-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Agnes AI</td>
+      <td><strong>agnes-image-2.0-flash</strong><small>agnes-ai/agnes-image-2-0-flash</small></td>
+      <td>4096 tokens</td>
+      <td>Not listed</td>
+      <td>image</td>
+      <td><a href="https://freellm.net/models/agnes-ai/agnes-image-2-0-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Agnes AI</td>
+      <td><strong>agnes-image-2.1-flash</strong><small>agnes-ai/agnes-image-2-1-flash</small></td>
+      <td>4096 tokens</td>
+      <td>Not listed</td>
+      <td>image</td>
+      <td><a href="https://freellm.net/models/agnes-ai/agnes-image-2-1-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Agnes AI</td>
+      <td><strong>agnes-video-v2.0</strong><small>agnes-ai/agnes-video-v2-0</small></td>
+      <td>4096 tokens</td>
+      <td>Not listed</td>
+      <td>video</td>
+      <td><a href="https://freellm.net/models/agnes-ai/agnes-video-v2-0" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>LongCat-2.0</strong><small>cline/cline-free-longcat-2-0</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/cline-free-longcat-2-0" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>Muse Spark 1.3 Contributor</strong><small>cline/cline-free-muse-spark-1-3-contributor</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/cline-free-muse-spark-1-3-contributor" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>Solar Pro 4</strong><small>cline/cline-free-solar-pro4</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/cline-free-solar-pro4" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>deepseek-v4-flash</strong><small>cline/deepseek-deepseek-v4-flash</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/deepseek-deepseek-v4-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>laguna-s-2.1:free</strong><small>cline/poolside-laguna-s-2-1</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/poolside-laguna-s-2-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cline</td>
+      <td><strong>glm-5.3-flash</strong><small>cline/z-ai-glm-5-3-flash</small></td>
+      <td>0 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cline/z-ai-glm-5-3-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/aisingapore/gemma-sea-lion-v4-27b-it</strong><small>cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/baai/bge-base-en-v1.5</strong><small>cloudflare-workers-ai/cf-baai-bge-base-en-v1-5</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-base-en-v1-5" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/baai/bge-large-en-v1.5</strong><small>cloudflare-workers-ai/cf-baai-bge-large-en-v1-5</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-large-en-v1-5" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/baai/bge-m3</strong><small>cloudflare-workers-ai/cf-baai-bge-m3</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-m3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/baai/bge-small-en-v1.5</strong><small>cloudflare-workers-ai/cf-baai-bge-small-en-v1-5</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-small-en-v1-5" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/deepseek-ai/deepseek-r1-distill-qwen-32b</strong><small>cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b</small></td>
+      <td>80000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/google/embeddinggemma-300m</strong><small>cloudflare-workers-ai/cf-google-embeddinggemma-300m</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-google-embeddinggemma-300m" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/google/gemma-2b-it-lora</strong><small>cloudflare-workers-ai/cf-google-gemma-2b-it-lora</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-2b-it-lora" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/google/gemma-4-26b-a4b-it</strong><small>cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/google/gemma-7b-it-lora</strong><small>cloudflare-workers-ai/cf-google-gemma-7b-it-lora</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-7b-it-lora" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/ibm-granite/granite-4.0-h-micro</strong><small>cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-3.1-8b-instruct-fp8</strong><small>cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-3.2-1b-instruct</strong><small>cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-3.2-3b-instruct</strong><small>cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-3.3-70b-instruct-fp8-fast</strong><small>cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast</small></td>
+      <td>24000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-4-scout-17b-16e-instruct</strong><small>cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta/llama-guard-3-8b</strong><small>cloudflare-workers-ai/cf-meta-llama-guard-3-8b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-guard-3-8b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/meta-llama/llama-2-7b-chat-hf-lora</strong><small>cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/mistral/mistral-7b-instruct-v0.2-lora</strong><small>cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/mistralai/mistral-small-3.1-24b-instruct</strong><small>cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/moondream/moondream3.1-9B-A2B</strong><small>cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/moonshotai/kimi-k2.6</strong><small>cloudflare-workers-ai/cf-moonshotai-kimi-k2-6</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-6" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/moonshotai/kimi-k2.7-code</strong><small>cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code</small></td>
+      <td>262000 tokens</td>
+      <td>Not listed</td>
+      <td>text, code, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/nvidia/nemotron-3-120b-a12b</strong><small>cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/openai/gpt-oss-120b</strong><small>cloudflare-workers-ai/cf-openai-gpt-oss-120b</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-120b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/openai/gpt-oss-20b</strong><small>cloudflare-workers-ai/cf-openai-gpt-oss-20b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-20b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/pfnet/plamo-embedding-1b</strong><small>cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/qwen/qwen2.5-coder-32b-instruct</strong><small>cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/qwen/qwen3-30b-a3b-fp8</strong><small>cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/qwen/qwen3.8-27b</strong><small>cloudflare-workers-ai/cf-qwen-qwen3-8-27b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-8-27b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/qwen/qwen3-embedding-0.6b</strong><small>cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/qwen/qwq-32b</strong><small>cloudflare-workers-ai/cf-qwen-qwq-32b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwq-32b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/zai-org/glm-4.7-flash</strong><small>cloudflare-workers-ai/cf-zai-org-glm-4-7-flash</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-4-7-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>@cf/zai-org/glm-5.2</strong><small>cloudflare-workers-ai/cf-zai-org-glm-5-2</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-5-2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Cloudflare Workers AI</td>
+      <td><strong>Mistral 7B</strong><small>cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1</small></td>
+      <td>32768 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Glhf.chat</td>
+      <td><strong>Mixtral 8x7B</strong><small>glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1</small></td>
+      <td>32768 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 2.5 Flash</strong><small>google-gemini/gemini-2-5-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, video, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-2-5-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 2.5 Flash-Lite</strong><small>google-gemini/gemini-2-5-flash-lite</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, video, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-2-5-flash-lite" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 2.5 Pro</strong><small>google-gemini/gemini-2-5-pro</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, video, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-2-5-pro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.1 Flash-Lite</strong><small>google-gemini/gemini-3-1-flash-lite</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, audio, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-1-flash-lite" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.5 Flash</strong><small>google-gemini/gemini-3-5-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, audio, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-5-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.5 Flash-Lite</strong><small>google-gemini/gemini-3-5-flash-lite</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, audio, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-5-flash-lite" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.6 Flash</strong><small>google-gemini/gemini-3-6-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, audio, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-6-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.7 Flash</strong><small>google-gemini/gemini-3-7-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, audio, pdf, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-7-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemini 3.8 Flash</strong><small>google-gemini/gemini-3-8-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>vision, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemini-3-8-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemma 4 26B A4B</strong><small>google-gemini/gemma-4-26b-a4b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemma-4-26b-a4b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemma 4 26B A4B IT</strong><small>google-gemini/gemma-4-26b-a4b-it</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemma-4-26b-a4b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemma 4 31B</strong><small>google-gemini/gemma-4-31b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemma-4-31b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Google Gemini</td>
+      <td><strong>Gemma 4 31B IT</strong><small>google-gemini/gemma-4-31b-it</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/google-gemini/gemma-4-31b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Groq</td>
+      <td><strong>allam-2-7b</strong><small>groq/allam-2-7b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/groq/allam-2-7b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Groq</td>
+      <td><strong>groq/compound</strong><small>groq/groq-compound</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/groq/groq-compound" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Groq</td>
+      <td><strong>groq/compound-mini</strong><small>groq/groq-compound-mini</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/groq/groq-compound-mini" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Groq</td>
+      <td><strong>whisper-large-v3</strong><small>groq/whisper-large-v3</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/groq/whisper-large-v3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Groq</td>
+      <td><strong>whisper-large-v3-turbo</strong><small>groq/whisper-large-v3-turbo</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/groq/whisper-large-v3-turbo" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Hugging Face</td>
+      <td><strong>Meta-Llama-3.1-8B-Instruct</strong><small>hugging-face/meta-llama-3-1-8b-instruct</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/hugging-face/meta-llama-3-1-8b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>Codestral (latest)</strong><small>llm7-io/codestral-latest</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/llm7-io/codestral-latest" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>DeepSeek V4 Flash 0731</strong><small>llm7-io/deepseek-v4-flash-0731</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/llm7-io/deepseek-v4-flash-0731" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>Gemini 3.1 Flash Lite</strong><small>llm7-io/gemini-3-1-flash-lite</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>vision, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/llm7-io/gemini-3-1-flash-lite" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>Gemma 4 31B IT</strong><small>llm7-io/gemma4-31b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/llm7-io/gemma4-31b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>minimax-m2.7</strong><small>llm7-io/minimax-m2-7</small></td>
+      <td>180000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/llm7-io/minimax-m2-7" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>LLM7.io</td>
+      <td><strong>mistral-Nemo-Instruct-2407</strong><small>llm7-io/mistral-nemo-instruct-2407</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/llm7-io/mistral-nemo-instruct-2407" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>deepseek-ai/DeepSeek-V4-Flash</strong><small>modelscope/deepseek-ai-deepseek-v4-flash</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>deepseek-ai/DeepSeek-V4-Pro</strong><small>modelscope/deepseek-ai-deepseek-v4-pro</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>deepseek-ai/DeepSeek-V4-Pro-0813</strong><small>modelscope/deepseek-ai-deepseek-v4-pro-0813</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro-0813" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>early-access/EA-29B-A4B</strong><small>modelscope/early-access-ea-29b-a4b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/early-access-ea-29b-a4b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>MedAIBase/AntAngelMed</strong><small>modelscope/medaibase-antangelmed</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/medaibase-antangelmed" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>meituan-longcat/LongCat-Flash-Lite</strong><small>modelscope/meituan-longcat-longcat-flash-lite</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/meituan-longcat-longcat-flash-lite" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>MiniMax/MiniMax-M1-80k</strong><small>modelscope/minimax-minimax-m1-80k</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/minimax-minimax-m1-80k" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>MiniMax-M3</strong><small>modelscope/minimax-minimax-m3</small></td>
+      <td>512000 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/minimax-minimax-m3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>mistralai/Mistral-Large-Instruct-2407</strong><small>modelscope/mistralai-mistral-large-instruct-2407</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/mistralai-mistral-large-instruct-2407" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>MusePublic/Qwen-Image-Edit</strong><small>modelscope/musepublic-qwen-image-edit</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/musepublic-qwen-image-edit" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>opencompass/CompassJudger-1-32B-Instruct</strong><small>modelscope/opencompass-compassjudger-1-32b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/opencompass-compassjudger-1-32b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>OpenGVLab/InternVL3_5-241B-A28B</strong><small>modelscope/opengvlab-internvl3-5-241b-a28b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/opengvlab-internvl3-5-241b-a28b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>PaddlePaddle/ERNIE-4.5-0.3B-PT</strong><small>modelscope/paddlepaddle-ernie-4-5-0-3b-pt</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-0-3b-pt" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>PaddlePaddle/ERNIE-4.5-21B-A3B-PT</strong><small>modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>PaddlePaddle/ERNIE-4.5-300B-A47B-PT</strong><small>modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>PaddlePaddle/ERNIE-4.5-VL-28B-A3B-PT</strong><small>modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen-Image-Edit</strong><small>modelscope/qwen-qwen-image-edit</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen-image-edit" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-14B</strong><small>modelscope/qwen-qwen3-14b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-14b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-235B-A22B</strong><small>modelscope/qwen-qwen3-235b-a22b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-235B-A22B-Instruct-2507</strong><small>modelscope/qwen-qwen3-235b-a22b-instruct-2507</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-instruct-2507" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-235B-A22B-Thinking-2507</strong><small>modelscope/qwen-qwen3-235b-a22b-thinking-2507</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-thinking-2507" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-30B-A3B</strong><small>modelscope/qwen-qwen3-30b-a3b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-30B-A3B-Thinking-2507</strong><small>modelscope/qwen-qwen3-30b-a3b-thinking-2507</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b-thinking-2507" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-4B</strong><small>modelscope/qwen-qwen3-4b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-4b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3.5-122B-A10B</strong><small>modelscope/qwen-qwen3-5-122b-a10b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-5-122b-a10b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3.5-397B-A17B</strong><small>modelscope/qwen-qwen3-5-397b-a17b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-5-397b-a17b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3.8-27B</strong><small>modelscope/qwen-qwen3-8-27b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-8-27b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3.8-Flash-Next</strong><small>modelscope/qwen-qwen3-8-flash-next</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-8-flash-next" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-8B</strong><small>modelscope/qwen-qwen3-8b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-8b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-Coder-30B-A3B-Instruct</strong><small>modelscope/qwen-qwen3-coder-30b-a3b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-coder-30b-a3b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-Next-80B-A3B-Instruct</strong><small>modelscope/qwen-qwen3-next-80b-a3b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-Next-80B-A3B-Thinking</strong><small>modelscope/qwen-qwen3-next-80b-a3b-thinking</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-thinking" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-VL-235B-A22B-Instruct</strong><small>modelscope/qwen-qwen3-vl-235b-a22b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-vl-235b-a22b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-VL-8B-Instruct</strong><small>modelscope/qwen-qwen3-vl-8b-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Qwen/Qwen3-VL-8B-Thinking</strong><small>modelscope/qwen-qwen3-vl-8b-thinking</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-thinking" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Shanghai_AI_Laboratory/Intern-S1</strong><small>modelscope/shanghai-ai-laboratory-intern-s1</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Shanghai_AI_Laboratory/Intern-S1-mini</strong><small>modelscope/shanghai-ai-laboratory-intern-s1-mini</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1-mini" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Shanghai_AI_Laboratory/Intern-S2-Preview</strong><small>modelscope/shanghai-ai-laboratory-intern-s2-preview</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s2-preview" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>stepfun-ai/Step-3.5-Flash</strong><small>modelscope/stepfun-ai-step-3-5-flash</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/stepfun-ai-step-3-5-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>stepfun-ai/Step-3.7-Flash</strong><small>modelscope/stepfun-ai-step-3-7-flash</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/stepfun-ai-step-3-7-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>Tencent-Hunyuan/Hy3</strong><small>modelscope/tencent-hunyuan-hy3</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/tencent-hunyuan-hy3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>XGenerationLab/XiYanSQL-QwenCoder-32B-2412</strong><small>modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>XGenerationLab/XiYanSQL-QwenCoder-32B-2504</strong><small>modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>GLM-4.7-FlashX</strong><small>modelscope/zhipuai-glm-4-7-flash</small></td>
+      <td>200000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/zhipuai-glm-4-7-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>ModelScope</td>
+      <td><strong>GLM-5.1</strong><small>modelscope/zhipuai-glm-5-2</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/modelscope/zhipuai-glm-5-2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>01-ai/yi-large</strong><small>nvidia-nim/01-ai-yi-large</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/01-ai-yi-large" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>adept/fuyu-8b</strong><small>nvidia-nim/adept-fuyu-8b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/adept-fuyu-8b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>ai21labs/jamba-1.5-large-instruct</strong><small>nvidia-nim/ai21labs-jamba-1-5-large-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/ai21labs-jamba-1-5-large-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>aisingapore/sea-lion-7b-instruct</strong><small>nvidia-nim/aisingapore-sea-lion-7b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/aisingapore-sea-lion-7b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>bigcode/starcoder2-15b</strong><small>nvidia-nim/bigcode-starcoder2-15b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/bigcode-starcoder2-15b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>databricks/dbrx-instruct</strong><small>nvidia-nim/databricks-dbrx-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/databricks-dbrx-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>deepseek-ai/deepseek-coder-6.7b-instruct</strong><small>nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>deepseek-ai/deepseek-v4-flash</strong><small>nvidia-nim/deepseek-ai-deepseek-v4-flash</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>deepseek-ai/deepseek-v4-flash-0731</strong><small>nvidia-nim/deepseek-ai-deepseek-v4-flash-0731</small></td>
+      <td>1310720 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash-0731" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>deepseek-ai/deepseek-v4-pro</strong><small>nvidia-nim/deepseek-ai-deepseek-v4-pro</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>deepseek-ai/deepseek-v4-pro-0813</strong><small>nvidia-nim/deepseek-ai-deepseek-v4-pro-0813</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro-0813" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/codegemma-1.1-7b</strong><small>nvidia-nim/google-codegemma-1-1-7b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-codegemma-1-1-7b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/codegemma-7b</strong><small>nvidia-nim/google-codegemma-7b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-codegemma-7b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/deplot</strong><small>nvidia-nim/google-deplot</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-deplot" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/diffusiongemma-26b-a4b-it</strong><small>nvidia-nim/google-diffusiongemma-26b-a4b-it</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-diffusiongemma-26b-a4b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/gemma-2b</strong><small>nvidia-nim/google-gemma-2b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-gemma-2b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Gemma 4 31B IT</strong><small>nvidia-nim/google-gemma-4-31b-it</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-gemma-4-31b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>google/recurrentgemma-2b</strong><small>nvidia-nim/google-recurrentgemma-2b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/google-recurrentgemma-2b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>ibm/granite-3.0-3b-a800m-instruct</strong><small>nvidia-nim/ibm-granite-3-0-3b-a800m-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/ibm-granite-3-0-3b-a800m-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>ibm/granite-3.0-8b-instruct</strong><small>nvidia-nim/ibm-granite-3-0-8b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/ibm-granite-3-0-8b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>ibm/granite-34b-code-instruct</strong><small>nvidia-nim/ibm-granite-34b-code-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/ibm-granite-34b-code-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>ibm/granite-8b-code-instruct</strong><small>nvidia-nim/ibm-granite-8b-code-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/ibm-granite-8b-code-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>meta/codellama-70b</strong><small>nvidia-nim/meta-codellama-70b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-codellama-70b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>meta/llama-3.2-11b-vision-instruct</strong><small>nvidia-nim/meta-llama-3-2-11b-vision-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text, image</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-llama-3-2-11b-vision-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>meta/llama-3.2-90b-vision-instruct</strong><small>nvidia-nim/meta-llama-3-2-90b-vision-instruct</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-llama-3-2-90b-vision-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>meta/llama-guard-4-12b</strong><small>nvidia-nim/meta-llama-guard-4-12b</small></td>
+      <td>163840 tokens</td>
+      <td>Not listed</td>
+      <td>text, image</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-llama-guard-4-12b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>meta/llama2-70b</strong><small>nvidia-nim/meta-llama2-70b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-llama2-70b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Muse Glimmer 30B</strong><small>nvidia-nim/meta-muse-glimmer-30b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/meta-muse-glimmer-30b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>microsoft/kosmos-2</strong><small>nvidia-nim/microsoft-kosmos-2</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/microsoft-kosmos-2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>microsoft/phi-3.5-moe-instruct</strong><small>nvidia-nim/microsoft-phi-3-5-moe-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/microsoft-phi-3-5-moe-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>microsoft/phi-3-vision-128k-instruct</strong><small>nvidia-nim/microsoft-phi-3-vision-128k-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/microsoft-phi-3-vision-128k-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>minimaxai/minimax-m3</strong><small>nvidia-nim/minimaxai-minimax-m3</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/minimaxai-minimax-m3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/codestral-22b-instruct-v0.1</strong><small>nvidia-nim/mistralai-codestral-22b-instruct-v0-1</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-codestral-22b-instruct-v0-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/mistral-7b-instruct-v0.3</strong><small>nvidia-nim/mistralai-mistral-7b-instruct-v0-3</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-mistral-7b-instruct-v0-3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/mistral-large-2-instruct</strong><small>nvidia-nim/mistralai-mistral-large-2-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-mistral-large-2-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/mistral-large-3-675b-instruct-2512</strong><small>nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/mistral-nemotron</strong><small>nvidia-nim/mistralai-mistral-nemotron</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-mistral-nemotron" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>mistralai/mixtral-8x22b-v0.1</strong><small>nvidia-nim/mistralai-mixtral-8x22b-v0-1</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/mistralai-mixtral-8x22b-v0-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>moonshotai/kimi-k2.6</strong><small>nvidia-nim/moonshotai-kimi-k2-6</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/moonshotai-kimi-k2-6" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Kimi K3</strong><small>nvidia-nim/moonshotai-kimi-k3</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/moonshotai-kimi-k3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nv-mistralai/mistral-nemo-12b-instruct</strong><small>nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/cosmos-reason2-8b</strong><small>nvidia-nim/nvidia-cosmos-reason2-8b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-cosmos-reason2-8b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/embed-qa-4</strong><small>nvidia-nim/nvidia-embed-qa-4</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-embed-qa-4" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/ising-calibration-1.5-31b</strong><small>nvidia-nim/nvidia-ising-calibration-1-5-31b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-ising-calibration-1-5-31b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.1-nemoguard-8b-content-safety</strong><small>nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.1-nemoguard-8b-topic-control</strong><small>nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.1-nemotron-51b-instruct</strong><small>nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.1-nemotron-70b-instruct</strong><small>nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Llama 3.1 Nemotron Safety Guard 8B v3</strong><small>nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.1-nemotron-ultra-253b-v1</strong><small>nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1</strong><small>nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding, rerank</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-3.2-nv-embedqa-1b-v1</strong><small>nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama-nemotron-embed-vl-1b-v2</strong><small>nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding, text, image</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/llama3-chatqa-1.5-70b</strong><small>nvidia-nim/nvidia-llama3-chatqa-1-5-70b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-llama3-chatqa-1-5-70b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/mistral-nemo-minitron-8b-8k-instruct</strong><small>nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-3.5-content-safety</strong><small>nvidia-nim/nvidia-nemotron-3-5-content-safety</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-content-safety" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-3.5-lightning-30b-a3b</strong><small>nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-3-embed-1b</strong><small>nvidia-nim/nvidia-nemotron-3-embed-1b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-embed-1b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Nemotron 3 Nano Omni 30B A3B Reasoning</strong><small>nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>vision, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Nemotron 3 Super 120B A12B</strong><small>nvidia-nim/nvidia-nemotron-3-super-120b-a12b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-super-120b-a12b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>Nemotron 3 Ultra 550B A55B</strong><small>nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-4-340b-instruct</strong><small>nvidia-nim/nvidia-nemotron-4-340b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-4-340b-reward</strong><small>nvidia-nim/nvidia-nemotron-4-340b-reward</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-reward" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-nano-3-30b-a3b</strong><small>nvidia-nim/nvidia-nemotron-nano-3-30b-a3b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-nano-3-30b-a3b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nemotron-parse</strong><small>nvidia-nim/nvidia-nemotron-parse</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/neva-22b</strong><small>nvidia-nim/nvidia-neva-22b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-neva-22b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nv-embedqa-mistral-7b-v2</strong><small>nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/nvclip</strong><small>nvidia-nim/nvidia-nvclip</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-nvclip" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/riva-translate-4b-instruct</strong><small>nvidia-nim/nvidia-riva-translate-4b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/riva-translate-4b-instruct-v1.1</strong><small>nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/riva-translate-4b-instruct-v2</strong><small>nvidia-nim/nvidia-riva-translate-4b-instruct-v2</small></td>
+      <td>8192 tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v2" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>nvidia/vila</strong><small>nvidia-nim/nvidia-vila</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/nvidia-vila" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>GPT OSS 20B</strong><small>nvidia-nim/openai-gpt-oss-20b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/openai-gpt-oss-20b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>poolside/laguna-xs-2.1</strong><small>nvidia-nim/poolside-laguna-xs-2-1</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/poolside-laguna-xs-2-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>snowflake/arctic-embed-l</strong><small>nvidia-nim/snowflake-arctic-embed-l</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>embedding</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/snowflake-arctic-embed-l" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>writer/palmyra-creative-122b</strong><small>nvidia-nim/writer-palmyra-creative-122b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/writer-palmyra-creative-122b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>writer/palmyra-fin-70b-32k</strong><small>nvidia-nim/writer-palmyra-fin-70b-32k</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/writer-palmyra-fin-70b-32k" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>writer/palmyra-med-70b</strong><small>nvidia-nim/writer-palmyra-med-70b</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>writer/palmyra-med-70b-32k</strong><small>nvidia-nim/writer-palmyra-med-70b-32k</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b-32k" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>NVIDIA NIM</td>
+      <td><strong>zyphra/zamba2-7b-instruct</strong><small>nvidia-nim/zyphra-zamba2-7b-instruct</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/nvidia-nim/zyphra-zamba2-7b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>deepseek-v4-flash</strong><small>ollama-cloud/deepseek-v4-flash</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/deepseek-v4-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>deepseek-v4-pro</strong><small>ollama-cloud/deepseek-v4-pro</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/deepseek-v4-pro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>Gemma 4 31B IT</strong><small>ollama-cloud/gemma4-31b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>vision, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/gemma4-31b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>gpt-oss:120b</strong><small>ollama-cloud/gpt-oss-120b</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/gpt-oss-120b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>gpt-oss:20b</strong><small>ollama-cloud/gpt-oss-20b</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/gpt-oss-20b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>minimax-m3</strong><small>ollama-cloud/minimax-m3</small></td>
+      <td>512000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/minimax-m3" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>Nemotron 3 Nano 30B A3B</strong><small>ollama-cloud/nemotron-3-nano-30b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/nemotron-3-nano-30b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>Nemotron 3 Super 120B A12B</strong><small>ollama-cloud/nemotron-3-super</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/nemotron-3-super" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Ollama Cloud</td>
+      <td><strong>nemotron-3-ultra</strong><small>ollama-cloud/nemotron-3-ultra</small></td>
+      <td>262000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/ollama-cloud/nemotron-3-ultra" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>big-pickle</strong><small>opencode/big-pickle</small></td>
+      <td>N/A tokens</td>
+      <td>Not listed</td>
+      <td>unknown</td>
+      <td><a href="https://freellm.net/models/opencode/big-pickle" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>DeepSeek V4 Flash</strong><small>opencode/deepseek-v4-flash-free</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/opencode/deepseek-v4-flash-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>Ling 3.0 Flash Fin</strong><small>opencode/ling-3-0-flash-fin-free</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/opencode/ling-3-0-flash-fin-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>MiMo-V2.5</strong><small>opencode/mimo-v2-5-free</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>vision, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/opencode/mimo-v2-5-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>Nemotron 3.5 Lightning 30B A3B</strong><small>opencode/nemotron-3-5-lightning-free</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/opencode/nemotron-3-5-lightning-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenCode Zen</td>
+      <td><strong>Nemotron 3 Ultra 550B A55B</strong><small>opencode/nemotron-3-ultra-free</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/opencode/nemotron-3-ultra-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Cohere: North Mini Code (free)</strong><small>openrouter/cohere-north-mini-code</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text, code, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/cohere-north-mini-code" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Dots Studio: Dots3-Note Preview (free)</strong><small>openrouter/dots-studio-dots-3-note-preview</small></td>
+      <td>512000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/dots-studio-dots-3-note-preview" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Google: Gemma 4 26B A4B (free)</strong><small>openrouter/google-gemma-4-26b-a4b-it</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning, video</td>
+      <td><a href="https://freellm.net/models/openrouter/google-gemma-4-26b-a4b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Google: Gemma 4 31B (free)</strong><small>openrouter/google-gemma-4-31b-it</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning, video</td>
+      <td><a href="https://freellm.net/models/openrouter/google-gemma-4-31b-it" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Google: Lyria 3 Clip Preview</strong><small>openrouter/google-lyria-3-clip-preview</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio</td>
+      <td><a href="https://freellm.net/models/openrouter/google-lyria-3-clip-preview" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Google: Lyria 3 Pro Preview</strong><small>openrouter/google-lyria-3-pro-preview</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio</td>
+      <td><a href="https://freellm.net/models/openrouter/google-lyria-3-pro-preview" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>inclusionAI: Ling 3.0 Flash Fin (free)</strong><small>openrouter/inclusionai-ling-3-0-flash-fin</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-fin" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>inclusionAI: Ling 3.0 Flash Sante (free)</strong><small>openrouter/inclusionai-ling-3-0-flash-sante</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-sante" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>LiquidAI: LFM2.5-2.6B (free)</strong><small>openrouter/liquid-lfm-2-5-2-6b</small></td>
+      <td>65536 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/liquid-lfm-2-5-2-6b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Nex AGI: Nex-N2.5-Mini (free)</strong><small>openrouter/nex-agi-nex-n2-5-mini</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nex-agi-nex-n2-5-mini" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Nex AGI: Nex-N2.5-Pro (free)</strong><small>openrouter/nex-agi-nex-n2-5-pro</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nex-agi-nex-n2-5-pro" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>NVIDIA: Nemotron 3.5 Content Safety (free)</strong><small>openrouter/nvidia-nemotron-3-5-content-safety</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nvidia-nemotron-3-5-content-safety" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>NVIDIA: Nemotron 3.5 Lightning (free)</strong><small>openrouter/nvidia-nemotron-3-5-lightning</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nvidia-nemotron-3-5-lightning" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>NVIDIA: Nemotron 3 Nano Omni (free)</strong><small>openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning</small></td>
+      <td>256000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, video, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>NVIDIA: Nemotron 3 Super (free)</strong><small>openrouter/nvidia-nemotron-3-super-120b-a12b</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nvidia-nemotron-3-super-120b-a12b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>NVIDIA: Nemotron 3 Ultra (free)</strong><small>openrouter/nvidia-nemotron-3-ultra-550b-a55b</small></td>
+      <td>1000000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/nvidia-nemotron-3-ultra-550b-a55b" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Free Models Router</strong><small>openrouter/openrouter-free</small></td>
+      <td>200000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/openrouter-free" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Poolside: Laguna S 2.1 (free)</strong><small>openrouter/poolside-laguna-s-2-1</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/poolside-laguna-s-2-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Poolside: Laguna XS 2.1 (free)</strong><small>openrouter/poolside-laguna-xs-2-1</small></td>
+      <td>262144 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/poolside-laguna-xs-2-1" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Thinking Machines: Inkling (free)</strong><small>openrouter/thinkingmachines-inkling</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/thinkingmachines-inkling" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OpenRouter</td>
+      <td><strong>Thinking Machines: Inkling Small (free)</strong><small>openrouter/thinkingmachines-inkling-small</small></td>
+      <td>1048576 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, audio, reasoning</td>
+      <td><a href="https://freellm.net/models/openrouter/thinkingmachines-inkling-small" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>OVHcloud AI Endpoints</td>
+      <td><strong>Meta-Llama-3_3-70B-Instruct</strong><small>ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct</small></td>
+      <td>131000 tokens</td>
+      <td>Not listed</td>
+      <td>text</td>
+      <td><a href="https://freellm.net/models/ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Z AI (Zhipu AI)</td>
+      <td><strong>GLM-4.5-Air</strong><small>z-ai-zhipu-ai/glm-4-5-air</small></td>
+      <td>131072 tokens</td>
+      <td>Not listed</td>
+      <td>reasoning</td>
+      <td><a href="https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-air" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Z AI (Zhipu AI)</td>
+      <td><strong>GLM-4.5-Flash</strong><small>z-ai-zhipu-ai/glm-4-5-flash</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Z AI (Zhipu AI)</td>
+      <td><strong>GLM-4.5-Flash (retirement announced)</strong><small>z-ai-zhipu-ai/glm-4-5-flash-retirement-announced</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash-retirement-announced" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Z AI (Zhipu AI)</td>
+      <td><strong>GLM-4.6V-Flash</strong><small>z-ai-zhipu-ai/glm-4-6v-flash</small></td>
+      <td>128000 tokens</td>
+      <td>Not listed</td>
+      <td>text, image, video, reasoning</td>
+      <td><a href="https://freellm.net/models/z-ai-zhipu-ai/glm-4-6v-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr><tr>
+      <td>Z AI (Zhipu AI)</td>
+      <td><strong>GLM-4.7-Flash</strong><small>z-ai-zhipu-ai/glm-4-7-flash</small></td>
+      <td>200000 tokens</td>
+      <td>Not listed</td>
+      <td>text, reasoning</td>
+      <td><a href="https://freellm.net/models/z-ai-zhipu-ai/glm-4-7-flash" target="_blank" rel="nofollow noopener">Source ↗</a></td>
+    </tr></tbody></table></div>
+    </section>
+    <section>
+      <div class="eyebrow">02 / related pages</div>
+      <h2><span lang="zh-CN">继续浏览</span><span lang="en">Continue exploring</span></h2>
+      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">开源权重模型</span><span lang="en">Open-Weight AI Models</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">开源权重模型</span><span lang="en">Open-Weight AI Models</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">开源权重模型</span><span lang="en">Open-Weight AI Models</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">开源权重模型</span><span lang="en">Open-Weight AI Models</span></a></li></ul>
+    </section>
+  </main>
+  <footer>
+    <p><strong><span lang="zh-CN">免责声明</span><span lang="en">Disclaimer</span>：</strong><span lang="zh-CN">免费访问不代表无限制或适合生产环境，请在使用前核对官方来源。</span><span lang="en">Free access does not mean unlimited or production-ready; verify the official source before use.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 首页 →</span><span lang="en">Return to FreeLLM home →</span></a></p>
+  </footer>
+</body>
+</html>

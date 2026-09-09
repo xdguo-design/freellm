@@ -1,0 +1,38 @@
+{
+  "providerId": "longcat",
+  "provider": "LongCat",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["longcat-2-0"],
+  "paths": [
+    {
+      "id": "api",
+      "label": "LongCat API 调用",
+      "productType": "api",
+      "prerequisites": ["已注册 LongCat 平台", "已创建 API key", "已确认账户可用额度与当前模型 ID"],
+      "steps": [
+        {"title": "获取 API key", "detail": "从 LongCat 官方平台进入 API key 或开发者设置，创建密钥并保存为 LONGCAT_API_KEY 环境变量。"},
+        {"title": "查看模型列表", "detail": "先访问官方模型接口，确认账户当前可见的模型 ID。", "command": "curl https://api.longcat.chat/openai/v1/models -H 'Authorization: Bearer ${LONGCAT_API_KEY}'", "expected": "返回 HTTP 200 和 data 模型列表。"},
+        {"title": "发送聊天请求", "detail": "把 model 改为模型列表中的真实 ID，先用短文本验证。", "command": "curl https://api.longcat.chat/openai/v1/chat/completions -H 'Authorization: Bearer ${LONGCAT_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "响应包含 choices[0].message.content。"}
+      ],
+      "endpoint": "https://api.longcat.chat/openai/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.longcat.chat/openai/v1/models -H 'Authorization: Bearer ${LONGCAT_API_KEY}'",
+      "validation": "GET /openai/v1/models 返回 HTTP 200，随后聊天接口返回 choices；额度和模型可用性以控制台为准。",
+      "sourceUrls": ["https://longcat.ai/platform/", "https://longcat.ai/platform/docs/zh/", "https://longcat.ai/platform/docs/zh/faq"]
+    },
+    {
+      "id": "open-weights",
+      "label": "下载 LongCat-2.0 开源权重",
+      "productType": "download",
+      "prerequisites": ["已安装 Python 与 Hugging Face Hub CLI", "有足够磁盘和显存或 CPU 内存", "已阅读模型仓库许可证"],
+      "steps": [
+        {"title": "阅读官方仓库", "detail": "先确认模型卡、许可证、硬件建议和推理方式。", "action": "打开 https://github.com/meituan-longcat/LongCat-2.0"},
+        {"title": "安装下载工具", "detail": "在独立虚拟环境中安装 Hugging Face Hub。", "command": "python -m pip install -U huggingface_hub"},
+        {"title": "下载权重", "detail": "将权重保存到明确的本地目录，避免覆盖已有模型。", "command": "huggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"},
+        {"title": "按仓库说明启动", "detail": "使用仓库提供的推理命令，并根据实际显存调整量化或并行参数。"}
+      ],
+      "validation": "下载目录包含模型配置与权重文件，并能按官方仓库示例完成一次本地推理。",
+      "sourceUrls": ["https://github.com/meituan-longcat/LongCat-2.0", "https://huggingface.co/meituan-longcat/LongCat-2.0"]
+    }
+  ]
+}

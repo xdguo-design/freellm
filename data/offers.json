@@ -466,97 +466,15 @@
     "notes": "Never describe this as a universal local-midnight discount."
   },
   {
-    "id": "longcat-api",
+    "id": "longcat-2-0",
     "order": 7,
     "date": "2026-09-06",
-    "name": "LongCat Meituan API",
+    "name": "LongCat-2.0",
     "providerMark": "LC",
-    "provider": "LongCat API",
-    "providerMeta": "Meituan · global login",
+    "provider": "LongCat",
+    "providerMeta": "Meituan · API + open weights",
     "model": "LongCat-2.0",
-    "modelMeta": "OpenAI / Anthropic compatible",
-    "type": [
-      "coding",
-      "promo"
-    ],
-    "productType": "api",
-    "capabilities": [
-      "model_api"
-    ],
-    "usageGuide": {
-      "summary": "通过 LongCat 官方平台调用模型 API",
-      "prerequisites": [
-        "LongCat 账号",
-        "确认 API 资格和计费规则"
-      ],
-      "steps": [
-        "打开官方平台并完成登录",
-        "创建凭据后设置环境变量并发送请求"
-      ],
-      "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
-      "method": "POST",
-      "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
-      "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
-      },
-      "docsUrl": "https://longcat.ai/platform/docs/zh/"
-    },
-    "kicker": "VERIFY BEFORE FREE",
-    "badges": [
-      "VERIFY",
-      "OPENAI / ANTHROPIC"
-    ],
-    "freeSummary": "Official API exists; no free quota confirmed",
-    "validitySummary": "Unknown / do not call free",
-    "accessSummary": "Email / phone",
-    "checkedSummary": "Today / official docs",
-    "title": "LongCat API · status check",
-    "why": "LongCat has a public API platform and supports non-mainland email or phone login. The official docs confirm API access but do not confirm a free quota, so it stays out of the free list.",
-    "mechanism": "Paid API status; free quota not confirmed",
-    "validity": "Unknown",
-    "access": "Non-mainland email or phone login",
-    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
-    "register": "https://longcat.ai/platform/",
-    "registerLabel": "Register / open LongCat",
-    "links": [
-      [
-        "API docs",
-        "https://longcat.ai/platform/docs/zh/"
-      ],
-      [
-        "FAQ",
-        "https://longcat.ai/platform/docs/zh/faq"
-      ]
-    ],
-    "originCountry": "China",
-    "availability": "Non-mainland email or phone login",
-    "freeMechanism": "not_confirmed",
-    "quota": "Free quota not confirmed",
-    "renewal": "Unknown",
-    "phoneRequired": "unknown",
-    "cardRequired": "unknown",
-    "commercialUse": "check provider terms",
-    "sourceUrls": [
-      "https://longcat.ai/platform/docs/zh/",
-      "https://longcat.ai/platform/docs/zh/faq"
-    ],
-    "evidence": "Official docs confirm the API platform but do not confirm a durable free quota.",
-    "status": "needs_review",
-    "confidence": "medium",
-    "lastVerifiedAt": "2026-09-06",
-    "checkedBy": "manual",
-    "notes": "Do not promote as free without a public quota rule."
-  },
-  {
-    "id": "longcat-download",
-    "order": 8,
-    "date": "2026-09-06",
-    "name": "LongCat 2.0 Meituan open weights",
-    "providerMark": "LC",
-    "provider": "LongCat-2.0",
-    "providerMeta": "Meituan · open weights",
-    "model": "1.6T MoE / 48B active",
-    "modelMeta": "Local deployment",
+    "modelMeta": "API · Open weights",
     "contextWindow": {
       "tokens": 262144,
       "en": "256K tokens",
@@ -564,44 +482,98 @@
       "sourceUrl": "https://huggingface.co/meituan-longcat/LongCat-2.0/blob/main/config.json"
     },
     "type": [
+      "coding",
+      "promo",
       "download"
     ],
-    "productType": "open_weights",
+    "productType": "api",
     "capabilities": [
+      "model_api",
       "open_weights"
     ],
     "usageGuide": {
-      "summary": "下载 LongCat-2.0 权重并在本地运行",
+      "summary": "通过 LongCat 官方平台调用模型 API；也可下载权重本地部署",
       "prerequisites": [
-        "满足模型许可证和硬件要求"
+        "LongCat 账号（API 路径）",
+        "确认 API 资格和计费规则，或满足本地部署硬件要求"
       ],
       "steps": [
-        "打开官方模型仓库并下载权重",
-        "按照仓库说明安装依赖并启动推理服务"
+        "选择 API 调用或下载权重入口",
+        "API 路径创建凭据发送请求；权重路径打开模型仓库并启动本地推理"
       ],
+      "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "shell": "git clone https://github.com/meituan-longcat/LongCat-2.0"
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+        "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
-      "docsUrl": "https://github.com/meituan-longcat/LongCat-2.0"
+      "docsUrl": "https://longcat.ai/platform/docs/zh/"
     },
-    "kicker": "DOWNLOAD MODEL",
-    "badges": [
-      "OPEN WEIGHTS",
-      "MIT LICENSE"
+    "accessPaths": [
+      {
+        "id": "api",
+        "label": "API 调用",
+        "productType": "api",
+        "summary": "在线调用 LongCat API",
+        "freeSummary": "免费额度未确认",
+        "access": "Email / phone",
+        "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
+        "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+        "links": [
+          [
+            "API docs",
+            "https://longcat.ai/platform/docs/zh/"
+          ],
+          [
+            "FAQ",
+            "https://longcat.ai/platform/docs/zh/faq"
+          ]
+        ]
+      },
+      {
+        "id": "open_weights",
+        "label": "下载权重",
+        "productType": "open_weights",
+        "summary": "下载 LongCat-2.0 权重并在本地运行",
+        "freeSummary": "权重免费，算力不免费",
+        "access": "Global",
+        "contextWindow": "256K tokens",
+        "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0",
+        "links": [
+          [
+            "Official GitHub",
+            "https://github.com/meituan-longcat/LongCat-2.0"
+          ],
+          [
+            "Hugging Face",
+            "https://huggingface.co/meituan-longcat/LongCat-2.0"
+          ]
+        ]
+      }
     ],
-    "freeSummary": "Weights are free; compute is not",
-    "validitySummary": "MIT license / check model card",
-    "accessSummary": "Global",
-    "checkedSummary": "Today / official GitHub",
-    "title": "LongCat-2.0 · open weights",
-    "why": "The official repository links the model for local deployment. “Free” means the weights are available; a 1.6T-parameter model still requires serious GPU or hosted infrastructure.",
-    "mechanism": "Downloadable weights; local inference",
-    "validity": "Model license applies",
-    "access": "Global download path",
-    "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0",
-    "register": "https://github.com/meituan-longcat/LongCat-2.0",
-    "registerLabel": "Open LongCat model",
+    "kicker": "API + OPEN WEIGHTS",
+    "badges": [
+      "VERIFY API",
+      "OPEN WEIGHTS"
+    ],
+    "freeSummary": "API 免费额度未确认；权重免费，算力不免费",
+    "validitySummary": "API 条款待确认；权重遵循 MIT / 模型卡",
+    "accessSummary": "API Email / phone；权重 Global",
+    "checkedSummary": "Today / official API docs + GitHub",
+    "title": "LongCat-2.0 · API + open weights",
+    "why": "LongCat-2.0 is one model with two access paths: an official API whose free quota is not confirmed, and downloadable weights whose license permits access but still requires storage and GPU infrastructure.",
+    "mechanism": "API access plus downloadable open weights",
+    "validity": "API quota unknown; model license applies to weights",
+    "access": "API email / phone; weights global download path",
+    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+    "register": "https://longcat.ai/platform/",
+    "registerLabel": "Open LongCat",
     "links": [
+      [
+        "API docs",
+        "https://longcat.ai/platform/docs/zh/"
+      ],
       [
         "Official GitHub",
         "https://github.com/meituan-longcat/LongCat-2.0"
@@ -612,22 +584,26 @@
       ]
     ],
     "originCountry": "China",
-    "availability": "Global download path",
-    "freeMechanism": "open_weights",
-    "quota": "Downloadable weights",
-    "renewal": "Model license applies",
-    "phoneRequired": "no",
-    "cardRequired": "no",
-    "commercialUse": "check MIT and model card terms",
+    "availability": "API email / phone; weights global",
+    "freeMechanism": "not_confirmed",
+    "pricingModel": "not_confirmed",
+    "quota": "API free quota not confirmed; downloadable weights",
+    "renewal": "API unknown; model license applies to weights",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check API terms and MIT/model-card terms",
     "sourceUrls": [
-      "https://github.com/meituan-longcat/LongCat-2.0"
+      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.ai/platform/docs/zh/faq",
+      "https://github.com/meituan-longcat/LongCat-2.0",
+      "https://huggingface.co/meituan-longcat/LongCat-2.0"
     ],
-    "evidence": "Official repository links the model for local deployment and documents the license.",
-    "status": "verified",
+    "evidence": "Official API docs confirm API access but do not confirm a durable free quota; the official repository documents LongCat-2.0 downloadable weights and the model license.",
+    "status": "needs_review",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-06",
     "checkedBy": "manual",
-    "notes": "Weights free does not mean GPU, storage or inference free."
+    "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free."
   },
   {
     "id": "qwen-download",
@@ -2723,6 +2699,112 @@
     "providerMeta": "Groq · International",
     "model": "gpt-oss-120b / gpt-oss-20b · qwen3.x-27b · groq/compound · llama-prompt-guard · whisper-large-v3",
     "modelMeta": "Hosted OpenAI-compatible models",
+    "freeModels": [
+      {
+        "model": "canopylabs/orpheus-arabic-saudi",
+        "label": "Preview · Arabic text-to-speech",
+        "contextWindow": "4,000 tokens",
+        "quota": "10 RPM · 100 RPD · 1.2K TPM · 3.6K TPD",
+        "note": "Audio model; free-plan limits are measured in text tokens here.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "canopylabs/orpheus-v1-english",
+        "label": "Preview · English text-to-speech",
+        "contextWindow": "4,000 tokens",
+        "quota": "10 RPM · 100 RPD · 1.2K TPM · 3.6K TPD",
+        "note": "Audio model; free-plan limits are measured in text tokens here.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "groq/compound",
+        "label": "Production system · web search and code execution",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 250 RPD · 70K TPM",
+        "note": "Compound system with built-in tools.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "groq/compound-mini",
+        "label": "Production system · web search and code execution",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 250 RPD · 70K TPM",
+        "note": "Compound Mini system with built-in tools.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "meta-llama/llama-prompt-guard-2-22m",
+        "label": "Preview · prompt moderation",
+        "contextWindow": "512 tokens",
+        "quota": "30 RPM · 14.4K RPD · 15K TPM · 500K TPD",
+        "note": "Prompt Guard model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "meta-llama/llama-prompt-guard-2-86m",
+        "label": "Preview · prompt moderation",
+        "contextWindow": "512 tokens",
+        "quota": "30 RPM · 14.4K RPD · 15K TPM · 500K TPD",
+        "note": "Prompt Guard model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-120b",
+        "label": "Production · reasoning and browser/code tools",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "OpenAI GPT-OSS 120B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-20b",
+        "label": "Production · reasoning and browser/code tools",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "OpenAI GPT-OSS 20B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "label": "Preview · safety classification",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Safety-tuned GPT-OSS 20B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "qwen/qwen3.6-27b",
+        "label": "Preview · text and reasoning",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Qwen 3.6 27B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "qwen/qwen3.8-27b",
+        "label": "Preview · text and reasoning",
+        "contextWindow": "131,042 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Qwen 3.8 27B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "whisper-large-v3",
+        "label": "Production · speech-to-text",
+        "contextWindow": "—（音频模型，无文本上下文窗口）",
+        "quota": "20 RPM · 2K RPD · 7.2K ASH · 28.8K ASD",
+        "note": "Audio seconds per hour/day; not a text-context model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "whisper-large-v3-turbo",
+        "label": "Production · speech-to-text",
+        "contextWindow": "—（音频模型，无文本上下文窗口）",
+        "quota": "20 RPM · 2K RPD · 7.2K ASH · 28.8K ASD",
+        "note": "Audio seconds per hour/day; not a text-context model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      }
+    ],
     "type": [
       "api",
       "free"
@@ -2764,11 +2846,19 @@
     "registerLabel": "Groq Console",
     "links": [
       [
-        "Official rate limits (free plan table)",
+        "Groq Console",
+        "https://console.groq.com/"
+      ],
+      [
+        "Groq model catalog",
+        "https://console.groq.com/docs/models"
+      ],
+      [
+        "Free Plan Limits",
         "https://console.groq.com/docs/rate-limits"
       ],
       [
-        "OpenAI compatibility",
+        "OpenAI Compatibility",
         "https://console.groq.com/docs/openai"
       ]
     ],
@@ -2785,6 +2875,7 @@
     "quota": "Per-model free plan limits, e.g. 30 RPM / 1K RPD / 8K TPM for gpt-oss models; 250 RPD / 70K TPM for groq/compound",
     "renewal": "Daily and per-minute limits reset automatically",
     "sourceUrls": [
+      "https://console.groq.com/docs/models",
       "https://console.groq.com/docs/rate-limits",
       "https://console.groq.com/docs/openai"
     ],

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>deepseek-ai/deepseek-coder-6.7b-instruct 多平台入口与限制 · deepseek-ai/deepseek-coder-6.7b-instruct Model Providers | FreeLLM</title><meta name="description" content="比较 deepseek-ai/deepseek-coder-6.7b-instruct 在不同厂商的评分、上下文、速率、状态和目录来源，并查看 FreeLLM 已整理的详细接入资源。">
+  <link rel="canonical" href="https://freellm.top/models/deepseek-ai-deepseek-coder-6-7b-instruct/"><meta property="og:type" content="article">
+<meta property="og:title" content="deepseek-ai/deepseek-coder-6.7b-instruct 多平台入口与限制 · deepseek-ai/deepseek-coder-6.7b-instruct Model Providers | FreeLLM">
+<meta property="og:description" content="比较 deepseek-ai/deepseek-coder-6.7b-instruct 在不同厂商的评分、上下文、速率、状态和目录来源，并查看 FreeLLM 已整理的详细接入资源。">
+<meta property="og:url" content="https://freellm.top/models/deepseek-ai-deepseek-coder-6-7b-instruct/">
+<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+<meta property="og:image:alt" content="deepseek-ai/deepseek-coder-6.7b-instruct 多平台入口与限制 · deepseek-ai/deepseek-coder-6.7b-instruct Model Providers | FreeLLM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="deepseek-ai/deepseek-coder-6.7b-instruct 多平台入口与限制 · deepseek-ai/deepseek-coder-6.7b-instruct Model Providers | FreeLLM">
+<meta name="twitter:description" content="比较 deepseek-ai/deepseek-coder-6.7b-instruct 在不同厂商的评分、上下文、速率、状态和目录来源，并查看 FreeLLM 已整理的详细接入资源。">
+<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script><style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style><script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "deepseek-ai/deepseek-coder-6.7b-instruct 多平台入口与限制 · deepseek-ai/deepseek-coder-6.7b-instruct Model Providers | FreeLLM", "description": "比较 deepseek-ai/deepseek-coder-6.7b-instruct 在不同厂商的评分、上下文、速率、状态和目录来源，并查看 FreeLLM 已整理的详细接入资源。", "url": "https://freellm.top/models/deepseek-ai-deepseek-coder-6-7b-instruct/", "inLanguage": ["zh-CN", "en"], "dateModified": "2026-09-09", "mainEntity": {"@type": "ItemList", "numberOfItems": 1, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "NVIDIA NIM · deepseek-ai/deepseek-coder-6.7b-instruct", "url": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct"}]}}</script>
+  <style>
+    :root { --ink:#172033; --muted:#68748a; --line:#dfe5ef; --soft:#f5f7fb; --blue:#1744e8; }
+    * { box-sizing:border-box; } body { max-width:1180px; margin:0 auto; padding:24px 18px 64px; color:var(--ink); background:var(--soft); font-family:Inter,ui-sans-serif,system-ui,sans-serif; line-height:1.65; }
+    a { color:var(--blue); } header,main,footer { background:#fff; border:1px solid var(--line); border-radius:16px; padding:clamp(20px,4vw,36px); margin-bottom:18px; }
+    h1 { margin:10px 0; font-size:clamp(28px,5vw,48px); line-height:1.1; } h2 { margin:0 0 8px; } .lead,.muted { color:var(--muted); } .stats { display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; color:var(--muted); font-size:13px; }
+    .catalog-table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:12px; } .catalog-table { width:100%; min-width:900px; border-collapse:collapse; font-size:13px; } .catalog-table th,.catalog-table td { padding:11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); } .catalog-table th { color:var(--muted); background:#f8fafc; font-size:11px; white-space:nowrap; } .catalog-table small { display:block; color:var(--muted); font-size:11px; } .score { color:var(--blue); } .status { display:inline-block; border-radius:999px; padding:2px 7px; font-size:11px; } .status-online { color:#147a46; background:#dcfce7; } .status-offline { color:#9f1239; background:#ffe4e6; } .status-degraded,.status-unknown { color:#8a5a00; background:#fef3c7; } .related-list { padding-left:20px; } .eyebrow { font:11px ui-monospace,Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; }
+    @media (max-width:620px) { body { padding:10px 8px 38px; } header,main,footer { padding:18px; border-radius:12px; } }
+  </style>
+</head>
+<body data-static-locale="true">
+  <header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/models/all/"><span lang="zh-CN">全部模型</span><span lang="en">All models</span></a></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><div class="eyebrow">MODEL AGGREGATION</div><h1>deepseek-ai/deepseek-coder-6.7b-instruct</h1>
+    <p class="lead"><span lang="zh-CN">同一模型在 1 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。</span><span lang="en">1 provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.</span></p>
+    <div class="stats"><span>1 <span lang="zh-CN">个平台记录</span><span lang="en">platform records</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-09</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">目录发现</span><span lang="en">Directory discovered</span></span></div>
+  </header>
+  <main><section><h2><span lang="zh-CN">平台记录对比</span><span lang="en">Provider records</span></h2><div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
+      <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>评分 <span lang="en">Score</span></th><th>上下文 <span lang="en">Context</span></th>
+      <th>速率 <span lang="en">Rate limit</span></th><th>状态 <span lang="en">Status</span></th><th>同步 <span lang="en">Synced</span></th><th>来源 <span lang="en">Source</span></th>
+    </tr></thead><tbody><tr>
+          <td><a href="/providers/nvidia-nim/">NVIDIA NIM</a></td>
+          <td><strong>deepseek-ai/deepseek-coder-6.7b-instruct</strong><small>nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct</small></td>
+          <td><strong class="score">51</strong></td>
+          <td>131072</td>
+          <td>Up to 40 RPM</td>
+          <td><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small><span lang="zh-CN">目录发现</span><span lang="en">Directory discovered</span></small></td>
+          <td>2026-09-09</td>
+          <td><a href="https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+        </tr></tbody></table></div></section>
+    <section><h2><span lang="zh-CN">本站详细接入资源</span><span lang="en">Detailed FreeLLM access records</span></h2><p class="lead"><span lang="zh-CN">这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。</span><span lang="en">Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.</span></p><p class="muted">暂未关联本站详细接入资源 / No detailed FreeLLM access record linked yet.</p></section>
+  </main><footer><p><a href="https://freellm.top/models/all/"><span lang="zh-CN">返回模型大列表</span><span lang="en">Back to model directory</span></a> · <a href="https://freellm.top/providers/"><span lang="zh-CN">按厂家浏览</span><span lang="en">Browse by provider</span></a></p></footer>
+</body></html>

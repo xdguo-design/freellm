@@ -27,9 +27,11 @@ FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额�
 
 ### 当前内容
 
-- **38 个**已整理的 AI 服务和模型条目
+- **37 个**已整理的 AI 资源条目，另有 **296 条**第三方模型目录记录和 **26 家**厂家目录
+- 原资源目录：[资源目录](https://freellm.top/models/)；模型中心：[双 Tab 页面](https://freellm.top/models/center/)（精选资源 / 全部模型）；独立模型大列表：[全部模型](https://freellm.top/models/all/)，支持搜索、按厂家筛选、按评分 / 厂家 / 模型分组；厂家入口：[按厂家浏览](https://freellm.top/providers/)
+- 重点入口附有逐步操作、可复制命令、验证动作和官方来源；操作型厂家（如 Freebuff、LongCat）即使暂时没有模型目录记录，也会单独保留操作页
 - **7 个**分类：[免费额度](https://freellm.top/category/free-quota/)、[学生优惠](https://freellm.top/category/student/)、[免费 IDE](https://freellm.top/category/free-ide/)、[AI API](https://freellm.top/category/api/)、[开放权重](https://freellm.top/category/open-weights/)、[试用与促销](https://freellm.top/category/promo/)、[Web 与浏览器 AI](https://freellm.top/category/web/)
-- **3 个**中文指南页：[免费 LLM API 开放目录指南](https://freellm.top/guides/free-llm/)、[免费 OpenAI API 替代品](https://freellm.top/guides/free-openai-api-alternatives/)、[Claude Code 免费替代品](https://freellm.top/guides/claude-code-free-alternatives/)
+- **9 个**主题指南页：[免费 LLM API 开放目录指南](https://freellm.top/guides/free-llm/)、[免费 OpenAI API 替代品](https://freellm.top/guides/free-openai-api-alternatives/)、[Claude Code 免费替代品](https://freellm.top/guides/claude-code-free-alternatives/)、[免费 OpenAI 兼容 API](https://freellm.top/guides/free-openai-compatible-apis/)、[免费 AI 编程工具](https://freellm.top/guides/free-ai-coding-tools/)、[免费 AI 搜索 API](https://freellm.top/guides/free-ai-search-apis/)、[开源权重模型](https://freellm.top/guides/open-weight-models/)、[模型上下文窗口](https://freellm.top/guides/model-context-windows/)、[国内免费 AI API](https://freellm.top/guides/china-free-ai-api/)
 - 展示来自 GitHub、Hugging Face 等平台的公开外部信号（Stars、Likes、Downloads）
 - 外部信号只作为原始公开数据展示，不伪造本站评分，也不把不同平台的数据强行合并成一个分数
 
@@ -46,12 +48,16 @@ FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额�
 
 ```text
 data/offers.json                 资源目录数据
+data/models.json                 第三方模型目录快照（含新鲜度状态）
+data/provider-catalog.json       厂家聚合目录
+data/operations/*.json           重点厂家 / 模型的详细操作路径
 data/providers.json              平台与提供商信息
 data/community-signals.json      外部公开信号快照
 data/review-queue.json           待人工审核的发现候选
 crawler/                         抓取 / 发现 / diff / schema 模块
 scripts/build_static.py          静态页面构建
 scripts/build_seo_pages.py       SEO 详情页 / 分类页 / 指南页生成
+scripts/sync_model_catalog.py    合并模型快照并标记 new/current/stale
 design/free-china-ai-index.html  网站页面
 offers/<id>/index.html            资源详情页（生成文件）
 category/<slug>/index.html        分类页（生成文件）
@@ -78,6 +84,8 @@ python -m http.server 8000
 pytest -q
 python scripts/build_static.py --check
 python scripts/build_seo_pages.py --check
+# 用新的发现快照更新模型目录（不会删除消失记录）
+python scripts/sync_model_catalog.py --input data/models-discovered.json --output data/models.json --as-of 2026-09-09
 ```
 
 ### 发布
@@ -102,9 +110,11 @@ FreeLLM ([freellm.top](https://freellm.top/)) is a curated directory of free AI 
 
 ### What's inside
 
-- **38** curated AI services and models
+- **37** curated AI resource entries, plus **296** third-party model-directory records across **26** providers
+- Model directory: [all models](https://freellm.top/models/) with search, provider filtering, and score / provider / model grouping; provider directory: [browse by provider](https://freellm.top/providers/)
+- Priority entries include step-by-step setup, copyable commands, validation actions, and official sources; operation-only providers such as Freebuff and LongCat keep dedicated pages even without synced model rows
 - **7** categories: [free quota](https://freellm.top/category/free-quota/), [student offers](https://freellm.top/category/student/), [free coding IDEs](https://freellm.top/category/free-ide/), [AI API services](https://freellm.top/category/api/), [open-weight models](https://freellm.top/category/open-weights/), [trials & promotions](https://freellm.top/category/promo/), [web & browser AI](https://freellm.top/category/web/)
-- **3** guide pages: [Free-LLM guide](https://freellm.top/guides/free-llm/), [free OpenAI API alternatives](https://freellm.top/guides/free-openai-api-alternatives/), [free Claude Code alternatives](https://freellm.top/guides/claude-code-free-alternatives/)
+- **9** topic guide pages: [Free-LLM guide](https://freellm.top/guides/free-llm/), [free OpenAI API alternatives](https://freellm.top/guides/free-openai-api-alternatives/), [free Claude Code alternatives](https://freellm.top/guides/claude-code-free-alternatives/), [free OpenAI-compatible APIs](https://freellm.top/guides/free-openai-compatible-apis/), [free AI coding tools](https://freellm.top/guides/free-ai-coding-tools/), [free AI search APIs](https://freellm.top/guides/free-ai-search-apis/), [open-weight models](https://freellm.top/guides/open-weight-models/), [model context windows](https://freellm.top/guides/model-context-windows/), [free AI APIs in China](https://freellm.top/guides/china-free-ai-api/)
 - Public external signals from GitHub, Hugging Face, and similar platforms (Stars, Likes, Downloads), shown as raw public data — no fabricated site-wide scores, no merging of different platforms into one number
 
 ### Automation

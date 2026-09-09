@@ -20,6 +20,31 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "SiliconFlow · ¥0 listed models", "description": "SiliconFlow：Selected models listed at ¥0 (free) on the official price list, plus paid models。请以官方页面为准，核对地区、有效期和使用条件。", "url": "https://freellm.top/offers/siliconflow-free-models/", "dateModified": "2026-09-07"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": "https://freellm.top/"}, {"@type": "ListItem", "position": 2, "name": "SiliconFlow · ¥0 listed models", "item": "https://freellm.top/offers/siliconflow-free-models/"}]}]}</script>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
@@ -41,58 +66,76 @@
     th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
     code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
     .muted { color: #68748a; }
+    .operation-path { margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }
+    .operation-path h3 { margin-top: 0; }
+    .operation-path h4 { margin: 18px 0 6px; }
+    .operation-type { display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }
+    .operation-steps { padding-left: 1.4em; }
+    .operation-steps li { margin: 12px 0; }
+    .operation-steps p { margin: 4px 0; }
+    .operation-command { margin: 10px 0; }
+    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }
+    .copy-command { border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }
+    .operation-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }
+    .operation-facts div { padding: 10px; border-radius: 8px; background: #f0f4fb; }
+    .operation-facts dt { color: #68748a; font-size: .78rem; }
+    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+    .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
-<body data-offer-id="siliconflow-free-models">
+<body data-offer-id="siliconflow-free-models" data-static-locale="true">
   <header>
-    <p><a href="https://freellm.top/">FreeLLM 免费 AI 资源索引</a> / 资源详情</p>
-    <h1>SiliconFlow · ¥0 listed models</h1>
-    <p>SiliconFlow 硅基流动 · China</p>
-    <nav aria-label="Categories"><a class="tag" href="/category/free-quota/">免费额度</a><a class="tag" href="/category/api/">AI API 服务</a></nav>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></h1>
+    <p><span lang="zh-CN">SiliconFlow 硅基流动 · China</span><span lang="en">SiliconFlow · China</span></p>
+    <nav aria-label="Categories"><a class="tag" href="/category/free-quota/"><span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span></a><a class="tag" href="/category/api/"><span lang="zh-CN">AI API 服务</span><span lang="en">AI API services</span></a></nav>
   </header>
   <main>
     <section>
-      <h2>这个资源提供什么</h2>
-      <p>The official SiliconFlow price page lists multiple models at 免费/¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.</p>
+      <h2><span lang="zh-CN">这个资源提供什么</span><span lang="en">What this offer provides</span></h2>
+      <p><span lang="zh-CN">The official SiliconFlow price page lists multiple models at 免费/¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.</span><span lang="en">The official SiliconFlow price page lists multiple models at /¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.</span></p>
     </section>
     <section>
-      <h2>关键信息</h2>
+      <h2><span lang="zh-CN">关键信息</span><span lang="en">Key details</span></h2>
       <div class="facts">
-        <div class="fact"><strong>免费方式</strong><span>Selected models listed at ¥0 (free) on the official price list, plus paid models</span></div>
-        <div class="fact"><strong>有效期</strong><span>Free listing can change; recheck the price page</span></div>
-        <div class="fact"><strong>访问条件</strong><span>SiliconFlow account; China registration</span></div>
-        <div class="fact"><strong>最后核验</strong><span>2026-09-07</span></div>
+        <div class="fact"><strong><span lang="zh-CN">免费方式</span><span lang="en">Free method</span></strong><span><span lang="zh-CN">Selected models listed at ¥0 (free) on the official price list, plus paid models</span><span lang="en">Selected models listed at ¥0 (free) on the official price list, plus paid models</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">有效期</span><span lang="en">Validity</span></strong><span><span lang="zh-CN">Free listing can change; recheck the price page</span><span lang="en">Free listing can change; recheck the price page</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">访问条件</span><span lang="en">Access</span></strong><span><span lang="zh-CN">SiliconFlow account; China registration</span><span lang="en">SiliconFlow account; China registration</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">最后核验</span><span lang="en">Last checked</span></strong><span>2026-09-07</span></div>
       </div>
     </section>
-    
-    <section>
-      <h2>免费模型逐个看</h2>
-      <div class="table-wrap"><table><thead><tr><th>模型 / Model</th><th>免费额度</th><th>备注</th></tr></thead><tbody><tr><td><code>PaddleOCR-VL-1.5</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>tencent/Hunyuan-MT-7B</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-m3</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-reranker-v2-m3</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr><tr><td><code>Kwai-Kolors</code></td><td>¥0（官方价目表标注免费）</td><td>价目表可随时调整，用前重查</td></tr></tbody></table></div>
-      <p class="muted">额度以官方页面和控制台实时显示为准；公测或限免额度可能随时调整。</p>
+
+
+<section id="operation-guides"><h2><span lang="zh-CN">详细操作步骤</span><span lang="en">Detailed operation paths</span></h2><p class="muted"><span lang="zh-CN">每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。</span><span lang="en">Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider&#x27;s live official policy.</span></p><article class="operation-path"><h3>调用 SiliconFlow 免费模型</h3><p class="operation-type">api</p><dl class="operation-facts"><div><dt><span lang="zh-CN">Endpoint</span><span lang="en">Endpoint</span></dt><dd><code>https://api.siliconflow.cn/v1</code></dd></div><div><dt><span lang="zh-CN">认证</span><span lang="en">Authentication</span></dt><dd>Authorization: Bearer API key</dd></div></dl><h4><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h4><ul><li><span lang="zh-CN">已注册 SiliconFlow</span><span lang="en">SiliconFlow</span></li><li><span lang="zh-CN">已创建 API key</span><span lang="en">API key</span></li><li><span lang="zh-CN">已在模型广场确认模型的免费或赠送额度状态</span><span lang="en">See official terms</span></li></ul><h4><span lang="zh-CN">操作步骤</span><span lang="en">Steps</span></h4><ol class="operation-steps"><li><strong>创建 API key</strong><p>进入 SiliconFlow 控制台的 API key 页面创建密钥，并保存为 SILICONFLOW_API_KEY 环境变量。</p></li><li><strong>查看模型与余额</strong><p>在模型广场确认模型 ID、上下文限制和当前免费政策；免费模型不等于无限调用。</p><p class="operation-action"><strong><span lang="zh-CN">操作</span><span lang="en">Action</span>：</strong>打开 https://siliconflow.cn/models</p></li><li><strong>发送兼容请求</strong><p>使用模型广场展示的完整模型 ID。</p><div class="operation-command"><div class="operation-command-head"><span><span lang="zh-CN">可复制命令</span><span lang="en">Copyable command</span></span><button type="button" class="copy-command" data-copy-target="operation-command-1"><span lang="zh-CN">复制命令</span><span lang="en">Copy command</span></button></div><pre id="operation-command-1"><code>curl https://api.siliconflow.cn/v1/chat/completions -H &#x27;Authorization: Bearer ${SILICONFLOW_API_KEY}&#x27; -H &#x27;Content-Type: application/json&#x27; --data &#x27;{&quot;model&quot;:&quot;Qwen/Qwen3-8B&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Hello&quot;}]}&#x27;</code></pre></div><p class="operation-expected"><strong><span lang="zh-CN">预期结果</span><span lang="en">Expected</span>：</strong>返回 choices[0].message.content；余额不足时停止重试并查看控制台。</p></li></ol><div class="operation-validation"><strong><span lang="zh-CN">验证动作</span><span lang="en">Validation</span></strong><p>GET /v1/models 返回 HTTP 200，并在控制台确认请求消耗与免费政策一致。</p></div><h4><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h4><ul class="link-list"><li><a href="https://docs.siliconflow.cn/" target="_blank" rel="nofollow noopener">https://docs.siliconflow.cn/ ↗</a></li><li><a href="https://siliconflow.cn/models" target="_blank" rel="nofollow noopener">https://siliconflow.cn/models ↗</a></li></ul></article><script>(() => { document.querySelectorAll('.copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script></section>
+<section>
+      <h2><span lang="zh-CN">免费模型逐个看</span><span lang="en">Free models by entry</span></h2>
+      <div class="table-wrap"><table><thead><tr><th><span lang="zh-CN">模型</span><span lang="en">Model</span></th><th><span lang="zh-CN">上下文窗口</span><span lang="en">Context window</span></th><th><span lang="zh-CN">免费额度</span><span lang="en">Free quota</span></th><th><span lang="zh-CN">备注</span><span lang="en">Notes</span></th></tr></thead><tbody><tr><td><code><span lang="zh-CN">PaddleOCR-VL-1.5</span><span lang="en">PaddleOCR-VL-1.5</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr><tr><td><code><span lang="zh-CN">tencent/Hunyuan-MT-7B</span><span lang="en">tencent/Hunyuan-MT-7B</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr><tr><td><code><span lang="zh-CN">BAAI/bge-m3</span><span lang="en">BAAI/bge-m3</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr><tr><td><code><span lang="zh-CN">BAAI/bge-reranker-v2-m3</span><span lang="en">BAAI/bge-reranker-v2-m3</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr><tr><td><code><span lang="zh-CN">BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</span><span lang="en">BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr><tr><td><code><span lang="zh-CN">Kwai-Kolors</span><span lang="en">Kwai-Kolors</span></code></td><td><span lang="zh-CN">—</span><span lang="en">—</span></td><td><span lang="zh-CN">¥0（官方价目表标注免费）</span><span lang="en">¥0（ ）</span></td><td><span lang="zh-CN">价目表可随时调整，用前重查</span><span lang="en">，</span></td></tr></tbody></table></div>
+      <p class="muted"><span lang="zh-CN">额度以官方页面和控制台实时显示为准；公测或限免额度可能随时调整。</span><span lang="en">Quota follows the official page and console; preview or limited free access can change.</span></p>
     </section>
     <section>
-      <h2>如何使用</h2>
-      <p>Call the models listed at ¥0 on the official price list via the SiliconFlow API</p>
-      <h3>前置条件</h3>
-      <ul><li>SiliconFlow account</li><li>API key from the SiliconFlow cloud console</li></ul>
-      <h3>步骤</h3>
-      <ul><li>Register on the SiliconFlow cloud platform and create an API key</li><li>Call the OpenAI-compatible chat or embeddings endpoint with a model ID listed at ¥0 on the official price page</li></ul>
-      <h3>curl</h3><pre><code>curl https://api.siliconflow.cn/v1/chat/completions --header &#x27;Authorization: Bearer ${SILICONFLOW_API_KEY}&#x27; --header &#x27;Content-Type: application/json&#x27; --data &#x27;{&quot;model&quot;:&quot;tencent/Hunyuan-MT-7B&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Hello&quot;}]}&#x27;</code></pre>
+      <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>
+      <p><span lang="zh-CN">Call the models listed at ¥0 on the official price list via the SiliconFlow API</span><span lang="en">Call the models listed at ¥0 on the official price list via the SiliconFlow API</span></p>
+      <h3><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h3>
+      <ul><li><span lang="zh-CN">SiliconFlow account</span><span lang="en">SiliconFlow account</span></li><li><span lang="zh-CN">API key from the SiliconFlow cloud console</span><span lang="en">API key from the SiliconFlow cloud console</span></li></ul>
+      <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
+      <ul><li><span lang="zh-CN">Register on the SiliconFlow cloud platform and create an API key</span><span lang="en">Register on the SiliconFlow cloud platform and create an API key</span></li><li><span lang="zh-CN">Call the OpenAI-compatible chat or embeddings endpoint with a model ID listed at ¥0 on the official price page</span><span lang="en">Call the OpenAI-compatible chat or embeddings endpoint with a model ID listed at ¥0 on the official price page</span></li></ul>
+      <h3><span lang="zh-CN">curl</span><span lang="en">curl</span></h3><pre><code>curl https://api.siliconflow.cn/v1/chat/completions --header &#x27;Authorization: Bearer ${SILICONFLOW_API_KEY}&#x27; --header &#x27;Content-Type: application/json&#x27; --data &#x27;{&quot;model&quot;:&quot;tencent/Hunyuan-MT-7B&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Hello&quot;}]}&#x27;</code></pre>
     </section>
     <section>
-      <h2>官方来源</h2>
-      <p class="muted">官方价格页列出 PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 价格为「免费」；官方快速开始文档给出 Base URL https://api.siliconflow.cn/v1。</p>
-      <ul><li><a href="https://cloud.siliconflow.cn/" rel="nofollow noopener" target="_blank">https://cloud.siliconflow.cn/</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank">https://siliconflow.cn/pricing</a></li><li><a href="https://docs.siliconflow.cn/cn/userguide/quickstart" rel="nofollow noopener" target="_blank">https://docs.siliconflow.cn/cn/userguide/quickstart</a></li></ul>
+      <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
+      <p class="muted"><span lang="zh-CN">官方价格页列出 PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 价格为「免费」；官方快速开始文档给出 Base URL https://api.siliconflow.cn/v1。</span><span lang="en">PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 「 」； Base URL https://api.siliconflow.cn/v1。</span></p>
+      <ul><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">官方价格页（¥0 模型列表）</span><span lang="en">（¥0 ）</span> ↗</a></li><li><a href="https://docs.siliconflow.cn/cn/userguide/quickstart" rel="nofollow noopener" target="_blank"><span lang="zh-CN">快速开始文档</span><span lang="en">Official source</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">PaddleOCR-VL-1.5</span><span lang="en">PaddleOCR-VL-1.5</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">tencent/Hunyuan-MT-7B</span><span lang="en">tencent/Hunyuan-MT-7B</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">BAAI/bge-m3</span><span lang="en">BAAI/bge-m3</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">BAAI/bge-reranker-v2-m3</span><span lang="en">BAAI/bge-reranker-v2-m3</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</span><span lang="en">BAAI/bge-large-zh-v1.5 · BAAI/bge-large-en-v1.5</span> ↗</a></li><li><a href="https://siliconflow.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Kwai-Kolors</span><span lang="en">Kwai-Kolors</span> ↗</a></li></ul>
     </section>
     <section>
-      <h2>相关资源</h2>
-      <ul><li><a href="/offers/longcat-api/">LongCat API</a></li><li><a href="/offers/sensecore/">SenseNova</a></li><li><a href="/offers/deepseek/">DeepSeek API</a></li><li><a href="/offers/opencode-zen-free/">OpenCode Zen</a></li><li><a href="/offers/aliyun-qwen-free-quota/">Alibaba Cloud Model Studio / 阿里云百炼</a></li><li><a href="/offers/keenable-search-free/">Keenable</a></li></ul>
+      <h2><span lang="zh-CN">相关资源</span><span lang="en">Related resources</span></h2>
+      <ul><li><a href="/offers/longcat-2-0/"><span lang="zh-CN">LongCat</span><span lang="en">LongCat-2.0 · API + open weights</span></a></li><li><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova</span><span lang="en">SenseNova · Token Plan</span></a></li><li><a href="/offers/deepseek/"><span lang="zh-CN">DeepSeek API</span><span lang="en">DeepSeek API · low cost, not free</span></a></li><li><a href="/offers/opencode-zen-free/"><span lang="zh-CN">OpenCode Zen</span><span lang="en">OpenCode Zen · free model pool</span></a></li><li><a href="/offers/aliyun-qwen-free-quota/"><span lang="zh-CN">Alibaba Cloud Model Studio / 阿里云百炼</span><span lang="en">Related resource</span></a></li><li><a href="/offers/keenable-search-free/"><span lang="zh-CN">Keenable</span><span lang="en">Keenable · Search API free quota</span></a></li></ul>
     </section>
   </main>
   <footer>
-    <p><strong>重要：</strong>免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</p>
-    <p><a href="https://freellm.top/">返回 FreeLLM 免费 AI 资源索引</a></p>
+    <p><strong><span lang="zh-CN">重要</span><span lang="en">Important</span>：</strong><span lang="zh-CN">免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</span><span lang="en">Free access may be affected by region, account type, rate limits, validity or provider terms; verify the official source before relying on this offer.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a></p>
   </footer>
 </body>
 </html>

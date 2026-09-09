@@ -40,6 +40,16 @@ WEB_REQUIRED_FIELDS = {
     "providerId", "productId", "offerVariant", "capabilities", "pricingModel",
     "freePolicy", "limits", "billing", "usageGuide",
 }
+MODEL_REQUIRED_FIELDS = {
+    "id", "providerId", "provider", "model", "score", "context", "maxOutput",
+    "modality", "rateLimit", "released", "usageActivity", "status", "sourceUrl",
+    "sourceKind", "lastSeenAt",
+}
+MODEL_STATUSES = {"online", "offline", "degraded", "unknown", "needs_review"}
+FRESHNESS_STATUSES = {"new", "current", "stale"}
+OPERATION_PRODUCT_TYPES = {"api", "cli", "web", "download", "ide"}
+OPERATION_PLACEHOLDERS_RE = re.compile(r"(?:YOUR[_ -]?|REPLACE[_ -]?|TODO|PLACEHOLDER|<[^>]+>|\.\.\.)", re.IGNORECASE)
+OPERATION_SECRET_RE = re.compile(r"(?:sk|key|token)-[A-Za-z0-9_-]{16,}|Bearer\s+[A-Za-z0-9_-]{20,}", re.IGNORECASE)
 
 
 def _https_url(value: object) -> bool:
@@ -233,3 +243,132 @@ def validate_offers(source: str | Path | list[dict]) -> list[str]:
                 errors.append(f"duplicate id: {offer['id']}")
             ids.add(offer["id"])
     return errors
+
+
+def validate_model(model: object) -> list[str]:
+    if not isinstance(model, dict):
+        return ["model must be an object"]
+
+    errors: list[str] = []
+    missing = sorted(MODEL_REQUIRED_FIELDS - model.keys())
+    errors.extend(f"missing field: {field}" for field in missing)
+    for field in ("id", "providerId", "provider", "model", "sourceKind"):
+        if field in model and (not isinstance(model[field], str) or not model[field].strip()):
+            errors.append(f"{field} must be a non-empty string")
+    score = model.get("score")
+    if score is not None and (not isinstance(score, int) or isinstance(score, bool) or not 0 <= score <= 100):
+        errors.append("score must be an integer from 0 to 100 or null")
+    for field in ("context", "maxOutput", "rateLimit", "released", "usageActivity", "status"):
+        if field in model and not isinstance(model[field], str):
+            errors.append(f"{field} must be a string")
+    modality = model.get("modality")
+    if not isinstance(modality, list) or not modality or not all(isinstance(item, str) and item.strip() for item in modality):
+        errors.append("modality must be a non-empty list of strings")
+    if "status" in model and model["status"] not in MODEL_STATUSES:
+        errors.append(f"status is not supported: {model['status']}")
+    if "freshnessStatus" in model and model["freshnessStatus"] not in FRESHNESS_STATUSES:
+        errors.append(f"freshnessStatus is not supported: {model['freshnessStatus']}")
+    for field in ("lastSeenAt", "lastVerifiedAt"):
+        if field in model and (not isinstance(model[field], str) or not DATE_RE.fullmatch(model[field])):
+            errors.append(f"{field} must use YYYY-MM-DD")
+    if "sourceUrl" in model and not _https_url(model["sourceUrl"]):
+        errors.append("sourceUrl must be an https URL without credentials")
+    return errors
+
+
+def validate_models(source: str | Path | list[dict]) -> list[str]:
+    data = json.loads(Path(source).read_text(encoding="utf-8")) if isinstance(source, (str, Path)) else source
+    if not isinstance(data, list):
+        return ["models file must contain a JSON list"]
+    errors: list[str] = []
+    ids: set[str] = set()
+    for index, model in enumerate(data):
+        for error in validate_model(model):
+            errors.append(f"models[{index}]: {error}")
+        if isinstance(model, dict) and isinstance(model.get("id"), str):
+            if model["id"] in ids:
+                errors.append(f"duplicate id: {model['id']}")
+            ids.add(model["id"])
+    return errors
+
+
+def validate_operation_guides(source: object, label: str = "operation guides") -> list[str]:
+    """Validate detailed, reproducible access instructions for a provider."""
+    if isinstance(source, (str, Path)):
+        source = json.loads(Path(source).read_text(encoding="utf-8"))
+    if not isinstance(source, dict):
+        return [f"{label} must be an object"]
+
+    errors: list[str] = []
+    provider_id = source.get("providerId")
+    if not isinstance(provider_id, str) or not provider_id.strip():
+        errors.append(f"{label} providerId must be a non-empty string")
+    paths = source.get("paths")
+    if not isinstance(paths, list) or not paths:
+        return errors + [f"{label} paths must be a non-empty list"]
+
+    path_ids: set[str] = set()
+    for index, path in enumerate(paths):
+        prefix = f"{label}.paths[{index}]"
+        if not isinstance(path, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        for field in ("id", "label", "validation"):
+            if not isinstance(path.get(field), str) or not path[field].strip():
+                errors.append(f"{prefix} {field} must be a non-empty string")
+        path_id = path.get("id")
+        if isinstance(path_id, str):
+            if path_id in path_ids:
+                errors.append(f"duplicate operation path id: {path_id}")
+            path_ids.add(path_id)
+        product_type = path.get("productType")
+        if product_type not in OPERATION_PRODUCT_TYPES:
+            errors.append(f"{prefix} productType is not supported: {product_type}")
+        prerequisites = path.get("prerequisites")
+        if not isinstance(prerequisites, list) or not prerequisites or not all(isinstance(item, str) and item.strip() for item in prerequisites):
+            errors.append(f"{prefix} prerequisites must be a non-empty list of strings")
+        steps = path.get("steps")
+        if not isinstance(steps, list) or len(steps) < 3:
+            errors.append(f"{prefix} steps must contain at least three items")
+        else:
+            for step_index, step in enumerate(steps):
+                step_prefix = f"{prefix}.steps[{step_index}]"
+                if isinstance(step, str):
+                    if not step.strip():
+                        errors.append(f"{step_prefix} must not be empty")
+                    continue
+                if not isinstance(step, dict) or not isinstance(step.get("title"), str) or not step["title"].strip() or not isinstance(step.get("detail"), str) or not step["detail"].strip():
+                    errors.append(f"{step_prefix} must contain title and detail")
+                    continue
+                command = step.get("command")
+                if command is not None and (not isinstance(command, str) or not command.strip()):
+                    errors.append(f"{step_prefix} command must be a non-empty string")
+                if isinstance(command, str) and (_operation_has_placeholder(command) or _operation_has_secret(command)):
+                    errors.append(f"{step_prefix} command contains a placeholder or plaintext secret")
+
+        source_urls = path.get("sourceUrls")
+        if not isinstance(source_urls, list) or not source_urls:
+            errors.append(f"{prefix} sourceUrls must be a non-empty list")
+        elif any(not _https_url(url) for url in source_urls):
+            errors.append(f"{prefix} sourceUrls must contain only HTTPS URLs")
+
+        for field in ("endpoint", "example"):
+            value = path.get(field)
+            if isinstance(value, str) and (_operation_has_placeholder(value) or _operation_has_secret(value)):
+                errors.append(f"{prefix} {field} contains a placeholder or plaintext secret")
+        if product_type == "api":
+            for field in ("endpoint", "auth", "example"):
+                if not isinstance(path.get(field), str) or not path[field].strip():
+                    errors.append(f"{prefix} {field} is required for API operation paths")
+            if isinstance(path.get("endpoint"), str) and not _https_url(path["endpoint"]):
+                errors.append(f"{prefix} endpoint must be an HTTPS URL")
+
+    return errors
+
+
+def _operation_has_placeholder(value: str) -> bool:
+    return bool(OPERATION_PLACEHOLDERS_RE.search(value))
+
+
+def _operation_has_secret(value: str) -> bool:
+    return bool(OPERATION_SECRET_RE.search(value))

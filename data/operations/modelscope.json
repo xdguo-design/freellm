@@ -1,0 +1,24 @@
+{
+  "providerId": "modelscope",
+  "provider": "ModelScope",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["modelscope-api-inference-free"],
+  "paths": [
+    {
+      "id": "api-inference",
+      "label": "ModelScope API-Inference",
+      "productType": "api",
+      "prerequisites": ["已注册 ModelScope", "已创建访问 Token", "已确认目标模型支持 API-Inference"],
+      "steps": [
+        {"title": "创建 Token", "detail": "打开 ModelScope 账户设置创建访问 Token，并保存到 MODELSCOPE_API_TOKEN 环境变量。"},
+        {"title": "确认模型 ID", "detail": "从模型详情页复制模型 ID，确认该模型的 API-Inference 状态和计费说明。", "action": "打开 https://modelscope.cn/models"},
+        {"title": "发送请求", "detail": "使用官方 OpenAI 兼容入口和模型 ID 发送请求。", "command": "curl https://api-inference.modelscope.cn/v1/chat/completions -H 'Authorization: Bearer ${MODELSCOPE_API_TOKEN}' -H 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3-8B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "响应返回 choices 或官方 API 的错误详情。"}
+      ],
+      "endpoint": "https://api-inference.modelscope.cn/v1",
+      "auth": "Authorization: Bearer access token",
+      "example": "curl https://api-inference.modelscope.cn/v1/models -H 'Authorization: Bearer ${MODELSCOPE_API_TOKEN}'",
+      "validation": "GET /v1/models 返回 HTTP 200，且目标模型 ID 与模型详情页一致。",
+      "sourceUrls": ["https://modelscope.cn/docs", "https://modelscope.cn/models"]
+    }
+  ]
+}

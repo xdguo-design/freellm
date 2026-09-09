@@ -3,21 +3,65 @@ from pathlib import Path
 
 from scripts.build_seo_pages import (
     CATEGORY_DEFINITIONS,
+    LEGACY_OFFER_REDIRECTS,
     build_site,
     categorize_offer,
     category_url,
     guide_url,
     models_url,
     offer_url,
+    render_category_page,
+    render_models_page,
+    render_offer_page,
+    _expected_files,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFERS_PATH = ROOT / "data" / "offers.json"
+MODELS_PATH = ROOT / "data" / "models.json"
 
 
 def read_offers():
     return json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
+
+
+def read_models():
+    return json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+
+
+THEME_GUIDES = {
+    "free-openai-compatible-apis",
+    "free-ai-coding-tools",
+    "free-ai-search-apis",
+    "open-weight-models",
+    "model-context-windows",
+    "china-free-ai-api",
+}
+
+
+def test_expected_files_include_theme_guides():
+    files, _ = _expected_files(read_offers(), "https://freellm.top", read_models())
+    generated = {path.parts[1] for path in files if path.parts[:1] == ("guides",)}
+    assert THEME_GUIDES <= generated
+
+
+def test_theme_guides_render_unique_metadata_and_verified_rows(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    for slug in THEME_GUIDES:
+        page = (tmp_path / "guides" / slug / "index.html").read_text(encoding="utf-8")
+        assert page.count("<h1>") == 1
+        assert f"https://freellm.top/guides/{slug}/" in page
+        assert '<meta name="description"' in page
+        assert "adsbygoogle.js?client=ca-pub-2461062743308239" in page
+
+
+def test_context_window_guide_exposes_model_parameters(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "guides" / "model-context-windows" / "index.html").read_text(encoding="utf-8")
+    assert "Context window" in page
+    assert "tokens" in page
+    assert "source" in page.lower()
 
 
 def test_offer_and_category_urls_are_stable_crawlable_paths():
@@ -42,7 +86,11 @@ def test_offer_categories_match_existing_catalog_semantics():
 
     assert "free-ide" in categorize_offer(offers["qoder"])
     assert "promo" in categorize_offer(offers["doubao"])
-    assert "open-weights" in categorize_offer(offers["longcat-download"])
+    longcat = offers["longcat-2-0"]
+    assert "longcat-api" not in offers
+    assert "longcat-download" not in offers
+    assert {path["id"] for path in longcat["accessPaths"]} == {"api", "open_weights"}
+    assert {"api", "open-weights"}.issubset(set(categorize_offer(longcat)))
     assert "web" in categorize_offer(offers["tinyfish-search-fetch-free"])
     assert "student" in categorize_offer(offers["github-copilot-free"])
 
@@ -83,6 +131,20 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
     assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(agnes)
+
+
+def test_longcat_page_renders_both_access_paths():
+    from scripts.build_seo_pages import render_offer_page
+
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+    page = render_offer_page(by_id["longcat-2-0"], offers, "https://freellm.top")
+
+    assert page.count("LongCat-2.0") >= 3
+    assert "API 调用" in page
+    assert "下载权重" in page
+    assert "免费额度未确认" in page
+    assert "权重免费，算力不免费" in page
 
 
 def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_path):
@@ -144,17 +206,23 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in guide
     assert '<script defer src="/_vercel/insights/script.js"></script>' in guide
 
+    adsense_script = 'adsbygoogle.js?client=ca-pub-2461062743308239'
+    for generated_page in (detail, category, guide):
+        assert adsense_script in generated_page
+
     openai_guide = (tmp_path / "guides" / "free-openai-api-alternatives" / "index.html").read_text(encoding="utf-8")
     assert "OpenAI API alternatives" in openai_guide
     assert "OpenAI&#x27;s official API is not presented as permanently free" in openai_guide
     assert '<link rel="canonical" href="https://freellm.top/guides/free-openai-api-alternatives/"' in openai_guide
     assert "https://console.groq.com/docs/openai" in openai_guide
+    assert adsense_script in openai_guide
 
     claude_guide = (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").read_text(encoding="utf-8")
     assert "Free Claude Code Alternatives" in claude_guide
     assert "not Claude&#x27;s official free service" in claude_guide
     assert '<link rel="canonical" href="https://freellm.top/guides/claude-code-free-alternatives/"' in claude_guide
     assert "https://docs.bigmodel.cn/cn/coding-plan/faq" in claude_guide
+    assert adsense_script in claude_guide
 
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://freellm.top/" in sitemap
@@ -165,22 +233,25 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
-    assert sitemap.count("<loc>") == 5 + result.offer_count + result.category_count
+    assert "https://freellm.top/models/center/" in sitemap
+    assert sitemap.count("<loc>") == result.page_count - len(LEGACY_OFFER_REDIRECTS)
 
 
 def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     offers = read_offers()
-    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+    page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
 
     assert '<html lang="zh-CN">' in page
     assert "全部免费 AI 模型与 API 一览" in page
     assert "All Free AI Models" in page
-    assert '<link rel="canonical" href="https://freellm.top/models/"' in page
+    assert '<link rel="canonical" href="https://freellm.top/models/all/"' in page
     assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in page
     assert 'window.va = window.va || function ()' in page
-    assert "注册领取 Register ↗" in page
-    assert "最后核验 last checked" in page
+    assert '<span lang="zh-CN">注册领取</span><span lang="en">Register</span>' in page
+    assert '<span lang="zh-CN">模型同步</span><span lang="en">Models synced</span>' in page
+    assert '<span lang="zh-CN">资源核验</span><span lang="en">Offers checked</span>' in page
 
     # Every offer appears with its detail link and official registration URL.
     for offer in offers:
@@ -189,18 +260,79 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
             assert f'href="{offer["register"]}"' in page
 
     # Category sections use bilingual headers from the shared definitions.
-    assert "免费额度 <span lang=\"en\">Free AI quota</span>" in page
-    assert "开源权重模型 <span lang=\"en\">Open-weight AI models</span>" in page
+    assert '<span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span>' in page
+    assert '<span lang="zh-CN">开源权重模型</span><span lang="en">Open-weight AI models</span>' in page
 
-    # Structured data lists every offer for crawlers.
+    # Structured data lists every catalog model for crawlers.
     assert '"@type": "CollectionPage"' in page
-    assert '"numberOfItems": %d' % len(offers) in page
+    assert '"numberOfItems": %d' % len(models) in page
+    assert '"dateModified": "%s"' % max(model["lastSeenAt"] for model in models) in page
 
     # The homepage and category pages link to the directory for crawl depth.
     homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
     assert 'href="/models/"' in homepage
+    assert 'href="/models/all/"' in homepage
+    assert 'href="/providers/"' in homepage
     category = (tmp_path / "category" / "free-ide" / "index.html").read_text(encoding="utf-8")
     assert "https://freellm.top/models/" in category
+
+
+def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+    models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+
+    assert 'id="model-catalog-search"' in page
+    assert 'id="model-catalog-provider"' in page
+    assert 'data-group-mode="provider"' in page
+    assert 'data-group-mode="model"' in page
+    assert f'{len(models)} 个模型' in page
+    assert 'data-model-id="ollama-cloud/deepseek-v4-pro"' in page
+    assert 'Ollama Cloud' in page
+    assert 'deepseek-v4-pro' in page
+    assert 'Score' in page
+    assert '目录来源' in page
+
+
+def test_static_seo_pages_can_follow_the_saved_locale_without_mixed_visible_copy(tmp_path):
+    offers = [
+        {
+            "id": "example",
+            "title": "Example English title",
+            "titleZh": "示例中文标题",
+            "provider": "Example",
+            "providerMeta": "示例供应商",
+            "providerMetaEn": "International provider",
+            "freeSummary": "中文免费额度说明",
+            "freeSummaryEn": "Recurring free quota",
+            "validitySummary": "长期有效",
+            "validitySummaryEn": "Ongoing access",
+            "accessSummary": "需要注册",
+            "accessSummaryEn": "Registration required",
+            "freeMechanism": "monthly_quota",
+            "productType": "api",
+            "type": ["api"],
+            "badges": ["FREE"],
+            "register": "https://example.com/register",
+            "order": 1,
+        }
+    ]
+
+    category = render_category_page("free-quota", offers, "https://freellm.top")
+    models = render_models_page(offers, "https://freellm.top")
+    detail = render_offer_page(offers[0], offers, "https://freellm.top")
+
+    for page in (category, models, detail):
+        assert 'data-static-locale="true"' in page
+        assert 'html[data-locale="en"] [lang="zh-CN"]' in page
+        assert 'html[data-locale="zh-CN"] [lang="en"]' in page
+        assert 'href="?lang=en"' in page
+        assert 'href="?lang=zh"' in page
+
+    assert '<span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span>' in category
+    assert '<span lang="zh-CN">示例中文标题</span><span lang="en">Example English title</span>' in models
+    assert '<span lang="zh-CN">这个资源提供什么</span><span lang="en">What this offer provides</span>' in detail
+    assert "中文免费额度说明 / Recurring free quota" not in category
 
 
 def test_build_site_check_detects_stale_output(tmp_path):
@@ -236,6 +368,33 @@ def test_multi_model_offers_expose_free_models_lists():
     assert all(entry["quota"].strip() for entry in siliconflow_models)
 
 
+def test_groq_models_are_structured_with_individual_context_windows():
+    offers = {offer["id"]: offer for offer in read_offers()}
+    groq = offers["groq-free"]
+
+    expected_models = {
+        "canopylabs/orpheus-arabic-saudi",
+        "canopylabs/orpheus-v1-english",
+        "groq/compound",
+        "groq/compound-mini",
+        "meta-llama/llama-prompt-guard-2-22m",
+        "meta-llama/llama-prompt-guard-2-86m",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "openai/gpt-oss-safeguard-20b",
+        "qwen/qwen3.6-27b",
+        "qwen/qwen3.8-27b",
+        "whisper-large-v3",
+        "whisper-large-v3-turbo",
+    }
+
+    free_models = groq["freeModels"]
+    assert {entry["model"] for entry in free_models} == expected_models
+    assert len(free_models) == len(expected_models)
+    assert all(entry["contextWindow"].strip() for entry in free_models)
+    assert all(entry["quota"].strip() for entry in free_models)
+
+
 def test_offer_page_renders_per_model_free_quota_table():
     from scripts.build_seo_pages import render_offer_page
 
@@ -247,6 +406,15 @@ def test_offer_page_renders_per_model_free_quota_table():
     assert "sensenova-6.8-flash-lite" in html
     assert "sensenova-u1-fast" in html
     assert "60,000 积分 / 5 小时" in html
+
+    groq_html = render_offer_page(by_id["groq-free"], offers, "https://freellm.top")
+    assert "上下文窗口" in groq_html
+    assert '<a href="https://console.groq.com/docs/models"' in groq_html
+    assert "131,072 tokens" in groq_html
+    assert "512 tokens" in groq_html
+    assert groq_html.count("<tr>") >= 14
+    assert '<span lang="en">openai/gpt-oss-120b</span> ↗</a>' in groq_html
+    assert '<span lang="en">qwen/qwen3.8-27b</span> ↗</a>' in groq_html
 
     plain = render_offer_page(by_id["doubao"], offers, "https://freellm.top")
     assert "免费模型逐个看" not in plain

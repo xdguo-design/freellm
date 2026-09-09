@@ -1,0 +1,24 @@
+{
+  "providerId": "openrouter",
+  "provider": "OpenRouter",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["openrouter-free"],
+  "paths": [
+    {
+      "id": "free-model-api",
+      "label": "调用免费模型",
+      "productType": "api",
+      "prerequisites": ["已注册 OpenRouter", "已创建 API key", "已从模型页确认当前免费模型 ID"],
+      "steps": [
+        {"title": "创建 API key", "detail": "进入 OpenRouter Keys 页面创建密钥，并将它放入 OPENROUTER_API_KEY 环境变量。"},
+        {"title": "选择免费模型", "detail": "在官方 Models 页面筛选价格为 0 的模型；免费标记和可用性会变化，不要长期写死目录中的模型。", "action": "打开 https://openrouter.ai/models?max_price=0"},
+        {"title": "发送 OpenAI 兼容请求", "detail": "将 model 替换成模型页显示的完整 ID。", "command": "curl https://openrouter.ai/api/v1/chat/completions -H 'Authorization: Bearer ${OPENROUTER_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "响应包含 choices[0].message.content。"}
+      ],
+      "endpoint": "https://openrouter.ai/api/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://openrouter.ai/api/v1/models -H 'Authorization: Bearer ${OPENROUTER_API_KEY}'",
+      "validation": "GET /api/v1/models 返回 HTTP 200；随后聊天请求返回 choices 数组。",
+      "sourceUrls": ["https://openrouter.ai/docs/quickstart", "https://openrouter.ai/models?max_price=0", "https://openrouter.ai/docs/api-reference/overview"]
+    }
+  ]
+}

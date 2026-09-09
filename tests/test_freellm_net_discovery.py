@@ -47,12 +47,27 @@ def test_parse_model_directory_returns_free_model_metadata():
         "directoryFree": True,
         "directoryNoCard": True,
         "directoryVerified": True,
+        "score": "92",
         "context": "128K",
+        "maxOutput": "",
         "modality": "text,reasoning",
         "rateLimit": "10 RPM, 100 RPD",
+        "released": "Sep 1, 2026",
+        "usageActivity": "—",
         "status": "Online",
         "tierType": "permanent",
     }]
+
+
+def test_parse_model_directory_does_not_turn_missing_release_into_epoch_date():
+    html = HTML_FIXTURE.replace(
+        'data-tier-type="permanent">',
+        'data-tier-type="permanent" data-released="0">',
+    )
+
+    rows = parse_model_directory(html, "https://freellm.net/models/")
+
+    assert rows[0]["released"] == ""
 
 
 def test_parse_llms_links_rejects_external_and_sensitive_urls():

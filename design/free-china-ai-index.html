@@ -78,161 +78,156 @@
         {
           "@type": "ListItem",
           "position": 7,
-          "name": "LongCat API · status check"
+          "name": "LongCat-2.0 · API + open weights"
         },
         {
           "@type": "ListItem",
           "position": 8,
-          "name": "LongCat-2.0 · open weights"
-        },
-        {
-          "@type": "ListItem",
-          "position": 9,
           "name": "Qwen3-4B · open weights"
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 9,
           "name": "GLM-4.7-Flash · open weights"
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 10,
           "name": "SenseNova · Token Plan 公测免费"
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 11,
           "name": "DeepSeek API · low cost, not free"
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 12,
           "name": "OpenCode Zen · free model pool"
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 13,
           "name": "GitHub Copilot · Free plan"
         },
         {
           "@type": "ListItem",
-          "position": 15,
+          "position": 14,
           "name": "Cursor · Hobby free plan"
         },
         {
           "@type": "ListItem",
-          "position": 16,
+          "position": 15,
           "name": "Amazon Q Developer · Free tier"
         },
         {
           "@type": "ListItem",
-          "position": 17,
+          "position": 16,
           "name": "Google Antigravity · Individual free plan"
         },
         {
           "@type": "ListItem",
-          "position": 18,
+          "position": 17,
           "name": "通义千问 · 阿里云百炼新人免费额度"
         },
         {
           "@type": "ListItem",
-          "position": 19,
+          "position": 18,
           "name": "Keenable · Search API free quota"
         },
         {
           "@type": "ListItem",
-          "position": 20,
+          "position": 19,
           "name": "TinyFish · Search + Fetch free tier"
         },
         {
           "@type": "ListItem",
-          "position": 21,
+          "position": 20,
           "name": "TinyFish · Agent + Browser metered"
         },
         {
           "@type": "ListItem",
-          "position": 22,
+          "position": 21,
           "name": "Tavily · Web APIs free credits"
         },
         {
           "@type": "ListItem",
-          "position": 23,
+          "position": 22,
           "name": "Exa · Search and Agent free credits"
         },
         {
           "@type": "ListItem",
-          "position": 24,
+          "position": 23,
           "name": "You.com · Search and Contents free tier"
         },
         {
           "@type": "ListItem",
-          "position": 25,
+          "position": 24,
           "name": "Firecrawl · Search and scrape free plan"
         },
         {
           "@type": "ListItem",
-          "position": 26,
+          "position": 25,
           "name": "Brave Search API · free monthly credits"
         },
         {
           "@type": "ListItem",
-          "position": 27,
+          "position": 26,
           "name": "Browserbase · free browser and web APIs"
         },
         {
           "@type": "ListItem",
-          "position": 28,
+          "position": 27,
           "name": "Google AI Studio · Gemini API free tier"
         },
         {
           "@type": "ListItem",
-          "position": 29,
+          "position": 28,
           "name": "Groq · free plan rate limits"
         },
         {
           "@type": "ListItem",
-          "position": 30,
+          "position": 29,
           "name": "Cerebras · free inference credits"
         },
         {
           "@type": "ListItem",
-          "position": 31,
+          "position": 30,
           "name": "OpenRouter · free model variants"
         },
         {
           "@type": "ListItem",
-          "position": 32,
+          "position": 31,
           "name": "Mistral · La Plateforme free mode"
         },
         {
           "@type": "ListItem",
-          "position": 33,
+          "position": 32,
           "name": "Cohere · free trial API key"
         },
         {
           "@type": "ListItem",
-          "position": 34,
+          "position": 33,
           "name": "Hugging Face · Inference Providers free tier"
         },
         {
           "@type": "ListItem",
-          "position": 35,
+          "position": 34,
           "name": "SiliconFlow · ¥0 listed models"
         },
         {
           "@type": "ListItem",
-          "position": 36,
+          "position": 35,
           "name": "ModelScope · API-Inference free calls"
         },
         {
           "@type": "ListItem",
-          "position": 37,
+          "position": 36,
           "name": "Agnes AI · Free/default multimodal API"
         },
         {
           "@type": "ListItem",
-          "position": 38,
+          "position": 37,
           "name": "StepFun · Limited-time free API models"
         }
       ]
@@ -498,6 +493,11 @@
     .provider-name { min-width: 0; font-weight: 850; }
     .provider-name small { display: block; color: var(--muted); margin-top: 3px; font: 10px var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .model { font-weight: 750; line-height: 1.25; }
+    .offer-card-model-list { display: grid; gap: 7px; }
+    .offer-model-row { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+    .offer-model-row:last-child { padding-bottom: 0; border-bottom: 0; }
+    .offer-model-row strong { display: block; font-weight: 750; line-height: 1.25; overflow-wrap: anywhere; }
+    .offer-model-row small { display: block; color: var(--muted); margin-top: 3px; font-size: 10px; line-height: 1.3; }
     .model small, .cell small { display: block; color: var(--muted); margin-top: 3px; font-size: 11px; line-height: 1.25; }
     .cell { min-width: 0; line-height: 1.2; }
     .category-label { display: inline-flex; padding: 4px 6px; background: var(--blue-soft); color: #2442a1; font: 10px var(--mono); font-weight: 800; line-height: 1.2; }
@@ -737,6 +737,10 @@
     .offer-card-model strong { max-width: 70%; font: 800 22px/.98 var(--display); letter-spacing: -.035em; }
     .offer-card-model > small { color: var(--muted); font: 10px var(--mono); text-align: right; }
     .offer-card-context { margin: -3px 0 10px; color: var(--muted); font: 10px var(--mono); }
+    .offer-access-paths { display: grid; gap: 6px; margin-top: 9px; }
+    .offer-access-path { padding: 7px 9px; border-left: 3px solid var(--blue); background: var(--blue-soft); }
+    .offer-access-path strong { display: block; font: 800 11px var(--sans); }
+    .offer-access-path small { display: block; margin-top: 2px; color: var(--muted); font: 10px/1.35 var(--mono); }
     .offer-card-metrics { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .offer-card-metric { min-width: 0; }
     .offer-card-metric label { display: block; color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
@@ -745,6 +749,8 @@
     .offer-card-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .offer-card-footer small { color: var(--muted); font: 10px/1.4 var(--mono); }
     .offer-card-footer small small { display: block; margin-top: 2px; }
+    .offer-source-link { color: var(--blue); font: 10px var(--mono); text-decoration: none; white-space: nowrap; }
+    .offer-source-link:hover { text-decoration: underline; }
     .offer-grid .row-arrow { width: 38px; height: 38px; }
     .student-mini { margin-top: 6px; color: var(--green-ink); font: 10px var(--mono); }
     .utility-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; margin-top: 70px; }
@@ -1029,7 +1035,7 @@
     <main id="catalog-top">
       <header class="catalog-header">
         <a class="brand" href="/"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">FreeLLM</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a href="#categories">模型库</a><a href="#catalog-offers">开发工具</a><a href="#catalog-offers">API 服务</a><a href="#catalog-compare">榜单</a><a href="/guides/free-llm/">使用指南</a></nav>
+        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="catalog" href="#categories">模型库</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="/models/all/">查全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a><a data-nav-key="tools" href="#catalog-offers">开发工具</a><a data-nav-key="api" href="#catalog-offers">API 服务</a><a data-nav-key="rank" href="#catalog-compare">榜单</a><a data-nav-key="guide" href="/guides/free-llm/">使用指南</a></nav>
         <div class="header-actions"><a class="header-submit" href="#catalog-offers">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
@@ -1046,12 +1052,12 @@
           <button class="category-card" data-filter="credits" aria-pressed="false"><span class="category-icon">↗</span><strong>API 服务</strong><b data-category-count="credits">—</b></button>
           <button class="category-card" data-filter="download_lowcost" aria-pressed="false"><span class="category-icon">◎</span><strong>开源模型</strong><b data-category-count="download_lowcost">—</b></button>
           <button class="category-card category-card-more" data-filter="student" aria-pressed="false"><span class="category-icon">•••</span><strong>更多分类</strong><b data-category-count="student">—</b></button>
-        </div><nav class="category-seo-links" aria-label="独立分类页面"><a href="/category/free-quota/">免费额度</a><a href="/category/free-ide/">免费 AI IDE</a><a href="/category/api/">AI API 服务</a><a href="/category/promo/">试用与优惠</a><a href="/category/student/">学生优惠</a><a href="/category/web/">网页工具</a><a href="/category/open-weights/">开源权重</a><a href="/guides/free-openai-api-alternatives/">OpenAI API alternatives</a><a href="/guides/claude-code-free-alternatives/">Claude Code alternatives</a><a href="/models/">全部模型 All models</a></nav></section>
+        </div><nav class="category-seo-links" aria-label="独立分类页面"><a data-i18n="freeQuota" href="/category/free-quota/">免费额度</a><a data-i18n="ide" href="/category/free-ide/">免费 AI IDE</a><a data-i18n="apiServices" href="/category/api/">AI API 服务</a><a data-i18n="promo" href="/category/promo/">试用与优惠</a><a data-i18n="studentDiscount" href="/category/student/">学生优惠</a><a data-i18n="web" href="/category/web/">网页工具</a><a data-i18n="openWeight" href="/category/open-weights/">开源权重</a><a data-i18n="guideOpenAiAlternatives" href="/guides/free-openai-api-alternatives/">OpenAI API alternatives</a><a data-i18n="guideClaudeAlternatives" href="/guides/claude-code-free-alternatives/">Claude Code alternatives</a><a data-i18n="guideOpenAiCompatible" href="/guides/free-openai-compatible-apis/">OpenAI-compatible APIs</a><a data-i18n="guideCodingTools" href="/guides/free-ai-coding-tools/">Free AI coding tools</a><a data-i18n="guideSearchApis" href="/guides/free-ai-search-apis/">Free AI search APIs</a><a data-i18n="guideOpenWeights" href="/guides/open-weight-models/">Open-weight models</a><a data-i18n="guideContextWindows" href="/guides/model-context-windows/">Model context windows</a><a data-i18n="guideChinaApi" href="/guides/china-free-ai-api/">Free AI APIs in China</a><a data-i18n="resourceDirectory" href="/models/">资源目录</a><a data-i18n="allModelsNav" href="/models/all/">全部模型</a><a data-i18n="providersDirectory" href="/providers/">按厂家浏览</a></nav></section>
         <section class="featured-section" aria-labelledby="featured-title"><div class="section-heading"><div><div class="eyebrow">Popular this week</div><h2 id="featured-title">🔥 本周热门</h2></div><a class="section-more" href="#catalog-offers">查看更多 →</a></div><div class="hot-layout"><div class="featured-grid">
-          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-qwen"><img src="https://www.google.com/s2/favicons?domain=help.aliyun.com&amp;sz=64" alt="阿里云图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>通义千问 Qwen3</h3><small>阿里云百炼</small><p>强大的中文多模态大模型，支持对话、文生图、代码等能力。</p><div class="resource-meta"><span>免费额度<br><b>每月 1000 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
-          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-seed"><img src="https://www.google.com/s2/favicons?domain=www.volcengine.com&amp;sz=64" alt="火山引擎图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>豆包 Seed</h3><small>字节跳动</small><p>全能的对话与创作助手，支持文本、图像、音视频等模态生成。</p><div class="resource-meta"><span>免费额度<br><b>每月 500 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
-          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-trae"><img src="https://www.google.com/s2/favicons?domain=www.trae.cn&amp;sz=64" alt="Trae 图标" loading="lazy"></span><span class="resource-status status-trial">限时试用</span></div><h3>Trae</h3><small>字节跳动</small><p>基于 AI 的新一代开发 IDE，内置 Agent 能力，提升开发效率。</p><div class="resource-meta"><span>免费额度<br><b>限时 30 天 Pro 体验</b></span><span>支持平台<br><b>Windows / macOS</b></span></div><a href="#catalog-offers" data-filter="ide" aria-label="查看免费 IDE">→</a></article>
-          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-cursor"><img src="https://www.google.com/s2/favicons?domain=cursor.com&amp;sz=64" alt="Cursor 图标" loading="lazy"></span><span class="resource-status status-download">开源可下载</span></div><h3>Cursor</h3><small>Anysphere</small><p>广受欢迎的 AI 编程工具，深度理解代码，支持多种模型接入。</p><div class="resource-meta"><span>免费方案<br><b>开源版可下载 (MIT)</b></span><span>支持平台<br><b>Windows / macOS / Linux</b></span></div><a href="#catalog-offers" data-filter="ide" aria-label="查看 Cursor">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-qwen"><img src="https://www.google.com/s2/favicons?domain=help.aliyun.com&amp;sz=64" alt="阿里云图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>通义千问 Qwen3</h3><small>阿里云百炼</small><p>强大的中文多模态大模型，支持对话、文生图、代码等能力。</p><div class="resource-meta"><span>免费额度<br><b>每月 1000 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a class="featured-resource-link" href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-seed"><img src="https://www.google.com/s2/favicons?domain=www.volcengine.com&amp;sz=64" alt="火山引擎图标" loading="lazy"></span><span class="resource-status status-free">永久免费</span></div><h3>豆包 Seed</h3><small>字节跳动</small><p>全能的对话与创作助手，支持文本、图像、音视频等模态生成。</p><div class="resource-meta"><span>免费额度<br><b>每月 500 万 tokens</b></span><span>中文支持<br><b>优秀</b></span></div><a class="featured-resource-link" href="#catalog-offers" data-filter="free_quota" aria-label="查看免费额度">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-trae"><img src="https://www.google.com/s2/favicons?domain=www.trae.cn&amp;sz=64" alt="Trae 图标" loading="lazy"></span><span class="resource-status status-trial">限时试用</span></div><h3>Trae</h3><small>字节跳动</small><p>基于 AI 的新一代开发 IDE，内置 Agent 能力，提升开发效率。</p><div class="resource-meta"><span>免费额度<br><b>限时 30 天 Pro 体验</b></span><span>支持平台<br><b>Windows / macOS</b></span></div><a class="featured-resource-link" href="#catalog-offers" data-filter="ide" aria-label="查看免费 IDE">→</a></article>
+          <article class="featured-card resource-card"><div class="featured-card-top"><span class="resource-logo logo-cursor"><img src="https://www.google.com/s2/favicons?domain=cursor.com&amp;sz=64" alt="Cursor 图标" loading="lazy"></span><span class="resource-status status-download">开源可下载</span></div><h3>Cursor</h3><small>Anysphere</small><p>广受欢迎的 AI 编程工具，深度理解代码，支持多种模型接入。</p><div class="resource-meta"><span>免费方案<br><b>开源版可下载 (MIT)</b></span><span>支持平台<br><b>Windows / macOS / Linux</b></span></div><a class="featured-resource-link" href="#catalog-offers" data-filter="ide" aria-label="查看 Cursor">→</a></article>
          </div><aside class="editor-pick"><div class="editor-head"><span>👑</span><strong>编辑精选</strong><a href="#catalog-offers">查看更多 →</a></div><div class="editor-model"><div class="hunyuan-mark"><img src="https://www.google.com/s2/favicons?domain=hunyuan.tencent.com&amp;sz=64" alt="腾讯混元图标" loading="lazy"></div><strong>混元 Hunyuan</strong><small>腾讯</small></div><blockquote>“ 中文理解与创作能力出色，支持长文对话、联网搜索、图像生成等多种能力。 ”</blockquote><div class="tag-row"><span>大语言模型</span><span>多模态</span><span>中文强</span></div><div class="trend"><div><b>热度趋势（近 7 天）</b><strong>+62%</strong></div><div class="trend-line"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="editor-checked">● 已于今日 17:19 核验 <span>›</span></div></aside></div></section>
         <section id="student-offers" class="student-panel" aria-labelledby="student-title"><div class="student-panel-copy"><div class="eyebrow">03 / education access</div><h2 id="student-title">学生优惠单独看</h2><p>学生优惠不是永久免费额度：通常需要学校邮箱或教育身份验证，资格、地区和有效期以官方页面为准。</p><button class="student-button" data-filter="student">筛选学生优惠 →</button></div><div class="student-list" id="studentList"><div class="student-item"><strong>GitHub Copilot Student</strong><span>需要 GitHub Education 验证</span></div><div class="student-item"><strong>Cursor Student</strong><span>官方学生计划 · 资格以页面为准</span></div></div></section>
         <section id="catalog-offers" class="offers-section"><div class="section-heading offers-heading"><div><div class="eyebrow">04 / all verified paths</div><h2>找到现在能打开的入口</h2><p>产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。</p></div><p id="catalog-result-count">Showing 27 offers</p></div><div class="filter-strip" role="tablist" aria-label="Offer filters"><button class="filter-chip active" data-filter="all" aria-pressed="true">全部 <em>27</em></button><button class="filter-chip" data-filter="free_quota" aria-pressed="false">免费额度 <em>—</em></button><button class="filter-chip" data-filter="credits" aria-pressed="false">积分 / 次数 <em>—</em></button><button class="filter-chip" data-filter="ide" aria-pressed="false">免费 IDE <em>—</em></button><button class="filter-chip" data-filter="promo" aria-pressed="false">限时优惠 <em>—</em></button><button class="filter-chip" data-filter="student" aria-pressed="false">学生优惠 <em>—</em></button><button class="filter-chip" data-filter="web" aria-pressed="false">网页 / Web <em>—</em></button><button class="filter-chip" data-filter="download_lowcost" aria-pressed="false">下载 / 低成本 <em>—</em></button></div><div class="table-wrap catalog-list-wrap"><div class="table-head"><div>产品</div><div>免费方式</div><div>额度 / 价格</div><div>有效期</div><div>地区</div><div>核验</div><div></div></div><div id="catalog-offer-rows" class="offer-grid" aria-live="polite"></div><div id="catalog-empty-state" class="empty-state" hidden><strong>没有匹配的入口。</strong><p>换个关键词，或清空搜索和筛选。</p><button type="button" id="catalog-reset-filters">清空搜索和筛选</button></div></div></section>
@@ -1211,6 +1217,7 @@
     <div class="detail-grid detail-block"><div class="detail-box"><strong>Free mechanism</strong><span id="drawerMechanism">—</span></div><div class="detail-box"><strong>Validity</strong><span id="drawerValidity">—</span></div><div class="detail-box"><strong>Access</strong><span id="drawerAccess">—</span></div><div class="detail-box" id="drawerContextWindow" hidden><strong>Context window</strong><span id="drawerContextValue">—</span></div><div class="detail-box"><strong>Last checked</strong><span id="drawerLastChecked">—</span></div></div>
     <div class="detail-block"><div class="detail-label">How to use</div><div class="detail-value" id="drawerUsageGuide">Select an offer to see the setup path.</div></div>
     <div class="detail-grid detail-block"><div class="detail-box"><strong>Prerequisites</strong><span id="drawerPrerequisites">—</span></div><div class="detail-box"><strong>Steps</strong><span id="drawerSteps">—</span></div><div class="detail-box"><strong>Endpoint</strong><span id="drawerEndpoint">—</span></div><div class="detail-box"><strong>Capabilities</strong><span id="drawerCapabilities">—</span></div></div>
+    <div class="detail-block" id="drawerAccessPathsBlock" hidden><div class="detail-label">Access paths</div><div class="detail-value" id="drawerAccessPaths"></div></div>
     <div class="detail-block" id="timeWindowBlock" hidden><div class="detail-label">Provider clock → your clock</div><div class="detail-value" id="timeWindowCopy"></div></div>
     <div class="detail-block"><div class="detail-label">Setup command</div><div class="codebox"><button class="copy" id="copyCommand">Copy</button><code id="drawerCommand"># Select a downloadable model</code></div></div>
     <div class="detail-block"><div class="detail-label">First request / install example</div><div class="codebox"><button class="copy" id="copyExample">Copy</button><code id="drawerExample"># Select an offer</code></div></div>
@@ -1691,97 +1698,15 @@
     "notes": "Never describe this as a universal local-midnight discount."
   },
   {
-    "id": "longcat-api",
+    "id": "longcat-2-0",
     "order": 7,
     "date": "2026-09-06",
-    "name": "LongCat Meituan API",
+    "name": "LongCat-2.0",
     "providerMark": "LC",
-    "provider": "LongCat API",
-    "providerMeta": "Meituan · global login",
+    "provider": "LongCat",
+    "providerMeta": "Meituan · API + open weights",
     "model": "LongCat-2.0",
-    "modelMeta": "OpenAI / Anthropic compatible",
-    "type": [
-      "coding",
-      "promo"
-    ],
-    "productType": "api",
-    "capabilities": [
-      "model_api"
-    ],
-    "usageGuide": {
-      "summary": "通过 LongCat 官方平台调用模型 API",
-      "prerequisites": [
-        "LongCat 账号",
-        "确认 API 资格和计费规则"
-      ],
-      "steps": [
-        "打开官方平台并完成登录",
-        "创建凭据后设置环境变量并发送请求"
-      ],
-      "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
-      "method": "POST",
-      "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
-      "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
-      },
-      "docsUrl": "https://longcat.ai/platform/docs/zh/"
-    },
-    "kicker": "VERIFY BEFORE FREE",
-    "badges": [
-      "VERIFY",
-      "OPENAI / ANTHROPIC"
-    ],
-    "freeSummary": "Official API exists; no free quota confirmed",
-    "validitySummary": "Unknown / do not call free",
-    "accessSummary": "Email / phone",
-    "checkedSummary": "Today / official docs",
-    "title": "LongCat API · status check",
-    "why": "LongCat has a public API platform and supports non-mainland email or phone login. The official docs confirm API access but do not confirm a free quota, so it stays out of the free list.",
-    "mechanism": "Paid API status; free quota not confirmed",
-    "validity": "Unknown",
-    "access": "Non-mainland email or phone login",
-    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
-    "register": "https://longcat.ai/platform/",
-    "registerLabel": "Register / open LongCat",
-    "links": [
-      [
-        "API docs",
-        "https://longcat.ai/platform/docs/zh/"
-      ],
-      [
-        "FAQ",
-        "https://longcat.ai/platform/docs/zh/faq"
-      ]
-    ],
-    "originCountry": "China",
-    "availability": "Non-mainland email or phone login",
-    "freeMechanism": "not_confirmed",
-    "quota": "Free quota not confirmed",
-    "renewal": "Unknown",
-    "phoneRequired": "unknown",
-    "cardRequired": "unknown",
-    "commercialUse": "check provider terms",
-    "sourceUrls": [
-      "https://longcat.ai/platform/docs/zh/",
-      "https://longcat.ai/platform/docs/zh/faq"
-    ],
-    "evidence": "Official docs confirm the API platform but do not confirm a durable free quota.",
-    "status": "needs_review",
-    "confidence": "medium",
-    "lastVerifiedAt": "2026-09-06",
-    "checkedBy": "manual",
-    "notes": "Do not promote as free without a public quota rule."
-  },
-  {
-    "id": "longcat-download",
-    "order": 8,
-    "date": "2026-09-06",
-    "name": "LongCat 2.0 Meituan open weights",
-    "providerMark": "LC",
-    "provider": "LongCat-2.0",
-    "providerMeta": "Meituan · open weights",
-    "model": "1.6T MoE / 48B active",
-    "modelMeta": "Local deployment",
+    "modelMeta": "API · Open weights",
     "contextWindow": {
       "tokens": 262144,
       "en": "256K tokens",
@@ -1789,44 +1714,98 @@
       "sourceUrl": "https://huggingface.co/meituan-longcat/LongCat-2.0/blob/main/config.json"
     },
     "type": [
+      "coding",
+      "promo",
       "download"
     ],
-    "productType": "open_weights",
+    "productType": "api",
     "capabilities": [
+      "model_api",
       "open_weights"
     ],
     "usageGuide": {
-      "summary": "下载 LongCat-2.0 权重并在本地运行",
+      "summary": "通过 LongCat 官方平台调用模型 API；也可下载权重本地部署",
       "prerequisites": [
-        "满足模型许可证和硬件要求"
+        "LongCat 账号（API 路径）",
+        "确认 API 资格和计费规则，或满足本地部署硬件要求"
       ],
       "steps": [
-        "打开官方模型仓库并下载权重",
-        "按照仓库说明安装依赖并启动推理服务"
+        "选择 API 调用或下载权重入口",
+        "API 路径创建凭据发送请求；权重路径打开模型仓库并启动本地推理"
       ],
+      "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "shell": "git clone https://github.com/meituan-longcat/LongCat-2.0"
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+        "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
-      "docsUrl": "https://github.com/meituan-longcat/LongCat-2.0"
+      "docsUrl": "https://longcat.ai/platform/docs/zh/"
     },
-    "kicker": "DOWNLOAD MODEL",
-    "badges": [
-      "OPEN WEIGHTS",
-      "MIT LICENSE"
+    "accessPaths": [
+      {
+        "id": "api",
+        "label": "API 调用",
+        "productType": "api",
+        "summary": "在线调用 LongCat API",
+        "freeSummary": "免费额度未确认",
+        "access": "Email / phone",
+        "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
+        "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+        "links": [
+          [
+            "API docs",
+            "https://longcat.ai/platform/docs/zh/"
+          ],
+          [
+            "FAQ",
+            "https://longcat.ai/platform/docs/zh/faq"
+          ]
+        ]
+      },
+      {
+        "id": "open_weights",
+        "label": "下载权重",
+        "productType": "open_weights",
+        "summary": "下载 LongCat-2.0 权重并在本地运行",
+        "freeSummary": "权重免费，算力不免费",
+        "access": "Global",
+        "contextWindow": "256K tokens",
+        "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0",
+        "links": [
+          [
+            "Official GitHub",
+            "https://github.com/meituan-longcat/LongCat-2.0"
+          ],
+          [
+            "Hugging Face",
+            "https://huggingface.co/meituan-longcat/LongCat-2.0"
+          ]
+        ]
+      }
     ],
-    "freeSummary": "Weights are free; compute is not",
-    "validitySummary": "MIT license / check model card",
-    "accessSummary": "Global",
-    "checkedSummary": "Today / official GitHub",
-    "title": "LongCat-2.0 · open weights",
-    "why": "The official repository links the model for local deployment. “Free” means the weights are available; a 1.6T-parameter model still requires serious GPU or hosted infrastructure.",
-    "mechanism": "Downloadable weights; local inference",
-    "validity": "Model license applies",
-    "access": "Global download path",
-    "command": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0",
-    "register": "https://github.com/meituan-longcat/LongCat-2.0",
-    "registerLabel": "Open LongCat model",
+    "kicker": "API + OPEN WEIGHTS",
+    "badges": [
+      "VERIFY API",
+      "OPEN WEIGHTS"
+    ],
+    "freeSummary": "API 免费额度未确认；权重免费，算力不免费",
+    "validitySummary": "API 条款待确认；权重遵循 MIT / 模型卡",
+    "accessSummary": "API Email / phone；权重 Global",
+    "checkedSummary": "Today / official API docs + GitHub",
+    "title": "LongCat-2.0 · API + open weights",
+    "why": "LongCat-2.0 is one model with two access paths: an official API whose free quota is not confirmed, and downloadable weights whose license permits access but still requires storage and GPU infrastructure.",
+    "mechanism": "API access plus downloadable open weights",
+    "validity": "API quota unknown; model license applies to weights",
+    "access": "API email / phone; weights global download path",
+    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+    "register": "https://longcat.ai/platform/",
+    "registerLabel": "Open LongCat",
     "links": [
+      [
+        "API docs",
+        "https://longcat.ai/platform/docs/zh/"
+      ],
       [
         "Official GitHub",
         "https://github.com/meituan-longcat/LongCat-2.0"
@@ -1837,22 +1816,26 @@
       ]
     ],
     "originCountry": "China",
-    "availability": "Global download path",
-    "freeMechanism": "open_weights",
-    "quota": "Downloadable weights",
-    "renewal": "Model license applies",
-    "phoneRequired": "no",
-    "cardRequired": "no",
-    "commercialUse": "check MIT and model card terms",
+    "availability": "API email / phone; weights global",
+    "freeMechanism": "not_confirmed",
+    "pricingModel": "not_confirmed",
+    "quota": "API free quota not confirmed; downloadable weights",
+    "renewal": "API unknown; model license applies to weights",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check API terms and MIT/model-card terms",
     "sourceUrls": [
-      "https://github.com/meituan-longcat/LongCat-2.0"
+      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.ai/platform/docs/zh/faq",
+      "https://github.com/meituan-longcat/LongCat-2.0",
+      "https://huggingface.co/meituan-longcat/LongCat-2.0"
     ],
-    "evidence": "Official repository links the model for local deployment and documents the license.",
-    "status": "verified",
+    "evidence": "Official API docs confirm API access but do not confirm a durable free quota; the official repository documents LongCat-2.0 downloadable weights and the model license.",
+    "status": "needs_review",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-06",
     "checkedBy": "manual",
-    "notes": "Weights free does not mean GPU, storage or inference free."
+    "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free."
   },
   {
     "id": "qwen-download",
@@ -3948,6 +3931,112 @@
     "providerMeta": "Groq · International",
     "model": "gpt-oss-120b / gpt-oss-20b · qwen3.x-27b · groq/compound · llama-prompt-guard · whisper-large-v3",
     "modelMeta": "Hosted OpenAI-compatible models",
+    "freeModels": [
+      {
+        "model": "canopylabs/orpheus-arabic-saudi",
+        "label": "Preview · Arabic text-to-speech",
+        "contextWindow": "4,000 tokens",
+        "quota": "10 RPM · 100 RPD · 1.2K TPM · 3.6K TPD",
+        "note": "Audio model; free-plan limits are measured in text tokens here.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "canopylabs/orpheus-v1-english",
+        "label": "Preview · English text-to-speech",
+        "contextWindow": "4,000 tokens",
+        "quota": "10 RPM · 100 RPD · 1.2K TPM · 3.6K TPD",
+        "note": "Audio model; free-plan limits are measured in text tokens here.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "groq/compound",
+        "label": "Production system · web search and code execution",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 250 RPD · 70K TPM",
+        "note": "Compound system with built-in tools.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "groq/compound-mini",
+        "label": "Production system · web search and code execution",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 250 RPD · 70K TPM",
+        "note": "Compound Mini system with built-in tools.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "meta-llama/llama-prompt-guard-2-22m",
+        "label": "Preview · prompt moderation",
+        "contextWindow": "512 tokens",
+        "quota": "30 RPM · 14.4K RPD · 15K TPM · 500K TPD",
+        "note": "Prompt Guard model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "meta-llama/llama-prompt-guard-2-86m",
+        "label": "Preview · prompt moderation",
+        "contextWindow": "512 tokens",
+        "quota": "30 RPM · 14.4K RPD · 15K TPM · 500K TPD",
+        "note": "Prompt Guard model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-120b",
+        "label": "Production · reasoning and browser/code tools",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "OpenAI GPT-OSS 120B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-20b",
+        "label": "Production · reasoning and browser/code tools",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "OpenAI GPT-OSS 20B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "openai/gpt-oss-safeguard-20b",
+        "label": "Preview · safety classification",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Safety-tuned GPT-OSS 20B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "qwen/qwen3.6-27b",
+        "label": "Preview · text and reasoning",
+        "contextWindow": "131,072 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Qwen 3.6 27B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "qwen/qwen3.8-27b",
+        "label": "Preview · text and reasoning",
+        "contextWindow": "131,042 tokens",
+        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "note": "Qwen 3.8 27B.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "whisper-large-v3",
+        "label": "Production · speech-to-text",
+        "contextWindow": "—（音频模型，无文本上下文窗口）",
+        "quota": "20 RPM · 2K RPD · 7.2K ASH · 28.8K ASD",
+        "note": "Audio seconds per hour/day; not a text-context model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      },
+      {
+        "model": "whisper-large-v3-turbo",
+        "label": "Production · speech-to-text",
+        "contextWindow": "—（音频模型，无文本上下文窗口）",
+        "quota": "20 RPM · 2K RPD · 7.2K ASH · 28.8K ASD",
+        "note": "Audio seconds per hour/day; not a text-context model.",
+        "sourceUrl": "https://console.groq.com/docs/rate-limits"
+      }
+    ],
     "type": [
       "api",
       "free"
@@ -3989,11 +4078,19 @@
     "registerLabel": "Groq Console",
     "links": [
       [
-        "Official rate limits (free plan table)",
+        "Groq Console",
+        "https://console.groq.com/"
+      ],
+      [
+        "Groq model catalog",
+        "https://console.groq.com/docs/models"
+      ],
+      [
+        "Free Plan Limits",
         "https://console.groq.com/docs/rate-limits"
       ],
       [
-        "OpenAI compatibility",
+        "OpenAI Compatibility",
         "https://console.groq.com/docs/openai"
       ]
     ],
@@ -4010,6 +4107,7 @@
     "quota": "Per-model free plan limits, e.g. 30 RPM / 1K RPD / 8K TPM for gpt-oss models; 250 RPD / 70K TPM for groq/compound",
     "renewal": "Daily and per-minute limits reset automatically",
     "sourceUrls": [
+      "https://console.groq.com/docs/models",
       "https://console.groq.com/docs/rate-limits",
       "https://console.groq.com/docs/openai"
     ],
@@ -4932,7 +5030,7 @@
         offersEyebrow: '04 / all verified paths', offersTitle: 'Find an entrance that works now', offersCopy: 'Product, free method, quota, validity, region and verification status in one card.', showing: 'Showing', offer: 'offer', offers: 'offers', noMatch: 'No matching entrance.', resetCopy: 'Try another keyword, or clear search and filters.', reset: 'Clear search and filters', product: 'Product', amountPrice: 'Quota / price', validity: 'Validity', region: 'Region', verification: 'Verification', officialSource: 'Official source →', openDetails: 'Open details',
         cheapestEyebrow: '05 / cheapest first', cheapestTitle: 'See the cheapest entrances first', cheapestCopy: 'Start with free access, then compare first-purchase prices; region, new-user status, validity and renewal are shown together.', liveRule: 'LIVE RULE', beFirst: 'Start here', firstPurchase: 'First purchase', selfHosted: 'Self-hosted', modelWeights: 'Model weights', conclusion: 'Conclusion:', comparePriceView: 'Price view', chinaBeijing: 'China / Beijing', international: 'International', judgment: 'Verdict', startHere: 'Start here', lowPrice: 'Low price', noteBeijing: 'Beijing does not mean every product is cheaper: this section shows verified free quota, first-purchase and open-weight paths, not one blended token-price ranking. Return to the official pricing page before subscribing.', newUserRegion: 'New user · Beijing', firstPurchaseRegion: 'Volcano Ark · first purchase', fromPrice: 'From ¥9.90', selfHostedRegion: 'Download · self-hosted', weightsFree: 'Free weights', aliModels: 'Alibaba Cloud · selected models', aliModelsCopy: 'Available in the China / Beijing deployment scope; new-user access lasts 90 days and then follows official pricing.', freeQuotaRule: 'See free quota rules ↗', codingPlanTitle: 'Doubao Coding Plan Lite', firstMonthCopy: 'First-month offer; renewal is ¥40 / month. Current limits follow the official promotion.', officialPlan: 'See official plan ↗', longcatTitle: 'LongCat-2.0', weightsCopy: 'Free weights do not mean free inference; storage, GPU, traffic and deployment time are separate costs.', openSourceEntry: 'Open source entry ↗', conclusionCopy: 'If you are in Beijing and qualify as a new user, start with the ¥0 quota; otherwise compare the ¥9.9 first-month plan. Neither is an unconditional permanent monthly price.', noEquivalentQuota: 'Usually no equivalent free quota', renewalPrice: '¥9.9 / ¥40 per month', notApplicable: 'Not applicable',
         localLane: '06 / local lane', downloadLocal: 'Download locally', weightsNote: 'Weights may be free; GPU time may not be.', open: 'Open ↗', howToRead: '07 / how to read it', faqTitle: 'This is not a “everything is free” ranking', faqCopy: 'Free quota, trials, promotions, student eligibility and low-cost paths are listed separately.', recurringQuota: 'Free quota', studentDiscount: 'Student offer', openWeight: 'Open weights', officialEntry: 'Official entry', recurringQuotaCopy: 'Recurring quota can still have rate, region or payment-method limits.', studentDiscountCopy: 'Education verification is required; region, term and renewal conditions follow the provider.', openWeightCopy: 'Weights can be downloaded, but storage, GPU, inference and network egress may cost money.', officialEntryCopy: 'Every offer keeps its source, update date and a copyable usage path.', faqFree: 'What counts as free?', faqStudent: 'Are student offers permanent free?', faqNight: 'Are night discounts always available?', sortDefault: 'Overall', sortFresh: 'Recently checked', sortName: 'A–Z', footerSources: 'Official sources only · Free status separated by mechanism', footerData: 'Data is subject to change', contactLabel: 'Contact',
-        localeToggle: '中文', localTime: 'Local time', detecting: 'Detecting timezone…', sourceLanguage: 'English', contextWindowLabel: 'Context window', guideNav: 'Guide', doubaoSearch: 'Doubao', qwenFeaturedTitle: 'Qwen3', qwenFeaturedProvider: 'Alibaba Cloud Model Studio', seedFeaturedTitle: 'Doubao Seed', seedFeaturedProvider: 'ByteDance', traeFeaturedProvider: 'ByteDance', hunyuanTitle: 'Hunyuan', hunyuanProvider: 'Tencent', qwenDownloadTitle: 'Alibaba Qwen3-4B / Qwen', officialTerms: 'See official terms'
+        localeToggle: '中文', localTime: 'Local time', detecting: 'Detecting timezone…', sourceLanguage: 'English', contextWindowLabel: 'Context window', guideNav: 'Guide', allModels: 'All models', doubaoSearch: 'Doubao', qwenFeaturedTitle: 'Qwen3', qwenFeaturedProvider: 'Alibaba Cloud Model Studio', seedFeaturedTitle: 'Doubao Seed', seedFeaturedProvider: 'ByteDance', traeFeaturedProvider: 'ByteDance', hunyuanTitle: 'Hunyuan', hunyuanProvider: 'Tencent', qwenDownloadTitle: 'Alibaba Qwen3-4B / Qwen', officialTerms: 'See official terms'
       }),
       'zh-CN': Object.freeze({
         pageTitle: 'Free AI Index — 免费 AI 模型、Qwen、豆包、IDE 和试用汇总',
@@ -4946,7 +5044,7 @@
         offersEyebrow: '04 / all verified paths', offersTitle: '找到现在能打开的入口', offersCopy: '产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。', showing: '找到', offer: '条资源', offers: '条资源', noMatch: '没有匹配的入口。', resetCopy: '换个关键词，或清空搜索和筛选。', reset: '清空搜索和筛选', product: '产品', amountPrice: '额度 / 价格', validity: '有效期', region: '地区', verification: '核验', officialSource: '官方来源 →', openDetails: '打开详情',
         cheapestEyebrow: '05 / cheapest first', cheapestTitle: '最便宜的入口先看', cheapestCopy: '先免费，再看首购价；地区、新用户、有效期和续费同时展示。', liveRule: 'LIVE RULE', beFirst: '优先看', firstPurchase: '首购', selfHosted: '自托管', modelWeights: '模型权重', conclusion: '结论：', comparePriceView: '价格视角', chinaBeijing: '中国区 / 北京', international: '国际区', judgment: '判断', startHere: '先看', lowPrice: '低价', noteBeijing: '北京不代表所有产品都更便宜：这里展示的是已核验的“免费额度 / 首购优惠 / 开源权重”入口，不把不同模型的 token 单价混成一个总榜。订阅前请回到官方价格页。', newUserRegion: '北京区 · 新用户', firstPurchaseRegion: '火山方舟 · 首购', fromPrice: '¥9.90 起', selfHostedRegion: '下载 · 自托管', weightsFree: '权重免费', aliModels: '阿里云百炼 · 部分模型', aliModelsCopy: '仅中国（北京）部署范围可用；新用户有效期 90 天，额度用完后按官方价格计费。', freeQuotaRule: '看免费额度规则 ↗', codingPlanTitle: '豆包 Coding Plan Lite', firstMonthCopy: '首月优惠价；后续续费 ¥40 / 月，限量活动以官方页面当前状态为准。', officialPlan: '看官方方案 ↗', longcatTitle: 'LongCat-2.0', weightsCopy: '下载权重不等于推理免费；存储、GPU、流量和部署时间另算。', openSourceEntry: '打开开源入口 ↗', conclusionCopy: '如果你在北京且符合新用户条件，先用 ¥0 免费额度；不符合时，再看 ¥9.9 首月方案。¥0 和 ¥9.9 都不是无条件的长期月费。', noEquivalentQuota: '通常无同等免费额度', renewalPrice: '¥9.9 / ¥40 月', notApplicable: '不适用',
         localLane: '06 / local lane', downloadLocal: '下载到本地', weightsNote: '权重免费，GPU 时间不一定免费。', open: '打开 ↗', howToRead: '07 / how to read it', faqTitle: '这不是“全都免费”榜单', faqCopy: '我们把免费、试用、优惠、学生资格和低价入口分开写。', recurringQuota: '免费额度', studentDiscount: '学生优惠', openWeight: '开源权重', officialEntry: '官方入口', recurringQuotaCopy: '周期性额度仍可能有速率、地区或付款方式限制。', studentDiscountCopy: '需要教育身份验证，优惠期限和适用地区以官方页面为准。', openWeightCopy: '可以下载模型，但存储、GPU、推理和流量可能收费。', officialEntryCopy: '每条 offer 都保留来源、更新时间和可复制的使用路径。', faqFree: '什么才算免费？', faqStudent: '学生优惠是永久免费吗？', faqNight: '夜间优惠一定存在吗？', sortDefault: '综合排序', sortFresh: '最近核验', sortName: 'A–Z', footerSources: 'OFFICIAL SOURCES ONLY · FREE STATUS SEPARATED BY MECHANISM', footerData: '数据会变化，请以官方页面为准', contactLabel: '联系我',
-        localeToggle: 'EN', localTime: '本地时间', detecting: '正在检测时区…', sourceLanguage: '简体中文', contextWindowLabel: '上下文窗口', guideNav: '使用指南', doubaoSearch: '豆包', qwenFeaturedTitle: '通义千问 Qwen3', qwenFeaturedProvider: '阿里云百炼', seedFeaturedTitle: '豆包 Seed', seedFeaturedProvider: '字节跳动', traeFeaturedProvider: '字节跳动', hunyuanTitle: '混元 Hunyuan', hunyuanProvider: '腾讯', qwenDownloadTitle: '阿里云 Qwen3-4B / 通义千问', officialTerms: '以官方条款为准'
+        localeToggle: 'EN', localTime: '本地时间', detecting: '正在检测时区…', sourceLanguage: '简体中文', contextWindowLabel: '上下文窗口', guideNav: '使用指南', allModels: '全部模型', doubaoSearch: '豆包', qwenFeaturedTitle: '通义千问 Qwen3', qwenFeaturedProvider: '阿里云百炼', seedFeaturedTitle: '豆包 Seed', seedFeaturedProvider: '字节跳动', traeFeaturedProvider: '字节跳动', hunyuanTitle: '混元 Hunyuan', hunyuanProvider: '腾讯', qwenDownloadTitle: '阿里云 Qwen3-4B / 通义千问', officialTerms: '以官方条款为准'
       })
     });
     let currentLocale = 'en';
@@ -4967,6 +5065,8 @@
       const pathMatch = url.pathname.match(/(?:^|\/)(zh|en)(?:\/|$)/i);
       const pathLocale = normalizeLocale(pathMatch?.[1]);
       if (pathLocale) return pathLocale;
+      const pageDefault = normalizeLocale(document.documentElement.dataset.defaultLocale);
+      if (pageDefault) return pageDefault;
       const stored = readStoredLocale();
       if (stored) return stored;
       const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
@@ -5046,7 +5146,7 @@
       setNodeText('.table-head > div:nth-child(1)', 'product'); setNodeText('.table-head > div:nth-child(2)', 'method'); setNodeText('.table-head > div:nth-child(3)', 'amountPrice'); setNodeText('.table-head > div:nth-child(4)', 'validity'); setNodeText('.table-head > div:nth-child(5)', 'region'); setNodeText('.table-head > div:nth-child(6)', 'verification');
       ['allOffers', 'freeQuota', 'credits', 'ide', 'promo', 'studentDiscount', 'web', 'download_lowcost'].forEach((key, index) => setLeadingText(`.filter-chip:nth-child(${index + 1})`, key));
       setNodeText('#catalog-empty-state strong', 'noMatch'); setNodeText('#catalog-empty-state p', 'resetCopy'); setNodeText('#catalog-reset-filters', 'reset');
-      setNodeText('.category-seo-links a:nth-child(1)', 'freeQuota'); setNodeText('.category-seo-links a:nth-child(2)', 'ide'); setNodeText('.category-seo-links a:nth-child(3)', 'apiServices'); setNodeText('.category-seo-links a:nth-child(4)', 'promo'); setNodeText('.category-seo-links a:nth-child(5)', 'studentDiscount'); setNodeText('.category-seo-links a:nth-child(6)', 'web'); setNodeText('.category-seo-links a:nth-child(7)', 'openWeight');
+      setNodeText('.category-seo-links a:nth-child(1)', 'freeQuota'); setNodeText('.category-seo-links a:nth-child(2)', 'ide'); setNodeText('.category-seo-links a:nth-child(3)', 'apiServices'); setNodeText('.category-seo-links a:nth-child(4)', 'promo'); setNodeText('.category-seo-links a:nth-child(5)', 'studentDiscount'); setNodeText('.category-seo-links a:nth-child(6)', 'web'); setNodeText('.category-seo-links a:nth-child(7)', 'openWeight'); setNodeText('.category-seo-links a:nth-child(10)', 'allModels');
       setNodeText('.compare-panel .eyebrow', 'cheapestEyebrow'); setNodeText('.compare-panel h2', 'cheapestTitle'); setNodeText('.compare-panel .section-heading p', 'cheapestCopy'); setNodeText('.compare-panel .badge', 'liveRule');
       setNodeText('.cheap-card:nth-child(1) .cheap-card-label span', 'newUserRegion'); setNodeText('.cheap-card:nth-child(1) .cheap-card-label b', 'beFirst'); setNodeText('.cheap-card:nth-child(1) .cheap-card-price small', 'freeQuota'); setNodeText('.cheap-card:nth-child(1) h3', 'aliModels'); setNodeText('.cheap-card:nth-child(1) p', 'aliModelsCopy'); setNodeText('.cheap-card:nth-child(1) a', 'freeQuotaRule');
       setNodeText('.cheap-card:nth-child(2) .cheap-card-label span', 'firstPurchaseRegion'); setNodeText('.cheap-card:nth-child(2) .cheap-card-label b', 'fromPrice'); setNodeText('.cheap-card:nth-child(2) .cheap-card-price small', 'firstPurchase'); setNodeText('.cheap-card:nth-child(2) h3', 'codingPlanTitle'); setNodeText('.cheap-card:nth-child(2) p', 'firstMonthCopy'); setNodeText('.cheap-card:nth-child(2) a', 'officialPlan');
@@ -5096,8 +5196,8 @@
     };
     const checkedMarkup = item => {
       const source = String(item.checkedSummary || '').split(' / ').slice(1).join(' / ');
-      const label = item.date ? (item.date === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(item.date)) : String(item.checkedSummary || '').split(' / ')[0];
-      return `${escapeHtml(label)}${source ? `<small>${escapeHtml(source)}</small>` : ''}`;
+      const label = item.date ? (item.date === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(item.date)) : localeValue(String(item.checkedSummary || '').split(' / ')[0], localeText('officialTerms'));
+      return `${escapeHtml(label)}${source ? `<small>${escapeHtml(localeValue(source, localeText('officialTerms')))}</small>` : ''}`;
     };
     const iconHostFromUrl = value => {
       try {
@@ -5114,8 +5214,7 @@
       comate: 'comate.baidu.com',
       doubao: 'www.volcengine.com',
       glm: 'bigmodel.cn',
-      'longcat-api': 'www.meituan.com',
-      'longcat-download': 'www.meituan.com',
+      'longcat-2-0': 'www.meituan.com',
       'qwen-download': 'www.aliyun.com',
       'glm-download': 'bigmodel.cn',
       sensecore: 'www.sensetime.com',
@@ -5200,8 +5299,8 @@
     const renderSignalSummary = signals => {
       if (!signals?.length) return '';
       return `<div class="offer-card-signal" aria-label="External platform signals">${signals.slice(0, 3).map(signal => {
-        const source = escapeHtml(signal.sourcePlatform || 'External source');
-        const label = escapeHtml(signal.rawLabel || `${signal.sourceType || 'signal'} · original value`);
+        const source = escapeHtml(localeValue(signal.sourcePlatform, 'External source'));
+        const label = escapeHtml(localeValue(signal.rawLabel || `${signal.sourceType || 'signal'} · original value`, 'Original value'));
         const href = escapeHtml(safeExternalHref(signal.sourceUrl));
         return `<a href="${href}" target="_blank" rel="noreferrer noopener" title="${source}">${source}: ${label} ↗</a>`;
       }).join('')}</div>`;
@@ -5209,9 +5308,16 @@
     const isModelOffer = item => Boolean(item?.contextWindow) && ['api', 'open_weights', 'coding_plan'].includes(item.productType);
     const modelContextText = context => context?.[currentLocale === SUPPORTED_LOCALES.zh ? 'zh' : 'en'] || context?.en || '—';
     const hasChineseText = value => /[\u3400-\u9fff]/.test(String(value || ''));
+    const englishSafeText = (value, fallback = localeText('officialTerms')) => {
+      const text = String(value || '').replace(/[\u3400-\u9fff]/g, ' ').replace(/\s+/g, ' ').trim();
+      return text || fallback;
+    };
+    const localeValue = (value, fallback = localeText('officialTerms')) => currentLocale === SUPPORTED_LOCALES.en
+      ? englishSafeText(value, fallback)
+      : (value || fallback);
     const localizedOfferText = (item, field, fallback = localeText('officialTerms')) => {
       const value = currentLocale === SUPPORTED_LOCALES.zh ? item?.[field] : (item?.[`${field}En`] || item?.[field]);
-      return currentLocale === SUPPORTED_LOCALES.en && hasChineseText(value) ? fallback : (value || fallback);
+      return localeValue(value, fallback);
     };
     const providerMarkText = item => currentLocale === SUPPORTED_LOCALES.en && hasChineseText(item?.providerMark)
       ? String(item?.id || 'ai').replace(/[^a-z0-9]+/gi, '').slice(0, 2).toUpperCase()
@@ -5221,11 +5327,43 @@
       if (!isModelOffer(item)) return '';
       return `<div class="offer-card-context">${escapeHtml(localeText('contextWindowLabel'))}: ${escapeHtml(modelContextText(context))}</div>`;
     };
+    const renderOfferModels = item => {
+      const models = Array.isArray(item?.freeModels) ? item.freeModels.filter(entry => entry?.model) : [];
+      if (!models.length) return `<strong>${escapeHtml(localeValue(item.model || item.name, 'Listed model'))}</strong>`;
+      return `<div class="offer-card-model-list">${models.map(entry => {
+        const context = localeValue(entry.contextWindow, 'See model limits');
+        const label = localeValue(entry.label, '');
+        const quota = localeValue(entry.quota, 'See quota terms');
+        const meta = [label, `${localeText('contextWindowLabel')}: ${context}`, quota].filter(Boolean).join(' · ');
+        return `<div class="offer-model-row"><strong>${escapeHtml(localeValue(entry.model, 'Listed model'))}</strong><small>${escapeHtml(meta)}</small></div>`;
+      }).join('')}</div>`;
+    };
+    const renderOfferAccessPaths = item => {
+      const paths = Array.isArray(item?.accessPaths) ? item.accessPaths.filter(path => path?.label) : [];
+      if (!paths.length) return '';
+      return `<div class="offer-access-paths">${paths.map(path => `<div class="offer-access-path"><strong>${escapeHtml(localeValue(path.label, 'Access path'))}</strong><small>${escapeHtml([path.summary, path.freeSummary, path.access].filter(Boolean).map(value => localeValue(value)).join(' · ') || localeText('officialTerms'))}</small></div>`).join('')}</div>`;
+    };
+    const renderOfferSource = item => {
+      const source = Array.isArray(item?.links) ? item.links.find(link => Array.isArray(link) && link[1]) : null;
+      const href = source?.[1] || item?.register;
+      if (!href) return `<span>${escapeHtml(localeText('officialSource'))}</span>`;
+      return `<a class="offer-source-link" href="${escapeHtml(href)}" rel="noreferrer noopener">${escapeHtml(localeText('officialSource'))} ↗</a>`;
+    };
+    const offerLinks = item => {
+      const links = Array.isArray(item?.links) ? item.links.filter(link => Array.isArray(link) && link.length === 2 && link[0] && link[1]) : [];
+      const modelLinks = Array.isArray(item?.freeModels)
+        ? item.freeModels.filter(entry => entry?.model && entry?.sourceUrl).map(entry => [entry.model, entry.sourceUrl])
+        : [];
+      const pathLinks = Array.isArray(item?.accessPaths)
+        ? item.accessPaths.flatMap(path => (path?.links || []).filter(link => Array.isArray(link) && link.length === 2 && link[0] && link[1]).map(([label, url]) => [`${localeValue(path.label, 'Access path')}: ${localeValue(label, 'Official link')}`, url]))
+        : [];
+      return [...links, ...modelLinks, ...pathLinks];
+    };
     const rowArticleMarkup = item => {
       const tokens = [...offerTokens(item)];
       const categories = offerCategories(item);
       const searchText = JSON.stringify([item.provider, item.name, item.product, item.model, item.endpoint, item.freeSummary, item.freeMechanism, item.validity, item.access, ...(item.capabilities || []), item.usageGuide?.summary, item.usageGuide?.steps?.join(' ')].filter(Boolean));
-      const capabilityLabel = (item.capabilities || []).join(' · ');
+      const capabilityLabel = (item.capabilities || []).map(value => localeValue(value, 'Capability')).join(' · ');
       const primary = primaryCategory(item);
       const categoryLabel = localeText(categoryNames[primary]) || localeText('verification');
       const offerHref = `/offers/${encodeURIComponent(item.id)}/`;
@@ -5236,7 +5374,8 @@
       const amount = localizedOfferText(item, 'freeSummary', localizedOfferText(item, 'mechanism'));
       const validity = localizedOfferText(item, 'validitySummary', localizedOfferText(item, 'validity'));
       const access = localizedOfferText(item, 'accessSummary', localizedOfferText(item, 'access'));
-      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div>${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model"><strong>${escapeHtml(item.model || item.name)}</strong><small>${escapeHtml(item.modelMeta || alternateLabels || '')}</small></div>${renderModelContext(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(item.badges?.[0] || 'OPEN')}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small><span>${escapeHtml(localeText('officialSource'))}</span><a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
+      const modelMeta = localeValue(item.modelMeta || alternateLabels, 'Model details');
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div>${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model">${renderOfferModels(item)}<small>${escapeHtml(modelMeta)}</small></div>${renderModelContext(item)}${renderOfferAccessPaths(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(localeValue(item.badges?.[0], 'OPEN'))}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small>${renderOfferSource(item)}<a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
     };
     const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString(currentLocale, { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
@@ -5285,7 +5424,7 @@
         : `<div class="student-item"><strong>${escapeHtml(localeText('noStudent'))}</strong><span>${escapeHtml(localeText('pendingStudent'))}</span></div>`;
 
       const downloadItems = items.filter(item => offerCategories(item).includes('download_lowcost'));
-      document.getElementById('catalog-download-list').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(localizedOfferText(item, 'provider', 'AI model'))}</strong><small>${escapeHtml((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model)}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(localizedOfferText(item, 'registerLabel', localeText('open')))}</a></div>`).join('');
+      document.getElementById('catalog-download-list').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(localizedOfferText(item, 'provider', 'AI model'))}</strong><small>${escapeHtml(localeValue((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model, 'Model details'))}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(localizedOfferText(item, 'registerLabel', localeText('open')))}</a></div>`).join('');
 
       const latest = items.map(item => item.lastVerifiedAt).filter(Boolean).sort().at(-1);
       if (latest) document.getElementById('catalog-last-checked').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `最后核验：${formatDate(latest)} · ${localeText('footerData')}` : `Last checked: ${formatDate(latest)} · ${localeText('footerData')}`;
@@ -5334,9 +5473,9 @@
     const renderCommunitySignals = signals => {
       if (!signals.length) return '<div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div>';
       return signals.map(signal => {
-        const platform = escapeHtml(signal.sourcePlatform || 'External platform');
-        const label = escapeHtml(signal.rawLabel || `${signal.sourceType || 'signal'} · original value`);
-        const excerpt = signal.excerpt ? `<p class="signal-excerpt">${escapeHtml(signal.excerpt)}</p>` : '';
+        const platform = escapeHtml(localeValue(signal.sourcePlatform, 'External platform'));
+        const label = escapeHtml(localeValue(signal.rawLabel || `${signal.sourceType || 'signal'} · original value`, 'Original value'));
+        const excerpt = signal.excerpt ? `<p class="signal-excerpt">${escapeHtml(localeValue(signal.excerpt, localeText('officialTerms')))}</p>` : '';
         const captured = escapeHtml(signal.capturedAt || 'capture time unavailable');
         const sourceUrl = safeExternalHref(signal.sourceUrl);
         const source = sourceUrl === '#' ? 'Source link unavailable' : `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer noopener">Open source ↗</a>`;
@@ -5344,15 +5483,15 @@
       }).join('');
     };
     const guideListText = value => Array.isArray(value) && value.length
-      ? value.map(entry => currentLocale === SUPPORTED_LOCALES.en && hasChineseText(entry) ? localeText('officialTerms') : entry).join(' · ')
+      ? value.map(entry => localeValue(entry)).join(' · ')
       : '—';
     const guideExampleText = guide => {
       const examples = guide?.examples || {};
       const first = Object.entries(examples)[0];
-      return first ? `${first[0]}: ${first[1]}` : 'No executable example provided.';
+      return first ? `${localeValue(first[0], 'Example')}: ${first[1]}` : 'No executable example provided.';
     };
     const guideIssuesText = issues => Array.isArray(issues) && issues.length
-      ? issues.map(issue => `${issue.problem}: ${issue.solution}`).join(' · ')
+      ? issues.map(issue => `${localeValue(issue.problemEn || issue.problem, 'Common issue')}: ${localeValue(issue.solutionEn || issue.solution, localeText('officialTerms'))}`).join(' · ')
       : '—';
     const drawer = document.getElementById('drawer');
     const backdrop = document.getElementById('backdrop');
@@ -5383,6 +5522,10 @@
       document.getElementById('drawerSteps').textContent = guideListText(guide.steps);
       document.getElementById('drawerEndpoint').textContent = guide.endpoint || guide.docsUrl || 'Install/action path';
       document.getElementById('drawerCapabilities').textContent = guideListText(item.capabilities);
+      const accessPaths = Array.isArray(item.accessPaths) ? item.accessPaths.filter(path => path?.label) : [];
+      const accessPathsBlock = document.getElementById('drawerAccessPathsBlock');
+      accessPathsBlock.hidden = !accessPaths.length;
+      document.getElementById('drawerAccessPaths').innerHTML = accessPaths.map(path => `<div class="detail-value"><strong>${escapeHtml(localeValue(path.label, 'Access path'))}</strong><br>${escapeHtml([path.summary, path.freeSummary, path.access].filter(Boolean).map(value => localeValue(value)).join(' · ') || localeText('officialTerms'))}</div>`).join('');
       document.getElementById('drawerExample').textContent = guideExampleText(guide);
       document.getElementById('drawerQuotaGuard').textContent = guideListText(guide.quotaGuard);
       document.getElementById('drawerCommonIssues').textContent = guideIssuesText(guide.commonIssues);
@@ -5395,7 +5538,7 @@
         const local = Intl.DateTimeFormat().resolvedOptions().timeZone || 'your timezone';
         document.getElementById('timeWindowCopy').textContent = `${item.timeWindow} Your browser timezone: ${local}. Convert the window before scheduling heavy work.`;
       }
-      document.getElementById('drawerLinks').innerHTML = (item.links || []).map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(label)} ↗</a>`).join('');
+      document.getElementById('drawerLinks').innerHTML = offerLinks(item).map(([label, url]) => `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(localeValue(label, 'Official link'))} ↗</a>`).join('');
       document.getElementById('drawerSignals').innerHTML = renderCommunitySignals(signalIndex[item.id] || []);
       drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
     };
@@ -5444,8 +5587,18 @@
       if (filter === 'compare') document.getElementById('catalog-compare').scrollIntoView({ behavior: 'smooth', block: 'start' });
       else applyFilters();
     };
-    document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {
+    const clearCatalogSearch = () => {
+      document.getElementById('catalog-search').value = '';
       filterBeforeSearch = null;
+    };
+    document.querySelectorAll('.featured-resource-link').forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      clearCatalogSearch();
+      setFilter(link.dataset.filter || 'all');
+      document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {
+      clearCatalogSearch();
       setFilter(el.dataset.filter);
     }));
     document.getElementById('catalog-search').addEventListener('input', () => {
@@ -5498,6 +5651,36 @@
         showDataError();
       }
     });
+  </script>
+  <script id="free-llm-extra-localization">
+    (() => {
+      const copy = {
+        en: {
+          catalog: 'Models', resources: 'Resource directory', 'model-center': 'Model center', 'all-models': 'All models', providers: 'Providers', tools: 'Developer tools', api: 'API services', rank: 'Compare', guide: 'Guide',
+          freeQuota: 'Free quota', ide: 'Free IDE', apiServices: 'API services', promo: 'Timed / regional deal', studentDiscount: 'Student offer', web: 'Web tools', openWeight: 'Open weights',
+          guideOpenAiAlternatives: 'OpenAI API alternatives', guideClaudeAlternatives: 'Claude Code alternatives', guideOpenAiCompatible: 'OpenAI-compatible APIs', guideCodingTools: 'Free AI coding tools', guideSearchApis: 'Free AI search APIs', guideOpenWeights: 'Open-weight models', guideContextWindows: 'Model context windows', guideChinaApi: 'Free AI APIs in China', resourceDirectory: 'Resource directory', allModelsNav: 'All models', providersDirectory: 'Browse by provider'
+        },
+        zh: {
+          catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
+          freeQuota: '免费额度', ide: '免费 AI IDE', apiServices: 'AI API 服务', promo: '试用与优惠', studentDiscount: '学生优惠', web: '网页工具', openWeight: '开源权重',
+          guideOpenAiAlternatives: 'OpenAI API 替代品', guideClaudeAlternatives: 'Claude Code 替代品', guideOpenAiCompatible: '免费 OpenAI 兼容 API', guideCodingTools: '免费 AI 编程工具', guideSearchApis: '免费 AI 搜索 API', guideOpenWeights: '开源权重模型', guideContextWindows: '模型上下文窗口', guideChinaApi: '国内免费 AI API', resourceDirectory: '资源目录', allModelsNav: '全部模型', providersDirectory: '按厂家浏览'
+        }
+      };
+      const update = () => {
+        const language = document.documentElement.lang === 'zh-CN' ? 'zh' : 'en';
+        const labels = copy[language];
+        document.querySelectorAll('[data-nav-key]').forEach(node => {
+          const key = node.dataset.navKey;
+          if (labels[key]) node.textContent = labels[key];
+        });
+        document.querySelectorAll('.category-seo-links [data-i18n]').forEach(node => {
+          const key = node.dataset.i18n;
+          if (labels[key]) node.textContent = labels[key];
+        });
+      };
+      update();
+      new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    })();
   </script>
 </body>
 </html>

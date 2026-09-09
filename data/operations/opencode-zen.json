@@ -1,0 +1,36 @@
+{
+  "providerId": "opencode",
+  "provider": "OpenCode Zen",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["opencode-zen-free"],
+  "paths": [
+    {
+      "id": "zen-cli",
+      "label": "OpenCode Zen 中使用免费模型",
+      "productType": "ide",
+      "prerequisites": ["已安装 OpenCode", "已完成 OpenCode 账户登录或提供商授权", "已从 Zen 文档确认当前可用模型"],
+      "steps": [
+        {"title": "安装 OpenCode", "detail": "按照官方安装页选择 Windows、macOS 或 Linux 安装方式。", "action": "打开 https://opencode.ai/docs"},
+        {"title": "配置 Zen 提供商", "detail": "在 OpenCode 的 provider 设置中选择 Zen，并按官方文档完成登录或 API key 配置。"},
+        {"title": "选择模型", "detail": "从 Zen 当前模型列表中选择可用模型；免费池和模型可用性不是永久承诺。"},
+        {"title": "验证编辑任务", "detail": "在一个可回滚的测试仓库中让 OpenCode 读取一个文件并提出修改建议，确认模型响应和工具权限均正常。"}
+      ],
+      "validation": "OpenCode 能列出 Zen 模型并完成一次只读代码分析；写入操作前先检查 diff。",
+      "sourceUrls": ["https://opencode.ai/docs", "https://dev.opencode.ai/docs/zen/", "https://opencode.ai/docs/providers"]
+    },
+    {
+      "id": "muse-spark-1-3",
+      "label": "查找 Muse Spark 1.3",
+      "productType": "ide",
+      "prerequisites": ["OpenCode 或其他已启用 Meta provider 的客户端", "账户所在地区与账户类型满足模型可见条件"],
+      "steps": [
+        {"title": "打开模型设置", "detail": "进入客户端的模型或 provider 设置，刷新远端模型列表。"},
+        {"title": "搜索模型名", "detail": "搜索 Muse Spark 1.3；如果没有出现，先检查 Meta provider 是否已启用以及客户端版本。"},
+        {"title": "确认可用性", "detail": "打开模型详情查看上下文、价格、访问范围和调用方；不要把第三方展示的名称当作 Meta API 的永久免费承诺。", "action": "打开 https://research.meta.ai/blog/introducing-muse-spark-1-3"},
+        {"title": "运行小任务", "detail": "使用短上下文执行一次只读问答，确认响应来自所选模型而非客户端自动回退模型。"}
+      ],
+      "validation": "客户端显示的模型 ID、provider 和响应元数据都指向 Muse Spark 1.3；缺失时记录为当前不可用。",
+      "sourceUrls": ["https://research.meta.ai/blog/introducing-muse-spark-1-3", "https://opencode.ai/docs/providers"]
+    }
+  ]
+}

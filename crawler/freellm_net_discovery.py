@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from html.parser import HTMLParser
+from datetime import datetime, timezone
 import re
 from urllib.parse import urljoin, urlparse
 
@@ -103,6 +104,44 @@ def _row_value(row: dict, index: int, key: str) -> str:
     return _text(cells[index]) if index < len(cells) else ""
 
 
+def _directory_row_value(row: dict, key: str, legacy_index: int | None, current_index: int) -> str:
+    """Read a directory field from data attributes, with table-layout fallbacks.
+
+    Older snapshots omitted the Max Output column. Keeping that fallback makes
+    historical discovery fixtures readable while the current table preserves
+    all columns from the public directory.
+    """
+    attribute_keys = {
+        "score": "data-score",
+        "context": "data-context",
+        "maxOutput": "data-max-output",
+        "modality": "data-modality",
+        "rateLimit": "data-rate-limit",
+        "released": "data-released",
+        "usageActivity": "data-usage-activity",
+        "status": "data-status",
+    }
+    attribute_key = attribute_keys.get(key)
+    if attribute_key:
+        value = _text(row.get("attributes", {}).get(attribute_key))
+        if value:
+            if key == "released" and value.isdigit():
+                if int(value) <= 0:
+                    return ""
+                try:
+                    return datetime.fromtimestamp(int(value) / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+                except (OverflowError, OSError, ValueError):
+                    pass
+            return value
+    cells = row.get("cells", [])
+    if len(cells) < 10 and legacy_index is None:
+        return ""
+    index = current_index if len(cells) >= 10 else legacy_index
+    if index is None:
+        return ""
+    return _row_value(row, index, "")
+
+
 def parse_model_directory(html: str, base_url: str) -> list[dict]:
     """Parse free model rows from freellm.net's server-rendered model table."""
     parser = _ModelRowParser()
@@ -146,10 +185,14 @@ def parse_model_directory(html: str, base_url: str) -> list[dict]:
             "directoryFree": True,
             "directoryNoCard": _bool_attribute(attributes.get("data-nocard")),
             "directoryVerified": _bool_attribute(attributes.get("data-verified")),
-            "context": _row_value(row, 3, "data-context"),
-            "modality": _row_value(row, 4, "data-modality"),
-            "rateLimit": _row_value(row, 5, "data-rate-limit"),
-            "status": _row_value(row, 8, "data-status"),
+            "score": _directory_row_value(row, "score", 2, 2),
+            "context": _directory_row_value(row, "context", 3, 3),
+            "maxOutput": _directory_row_value(row, "maxOutput", None, 4),
+            "modality": _directory_row_value(row, "modality", 4, 5),
+            "rateLimit": _directory_row_value(row, "rateLimit", 5, 6),
+            "released": _directory_row_value(row, "released", 6, 7),
+            "usageActivity": _directory_row_value(row, "usageActivity", 7, 8),
+            "status": _directory_row_value(row, "status", 8, 9),
             "tierType": _text(attributes.get("data-tier-type")),
         }
         seen_urls.add(directory_url)

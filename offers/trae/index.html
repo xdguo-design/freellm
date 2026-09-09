@@ -20,6 +20,31 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "TraeCode CN · Personal plan", "description": "TraeCode CN：Personal version is free; quota varies by mode。请以官方页面为准，核对地区、有效期和使用条件。", "url": "https://freellm.top/offers/trae/", "dateModified": "2026-09-06"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": "https://freellm.top/"}, {"@type": "ListItem", "position": 2, "name": "TraeCode CN · Personal plan", "item": "https://freellm.top/offers/trae/"}]}]}</script>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
@@ -41,54 +66,72 @@
     th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
     code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
     .muted { color: #68748a; }
+    .operation-path { margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }
+    .operation-path h3 { margin-top: 0; }
+    .operation-path h4 { margin: 18px 0 6px; }
+    .operation-type { display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }
+    .operation-steps { padding-left: 1.4em; }
+    .operation-steps li { margin: 12px 0; }
+    .operation-steps p { margin: 4px 0; }
+    .operation-command { margin: 10px 0; }
+    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }
+    .copy-command { border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }
+    .operation-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }
+    .operation-facts div { padding: 10px; border-radius: 8px; background: #f0f4fb; }
+    .operation-facts dt { color: #68748a; font-size: .78rem; }
+    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+    .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
-<body data-offer-id="trae">
+<body data-offer-id="trae" data-static-locale="true">
   <header>
-    <p><a href="https://freellm.top/">FreeLLM 免费 AI 资源索引</a> / 资源详情</p>
-    <h1>TraeCode CN · Personal plan</h1>
-    <p>ByteDance · China</p>
-    <nav aria-label="Categories"><a class="tag" href="/category/free-ide/">免费 AI IDE</a></nav>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">TraeCode CN · Personal plan</span><span lang="en">TraeCode CN · Personal plan</span></h1>
+    <p><span lang="zh-CN">ByteDance · China</span><span lang="en">TraeCode CN</span></p>
+    <nav aria-label="Categories"><a class="tag" href="/category/free-ide/"><span lang="zh-CN">免费 AI IDE</span><span lang="en">Free AI coding IDEs</span></a></nav>
   </header>
   <main>
     <section>
-      <h2>这个资源提供什么</h2>
-      <p>The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.</p>
+      <h2><span lang="zh-CN">这个资源提供什么</span><span lang="en">What this offer provides</span></h2>
+      <p><span lang="zh-CN">The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.</span><span lang="en">The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.</span></p>
     </section>
     <section>
-      <h2>关键信息</h2>
+      <h2><span lang="zh-CN">关键信息</span><span lang="en">Key details</span></h2>
       <div class="facts">
-        <div class="fact"><strong>免费方式</strong><span>Personal version is free; quota varies by mode</span></div>
-        <div class="fact"><strong>有效期</strong><span>Ongoing / subject to limits</span></div>
-        <div class="fact"><strong>访问条件</strong><span>China account</span></div>
-        <div class="fact"><strong>最后核验</strong><span>2026-09-06</span></div>
+        <div class="fact"><strong><span lang="zh-CN">免费方式</span><span lang="en">Free method</span></strong><span><span lang="zh-CN">Personal version is free; quota varies by mode</span><span lang="en">Personal version is free; quota varies by mode</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">有效期</span><span lang="en">Validity</span></strong><span><span lang="zh-CN">Ongoing / subject to limits</span><span lang="en">Ongoing / subject to limits</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">访问条件</span><span lang="en">Access</span></strong><span><span lang="zh-CN">China account</span><span lang="en">China account</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">最后核验</span><span lang="en">Last checked</span></strong><span>2026-09-06</span></div>
       </div>
     </section>
-    
-    
+
+
+
+
     <section>
-      <h2>如何使用</h2>
-      <p>安装 Trae 中国版个人计划</p>
-      <h3>前置条件</h3>
-      <ul><li>中国账号</li></ul>
-      <h3>步骤</h3>
-      <ul><li>打开官方定价页并下载客户端</li><li>登录后选择个人计划并查看当前模式额度</li></ul>
-      <h3>action</h3><pre><code>打开 https://www.trae.cn/pricing 并下载安装 Trae</code></pre>
+      <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>
+      <p><span lang="zh-CN">安装 Trae 中国版个人计划</span><span lang="en">Trae</span></p>
+      <h3><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h3>
+      <ul><li><span lang="zh-CN">中国账号</span><span lang="en">See official terms</span></li></ul>
+      <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
+      <ul><li><span lang="zh-CN">打开官方定价页并下载客户端</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">登录后选择个人计划并查看当前模式额度</span><span lang="en">See official terms</span></li></ul>
+      <h3><span lang="zh-CN">action</span><span lang="en">action</span></h3><pre><code>打开 https://www.trae.cn/pricing 并下载安装 Trae</code></pre>
     </section>
     <section>
-      <h2>官方来源</h2>
-      <p class="muted">Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.</p>
-      <ul><li><a href="https://www.trae.cn/" rel="nofollow noopener" target="_blank">https://www.trae.cn/</a></li><li><a href="https://www.trae.cn/pricing" rel="nofollow noopener" target="_blank">https://www.trae.cn/pricing</a></li></ul>
+      <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
+      <p class="muted"><span lang="zh-CN">Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.</span><span lang="en">Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.</span></p>
+      <ul><li><a href="https://www.trae.cn/pricing" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Official pricing</span><span lang="en">Official pricing</span> ↗</a></li><li><a href="https://www.trae.cn/" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Download</span><span lang="en">Download</span> ↗</a></li></ul>
     </section>
     <section>
-      <h2>相关资源</h2>
-      <ul><li><a href="/offers/codebuddy/">CodeBuddy</a></li><li><a href="/offers/qoder/">Qoder</a></li><li><a href="/offers/comate/">Baidu Comate</a></li><li><a href="/offers/github-copilot-free/">GitHub Copilot</a></li><li><a href="/offers/cursor-hobby/">Cursor</a></li><li><a href="/offers/amazon-q-free/">Amazon Q Developer</a></li></ul>
+      <h2><span lang="zh-CN">相关资源</span><span lang="en">Related resources</span></h2>
+      <ul><li><a href="/offers/codebuddy/"><span lang="zh-CN">CodeBuddy</span><span lang="en">CodeBuddy · Personal trial</span></a></li><li><a href="/offers/qoder/"><span lang="zh-CN">Qoder</span><span lang="en">Qoder · Experience plan</span></a></li><li><a href="/offers/comate/"><span lang="zh-CN">Baidu Comate</span><span lang="en">Baidu Comate · Auto-Free mode</span></a></li><li><a href="/offers/github-copilot-free/"><span lang="zh-CN">GitHub Copilot</span><span lang="en">GitHub Copilot · Free plan</span></a></li><li><a href="/offers/cursor-hobby/"><span lang="zh-CN">Cursor</span><span lang="en">Cursor · Hobby free plan</span></a></li><li><a href="/offers/amazon-q-free/"><span lang="zh-CN">Amazon Q Developer</span><span lang="en">Amazon Q Developer · Free tier</span></a></li></ul>
     </section>
   </main>
   <footer>
-    <p><strong>重要：</strong>免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</p>
-    <p><a href="https://freellm.top/">返回 FreeLLM 免费 AI 资源索引</a></p>
+    <p><strong><span lang="zh-CN">重要</span><span lang="en">Important</span>：</strong><span lang="zh-CN">免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</span><span lang="en">Free access may be affected by region, account type, rate limits, validity or provider terms; verify the official source before relying on this offer.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a></p>
   </footer>
 </body>
 </html>

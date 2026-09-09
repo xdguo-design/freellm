@@ -91,9 +91,10 @@ def validate_signals(records: object) -> list[str]:
     return errors
 
 
-def _signal_key(record: dict) -> tuple[str, str, str, str]:
+def _signal_key(record: dict) -> tuple[str, str, str, str, str]:
     return (
         str(record.get("offerId", "")),
+        str(record.get("modelId", "")),
         str(record.get("sourcePlatform", "")),
         str(record.get("sourceType", "")),
         str(record.get("sourceUrl", "")),
@@ -121,6 +122,7 @@ def merge_signals(existing: list[dict], discovered: list[dict], captured_at: str
         merged.values(),
         key=lambda record: (
             str(record.get("offerId", "")),
+            str(record.get("modelId", "")),
             str(record.get("sourcePlatform", "")),
             str(record.get("sourceType", "")),
             str(record.get("sourceUrl", "")),

@@ -20,6 +20,31 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "免费额度 · FreeLLM 免费 AI 资源索引", "description": "整理经过核验的 AI 模型与 API 免费额度和免费入口。当前有 16 个经过核验的资源，均提供官方入口与有效期说明。", "url": "https://freellm.top/category/free-quota/", "mainEntity": {"@type": "ItemList", "numberOfItems": 16, "itemListElement": [{"@type": "ListItem", "position": 1, "url": "https://freellm.top/offers/keenable-search-free/", "name": "Keenable · Search API free quota"}, {"@type": "ListItem", "position": 2, "url": "https://freellm.top/offers/tinyfish-search-fetch-free/", "name": "TinyFish · Search + Fetch free tier"}, {"@type": "ListItem", "position": 3, "url": "https://freellm.top/offers/tavily-web-free-credits/", "name": "Tavily · Web APIs free credits"}, {"@type": "ListItem", "position": 4, "url": "https://freellm.top/offers/exa-web-free-credits/", "name": "Exa · Search and Agent free credits"}, {"@type": "ListItem", "position": 5, "url": "https://freellm.top/offers/you-web-free-tier/", "name": "You.com · Search and Contents free tier"}, {"@type": "ListItem", "position": 6, "url": "https://freellm.top/offers/firecrawl-web-free-credits/", "name": "Firecrawl · Search and scrape free plan"}, {"@type": "ListItem", "position": 7, "url": "https://freellm.top/offers/brave-search-free-credits/", "name": "Brave Search API · free monthly credits"}, {"@type": "ListItem", "position": 8, "url": "https://freellm.top/offers/browserbase-free-tier/", "name": "Browserbase · free browser and web APIs"}, {"@type": "ListItem", "position": 9, "url": "https://freellm.top/offers/google-ai-studio-free/", "name": "Google AI Studio · Gemini API free tier"}, {"@type": "ListItem", "position": 10, "url": "https://freellm.top/offers/groq-free/", "name": "Groq · free plan rate limits"}, {"@type": "ListItem", "position": 11, "url": "https://freellm.top/offers/openrouter-free/", "name": "OpenRouter · free model variants"}, {"@type": "ListItem", "position": 12, "url": "https://freellm.top/offers/mistral-free-mode/", "name": "Mistral · La Plateforme free mode"}, {"@type": "ListItem", "position": 13, "url": "https://freellm.top/offers/hf-inference-free/", "name": "Hugging Face · Inference Providers free tier"}, {"@type": "ListItem", "position": 14, "url": "https://freellm.top/offers/siliconflow-free-models/", "name": "SiliconFlow · ¥0 listed models"}, {"@type": "ListItem", "position": 15, "url": "https://freellm.top/offers/modelscope-api-inference-free/", "name": "ModelScope · API-Inference free calls"}, {"@type": "ListItem", "position": 16, "url": "https://freellm.top/offers/agnes-ai-free/", "name": "Agnes AI · Free/default multimodal API"}]}}</script>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
@@ -34,84 +59,84 @@
     .muted { color: #68748a; }
   </style>
 </head>
-<body>
+<body data-static-locale="true">
   <header>
-    <p><a href="https://freellm.top/">FreeLLM 免费 AI 资源索引</a> / 分类</p>
-    <h1>Free AI quota</h1>
-    <p>Verified recurring free quotas and free access paths for AI models and APIs.</p>
-    <p>整理经过核验的 AI 模型与 API 免费额度和免费入口。</p>
-    <p>16 个经过核验的资源</p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">分类</span><span lang="en">Category</span></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span></h1>
+    <p><span lang="zh-CN">整理经过核验的 AI 模型与 API 免费额度和免费入口。</span><span lang="en">Verified recurring free quotas and free access paths for AI models and APIs.</span></p>
+    <p><span lang="zh-CN">16 个经过核验的资源</span><span lang="en">16 verified resources</span></p>
   </header>
   <main>
     <article>
-          <h2><a href="/offers/keenable-search-free/">Keenable · Search API free quota</a></h2>
-          <p>100,000 requests / month · no card</p>
-          <p class="muted">Monthly quota; overage metered · Global · cloud only</p>
+          <h2><a href="/offers/keenable-search-free/"><span lang="zh-CN">Keenable · Search API free quota</span><span lang="en">Keenable · Search API free quota</span></a></h2>
+          <p><span lang="zh-CN">100,000 requests / month · no card</span><span lang="en">100,000 requests / month · no card</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly quota; overage metered</span><span lang="en">Monthly quota; overage metered</span> · <span lang="zh-CN">Global · cloud only</span><span lang="en">Global · cloud only</span></p>
         </article><article>
-          <h2><a href="/offers/tinyfish-search-fetch-free/">TinyFish · Search + Fetch free tier</a></h2>
-          <p>Search 30 / min · Fetch 150 URLs / min</p>
-          <p class="muted">Free while service rules continue · Global · no card</p>
+          <h2><a href="/offers/tinyfish-search-fetch-free/"><span lang="zh-CN">TinyFish · Search + Fetch free tier</span><span lang="en">TinyFish · Search + Fetch free tier</span></a></h2>
+          <p><span lang="zh-CN">Search 30 / min · Fetch 150 URLs / min</span><span lang="en">Search 30 / min · Fetch 150 URLs / min</span></p>
+          <p class="muted"><span lang="zh-CN">Free while service rules continue</span><span lang="en">Free while service rules continue</span> · <span lang="zh-CN">Global · no card</span><span lang="en">Global · no card</span></p>
         </article><article>
-          <h2><a href="/offers/tavily-web-free-credits/">Tavily · Web APIs free credits</a></h2>
-          <p>1,000 API credits / month</p>
-          <p class="muted">Monthly credits; advanced calls cost more · Global · API key</p>
+          <h2><a href="/offers/tavily-web-free-credits/"><span lang="zh-CN">Tavily · Web APIs free credits</span><span lang="en">Tavily · Web APIs free credits</span></a></h2>
+          <p><span lang="zh-CN">1,000 API credits / month</span><span lang="en">1,000 API credits / month</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly credits; advanced calls cost more</span><span lang="en">Monthly credits; advanced calls cost more</span> · <span lang="zh-CN">Global · API key</span><span lang="en">Global · API key</span></p>
         </article><article>
-          <h2><a href="/offers/exa-web-free-credits/">Exa · Search and Agent free credits</a></h2>
-          <p>$10 credits / month · $20 signup credits</p>
-          <p class="muted">Monthly credits; PAYG after upgrade · Global · no payment method</p>
+          <h2><a href="/offers/exa-web-free-credits/"><span lang="zh-CN">Exa · Search and Agent free credits</span><span lang="en">Exa · Search and Agent free credits</span></a></h2>
+          <p><span lang="zh-CN">$10 credits / month · $20 signup credits</span><span lang="en">$10 credits / month · $20 signup credits</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly credits; PAYG after upgrade</span><span lang="en">Monthly credits; PAYG after upgrade</span> · <span lang="zh-CN">Global · no payment method</span><span lang="en">Global · no payment method</span></p>
         </article><article>
-          <h2><a href="/offers/you-web-free-tier/">You.com · Search and Contents free tier</a></h2>
-          <p>100 Search queries / day + $100 credits</p>
-          <p class="muted">Daily free tier; PAYG API prices · Global · API key or keyless tier</p>
+          <h2><a href="/offers/you-web-free-tier/"><span lang="zh-CN">You.com · Search and Contents free tier</span><span lang="en">You.com · Search and Contents free tier</span></a></h2>
+          <p><span lang="zh-CN">100 Search queries / day + $100 credits</span><span lang="en">100 Search queries / day + $100 credits</span></p>
+          <p class="muted"><span lang="zh-CN">Daily free tier; PAYG API prices</span><span lang="en">Daily free tier; PAYG API prices</span> · <span lang="zh-CN">Global · API key or keyless tier</span><span lang="en">Global · API key or keyless tier</span></p>
         </article><article>
-          <h2><a href="/offers/firecrawl-web-free-credits/">Firecrawl · Search and scrape free plan</a></h2>
-          <p>1,000 credits / month · 500 searches or 1,000 pages</p>
-          <p class="muted">Monthly free credits · Global · no card</p>
+          <h2><a href="/offers/firecrawl-web-free-credits/"><span lang="zh-CN">Firecrawl · Search and scrape free plan</span><span lang="en">Firecrawl · Search and scrape free plan</span></a></h2>
+          <p><span lang="zh-CN">1,000 credits / month · 500 searches or 1,000 pages</span><span lang="en">1,000 credits / month · 500 searches or 1,000 pages</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly free credits</span><span lang="en">Monthly free credits</span> · <span lang="zh-CN">Global · no card</span><span lang="en">Global · no card</span></p>
         </article><article>
-          <h2><a href="/offers/brave-search-free-credits/">Brave Search API · free monthly credits</a></h2>
-          <p>$5 free credits / month</p>
-          <p class="muted">Monthly credits; Search $5 / 1,000 · Global · API key</p>
+          <h2><a href="/offers/brave-search-free-credits/"><span lang="zh-CN">Brave Search API · free monthly credits</span><span lang="en">Brave Search API · free monthly credits</span></a></h2>
+          <p><span lang="zh-CN">$5 free credits / month</span><span lang="en">$5 free credits / month</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly credits; Search $5 / 1,000</span><span lang="en">Monthly credits; Search $5 / 1,000</span> · <span lang="zh-CN">Global · API key</span><span lang="en">Global · API key</span></p>
         </article><article>
-          <h2><a href="/offers/browserbase-free-tier/">Browserbase · free browser and web APIs</a></h2>
-          <p>1 browser hour + 1,000 Search + 1,000 Fetch calls</p>
-          <p class="muted">Free plan; 15-minute sessions · Global · 3 concurrent browsers</p>
+          <h2><a href="/offers/browserbase-free-tier/"><span lang="zh-CN">Browserbase · free browser and web APIs</span><span lang="en">Browserbase · free browser and web APIs</span></a></h2>
+          <p><span lang="zh-CN">1 browser hour + 1,000 Search + 1,000 Fetch calls</span><span lang="en">1 browser hour + 1,000 Search + 1,000 Fetch calls</span></p>
+          <p class="muted"><span lang="zh-CN">Free plan; 15-minute sessions</span><span lang="en">Free plan; 15-minute sessions</span> · <span lang="zh-CN">Global · 3 concurrent browsers</span><span lang="en">Global · 3 concurrent browsers</span></p>
         </article><article>
-          <h2><a href="/offers/google-ai-studio-free/">Google AI Studio · Gemini API free tier</a></h2>
-          <p>Free tier: input, output and context caching listed as Free of charge</p>
-          <p class="muted">Ongoing free tier; limits and terms can change · Google account; availability may vary by region</p>
+          <h2><a href="/offers/google-ai-studio-free/"><span lang="zh-CN">Google AI Studio · Gemini API free tier</span><span lang="en">Google AI Studio · Gemini API free tier</span></a></h2>
+          <p><span lang="zh-CN">Free tier: input, output and context caching listed as Free of charge</span><span lang="en">Free tier: input, output and context caching listed as Free of charge</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing free tier; limits and terms can change</span><span lang="en">Ongoing free tier; limits and terms can change</span> · <span lang="zh-CN">Google account; availability may vary by region</span><span lang="en">Google account; availability may vary by region</span></p>
         </article><article>
-          <h2><a href="/offers/groq-free/">Groq · free plan rate limits</a></h2>
-          <p>Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)</p>
-          <p class="muted">Ongoing free plan; exact limits per model can change · Groq account; rate limits apply at organization level</p>
+          <h2><a href="/offers/groq-free/"><span lang="zh-CN">Groq · free plan rate limits</span><span lang="en">Groq · free plan rate limits</span></a></h2>
+          <p><span lang="zh-CN">Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)</span><span lang="en">Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing free plan; exact limits per model can change</span><span lang="en">Ongoing free plan; exact limits per model can change</span> · <span lang="zh-CN">Groq account; rate limits apply at organization level</span><span lang="en">Groq account; rate limits apply at organization level</span></p>
         </article><article>
-          <h2><a href="/offers/openrouter-free/">OpenRouter · free model variants</a></h2>
-          <p>:free variants: 20 req/min; 50 req/day (under 10 credits purchased) or 1000 req/day (10+ credits)</p>
-          <p class="muted">Ongoing free usage limits; caps can change · OpenRouter account; daily caps depend on lifetime credit purchases</p>
+          <h2><a href="/offers/openrouter-free/"><span lang="zh-CN">OpenRouter · free model variants</span><span lang="en">OpenRouter · free model variants</span></a></h2>
+          <p><span lang="zh-CN">:free variants: 20 req/min; 50 req/day (under 10 credits purchased) or 1000 req/day (10+ credits)</span><span lang="en">free variants: 20 req/min; 50 req/day (under 10 credits purchased) or 1000 req/day (10+ credits)</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing free usage limits; caps can change</span><span lang="en">Ongoing free usage limits; caps can change</span> · <span lang="zh-CN">OpenRouter account; daily caps depend on lifetime credit purchases</span><span lang="en">OpenRouter account; daily caps depend on lifetime credit purchases</span></p>
         </article><article>
-          <h2><a href="/offers/mistral-free-mode/">Mistral · La Plateforme free mode</a></h2>
-          <p>Free mode (default): lowest rate limits, intended for evaluation and prototyping</p>
-          <p class="muted">Ongoing default tier; limits can change · Mistral account</p>
+          <h2><a href="/offers/mistral-free-mode/"><span lang="zh-CN">Mistral · La Plateforme free mode</span><span lang="en">Mistral · La Plateforme free mode</span></a></h2>
+          <p><span lang="zh-CN">Free mode (default): lowest rate limits, intended for evaluation and prototyping</span><span lang="en">Free mode (default): lowest rate limits, intended for evaluation and prototyping</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing default tier; limits can change</span><span lang="en">Ongoing default tier; limits can change</span> · <span lang="zh-CN">Mistral account</span><span lang="en">Mistral account</span></p>
         </article><article>
-          <h2><a href="/offers/hf-inference-free/">Hugging Face · Inference Providers free tier</a></h2>
-          <p>Generous free tier included; additional credits for PRO users and organizations</p>
-          <p class="muted">Monthly included credits; unused quota does not roll over · Hugging Face account</p>
+          <h2><a href="/offers/hf-inference-free/"><span lang="zh-CN">Hugging Face · Inference Providers free tier</span><span lang="en">Hugging Face · Inference Providers free tier</span></a></h2>
+          <p><span lang="zh-CN">Generous free tier included; additional credits for PRO users and organizations</span><span lang="en">Generous free tier included; additional credits for PRO users and organizations</span></p>
+          <p class="muted"><span lang="zh-CN">Monthly included credits; unused quota does not roll over</span><span lang="en">Monthly included credits; unused quota does not roll over</span> · <span lang="zh-CN">Hugging Face account</span><span lang="en">Hugging Face account</span></p>
         </article><article>
-          <h2><a href="/offers/siliconflow-free-models/">SiliconFlow · ¥0 listed models</a></h2>
-          <p>Selected models listed at ¥0 (free) on the official price list, plus paid models</p>
-          <p class="muted">Free listing can change; recheck the price page · SiliconFlow account; China registration</p>
+          <h2><a href="/offers/siliconflow-free-models/"><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></a></h2>
+          <p><span lang="zh-CN">Selected models listed at ¥0 (free) on the official price list, plus paid models</span><span lang="en">Selected models listed at ¥0 (free) on the official price list, plus paid models</span></p>
+          <p class="muted"><span lang="zh-CN">Free listing can change; recheck the price page</span><span lang="en">Free listing can change; recheck the price page</span> · <span lang="zh-CN">SiliconFlow account; China registration</span><span lang="en">SiliconFlow account; China registration</span></p>
         </article><article>
-          <h2><a href="/offers/modelscope-api-inference-free/">ModelScope · API-Inference free calls</a></h2>
-          <p>API-Inference is free for registered users; dynamic rate limits and 魔粒 (MoLi) deduction apply</p>
-          <p class="muted">Ongoing free service; model list iterates as new open models release · ModelScope account + Aliyun binding + real-name verification</p>
+          <h2><a href="/offers/modelscope-api-inference-free/"><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></a></h2>
+          <p><span lang="zh-CN">API-Inference is free for registered users; dynamic rate limits and 魔粒 (MoLi) deduction apply</span><span lang="en">API-Inference is free for registered users; dynamic rate limits and MoLi deduction apply</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing free service; model list iterates as new open models release</span><span lang="en">Ongoing free service; model list iterates as new open models release</span> · <span lang="zh-CN">ModelScope account + Aliyun binding + real-name verification</span><span lang="en">ModelScope account + Aliyun binding + real-name verification</span></p>
         </article><article>
-          <h2><a href="/offers/agnes-ai-free/">Agnes AI · Free/default multimodal API</a></h2>
-          <p>Free/default API access for selected Agnes models with public rate limits</p>
-          <p class="muted">Ongoing while the official free/default program is available; limits can change · Agnes AI account and API key</p>
+          <h2><a href="/offers/agnes-ai-free/"><span lang="zh-CN">Agnes AI · 免费/默认多模态 API</span><span lang="en">Agnes AI · Free/default multimodal API</span></a></h2>
+          <p><span lang="zh-CN">Free/default API access for selected Agnes models with public rate limits</span><span lang="en">Free/default API access for selected Agnes models with public rate limits</span></p>
+          <p class="muted"><span lang="zh-CN">Ongoing while the official free/default program is available; limits can change</span><span lang="en">Ongoing while the official free/default program is available; limits can change</span> · <span lang="zh-CN">Agnes AI account and API key</span><span lang="en">Agnes AI account and API key</span></p>
         </article>
   </main>
   <footer>
-    <p>资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</p>
-    <p><a href="https://freellm.top/">返回 FreeLLM 免费 AI 资源索引</a> · <a href="https://freellm.top/models/">全部模型双语一览 / All models (bilingual)</a></p>
+    <p><span lang="zh-CN">资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</span><span lang="en">Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a> · <a href="https://freellm.top/models/"><span lang="zh-CN">全部模型一览</span><span lang="en">Browse all models</span></a></p>
   </footer>
 </body>
 </html>

@@ -20,6 +20,31 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Amazon Q Developer · Free tier", "description": "Amazon Q Developer：50 agentic requests + 25 AWS resource queries per month。请以官方页面为准，核对地区、有效期和使用条件。", "url": "https://freellm.top/offers/amazon-q-free/", "dateModified": "2026-09-07"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": "https://freellm.top/"}, {"@type": "ListItem", "position": 2, "name": "Amazon Q Developer · Free tier", "item": "https://freellm.top/offers/amazon-q-free/"}]}]}</script>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
@@ -41,54 +66,72 @@
     th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
     code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
     .muted { color: #68748a; }
+    .operation-path { margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }
+    .operation-path h3 { margin-top: 0; }
+    .operation-path h4 { margin: 18px 0 6px; }
+    .operation-type { display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }
+    .operation-steps { padding-left: 1.4em; }
+    .operation-steps li { margin: 12px 0; }
+    .operation-steps p { margin: 4px 0; }
+    .operation-command { margin: 10px 0; }
+    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }
+    .copy-command { border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }
+    .operation-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }
+    .operation-facts div { padding: 10px; border-radius: 8px; background: #f0f4fb; }
+    .operation-facts dt { color: #68748a; font-size: .78rem; }
+    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+    .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
-<body data-offer-id="amazon-q-free">
+<body data-offer-id="amazon-q-free" data-static-locale="true">
   <header>
-    <p><a href="https://freellm.top/">FreeLLM 免费 AI 资源索引</a> / 资源详情</p>
-    <h1>Amazon Q Developer · Free tier</h1>
-    <p>AWS · International</p>
-    <nav aria-label="Categories"><a class="tag" href="/category/free-ide/">免费 AI IDE</a></nav>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">Amazon Q Developer · Free tier</span><span lang="en">Amazon Q Developer · Free tier</span></h1>
+    <p><span lang="zh-CN">AWS · International</span><span lang="en">Amazon Q Developer</span></p>
+    <nav aria-label="Categories"><a class="tag" href="/category/free-ide/"><span lang="zh-CN">免费 AI IDE</span><span lang="en">Free AI coding IDEs</span></a></nav>
   </header>
   <main>
     <section>
-      <h2>这个资源提供什么</h2>
-      <p>AWS documents a perpetual Amazon Q Developer Free tier with monthly limits for IDE and CLI use. The official pricing page lists 50 agentic requests per month and 25 AWS resource queries per account.</p>
+      <h2><span lang="zh-CN">这个资源提供什么</span><span lang="en">What this offer provides</span></h2>
+      <p><span lang="zh-CN">AWS documents a perpetual Amazon Q Developer Free tier with monthly limits for IDE and CLI use. The official pricing page lists 50 agentic requests per month and 25 AWS resource queries per account.</span><span lang="en">AWS documents a perpetual Amazon Q Developer Free tier with monthly limits for IDE and CLI use. The official pricing page lists 50 agentic requests per month and 25 AWS resource queries per account.</span></p>
     </section>
     <section>
-      <h2>关键信息</h2>
+      <h2><span lang="zh-CN">关键信息</span><span lang="en">Key details</span></h2>
       <div class="facts">
-        <div class="fact"><strong>免费方式</strong><span>50 agentic requests + 25 AWS resource queries per month</span></div>
-        <div class="fact"><strong>有效期</strong><span>Perpetual free tier / monthly limits</span></div>
-        <div class="fact"><strong>访问条件</strong><span>Global where AWS Q is supported</span></div>
-        <div class="fact"><strong>最后核验</strong><span>2026-09-07</span></div>
+        <div class="fact"><strong><span lang="zh-CN">免费方式</span><span lang="en">Free method</span></strong><span><span lang="zh-CN">50 agentic requests + 25 AWS resource queries per month</span><span lang="en">50 agentic requests + 25 AWS resource queries per month</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">有效期</span><span lang="en">Validity</span></strong><span><span lang="zh-CN">Perpetual free tier / monthly limits</span><span lang="en">Perpetual free tier / monthly limits</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">访问条件</span><span lang="en">Access</span></strong><span><span lang="zh-CN">Global where AWS Q is supported</span><span lang="en">Global where AWS Q is supported</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">最后核验</span><span lang="en">Last checked</span></strong><span>2026-09-07</span></div>
       </div>
     </section>
-    
-    
+
+
+
+
     <section>
-      <h2>如何使用</h2>
-      <p>用 Builder ID 开通 Amazon Q Developer Free</p>
-      <h3>前置条件</h3>
-      <ul><li>Builder ID 或 AWS 账号</li></ul>
-      <h3>步骤</h3>
-      <ul><li>打开官方入门页并完成登录</li><li>安装 IDE/CLI 扩展后查看每月 Agent 和资源查询额度</li></ul>
-      <h3>action</h3><pre><code>打开 https://aws.amazon.com/q/developer/getting-started/ 并按官方步骤配置 Builder ID</code></pre>
+      <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>
+      <p><span lang="zh-CN">用 Builder ID 开通 Amazon Q Developer Free</span><span lang="en">Builder ID Amazon Q Developer Free</span></p>
+      <h3><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h3>
+      <ul><li><span lang="zh-CN">Builder ID 或 AWS 账号</span><span lang="en">Builder ID AWS</span></li></ul>
+      <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
+      <ul><li><span lang="zh-CN">打开官方入门页并完成登录</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">安装 IDE/CLI 扩展后查看每月 Agent 和资源查询额度</span><span lang="en">IDE/CLI Agent</span></li></ul>
+      <h3><span lang="zh-CN">action</span><span lang="en">action</span></h3><pre><code>打开 https://aws.amazon.com/q/developer/getting-started/ 并按官方步骤配置 Builder ID</code></pre>
     </section>
     <section>
-      <h2>官方来源</h2>
-      <p class="muted">AWS&#x27;s official pricing page lists a zero-cost Free tier with 50 agentic requests per month; AWS documentation calls the Free tier perpetual and shows IDE/CLI access for personal Builder IDs.</p>
-      <ul><li><a href="https://aws.amazon.com/q/developer/getting-started/" rel="nofollow noopener" target="_blank">https://aws.amazon.com/q/developer/getting-started/</a></li><li><a href="https://aws.amazon.com/q/developer/pricing/" rel="nofollow noopener" target="_blank">https://aws.amazon.com/q/developer/pricing/</a></li><li><a href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html" rel="nofollow noopener" target="_blank">https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html</a></li></ul>
+      <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
+      <p class="muted"><span lang="zh-CN">AWS&#x27;s official pricing page lists a zero-cost Free tier with 50 agentic requests per month; AWS documentation calls the Free tier perpetual and shows IDE/CLI access for personal Builder IDs.</span><span lang="en">AWS&#x27;s official pricing page lists a zero-cost Free tier with 50 agentic requests per month; AWS documentation calls the Free tier perpetual and shows IDE/CLI access for personal Builder IDs.</span></p>
+      <ul><li><a href="https://aws.amazon.com/q/developer/pricing/" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Official pricing</span><span lang="en">Official pricing</span> ↗</a></li><li><a href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Free and Pro tiers</span><span lang="en">Free and Pro tiers</span> ↗</a></li><li><a href="https://aws.amazon.com/q/developer/getting-started/" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Getting started</span><span lang="en">Getting started</span> ↗</a></li></ul>
     </section>
     <section>
-      <h2>相关资源</h2>
-      <ul><li><a href="/offers/codebuddy/">CodeBuddy</a></li><li><a href="/offers/qoder/">Qoder</a></li><li><a href="/offers/trae/">TraeCode CN</a></li><li><a href="/offers/comate/">Baidu Comate</a></li><li><a href="/offers/github-copilot-free/">GitHub Copilot</a></li><li><a href="/offers/cursor-hobby/">Cursor</a></li></ul>
+      <h2><span lang="zh-CN">相关资源</span><span lang="en">Related resources</span></h2>
+      <ul><li><a href="/offers/codebuddy/"><span lang="zh-CN">CodeBuddy</span><span lang="en">CodeBuddy · Personal trial</span></a></li><li><a href="/offers/qoder/"><span lang="zh-CN">Qoder</span><span lang="en">Qoder · Experience plan</span></a></li><li><a href="/offers/trae/"><span lang="zh-CN">TraeCode CN</span><span lang="en">TraeCode CN · Personal plan</span></a></li><li><a href="/offers/comate/"><span lang="zh-CN">Baidu Comate</span><span lang="en">Baidu Comate · Auto-Free mode</span></a></li><li><a href="/offers/github-copilot-free/"><span lang="zh-CN">GitHub Copilot</span><span lang="en">GitHub Copilot · Free plan</span></a></li><li><a href="/offers/cursor-hobby/"><span lang="zh-CN">Cursor</span><span lang="en">Cursor · Hobby free plan</span></a></li></ul>
     </section>
   </main>
   <footer>
-    <p><strong>重要：</strong>免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</p>
-    <p><a href="https://freellm.top/">返回 FreeLLM 免费 AI 资源索引</a></p>
+    <p><strong><span lang="zh-CN">重要</span><span lang="en">Important</span>：</strong><span lang="zh-CN">免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</span><span lang="en">Free access may be affected by region, account type, rate limits, validity or provider terms; verify the official source before relying on this offer.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a></p>
   </footer>
 </body>
 </html>

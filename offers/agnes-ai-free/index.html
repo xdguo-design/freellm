@@ -20,6 +20,31 @@
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Agnes AI · Free/default multimodal API", "description": "Agnes AI：Free/default API access for selected Agnes models with public rate limits。请以官方页面为准，核对地区、有效期和使用条件。", "url": "https://freellm.top/offers/agnes-ai-free/", "dateModified": "2026-09-08"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": "https://freellm.top/"}, {"@type": "ListItem", "position": 2, "name": "Agnes AI · Free/default multimodal API", "item": "https://freellm.top/offers/agnes-ai-free/"}]}]}</script>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
@@ -41,54 +66,72 @@
     th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
     code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
     .muted { color: #68748a; }
+    .operation-path { margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }
+    .operation-path h3 { margin-top: 0; }
+    .operation-path h4 { margin: 18px 0 6px; }
+    .operation-type { display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }
+    .operation-steps { padding-left: 1.4em; }
+    .operation-steps li { margin: 12px 0; }
+    .operation-steps p { margin: 4px 0; }
+    .operation-command { margin: 10px 0; }
+    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }
+    .copy-command { border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }
+    .operation-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }
+    .operation-facts div { padding: 10px; border-radius: 8px; background: #f0f4fb; }
+    .operation-facts dt { color: #68748a; font-size: .78rem; }
+    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
+    .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
-<body data-offer-id="agnes-ai-free">
+<body data-offer-id="agnes-ai-free" data-static-locale="true">
   <header>
-    <p><a href="https://freellm.top/">FreeLLM 免费 AI 资源索引</a> / 资源详情</p>
-    <h1>Agnes AI · Free/default multimodal API</h1>
-    <p>Agnes AI · Global</p>
-    <nav aria-label="Categories"><a class="tag" href="/category/free-quota/">免费额度</a><a class="tag" href="/category/api/">AI API 服务</a></nav>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">Agnes AI · 免费/默认多模态 API</span><span lang="en">Agnes AI · Free/default multimodal API</span></h1>
+    <p><span lang="zh-CN">Agnes AI · Global</span><span lang="en">Agnes AI · Global</span></p>
+    <nav aria-label="Categories"><a class="tag" href="/category/free-quota/"><span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span></a><a class="tag" href="/category/api/"><span lang="zh-CN">AI API 服务</span><span lang="en">AI API services</span></a></nav>
   </header>
   <main>
     <section>
-      <h2>这个资源提供什么</h2>
-      <p>Agnes AI 官方文档提供 OpenAI 兼容 API，官方模型目录列出文本、图片和视频模型，并给出 free/default 层的公开速率限制。它适合作为一个可直接试用的多模态 API 入口，但不是无限免费承诺。</p>
+      <h2><span lang="zh-CN">这个资源提供什么</span><span lang="en">What this offer provides</span></h2>
+      <p><span lang="zh-CN">Agnes AI 官方文档提供 OpenAI 兼容 API，官方模型目录列出文本、图片和视频模型，并给出 free/default 层的公开速率限制。它适合作为一个可直接试用的多模态 API 入口，但不是无限免费承诺。</span><span lang="en">Agnes AI documents an OpenAI-compatible API, and its official model catalog lists text, image and video models with public free/default rate limits. It is a practical multimodal API entry point, not an unlimited-free promise.</span></p>
     </section>
     <section>
-      <h2>关键信息</h2>
+      <h2><span lang="zh-CN">关键信息</span><span lang="en">Key details</span></h2>
       <div class="facts">
-        <div class="fact"><strong>免费方式</strong><span>Free/default API access for selected Agnes models with public rate limits</span></div>
-        <div class="fact"><strong>有效期</strong><span>Ongoing while the official free/default program is available; limits can change</span></div>
-        <div class="fact"><strong>访问条件</strong><span>Agnes AI account and API key</span></div>
-        <div class="fact"><strong>最后核验</strong><span>2026-09-08</span></div>
+        <div class="fact"><strong><span lang="zh-CN">免费方式</span><span lang="en">Free method</span></strong><span><span lang="zh-CN">Free/default API access for selected Agnes models with public rate limits</span><span lang="en">Free/default API access for selected Agnes models with public rate limits</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">有效期</span><span lang="en">Validity</span></strong><span><span lang="zh-CN">Ongoing while the official free/default program is available; limits can change</span><span lang="en">Ongoing while the official free/default program is available; limits can change</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">访问条件</span><span lang="en">Access</span></strong><span><span lang="zh-CN">Agnes AI account and API key</span><span lang="en">Agnes AI account and API key</span></span></div>
+        <div class="fact"><strong><span lang="zh-CN">最后核验</span><span lang="en">Last checked</span></strong><span>2026-09-08</span></div>
       </div>
     </section>
-    
-    
+
+
+
+
     <section>
-      <h2>如何使用</h2>
-      <p>通过 Agnes AI 的 OpenAI 兼容 API 调用文本、图片和视频模型；免费/default 层受速率限制</p>
-      <h3>前置条件</h3>
-      <ul><li>Agnes AI account</li><li>Agnes AI API key</li></ul>
-      <h3>步骤</h3>
-      <ul><li>Create an Agnes AI account and API key in the official console</li><li>Send a request to the OpenAI-compatible endpoint with one of the listed model IDs</li><li>Check the official model catalog for current rate limits and image/video request formats</li></ul>
-      <h3>curl</h3><pre><code>curl https://apihub.agnes-ai.com/v1/chat/completions --header &#x27;Authorization: Bearer ${AGNES_API_KEY}&#x27; --header &#x27;Content-Type: application/json&#x27; --data &#x27;{&quot;model&quot;:&quot;agnes-2.5-flash&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Hello&quot;}]}&#x27;</code></pre>
+      <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>
+      <p><span lang="zh-CN">通过 Agnes AI 的 OpenAI 兼容 API 调用文本、图片和视频模型；免费/default 层受速率限制</span><span lang="en">Agnes AI OpenAI API 、 ； /default</span></p>
+      <h3><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h3>
+      <ul><li><span lang="zh-CN">Agnes AI account</span><span lang="en">Agnes AI account</span></li><li><span lang="zh-CN">Agnes AI API key</span><span lang="en">Agnes AI API key</span></li></ul>
+      <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
+      <ul><li><span lang="zh-CN">Create an Agnes AI account and API key in the official console</span><span lang="en">Create an Agnes AI account and API key in the official console</span></li><li><span lang="zh-CN">Send a request to the OpenAI-compatible endpoint with one of the listed model IDs</span><span lang="en">Send a request to the OpenAI-compatible endpoint with one of the listed model IDs</span></li><li><span lang="zh-CN">Check the official model catalog for current rate limits and image/video request formats</span><span lang="en">Check the official model catalog for current rate limits and image/video request formats</span></li></ul>
+      <h3><span lang="zh-CN">curl</span><span lang="en">curl</span></h3><pre><code>curl https://apihub.agnes-ai.com/v1/chat/completions --header &#x27;Authorization: Bearer ${AGNES_API_KEY}&#x27; --header &#x27;Content-Type: application/json&#x27; --data &#x27;{&quot;model&quot;:&quot;agnes-2.5-flash&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;Hello&quot;}]}&#x27;</code></pre>
     </section>
     <section>
-      <h2>官方来源</h2>
-      <p class="muted">Agnes 官方文档说明其提供 OpenAI 兼容 API，API Hub Base URL 为 https://apihub.agnes-ai.com/v1；AgnesAI-Labs 官方模型目录列出 agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash 和 agnes-video-v2.0，并记录 Free/default 层的模型级速率限制。目录同时注明限额和可用性可能变化。</p>
-      <ul><li><a href="https://agnes-ai.com/" rel="nofollow noopener" target="_blank">https://agnes-ai.com/</a></li><li><a href="https://agnes-ai.com/en/docs/overview" rel="nofollow noopener" target="_blank">https://agnes-ai.com/en/docs/overview</a></li><li><a href="https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md" rel="nofollow noopener" target="_blank">https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md</a></li></ul>
+      <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
+      <p class="muted"><span lang="zh-CN">Agnes 官方文档说明其提供 OpenAI 兼容 API，API Hub Base URL 为 https://apihub.agnes-ai.com/v1；AgnesAI-Labs 官方模型目录列出 agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash 和 agnes-video-v2.0，并记录 Free/default 层的模型级速率限制。目录同时注明限额和可用性可能变化。</span><span lang="en">Agnes OpenAI API，API Hub Base URL https://apihub.agnes-ai.com/v1；AgnesAI-Labs agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash agnes-video-v2.0， Free/default 。 。</span></p>
+      <ul><li><a href="https://agnes-ai.com/en/docs/overview" rel="nofollow noopener" target="_blank"><span lang="zh-CN">API 概览（官方文档）</span><span lang="en">API （ ）</span> ↗</a></li><li><a href="https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md" rel="nofollow noopener" target="_blank"><span lang="zh-CN">模型目录与速率限制（官方）</span><span lang="en">（ ）</span> ↗</a></li></ul>
     </section>
     <section>
-      <h2>相关资源</h2>
-      <ul><li><a href="/offers/longcat-api/">LongCat API</a></li><li><a href="/offers/sensecore/">SenseNova</a></li><li><a href="/offers/deepseek/">DeepSeek API</a></li><li><a href="/offers/opencode-zen-free/">OpenCode Zen</a></li><li><a href="/offers/aliyun-qwen-free-quota/">Alibaba Cloud Model Studio / 阿里云百炼</a></li><li><a href="/offers/keenable-search-free/">Keenable</a></li></ul>
+      <h2><span lang="zh-CN">相关资源</span><span lang="en">Related resources</span></h2>
+      <ul><li><a href="/offers/longcat-2-0/"><span lang="zh-CN">LongCat</span><span lang="en">LongCat-2.0 · API + open weights</span></a></li><li><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova</span><span lang="en">SenseNova · Token Plan</span></a></li><li><a href="/offers/deepseek/"><span lang="zh-CN">DeepSeek API</span><span lang="en">DeepSeek API · low cost, not free</span></a></li><li><a href="/offers/opencode-zen-free/"><span lang="zh-CN">OpenCode Zen</span><span lang="en">OpenCode Zen · free model pool</span></a></li><li><a href="/offers/aliyun-qwen-free-quota/"><span lang="zh-CN">Alibaba Cloud Model Studio / 阿里云百炼</span><span lang="en">Related resource</span></a></li><li><a href="/offers/keenable-search-free/"><span lang="zh-CN">Keenable</span><span lang="en">Keenable · Search API free quota</span></a></li></ul>
     </section>
   </main>
   <footer>
-    <p><strong>重要：</strong>免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</p>
-    <p><a href="https://freellm.top/">返回 FreeLLM 免费 AI 资源索引</a></p>
+    <p><strong><span lang="zh-CN">重要</span><span lang="en">Important</span>：</strong><span lang="zh-CN">免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</span><span lang="en">Free access may be affected by region, account type, rate limits, validity or provider terms; verify the official source before relying on this offer.</span></p>
+    <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a></p>
   </footer>
 </body>
 </html>

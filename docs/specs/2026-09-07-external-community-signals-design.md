@@ -44,6 +44,8 @@
 }
 ```
 
+当一个 offer 包含多个模型时，可选的 `modelId` 用于标明具体模型，并参与去重；不应把同一 API 入口下不同模型的信号互相覆盖。
+
 `sourceType` 可为 `rating`、`review`、`stars`、`likes`、`downloads`、`rank` 或 `sentiment`。只有 `rating` 可以带 `value/scaleMax`；热度类指标使用 `value` 但必须用 `rawLabel` 和 `sourceType` 明确含义。数据不完整时使用 `needs_review`，来源失败使用 `source_unavailable`。
 
 ## 页面行为

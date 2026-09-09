@@ -81,6 +81,14 @@ class CommunitySignalMergeTests(unittest.TestCase):
         self.assertEqual(next(item for item in merged if item["sourcePlatform"] == "hugging_face")["value"], 4.3)
         self.assertEqual(next(item for item in merged if item["sourcePlatform"] == "modelscope")["sourceType"], "downloads")
 
+    def test_merge_keeps_distinct_models_under_one_offer(self):
+        first = rating_signal(modelId="model-a", rawLabel="model-a 4.1 / 5")
+        second = rating_signal(modelId="model-b", rawLabel="model-b 4.2 / 5")
+
+        merged = merge_signals([], [first, second])
+
+        self.assertEqual(len(merged), 2)
+
     def test_group_signals_by_offer_does_not_create_missing_scores(self):
         grouped = group_signals_by_offer([
             rating_signal(),

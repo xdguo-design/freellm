@@ -22,7 +22,7 @@ description: "搬运 AI 模型和工具在其他公开平台上的原生评分�
   - 只有平台明确给出评分时才使用 `sourceType=rating`；热度指标不得写成评分。
   - 过滤 token、密码、邮箱、私网地址和敏感查询参数；缺字段标记 `needs_review`，来源失败标记 `source_unavailable`。
 - [ ] 第四步：合并和展示
-  - 用 `offerId + sourcePlatform + sourceType + sourceUrl` 去重；同一平台新快照覆盖旧快照，其他平台并列保留。
+  - 用 `offerId + modelId + sourcePlatform + sourceType + sourceUrl` 去重；`modelId` 在一个 offer 包含多个模型时使用；同一平台新快照覆盖旧快照，其他平台并列保留。
   - 页面标题使用“外部平台信号”或“社区反馈”，不使用“综合分”“本站评分”或“推荐分”。
   - 不跨平台归一化、不平均、不排序成总榜；允许用户按平台原始指标查看。
 - [ ] 第五步：输出报告

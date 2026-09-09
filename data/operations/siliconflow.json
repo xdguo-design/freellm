@@ -1,0 +1,24 @@
+{
+  "providerId": "siliconflow",
+  "provider": "SiliconFlow",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["siliconflow-free-models"],
+  "paths": [
+    {
+      "id": "free-model-api",
+      "label": "调用 SiliconFlow 免费模型",
+      "productType": "api",
+      "prerequisites": ["已注册 SiliconFlow", "已创建 API key", "已在模型广场确认模型的免费或赠送额度状态"],
+      "steps": [
+        {"title": "创建 API key", "detail": "进入 SiliconFlow 控制台的 API key 页面创建密钥，并保存为 SILICONFLOW_API_KEY 环境变量。"},
+        {"title": "查看模型与余额", "detail": "在模型广场确认模型 ID、上下文限制和当前免费政策；免费模型不等于无限调用。", "action": "打开 https://siliconflow.cn/models"},
+        {"title": "发送兼容请求", "detail": "使用模型广场展示的完整模型 ID。", "command": "curl https://api.siliconflow.cn/v1/chat/completions -H 'Authorization: Bearer ${SILICONFLOW_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3-8B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "返回 choices[0].message.content；余额不足时停止重试并查看控制台。"}
+      ],
+      "endpoint": "https://api.siliconflow.cn/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.siliconflow.cn/v1/models -H 'Authorization: Bearer ${SILICONFLOW_API_KEY}'",
+      "validation": "GET /v1/models 返回 HTTP 200，并在控制台确认请求消耗与免费政策一致。",
+      "sourceUrls": ["https://docs.siliconflow.cn/", "https://siliconflow.cn/models"]
+    }
+  ]
+}

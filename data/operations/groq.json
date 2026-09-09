@@ -1,0 +1,24 @@
+{
+  "providerId": "groq",
+  "provider": "Groq",
+  "lastVerifiedAt": "2026-09-09",
+  "offerIds": ["groq-free"],
+  "paths": [
+    {
+      "id": "openai-compatible-api",
+      "label": "Groq OpenAI 兼容 API",
+      "productType": "api",
+      "prerequisites": ["已注册 Groq Console", "已创建 API key", "已阅读当前 Free Plan Limits"],
+      "steps": [
+        {"title": "创建密钥", "detail": "在 Groq Console 的 API Keys 页面创建密钥，并保存为 GROQ_API_KEY 环境变量。"},
+        {"title": "确认模型与限制", "detail": "从官方 Models 页面选择当前可用模型，再按 Rate Limits 页面控制 RPM、RPD 和 TPM。", "action": "打开 https://console.groq.com/docs/models"},
+        {"title": "发送测试请求", "detail": "使用官方支持的模型 ID 发起一次短请求。", "command": "curl https://api.groq.com/openai/v1/chat/completions -H 'Authorization: Bearer ${GROQ_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "返回 choices，并在超限时得到明确的 rate-limit 响应。"}
+      ],
+      "endpoint": "https://api.groq.com/openai/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.groq.com/openai/v1/models -H 'Authorization: Bearer ${GROQ_API_KEY}'",
+      "validation": "GET /openai/v1/models 返回 HTTP 200，并确认目标模型仍在官方模型列表。",
+      "sourceUrls": ["https://console.groq.com/docs/quickstart", "https://console.groq.com/docs/models", "https://console.groq.com/docs/rate-limits", "https://console.groq.com/docs/openai"]
+    }
+  ]
+}

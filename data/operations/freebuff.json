@@ -1,0 +1,21 @@
+{
+  "providerId": "freebuff",
+  "provider": "Freebuff",
+  "lastVerifiedAt": "2026-09-09",
+  "paths": [
+    {
+      "id": "web-agent",
+      "label": "Freebuff Web 编程代理",
+      "productType": "web",
+      "prerequisites": ["可访问 Freebuff 官网", "已完成官方邀请或注册流程", "准备一个可单独测试的代码仓库"],
+      "steps": [
+        {"title": "打开官方入口", "detail": "进入 Freebuff 官网或 Get Started 页面，确认当前注册、邀请和地区要求。", "action": "打开 https://freebuff.ai/"},
+        {"title": "完成登录或邀请", "detail": "按页面提示完成账户验证；不要在第三方页面提交账号密钥。"},
+        {"title": "连接测试项目", "detail": "只连接一个不含生产密钥的测试仓库，先查看权限范围和数据处理说明。"},
+        {"title": "提交只读任务", "detail": "先让代理解释一个文件或生成计划，确认结果后再授权写入或部署。"}
+      ],
+      "validation": "能够完成一次只读代码分析，且账户页面明确显示当前免费、邀请和数据权限状态。",
+      "sourceUrls": ["https://freebuff.ai/", "https://freebuff.com/get-started", "https://freebuff.com/terms-of-service"]
+    }
+  ]
+}

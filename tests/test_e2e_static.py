@@ -57,6 +57,9 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
         self.assertIn('"id": "agnes-ai-free"', self.html)
         self.assertIn('"id": "stepfun-limited-time-free"', self.html)
+        self.assertIn('"id": "longcat-2-0"', self.html)
+        self.assertNotIn('"id": "longcat-api"', self.html)
+        self.assertNotIn('"id": "longcat-download"', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
         for href in (
@@ -64,6 +67,17 @@ class StaticContractTests(unittest.TestCase):
             '/guides/claude-code-free-alternatives/',
         ):
             self.assertIn(f'href="{href}"', self.html)
+
+    def test_homepage_links_to_theme_guides(self):
+        for slug in (
+            "free-openai-compatible-apis",
+            "free-ai-coding-tools",
+            "free-ai-search-apis",
+            "open-weight-models",
+            "model-context-windows",
+            "china-free-ai-api",
+        ):
+            self.assertIn(f'href="/guides/{slug}/"', self.html)
 
     def test_external_signals_are_available_for_current_offer_set(self):
         offer_ids = {offer["id"] for offer in read_offers()}
@@ -79,6 +93,34 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('.offer-card-metric p > small { display: block;', self.html)
+
+    def test_catalog_cards_make_official_sources_clickable(self):
+        for needle in (
+            'renderOfferSource',
+            'offerLinks',
+            'renderOfferAccessPaths',
+            'drawerAccessPathsBlock',
+            'class="offer-source-link"',
+            'target="_blank" rel="noreferrer noopener"',
+            'renderOfferModels',
+            'class="offer-model-row"',
+        ):
+            self.assertIn(needle, self.html)
+
+    def test_official_source_links_navigate_in_current_tab(self):
+        self.assertNotIn(
+            'class="offer-source-link" href="${escapeHtml(href)}" target="_blank"',
+            self.html,
+        )
+
+    def test_featured_resource_links_are_wired_to_catalog_filters(self):
+        self.assertIn('class="featured-resource-link"', self.html)
+        self.assertIn(
+            "document.querySelectorAll('.featured-resource-link').forEach",
+            self.html,
+        )
+        self.assertIn("const clearCatalogSearch = () =>", self.html)
+        self.assertIn("document.getElementById('catalog-search').value = ''", self.html)
 
     def test_offer_cards_load_company_icons_with_initial_fallback(self):
         for needle in (
@@ -178,6 +220,11 @@ class StaticContractTests(unittest.TestCase):
             "qwenFeaturedTitle",
             "localizedOfferText",
             "hasChineseText",
+            "englishSafeText",
+            "localeValue(path.label",
+            "localeValue(entry.quota",
+            "localeValue(label, 'Official link')",
+            "allModels",
             "registerLabelEn",
             "category-seo-links a:nth-child(7)",
         ):
@@ -397,6 +444,31 @@ class BrowserPageTests(unittest.TestCase):
         self.assertIn("Auto-Free", page.locator("#drawerTitle").inner_text())
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
+        self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_featured_resource_link_filters_catalog(self):
+        page = self.new_page()
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+
+        page.fill("#catalog-search", "Qwen3")
+        page.click(".featured-resource-link[aria-label='查看免费 IDE']")
+        page.wait_for_function(
+            """document.querySelector('.filter-chip[data-filter="ide"]')?.classList.contains('active')"""
+        )
+        self.assertEqual(self.visible_offers(page), 8)
+        self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_featured_resource_link_filters_catalog_without_stale_query(self):
+        page = self.new_page()
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+
+        page.click(".featured-resource-link[aria-label='查看免费额度']")
+        page.wait_for_function(
+            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
+        )
+        self.assertEqual(self.visible_offers(page), 8)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):

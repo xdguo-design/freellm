@@ -1,0 +1,37 @@
+{
+  "providerId": "ollama-cloud",
+  "provider": "Ollama Cloud",
+  "lastVerifiedAt": "2026-09-09",
+  "paths": [
+    {
+      "id": "cloud-cli",
+      "label": "命令行运行 Cloud 模型",
+      "productType": "cli",
+      "prerequisites": ["已安装 Ollama", "已注册 ollama.com 账号", "本机可访问 Ollama 服务"],
+      "steps": [
+        {"title": "安装并登录", "detail": "安装 Ollama 后，在终端执行登录命令，按浏览器提示完成账号授权。", "command": "ollama signin"},
+        {"title": "拉取 Cloud 模型", "detail": "从 Ollama Model Library 选择带 -cloud 后缀的模型，再拉取到本机客户端。", "command": "ollama pull gpt-oss:120b-cloud"},
+        {"title": "开始对话", "detail": "运行模型；推理会自动转到 Ollama Cloud，不要求本机拥有对应的大 GPU。", "command": "ollama run gpt-oss:120b-cloud"},
+        {"title": "验证结果", "detail": "输入一条简单问题，确认终端持续返回模型文本；失败时先检查登录状态和模型名。"}
+      ],
+      "validation": "ollama run 能返回完整回答，并且客户端没有提示需要本地模型文件。",
+      "sourceUrls": ["https://docs.ollama.com/cloud", "https://ollama.com/library"]
+    },
+    {
+      "id": "cloud-api",
+      "label": "直连 Ollama Cloud API",
+      "productType": "api",
+      "prerequisites": ["已注册 ollama.com 账号", "已在官方账户设置中创建 API key", "已将密钥保存到 OLLAMA_API_KEY 环境变量"],
+      "steps": [
+        {"title": "创建密钥", "detail": "打开 Ollama 官方账户设置，创建 API key；只把它保存到本机密钥管理器或环境变量。"},
+        {"title": "列出可用模型", "detail": "先调用模型列表接口，确认账户可访问的模型 ID。", "command": "curl https://ollama.com/api/tags -H 'Authorization: Bearer ${OLLAMA_API_KEY}'", "expected": "返回 HTTP 200 和 models 列表。"},
+        {"title": "发送聊天请求", "detail": "把模型 ID 替换为列表中实际可用的值，使用非流式请求便于第一次验证。", "command": "curl https://ollama.com/api/chat -H 'Authorization: Bearer ${OLLAMA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"gpt-oss:120b-cloud\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":false}'", "expected": "响应包含 message.content。"}
+      ],
+      "endpoint": "https://ollama.com/api",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://ollama.com/api/tags -H 'Authorization: Bearer ${OLLAMA_API_KEY}'",
+      "validation": "GET /api/tags 返回 HTTP 200，并能在返回列表中找到要调用的模型。",
+      "sourceUrls": ["https://docs.ollama.com/cloud", "https://docs.ollama.com/api"]
+    }
+  ]
+}

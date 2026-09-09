@@ -1,0 +1,21 @@
+{
+  "providerId": "nvidia-nim",
+  "provider": "NVIDIA NIM",
+  "lastVerifiedAt": "2026-09-09",
+  "paths": [
+    {
+      "id": "build-nim-container",
+      "label": "用 NVIDIA NIM 容器部署模型",
+      "productType": "download",
+      "prerequisites": ["NVIDIA GPU 与匹配驱动", "已安装 Docker", "已获得 NGC API key 并保存为 NGC_API_KEY"],
+      "steps": [
+        {"title": "登录 NGC", "detail": "在 NVIDIA NGC 账户设置中创建 API key，并用环境变量登录容器仓库。", "command": "echo ${NGC_API_KEY} | docker login nvcr.io --username '$oauthtoken' --password-stdin"},
+        {"title": "选择 NIM 容器", "detail": "在 NGC Catalog 按模型查找对应 NIM 镜像，并确认 GPU、显存和许可要求。", "action": "打开 https://catalog.ngc.nvidia.com/"},
+        {"title": "启动容器", "detail": "把官方文档中的镜像名、模型缓存目录和端口参数替换为当前选择，启动后从本机端口调用。", "action": "按照 NIM 官方 Quickstart 复制当前镜像对应的 docker run 命令。"},
+        {"title": "验证服务", "detail": "查看容器日志确认服务已 ready，再访问本机健康检查或 OpenAI 兼容 models 接口。"}
+      ],
+      "validation": "容器日志显示服务 ready，并且本机 API 能返回模型列表或健康状态。",
+      "sourceUrls": ["https://docs.nvidia.com/nim/", "https://catalog.ngc.nvidia.com/"]
+    }
+  ]
+}
