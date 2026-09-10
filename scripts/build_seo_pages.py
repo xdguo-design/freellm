@@ -166,6 +166,7 @@ MODELS_PAGE_PATH = "/models/"
 ALL_MODELS_PAGE_PATH = "/models/all/"
 MODEL_CENTER_PAGE_PATH = "/models/center/"
 PROVIDERS_PAGE_PATH = "/providers/"
+CHANGE_LOG_PAGE_PATH = "/logs/"
 
 
 OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
@@ -1841,6 +1842,25 @@ def _registration_requirements_markup(provider_card: dict | None, model_card: di
       <dl class="facts">{facts}</dl>{f"<ol>{steps_markup}</ol>" if steps_markup else f'<p class="lead">{_locale_pair("注册步骤尚未核验。", "Registration steps are not yet verified.")}</p>'}{register_markup}</section>'''
 
 
+def _access_routes_markup(records: list[dict]) -> str:
+    routes = [record for record in records if record.get("accessEndpoint")]
+    if not routes:
+        return ""
+    labels = {"domestic": ("国内入口", "Mainland route"), "international": ("国外入口", "International route")}
+    cards = []
+    for record in routes:
+        region = str(record.get("accessRegion") or "unknown")
+        zh, en = labels.get(region, ("地区待核验", "Region unverified"))
+        cards.append(f'''<article class="access-route"><h3>{_locale_pair(zh, en)}</h3>
+          <p><strong>{_esc(record.get("provider"))}</strong> · {_esc(record.get("id"))}</p>
+          <p><span class="muted">{_locale_pair("Base URL", "Base URL")}:</span> <code>{_esc(record.get("accessEndpoint"))}</code></p>
+          <p><span class="muted">{_locale_pair("模型 ID", "Model ID")}:</span> <code>{_esc(record.get("modelId") or record.get("id"))}</code></p>
+          <p><a href="{_esc(record.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("查看官方说明", "View official documentation")} ↗</a></p>
+        </article>''')
+    return f'''<section class="access-routes"><h2>{_locale_pair("国内 / 国外接入地址", "Domestic / international access routes")}</h2>
+      <div class="access-route-grid">{"".join(cards)}</div></section>'''
+
+
 def render_model_aggregate_page(model_name: str, records: list[dict], offers: list[dict], site_url: str, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
     path = model_aggregate_url(model_name)
     page_url = _absolute(site_url, path)
@@ -1873,6 +1893,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
         for record in records
         if str(record.get("providerId") or "")
     )
+    routes_markup = _access_routes_markup(records)
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1887,6 +1908,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     a {{ color:var(--blue); }} header,main,footer {{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:clamp(20px,4vw,36px); margin-bottom:18px; }}
     h1 {{ margin:10px 0; font-size:clamp(28px,5vw,48px); line-height:1.1; }} h2 {{ margin:0 0 8px; }} .lead,.muted {{ color:var(--muted); }} .stats {{ display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; color:var(--muted); font-size:13px; }}
     .catalog-table-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }} .catalog-table {{ width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }} .catalog-table th,.catalog-table td {{ padding:11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }} .catalog-table th {{ color:var(--muted); background:#f8fafc; font-size:11px; white-space:nowrap; }} .catalog-table small {{ display:block; color:var(--muted); font-size:11px; }} .score {{ color:var(--blue); }} .status {{ display:inline-block; border-radius:999px; padding:2px 7px; font-size:11px; }} .status-online {{ color:#147a46; background:#dcfce7; }} .status-offline {{ color:#9f1239; background:#ffe4e6; }} .status-degraded,.status-unknown {{ color:#8a5a00; background:#fef3c7; }} .related-list {{ padding-left:20px; }} .eyebrow {{ font:11px ui-monospace,Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; }}
+    .access-route-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }} .access-route {{ padding:14px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; }} .access-route h3 {{ margin:0 0 8px; }} code {{ overflow-wrap:anywhere; }}
     @media (max-width:620px) {{ body {{ padding:10px 8px 38px; }} header,main,footer {{ padding:18px; border-radius:12px; }} }}
   </style>
 </head>
@@ -1896,7 +1918,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>
     <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('目录发现', 'Directory discovered')}</span></div>
   </header>
-  <main><section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
+  <main>{routes_markup}<section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
      {registration_markup}<section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2><p class="lead">{_locale_pair('这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。', 'Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.')}</p>{_related_offer_links(offers, lambda offer: _model_offer_matches(model_name, offer))}</section>
   </main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p></footer>
 </body></html>'''
@@ -2310,6 +2332,91 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
 '''
 
 
+def _log_value(value: object) -> str:
+    if isinstance(value, list):
+        return ", ".join(str(item) for item in value if str(item).strip()) or "未提供"
+    if isinstance(value, dict):
+        return "; ".join(f"{key}: {item}" for key, item in value.items()) or "未提供"
+    return str(value or "未提供")
+
+
+def _log_links(details: dict) -> str:
+    urls: list[str] = []
+    for key in ("sourceUrl", "register"):
+        value = str(details.get(key) or "").strip()
+        if value:
+            urls.append(value)
+    urls.extend(str(value).strip() for value in details.get("sourceUrls") or [] if str(value).strip())
+    urls = list(dict.fromkeys(urls))
+    if not urls:
+        return '<span class="muted">未提供</span>'
+    return '<ul class="log-links">' + "".join(
+        f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(url)} ↗</a></li>'
+        for url in urls
+    ) + "</ul>"
+
+
+def _log_detail_card(event: dict) -> str:
+    details = event.get("details") or {}
+    detail_keys = (
+        "provider", "productType", "model", "freeMechanism", "quota", "validity",
+        "access", "phoneRequired", "cardRequired", "context", "maxOutput",
+        "modality", "rateLimit", "status", "verificationStatus", "register",
+        "evidence",
+    )
+    facts = "".join(
+        f"<div><dt>{_esc(key)}</dt><dd>{_esc(_log_value(details.get(key)))}</dd></div>"
+        for key in detail_keys
+        if details.get(key) not in (None, "", [])
+    )
+    return f'''<article class="log-new-card"><div class="log-card-head"><span class="log-badge">{_esc(event.get("eventType"))}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></div><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl><div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></article>'''
+
+
+def _log_event_table(events: list[dict]) -> str:
+    rows = []
+    for event in events:
+        details = event.get("details") or {}
+        rows.append(
+            f'<tr><td><strong>{_esc(event.get("title"))}</strong><small>{_esc(event.get("id"))}</small></td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
+        )
+    if not rows:
+        return '<p class="muted">当天没有此类记录 / No records for this category.</p>'
+    return f'<div class="table-wrap"><table><thead><tr><th>项目 / Item</th><th>提供商或类型 / Provider or type</th><th>依据 / Reason</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+
+
+def render_daily_log_page(logs: list[dict], site_url: str) -> str:
+    """Render the public daily change log with expanded new-entry cards."""
+    page_url = _absolute(site_url, CHANGE_LOG_PAGE_PATH)
+    dates = []
+    sections = []
+    for log in sorted(logs, key=lambda item: str(item.get("date") or ""), reverse=True):
+        date = str(log.get("date") or "未知日期")
+        dates.append(date)
+        events = list(log.get("events") or [])
+        new_events = [event for event in events if event.get("eventType") in {"new", "new_route"}]
+        recovered = [event for event in events if event.get("eventType") == "recovered"]
+        offline = [event for event in events if event.get("eventType") == "offline"]
+        unavailable = [event for event in events if event.get("eventType") == "source_unavailable"]
+        new_markup = "".join(_log_detail_card(event) for event in new_events) or '<p class="muted">当天没有新增 / No new entries.</p>'
+        sections.append(f'''<section class="log-day"><div class="log-day-head"><h2>{_esc(date)}</h2><div class="log-counts"><span>新增 {len(new_events)}</span><span>恢复 {len(recovered)}</span><span>下线 {len(offline)}</span><span>来源异常 {len(unavailable)}</span></div></div><h3>新增详情 / New entries</h3>{new_markup}<h3>恢复 / Recovered</h3>{_log_event_table(recovered)}<h3>下线 / Offline</h3>{_log_event_table(offline)}<h3>来源状态 / Source health</h3>{_log_event_table(unavailable)}</section>''')
+    body = "".join(sections) or '<section class="log-day"><p class="muted">日志即将开始记录 / The daily log has not started yet.</p></section>'
+    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM daily discovery log", "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": dates[0] if dates else None}
+    return f'''<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日新增与下线日志 · FreeLLM</title><meta name="description" content="FreeLLM 每日记录新发现、下线、恢复和来源状态；新增条目提供详细的免费条件、访问方式和证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">FreeLLM Free AI Index</a> / 日志</p>{_static_locale_nav()}<h1>{_locale_pair('每日新增与下线日志', 'Daily discovery change log')}</h1><p class="lead">{_locale_pair('每天记录新发现、重新上线、下线和来源异常。新增项目展开显示完整接入信息与证据。', 'Track new entries, recoveries, offline records and source failures. New entries expand into detailed access and evidence cards.')}</p><p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a> · <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('模型目录', 'Model directory')}</a></p></header><main>{body}</main><footer><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p></footer><style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;--new:#0f766e;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.6;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}h2 {{margin:0;font-size:26px;}}h3 {{margin-top:24px;}}.lead,.muted {{color:var(--muted);}}.static-locale-nav {{margin:10px 0;}}.log-day {{padding:20px 0;border-bottom:1px solid var(--line);}}.log-day:last-child {{border-bottom:0;}}.log-day-head {{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;}}.log-counts {{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;}}.log-counts span,.log-badge {{padding:4px 8px;border-radius:999px;background:#e7f5f2;color:var(--new);font-size:12px;font-weight:700;}}.log-new-card {{margin:12px 0;padding:18px;border:1px solid #b7e4db;border-left:4px solid var(--new);border-radius:12px;background:#fbfffe;}}.log-card-head {{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}}.log-card-head h3 {{margin:0;font-size:20px;}}.log-card-head code,small {{color:var(--muted);font-size:11px;}}.log-facts {{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;margin:16px 0;}}.log-facts div {{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;}}.log-facts dt {{color:var(--muted);font:11px ui-monospace,Consolas,monospace;}}.log-facts dd {{margin:3px 0 0;overflow-wrap:anywhere;}}.log-source {{padding-top:12px;border-top:1px solid var(--line);}}.log-links {{margin:6px 0;padding-left:20px;overflow-wrap:anywhere;}}.log-reason {{color:var(--muted);font-size:13px;}}.table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:10px;}}table {{width:100%;border-collapse:collapse;font-size:13px;}}th,td {{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;}}th {{color:var(--muted);font-size:11px;}}tr:last-child td {{border-bottom:0;}}td small {{display:block;margin-top:3px;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></body></html>'''
+
+
+def _load_daily_logs(data_path: Path) -> list[dict]:
+    log_dir = data_path.parent / "daily-log"
+    if not log_dir.is_dir():
+        return []
+    logs = []
+    for path in sorted(log_dir.glob("*.json")):
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(value, dict):
+            logs.append(value)
+    return logs
+
+
 def render_sitemap(
     offers: list[dict],
     categories: list[str],
@@ -2326,6 +2433,7 @@ def render_sitemap(
         ALL_MODELS_PAGE_PATH,
         MODEL_CENTER_PAGE_PATH,
         PROVIDERS_PAGE_PATH,
+        CHANGE_LOG_PAGE_PATH,
     ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
     paths += [model_aggregate_url(model) for model in (models or [])]
     paths += [provider_url(provider) for provider in (providers or [])]
@@ -2338,7 +2446,7 @@ def render_sitemap(
 '''
 
 
-def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
+def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
     categories = [
         category
         for category in CATEGORY_DEFINITIONS
@@ -2353,6 +2461,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
+        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
@@ -2454,7 +2563,7 @@ def _clean_previous_pages(output_root: Path) -> None:
         path = (output_root / relative).resolve()
         root = output_root.resolve()
         relative_path = path.relative_to(root)
-        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers"}:
+        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs"}:
             continue
         if path.is_file():
             path.unlink()
@@ -2470,7 +2579,8 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     models = _load_models(data_path)
     models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
-    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations)
+    daily_logs = _load_daily_logs(data_path)
+    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs)
     output_root = Path(output_root)
     if check:
         stale = []
@@ -2489,7 +2599,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         path = output_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
-    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers"}]}
+    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs"}]}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=len(files))
     print(f"built SEO output: {result.offer_count} offers, {result.category_count} categories, {result.page_count} files")

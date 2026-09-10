@@ -649,6 +649,39 @@
     "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
   },
   {
+    "providerId": "dots-api-cn",
+    "profileId": "dots-api-cn-api",
+    "registerUrl": "https://dots.ai/platform",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "dots-api-cn-route",
+    "registrationSteps": [
+      "访问 dots.ai/platform，用小红书账号或手机号登录。",
+      "在 API Keys 页面创建 API Key。",
+      "使用官方文档中的 dots3-note-prev 模型 ID 和国内 Base URL 调用。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://dots.ai/platform",
+      "https://dots.ai/platform/docs"
+    ],
+    "lastVerifiedAt": "2026-09-10",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "小红书 Dots 官方国内 API 平台；官方文档给出 OpenAI/Anthropic 兼容接口、60 RPM 和 1,500,000 TPM。免费期限未公开，需以平台当前页面为准。"
+  },
+  {
     "providerId": "openrouter",
     "profileId": "openrouter-api",
     "registerUrl": "https://openrouter.ai/",

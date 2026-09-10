@@ -17,6 +17,7 @@ from scripts.build_seo_pages import (
     render_offer_page,
     _expected_files,
     _adsense_slot_markup,
+    render_daily_log_page,
 )
 
 
@@ -475,3 +476,55 @@ def test_offer_page_renders_per_model_free_quota_table():
 
     plain = render_offer_page(by_id["doubao"], offers, "https://freellm.top")
     assert "免费模型逐个看" not in plain
+
+
+def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fields():
+    logs = [{
+        "schemaVersion": 1,
+        "date": "2026-09-10",
+        "baseline": False,
+        "events": [{
+            "kind": "offer",
+            "eventType": "new",
+            "id": "alpha",
+            "title": "Alpha free API",
+            "asOf": "2026-09-10",
+            "details": {
+                "provider": "Alpha",
+                "productType": "api",
+                "freeMechanism": "monthly_quota",
+                "quota": "100 requests/day",
+                "validity": "Monthly",
+                "access": "Global",
+                "phoneRequired": "no",
+                "cardRequired": "no",
+                "register": "https://alpha.example/register",
+                "sourceUrls": ["https://alpha.example/pricing"],
+                "evidence": "Official pricing documents a free tier.",
+                "status": "verified",
+            },
+        }],
+        "observed": {"models": [], "offers": []},
+        "known": {"models": [], "offers": []},
+        "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    }]
+
+    page = render_daily_log_page(logs, "https://freellm.top")
+
+    assert "每日新增与下线日志" in page
+    assert "Alpha free API" in page
+    assert "monthly_quota" in page
+    assert "100 requests/day" in page
+    assert "https://alpha.example/pricing" in page
+    assert "Official pricing documents a free tier." in page
+    assert "phoneRequired" in page
+    assert "/logs/" in page
+
+
+def test_expected_files_and_sitemap_include_daily_logs(tmp_path):
+    files, _ = _expected_files(read_offers(), "https://freellm.top", read_models())
+    assert Path("logs/index.html") in files
+
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    assert "https://freellm.top/logs/" in sitemap

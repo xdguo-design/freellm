@@ -48,6 +48,18 @@ def test_every_catalog_model_has_exactly_one_access_card():
         )
 
 
+def test_dots_model_has_separate_domestic_and_international_routes():
+    models = _load(MODELS_PATH)
+    dots = [model for model in models if model.get("canonicalModelId") == "dots3-note-preview"]
+    assert {model["accessRegion"] for model in dots} == {"domestic", "international"}
+    domestic = next(model for model in dots if model["accessRegion"] == "domestic")
+    international = next(model for model in dots if model["accessRegion"] == "international")
+    assert domestic["providerId"] == "dots-api-cn"
+    assert domestic["id"] != international["id"]
+    assert domestic["accessEndpoint"] == "https://note3-prev-api.askdiandian.com"
+    assert international["accessEndpoint"] == "https://openrouter.ai/api/v1"
+
+
 def test_access_cards_only_reference_known_region_policies():
     policies = _load(POLICIES_PATH)
     policy_ids = {policy["id"] for policy in policies["policies"]}
@@ -220,6 +232,16 @@ def test_model_catalog_page_exposes_mainland_cn_filter(tmp_path):
     # The default option is "all statuses": with mostly unverified data the CN lens
     # annotates every row instead of hiding them.
     assert '<option value="" data-label-zh="全部状态" data-label-en="All statuses" selected>' in all_models_page
+
+
+def test_dots_aggregate_page_keeps_domestic_and_international_endpoints_separate(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "dots-studio-dots3-note-preview-free" / "index.html").read_text(encoding="utf-8")
+    assert "国内入口" in page
+    assert "国外入口" in page
+    assert "https://note3-prev-api.askdiandian.com" in page
+    assert "https://openrouter.ai/api/v1" in page
+    assert "dots3-note-prev" in page
 
 
 def test_models_page_seo_surfaces_cn_availability(tmp_path):

@@ -6398,6 +6398,37 @@
     "freshnessStatus": "current"
   },
   {
+    "id": "dots-api-cn/dots3-note-prev",
+    "providerId": "dots-api-cn",
+    "provider": "Dots API（国内）",
+    "model": "Dots Studio: Dots3-Note Preview (free)",
+    "score": 71,
+    "context": "512000",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "image",
+      "audio",
+      "video",
+      "reasoning"
+    ],
+    "rateLimit": "60 req/min; 1,500,000 tokens/min",
+    "released": "2026-08-14",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://dots.ai/platform/docs",
+    "sourceKind": "official",
+    "lastSeenAt": "2026-09-10",
+    "directoryFree": true,
+    "directoryNoCard": true,
+    "directoryVerified": true,
+    "tierType": "limited_time_free",
+    "canonicalModelId": "dots3-note-preview",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://note3-prev-api.askdiandian.com",
+    "freshnessStatus": "current"
+  },
+  {
     "id": "openrouter/dots-studio-dots-3-note-preview",
     "providerId": "openrouter",
     "provider": "OpenRouter",
@@ -6421,6 +6452,9 @@
     "directoryNoCard": true,
     "directoryVerified": true,
     "tierType": "permanent",
+    "canonicalModelId": "dots3-note-preview",
+    "accessRegion": "international",
+    "accessEndpoint": "https://openrouter.ai/api/v1",
     "freshnessStatus": "current"
   },
   {
