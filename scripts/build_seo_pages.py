@@ -1951,7 +1951,8 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     description = f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较评分、上下文、限流、状态和来源，并查看已整理的免费入口。"
     related = _related_offer_links(offers, lambda offer: _provider_offer_matches(provider, offer))
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
-    registration_markup = _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
+    routes_markup = _access_routes_markup(provider_models)
+    registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
     source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("目录发现", "Directory discovered")
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
