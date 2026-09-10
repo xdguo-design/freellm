@@ -302,6 +302,29 @@ def test_model_directory_intents_have_distinct_metadata_and_hreflang(tmp_path):
         assert f'<link rel="alternate" hreflang="x-default" href="{canonical}"' in page
 
 
+def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    pages = [
+        tmp_path / "offers" / "codebuddy" / "index.html",
+        tmp_path / "models" / "all" / "index.html",
+        tmp_path / "category" / "free-ide" / "index.html",
+        tmp_path / "guides" / "free-llm" / "index.html",
+        tmp_path / "providers" / "index.html",
+        tmp_path / "providers" / "agnes-ai" / "index.html",
+    ]
+
+    for page_path in pages:
+        page = page_path.read_text(encoding="utf-8")
+        canonical = page.split('<link rel="canonical" href="', 1)[1].split('"', 1)[0]
+        assert page.count('rel="alternate" hreflang="zh-CN"') == 1
+        assert page.count('rel="alternate" hreflang="en"') == 1
+        assert page.count('rel="alternate" hreflang="x-default"') == 1
+        assert f'<link rel="alternate" hreflang="zh-CN" href="{canonical}"' in page
+        assert f'<link rel="alternate" hreflang="en" href="{canonical}?lang=en"' in page
+        assert f'<link rel="alternate" hreflang="x-default" href="{canonical}"' in page
+
+
 def test_explicit_adsense_slot_is_opt_in():
     markup = _adsense_slot_markup("1234567890")
     assert 'data-ad-client="ca-pub-2461062743308239"' in markup

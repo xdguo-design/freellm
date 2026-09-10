@@ -1,27 +1,16 @@
-import json
 from pathlib import Path
 
-from scripts.build_seo_pages import _load_model_access, build_site
+from scripts.build_seo_pages import _exclude_retired_models, _load_model_access, _load_operations, _load_models, _provider_catalog_from_models, build_site
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFERS_PATH = ROOT / "data" / "offers.json"
-PROVIDERS_PATH = ROOT / "data" / "provider-catalog.json"
 
 
 def visible_providers() -> list[dict]:
-    """Providers with no models (guide-only) stay visible; fully retired ones do not."""
-    providers = json.loads(PROVIDERS_PATH.read_text(encoding="utf-8"))
-    retired_ids = {
-        card["modelId"]
-        for card in _load_model_access(OFFERS_PATH)
-        if card["accessStatus"] == "retired"
-    }
-    return [
-        provider
-        for provider in providers
-        if not provider.get("modelIds") or any(model_id not in retired_ids for model_id in provider["modelIds"])
-    ]
+    """Providers generated from the current model catalog and operation guides."""
+    models = _exclude_retired_models(_load_models(OFFERS_PATH), _load_model_access(OFFERS_PATH))
+    return _provider_catalog_from_models(models, _load_operations(OFFERS_PATH))
 
 
 def test_build_site_creates_provider_directory_and_detail_pages(tmp_path):

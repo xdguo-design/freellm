@@ -84,9 +84,14 @@ python -m http.server 8000
 pytest -q
 python scripts/build_static.py --check
 python scripts/build_seo_pages.py --check
+# 配置 AdSense 展示广告单元后再生成详情页（slot ID 仅填数字）
+$env:FREELLM_ADSENSE_SLOT="1234567890"
+python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
 # 用新的发现快照更新模型目录（不会删除消失记录）
 python scripts/sync_model_catalog.py --input data/models-discovered.json --output data/models.json --as-of 2026-09-09
 ```
+
+`FREELLM_ADSENSE_SLOT` 未设置或不是纯数字时，不会生成显式广告单元；设置后会写入资源详情页的 `data-ad-slot`。正式发布前请确认 AdSense 网站状态为 Ready，并确认根目录 `/ads.txt` 中的 publisher ID 与账户一致。
 
 ### 发布
 
@@ -150,6 +155,8 @@ pytest -q
 python scripts/build_static.py --check
 python scripts/build_seo_pages.py --check
 ```
+
+To add a manual AdSense display unit to offer detail pages, set `FREELLM_ADSENSE_SLOT` to the numeric slot ID from AdSense and regenerate the static pages before deployment. Invalid or missing values intentionally render no explicit ad unit.
 
 ### Deployment
 

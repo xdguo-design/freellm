@@ -411,6 +411,22 @@ def _hreflang_links(site_url: str, path: str) -> str:
     )
 
 
+def _inject_hreflang_links(page: str, site_url: str, path: str) -> str:
+    """Normalize hreflang metadata for every generated bilingual HTML page."""
+    page = re.sub(
+        r'\s*<link rel="alternate" hreflang="(?:zh-CN|en|x-default)"[^>]*>',
+        "",
+        page,
+    )
+    links = _hreflang_links(site_url, path)
+    return re.sub(
+        r'(<link rel="canonical"[^>]*>)',
+        lambda match: f"{match.group(1)}\n  {links}",
+        page,
+        count=1,
+    )
+
+
 def _adsense_slot_markup(slot: str | None = None) -> str:
     """Render an explicit AdSense unit only when a real slot is configured."""
     slot_id = str(ADSENSE_SLOT if slot is None else slot).strip()
@@ -2358,6 +2374,15 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         files[Path("models") / _safe_slug(model_name, "model") / "index.html"] = render_model_aggregate_page(model_name, records, offers, site_url, provider_access, model_access)
     for provider in providers:
         files[Path("providers") / _safe_slug(provider.get("id"), "provider") / "index.html"] = render_provider_page(provider, model_catalog, offers, site_url, operations, provider_access, model_access)
+    for path, page in list(files.items()):
+        if path.suffix != ".html":
+            continue
+        if path.parts[:1] == ("offers",) and len(path.parts) > 1 and path.parts[1] in LEGACY_OFFER_REDIRECTS:
+            continue
+        page_path = "/" + path.as_posix()
+        if page_path.endswith("index.html"):
+            page_path = page_path[:-len("index.html")]
+        files[path] = _inject_hreflang_links(page, site_url, page_path)
     return files, categories
 
 
