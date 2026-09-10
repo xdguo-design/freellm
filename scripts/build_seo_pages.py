@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -13,10 +14,20 @@ from urllib.parse import urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from crawler.schema import validate_models, validate_offers, validate_operation_guides
+from crawler.schema import (
+    validate_access_references,
+    validate_model_access_file,
+    validate_provider_access_file,
+    validate_region_policies,
+    validate_models,
+    validate_offers,
+    validate_operation_guides,
+)
+from scripts.generate_access_cards import _operation_hints
 
 
 SITE_URL = "https://freellm.top"
+ACCESS_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 SHARE_IMAGE_PATH = "/freellm-01-hero.png"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MANIFEST_NAME = ".seo-pages-manifest.json"
@@ -28,6 +39,8 @@ VERCEL_ANALYTICS_SCRIPT = '''<script>
 
 ADSENSE_SCRIPT = '''<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>'''
+
+ADSENSE_SLOT = os.environ.get("FREELLM_ADSENSE_SLOT", "").strip()
 
 STATIC_LOCALE_STYLE = '''<style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
@@ -208,10 +221,10 @@ THEME_GUIDE_DEFINITIONS = (
         "slug": "china-free-ai-api",
         "title_zh": "国内免费 AI API",
         "title_en": "Free AI APIs in China",
-        "description_zh": "整理面向中国用户的免费或试用 AI API，标注地区、注册、额度、兼容性和官方入口。",
-        "description_en": "Compare free or trial AI APIs available to users in China, with region, signup, quota, compatibility and official entry notes.",
-        "lead_zh": "国内 API 的免费条件经常和地区、实名认证、账户类型或新用户资格相关。",
-        "lead_en": "Free access in China often depends on region, identity verification, account type or new-user eligibility.",
+        "description_zh": "整理面向中国用户的免费或试用 AI API，标注地区、注册要求（手机号、实名、信用卡）、额度、兼容性和官方入口，模型目录逐行标注中国大陆可用性。",
+        "description_en": "Compare free or trial AI APIs available to users in China, with region, signup requirements (phone, identity, credit card), quota, compatibility and official entry notes; the model directory carries per-row mainland-China availability labels.",
+        "lead_zh": "国内 API 的免费条件经常和地区、实名认证、账户类型或新用户资格相关；本页只收录有官方证据的结论，未核验的如实标记待核验。",
+        "lead_en": "Free access in China often depends on region, identity verification, account type or new-user eligibility; this page only states conclusions backed by official evidence, and marks everything else as unverified.",
     },
 )
 
@@ -385,6 +398,28 @@ def _static_locale_nav() -> str:
     return '<nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>'
 
 
+def _hreflang_links(site_url: str, path: str) -> str:
+    """Expose the stable Chinese URL and its English locale variant to crawlers."""
+    canonical = _absolute(site_url, path)
+    english = f"{canonical}?lang=en"
+    return "\n".join(
+        (
+            f'<link rel="alternate" hreflang="zh-CN" href="{_esc(canonical)}">',
+            f'<link rel="alternate" hreflang="en" href="{_esc(english)}">',
+            f'<link rel="alternate" hreflang="x-default" href="{_esc(canonical)}">',
+        )
+    )
+
+
+def _adsense_slot_markup(slot: str | None = None) -> str:
+    """Render an explicit AdSense unit only when a real slot is configured."""
+    slot_id = str(ADSENSE_SLOT if slot is None else slot).strip()
+    if not slot_id or not re.fullmatch(r"\d+", slot_id):
+        return ""
+    return f'''<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2461062743308239" data-ad-slot="{_esc(slot_id)}" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({{}});</script>'''
+
+
 def _absolute(site_url: str, path: str) -> str:
     return urljoin(site_url.rstrip("/") + "/", path.lstrip("/"))
 
@@ -499,6 +534,17 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     else:
         rows = "".join(_theme_model_row(model) for model in records)
         table = f'''<div class="table-wrap"><table><thead><tr><th>Provider</th><th>Model</th><th>Context window</th><th>Max output</th><th>Modality</th><th>Source</th></tr></thead><tbody>{rows}</tbody></table></div>'''
+    china_callout = ""
+    if slug == "china-free-ai-api":
+        china_callout = f'''<section>
+      <div class="eyebrow">02 / mainland CN availability</div>
+      <h2>{_locale_pair("模型目录的大陆可用性标注", "Mainland-CN availability labels in the model directory")}</h2>
+      <p>{_locale_pair(
+          f"完整模型目录（{len(models)} 个模型）逐行标注中国大陆可用状态，并提供“大陆可用性”筛选工具；每家提供商的注册要求（手机号、实名、信用卡）都有独立核验卡片与官方来源。没有官方证据的状态一律显示“待核验”。",
+          f"The full catalog of {len(models)} models carries per-row mainland-China availability labels with a dedicated filter; each provider's signup requirements (phone, identity, credit card) live on its own evidence-linked card. Anything without official evidence shows as unverified.")}
+          <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair("打开模型大列表并按大陆可用性筛选 →", "Open the model directory and filter by mainland-CN availability →")}</a></p>
+    </section>'''
+    related_eyebrow = "03 / related pages" if china_callout else "02 / related pages"
     related = ''.join(
         f'<li><a href="{_esc(path)}">{_locale_pair(definition["title_zh"], definition["title_en"])}</a></li>'
         for path in (models_url(), guide_url(), OPENAI_ALTERNATIVES_GUIDE_PATH, CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH)
@@ -575,8 +621,8 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
       <p>{_locale_pair(f"当前页面收录 {len(records)} 条记录。每条记录都能回到 FreeLLM 详情或目录来源。", f"This page contains {len(records)} records. Each row links back to a FreeLLM detail page or directory source.")}</p>
       {table}
     </section>
-    <section>
-      <div class="eyebrow">02 / related pages</div>
+    {china_callout}<section>
+      <div class="eyebrow">{related_eyebrow}</div>
       <h2>{_locale_pair("继续浏览", "Continue exploring")}</h2>
       <ul class="link-list">{related}</ul>
     </section>
@@ -679,8 +725,13 @@ def _operation_guides_markup(guides: list[dict]) -> str:
             endpoint_markup = ""
             if path.get("endpoint") or path.get("auth"):
                 endpoint_markup = f'''<dl class="operation-facts"><div><dt>{_locale_pair("Endpoint", "Endpoint")}</dt><dd><code>{_esc(path.get("endpoint") or "—")}</code></dd></div><div><dt>{_locale_pair("认证", "Authentication")}</dt><dd>{_esc(path.get("auth") or "—")}</dd></div></dl>'''
+            limits_markup = f'<div class="operation-limits"><strong>{_locale_pair("额度与限制", "Limits")}</strong><p>{_esc(path.get("limits"))}</p></div>' if path.get("limits") else ""
+            common_issues = path.get("commonIssues") or []
+            if isinstance(common_issues, str):
+                common_issues = [common_issues]
+            issues_markup = f'<div class="operation-issues"><strong>{_locale_pair("常见问题", "Common issues")}</strong>{_list(common_issues, "以官方帮助中心为准。")}</div>' if common_issues else ""
             sources = "".join(f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(url)} ↗</a></li>' for url in path.get("sourceUrls") or [])
-            paths.append(f'''<article class="operation-path"><h3>{_esc(path.get("label") or path.get("id"))}</h3><p class="operation-type">{_esc(path.get("productType") or "operation")}</p>{endpoint_markup}<h4>{_locale_pair("前置条件", "Prerequisites")}</h4>{prerequisite_markup}<h4>{_locale_pair("操作步骤", "Steps")}</h4><ol class="operation-steps">{"".join(steps)}</ol><div class="operation-validation"><strong>{_locale_pair("验证动作", "Validation")}</strong><p>{_esc(path.get("validation") or "")}</p></div><h4>{_locale_pair("官方来源", "Official sources")}</h4><ul class="link-list">{sources}</ul></article>''')
+            paths.append(f'''<article class="operation-path"><h3>{_esc(path.get("label") or path.get("id"))}</h3><p class="operation-type">{_esc(path.get("productType") or "operation")}</p>{endpoint_markup}{limits_markup}<h4>{_locale_pair("前置条件", "Prerequisites")}</h4>{prerequisite_markup}<h4>{_locale_pair("操作步骤", "Steps")}</h4><ol class="operation-steps">{"".join(steps)}</ol><div class="operation-validation"><strong>{_locale_pair("验证动作", "Validation")}</strong><p>{_esc(path.get("validation") or "")}</p></div>{issues_markup}<h4>{_locale_pair("官方来源", "Official sources")}</h4><ul class="link-list">{sources}</ul></article>''')
         rendered_guides.append("".join(paths))
     return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
 
@@ -792,6 +843,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   <title>{_esc(page_title)}</title>
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
+  {_hreflang_links(site_url, path)}
   {social_meta}
   {_analytics_script()}
   {ADSENSE_SCRIPT}
@@ -833,10 +885,13 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .operation-facts dt {{ color: #68748a; font-size: .78rem; }}
     .operation-facts dd {{ margin: 3px 0 0; overflow-wrap: anywhere; }}
     .operation-validation {{ margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }}
+    .operation-limits, .operation-issues {{ margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: #f0f4fb; }}
+    .operation-limits p, .operation-issues ul {{ margin: 4px 0 0; }}
     @media (max-width: 600px) {{ body {{ padding: 14px 10px 40px; }} header, main, footer {{ padding: 18px; }} }}
   </style>
 </head>
 <body data-offer-id="{_esc(offer.get('id'))}" data-static-locale="true">
+{_adsense_slot_markup()}
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
@@ -1426,7 +1481,89 @@ def _model_card(offer: dict) -> str:
     </article>'''
 
 
-def _model_catalog_row(model: dict) -> str:
+_CN_STATUS_LABELS = {
+    "available": ("大陆可用", "Available in mainland CN"),
+    "unavailable": ("大陆不可用", "Unavailable in mainland CN"),
+    "unknown": ("大陆待核验", "Unverified in mainland CN"),
+}
+
+
+def _load_access_context() -> tuple[dict[str, dict], dict[str, dict], dict[str, dict]]:
+    """Load provider access cards and region policies from the repo data directory."""
+    data_dir = ACCESS_DATA_DIR
+    try:
+        provider_cards = json.loads((data_dir / "provider-access.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise SystemExit(f"Invalid provider access data: {error}") from error
+    try:
+        policies_data = json.loads((data_dir / "region-policies.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise SystemExit(f"Invalid region policy data: {error}") from error
+    try:
+        model_cards = json.loads((data_dir / "model-access.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise SystemExit(f"Invalid model access data: {error}") from error
+    if not isinstance(provider_cards, list):
+        raise SystemExit("Invalid provider access data: expected a JSON array")
+    if not isinstance(policies_data, dict) or not isinstance(policies_data.get("policies"), list):
+        raise SystemExit("Invalid region policy data: expected an object with a policies array")
+    if not isinstance(model_cards, list):
+        raise SystemExit("Invalid model access data: expected a JSON array")
+    schema_errors = [
+        *validate_provider_access_file(provider_cards),
+        *validate_region_policies(policies_data),
+        *validate_model_access_file(model_cards),
+    ]
+    if schema_errors:
+        raise SystemExit("Invalid access data:\n" + "\n".join(schema_errors))
+    cards = {str(card.get("providerId") or ""): card for card in provider_cards if isinstance(card, dict)}
+    policies = {str(policy.get("id") or ""): policy for policy in policies_data["policies"] if isinstance(policy, dict)}
+    model_access = {str(card.get("modelId") or ""): card for card in model_cards if isinstance(card, dict)}
+    errors = validate_access_references(provider_cards, model_cards, set(policies))
+    if errors:
+        raise SystemExit("Invalid access references:\n" + "\n".join(errors))
+    return cards, policies, model_access
+
+
+def _cn_status_for_policy(policy: dict | None) -> str:
+    """Derive mainland-CN availability from one region policy; absence of evidence stays unknown."""
+    if not isinstance(policy, dict):
+        return "unknown"
+    policy_type = policy.get("type")
+    if policy_type == "denylist":
+        blocked = policy.get("blockedCountries") or []
+        return "unavailable" if "CN" in blocked else "unknown"
+    if policy_type == "allowlist":
+        allowed = policy.get("allowedCountries") or []
+        if policy.get("countriesComplete") is True:
+            return "available" if "CN" in allowed else "unavailable"
+        return "unknown"
+    return "unknown"
+
+
+def _cn_region_status_map() -> dict[str, dict]:
+    cards, policies, _ = _load_access_context()
+    statuses: dict[str, dict] = {}
+    for provider_id, card in cards.items():
+        if card.get("registrationStatus") == "unavailable":
+            code = "unavailable"
+        else:
+            code = _cn_status_for_policy(policies.get(str(card.get("regionPolicyId") or "")))
+        zh, en = _CN_STATUS_LABELS[code]
+        statuses[provider_id] = {"code": code, "zh": zh, "en": en}
+    return statuses
+
+
+def _cn_status_for_model(model: dict, provider_cards: dict[str, dict], policies: dict[str, dict], model_access: dict[str, dict]) -> str:
+    provider = provider_cards.get(str(model.get("providerId") or "")) or {}
+    access = model_access.get(str(model.get("id") or "")) or {}
+    if access.get("accessStatus") == "retired" or provider.get("registrationStatus") == "unavailable":
+        return "unavailable"
+    policy_id = access.get("regionOverridePolicyId") or provider.get("regionPolicyId")
+    return _cn_status_for_policy(policies.get(str(policy_id or "")))
+
+
+def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) -> str:
     score = model.get("score")
     score_markup = f'<span class="score-ring" style="--score:{_esc(score)}" aria-label="Score {_esc(score)}"><strong>{_esc(score)}</strong></span>' if score is not None else '<span class="muted">—</span>'
     modalities = "".join(f'<span class="model-badge">{_esc(item)}</span>' for item in (model.get("modality") or []))
@@ -1444,7 +1581,8 @@ def _model_catalog_row(model: dict) -> str:
     freshness_markup = f'<small class="freshness freshness-{_esc(freshness)}">{freshness_label}</small>' if freshness_label else ""
     provider_id = str(model.get("providerId") or "")
     model_id = str(model.get("id") or "")
-    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-provider="{_esc(str(model.get("provider") or "").lower())}" data-model="{_esc(str(model.get("model") or "").lower())}" data-score="{_esc(score if score is not None else -1)}">
+    cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
+    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-provider="{_esc(str(model.get("provider") or "").lower())}" data-model="{_esc(str(model.get("model") or "").lower())}" data-score="{_esc(score if score is not None else -1)}" data-cn="{_esc(cn["code"])}">
       <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(model.get("provider"))}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
       <td><a href="{_esc(model_aggregate_url(model))}"><strong>{_esc(model.get("model"))}</strong></a><small>{_esc(model_id)}</small></td>
       <td>{score_markup}</td>
@@ -1455,6 +1593,7 @@ def _model_catalog_row(model: dict) -> str:
       <td>{_esc(model.get("released") or "—")}</td>
       <td>{_esc(model.get("usageActivity") or "—")}</td>
       <td><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
+      <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
       <td class="source-cell"><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
     </tr>'''
 
@@ -1462,9 +1601,14 @@ def _model_catalog_row(model: dict) -> str:
 def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> str:
     if not models:
         return ""
+    provider_cards, policies, model_access = _load_access_context()
+    cn_statuses = {}
+    for model in models:
+        code = _cn_status_for_model(model, provider_cards, policies, model_access)
+        cn_statuses[str(model.get("id") or "")] = {"code": code, "zh": _CN_STATUS_LABELS[code][0], "en": _CN_STATUS_LABELS[code][1]}
     providers = sorted({(str(model.get("providerId") or ""), str(model.get("provider") or "")) for model in models}, key=lambda item: item[1].lower())
     provider_options = "".join(f'<option value="{_esc(provider_id)}">{_esc(name)}</option>' for provider_id, name in providers if provider_id)
-    rows = "".join(_model_catalog_row(model) for model in models)
+    rows = "".join(_model_catalog_row(model, cn_statuses) for model in models)
     heading_markup = f'''<div class="eyebrow">{_locale_pair("01 / 实时模型目录", "01 / Live model directory")}</div>
       <h2>{_locale_pair("模型大列表", "Model directory")} <small>{len(models)}</small></h2>
       <p class="section-desc">{_locale_pair("按模型查找可用入口，或按厂商查看完整模型家族。这里展示目录数据；具体免费额度和接入步骤进入对应资源详情。", "Search by model or browse a complete provider family. This directory shows catalog facts; open the linked access record for free-tier terms and step-by-step setup.")}</p>''' if include_heading else ""
@@ -1475,6 +1619,13 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
         <input id="model-catalog-search" type="search" placeholder="搜索模型或厂商" data-placeholder-zh="搜索模型或厂商" data-placeholder-en="Search models or providers" autocomplete="off">
         <label class="catalog-provider-label" for="model-catalog-provider">{_locale_pair("厂商", "Provider")}</label>
         <select id="model-catalog-provider"><option value="" data-label-zh="全部厂商" data-label-en="All providers">全部厂商</option>{provider_options}</select>
+        <label class="catalog-region-label" for="model-catalog-region">{_locale_pair("大陆可用性", "Mainland CN")}</label>
+        <select id="model-catalog-region">
+          <option value="" data-label-zh="全部状态" data-label-en="All statuses" selected>全部状态</option>
+          <option value="available" data-label-zh="大陆可用" data-label-en="Available">大陆可用</option>
+          <option value="unknown" data-label-zh="大陆待核验" data-label-en="Unverified">大陆待核验</option>
+          <option value="unavailable" data-label-zh="大陆不可用" data-label-en="Unavailable">大陆不可用</option>
+        </select>
         <div class="catalog-modes" aria-label="排序方式 / Group by">
           <button type="button" class="group-mode is-active" data-group-mode="score">{_locale_pair("按评分", "Score")}</button>
           <button type="button" class="group-mode" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
@@ -1484,9 +1635,9 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
       </div>
       <p class="catalog-hint">{_locale_pair("这是连续长列表，不分页；可滚动查看全部记录。筛选后会显示当前匹配数量。", "This is one continuous list, not pagination; scroll to view all records. Filters show the current match count.")}</p>
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
-        <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("评分", "Score")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("来源", "Source")}</th>
+        <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("评分", "Score")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("大陆可用性", "Mainland CN")}</th><th>{_locale_pair("来源", "Source")}</th>
       </tr></thead><tbody>{rows}</tbody></table></div>
-      <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除厂商筛选。", "No models match this filter. Try another keyword or clear the provider filter.")}</p>
+      <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除厂商、地区筛选。", "No models match this filter. Try another keyword or clear the provider and region filters.")}</p>
       <script>
         (() => {{
           const table = document.getElementById('model-catalog');
@@ -1494,6 +1645,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
           const rows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
+          const region = document.getElementById('model-catalog-region');
           const count = document.getElementById('model-catalog-count');
           const empty = document.getElementById('model-catalog-empty');
           const modes = Array.from(document.querySelectorAll('[data-group-mode]'));
@@ -1503,15 +1655,20 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
             const allProviders = provider?.querySelector('option[value=""]');
             if (allProviders) allProviders.textContent = isEnglish() ? allProviders.dataset.labelEn : allProviders.dataset.labelZh;
+            region?.querySelectorAll('option[data-label-zh]').forEach(option => {{
+              option.textContent = isEnglish() ? option.dataset.labelEn : option.dataset.labelZh;
+            }});
           }};
           const apply = () => {{
             const query = (search?.value || '').trim().toLowerCase();
             const providerId = provider?.value || '';
+            const regionFilter = region?.value || '';
             const visible = rows.filter(row => {{
               const matchesText = !query || `${{row.dataset.provider || ''}} ${{row.dataset.model || ''}} ${{row.dataset.modelId || ''}}`.includes(query);
               const matchesProvider = !providerId || row.dataset.providerId === providerId;
-              row.hidden = !(matchesText && matchesProvider);
-              return matchesText && matchesProvider;
+              const matchesRegion = !regionFilter || row.dataset.cn === regionFilter;
+              row.hidden = !(matchesText && matchesProvider && matchesRegion);
+              return matchesText && matchesProvider && matchesRegion;
             }});
             const value = row => mode === 'provider' ? `${{row.dataset.provider || ''}} ${{row.dataset.model || ''}}` : mode === 'model' ? `${{row.dataset.model || ''}} ${{row.dataset.provider || ''}}` : String(999 - Number(row.dataset.score || -1)).padStart(3, '0');
             visible.sort((a, b) => value(a).localeCompare(value(b), undefined, {{numeric: true}}));
@@ -1521,10 +1678,10 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
               if (mode !== 'score') {{
                 const group = mode === 'provider' ? row.querySelector('.provider-filter')?.textContent : row.querySelector('td:nth-child(2) strong')?.textContent;
                 if (group && group !== previousGroup) {{
-                  const groupRow = document.createElement('tr');
-                  groupRow.className = 'catalog-group-row';
-                  const cell = document.createElement('th');
-                  cell.colSpan = 11;
+                const groupRow = document.createElement('tr');
+                groupRow.className = 'catalog-group-row';
+                const cell = document.createElement('th');
+                cell.colSpan = 12;
                   cell.scope = 'rowgroup';
                   cell.textContent = group;
                   groupRow.appendChild(cell);
@@ -1647,7 +1804,28 @@ def _related_offer_links(offers: list[dict], predicate) -> str:
     ) + "</ul>"
 
 
-def render_model_aggregate_page(model_name: str, records: list[dict], offers: list[dict], site_url: str) -> str:
+def _registration_requirements_markup(provider_card: dict | None, model_card: dict | None = None) -> str:
+    if not isinstance(provider_card, dict):
+        return ""
+    labels = {
+        "accountRequired": ("需要账号", "Account"), "emailRequired": ("需要邮箱", "Email"),
+        "phoneRequired": ("需要手机号", "Phone"), "identityRequired": ("需要实名", "Identity"),
+        "cardRequired": ("需要信用卡", "Card"), "billingRequired": ("需要开通计费", "Billing"),
+        "apiKeyRequired": ("需要 API Key", "API key"), "licenseAcceptance": ("许可证", "License"),
+    }
+    facts = "".join(f'<div><dt>{_locale_pair(zh, en)}</dt><dd>{_esc(str(provider_card.get(key) or "unknown"))}</dd></div>' for key, (zh, en) in labels.items())
+    steps = list(provider_card.get("registrationSteps") or [])
+    extras = list((model_card or {}).get("extraRequirements") or [])
+    if extras:
+        steps.extend(extras)
+    steps_markup = "".join(f"<li>{_esc(step)}</li>" for step in steps)
+    register_url = provider_card.get("registerUrl")
+    register_markup = f'<a class="btn" href="{_esc(register_url)}" target="_blank" rel="noopener noreferrer">{_locale_pair("打开注册入口", "Open signup")}</a>' if register_url else ""
+    return f'''<section class="registration-requirements"><h2>{_locale_pair("注册要求与模型查找", "Registration and model lookup")}</h2>
+      <dl class="facts">{facts}</dl>{f"<ol>{steps_markup}</ol>" if steps_markup else f'<p class="lead">{_locale_pair("注册步骤尚未核验。", "Registration steps are not yet verified.")}</p>'}{register_markup}</section>'''
+
+
+def render_model_aggregate_page(model_name: str, records: list[dict], offers: list[dict], site_url: str, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
     path = model_aggregate_url(model_name)
     page_url = _absolute(site_url, path)
     title = f"{model_name} 多平台入口与限制 · {model_name} Model Providers | FreeLLM"
@@ -1670,6 +1848,15 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
             ],
         },
     }
+    provider_card = (provider_access or {}).get(str(records[0].get("providerId") or "")) if records else None
+    registration_markup = "".join(
+        _registration_requirements_markup(
+            (provider_access or {}).get(str(record.get("providerId") or "")),
+            (model_access or {}).get(str(record.get("id") or "")),
+        )
+        for record in records
+        if str(record.get("providerId") or "")
+    )
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1694,7 +1881,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('目录发现', 'Directory discovered')}</span></div>
   </header>
   <main><section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
-    <section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2><p class="lead">{_locale_pair('这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。', 'Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.')}</p>{_related_offer_links(offers, lambda offer: _model_offer_matches(model_name, offer))}</section>
+     {registration_markup}<section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2><p class="lead">{_locale_pair('这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。', 'Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.')}</p>{_related_offer_links(offers, lambda offer: _model_offer_matches(model_name, offer))}</section>
   </main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p></footer>
 </body></html>'''
 
@@ -1717,7 +1904,7 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自第三方模型目录，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from a third-party model directory; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
 
 
-def render_provider_page(provider: dict, models: list[dict], offers: list[dict], site_url: str, operations: list[dict] | None = None) -> str:
+def render_provider_page(provider: dict, models: list[dict], offers: list[dict], site_url: str, operations: list[dict] | None = None, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
     provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
     path = provider_url(provider)
     page_url = _absolute(site_url, path)
@@ -1726,12 +1913,13 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     description = f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较评分、上下文、限流、状态和来源，并查看已整理的免费入口。"
     related = _related_offer_links(offers, lambda offer: _provider_offer_matches(provider, offer))
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
+    registration_markup = _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
     source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("目录发现", "Directory discovered")
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 <style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.65;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}.lead,.muted {{color:var(--muted);}}.catalog-table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}}.catalog-table {{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;}}.catalog-table th,.catalog-table td {{padding:11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}}.catalog-table th {{color:var(--muted);background:#f8fafc;font-size:11px;white-space:nowrap;}}.catalog-table small {{display:block;color:var(--muted);font-size:11px;}}.score {{color:var(--blue);}}.status {{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;}}.status-online {{color:#147a46;background:#dcfce7;}}.status-offline {{color:#9f1239;background:#ffe4e6;}}.status-degraded,.status-unknown {{color:#8a5a00;background:#fef3c7;}}.related-list {{padding-left:20px;}}.stats {{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px;}}.eyebrow {{font:11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main><section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None) -> str:
@@ -1742,11 +1930,20 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     total = len(offers)
     model_catalog = models or []
     model_total = len(model_catalog)
-    title = f"全部免费 AI 模型与 API 一览 · All Free AI Models & APIs | FreeLLM"
-    description = (
-        f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，附目录来源、免费条件与详细接入入口。"
-        f" Browse {model_total or total} catalog models and {total} verified free access records with catalog sources and setup details."
-    )
+    if models is None:
+        title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
+        description = (
+            f"按免费额度、API、IDE、试用和开源权重浏览 FreeLLM 的 {total} 条可核验资源，"
+            "进入每条资源页查看官方入口、限制和操作步骤。 Browse verified free AI models, APIs, IDEs and open-weight resources."
+        )
+    else:
+        title = "全部免费 AI 模型与 API 一览（含中国大陆可用性标注）· All Free AI Models with Mainland CN Availability | FreeLLM"
+        description = (
+            f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
+            f"附 26 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
+            f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
+            f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
+        )
     social_meta = _social_meta(site_url, path, title, description, "website")
     checked_dates = {
         offer.get("lastVerifiedAt") for offer in offers if offer.get("lastVerifiedAt")
@@ -1780,6 +1977,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         "description": description,
         "url": page_url,
         "inLanguage": ["zh-CN", "en"],
+        "keywords": "免费 AI 模型, 中国大陆可用, 大陆可用性标注, 注册要求, 手机号验证, 信用卡, 免费 LLM API, free AI models, mainland China availability, signup requirements",
         "dateModified": last_checked,
         "isPartOf": {"@type": "WebSite", "name": "Free AI Index", "url": _absolute(site_url, "/")},
         "mainEntity": {
@@ -1808,6 +2006,24 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         f'<a class="tag" href="{_esc(category_url(category))}">{_locale_pair(CATEGORY_DEFINITIONS[category]["name_zh"], CATEGORY_DEFINITIONS[category]["name"])}</a>'
         for category in CATEGORY_DEFINITIONS
     )
+    cn_section = f'''<section id="mainland-cn-availability">
+      <h2>{_locale_pair("中国大陆可用性与注册要求", "Mainland China availability and signup requirements")}</h2>
+      <p class="section-desc">{_locale_pair(
+        "目录逐行标注每个模型在中国大陆的可用状态（可用 / 不可用 / 待核验），背后是 26 家提供商的注册要求核验卡：是否需要手机号、实名认证或信用卡，全部以官方来源为准。没有官方证据的一律标为“待核验”，不会因为证据缺失而被判为不可用。以下要点已完成人工核验：",
+        "Every catalog row carries a mainland-China availability label (available / unavailable / unverified), backed by per-provider registration cards covering phone, identity and credit-card requirements — all evidence-linked. Anything without official evidence stays “unverified” and is never marked unavailable for lack of evidence. Key verified facts:")}</p>
+      <ul>
+        <li>{_locale_pair("SiliconFlow：手机号 + 短信验证码注册，实名认证仅用于提升额度", "SiliconFlow: phone + SMS signup; identity verification only raises quotas")}</li>
+        <li>{_locale_pair("ModelScope：手机号、邮箱、阿里云账号或 GitHub 任一即可注册", "ModelScope: register with any one of phone, email, Alibaba Cloud or GitHub")}</li>
+        <li>{_locale_pair("Mistral：免费 Experiment 层需短信验证，无需信用卡", "Mistral: free Experiment tier needs SMS verification, no credit card")}</li>
+        <li>{_locale_pair("OpenRouter、Groq、Cohere、Cloudflare Workers AI、NVIDIA NIM：免费层均无需信用卡", "OpenRouter, Groq, Cohere, Cloudflare Workers AI and NVIDIA NIM: no credit card on free tiers")}</li>
+        <li>{_locale_pair("Hugging Face：需邮箱验证后才能创建访问令牌", "Hugging Face: email verification is required before creating access tokens")}</li>
+        <li>{_locale_pair("Agnes AI：仅邮箱注册，并提供中国大陆 API 加速节点", "Agnes AI: email-only signup with a dedicated mainland-CN API endpoint")}</li>
+        <li>{_locale_pair("llm7.io：可匿名调用，也可免费领取 token 提升限额", "llm7.io: anonymous access works, or claim a free token for higher limits")}</li>
+        <li>{_locale_pair("Chutes.ai：免费层已于 2026 年 2 月退役，需订阅或按量付费", "Chutes.ai: free tier retired in February 2026; subscription or pay-as-you-go required")}</li>
+        <li>{_locale_pair("GitHub Models：已于 2026-07-30 完全退役，替代方案为 Azure AI Foundry 与 GitHub Copilot", "GitHub Models: fully retired on July 30, 2026; use Azure AI Foundry or GitHub Copilot instead")}</li>
+      </ul>
+      <p><a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair("按厂家查看注册要求 →", "Browse signup requirements by provider →")}</a> · <a href="{_esc(_absolute(site_url, "/guides/china-free-ai-api/"))}">{_locale_pair("国内免费 AI API 指南 →", "Free AI APIs in China guide →")}</a></p>
+    </section>'''
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1816,6 +2032,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
   <title>{_esc(title)}</title>
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(page_url)}">
+  {_hreflang_links(site_url, path)}
   {social_meta}
   {_analytics_script()}
   {ADSENSE_SCRIPT}
@@ -1842,9 +2059,9 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     main {{ display: grid; gap: 30px; }}
     section + section {{ padding-top: 26px; border-top: 1px solid var(--line); }}
     .section-desc {{ margin: 0 0 14px; color: var(--muted); font-size: 14px; }}
-    .catalog-toolbar {{ display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(160px, .8fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }}
+    .catalog-toolbar {{ display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }}
     .catalog-toolbar label {{ color: var(--muted); font-size: 11px; font-weight: 700; }}
-    .catalog-search-label, .catalog-provider-label {{ display: grid; gap: 5px; }}
+    .catalog-search-label, .catalog-provider-label, .catalog-region-label {{ display: grid; gap: 5px; }}
     .catalog-toolbar input, .catalog-toolbar select {{ min-height: 38px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; color: var(--ink); background: white; font: inherit; }}
     .catalog-modes {{ display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }}
     .group-mode, .provider-filter {{ border: 0; border-radius: 7px; padding: 7px 9px; color: var(--blue); background: transparent; cursor: pointer; font: inherit; }}
@@ -1907,7 +2124,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('全部模型', 'All models')}</div>
     {_static_locale_nav()}
     <h1>{_locale_pair('全部免费 AI 模型与 API 一览', 'All Free AI Models & APIs')}</h1>
-    <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录保留来源，接入资源直达官方，免费条件与更新时间逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows retain their directory source, while access records link to official sites with free-tier terms and update dates.')}</p>
+    <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.')}</p>
     <div class="stats">
       <span><strong>{model_total or total}</strong> {_locale_pair('个模型', 'models')}</span>
       <span><strong>{total}</strong> {_locale_pair('个接入资源', 'access records')}</span>
@@ -1919,7 +2136,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     </div>
     <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
   </header>
-  <main>{_model_catalog_markup(model_catalog)}{sections_markup}
+  <main>{_model_catalog_markup(model_catalog)}{cn_section}{sections_markup}
     <section>
       <h2>{_locale_pair('按分类浏览', 'Browse by category')}</h2>
       <p class="section-desc">{_locale_pair('每个分类有独立页面，收录同一资源的深度信息。', 'Each category has its own page with the full verified records.')}</p>
@@ -1951,9 +2168,9 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
   .model-center-all-models-panel .model-directory h2 { margin: 0 0 6px; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.03em; }
   .model-center-all-models-panel .model-directory h2 small { color: #68748a; font-size: 15px; font-weight: 400; }
   .model-center-all-models-panel .section-desc { margin: 0 0 14px; color: #68748a; font-size: 14px; }
-  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(160px, .8fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid #dfe5ef; border-radius: 12px; background: #f5f7fb; }
+  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid #dfe5ef; border-radius: 12px; background: #f5f7fb; }
   .model-center-all-models-panel .catalog-toolbar label { color: #68748a; font-size: 11px; font-weight: 700; }
-  .model-center-all-models-panel .catalog-search-label, .model-center-all-models-panel .catalog-provider-label { display: grid; gap: 5px; }
+  .model-center-all-models-panel .catalog-search-label, .model-center-all-models-panel .catalog-provider-label, .model-center-all-models-panel .catalog-region-label { display: grid; gap: 5px; }
   .model-center-all-models-panel .catalog-toolbar input, .model-center-all-models-panel .catalog-toolbar select { min-height: 38px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; color: #172033; background: #fff; font: inherit; }
   .model-center-all-models-panel .catalog-modes { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
   .model-center-all-models-panel .group-mode { border: 1px solid #dfe5ef; border-radius: 7px; padding: 7px 9px; color: #1744e8; background: transparent; cursor: pointer; font: inherit; font-size: 12px; white-space: nowrap; }
@@ -1995,11 +2212,12 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = template[:body_start]
     body = template[body_start + len("<body>"):body_end]
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
-    description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，查看厂家、评分、上下文、活动和官方来源。"
+    description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、评分、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
     head = re.sub(r"<title>.*?</title>", f"<title>{_esc(title)}</title>", head, count=1, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*>', f'<meta name="description" content="{_esc(description)}" />', head, count=1)
     head = re.sub(r'<link rel="canonical"[^>]*>', f'<link rel="canonical" href="{_esc(page_url)}" />', head, count=1)
+    head = re.sub(r'(?:\s*<link rel="alternate"[^>]+>){3}', f'\n  {_hreflang_links(site_url, MODEL_CENTER_PAGE_PATH)}', head, count=1, flags=re.S)
     head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = head.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-default-locale="zh-CN">', 1)
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
@@ -2019,10 +2237,14 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
       root.dataset.modelCenterLocale = english ? 'en' : 'zh-CN';
       const search = document.getElementById('model-catalog-search');
       const provider = document.getElementById('model-catalog-provider');
+      const region = document.getElementById('model-catalog-region');
       const count = document.getElementById('model-catalog-count');
       if (search) search.placeholder = english ? search.dataset.placeholderEn : search.dataset.placeholderZh;
       const allProviders = provider?.querySelector('option[value=""]');
       if (allProviders) allProviders.textContent = english ? allProviders.dataset.labelEn : allProviders.dataset.labelZh;
+      document.querySelectorAll('#model-catalog-region option[data-label-zh]').forEach(option => {{
+        option.textContent = english ? option.dataset.labelEn : option.dataset.labelZh;
+      }});
       const rows = Array.from(document.querySelectorAll('#model-catalog .catalog-row'));
       if (count) count.textContent = english ? `Showing ${rows.filter(row => !row.hidden).length} / ${rows.length}` : `显示 ${rows.filter(row => !row.hidden).length} 条 / 共 ${rows.length} 条`;
     };
@@ -2108,6 +2330,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     ]
     model_catalog = models or []
     providers = _provider_catalog_from_models(model_catalog, operations)
+    provider_access, _, model_access = _load_access_context()
     files: dict[Path, str] = {
         Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers),
         Path("models") / "index.html": render_models_page(offers, site_url),
@@ -2132,9 +2355,9 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         key=lambda value: (_safe_slug(value, "model"), value.lower(), value),
     ):
         records = [model for model in model_catalog if str(model.get("model") or "").strip().lower() == model_name.lower()]
-        files[Path("models") / _safe_slug(model_name, "model") / "index.html"] = render_model_aggregate_page(model_name, records, offers, site_url)
+        files[Path("models") / _safe_slug(model_name, "model") / "index.html"] = render_model_aggregate_page(model_name, records, offers, site_url, provider_access, model_access)
     for provider in providers:
-        files[Path("providers") / _safe_slug(provider.get("id"), "provider") / "index.html"] = render_provider_page(provider, model_catalog, offers, site_url, operations)
+        files[Path("providers") / _safe_slug(provider.get("id"), "provider") / "index.html"] = render_provider_page(provider, model_catalog, offers, site_url, operations, provider_access, model_access)
     return files, categories
 
 
@@ -2156,6 +2379,24 @@ def _load_models(data_path: Path) -> list[dict]:
     if errors:
         raise SystemExit("Invalid models data:\n" + "\n".join(errors))
     return json.loads(models_path.read_text(encoding="utf-8"))
+
+
+def _load_model_access(data_path: Path) -> list[dict]:
+    access_path = data_path.parent / "model-access.json"
+    if not access_path.is_file():
+        return []
+    errors = validate_model_access_file(access_path)
+    if errors:
+        raise SystemExit("Invalid model access data:\n" + "\n".join(errors))
+    return json.loads(access_path.read_text(encoding="utf-8"))
+
+
+def _exclude_retired_models(models: list[dict], access_cards: list[dict]) -> list[dict]:
+    """Retired models must never render as registerable free models."""
+    retired = {str(card.get("modelId") or "") for card in access_cards if card.get("accessStatus") == "retired"}
+    if not retired:
+        return models
+    return [model for model in models if str(model.get("id") or "") not in retired]
 
 
 def _load_operations(data_path: Path) -> list[dict]:
@@ -2202,6 +2443,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     data_path = Path(data_path)
     offers = _load_data(data_path)
     models = _load_models(data_path)
+    models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations)
     output_root = Path(output_root)

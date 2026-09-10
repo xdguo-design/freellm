@@ -1,0 +1,24 @@
+{
+  "providerId": "cursor",
+  "provider": "Cursor",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["cursor-hobby"],
+  "paths": [
+    {
+      "id": "ide",
+      "label": "Cursor Hobby 个人免费方案",
+      "productType": "ide",
+      "prerequisites": ["可访问 Cursor 官方站点", "准备 Cursor 账户", "准备一个不含生产密钥的测试项目"],
+      "steps": [
+        {"title": "下载安装", "detail": "从 Cursor 官方站点下载桌面客户端并完成安装。", "action": "打开 https://cursor.com/"},
+        {"title": "登录并选择 Hobby", "detail": "登录后选择 Hobby 方案，进入账户或计费页查看当前可用功能。"},
+        {"title": "运行短任务", "detail": "在测试项目中进行一次 Tab 补全或短聊天任务，先观察 Agent 和 Chat 的权限。"},
+        {"title": "检查当前限制", "detail": "回到账户页核对 Agent、Chat、Tab 的剩余额度和重置时间。"}
+      ],
+      "validation": "完成一次短补全或聊天任务，并在 Cursor 账户页确认 Hobby 方案和当前用量限制。",
+      "limits": "当前记录为有限 Agent 请求、Chat 和 Tab 补全；官方未固定公开统一上限，具体 cap 以账户页为准。",
+      "commonIssues": ["Hobby 方案不是无限 Agent 使用。", "不同模型或功能可能有独立限制，长任务应先在小项目验证。", "学生资格和普通 Hobby 方案不是同一权益，应按对应官方页面核对。"],
+      "sourceUrls": ["https://cursor.com/", "https://cursor.com/pricing", "https://prod.cursor.com/help/account-and-billing/pricing"]
+    }
+  ]
+}

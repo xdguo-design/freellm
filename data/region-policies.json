@@ -1,0 +1,110 @@
+{
+  "defaultCountryCode": "CN",
+  "defaultCountryNote": "经确认，地区判断的首要用户为中国大陆用户：页面默认筛选中国大陆，未核验字段显示“待核验”，绝不因国家未出现在搜索结果而判定不可用。",
+  "priorityCountries": [
+    "CN",
+    "HK",
+    "MO",
+    "TW",
+    "US",
+    "SG",
+    "JP",
+    "DE",
+    "FR"
+  ],
+  "policies": [
+    {
+      "id": "policy-unknown-default",
+      "type": "unknown",
+      "allowedCountries": [],
+      "blockedCountries": [],
+      "notes": "默认策略：没有足够官方证据判断地区可用性。页面必须显示“待核验”，绝不能因为某个国家没有出现在搜索结果中就判定该国家不可用。",
+      "sourceUrls": [],
+      "lastVerifiedAt": null,
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "google-gemini-allowlist",
+      "type": "allowlist",
+      "allowedCountries": [],
+      "blockedCountries": [],
+      "countriesComplete": false,
+      "notes": "Google AI Studio 与 Gemini API 采用官方支持地区白名单，且条款要求用户年满 18 岁。完整国家/地区列表约 223 项，以官方 available-regions 页面为准，尚未逐项导入本文件。",
+      "sourceUrls": [
+        "https://ai.google.dev/gemini-api/docs/available-regions",
+        "https://ai.google.dev/gemini-api/terms"
+      ],
+      "lastVerifiedAt": "2026-09-09",
+      "verificationStatus": "partial"
+    },
+    {
+      "id": "mistral-regional-endpoints",
+      "type": "cloud_region",
+      "allowedCountries": [],
+      "blockedCountries": [],
+      "endpoints": [
+        {
+          "id": "global",
+          "url": "https://api.mistral.ai"
+        },
+        {
+          "id": "eu",
+          "url": "https://api.eu.mistral.ai",
+          "regions": [
+            "EU",
+            "EFTA"
+          ]
+        },
+        {
+          "id": "us",
+          "url": "https://api.us.mistral.ai",
+          "regions": [
+            "US"
+          ]
+        }
+      ],
+      "notes": "区域端点属于数据驻留/推理区域选择，不等于账号注册国家限制。区域推理为可选项，官方定价页显示区域端点约有 +10% 溢价。",
+      "sourceUrls": [
+        "https://docs.mistral.ai/inference/regional-inference",
+        "https://mistral.ai/news/regional-inference-open-models-new-compute/",
+        "https://mistral.ai/pricing/api/"
+      ],
+      "lastVerifiedAt": "2026-09-09",
+      "verificationStatus": "partial"
+    },
+    {
+      "id": "github-models-retired",
+      "type": "unknown",
+      "allowedCountries": [],
+      "blockedCountries": [],
+      "notes": "GitHub Models 已于 2026-07-30 完全退役：Playground、模型目录、Inference API 与 BYOK 均不可用。官方建议替代方案为 Azure AI Foundry（模型目录）与 GitHub Copilot（在 GitHub 上构建 AI 工作流）。",
+      "sourceUrls": [
+        "https://docs.github.com/en/github-models"
+      ],
+      "lastVerifiedAt": "2026-09-09",
+      "verificationStatus": "verified"
+    },
+    {
+      "id": "ovhcloud-endpoints-regions",
+      "type": "cloud_region",
+      "allowedCountries": [],
+      "blockedCountries": [],
+      "endpoints": [
+        {
+          "id": "eu-gravelines",
+          "url": "https://www.ovhcloud.com/en/public-cloud/ai-endpoints/",
+          "regions": [
+            "EU"
+          ]
+        }
+      ],
+      "notes": "OVHcloud AI Endpoints 面向欧洲数据主权设计，从法国 Gravelines 数据中心部署，官方文档称服务覆盖欧洲并扩展至 APAC 与加拿大；对中国的可访问性无官方声明，待核验。",
+      "sourceUrls": [
+        "https://www.ovhcloud.com/en/public-cloud/ai-endpoints/",
+        "https://docs.ovhcloud.com/en/guides/public-cloud/ai-machine-learning/ai-endpoints-capabilities"
+      ],
+      "lastVerifiedAt": "2026-09-09",
+      "verificationStatus": "partial"
+    }
+  ]
+}

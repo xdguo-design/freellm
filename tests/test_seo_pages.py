@@ -4,6 +4,8 @@ from pathlib import Path
 from scripts.build_seo_pages import (
     CATEGORY_DEFINITIONS,
     LEGACY_OFFER_REDIRECTS,
+    _exclude_retired_models,
+    _load_model_access,
     build_site,
     categorize_offer,
     category_url,
@@ -14,6 +16,7 @@ from scripts.build_seo_pages import (
     render_models_page,
     render_offer_page,
     _expected_files,
+    _adsense_slot_markup,
 )
 
 
@@ -28,6 +31,10 @@ def read_offers():
 
 def read_models():
     return json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+
+
+def read_visible_models():
+    return _exclude_retired_models(read_models(), _load_model_access(OFFERS_PATH))
 
 
 THEME_GUIDES = {
@@ -263,9 +270,9 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     assert '<span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span>' in page
     assert '<span lang="zh-CN">开源权重模型</span><span lang="en">Open-weight AI models</span>' in page
 
-    # Structured data lists every catalog model for crawlers.
+    # Structured data lists every visible catalog model for crawlers.
     assert '"@type": "CollectionPage"' in page
-    assert '"numberOfItems": %d' % len(models) in page
+    assert '"numberOfItems": %d' % len(read_visible_models()) in page
     assert '"dateModified": "%s"' % max(model["lastSeenAt"] for model in models) in page
 
     # The homepage and category pages link to the directory for crawl depth.
@@ -277,6 +284,33 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     assert "https://freellm.top/models/" in category
 
 
+def test_model_directory_intents_have_distinct_metadata_and_hreflang(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    resource_directory = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    all_models = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+
+    title = lambda page: page.split("<title>", 1)[1].split("</title>", 1)[0]
+    description = lambda page: page.split('<meta name="description" content="', 1)[1].split('">', 1)[0]
+    assert title(resource_directory) != title(all_models)
+    assert description(resource_directory) != description(all_models)
+    for page, canonical in (
+        (resource_directory, "https://freellm.top/models/"),
+        (all_models, "https://freellm.top/models/all/"),
+    ):
+        assert f'<link rel="alternate" hreflang="zh-CN" href="{canonical}"' in page
+        assert f'<link rel="alternate" hreflang="en" href="{canonical}?lang=en"' in page
+        assert f'<link rel="alternate" hreflang="x-default" href="{canonical}"' in page
+
+
+def test_explicit_adsense_slot_is_opt_in():
+    markup = _adsense_slot_markup("1234567890")
+    assert 'data-ad-client="ca-pub-2461062743308239"' in markup
+    assert 'data-ad-slot="1234567890"' in markup
+    assert ".push({})" in markup
+    assert _adsense_slot_markup("") == ""
+    assert _adsense_slot_markup("not-a-slot") == ""
+
+
 def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
@@ -286,7 +320,7 @@ def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     assert 'id="model-catalog-provider"' in page
     assert 'data-group-mode="provider"' in page
     assert 'data-group-mode="model"' in page
-    assert f'{len(models)} 个模型' in page
+    assert f'{len(read_visible_models())} 个模型' in page
     assert 'data-model-id="ollama-cloud/deepseek-v4-pro"' in page
     assert 'Ollama Cloud' in page
     assert 'deepseek-v4-pro' in page

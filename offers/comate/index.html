@@ -6,6 +6,9 @@
   <title>Baidu Comate · Auto-Free mode · FreeLLM 免费 AI 资源索引</title>
   <meta name="description" content="Baidu Comate：150k tokens / hour in free fallback mode。请以官方页面为准，核对地区、有效期和使用条件。">
   <link rel="canonical" href="https://freellm.top/offers/comate/">
+  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/offers/comate/">
+<link rel="alternate" hreflang="en" href="https://freellm.top/offers/comate/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://freellm.top/offers/comate/">
   <meta property="og:type" content="article">
 <meta property="og:title" content="Baidu Comate · Auto-Free mode · FreeLLM 免费 AI 资源索引">
 <meta property="og:description" content="Baidu Comate：150k tokens / hour in free fallback mode。请以官方页面为准，核对地区、有效期和使用条件。">
@@ -81,10 +84,13 @@
     .operation-facts dt { color: #68748a; font-size: .78rem; }
     .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
     .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
+    .operation-limits, .operation-issues { margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: #f0f4fb; }
+    .operation-limits p, .operation-issues ul { margin: 4px 0 0; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
 <body data-offer-id="comate" data-static-locale="true">
+
   <header>
     <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
     <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
@@ -108,7 +114,7 @@
     </section>
 
 
-
+<section id="operation-guides"><h2><span lang="zh-CN">详细操作步骤</span><span lang="en">Detailed operation paths</span></h2><p class="muted"><span lang="zh-CN">每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。</span><span lang="en">Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider&#x27;s live official policy.</span></p><article class="operation-path"><h3>Baidu Comate Auto-Free 模式</h3><p class="operation-type">ide</p><div class="operation-limits"><strong><span lang="zh-CN">额度与限制</span><span lang="en">Limits</span></strong><p>当前记录为 Auto-Free 模式每小时 150,000 tokens；模型、功能和重置规则以官方计费页为准。</p></div><h4><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h4><ul><li><span lang="zh-CN">可访问 Baidu Comate 官方站点</span><span lang="en">Baidu Comate</span></li><li><span lang="zh-CN">准备登录账户</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">准备 VS Code、JetBrains 或官方客户端</span><span lang="en">VS Code、JetBrains</span></li><li><span lang="zh-CN">准备一个不含生产密钥的测试项目</span><span lang="en">See official terms</span></li></ul><h4><span lang="zh-CN">操作步骤</span><span lang="en">Steps</span></h4><ol class="operation-steps"><li><strong>安装客户端或插件</strong><p>从官方页面选择独立 IDE 或对应编辑器插件并完成安装。</p><p class="operation-action"><strong><span lang="zh-CN">操作</span><span lang="en">Action</span>：</strong>打开 https://comate.baidu.com/zh</p></li><li><strong>登录并选择 Auto-Free</strong><p>登录后在模型或计费设置中选择 Auto-Free 模式，确认页面显示当前小时额度。</p></li><li><strong>执行短任务</strong><p>在测试项目中运行一次补全或问答任务，使用短上下文观察消耗。</p></li><li><strong>回到账户页核验</strong><p>检查 Auto-Free 模式、小时额度和剩余量是否与任务记录一致。</p></li></ol><div class="operation-validation"><strong><span lang="zh-CN">验证动作</span><span lang="en">Validation</span></strong><p>完成一次补全或问答任务，并在 Comate 账户页确认 Auto-Free 模式和当前小时额度。</p></div><div class="operation-issues"><strong><span lang="zh-CN">常见问题</span><span lang="en">Common issues</span></strong><ul><li><span lang="zh-CN">未选择 Auto-Free 时可能进入其他计费模式。</span><span lang="en">Auto-Free 。</span></li><li><span lang="zh-CN">额度按模型和功能计算，长上下文测试会更快消耗额度。</span><span lang="en">， 。</span></li><li><span lang="zh-CN">插件权限和代码上传范围应在首次使用前检查。</span><span lang="en">。</span></li></ul></div><h4><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h4><ul class="link-list"><li><a href="https://comate.baidu.com/zh" target="_blank" rel="nofollow noopener">https://comate.baidu.com/zh ↗</a></li><li><a href="https://comate.baidu.com/zh/pricing/payment?type=vip" target="_blank" rel="nofollow noopener">https://comate.baidu.com/zh/pricing/payment?type=vip ↗</a></li></ul></article><script>(() => { document.querySelectorAll('.copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script></section>
 
     <section>
       <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>

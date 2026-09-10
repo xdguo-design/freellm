@@ -1,0 +1,24 @@
+{
+  "providerId": "glm",
+  "provider": "GLM Coding Plan",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["glm"],
+  "paths": [
+    {
+      "id": "coding-plan",
+      "label": "GLM Coding Plan 接入",
+      "productType": "ide",
+      "prerequisites": ["可访问智谱 GLM Coding Plan 页面", "准备智谱账户", "准备 Claude Code、Cursor、Cline 等支持工具", "先阅读套餐和窗口规则"],
+      "steps": [
+        {"title": "确认套餐规则", "detail": "打开官方 Coding Plan FAQ，确认当前套餐、模型、计费和 5 小时窗口规则。", "action": "打开 https://docs.bigmodel.cn/cn/coding-plan/faq"},
+        {"title": "登录并开通", "detail": "在官方入口登录，按当前页面提示开通适合个人的计划，并确认是否自动续费。"},
+        {"title": "配置支持工具", "detail": "按照官方说明在 Claude Code、Cursor、Cline 或其他支持工具中选择 GLM Coding Plan。"},
+        {"title": "发送最小任务", "detail": "在测试项目中发送一个短代码任务，查看工具和账户页的窗口消耗。"}
+      ],
+      "validation": "支持工具完成一次最小代码任务，且账户或工具页面能显示当前 5 小时窗口和剩余额度。",
+      "limits": "当前记录为时间依赖的额度倍率和 5 小时窗口；套餐、模型和超额规则以官方 FAQ 为准。",
+      "commonIssues": ["不同工具的配置方式不同，应优先使用官方 FAQ 中的入口。", "窗口额度重置时间与本地时区显示可能不同。", "不要把计划额度描述为无限免费 API。"],
+      "sourceUrls": ["https://open.bigmodel.cn/glm-coding?plantype=team", "https://docs.bigmodel.cn/cn/coding-plan/faq"]
+    }
+  ]
+}

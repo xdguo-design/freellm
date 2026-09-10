@@ -108,3 +108,36 @@ def test_operation_only_providers_are_discoverable(tmp_path):
     assert 'id="operation-guides"' in longcat_page
     assert 'No catalog model records are synced yet' in freebuff_page
     assert 'Operation guide' in freebuff_page
+
+
+def test_promoted_offers_have_reproducible_operation_paths():
+    root = Path(__file__).parents[1]
+    offers = json.loads((root / "data" / "offers.json").read_text(encoding="utf-8"))
+    guides = load_operation_guides(root / "data" / "operations")
+    required = {
+        "codebuddy", "qoder", "trae", "comate", "doubao", "glm",
+        "aliyun-qwen-free-quota", "cursor-hobby",
+    }
+    linked = {
+        offer_id
+        for guide in guides
+        for offer_id in guide.get("offerIds") or []
+    }
+    assert required <= linked
+
+    for guide in guides:
+        if not required.intersection(guide.get("offerIds") or []):
+            continue
+        for path in guide["paths"]:
+            assert path.get("validation", "").strip()
+            assert path.get("limits", "").strip()
+            assert path.get("commonIssues")
+            assert path.get("sourceUrls")
+
+
+def test_operation_markup_renders_limits_and_common_issues(tmp_path):
+    root = Path(__file__).parents[1]
+    build_site(root / "data" / "offers.json", tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "offers" / "codebuddy" / "index.html").read_text(encoding="utf-8")
+    assert "额度与限制" in page
+    assert "常见问题" in page

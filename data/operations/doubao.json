@@ -1,0 +1,24 @@
+{
+  "providerId": "doubao",
+  "provider": "Doubao Seed Code",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["doubao"],
+  "paths": [
+    {
+      "id": "coding-plan",
+      "label": "豆包 Coding Plan Lite",
+      "productType": "ide",
+      "prerequisites": ["可访问火山引擎官方活动页", "准备火山引擎账户", "准备支持该计划的编码工具", "确认首购和续费条款"],
+      "steps": [
+        {"title": "打开官方活动页", "detail": "登录火山引擎并阅读 Coding Plan Lite 的当前价格、模型和活动条件。", "action": "打开 https://www.volcengine.com/activity/codingplan"},
+        {"title": "确认计划资格", "detail": "核对账户是否符合首购条件、地域条件和当前活动时间。"},
+        {"title": "完成订阅", "detail": "确认支付和续费规则后订阅计划，不把首月优惠当作永久免费。"},
+        {"title": "在工具中验证", "detail": "按官方说明配置支持的编码工具，发送一个最小代码任务并检查计划额度。"}
+      ],
+      "validation": "支持的编码工具能够完成一次最小任务，且账户或工具页面显示 Coding Plan Lite 的当前计划和剩余额度。",
+      "limits": "当前记录为 Coding Plan Lite 首月促销价；后续价格、模型范围、用量窗口及续费行为以官方活动页为准。",
+      "commonIssues": ["首月优惠不等于长期免费，订阅前必须确认自动续费。", "编码工具兼容性和模型列表可能随活动调整。", "额度不足时不要直接切换到未确认价格的付费模型。"],
+      "sourceUrls": ["https://www.volcengine.com/activity/codingplan", "https://developer.volcengine.com/articles/7575446945372897322"]
+    }
+  ]
+}

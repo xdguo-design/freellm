@@ -1,0 +1,24 @@
+{
+  "providerId": "codebuddy",
+  "provider": "CodeBuddy",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["codebuddy"],
+  "paths": [
+    {
+      "id": "ide",
+      "label": "CodeBuddy 个人体验计划",
+      "productType": "ide",
+      "prerequisites": ["可访问 CodeBuddy 官方站点", "准备邮箱或官方支持的登录方式", "准备一个不含生产密钥的测试项目"],
+      "steps": [
+        {"title": "下载安装", "detail": "从 CodeBuddy 官方产品页下载适合当前系统的 IDE，避免使用第三方安装包。", "action": "打开 https://www.codebuddy.cn/"},
+        {"title": "登录并选择计划", "detail": "登录后选择个人体验计划，确认账户页显示的当前额度。"},
+        {"title": "连接测试项目", "detail": "先打开一个不含生产密钥的项目，检查编辑器、补全和 Agent 权限。"},
+        {"title": "验证免费额度", "detail": "执行一次小型补全或问答任务，回到账户页确认 credits 和 code completions 的消耗记录。"}
+      ],
+      "validation": "完成一次小型代码补全或问答任务，并在账户页看到个人体验计划及剩余额度。",
+      "limits": "当前记录为每月 500 credits、5,000 次代码补全；具体模型、Agent 和并发限制以账户页为准。",
+      "commonIssues": ["看不到个人计划时先完成邮箱或账户验证。", "额度展示与任务消耗存在延迟时，以官方账户页刷新后的记录为准。", "不要把生产密钥放入用于首次测试的项目。"],
+      "sourceUrls": ["https://www.codebuddy.cn/", "https://www.codebuddy.cn/docs/ide/Account/pricing"]
+    }
+  ]
+}

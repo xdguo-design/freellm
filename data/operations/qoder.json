@@ -1,0 +1,24 @@
+{
+  "providerId": "qoder",
+  "provider": "Qoder",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["qoder"],
+  "paths": [
+    {
+      "id": "ide",
+      "label": "Qoder Pro 试用",
+      "productType": "ide",
+      "prerequisites": ["可访问 Qoder 官方站点", "准备 Qoder 登录账户", "准备一个不含生产密钥的测试项目"],
+      "steps": [
+        {"title": "下载安装", "detail": "从 Qoder 官方站点下载客户端并完成本地安装。", "action": "打开 https://qoder.com/"},
+        {"title": "登录并启用试用", "detail": "登录后在账户页启用 Pro 试用，确认页面显示可用 credits。"},
+        {"title": "打开测试项目", "detail": "先使用小型项目测试补全、问答或 Agent 功能，并确认工作区权限。"},
+        {"title": "检查消耗", "detail": "完成一次短任务后回到账户页，记录剩余 credits 和试用状态。"}
+      ],
+      "validation": "完成一次短代码任务，并在账户页确认 Pro 试用仍有效且 credits 有可见余额或消耗记录。",
+      "limits": "当前记录为 300 trial credits 和基础模型消息；试用期限、模型范围及超额行为以官方账户页为准。",
+      "commonIssues": ["试用入口可能只对新账户显示。", "credits 未更新时刷新账户页并确认登录的是正确账户。", "将 Agent 首次运行限制在不含敏感信息的测试项目。"],
+      "sourceUrls": ["https://qoder.com/", "https://docs.qoder.com/zh/account/pricing"]
+    }
+  ]
+}

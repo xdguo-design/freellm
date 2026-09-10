@@ -6,6 +6,9 @@
   <title>GLM Coding Plan · FreeLLM 免费 AI 资源索引</title>
   <meta name="description" content="GLM Coding Plan：Quota multiplier changes by provider time。请以官方页面为准，核对地区、有效期和使用条件。">
   <link rel="canonical" href="https://freellm.top/offers/glm/">
+  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/offers/glm/">
+<link rel="alternate" hreflang="en" href="https://freellm.top/offers/glm/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://freellm.top/offers/glm/">
   <meta property="og:type" content="article">
 <meta property="og:title" content="GLM Coding Plan · FreeLLM 免费 AI 资源索引">
 <meta property="og:description" content="GLM Coding Plan：Quota multiplier changes by provider time。请以官方页面为准，核对地区、有效期和使用条件。">
@@ -81,10 +84,13 @@
     .operation-facts dt { color: #68748a; font-size: .78rem; }
     .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
     .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
+    .operation-limits, .operation-issues { margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: #f0f4fb; }
+    .operation-limits p, .operation-issues ul { margin: 4px 0 0; }
     @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
   </style>
 </head>
 <body data-offer-id="glm" data-static-locale="true">
+
   <header>
     <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
     <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
@@ -108,7 +114,7 @@
     </section>
 
 
-
+<section id="operation-guides"><h2><span lang="zh-CN">详细操作步骤</span><span lang="en">Detailed operation paths</span></h2><p class="muted"><span lang="zh-CN">每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。</span><span lang="en">Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider&#x27;s live official policy.</span></p><article class="operation-path"><h3>GLM Coding Plan 接入</h3><p class="operation-type">ide</p><div class="operation-limits"><strong><span lang="zh-CN">额度与限制</span><span lang="en">Limits</span></strong><p>当前记录为时间依赖的额度倍率和 5 小时窗口；套餐、模型和超额规则以官方 FAQ 为准。</p></div><h4><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h4><ul><li><span lang="zh-CN">可访问智谱 GLM Coding Plan 页面</span><span lang="en">GLM Coding Plan</span></li><li><span lang="zh-CN">准备智谱账户</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">准备 Claude Code、Cursor、Cline 等支持工具</span><span lang="en">Claude Code、Cursor、Cline</span></li><li><span lang="zh-CN">先阅读套餐和窗口规则</span><span lang="en">See official terms</span></li></ul><h4><span lang="zh-CN">操作步骤</span><span lang="en">Steps</span></h4><ol class="operation-steps"><li><strong>确认套餐规则</strong><p>打开官方 Coding Plan FAQ，确认当前套餐、模型、计费和 5 小时窗口规则。</p><p class="operation-action"><strong><span lang="zh-CN">操作</span><span lang="en">Action</span>：</strong>打开 https://docs.bigmodel.cn/cn/coding-plan/faq</p></li><li><strong>登录并开通</strong><p>在官方入口登录，按当前页面提示开通适合个人的计划，并确认是否自动续费。</p></li><li><strong>配置支持工具</strong><p>按照官方说明在 Claude Code、Cursor、Cline 或其他支持工具中选择 GLM Coding Plan。</p></li><li><strong>发送最小任务</strong><p>在测试项目中发送一个短代码任务，查看工具和账户页的窗口消耗。</p></li></ol><div class="operation-validation"><strong><span lang="zh-CN">验证动作</span><span lang="en">Validation</span></strong><p>支持工具完成一次最小代码任务，且账户或工具页面能显示当前 5 小时窗口和剩余额度。</p></div><div class="operation-issues"><strong><span lang="zh-CN">常见问题</span><span lang="en">Common issues</span></strong><ul><li><span lang="zh-CN">不同工具的配置方式不同，应优先使用官方 FAQ 中的入口。</span><span lang="en">， FAQ 。</span></li><li><span lang="zh-CN">窗口额度重置时间与本地时区显示可能不同。</span><span lang="en">。</span></li><li><span lang="zh-CN">不要把计划额度描述为无限免费 API。</span><span lang="en">API。</span></li></ul></div><h4><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h4><ul class="link-list"><li><a href="https://open.bigmodel.cn/glm-coding?plantype=team" target="_blank" rel="nofollow noopener">https://open.bigmodel.cn/glm-coding?plantype=team ↗</a></li><li><a href="https://docs.bigmodel.cn/cn/coding-plan/faq" target="_blank" rel="nofollow noopener">https://docs.bigmodel.cn/cn/coding-plan/faq ↗</a></li></ul></article><script>(() => { document.querySelectorAll('.copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script></section>
 
     <section>
       <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>

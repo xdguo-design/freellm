@@ -1,0 +1,24 @@
+{
+  "providerId": "comate",
+  "provider": "Baidu Comate",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["comate"],
+  "paths": [
+    {
+      "id": "ide",
+      "label": "Baidu Comate Auto-Free 模式",
+      "productType": "ide",
+      "prerequisites": ["可访问 Baidu Comate 官方站点", "准备登录账户", "准备 VS Code、JetBrains 或官方客户端", "准备一个不含生产密钥的测试项目"],
+      "steps": [
+        {"title": "安装客户端或插件", "detail": "从官方页面选择独立 IDE 或对应编辑器插件并完成安装。", "action": "打开 https://comate.baidu.com/zh"},
+        {"title": "登录并选择 Auto-Free", "detail": "登录后在模型或计费设置中选择 Auto-Free 模式，确认页面显示当前小时额度。"},
+        {"title": "执行短任务", "detail": "在测试项目中运行一次补全或问答任务，使用短上下文观察消耗。"},
+        {"title": "回到账户页核验", "detail": "检查 Auto-Free 模式、小时额度和剩余量是否与任务记录一致。"}
+      ],
+      "validation": "完成一次补全或问答任务，并在 Comate 账户页确认 Auto-Free 模式和当前小时额度。",
+      "limits": "当前记录为 Auto-Free 模式每小时 150,000 tokens；模型、功能和重置规则以官方计费页为准。",
+      "commonIssues": ["未选择 Auto-Free 时可能进入其他计费模式。", "额度按模型和功能计算，长上下文测试会更快消耗额度。", "插件权限和代码上传范围应在首次使用前检查。"],
+      "sourceUrls": ["https://comate.baidu.com/zh", "https://comate.baidu.com/zh/pricing/payment?type=vip"]
+    }
+  ]
+}

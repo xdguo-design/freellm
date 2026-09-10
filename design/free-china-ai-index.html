@@ -7,6 +7,9 @@
   <meta name="description" content="FreeLLM 整理可核验的免费 AI 模型、API、编程 IDE、学生优惠和开源权重，标注免费方式、额度、地区、有效期与官方入口。" />
   <meta name="keywords" content="FreeLLM, 免费 AI, 免费大模型, Qwen, 通义千问, Doubao, 豆包, 免费 IDE, 学生优惠, 学生计划, 代码助手, AI API, 开源模型, 免费额度, free AI, coding IDE, open weights" />
   <link rel="canonical" href="https://freellm.top/" />
+  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/" />
+  <link rel="alternate" hreflang="en" href="https://freellm.top/?lang=en" />
+  <link rel="alternate" hreflang="x-default" href="https://freellm.top/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="FreeLLM — 免费 AI 模型、API、IDE 与额度索引" />
   <meta property="og:description" content="FreeLLM 整理可核验的免费 AI 模型、API、编程 IDE、学生优惠和开源权重，标注免费方式、额度、地区、有效期与官方入口。" />
@@ -1022,6 +1025,8 @@
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
+  <!-- Set a real AdSense slot ID here after approval; empty keeps the unit disabled. -->
+  <script>window.FREELLM_ADSENSE_SLOT = '';</script>
 </head>
 <body>
   <!--
@@ -5680,6 +5685,21 @@
       };
       update();
       new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    })();
+  </script>
+  <script>
+    (() => {
+      const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
+      if (!slot) return;
+      const unit = document.createElement('ins');
+      unit.className = 'adsbygoogle';
+      unit.style.display = 'block';
+      unit.dataset.adClient = 'ca-pub-2461062743308239';
+      unit.dataset.adSlot = slot;
+      unit.dataset.adFormat = 'auto';
+      unit.dataset.fullWidthResponsive = 'true';
+      document.body.appendChild(unit);
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     })();
   </script>
 </body>

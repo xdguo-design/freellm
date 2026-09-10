@@ -53,7 +53,13 @@ def test_new_model_directory_is_additive_and_preserves_previous_models_page(tmp_
     assert "card-grid" in previous_page
     assert "模型大列表" not in previous_page
     assert "模型大列表" in all_models_page
-    assert "296" in all_models_page
+    retired_ids = {
+        card["modelId"]
+        for card in json.loads((ROOT / "data" / "model-access.json").read_text(encoding="utf-8"))
+        if card["accessStatus"] == "retired"
+    }
+    visible_models = sum(model["id"] not in retired_ids for model in json.loads(MODELS_PATH.read_text(encoding="utf-8")))
+    assert str(visible_models) in all_models_page
 
 
 def test_model_center_combines_original_feature_page_and_model_directory_tabs(tmp_path):

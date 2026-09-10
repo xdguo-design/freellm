@@ -1,0 +1,27 @@
+{
+  "providerId": "aliyun-qwen",
+  "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
+  "lastVerifiedAt": "2026-09-10",
+  "offerIds": ["aliyun-qwen-free-quota"],
+  "paths": [
+    {
+      "id": "compatible-api",
+      "label": "通义千问 OpenAI 兼容 API",
+      "productType": "api",
+      "prerequisites": ["阿里云百炼账户", "已选择官方支持的地域", "已创建 Model Studio API key", "已阅读免费额度和额度耗尽行为"],
+      "steps": [
+        {"title": "确认免费额度", "detail": "打开官方免费额度说明，确认目标模型、地域和当前新用户资格。", "action": "打开 https://help.aliyun.com/zh/model-studio/new-free-quota"},
+        {"title": "创建 API key", "detail": "在百炼控制台创建 API key，并只保存到本地环境变量 DASHSCOPE_API_KEY。"},
+        {"title": "开启耗尽停止", "detail": "在控制台开启免费额度耗尽后的停止设置，避免测试请求意外进入付费计费。"},
+        {"title": "发送最小请求", "detail": "使用官方兼容 endpoint 和当前可用的 Qwen 模型 ID 发送短文本请求。", "command": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "返回 HTTP 200 和 choices[0].message.content。"}
+      ],
+      "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "validation": "请求返回 HTTP 200 和 choices[0].message.content；同时在百炼控制台确认免费额度没有意外转入付费。",
+      "limits": "当前记录通常为每个模型 1,000,000 input + output tokens，新用户、地域、模型和额度耗尽行为以官方页面实时状态为准。",
+      "commonIssues": ["免费额度通常与地域和新用户资格绑定。", "模型 ID 变化或不可见时以官方模型列表为准。", "未开启额度耗尽停止设置前不要进行大批量测试。"],
+      "sourceUrls": ["https://bailian.console.aliyun.com/", "https://help.aliyun.com/zh/model-studio/new-free-quota"]
+    }
+  ]
+}
