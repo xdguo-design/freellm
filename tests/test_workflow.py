@@ -28,3 +28,21 @@ class DiscoveryWorkflowTests(unittest.TestCase):
             self.assertIn(needle, workflow)
         self.assertNotIn("git add data/offers.json", workflow)
         self.assertNotIn("--out data/offers.json", workflow)
+
+    def test_daily_log_workflow_persists_detailed_logs_and_only_commits_log_outputs(self):
+        workflow = (ROOT / ".github" / "workflows" / "daily-log.yml").read_text(encoding="utf-8")
+
+        for needle in (
+            "schedule:",
+            "workflow_dispatch:",
+            "contents: write",
+            "scripts/build_model_catalog.py",
+            "python -m crawler.cli log",
+            "data/daily-log",
+            "scripts/build_seo_pages.py",
+            "logs/index.html",
+            "git diff --cached --quiet",
+        ):
+            self.assertIn(needle, workflow)
+        self.assertIn("--models-status", workflow)
+        self.assertNotIn("git add data/offers.json", workflow)

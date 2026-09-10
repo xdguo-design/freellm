@@ -1,0 +1,87 @@
+name: daily-discovery-log
+
+on:
+  schedule:
+    - cron: "30 1 * * *" # 09:30 Asia/Shanghai every day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Resolve Beijing date
+        id: date
+        run: echo "as_of=$(TZ=Asia/Shanghai date +%F)" >> "$GITHUB_OUTPUT"
+
+      - name: Validate current offers
+        run: python -m crawler.cli validate data/offers.json
+
+      - name: Scan current model directory
+        id: model_scan
+        continue-on-error: true
+        run: >-
+          python scripts/build_model_catalog.py
+          --date "${{ steps.date.outputs.as_of }}"
+          --models-out data/snapshots/daily-models.json
+          --providers-out data/snapshots/daily-providers.json
+          --max-models 1000
+          --timeout 20
+
+      - name: Keep failed scans from producing false offline events
+        if: always()
+        run: |
+          mkdir -p data/daily-log data/snapshots
+          if [ ! -f data/snapshots/daily-models.json ]; then
+            echo '[]' > data/snapshots/daily-models.json
+          fi
+
+      - name: Build daily change log
+        if: always()
+        env:
+          AS_OF: ${{ steps.date.outputs.as_of }}
+          MODEL_SCAN_OUTCOME: ${{ steps.model_scan.outcome }}
+        run: |
+          previous="$(find data/daily-log -maxdepth 1 -type f -name '*.json' ! -name "$AS_OF.json" | sort | tail -n 1 || true)"
+          previous_args=()
+          if [ -n "$previous" ]; then previous_args+=(--previous "$previous"); fi
+          model_status=ok
+          model_reason=""
+          if [ "$MODEL_SCAN_OUTCOME" != "success" ]; then
+            model_status=failed
+            model_reason="model directory scan failed"
+          fi
+          python -m crawler.cli log \
+            --models data/snapshots/daily-models.json \
+            --offers data/offers.json \
+            "${previous_args[@]}" \
+            --out "data/daily-log/$AS_OF.json" \
+            --as-of "$AS_OF" \
+            --models-status "$model_status" \
+            --models-reason "$model_reason" \
+            --offers-status ok
+
+      - name: Build static log page
+        run: python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+
+      - name: Commit daily log output
+        env:
+          AS_OF: ${{ steps.date.outputs.as_of }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "data/daily-log/$AS_OF.json" logs/index.html sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No daily log changes; nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: update daily discovery log"
+          git push origin HEAD:${{ github.ref_name }}

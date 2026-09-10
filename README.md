@@ -54,6 +54,7 @@ data/operations/*.json           重点厂家 / 模型的详细操作路径
 data/providers.json              平台与提供商信息
 data/community-signals.json      外部公开信号快照
 data/review-queue.json           待人工审核的发现候选
+data/daily-log/*.json            每日新增、恢复、下线与来源状态记录
 crawler/                         抓取 / 发现 / diff / schema 模块
 scripts/build_static.py          静态页面构建
 scripts/build_seo_pages.py       SEO 详情页 / 分类页 / 指南页生成
@@ -62,6 +63,7 @@ design/free-china-ai-index.html  网站页面
 offers/<id>/index.html            资源详情页（生成文件）
 category/<slug>/index.html        分类页（生成文件）
 guides/*/index.html               指南页（生成文件）
+logs/index.html                   每日变更日志（生成文件）
 docs/specs/                       设计与实施记录
 ads.txt                          Google AdSense 授权声明
 robots.txt                       搜索引擎抓取规则
@@ -84,6 +86,7 @@ python -m http.server 8000
 pytest -q
 python scripts/build_static.py --check
 python scripts/build_seo_pages.py --check
+# 查看每日新增与下线日志：/logs/
 # 配置 AdSense 展示广告单元后再生成详情页（slot ID 仅填数字）
 $env:FREELLM_ADSENSE_SLOT="1234567890"
 python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
@@ -161,6 +164,8 @@ To add a manual AdSense display unit to offer detail pages, set `FREELLM_ADSENSE
 ### Deployment
 
 The production site is deployed on Vercel; the root path serves `design/free-china-ai-index.html`. After changing pages or data, run the checks, deploy, and verify the homepage, `/ads.txt`, `/robots.txt`, and `/sitemap.xml`.
+
+The daily discovery workflow writes date-partitioned records under `data/daily-log/` and publishes the detailed log page at `/logs/`. Failed source scans are recorded as unavailable sources and are never treated as offline entries.
 
 ### Data disclaimer
 

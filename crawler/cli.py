@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .diff import build_review_queue, compare_offers
 from .community_signals import merge_signals, validate_signals
+from .change_log import build_daily_log, write_daily_log
 from .discovery import build_candidates, build_coverage_report, merge_candidates, scan_provider_sources, validate_provider_registry
 from .fetch import fetch_public_page, fetch_public_text_resource
 from .freellm_net_discovery import discover_freellm_net_sources, validate_source_registry
@@ -82,6 +83,17 @@ def main(argv: list[str] | None = None) -> int:
     signals = commands.add_parser("signals")
     signals.add_argument("--input", required=True)
     signals.add_argument("--out", required=True)
+
+    log = commands.add_parser("log")
+    log.add_argument("--models", required=True)
+    log.add_argument("--offers", required=True)
+    log.add_argument("--previous", default=None)
+    log.add_argument("--out", required=True)
+    log.add_argument("--as-of", required=True)
+    log.add_argument("--models-status", default="ok")
+    log.add_argument("--models-reason", default="")
+    log.add_argument("--offers-status", default="ok")
+    log.add_argument("--offers-reason", default="")
 
     args = parser.parse_args(argv)
     if args.command == "validate":
@@ -234,6 +246,23 @@ def main(argv: list[str] | None = None) -> int:
         _write_json(args.out, merged)
         rejected_count = sum(1 for record in incoming if validate_signals([record]))
         print(f"signals: {len(merged)} records, {rejected_count} rejected")
+        return 0
+    if args.command == "log":
+        previous = _read_json(args.previous) if args.previous and Path(args.previous).is_file() else None
+        source_health = {
+            "models": {"status": args.models_status, "reason": args.models_reason},
+            "offers": {"status": args.offers_status, "reason": args.offers_reason},
+        }
+        result = build_daily_log(
+            previous,
+            _read_json(args.models),
+            _read_json(args.offers),
+            args.as_of,
+            source_health,
+        )
+        write_daily_log(args.out, result)
+        counts = {event_type: sum(event.get("eventType") == event_type for event in result["events"]) for event_type in ("new", "new_route", "recovered", "offline", "source_unavailable")}
+        print(f"daily log: {args.as_of} ({counts['new']} new, {counts['new_route']} new routes, {counts['recovered']} recovered, {counts['offline']} offline)")
         return 0
     return 2
 
