@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -14,6 +15,24 @@ from crawler.schema import validate_offers
 START = '<script type="application/json" id="offer-data">'
 END = "</script>"
 LD_START = '<script type="application/ld+json" id="ld-dynamic">'
+
+
+def update_daily_log_summary(html: str, data_path: Path) -> str:
+    log_dir = data_path.parent / "daily-log"
+    log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
+    if not log_paths:
+        return html
+    try:
+        latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return html
+    date = latest.get("date") if isinstance(latest, dict) else None
+    if not isinstance(date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+        return html
+    year, month, day = date.split("-")
+    label = f"{year} 年 {int(month)} 月 {int(day)} 日"
+    replacement = f'▣ &nbsp;{label}</span><a class="intel-log-link" href="/logs/">查看今日更新 →</a>'
+    return re.sub(r"▣\s*&nbsp;[^<]+</span>(?:<a class=\"intel-log-link\"[^>]*>查看今日更新 →</a>)?", replacement, html, count=1)
 
 
 def update_static_item_list(html: str, data: list[dict]) -> str:
@@ -52,6 +71,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     replacement = "\n  " + json.dumps(data, ensure_ascii=False, indent=2) + "\n  "
     updated = html[:content_start] + replacement + html[end:]
     updated = update_static_item_list(updated, data)
+    updated = update_daily_log_summary(updated, data_path)
     if check:
         if updated != html:
             print(f"stale: {html_path} does not contain the current offers JSON")
