@@ -76,7 +76,11 @@ def _snapshot_record(record: dict, kind: str) -> dict:
     fields = (
         ("id", "providerId", "provider", "model", "sourceUrl", "status")
         if kind == "model"
-        else ("id", "title", "name", "provider", "productType", "status", "register", "sourceUrls")
+        else (
+            "id", "title", "name", "provider", "productType", "status", "register",
+            "registerLabel", "sourceUrls", "links", "registrationSteps", "usageGuide",
+            "evidence", "freeSummary", "validitySummary", "accessSummary",
+        )
     )
     return {field: record[field] for field in fields if field in record and record[field] not in (None, "", [])}
 

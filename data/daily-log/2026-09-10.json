@@ -3,6 +3,80 @@
   "date": "2026-09-10",
   "baseline": true,
   "events": [],
+  "curatedEvents": [
+    {
+      "kind": "model",
+      "eventType": "new",
+      "curated": true,
+      "id": "dots-api-cn/dots3-note-prev",
+      "title": "Dots3-Note Preview · 小红书 Dots",
+      "asOf": "2026-09-10",
+      "reason": "用户确认今日新增；当前目录与 Dots 官方平台均已核验。",
+      "details": {
+        "provider": "Dots API（国内）",
+        "productType": "api",
+        "model": "Dots Studio: Dots3-Note Preview (free)",
+        "freeMechanism": "limited_time_free",
+        "quota": "60 req/min; 1,500,000 tokens/min",
+        "access": "小红书账号或手机号登录 Dots 国内平台",
+        "register": "https://dots.ai/platform",
+        "registrationSteps": [
+          "打开 Dots 国内平台并使用小红书账号或手机号登录",
+          "进入 API Keys 页面创建 API Key",
+          "使用模型 ID dots3-note-preview 和国内 Base URL 发起请求"
+        ],
+        "sourceUrl": "https://dots.ai/platform/docs",
+        "sourceUrls": ["https://dots.ai/platform", "https://dots.ai/platform/docs"],
+        "links": [["Dots 注册入口", "https://dots.ai/platform"], ["Dots 官方文档", "https://dots.ai/platform/docs"]],
+        "evidence": "Dots 官方平台与文档给出注册入口、模型 ID、国内 Base URL 和限速信息。",
+        "status": "verified",
+        "verificationStatus": "partial"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "new",
+      "curated": true,
+      "id": "manus-free-agent",
+      "title": "Manus AI · 免费 Agent 计划",
+      "asOf": "2026-09-10",
+      "reason": "用户确认今日新增；注册方式、免费额度和 API 文档均已使用 Manus 官方来源核验。",
+      "details": {
+        "provider": "Manus AI",
+        "productType": "web_infrastructure",
+        "model": "Manus AI agent and Chat Mode",
+        "freeMechanism": "daily_quota",
+        "quota": "注册赠送 1,000 credits；免费用户每天刷新 300 credits",
+        "validity": "免费计划和额度可能调整",
+        "access": "浏览器访问；支持 Google、Microsoft、Apple 或邮箱登录",
+        "register": "https://manus.im/login?type=signUp",
+        "registrationSteps": [
+          "打开 Manus 注册入口",
+          "选择 Google、Microsoft、Apple 或邮箱注册；注册方式会绑定到该账号",
+          "进入免费计划，使用注册赠送的 1,000 credits 与每天刷新的 300 credits",
+          "如需 API，进入 Manus API 文档的 Authentication 页面创建 API Key"
+        ],
+        "sourceUrls": [
+          "https://manus.im/login?type=signUp",
+          "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods",
+          "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
+          "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers",
+          "https://open.manus.ai/docs/v2/introduction"
+        ],
+        "links": [
+          ["Manus 注册入口", "https://manus.im/login?type=signUp"],
+          ["登录方式说明", "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods"],
+          ["免费计划与价格", "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus"],
+          ["注册优惠与额度", "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers"],
+          ["Manus API 文档", "https://open.manus.ai/docs/v2/introduction"]
+        ],
+        "usageGuide": {"docsUrl": "https://manus.im/docs/introduction/welcome"},
+        "evidence": "Manus 官方帮助中心说明免费用户可获得注册赠送 credits 与每日刷新 credits；官方注册页列出 Google、Microsoft、Apple 和邮箱登录；API 文档说明需创建 API Key。",
+        "status": "verified",
+        "verificationStatus": "verified"
+      }
+    }
+  ],
   "observed": {
     "models": [
       {
@@ -2853,6 +2927,33 @@
         "sourceUrls": [
           "https://about.you.com/pricing",
           "https://you.com/docs/quickstart"
+        ]
+      },
+      {
+        "id": "dots-api-free",
+        "title": "小红书 Dots · Dots3-Note Preview API",
+        "name": "Dots API Dots3 Note Preview",
+        "provider": "Dots API（国内）",
+        "productType": "api",
+        "status": "verified",
+        "register": "https://dots.ai/platform",
+        "sourceUrls": [
+          "https://dots.ai/platform",
+          "https://dots.ai/platform/docs"
+        ]
+      },
+      {
+        "id": "manus-free-agent",
+        "title": "Manus AI · 免费 Agent 计划",
+        "name": "Manus AI free plan",
+        "provider": "Manus AI",
+        "productType": "web_infrastructure",
+        "status": "verified",
+        "register": "https://manus.im/login?type=signUp",
+        "sourceUrls": [
+          "https://manus.im/login?type=signUp",
+          "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
+          "https://open.manus.ai/docs/v2/introduction"
         ]
       }
     ]

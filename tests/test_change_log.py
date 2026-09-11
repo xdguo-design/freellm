@@ -88,6 +88,29 @@ def test_new_records_keep_detailed_model_and_offer_fields():
     assert new_offer["details"]["evidence"]
 
 
+def test_new_offer_keeps_registration_documentation_for_daily_log():
+    previous = log_with([model()], [offer("old")])
+    current = offer(
+        "manus-free-agent",
+        register="https://manus.im/login?type=signUp",
+        registrationSteps=["打开注册入口", "选择登录方式", "进入免费计划"],
+        links=[["官方定价", "https://manus.im/pricing"]],
+        usageGuide={"docsUrl": "https://manus.im/docs"},
+    )
+    result = build_daily_log(
+        previous,
+        [model()],
+        [offer("old"), current],
+        "2026-09-10",
+        {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    )
+
+    event = next(item for item in result["events"] if item["id"] == "manus-free-agent")
+    assert event["details"]["registrationSteps"] == ["打开注册入口", "选择登录方式", "进入免费计划"]
+    assert event["details"]["links"] == [["官方定价", "https://manus.im/pricing"]]
+    assert event["details"]["usageGuide"]["docsUrl"] == "https://manus.im/docs"
+
+
 def test_missing_records_are_not_marked_offline_when_model_source_failed():
     previous = log_with([model()], [offer()])
     result = build_daily_log(

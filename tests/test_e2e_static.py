@@ -22,6 +22,7 @@ ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
 ADS_PATH = ROOT / "ads.txt"
 GUIDE_PATH = ROOT / "guides" / "free-llm" / "index.html"
+LOG_PATH = ROOT / "logs" / "index.html"
 
 
 def read_offers() -> list:
@@ -67,6 +68,52 @@ class StaticContractTests(unittest.TestCase):
             '/guides/claude-code-free-alternatives/',
         ):
             self.assertIn(f'href="{href}"', self.html)
+
+    def test_mobile_navigation_keeps_core_directory_entries_visible(self):
+        """Narrow screens must keep the directory navigation discoverable."""
+        self.assertIn('href="/logs/"', self.html)
+        for href in (
+            'href="/models/"',
+            'href="/models/center/"',
+            'href="/models/all/"',
+            'href="/providers/"',
+        ):
+            self.assertIn(href, self.html)
+        mobile_block = re.search(
+            r'@media \(max-width: 700px\) \{(?P<body>.*?)\n    \}',
+            self.html,
+            re.S,
+        )
+        self.assertIsNotNone(mobile_block)
+        self.assertNotRegex(mobile_block.group("body"), r'\.top-nav\s*\{\s*display:\s*none')
+        self.assertRegex(mobile_block.group("body"), r'\.top-nav\s*\{[^}]*overflow-x:\s*auto')
+
+    def test_file_preview_navigation_maps_site_routes_to_local_pages(self):
+        """The file:// preview must resolve root navigation to workspace index pages."""
+        self.assertIn("window.location.protocol !== 'file:'", self.html)
+        self.assertIn("document.body.classList.contains('model-center-page') ? '../../' : '../'", self.html)
+        self.assertIn("${siteRoot}${path.slice(1)}index.html${query}", self.html)
+
+    def test_daily_log_dashboard_exposes_baseline_snapshot(self):
+        log = LOG_PATH.read_text(encoding="utf-8")
+        for needle in (
+            'class="daily-log-dashboard"',
+            'class="log-hero"',
+            'class="log-stat-card blue"',
+            'id="static-locale-script"',
+            '.log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }',
+            '.log-stat-card { min-height:92px;',
+            '.log-days::before { content:"";',
+            '.log-registration { margin:12px 0;',
+            ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
+            ">297</strong>",
+            ">25</strong>",
+            ">39</strong>",
+        ):
+            self.assertIn(needle, log)
+        self.assertNotIn("首次建立基线", log)
+        self.assertIn('<details class="log-new-card">', log)
+        self.assertIn('<summary class="log-card-summary">', log)
 
     def test_homepage_links_to_theme_guides(self):
         for slug in (
@@ -196,8 +243,7 @@ class StaticContractTests(unittest.TestCase):
         for slug in ("free-quota", "free-ide", "api", "promo", "student", "web", "open-weights"):
             self.assertIn(f'href="/category/{slug}/"', self.html)
 
-    def test_page_exposes_free_llm_guide_link(self):
-        self.assertIn('href="/guides/free-llm/"', self.html)
+    def test_free_llm_guide_page_remains_available(self):
         self.assertTrue(GUIDE_PATH.is_file())
         guide = GUIDE_PATH.read_text(encoding="utf-8")
         self.assertIn("Free-LLM — 免费 AI 与 LLM API 开放目录", guide)
@@ -430,6 +476,19 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), 27)
         self.assertEqual(len(page.problems), 0, page.problems)
 
+    def test_mobile_navigation_exposes_core_directory_entries(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        self.assertTrue(page.locator('.top-nav').is_visible())
+        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/"):
+            self.assertGreater(page.locator(f'.top-nav a[href="{href}"]').count(), 0)
+        self.assertEqual(
+            page.locator('.top-nav a').evaluate_all("links => links.map(link => link.dataset.navKey)"),
+            ["daily-log", "resources", "model-center", "all-models", "providers"],
+        )
+
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
@@ -507,13 +566,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=en#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
-        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "Models")
+        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "Daily updates")
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
-        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "模型库")
+        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "今日更新")
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 
