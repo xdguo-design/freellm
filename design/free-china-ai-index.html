@@ -866,8 +866,12 @@
     .hero-intel::before { content: ''; position: absolute; z-index: -1; inset: -16px 42px 28px 150px; border-radius: 18px; background: linear-gradient(120deg, rgba(208,231,255,.6), rgba(228,220,255,.7)); transform: rotate(4deg); }
     .hero-intel::after { content: var(--hero-note, '好的 AI\A应该被更多人\A轻松使用'); white-space: pre; position: absolute; right: -112px; top: 25px; width: 145px; min-height: 226px; padding: 24px 17px; border-radius: 16px; color: #182a50; background: linear-gradient(155deg, rgba(255,255,255,.96), rgba(246,250,255,.82)); box-shadow: 0 16px 35px rgba(85, 120, 205, .13); font: 800 17px/1.75 var(--display); transform: rotate(4deg); }
     .hero-intel-head, .hero-intel-main, .intel-pills, .editor-head, .editor-model, .trend > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .hero-intel-title-row { display: flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; }
+    .hero-intel-head { flex-wrap: wrap; }
     .hero-intel-head strong { color: #17274b; font: 850 22px var(--display); }
+    .intel-update-badge { padding: 5px 9px; border-radius: 999px; color: #176b55; background: #e5f7ef; font: 800 11px var(--sans); white-space: nowrap; }
     .hero-intel-head > span { color: #6a7897; font: 12px var(--sans); }
+    .intel-story-copy { margin: 8px 0 0; color: #536687; font-size: 12px; line-height: 1.5; }
     .hero-intel-main { align-items: flex-end; margin-top: 26px; padding-right: 74px; }
     .hero-intel-main > div:first-child { display: grid; grid-template-columns: auto auto; align-items: baseline; column-gap: 10px; }
     .hero-intel-main > div:first-child > b { color: #122349; font: 900 61px/.9 var(--display); letter-spacing: -.06em; }
@@ -1057,13 +1061,13 @@
     <main id="catalog-top">
       <header class="catalog-header">
         <a class="brand" href="/"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">FreeLLM</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">今日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="/models/all/">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a></nav>
+        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">每日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="/models/all/">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a></nav>
         <div class="header-actions"><a class="header-submit" href="#catalog-offers">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
         <section class="catalog-hero">
           <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 真实免费</div><h1>FreeLLM：发现真正好用的<span>免费 AI</span></h1><p class="hero-copy">模型、API、IDE 与限时试用，一站比较</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 Qwen、豆包、Cursor" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 API</button><button type="button">AI IDE</button></div></div>
-          <div class="hero-intel"><div class="hero-intel-head"><strong>今日 AI 情报</strong><span>▣ &nbsp;2026 年 9 月 10 日</span><a class="intel-log-link" href="/logs/">查看今日更新 →</a></div><div class="hero-intel-main"><div><b id="heroCount">27</b><strong>个优质资源</strong><p>通过人工核验，确认可免费使用</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
+          <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="2" data-change-count="2">新增 2 项</span></div><span>▣ &nbsp;2026 年 9 月 10 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">27</b><strong>个优质资源</strong><p>通过人工核验，确认可免费使用</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
         </section>
         <section class="catalog-filter-bar" aria-label="Catalog tools"><div><b>免费方式</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>能力</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>中文支持</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><div><b>更新时间</b><span class="filter-current">全部</span><span class="filter-chevron">⌄</span></div><select class="sort" id="catalog-sort" aria-label="Sort offers"><option value="free">综合排序</option><option value="fresh">最近核验</option><option value="name">A–Z</option></select></section>
         <section id="categories" class="category-section" aria-labelledby="categories-title"><div class="section-heading"><div><div class="eyebrow">Browse by purpose</div><h2 id="categories-title">找到适合你的 AI 工具</h2></div><p>分类可以重叠，一条资源可能同时属于多个入口。</p></div><div class="category-grid">
@@ -5266,28 +5270,28 @@
         brandSub: 'Verified free AI resources',
         navCatalog: 'Models', navTools: 'Developer tools', navApi: 'API services', navRank: 'Compare', submit: 'Submit a resource',
         verified: 'Verified daily · genuinely free', heroTitle: 'Find truly useful <span>free AI</span>', heroTitleAccent: 'free AI', heroCopy: 'Models, APIs, IDEs and limited trials compared in one place', searchPlaceholder: 'Search models, platforms or capabilities, e.g. Qwen, Doubao, Cursor', searchLabel: 'Search offers', search: 'Search', hot: 'Popular searches:', freeApi: 'Free API',
-        intelTitle: 'Today in AI', resourceCount: 'quality resources', checked: 'Human-checked and confirmed free to use', trend: 'vs. last week', forever: 'Free forever', longTerm: 'Long-term access', trial: 'Limited trial', grabChance: 'Use it while it lasts', openWeights: 'Downloadable weights', useFreely: 'Use freely', heroNote: 'Good AI\nshould be easier\nfor more people to use',
+        intelTitle: 'What changed in AI today?', intelStoryCopy: 'We check official sources daily and record new, recovered, offline and source issues.', intelLogCta: "See today's changes →", newCount: 'new', changesToday: 'Changes today', noNew: 'No new entries', resourceCount: 'quality resources', checked: 'Human-checked and confirmed free to use', trend: 'vs. last week', forever: 'Free forever', longTerm: 'Long-term access', trial: 'Limited trial', grabChance: 'Use it while it lasts', openWeights: 'Downloadable weights', useFreely: 'Use freely', heroNote: 'Good AI\nshould be easier\nfor more people to use',
         method: 'Free method', capability: 'Capability', chinese: 'Chinese support', updated: 'Last checked', all: 'All', browse: 'Browse by purpose', categoryCopy: 'Categories can overlap; one resource may belong to multiple paths.', allOffers: 'All', largeModels: 'Large models', ide: 'Free IDE', credits: 'Credits / uses', promo: 'Timed / regional deal', web: 'Web tools', download_lowcost: 'Download / low cost', imageVideo: 'Image / video', apiServices: 'API services', openModels: 'Open models', more: 'More categories',
         popular: 'Popular this week', moreLink: 'See more →', permanent: 'Free forever', limitedTrial: 'Limited trial', downloadable: 'Downloadable', freeQuota: 'Free quota', freePlan: 'Free plan', supportedPlatforms: 'Supported platforms', excellent: 'Excellent', featured: 'Editor pick', checkedToday: 'Checked today', qwenFeatured: 'A powerful Chinese multimodal model for chat, image generation and code.', seedFeatured: 'An all-purpose conversation and creation assistant with text, image, audio and video generation.', traeFeatured: 'A new AI coding IDE with built-in agent capabilities to improve development speed.', cursorFeatured: 'A popular AI coding tool that understands code deeply and supports multiple model providers.', quotaLabel: 'Free quota', monthlyTokensQwen: '10M tokens / month', monthlyTokensSeed: '5M tokens / month', chineseSupport: 'Chinese support', trial30: '30-day Pro trial', platforms: 'Windows / macOS', openEdition: 'Open edition available (MIT)', platformsLinux: 'Windows / macOS / Linux', editorQuote: '“ Strong Chinese understanding and creative capabilities, with long-context chat, web search and image generation. ”', largeLanguage: 'Large language model', multimodal: 'Multimodal', chineseStrong: 'Strong Chinese', trend7: 'Trend (7 days)',
         education: '03 / education access', studentTitle: 'Student offers, separately', studentCopy: 'Student offers are not always permanent free quota: school email or education verification is usually required. Check the eligibility, region and expiry on the official page.', studentFilter: 'Show student offers →', educationVerify: 'Requires GitHub Education verification', officialStudent: 'Official student plan · eligibility is defined by the provider', openStudent: 'Open official student page ↗', noStudent: 'No verified student offer yet', pendingStudent: 'Waiting for an official source update',
         offersEyebrow: '04 / all verified paths', offersTitle: 'Find an entrance that works now', offersCopy: 'Product, free method, quota, validity, region and verification status in one card.', showing: 'Showing', offer: 'offer', offers: 'offers', noMatch: 'No matching entrance.', resetCopy: 'Try another keyword, or clear search and filters.', reset: 'Clear search and filters', product: 'Product', amountPrice: 'Quota / price', validity: 'Validity', region: 'Region', verification: 'Verification', officialSource: 'Official source →', openDetails: 'Open details',
         cheapestEyebrow: '05 / cheapest first', cheapestTitle: 'See the cheapest entrances first', cheapestCopy: 'Start with free access, then compare first-purchase prices; region, new-user status, validity and renewal are shown together.', liveRule: 'LIVE RULE', beFirst: 'Start here', firstPurchase: 'First purchase', selfHosted: 'Self-hosted', modelWeights: 'Model weights', conclusion: 'Conclusion:', comparePriceView: 'Price view', chinaBeijing: 'China / Beijing', international: 'International', judgment: 'Verdict', startHere: 'Start here', lowPrice: 'Low price', noteBeijing: 'Beijing does not mean every product is cheaper: this section shows verified free quota, first-purchase and open-weight paths, not one blended token-price ranking. Return to the official pricing page before subscribing.', newUserRegion: 'New user · Beijing', firstPurchaseRegion: 'Volcano Ark · first purchase', fromPrice: 'From ¥9.90', selfHostedRegion: 'Download · self-hosted', weightsFree: 'Free weights', aliModels: 'Alibaba Cloud · selected models', aliModelsCopy: 'Available in the China / Beijing deployment scope; new-user access lasts 90 days and then follows official pricing.', freeQuotaRule: 'See free quota rules ↗', codingPlanTitle: 'Doubao Coding Plan Lite', firstMonthCopy: 'First-month offer; renewal is ¥40 / month. Current limits follow the official promotion.', officialPlan: 'See official plan ↗', longcatTitle: 'LongCat-2.0', weightsCopy: 'Free weights do not mean free inference; storage, GPU, traffic and deployment time are separate costs.', openSourceEntry: 'Open source entry ↗', conclusionCopy: 'If you are in Beijing and qualify as a new user, start with the ¥0 quota; otherwise compare the ¥9.9 first-month plan. Neither is an unconditional permanent monthly price.', noEquivalentQuota: 'Usually no equivalent free quota', renewalPrice: '¥9.9 / ¥40 per month', notApplicable: 'Not applicable',
         localLane: '06 / local lane', downloadLocal: 'Download locally', weightsNote: 'Weights may be free; GPU time may not be.', open: 'Open ↗', howToRead: '07 / how to read it', faqTitle: 'This is not a “everything is free” ranking', faqCopy: 'Free quota, trials, promotions, student eligibility and low-cost paths are listed separately.', recurringQuota: 'Free quota', studentDiscount: 'Student offer', openWeight: 'Open weights', officialEntry: 'Official entry', recurringQuotaCopy: 'Recurring quota can still have rate, region or payment-method limits.', studentDiscountCopy: 'Education verification is required; region, term and renewal conditions follow the provider.', openWeightCopy: 'Weights can be downloaded, but storage, GPU, inference and network egress may cost money.', officialEntryCopy: 'Every offer keeps its source, update date and a copyable usage path.', faqFree: 'What counts as free?', faqStudent: 'Are student offers permanent free?', faqNight: 'Are night discounts always available?', sortDefault: 'Overall', sortFresh: 'Recently checked', sortName: 'A–Z', footerSources: 'Official sources only · Free status separated by mechanism', footerData: 'Data is subject to change', contactLabel: 'Contact',
-        localeToggle: '中文', localTime: 'Local time', detecting: 'Detecting timezone…', sourceLanguage: 'English', contextWindowLabel: 'Context window', guideNav: 'Guide', allModels: 'All models', doubaoSearch: 'Doubao', qwenFeaturedTitle: 'Qwen3', qwenFeaturedProvider: 'Alibaba Cloud Model Studio', seedFeaturedTitle: 'Doubao Seed', seedFeaturedProvider: 'ByteDance', traeFeaturedProvider: 'ByteDance', hunyuanTitle: 'Hunyuan', hunyuanProvider: 'Tencent', qwenDownloadTitle: 'Alibaba Qwen3-4B / Qwen', officialTerms: 'See official terms'
+        localeToggle: '中文', localTime: 'Local time', detecting: 'Detecting timezone…', sourceLanguage: 'English', contextWindowLabel: 'Context window', guideNav: 'Guide', allModels: 'All models', doubaoSearch: 'Doubao', qwenFeaturedTitle: 'Qwen3', qwenFeaturedProvider: 'Alibaba Cloud Model Studio', seedFeaturedTitle: 'Doubao Seed', seedFeaturedProvider: 'ByteDance', traeFeaturedProvider: 'ByteDance', hunyuanTitle: 'Hunyuan', hunyuanProvider: 'Tencent', qwenDownloadTitle: 'Alibaba Qwen3-4B / Qwen', officialTerms: 'See official terms', dateUnknown: 'Date unavailable · review needed', dateStale: 'Needs re-check'
       }),
       'zh-CN': Object.freeze({
         pageTitle: 'Free AI Index — 免费 AI 模型、Qwen、豆包、IDE 和试用汇总',
         pageDescription: '一站比较经过核验的免费 AI 模型、免费编码 IDE、学生优惠、可下载权重和限时试用入口。',
         brandSub: '已核验的免费 AI 资源', navCatalog: '模型库', navTools: '开发工具', navApi: 'API 服务', navRank: '榜单', submit: '提交资源',
         verified: '每日核验 · 真实免费', heroTitle: '发现真正好用的<span>免费 AI</span>', heroTitleAccent: '免费 AI', heroCopy: '模型、API、IDE 与限时试用，一站比较', searchPlaceholder: '搜索模型、平台或功能，例如 Qwen、豆包、Cursor', searchLabel: '搜索资源', search: '搜索', hot: '热门搜索：', freeApi: '免费 API',
-        intelTitle: '今日 AI 情报', resourceCount: '个优质资源', checked: '通过人工核验，确认可免费使用', trend: '较上周', forever: '永久免费', longTerm: '长期可用', trial: '限时试用', grabChance: '把握机会', openWeights: '开源可下载', useFreely: '自由使用', heroNote: '好的 AI\n应该被更多人\n轻松使用',
+        intelTitle: '今天的 AI 资源有什么变化？', intelStoryCopy: '我们每天检查官方来源，记录新增、恢复、下线和异常。', intelLogCta: '查看今日变化 →', newCount: '新增', changesToday: '今日有变化', noNew: '今日无新增', resourceCount: '个优质资源', checked: '通过人工核验，确认可免费使用', trend: '较上周', forever: '永久免费', longTerm: '长期可用', trial: '限时试用', grabChance: '把握机会', openWeights: '开源可下载', useFreely: '自由使用', heroNote: '好的 AI\n应该被更多人\n轻松使用',
         method: '免费方式', capability: '能力', chinese: '中文支持', updated: '更新时间', all: '全部', browse: '找到适合你的 AI 工具', categoryCopy: '分类可以重叠，一条资源可能同时属于多个入口。', allOffers: '全部', largeModels: '大模型', ide: '免费 IDE', credits: '积分 / 次数', promo: '时段 / 限时优惠', web: '网页工具', download_lowcost: '下载 / 低成本', imageVideo: '图像视频', apiServices: 'API 服务', openModels: '开源模型', more: '更多分类',
         popular: '本周热门', moreLink: '查看更多 →', permanent: '永久免费', limitedTrial: '限时试用', downloadable: '开源可下载', freeQuota: '免费额度', freePlan: '免费方案', supportedPlatforms: '支持平台', excellent: '优秀', featured: '编辑精选', checkedToday: '已于今日核验', qwenFeatured: '强大的中文多模态大模型，支持对话、文生图、代码等能力。', seedFeatured: '全能的对话与创作助手，支持文本、图像、音视频等模态生成。', traeFeatured: '基于 AI 的新一代开发 IDE，内置 Agent 能力，提升开发效率。', cursorFeatured: '广受欢迎的 AI 编程工具，深度理解代码，支持多种模型接入。', quotaLabel: '免费额度', monthlyTokensQwen: '每月 1000 万 tokens', monthlyTokensSeed: '每月 500 万 tokens', chineseSupport: '中文支持', trial30: '限时 30 天 Pro 体验', platforms: 'Windows / macOS', openEdition: '开源版可下载 (MIT)', platformsLinux: 'Windows / macOS / Linux', editorQuote: '“ 中文理解与创作能力出色，支持长文对话、联网搜索、图像生成等多种能力。 ”', largeLanguage: '大语言模型', multimodal: '多模态', chineseStrong: '中文强', trend7: '热度趋势（近 7 天）',
         education: '03 / education access', studentTitle: '学生优惠单独看', studentCopy: '学生优惠不是永久免费额度：通常需要学校邮箱或教育身份验证，资格、地区和有效期以官方页面为准。', studentFilter: '筛选学生优惠 →', educationVerify: '需要 GitHub Education 验证', officialStudent: '官方学生计划 · 资格以页面为准', openStudent: '打开官方学生页 ↗', noStudent: '暂无已核验学生优惠', pendingStudent: '等待官方来源更新',
         offersEyebrow: '04 / all verified paths', offersTitle: '找到现在能打开的入口', offersCopy: '产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。', showing: '找到', offer: '条资源', offers: '条资源', noMatch: '没有匹配的入口。', resetCopy: '换个关键词，或清空搜索和筛选。', reset: '清空搜索和筛选', product: '产品', amountPrice: '额度 / 价格', validity: '有效期', region: '地区', verification: '核验', officialSource: '官方来源 →', openDetails: '打开详情',
         cheapestEyebrow: '05 / cheapest first', cheapestTitle: '最便宜的入口先看', cheapestCopy: '先免费，再看首购价；地区、新用户、有效期和续费同时展示。', liveRule: 'LIVE RULE', beFirst: '优先看', firstPurchase: '首购', selfHosted: '自托管', modelWeights: '模型权重', conclusion: '结论：', comparePriceView: '价格视角', chinaBeijing: '中国区 / 北京', international: '国际区', judgment: '判断', startHere: '先看', lowPrice: '低价', noteBeijing: '北京不代表所有产品都更便宜：这里展示的是已核验的“免费额度 / 首购优惠 / 开源权重”入口，不把不同模型的 token 单价混成一个总榜。订阅前请回到官方价格页。', newUserRegion: '北京区 · 新用户', firstPurchaseRegion: '火山方舟 · 首购', fromPrice: '¥9.90 起', selfHostedRegion: '下载 · 自托管', weightsFree: '权重免费', aliModels: '阿里云百炼 · 部分模型', aliModelsCopy: '仅中国（北京）部署范围可用；新用户有效期 90 天，额度用完后按官方价格计费。', freeQuotaRule: '看免费额度规则 ↗', codingPlanTitle: '豆包 Coding Plan Lite', firstMonthCopy: '首月优惠价；后续续费 ¥40 / 月，限量活动以官方页面当前状态为准。', officialPlan: '看官方方案 ↗', longcatTitle: 'LongCat-2.0', weightsCopy: '下载权重不等于推理免费；存储、GPU、流量和部署时间另算。', openSourceEntry: '打开开源入口 ↗', conclusionCopy: '如果你在北京且符合新用户条件，先用 ¥0 免费额度；不符合时，再看 ¥9.9 首月方案。¥0 和 ¥9.9 都不是无条件的长期月费。', noEquivalentQuota: '通常无同等免费额度', renewalPrice: '¥9.9 / ¥40 月', notApplicable: '不适用',
         localLane: '06 / local lane', downloadLocal: '下载到本地', weightsNote: '权重免费，GPU 时间不一定免费。', open: '打开 ↗', howToRead: '07 / how to read it', faqTitle: '这不是“全都免费”榜单', faqCopy: '我们把免费、试用、优惠、学生资格和低价入口分开写。', recurringQuota: '免费额度', studentDiscount: '学生优惠', openWeight: '开源权重', officialEntry: '官方入口', recurringQuotaCopy: '周期性额度仍可能有速率、地区或付款方式限制。', studentDiscountCopy: '需要教育身份验证，优惠期限和适用地区以官方页面为准。', openWeightCopy: '可以下载模型，但存储、GPU、推理和流量可能收费。', officialEntryCopy: '每条 offer 都保留来源、更新时间和可复制的使用路径。', faqFree: '什么才算免费？', faqStudent: '学生优惠是永久免费吗？', faqNight: '夜间优惠一定存在吗？', sortDefault: '综合排序', sortFresh: '最近核验', sortName: 'A–Z', footerSources: 'OFFICIAL SOURCES ONLY · FREE STATUS SEPARATED BY MECHANISM', footerData: '数据会变化，请以官方页面为准', contactLabel: '联系我',
-        localeToggle: 'EN', localTime: '本地时间', detecting: '正在检测时区…', sourceLanguage: '简体中文', contextWindowLabel: '上下文窗口', guideNav: '使用指南', allModels: '全部模型', doubaoSearch: '豆包', qwenFeaturedTitle: '通义千问 Qwen3', qwenFeaturedProvider: '阿里云百炼', seedFeaturedTitle: '豆包 Seed', seedFeaturedProvider: '字节跳动', traeFeaturedProvider: '字节跳动', hunyuanTitle: '混元 Hunyuan', hunyuanProvider: '腾讯', qwenDownloadTitle: '阿里云 Qwen3-4B / 通义千问', officialTerms: '以官方条款为准'
+        localeToggle: 'EN', localTime: '本地时间', detecting: '正在检测时区…', sourceLanguage: '简体中文', contextWindowLabel: '上下文窗口', guideNav: '使用指南', allModels: '全部模型', doubaoSearch: '豆包', qwenFeaturedTitle: '通义千问 Qwen3', qwenFeaturedProvider: '阿里云百炼', seedFeaturedTitle: '豆包 Seed', seedFeaturedProvider: '字节跳动', traeFeaturedProvider: '字节跳动', hunyuanTitle: '混元 Hunyuan', hunyuanProvider: '腾讯', qwenDownloadTitle: '阿里云 Qwen3-4B / 通义千问', officialTerms: '以官方条款为准', dateUnknown: '日期未知 · 需要重新核验', dateStale: '需要重新核验'
       })
     });
     let currentLocale = 'en';
@@ -5327,11 +5331,21 @@
       url.searchParams.set('lang', locale === SUPPORTED_LOCALES.zh ? 'zh-CN' : 'en');
       history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
     };
+    const renderClock = (clock, label, timeZone, time) => {
+      clock.replaceChildren();
+      clock.append(document.createTextNode(`${label} `));
+      const details = document.createElement('span');
+      details.append(document.createTextNode(`${timeZone} · `));
+      const currentTime = document.createElement('b');
+      currentTime.textContent = time;
+      details.append(currentTime);
+      clock.append(details);
+    };
     const updateClock = () => {
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
       const time = new Intl.DateTimeFormat(currentLocale, { hour: '2-digit', minute: '2-digit' }).format(new Date());
       const clock = document.getElementById('catalog-clock');
-      if (clock) clock.innerHTML = `${localeText('localTime')} <span>${timeZone} · <b>${time}</b></span>`;
+      if (clock) renderClock(clock, localeText('localTime'), timeZone, time);
     };
     const updateLocaleMeta = () => {
       document.documentElement.lang = currentLocale;
@@ -5354,10 +5368,19 @@
       setNodeText('.hot-searches > span', 'hot');
       setNodeText('.hot-searches button:nth-of-type(2)', 'doubaoSearch');
       setNodeText('.hot-searches button:nth-of-type(3)', 'freeApi');
-      setNodeText('.hero-intel-head strong', 'intelTitle');
-      setNodeHtml('.hero-intel-head > span', 'intelTitle');
+      setNodeText('.hero-intel-title-row strong', 'intelTitle');
+      setNodeText('.intel-story-copy', 'intelStoryCopy');
+      setNodeText('.intel-log-link', 'intelLogCta');
       const intelDate = new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
-      document.querySelector('.hero-intel-head > span').innerHTML = `▣ &nbsp;${intelDate}`;
+      document.querySelector('.hero-intel-head > span').textContent = `▣\u00a0${intelDate}`;
+      const dailyBadge = document.getElementById('daily-log-badge');
+      if (dailyBadge) {
+        const newCount = Number(dailyBadge.dataset.newCount || 0);
+        const changeCount = Number(dailyBadge.dataset.changeCount || 0);
+        dailyBadge.textContent = newCount
+          ? `${localeText('newCount')} ${newCount}${currentLocale === SUPPORTED_LOCALES.zh ? ' 项' : ` ${newCount === 1 ? 'entry' : 'entries'}`}`
+          : (changeCount ? localeText('changesToday') : localeText('noNew'));
+      }
       setNodeText('.hero-intel-main > div:first-child > strong', 'resourceCount');
       setNodeText('.hero-intel-main p', 'checked');
       setNodeHtml('.mini-chart small', 'trend');
@@ -5435,9 +5458,25 @@
       const now = new Date();
       return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
     };
+    const isValidIsoDate = value => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return false;
+      const parsed = new Date(`${value}T00:00:00`);
+      const [year, month, day] = String(value).split('-').map(Number);
+      return !Number.isNaN(parsed.getTime()) && parsed.getFullYear() === year && parsed.getMonth() + 1 === month && parsed.getDate() === day;
+    };
+    const isFreshDate = value => {
+      if (!isValidIsoDate(value)) return false;
+      const age = Math.floor((new Date(`${localTodayIso()}T00:00:00`) - new Date(`${value}T00:00:00`)) / 86400000);
+      return age >= 0 && age <= 7;
+    };
+    const checkedDateLabel = value => {
+      if (!isValidIsoDate(value)) return localeText('dateUnknown');
+      if (!isFreshDate(value)) return localeText('dateStale');
+      return value === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(value);
+    };
     const checkedMarkup = item => {
       const source = String(item.checkedSummary || '').split(' / ').slice(1).join(' / ');
-      const label = item.date ? (item.date === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(item.date)) : localeValue(String(item.checkedSummary || '').split(' / ')[0], localeText('officialTerms'));
+      const label = checkedDateLabel(item.date);
       return `${escapeHtml(label)}${source ? `<small>${escapeHtml(localeValue(source, localeText('officialTerms')))}</small>` : ''}`;
     };
     const iconHostFromUrl = value => {
@@ -5667,14 +5706,20 @@
       const downloadItems = items.filter(item => offerCategories(item).includes('download_lowcost'));
       document.getElementById('catalog-download-list').innerHTML = downloadItems.map(item => `<div class="download-item"><div><strong>${escapeHtml(localizedOfferText(item, 'provider', 'AI model'))}</strong><small>${escapeHtml(localeValue((item.links || []).map(link => link[0]).join(' + ') || item.modelMeta || item.model, 'Model details'))}</small></div><a href="${escapeHtml(item.register)}" target="_blank" rel="noreferrer">${escapeHtml(localizedOfferText(item, 'registerLabel', localeText('open')))}</a></div>`).join('');
 
-      const latest = items.map(item => item.lastVerifiedAt).filter(Boolean).sort().at(-1);
-      if (latest) document.getElementById('catalog-last-checked').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `最后核验：${formatDate(latest)} · ${localeText('footerData')}` : `Last checked: ${formatDate(latest)} · ${localeText('footerData')}`;
+      const latest = items.map(item => item.lastVerifiedAt).filter(isValidIsoDate).sort().at(-1);
+      const latestLabel = latest ? (isFreshDate(latest) ? formatDate(latest) : localeText('dateStale')) : localeText('dateUnknown');
+      document.getElementById('catalog-last-checked').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `最后核验：${latestLabel} · ${localeText('footerData')}` : `Last checked: ${latestLabel} · ${localeText('footerData')}`;
 
       updateStructuredData(items);
     };
     const showDataError = () => {
       const container = document.getElementById('catalog-offer-rows');
-      container.innerHTML = '<div class="offer-error"><strong>Offer data unavailable.</strong> The directory could not load <code>data/offers.json</code> and this page has no embedded fallback. Serve the site over HTTP (or run <code>python scripts/build_static.py</code>) and reload.</div>';
+      container.replaceChildren();
+      const error = document.createElement('div');
+      error.className = 'offer-error';
+      error.textContent = 'Offer data unavailable. The directory could not load data/offers.json and this page has no embedded fallback. Serve the site over HTTP (or run python scripts/build_static.py) and reload.';
+      container.append(error);
+      document.getElementById('catalog-last-checked').textContent = `${localeText('dateUnknown')} · ${localeText('footerData')}`;
       document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `0 ${localeText('offer')}` : `${localeText('showing')} 0 ${localeText('offers')}`;
     };
     const loadOffers = async () => {
@@ -5755,7 +5800,7 @@
       const contextWindowBlock = document.getElementById('drawerContextWindow');
       contextWindowBlock.hidden = !isModelOffer(item);
       document.getElementById('drawerContextValue').textContent = isModelOffer(item) ? modelContextText(item.contextWindow) : '—';
-      document.getElementById('drawerLastChecked').textContent = item.date ? formatDate(item.date) : '—';
+      document.getElementById('drawerLastChecked').textContent = checkedDateLabel(item.date);
       document.getElementById('drawerCommand').textContent = item.command;
       const guide = item.usageGuide || {};
       document.getElementById('drawerUsageGuide').textContent = currentLocale === SUPPORTED_LOCALES.en && hasChineseText(guide.summary) ? localeText('officialTerms') : (guide.summary || 'Usage guide pending review.');
@@ -5880,7 +5925,7 @@
     });
     const clock = document.getElementById('catalog-clock');
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
-    clock.innerHTML = `Local time <span>${tz} · <b>${new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date())}</b></span>`;
+    renderClock(clock, 'Local time', tz, new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date()));
     let offerDataSource = 'embedded';
     loadOffers().then(async items => {
       signalIndex = indexCommunitySignals(await loadCommunitySignals());
@@ -5902,7 +5947,7 @@
           guideOpenAiAlternatives: 'OpenAI API alternatives', guideClaudeAlternatives: 'Claude Code alternatives', guideOpenAiCompatible: 'OpenAI-compatible APIs', guideCodingTools: 'Free AI coding tools', guideSearchApis: 'Free AI search APIs', guideOpenWeights: 'Open-weight models', guideContextWindows: 'Model context windows', guideChinaApi: 'Free AI APIs in China', resourceDirectory: 'Resource directory', allModelsNav: 'All models', providersDirectory: 'Browse by provider'
         },
         zh: {
-          'daily-log': '今日更新', catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
+          'daily-log': '每日更新', catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
           freeQuota: '免费额度', ide: '免费 AI IDE', apiServices: 'AI API 服务', promo: '试用与优惠', studentDiscount: '学生优惠', web: '网页工具', openWeight: '开源权重',
           guideOpenAiAlternatives: 'OpenAI API 替代品', guideClaudeAlternatives: 'Claude Code 替代品', guideOpenAiCompatible: '免费 OpenAI 兼容 API', guideCodingTools: '免费 AI 编程工具', guideSearchApis: '免费 AI 搜索 API', guideOpenWeights: '开源权重模型', guideContextWindows: '模型上下文窗口', guideChinaApi: '国内免费 AI API', resourceDirectory: '资源目录', allModelsNav: '全部模型', providersDirectory: '按厂家浏览'
         }

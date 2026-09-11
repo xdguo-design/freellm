@@ -115,6 +115,21 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<details class="log-new-card">', log)
         self.assertIn('<summary class="log-card-summary">', log)
 
+    def test_daily_updates_story_is_visible_in_homepage_and_log(self):
+        log = LOG_PATH.read_text(encoding="utf-8")
+        for needle in (
+            'data-nav-key="daily-log"',
+            '今天的 AI 资源有什么变化？',
+            '我们每天检查官方来源，记录新增、恢复、下线和异常。',
+            '查看今日变化',
+            'id="daily-log-badge"',
+        ):
+            self.assertIn(needle, self.html)
+        self.assertIn('每日更新', self.html)
+        self.assertIn('今天的 AI 资源有什么变化？', log)
+        self.assertIn('我们每天检查官方来源，记录新增、恢复、下线和异常。', log)
+        self.assertIn('查看今日变化', self.html)
+
     def test_homepage_links_to_theme_guides(self):
         for slug in (
             "free-openai-compatible-apis",
@@ -360,6 +375,16 @@ class StaticContractTests(unittest.TestCase):
         static_articles = re.findall(r'<article class="offer" data-type="(?!")', self.html)
         self.assertEqual(static_articles, [])
 
+    def test_dynamic_plain_text_has_safe_dom_boundaries_and_date_fallback(self):
+        for needle in ("const renderClock", "clock.replaceChildren()", "checkedDateLabel", "dateUnknown", "error.textContent"):
+            self.assertIn(needle, self.html)
+        for forbidden in (
+            "if (clock) clock.innerHTML",
+            "hero-intel-head > span').innerHTML",
+            "container.innerHTML = '<div class=\"offer-error\"",
+        ):
+            self.assertNotIn(forbidden, self.html)
+
     def test_static_itemlist_fallback_lists_every_offer_title(self):
         block = re.search(r'<script type="application/ld\+json" id="ld-dynamic">(.*?)</script>', self.html, re.S)
         self.assertIsNotNone(block, "ld-dynamic JSON-LD block missing")
@@ -377,7 +402,7 @@ class DailyWorkflowTests(unittest.TestCase):
         self.assertNotIn("pip install", self.text)
 
     def test_workflow_validates_scans_diffs_and_uploads(self):
-        for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "upload-artifact", "if: always()"):
+        for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "scripts/site_health.py", "site-health-report.json", "upload-artifact", "if: always()"):
             self.assertIn(needle, self.text)
 
     def test_workflow_ingests_external_signals_without_publishing_them_as_offers(self):
@@ -389,6 +414,11 @@ class DailyWorkflowTests(unittest.TestCase):
     def test_workflow_never_pushes_public_data(self):
         self.assertNotIn("git push", self.text)
         self.assertNotIn("git commit", self.text)
+
+    def test_browser_smoke_workflow_installs_chromium_separately(self):
+        workflow = (ROOT / ".github" / "workflows" / "browser-smoke.yml").read_text(encoding="utf-8")
+        self.assertIn("playwright install --with-deps chromium", workflow)
+        self.assertIn("tests.test_e2e_static", workflow)
 
 
 class _LocalSite:
@@ -572,7 +602,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
-        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "今日更新")
+        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "每日更新")
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 

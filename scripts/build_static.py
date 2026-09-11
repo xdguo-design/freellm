@@ -29,10 +29,21 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     date = latest.get("date") if isinstance(latest, dict) else None
     if not isinstance(date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
         return html
+    events = [
+        event
+        for key in ("events", "curatedEvents")
+        for event in (latest.get(key) or [])
+        if isinstance(event, dict)
+    ]
+    new_count = sum(1 for event in events if event.get("eventType") in {"new", "new_route"})
+    change_count = sum(1 for event in events if event.get("eventType") in {"new", "new_route", "recovered", "offline", "source_unavailable"})
+    badge = f"新增 {new_count} 项" if new_count else ("今日有变化" if change_count else "今日无新增")
     year, month, day = date.split("-")
     label = f"{year} 年 {int(month)} 月 {int(day)} 日"
-    replacement = f'▣ &nbsp;{label}</span><a class="intel-log-link" href="/logs/">查看今日更新 →</a>'
-    return re.sub(r"▣\s*&nbsp;[^<]+</span>(?:<a class=\"intel-log-link\"[^>]*>查看今日更新 →</a>)?", replacement, html, count=1)
+    replacement = f'▣ &nbsp;{label}</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a>'
+    updated = re.sub(r"▣\s*&nbsp;[^<]+</span>(?:<a class=\"intel-log-link\"[^>]*>查看(?:今日更新|今日变化) →</a>)?", replacement, html, count=1)
+    badge_markup = f'<span class="intel-update-badge" id="daily-log-badge" data-new-count="{new_count}" data-change-count="{change_count}">{badge}</span>'
+    return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
 def update_static_item_list(html: str, data: list[dict]) -> str:

@@ -518,7 +518,7 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
 
     page = render_daily_log_page(logs, "https://freellm.top")
 
-    assert "每日新增与下线日志" in page
+    assert "今天的 AI 资源有什么变化？" in page
     assert "Alpha free API" in page
     assert "monthly_quota" in page
     assert "100 requests/day" in page

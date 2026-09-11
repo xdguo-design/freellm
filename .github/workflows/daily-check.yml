@@ -55,6 +55,9 @@ jobs:
       - name: Build check (embedded page data must be current)
         run: python scripts/build_static.py --check
 
+      - name: Site health gate (freshness, size budgets, release SHA)
+        run: python scripts/site_health.py --report site-health-report.json
+
       - name: Upload scan evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,4 +69,5 @@ jobs:
             data/community-signals.json
             data/coverage.json
             data/review-queue.json
+            site-health-report.json
           if-no-files-found: error

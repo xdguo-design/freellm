@@ -1969,6 +1969,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     total = len(offers)
     model_catalog = models or []
     model_total = len(model_catalog)
+    provider_access_count = len(_load_access_context()[0]) if models is not None else 0
     if models is None:
         title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
         description = (
@@ -1979,7 +1980,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         title = "全部免费 AI 模型与 API 一览（含中国大陆可用性标注）· All Free AI Models with Mainland CN Availability | FreeLLM"
         description = (
             f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
-            f"附 26 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
+            f"附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
             f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
             f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
         )
@@ -2048,7 +2049,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     cn_section = f'''<section id="mainland-cn-availability">
       <h2>{_locale_pair("中国大陆可用性与注册要求", "Mainland China availability and signup requirements")}</h2>
       <p class="section-desc">{_locale_pair(
-        "目录逐行标注每个模型在中国大陆的可用状态（可用 / 不可用 / 待核验），背后是 26 家提供商的注册要求核验卡：是否需要手机号、实名认证或信用卡，全部以官方来源为准。没有官方证据的一律标为“待核验”，不会因为证据缺失而被判为不可用。以下要点已完成人工核验：",
+        f"目录逐行标注每个模型在中国大陆的可用状态（可用 / 不可用 / 待核验），背后是 {provider_access_count} 家提供商的注册要求核验卡：是否需要手机号、实名认证或信用卡，全部以官方来源为准。没有官方证据的一律标为“待核验”，不会因为证据缺失而被判为不可用。以下要点已完成人工核验：",
         "Every catalog row carries a mainland-China availability label (available / unavailable / unverified), backed by per-provider registration cards covering phone, identity and credit-card requirements — all evidence-linked. Anything without official evidence stays “unverified” and is never marked unavailable for lack of evidence. Key verified facts:")}</p>
       <ul>
         <li>{_locale_pair("SiliconFlow：手机号 + 短信验证码注册，实名认证仅用于提升额度", "SiliconFlow: phone + SMS signup; identity verification only raises quotas")}</li>
@@ -2406,7 +2407,14 @@ def _log_detail_card(event: dict) -> str:
         for key in detail_keys
         if details.get(key) not in (None, "", [])
     )
-    badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(event.get("eventType"), event.get("eventType"))
+    badge_labels = {
+        "new": ("新增", "New"),
+        "new_route": ("新增路径", "New route"),
+        "recovered": ("恢复", "Recovered"),
+        "offline": ("下线", "Offline"),
+        "source_unavailable": ("来源异常", "Source issue"),
+    }
+    badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(*badge_labels.get(event.get("eventType"), (event.get("eventType"), event.get("eventType"))))
     return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
 
 
@@ -2511,7 +2519,9 @@ def render_daily_log_page(logs: list[dict], site_url: str) -> str:
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
-    latest_status = "首次基线" if latest.get("baseline") and not any(latest_groups.values()) else ("今日有更新" if any(latest_groups.values()) else "今日扫描完成")
+    latest_has_changes = any(latest_groups.values())
+    latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
+    latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
     date_nav = ""
     if len(dates) > 1:
         links = []
@@ -2581,7 +2591,7 @@ a { color:var(--blue); }
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日新增与下线日志 · FreeLLM</title><meta name="description" content="FreeLLM 每日记录新发现、下线、恢复和来源状态；新增项目提供当前目录快照、免费条件、访问方式和证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY DISCOVERY / 每日情报</div><h1>{_locale_pair('每日更新', 'Daily updates')}</h1><p class="lead">{_locale_pair('每天记录 FreeLLM 目录里的新增、恢复、下线与来源状态，并保留可核对的官方证据。', 'Track new entries, recoveries, offline records and source health with evidence you can verify.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, 'Baseline' if latest.get('baseline') else latest_status)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1>{_locale_pair('今天的 AI 资源有什么变化？', 'What changed in AI today?')}</h1><p class="lead">{_locale_pair('我们每天检查官方来源，记录新增、恢复、下线和异常。', 'We check official sources daily and record new, recovered, offline and source issues.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
 def _load_daily_logs(data_path: Path) -> list[dict]:
