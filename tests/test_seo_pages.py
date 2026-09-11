@@ -242,7 +242,12 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
     assert "https://freellm.top/models/center/" in sitemap
-    assert sitemap.count("<loc>") == result.page_count - len(LEGACY_OFFER_REDIRECTS)
+    # page_count includes sitemap.xml itself but excludes the three static legal
+    # pages (about/terms/privacy), which are hand-maintained and only referenced in the sitemap.
+    static_legal_pages = 3
+    assert sitemap.count("<loc>") == result.page_count - len(LEGACY_OFFER_REDIRECTS) + static_legal_pages
+    for legal_path in ("/about/", "/terms/", "/privacy/"):
+        assert f"https://freellm.top{legal_path}" in sitemap
 
 
 def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
@@ -500,6 +505,8 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
                 "cardRequired": "no",
                 "register": "https://alpha.example/register",
                 "sourceUrls": ["https://alpha.example/pricing"],
+                "registrationSteps": ["打开注册入口", "创建账号", "生成 API Key"],
+                "links": [["注册文档", "https://alpha.example/docs/signup"]],
                 "evidence": "Official pricing documents a free tier.",
                 "status": "verified",
             },
@@ -518,7 +525,113 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
     assert "https://alpha.example/pricing" in page
     assert "Official pricing documents a free tier." in page
     assert "phoneRequired" in page
+    assert "注册与文档" in page
+    assert "创建账号" in page
+    assert "https://alpha.example/docs/signup" in page
     assert "/logs/" in page
+
+
+def test_daily_log_dashboard_renders_baseline_snapshot_and_health():
+    logs = [{
+        "schemaVersion": 1,
+        "date": "2026-09-10",
+        "baseline": True,
+        "events": [],
+        "observed": {
+            "models": [
+                {"providerId": f"provider-{index % 25}", "model": f"model-{index}"}
+                for index in range(297)
+            ],
+            "offers": [{"id": f"offer-{index}"} for index in range(37)],
+        },
+        "known": {"models": [], "offers": []},
+        "sourceHealth": {
+            "models": {"status": "ok"},
+            "offers": {"status": "ok"},
+        },
+    }]
+
+    page = render_daily_log_page(logs, "https://freellm.top")
+
+    assert 'class="daily-log-dashboard"' in page
+    assert 'class="log-hero"' in page
+    assert page.count('class="log-stat-card ') == 4
+    assert "首次基线" in page
+    assert "297" in page
+    assert "25" in page
+    assert "37" in page
+    assert "模型源" in page and "正常" in page
+    assert "资源源" in page and "正常" in page
+    assert "今日扫描完成" in page
+    assert ".log-days::before" in page
+    assert "class=\"log-registration\"" not in page
+    assert "首次建立基线" not in page
+    assert "class=\"log-empty baseline-empty\"" not in page
+
+
+def test_daily_log_dashboard_distinguishes_no_change_from_baseline_and_lists_dates():
+    logs = [
+        {
+            "schemaVersion": 1,
+            "date": "2026-09-10",
+            "baseline": False,
+            "events": [],
+            "observed": {"models": [], "offers": []},
+            "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+        },
+        {
+            "schemaVersion": 1,
+            "date": "2026-09-09",
+            "baseline": False,
+            "events": [],
+            "observed": {"models": [], "offers": []},
+            "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+        },
+    ]
+
+    page = render_daily_log_page(logs, "https://freellm.top")
+
+    assert "今日扫描完成，未发现变化" in page
+    assert "首次建立基线" not in page
+    assert 'class="log-date-nav"' in page
+    assert "2026-09-10" in page
+    assert "2026-09-09" in page
+
+
+def test_daily_log_dashboard_renders_curated_additions_on_timeline():
+    page = render_daily_log_page([{
+        "schemaVersion": 1,
+        "date": "2026-09-10",
+        "baseline": True,
+        "events": [],
+        "curatedEvents": [{
+            "kind": "offer",
+            "eventType": "new",
+            "curated": True,
+            "id": "manus-free-agent",
+            "title": "Manus AI · 免费 Agent 计划",
+            "reason": "人工确认新增",
+            "details": {
+                "provider": "Manus AI",
+                "register": "https://manus.im/login?type=signUp",
+                "registrationSteps": ["打开 Manus 注册入口", "选择登录方式"],
+                "sourceUrls": ["https://open.manus.ai/docs/v2/introduction"],
+            },
+        }],
+        "observed": {"models": [], "offers": []},
+        "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    }], "https://freellm.top")
+
+    assert "首次建立基线，以下为人工确认新增" not in page
+    assert "Curated new" in page
+    assert "Manus AI" in page
+    assert "注册与文档" in page
+    assert '<details class="log-new-card">' in page
+    assert '<summary class="log-card-summary">' in page
+    assert 'class="log-card-body"' in page
+    assert '<details class="log-new-card" open>' not in page
+    assert '.log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }' in page
+    assert ".log-days::before" in page
 
 
 def test_expected_files_and_sitemap_include_daily_logs(tmp_path):

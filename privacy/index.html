@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>隐私政策 | Privacy Policy · FreeLLM</title>
+  <meta name="description" content="FreeLLM (freellm.top) 隐私政策：说明本站收集哪些信息、如何使用 Cookie 与 Google AdSense 广告 Cookie，以及如何管理或退出个性化广告。FreeLLM privacy policy covering data collection, cookies, Google AdSense advertising cookies, and how to control or opt out of personalized ads.">
+  <link rel="canonical" href="https://freellm.top/privacy/">
+  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/privacy/">
+  <link rel="alternate" hreflang="en" href="https://freellm.top/privacy/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://freellm.top/privacy/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="隐私政策 | Privacy Policy · FreeLLM">
+  <meta property="og:description" content="FreeLLM (freellm.top) 隐私政策：说明本站收集哪些信息、如何使用 Cookie 与 Google AdSense 广告 Cookie，以及如何管理或退出个性化广告。">
+  <meta property="og:url" content="https://freellm.top/privacy/">
+  <meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="隐私政策 | Privacy Policy · FreeLLM">
+  <meta name="twitter:description" content="FreeLLM (freellm.top) 隐私政策：说明本站收集哪些信息、如何使用 Cookie 与 Google AdSense 广告 Cookie，以及如何管理或退出个性化广告。">
+  <meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
+  <style>
+    :root { color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; }
+    * { box-sizing: border-box; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    a { color: var(--blue); }
+    header, main, footer { background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }
+    header { color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }
+    header a { color: white; }
+    h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }
+    h2 { margin: 0 0 10px; font-size: clamp(22px, 3.6vw, 30px); }
+    p { max-width: 900px; }
+    .crumb, .eyebrow, th { font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .lead { max-width: 840px; color: #dbe6ff; font-size: 17px; }
+    .callout { margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }
+    section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    ul { max-width: 900px; padding-left: 1.3em; }
+    li { margin: 6px 0; }
+    footer { color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body data-static-locale="true">
+  <header>
+    <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / <span lang="zh-CN">隐私政策</span><span lang="en">Privacy Policy</span></div>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <h1><span lang="zh-CN">隐私政策</span><span lang="en">Privacy Policy</span></h1>
+    <p class="lead"><span lang="zh-CN">本政策说明 FreeLLM（freellm.top）收集哪些信息、如何使用 Cookie 与广告技术，以及您可以如何控制这些数据。最后更新：2026 年 9 月 11 日。</span><span lang="en">This policy explains what FreeLLM (freellm.top) collects, how cookies and advertising technologies are used, and how you can control your data. Last updated: 11 September 2026.</span></p>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / scope</div>
+      <h2><span lang="zh-CN">适用范围</span><span lang="en">Scope</span></h2>
+      <p><span lang="zh-CN">本政策适用于 FreeLLM 网站及其子页面。FreeLLM 是一个整理公开免费 AI 资源的信息目录：我们提供条目说明、官方链接和使用条件标注，不要求注册，不提供账户系统，也不直接销售任何产品或服务。</span><span lang="en">This policy applies to the FreeLLM website and its subpages. FreeLLM is an informational directory of publicly available free AI resources: we publish entry descriptions, official links and eligibility notes. We do not require registration, do not operate user accounts, and do not sell products or services directly.</span></p>
+    </section>
+    <section>
+      <div class="eyebrow">02 / data we collect</div>
+      <h2><span lang="zh-CN">我们收集的信息</span><span lang="en">Information we collect</span></h2>
+      <ul>
+        <li><span lang="zh-CN"><strong>您主动提供的信息</strong>：如果您通过电子邮件（xdguo0527@gmail.com）与我们联系，我们会收到您在邮件中提供的内容和邮箱地址，仅用于回复和处理相关问题。</span><span lang="en"><strong>Information you provide</strong>: if you contact us by email (xdguo0527@gmail.com), we receive the content of your message and your email address, used only to reply and handle your request.</span></li>
+        <li><span lang="zh-CN"><strong>语言偏好</strong>：本站使用浏览器 localStorage 记住您选择的语言（中文 / English），该信息仅保存在您的设备上，不会上传。</span><span lang="en"><strong>Language preference</strong>: the site uses browser localStorage to remember your language choice (Chinese / English). It stays on your device and is never uploaded.</span></li>
+        <li><span lang="zh-CN"><strong>汇总访问统计</strong>：本站使用 Vercel Analytics 收集不含个人身份信息的匿名访问统计（如页面浏览量、来源地区概览），用于改进内容结构。</span><span lang="en"><strong>Aggregate analytics</strong>: the site uses Vercel Analytics to collect anonymous, non-personally-identifiable traffic statistics (such as page views and rough source regions) to improve content structure.</span></li>
+      </ul>
+    </section>
+    <section>
+      <div class="eyebrow">03 / cookies &amp; advertising</div>
+      <h2><span lang="zh-CN">Cookie 与广告</span><span lang="en">Cookies and advertising</span></h2>
+      <p><span lang="zh-CN">本站通过 Google AdSense 展示广告。第三方供应商（包括 Google）会使用 Cookie 根据您对本站及其他网站的访问记录投放广告。</span><span lang="en">This site serves ads through Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this and other websites.</span></p>
+      <ul>
+        <li><span lang="zh-CN">Google 使用 DoubleClick DART Cookie 及其他广告 Cookie，向您展示基于您访问本站和互联网上其他站点的广告。</span><span lang="en">Google's use of advertising cookies (including the DoubleClick DART cookie) enables it and its partners to serve ads to you based on your visits to this site and/or other sites on the Internet.</span></li>
+        <li><span lang="zh-CN">您可以随时通过 <a href="https://www.google.com/settings/ads" rel="nofollow noopener" target="_blank">Google 广告设置（Ads Settings）</a> 退出个性化广告。</span><span lang="en">You may opt out of personalized advertising at any time via <a href="https://www.google.com/settings/ads" rel="nofollow noopener" target="_blank">Google Ads Settings</a>.</span></li>
+        <li><span lang="zh-CN">您也可以访问 <a href="https://www.aboutads.info/choices/" rel="nofollow noopener" target="_blank">www.aboutads.info</a> 退出部分第三方供应商的个性化广告 Cookie。</span><span lang="en">You can opt out of some third-party vendors' use of cookies for personalized advertising at <a href="https://www.aboutads.info/choices/" rel="nofollow noopener" target="_blank">www.aboutads.info</a>.</span></li>
+        <li><span lang="zh-CN">如需了解 Google 如何使用广告数据，请参阅 <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">Google 合作伙伴政策</a>。</span><span lang="en">For details on how Google uses data from partner sites, see <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">Google's partner policy page</a>.</span></li>
+      </ul>
+      <p><span lang="zh-CN">除语言偏好外，本站自身不设置跟踪 Cookie；广告 Cookie 由 Google 及其合作伙伴管理，其数据处理遵循 Google 隐私政策。</span><span lang="en">Apart from the language preference, the site itself sets no tracking cookies; advertising cookies are managed by Google and its partners under Google's own privacy policy.</span></p>
+    </section>
+    <section>
+      <div class="eyebrow">04 / third-party links</div>
+      <h2><span lang="zh-CN">外部链接</span><span lang="en">Third-party links</span></h2>
+      <p><span lang="zh-CN">本站的大量内容是指向第三方平台（如 AI 厂商官网、GitHub、Hugging Face）的链接。您点击这些链接后访问的外部网站受其各自的隐私政策约束，本政策不适用于那些网站。离开本站后，请阅读目标网站的隐私条款。</span><span lang="en">Much of our content consists of links to third-party platforms (such as AI provider sites, GitHub and Hugging Face). External websites you reach through those links are governed by their own privacy policies, which this policy does not cover. Please read the target site's terms after leaving FreeLLM.</span></p>
+    </section>
+    <section>
+      <div class="eyebrow">05 / data retention &amp; control</div>
+      <h2><span lang="zh-CN">数据保留与您的控制权</span><span lang="en">Retention and your controls</span></h2>
+      <ul>
+        <li><span lang="zh-CN">语言偏好保存在您的浏览器中，清除浏览器数据即可删除。</span><span lang="en">The language preference lives in your browser; clearing site data removes it.</span></li>
+        <li><span lang="zh-CN">往来邮件在问题处理完毕后即不再用于其他用途。</span><span lang="en">Email correspondence is not used for any other purpose once your request is handled.</span></li>
+        <li><span lang="zh-CN">匿名统计数据由 Vercel 按 <a href="https://vercel.com/legal/privacy-policy" rel="nofollow noopener" target="_blank">Vercel 隐私政策</a> 处理和保留。</span><span lang="en">Anonymous analytics are processed and retained by Vercel under the <a href="https://vercel.com/legal/privacy-policy" rel="nofollow noopener" target="_blank">Vercel privacy policy</a>.</span></li>
+      </ul>
+    </section>
+    <section>
+      <div class="eyebrow">06 / changes &amp; contact</div>
+      <h2><span lang="zh-CN">政策更新与联系方式</span><span lang="en">Changes and contact</span></h2>
+      <p><span lang="zh-CN">本政策可能随网站功能或广告配置调整而更新，更新后会在本页面注明日期。若您对本政策或本站数据处理有任何疑问，请联系：<a href="mailto:xdguo0527@gmail.com">xdguo0527@gmail.com</a>。</span><span lang="en">This policy may be updated as site features or ad configurations change; the revision date at the top will reflect updates. If you have any questions about this policy or how the site handles data, contact <a href="mailto:xdguo0527@gmail.com">xdguo0527@gmail.com</a>.</span></p>
+      <div class="callout"><span lang="zh-CN">相关页面：<a href="/about/" style="color:inherit">关于 FreeLLM</a> · <a href="/terms/" style="color:inherit">使用条款与免责声明</a></span><span lang="en">Related pages: <a href="/about/" style="color:inherit">About FreeLLM</a> · <a href="/terms/" style="color:inherit">Terms &amp; disclaimer</a></span></div>
+    </section>
+  </main>
+  <footer>
+    <p><strong>FreeLLM</strong> · <span lang="zh-CN">免费 AI 资源索引</span><span lang="en">Free AI Index</span> · <a href="mailto:xdguo0527@gmail.com">xdguo0527@gmail.com</a></p>
+    <p><a href="/">freellm.top</a> · <a href="/about/">About</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+</body>
+</html>

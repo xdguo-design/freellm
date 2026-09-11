@@ -232,6 +232,16 @@
           "@type": "ListItem",
           "position": 37,
           "name": "StepFun · Limited-time free API models"
+        },
+        {
+          "@type": "ListItem",
+          "position": 38,
+          "name": "小红书 Dots · Dots3-Note Preview API"
+        },
+        {
+          "@type": "ListItem",
+          "position": 39,
+          "name": "Manus AI · 免费 Agent 计划"
         }
       ]
     },
@@ -555,6 +565,9 @@
     .download-item a { padding: 7px 9px; background: var(--blue); color: white; text-decoration: none; font: 10px var(--mono); white-space: nowrap; }
 
     .footer { margin: 26px 0 5px; padding-top: 14px; border-top: 1px solid var(--ink); display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
+    .footer-legal { margin-top: -14px; padding-top: 0; border-top: 0; justify-content: flex-start; gap: 18px; }
+    .footer-legal a { color: inherit; text-decoration: none; }
+    .footer-legal a:hover { text-decoration: underline; text-underline-offset: 3px; }
     .drawer-backdrop { position: fixed; inset: 0; background: rgba(16,17,19,.32); z-index: 4; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
     .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
     .drawer { position: fixed; z-index: 5; top: 0; right: 0; width: min(520px, 100vw); height: 100vh; padding: 24px; overflow: auto; background: #fff; border-left: 2px solid var(--ink); transform: translateX(100%); transition: transform .2s ease; }
@@ -823,6 +836,8 @@
     .top-nav { gap: clamp(20px, 3.2vw, 43px); }
     .top-nav a { color: var(--navy); font: 700 14px var(--sans); }
     .top-nav a:hover { color: var(--blue-bright); }
+    .top-nav .nav-daily-update { padding: 8px 13px; border-radius: 999px; color: white; background: linear-gradient(120deg, #2874ff, #4d42eb); box-shadow: 0 6px 14px rgba(55, 96, 232, .2); }
+    .top-nav .nav-daily-update:hover { color: white; box-shadow: 0 8px 18px rgba(55, 96, 232, .3); }
     .header-actions { display: flex; align-items: center; gap: 12px; }
     .locale-toggle { padding: 8px 11px; border: 1px solid #cbd9f2; border-radius: 999px; color: #2f4d85; background: white; font: 800 11px var(--sans); cursor: pointer; white-space: nowrap; }
     .locale-toggle:hover, .locale-toggle:focus-visible { color: white; border-color: var(--blue-bright); background: var(--blue-bright); outline: none; }
@@ -992,7 +1007,9 @@
     @media (max-width: 700px) {
       .catalog-header { grid-template-columns: auto 1fr auto; padding: 10px 16px; }
       .catalog-header .brand-name { font-size: 17px; }
-      .top-nav { display: none; }
+      .top-nav { min-width: 0; justify-content: flex-start; gap: 14px; overflow-x: auto; overscroll-behavior-inline: contain; padding: 4px 2px; scrollbar-width: none; white-space: nowrap; }
+      .top-nav::-webkit-scrollbar { display: none; }
+      .top-nav a { flex: 0 0 auto; }
       .header-submit { padding: 8px 10px; font-size: 11px; }
       .profile-dot, .profile-chevron { display: none; }
       .catalog-content { padding: 28px 16px 48px; }
@@ -1040,7 +1057,7 @@
     <main id="catalog-top">
       <header class="catalog-header">
         <a class="brand" href="/"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">FreeLLM</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="catalog" href="#categories">模型库</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="/models/all/">查全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a><a data-nav-key="tools" href="#catalog-offers">开发工具</a><a data-nav-key="api" href="#catalog-offers">API 服务</a><a data-nav-key="rank" href="#catalog-compare">榜单</a><a data-nav-key="guide" href="/guides/free-llm/">使用指南</a></nav>
+        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">今日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="/models/all/">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a></nav>
         <div class="header-actions"><a class="header-submit" href="#catalog-offers">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
@@ -1069,6 +1086,7 @@
         <div class="utility-grid"><section class="compare-panel" id="catalog-compare"><div class="section-heading"><div><div class="eyebrow">05 / cheapest first</div><h2>最便宜的入口先看</h2><p>先免费，再看首购价；地区、新用户、有效期和续费同时展示。</p></div><span class="badge free">LIVE RULE</span></div><div class="cheap-lane" aria-label="Cheapest verified routes"><article class="cheap-card is-best"><div class="cheap-card-label"><span>北京区 · 新用户</span><b>优先看</b></div><div class="cheap-card-price">¥0<small>免费额度</small></div><h3>阿里云百炼 · 部分模型</h3><p>仅中国（北京）部署范围可用；新用户有效期 90 天，额度用完后按官方价格计费。</p><a href="https://help.aliyun.com/en/model-studio/new-free-quota" target="_blank" rel="noreferrer">看免费额度规则 ↗</a></article><article class="cheap-card"><div class="cheap-card-label"><span>火山方舟 · 首购</span><b>¥9.90 起</b></div><div class="cheap-card-price">¥9.9<small>首月 / 月</small></div><h3>豆包 Coding Plan Lite</h3><p>首月优惠价；后续续费 ¥40 / 月，限量活动以官方页面当前状态为准。</p><a href="https://www.volcengine.com/L/L7N-ZPzoyHE/" target="_blank" rel="noreferrer">看官方方案 ↗</a></article><article class="cheap-card"><div class="cheap-card-label"><span>下载 · 自托管</span><b>权重免费</b></div><div class="cheap-card-price">¥0<small>模型权重</small></div><h3>LongCat-2.0</h3><p>下载权重不等于推理免费；存储、GPU、流量和部署时间另算。</p><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开开源入口 ↗</a></article></div><p class="cheap-disclaimer"><strong>结论：</strong>如果你在北京且符合新用户条件，先用 ¥0 免费额度；不符合时，再看 ¥9.9 首月方案。¥0 和 ¥9.9 都不是无条件的长期月费。</p><div class="compare-table"><div class="compare-row head"><div>价格视角</div><div>中国区 / 北京</div><div>国际区</div><div>判断</div></div><div class="compare-row"><div>阿里云部分模型<br><small>新用户免费额度</small></div><div>¥0 · 90 天</div><div>通常无同等免费额度</div><div class="saving">先看</div></div><div class="compare-row"><div>豆包 Coding Plan Lite<br><small>首购 / 后续续费</small></div><div>¥9.9 / ¥40 月</div><div>不适用</div><div class="saving">低价</div></div></div><p class="compare-note">北京不代表所有产品都更便宜：这里展示的是已核验的“免费额度 / 首购优惠 / 开源权重”入口，不把不同模型的 token 单价混成一个总榜。订阅前请回到官方价格页。</p></section><section class="download-panel" id="catalog-downloads"><div class="section-heading"><div><div class="eyebrow">06 / local lane</div><h2>下载到本地</h2><p>权重免费，GPU 时间不一定免费。</p></div></div><div class="download-list" id="catalog-download-list"><div class="download-item"><div><strong>LongCat-2.0</strong><small>GitHub + Hugging Face</small></div><a href="https://github.com/meituan-longcat/LongCat-2.0" target="_blank" rel="noreferrer">打开 ↗</a></div></div></section></div>
         <section class="seo-copy catalog-faq" id="catalog-faq" aria-labelledby="catalog-faq-title"><div class="section-heading"><div><div class="eyebrow">07 / how to read it</div><h2 id="catalog-faq-title">这不是“全都免费”榜单</h2><p>我们把免费、试用、优惠、学生资格和低价入口分开写。</p></div></div><div class="seo-grid"><div><h3>免费额度</h3><p>周期性额度仍可能有速率、地区或付款方式限制。</p></div><div><h3>学生优惠</h3><p>需要教育身份验证，优惠期限和适用地区以官方页面为准。</p></div><div><h3>开源权重</h3><p>可以下载模型，但存储、GPU、推理和流量可能收费。</p></div><div><h3>官方入口</h3><p>每条 offer 都保留来源、更新时间和可复制的使用路径。</p></div></div><div class="faq-list"><details><summary>什么才算免费？</summary><p>页面会区分持续额度、一次性积分、首月优惠、学生计划、免费 IDE、网页工具、开源权重和低成本 pay-as-you-go。</p></details><details><summary>学生优惠是永久免费吗？</summary><p>不是。学生优惠通常需要教育身份验证，可能有地区、学校、期限或续费条件。</p></details><details><summary>夜间优惠一定存在吗？</summary><p>只有官方来源明确说明时间窗口时才会展示，传闻不会被写成免费活动。</p></details></div></section>
          <div class="footer" id="catalog-methodology"><span>Official sources only · Free status separated by mechanism</span><a class="footer-contact" href="mailto:xdguo0527@gmail.com"><span data-footer-contact-label>Contact</span>: xdguo0527@gmail.com</a><span id="catalog-last-checked">Last checked: 07 Sep 2026 · Data is subject to change</span></div>
+         <div class="footer footer-legal"><a href="/about/">关于 / About</a><a href="/terms/">条款 / Terms</a><a href="/privacy/">隐私 / Privacy</a></div>
       </div>
     </main>
   </div>
@@ -1210,6 +1228,7 @@
         </section>
 
         <div class="footer" id="methodology"><span>Official sources only · Free status separated by mechanism</span><span id="lastChecked">Last checked: 06 Sep 2026 · Data is subject to change</span></div>
+        <div class="footer footer-legal"><a href="/about/">关于 / About</a><a href="/terms/">条款 / Terms</a><a href="/privacy/">隐私 / Privacy</a></div>
       </div>
     </main>
   </div>
@@ -5009,6 +5028,225 @@
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       }
     ]
+  },
+  {
+    "date": "2026-09-10",
+    "lastVerifiedAt": "2026-09-10",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Dots official terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "id": "dots-api-free",
+    "order": 39,
+    "name": "Dots API Dots3 Note Preview",
+    "providerMark": "DO",
+    "provider": "Dots API（国内）",
+    "providerMeta": "小红书 Dots · China",
+    "providerMetaEn": "Xiaohongshu Dots · China",
+    "model": "Dots3-Note Preview",
+    "modelMeta": "Dots Studio domestic API route",
+    "type": [
+      "api",
+      "free"
+    ],
+    "usageGuide": {
+      "summary": "通过小红书 Dots 国内平台注册并调用 Dots3-Note Preview",
+      "prerequisites": [
+        "小红书账号或手机号",
+        "Dots API Key"
+      ],
+      "steps": [
+        "打开 Dots 国内平台并使用小红书账号或手机号登录",
+        "进入 API Keys 页面创建 API Key",
+        "使用模型 ID dots3-note-preview 和国内 Base URL 发起请求"
+      ],
+      "endpoint": "https://note3-prev-api.askdiandian.com",
+      "method": "POST",
+      "authentication": "API key according to the official Dots documentation",
+      "examples": {
+        "curl": "curl https://note3-prev-api.askdiandian.com --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
+      },
+      "docsUrl": "https://dots.ai/platform/docs"
+    },
+    "kicker": "CHINA FREE API",
+    "badges": [
+      "小红书登录",
+      "限时免费",
+      "60 RPM"
+    ],
+    "freeSummary": "Dots3-Note Preview 当前免费试用，按官方限速使用",
+    "validitySummary": "限时免费；额度和模型可用性以 Dots 官方页面为准",
+    "accessSummary": "小红书账号或手机号登录 Dots 国内平台",
+    "checkedSummary": "2026-09-10 / Dots 官方平台与文档",
+    "title": "小红书 Dots · Dots3-Note Preview API",
+    "titleZh": "小红书 Dots · Dots3-Note Preview API",
+    "why": "Dots 官方国内平台提供 Dots3-Note Preview 模型入口；注册可使用小红书账号或手机号，官方文档给出国内 Base URL 与 API 调用说明。",
+    "mechanism": "限时免费模型 API，按官方 RPM/TPM 限制使用",
+    "validity": "限时免费；使用前重新核对官方平台状态",
+    "access": "国内 Dots 平台；小红书账号或手机号登录后创建 API Key",
+    "command": "Open the Dots platform, create an API key, and call the documented domestic endpoint.",
+    "register": "https://dots.ai/platform",
+    "registerLabel": "Dots 国内平台",
+    "links": [
+      [
+        "Dots 注册入口",
+        "https://dots.ai/platform"
+      ],
+      [
+        "Dots 官方文档",
+        "https://dots.ai/platform/docs"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China domestic route; account and region availability may vary",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": null,
+      "unit": "model",
+      "period": "while officially available"
+    },
+    "quota": "60 requests/minute; 1,500,000 tokens/minute",
+    "renewal": "No fixed renewal; limited-free status can change",
+    "sourceUrls": [
+      "https://dots.ai/platform",
+      "https://dots.ai/platform/docs"
+    ],
+    "evidence": "Dots provider access record verified on 2026-09-10; official docs identify the domestic platform, model ID and rate limits.",
+    "confidence": "high",
+    "notes": "小红书账号登录入口与手机号登录入口以 Dots 官方页面当前选项为准。"
+  },
+  {
+    "date": "2026-09-10",
+    "lastVerifiedAt": "2026-09-10",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Manus official terms",
+    "productType": "web_infrastructure",
+    "capabilities": [
+      "agent"
+    ],
+    "id": "manus-free-agent",
+    "order": 40,
+    "name": "Manus AI free plan",
+    "providerMark": "MA",
+    "provider": "Manus AI",
+    "providerMeta": "Manus AI · International",
+    "providerMetaEn": "Manus AI · International",
+    "model": "Manus AI agent and Chat Mode",
+    "modelMeta": "Browser-based autonomous agent platform",
+    "type": [
+      "web",
+      "agent",
+      "free"
+    ],
+    "usageGuide": {
+      "summary": "注册 Manus 后使用 Chat Mode 和免费 Agent 额度",
+      "prerequisites": [
+        "Manus account",
+        "Google, Microsoft, Apple or email sign-in"
+      ],
+      "steps": [
+        "打开 Manus 注册入口",
+        "选择 Google、Microsoft、Apple 或邮箱注册；注册方式会绑定到该账号",
+        "进入免费计划，使用注册赠送的 1,000 credits 与每天刷新的 300 credits",
+        "如需 API，进入 Manus API 文档的 Authentication 页面创建 API Key"
+      ],
+      "endpoint": "https://api.manus.ai",
+      "method": "POST",
+      "authentication": "API key according to the Manus API authentication documentation",
+      "examples": {
+        "web": "Open https://manus.im/login?type=signUp and follow the signup flow."
+      },
+      "docsUrl": "https://manus.im/docs/introduction/welcome"
+    },
+    "kicker": "FREE AGENT",
+    "badges": [
+      "1,000 SIGNUP CREDITS",
+      "300 DAILY CREDITS",
+      "AGENT"
+    ],
+    "freeSummary": "新用户注册赠送 1,000 credits；免费计划每天刷新 300 credits",
+    "validitySummary": "免费计划持续提供；额度、模型和计划内容可能调整",
+    "accessSummary": "浏览器访问；支持 Google、Microsoft、Apple 或邮箱登录",
+    "checkedSummary": "2026-09-10 / Manus 官方首页、帮助中心与文档",
+    "title": "Manus AI · 免费 Agent 计划",
+    "titleZh": "Manus AI · 免费 Agent 计划",
+    "why": "Manus 官方帮助中心说明免费用户可获得注册赠送 credits 与每日刷新 credits；官方注册页提供多种登录方式，适合作为 AI Agent、网页构建和自动化任务入口。",
+    "mechanism": "Web Agent 免费计划，按 credits 消耗并受任务并发限制",
+    "validity": "免费计划与额度以 Manus 当前定价和帮助中心页面为准",
+    "access": "Manus Web App；登录方式在注册时绑定，错误方式可能创建新账号",
+    "command": "Open the Manus web app, sign up, and start a Chat Mode or Agent task within the free credit allowance.",
+    "register": "https://manus.im/login?type=signUp",
+    "registerLabel": "Manus 注册入口",
+    "links": [
+      [
+        "Manus 注册入口",
+        "https://manus.im/login?type=signUp"
+      ],
+      [
+        "登录方式说明",
+        "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods"
+      ],
+      [
+        "免费计划与价格",
+        "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus"
+      ],
+      [
+        "注册优惠与额度",
+        "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers"
+      ],
+      [
+        "Manus API 文档",
+        "https://open.manus.ai/docs/v2/introduction"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global web access; login and feature availability may vary by region",
+    "freeMechanism": "daily_quota",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "credits",
+      "amount": 300,
+      "unit": "credits",
+      "period": "day",
+      "signupBonus": 1000
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": 1
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "providerId": "manus",
+    "productId": "manus-web",
+    "offerVariant": "free-agent-plan",
+    "sourceUrls": [
+      "https://manus.im/login?type=signUp",
+      "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods",
+      "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
+      "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers",
+      "https://open.manus.ai/docs/v2/introduction"
+    ],
+    "evidence": "Manus official help pages document the Free plan, 1,000 signup credits and 300 daily credits; the official login page lists Google, Microsoft, Apple and email sign-in; the API docs explain how to obtain an API key.",
+    "confidence": "high",
+    "notes": "登录方式与额度为 2026-09-10 核验值；使用前重新检查官方价格页和帮助中心。"
   }
 ]
   </script>
@@ -5106,8 +5344,6 @@
       updateLocaleMeta();
       document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = localeText(node.dataset.i18n); });
       setNodeText('.catalog-header .brand-sub', 'brandSub');
-      ['navCatalog', 'navTools', 'navApi', 'navRank'].forEach((key, index) => setNodeText(`.top-nav a:nth-child(${index + 1})`, key));
-      setNodeText('.top-nav a:nth-child(5)', 'guideNav');
       setNodeText('.header-submit', 'submit');
       setNodeHtml('.hero-badge', 'verified');
       setNodeHtml('.catalog-hero h1', 'heroTitle');
@@ -5661,12 +5897,12 @@
     (() => {
       const copy = {
         en: {
-          catalog: 'Models', resources: 'Resource directory', 'model-center': 'Model center', 'all-models': 'All models', providers: 'Providers', tools: 'Developer tools', api: 'API services', rank: 'Compare', guide: 'Guide',
+          'daily-log': 'Daily updates', catalog: 'Models', resources: 'Resource directory', 'model-center': 'Model center', 'all-models': 'All models', providers: 'Providers', tools: 'Developer tools', api: 'API services', rank: 'Compare', guide: 'Guide',
           freeQuota: 'Free quota', ide: 'Free IDE', apiServices: 'API services', promo: 'Timed / regional deal', studentDiscount: 'Student offer', web: 'Web tools', openWeight: 'Open weights',
           guideOpenAiAlternatives: 'OpenAI API alternatives', guideClaudeAlternatives: 'Claude Code alternatives', guideOpenAiCompatible: 'OpenAI-compatible APIs', guideCodingTools: 'Free AI coding tools', guideSearchApis: 'Free AI search APIs', guideOpenWeights: 'Open-weight models', guideContextWindows: 'Model context windows', guideChinaApi: 'Free AI APIs in China', resourceDirectory: 'Resource directory', allModelsNav: 'All models', providersDirectory: 'Browse by provider'
         },
         zh: {
-          catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
+          'daily-log': '今日更新', catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
           freeQuota: '免费额度', ide: '免费 AI IDE', apiServices: 'AI API 服务', promo: '试用与优惠', studentDiscount: '学生优惠', web: '网页工具', openWeight: '开源权重',
           guideOpenAiAlternatives: 'OpenAI API 替代品', guideClaudeAlternatives: 'Claude Code 替代品', guideOpenAiCompatible: '免费 OpenAI 兼容 API', guideCodingTools: '免费 AI 编程工具', guideSearchApis: '免费 AI 搜索 API', guideOpenWeights: '开源权重模型', guideContextWindows: '模型上下文窗口', guideChinaApi: '国内免费 AI API', resourceDirectory: '资源目录', allModelsNav: '全部模型', providersDirectory: '按厂家浏览'
         }
@@ -5683,7 +5919,18 @@
           if (labels[key]) node.textContent = labels[key];
         });
       };
+      const adaptFileNavigation = () => {
+        if (window.location.protocol !== 'file:') return;
+        const siteRoot = document.body.classList.contains('model-center-page') ? '../../' : '../';
+        const query = window.location.search;
+        document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => {
+          const path = link.getAttribute('href').split(/[?#]/, 1)[0];
+          if (!path.endsWith('/')) return;
+          link.setAttribute('href', `${siteRoot}${path.slice(1)}index.html${query}`);
+        });
+      };
       update();
+      adaptFileNavigation();
       new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     })();
   </script>

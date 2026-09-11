@@ -1601,7 +1601,7 @@ def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) 
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-provider="{_esc(str(model.get("provider") or "").lower())}" data-model="{_esc(str(model.get("model") or "").lower())}" data-score="{_esc(score if score is not None else -1)}" data-cn="{_esc(cn["code"])}">
       <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(model.get("provider"))}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
-      <td><a href="{_esc(model_aggregate_url(model))}"><strong>{_esc(model.get("model"))}</strong></a><small>{_esc(model_id)}</small></td>
+      <td class="model-cell"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model.get("model"))}"><strong>{_esc(model.get("model"))}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
       <td>{score_markup}</td>
       <td>{_esc(model.get("context") or "—")}</td>
       <td>{_esc(model.get("maxOutput") or "—")}</td>
@@ -1785,7 +1785,7 @@ def _catalog_record_table(models: list[dict]) -> str:
         )
         rows.append(f'''<tr>
           <td><a href="{_esc(provider_url(str(model.get("providerId") or "provider")))}">{_esc(model.get("provider"))}</a></td>
-          <td><strong>{_esc(model.get("model"))}</strong><small>{_esc(model.get("id"))}</small></td>
+          <td class="model-cell"><strong class="model-name" title="{_esc(model.get("model"))}">{_esc(model.get("model"))}</strong><small class="model-id" title="{_esc(model.get("id"))}">{_esc(model.get("id"))}</small></td>
           <td><strong class="score">{_esc(model.get("score") if model.get("score") is not None else "—")}</strong></td>
           <td>{_esc(model.get("context") or "—")}</td>
           <td>{_esc(model.get("rateLimit") or "—")}</td>
@@ -1907,7 +1907,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     * {{ box-sizing:border-box; }} body {{ max-width:1180px; margin:0 auto; padding:24px 18px 64px; color:var(--ink); background:var(--soft); font-family:Inter,ui-sans-serif,system-ui,sans-serif; line-height:1.65; }}
     a {{ color:var(--blue); }} header,main,footer {{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:clamp(20px,4vw,36px); margin-bottom:18px; }}
     h1 {{ margin:10px 0; font-size:clamp(28px,5vw,48px); line-height:1.1; }} h2 {{ margin:0 0 8px; }} .lead,.muted {{ color:var(--muted); }} .stats {{ display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; color:var(--muted); font-size:13px; }}
-    .catalog-table-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }} .catalog-table {{ width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }} .catalog-table th,.catalog-table td {{ padding:11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }} .catalog-table th {{ color:var(--muted); background:#f8fafc; font-size:11px; white-space:nowrap; }} .catalog-table small {{ display:block; color:var(--muted); font-size:11px; }} .score {{ color:var(--blue); }} .status {{ display:inline-block; border-radius:999px; padding:2px 7px; font-size:11px; }} .status-online {{ color:#147a46; background:#dcfce7; }} .status-offline {{ color:#9f1239; background:#ffe4e6; }} .status-degraded,.status-unknown {{ color:#8a5a00; background:#fef3c7; }} .related-list {{ padding-left:20px; }} .eyebrow {{ font:11px ui-monospace,Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; }}
+    .catalog-table-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }} .catalog-table {{ width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }} .catalog-table th,.catalog-table td {{ padding:11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }} .catalog-table th {{ color:var(--muted); background:#f8fafc; font-size:11px; white-space:nowrap; }} .catalog-table small {{ display:block; color:var(--muted); font-size:11px; }} .catalog-table .model-name,.catalog-table .model-id {{ display:block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }} .catalog-table .model-id {{ margin-top:3px; }} .score {{ color:var(--blue); }} .status {{ display:inline-block; border-radius:999px; padding:2px 7px; font-size:11px; }} .status-online {{ color:#147a46; background:#dcfce7; }} .status-offline {{ color:#9f1239; background:#ffe4e6; }} .status-degraded,.status-unknown {{ color:#8a5a00; background:#fef3c7; }} .related-list {{ padding-left:20px; }} .eyebrow {{ font:11px ui-monospace,Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; }}
     .access-route-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }} .access-route {{ padding:14px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; }} .access-route h3 {{ margin:0 0 8px; }} code {{ overflow-wrap:anywhere; }}
     @media (max-width:620px) {{ body {{ padding:10px 8px 38px; }} header,main,footer {{ padding:18px; border-radius:12px; }} }}
   </style>
@@ -1957,7 +1957,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
-<style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.65;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}.lead,.muted {{color:var(--muted);}}.catalog-table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}}.catalog-table {{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;}}.catalog-table th,.catalog-table td {{padding:11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}}.catalog-table th {{color:var(--muted);background:#f8fafc;font-size:11px;white-space:nowrap;}}.catalog-table small {{display:block;color:var(--muted);font-size:11px;}}.score {{color:var(--blue);}}.status {{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;}}.status-online {{color:#147a46;background:#dcfce7;}}.status-offline {{color:#9f1239;background:#ffe4e6;}}.status-degraded,.status-unknown {{color:#8a5a00;background:#fef3c7;}}.related-list {{padding-left:20px;}}.stats {{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px;}}.eyebrow {{font:11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></head>
+<style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.65;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}.lead,.muted {{color:var(--muted);}}.catalog-table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}}.catalog-table {{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;}}.catalog-table th,.catalog-table td {{padding:11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}}.catalog-table th {{color:var(--muted);background:#f8fafc;font-size:11px;white-space:nowrap;}}.catalog-table small {{display:block;color:var(--muted);font-size:11px;}}.catalog-table .model-name,.catalog-table .model-id {{display:block;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}.catalog-table .model-id {{margin-top:3px;}}.score {{color:var(--blue);}}.status {{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;}}.status-online {{color:#147a46;background:#dcfce7;}}.status-offline {{color:#9f1239;background:#ffe4e6;}}.status-degraded,.status-unknown {{color:#8a5a00;background:#fef3c7;}}.related-list {{padding-left:20px;}}.stats {{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px;}}.eyebrow {{font:11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></head>
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
@@ -2116,6 +2116,8 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     .catalog-table thead th {{ position: sticky; top: 0; z-index: 1; color: var(--muted); background: #f8fafc; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }}
     .catalog-table tbody tr:last-child td {{ border-bottom: 0; }}
     .catalog-table small {{ display: block; margin-top: 3px; color: var(--muted); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }}
+    .catalog-table .model-name, .catalog-table .model-id {{ display: block; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
+    .catalog-table .model-id {{ margin-top: 3px; }}
     .score-ring {{ display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: conic-gradient(from -90deg, #3b82f6 0%, #7c3aed calc(var(--score) * .65%), #ec4899 calc(var(--score) * 1%), #e4eaf5 0); position: relative; color: var(--ink); }}
     .score-ring::after {{ content: ""; position: absolute; inset: 4px; border-radius: 50%; background: white; }}
     .score-ring strong {{ position: relative; z-index: 1; color: var(--blue); font-size: 12px; }}
@@ -2224,6 +2226,8 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
   .model-center-all-models-panel .catalog-table th, .model-center-all-models-panel .catalog-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid #dfe5ef; }
   .model-center-all-models-panel .catalog-table thead th { position: sticky; top: 0; z-index: 1; color: #68748a; background: #f8fafc; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
   .model-center-all-models-panel .catalog-table small { display: block; margin-top: 3px; color: #68748a; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .model-center-all-models-panel .catalog-table .model-name, .model-center-all-models-panel .catalog-table .model-id { display: block; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .model-center-all-models-panel .catalog-table .model-id { margin-top: 3px; }
   .model-center-all-models-panel .score-ring { display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: conic-gradient(from -90deg, #3b82f6 0%, #7c3aed calc(var(--score) * .65%), #ec4899 calc(var(--score) * 1%), #e4eaf5 0); position: relative; color: #172033; }
   .model-center-all-models-panel .score-ring::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
   .model-center-all-models-panel .score-ring strong { position: relative; z-index: 1; color: #1744e8; font-size: 12px; }
@@ -2357,6 +2361,38 @@ def _log_links(details: dict) -> str:
     ) + "</ul>"
 
 
+def _log_registration_docs(details: dict) -> str:
+    guide = details.get("usageGuide") if isinstance(details.get("usageGuide"), dict) else {}
+    steps = [str(step).strip() for step in (details.get("registrationSteps") or guide.get("steps") or []) if str(step).strip()]
+    prerequisites = [str(item).strip() for item in (guide.get("prerequisites") or []) if str(item).strip()]
+    if prerequisites:
+        steps = prerequisites + steps
+    register_url = str(details.get("register") or details.get("registerUrl") or "").strip()
+    docs_url = str(guide.get("docsUrl") or "").strip()
+    links = []
+    if register_url:
+        links.append(("注册入口", "Open signup", register_url))
+    if docs_url:
+        links.append(("使用文档", "Open documentation", docs_url))
+    for item in details.get("links") or []:
+        if isinstance(item, (list, tuple)) and len(item) >= 2:
+            label, url = str(item[0]).strip(), str(item[1]).strip()
+            if url:
+                links.append((label or "官方来源", label or "Official source", url))
+    seen = set()
+    link_markup = []
+    for zh, en, url in links:
+        if url in seen:
+            continue
+        seen.add(url)
+        link_markup.append(f'<a class="log-registration-link" href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_locale_pair(zh, en)} ↗</a>')
+    steps_markup = "".join(f"<li>{_esc(step)}</li>" for step in steps)
+    fallback = _locale_pair("注册步骤待核验", "Registration steps not yet verified")
+    steps_block = f"<ol>{steps_markup}</ol>" if steps else f'<p class="muted">{fallback}</p>'
+    links_block = f'<div class="log-registration-links">{"".join(link_markup)}</div>' if link_markup else ""
+    return f'''<section class="log-registration"><h4>{_locale_pair("注册与文档", "Signup & docs")}</h4>{steps_block}{links_block}</section>'''
+
+
 def _log_detail_card(event: dict) -> str:
     details = event.get("details") or {}
     detail_keys = (
@@ -2370,7 +2406,8 @@ def _log_detail_card(event: dict) -> str:
         for key in detail_keys
         if details.get(key) not in (None, "", [])
     )
-    return f'''<article class="log-new-card"><div class="log-card-head"><span class="log-badge">{_esc(event.get("eventType"))}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></div><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl><div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></article>'''
+    badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(event.get("eventType"), event.get("eventType"))
+    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
 
 
 def _log_event_table(events: list[dict]) -> str:
@@ -2381,29 +2418,170 @@ def _log_event_table(events: list[dict]) -> str:
             f'<tr><td><strong>{_esc(event.get("title"))}</strong><small>{_esc(event.get("id"))}</small></td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
         )
     if not rows:
-        return '<p class="muted">当天没有此类记录 / No records for this category.</p>'
-    return f'<div class="table-wrap"><table><thead><tr><th>项目 / Item</th><th>提供商或类型 / Provider or type</th><th>依据 / Reason</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+        return f'<p class="muted">{_locale_pair("当天没有此类记录", "No records for this category.")}</p>'
+    return f'<div class="table-wrap"><table><thead><tr><th>{_locale_pair("项目", "Item")}</th><th>{_locale_pair("提供商或类型", "Provider or type")}</th><th>{_locale_pair("依据", "Reason")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+
+
+def _log_event_groups(events: list[dict], curated_events: list[dict] | None = None) -> dict[str, list[dict]]:
+    all_events = list(events) + list(curated_events or [])
+    return {
+        "new": [event for event in all_events if event.get("eventType") in {"new", "new_route"}],
+        "recovered": [event for event in all_events if event.get("eventType") == "recovered"],
+        "offline": [event for event in all_events if event.get("eventType") == "offline"],
+        "unavailable": [event for event in all_events if event.get("eventType") == "source_unavailable"],
+    }
+
+
+def _log_snapshot(log: dict) -> dict[str, int]:
+    observed = log.get("observed") or {}
+    models = [item for item in observed.get("models") or [] if isinstance(item, dict)]
+    offers = [item for item in observed.get("offers") or [] if isinstance(item, dict)]
+    providers = {
+        str(item.get("providerId") or "").strip()
+        for item in models
+        if str(item.get("providerId") or "").strip()
+    }
+    return {"models": len(models), "providers": len(providers), "offers": len(offers)}
+
+
+def _log_stat_cards(groups: dict[str, list[dict]]) -> str:
+    cards = (
+        ("new", "新增", "New", "发现的新资源或新路径", "Newly discovered resources or routes", "blue"),
+        ("recovered", "恢复", "Recovered", "重新恢复可用的项目", "Entries available again", "green"),
+        ("offline", "下线", "Offline", "确认不再可用的项目", "Confirmed unavailable entries", "red"),
+        ("unavailable", "来源异常", "Source issues", "扫描失败，不等于项目下线", "Scan failure, not an offline record", "amber"),
+    )
+    return "".join(
+        f'''<article class="log-stat-card {tone}"><div class="log-stat-label">{_locale_pair(zh, en)}</div><strong>{len(groups[key])}</strong><p>{_locale_pair(copy_zh, copy_en)}</p></article>'''
+        for key, zh, en, copy_zh, copy_en, tone in cards
+    )
+
+
+def _log_snapshot_cards(snapshot: dict[str, int]) -> str:
+    cards = (
+        ("models", "模型", "Models", "当前观测到的模型记录", "Observed model records"),
+        ("providers", "提供商", "Providers", "按 providerId 去重", "Deduplicated by providerId"),
+        ("offers", "资源", "Offers", "当前免费与试用入口", "Current free and trial entry points"),
+    )
+    return "".join(
+        f'''<article class="log-snapshot-card"><span>{_locale_pair(zh, en)}</span><strong>{snapshot[key]}</strong><small>{_locale_pair(copy_zh, copy_en)}</small></article>'''
+        for key, zh, en, copy_zh, copy_en in cards
+    )
+
+
+def _log_health_cards(log: dict) -> str:
+    health = log.get("sourceHealth") or {}
+    cards = (("models", "模型源", "Model source"), ("offers", "资源源", "Offer source"))
+    rendered = []
+    for key, zh, en in cards:
+        source = health.get(key) or {}
+        ok = str(source.get("status") or "unknown").lower() == "ok"
+        state_zh, state_en, tone = (("正常", "Healthy", "healthy") if ok else ("异常", "Issue", "issue"))
+        reason = source.get("reason") or ("扫描完成" if ok else "原因未提供")
+        reason_en = "Scan complete" if ok else "Reason not provided"
+        rendered.append(
+            f'''<article class="log-health-card {tone}"><div><span>{_locale_pair(zh, en)}</span><strong>{_locale_pair(state_zh, state_en)}</strong></div><p>{_locale_pair(reason, reason_en)}</p></article>'''
+        )
+    return "".join(rendered)
+
+
+def _log_health_table(log: dict) -> str:
+    health = log.get("sourceHealth") or {}
+    rows = []
+    for key, zh, en in (("models", "模型源", "Model source"), ("offers", "资源源", "Offer source")):
+        source = health.get(key) or {}
+        status = str(source.get("status") or "unknown")
+        reason = source.get("reason") or ("扫描完成" if status == "ok" else "原因未提供")
+        reason_en = "Scan complete" if status == "ok" else "Reason not provided"
+        rows.append(f"<tr><td>{_locale_pair(zh, en)}</td><td><span class=\"health-pill {'healthy' if status == 'ok' else 'issue'}\">{_esc(status)}</span></td><td>{_locale_pair(reason, reason_en)}</td></tr>")
+    return f'<div class="table-wrap"><table><thead><tr><th>{_locale_pair("来源", "Source")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("说明", "Note")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+
+
+def _log_empty_state(log: dict, groups: dict[str, list[dict]]) -> str:
+    if not any(groups.values()):
+        return f'<div class="log-empty"><strong>{_locale_pair("今日扫描完成，未发现变化", "Scan complete, no changes")}</strong><p>{_locale_pair("当前目录保持稳定。你仍可以从下面的快照进入模型和资源目录。", "The directory is stable. You can still use the snapshot below to open the model and resource directories.")}</p></div>'
+    return ""
 
 
 def render_daily_log_page(logs: list[dict], site_url: str) -> str:
-    """Render the public daily change log with expanded new-entry cards."""
+    """Render the public daily change log as a dashboard with event details."""
     page_url = _absolute(site_url, CHANGE_LOG_PAGE_PATH)
-    dates = []
+    sorted_logs = sorted(logs, key=lambda item: str(item.get("date") or ""), reverse=True)
+    dates = [str(log.get("date") or "未知日期") for log in sorted_logs]
+    latest = sorted_logs[0] if sorted_logs else {}
+    latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
+    latest_snapshot = _log_snapshot(latest)
+    latest_status = "首次基线" if latest.get("baseline") and not any(latest_groups.values()) else ("今日有更新" if any(latest_groups.values()) else "今日扫描完成")
+    date_nav = ""
+    if len(dates) > 1:
+        links = []
+        for index, date in enumerate(dates):
+            active = " is-active" if index == 0 else ""
+            links.append(f'<a class="log-date-link{active}" href="#log-day-{_esc(date)}">{_esc(date)}</a>')
+        date_nav = f'<nav class="log-date-nav" aria-label="历史日期 / History">{_locale_pair("历史日期", "History")}{"".join(links)}</nav>'
     sections = []
-    for log in sorted(logs, key=lambda item: str(item.get("date") or ""), reverse=True):
+    for index, log in enumerate(sorted_logs):
         date = str(log.get("date") or "未知日期")
-        dates.append(date)
         events = list(log.get("events") or [])
-        new_events = [event for event in events if event.get("eventType") in {"new", "new_route"}]
-        recovered = [event for event in events if event.get("eventType") == "recovered"]
-        offline = [event for event in events if event.get("eventType") == "offline"]
-        unavailable = [event for event in events if event.get("eventType") == "source_unavailable"]
-        new_markup = "".join(_log_detail_card(event) for event in new_events) or '<p class="muted">当天没有新增 / No new entries.</p>'
-        sections.append(f'''<section class="log-day"><div class="log-day-head"><h2>{_esc(date)}</h2><div class="log-counts"><span>新增 {len(new_events)}</span><span>恢复 {len(recovered)}</span><span>下线 {len(offline)}</span><span>来源异常 {len(unavailable)}</span></div></div><h3>新增详情 / New entries</h3>{new_markup}<h3>恢复 / Recovered</h3>{_log_event_table(recovered)}<h3>下线 / Offline</h3>{_log_event_table(offline)}<h3>来源状态 / Source health</h3>{_log_event_table(unavailable)}</section>''')
-    body = "".join(sections) or '<section class="log-day"><p class="muted">日志即将开始记录 / The daily log has not started yet.</p></section>'
+        groups = _log_event_groups(events, list(log.get("curatedEvents") or []))
+        snapshot = _log_snapshot(log)
+        day_state = ("首次基线", "Baseline") if log.get("baseline") and not any(groups.values()) else (("有变更", "Changes") if any(groups.values()) else ("无变化", "No changes"))
+        new_markup = "".join(_log_detail_card(event) for event in groups["new"]) or f'<p class="muted">{_locale_pair("当天没有新增", "No new entries.")}</p>'
+        empty_state = _log_empty_state(log, groups) if index == 0 else ""
+        sections.append(
+            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("扫描日期", "Scan date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{_locale_pair("当日快照", "Daily snapshot")}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid"><section class="log-event-panel"><h3>{_locale_pair("新增详情", "New entries")}</h3>{new_markup}</section><section class="log-event-panel"><h3>{_locale_pair("恢复", "Recovered")}</h3>{_log_event_table(groups["recovered"])}</section><section class="log-event-panel"><h3>{_locale_pair("下线", "Offline")}</h3>{_log_event_table(groups["offline"])}</section><section class="log-event-panel"><h3>{_locale_pair("来源异常", "Source issues")}</h3>{_log_event_table(groups["unavailable"])}</section></div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
+        )
+    body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM daily discovery log", "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": dates[0] if dates else None}
+    style = '''<style>
+:root { --ink:#14213d; --muted:#66738d; --line:#dfe6f2; --paper:#f4f7fc; --panel:#fff; --blue:#285ee8; --blue-soft:#eaf0ff; --green:#0f8b68; --green-soft:#e8f8f2; --red:#c2414c; --red-soft:#fff0f1; --amber:#a66b16; --amber-soft:#fff6df; }
+* { box-sizing:border-box; }
+html { background:var(--paper); }
+body { margin:0; color:var(--ink); background:linear-gradient(135deg,#f7f9fd 0%,#eef3fb 100%); font-family:Inter,ui-sans-serif,system-ui,sans-serif; line-height:1.55; }
+a { color:var(--blue); }
+.daily-log-dashboard { max-width:1240px; margin:0 auto; padding:24px 18px 64px; }
+.log-hero { padding:clamp(24px,5vw,52px); border:1px solid #cbd9f2; border-radius:26px; background:linear-gradient(135deg,#fff 0%,#edf3ff 70%,#e8eeff 100%); box-shadow:0 18px 50px rgba(41,78,151,.08); }
+.log-hero-top,.log-day-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+.log-kicker,.log-eyebrow { color:var(--blue); font:700 11px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.12em; text-transform:uppercase; }
+.log-hero h1 { max-width:820px; margin:14px 0 12px; font-size:clamp(36px,6vw,72px); line-height:.98; letter-spacing:-.055em; }
+.log-hero .lead { max-width:760px; margin:0; color:#52617e; font-size:16px; }
+.log-hero-meta { display:grid; grid-template-columns:repeat(3,minmax(100px,1fr)); gap:10px; min-width:min(100%,360px); }
+.log-hero-meta div { padding:12px; border:1px solid #d6e1f5; border-radius:14px; background:rgba(255,255,255,.72); }
+.log-hero-meta span,.log-snapshot-card span { display:block; color:var(--muted); font-size:12px; }
+.log-hero-meta strong { display:block; margin-top:4px; font-size:20px; }
+.log-hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+.log-hero-actions a { padding:9px 13px; border:1px solid #bdd0f4; border-radius:999px; background:#fff; text-decoration:none; font-weight:700; }
+.log-date-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:18px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.72); color:var(--muted); font-size:12px; }
+.log-date-link { padding:6px 9px; border-radius:999px; color:var(--muted); text-decoration:none; }
+.log-date-link.is-active { color:#fff; background:var(--blue); }
+.log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }
+.log-panel,.log-snapshot-panel { padding:14px; border:1px solid var(--line); border-radius:16px; background:var(--panel); box-shadow:0 8px 24px rgba(41,78,151,.045); }
+.log-panel h2,.log-snapshot-panel h2 { margin:0 0 10px; font-size:18px; letter-spacing:-.025em; }
+.log-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; align-items:start; }
+.log-stat-card { min-height:92px; padding:11px; border:1px solid var(--line); border-radius:12px; background:#fbfcff; }
+.log-stat-card strong { display:block; margin-top:5px; font-size:27px; line-height:1; }
+.log-stat-card p { margin:5px 0 0; color:var(--muted); font-size:10px; line-height:1.3; }
+.log-stat-card.blue { border-top:3px solid var(--blue); }.log-stat-card.green { border-top:3px solid var(--green); }.log-stat-card.red { border-top:3px solid var(--red); }.log-stat-card.amber { border-top:3px solid #dda12c; }
+.log-stat-label { color:var(--muted); font-size:12px; font-weight:700; }
+.log-snapshot-grid,.log-health-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.log-snapshot-card { padding:10px; border:1px solid var(--line); border-radius:12px; background:#fbfcff; }.log-snapshot-card strong { display:block; margin-top:3px; font-size:24px; }.log-snapshot-card small { color:var(--muted); font-size:10px; line-height:1.3; }
+.log-health-grid { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:8px; }.log-health-card { padding:10px; border-radius:12px; background:var(--green-soft); }.log-health-card.issue { background:var(--amber-soft); }.log-health-card div { display:flex; justify-content:space-between; gap:8px; }.log-health-card span { font-size:11px; font-weight:700; }.log-health-card strong { color:var(--green); font-size:11px; }.log-health-card.issue strong { color:var(--amber); }.log-health-card p { margin:3px 0 0; color:var(--muted); font-size:10px; overflow-wrap:anywhere; }
+.log-days { position:relative; margin-top:18px; padding:22px 0 30px; background:transparent; }
+.log-days::before { content:""; position:absolute; left:25px; top:96px; bottom:40px; width:2px; background:linear-gradient(var(--blue),#dce5f5); }
+.log-section-heading { margin:0 0 22px 70px; }.log-section-heading p { margin:8px 0 0; color:var(--muted); }
+.log-day { position:relative; scroll-margin-top:18px; margin:0 0 18px 70px; padding:18px 20px 20px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:0 8px 24px rgba(41,78,151,.045); }.log-day:last-child { margin-bottom:0; }.log-day::before { content:""; position:absolute; left:-54px; top:22px; width:16px; height:16px; border:4px solid var(--paper); border-radius:50%; background:var(--blue); box-shadow:0 0 0 1px #b9c9e6; z-index:1; }.log-day-head h2 { margin:4px 0 0; font-size:30px; letter-spacing:-.035em; }.log-day-summary { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }.log-day-summary span { padding:5px 9px; border-radius:999px; background:var(--blue-soft); color:#3156a5; font-size:11px; font-weight:700; }
+.log-empty { margin:18px 0; padding:16px 18px; border:1px dashed #b9c9e6; border-radius:15px; background:#f8faff; }.log-empty.baseline-empty { border-color:#a9bdf4; background:#eef3ff; }.log-empty strong { display:block; }.log-empty p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+.log-day-snapshot { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0; padding:11px 13px; border-radius:12px; background:#f7f9fd; color:var(--muted); font-size:12px; }.log-day-snapshot strong { color:var(--ink); }
+.log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }.log-event-panel { min-width:0; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fff; }.log-event-panel h3 { margin:0 0 10px; font-size:16px; }.log-health-panel { margin-top:12px; }.log-event-panel .muted { margin:8px 0; color:var(--muted); font-size:13px; }
+.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid #b8e5d7; border-left:4px solid var(--green); border-radius:14px; background:#fbfffd; overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--green); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--muted); font-size:11px; }.log-badge { padding:4px 8px; border-radius:999px; color:var(--green); background:var(--green-soft); font-size:11px; font-weight:800; }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 9px; border:1px solid var(--line); border-radius:9px; background:#fff; }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--muted); font-size:12px; }
+.log-registration { margin:12px 0; padding:12px 14px; border:1px solid #cfe0f8; border-radius:12px; background:#f7faff; }.log-registration h4 { margin:0; font-size:14px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 8px; border:1px solid #bcd0f2; border-radius:999px; background:#fff; font-size:11px; text-decoration:none; }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:10px; }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12px; }.table-wrap th,.table-wrap td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }.table-wrap th { color:var(--muted); font-size:10px; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 7px; border-radius:999px; background:var(--green-soft); color:var(--green); font-size:11px; }.health-pill.issue { background:var(--amber-soft); color:var(--amber); }
+@media (max-width:900px) { .log-overview-grid { grid-template-columns:1fr; } }
+@media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; border-radius:20px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; border-radius:15px; }.log-day::before { left:-34px; top:20px; width:14px; height:14px; }.log-day-summary { justify-content:flex-start; } }
+</style>'''
+    style += STATIC_LOCALE_SCRIPT
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日新增与下线日志 · FreeLLM</title><meta name="description" content="FreeLLM 每日记录新发现、下线、恢复和来源状态；新增条目提供详细的免费条件、访问方式和证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">FreeLLM Free AI Index</a> / 日志</p>{_static_locale_nav()}<h1>{_locale_pair('每日新增与下线日志', 'Daily discovery change log')}</h1><p class="lead">{_locale_pair('每天记录新发现、重新上线、下线和来源异常。新增项目展开显示完整接入信息与证据。', 'Track new entries, recoveries, offline records and source failures. New entries expand into detailed access and evidence cards.')}</p><p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a> · <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('模型目录', 'Model directory')}</a></p></header><main>{body}</main><footer><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p></footer><style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;--new:#0f766e;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.6;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}h2 {{margin:0;font-size:26px;}}h3 {{margin-top:24px;}}.lead,.muted {{color:var(--muted);}}.static-locale-nav {{margin:10px 0;}}.log-day {{padding:20px 0;border-bottom:1px solid var(--line);}}.log-day:last-child {{border-bottom:0;}}.log-day-head {{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;}}.log-counts {{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:12px;}}.log-counts span,.log-badge {{padding:4px 8px;border-radius:999px;background:#e7f5f2;color:var(--new);font-size:12px;font-weight:700;}}.log-new-card {{margin:12px 0;padding:18px;border:1px solid #b7e4db;border-left:4px solid var(--new);border-radius:12px;background:#fbfffe;}}.log-card-head {{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}}.log-card-head h3 {{margin:0;font-size:20px;}}.log-card-head code,small {{color:var(--muted);font-size:11px;}}.log-facts {{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;margin:16px 0;}}.log-facts div {{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;}}.log-facts dt {{color:var(--muted);font:11px ui-monospace,Consolas,monospace;}}.log-facts dd {{margin:3px 0 0;overflow-wrap:anywhere;}}.log-source {{padding-top:12px;border-top:1px solid var(--line);}}.log-links {{margin:6px 0;padding-left:20px;overflow-wrap:anywhere;}}.log-reason {{color:var(--muted);font-size:13px;}}.table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:10px;}}table {{width:100%;border-collapse:collapse;font-size:13px;}}th,td {{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;}}th {{color:var(--muted);font-size:11px;}}tr:last-child td {{border-bottom:0;}}td small {{display:block;margin-top:3px;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日新增与下线日志 · FreeLLM</title><meta name="description" content="FreeLLM 每日记录新发现、下线、恢复和来源状态；新增项目提供当前目录快照、免费条件、访问方式和证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY DISCOVERY / 每日情报</div><h1>{_locale_pair('每日更新', 'Daily updates')}</h1><p class="lead">{_locale_pair('每天记录 FreeLLM 目录里的新增、恢复、下线与来源状态，并保留可核对的官方证据。', 'Track new entries, recoveries, offline records and source health with evidence you can verify.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, 'Baseline' if latest.get('baseline') else latest_status)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
 def _load_daily_logs(data_path: Path) -> list[dict]:
@@ -2427,6 +2605,9 @@ def render_sitemap(
 ) -> str:
     paths = [
         "/",
+        "/about/",
+        "/terms/",
+        "/privacy/",
         guide_url(),
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
@@ -2574,6 +2755,26 @@ def _clean_previous_pages(output_root: Path) -> None:
             pass
 
 
+LEGAL_FOOTER_LINKS = (
+    '<p><a href="/about/">{zh}关于本站{/zh}{en}About{/en}</a>'
+    ' · <a href="/terms/">{zh}使用条款与免责声明{/zh}{en}Terms &amp; Disclaimer{/en}</a>'
+    ' · <a href="/privacy/">{zh}隐私政策（含广告 Cookie 说明）{/zh}{en}Privacy Policy (incl. ad cookies){/en}</a></p>'
+)
+
+
+def _localized_legal_links() -> str:
+    return (LEGAL_FOOTER_LINKS
+            .replace('{zh}', '<span lang="zh-CN">').replace('{/zh}', '</span>')
+            .replace('{en}', '<span lang="en">').replace('{/en}', '</span>'))
+
+
+def _append_legal_links(content: str) -> str:
+    """Every generated page must expose the privacy / about / terms pages for AdSense compliance."""
+    if "</footer>" not in content or "href=\"/privacy/\"" in content:
+        return content
+    return content.replace("</footer>", _localized_legal_links() + "</footer>", 1)
+
+
 def build_site(data_path: str | Path, output_root: str | Path, site_url: str = SITE_URL, check: bool = False) -> BuildResult | bool:
     data_path = Path(data_path)
     offers = _load_data(data_path)
@@ -2582,6 +2783,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     operations = _load_operations(data_path)
     daily_logs = _load_daily_logs(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs)
+    files = {relative: _append_legal_links(content) for relative, content in files.items()}
     output_root = Path(output_root)
     if check:
         stale = []
