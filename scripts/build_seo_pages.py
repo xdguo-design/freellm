@@ -2501,6 +2501,12 @@ def _log_event_table(events: list[dict]) -> str:
     return f'<div class="table-wrap"><table><thead><tr><th>{_locale_pair("项目", "Item")}</th><th>{_locale_pair("提供商或类型", "Provider or type")}</th><th>{_locale_pair("依据", "Reason")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
 
 
+def _log_event_panel(title_zh: str, title_en: str, content: str, events: list[dict]) -> str:
+    if not events:
+        return ""
+    return f'<section class="log-event-panel"><h3>{_locale_pair(title_zh, title_en)}</h3>{content}</section>'
+
+
 def _log_event_groups(events: list[dict], curated_events: list[dict] | None = None) -> dict[str, list[dict]]:
     all_events = list(events) + list(curated_events or [])
     return {
@@ -2607,10 +2613,16 @@ def render_daily_log_page(logs: list[dict], site_url: str) -> str:
         groups = _log_event_groups(events, list(log.get("curatedEvents") or []))
         snapshot = _log_snapshot(log)
         day_state = ("首次基线", "Baseline") if log.get("baseline") and not any(groups.values()) else (("有变更", "Changes") if any(groups.values()) else ("无变化", "No changes"))
-        new_markup = "".join(_log_detail_card(event) for event in groups["new"]) or f'<p class="muted">{_locale_pair("当天没有新增", "No new entries.")}</p>'
+        new_markup = "".join(_log_detail_card(event) for event in groups["new"])
+        event_panels = "".join((
+            _log_event_panel("新增详情", "New entries", new_markup, groups["new"]),
+            _log_event_panel("恢复", "Recovered", _log_event_table(groups["recovered"]), groups["recovered"]),
+            _log_event_panel("下线", "Offline", _log_event_table(groups["offline"]), groups["offline"]),
+            _log_event_panel("来源异常", "Source issues", _log_event_table(groups["unavailable"]), groups["unavailable"]),
+        ))
         empty_state = _log_empty_state(log, groups) if index == 0 else ""
         sections.append(
-            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("扫描日期", "Scan date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{_locale_pair("当日快照", "Daily snapshot")}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid"><section class="log-event-panel"><h3>{_locale_pair("新增详情", "New entries")}</h3>{new_markup}</section><section class="log-event-panel"><h3>{_locale_pair("恢复", "Recovered")}</h3>{_log_event_table(groups["recovered"])}</section><section class="log-event-panel"><h3>{_locale_pair("下线", "Offline")}</h3>{_log_event_table(groups["offline"])}</section><section class="log-event-panel"><h3>{_locale_pair("来源异常", "Source issues")}</h3>{_log_event_table(groups["unavailable"])}</section></div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
+            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("扫描日期", "Scan date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{_locale_pair("当日快照", "Daily snapshot")}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
         )
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM daily discovery log", "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": dates[0] if dates else None}

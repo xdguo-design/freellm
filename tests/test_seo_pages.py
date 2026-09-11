@@ -649,6 +649,40 @@ def test_daily_log_dashboard_renders_curated_additions_on_timeline():
     assert ".log-days::before" in page
 
 
+def test_daily_log_hides_empty_event_panels():
+    page = render_daily_log_page([{
+        "schemaVersion": 1,
+        "date": "2026-09-11",
+        "baseline": False,
+        "events": [
+            {
+                "kind": "offer",
+                "eventType": "new",
+                "id": "alpha",
+                "title": "Alpha",
+                "details": {"provider": "Alpha"},
+                "reason": "new",
+            },
+            {
+                "kind": "source",
+                "eventType": "source_unavailable",
+                "id": "models",
+                "title": "models",
+                "details": {"status": "failed"},
+                "reason": "scan failed",
+            },
+        ],
+        "observed": {"models": [], "offers": []},
+        "sourceHealth": {"models": {"status": "failed"}, "offers": {"status": "ok"}},
+    }], "https://freellm.top")
+
+    assert 'class="log-event-panel"><h3><span lang="zh-CN">恢复</span>' not in page
+    assert 'class="log-event-panel"><h3><span lang="zh-CN">下线</span>' not in page
+    assert "当天没有此类记录" not in page
+    assert "Alpha" in page
+    assert "来源异常" in page
+
+
 def test_expected_files_and_sitemap_include_daily_logs(tmp_path):
     files, _ = _expected_files(read_offers(), "https://freellm.top", read_models())
     assert Path("logs/index.html") in files
