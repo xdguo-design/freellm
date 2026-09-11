@@ -54,13 +54,13 @@ class StaticContractTests(unittest.TestCase):
             'assets/free-method-night-window.png', "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.html)
-        self.assertIn('"id": "doubao"', self.html)
-        self.assertIn('"id": "aliyun-qwen-free-quota"', self.html)
-        self.assertIn('"id": "agnes-ai-free"', self.html)
-        self.assertIn('"id": "stepfun-limited-time-free"', self.html)
-        self.assertIn('"id": "longcat-2-0"', self.html)
-        self.assertNotIn('"id": "longcat-api"', self.html)
-        self.assertNotIn('"id": "longcat-download"', self.html)
+        self.assertIn('"id":"doubao"', self.html)
+        self.assertIn('"id":"aliyun-qwen-free-quota"', self.html)
+        self.assertIn('"id":"agnes-ai-free"', self.html)
+        self.assertIn('"id":"stepfun-limited-time-free"', self.html)
+        self.assertIn('"id":"longcat-2-0"', self.html)
+        self.assertNotIn('"id":"longcat-api"', self.html)
+        self.assertNotIn('"id":"longcat-download"', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
         for href in (
@@ -354,7 +354,7 @@ class StaticContractTests(unittest.TestCase):
     def test_web_usage_guide_hooks_exist(self):
         for hook in ("drawerUsageGuide", "drawerPrerequisites", "drawerSteps", "drawerEndpoint", "drawerExample", "drawerQuotaGuard", "drawerCommonIssues"):
             self.assertIn(f'id="{hook}"', self.html)
-        self.assertIn('"id": "tinyfish-search-fetch-free"', self.html)
+        self.assertIn('"id":"tinyfish-search-fetch-free"', self.html)
 
     def test_page_has_external_signal_hooks_without_local_scoring(self):
         for needle in (

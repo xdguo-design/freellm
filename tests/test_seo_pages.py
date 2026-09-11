@@ -340,9 +340,18 @@ def test_explicit_adsense_slot_is_opt_in():
     assert _adsense_slot_markup("not-a-slot") == ""
 
 
+def _all_catalog_pages(tmp_path) -> str:
+    """Concatenate every paginated model-catalog page (page 1 + page/2..N)."""
+    base = tmp_path / "models" / "all"
+    pages = [base / "index.html"]
+    pages.extend(sorted(base.glob("page/*/index.html")))
+    return "".join(page.read_text(encoding="utf-8") for page in pages if page.is_file())
+
+
 def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+    all_pages = _all_catalog_pages(tmp_path)
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
 
     assert 'id="model-catalog-search"' in page
@@ -350,9 +359,11 @@ def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     assert 'data-group-mode="provider"' in page
     assert 'data-group-mode="model"' in page
     assert f'{len(read_visible_models())} 个模型' in page
-    assert 'data-model-id="ollama-cloud/deepseek-v4-pro"' in page
-    assert 'Ollama Cloud' in page
-    assert 'deepseek-v4-pro' in page
+    # The catalog is paginated; ollama-cloud lives beyond page one, so scan all
+    # pages — the queryable catalog contract must hold on every page.
+    assert 'data-model-id="ollama-cloud/deepseek-v4-pro"' in all_pages
+    assert 'Ollama Cloud' in all_pages
+    assert 'deepseek-v4-pro' in all_pages
     assert 'Score' in page
     assert '目录来源' in page
 

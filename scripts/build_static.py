@@ -79,7 +79,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     end = html.find(END, content_start)
     if end < 0:
         raise SystemExit(f"Missing JSON script closing tag in {html_path}")
-    replacement = "\n  " + json.dumps(data, ensure_ascii=False, indent=2) + "\n  "
+    replacement = "\n  " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n  "
     updated = html[:content_start] + replacement + html[end:]
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)

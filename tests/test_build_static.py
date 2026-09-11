@@ -17,7 +17,7 @@ class BuildStaticTests(unittest.TestCase):
             }]), encoding="utf-8")
             html_path.write_text('<script type="application/json" id="offer-data">\n[]\n</script>', encoding="utf-8")
             self.assertTrue(build(data_path, html_path))
-            self.assertIn('"id": "x"', html_path.read_text(encoding="utf-8"))
+            self.assertIn('"id":"x"', html_path.read_text(encoding="utf-8"))
 
     def test_build_injects_latest_daily_log_date_and_link(self):
         with tempfile.TemporaryDirectory() as directory:

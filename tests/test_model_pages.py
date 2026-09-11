@@ -36,13 +36,24 @@ def test_build_site_creates_model_aggregation_pages(tmp_path):
     assert '"@type": "ItemList"' in page
 
 
+def _all_catalog_pages(tmp_path) -> str:
+    """Concatenate every paginated model-catalog page (page 1 + page/2..N)."""
+    base = tmp_path / "models" / "all"
+    pages = [base / "index.html"]
+    pages.extend(sorted(base.glob("page/*/index.html")))
+    return "".join(page.read_text(encoding="utf-8") for page in pages if page.is_file())
+
+
 def test_model_rows_link_to_local_aggregation_pages(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+    all_pages = _all_catalog_pages(tmp_path)
 
     assert 'href="/models/llama-3-1-70b/"' in page
     assert 'href="/models/longcat-2-0/"' in page
-    assert 'href="/providers/ollama-cloud/"' in page
+    # The catalog is paginated, so scan every page for a provider that lives
+    # beyond page one — the row→aggregation-page contract must hold everywhere.
+    assert 'href="/providers/ollama-cloud/"' in all_pages
 
 
 def test_new_model_directory_is_additive_and_preserves_previous_models_page(tmp_path):

@@ -168,6 +168,10 @@ MODEL_CENTER_PAGE_PATH = "/models/center/"
 PROVIDERS_PAGE_PATH = "/providers/"
 CHANGE_LOG_PAGE_PATH = "/logs/"
 
+# Server-side pagination: each catalog page carries at most this many rows.
+# Keeps individual HTML files small enough for fast parse/DOM build on mobile.
+MODELS_PER_PAGE = 75
+
 
 OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
 CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
@@ -1599,7 +1603,7 @@ def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) 
     provider_id = str(model.get("providerId") or "")
     model_id = str(model.get("id") or "")
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
-    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-provider="{_esc(str(model.get("provider") or "").lower())}" data-model="{_esc(str(model.get("model") or "").lower())}" data-score="{_esc(score if score is not None else -1)}" data-cn="{_esc(cn["code"])}">
+    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-score="{_esc(score if score is not None else -1)}" data-cn="{_esc(cn["code"])}">
       <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(model.get("provider"))}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
       <td class="model-cell"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model.get("model"))}"><strong>{_esc(model.get("model"))}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
       <td>{score_markup}</td>
@@ -1615,7 +1619,7 @@ def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) 
     </tr>'''
 
 
-def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> str:
+def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0) -> str:
     if not models:
         return ""
     provider_cards, policies, model_access = _load_access_context()
@@ -1629,6 +1633,37 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
     heading_markup = f'''<div class="eyebrow">{_locale_pair("01 / 实时模型目录", "01 / Live model directory")}</div>
       <h2>{_locale_pair("模型大列表", "Model directory")} <small>{len(models)}</small></h2>
       <p class="section-desc">{_locale_pair("按模型查找可用入口，或按厂商查看完整模型家族。这里展示目录数据；具体免费额度和接入步骤进入对应资源详情。", "Search by model or browse a complete provider family. This directory shows catalog facts; open the linked access record for free-tier terms and step-by-step setup.")}</p>''' if include_heading else ""
+    # Build pagination navigation
+    if total_pages > 1:
+        def _page_link(p: int, label: str, aria_label: str) -> str:
+            if p == page_num:
+                return f'<span class="catalog-page-current" aria-current="page">{label}</span>'
+            href = "/models/all/" if p == 1 else f"/models/all/page/{p}/"
+            return f'<a class="catalog-page-link" href="{href}" aria-label="{aria_label}">{label}</a>'
+        prev_link = _page_link(page_num - 1, "‹ " + _locale_pair("上一页", "Previous"), _locale_pair("上一页", "Previous page")) if page_num > 1 else ""
+        next_link = _page_link(page_num + 1, _locale_pair("下一页", "Next") + " ‹", _locale_pair("下一页", "Next page")) if page_num < total_pages else ""
+        page_links = ""
+        for p in range(1, total_pages + 1):
+            if p == page_num:
+                page_links += f'<span class="catalog-page-current" aria-current="page">{p}</span>'
+            else:
+                href = "/models/all/" if p == 1 else f"/models/all/page/{p}/"
+                page_links += f'<a class="catalog-page-link" href="{href}" aria-label="{_locale_pair(f"第 {p} 页", f"Page {p}")}">{p}</a>'
+        pagination_markup = f'''<nav class="catalog-pagination" aria-label="{_locale_pair("分页导航", "Pagination")}>
+        {prev_link}
+        {page_links}
+        {next_link}
+      </nav>'''
+        hint_text = _locale_pair(
+            f"第 {page_num} / {total_pages} 页，共 {total_models} 条。可滚动查看当前页；筛选仅作用于当前页。",
+            f"Page {page_num} of {total_pages}, {total_models} total records. Filters apply to the current page only.",
+        )
+    else:
+        pagination_markup = ""
+        hint_text = _locale_pair(
+            f"共 {len(models)} 条，可滚动查看全部记录。筛选后会显示当前匹配数量。",
+            f"{len(models)} records, scroll to view all. Filters show the current match count.",
+        )
     return f'''<section id="model-directory" class="model-directory">
       {heading_markup}
       <div class="catalog-toolbar" role="search">
@@ -1648,13 +1683,15 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
           <button type="button" class="group-mode" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
           <button type="button" class="group-mode" data-group-mode="model">{_locale_pair("按模型分组", "By model")}</button>
         </div>
-        <span id="model-catalog-count" class="catalog-count">{_locale_pair(f"显示 {len(models)} 条 / 共 {len(models)} 条", f"Showing {len(models)} / {len(models)}")}</span>
+        <span id="model-catalog-count" class="catalog-count">{_locale_pair(f"显示 {len(models)} 条 / 共 {total_models} 条", f"Showing {len(models)} / {total_models}")}</span>
       </div>
-      <p class="catalog-hint">{_locale_pair("这是连续长列表，不分页；可滚动查看全部记录。筛选后会显示当前匹配数量。", "This is one continuous list, not pagination; scroll to view all records. Filters show the current match count.")}</p>
+      <p class="catalog-hint">{hint_text}</p>
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
         <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("评分", "Score")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("大陆可用性", "Mainland CN")}</th><th>{_locale_pair("来源", "Source")}</th>
       </tr></thead><tbody>{rows}</tbody></table></div>
       <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除厂商、地区筛选。", "No models match this filter. Try another keyword or clear the provider and region filters.")}</p>
+      {pagination_markup}
+      {f'<style>.catalog-pagination {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin: 20px 0 0; padding: 16px; }}.catalog-page-link, .catalog-page-current {{ display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--blue); text-decoration: none; font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif; }}.catalog-page-link:hover {{ background: var(--soft); }}.catalog-page-current {{ color: var(--ink); background: var(--blue); border-color: var(--blue); }}</style>' if total_pages > 1 else ''}
       <script>
         (() => {{
           const table = document.getElementById('model-catalog');
@@ -1681,13 +1718,23 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
             const providerId = provider?.value || '';
             const regionFilter = region?.value || '';
             const visible = rows.filter(row => {{
-              const matchesText = !query || `${{row.dataset.provider || ''}} ${{row.dataset.model || ''}} ${{row.dataset.modelId || ''}}`.includes(query);
+              const matchesText = !query || row.textContent.toLowerCase().includes(query);
               const matchesProvider = !providerId || row.dataset.providerId === providerId;
               const matchesRegion = !regionFilter || row.dataset.cn === regionFilter;
               row.hidden = !(matchesText && matchesProvider && matchesRegion);
               return matchesText && matchesProvider && matchesRegion;
             }});
-            const value = row => mode === 'provider' ? `${{row.dataset.provider || ''}} ${{row.dataset.model || ''}}` : mode === 'model' ? `${{row.dataset.model || ''}} ${{row.dataset.provider || ''}}` : String(999 - Number(row.dataset.score || -1)).padStart(3, '0');
+            const value = row => {{
+              if (mode === 'provider') {{
+                const cell = row.querySelector('.provider-filter');
+                return cell ? cell.textContent.trim().toLowerCase() : '';
+              }}
+              if (mode === 'model') {{
+                const cell = row.querySelector('td:nth-child(2) strong');
+                return cell ? cell.textContent.trim().toLowerCase() : '';
+              }}
+              return String(999 - Number(row.dataset.score || -1)).padStart(3, '0');
+            }};
             visible.sort((a, b) => value(a).localeCompare(value(b), undefined, {{numeric: true}}));
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
@@ -1727,6 +1774,12 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True) -> s
           apply();
         }})();
       </script>
+      <style>
+        .catalog-pagination {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin: 20px 0 0; padding: 16px; }}
+        .catalog-page-link, .catalog-page-current {{ display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--blue); text-decoration: none; font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif; }}
+        .catalog-page-link:hover {{ background: var(--soft); }}
+        .catalog-page-current {{ color: var(--ink); background: var(--blue); border-color: var(--blue); }}
+      </style>
     </section>'''
 
 
@@ -1961,14 +2014,23 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
-def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None) -> str:
+def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
     registration CTA, so one shareable URL serves both language communities."""
-    path = ALL_MODELS_PAGE_PATH if models is not None else MODELS_PAGE_PATH
+    if models is not None and total_pages > 1:
+        path = f"{ALL_MODELS_PAGE_PATH}page/{page_num}/" if page_num > 1 else ALL_MODELS_PAGE_PATH
+    else:
+        path = ALL_MODELS_PAGE_PATH if models is not None else MODELS_PAGE_PATH
     page_url = _absolute(site_url, path)
     total = len(offers)
     model_catalog = models or []
     model_total = len(model_catalog)
+    if models is not None and total_pages > 1:
+        start = (page_num - 1) * MODELS_PER_PAGE
+        end = start + MODELS_PER_PAGE
+        page_models = model_catalog[start:end]
+    else:
+        page_models = model_catalog
     provider_access_count = len(_load_access_context()[0]) if models is not None else 0
     if models is None:
         title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
@@ -1977,13 +2039,22 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
             "进入每条资源页查看官方入口、限制和操作步骤。 Browse verified free AI models, APIs, IDEs and open-weight resources."
         )
     else:
-        title = "全部免费 AI 模型与 API 一览（含中国大陆可用性标注）· All Free AI Models with Mainland CN Availability | FreeLLM"
-        description = (
-            f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
-            f"附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
-            f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
-            f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
-        )
+        if page_num > 1:
+            title = f"全部免费 AI 模型与 API 一览（第 {page_num} 页）· All Free AI Models with Mainland CN Availability | FreeLLM"
+            description = (
+                f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
+                f"第 {page_num}/{total_pages} 页。附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
+                f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
+                f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
+            )
+        else:
+            title = "全部免费 AI 模型与 API 一览（含中国大陆可用性标注）· All Free AI Models with Mainland CN Availability | FreeLLM"
+            description = (
+                f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
+                f"附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
+                f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
+                f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
+            )
     social_meta = _social_meta(site_url, path, title, description, "website")
     checked_dates = {
         offer.get("lastVerifiedAt") for offer in offers if offer.get("lastVerifiedAt")
@@ -2178,7 +2249,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     </div>
     <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
   </header>
-  <main>{_model_catalog_markup(model_catalog)}{cn_section}{sections_markup}
+  <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total)}{cn_section}{sections_markup}
     <section>
       <h2>{_locale_pair('按分类浏览', 'Browse by category')}</h2>
       <p class="section-desc">{_locale_pair('每个分类有独立页面，收录同一资源的深度信息。', 'Each category has its own page with the full verified records.')}</p>
@@ -2629,6 +2700,10 @@ def render_sitemap(
     ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
     paths += [model_aggregate_url(model) for model in (models or [])]
     paths += [provider_url(provider) for provider in (providers or [])]
+    if models:
+        total_pages = (len(models) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
+        for page_num in range(2, total_pages + 1):
+            paths.append(f"{ALL_MODELS_PAGE_PATH}page/{page_num}/")
     paths = list(dict.fromkeys(paths))
     urls = "\n".join(f"  <url><loc>{_esc(_absolute(site_url, path))}</loc></url>" for path in paths)
     return f'''<?xml version="1.0" encoding="UTF-8"?>
@@ -2650,7 +2725,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     files: dict[Path, str] = {
         Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers),
         Path("models") / "index.html": render_models_page(offers, site_url),
-        Path("models") / "all" / "index.html": render_models_page(offers, site_url, models),
+        Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
         Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url),
@@ -2658,6 +2733,10 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
     }
+    if models:
+        total_pages = (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
+        for page_num in range(2, total_pages + 1):
+            files[Path("models") / "all" / f"page/{page_num}" / "index.html"] = render_models_page(offers, site_url, models, page_num=page_num, total_pages=total_pages)
     for definition in THEME_GUIDE_DEFINITIONS:
         path = Path("guides") / definition["slug"] / "index.html"
         files[path] = _render_theme_guide_page_expanded(offers, model_catalog, site_url, definition["slug"])
