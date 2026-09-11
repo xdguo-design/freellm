@@ -13,7 +13,7 @@ REQUIRED_FIELDS = {
     "why", "mechanism", "validity", "access", "command", "register", "links",
     "sourceUrls", "evidence", "status", "confidence", "lastVerifiedAt",
 }
-PRODUCT_TYPES = {"free_ide", "api", "coding_plan", "open_weights", "payg", "web_infrastructure"}
+PRODUCT_TYPES = {"free_ide", "api", "coding_plan", "open_weights", "payg", "web_infrastructure", "desktop_ai_app"}
 MECHANISMS = {"permanent", "monthly_quota", "daily_quota", "weekly_quota", "trial", "first_month_promo", "limited_time_free", "open_weights", "not_confirmed"}
 STATUSES = {"verified", "changed", "expired", "unavailable", "needs_review"}
 CONFIDENCES = {"high", "medium", "low"}
@@ -21,7 +21,7 @@ REQUIREMENT_VALUES = {"yes", "no", "unknown"}
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent",
-    "model_api", "free_ide", "coding_plan", "open_weights",
+    "model_api", "free_ide", "coding_plan", "open_weights", "desktop_app",
 }
 API_CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent", "model_api",

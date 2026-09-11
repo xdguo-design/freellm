@@ -27,7 +27,7 @@ FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额�
 
 ### 当前内容
 
-- **39 个**已整理的 AI 资源条目，另有 **297 条**第三方模型目录记录和 **38 家**厂家目录
+- **40 个**已整理的 AI 资源条目，另有 **297 条**第三方模型目录记录和 **38 家**厂家目录
 - 原资源目录：[资源目录](https://freellm.top/models/)；模型中心：[双 Tab 页面](https://freellm.top/models/center/)（精选资源 / 全部模型）；独立模型大列表：[全部模型](https://freellm.top/models/all/)，支持搜索、按厂家筛选、按评分 / 厂家 / 模型分组；厂家入口：[按厂家浏览](https://freellm.top/providers/)
 - 重点入口附有逐步操作、可复制命令、验证动作和官方来源；操作型厂家（如 Freebuff、LongCat）即使暂时没有模型目录记录，也会单独保留操作页
 - **7 个**分类：[免费额度](https://freellm.top/category/free-quota/)、[学生优惠](https://freellm.top/category/student/)、[免费 IDE](https://freellm.top/category/free-ide/)、[AI API](https://freellm.top/category/api/)、[开放权重](https://freellm.top/category/open-weights/)、[试用与促销](https://freellm.top/category/promo/)、[Web 与浏览器 AI](https://freellm.top/category/web/)
@@ -118,7 +118,7 @@ FreeLLM ([freellm.top](https://freellm.top/)) is a curated directory of free AI 
 
 ### What's inside
 
-- **39** curated AI resource entries, plus **297** third-party model-directory records across **38** providers
+- **40** curated AI resource entries, plus **297** third-party model-directory records across **38** providers
 - Model directory: [all models](https://freellm.top/models/) with search, provider filtering, and score / provider / model grouping; provider directory: [browse by provider](https://freellm.top/providers/)
 - Priority entries include step-by-step setup, copyable commands, validation actions, and official sources; operation-only providers such as Freebuff and LongCat keep dedicated pages even without synced model rows
 - **7** categories: [free quota](https://freellm.top/category/free-quota/), [student offers](https://freellm.top/category/student/), [free coding IDEs](https://freellm.top/category/free-ide/), [AI API services](https://freellm.top/category/api/), [open-weight models](https://freellm.top/category/open-weights/), [trials & promotions](https://freellm.top/category/promo/), [web & browser AI](https://freellm.top/category/web/)

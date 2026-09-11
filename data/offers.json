@@ -3917,5 +3917,82 @@
     "evidence": "Manus official help pages document the Free plan, 1,000 signup credits and 300 daily credits; the official login page lists Google, Microsoft, Apple and email sign-in; the API docs explain how to obtain an API key.",
     "confidence": "high",
     "notes": "登录方式与额度为 2026-09-10 核验值；使用前重新检查官方价格页和帮助中心。"
+  },
+  {
+    "date": "2026-09-11",
+    "lastVerifiedAt": "2026-09-11",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Xiaomi MiMo Desktop beta terms",
+    "productType": "desktop_ai_app",
+    "capabilities": ["desktop_app"],
+    "id": "xiaomi-mimo-desktop",
+    "order": 41,
+    "name": "Xiaomi MiMo Desktop invitation beta",
+    "providerMark": "米",
+    "provider": "Xiaomi MiMo",
+    "providerMeta": "Xiaomi MiMo · China / Overseas",
+    "providerMetaEn": "Xiaomi MiMo · China / Overseas",
+    "model": "MiMo-X-Pro-Preview · MiMo-X-Flash-Preview",
+    "modelMeta": "Preview models included in the invitation-only desktop beta",
+    "type": ["desktop", "agent", "free"],
+    "usageGuide": {
+      "summary": "申请 Xiaomi MiMo Desktop 邀请制测试，获批后下载并使用 Preview 模型",
+      "summaryEn": "Apply for the Xiaomi MiMo Desktop invitation beta, then download and use the Preview models if approved",
+      "prerequisites": ["Xiaomi MiMo account", "Invitation approval"],
+      "steps": [
+        "打开国内或海外官方申请入口并提交 MiMo Desktop 测试申请",
+        "申请获批后按官方通知下载 MiMo Desktop",
+        "在邀请制测试期间使用 MiMo-X-Pro-Preview 或 MiMo-X-Flash-Preview，并留意限时限额"
+      ],
+      "examples": {
+        "action": "Apply at https://mimo.xiaomimimo.com/desktop/invite/ and wait for invitation approval."
+      },
+      "docsUrl": "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"
+    },
+    "kicker": "DESKTOP BETA",
+    "badges": ["INVITATION ONLY", "LIMITED TIME", "LIMITED QUOTA"],
+    "freeSummary": "获批申请者可在邀请制测试期间免费体验两款 Preview 模型",
+    "freeSummaryEn": "Approved applicants can try two Preview models for free during the invitation beta",
+    "validitySummary": "Invitation beta / limited time and quota",
+    "accessSummary": "申请并获批；国内与海外入口不同",
+    "checkedSummary": "2026-09-11 / official Xiaomi MiMo Desktop announcement",
+    "title": "Xiaomi MiMo Desktop · invitation-only beta",
+    "titleZh": "Xiaomi MiMo Desktop · 邀请制 Beta",
+    "why": "小米 MiMo 官方公告宣布 MiMo Desktop 开启邀请制测试。获批申请者可在测试期间免费体验 MiMo-X-Pro-Preview 与 MiMo-X-Flash-Preview，但官方明确这是限时、限额的 Preview 体验，不是长期免费桌面应用承诺。",
+    "whyEn": "Xiaomi MiMo's official announcement opens invitation-based testing for MiMo Desktop. Approved applicants can try MiMo-X-Pro-Preview and MiMo-X-Flash-Preview for free during the beta, with time and quota limits; this is not a promise of a permanently free desktop app.",
+    "mechanism": "Invitation-only desktop beta with two Preview models",
+    "mechanismEn": "Invitation-only desktop beta with two Preview models",
+    "validity": "Limited-time invitation beta; Preview behavior and availability may change",
+    "access": "Invitation-based testing; approved applicants can download and use MiMo Desktop. Existing Xiaomi MiMo Open Platform users are prioritized.",
+    "command": "Apply through the official domestic or overseas invitation page, then download MiMo Desktop after approval.",
+    "register": "https://mimo.xiaomimimo.com/desktop/invite/",
+    "registerLabel": "MiMo Desktop 国内申请",
+    "registerLabelEn": "Apply for MiMo Desktop",
+    "links": [
+      ["MiMo Desktop 官方公告", "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"],
+      ["国内申请入口", "https://mimo.xiaomimimo.com/desktop/invite/"],
+      ["海外申请入口", "https://mimo-ai.xiaomimimo.com/desktop/invite/"],
+      ["MiMo FAQ（独立 App 说明）", "https://mimo.mi.com/docs/en-US/quick-start/faq/others"]
+    ],
+    "originCountry": "China",
+    "availability": "Domestic and overseas invitation routes; existing Open Platform users are prioritized",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {"type": "limited_time_free", "amount": null, "unit": "preview_models", "period": "during invitation beta"},
+    "quota": "Two Preview models are free for a limited time and with limited quota during the invitation-only testing period",
+    "renewal": "No renewal promise; beta access and quota can end or change",
+    "sourceUrls": [
+      "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop",
+      "https://mimo.xiaomimimo.com/desktop/invite/",
+      "https://mimo-ai.xiaomimimo.com/desktop/invite/",
+      "https://mimo.mi.com/docs/en-US/quick-start/faq/others"
+    ],
+    "evidence": "Xiaomi MiMo's official September 8, 2026 announcement says MiMo Desktop is in invitation-based testing, lists domestic and overseas application links, and states that approved applicants can try MiMo-X-Pro-Preview and MiMo-X-Flash-Preview for free with limited time and limited quota. The official FAQ separately says there is no standalone MiMo app, so this entry is labeled as a desktop beta rather than a general app download.",
+    "confidence": "high",
+    "confidenceReason": "The beta status, application routes, Preview model names and limited free terms are stated on Xiaomi MiMo's official announcement; invitation approval remains account-dependent.",
+    "notes": "Use only the official application links. Do not present this as an unrestricted or permanently free standalone app; wait for invitation approval and recheck the official announcement for current quota and availability."
   }
 ]

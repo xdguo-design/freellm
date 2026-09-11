@@ -279,7 +279,11 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     # Structured data lists every visible catalog model for crawlers.
     assert '"@type": "CollectionPage"' in page
     assert '"numberOfItems": %d' % len(read_visible_models()) in page
-    assert '"dateModified": "%s"' % max(model["lastSeenAt"] for model in models) in page
+    expected_date_modified = max(
+        [model["lastSeenAt"] for model in models]
+        + [offer["lastVerifiedAt"] for offer in offers]
+    )
+    assert '"dateModified": "%s"' % expected_date_modified in page
 
     # The homepage and category pages link to the directory for crawl depth.
     homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
