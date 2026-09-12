@@ -34,8 +34,12 @@ def test_curated_data_files_pass_schema_validation():
 
 def test_every_catalog_provider_has_a_registration_card():
     catalog_ids = {provider["id"] for provider in _load(CATALOG_PATH)}
+    operation_ids = {
+        json.loads(path.read_text(encoding="utf-8"))["providerId"]
+        for path in (ROOT / "data" / "operations").glob("*.json")
+    }
     card_ids = {card["providerId"] for card in _load(PROVIDER_ACCESS_PATH)}
-    assert card_ids == catalog_ids
+    assert card_ids == catalog_ids | operation_ids
 
 
 def test_every_catalog_model_has_exactly_one_access_card():

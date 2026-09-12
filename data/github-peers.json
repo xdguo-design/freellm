@@ -70,5 +70,22 @@
     ],
     "enabled": true,
     "notes": "Peer discovery only; do not treat gateway claims as provider evidence."
+  },
+  {
+    "id": "agent-router",
+    "owner": "justbiar",
+    "repo": "agent-router",
+    "repoUrl": "https://github.com/justbiar/agent-router",
+    "kind": "gateway",
+    "discoveryQueries": [
+      "agent router free ai api"
+    ],
+    "allowedHosts": [
+      "github.com",
+      "api.github.com",
+      "raw.githubusercontent.com"
+    ],
+    "enabled": true,
+    "notes": "Discovery evidence only; verify Agent Router pricing, model availability and terms on the official site."
   }
 ]

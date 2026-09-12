@@ -25,5 +25,5 @@ def test_build_site_creates_provider_directory_and_detail_pages(tmp_path):
     assert '<link rel="canonical" href="https://freellm.top/providers/ollama-cloud/"' in ollama
     assert "deepseek-v4-pro" in ollama
     assert "目录发现" in ollama
-    assert "2026-09-09" in ollama
+    assert "2026-09-12" in ollama
     assert "https://freellm.top/models/" in ollama

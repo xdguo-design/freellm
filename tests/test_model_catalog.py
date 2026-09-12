@@ -3,6 +3,7 @@ from pathlib import Path
 
 from crawler.schema import validate_models
 from scripts.build_model_catalog import build_model_catalog, build_provider_catalog
+from scripts.sync_model_catalog import sync_model_catalog
 
 
 def valid_model():
@@ -80,3 +81,16 @@ def test_provider_catalog_groups_models_without_collapsing_model_rows():
         "sourceKind": "catalog",
         "lastSeenAt": "2026-09-09",
     }]
+
+
+def test_sync_is_idempotent_for_same_day_new_records():
+    discovered = [{
+        "id": "provider/new-model",
+        "providerId": "provider",
+        "model": "New Model",
+        "sourceUrl": "https://freellm.net/models/provider/new-model",
+    }]
+    first = sync_model_catalog(discovered, [], "2026-09-12")
+    second = sync_model_catalog(discovered, first, "2026-09-12")
+    assert first[0]["freshnessStatus"] == "new"
+    assert second[0]["freshnessStatus"] == "new"

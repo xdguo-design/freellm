@@ -17,7 +17,10 @@ MANUAL_FIELDS = {
     "reviewNotes",
     "verificationNotes",
     "canonicalModel",
+    "canonicalModelId",
     "aliasOf",
+    "accessRegion",
+    "accessEndpoint",
 }
 
 
@@ -66,7 +69,14 @@ def sync_model_catalog(discovered: list[dict], previous: list[dict], as_of: str)
             for field in MANUAL_FIELDS:
                 if field in prior:
                     item[field] = prior[field]
-            item["freshnessStatus"] = "current"
+            # Keep a same-day addition marked as new when the sync is rerun.
+            # This makes reconciliation idempotent and keeps the daily log
+            # aligned with the stable catalog.
+            item["freshnessStatus"] = (
+                "new"
+                if prior.get("freshnessStatus") == "new" and prior.get("lastSeenAt") == as_of
+                else "current"
+            )
         else:
             item["freshnessStatus"] = "new"
         item["lastSeenAt"] = as_of

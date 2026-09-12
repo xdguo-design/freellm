@@ -38,6 +38,9 @@ DOCUMENT_PATH_PATTERNS = (
     ".env.example",
 )
 KNOWN_PROVIDERS = (
+    "Anthropic",
+    "OpenAI",
+    "AgentRouter",
     "Gemini",
     "Groq",
     "Mistral",
@@ -264,7 +267,7 @@ def extract_peer_document_evidence(
 
     mentioned_providers = [provider for provider in KNOWN_PROVIDERS if provider.lower() in safe_content.lower()]
     mentioned_models = sorted(set(re.findall(
-        r"\b(?:free-[a-z0-9-]+|(?:gemini|groq|mistral|cerebras|qwen|deepseek|gpt|llama)[a-z0-9._/-]*)\b",
+        r"\b(?:free-[a-z0-9-]+|(?:claude|gemini|groq|mistral|cerebras|qwen|deepseek|gpt|llama)[a-z0-9._/-]*)\b",
         safe_content,
         re.I,
     )))

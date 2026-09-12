@@ -106,8 +106,8 @@ class StaticContractTests(unittest.TestCase):
             '.log-days::before { content:"";',
             '.log-registration { margin:12px 0;',
             ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
-            ">297</strong>",
-            ">25</strong>",
+            ">297 ",
+            ">25 ",
             ">40</strong>",
         ):
             self.assertIn(needle, log)
