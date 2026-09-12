@@ -2507,13 +2507,22 @@ def _log_event_panel(title_zh: str, title_en: str, content: str, events: list[di
     return f'<section class="log-event-panel"><h3>{_locale_pair(title_zh, title_en)}</h3>{content}</section>'
 
 
+def _log_event_has_context(event: dict) -> bool:
+    details = event.get("details") or {}
+    return any(str(details.get(key) or "").strip() for key in ("provider", "productType"))
+
+
 def _log_event_groups(events: list[dict], curated_events: list[dict] | None = None) -> dict[str, list[dict]]:
     all_events = list(events) + list(curated_events or [])
     return {
         "new": [event for event in all_events if event.get("eventType") in {"new", "new_route"}],
         "recovered": [event for event in all_events if event.get("eventType") == "recovered"],
         "offline": [event for event in all_events if event.get("eventType") == "offline"],
-        "unavailable": [event for event in all_events if event.get("eventType") == "source_unavailable"],
+        "unavailable": [
+            event
+            for event in all_events
+            if event.get("eventType") == "source_unavailable" and _log_event_has_context(event)
+        ],
     }
 
 

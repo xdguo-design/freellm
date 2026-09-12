@@ -668,7 +668,7 @@ def test_daily_log_hides_empty_event_panels():
                 "eventType": "source_unavailable",
                 "id": "models",
                 "title": "models",
-                "details": {"status": "failed"},
+                "details": {"status": "failed", "provider": "Model directory"},
                 "reason": "scan failed",
             },
         ],
@@ -681,6 +681,31 @@ def test_daily_log_hides_empty_event_panels():
     assert "当天没有此类记录" not in page
     assert "Alpha" in page
     assert "来源异常" in page
+
+
+def test_daily_log_hides_source_issue_without_provider_or_type():
+    page = render_daily_log_page([{
+        "schemaVersion": 1,
+        "date": "2026-09-11",
+        "baseline": False,
+        "events": [{
+            "kind": "source",
+            "eventType": "source_unavailable",
+            "id": "models",
+            "title": "models",
+            "details": {"status": "failed"},
+            "reason": "source scan failed",
+        }],
+        "observed": {"models": [], "offers": []},
+        "sourceHealth": {
+            "models": {"status": "failed", "reason": "source scan failed"},
+            "offers": {"status": "ok"},
+        },
+    }], "https://freellm.top")
+
+    assert 'class="log-event-panel"><h3><span lang="zh-CN">来源异常</span>' not in page
+    assert "未提供" not in page
+    assert "source scan failed" in page
 
 
 def test_expected_files_and_sitemap_include_daily_logs(tmp_path):
