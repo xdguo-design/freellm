@@ -1,102 +1,8 @@
 {
   "schemaVersion": 1,
-  "date": "2026-09-14",
+  "date": "2026-09-13",
   "baseline": false,
-  "events": [
-    {
-      "kind": "model",
-      "eventType": "new",
-      "id": "modelscope/nex-agi-nex-n2-5-mini",
-      "title": "nex-agi/Nex-N2.5-mini",
-      "asOf": "2026-09-14",
-      "details": {
-        "id": "modelscope/nex-agi-nex-n2-5-mini",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-mini",
-        "score": 43,
-        "context": "8192",
-        "maxOutput": "",
-        "modality": [
-          "unknown"
-        ],
-        "rateLimit": "",
-        "released": "",
-        "usageActivity": "—",
-        "status": "online",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-mini",
-        "sourceKind": "third_party_directory",
-        "lastSeenAt": "2026-09-14",
-        "directoryFree": true,
-        "directoryNoCard": true,
-        "directoryVerified": true,
-        "tierType": "permanent"
-      },
-      "reason": "not present in the previous successful snapshot"
-    },
-    {
-      "kind": "model",
-      "eventType": "new",
-      "id": "modelscope/nex-agi-nex-n2-5-pro",
-      "title": "nex-agi/Nex-N2.5-Pro",
-      "asOf": "2026-09-14",
-      "details": {
-        "id": "modelscope/nex-agi-nex-n2-5-pro",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-Pro",
-        "score": 52,
-        "context": "8192",
-        "maxOutput": "",
-        "modality": [
-          "unknown"
-        ],
-        "rateLimit": "",
-        "released": "",
-        "usageActivity": "—",
-        "status": "online",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-pro",
-        "sourceKind": "third_party_directory",
-        "lastSeenAt": "2026-09-14",
-        "directoryFree": true,
-        "directoryNoCard": true,
-        "directoryVerified": true,
-        "tierType": "permanent"
-      },
-      "reason": "not present in the previous successful snapshot"
-    },
-    {
-      "kind": "model",
-      "eventType": "new",
-      "id": "nvidia-nim/nvidia-nemotron-parse-2-0",
-      "title": "nvidia/nemotron-parse-2.0",
-      "asOf": "2026-09-14",
-      "details": {
-        "id": "nvidia-nim/nvidia-nemotron-parse-2-0",
-        "providerId": "nvidia-nim",
-        "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-parse-2.0",
-        "score": 48,
-        "context": "8192",
-        "maxOutput": "",
-        "modality": [
-          "unknown"
-        ],
-        "rateLimit": "",
-        "released": "",
-        "usageActivity": "—",
-        "status": "online",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse-2-0",
-        "sourceKind": "third_party_directory",
-        "lastSeenAt": "2026-09-14",
-        "directoryFree": true,
-        "directoryNoCard": true,
-        "directoryVerified": true,
-        "tierType": "permanent"
-      },
-      "reason": "not present in the previous successful snapshot"
-    }
-  ],
+  "events": [],
   "observed": {
     "models": [
       {
@@ -1116,22 +1022,6 @@
         "status": "online"
       },
       {
-        "id": "modelscope/nex-agi-nex-n2-5-mini",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-mini",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-mini",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/nex-agi-nex-n2-5-pro",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-Pro",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-pro",
-        "status": "online"
-      },
-      {
         "id": "modelscope/opencompass-compassjudger-1-32b-instruct",
         "providerId": "modelscope",
         "provider": "ModelScope",
@@ -1897,14 +1787,6 @@
         "provider": "NVIDIA NIM",
         "model": "nvidia/nemotron-parse",
         "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse",
-        "status": "online"
-      },
-      {
-        "id": "nvidia-nim/nvidia-nemotron-parse-2-0",
-        "providerId": "nvidia-nim",
-        "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-parse-2.0",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse-2-0",
         "status": "online"
       },
       {
