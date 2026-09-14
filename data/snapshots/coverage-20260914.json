@@ -1,0 +1,751 @@
+{
+  "generatedAt": "2026-09-14T13:02:31+00:00",
+  "providerCount": 40,
+  "sourceCount": 231,
+  "successfulSourceCount": 89,
+  "failedSourceCount": 142,
+  "officialSourceCount": 100,
+  "peerSourceCount": 131,
+  "successfulPeerSourceCount": 0,
+  "failedPeerSourceCount": 131,
+  "peerRepositoryCount": 5,
+  "thirdPartySourceCount": 0,
+  "successfulThirdPartySourceCount": 0,
+  "failedThirdPartySourceCount": 0,
+  "failedSources": [
+    {
+      "providerId": "agent-router",
+      "sourceUrl": "https://agentrouter.org/",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "agent-router",
+      "sourceUrl": "https://agentrouter.org/register",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "b-ai",
+      "sourceUrl": "https://b.ai/",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "b-ai",
+      "sourceUrl": "https://chat.b.ai/chat?invite_code=U9ABB8",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "sensecore",
+      "sourceUrl": "https://www.sensecore.cn/help/docs/model-as-a-service/nova/pricing/",
+      "reason": "HTTP 308"
+    },
+    {
+      "providerId": "sensecore",
+      "sourceUrl": "https://console.sensecore.cn/micro/help/docs/model-as-a-service/nova/pricing/pricing_tpm_quota",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "meituan-longcat",
+      "sourceUrl": "https://github.com/meituan-longcat/LongCat-2.0",
+      "reason": "The read operation timed out"
+    },
+    {
+      "providerId": "meituan-longcat",
+      "sourceUrl": "https://huggingface.co/meituan-longcat",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "qwen",
+      "sourceUrl": "https://github.com/QwenLM/Qwen3",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "qwen",
+      "sourceUrl": "https://huggingface.co/Qwen",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "github-copilot",
+      "sourceUrl": "https://github.com/features/copilot/plans",
+      "reason": "<urlopen error timed out>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/examples/browser-chatbot/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/.env.example",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/benchmarks.json",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/screenshots/dashboard-demo.gif",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/screenshots/dashboard-full.png",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/screenshots/dashboard.png",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/screenshots/models.png",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/screenshots/quickstart.png",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docs/superpowers/plans/2026-04-03-architecture-refactor.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/dashboard/package.json",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/package.json",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/base.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/cerebras.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/cloudflare.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/gemini.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/github.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/groq.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/mistral.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/nim.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/ollama.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/gateway/src/providers/types.ts",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/package.json",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/benchmarks.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/browser-integration.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/comparison.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/features/caching.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/features/circuit-breakers.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/features/meta-models.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/features/multi-key.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/features/token-usage.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/introduction.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/privacy.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/quickstart.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/reference/api.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/reference/configuration.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/reference/providers.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/apps/web/src/content/docs/security.mdx",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/docker-compose.yml",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/package.json",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "devansh-freellm",
+      "sourceUrl": "https://raw.githubusercontent.com/Devansh-365/freellm/3a394fd73b53126adb406ab979798fed873a2d97/profile-readme.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "awesome-free-llm-apis",
+      "sourceUrl": "https://raw.githubusercontent.com/mnfst/awesome-free-llm-apis/167013ff729e30f3a92bb8d416062d6c34a84507/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "awesome-free-llm-apis",
+      "sourceUrl": "https://raw.githubusercontent.com/mnfst/awesome-free-llm-apis/167013ff729e30f3a92bb8d416062d6c34a84507/.github/workflows/generate-readme.yml",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "awesome-free-llm-apis",
+      "sourceUrl": "https://raw.githubusercontent.com/mnfst/awesome-free-llm-apis/167013ff729e30f3a92bb8d416062d6c34a84507/scripts/generate-readme.js",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "open-free-llm-api",
+      "sourceUrl": "https://raw.githubusercontent.com/open-free-llm-api/awesome-freellm-apis/ef868bc2661e84f4e8d0011071df932005a3e1a5/README.ja.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "open-free-llm-api",
+      "sourceUrl": "https://raw.githubusercontent.com/open-free-llm-api/awesome-freellm-apis/ef868bc2661e84f4e8d0011071df932005a3e1a5/README.ko.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "open-free-llm-api",
+      "sourceUrl": "https://raw.githubusercontent.com/open-free-llm-api/awesome-freellm-apis/ef868bc2661e84f4e8d0011071df932005a3e1a5/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "open-free-llm-api",
+      "sourceUrl": "https://raw.githubusercontent.com/open-free-llm-api/awesome-freellm-apis/ef868bc2661e84f4e8d0011071df932005a3e1a5/README.zh-CN.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "open-free-llm-api",
+      "sourceUrl": "https://raw.githubusercontent.com/open-free-llm-api/awesome-freellm-apis/ef868bc2661e84f4e8d0011071df932005a3e1a5/README.zh-TW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/README.zh-cn.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/cli/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/client/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/desktop/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docker/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/examples/fetch-relay-worker/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/server/src/db/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/.github/RELEASE_TEMPLATE.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/api/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/cli/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/clients/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/compression/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/deployment/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/desktop/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/env/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/fallback/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/glossary/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/install/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/logs/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/providers/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/proxy/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/testing/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/troubleshooting/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/api/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/architecture/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/cli/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/clients/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/compression/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/deployment/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/desktop/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/env/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/fallback/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/glossary/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/install/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/logs/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/providers/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/proxy/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/testing/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/zh-cn/troubleshooting/CHANGELOG.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/.env.example",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/TRANSLATION.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/api.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/api/01-rest-api.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/architecture.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/clients/01-agent-clients.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/api/01-rest-api.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/api/02-idempotency.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/api/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/00-high-level-index.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/01-routing-and-bandit-scoring.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/02-quota-and-cooldown-engine.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/03-streaming-pipeline.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/04-degraded-mode-and-failover.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/05-catalog-sync.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/06-observability.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/architecture/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/cli/01-generators.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/cli/02-config-files.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/cli/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/clients/01-agent-clients.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/clients/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/compression/01-compression-pipeline.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/compression/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/deployment/01-docker.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/deployment/02-updates-and-backup.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/deployment/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/desktop/01-desktop-app.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/desktop/02-logging-and-updates.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/desktop/OVERVIEW.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "tashfeenahmed-freellmapi",
+      "sourceUrl": "https://raw.githubusercontent.com/tashfeenahmed/freellmapi/496ec4ef1bd1da48fa7c83fd1094a34c2b204e7d/docs/en/env/01-variables.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    },
+    {
+      "providerId": "agent-router",
+      "sourceUrl": "https://raw.githubusercontent.com/justbiar/agent-router/9962e8b9edaaeff6b022b892faa821a4890acc9f/README.md",
+      "reason": "<urlopen error [Errno 11004] getaddrinfo failed>"
+    }
+  ],
+  "missingProviderIds": [
+    "agnes-ai",
+    "amazon-q-developer",
+    "brave-search",
+    "browserbase",
+    "cerebras",
+    "cohere",
+    "cursor",
+    "exa",
+    "firecrawl",
+    "google-ai-studio",
+    "google-antigravity",
+    "groq",
+    "huggingface",
+    "keenable",
+    "mistral",
+    "openrouter",
+    "stepfun",
+    "tavily",
+    "tinyfish",
+    "you-com"
+  ],
+  "candidateCount": 73,
+  "staleCandidateCount": 4
+}

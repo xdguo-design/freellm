@@ -111,6 +111,32 @@ CATEGORY_DEFINITIONS = {
         "description_zh": "整理有官方仓库或模型卡下载入口的开放权重模型。",
     },
 }
+
+SKILL_CATEGORY_DEFINITIONS = {
+    "product-design": {"name_zh": "产品设计", "name_en": "Product design", "accent": "blue"},
+    "ecommerce": {"name_zh": "电商运营", "name_en": "E-commerce", "accent": "yellow"},
+    "seo-content": {"name_zh": "SEO & 内容流量", "name_en": "SEO & content", "accent": "green"},
+    "email-office": {"name_zh": "邮件与消息", "name_en": "Email & messaging", "accent": "violet"},
+    "planning-office": {"name_zh": "任务与会议", "name_en": "Planning & meetings", "accent": "blue"},
+    "data-office": {"name_zh": "报表与数据", "name_en": "Reports & data", "accent": "green"},
+    "file-office": {"name_zh": "文件与资源", "name_en": "Files & resources", "accent": "yellow"},
+    "documents": {"name_zh": "办公文档", "name_en": "Documents", "accent": "blue"},
+    "presentations": {"name_zh": "PPT 幻灯片", "name_en": "Presentations", "accent": "violet"},
+    "resume": {"name_zh": "简历与求职", "name_en": "Resume & jobs", "accent": "yellow"},
+    "writing": {"name_zh": "写作与文案", "name_en": "Writing & copy", "accent": "green"},
+}
+SKILL_REQUIRED_FIELDS = (
+    "id", "name", "category", "description", "githubUrl", "cloneCommand",
+    "compatibility", "status", "source", "lastCheckedAt",
+)
+SKILL_STATUS_LABELS = {
+    "candidate": ("社区候选", "Community candidate"),
+    "needs_review": ("待核验", "Needs review"),
+    "verified": ("已核验", "Verified"),
+}
+SKILL_RECIPE_REQUIRED_FIELDS = (
+    "id", "title", "description", "input", "output", "steps",
+)
 LEGACY_OFFER_REDIRECTS = {
     "longcat-api": "longcat-2-0",
     "longcat-download": "longcat-2-0",
@@ -167,6 +193,8 @@ ALL_MODELS_PAGE_PATH = "/models/all/"
 MODEL_CENTER_PAGE_PATH = "/models/center/"
 PROVIDERS_PAGE_PATH = "/providers/"
 CHANGE_LOG_PAGE_PATH = "/logs/"
+SKILLS_PAGE_PATH = "/skills/"
+SKILL_LAB_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
@@ -456,6 +484,7 @@ def _social_meta(site_url: str, page_url: str, title: str, description: str, og_
     image_url = _absolute(site_url, SHARE_IMAGE_PATH)
     return "\n".join(
         (
+            '<meta name="robots" content="index,follow,max-image-preview:large">',
             f'<meta property="og:type" content="{_esc(og_type)}">',
             f'<meta property="og:title" content="{_esc(title)}">',
             f'<meta property="og:description" content="{_esc(description)}">',
@@ -465,6 +494,7 @@ def _social_meta(site_url: str, page_url: str, title: str, description: str, og_
             f'<meta name="twitter:card" content="summary_large_image">',
             f'<meta name="twitter:title" content="{_esc(title)}">',
             f'<meta name="twitter:description" content="{_esc(description)}">',
+            f'<meta name="twitter:url" content="{_esc(absolute_url)}">',
             f'<meta name="twitter:image" content="{_esc(image_url)}">',
         )
     )
@@ -761,9 +791,15 @@ def render_legacy_offer_redirect(legacy_id: str, target_id: str, site_url: str) 
     target_path = f"/offers/{target_id}/"
     target_url = _absolute(site_url, target_path)
     title = "页面已合并 · FreeLLM"
-    return f'''<!doctype html>
+    page = f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><link rel="canonical" href="{_esc(target_url)}"><meta http-equiv="refresh" content="0; url={_esc(target_url)}"></head>
 <body><main><h1>页面已合并</h1><p>旧入口 <code>{_esc(legacy_id)}</code> 已合并到 LongCat-2.0 统一详情页。</p><p><a href="{_esc(target_url)}">继续查看 LongCat-2.0 详情 →</a></p></main></body></html>'''
+    page = page.replace(
+        '<link rel="canonical" href="' + _esc(target_url) + '">',
+        '<meta name="robots" content="noindex,follow"><link rel="canonical" href="' + _esc(target_url) + '">',
+        1,
+    )
+    return page
 
 
 def _related_links(offer: dict, offers: list[dict]) -> str:
@@ -2332,8 +2368,10 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = re.sub(r"<title>.*?</title>", f"<title>{_esc(title)}</title>", head, count=1, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*>', f'<meta name="description" content="{_esc(description)}" />', head, count=1)
     head = re.sub(r'<link rel="canonical"[^>]*>', f'<link rel="canonical" href="{_esc(page_url)}" />', head, count=1)
+    head = re.sub(r'<meta name="robots"[^>]*>', '<meta name="robots" content="index,follow,max-image-preview:large" />', head, count=1)
     head = re.sub(r'(?:\s*<link rel="alternate"[^>]+>){3}', f'\n  {_hreflang_links(site_url, MODEL_CENTER_PAGE_PATH)}', head, count=1, flags=re.S)
     head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
+    head = re.sub(r'(<meta name="twitter:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = head.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-default-locale="zh-CN">', 1)
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
     body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
@@ -2682,8 +2720,16 @@ a { color:var(--blue); }
 @media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; border-radius:20px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; border-radius:15px; }.log-day::before { left:-34px; top:20px; width:14px; height:14px; }.log-day-summary { justify-content:flex-start; } }
 </style>'''
     style += STATIC_LOCALE_SCRIPT
-    return f'''<!doctype html>
+    page = f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1>{_locale_pair('今天的 AI 资源有什么变化？', 'What changed in AI today?')}</h1><p class="lead">{_locale_pair('我们每天检查官方来源，记录新增、恢复、下线和异常。', 'We check official sources daily and record new, recovered, offline and source issues.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
+
+
+    canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
+    return page.replace(
+        canonical,
+        canonical + f'<meta name="robots" content="index,follow,max-image-preview:large"><meta name="twitter:url" content="{_esc(page_url)}">',
+        1,
+    )
 
 
 def _load_daily_logs(data_path: Path) -> list[dict]:
@@ -2698,12 +2744,223 @@ def _load_daily_logs(data_path: Path) -> list[dict]:
     return logs
 
 
+def _skill_card(skill: dict) -> str:
+    category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {})
+    status_zh, status_en = SKILL_STATUS_LABELS.get(skill.get("status"), ("待核验", "Needs review"))
+    compatibility = "".join(f'<span class="skill-chip">{_esc(item)}</span>' for item in skill.get("compatibility") or [])
+    github = str(skill.get("githubUrl") or "").strip()
+    source = (
+        f'<a class="skill-source-link" href="{_esc(github)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>'
+        if github else '<span class="skill-source-missing">来源链接待补充</span>'
+    )
+    status_class = "verified" if skill.get("status") == "verified" else "review"
+    return f'''<article class="skill-card" data-skill-id="{_esc(skill.get('id'))}" data-category="{_esc(skill.get('category'))}" data-status="{_esc(skill.get('status'))}">
+      <div class="skill-card-top"><span class="skill-category {category.get('accent', 'blue')}">{_esc(category.get('name_zh', 'Skill'))}</span><span class="skill-status {status_class}"><span lang="zh-CN">{_esc(status_zh)}</span><span lang="en">{_esc(status_en)}</span></span></div>
+      <h2>{_esc(skill.get('name'))}</h2><p>{_esc(skill.get('description'))}</p><div class="skill-chips">{compatibility}</div>
+      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}">查看安装方式 →</button>{source}</div>
+    </article>'''
+
+
+def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
+    path = SKILLS_PAGE_PATH
+    title = "Agent Skills 市集 · FreeLLM"
+    description = "发现适用于 Claude Code、OpenCode、Codex 等 Agent 工具的产品设计、电商运营和 SEO Skill。"
+    page_url = _absolute(site_url, path)
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": title,
+        "description": description,
+        "url": page_url,
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": _absolute(site_url, "/")},
+                {"@type": "ListItem", "position": 2, "name": title, "item": page_url},
+            ],
+        },
+        "mainEntity": {"@type": "ItemList", "numberOfItems": len(skills), "itemListElement": [
+            {"@type": "ListItem", "position": index, "name": skill.get("name"), "url": page_url}
+            for index, skill in enumerate(skills, start=1)
+        ]},
+    }
+    serialized = json.dumps(skills, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    cards = "".join(_skill_card(skill) for skill in skills)
+    category_buttons = "".join(
+        f'<button class="skill-category-tab" type="button" data-category="{_esc(key)}"><span>{_esc(value["name_zh"])}</span><small>{sum(item.get("category") == key for item in skills):02d}</small></button>'
+        for key, value in SKILL_CATEGORY_DEFINITIONS.items()
+    )
+    style = r'''
+    :root { color-scheme: light; --ink:#101113; --paper:#f5f7f8; --blue:#1744e8; --yellow:#ffd51f; --green:#b8f1cc; --line:#d7dce1; --muted:#69717c; font-family: Inter,ui-sans-serif,system-ui,sans-serif; color:var(--ink); background:var(--paper); }
+    * { box-sizing:border-box; } body { margin:0; background:var(--paper); } a { color:inherit; } button,input,select { font:inherit; }
+    .skills-page { max-width:1280px; margin:0 auto; padding:20px 24px 64px; } .skills-header { display:flex; gap:20px; align-items:center; justify-content:space-between; padding:8px 0 26px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; gap:10px; align-items:center; text-decoration:none; } .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; color:#fff; background:var(--blue); font-size:22px; } .brand-name { display:block; font-weight:850; letter-spacing:-.04em; } .brand-sub { display:block; color:var(--muted); font-size:11px; margin-top:2px; }
+    .top-nav { display:flex; gap:16px; align-items:center; overflow-x:auto; white-space:nowrap; font-size:13px; } .top-nav a { text-decoration:none; color:#515964; } .top-nav a:hover,.top-nav a[aria-current="page"] { color:var(--blue); }
+    .skills-hero { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr); gap:18px; padding:52px 0 30px; } .eyebrow { color:var(--blue); font:700 11px/1.2 "IBM Plex Mono",ui-monospace,monospace; letter-spacing:.1em; } h1 { max-width:720px; margin:10px 0 14px; font-size:clamp(42px,7vw,84px); line-height:.98; letter-spacing:-.075em; } .hero-copy { max-width:610px; margin:0; color:#4f5762; font-size:18px; line-height:1.6; }
+    .hero-note { align-self:end; padding:20px; border:1px solid var(--ink); background:var(--yellow); box-shadow:8px 8px 0 var(--ink); } .hero-note strong { display:block; font-size:32px; letter-spacing:-.06em; } .hero-note p { margin:7px 0 0; line-height:1.5; font-size:13px; }
+    .skills-toolbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:13px 0; border-top:1px solid var(--ink); border-bottom:1px solid var(--line); } .skills-search { flex:1 1 280px; min-width:220px; padding:12px 14px; border:1px solid var(--ink); border-radius:0; background:#fff; } .skills-status-filter { padding:11px 12px; border:1px solid var(--line); background:#fff; } .skills-count { margin-left:auto; color:var(--muted); font:11px "IBM Plex Mono",ui-monospace,monospace; }
+    .skill-category-tabs { display:flex; gap:8px; overflow-x:auto; padding:20px 0 14px; } .skill-category-tab { display:flex; gap:15px; align-items:center; padding:10px 13px; border:1px solid var(--line); background:#fff; cursor:pointer; } .skill-category-tab.is-active { border-color:var(--blue); color:var(--blue); box-shadow:3px 3px 0 var(--blue); } .skill-category-tab small { color:var(--muted); font:11px "IBM Plex Mono",ui-monospace,monospace; }
+    .skill-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; } .skill-card { min-width:0; display:flex; flex-direction:column; min-height:260px; padding:18px; border:1px solid var(--line); background:#fff; } .skill-card:hover { border-color:var(--ink); transform:translateY(-2px); transition:transform .16s ease; } .skill-card-top,.skill-card-bottom { display:flex; gap:8px; align-items:center; justify-content:space-between; } .skill-category,.skill-status { padding:4px 7px; font-size:10px; font-weight:750; } .skill-category.blue { background:#e9efff; color:var(--blue); } .skill-category.yellow { background:#fff2a9; } .skill-category.green { background:#ddf7e6; color:#14693d; } .skill-status.review { background:#fff5d5; color:#7a5a00; } .skill-status.verified { background:var(--green); color:#14693d; }
+    .skill-card h2 { margin:22px 0 8px; font:700 20px/1.15 "IBM Plex Mono",ui-monospace,monospace; overflow-wrap:anywhere; } .skill-card p { min-height:68px; margin:0; color:#5d6671; font-size:14px; line-height:1.6; } .skill-chips { display:flex; flex-wrap:wrap; gap:5px; margin:16px 0 auto; } .skill-chip { padding:4px 7px; border:1px solid var(--line); color:#5d6671; font-size:10px; } .skill-card-bottom { gap:10px; justify-content:flex-start; padding-top:15px; border-top:1px solid var(--line); } .skill-details,.skill-source-link { color:var(--blue); font-size:12px; text-decoration:none; } .skill-details { padding:0; border:0; background:none; cursor:pointer; } .skill-source-link { margin-left:auto; } .skill-source-missing { margin-left:auto; color:var(--muted); font-size:11px; }
+    .skills-empty { padding:50px 18px; text-align:center; color:var(--muted); border:1px dashed #aeb8c4; background:#fff; } .skills-empty button { margin-top:8px; padding:8px 12px; border:1px solid var(--blue); color:var(--blue); background:#fff; cursor:pointer; } dialog { width:min(620px,calc(100% - 28px)); padding:0; border:1px solid var(--ink); box-shadow:10px 10px 0 var(--ink); } dialog::backdrop { background:rgba(16,17,19,.35); } .skill-dialog-body { padding:24px; } .skill-dialog-close { float:right; border:0; background:none; font-size:22px; cursor:pointer; } .skill-dialog-body h2 { margin:0 40px 9px 0; font:700 24px "IBM Plex Mono",ui-monospace,monospace; } .skill-dialog-body p { color:#5d6671; line-height:1.6; } .command-box { display:flex; gap:8px; align-items:center; margin:20px 0; padding:12px; background:#101113; color:#fff; } .command-box code { flex:1; overflow:auto; font:12px "IBM Plex Mono",ui-monospace,monospace; white-space:pre-wrap; } .copy-command { padding:7px 9px; border:1px solid #fff; color:#fff; background:transparent; cursor:pointer; white-space:nowrap; } .dialog-actions { display:flex; gap:12px; align-items:center; } .dialog-actions a { color:var(--blue); font-size:13px; } .skills-footer { margin-top:26px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; line-height:1.6; }
+    @media (max-width:800px) { .skills-page { padding:12px 14px 46px; } .skills-header { align-items:flex-start; flex-direction:column; } .skills-hero { grid-template-columns:1fr; padding-top:34px; } .skill-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .skills-count { margin-left:0; } } @media (max-width:560px) { h1 { font-size:48px; } .skill-grid { grid-template-columns:1fr; } .skill-card p { min-height:0; } }
+    '''
+    script = r'''
+    (() => {
+      const skills = JSON.parse(document.getElementById('skill-data').textContent); const grid = document.getElementById('skill-grid'); const search = document.getElementById('skill-search'); const status = document.getElementById('skill-status'); const count = document.getElementById('skill-count'); const empty = document.getElementById('skill-empty'); const dialog = document.getElementById('skill-dialog'); let category = 'all';
+      const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character])); const statusLabel = value => value === 'verified' ? '已核验' : value === 'candidate' ? '社区候选' : '待核验'; const categoryLabel = value => ({ 'product-design':'产品设计', ecommerce:'电商运营', 'seo-content':'SEO & 内容流量' }[value] || 'Skill');
+      const filtered = () => { const keyword = search.value.trim().toLowerCase(); return skills.filter(skill => (category === 'all' || skill.category === category) && (status.value === 'all' || skill.status === status.value) && (!keyword || [skill.name, skill.description, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase().includes(keyword))); };
+      const card = skill => `<article class="skill-card"><div class="skill-card-top"><span class="skill-category blue">${escapeHtml(categoryLabel(skill.category))}</span><span class="skill-status review">${escapeHtml(statusLabel(skill.status))}</span></div><h2>${escapeHtml(skill.name)}</h2><p>${escapeHtml(skill.description)}</p><div class="skill-chips">${(skill.compatibility || []).map(item => `<span class="skill-chip">${escapeHtml(item)}</span>`).join('')}</div><div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="${escapeHtml(skill.id)}">查看安装方式 →</button>${skill.githubUrl ? `<a class="skill-source-link" href="${escapeHtml(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
+      const render = () => { const visible = filtered(); grid.innerHTML = visible.map(card).join(''); empty.hidden = visible.length > 0; count.textContent = `显示 ${visible.length} / ${skills.length}`; };
+      document.querySelectorAll('.skill-category-tab').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item === button)); render(); })); search.addEventListener('input', render); status.addEventListener('change', render);
+      document.getElementById('skill-clear').addEventListener('click', () => { search.value = ''; status.value = 'all'; category = 'all'; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item.dataset.category === 'all')); render(); });
+      grid.addEventListener('click', event => { const trigger = event.target.closest('.skill-details'); if (!trigger) return; const skill = skills.find(item => item.id === trigger.dataset.skillId); if (!skill) return; document.getElementById('dialog-skill-name').textContent = skill.name; document.getElementById('dialog-skill-description').textContent = skill.description; document.getElementById('dialog-command').textContent = skill.cloneCommand; const link = document.getElementById('dialog-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; dialog.showModal(); });
+      document.querySelector('.skill-dialog-close').addEventListener('click', () => dialog.close()); document.getElementById('copy-command').addEventListener('click', async event => { const button = event.currentTarget; const command = document.getElementById('dialog-command').textContent; try { await navigator.clipboard.writeText(command); button.textContent = '已复制'; } catch { const range = document.createRange(); range.selectNodeContents(document.getElementById('dialog-command')); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); button.textContent = '请手动复制'; } setTimeout(() => { button.textContent = '复制命令'; }, 1600); });
+      const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (!path.endsWith('/')) return; link.setAttribute('href', `../${path.slice(1)}index.html${window.location.search}`); }); };
+      adaptFileNavigation(); render();
+    })();
+    '''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script><style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>给模型装上真正好用的工作流</h1><p class="hero-copy">模型决定上限，Skill 决定你能不能把事情做完。按场景挑选可下载、可复用的 Agent Skill。</p></div><aside class="hero-note"><strong>{len(skills)} 个候选 Skill</strong><p>首批覆盖产品设计、电商运营和 SEO。当前条目来自社区清单，使用前请打开 GitHub 自行核对。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有首批条目均为社区候选 / 待核验。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">INSTALL GUIDE / 安装方式</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"></p><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted">使用前请自行核对仓库状态</span></div></div></dialog><script>{script}</script></body></html>'''
+
+
+def render_skills_page(skills: list[dict], site_url: str) -> str:
+    page = _legacy_render_skills_page(skills, site_url)
+    return page.replace(
+        '<a href="/skills/" aria-current="page">Skills</a></nav>',
+        '<a href="/skills/" aria-current="page">Skills</a><a href="/skills/lab/">Skill Lab</a></nav>',
+    )
+
+
+def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str) -> str:
+    """Render curated workflow recipes first; keep the full catalog behind a collapsed library."""
+    if site_url is None:
+        site_url = str(recipes)
+        recipes = []
+    recipes = recipes if isinstance(recipes, list) else []
+    path = SKILL_LAB_PAGE_PATH
+    title = "Skill Lab · FreeLLM"
+    description = "用 FreeLLM 的 Workflow Recipes 把 Agent Skill 组合成可执行的产品、办公、电商、SEO 和求职工作流。"
+    page_url = _absolute(site_url, path)
+    schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "CollectionPage", "name": title, "description": description, "url": page_url},
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": _absolute(site_url, "/")},
+                    {"@type": "ListItem", "position": 2, "name": "Agent Skills", "item": _absolute(site_url, SKILLS_PAGE_PATH)},
+                    {"@type": "ListItem", "position": 3, "name": title, "item": page_url},
+                ],
+            },
+            {
+                "@type": "ItemList",
+                "name": "FreeLLM Workflow Recipes",
+                "numberOfItems": len(recipes),
+                "itemListElement": [
+                    {"@type": "ListItem", "position": index, "name": recipe.get("title"), "url": page_url}
+                    for index, recipe in enumerate(recipes, start=1)
+                ],
+            },
+            *[
+                {
+                    "@type": "HowTo",
+                    "name": recipe.get("title"),
+                    "description": recipe.get("description"),
+                    "step": [
+                        {"@type": "HowToStep", "position": index, "name": step.get("label"), "text": step.get("detail")}
+                        for index, step in enumerate(recipe.get("steps") or [], start=1)
+                    ],
+                }
+                for recipe in recipes
+            ],
+        ],
+    }
+    serialized_skills = json.dumps(skills, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    serialized_recipes = json.dumps(recipes, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    recipe_cards = []
+    for recipe in recipes:
+        flow = "".join(
+            f'<span class="flow-node">{index:02d}</span><span class="flow-line" aria-hidden="true"></span>'
+            for index, _ in enumerate(recipe.get("steps") or [], start=1)
+        )
+        recipe_cards.append(
+            f'''<article class="workflow-card" data-recipe-id="{_esc(recipe.get("id"))}">
+              <div class="workflow-card-head"><span class="recipe-kicker">{_esc(recipe.get("kicker", "WORKFLOW"))}</span><span class="recipe-count">{len(recipe.get("steps") or []):02d} STEPS</span></div>
+              <h2>{_esc(recipe.get("title"))}</h2><p>{_esc(recipe.get("description"))}</p>
+              <div class="workflow-flow">{flow}</div>
+              <div class="workflow-card-foot"><span>{_esc(" · ".join(recipe.get("tags") or []))}</span><button class="workflow-details" type="button" data-recipe-id="{_esc(recipe.get("id"))}">展开配方 ↗</button></div>
+            </article>'''
+        )
+    category_options = "".join(
+        f'<option value="{_esc(key)}" data-category="{_esc(key)}">{_esc(value["name_zh"])} / {_esc(value["name_en"])}</option>'
+        for key, value in SKILL_CATEGORY_DEFINITIONS.items()
+    )
+    category_map = json.dumps(
+        {key: value["name_zh"] for key, value in SKILL_CATEGORY_DEFINITIONS.items()},
+        ensure_ascii=False,
+    )
+    style = r'''
+    :root { color-scheme:light; --ink:#0b0d10; --paper:#f4f5f1; --white:#fff; --blue:#1645e8; --blue-soft:#dfe7ff; --yellow:#ffd52b; --green:#b8edca; --line:#cfd4d7; --muted:#667078; --sidebar:232px; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--paper); }
+    * { box-sizing:border-box; } body { margin:0; min-width:320px; background:var(--paper); background-image:linear-gradient(rgba(11,13,16,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(11,13,16,.045) 1px,transparent 1px); background-size:24px 24px; } a { color:inherit; } button,input,select { font:inherit; }
+    .skill-lab-page { min-height:100vh; padding-left:var(--sidebar); } .skill-lab-sidebar { position:fixed; inset:0 auto 0 0; z-index:4; width:var(--sidebar); display:flex; flex-direction:column; padding:24px 20px; border-right:1px solid var(--ink); background:var(--paper); } .lab-brand { display:flex; gap:11px; align-items:center; text-decoration:none; padding-bottom:28px; border-bottom:1px solid var(--ink); } .lab-mark { display:grid; place-items:center; width:36px; height:36px; color:#fff; background:var(--blue); font-size:22px; } .lab-brand strong { display:block; font-size:18px; letter-spacing:-.05em; } .lab-brand small { display:block; margin-top:2px; color:var(--muted); font:10px "IBM Plex Mono",monospace; } .lab-side-label { margin:27px 0 9px; color:var(--muted); font:10px "IBM Plex Mono",monospace; letter-spacing:.11em; } .lab-side-nav { display:grid; gap:3px; } .lab-side-nav a { padding:9px 10px; color:#4e565d; font-size:13px; text-decoration:none; } .lab-side-nav a:hover,.lab-side-nav a[aria-current="page"] { color:var(--ink); background:var(--yellow); font-weight:800; } .lab-side-note { margin-top:auto; padding:12px; border:1px solid var(--ink); background:var(--white); font-size:11px; line-height:1.5; } .lab-side-note strong { display:block; margin-bottom:6px; font:11px "IBM Plex Mono",monospace; }
+    .lab-content { max-width:1360px; margin:0 auto; padding:28px 46px 70px; } .lab-topline { display:flex; justify-content:space-between; gap:18px; align-items:center; padding-bottom:15px; border-bottom:1px solid var(--ink); } .lab-topline span,.lab-topline a { color:var(--muted); font:10px "IBM Plex Mono",monospace; letter-spacing:.08em; } .lab-topline a { text-decoration:none; } .lab-topline a:hover { color:var(--blue); }
+    .lab-hero { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:30px; padding:58px 0 38px; } .lab-eyebrow,.recipe-kicker { color:var(--blue); font:700 11px "IBM Plex Mono",monospace; letter-spacing:.11em; } .lab-hero h1 { max-width:820px; margin:11px 0 18px; font-size:clamp(48px,7vw,102px); line-height:.92; letter-spacing:-.085em; } .lab-hero .lead { max-width:680px; margin:0; color:#505a61; font-size:19px; line-height:1.55; } .lab-hero-aside { align-self:end; padding:18px; border:1px solid var(--ink); background:var(--blue); color:#fff; box-shadow:9px 9px 0 var(--ink); } .lab-hero-aside strong { display:block; font-size:42px; line-height:1; letter-spacing:-.08em; } .lab-hero-aside p { margin:12px 0 0; color:#dce5ff; font-size:12px; line-height:1.55; }
+    .lab-rule { display:flex; gap:14px; align-items:center; margin:0 0 24px; padding:11px 14px; border:1px solid var(--ink); background:var(--yellow); } .lab-rule strong { font:12px "IBM Plex Mono",monospace; } .lab-rule span { color:#393a25; font-size:12px; }
+    .workflow-section-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin:0 0 13px; } .workflow-section-head h2 { margin:0; font-size:27px; letter-spacing:-.06em; } .workflow-section-head p { margin:0; color:var(--muted); font-size:12px; } .workflow-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; } .workflow-card { position:relative; min-height:258px; display:flex; flex-direction:column; padding:21px; border:1px solid var(--ink); background:var(--white); overflow:hidden; cursor:pointer; } .workflow-card::after { content:""; position:absolute; right:-30px; bottom:-42px; width:140px; height:140px; border-radius:50%; background:var(--blue-soft); } .workflow-card:nth-child(2n)::after,.workflow-card:nth-child(4n)::after { background:var(--yellow); } .workflow-card:nth-child(3n)::after { background:var(--green); } .workflow-card-head,.workflow-card-foot { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; gap:10px; } .recipe-count { color:var(--muted); font:10px "IBM Plex Mono",monospace; } .workflow-card h2 { position:relative; z-index:1; max-width:450px; margin:29px 0 9px; font-size:28px; line-height:1.08; letter-spacing:-.065em; } .workflow-card p { position:relative; z-index:1; max-width:510px; min-height:43px; margin:0; color:#59636a; font-size:13px; line-height:1.55; } .workflow-flow { position:relative; z-index:1; display:flex; align-items:center; margin:24px 0 22px; } .flow-node { display:grid; place-items:center; width:27px; height:27px; color:#fff; background:var(--ink); font:10px "IBM Plex Mono",monospace; } .flow-line { width:34px; height:1px; background:var(--ink); } .workflow-card-foot { margin-top:auto; padding-top:12px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; } .workflow-details { padding:0; border:0; color:var(--blue); background:none; cursor:pointer; font-size:12px; font-weight:750; } .workflow-details:hover { text-decoration:underline; }
+    .component-library { margin-top:34px; border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); background:rgba(255,255,255,.46); } .component-library > summary { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:19px 0; cursor:pointer; list-style:none; } .component-library > summary::-webkit-details-marker { display:none; } .component-library > summary::after { content:"＋"; font-size:22px; } .component-library[open] > summary::after { content:"－"; } .library-summary strong { display:block; font-size:21px; letter-spacing:-.05em; } .library-summary span { display:block; margin-top:4px; color:var(--muted); font-size:12px; } .library-count { padding:7px 9px; color:var(--blue); background:var(--blue-soft); font:11px "IBM Plex Mono",monospace; white-space:nowrap; } .library-body { padding:0 0 24px; } .library-tools { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:13px; } .library-tools input,.library-tools select { min-height:40px; border:1px solid var(--ink); border-radius:0; background:#fff; padding:9px 11px; } .library-tools input { flex:1 1 300px; } .library-tools select { min-width:210px; } .component-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; } .component-grid .component-card { min-width:0; padding:13px; border:1px solid var(--line); background:#fff; } .component-card h3 { margin:0 0 7px; font:700 13px "IBM Plex Mono",monospace; overflow-wrap:anywhere; } .component-card p { min-height:36px; margin:0; color:var(--muted); font-size:11px; line-height:1.45; } .component-meta { display:flex; justify-content:space-between; gap:7px; align-items:center; margin-top:12px; padding-top:9px; border-top:1px solid var(--line); color:var(--muted); font-size:10px; } .component-source-link { color:var(--blue); text-decoration:none; } .component-install { margin-top:9px; padding:0; border:0; color:var(--blue); background:none; cursor:pointer; font-size:11px; } .library-empty { padding:24px; color:var(--muted); border:1px dashed var(--line); text-align:center; }
+    .lab-footer { display:flex; justify-content:space-between; gap:18px; margin-top:42px; padding-top:15px; border-top:1px solid var(--ink); color:var(--muted); font-size:11px; line-height:1.5; } .lab-footer p { max-width:650px; margin:0; } .lab-footer nav { white-space:nowrap; } .lab-footer a { text-decoration:none; } dialog { width:min(720px,calc(100% - 28px)); max-height:calc(100% - 28px); padding:0; border:1px solid var(--ink); box-shadow:12px 12px 0 var(--ink); } dialog::backdrop { background:rgba(11,13,16,.58); } .workflow-dialog-body { padding:28px; background:var(--paper); } .dialog-close { float:right; width:32px; height:32px; border:1px solid var(--ink); background:#fff; cursor:pointer; } .dialog-kicker { color:var(--blue); font:11px "IBM Plex Mono",monospace; letter-spacing:.1em; } .workflow-dialog-body h2 { max-width:560px; margin:38px 0 9px; font-size:38px; line-height:1; letter-spacing:-.075em; } .dialog-intro { max-width:600px; color:#576168; font-size:14px; line-height:1.55; } .dialog-io { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:21px 0; } .dialog-io div { padding:13px; border:1px solid var(--line); background:#fff; } .dialog-io span { display:block; color:var(--muted); font:10px "IBM Plex Mono",monospace; } .dialog-io strong { display:block; margin-top:6px; font-size:13px; line-height:1.45; } .recipe-steps { display:grid; gap:8px; margin:18px 0 22px; } .recipe-step { display:grid; grid-template-columns:30px minmax(0,1fr); gap:11px; padding:12px; border-left:3px solid var(--blue); background:#fff; } .recipe-step-number { color:var(--blue); font:700 12px "IBM Plex Mono",monospace; } .recipe-step strong { display:block; font-size:14px; } .recipe-step small { display:block; margin-top:4px; color:var(--muted); line-height:1.45; } .recipe-step code { display:block; margin-top:9px; color:#27303a; font:10px "IBM Plex Mono",monospace; overflow-wrap:anywhere; } .dialog-actions { display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding-top:17px; border-top:1px solid var(--ink); } .primary-action { padding:10px 13px; border:1px solid var(--ink); color:#fff; background:var(--blue); cursor:pointer; font-weight:750; } .muted { color:var(--muted); font-size:11px; } .component-dialog .workflow-dialog-body h2 { font-family:"IBM Plex Mono",monospace; font-size:29px; }
+    @media (max-width:900px) { :root { --sidebar:190px; } .lab-content { padding:24px 25px 60px; } .lab-hero { grid-template-columns:1fr; } .lab-hero-aside { max-width:370px; } .component-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:650px) { :root { --sidebar:0px; } .skill-lab-sidebar { position:relative; width:auto; height:auto; padding:16px; border-right:0; border-bottom:1px solid var(--ink); } .lab-brand { padding-bottom:13px; } .lab-side-label,.lab-side-note { display:none; } .lab-side-nav { display:flex; overflow:auto; gap:3px; padding-top:11px; } .lab-side-nav a { white-space:nowrap; } .lab-content { padding:20px 14px 46px; } .lab-topline { display:none; } .lab-hero { padding:33px 0 28px; } .lab-hero h1 { font-size:54px; } .lab-hero .lead { font-size:16px; } .workflow-grid { grid-template-columns:1fr; } .workflow-card h2 { font-size:25px; } .component-grid { grid-template-columns:1fr; } .dialog-io { grid-template-columns:1fr; } .lab-footer { display:block; } .lab-footer nav { margin-top:11px; } }
+    @media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; transition:none !important; } } .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    '''
+    script = r'''
+    (() => {
+      const skills = JSON.parse(document.getElementById('skill-data').textContent);
+      const recipes = JSON.parse(document.getElementById('recipe-data').textContent);
+      const dialog = document.getElementById('workflow-dialog');
+      const componentDialog = document.getElementById('component-dialog');
+      const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character]));
+      const categoryLabel = value => (''' + category_map + r''')[value] || 'Skill';
+      const componentGrid = document.getElementById('component-grid');
+      const search = document.getElementById('skill-library-search');
+      const category = document.getElementById('skill-library-category');
+      const empty = document.getElementById('library-empty');
+      const commandFor = skill => skill ? String(skill.cloneCommand || '').trim() : '';
+      const componentCard = skill => '<article class="component-' + 'card"><h3>' + escapeHtml(skill.name) + '</h3><p>' + escapeHtml(skill.description) + '</p><div class="component-meta"><span>' + escapeHtml(categoryLabel(skill.category)) + '</span>' + (skill.githubUrl ? '<a class="component-source-link" href="' + escapeHtml(skill.githubUrl) + '" target="_blank" rel="nofollow noopener">GitHub ↗</a>' : '') + '</div><button class="component-install" type="button" data-skill-id="' + escapeHtml(skill.id) + '">查看安装命令 →</button></article>';
+      const renderComponents = () => { const query = search.value.trim().toLowerCase(); const visible = skills.filter(skill => (!category.value || skill.category === category.value) && (!query || [skill.id, skill.name, skill.description, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase().includes(query))); componentGrid.innerHTML = visible.map(componentCard).join(''); empty.hidden = visible.length > 0; };
+      const openRecipe = recipe => { if (!recipe) return; document.getElementById('workflow-dialog-kicker').textContent = recipe.kicker || 'WORKFLOW'; document.getElementById('workflow-dialog-title').textContent = recipe.title || ''; document.getElementById('workflow-dialog-description').textContent = recipe.description || ''; document.getElementById('workflow-input').textContent = recipe.input || ''; document.getElementById('workflow-output').textContent = recipe.output || ''; const steps = recipe.steps || []; document.getElementById('recipe-steps').innerHTML = steps.map((step, index) => { const skill = skills.find(item => item.id === step.skillId); return '<div class="recipe-step"><span class="recipe-step-number">' + String(index + 1).padStart(2, '0') + '</span><div><strong>' + escapeHtml(step.label || (skill && skill.name) || step.skillId) + '</strong><small>' + escapeHtml(step.detail || (skill && skill.description) || '') + '</small><code>' + escapeHtml(commandFor(skill)) + '</code></div></div>'; }).join(''); document.getElementById('copy-workflow-command').dataset.command = steps.map(step => commandFor(skills.find(item => item.id === step.skillId))).filter(Boolean).join('\n'); dialog.showModal(); };
+      document.querySelectorAll('.workflow-details').forEach(button => button.addEventListener('click', () => openRecipe(recipes.find(recipe => recipe.id === button.dataset.recipeId))));
+      document.querySelectorAll('.workflow-card').forEach(card => card.addEventListener('click', event => { if (event.target.closest('button')) return; openRecipe(recipes.find(recipe => recipe.id === card.dataset.recipeId)); }));
+      document.querySelectorAll('[data-dialog-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
+      search.addEventListener('input', renderComponents); category.addEventListener('change', renderComponents);
+      componentGrid.addEventListener('click', event => { const button = event.target.closest('.component-install'); if (!button) return; const skill = skills.find(item => item.id === button.dataset.skillId); if (!skill) return; document.getElementById('component-dialog-title').textContent = skill.name; document.getElementById('component-dialog-description').textContent = skill.description; document.getElementById('component-command').textContent = commandFor(skill); const link = document.getElementById('component-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; componentDialog.showModal(); });
+      const copy = async (button, value) => { try { await navigator.clipboard.writeText(value); button.textContent = '已复制 ✓'; } catch { button.textContent = '请手动复制'; } setTimeout(() => { button.textContent = button.dataset.label || '复制命令'; }, 1600); };
+      document.getElementById('copy-workflow-command').addEventListener('click', event => copy(event.currentTarget, event.currentTarget.dataset.command || ''));
+      document.getElementById('copy-component-command').addEventListener('click', event => copy(event.currentTarget, document.getElementById('component-command').textContent));
+      const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.lab-side-nav a[href^="/"], .lab-topline a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (path === '/') link.setAttribute('href', '../index.html'); else if (path.endsWith('/')) link.setAttribute('href', '../' + path.slice(1) + 'index.html' + window.location.search); }); };
+      document.querySelectorAll('[data-copy-label]').forEach(button => { button.dataset.label = button.textContent; });
+      adaptFileNavigation(); renderComponents();
+    })();
+    '''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized_skills}</script><script type="application/json" id="recipe-data">{serialized_recipes}</script><style>{style}</style></head><body data-static-locale="true"><main class="skill-lab-page"><aside class="skill-lab-sidebar"><a class="lab-brand" href="/"><span class="lab-mark">✦</span><span><strong>FreeLLM</strong><small>SKILL LAB / 2026</small></span></a><div class="lab-side-label">EXPLORE</div><nav class="lab-side-nav" aria-label="Skill Lab 导航"><a href="/skills/" aria-current="page">工作流配方</a><a href="#component-library">组件库</a><a href="/models/">模型目录</a><a href="/logs/">每日更新</a></nav><div class="lab-side-note"><strong>110 COMPONENTS</strong><span>组件是积木，配方才是做事的方法。先从结果出发。</span></div></aside><section class="lab-content"><div class="lab-topline"><span>FREE AI INDEX / SKILL LAB</span><a href="/">返回 FreeLLM 首页 ↗</a></div><header class="lab-hero"><div><div class="lab-eyebrow">AGENT SKILLS / WORKFLOW RECIPES</div><h1>让模型<br><span style="color:var(--blue)">把事情做完。</span></h1><p class="lead">模型决定上限，Skill 决定执行路径。我们把零散能力编排成 6 套可直接复用的工作流配方，先选你要交付的结果。</p></div><aside class="lab-hero-aside"><strong>06</strong><p>套经过人工编排的工作流<br>{len(skills)} 个可检索的底层组件<br>每个来源都标记为待核验</p></aside></header><div class="lab-rule"><strong>HOW TO USE / 使用方式</strong><span>选一套配方 → 查看步骤 → 复制安装命令 → 把输入交给 Agent</span></div><section aria-labelledby="workflow-heading"><div class="workflow-section-head"><div><div class="lab-eyebrow">START WITH THE OUTCOME</div><h2 id="workflow-heading">你现在要完成什么？</h2></div><p>首屏只保留 6 个高频结果</p></div><div class="workflow-grid">{"".join(recipe_cards)}</div></section><details id="component-library" class="component-library"><summary><span class="library-summary"><strong>组件库 / Component library</strong><span>不确定从哪开始？搜索 {len(skills)} 个底层 Skill，按用途挑一块积木。</span></span><span class="library-count">{len(skills):03d} COMPONENTS</span></summary><div class="library-body"><div class="library-tools"><label class="sr-only" for="skill-library-search">搜索组件</label><input id="skill-library-search" type="search" placeholder="搜索名称、用途、仓库或框架"><label class="sr-only" for="skill-library-category">按分类筛选</label><select id="skill-library-category"><option value="">全部分类</option>{category_options}</select></div><div id="component-grid" class="component-grid" aria-live="polite"></div><div id="library-empty" class="library-empty" hidden>没有找到匹配的组件。</div></div></details><footer class="lab-footer"><p>提示：组件来自用户提交的 GitHub 清单，均标记为待核验。安装前请打开来源仓库，确认维护状态、权限要求和 Agent 目录结构。</p>{_static_locale_nav()}</footer></section></main><dialog id="workflow-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div id="workflow-dialog-kicker" class="dialog-kicker">WORKFLOW</div><h2 id="workflow-dialog-title"></h2><p id="workflow-dialog-description" class="dialog-intro"></p><div class="dialog-io"><div><span>INPUT / 输入</span><strong id="workflow-input"></strong></div><div><span>OUTPUT / 产出</span><strong id="workflow-output"></strong></div></div><div id="recipe-steps" class="recipe-steps"></div><div class="dialog-actions"><button id="copy-workflow-command" class="primary-action" type="button" data-copy-label="复制整套安装命令">复制整套安装命令</button><span class="muted">命令按步骤顺序排列</span></div></div></dialog><dialog id="component-dialog" class="component-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div class="dialog-kicker">COMPONENT / 组件</div><h2 id="component-dialog-title"></h2><p id="component-dialog-description" class="dialog-intro"></p><div class="command-box"><code id="component-command"></code></div><div class="dialog-actions"><button id="copy-component-command" class="primary-action" type="button" data-copy-label="复制安装命令">复制安装命令</button><a id="component-github" class="component-source-link" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a></div></div></dialog><script>{script}</script></body></html>'''
+
+
+def render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str) -> str:
+    page = _render_skill_lab_page(skills, recipes, site_url)
+    return page.replace(
+        '<a href="/skills/" aria-current="page">工作流配方</a>',
+        '<a href="/skills/lab/" aria-current="page">工作流配方</a><a href="/skills/">Skill 目录</a>',
+    )
+
+
 def render_sitemap(
     offers: list[dict],
     categories: list[str],
     site_url: str,
     models: list[dict] | None = None,
     providers: list[dict] | None = None,
+    skills: list[dict] | None = None,
 ) -> str:
     paths = [
         "/",
@@ -2718,6 +2975,8 @@ def render_sitemap(
         MODEL_CENTER_PAGE_PATH,
         PROVIDERS_PAGE_PATH,
         CHANGE_LOG_PAGE_PATH,
+        SKILLS_PAGE_PATH,
+        SKILL_LAB_PAGE_PATH,
     ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
     paths += [model_aggregate_url(model) for model in (models or [])]
     paths += [provider_url(provider) for provider in (providers or [])]
@@ -2734,7 +2993,7 @@ def render_sitemap(
 '''
 
 
-def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
+def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None, skills: list[dict] | None = None, recipes: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
     categories = [
         category
         for category in CATEGORY_DEFINITIONS
@@ -2744,7 +3003,9 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     providers = _provider_catalog_from_models(model_catalog, operations)
     provider_access, _, model_access = _load_access_context()
     files: dict[Path, str] = {
-        Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers),
+        Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers, skills),
+        Path("skills") / "index.html": render_skills_page(skills or [], site_url),
+        Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path("models") / "index.html": render_models_page(offers, site_url),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
@@ -2785,6 +3046,110 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             page_path = page_path[:-len("index.html")]
         files[path] = _inject_hreflang_links(page, site_url, page_path)
     return files, categories
+
+
+def validate_skills(source: str | Path | list[dict]) -> list[str]:
+    """Validate the small, publishable contract used by the Skills directory."""
+    if isinstance(source, (str, Path)):
+        path = Path(source)
+        if not path.is_file():
+            return [f"skills file does not exist: {path}"]
+        try:
+            source = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            return [f"skills file cannot be read: {error}"]
+    if not isinstance(source, list):
+        return ["skills data must be a JSON array"]
+
+    errors: list[str] = []
+    seen_ids: set[str] = set()
+    for index, item in enumerate(source):
+        prefix = f"skills[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        missing = [field for field in SKILL_REQUIRED_FIELDS if field not in item]
+        if missing:
+            errors.append(f"{prefix} missing required fields: {', '.join(missing)}")
+        skill_id = str(item.get("id") or "").strip()
+        if skill_id in seen_ids:
+            errors.append(f"{prefix}.id must be unique: {skill_id}")
+        if skill_id:
+            seen_ids.add(skill_id)
+        if item.get("category") not in SKILL_CATEGORY_DEFINITIONS:
+            errors.append(f"{prefix}.category is unknown: {item.get('category')!r}")
+        if item.get("status") not in SKILL_STATUS_LABELS:
+            errors.append(f"{prefix}.status is unknown: {item.get('status')!r}")
+        if not isinstance(item.get("compatibility"), list) or not item.get("compatibility"):
+            errors.append(f"{prefix}.compatibility must be a non-empty array")
+        github_url = str(item.get("githubUrl") or "")
+        if github_url and not github_url.startswith("https://github.com/"):
+            errors.append(f"{prefix}.githubUrl must use https://github.com/")
+    return errors
+
+
+def validate_skill_recipes(source: str | Path | list[dict], skills: list[dict]) -> list[str]:
+    """Validate curated workflow recipes and their references into the component catalog."""
+    if isinstance(source, (str, Path)):
+        path = Path(source)
+        if not path.is_file():
+            return [f"skill recipes file does not exist: {path}"]
+        try:
+            source = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            return [f"skill recipes file cannot be read: {error}"]
+    if not isinstance(source, list):
+        return ["skill recipes data must be a JSON array"]
+
+    errors: list[str] = []
+    seen_ids: set[str] = set()
+    skill_ids = {str(item.get("id") or "").strip() for item in skills if isinstance(item, dict)}
+    for index, item in enumerate(source):
+        prefix = f"skillRecipes[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        missing = [field for field in SKILL_RECIPE_REQUIRED_FIELDS if field not in item]
+        if missing:
+            errors.append(f"{prefix} missing required fields: {', '.join(missing)}")
+        recipe_id = str(item.get("id") or "").strip()
+        if recipe_id in seen_ids:
+            errors.append(f"{prefix}.id must be unique: {recipe_id}")
+        if recipe_id:
+            seen_ids.add(recipe_id)
+        steps = item.get("steps")
+        if not isinstance(steps, list) or len(steps) < 3:
+            errors.append(f"{prefix}.steps must contain at least 3 steps")
+            continue
+        for step_index, step in enumerate(steps):
+            step_prefix = f"{prefix}.steps[{step_index}]"
+            if not isinstance(step, dict):
+                errors.append(f"{step_prefix} must be an object")
+                continue
+            skill_id = str(step.get("skillId") or "").strip()
+            if skill_id not in skill_ids:
+                errors.append(f"{step_prefix}.skillId references unknown component: {skill_id}")
+    return errors
+
+
+def _load_skills(data_path: Path) -> list[dict]:
+    skills_path = data_path.parent / "skills.json"
+    if not skills_path.is_file():
+        return []
+    errors = validate_skills(skills_path)
+    if errors:
+        raise SystemExit("Invalid skills data:\n" + "\n".join(errors))
+    return json.loads(skills_path.read_text(encoding="utf-8"))
+
+
+def _load_skill_recipes(data_path: Path, skills: list[dict]) -> list[dict]:
+    recipes_path = data_path.parent / "skill-recipes.json"
+    if not recipes_path.is_file():
+        return []
+    errors = validate_skill_recipes(recipes_path, skills)
+    if errors:
+        raise SystemExit("Invalid skill recipes data:\n" + "\n".join(errors))
+    return json.loads(recipes_path.read_text(encoding="utf-8"))
 
 
 def _load_data(data_path: Path) -> list[dict]:
@@ -2855,7 +3220,7 @@ def _clean_previous_pages(output_root: Path) -> None:
         path = (output_root / relative).resolve()
         root = output_root.resolve()
         relative_path = path.relative_to(root)
-        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs"}:
+        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs", "skills"}:
             continue
         if path.is_file():
             path.unlink()
@@ -2891,8 +3256,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     models = _load_models(data_path)
     models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
+    skills = _load_skills(data_path)
+    recipes = _load_skill_recipes(data_path, skills)
     daily_logs = _load_daily_logs(data_path)
-    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs)
+    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes)
     files = {relative: _append_legal_links(content) for relative, content in files.items()}
     output_root = Path(output_root)
     if check:
@@ -2912,7 +3279,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         path = output_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
-    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs"}]}
+    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}]}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=len(files))
     print(f"built SEO output: {result.offer_count} offers, {result.category_count} categories, {result.page_count} files")

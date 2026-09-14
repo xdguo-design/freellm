@@ -1,0 +1,98 @@
+[
+  {
+    "id": "idea-to-prd",
+    "title": "从一句想法到可执行 PRD",
+    "kicker": "PRODUCT / 01",
+    "description": "把模糊想法压成团队能评审、能排期、能验收的产品任务。",
+    "input": "一句想法、目标用户和已知约束",
+    "output": "带验收标准、风险边界和流程图的 PRD",
+    "why": "先澄清问题，再写文档，最后把讨论变成下一步动作。",
+    "tags": ["产品设计", "需求落地"],
+    "steps": [
+      {"skillId":"user-story-skill","label":"把想法变成用户故事","detail":"补上角色、场景、价值和可验证的验收标准。"},
+      {"skillId":"prd-write-skill","label":"生成第一版 PRD","detail":"把背景、目标、功能和非功能需求组织成文档。"},
+      {"skillId":"requirement-review-skill","label":"找出遗漏和冲突","detail":"检查边界、异常路径、依赖和不可执行的表述。"},
+      {"skillId":"flowchart-md-skill","label":"补上流程与状态","detail":"用 Mermaid 把关键流程和状态变化画出来。"}
+    ]
+  },
+  {
+    "id": "meeting-to-action",
+    "title": "从会议记录到团队推进",
+    "kicker": "OPERATIONS / 02",
+    "description": "把一段会议记录变成有负责人、有截止日期、可追踪的行动面板。",
+    "input": "会议录音、聊天记录或零散笔记",
+    "output": "纪要、行动项、风险清单和跟进邮件",
+    "why": "会议的价值不在总结，而在让下一步有人接、有人做、有人验收。",
+    "tags": ["会议管理", "执行跟进"],
+    "steps": [
+      {"skillId":"meeting-note-skill","label":"清洗会议记录","detail":"去掉口头重复，保留决策、争议和上下文。"},
+      {"skillId":"minutes-review-skill","label":"校验行动项","detail":"检查每项任务是否有清晰的负责人、时间和结果。"},
+      {"skillId":"risk-assess-skill","label":"补一张风险清单","detail":"把阻塞、依赖和潜在延期变成可处理的风险。"},
+      {"skillId":"followup-skill","label":"发出跟进消息","detail":"根据不同对象生成简洁、可回复的跟进文案。"}
+    ]
+  },
+  {
+    "id": "keyword-to-publish",
+    "title": "从关键词到 SEO 内容发布",
+    "kicker": "GROWTH / 03",
+    "description": "把关键词机会变成一篇结构清楚、可上线、可复用的内容资产。",
+    "input": "主题、关键词、目标读者和站点定位",
+    "output": "文章大纲、正文、Meta 信息和内链建议",
+    "why": "把搜索意图、内容结构和发布检查放进一条流水线。",
+    "tags": ["SEO", "内容增长"],
+    "steps": [
+      {"skillId":"keyword-research-skill","label":"拆解关键词意图","detail":"区分核心词、长尾词和用户真正想解决的问题。"},
+      {"skillId":"content-outline-seo-skill","label":"搭出内容骨架","detail":"围绕搜索意图规划章节、覆盖点和信息顺序。"},
+      {"skillId":"article-seo-skill","label":"写正文并做 SEO","detail":"把关键词自然放入标题、段落和页面结构。"},
+      {"skillId":"meta-gen-skill","label":"生成发布元信息","detail":"一次产出 Title、Description、OG 和摘要版本。"}
+    ]
+  },
+  {
+    "id": "product-launch-pack",
+    "title": "从商品资料到完整上新包",
+    "kicker": "COMMERCE / 04",
+    "description": "把一份商品资料变成商品页、客服 FAQ、广告文案和首周经营检查表。",
+    "input": "商品参数、目标人群、成本和竞品信息",
+    "output": "商品详情页、FAQ、广告 A/B 文案和经营指标表",
+    "why": "上新不是写一段卖点，而是让内容、客服和经营动作同时到位。",
+    "tags": ["电商", "上新"],
+    "steps": [
+      {"skillId":"product-copy-skill","label":"提炼商品卖点","detail":"把参数翻译成用户能感知、能比较的购买理由。"},
+      {"skillId":"review-analyze-skill","label":"借评论补痛点","detail":"用真实反馈校准卖点、疑虑和客服表达。"},
+      {"skillId":"faq-gen-skill","label":"生成售前 FAQ","detail":"把高频问题整理成客服可直接复用的话术。"},
+      {"skillId":"shop-kpi-skill","label":"设置首周观察指标","detail":"把点击、转化、客单和 ROI 变成复盘清单。"}
+    ]
+  },
+  {
+    "id": "data-to-deck",
+    "title": "从数据表到经营汇报",
+    "kicker": "INSIGHTS / 05",
+    "description": "把一张没人想看的数据表，变成有结论、有证据、有动作的汇报结构。",
+    "input": "CSV、Excel 或一组业务指标",
+    "output": "数据结论、关键图表、KPI 解读和 PPT 大纲",
+    "why": "先回答业务问题，再决定图表和页面，不让 PPT 变成数据搬运。",
+    "tags": ["数据分析", "经营汇报"],
+    "steps": [
+      {"skillId":"data-analyze-skill","label":"读懂数据表","detail":"识别指标口径、趋势、异常和需要追问的地方。"},
+      {"skillId":"data-interpret-skill","label":"提炼关键变化","detail":"把变化写成面向业务的结论，而不是复述数字。"},
+      {"skillId":"chart-gen-skill","label":"选择证据图表","detail":"为每个结论配最少但有效的图表表达。"},
+      {"skillId":"ppt-outline-skill","label":"组织汇报叙事","detail":"将结论、证据和下一步动作拆成可讲述的页面。"}
+    ]
+  },
+  {
+    "id": "job-search-sprint",
+    "title": "从招聘 JD 到面试准备",
+    "kicker": "CAREER / 06",
+    "description": "把岗位描述拆成准备清单，让简历、经历和面试回答围绕同一组能力对齐。",
+    "input": "目标岗位 JD、个人简历和项目经历",
+    "output": "岗位拆解、定制简历、匹配缺口和 STAR 故事",
+    "why": "不是把简历写得更长，而是让每个证据都回答岗位真正关心的问题。",
+    "tags": ["求职", "面试"],
+    "steps": [
+      {"skillId":"jd-decoder-skill","label":"拆解岗位要求","detail":"区分硬技能、软能力、业务目标和隐藏门槛。"},
+      {"skillId":"tailored-resume-generator-skill","label":"定制简历版本","detail":"围绕岗位语言重排经历，突出可验证的成果。"},
+      {"skillId":"resume-matcher-skill","label":"找出能力缺口","detail":"对照 JD 标记证据不足和需要补充的关键词。"},
+      {"skillId":"interview-story-skill","label":"准备 STAR 故事","detail":"把真实经历整理成面试可复述、可追问的答案。"}
+    ]
+  }
+]

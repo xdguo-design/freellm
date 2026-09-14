@@ -217,6 +217,45 @@
       "reason": "missing from the successful snapshot"
     }
   ],
+  "curatedEvents": [
+    {
+      "kind": "offer",
+      "eventType": "new",
+      "curated": true,
+      "id": "taotoken",
+      "title": "Taotoken · 多模型 API / Token Plan",
+      "asOf": "2026-09-12",
+      "reason": "用户确认每日新增；官方价格页已核验。Taotoken 不是免费服务，但提供较优惠的多模型 API 与 Token Plan 套餐。",
+      "details": {
+        "provider": "Taotoken（北京灵明智码科技有限公司）",
+        "productType": "payg",
+        "model": "多模型 API；支持 Claude Code、Cursor、OpenCode 等工具",
+        "quota": "Lite ¥59/月（5000 Credits）；Pro ¥149/月（14000 Credits）；加油包 ¥99/10000 Credits",
+        "validity": "按月订阅；Credits 按周期发放，实际消耗因模型及输入/输出 Token 而异",
+        "access": "注册、充值并创建 API Key；支持 OpenAI / Anthropic 兼容接口",
+        "register": "https://taotoken.net/",
+        "registrationSteps": [
+          "打开 Taotoken 官网并注册或登录",
+          "选择 Token Plan 套餐并完成充值",
+          "在控制台创建 API Key，按工具协议配置 Base URL"
+        ],
+        "sourceUrl": "https://taotoken.net/",
+        "sourceUrls": [
+          "https://taotoken.net/",
+          "https://taotoken.net/token-plan",
+          "https://taotoken.net/agreement/user-service"
+        ],
+        "links": [
+          ["Taotoken 官网", "https://taotoken.net/"],
+          ["Token Plan 价格", "https://taotoken.net/token-plan"],
+          ["用户服务协议", "https://taotoken.net/agreement/user-service"]
+        ],
+        "evidence": "官方首页与价格页列出多模型 API、Token Plan 套餐及对应价格；用户服务协议显示运营方为北京灵明智码科技有限公司。",
+        "status": "paid",
+        "verificationStatus": "verified"
+      }
+    }
+  ],
   "observed": {
     "models": [
       {

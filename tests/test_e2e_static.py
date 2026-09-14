@@ -69,6 +69,14 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(f'href="{href}"', self.html)
 
+    def test_indexable_legal_pages_have_crawler_and_share_metadata(self):
+        for relative in ("about/index.html", "terms/index.html", "privacy/index.html"):
+            page = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn('<meta name="robots" content="index,follow,max-image-preview:large"', page)
+            canonical = re.search(r'<link rel="canonical" href="([^"]+)"', page)
+            self.assertIsNotNone(canonical)
+            self.assertIn(f'<meta name="twitter:url" content="{canonical.group(1)}"', page)
+
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
         """Narrow screens must keep the directory navigation discoverable."""
         self.assertIn('href="/logs/"', self.html)

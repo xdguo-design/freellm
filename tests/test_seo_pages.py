@@ -64,6 +64,46 @@ def test_theme_guides_render_unique_metadata_and_verified_rows(tmp_path):
         assert "adsbygoogle.js?client=ca-pub-2461062743308239" in page
 
 
+def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    pages = [
+        tmp_path / "models" / "index.html",
+        tmp_path / "models" / "all" / "index.html",
+        tmp_path / "models" / "center" / "index.html",
+        tmp_path / "providers" / "index.html",
+        tmp_path / "skills" / "index.html",
+        tmp_path / "skills" / "lab" / "index.html",
+        tmp_path / "logs" / "index.html",
+    ]
+    for path in pages:
+        page = path.read_text(encoding="utf-8")
+        assert '<meta name="robots" content="index,follow,max-image-preview:large"' in page
+        canonical = next(line for line in page.splitlines() if '<link rel="canonical"' in line)
+        canonical_url = canonical.split('href="', 1)[1].split('"', 1)[0]
+        assert f'<meta name="twitter:url" content="{canonical_url}"' in page
+
+    homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+    assert '<meta name="robots" content="index,follow,max-image-preview:large"' in homepage
+    assert '<meta name="twitter:url" content="https://freellm.top/"' in homepage
+
+
+def test_skills_pages_expose_breadcrumb_structured_data(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    for relative_path in ("skills/index.html", "skills/lab/index.html"):
+        page = (tmp_path / relative_path).read_text(encoding="utf-8")
+        assert '"@type": "BreadcrumbList"' in page
+        assert "FreeLLM" in page
+        assert "https://freellm.top/skills/" in page
+
+
+def test_legacy_offer_redirects_are_kept_but_not_indexed(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    for relative_path in ("offers/longcat-api/index.html", "offers/longcat-download/index.html"):
+        page = (tmp_path / relative_path).read_text(encoding="utf-8")
+        assert '<meta name="robots" content="noindex,follow">' in page
+        assert 'http-equiv="refresh"' in page
+
+
 def test_context_window_guide_exposes_model_parameters(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "guides" / "model-context-windows" / "index.html").read_text(encoding="utf-8")
