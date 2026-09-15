@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>键盘键位码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('键盘键位码', 'keyCode/key/which 实时查看', 'keycode');
+
+  var display = T.el('div', { class: 'output dark', style: 'text-align:center;padding:40px;font-size:1.2em;min-height:200px' });
+  display.innerHTML = '<p style="color:var(--muted)">按下任意键查看键位码信息</p>';
+
+  var history = T.el('div', { class: 'output dark', style: 'max-height:300px;overflow-y:auto' });
+  var log = [];
+
+  document.addEventListener('keydown', function (e) {
+    e.preventDefault();
+
+    var info = {
+      key: e.key,
+      code: e.code,
+      keyCode: e.keyCode,
+      which: e.which,
+      ctrlKey: e.ctrlKey,
+      shiftKey: e.shiftKey,
+      altKey: e.altKey,
+      metaKey: e.metaKey
+    };
+
+    display.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;text-align:right;color:var(--muted)">key:</td><td style="padding:8px;font-family:monospace;font-weight:bold">' + info.key + '</td></tr>' +
+      '<tr><td style="padding:8px;text-align:right;color:var(--muted)">code:</td><td style="padding:8px;font-family:monospace;font-weight:bold">' + info.code + '</td></tr>' +
+      '<tr><td style="padding:8px;text-align:right;color:var(--muted)">keyCode:</td><td style="padding:8px;font-family:monospace;font-weight:bold">' + info.keyCode + '</td></tr>' +
+      '<tr><td style="padding:8px;text-align:right;color:var(--muted)">which:</td><td style="padding:8px;font-family:monospace;font-weight:bold">' + info.which + '</td></tr>' +
+      '<tr><td style="padding:8px;text-align:right;color:var(--muted)">modifiers:</td><td style="padding:8px;font-family:monospace">' +
+      (info.ctrlKey ? 'Ctrl ' : '') + (info.shiftKey ? 'Shift ' : '') + (info.altKey ? 'Alt ' : '') + (info.metaKey ? 'Meta ' : '') +
+      '</td></tr></table>';
+
+    log.unshift(info);
+    if (log.length > 20) log.pop();
+    renderHistory();
+  });
+
+  function renderHistory() {
+    var html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
+    html += '<thead><tr><th style="padding:4px;border-bottom:1px solid var(--line)">Key</th><th style="padding:4px;border-bottom:1px solid var(--line)">Code</th><th style="padding:4px;border-bottom:1px solid var(--line)">keyCode</th><th style="padding:4px;border-bottom:1px solid var(--line)">Modifiers</th></tr></thead>';
+    html += '<tbody>';
+    log.forEach(function (e) {
+      html += '<tr><td style="padding:4px;border-bottom:1px solid var(--line)">' + e.key + '</td>';
+      html += '<td style="padding:4px;border-bottom:1px solid var(--line)">' + e.code + '</td>';
+      html += '<td style="padding:4px;border-bottom:1px solid var(--line)">' + e.keyCode + '</td>';
+      html += '<td style="padding:4px;border-bottom:1px solid var(--line)">' +
+        (e.ctrlKey ? 'Ctrl ' : '') + (e.shiftKey ? 'Shift ' : '') + (e.altKey ? 'Alt ' : '') + (e.metaKey ? 'Meta ' : '') +
+        '</td></tr>';
+    });
+    html += '</tbody></table>';
+    history.innerHTML = html;
+  }
+
+  app.appendChild(display);
+  app.appendChild(T.el('div', { class: 'field', text: '按键历史:' }));
+  app.appendChild(history);
+})();
+</script>
+</body>
+</html>

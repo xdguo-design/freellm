@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>季数计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('季度计算器', '季度/财年计算', 'quarter');
+
+  var date = T.el('input', { type: 'date', style: 'flex:1' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function calculate() {
+    var d = new Date(date.value);
+    if (isNaN(d.getTime())) { result.textContent = '请选择日期'; return; }
+
+    var month = d.getMonth();
+    var quarter = Math.floor(month / 3) + 1;
+    var year = d.getFullYear();
+
+    var quarterStart = new Date(year, (quarter - 1) * 3, 1);
+    var quarterEnd = new Date(year, quarter * 3, 0);
+
+    var fiscalYear = month >= 3 ? year + 1 : year;
+    var fiscalQuarter = Math.floor(((month - 3 + 12) % 12) / 3) + 1;
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">日期</td><td style="padding:8px;text-align:right">' + d.toLocaleDateString('zh-CN') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">季度</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">Q' + quarter + ' ' + year + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">季度范围</td><td style="padding:8px;text-align:right">' + quarterStart.toLocaleDateString('zh-CN') + ' - ' + quarterEnd.toLocaleDateString('zh-CN') + '</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">财年</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right">FY' + fiscalYear + ' Q' + fiscalQuarter + '</td></tr>' +
+      '</table>';
+  }
+
+  date.addEventListener('change', calculate);
+
+  app.appendChild(T.el('div', { class: 'field', text: '选择日期:' }));
+  app.appendChild(date);
+  app.appendChild(result);
+
+  date.value = new Date().toISOString().slice(0, 10);
+  calculate();
+})();
+</script>
+</body>
+</html>

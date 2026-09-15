@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AES 加解密 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('AES 加解密', 'AES-GCM/CBC 对称加解密', 'aes');
+
+  var mode = T.select([
+    { value: 'encrypt', label: '加密' },
+    { value: 'decrypt', label: '解密' }
+  ]);
+  var algo = T.select([
+    { value: 'AES-GCM', label: 'AES-GCM' },
+    { value: 'AES-CBC', label: 'AES-CBC' }
+  ]);
+  var key = T.el('input', { type: 'text', placeholder: '密钥（16/24/32字节）', style: 'flex:1' });
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  async function getKey(keyStr) {
+    var keyBytes = new TextEncoder().encode(keyStr.padEnd(32, '\0').slice(0, 32));
+    return await crypto.subtle.importKey('raw', keyBytes, algo.value, false, ['encrypt', 'decrypt']);
+  }
+
+  async function run() {
+    var v = input.value;
+    var k = key.value;
+    if (!v || !k) { output.value = ''; return; }
+    try {
+      if (mode.value === 'encrypt') {
+        var iv = crypto.getRandomValues(new Uint8Array(12));
+        var keyObj = await getKey(k);
+        var encrypted = await crypto.subtle.encrypt({ name: algo.value, iv: iv }, keyObj, new TextEncoder().encode(v));
+        var result = btoa(String.fromCharCode(...iv, ...new Uint8Array(encrypted)));
+        output.value = result;
+      } else {
+        var data = atob(v);
+        var bytes = new Uint8Array(data.length);
+        for (var i = 0; i < data.length; i++) bytes[i] = data.charCodeAt(i);
+        var iv = bytes.slice(0, 12);
+        var encrypted = bytes.slice(12);
+        var keyObj = await getKey(k);
+        var decrypted = await crypto.subtle.decrypt({ name: algo.value, iv: iv }, keyObj, encrypted);
+        output.value = new TextDecoder().decode(decrypted);
+      }
+    } catch (e) {
+      output.value = '⚠ 操作失败: ' + e.message;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  algo.addEventListener('change', run);
+  key.addEventListener('input', function () { setTimeout(run, 100); });
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, algo]));
+  app.appendChild(T.el('div', { class: 'row' }, [key]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'row' }, [output, copyBtn]));
+})();
+</script>
+</body>
+</html>

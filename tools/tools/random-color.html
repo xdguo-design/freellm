@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>随机颜色 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('随机颜色', '随机颜色生成 + 调色板', 'random-color');
+
+  var palette = T.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin:16px 0' });
+  var currentColor = T.el('div', { style: 'width:100%;height:100px;border-radius:8px;border:1px solid var(--line);transition:background 0.3s' });
+  var hexInput = T.el('input', { type: 'text', readonly: true, style: 'width:100%;font-family:monospace;text-align:center;padding:8px;font-size:1.1em' });
+
+  var generateBtn = T.button('生成新颜色', generate, true);
+  var copyBtn = T.copyBtn(function () { return hexInput.value; });
+
+  var colors = [];
+
+  function randomColor() {
+    var h = Math.floor(Math.random() * 360);
+    var s = 50 + Math.floor(Math.random() * 40);
+    var l = 40 + Math.floor(Math.random() * 30);
+    return { h: h, s: s, l: l };
+  }
+
+  function hslToHex(h, s, l) {
+    s /= 100; l /= 100;
+    var c = (1 - Math.abs(2 * l - 1)) * s;
+    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    var m = l - c / 2;
+    var r, g, b;
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    r = Math.round((r + m) * 255).toString(16).padStart(2, '0');
+    g = Math.round((g + m) * 255).toString(16).padStart(2, '0');
+    b = Math.round((b + m) * 255).toString(16).padStart(2, '0');
+    return '#' + r + g + b;
+  }
+
+  function generate() {
+    colors = [];
+    for (var i = 0; i < 6; i++) {
+      var c = randomColor();
+      colors.push({
+        hex: hslToHex(c.h, c.s, c.l),
+        hsl: 'hsl(' + c.h + ', ' + c.s + '%, ' + c.l + '%)'
+      });
+    }
+
+    palette.innerHTML = '';
+    colors.forEach(function (c) {
+      var swatch = T.el('div', {
+        style: 'width:80px;height:80px;border-radius:8px;background:' + c.hex + ';cursor:pointer;border:2px solid var(--line)',
+        title: c.hex + '\n点击复制',
+        onclick: function () { T.copy(c.hex); }
+      });
+      palette.appendChild(swatch);
+    });
+
+    var main = colors[0];
+    currentColor.style.backgroundColor = main.hex;
+    hexInput.value = main.hex;
+  }
+
+  generateBtn.addEventListener('click', generate);
+
+  app.appendChild(generateBtn);
+  app.appendChild(palette);
+  app.appendChild(currentColor);
+  app.appendChild(T.el('div', { class: 'row' }, [hexInput, copyBtn]));
+
+  generate();
+})();
+</script>
+</body>
+</html>

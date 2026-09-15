@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS 渐变生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('CSS 渐变生成器', '可视化拖拽 CSS 渐变', 'css-gradient');
+
+  var type = T.select([
+    { value: 'linear', label: '线性渐变' },
+    { value: 'radial', label: '径向渐变' },
+    { value: 'conic', label: '锥形渐变' }
+  ]);
+
+  var angle = T.el('input', { type: 'range', min: '0', max: '360', value: '135' });
+  var angleLabel = T.el('span', { text: '135°' });
+
+  var color1 = T.el('input', { type: 'color', value: '#667eea' });
+  var color2 = T.el('input', { type: 'color', value: '#764ba2' });
+
+  var preview = T.el('div', { style: 'width:100%;height:200px;border-radius:12px;border:1px solid var(--line);transition:background 0.3s' });
+  var cssOutput = T.el('div', { class: 'output dark', style: 'font-family:monospace;white-space:pre-wrap;padding:12px' });
+
+  var copyBtn = T.copyBtn(function () { return cssOutput.textContent; });
+
+  function update() {
+    var grad;
+    if (type.value === 'linear') {
+      grad = 'linear-gradient(' + angle.value + 'deg, ' + color1.value + ', ' + color2.value + ')';
+    } else if (type.value === 'radial') {
+      grad = 'radial-gradient(circle, ' + color1.value + ', ' + color2.value + ')';
+    } else {
+      grad = 'conic-gradient(' + angle.value + 'deg, ' + color1.value + ', ' + color2.value + ')';
+    }
+    preview.style.background = grad;
+    cssOutput.textContent = 'background: ' + grad + ';';
+    angleLabel.textContent = angle.value + '°';
+  }
+
+  type.addEventListener('change', update);
+  angle.addEventListener('input', update);
+  color1.addEventListener('input', update);
+  color2.addEventListener('input', update);
+
+  app.appendChild(type);
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '角度' }), angle, angleLabel]));
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '颜色1' }), color1, T.el('span', { text: '颜色2' }), color2]));
+  app.appendChild(preview);
+  app.appendChild(T.el('div', { class: 'row' }, [cssOutput, copyBtn]));
+
+  update();
+})();
+</script>
+</body>
+</html>

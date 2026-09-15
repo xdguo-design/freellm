@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面积单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('面积单位换算', 'm²/亩/平方英尺 等', 'area-converter');
+
+  var units = [
+    { id: 'mm2', name: '平方毫米 (mm²)' },
+    { id: 'cm2', name: '平方厘米 (cm²)' },
+    { id: 'm2', name: '平方米 (m²)' },
+    { id: 'km2', name: '平方千米 (km²)' },
+    { id: 'ha', name: '公顷 (ha)' },
+    { id: 'mu', name: '亩' },
+    { id: 'ft2', name: '平方英尺 (ft²)' },
+    { id: 'in2', name: '平方英寸 (in²)' },
+    { id: 'ac', name: '英亩 (ac)' }
+  ];
+
+  var factors = { mm2: 1e-6, cm2: 1e-4, m2: 1, km2: 1e6, ha: 10000, mu: 666.6667, ft2: 0.092903, 'in2': 0.00064516, ac: 4046.856 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var m2 = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (m2 / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.m2.value = '1';
+  run('m2');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>宽高比计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('宽高比计算器', '图片/视频宽高比计算', 'aspect-ratio');
+
+  var width = T.el('input', { type: 'number', value: '1920', min: '1', style: 'flex:1' });
+  var height = T.el('input', { type: 'number', value: '1080', min: '1', style: 'flex:1' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var preview = T.el('div', { style: 'width:200px;height:112px;background:var(--accent);margin:16px auto;border-radius:8px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold' });
+
+  var presets = T.el('div', { class: 'row', style: 'flex-wrap:wrap;gap:8px' });
+  var PRESETS = [
+    ['16:9', 16, 9], ['4:3', 4, 3], ['1:1', 1, 1], ['3:2', 3, 2],
+    ['21:9', 21, 9], ['9:16', 9, 16], ['2:3', 2, 3]
+  ];
+
+  PRESETS.forEach(function (p) {
+    presets.appendChild(T.button(p[0], function () { width.value = p[1] * 100; height.value = p[2] * 100; calculate(); }));
+  });
+
+  function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+
+  function calculate() {
+    var w = parseInt(width.value) || 1;
+    var h = parseInt(height.value) || 1;
+    var g = gcd(w, h);
+    var ratioW = w / g;
+    var ratioH = h / g;
+    var decimal = (w / h).toFixed(4);
+
+    result.innerHTML = '<strong>宽高比:</strong> ' + ratioW + ':' + ratioH + ' (' + decimal + ')';
+    preview.textContent = ratioW + ':' + ratioH;
+    preview.style.aspectRatio = w + '/' + h;
+    preview.style.width = Math.min(200, 200 * (w / h)) + 'px';
+  }
+
+  width.addEventListener('input', function () { setTimeout(calculate, 100); });
+  height.addEventListener('input', function () { setTimeout(calculate, 100); });
+
+  app.appendChild(T.el('div', { class: 'field', text: '预设:' }));
+  app.appendChild(presets);
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '宽' }), width, T.el('span', { text: '高' }), height]));
+  app.appendChild(preview);
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

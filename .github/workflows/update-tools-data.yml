@@ -1,0 +1,50 @@
+name: Update Tools Data
+
+# 每日刷新工具站数据：汇率；节假日/农历在数据源更新时手动触发或按年 cron。
+# 数据写入 tools/data/ 并直接提交到当前分支，前端从同源静态文件读取。
+
+on:
+  schedule:
+    - cron: '20 0 * * *'   # 每天 UTC 00:20（北京 08:20）
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-tools-data
+  cancel-in-progress: true
+
+jobs:
+  exchange:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch exchange rates
+        run: |
+          mkdir -p tools/data
+          curl -fsSL --max-time 30 "https://open.er-api.com/v6/latest/USD" -o /tmp/er.json
+          node -e '
+            const fs = require("fs");
+            const j = JSON.parse(fs.readFileSync("/tmp/er.json", "utf8"));
+            const out = {
+              base: "USD",
+              updated: (j.time_last_update_utc || new Date().toISOString()).trim(),
+              source: "open.er-api.com",
+              rates: j.rates
+            };
+            fs.writeFileSync("tools/data/exchange.json", JSON.stringify(out, null, 2) + "\n");
+          '
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/data/exchange.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "chore(tools): daily exchange rates update"
+            git push
+          fi

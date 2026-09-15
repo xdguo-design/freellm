@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>网页定时刷新 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('网页定时刷新', '设间隔自动刷新网页', 'auto-refresh');
+
+  var url = T.el('input', { type: 'url', value: window.location.href, placeholder: '输入网址', style: 'flex:1' });
+  var interval = T.el('input', { type: 'number', value: '30', min: '1', style: 'width:80px' });
+  var countdown = T.el('span', { class: 'badge blue', text: '30' });
+
+  var startBtn = T.button('开始刷新', start, true);
+  var stopBtn = T.button('停止', stop);
+
+  var timer = null;
+  var countTimer = null;
+  var timeLeft = 30;
+
+  function start() {
+    stop();
+    timeLeft = parseInt(interval.value) || 30;
+    countdown.textContent = timeLeft;
+
+    countTimer = setInterval(function () {
+      timeLeft--;
+      countdown.textContent = timeLeft;
+      if (timeLeft <= 0) {
+        window.location.href = url.value;
+      }
+    }, 1000);
+  }
+
+  function stop() {
+    clearInterval(countTimer);
+    countdown.textContent = interval.value;
+    timeLeft = parseInt(interval.value) || 30;
+  }
+
+  interval.addEventListener('input', function () {
+    timeLeft = parseInt(interval.value) || 30;
+    countdown.textContent = timeLeft;
+  });
+
+  app.appendChild(T.el('div', { class: 'field', text: '刷新网址:' }));
+  app.appendChild(url);
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '间隔 (秒)' }), interval, countdown, startBtn, stopBtn
+  ]));
+})();
+</script>
+</body>
+</html>

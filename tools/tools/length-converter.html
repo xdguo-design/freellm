@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>长度单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('长度单位换算', 'mm/cm/m/in/ft/px 等', 'length-converter');
+
+  var units = [
+    { id: 'mm', name: '毫米 (mm)' },
+    { id: 'cm', name: '厘米 (cm)' },
+    { id: 'm', name: '米 (m)' },
+    { id: 'km', name: '千米 (km)' },
+    { id: 'in', name: '英寸 (in)' },
+    { id: 'ft', name: '英尺 (ft)' },
+    { id: 'yd', name: '码 (yd)' },
+    { id: 'mi', name: '英里 (mi)' },
+    { id: 'px', name: '像素 (px)' }
+  ];
+
+  var factors = { mm: 0.001, cm: 0.01, m: 1, km: 1000, 'in': 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344, px: 0.000264583333 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var meters = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (meters / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:100px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.m.value = '1';
+  run('m');
+})();
+</script>
+</body>
+</html>

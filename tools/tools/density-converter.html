@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>密度单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('密度单位换算', 'g/cm³ ↔ kg/m³ 等', 'density-converter');
+
+  var units = [
+    { id: 'kgm3', name: '千克/立方米 (kg/m³)' },
+    { id: 'gcm3', name: '克/立方厘米 (g/cm³)' },
+    { id: 'gl', name: '克/升 (g/L)' },
+    { id: 'kgL', name: '千克/升 (kg/L)' },
+    { id: 'lbft3', name: '磅/立方英尺 (lb/ft³)' },
+    { id: 'lbin3', name: '磅/立方英寸 (lb/in³)' }
+  ];
+
+  var factors = { kgm3: 1, gcm3: 1000, gl: 1, kgL: 1000, lbft3: 16.0185, lbin3: 27679.9 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var kgm3 = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (kgm3 / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:160px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.kgm3.value = '1000';
+  run('kgm3');
+})();
+</script>
+</body>
+</html>

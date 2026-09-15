@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对比度检查器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('对比度检查器', 'WCAG 2.1 对比度检测', 'css-contrast');
+
+  var fg = T.el('input', { type: 'color', value: '#000000' });
+  var bg = T.el('input', { type: 'color', value: '#FFFFFF' });
+
+  var preview = T.el('div', { style: 'padding:20px;border-radius:8px;text-align:center;font-size:1.2em;margin:16px 0' });
+  preview.textContent = '预览文字 Sample Text 123';
+
+  var ratio = T.el('span', { class: 'badge', style: 'font-size:1.2em' });
+  var results = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
+  }
+
+  function luminance(r, g, b) {
+    var a = [r, g, b].map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+  }
+
+  function run() {
+    var fgRgb = hexToRgb(fg.value);
+    var bgRgb = hexToRgb(bg.value);
+    if (!fgRgb || !bgRgb) return;
+
+    preview.style.color = fg.value;
+    preview.style.backgroundColor = bg.value;
+
+    var l1 = luminance(...fgRgb);
+    var l2 = luminance(...bgRgb);
+    var ratioVal = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    ratio.textContent = '对比度: ' + ratioVal.toFixed(2) + ':1';
+
+    var aa = ratioVal >= 4.5;
+    var aaa = ratioVal >= 7;
+    var aaLarge = ratioVal >= 3;
+    var aaaLarge = ratioVal >= 4.5;
+
+    results.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px">AA 普通文本</td><td style="padding:8px;text-align:right">' + (aa ? '✅ 通过' : '❌ 未通过') + '</td></tr>' +
+      '<tr><td style="padding:8px">AA 大文本 (18px+)</td><td style="padding:8px;text-align:right">' + (aaLarge ? '✅ 通过' : '❌ 未通过') + '</td></tr>' +
+      '<tr><td style="padding:8px">AAA 普通文本</td><td style="padding:8px;text-align:right">' + (aaa ? '✅ 通过' : '❌ 未通过') + '</td></tr>' +
+      '<tr><td style="padding:8px">AAA 大文本 (18px+)</td><td style="padding:8px;text-align:right">' + (aaaLarge ? '✅ 通过' : '❌ 未通过') + '</td></tr>' +
+      '</table>';
+  }
+
+  fg.addEventListener('input', run);
+  bg.addEventListener('input', run);
+
+  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:20px' }, [
+    T.el('div', { class: 'field', style: 'text-align:center' }, [
+      T.el('span', { text: '前景色', style: 'display:block;margin-bottom:4px' }), fg
+    ]),
+    T.el('div', { class: 'field', style: 'text-align:center' }, [
+      T.el('span', { text: '背景色', style: 'display:block;margin-bottom:4px' }), bg
+    ])
+  ]));
+  app.appendChild(preview);
+  app.appendChild(ratio);
+  app.appendChild(results);
+  run();
+})();
+</script>
+</body>
+</html>

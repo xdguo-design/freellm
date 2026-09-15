@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在线计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('在线计算器', '科学计算器，支持多种运算', 'calculator');
+
+  var display = T.el('input', { type: 'text', readonly: true, style: 'width:100%;font-size:1.5em;font-family:monospace;text-align:right;padding:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px' });
+  var memory = T.el('span', { class: 'badge', text: '' });
+
+  var buttons = [
+    ['C', '±', '%', '÷'],
+    ['7', '8', '9', '×'],
+    ['4', '5', '6', '−'],
+    ['1', '2', '3', '+'],
+    ['0', '.', '⌫', '=']
+  ];
+
+  var grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px' });
+
+  var current = '0';
+  var previous = '';
+  var operator = '';
+  var newNumber = true;
+
+  function updateDisplay() {
+    display.value = current;
+  }
+
+  function handleButton(btn) {
+    if (btn >= '0' && btn <= '9' || btn === '.') {
+      if (newNumber) {
+        current = btn === '.' ? '0.' : btn;
+        newNumber = false;
+      } else {
+        if (btn === '.' && current.includes('.')) return;
+        current += btn;
+      }
+    } else if (btn === 'C') {
+      current = '0';
+      previous = '';
+      operator = '';
+      newNumber = true;
+    } else if (btn === '±') {
+      current = String(-parseFloat(current));
+    } else if (btn === '%') {
+      current = String(parseFloat(current) / 100);
+    } else if (btn === '⌫') {
+      current = current.slice(0, -1) || '0';
+    } else if (['+', '−', '×', '÷'].includes(btn)) {
+      if (previous && operator && !newNumber) {
+        calculate();
+      }
+      previous = current;
+      operator = btn;
+      newNumber = true;
+    } else if (btn === '=') {
+      calculate();
+      operator = '';
+      previous = '';
+    }
+    updateDisplay();
+  }
+
+  function calculate() {
+    var a = parseFloat(previous);
+    var b = parseFloat(current);
+    var result;
+    switch (operator) {
+      case '+': result = a + b; break;
+      case '−': result = a - b; break;
+      case '×': result = a * b; break;
+      case '÷': result = b !== 0 ? a / b : 'Error'; break;
+    }
+    current = String(result);
+    newNumber = true;
+  }
+
+  buttons.forEach(function (row) {
+    row.forEach(function (btn) {
+      var b = T.el('button', {
+        text: btn,
+        style: 'padding:16px;font-size:1.2em;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--bg);color:var(--fg)',
+        onclick: function () { handleButton(btn); }
+      });
+      if (['÷', '×', '−', '+', '='].includes(btn)) {
+        b.style.background = 'var(--accent)';
+        b.style.color = '#fff';
+      }
+      grid.appendChild(b);
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key >= '0' && e.key <= '9') handleButton(e.key);
+    else if (e.key === '.') handleButton('.');
+    else if (e.key === '+') handleButton('+');
+    else if (e.key === '-') handleButton('−');
+    else if (e.key === '*') handleButton('×');
+    else if (e.key === '/') { e.preventDefault(); handleButton('÷'); }
+    else if (e.key === 'Enter' || e.key === '=') handleButton('=');
+    else if (e.key === 'Escape') handleButton('C');
+    else if (e.key === 'Backspace') handleButton('⌫');
+  });
+
+  app.appendChild(display);
+  app.appendChild(grid);
+})();
+</script>
+</body>
+</html>

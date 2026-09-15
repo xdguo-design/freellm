@@ -531,4 +531,4 @@
       const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (!path.endsWith('/')) return; link.setAttribute('href', `../${path.slice(1)}index.html${window.location.search}`); }); };
       adaptFileNavigation(); render();
     })();
-    </script></body></html>
+    </script><script src="/js/freellm-sync.js"></script></body></html>

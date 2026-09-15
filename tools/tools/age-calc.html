@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>年龄计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('年龄计算器', '精确到天的年龄计算', 'age-calc');
+
+  var birthday = T.el('input', { type: 'date', style: 'flex:1' });
+  var calcBtn = T.button('计算', calculate, true);
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function calculate() {
+    var b = new Date(birthday.value);
+    if (isNaN(b.getTime())) { result.textContent = '请选择出生日期'; return; }
+
+    var now = new Date();
+    var years = now.getFullYear() - b.getFullYear();
+    var months = now.getMonth() - b.getMonth();
+    var days = now.getDate() - b.getDate();
+
+    if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+    if (months < 0) { years--; months += 12; }
+
+    var totalDays = Math.floor((now - b) / (1000 * 60 * 60 * 24));
+    var totalWeeks = Math.floor(totalDays / 7);
+    var totalHours = totalDays * 24;
+    var totalMinutes = totalHours * 60;
+
+    var nextBirthday = new Date(now.getFullYear(), b.getMonth(), b.getDate());
+    if (nextBirthday <= now) nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+    var daysUntilBirthday = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
+
+    var zodiac = getZodiac(b.getMonth() + 1, b.getDate());
+    var chinese = getChineseZodiac(b.getFullYear());
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">年龄</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">' + years + ' 岁 ' + months + ' 月 ' + days + ' 天</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">总天数</td><td style="padding:8px;text-align:right">' + totalDays.toLocaleString() + ' 天</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">总周数</td><td style="padding:8px;text-align:right">' + totalWeeks.toLocaleString() + ' 周</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">总小时</td><td style="padding:8px;text-align:right">' + totalHours.toLocaleString() + ' 小时</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">距离下次生日</td><td style="padding:8px;text-align:right;color:var(--green)">' + daysUntilBirthday + ' 天</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">星座</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right">' + zodiac + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">生肖</td><td style="padding:8px;text-align:right">' + chinese + '</td></tr>' +
+      '</table>';
+  }
+
+  function getZodiac(m, d) {
+    var signs = ['摩羯座','水瓶座','双鱼座','白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座'];
+    var dates = [20,19,21,20,21,22,23,23,23,24,22,22];
+    return signs[(m + (d >= dates[m-1] ? 1 : 0)) % 12];
+  }
+
+  function getChineseZodiac(y) {
+    var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+    return animals[(y - 4) % 12];
+  }
+
+  birthday.addEventListener('change', calculate);
+  calcBtn.addEventListener('click', calculate);
+
+  app.appendChild(T.el('div', { class: 'field', text: '出生日期:' }));
+  app.appendChild(T.el('div', { class: 'row' }, [birthday, calcBtn]));
+  app.appendChild(result);
+
+  birthday.value = '1990-01-01';
+  calculate();
+})();
+</script>
+</body>
+</html>

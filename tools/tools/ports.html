@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>常见端口速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('常见端口速查', 'TCP/UDP 常用端口号', 'ports');
+
+  var search = T.el('input', { type: 'search', placeholder: '搜索端口或服务...', style: 'width:100%' });
+
+  var PORTS = [
+    [20, 'FTP Data', 'FTP 数据传输'],
+    [21, 'FTP Control', 'FTP 控制连接'],
+    [22, 'SSH', '安全外壳协议'],
+    [23, 'Telnet', '远程终端协议'],
+    [25, 'SMTP', '简单邮件传输协议'],
+    [53, 'DNS', '域名系统'],
+    [67, 'DHCP Server', 'DHCP 服务端'],
+    [68, 'DHCP Client', 'DHCP 客户端'],
+    [69, 'TFTP', '简单文件传输协议'],
+    [80, 'HTTP', '超文本传输协议'],
+    [110, 'POP3', '邮局协议版本3'],
+    [111, 'RPCBind', '远程过程调用绑定'],
+    [135, 'MSRPC', 'Microsoft RPC'],
+    [137, 'NetBIOS', 'NetBIOS 名称服务'],
+    [138, 'NetBIOS', 'NetBIOS 数据报服务'],
+    [139, 'NetBIOS', 'NetBIOS 会话服务'],
+    [143, 'IMAP', '互联网消息访问协议'],
+    [161, 'SNMP', '简单网络管理协议'],
+    [162, 'SNMP Trap', 'SNMP 陷阱'],
+    [389, 'LDAP', '轻量目录访问协议'],
+    [443, 'HTTPS', '安全超文本传输协议'],
+    [445, 'SMB', '服务器消息块'],
+    [465, 'SMTPS', '安全简单邮件传输协议'],
+    [514, 'Syslog', '系统日志'],
+    [554, 'RTSP', '实时流传输协议'],
+    [587, 'SMTP', '邮件提交协议'],
+    [631, 'IPP', '互联网打印协议'],
+    [636, 'LDAPS', '安全轻量目录访问协议'],
+    [993, 'IMAPS', '安全IMAP'],
+    [995, 'POP3S', '安全POP3'],
+    [1080, 'SOCKS', 'SOCKS 代理'],
+    [1433, 'MSSQL', 'Microsoft SQL Server'],
+    [1434, 'MSSQL', 'Microsoft SQL Server Browser'],
+    [1521, 'Oracle', 'Oracle 数据库'],
+    [2049, 'NFS', '网络文件系统'],
+    [3306, 'MySQL', 'MySQL 数据库'],
+    [3389, 'RDP', '远程桌面协议'],
+    [5432, 'PostgreSQL', 'PostgreSQL 数据库'],
+    [5672, 'AMQP', '高级消息队列协议'],
+    [5900, 'VNC', '虚拟网络计算'],
+    [6379, 'Redis', 'Redis 缓存数据库'],
+    [6443, 'Kubernetes', 'Kubernetes API Server'],
+    [8080, 'HTTP Alt', 'HTTP 备用端口'],
+    [8443, 'HTTPS Alt', 'HTTPS 备用端口'],
+    [8888, 'HTTP Alt', 'HTTP 备用端口'],
+    [9090, 'Prometheus', 'Prometheus 监控'],
+    [9200, 'Elasticsearch', 'Elasticsearch REST API'],
+    [9300, 'Elasticsearch', 'Elasticsearch 节点通信'],
+    [11211, 'Memcached', 'Memcached 缓存'],
+    [27017, 'MongoDB', 'MongoDB 数据库'],
+    [50000, 'SAP', 'SAP 服务']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var filtered = PORTS.filter(function (p) {
+      if (!q) return true;
+      return String(p[0]).includes(q) || p[1].toLowerCase().includes(q) || p[2].toLowerCase().includes(q);
+    });
+
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">端口</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">服务</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
+    html += '<tbody>';
+    filtered.forEach(function (p) {
+      html += '<tr style="cursor:pointer" onclick="navigator.clipboard.writeText(\'' + p[0] + '\')">';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);color:var(--accent);font-weight:bold;font-family:monospace">' + p[0] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code>' + p[1] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + p[2] + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+
+  app.appendChild(search);
+  app.appendChild(table);
+  render();
+})();
+</script>
+</body>
+</html>

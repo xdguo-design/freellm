@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>贷款计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('贷款计算器', '等额本息/等额本金计算', 'loan');
+
+  var amount = T.el('input', { type: 'number', value: '1000000', placeholder: '贷款金额', style: 'flex:1' });
+  var rate = T.el('input', { type: 'number', value: '4.9', step: '0.01', placeholder: '年利率 %', style: 'flex:1' });
+  var years = T.el('input', { type: 'number', value: '30', min: '1', max: '30', placeholder: '贷款年限', style: 'flex:1' });
+  var method = T.select([
+    { value: 'equal_payment', label: '等额本息' },
+    { value: 'equal_principal', label: '等额本金' }
+  ]);
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var copyBtn = T.copyBtn(function () { return result.textContent; });
+
+  function calculate() {
+    var P = parseFloat(amount.value) || 0;
+    var annualRate = parseFloat(rate.value) || 0;
+    var N = parseInt(years.value) || 30;
+    var n = N * 12;
+    var r = annualRate / 100 / 12;
+
+    if (P <= 0 || r <= 0 || n <= 0) {
+      result.textContent = '请输入有效数值';
+      return;
+    }
+
+    var totalInterest, monthlyPayment, firstMonth, lastMonth;
+
+    if (method.value === 'equal_payment') {
+      monthlyPayment = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+      totalInterest = monthlyPayment * n - P;
+      firstMonth = monthlyPayment;
+      lastMonth = monthlyPayment;
+    } else {
+      var monthlyPrincipal = P / n;
+      firstMonth = monthlyPrincipal + P * r;
+      lastMonth = monthlyPrincipal + monthlyPrincipal * r;
+      totalInterest = (firstMonth + lastMonth) * n / 2 - P;
+      monthlyPayment = firstMonth;
+    }
+
+    var totalPayment = P + totalInterest;
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">贷款金额</td><td style="padding:8px;text-align:right;font-weight:bold">¥' + P.toLocaleString() + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">年利率</td><td style="padding:8px;text-align:right">' + annualRate + '%</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">贷款年限</td><td style="padding:8px;text-align:right">' + N + ' 年 (' + n + ' 期)</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">还款方式</td><td style="padding:8px;text-align:right">' + (method.value === 'equal_payment' ? '等额本息' : '等额本金') + '</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">月供</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;font-weight:bold;color:var(--accent)">¥' + monthlyPayment.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">总利息</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--red)">¥' + totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">还款总额</td><td style="padding:8px;text-align:right;font-weight:bold">¥' + totalPayment.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '</table>';
+  }
+
+  [amount, rate, years].forEach(function (el) { el.addEventListener('input', function () { setTimeout(calculate, 100); }); });
+  method.addEventListener('change', calculate);
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '金额' }), amount,
+    T.el('span', { text: '利率 %' }), rate
+  ]));
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '年限' }), years, method, copyBtn
+  ]));
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

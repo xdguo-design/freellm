@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chmod 计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Chmod 计算器', 'Linux 权限数字与符号互转', 'chmod');
+
+  var numeric = T.el('input', { type: 'text', value: '755', placeholder: '数字权限 (如 755)', style: 'flex:1;font-family:monospace;font-size:1.2em' });
+  var symbolic = T.el('span', { class: 'badge blue', text: 'rwxr-xr-x', style: 'font-family:monospace;font-size:1.2em' });
+
+  var output = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace' });
+
+  var checkboxes = {};
+  var perms = ['r', 'w', 'x'];
+  var owners = ['所有者', '用户组', '其他人'];
+  var values = [4, 2, 1];
+
+  var table = T.el('table', { class: 'ref' });
+  var thead = T.el('thead');
+  var headerRow = T.el('tr');
+  headerRow.appendChild(T.el('th', { text: '' }));
+  owners.forEach(function (o) { headerRow.appendChild(T.el('th', { text: o })); });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  var tbody = T.el('tbody');
+  perms.forEach(function (perm, pi) {
+    var tr = T.el('tr');
+    tr.appendChild(T.el('td', { text: perm + ' (' + values[pi] + ')' }));
+    owners.forEach(function (owner, oi) {
+      var td = T.el('td', { style: 'text-align:center' });
+      var cb = T.el('input', { type: 'checkbox' });
+      cb.checked = perm === 'r' || (perm === 'x' && (oi === 0 || oi === 2));
+      checkboxes[perm + oi] = cb;
+      td.appendChild(cb);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  function update() {
+    var num = 0;
+    perms.forEach(function (perm, pi) {
+      owners.forEach(function (owner, oi) {
+        if (checkboxes[perm + oi].checked) num += values[pi] * Math.pow(8, 2 - oi);
+      });
+    });
+    numeric.value = num.toString();
+
+    var sym = '';
+    owners.forEach(function (owner, oi) {
+      perms.forEach(function (perm, pi) {
+        sym += checkboxes[perm + oi].checked ? perm : '-';
+      });
+    });
+    symbolic.textContent = sym;
+
+    output.textContent = 'chmod ' + num + ' ' + sym + '\n' +
+      owners.map(function (o, oi) {
+        return o + ': ' + perms.map(function (p, pi) {
+          return checkboxes[p + oi].checked ? p : '-';
+        }).join('');
+      }).join('\n');
+  }
+
+  function updateFromNumeric() {
+    var num = parseInt(numeric.value);
+    if (isNaN(num) || num < 0 || num > 777) return;
+    var str = num.toString().padStart(3, '0');
+    str.split('').forEach(function (d, oi) {
+      perms.forEach(function (perm, pi) {
+        checkboxes[perm + oi].checked = (parseInt(d) & values[pi]) > 0;
+      });
+    });
+    update();
+  }
+
+  Object.values(checkboxes).forEach(function (cb) {
+    cb.addEventListener('change', update);
+  });
+  numeric.addEventListener('input', function () { setTimeout(updateFromNumeric, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '权限' }), numeric, symbolic]));
+  app.appendChild(table);
+  app.appendChild(output);
+
+  update();
+})();
+</script>
+</body>
+</html>

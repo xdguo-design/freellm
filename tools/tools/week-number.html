@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>周数查询 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('周数查询', '任意日期是当年第几周', 'week-number');
+
+  var dateInput = T.el('input', { type: 'date', style: 'flex:1' });
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.2em' });
+
+  function getWeekNumber(d) {
+    var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+    var yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  }
+
+  function update() {
+    var d = new Date(dateInput.value);
+    if (isNaN(d.getTime())) { result.textContent = '请选择日期'; return; }
+
+    var weekNum = getWeekNumber(d);
+    var dayNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+    result.innerHTML = '<strong>' + d.getFullYear() + ' 年第 ' + weekNum + ' 周</strong><br>' +
+      '<span style="color:var(--muted)">' + d.toLocaleDateString('zh-CN') + ' ' + dayNames[d.getDay()] + '</span>';
+  }
+
+  dateInput.addEventListener('change', update);
+
+  app.appendChild(T.el('div', { class: 'field', text: '选择日期:' }));
+  app.appendChild(dateInput);
+  app.appendChild(result);
+
+  dateInput.value = new Date().toISOString().slice(0, 10);
+  update();
+})();
+</script>
+</body>
+</html>

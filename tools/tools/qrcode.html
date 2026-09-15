@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>二维码生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/qr.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('二维码生成', '文本 / 网址转 QR Code，自动选择版本与最优掩码，支持 PNG / SVG 下载', 'qrcode');
+
+  var text = T.textarea('输入文本、网址…', true);
+  text.value = 'https://freellm.top/';
+  var ecSel = T.select([{ value: 'M', label: 'M — 常用' }, { value: 'L', label: 'L — 内容多' }, { value: 'Q', label: 'Q — 较稳' }, { value: 'H', label: 'H — 最稳' }], 'M');
+  var darkColor = T.el('input', { type: 'color', value: '#000000' });
+  var lightColor = T.el('input', { type: 'color', value: '#FFFFFF' });
+
+  var canvas = T.el('canvas', { style: 'image-rendering:pixelated;border:1px solid var(--line);border-radius:8px;background:#fff' });
+  var info = T.el('span', { class: 'badge blue', text: '—' });
+  var render = function () {
+    QR.encode(text.value, ecSel.value, function (res) {
+      QR.toCanvas(canvas, res, { dark: darkColor.value, light: lightColor.value });
+      info.textContent = '版本 ' + res.version + ' · ' + res.size + '×' + res.size + ' · 纠错 ' + res.ec;
+      window._lastQR = res;
+    });
+  };
+  var timer;
+  [text, ecSel].forEach(function (el) {
+    el.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(render, 250); });
+  });
+  [darkColor, lightColor].forEach(function (el) { el.addEventListener('input', render); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '纠错级别' }), ecSel,
+    T.el('span', { text: '前景色' }), darkColor,
+    T.el('span', { text: '背景色' }), lightColor
+  ]));
+  app.appendChild(T.el('div', { class: 'pane single' }, [text]));
+
+  var out = T.el('div', { class: 'row', style: 'align-items:flex-start;gap:20px' }, [
+    canvas,
+    T.el('div', { class: 'field', style: 'gap:10px' }, [
+      info,
+      T.button('下载 PNG', function () {
+        canvas.toBlob(function (b) { T.download('qrcode.png', b); });
+      }, true),
+      T.button('下载 SVG', function () {
+        if (window._lastQR) T.download('qrcode.svg', QR.toSVG(window._lastQR, { dark: darkColor.value, light: lightColor.value }), 'image/svg+xml');
+      }),
+      T.button('复制 SVG 代码', function () {
+        if (window._lastQR) T.copy(QR.toSVG(window._lastQR));
+      })
+    ])
+  ]);
+  app.appendChild(out);
+  render();
+})();
+</script>
+</body>
+</html>

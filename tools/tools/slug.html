@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>URL Slug 生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('URL Slug 生成', 'SEO 友好 URL 路径', 'slug');
+
+  var separator = T.select([
+    { value: '-', label: '短横线 (kebab-case)' },
+    { value: '_', label: '下划线 (snake_case)' }
+  ]);
+  var lowercase = T.el('label', { html: '<input type="checkbox" checked> 转小写' });
+  var input = T.textarea('输入标题或文本...');
+  var output = T.textarea('Slug', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; return; }
+
+    var slug = v
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s\u4e00-\u9fa5-]/g, '')
+      .replace(/\s+/g, separator.value);
+
+    if (lowercase.checked) {
+      slug = slug.toLowerCase();
+    }
+
+    output.value = slug;
+  }
+
+  separator.addEventListener('change', run);
+  lowercase.querySelector('input').addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [separator, lowercase, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

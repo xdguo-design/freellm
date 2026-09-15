@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>时间单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('时间单位换算', '秒/分/时/天/年 等', 'time-converter');
+
+  var units = [
+    { id: 'ms', name: '毫秒 (ms)' },
+    { id: 's', name: '秒 (s)' },
+    { id: 'min', name: '分钟 (min)' },
+    { id: 'h', name: '小时 (h)' },
+    { id: 'd', name: '天 (d)' },
+    { id: 'w', name: '周 (w)' },
+    { id: 'm', name: '月 (30天)' },
+    { id: 'y', name: '年 (365天)' }
+  ];
+
+  var factors = { ms: 0.001, s: 1, min: 60, h: 3600, d: 86400, w: 604800, m: 2592000, y: 31536000 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var seconds = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (seconds / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:100px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.h.value = '1';
+  run('h');
+})();
+</script>
+</body>
+</html>

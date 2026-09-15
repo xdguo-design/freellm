@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>闰年计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('闰年计算器', '公历/农历闰年查询', 'leap-year');
+
+  var year = T.el('input', { type: 'number', value: new Date().getFullYear(), min: '1', style: 'width:120px' });
+  var checkBtn = T.button('检查', check, true);
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.1em' });
+  var nearby = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function isLeapYear(y) {
+    return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+  }
+
+  function check() {
+    var y = parseInt(year.value) || 2024;
+    var leap = isLeapYear(y);
+
+    result.innerHTML = '<span style="font-size:2em">' + (leap ? '✅' : '❌') + '</span><br>' +
+      '<strong>' + y + ' 年' + (leap ? '是' : '不是') + '闰年</strong><br>' +
+      '<span style="color:var(--muted)">' + (leap ? '有 2月29日，共366天' : '无2月29日，共365天') + '</span>';
+
+    // Find nearby leap years
+    var leaps = [];
+    for (var i = y - 12; i <= y + 12; i++) {
+      if (isLeapYear(i)) leaps.push(i);
+    }
+    nearby.innerHTML = '<strong>附近的闰年:</strong><br>' + leaps.map(function (ly) {
+      var style = ly === y ? 'color:var(--accent);font-weight:bold' : '';
+      return '<span style="' + style + '">' + ly + '</span>';
+    }).join(' · ');
+  }
+
+  year.addEventListener('input', function () { setTimeout(check, 100); });
+  checkBtn.addEventListener('click', check);
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '年份' }), year, checkBtn]));
+  app.appendChild(result);
+  app.appendChild(nearby);
+
+  check();
+})();
+</script>
+</body>
+</html>

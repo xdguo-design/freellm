@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在线闹钟 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('在线闹钟', '设定时间到点响铃', 'alarm');
+
+  var alarmTime = T.el('input', { type: 'time', style: 'flex:1' });
+  var setBtn = T.button('设置闹钟', setAlarm, true);
+  var clearBtn = T.button('清除', clearAlarm);
+
+  var display = T.el('div', {
+    style: 'font-size:3em;font-family:monospace;text-align:center;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--line)',
+    text: '--:--:--'
+  });
+
+  var status = T.el('div', { class: 'badge', text: '未设置' });
+  var alarms = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  var clockTimer = null;
+  var alarmTimer = null;
+  var setAlarms = [];
+
+  function updateClock() {
+    var now = new Date();
+    display.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+    checkAlarms(now);
+  }
+
+  function checkAlarms(now) {
+    var timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setAlarms.forEach(function (a, i) {
+      if (a.time === timeStr.slice(0, 5) && !a.triggered) {
+        a.triggered = true;
+        ring();
+        status.textContent = '⏰ ' + a.time + ' 闹钟响了！';
+        status.style.color = '#e74c3c';
+      }
+    });
+  }
+
+  function ring() {
+    try {
+      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var frequencies = [523, 659, 784, 1047];
+      frequencies.forEach(function (freq, i) {
+        var oscillator = audioCtx.createOscillator();
+        var gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.frequency.value = freq;
+        oscillator.type = 'sine';
+        gainNode.gain.value = 0.3;
+        oscillator.start(audioCtx.currentTime + i * 0.2);
+        oscillator.stop(audioCtx.currentTime + i * 0.2 + 0.3);
+      });
+    } catch (e) {}
+  }
+
+  function setAlarm() {
+    var time = alarmTime.value;
+    if (!time) return;
+
+    setAlarms.push({ time: time, triggered: false });
+    setAlarms.sort(function (a, b) { return a.time.localeCompare(b.time); });
+    status.textContent = '已设置 ' + setAlarms.length + ' 个闹钟';
+    status.style.color = '';
+    renderAlarms();
+  }
+
+  function clearAlarm() {
+    setAlarms = [];
+    status.textContent = '未设置';
+    status.style.color = '';
+    renderAlarms();
+  }
+
+  function renderAlarms() {
+    alarms.innerHTML = setAlarms.length ? 
+      setAlarms.map(function (a, i) {
+        return '<div style="padding:8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between">' +
+          '<span>' + a.time + '</span>' +
+          '<span style="color:var(--muted)">' + (a.triggered ? '已响' : '等待中') + '</span></div>';
+      }).join('') : '<p style="color:var(--muted);text-align:center">无闹钟</p>';
+  }
+
+  clockTimer = setInterval(updateClock, 1000);
+
+  app.appendChild(display);
+  app.appendChild(status);
+  app.appendChild(T.el('div', { class: 'row' }, [alarmTime, setBtn, clearBtn]));
+  app.appendChild(T.el('div', { class: 'field', text: '已设置的闹钟:' }));
+  app.appendChild(alarms);
+
+  updateClock();
+})();
+</script>
+</body>
+</html>

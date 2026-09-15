@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文字转语音 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('文字转语音', 'Web Speech API 朗读', 'tts');
+
+  var input = T.textarea('输入要朗读的文本...');
+  var voice = T.el('select', { style: 'flex:1' });
+  var rate = T.el('input', { type: 'range', min: '0.5', max: '2', step: '0.1', value: '1' });
+  var rateLabel = T.el('span', { text: '1x' });
+  var pitch = T.el('input', { type: 'range', min: '0', max: '2', step: '0.1', value: '1' });
+  var pitchLabel = T.el('span', { text: '1' });
+
+  var speakBtn = T.button('朗读', speak, true);
+  var pauseBtn = T.button('暂停', pause);
+  var stopBtn = T.button('停止', stop);
+
+  var voices = [];
+
+  function loadVoices() {
+    voices = speechSynthesis.getVoices();
+    voice.innerHTML = '';
+    voices.forEach(function (v, i) {
+      var opt = T.el('option', { value: i, text: v.name + ' (' + v.lang + ')' });
+      voice.appendChild(opt);
+    });
+  }
+
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+  loadVoices();
+
+  function speak() {
+    speechSynthesis.cancel();
+    var text = input.value.trim();
+    if (!text) return;
+
+    var utterance = new SpeechSynthesisUtterance(text);
+    if (voices[voice.value]) utterance.voice = voices[voice.value];
+    utterance.rate = parseFloat(rate.value);
+    utterance.pitch = parseFloat(pitch.value);
+    speechSynthesis.speak(utterance);
+  }
+
+  function pause() {
+    if (speechSynthesis.speaking) {
+      speechSynthesis.paused ? speechSynthesis.resume() : speechSynthesis.pause();
+    }
+  }
+
+  function stop() {
+    speechSynthesis.cancel();
+  }
+
+  rate.addEventListener('input', function () { rateLabel.textContent = rate.value + 'x'; });
+  pitch.addEventListener('input', function () { pitchLabel.textContent = pitch.value; });
+
+  app.appendChild(T.el('div', { class: 'field', text: '语音:' }));
+  app.appendChild(voice);
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '语速' }), rate, rateLabel,
+    T.el('span', { text: '音调' }), pitch, pitchLabel
+  ]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'row' }, [speakBtn, pauseBtn, stopBtn]));
+})();
+</script>
+</body>
+</html>

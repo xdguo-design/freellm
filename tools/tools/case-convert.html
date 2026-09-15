@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大小写转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('大小写转换', '英文大小写/首字母大写转换', 'case-convert');
+
+  var mode = T.select([
+    { value: 'upper', label: '全部大写' },
+    { value: 'lower', label: '全部小写' },
+    { value: 'title', label: '首字母大写' },
+    { value: 'sentence', label: '句首大写' },
+    { value: 'toggle', label: '大小写反转' }
+  ]);
+  var input = T.textarea('输入英文文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    switch (mode.value) {
+      case 'upper': output.value = v.toUpperCase(); break;
+      case 'lower': output.value = v.toLowerCase(); break;
+      case 'title': output.value = v.replace(/\w\S*/g, function (w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }); break;
+      case 'sentence': output.value = v.replace(/(^\s*|[.!?]\s+)([a-z])/g, function (m, p, c) { return p + c.toUpperCase(); }); break;
+      case 'toggle': output.value = v.split('').map(function (c) { return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(); }).join(''); break;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

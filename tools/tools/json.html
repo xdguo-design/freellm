@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('JSON 格式化', 'JSON 数据美化、校验与转换', 'json');
+
+  var indent = T.select([
+    { value: '2', label: '2 空格' },
+    { value: '4', label: '4 空格' },
+    { value: 'tab', label: 'Tab' }
+  ]);
+  var input = T.textarea('粘贴 JSON 数据...');
+  var output = T.textarea('格式化结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+  var downloadBtn = T.button('下载', function () {
+    T.download('formatted.json', output.value, 'application/json');
+  });
+  var error = T.el('span', { class: 'badge', text: '' });
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; error.textContent = ''; return; }
+    try {
+      var obj = JSON.parse(v);
+      var indentVal = indent.value === 'tab' ? '\t' : parseInt(indent.value);
+      output.value = JSON.stringify(obj, null, indentVal);
+      error.textContent = '✓ 有效 JSON';
+      error.style.color = 'var(--green)';
+    } catch (e) {
+      error.textContent = '✗ ' + e.message;
+      error.style.color = 'var(--red)';
+    }
+  }
+
+  indent.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 200); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [indent, error, copyBtn, downloadBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

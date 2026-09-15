@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>凯撒密码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('凯撒密码', '经典凯撒加密解密', 'caesar');
+
+  var mode = T.select([
+    { value: 'encrypt', label: '加密' },
+    { value: 'decrypt', label: '解码' }
+  ]);
+  var shift = T.el('input', { type: 'number', value: '3', min: '1', max: '25', style: 'width:80px' });
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function caesar(text, shift, encrypt) {
+    var s = encrypt ? shift : -shift;
+    return text.replace(/[a-zA-Z]/g, function (c) {
+      var base = c <= 'Z' ? 65 : 97;
+      return String.fromCharCode(((c.charCodeAt(0) - base + s + 26) % 26) + base);
+    });
+  }
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    var s = parseInt(shift.value) || 3;
+    output.value = caesar(v, s, mode.value === 'encrypt');
+  }
+
+  mode.addEventListener('change', run);
+  shift.addEventListener('input', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, T.el('span', { text: '偏移量' }), shift, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "providerId": "iflytek-spark",
+  "provider": "iFlytek AStudio",
+  "lastVerifiedAt": "2026-09-15",
+  "offerIds": [
+    "astudio"
+  ],
+  "paths": [
+    {
+      "id": "install",
+      "label": "下载安装客户端",
+      "productType": "download",
+      "prerequisites": [
+        "Windows 10/11 64 位或 macOS M 系列芯片",
+        "讯飞/星火账号"
+      ],
+      "steps": [
+        {
+          "title": "打开官网",
+          "detail": "访问 agent.xfyun.cn，进入客户端下载页。"
+        },
+        {
+          "title": "下载安装包",
+          "detail": "按操作系统选择 Windows 或 macOS（Apple silicon）安装包并安装。"
+        },
+        {
+          "title": "登录领积分",
+          "detail": "首次登录领取 1,000 新用户积分（3 个月有效），体验版每日登录可再领 100 积分。"
+        }
+      ],
+      "validation": "安装后登录客户端，确认积分到账并能新建任务。",
+      "limits": "客户端平台要求以官方下载页为准；积分规则可能随版本调整。",
+      "commonIssues": [
+        "macOS 需 M 系列 Apple 芯片。",
+        "登录异常时检查讯飞开放平台账号状态。"
+      ],
+      "sourceUrls": [
+        "https://agent.xfyun.cn/studio-guide/quickstart"
+      ]
+    },
+    {
+      "id": "run-task",
+      "label": "创建并迭代任务",
+      "productType": "web",
+      "prerequisites": [
+        "已安装并登录 AStudio 客户端",
+        "可用积分"
+      ],
+      "steps": [
+        {
+          "title": "新建任务",
+          "detail": "在左侧导航点击“新建任务”，选择日常（Plan）或项目（Goal）模式。"
+        },
+        {
+          "title": "描述目标",
+          "detail": "在中间任务区描述需求、添加参考文件并发送。"
+        },
+        {
+          "title": "查看与迭代",
+          "detail": "在右侧预览区查看文档/网页/代码成果，点选编辑或继续对话调整。"
+        }
+      ],
+      "validation": "用一个不含敏感信息的示例任务验证自主规划、工具调用与成果交付流程。",
+      "limits": "任务消耗积分，具体消耗率以客户端内价格与积分规则为准。",
+      "commonIssues": [
+        "复杂任务建议使用项目模式并拆解目标。",
+        "积分不足时任务可能中断，注意查看积分余额。"
+      ],
+      "sourceUrls": [
+        "https://agent.xfyun.cn/studio-guide/intro",
+        "https://agent.xfyun.cn/studio-guide/quickstart"
+      ]
+    }
+  ]
+}

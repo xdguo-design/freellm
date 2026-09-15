@@ -531,8 +531,8 @@ def test_offer_page_renders_per_model_free_quota_table():
     assert "131,072 tokens" in groq_html
     assert "512 tokens" in groq_html
     assert groq_html.count("<tr>") >= 14
-    assert '<span lang="en">openai/gpt-oss-120b</span> ↗</a>' in groq_html
-    assert '<span lang="en">qwen/qwen3.8-27b</span> ↗</a>' in groq_html
+    assert '<code><span lang="zh-CN">openai/gpt-oss-120b</span><span lang="en">openai/gpt-oss-120b</span></code>' in groq_html
+    assert '<code><span lang="zh-CN">qwen/qwen3.8-27b</span><span lang="en">qwen/qwen3.8-27b</span></code>' in groq_html
 
     plain = render_offer_page(by_id["doubao"], offers, "https://freellm.top")
     assert "免费模型逐个看" not in plain

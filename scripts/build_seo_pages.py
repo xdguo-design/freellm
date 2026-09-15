@@ -97,6 +97,107 @@ SKILLS_THEME_SCRIPT = '''<script id="skills-theme-script">
 
 SKILLS_THEME_ASSETS = SKILLS_THEME_FONTS + SKILLS_THEME_SCRIPT
 
+# Editorial design tokens (data-platform-editorial): warm paper canvas, Instrument Serif
+# display type, Manrope body, JetBrains Mono metadata, hairline borders, pastel semantics.
+# Shared by every content page; legacy token names (--muted/--soft/--blue) are aliased so
+# page-specific rules written against the old palette keep resolving.
+EDITORIAL_TOKENS_CSS = ''':root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --ink-solid-contrast:#FFFFFF; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-red-bg:#FDEBEC; --pale-red-text:#9F2F2D; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; --muted:#787774; --soft:#F7F6F3; --blue:#1744E8; }
+:root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --ink-solid-contrast:#111111; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-red-bg:#2A1416; --pale-red-text:#E98A86; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --pale-stone-bg:#232220; --pale-stone-text:#B4B1AB; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); --muted:#A7A5A0; --soft:#1E2127; --blue:#7BC0E5; }'''
+
+EDITORIAL_BASE_CSS = EDITORIAL_TOKENS_CSS + '''
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0 auto; max-width:1180px; padding:24px 20px 64px; background:var(--canvas); color:var(--ink); font:400 15px/1.65 var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+::selection { background:var(--accent-soft); }
+a { color:var(--accent); }
+button, input, select { font:inherit; }
+h1, h2, h3, h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
+header, main, footer { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:clamp(22px,4vw,36px); margin-bottom:16px; position:relative; }
+header a { color:var(--accent); }
+h1 { margin:18px 0 10px; line-height:1.08; letter-spacing:-.02em; }
+h2 { margin:0 0 8px; line-height:1.2; letter-spacing:-.015em; }
+h3 { margin:22px 0 6px; }
+p { max-width:880px; }
+.lead { max-width:840px; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
+.muted { color:var(--ink-secondary); }
+.crumb, .eyebrow { font:500 11px/1.5 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; }
+.crumb { color:var(--ink-secondary); }
+.crumb a { color:var(--ink-secondary); text-decoration:none; }
+.crumb a:hover { color:var(--ink); }
+header > p:first-child { margin:0; color:var(--ink-secondary); font:500 12px/1.7 var(--font-mono); }
+header > p:first-child a { color:var(--ink-secondary); }
+.eyebrow { color:var(--accent); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th, td { padding:11px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 11px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+tr:last-child td { border-bottom:0; }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; margin:14px 0 18px; background:var(--surface); }
+.table-wrap table { min-width:640px; }
+td small { display:block; margin-top:4px; color:var(--ink-secondary); }
+code { padding:2px 6px; border-radius:5px; background:var(--surface-soft); color:var(--ink); font:400 .88em var(--font-mono); overflow-wrap:anywhere; }
+pre { overflow-x:auto; margin:12px 0; padding:16px 18px; border-radius:8px; background:var(--code-bg); color:var(--code-text); font:400 13px/1.65 var(--font-mono); }
+pre code { padding:0; background:none; color:inherit; }
+.link-list, .steps { padding-left:1.35em; }
+.steps li { margin:8px 0; }
+.callout { margin:20px 0 0; padding:14px 18px; border-left:3px solid var(--ink); border-radius:0 6px 6px 0; background:var(--canvas-warm); color:var(--ink); font-size:14px; }
+.callout.green { border-left-color:var(--pale-green-text); background:var(--pale-green-bg); color:var(--pale-green-text); }
+.notice { padding:14px 18px; border-left:3px solid var(--pale-green-text); border-radius:0 6px 6px 0; background:var(--pale-green-bg); color:var(--pale-green-text); }
+.button, .btn { display:inline-block; width:max-content; padding:9px 16px; border:1px solid var(--ink-solid); border-radius:6px; background:var(--ink-solid); color:var(--ink-solid-contrast); text-decoration:none; font-size:13px; font-weight:600; transition:background .15s, border-color .15s; }
+.button:hover, .btn:hover { background:var(--ink-solid-hover); border-color:var(--ink-solid-hover); color:var(--ink-solid-contrast); }
+.ghost { font-size:13px; color:var(--ink-secondary); }
+.stats { display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0 0; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:13px; }
+.stats strong { font-family:var(--font-serif); font-size:19px; font-weight:400; color:var(--ink); }
+.tag { display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); text-decoration:none; font:500 11px/1.7 var(--font-mono); letter-spacing:.04em; }
+.status { display:inline-block; border-radius:9999px; padding:3px 8px; font:500 11px/1.5 var(--font-mono); white-space:nowrap; }
+.status-online { color:var(--pale-green-text); background:var(--pale-green-bg); }
+.status-offline { color:var(--pale-red-text); background:var(--pale-red-bg); }
+.status-degraded, .status-unknown { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+.facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+.fact { padding:13px 14px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.fact strong, .fact span { display:block; }
+.fact strong { color:var(--ink-tertiary); font:500 10.5px/1.6 var(--font-mono); text-transform:uppercase; letter-spacing:.08em; }
+.provider-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; }
+.provider-card { display:flex; flex-direction:column; min-height:200px; padding:20px; border:1px solid var(--line); border-radius:8px; background:var(--surface); transition:box-shadow .2s; }
+.provider-card:hover { box-shadow:var(--card-shadow); }
+.provider-card h2 { margin:8px 0 4px; font-size:22px; }
+.provider-card h2 a { color:var(--ink); text-decoration:none; }
+.provider-card h2 a:hover { color:var(--accent); }
+.provider-card p { margin:5px 0; color:var(--ink-secondary); font-size:13.5px; }
+.provider-card .eyebrow { color:var(--ink-tertiary); }
+.catalog-table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; }
+.catalog-table { width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }
+.catalog-table th, .catalog-table td { padding:10px 11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+.catalog-table thead th { position:sticky; top:0; z-index:1; color:var(--ink-tertiary); background:var(--surface-soft); font:500 11px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+.catalog-table tbody tr:last-child td { border-bottom:0; }
+.catalog-table small { display:block; margin-top:3px; color:var(--ink-secondary); font:400 11px/1.5 var(--font-mono); }
+.catalog-table .model-name, .catalog-table .model-id { display:block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.catalog-table .model-id { margin-top:3px; color:var(--ink-tertiary); }
+.score { color:var(--accent); font-family:var(--font-mono); }
+.score-ring { display:inline-grid; width:34px; height:34px; place-items:center; border:1px solid var(--line); border-radius:50%; background:var(--surface-soft); }
+.score-ring strong { color:var(--accent); font:500 12px var(--font-mono); }
+.model-badges { display:flex; flex-wrap:wrap; gap:4px; min-width:80px; }
+.model-badge { border-radius:9999px; padding:2px 8px; color:var(--accent); background:var(--accent-soft); font:500 11px/1.6 var(--font-mono); white-space:nowrap; }
+.catalog-group-row th { padding:13px 11px 7px; color:var(--ink); background:var(--canvas-warm); font-size:13px; letter-spacing:0; text-transform:none; font-family:var(--font-sans); }
+.catalog-empty { margin:16px 0 0; padding:13px 16px; border-radius:6px; color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+.source-cell { min-width:100px; white-space:nowrap; }
+.freshness { color:var(--ink-secondary); }
+.freshness-stale { color:var(--pale-red-text); }
+.access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+.access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.access-route h3 { margin:0 0 8px; font-size:18px; }
+.access-route code { overflow-wrap:anywhere; }
+.theme-toggle { position:absolute; top:16px; right:16px; z-index:5; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); cursor:pointer; transition:all .2s; font-size:14px; line-height:1; padding:0; }
+.theme-toggle:hover { background:var(--line-soft); border-color:var(--ink-tertiary); }
+.theme-toggle .icon-sun { display:none; }
+.theme-toggle .icon-moon { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display:none; }
+@media (max-width:640px) { body { padding:14px 10px 40px; } header, main, footer { padding:18px; border-radius:8px; } }'''
+
+# Compact token-only bundle for pages that keep bespoke layout CSS but need the palette
+# (model center reuses the homepage document, so it must not inherit the full base styles).
+EDITORIAL_TOKEN_STYLE = f'<style id="editorial-tokens">{EDITORIAL_TOKENS_CSS}</style>'
+
 CATEGORY_DEFINITIONS = {
     "free-quota": {
         "name": "Free AI quota",
@@ -662,35 +763,22 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; }}
-    * {{ box-sizing: border-box; }}
-    body {{ max-width: 1120px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
-    a {{ color: var(--blue); }}
-    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }}
-    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
-    header a {{ color: white; }}
-    h1 {{ max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }}
-    h2 {{ margin: 0 0 10px; font-size: clamp(24px, 4vw, 34px); }}
-    p {{ max-width: 900px; }}
-    .crumb, .eyebrow, th {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
-    .lead {{ max-width: 840px; color: #dbe6ff; font-size: 17px; }}
-    .callout {{ margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    body {{ max-width: 1120px; }}
+    h1 {{ max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }}
     section + section {{ padding-top: 28px; border-top: 1px solid var(--line); }}
-    .table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 16px 0 8px; }}
-    table {{ width: 100%; min-width: 780px; border-collapse: collapse; font-size: 14px; }}
-    th, td {{ padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }}
-    th {{ color: var(--muted); background: var(--soft); }}
-    tr:last-child td {{ border-bottom: 0; }}
-    td small {{ display: block; margin-top: 4px; color: var(--muted); }}
-    .link-list {{ padding-left: 1.3em; }}
-    footer {{ color: var(--muted); font-size: 13px; }}
+    footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
 <body data-static-locale="true">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">FreeLLM Free AI Index</a> / Guides</div>
     {_static_locale_nav()}
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(definition["title_zh"], definition["title_en"])}</h1>
     <p class="lead">{_locale_pair(definition["lead_zh"], definition["lead_en"])}</p>
     <div class="callout">{_locale_pair("数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。", "Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.")}</div>
@@ -723,6 +811,98 @@ def _list(items: list[object], empty: str = "Not specified") -> str:
     return "<ul>" + "".join(f"<li>{_locale_pair(item, item)}</li>" for item in items) + "</ul>"
 
 
+def _quick_start_markup(offer: dict) -> str:
+    """Render the one-stop quick-start block: register → get API key → call model.
+
+    Each offer already carries ``register`` (signup/console URL), ``usageGuide.docsUrl``
+    (docs / API-key page) and ``usageGuide.examples.curl`` (invocation example) in
+    ``data/offers.json``; this surfaces them as the first thing a visitor sees instead
+    of burying them inside the official-sources list.
+    """
+    guide = offer.get("usageGuide") or {}
+    register_url = offer.get("register")
+    register_label = offer.get("registerLabel") or _locale_pair("注册账号", "Sign up")
+    docs_url = guide.get("docsUrl")
+    curl = ((guide.get("examples") or {}).get("curl") or offer.get("command"))
+
+    def step(number: int, title_zh: str, title_en: str, desc_zh: str, desc_en: str, body: str, wide: bool = False) -> str:
+        wide_class = " qs-step-wide" if wide else ""
+        return (
+            f'<div class="qs-step{wide_class}">'
+            f'<span class="qs-num">{number}</span>'
+            f'<h3>{_locale_pair(title_zh, title_en)}</h3>'
+            f'<p class="qs-desc">{_locale_pair(desc_zh, desc_en)}</p>'
+            f'{body}'
+            f'</div>'
+        )
+
+    # ① 注册账号
+    if register_url:
+        body1 = (
+            f'<a class="qs-link" href="{_esc(register_url)}" target="_blank" '
+            f'rel="noopener noreferrer">{_esc(register_label)} ↗</a>'
+        )
+    else:
+        body1 = f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
+
+    # ② 获取 API Key
+    key_url = docs_url or register_url
+    if key_url:
+        key_label = (
+            _locale_pair("查看文档 / 控制台", "Docs / console")
+            if docs_url
+            else _locale_pair("在同一控制台创建", "Create in the same console")
+        )
+        body2 = (
+            f'<a class="qs-link" href="{_esc(key_url)}" target="_blank" '
+            f'rel="noopener noreferrer">{key_label} ↗</a>'
+        )
+    else:
+        body2 = f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
+
+    # ③ 调用模型：全宽代码块 + 复制按钮
+    if curl:
+        body3 = (
+            '<div class="qs-code">'
+            f'<div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span>'
+            f'<button type="button" class="copy-command" data-copy-target="qs-command-1">{_locale_pair("复制命令", "Copy command")}</button>'
+            '</div>'
+            f'<pre id="qs-command-1"><code>{_esc(curl)}</code></pre>'
+            '</div>'
+        )
+    else:
+        body3 = f'<p class="muted">{_locale_pair("见下方操作步骤", "See the operation steps below")}</p>'
+
+    steps = "".join(
+        (
+            step(1, "注册账号", "Sign up", "打开官方平台完成注册；部分平台需要手机号或邮箱验证。", "Create an account on the official platform; phone or email verification may apply.", body1),
+            step(2, "获取 API Key", "Get API key", "在控制台的 API Keys 页面创建密钥并妥善保存。", "Create a key on the console's API keys page and store it safely.", body2),
+            step(3, "调用模型", "Call model", "把命令中的环境变量换成你的 Key，即可发送第一条请求。", "Swap in your key via the environment variable and send the first request.", body3, wide=True),
+        )
+    )
+
+    qs_desc_zh = "注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。"
+    qs_desc_en = "Register, get your API key, then call the model; free terms still follow the provider's live official policy."
+    copy_script = (
+        "<script>(() => { document.querySelectorAll('.quick-start .copy-command')"
+        ".forEach(button => button.addEventListener('click', async () => {"
+        " const target = document.getElementById(button.dataset.copyTarget);"
+        " if (!target) return;"
+        " await navigator.clipboard.writeText(target.innerText);"
+        f" button.textContent = {json.dumps('已复制', ensure_ascii=False)};"
+        f" setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400);"
+        " })); })();</script>"
+    )
+    return (
+        '<section class="quick-start">\n'
+        '      <h2>' + _locale_pair("快速上手", "Quick start") + '</h2>\n'
+        '      <p class="muted">' + _locale_pair(qs_desc_zh, qs_desc_en) + '</p>\n'
+        '      <div class="qs-grid">' + steps + '</div>\n'
+        '      ' + copy_script + '\n'
+        '    </section>'
+    )
+
+
 def _source_links(offer: dict) -> str:
     labeled_links = []
     for link in offer.get("links") or []:
@@ -732,9 +912,12 @@ def _source_links(offer: dict) -> str:
         if isinstance(entry, dict) and entry.get("model") and entry.get("sourceUrl"):
             labeled_links.append((str(entry["model"]), str(entry["sourceUrl"])))
     if labeled_links:
+        by_url: dict[str, str] = {}
+        for label, url in labeled_links:
+            by_url.setdefault(url, label)
         return "".join(
             f'<li><a href="{_esc(url)}" rel="nofollow noopener" target="_blank">{_locale_pair(label, label, "Official source")} ↗</a></li>'
-            for label, url in dict(labeled_links).items()
+            for url, label in by_url.items()
         )
 
     urls = list(dict.fromkeys([offer.get("register"), *(offer.get("sourceUrls") or [])]))
@@ -778,7 +961,17 @@ def _operation_guides_for_provider(provider_id: str, operations: list[dict]) -> 
     return [guide for guide in operations if guide.get("providerId") == provider_id]
 
 
-def _operation_guides_markup(guides: list[dict]) -> str:
+def _repeats_reference_command(command: str, reference_command: str) -> bool:
+    """True when a step command merely restates the quick-start command (same endpoint)."""
+    if not reference_command:
+        return False
+    match = re.search(r"https?://[^\s'\"]+", str(reference_command))
+    if not match:
+        return False
+    return match.group(0) in str(command)
+
+
+def _operation_guides_markup(guides: list[dict], reference_command: str = "") -> str:
     if not guides:
         return ""
     rendered_guides = []
@@ -794,7 +987,10 @@ def _operation_guides_markup(guides: list[dict]) -> str:
                     continue
                 command_markup = ""
                 command = step.get("command")
-                if command:
+                if command and _repeats_reference_command(command, reference_command):
+                    # 快速上手已展示同一 endpoint 的可复制命令，这里只留指引避免整页重复。
+                    command_markup = f'<p class="muted">{_locale_pair("命令已在上方「快速上手」给出。", "The copyable command already appears in Quick start above.")}</p>'
+                elif command:
                     command_index += 1
                     command_id = f"operation-command-{command_index}"
                     command_markup = f'''<div class="operation-command"><div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span><button type="button" class="copy-command" data-copy-target="{command_id}">{_locale_pair("复制命令", "Copy command")}</button></div><pre id="{command_id}"><code>{_esc(command)}</code></pre></div>'''
@@ -814,7 +1010,7 @@ def _operation_guides_markup(guides: list[dict]) -> str:
             sources = "".join(f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(url)} ↗</a></li>' for url in path.get("sourceUrls") or [])
             paths.append(f'''<article class="operation-path"><h3>{_esc(path.get("label") or path.get("id"))}</h3><p class="operation-type">{_esc(path.get("productType") or "operation")}</p>{endpoint_markup}{limits_markup}<h4>{_locale_pair("前置条件", "Prerequisites")}</h4>{prerequisite_markup}<h4>{_locale_pair("操作步骤", "Steps")}</h4><ol class="operation-steps">{"".join(steps)}</ol><div class="operation-validation"><strong>{_locale_pair("验证动作", "Validation")}</strong><p>{_esc(path.get("validation") or "")}</p></div>{issues_markup}<h4>{_locale_pair("官方来源", "Official sources")}</h4><ul class="link-list">{sources}</ul></article>''')
         rendered_guides.append("".join(paths))
-    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
+    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
 
 
 def render_legacy_offer_redirect(legacy_id: str, target_id: str, site_url: str) -> str:
@@ -870,10 +1066,21 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
         f'<a class="tag" href="{_esc(category_url(category))}">{_locale_pair(CATEGORY_DEFINITIONS[category]["name_zh"], CATEGORY_DEFINITIONS[category]["name"])}</a>'
         for category in categories
     ) or f'<a class="tag" href="/">{_locale_pair("免费 AI 资源索引", "Free AI Index")}</a>'
-    examples = guide.get("examples") or {}
-    example_markup = "".join(
-            f'<h3>{_locale_pair(name, name, "Example")}</h3><pre><code>{_esc(code)}</code></pre>' for name, code in examples.items()
-    )
+    cta_parts = []
+    if offer.get("register"):
+        reg_small = f'<small>{_esc(offer.get("registerLabel"))}</small>' if offer.get("registerLabel") else ""
+        cta_parts.append(
+            f'<a class="button" href="{_esc(offer.get("register"))}" target="_blank" rel="nofollow noopener">'
+            f'<span>{_locale_pair("立即开始", "Get started")} ↗</span>{reg_small}</a>'
+        )
+    if guide.get("docsUrl"):
+        cta_parts.append(
+            f'<a class="button button--ghost" href="{_esc(guide.get("docsUrl"))}" target="_blank" rel="nofollow noopener">'
+            f'<span>{_locale_pair("官方文档", "Documentation")} ↗</span></a>'
+        )
+    header_cta_markup = (
+        '<nav class="header-cta" aria-label="Official links">' + "".join(cta_parts) + "</nav>"
+    ) if cta_parts else ""
     context_window = offer.get("contextWindow") or {}
     context_window_markup = ""
     if context_window and offer.get("productType") in {"api", "open_weights", "coding_plan"}:
@@ -890,17 +1097,54 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
       <p>{_locale_pair(context_summary_zh, context_summary_en)}.{source_markup}</p>
     </section>'''
     access_paths_markup = _access_paths_markup(offer)
-    operation_guides_markup = _operation_guides_markup(_operation_guides_for_offer(offer, operations or []))
+    operation_guides_markup = _operation_guides_markup(
+        _operation_guides_for_offer(offer, operations or []),
+        reference_command=((guide.get("examples") or {}).get("curl") or offer.get("command") or ""),
+    )
+    if operation_guides_markup:
+        # 操作路径已覆盖前置条件/步骤/命令，再渲染"如何使用"只会重复内容。
+        how_to_section = ""
+    else:
+        how_to_section = f'''<section>
+      <h2>{_locale_pair("如何使用", "How to use")}</h2>
+      <p>{_locale_pair(guide.get('summary') or offer.get('command'), _english_text(guide.get('summary') or offer.get('command'), "See the official setup guide"))}</p>
+      <h3>{_locale_pair("前置条件", "Prerequisites")}</h3>
+      {_list(guide.get('prerequisites') or [offer.get('access')], '请查看官方访问要求。')}
+      <h3>{_locale_pair("步骤", "Steps")}</h3>
+      {_list(guide.get('steps') or [offer.get('command')], '请按照官方设置说明操作。')}
+    </section>'''
     free_models = offer.get("freeModels") or []
     free_models_markup = ""
     if free_models:
-        rows = "".join(
-            f'''<tr><td><code>{_locale_pair(entry.get("model"), entry.get("model"), "Listed model")}</code>{f'<br><small class="muted">{_locale_pair(entry["label"], entry["label"], "Model label")}</small>' if entry.get("label") else ""}</td><td>{_locale_pair(entry.get("contextWindow") or "—", entry.get("contextWindow") or "—", "See model limits")}</td><td>{_locale_pair(entry.get("quota") or "—", entry.get("quota") or "—", "See quota terms")}</td><td>{_locale_pair(entry.get("note") or "—", entry.get("note") or "—", "See official terms")}</td></tr>'''
-            for entry in free_models
-        )
+        show_context = any(entry.get("contextWindow") for entry in free_models)
+
+        def _model_row(entry: dict) -> str:
+            name_cell = (
+                f'<td><code>{_locale_pair(entry.get("model"), entry.get("model"), "Listed model")}</code>'
+                + (
+                    f'<br><small class="muted">{_locale_pair(entry["label"], entry["label"], "Model label")}</small>'
+                    if entry.get("label")
+                    else ""
+                )
+                + "</td>"
+            )
+            context_cell = (
+                f'<td>{_locale_pair(entry.get("contextWindow") or "—", entry.get("contextWindow") or "—", "See model limits")}</td>'
+                if show_context
+                else ""
+            )
+            quota_cell = f'<td>{_locale_pair(entry.get("quota") or "—", entry.get("quota") or "—", "See quota terms")}</td>'
+            note_cell = f'<td>{_locale_pair(entry.get("note") or "—", entry.get("note") or "—", "See official terms")}</td>'
+            return f"<tr>{name_cell}{context_cell}{quota_cell}{note_cell}</tr>"
+
+        head_cells = f'<th>{_locale_pair("模型", "Model")}</th>'
+        if show_context:
+            head_cells += f'<th>{_locale_pair("上下文窗口", "Context window")}</th>'
+        head_cells += f'<th>{_locale_pair("免费额度", "Free quota")}</th><th>{_locale_pair("备注", "Notes")}</th>'
+        rows = "".join(_model_row(entry) for entry in free_models)
         free_models_markup = f'''<section>
       <h2>{_locale_pair("免费模型逐个看", "Free models by entry")}</h2>
-      <div class="table-wrap"><table><thead><tr><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("上下文窗口", "Context window")}</th><th>{_locale_pair("免费额度", "Free quota")}</th><th>{_locale_pair("备注", "Notes")}</th></tr></thead><tbody>{rows}</tbody></table></div>
+      <div class="table-wrap"><table><thead><tr>{head_cells}</tr></thead><tbody>{rows}</tbody></table></div>
       <p class="muted">{_locale_pair("额度以官方页面和控制台实时显示为准；公测或限免额度可能随时调整。", "Quota follows the official page and console; preview or limited free access can change.")}</p>
     </section>'''
     schema = {
@@ -937,44 +1181,54 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }}
-    body {{ max-width: 980px; margin: 0 auto; padding: 28px 20px 64px; line-height: 1.65; }}
-    a {{ color: #1744e8; }}
-    header, main, footer {{ background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 24px; margin-bottom: 18px; }}
-    header {{ background: #172033; color: white; }}
-    header a {{ color: white; }}
-    nav {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }}
-    .tag {{ display: inline-block; padding: 3px 9px; border-radius: 999px; background: #e9efff; text-decoration: none; font-size: .9rem; }}
-    .facts {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }}
-    .fact {{ padding: 13px; background: #f5f7fb; border-radius: 9px; }}
-    .fact strong, .fact span {{ display: block; }}
-    .fact strong {{ font-size: .78rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }}
-    pre {{ overflow-x: auto; padding: 14px; background: #172033; color: #f5f7fb; border-radius: 8px; }}
-    .table-wrap {{ overflow-x: auto; }}
-    table {{ width: 100%; border-collapse: collapse; }}
-    th, td {{ padding: 9px 10px; border-bottom: 1px solid #dfe5ef; text-align: left; vertical-align: top; }}
-    th {{ font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }}
-    code {{ background: #eef2f9; padding: 2px 6px; border-radius: 5px; }}
-    .muted {{ color: #68748a; }}
-    .operation-path {{ margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    body {{ max-width: 980px; }}
+    h1 {{ font-size: clamp(30px, 5vw, 44px); }}
+    header {{ padding-bottom: 26px; }}
+    header nav {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }}
+    main section + section {{ margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }}
+    main h2 {{ font-size: clamp(22px, 3.4vw, 30px); }}
+    main h3 {{ font-size: 18px; }}
+    .operation-path {{ margin-top: 24px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }}
     .operation-path h3 {{ margin-top: 0; }}
     .operation-path h4 {{ margin: 18px 0 6px; }}
-    .operation-type {{ display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }}
+    .operation-type {{ display: inline-block; margin: 0; padding: 3px 10px; border-radius: 9999px; color: var(--accent); background: var(--accent-soft); font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; }}
     .operation-steps {{ padding-left: 1.4em; }}
     .operation-steps li {{ margin: 12px 0; }}
     .operation-steps p {{ margin: 4px 0; }}
     .operation-command {{ margin: 10px 0; }}
-    .operation-command-head {{ display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }}
-    .copy-command {{ border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }}
+    .operation-command-head {{ display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); letter-spacing: .05em; }}
+    .copy-command {{ border: 1px solid var(--line); border-radius: 6px; padding: 5px 11px; color: var(--accent); background: var(--surface); cursor: pointer; font-size: 12px; transition: all .15s; }}
+    .copy-command:hover {{ border-color: var(--accent); }}
     .operation-facts {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }}
-    .operation-facts div {{ padding: 10px; border-radius: 8px; background: #f0f4fb; }}
-    .operation-facts dt {{ color: #68748a; font-size: .78rem; }}
-    .operation-facts dd {{ margin: 3px 0 0; overflow-wrap: anywhere; }}
-    .operation-validation {{ margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }}
-    .operation-limits, .operation-issues {{ margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: #f0f4fb; }}
-    .operation-limits p, .operation-issues ul {{ margin: 4px 0 0; }}
-    @media (max-width: 600px) {{ body {{ padding: 14px 10px 40px; }} header, main, footer {{ padding: 18px; }} }}
+    .operation-facts div {{ padding: 11px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }}
+    .operation-facts dt {{ color: var(--ink-tertiary); font: 500 10.5px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }}
+    .operation-facts dd {{ margin: 3px 0 0; overflow-wrap: anywhere; font-size: 13.5px; }}
+    .operation-validation {{ margin-top: 18px; padding: 12px 16px; border-left: 3px solid var(--pale-green-text); border-radius: 0 6px 6px 0; background: var(--pale-green-bg); color: var(--pale-green-text); }}
+.operation-limits, .operation-issues {{ margin-top: 14px; padding: 12px 16px; border-radius: 8px; background: var(--surface-soft); }}
+        .operation-limits p, .operation-issues ul {{ margin: 4px 0 0; }}
+    .quick-start {{ margin: 26px 0 0; }}
+    .qs-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }}
+    .qs-step {{ display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }}
+    .qs-step-wide {{ grid-column: 1 / -1; }}
+    .qs-num {{ display: inline-block; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; color: var(--ink-solid-contrast); background: var(--ink-solid); font: 500 12px/1 var(--font-mono); flex-shrink: 0; }}
+    .qs-step h3 {{ margin: 0; font-size: 18px; }}
+    .qs-desc {{ margin: 0; color: var(--ink-secondary); font-size: 13.5px; }}
+    .qs-link {{ display: inline-block; color: var(--accent); text-decoration: none; font-weight: 500; word-break: break-all; }}
+    .qs-link:hover {{ text-decoration: underline; }}
+    .qs-code {{ display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }}
+    .qs-step pre {{ margin: 0; padding: 12px 14px; border-radius: 6px; background: var(--code-bg); color: var(--code-text); font: 400 12px/1.55 var(--font-mono); overflow-x: auto; max-width: 100%; }}
+    .header-cta {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }}
+    .header-cta .button {{ display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; }}
+    .header-cta .button small {{ font-weight: 400; opacity: .75; font-size: 11px; }}
+    .header-cta .button--ghost {{ background: transparent; color: var(--ink); border-color: var(--line); }}
+    .header-cta .button--ghost:hover {{ background: var(--surface-soft); border-color: var(--ink-tertiary); color: var(--ink); }}
+    @media (max-width: 680px) {{ .qs-grid {{ grid-template-columns: 1fr; }} }}
+        footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
 </head>
 <body data-offer-id="{_esc(offer.get('id'))}" data-static-locale="true">
@@ -982,9 +1236,11 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     <nav aria-label="Categories">{category_links}</nav>
+    {header_cta_markup}
   </header>
   <main>
     <section>
@@ -1000,19 +1256,12 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
         <div class="fact"><strong>{_locale_pair("最后核验", "Last checked")}</strong><span>{_esc(offer.get('lastVerifiedAt'))}</span></div>
       </div>
     </section>
+{_quick_start_markup(offer)}
 {context_window_markup}
 {access_paths_markup}
 {operation_guides_markup}
 {free_models_markup}
-    <section>
-      <h2>{_locale_pair("如何使用", "How to use")}</h2>
-      <p>{_locale_pair(guide.get('summary') or offer.get('command'), _english_text(guide.get('summary') or offer.get('command'), "See the official setup guide"))}</p>
-      <h3>{_locale_pair("前置条件", "Prerequisites")}</h3>
-      {_list(guide.get('prerequisites') or [offer.get('access')], '请查看官方访问要求。')}
-      <h3>{_locale_pair("步骤", "Steps")}</h3>
-      {_list(guide.get('steps') or [offer.get('command')], '请按照官方设置说明操作。')}
-      {example_markup}
-    </section>
+{how_to_section}
     <section>
       <h2>{_locale_pair("官方来源", "Official sources")}</h2>
       <p class="muted">{_locale_pair(offer.get('evidence'), _english_text(offer.get('evidence'), "See the official source links below"))}</p>
@@ -1076,23 +1325,28 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }}
-    body {{ max-width: 980px; margin: 0 auto; padding: 28px 20px 64px; line-height: 1.65; }}
-    a {{ color: #1744e8; }}
-    header, main, footer {{ background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 24px; margin-bottom: 18px; }}
-    header {{ background: #172033; color: white; }}
-    header a {{ color: white; }}
-    article {{ padding: 16px 0; border-bottom: 1px solid #e6eaf1; }}
-    article:last-child {{ border-bottom: 0; }}
-    h1 {{ margin-bottom: 8px; }}
-    .muted {{ color: #68748a; }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    body {{ max-width: 980px; }}
+    h1 {{ font-size: clamp(30px, 5vw, 44px); }}
+    main {{ padding-top: 6px; }}
+    article {{ padding: 18px 0; border-bottom: 1px solid var(--line-soft); }}
+    article:last-child {{ border-bottom: 0; padding-bottom: 6px; }}
+    article h2 {{ margin: 0 0 6px; font-size: 21px; }}
+    article h2 a {{ color: var(--ink); text-decoration: none; }}
+    article h2 a:hover {{ color: var(--accent); }}
+    article p {{ margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }}
+    footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
 </head>
 <body data-static-locale="true">
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('FreeLLM 免费 AI 资源索引', 'FreeLLM Free AI Index')}</a> / {_locale_pair('分类', 'Category')}</p>
     {_static_locale_nav()}
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(definition['name_zh'], definition['name'])}</h1>
     <p>{_locale_pair(definition['description_zh'], definition['description'])}</p>
     <p>{_locale_pair(f'{len(matching)} 个经过核验的资源', f'{len(matching)} verified resources')}</p>
@@ -1169,43 +1423,28 @@ print(response.choices[0].message.content)'''
   {_analytics_script()}
   {ADSENSE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --blue: #1744e8; --soft: #f5f7fb; --green: #e6f7ee; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--soft); }}
-    * {{ box-sizing: border-box; }}
-    body {{ max-width: 1180px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; }}
-    a {{ color: var(--blue); }}
-    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 34px); margin-bottom: 18px; }}
-    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
-    header a {{ color: white; }}
-    header h1 {{ max-width: 760px; margin: 22px 0 8px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.06em; }}
-    header p {{ max-width: 780px; margin: 8px 0; color: #dbe6ff; }}
-    .crumb, .eyebrow {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
-    .source {{ display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); font-size: 13px; }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    h1 {{ max-width: 760px; margin: 22px 0 8px; font-size: clamp(34px, 6vw, 58px); }}
+    header p {{ max-width: 780px; margin: 8px 0; }}
+    .source {{ display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-secondary); }}
     main {{ display: grid; gap: 28px; }}
     section + section {{ padding-top: 26px; border-top: 1px solid var(--line); }}
-    h2 {{ margin: 0 0 8px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.04em; }}
-    h3 {{ margin: 22px 0 6px; font-size: 20px; }}
-    p {{ max-width: 860px; }}
-    .lead {{ font-size: 17px; color: #3d4b63; }}
-    .steps, .link-list {{ padding-left: 1.4em; }}
-    .steps li {{ margin: 8px 0; }}
-    .callout {{ padding: 16px 18px; border-left: 4px solid var(--blue); background: var(--soft); }}
-    .callout.green {{ border-left-color: #1a9a5a; background: var(--green); }}
-    pre {{ overflow-x: auto; margin: 12px 0; padding: 18px; border-radius: 10px; background: #101827; color: #e9f0ff; font: 13px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }}
-    .table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 12px 0 20px; }}
-    table {{ width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13px; }}
-    th, td {{ padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }}
-    th {{ color: #53627b; background: var(--soft); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }}
-    tr:last-child td {{ border-bottom: 0; }}
-    .meta {{ color: var(--muted); font-size: 13px; }}
-    footer {{ color: var(--muted); font-size: 13px; }}
+    h2 {{ font-size: clamp(24px, 4vw, 32px); }}
+    h3 {{ font-size: 20px; }}
+    .meta {{ color: var(--ink-secondary); font-size: 13px; }}
+    footer {{ color: var(--ink-secondary); font-size: 13px; }}
     footer strong {{ color: var(--ink); }}
-    @media (max-width: 620px) {{ body {{ padding: 10px 8px 38px; }} header, main, footer {{ border-radius: 12px; padding: 18px; }} header h1 {{ font-size: 42px; }} }}
+    @media (max-width: 620px) {{ h1 {{ font-size: 40px; }} }}
   </style>
 </head>
 <body>
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / 使用指南</div>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_esc(title)}</h1>
     <p>来自多个提供商的免费 LLM API、试用额度和本地 / 自托管工具，帮助你几秒钟内发现、比较并开始接入。</p>
     <div class="source">
@@ -1384,37 +1623,22 @@ def render_special_guide_page(
   {_analytics_script()}
   {ADSENSE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; --green: #e6f7ee; }}
-    * {{ box-sizing: border-box; }}
-    body {{ max-width: 1080px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
-    a {{ color: var(--blue); }}
-    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }}
-    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
-    header a {{ color: white; }}
-    h1 {{ max-width: 820px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 62px); line-height: 1.05; letter-spacing: -.05em; }}
-    h2 {{ margin: 0 0 10px; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.03em; }}
-    h3 {{ margin: 24px 0 6px; font-size: 19px; }}
-    p {{ max-width: 860px; }}
-    .crumb, .eyebrow, th {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
-    .lead {{ max-width: 800px; color: #dbe6ff; font-size: 17px; }}
-    .callout {{ margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    h1 {{ max-width: 820px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }}
     section + section {{ padding-top: 28px; border-top: 1px solid var(--line); }}
-    .table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 16px 0 8px; }}
-    table {{ width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; }}
-    th, td {{ padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }}
-    th {{ color: var(--muted); background: var(--soft); }}
-    tr:last-child td {{ border-bottom: 0; }}
-    td small {{ display: block; margin-top: 4px; color: var(--muted); }}
-    pre {{ overflow-x: auto; padding: 18px; border-radius: 10px; background: #101827; color: #e9f0ff; font: 13px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }}
-    .notice {{ padding: 16px 18px; border-left: 4px solid #1a9a5a; background: var(--green); }}
-    .link-list {{ padding-left: 1.3em; }}
-    footer {{ color: var(--muted); font-size: 13px; }}
+    h2 {{ font-size: clamp(24px, 4vw, 32px); }}
+    h3 {{ font-size: 19px; }}
+    footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
 <body>
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / Guides</div>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_esc(title)}</h1>
     <p class="lead">{_esc(lead)}</p>
     <div class="callout">{_esc(caution)}</div>
@@ -2021,19 +2245,20 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
   <link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}
   {_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ --ink:#172033; --muted:#68748a; --line:#dfe5ef; --soft:#f5f7fb; --blue:#1744e8; }}
-    * {{ box-sizing:border-box; }} body {{ max-width:1180px; margin:0 auto; padding:24px 18px 64px; color:var(--ink); background:var(--soft); font-family:Inter,ui-sans-serif,system-ui,sans-serif; line-height:1.65; }}
-    a {{ color:var(--blue); }} header,main,footer {{ background:#fff; border:1px solid var(--line); border-radius:16px; padding:clamp(20px,4vw,36px); margin-bottom:18px; }}
-    h1 {{ margin:10px 0; font-size:clamp(28px,5vw,48px); line-height:1.1; }} h2 {{ margin:0 0 8px; }} .lead,.muted {{ color:var(--muted); }} .stats {{ display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:18px; color:var(--muted); font-size:13px; }}
-    .catalog-table-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:12px; }} .catalog-table {{ width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }} .catalog-table th,.catalog-table td {{ padding:11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }} .catalog-table th {{ color:var(--muted); background:#f8fafc; font-size:11px; white-space:nowrap; }} .catalog-table small {{ display:block; color:var(--muted); font-size:11px; }} .catalog-table .model-name,.catalog-table .model-id {{ display:block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }} .catalog-table .model-id {{ margin-top:3px; }} .score {{ color:var(--blue); }} .status {{ display:inline-block; border-radius:999px; padding:2px 7px; font-size:11px; }} .status-online {{ color:#147a46; background:#dcfce7; }} .status-offline {{ color:#9f1239; background:#ffe4e6; }} .status-degraded,.status-unknown {{ color:#8a5a00; background:#fef3c7; }} .related-list {{ padding-left:20px; }} .eyebrow {{ font:11px ui-monospace,Consolas,monospace; letter-spacing:.08em; text-transform:uppercase; }}
-    .access-route-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }} .access-route {{ padding:14px; border:1px solid var(--line); border-radius:10px; background:#f8fafc; }} .access-route h3 {{ margin:0 0 8px; }} code {{ overflow-wrap:anywhere; }}
-    @media (max-width:620px) {{ body {{ padding:10px 8px 38px; }} header,main,footer {{ padding:18px; border-radius:12px; }} }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    h1 {{ margin: 10px 0; font-size: clamp(30px, 5vw, 48px); }}
+    main section h2 {{ font-size: clamp(22px, 3.4vw, 30px); }}
+    .related-list {{ padding-left: 20px; }}
+    footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
 <body data-static-locale="true">
   <header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('全部模型', 'All models')}</a></p>
-    {_static_locale_nav()}<div class="eyebrow">MODEL AGGREGATION</div><h1>{_esc(model_name)}</h1>
+    {_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>{_esc(model_name)}</h1>
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>
     <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('目录发现', 'Directory discovered')}</span></div>
   </header>
@@ -2056,9 +2281,10 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
         cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p><a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
-<style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.65;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}.lead,.muted {{color:var(--muted);}}.eyebrow {{font:11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}}.provider-grid {{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}}.provider-card {{display:flex;flex-direction:column;min-height:220px;padding:18px;border:1px solid var(--line);border-radius:12px;background:#fff;}}.provider-card h2 {{margin:8px 0 4px;font-size:20px;}}.provider-card p {{margin:5px 0;}}.button {{margin-top:auto;display:inline-block;width:max-content;padding:8px 12px;border-radius:8px;background:var(--blue);color:#fff;text-decoration:none;font-size:13px;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自第三方模型目录，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from a third-party model directory; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
+<style>{EDITORIAL_BASE_CSS}</style>
+<style>body {{max-width:1180px;}}h1 {{font-size:clamp(30px,5vw,48px);}}.provider-card .button {{margin-top:auto;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自第三方模型目录，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from a third-party model directory; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
 
 
 def render_provider_page(provider: dict, models: list[dict], offers: list[dict], site_url: str, operations: list[dict] | None = None, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
@@ -2075,9 +2301,10 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("目录发现", "Directory discovered")
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
-<style>:root {{--ink:#172033;--muted:#68748a;--line:#dfe5ef;--soft:#f5f7fb;--blue:#1744e8;}}* {{box-sizing:border-box;}}body {{max-width:1180px;margin:0 auto;padding:24px 18px 64px;color:var(--ink);background:var(--soft);font-family:Inter,ui-sans-serif,system-ui,sans-serif;line-height:1.65;}}a {{color:var(--blue);}}header,main,footer {{background:#fff;border:1px solid var(--line);border-radius:16px;padding:clamp(20px,4vw,36px);margin-bottom:18px;}}h1 {{font-size:clamp(28px,5vw,48px);line-height:1.1;}}.lead,.muted {{color:var(--muted);}}.catalog-table-wrap {{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}}.catalog-table {{width:100%;min-width:900px;border-collapse:collapse;font-size:13px;}}.catalog-table th,.catalog-table td {{padding:11px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}}.catalog-table th {{color:var(--muted);background:#f8fafc;font-size:11px;white-space:nowrap;}}.catalog-table small {{display:block;color:var(--muted);font-size:11px;}}.catalog-table .model-name,.catalog-table .model-id {{display:block;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}}.catalog-table .model-id {{margin-top:3px;}}.score {{color:var(--blue);}}.status {{display:inline-block;border-radius:999px;padding:2px 7px;font-size:11px;}}.status-online {{color:#147a46;background:#dcfce7;}}.status-offline {{color:#9f1239;background:#ffe4e6;}}.status-degraded,.status-unknown {{color:#8a5a00;background:#fef3c7;}}.related-list {{padding-left:20px;}}.stats {{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px;}}.eyebrow {{font:11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;}}@media (max-width:620px) {{body {{padding:10px 8px 38px;}}header,main,footer {{padding:18px;border-radius:12px;}}}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
+<style>{EDITORIAL_BASE_CSS}</style>
+<style>h1 {{margin:10px 0;font-size:clamp(30px,5vw,48px);}}main section h2 {{font-size:clamp(22px,3.4vw,30px);}}.related-list {{padding-left:20px;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
@@ -2216,92 +2443,63 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
   <style>
-    :root {{ color-scheme: light; --ink: #172033; --muted: #68748a; --line: #dfe5ef; --soft: #f5f7fb; --blue: #1744e8; --green: #e6f7ee; }}
-    * {{ box-sizing: border-box; }}
-    body {{ max-width: 1180px; margin: 0 auto; padding: 24px 18px 64px; line-height: 1.65; color: var(--ink); background: var(--soft); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
-    a {{ color: var(--blue); }}
-    header, main, footer {{ background: white; border: 1px solid var(--line); border-radius: 16px; padding: clamp(20px, 4vw, 36px); margin-bottom: 18px; }}
-    header {{ color: white; background: linear-gradient(135deg, #172033, #243f78); border-color: #172033; }}
-    header a {{ color: white; }}
-    h1 {{ max-width: 860px; margin: 22px 0 10px; font-size: clamp(32px, 5.5vw, 56px); line-height: 1.08; letter-spacing: -.05em; }}
-    h2 {{ margin: 0 0 6px; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.03em; }}
-    h2 small {{ color: var(--muted); font-size: 15px; font-weight: 400; }}
-    h2 [lang="en"] {{ color: #9db4d8; font-weight: 500; font-size: .62em; margin-left: 6px; }}
-    p {{ max-width: 880px; }}
-    .crumb, .eyebrow {{ font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }}
-    .lead {{ max-width: 840px; color: #dbe6ff; font-size: 17px; }}
-    .stats {{ display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 18px 0 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.22); font-size: 13px; color: #dbe6ff; }}
-    .callout {{ margin: 22px 0 0; padding: 16px 18px; border-left: 4px solid #79e5a3; background: rgba(255,255,255,.1); font-size: 14px; }}
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>
+    h1 {{ max-width: 860px; margin: 22px 0 10px; font-size: clamp(32px, 5.5vw, 52px); }}
+    h2 {{ font-size: clamp(23px, 3.5vw, 30px); }}
+    h2 small {{ color: var(--ink-secondary); font-size: 15px; font-weight: 400; }}
+    h2 [lang="en"] {{ color: var(--ink-tertiary); font-weight: 500; font-size: .62em; margin-left: 6px; }}
     main {{ display: grid; gap: 30px; }}
     section + section {{ padding-top: 26px; border-top: 1px solid var(--line); }}
-    .section-desc {{ margin: 0 0 14px; color: var(--muted); font-size: 14px; }}
-    .catalog-toolbar {{ display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }}
-    .catalog-toolbar label {{ color: var(--muted); font-size: 11px; font-weight: 700; }}
+    .section-desc {{ margin: 0 0 14px; color: var(--ink-secondary); font-size: 14px; }}
+    .catalog-toolbar {{ display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }}
+    .catalog-toolbar label {{ color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }}
     .catalog-search-label, .catalog-provider-label, .catalog-region-label {{ display: grid; gap: 5px; }}
-    .catalog-toolbar input, .catalog-toolbar select {{ min-height: 38px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; color: var(--ink); background: white; font: inherit; }}
+    .catalog-toolbar input, .catalog-toolbar select {{ min-height: 38px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; color: var(--ink); background: var(--surface); font: inherit; outline: none; transition: border-color .15s, box-shadow .15s; }}
+    .catalog-toolbar input:focus, .catalog-toolbar select:focus {{ border-color: var(--ink); box-shadow: 0 0 0 3px var(--line-soft); }}
     .catalog-modes {{ display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }}
-    .group-mode, .provider-filter {{ border: 0; border-radius: 7px; padding: 7px 9px; color: var(--blue); background: transparent; cursor: pointer; font: inherit; }}
-    .group-mode {{ border: 1px solid var(--line); font-size: 12px; white-space: nowrap; }}
-    .group-mode.is-active {{ color: white; background: var(--blue); border-color: var(--blue); }}
-    .provider-filter {{ padding: 0; color: var(--blue); text-align: left; font-size: 13px; font-weight: 600; }}
+    .group-mode, .provider-filter {{ border: 0; border-radius: 6px; padding: 7px 10px; color: var(--accent); background: transparent; cursor: pointer; font: inherit; }}
+    .group-mode {{ border: 1px solid var(--line); font-size: 12px; white-space: nowrap; transition: all .15s; }}
+    .group-mode:hover {{ border-color: var(--ink-tertiary); }}
+    .group-mode.is-active {{ color: var(--ink-solid-contrast); background: var(--ink-solid); border-color: var(--ink-solid); }}
+    .provider-filter {{ padding: 0; text-align: left; font-size: 13px; font-weight: 600; }}
     .provider-filter:hover {{ text-decoration: underline; }}
-    .provider-page-link {{ display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }}
-    .catalog-count {{ align-self: center; justify-self: end; color: var(--muted); font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }}
-    .catalog-table-wrap {{ overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }}
-    .catalog-table {{ width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 12.5px; }}
-    .catalog-table th, .catalog-table td {{ padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }}
-    .catalog-table thead th {{ position: sticky; top: 0; z-index: 1; color: var(--muted); background: #f8fafc; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }}
-    .catalog-table tbody tr:last-child td {{ border-bottom: 0; }}
-    .catalog-table small {{ display: block; margin-top: 3px; color: var(--muted); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }}
-    .catalog-table .model-name, .catalog-table .model-id {{ display: block; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
-    .catalog-table .model-id {{ margin-top: 3px; }}
-    .score-ring {{ display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: conic-gradient(from -90deg, #3b82f6 0%, #7c3aed calc(var(--score) * .65%), #ec4899 calc(var(--score) * 1%), #e4eaf5 0); position: relative; color: var(--ink); }}
-    .score-ring::after {{ content: ""; position: absolute; inset: 4px; border-radius: 50%; background: white; }}
-    .score-ring strong {{ position: relative; z-index: 1; color: var(--blue); font-size: 12px; }}
-    .model-badges {{ display: flex; flex-wrap: wrap; gap: 4px; min-width: 80px; }}
-    .model-badge {{ border-radius: 999px; padding: 2px 6px; color: #2457b7; background: #e9efff; font-size: 11px; white-space: nowrap; }}
-    .status {{ display: inline-block; border-radius: 999px; padding: 3px 7px; font-size: 11px; white-space: nowrap; }}
-    .status-online {{ color: #147a46; background: #dcfce7; }}
-    .status-offline {{ color: #9f1239; background: #ffe4e6; }}
-    .status-degraded, .status-unknown {{ color: #8a5a00; background: #fef3c7; }}
-    .catalog-group-row th {{ padding: 13px 11px 7px; color: var(--ink); background: #eef4ff; font-size: 13px; }}
-    .catalog-empty {{ margin: 16px 0 0; padding: 14px; border-radius: 8px; color: #8a5a00; background: #fef3c7; }}
-    .catalog-hint {{ margin: 0 0 12px; color: var(--muted); font-size: 12px; }}
-    .source-cell {{ min-width: 100px; white-space: nowrap; }}
-    .freshness {{ color: var(--muted); }}
-    .freshness-stale {{ color: #b42318; }}
+    .provider-page-link {{ display: block; margin-top: 3px; color: var(--ink-secondary); font-size: 11px; }}
+    .catalog-count {{ align-self: center; justify-self: end; color: var(--ink-tertiary); font: 500 11px var(--font-mono); letter-spacing: .05em; white-space: nowrap; }}
+    .catalog-table {{ min-width: 1120px; }}
+    .catalog-hint {{ margin: 0 0 12px; color: var(--ink-secondary); font-size: 12px; }}
     .card-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }}
-    .model-card {{ display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: white; }}
+    .model-card {{ display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 18px; background: var(--surface); transition: box-shadow .2s; }}
+    .model-card:hover {{ box-shadow: var(--card-shadow); }}
     .card-head {{ display: flex; gap: 10px; align-items: flex-start; }}
-    .mark {{ flex: 0 0 auto; display: inline-flex; width: 34px; height: 34px; border-radius: 9px; background: #e9efff; color: var(--blue); align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }}
-    .card-head h3 {{ margin: 0; font-size: 16px; line-height: 1.35; }}
+    .mark {{ flex: 0 0 auto; display: inline-flex; width: 34px; height: 34px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); align-items: center; justify-content: center; font: 700 13px var(--font-mono); }}
+    .card-head h3 {{ margin: 0; font-size: 19px; line-height: 1.35; }}
     .card-head a {{ color: var(--ink); text-decoration: none; }}
-    .card-head a:hover {{ color: var(--blue); }}
-    .provider {{ margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }}
-    .model {{ margin: 0; color: #3d4b63; font-size: 13px; }}
+    .card-head a:hover {{ color: var(--accent); }}
+    .provider {{ margin: 2px 0 0; color: var(--ink-secondary); font-size: 12.5px; }}
+    .model {{ margin: 0; color: var(--ink-secondary); font: 400 12px/1.6 var(--font-mono); }}
     .facts {{ margin: 0; display: grid; gap: 6px; }}
     .facts div {{ display: grid; grid-template-columns: 112px 1fr; gap: 8px; font-size: 12.5px; }}
-    .facts dt {{ color: var(--muted); }}
+    .facts dt {{ color: var(--ink-tertiary); }}
     .facts dd {{ margin: 0; }}
     .badges {{ display: flex; flex-wrap: wrap; gap: 6px; }}
-    .badge {{ border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; font-size: 11.5px; color: #3d4b63; background: var(--soft); }}
+    .badge {{ border: 1px solid var(--line); border-radius: 9999px; padding: 2px 9px; font: 400 11px/1.7 var(--font-mono); color: var(--ink-secondary); background: var(--surface-soft); }}
     .actions {{ margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 4px; }}
-    .btn {{ display: inline-block; background: var(--blue); color: white; border-radius: 9px; padding: 8px 14px; text-decoration: none; font-size: 13.5px; font-weight: 600; }}
-    .btn:hover {{ background: #0f34c4; }}
-    .ghost {{ font-size: 13px; color: var(--muted); }}
     .tags {{ display: flex; flex-wrap: wrap; gap: 8px; }}
-    .tag {{ display: inline-block; padding: 3px 10px; border-radius: 999px; background: #e9efff; text-decoration: none; font-size: 12.5px; }}
-    footer {{ color: var(--muted); font-size: 13px; }}
+    footer {{ color: var(--ink-secondary); font-size: 13px; }}
     footer strong {{ color: var(--ink); }}
     @media (max-width: 820px) {{ .catalog-toolbar {{ grid-template-columns: 1fr 1fr; }} .catalog-modes {{ grid-column: 1 / -1; }} .catalog-count {{ justify-self: start; }} }}
-    @media (max-width: 620px) {{ body {{ padding: 10px 8px 38px; }} header, main, footer {{ border-radius: 12px; padding: 18px; }} .facts div {{ grid-template-columns: 96px 1fr; }} .catalog-toolbar {{ grid-template-columns: 1fr; }} .catalog-modes {{ grid-column: auto; }} }}
+    @media (max-width: 620px) {{ .facts div {{ grid-template-columns: 96px 1fr; }} .catalog-toolbar {{ grid-template-columns: 1fr; }} .catalog-modes {{ grid-column: auto; }} }}
   </style>
 </head>
 <body data-static-locale="true">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('全部模型', 'All models')}</div>
     {_static_locale_nav()}
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair('全部免费 AI 模型与 API 一览', 'All Free AI Models & APIs')}</h1>
     <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.')}</p>
     <div class="stats">
@@ -2332,56 +2530,58 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
 
 
 MODEL_CENTER_STYLE = '''<style id="model-center-style">
-  .model-center-page { margin: 0; min-height: 100vh; background: #eef4ff; }
+''' + EDITORIAL_TOKENS_CSS + '''
+  .model-center-page { margin: 0; min-height: 100vh; background: var(--canvas); }
   .model-center-page[data-model-center-locale="en"] [lang="zh-CN"], .model-center-page[data-model-center-locale="zh-CN"] [lang="en"] { display: none !important; }
-  .model-center-tabs { display: flex; justify-content: flex-start; gap: 8px; margin: 22px 0 26px; padding: 10px 0; border-bottom: 1px solid #dbe4f3; }
-  .model-center-tab { border: 1px solid #cbd8ef; border-radius: 999px; padding: 8px 18px; color: #31456d; background: #fff; cursor: pointer; font: 700 13px/1.2 Inter, ui-sans-serif, system-ui, sans-serif; }
-  .model-center-tab[aria-selected="true"] { border-color: #1744e8; color: #fff; background: #1744e8; }
-  .model-center-tab small { margin-left: 5px; opacity: .75; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .model-center-tabs { display: flex; justify-content: flex-start; gap: 8px; margin: 22px 0 26px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .model-center-tab { border: 1px solid var(--line); border-radius: 9999px; padding: 8px 18px; color: var(--ink-secondary); background: var(--surface); cursor: pointer; font: 600 13px/1.2 var(--font-sans); transition: all .18s; }
+  .model-center-tab:hover { border-color: var(--ink-tertiary); color: var(--ink); }
+  .model-center-tab[aria-selected="true"] { border-color: var(--ink-solid); color: var(--ink-solid-contrast); background: var(--ink-solid); }
+  .model-center-tab small { margin-left: 5px; opacity: .7; font: 500 11px/1.2 var(--font-mono); }
   .model-center-page[data-model-center-tab="all-models"] #categories, .model-center-page[data-model-center-tab="all-models"] #categories ~ * { display: none !important; }
   .model-center-page[data-model-center-tab="all-models"] .model-center-all-models-panel { display: block; }
   .model-center-page:not([data-model-center-tab="all-models"]) .model-center-all-models-panel { display: none; }
-  .model-center-all-models-panel { max-width: 1240px; margin: 0 auto; padding: 28px 18px 64px; color: #172033; font-family: Inter, ui-sans-serif, system-ui, sans-serif; line-height: 1.65; }
-  .model-center-all-models-panel .model-center-eyebrow { font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
-  .model-center-all-models-panel .model-directory { padding: clamp(20px, 4vw, 36px); border: 1px solid #dfe5ef; border-radius: 16px; background: #fff; }
-  .model-center-all-models-panel .model-directory h2 { margin: 0 0 6px; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.03em; }
-  .model-center-all-models-panel .model-directory h2 small { color: #68748a; font-size: 15px; font-weight: 400; }
-  .model-center-all-models-panel .section-desc { margin: 0 0 14px; color: #68748a; font-size: 14px; }
-  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid #dfe5ef; border-radius: 12px; background: #f5f7fb; }
-  .model-center-all-models-panel .catalog-toolbar label { color: #68748a; font-size: 11px; font-weight: 700; }
+  .model-center-all-models-panel { max-width: 1240px; margin: 0 auto; padding: 28px 18px 64px; color: var(--ink); font-family: var(--font-sans); line-height: 1.65; }
+  .model-center-all-models-panel .model-center-eyebrow { color: var(--accent); font: 500 11px/1.5 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .model-center-all-models-panel .model-directory { padding: clamp(20px, 4vw, 36px); border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .model-center-all-models-panel .model-directory h2 { margin: 0 0 6px; font-family: var(--font-serif); font-weight: 400; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.015em; }
+  .model-center-all-models-panel .model-directory h2 small { color: var(--ink-secondary); font-size: 15px; font-weight: 400; }
+  .model-center-all-models-panel .section-desc { margin: 0 0 14px; color: var(--ink-secondary); font-size: 14px; }
+  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
+  .model-center-all-models-panel .catalog-toolbar label { color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }
   .model-center-all-models-panel .catalog-search-label, .model-center-all-models-panel .catalog-provider-label, .model-center-all-models-panel .catalog-region-label { display: grid; gap: 5px; }
-  .model-center-all-models-panel .catalog-toolbar input, .model-center-all-models-panel .catalog-toolbar select { min-height: 38px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; color: #172033; background: #fff; font: inherit; }
+  .model-center-all-models-panel .catalog-toolbar input, .model-center-all-models-panel .catalog-toolbar select { min-height: 38px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; color: var(--ink); background: var(--surface); font: inherit; }
   .model-center-all-models-panel .catalog-modes { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
-  .model-center-all-models-panel .group-mode { border: 1px solid #dfe5ef; border-radius: 7px; padding: 7px 9px; color: #1744e8; background: transparent; cursor: pointer; font: inherit; font-size: 12px; white-space: nowrap; }
-  .model-center-all-models-panel .group-mode.is-active { color: #fff; background: #1744e8; border-color: #1744e8; }
-  .model-center-all-models-panel .provider-filter { border: 0; padding: 0; color: #1744e8; background: transparent; cursor: pointer; text-align: left; font: inherit; font-size: 13px; font-weight: 700; }
+  .model-center-all-models-panel .group-mode { border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; color: var(--accent); background: transparent; cursor: pointer; font: inherit; font-size: 12px; white-space: nowrap; }
+  .model-center-all-models-panel .group-mode.is-active { color: #FFF; background: var(--ink-solid); border-color: var(--ink-solid); }
+  .model-center-all-models-panel .provider-filter { border: 0; padding: 0; color: var(--accent); background: transparent; cursor: pointer; text-align: left; font: inherit; font-size: 13px; font-weight: 600; }
   .model-center-all-models-panel .provider-filter:hover { text-decoration: underline; }
-  .model-center-all-models-panel .provider-page-link { display: block; margin-top: 3px; color: #68748a; font-size: 11px; }
-  .model-center-all-models-panel .catalog-count { align-self: center; justify-self: end; color: #68748a; font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
-  .model-center-all-models-panel .catalog-hint { margin: 0 0 12px; color: #68748a; font-size: 12px; }
-  .model-center-all-models-panel .catalog-table-wrap { overflow-x: auto; border: 1px solid #dfe5ef; border-radius: 12px; }
-  .model-center-all-models-panel .catalog-table { width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 12.5px; }
-  .model-center-all-models-panel .catalog-table th, .model-center-all-models-panel .catalog-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid #dfe5ef; }
-  .model-center-all-models-panel .catalog-table thead th { position: sticky; top: 0; z-index: 1; color: #68748a; background: #f8fafc; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
-  .model-center-all-models-panel .catalog-table small { display: block; margin-top: 3px; color: #68748a; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .model-center-all-models-panel .provider-page-link { display: block; margin-top: 3px; color: var(--ink-secondary); font-size: 11px; }
+  .model-center-all-models-panel .catalog-count { align-self: center; justify-self: end; color: var(--ink-tertiary); font: 500 11px var(--font-mono); letter-spacing: .05em; white-space: nowrap; }
+  .model-center-all-models-panel .catalog-hint { margin: 0 0 12px; color: var(--ink-secondary); font-size: 12px; }
+  .model-center-all-models-panel .catalog-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+  .model-center-all-models-panel .catalog-table { width: 100%; min-width: 1120px; border-collapse: collapse; font-size: 13px; }
+  .model-center-all-models-panel .catalog-table th, .model-center-all-models-panel .catalog-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
+  .model-center-all-models-panel .catalog-table thead th { position: sticky; top: 0; z-index: 1; color: var(--ink-tertiary); background: var(--surface-soft); font: 500 11px/1.5 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+  .model-center-all-models-panel .catalog-table tbody tr:last-child td { border-bottom: 0; }
+  .model-center-all-models-panel .catalog-table small { display: block; margin-top: 3px; color: var(--ink-secondary); font: 400 11px/1.5 var(--font-mono); }
   .model-center-all-models-panel .catalog-table .model-name, .model-center-all-models-panel .catalog-table .model-id { display: block; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .model-center-all-models-panel .catalog-table .model-id { margin-top: 3px; }
-  .model-center-all-models-panel .score-ring { display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: conic-gradient(from -90deg, #3b82f6 0%, #7c3aed calc(var(--score) * .65%), #ec4899 calc(var(--score) * 1%), #e4eaf5 0); position: relative; color: #172033; }
-  .model-center-all-models-panel .score-ring::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #fff; }
-  .model-center-all-models-panel .score-ring strong { position: relative; z-index: 1; color: #1744e8; font-size: 12px; }
+  .model-center-all-models-panel .catalog-table .model-id { margin-top: 3px; color: var(--ink-tertiary); }
+  .model-center-all-models-panel .score-ring { display: inline-grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-soft); }
+  .model-center-all-models-panel .score-ring strong { color: var(--accent); font: 500 12px var(--font-mono); }
   .model-center-all-models-panel .model-badges { display: flex; flex-wrap: wrap; gap: 4px; min-width: 80px; }
-  .model-center-all-models-panel .model-badge { border-radius: 999px; padding: 2px 6px; color: #2457b7; background: #e9efff; font-size: 11px; white-space: nowrap; }
-  .model-center-all-models-panel .status { display: inline-block; border-radius: 999px; padding: 3px 7px; font-size: 11px; white-space: nowrap; }
-  .model-center-all-models-panel .status-online { color: #147a46; background: #dcfce7; }
-  .model-center-all-models-panel .status-offline { color: #9f1239; background: #ffe4e6; }
-  .model-center-all-models-panel .status-degraded, .model-center-all-models-panel .status-unknown { color: #8a5a00; background: #fef3c7; }
-  .model-center-all-models-panel .catalog-group-row th { padding: 13px 11px 7px; color: #172033; background: #eef4ff; font-size: 13px; }
-  .model-center-all-models-panel .catalog-empty { margin: 16px 0 0; padding: 14px; border-radius: 8px; color: #8a5a00; background: #fef3c7; }
+  .model-center-all-models-panel .model-badge { border-radius: 9999px; padding: 2px 8px; color: var(--accent); background: var(--accent-soft); font: 500 11px/1.6 var(--font-mono); white-space: nowrap; }
+  .model-center-all-models-panel .status { display: inline-block; border-radius: 9999px; padding: 3px 8px; font: 500 11px/1.5 var(--font-mono); white-space: nowrap; }
+  .model-center-all-models-panel .status-online { color: var(--pale-green-text); background: var(--pale-green-bg); }
+  .model-center-all-models-panel .status-offline { color: var(--pale-red-text); background: var(--pale-red-bg); }
+  .model-center-all-models-panel .status-degraded, .model-center-all-models-panel .status-unknown { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
+  .model-center-all-models-panel .catalog-group-row th { padding: 13px 11px 7px; color: var(--ink); background: var(--canvas-warm); font-family: var(--font-sans); font-size: 13px; letter-spacing: 0; text-transform: none; }
+  .model-center-all-models-panel .catalog-empty { margin: 16px 0 0; padding: 13px 16px; border-radius: 6px; color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
   .model-center-all-models-panel .source-cell { min-width: 100px; white-space: nowrap; }
-  .model-center-all-models-panel .freshness { color: #68748a; }
-  .model-center-all-models-panel .freshness-stale { color: #b42318; }
+  .model-center-all-models-panel .freshness { color: var(--ink-secondary); }
+  .model-center-all-models-panel .freshness-stale { color: var(--pale-red-text); }
   @media (max-width: 820px) { .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr 1fr; } .model-center-all-models-panel .catalog-modes { grid-column: 1 / -1; } .model-center-all-models-panel .catalog-count { justify-self: start; } }
-  @media (max-width: 620px) { .model-center-tabs { justify-content: stretch; } .model-center-tab { flex: 1; padding: 8px 10px; } .model-center-all-models-panel { padding: 14px 8px 38px; } .model-center-all-models-panel .model-directory { border-radius: 12px; padding: 18px; } .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr; } .model-center-all-models-panel .catalog-modes { grid-column: auto; } }
+  @media (max-width: 620px) { .model-center-tabs { justify-content: stretch; } .model-center-tab { flex: 1; padding: 8px 10px; } .model-center-all-models-panel { padding: 14px 8px 38px; } .model-center-all-models-panel .model-directory { border-radius: 8px; padding: 18px; } .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr; } .model-center-all-models-panel .catalog-modes { grid-column: auto; } }
 </style>'''
 
 
@@ -2704,50 +2904,56 @@ def render_daily_log_page(logs: list[dict], site_url: str) -> str:
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM daily discovery log", "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": dates[0] if dates else None}
     style = '''<style>
-:root { --ink:#14213d; --muted:#66738d; --line:#dfe6f2; --paper:#f4f7fc; --panel:#fff; --blue:#285ee8; --blue-soft:#eaf0ff; --green:#0f8b68; --green-soft:#e8f8f2; --red:#c2414c; --red-soft:#fff0f1; --amber:#a66b16; --amber-soft:#fff6df; }
+''' + EDITORIAL_TOKENS_CSS + '''
 * { box-sizing:border-box; }
-html { background:var(--paper); }
-body { margin:0; color:var(--ink); background:linear-gradient(135deg,#f7f9fd 0%,#eef3fb 100%); font-family:Inter,ui-sans-serif,system-ui,sans-serif; line-height:1.55; }
-a { color:var(--blue); }
+html { scroll-behavior:smooth; }
+body { margin:0; color:var(--ink); background:var(--canvas); font:400 15px/1.6 var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+a { color:var(--accent); }
+h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
 .daily-log-dashboard { max-width:1240px; margin:0 auto; padding:24px 18px 64px; }
-.log-hero { padding:clamp(24px,5vw,52px); border:1px solid #cbd9f2; border-radius:26px; background:linear-gradient(135deg,#fff 0%,#edf3ff 70%,#e8eeff 100%); box-shadow:0 18px 50px rgba(41,78,151,.08); }
+.log-hero { padding:clamp(24px,5vw,52px); border:1px solid var(--line); border-radius:8px; background:var(--surface); }
 .log-hero-top,.log-day-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap; }
-.log-kicker,.log-eyebrow { color:var(--blue); font:700 11px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.12em; text-transform:uppercase; }
-.log-hero h1 { max-width:820px; margin:14px 0 12px; font-size:clamp(36px,6vw,72px); line-height:.98; letter-spacing:-.055em; }
-.log-hero .lead { max-width:760px; margin:0; color:#52617e; font-size:16px; }
+.log-kicker,.log-eyebrow { color:var(--accent); font:500 11px/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
+.log-hero h1 { max-width:820px; margin:14px 0 12px; font-size:clamp(36px,6vw,64px); line-height:1.05; letter-spacing:-.02em; }
+.log-hero .lead { max-width:760px; margin:0; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
 .log-hero-meta { display:grid; grid-template-columns:repeat(3,minmax(100px,1fr)); gap:10px; min-width:min(100%,360px); }
-.log-hero-meta div { padding:12px; border:1px solid #d6e1f5; border-radius:14px; background:rgba(255,255,255,.72); }
-.log-hero-meta span,.log-snapshot-card span { display:block; color:var(--muted); font-size:12px; }
-.log-hero-meta strong { display:block; margin-top:4px; font-size:20px; }
+.log-hero-meta div { padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.log-hero-meta span,.log-snapshot-card span { display:block; color:var(--ink-tertiary); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }
+.log-hero-meta strong { display:block; margin-top:5px; font-family:var(--font-serif); font-weight:400; font-size:21px; letter-spacing:-.01em; }
 .log-hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
-.log-hero-actions a { padding:9px 13px; border:1px solid #bdd0f4; border-radius:999px; background:#fff; text-decoration:none; font-weight:700; }
-.log-date-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:18px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.72); color:var(--muted); font-size:12px; }
-.log-date-link { padding:6px 9px; border-radius:999px; color:var(--muted); text-decoration:none; }
-.log-date-link.is-active { color:#fff; background:var(--blue); }
+.log-hero-actions a { padding:9px 15px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); text-decoration:none; font-size:13px; font-weight:600; transition:all .15s; }
+.log-hero-actions a:first-child { background:var(--ink-solid); border-color:var(--ink-solid); color:var(--ink-solid-contrast); }
+.log-hero-actions a:hover { border-color:var(--ink-tertiary); }
+.log-hero-actions a:first-child:hover { background:var(--ink-solid-hover); border-color:var(--ink-solid-hover); color:var(--ink-solid-contrast); }
+.log-date-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:18px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font:400 12px var(--font-mono); }
+.log-date-link { padding:5px 10px; border-radius:9999px; color:var(--ink-secondary); text-decoration:none; font-size:11.5px; transition:all .15s; }
+.log-date-link:hover { color:var(--ink); background:var(--line-soft); }
+.log-date-link.is-active { color:var(--ink-solid-contrast); background:var(--ink-solid); }
 .log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }
-.log-panel,.log-snapshot-panel { padding:14px; border:1px solid var(--line); border-radius:16px; background:var(--panel); box-shadow:0 8px 24px rgba(41,78,151,.045); }
-.log-panel h2,.log-snapshot-panel h2 { margin:0 0 10px; font-size:18px; letter-spacing:-.025em; }
+.log-panel,.log-snapshot-panel { padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.log-panel h2,.log-snapshot-panel h2 { margin:0 0 12px; font-size:22px; letter-spacing:-.015em; }
 .log-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; align-items:start; }
-.log-stat-card { min-height:92px; padding:11px; border:1px solid var(--line); border-radius:12px; background:#fbfcff; }
-.log-stat-card strong { display:block; margin-top:5px; font-size:27px; line-height:1; }
-.log-stat-card p { margin:5px 0 0; color:var(--muted); font-size:10px; line-height:1.3; }
-.log-stat-card.blue { border-top:3px solid var(--blue); }.log-stat-card.green { border-top:3px solid var(--green); }.log-stat-card.red { border-top:3px solid var(--red); }.log-stat-card.amber { border-top:3px solid #dda12c; }
-.log-stat-label { color:var(--muted); font-size:12px; font-weight:700; }
+.log-stat-card { min-height:92px; padding:12px 13px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.log-stat-card strong { display:block; margin-top:5px; font-family:var(--font-serif); font-weight:400; font-size:30px; line-height:1; letter-spacing:-.02em; }
+.log-stat-card p { margin:5px 0 0; color:var(--ink-secondary); font-size:10.5px; line-height:1.4; }
+.log-stat-card.blue { border-top:2px solid var(--accent); }.log-stat-card.green { border-top:2px solid var(--pale-green-text); }.log-stat-card.red { border-top:2px solid var(--pale-red-text); }.log-stat-card.amber { border-top:2px solid var(--pale-yellow-text); }
+.log-stat-label { color:var(--ink-secondary); font:500 11px/1.5 var(--font-mono); letter-spacing:.05em; }
 .log-snapshot-grid,.log-health-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
-.log-snapshot-card { padding:10px; border:1px solid var(--line); border-radius:12px; background:#fbfcff; }.log-snapshot-card strong { display:block; margin-top:3px; font-size:24px; }.log-snapshot-card small { color:var(--muted); font-size:10px; line-height:1.3; }
-.log-health-grid { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:8px; }.log-health-card { padding:10px; border-radius:12px; background:var(--green-soft); }.log-health-card.issue { background:var(--amber-soft); }.log-health-card div { display:flex; justify-content:space-between; gap:8px; }.log-health-card span { font-size:11px; font-weight:700; }.log-health-card strong { color:var(--green); font-size:11px; }.log-health-card.issue strong { color:var(--amber); }.log-health-card p { margin:3px 0 0; color:var(--muted); font-size:10px; overflow-wrap:anywhere; }
+.log-snapshot-card { padding:11px 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }.log-snapshot-card strong { display:block; margin-top:3px; font-family:var(--font-serif); font-weight:400; font-size:25px; letter-spacing:-.02em; }.log-snapshot-card small { color:var(--ink-secondary); font-size:10.5px; line-height:1.4; }
+.log-health-grid { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:8px; }.log-health-card { padding:11px 12px; border-radius:8px; background:var(--pale-green-bg); }.log-health-card.issue { background:var(--pale-yellow-bg); }.log-health-card div { display:flex; justify-content:space-between; gap:8px; }.log-health-card span { font-size:11px; font-weight:600; }.log-health-card strong { color:var(--pale-green-text); font:500 11px var(--font-mono); }.log-health-card.issue strong { color:var(--pale-yellow-text); }.log-health-card p { margin:3px 0 0; color:var(--ink-secondary); font-size:10.5px; overflow-wrap:anywhere; }
 .log-days { position:relative; margin-top:18px; padding:22px 0 30px; background:transparent; }
-.log-days::before { content:""; position:absolute; left:25px; top:96px; bottom:40px; width:2px; background:linear-gradient(var(--blue),#dce5f5); }
-.log-section-heading { margin:0 0 22px 70px; }.log-section-heading p { margin:8px 0 0; color:var(--muted); }
-.log-day { position:relative; scroll-margin-top:18px; margin:0 0 18px 70px; padding:18px 20px 20px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:0 8px 24px rgba(41,78,151,.045); }.log-day:last-child { margin-bottom:0; }.log-day::before { content:""; position:absolute; left:-54px; top:22px; width:16px; height:16px; border:4px solid var(--paper); border-radius:50%; background:var(--blue); box-shadow:0 0 0 1px #b9c9e6; z-index:1; }.log-day-head h2 { margin:4px 0 0; font-size:30px; letter-spacing:-.035em; }.log-day-summary { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }.log-day-summary span { padding:5px 9px; border-radius:999px; background:var(--blue-soft); color:#3156a5; font-size:11px; font-weight:700; }
-.log-empty { margin:18px 0; padding:16px 18px; border:1px dashed #b9c9e6; border-radius:15px; background:#f8faff; }.log-empty.baseline-empty { border-color:#a9bdf4; background:#eef3ff; }.log-empty strong { display:block; }.log-empty p { margin:5px 0 0; color:var(--muted); font-size:13px; }
-.log-day-snapshot { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0; padding:11px 13px; border-radius:12px; background:#f7f9fd; color:var(--muted); font-size:12px; }.log-day-snapshot strong { color:var(--ink); }
-.log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }.log-event-panel { min-width:0; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fff; }.log-event-panel h3 { margin:0 0 10px; font-size:16px; }.log-health-panel { margin-top:12px; }.log-event-panel .muted { margin:8px 0; color:var(--muted); font-size:13px; }
-.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid #b8e5d7; border-left:4px solid var(--green); border-radius:14px; background:#fbfffd; overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--green); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--muted); font-size:11px; }.log-badge { padding:4px 8px; border-radius:999px; color:var(--green); background:var(--green-soft); font-size:11px; font-weight:800; }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 9px; border:1px solid var(--line); border-radius:9px; background:#fff; }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--muted); font-size:12px; }
-.log-registration { margin:12px 0; padding:12px 14px; border:1px solid #cfe0f8; border-radius:12px; background:#f7faff; }.log-registration h4 { margin:0; font-size:14px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 8px; border:1px solid #bcd0f2; border-radius:999px; background:#fff; font-size:11px; text-decoration:none; }
-.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:10px; }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12px; }.table-wrap th,.table-wrap td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }.table-wrap th { color:var(--muted); font-size:10px; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 7px; border-radius:999px; background:var(--green-soft); color:var(--green); font-size:11px; }.health-pill.issue { background:var(--amber-soft); color:var(--amber); }
+.log-days::before { content:""; position:absolute; left:25px; top:96px; bottom:40px; width:1px; background:var(--line); }
+.log-section-heading { margin:0 0 22px 70px; }.log-section-heading p { margin:8px 0 0; color:var(--ink-secondary); }
+.log-day { position:relative; scroll-margin-top:18px; margin:0 0 18px 70px; padding:18px 20px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-day:last-child { margin-bottom:0; }.log-day::before { content:""; position:absolute; left:-54px; top:22px; width:11px; height:11px; border:3px solid var(--canvas); border-radius:50%; background:var(--accent); z-index:1; }.log-day-head h2 { margin:4px 0 0; font-size:30px; letter-spacing:-.02em; }.log-day-summary { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }.log-day-summary span { padding:4px 10px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); font:500 11px/1.6 var(--font-mono); }
+.log-empty { margin:18px 0; padding:16px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--surface-soft); }.log-empty.baseline-empty { border-color:var(--ink-tertiary); background:var(--canvas-warm); }.log-empty strong { display:block; }.log-empty p { margin:5px 0 0; color:var(--ink-secondary); font-size:13px; }
+.log-day-snapshot { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0; padding:11px 13px; border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font:400 12px var(--font-mono); }.log-day-snapshot strong { color:var(--ink); }
+.log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }.log-event-panel { min-width:0; padding:16px 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-event-panel h3 { margin:0 0 10px; font-size:18px; }.log-health-panel { margin-top:12px; }.log-event-panel .muted { margin:8px 0; color:var(--ink-secondary); font-size:13px; }
+.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid var(--line); border-left:3px solid var(--pale-green-text); border-radius:8px; background:var(--surface); overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--pale-green-text); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--ink-secondary); font:400 11px/1.6 var(--font-mono); }.log-badge { padding:3px 9px; border-radius:9999px; color:var(--pale-green-text); background:var(--pale-green-bg); font:600 10.5px/1.6 var(--font-mono); }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--surface-soft); }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line-soft); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--ink-secondary); font-size:12px; }
+.log-registration { margin:12px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--canvas-warm); }.log-registration h4 { margin:0; font-size:15px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 10px; border:1px solid var(--line); border-radius:9999px; background:var(--surface); color:var(--accent); font-size:11px; text-decoration:none; }.log-registration-link:hover { border-color:var(--accent); }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12.5px; }.table-wrap th,.table-wrap td { padding:9px 11px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top; }.table-wrap th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 9px; border-radius:9999px; background:var(--pale-green-bg); color:var(--pale-green-text); font:500 11px/1.6 var(--font-mono); }.health-pill.issue { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
+.log-footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.7; }
 @media (max-width:900px) { .log-overview-grid { grid-template-columns:1fr; } }
-@media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; border-radius:20px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; border-radius:15px; }.log-day::before { left:-34px; top:20px; width:14px; height:14px; }.log-day-summary { justify-content:flex-start; } }
+@media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; }.log-day::before { left:-34px; top:20px; width:10px; height:10px; }.log-day-summary { justify-content:flex-start; } }
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     page = f'''<!doctype html>
@@ -3311,6 +3517,12 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     daily_logs = _load_daily_logs(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes)
     files = {relative: _append_legal_links(content) for relative, content in files.items()}
+    sync_tag = '<script src="/js/freellm-sync.js"></script>'
+    files = {
+        relative: (content if ("freellm-sync.js" in content or "</body>" not in content)
+                   else content.replace("</body>", sync_tag + "</body>", 1))
+        for relative, content in files.items()
+    }
     output_root = Path(output_root)
     if check:
         stale = []

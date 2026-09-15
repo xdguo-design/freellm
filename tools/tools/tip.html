@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小费计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('小费计算器', '计算小费与总账单', 'tip');
+
+  var bill = T.el('input', { type: 'number', value: '100', placeholder: '账单金额', style: 'flex:1' });
+  var tipPercent = T.el('input', { type: 'range', min: '0', max: '50', value: '15' });
+  var tipLabel = T.el('span', { text: '15%' });
+  var people = T.el('input', { type: 'number', value: '1', min: '1', max: '50', style: 'width:80px' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px;font-size:1.1em' });
+
+  var quickTips = T.el('div', { class: 'row', style: 'gap:8px' });
+  [10, 15, 18, 20, 25].forEach(function (p) {
+    var btn = T.button(p + '%', function () { tipPercent.value = p; tipLabel.textContent = p + '%'; calculate(); });
+    quickTips.appendChild(btn);
+  });
+
+  function calculate() {
+    var b = parseFloat(bill.value) || 0;
+    var t = parseInt(tipPercent.value) || 0;
+    var p = parseInt(people.value) || 1;
+
+    var tipAmount = b * t / 100;
+    var total = b + tipAmount;
+    var perPerson = total / p;
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px">小费金额</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">¥' + tipAmount.toFixed(2) + '</td></tr>' +
+      '<tr><td style="padding:8px">总计</td><td style="padding:8px;text-align:right;font-weight:bold">¥' + total.toFixed(2) + '</td></tr>' +
+      (p > 1 ? '<tr><td style="padding:8px;border-top:2px solid var(--line)">每人</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;font-weight:bold;color:var(--green)">¥' + perPerson.toFixed(2) + '</td></tr>' : '') +
+      '</table>';
+  }
+
+  bill.addEventListener('input', function () { setTimeout(calculate, 100); });
+  tipPercent.addEventListener('input', function () { tipLabel.textContent = tipPercent.value + '%'; calculate(); });
+  people.addEventListener('input', function () { setTimeout(calculate, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '账单' }), bill, T.el('span', { text: '人数' }), people]));
+  app.appendChild(T.el('div', { class: 'field', text: '小费比例' }));
+  app.appendChild(T.el('div', { class: 'row' }, [tipPercent, tipLabel]));
+  app.appendChild(quickTips);
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

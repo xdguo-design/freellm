@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>体积单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('体积单位换算', 'L/mL/m³ 等', 'volume-converter');
+
+  var units = [
+    { id: 'ml', name: '毫升 (mL)' },
+    { id: 'l', name: '升 (L)' },
+    { id: 'm3', name: '立方米 (m³)' },
+    { id: 'cm3', name: '立方厘米 (cm³)' },
+    { id: 'gal', name: '加仑 (gal)' },
+    { id: 'qt', name: '夸脱 (qt)' },
+    { id: 'pt', name: '品脱 (pt)' },
+    { id: 'cup', name: '杯 (cup)' },
+    { id: 'floz', name: '液盎司 (fl oz)' }
+  ];
+
+  var factors = { ml: 0.001, l: 1, m3: 1000, cm3: 0.001, gal: 3.78541, qt: 0.946353, pt: 0.473176, cup: 0.236588, floz: 0.0295735 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var liters = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (liters / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:100px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.l.value = '1';
+  run('l');
+})();
+</script>
+</body>
+</html>

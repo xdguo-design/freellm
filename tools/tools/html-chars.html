@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML 特殊字符 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('HTML 特殊字符', '常用 HTML 字符实体速查', 'html-chars');
+
+  var CHARS = [
+    ['&amp;', '&', '和号'],
+    ['&lt;', '<', '小于号'],
+    ['&gt;', '>', '大于号'],
+    ['&quot;', '"', '双引号'],
+    ['&apos;', "'", '单引号'],
+    ['&nbsp;', ' ', '空格'],
+    ['&copy;', '©', '版权'],
+    ['&reg;', '®', '注册商标'],
+    ['&trade;', '™', '商标'],
+    ['&euro;', '€', '欧元'],
+    ['&pound;', '£', '英镑'],
+    ['&yen;', '¥', '日元/人民币'],
+    ['&cent;', '¢', '分'],
+    ['&deg;', '°', '度'],
+    ['&plusmn;', '±', '正负号'],
+    ['&times;', '×', '乘号'],
+    ['&divide;', '÷', '除号'],
+    ['&micro;', 'µ', '微'],
+    ['&para;', '¶', '段落'],
+    ['&sect;', '§', '节'],
+    ['&alpha;', 'α', 'Alpha'],
+    ['&beta;', 'β', 'Beta'],
+    ['&gamma;', 'γ', 'Gamma'],
+    ['&delta;', 'δ', 'Delta'],
+    ['&epsilon;', 'ε', 'Epsilon'],
+    ['&lambda;', 'λ', 'Lambda'],
+    ['&pi;', 'π', 'Pi'],
+    ['&sigma;', 'σ', 'Sigma'],
+    ['&omega;', 'ω', 'Omega'],
+    ['&infin;', '∞', '无穷'],
+    ['&ne;', '≠', '不等于'],
+    ['&le;', '≤', '小于等于'],
+    ['&ge;', '≥', '大于等于'],
+    ['&larr;', '←', '左箭头'],
+    ['&uarr;', '↑', '上箭头'],
+    ['&rarr;', '→', '右箭头'],
+    ['&darr;', '↓', '下箭头'],
+    ['&hearts;', '♥', '红心'],
+    ['&diams;', '♦', '方块'],
+    ['&clubs;', '♣', '梅花'],
+    ['&spades;', '♠', '黑桃']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render() {
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">实体</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">字符</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">操作</th></tr></thead>';
+    html += '<tbody>';
+    CHARS.forEach(function (c) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code>' + c[0] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-size:1.2em">' + c[1] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + c[2] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><button onclick="navigator.clipboard.writeText(\'' + c[0] + '\')" style="padding:4px 8px;cursor:pointer">复制</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  render();
+  app.appendChild(table);
+})();
+</script>
+</body>
+</html>

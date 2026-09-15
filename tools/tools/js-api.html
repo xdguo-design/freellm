@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JS API 速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('JS API 速查', '常用 JavaScript API 参考', 'js-api');
+
+  var search = T.el('input', { type: 'search', placeholder: '搜索 API...', style: 'width:100%' });
+
+  var APIS = [
+    ['String', 'charAt() 返回指定位置的字符'],
+    ['String', 'charCodeAt() 返回指定位置的字符编码'],
+    ['String', 'concat() 连接字符串'],
+    ['String', 'includes() 检查是否包含'],
+    ['String', 'indexOf() 返回第一次出现的位置'],
+    ['String', 'lastIndexOf() 返回最后一次出现的位置'],
+    ['String', 'slice() 截取字符串'],
+    ['String', 'split() 分割字符串'],
+    ['String', 'toLowerCase() 转小写'],
+    ['String', 'toUpperCase() 转大写'],
+    ['String', 'trim() 去除首尾空白'],
+    ['Array', 'push() 末尾添加元素'],
+    ['Array', 'pop() 末尾移除元素'],
+    ['Array', 'shift() 开头移除元素'],
+    ['Array', 'unshift() 开头添加元素'],
+    ['Array', 'splice() 添加/删除元素'],
+    ['Array', 'slice() 截取数组'],
+    ['Array', 'concat() 连接数组'],
+    ['Array', 'join() 数组转字符串'],
+    ['Array', 'reverse() 反转数组'],
+    ['Array', 'sort() 排序'],
+    ['Array', 'map() 映射转换'],
+    ['Array', 'filter() 过滤'],
+    ['Array', 'reduce() 归约'],
+    ['Array', 'forEach() 遍历'],
+    ['Array', 'find() 查找元素'],
+    ['Array', 'includes() 检查是否包含'],
+    ['Object', 'keys() 获取所有键'],
+    ['Object', 'values() 获取所有值'],
+    ['Object', 'entries() 获取键值对'],
+    ['Object', 'assign() 合并对象'],
+    ['Object', 'freeze() 冻结对象'],
+    ['JSON', 'parse() 解析 JSON'],
+    ['JSON', 'stringify() 序列化 JSON'],
+    ['Math', 'abs() 绝对值'],
+    ['Math', 'ceil() 向上取整'],
+    ['Math', 'floor() 向下取整'],
+    ['Math', 'round() 四舍五入'],
+    ['Math', 'max() 最大值'],
+    ['Math', 'min() 最小值'],
+    ['Math', 'random() 随机数'],
+    ['Math', 'sqrt() 平方根'],
+    ['Date', 'now() 当前时间戳'],
+    ['Date', 'getDate() 日期'],
+    ['Date', 'getMonth() 月份'],
+    ['Date', 'getFullYear() 年份'],
+    ['Date', 'getHours() 小时'],
+    ['Date', 'getMinutes() 分钟'],
+    ['Date', 'getSeconds() 秒'],
+    ['Promise', 'then() 成功回调'],
+    ['Promise', 'catch() 失败回调'],
+    ['Promise', 'all() 并行等待'],
+    ['Promise', 'race() 竞速'],
+    ['fetch', '发送网络请求'],
+    ['localStorage', 'getItem() / setItem() / removeItem()'],
+    ['sessionStorage', '同 localStorage，会话级'],
+    ['navigator', 'geolocation.getCurrentPosition() 获取位置']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var filtered = APIS.filter(function (a) {
+      if (!q) return true;
+      return a[0].toLowerCase().includes(q) || a[1].toLowerCase().includes(q);
+    });
+
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">类别</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">API</th></tr></thead>';
+    html += '<tbody>';
+    filtered.forEach(function (a) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + a[0] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + a[1] + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+
+  app.appendChild(search);
+  app.appendChild(table);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>退休年龄计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('退休年龄计算器', '按政策计算退休年龄与日期', 'retirement');
+
+  var gender = T.select([{ value: 'male', label: '男' }, { value: 'female', label: '女' }]);
+  var birthYear = T.el('input', { type: 'number', value: '1990', min: '1950', max: '2010', style: 'width:100px' });
+  var birthMonth = T.el('input', { type: 'number', value: '1', min: '1', max: '12', style: 'width:80px' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function calculate() {
+    var by = parseInt(birthYear.value) || 1990;
+    var bm = parseInt(birthMonth.value) || 1;
+    var isMale = gender.value === 'male';
+
+    // China 2025 retirement reform (gradual delay)
+    var retireAge, retireYear, retireMonth;
+    if (isMale) {
+      retireAge = 63;
+      retireYear = by + 63;
+      retireMonth = bm;
+    } else {
+      retireAge = 58;
+      retireYear = by + 58;
+      retireMonth = bm;
+    }
+
+    if (retireMonth > 12) { retireYear++; retireMonth -= 12; }
+
+    var now = new Date();
+    var yearsLeft = retireYear - now.getFullYear();
+    var monthsLeft = retireMonth - now.getMonth() - 1;
+    if (monthsLeft < 0) { yearsLeft--; monthsLeft += 12; }
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">出生年月</td><td style="padding:8px;text-align:right">' + by + '年' + bm + '月</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">性别</td><td style="padding:8px;text-align:right">' + (isMale ? '男' : '女') + '</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">退休年龄</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;font-weight:bold;color:var(--accent)">' + retireAge + ' 岁</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">退休日期</td><td style="padding:8px;text-align:right;font-weight:bold">' + retireYear + '年' + retireMonth + '月</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">距离退休</td><td style="padding:8px;text-align:right;color:var(--green)">' + yearsLeft + '年' + monthsLeft + '个月</td></tr>' +
+      '</table>';
+  }
+
+  [gender, birthYear, birthMonth].forEach(function (el) {
+    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function () { setTimeout(calculate, 100); });
+  });
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '性别' }), gender, T.el('span', { text: '出生年' }), birthYear, T.el('span', { text: '月' }), birthMonth]));
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

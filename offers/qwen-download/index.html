@@ -51,44 +51,162 @@
     })();
   </script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Qwen3-4B · open weights", "description": "Alibaba Qwen3-4B / 通义千问：Open weights; local inference path。请以官方页面为准，核对地区、有效期和使用条件。", "url": "https://freellm.top/offers/qwen-download/", "dateModified": "2026-09-06"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "FreeLLM 免费 AI 资源索引", "item": "https://freellm.top/"}, {"@type": "ListItem", "position": 2, "name": "Qwen3-4B · open weights", "item": "https://freellm.top/offers/qwen-download/"}]}]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet"><script id="skills-theme-script">
+    (() => {
+      let theme = '';
+      try {
+        theme = localStorage.getItem('freellm-theme')
+          || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : '');
+      } catch (error) { /* storage can be unavailable */ }
+      if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.theme-toggle').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = document.documentElement.dataset.theme === 'dark' ? '' : 'dark';
+            if (next === 'dark') document.documentElement.dataset.theme = 'dark';
+            else delete document.documentElement.dataset.theme;
+            try { localStorage.setItem('freellm-theme', next); } catch (error) { /* ignore */ }
+          });
+        });
+      });
+    })();
+  </script>
   <style>
-    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #172033; background: #f5f7fb; }
-    body { max-width: 980px; margin: 0 auto; padding: 28px 20px 64px; line-height: 1.65; }
-    a { color: #1744e8; }
-    header, main, footer { background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 24px; margin-bottom: 18px; }
-    header { background: #172033; color: white; }
-    header a { color: white; }
-    nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .tag { display: inline-block; padding: 3px 9px; border-radius: 999px; background: #e9efff; text-decoration: none; font-size: .9rem; }
-    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-    .fact { padding: 13px; background: #f5f7fb; border-radius: 9px; }
-    .fact strong, .fact span { display: block; }
-    .fact strong { font-size: .78rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
-    pre { overflow-x: auto; padding: 14px; background: #172033; color: #f5f7fb; border-radius: 8px; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 9px 10px; border-bottom: 1px solid #dfe5ef; text-align: left; vertical-align: top; }
-    th { font-size: .82rem; color: #68748a; text-transform: uppercase; letter-spacing: .04em; }
-    code { background: #eef2f9; padding: 2px 6px; border-radius: 5px; }
-    .muted { color: #68748a; }
-    .operation-path { margin-top: 22px; padding: 18px; border: 1px solid #dfe5ef; border-radius: 10px; background: #fbfcff; }
+    :root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --ink-solid-contrast:#FFFFFF; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-red-bg:#FDEBEC; --pale-red-text:#9F2F2D; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; --muted:#787774; --soft:#F7F6F3; --blue:#1744E8; }
+:root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --ink-solid-contrast:#111111; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-red-bg:#2A1416; --pale-red-text:#E98A86; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --pale-stone-bg:#232220; --pale-stone-text:#B4B1AB; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); --muted:#A7A5A0; --soft:#1E2127; --blue:#7BC0E5; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0 auto; max-width:1180px; padding:24px 20px 64px; background:var(--canvas); color:var(--ink); font:400 15px/1.65 var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+::selection { background:var(--accent-soft); }
+a { color:var(--accent); }
+button, input, select { font:inherit; }
+h1, h2, h3, h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
+header, main, footer { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:clamp(22px,4vw,36px); margin-bottom:16px; position:relative; }
+header a { color:var(--accent); }
+h1 { margin:18px 0 10px; line-height:1.08; letter-spacing:-.02em; }
+h2 { margin:0 0 8px; line-height:1.2; letter-spacing:-.015em; }
+h3 { margin:22px 0 6px; }
+p { max-width:880px; }
+.lead { max-width:840px; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
+.muted { color:var(--ink-secondary); }
+.crumb, .eyebrow { font:500 11px/1.5 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; }
+.crumb { color:var(--ink-secondary); }
+.crumb a { color:var(--ink-secondary); text-decoration:none; }
+.crumb a:hover { color:var(--ink); }
+header > p:first-child { margin:0; color:var(--ink-secondary); font:500 12px/1.7 var(--font-mono); }
+header > p:first-child a { color:var(--ink-secondary); }
+.eyebrow { color:var(--accent); }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th, td { padding:11px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 11px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+tr:last-child td { border-bottom:0; }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; margin:14px 0 18px; background:var(--surface); }
+.table-wrap table { min-width:640px; }
+td small { display:block; margin-top:4px; color:var(--ink-secondary); }
+code { padding:2px 6px; border-radius:5px; background:var(--surface-soft); color:var(--ink); font:400 .88em var(--font-mono); overflow-wrap:anywhere; }
+pre { overflow-x:auto; margin:12px 0; padding:16px 18px; border-radius:8px; background:var(--code-bg); color:var(--code-text); font:400 13px/1.65 var(--font-mono); }
+pre code { padding:0; background:none; color:inherit; }
+.link-list, .steps { padding-left:1.35em; }
+.steps li { margin:8px 0; }
+.callout { margin:20px 0 0; padding:14px 18px; border-left:3px solid var(--ink); border-radius:0 6px 6px 0; background:var(--canvas-warm); color:var(--ink); font-size:14px; }
+.callout.green { border-left-color:var(--pale-green-text); background:var(--pale-green-bg); color:var(--pale-green-text); }
+.notice { padding:14px 18px; border-left:3px solid var(--pale-green-text); border-radius:0 6px 6px 0; background:var(--pale-green-bg); color:var(--pale-green-text); }
+.button, .btn { display:inline-block; width:max-content; padding:9px 16px; border:1px solid var(--ink-solid); border-radius:6px; background:var(--ink-solid); color:var(--ink-solid-contrast); text-decoration:none; font-size:13px; font-weight:600; transition:background .15s, border-color .15s; }
+.button:hover, .btn:hover { background:var(--ink-solid-hover); border-color:var(--ink-solid-hover); color:var(--ink-solid-contrast); }
+.ghost { font-size:13px; color:var(--ink-secondary); }
+.stats { display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0 0; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:13px; }
+.stats strong { font-family:var(--font-serif); font-size:19px; font-weight:400; color:var(--ink); }
+.tag { display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); text-decoration:none; font:500 11px/1.7 var(--font-mono); letter-spacing:.04em; }
+.status { display:inline-block; border-radius:9999px; padding:3px 8px; font:500 11px/1.5 var(--font-mono); white-space:nowrap; }
+.status-online { color:var(--pale-green-text); background:var(--pale-green-bg); }
+.status-offline { color:var(--pale-red-text); background:var(--pale-red-bg); }
+.status-degraded, .status-unknown { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+.facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+.fact { padding:13px 14px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.fact strong, .fact span { display:block; }
+.fact strong { color:var(--ink-tertiary); font:500 10.5px/1.6 var(--font-mono); text-transform:uppercase; letter-spacing:.08em; }
+.provider-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; }
+.provider-card { display:flex; flex-direction:column; min-height:200px; padding:20px; border:1px solid var(--line); border-radius:8px; background:var(--surface); transition:box-shadow .2s; }
+.provider-card:hover { box-shadow:var(--card-shadow); }
+.provider-card h2 { margin:8px 0 4px; font-size:22px; }
+.provider-card h2 a { color:var(--ink); text-decoration:none; }
+.provider-card h2 a:hover { color:var(--accent); }
+.provider-card p { margin:5px 0; color:var(--ink-secondary); font-size:13.5px; }
+.provider-card .eyebrow { color:var(--ink-tertiary); }
+.catalog-table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; }
+.catalog-table { width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }
+.catalog-table th, .catalog-table td { padding:10px 11px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+.catalog-table thead th { position:sticky; top:0; z-index:1; color:var(--ink-tertiary); background:var(--surface-soft); font:500 11px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+.catalog-table tbody tr:last-child td { border-bottom:0; }
+.catalog-table small { display:block; margin-top:3px; color:var(--ink-secondary); font:400 11px/1.5 var(--font-mono); }
+.catalog-table .model-name, .catalog-table .model-id { display:block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.catalog-table .model-id { margin-top:3px; color:var(--ink-tertiary); }
+.score { color:var(--accent); font-family:var(--font-mono); }
+.score-ring { display:inline-grid; width:34px; height:34px; place-items:center; border:1px solid var(--line); border-radius:50%; background:var(--surface-soft); }
+.score-ring strong { color:var(--accent); font:500 12px var(--font-mono); }
+.model-badges { display:flex; flex-wrap:wrap; gap:4px; min-width:80px; }
+.model-badge { border-radius:9999px; padding:2px 8px; color:var(--accent); background:var(--accent-soft); font:500 11px/1.6 var(--font-mono); white-space:nowrap; }
+.catalog-group-row th { padding:13px 11px 7px; color:var(--ink); background:var(--canvas-warm); font-size:13px; letter-spacing:0; text-transform:none; font-family:var(--font-sans); }
+.catalog-empty { margin:16px 0 0; padding:13px 16px; border-radius:6px; color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+.source-cell { min-width:100px; white-space:nowrap; }
+.freshness { color:var(--ink-secondary); }
+.freshness-stale { color:var(--pale-red-text); }
+.access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
+.access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.access-route h3 { margin:0 0 8px; font-size:18px; }
+.access-route code { overflow-wrap:anywhere; }
+.theme-toggle { position:absolute; top:16px; right:16px; z-index:5; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); cursor:pointer; transition:all .2s; font-size:14px; line-height:1; padding:0; }
+.theme-toggle:hover { background:var(--line-soft); border-color:var(--ink-tertiary); }
+.theme-toggle .icon-sun { display:none; }
+.theme-toggle .icon-moon { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display:none; }
+@media (max-width:640px) { body { padding:14px 10px 40px; } header, main, footer { padding:18px; border-radius:8px; } }
+  </style>
+  <style>
+    body { max-width: 980px; }
+    h1 { font-size: clamp(30px, 5vw, 44px); }
+    header { padding-bottom: 26px; }
+    header nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    main section + section { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
+    main h2 { font-size: clamp(22px, 3.4vw, 30px); }
+    main h3 { font-size: 18px; }
+    .operation-path { margin-top: 24px; padding: 20px 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
     .operation-path h3 { margin-top: 0; }
     .operation-path h4 { margin: 18px 0 6px; }
-    .operation-type { display: inline-block; margin: 0; padding: 2px 8px; border-radius: 999px; color: #1744e8; background: #e9efff; font-size: .78rem; }
+    .operation-type { display: inline-block; margin: 0; padding: 3px 10px; border-radius: 9999px; color: var(--accent); background: var(--accent-soft); font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; }
     .operation-steps { padding-left: 1.4em; }
     .operation-steps li { margin: 12px 0; }
     .operation-steps p { margin: 4px 0; }
     .operation-command { margin: 10px 0; }
-    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #68748a; font-size: .82rem; }
-    .copy-command { border: 1px solid #b9c7e8; border-radius: 6px; padding: 4px 9px; color: #1744e8; background: white; cursor: pointer; }
+    .operation-command-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); letter-spacing: .05em; }
+    .copy-command { border: 1px solid var(--line); border-radius: 6px; padding: 5px 11px; color: var(--accent); background: var(--surface); cursor: pointer; font-size: 12px; transition: all .15s; }
+    .copy-command:hover { border-color: var(--accent); }
     .operation-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 14px 0; }
-    .operation-facts div { padding: 10px; border-radius: 8px; background: #f0f4fb; }
-    .operation-facts dt { color: #68748a; font-size: .78rem; }
-    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; }
-    .operation-validation { margin-top: 18px; padding: 12px 14px; border-left: 4px solid #1a9a5a; background: #e6f7ee; }
-    .operation-limits, .operation-issues { margin-top: 14px; padding: 12px 14px; border-radius: 8px; background: #f0f4fb; }
-    .operation-limits p, .operation-issues ul { margin: 4px 0 0; }
-    @media (max-width: 600px) { body { padding: 14px 10px 40px; } header, main, footer { padding: 18px; } }
+    .operation-facts div { padding: 11px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .operation-facts dt { color: var(--ink-tertiary); font: 500 10.5px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }
+    .operation-facts dd { margin: 3px 0 0; overflow-wrap: anywhere; font-size: 13.5px; }
+    .operation-validation { margin-top: 18px; padding: 12px 16px; border-left: 3px solid var(--pale-green-text); border-radius: 0 6px 6px 0; background: var(--pale-green-bg); color: var(--pale-green-text); }
+.operation-limits, .operation-issues { margin-top: 14px; padding: 12px 16px; border-radius: 8px; background: var(--surface-soft); }
+        .operation-limits p, .operation-issues ul { margin: 4px 0 0; }
+    .quick-start { margin: 26px 0 0; }
+    .qs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .qs-step { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .qs-step-wide { grid-column: 1 / -1; }
+    .qs-num { display: inline-block; width: 26px; height: 26px; line-height: 26px; text-align: center; border-radius: 50%; color: var(--ink-solid-contrast); background: var(--ink-solid); font: 500 12px/1 var(--font-mono); flex-shrink: 0; }
+    .qs-step h3 { margin: 0; font-size: 18px; }
+    .qs-desc { margin: 0; color: var(--ink-secondary); font-size: 13.5px; }
+    .qs-link { display: inline-block; color: var(--accent); text-decoration: none; font-weight: 500; word-break: break-all; }
+    .qs-link:hover { text-decoration: underline; }
+    .qs-code { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+    .qs-step pre { margin: 0; padding: 12px 14px; border-radius: 6px; background: var(--code-bg); color: var(--code-text); font: 400 12px/1.55 var(--font-mono); overflow-x: auto; max-width: 100%; }
+    .header-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .header-cta .button { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; }
+    .header-cta .button small { font-weight: 400; opacity: .75; font-size: 11px; }
+    .header-cta .button--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .header-cta .button--ghost:hover { background: var(--surface-soft); border-color: var(--ink-tertiary); color: var(--ink); }
+    @media (max-width: 680px) { .qs-grid { grid-template-columns: 1fr; } }
+        footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
 </head>
 <body data-offer-id="qwen-download" data-static-locale="true">
@@ -96,9 +214,11 @@
   <header>
     <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
     <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">Qwen3-4B · open weights</span><span lang="en">Qwen3-4B · open weights</span></h1>
     <p><span lang="zh-CN">Alibaba · Hugging Face · 通义千问</span><span lang="en">Alibaba · Hugging Face · Qwen</span></p>
     <nav aria-label="Categories"><a class="tag" href="/category/open-weights/"><span lang="zh-CN">开源权重模型</span><span lang="en">Open-weight AI models</span></a></nav>
+    <nav class="header-cta" aria-label="Official links"><a class="button" href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">立即开始</span><span lang="en">Get started</span> ↗</span><small>Open Qwen model</small></a><a class="button button--ghost" href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">官方文档</span><span lang="en">Documentation</span> ↗</span></a></nav>
   </header>
   <main>
     <section>
@@ -114,6 +234,13 @@
         <div class="fact"><strong><span lang="zh-CN">最后核验</span><span lang="en">Last checked</span></strong><span>2026-09-06</span></div>
       </div>
     </section>
+<section class="quick-start">
+      <h2><span lang="zh-CN">快速上手</span><span lang="en">Quick start</span></h2>
+      <p class="muted"><span lang="zh-CN">注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。</span><span lang="en">Register, get your API key, then call the model; free terms still follow the provider&#x27;s live official policy.</span></p>
+      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">注册账号</span><span lang="en">Sign up</span></h3><p class="qs-desc"><span lang="zh-CN">打开官方平台完成注册；部分平台需要手机号或邮箱验证。</span><span lang="en">Create an account on the official platform; phone or email verification may apply.</span></p><a class="qs-link" href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noopener noreferrer">Open Qwen model ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">获取 API Key</span><span lang="en">Get API key</span></h3><p class="qs-desc"><span lang="zh-CN">在控制台的 API Keys 页面创建密钥并妥善保存。</span><span lang="en">Create a key on the console&#x27;s API keys page and store it safely.</span></p><a class="qs-link" href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看文档 / 控制台</span><span lang="en">Docs / console</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">调用模型</span><span lang="en">Call model</span></h3><p class="qs-desc"><span lang="zh-CN">把命令中的环境变量换成你的 Key，即可发送第一条请求。</span><span lang="en">Swap in your key via the environment variable and send the first request.</span></p><div class="qs-code"><div class="operation-command-head"><span><span lang="zh-CN">可复制命令</span><span lang="en">Copyable command</span></span><button type="button" class="copy-command" data-copy-target="qs-command-1"><span lang="zh-CN">复制命令</span><span lang="en">Copy command</span></button></div><pre id="qs-command-1"><code>python -m pip install -U huggingface_hub
+huggingface-cli download Qwen/Qwen3-4B --local-dir ./Qwen3-4B</code></pre></div></div></div>
+      <script>(() => { document.querySelectorAll('.quick-start .copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script>
+    </section>
 <section>
       <h2><span lang="zh-CN">上下文窗口</span><span lang="en">Context window</span></h2>
       <p><span lang="zh-CN">原生 32K · YaRN 131K</span><span lang="en">32K native · 131K with YaRN</span>. <a href="https://huggingface.co/Qwen/Qwen3-4B" rel="nofollow noopener" target="_blank"><span lang="zh-CN">来源</span><span lang="en">Source</span> ↗</a></p>
@@ -121,14 +248,13 @@
 
 
 
-    <section>
+<section>
       <h2><span lang="zh-CN">如何使用</span><span lang="en">How to use</span></h2>
       <p><span lang="zh-CN">下载 Qwen3-4B 权重并使用本地推理工具</span><span lang="en">Qwen3-4B</span></p>
       <h3><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h3>
       <ul><li><span lang="zh-CN">安装本地推理运行时</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">确认模型许可证</span><span lang="en">See official terms</span></li></ul>
       <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
       <ul><li><span lang="zh-CN">打开官方模型卡并下载权重</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">使用 Ollama、vLLM 或模型卡命令启动</span><span lang="en">Ollama、vLLM</span></li></ul>
-      <h3><span lang="zh-CN">shell</span><span lang="en">shell</span></h3><pre><code>ollama run qwen3:4b</code></pre>
     </section>
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
@@ -144,5 +270,5 @@
     <p><strong><span lang="zh-CN">重要</span><span lang="en">Important</span>：</strong><span lang="zh-CN">免费访问可能受地区、账户类型、速率限制、有效期或提供商条款影响。依赖该资源前请核对官方来源。</span><span lang="en">Free access may be affected by region, account type, rate limits, validity or provider terms; verify the official source before relying on this offer.</span></p>
     <p><a href="https://freellm.top/"><span lang="zh-CN">返回 FreeLLM 免费 AI 资源索引</span><span lang="en">Return to FreeLLM Free AI Index</span></a></p>
   <p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer>
-</body>
+<script src="/js/freellm-sync.js"></script></body>
 </html>

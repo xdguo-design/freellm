@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>番茄钟 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('番茄钟', '番茄工作法计时器', 'pomodoro');
+
+  var display = T.el('div', {
+    style: 'font-size:4em;font-family:monospace;text-align:center;padding:30px;background:var(--bg);border-radius:16px;border:2px solid var(--line)',
+    text: '25:00'
+  });
+
+  var mode = T.select([
+    { value: '25', label: '工作 25分钟' },
+    { value: '5', label: '短休 5分钟' },
+    { value: '15', label: '长休 15分钟' }
+  ]);
+
+  var startBtn = T.button('开始', start, true);
+  var resetBtn = T.button('重置', reset);
+  var skipBtn = T.button('跳过', skip);
+
+  var sessions = T.el('div', { class: 'output dark', style: 'text-align:center;padding:16px' });
+  var sessionCount = 0;
+  var completedPomodoros = 0;
+
+  var timer = null;
+  var timeLeft = 25 * 60;
+  var running = false;
+
+  function formatTime(seconds) {
+    var m = Math.floor(seconds / 60);
+    var s = seconds % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function updateDisplay() {
+    display.textContent = formatTime(timeLeft);
+    document.title = formatTime(timeLeft) + ' - 番茄钟';
+  }
+
+  function start() {
+    if (running) {
+      clearInterval(timer);
+      running = false;
+      startBtn.textContent = '继续';
+    } else {
+      timer = setInterval(function () {
+        timeLeft--;
+        updateDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          running = false;
+          completedPomodoros++;
+          updateSessions();
+          startBtn.textContent = '开始';
+          alert('时间到！' + (mode.value === '25' ? '工作' : '休息') + '结束');
+        }
+      }, 1000);
+      running = true;
+      startBtn.textContent = '暂停';
+    }
+  }
+
+  function reset() {
+    clearInterval(timer);
+    running = false;
+    timeLeft = parseInt(mode.value) * 60;
+    updateDisplay();
+    startBtn.textContent = '开始';
+  }
+
+  function skip() {
+    clearInterval(timer);
+    running = false;
+    completedPomodoros++;
+    updateSessions();
+    timeLeft = parseInt(mode.value) * 60;
+    updateDisplay();
+    startBtn.textContent = '开始';
+  }
+
+  function updateSessions() {
+    var icons = '';
+    for (var i = 0; i < completedPomodoros; i++) icons += '🍅';
+    sessions.innerHTML = '完成的番茄: ' + (icons || '无') + '<br>总计: ' + completedPomodoros + ' 个';
+  }
+
+  mode.addEventListener('change', reset);
+
+  app.appendChild(display);
+  app.appendChild(mode);
+  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' }, [startBtn, resetBtn, skipBtn]));
+  app.appendChild(sessions);
+  updateDisplay();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Base58 编码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Base58 编码', 'Base58 编码与解码（Bitcoin 风格）', 'base58');
+
+  var mode = T.select([
+    { value: 'encode', label: '编码' },
+    { value: 'decode', label: '解码' }
+  ]);
+  var input = T.textarea('输入文本或 Base58...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+  function encode(str) {
+    var bytes = new TextEncoder().encode(str);
+    var num = 0n;
+    for (var i = 0; i < bytes.length; i++) {
+      num = num * 256n + BigInt(bytes[i]);
+    }
+    var result = '';
+    while (num > 0n) {
+      var rem = Number(num % 58n);
+      num = num / 58n;
+      result = ALPHABET[rem] + result;
+    }
+    for (var i = 0; i < bytes.length && bytes[i] === 0; i++) {
+      result = '1' + result;
+    }
+    return result;
+  }
+
+  function decode(str) {
+    var num = 0n;
+    for (var i = 0; i < str.length; i++) {
+      var idx = ALPHABET.indexOf(str[i]);
+      if (idx === -1) throw new Error('Invalid character: ' + str[i]);
+      num = num * 58n + BigInt(idx);
+    }
+    var bytes = [];
+    while (num > 0n) {
+      bytes.unshift(Number(num % 256n));
+      num = num / 256n;
+    }
+    for (var i = 0; i < str.length && str[i] === '1'; i++) {
+      bytes.unshift(0);
+    }
+    return new TextDecoder().decode(new Uint8Array(bytes));
+  }
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; return; }
+    try {
+      output.value = mode.value === 'encode' ? encode(v) : decode(v);
+    } catch (e) {
+      output.value = '⚠ 解码失败: ' + e.message;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

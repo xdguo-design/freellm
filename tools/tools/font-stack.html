@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>字体栈推荐 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('字体栈推荐', '常用字体栈组合参考', 'font-stack');
+
+  var STACKS = [
+    ['系统默认', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'],
+    ['Windows', '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'],
+    ['macOS/iOS', '"SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif'],
+    ['Ubuntu', '"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'],
+    ['等宽字体 (代码)', '"SF Mono", "Monaco", "Inconsolata", "Fira Code", "Fira Mono", "Droid Sans Mono", monospace'],
+    ['中文字体', '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'],
+    ['衬线字体 (中文)', '"Noto Serif SC", "Source Han Serif SC", "SimSun", "FangSong", serif'],
+    ['衬线字体 (英文)', 'Georgia, "Times New Roman", Times, serif'],
+    ['无衬线字体', '"Helvetica Neue", Helvetica, Arial, sans-serif'],
+    ['手写风格', '"Comic Sans MS", cursive'],
+    ['网页安全', 'Arial, Helvetica, sans-serif'],
+    ['旧版 Windows', 'Tahoma, Verdana, Arial, sans-serif'],
+    ['Google Fonts', '"Inter", "Roboto", "Open Sans", "Lato", "Montserrat"'],
+    ['Fira Code', '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace'],
+    ['Noto Sans', '"Noto Sans", "Noto Sans SC", sans-serif']
+  ];
+
+  var container = T.el('div');
+
+  function render() {
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">名称</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">字体栈</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">操作</th></tr></thead>';
+    html += '<tbody>';
+    STACKS.forEach(function (s) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><strong>' + s[0] + '</strong></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace;font-size:0.85em;word-break:break-all">' + s[1] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><button onclick="navigator.clipboard.writeText(\'' + s[1].replace(/'/g, "\\'") + '\')" style="padding:4px 8px;cursor:pointer">复制</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  render();
+  app.appendChild(container);
+})();
+</script>
+</body>
+</html>

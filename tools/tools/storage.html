@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>存储容量换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('存储容量换算', 'Byte/KB/MB/GB/TB 互转', 'storage');
+
+  var units = ['Byte', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  var inputs = {};
+
+  units.forEach(function (unit) {
+    inputs[unit] = T.el('input', { type: 'number', placeholder: unit, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val) || val === 0) {
+      units.forEach(function (u) { if (u !== source) inputs[u].value = ''; });
+      return;
+    }
+
+    var bytes = val;
+    var idx = units.indexOf(source);
+    for (var i = 0; i < idx; i++) bytes *= 1024;
+    for (var i = idx + 1; i < units.length; i++) bytes /= 1024;
+
+    units.forEach(function (u, i) {
+      if (u !== source) {
+        var result = bytes;
+        for (var j = i + 1; j < units.length; j++) result /= 1024;
+        inputs[u].value = result < 0.0001 && result > 0 ? result.toExponential(2) : result.toFixed(4).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (unit) {
+    var row = T.el('div', { class: 'row' }, [
+      T.el('span', { text: unit, style: 'width:60px' }),
+      inputs[unit]
+    ]);
+    inputs[unit].addEventListener('input', function () { setTimeout(function () { run(unit); }, 100); });
+    app.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工作日计算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('工作日计算', '两个日期之间工作日天数', 'workday');
+
+  var start = T.el('input', { type: 'date', style: 'flex:1' });
+  var end = T.el('input', { type: 'date', style: 'flex:1' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var calcBtn = T.button('计算', calculate, true);
+
+  function isWorkday(d) {
+    var day = d.getDay();
+    return day !== 0 && day !== 6;
+  }
+
+  function calculate() {
+    var s = new Date(start.value);
+    var e = new Date(end.value);
+
+    if (isNaN(s.getTime()) || isNaN(e.getTime())) {
+      result.textContent = '请选择两个日期';
+      return;
+    }
+
+    if (s > e) { var temp = s; s = e; e = temp; }
+
+    var totalDays = Math.ceil((e - s) / (1000 * 60 * 60 * 24)) + 1;
+    var workdays = 0;
+    var holidays = 0;
+    var current = new Date(s);
+
+    while (current <= e) {
+      if (isWorkday(current)) workdays++;
+      else holidays++;
+      current.setDate(current.getDate() + 1);
+    }
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">起始日期</td><td style="padding:8px;text-align:right">' + s.toLocaleDateString('zh-CN') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">结束日期</td><td style="padding:8px;text-align:right">' + e.toLocaleDateString('zh-CN') + '</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">总天数</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;font-weight:bold">' + totalDays + ' 天</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">工作日</td><td style="padding:8px;text-align:right;color:var(--green);font-weight:bold">' + workdays + ' 天</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">周末</td><td style="padding:8px;text-align:right;color:var(--red)">' + holidays + ' 天</td></tr>' +
+      '</table>';
+  }
+
+  start.addEventListener('change', calculate);
+  end.addEventListener('change', calculate);
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '开始' }), start, T.el('span', { text: '结束' }), end, calcBtn]));
+  app.appendChild(result);
+
+  var today = new Date().toISOString().slice(0, 10);
+  start.value = today;
+  end.value = today;
+  calculate();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROT13/ROT47 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('ROT13/ROT47', '经典 ROT 系列编码', 'rot13');
+
+  var mode = T.select([
+    { value: 'rot13', label: 'ROT13' },
+    { value: 'rot47', label: 'ROT47' }
+  ]);
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function rot13(text) {
+    return text.replace(/[a-zA-Z]/g, function (c) {
+      var base = c <= 'Z' ? 65 : 97;
+      return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base);
+    });
+  }
+
+  function rot47(text) {
+    return text.replace(/[!-~]/g, function (c) {
+      return String.fromCharCode(((c.charCodeAt(0) - 33 + 47) % 94) + 33);
+    });
+  }
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    output.value = mode.value === 'rot13' ? rot13(v) : rot47(v);
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

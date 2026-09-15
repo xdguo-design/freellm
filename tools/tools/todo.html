@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>待办事项 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('待办事项', '本地待办清单管理', 'todo');
+
+  var input = T.el('input', { type: 'text', placeholder: '添加新任务...', style: 'flex:1' });
+  var addBtn = T.button('添加', addTodo, true);
+  var list = T.el('div');
+  var stats = T.el('div', { class: 'badge' });
+
+  var todos = JSON.parse(localStorage.getItem('freellm-todos') || '[]');
+
+  function save() {
+    localStorage.setItem('freellm-todos', JSON.stringify(todos));
+  }
+
+  function render() {
+    list.innerHTML = '';
+    todos.forEach(function (todo, i) {
+      var item = T.el('div', { 
+        class: 'row',
+        style: 'padding:8px;border-bottom:1px solid var(--line);align-items:center'
+      });
+
+      var checkbox = T.el('input', { type: 'checkbox' });
+      checkbox.checked = todo.done;
+      var text = T.el('span', { 
+        text: todo.text, 
+        style: 'flex:1;text-decoration:' + (todo.done ? 'line-through' : 'none') + ';opacity:' + (todo.done ? '0.5' : '1')
+      });
+      var deleteBtn = T.button('删除', function () { deleteTodo(i); });
+
+      checkbox.addEventListener('change', function () {
+        todo.done = checkbox.checked;
+        save();
+        render();
+      });
+
+      item.appendChild(checkbox);
+      item.appendChild(text);
+      item.appendChild(deleteBtn);
+      list.appendChild(item);
+    });
+
+    var done = todos.filter(function (t) { return t.done; }).length;
+    stats.textContent = '总计: ' + todos.length + ' | 已完成: ' + done + ' | 待完成: ' + (todos.length - done);
+  }
+
+  function addTodo() {
+    var text = input.value.trim();
+    if (!text) return;
+    todos.push({ text: text, done: false });
+    input.value = '';
+    save();
+    render();
+  }
+
+  function deleteTodo(i) {
+    todos.splice(i, 1);
+    save();
+    render();
+  }
+
+  input.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') addTodo();
+  });
+
+  app.appendChild(T.el('div', { class: 'row' }, [input, addBtn]));
+  app.appendChild(list);
+  app.appendChild(stats);
+  render();
+})();
+</script>
+</body>
+</html>

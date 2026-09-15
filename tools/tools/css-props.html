@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS 属性速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('CSS 属性速查', 'CSS 属性参考表', 'css-props');
+
+  var search = T.el('input', { type: 'search', placeholder: '搜索 CSS 属性...', style: 'width:100%' });
+
+  var PROPS = [
+    ['display', 'block | inline | flex | grid | none', '元素显示类型'],
+    ['position', 'static | relative | absolute | fixed | sticky', '定位方式'],
+    ['top/right/bottom/left', 'auto | <length> | <percentage>', '定位偏移'],
+    ['z-index', 'auto | <integer>', '堆叠顺序'],
+    ['float', 'none | left | right', '浮动'],
+    ['clear', 'none | left | right | both', '清除浮动'],
+    ['width/min-width/max-width', 'auto | <length> | <percentage>', '宽度'],
+    ['height/min-height/max-height', 'auto | <length> | <percentage>', '高度'],
+    ['margin', '<length> | <percentage> | auto', '外边距'],
+    ['padding', '<length> | <percentage>', '内边距'],
+    ['border', '<width> <style> <color>', '边框'],
+    ['border-radius', '<length> | <percentage>', '圆角'],
+    ['box-shadow', 'none | <shadow>', '盒阴影'],
+    ['background', '<color> <image> <position> <size> <repeat>', '背景'],
+    ['background-color', '<color>', '背景颜色'],
+    ['background-image', 'none | <image>', '背景图片'],
+    ['background-size', 'auto | <length> | <percentage> | cover | contain', '背景尺寸'],
+    ['color', '<color>', '文本颜色'],
+    ['font-size', '<length> | <percentage>', '字体大小'],
+    ['font-weight', 'normal | bold | <number>', '字体粗细'],
+    ['font-family', '<family-name> | <generic-family>', '字体族'],
+    ['line-height', 'normal | <number> | <length>', '行高'],
+    ['text-align', 'left | center | right | justify', '文本对齐'],
+    ['text-decoration', 'none | underline | overline | line-through', '文本装饰'],
+    ['text-transform', 'none | capitalize | uppercase | lowercase', '文本转换'],
+    ['letter-spacing', 'normal | <length>', '字间距'],
+    ['word-spacing', 'normal | <length>', '词间距'],
+    ['white-space', 'normal | nowrap | pre | pre-wrap | pre-line', '空白处理'],
+    ['overflow', 'visible | hidden | scroll | auto', '溢出处理'],
+    ['opacity', '0 | <number> | 1', '透明度'],
+    ['cursor', 'auto | pointer | text | move | not-allowed', '光标样式'],
+    ['transition', '<property> <duration> <timing-function> <delay>', '过渡动画'],
+    ['transform', 'rotate | scale | translate | skew', '变换'],
+    ['animation', '<name> <duration> <timing-function> <delay> <iteration-count>', '动画'],
+    ['flex-direction', 'row | column | row-reverse | column-reverse', 'Flex 主轴方向'],
+    ['justify-content', 'flex-start | center | flex-end | space-between', 'Flex 主轴对齐'],
+    ['align-items', 'flex-start | center | flex-end | stretch', 'Flex 交叉轴对齐'],
+    ['grid-template-columns', '<track-size> | repeat()', 'Grid 列定义'],
+    ['grid-template-rows', '<track-size> | repeat()', 'Grid 行定义'],
+    ['grid-gap', '<length>', 'Grid 间距']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var filtered = PROPS.filter(function (p) {
+      if (!q) return true;
+      return p[0].toLowerCase().includes(q) || p[2].toLowerCase().includes(q);
+    });
+
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">属性</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">值</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
+    html += '<tbody>';
+    filtered.forEach(function (p) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + p[0] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace;font-size:0.9em">' + p[1] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + p[2] + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+
+  app.appendChild(search);
+  app.appendChild(table);
+  render();
+})();
+</script>
+</body>
+</html>

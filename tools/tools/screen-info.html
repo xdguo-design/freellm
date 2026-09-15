@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>屏幕信息 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('屏幕信息', '当前设备屏幕参数', 'screen-info');
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var copyBtn = T.copyBtn(function () { return result.textContent; });
+
+  function update() {
+    var info = [
+      ['屏幕宽度', screen.width + 'px'],
+      ['屏幕高度', screen.height + 'px'],
+      ['可用宽度', screen.availWidth + 'px'],
+      ['可用高度', screen.availHeight + 'px'],
+      ['窗口宽度', window.innerWidth + 'px'],
+      ['窗口高度', window.innerHeight + 'px'],
+      ['设备像素比', window.devicePixelRatio],
+      ['颜色深度', screen.colorDepth + 'bit'],
+      ['像素深度', screen.pixelDepth + 'bit'],
+      ['方向', screen.orientation?.type || '未知'],
+      ['DPI', Math.round(screen.width / (screen.width / 96)) + 'dpi']
+    ];
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      info.map(function (i) {
+        return '<tr><td style="padding:8px;border-bottom:1px solid var(--line);color:var(--muted)">' + i[0] + '</td><td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace">' + i[1] + '</td></tr>';
+      }).join('') + '</table>';
+  }
+
+  window.addEventListener('resize', update);
+  update();
+
+  app.appendChild(T.el('div', { class: 'row' }, [copyBtn]));
+  app.appendChild(result);
+})();
+</script>
+</body>
+</html>

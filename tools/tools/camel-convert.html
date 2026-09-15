@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>变量名转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('变量名转换', '驼峰/下划线/短横线命名互转', 'camel-convert');
+
+  var mode = T.select([
+    { value: 'camel', label: '驼峰命名 (camelCase)' },
+    { value: 'pascal', label: '帕斯卡命名 (PascalCase)' },
+    { value: 'snake', label: '下划线命名 (snake_case)' },
+    { value: 'kebab', label: '短横线命名 (kebab-case)' },
+    { value: 'constant', label: '常量命名 (CONSTANT_CASE)' },
+    { value: 'dot', label: '点号命名 (dot.case)' }
+  ]);
+  var input = T.textarea('输入变量名（支持任意格式）...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function toWords(str) {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
+      .replace(/[-_./\\]/g, ' ')
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean);
+  }
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; return; }
+    var words = toWords(v);
+    switch (mode.value) {
+      case 'camel':
+        output.value = words.map(function (w, i) {
+          return i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1);
+        }).join('');
+        break;
+      case 'pascal':
+        output.value = words.map(function (w) {
+          return w.charAt(0).toUpperCase() + w.slice(1);
+        }).join('');
+        break;
+      case 'snake':
+        output.value = words.join('_');
+        break;
+      case 'kebab':
+        output.value = words.join('-');
+        break;
+      case 'constant':
+        output.value = words.map(function (w) { return w.toUpperCase(); }).join('_');
+        break;
+      case 'dot':
+        output.value = words.join('.');
+        break;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

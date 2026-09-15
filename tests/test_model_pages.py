@@ -113,7 +113,7 @@ def test_model_rows_render_score_as_a_circular_indicator():
     assert 'class="score-ring"' in row
     assert "--score:94" in row
     assert 'aria-label="Score 94"' in row
-    assert "#7c3aed" in (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
+    assert "#1744E8" in (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
 
 
 def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
@@ -133,7 +133,7 @@ def test_model_center_tabs_are_localized_and_model_catalog_uses_gradient_score(t
 
     assert '<span lang="zh-CN">精选资源</span><span lang="en">Featured resources</span>' in page
     assert '<span lang="zh-CN">全部模型</span><span lang="en">All models</span>' in page
-    assert "#7c3aed" in page
+    assert "#1744E8" in page
     assert "Catalog source" in page
 
 

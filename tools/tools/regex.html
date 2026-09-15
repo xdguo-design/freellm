@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>正则表达式测试 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('正则表达式测试', '在线正则测试与匹配高亮', 'regex');
+
+  var regexInput = T.el('input', { type: 'text', placeholder: '正则表达式', style: 'flex:1;font-family:monospace' });
+  var flags = T.el('input', { type: 'text', value: 'g', placeholder: 'flags', style: 'width:60px;font-family:monospace' });
+  var input = T.textarea('输入测试文本...');
+  var output = T.el('div', { class: 'output', style: 'min-height:100px;white-space:pre-wrap;line-height:1.8' });
+  var matches = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace' });
+
+  function run() {
+    var pattern = regexInput.value;
+    var text = input.value;
+    if (!pattern || !text) {
+      output.innerHTML = '';
+      matches.textContent = '';
+      return;
+    }
+
+    try {
+      var regex = new RegExp(pattern, flags.value);
+      var html = '';
+      var lastIndex = 0;
+      var match;
+      var matchList = [];
+
+      while ((match = regex.exec(text)) !== null) {
+        html += escapeHtml(text.slice(lastIndex, match.index));
+        html += '<mark style="background:#ffd700;padding:2px;border-radius:2px">' + escapeHtml(match[0]) + '</mark>';
+        lastIndex = regex.lastIndex;
+        matchList.push({ index: match.index, value: match[0], groups: match.slice(1) });
+        if (!flags.value.includes('g')) break;
+      }
+      html += escapeHtml(text.slice(lastIndex));
+      output.innerHTML = html;
+
+      if (matchList.length) {
+        matches.textContent = matchList.map(function (m, i) {
+          return 'Match ' + (i + 1) + ': "' + m.value + '" at index ' + m.index;
+        }).join('\n');
+      } else {
+        matches.textContent = 'No matches found';
+      }
+    } catch (e) {
+      output.innerHTML = '<span style="color:red">' + e.message + '</span>';
+      matches.textContent = '';
+    }
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  regexInput.addEventListener('input', run);
+  flags.addEventListener('input', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '/' }), regexInput, T.el('span', { text: '/' }), flags
+  ]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'field', text: '匹配结果:' }));
+  app.appendChild(matches);
+  app.appendChild(T.el('div', { class: 'field', text: '高亮预览:' }));
+  app.appendChild(output);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Base32 编码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Base32 编码', 'Base32 编码与解码', 'base32');
+
+  var mode = T.select([
+    { value: 'encode', label: '编码' },
+    { value: 'decode', label: '解码' }
+  ]);
+  var input = T.textarea('输入文本或 Base32...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+  function encode(str) {
+    var bytes = new TextEncoder().encode(str);
+    var bits = '';
+    for (var i = 0; i < bytes.length; i++) {
+      bits += bytes[i].toString(2).padStart(8, '0');
+    }
+    while (bits.length % 5 !== 0) bits += '0';
+    var result = '';
+    for (var i = 0; i < bits.length; i += 5) {
+      result += CHARS[parseInt(bits.substr(i, 5), 2)];
+    }
+    return result;
+  }
+
+  function decode(str) {
+    var bits = '';
+    for (var i = 0; i < str.length; i++) {
+      var val = CHARS.indexOf(str[i].toUpperCase());
+      if (val === -1) continue;
+      bits += val.toString(2).padStart(5, '0');
+    }
+    var bytes = new Uint8Array(Math.floor(bits.length / 8));
+    for (var i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(bits.substr(i * 8, 8), 2);
+    }
+    return new TextDecoder().decode(bytes);
+  }
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; return; }
+    try {
+      output.value = mode.value === 'encode' ? encode(v) : decode(v);
+    } catch (e) {
+      output.value = '⚠ 解码失败: ' + e.message;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>温度单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('温度单位换算', '摄氏/华氏/开氏 等', 'temp-converter');
+
+  var units = [
+    { id: 'c', name: '摄氏度 (°C)' },
+    { id: 'f', name: '华氏度 (°F)' },
+    { id: 'k', name: '开尔文 (K)' }
+  ];
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function convert(val, from) {
+    var celsius;
+    switch (from) {
+      case 'c': celsius = val; break;
+      case 'f': celsius = (val - 32) * 5 / 9; break;
+      case 'k': celsius = val - 273.15; break;
+    }
+    return {
+      c: celsius,
+      f: celsius * 9 / 5 + 32,
+      k: celsius + 273.15
+    };
+  }
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var results = convert(val, source);
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = results[u.id].toFixed(2);
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.c.value = '0';
+  run('c');
+})();
+</script>
+</body>
+</html>

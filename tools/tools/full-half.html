@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全角半角转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('全角半角转换', '全角字符与半角字符互转', 'full-half');
+
+  var mode = T.select([
+    { value: 'toHalf', label: '全角 → 半角' },
+    { value: 'toFull', label: '半角 → 全角' }
+  ]);
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function toHalfWidth(str) {
+    return str.replace(/[\uff01-\uff5e]/g, function (c) {
+      return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+    }).replace(/\u3000/g, ' ');
+  }
+
+  function toFullWidth(str) {
+    return str.replace(/[!-~]/g, function (c) {
+      return String.fromCharCode(c.charCodeAt(0) + 0xfee0);
+    }).replace(/ /g, '\u3000');
+  }
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    output.value = mode.value === 'toHalf' ? toHalfWidth(v) : toFullWidth(v);
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

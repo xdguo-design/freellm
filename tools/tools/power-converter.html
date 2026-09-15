@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>功率单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('功率单位换算', 'Watt/KW/Horsepower 等', 'power-converter');
+
+  var units = [
+    { id: 'w', name: '瓦特 (W)' },
+    { id: 'kw', name: '千瓦 (kW)' },
+    { id: 'mw', name: '兆瓦 (MW)' },
+    { id: 'hp', name: '马力 (hp)' },
+    { id: 'ps', name: '公制马力 (PS)' },
+    { id: 'btuh', name: '英热/时 (BTU/h)' },
+    { id: 'kcalh', name: '千卡/时 (kcal/h)' }
+  ];
+
+  var factors = { w: 1, kw: 1000, mw: 1000000, hp: 745.7, ps: 735.5, btuh: 0.293071, kcalh: 1.163 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var w = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (w / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.kw.value = '1';
+  run('kw');
+})();
+</script>
+</body>
+</html>

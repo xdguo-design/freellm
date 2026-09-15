@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lorem Ipsum · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Lorem Ipsum', '占位文本段落生成', 'lorem');
+
+  var type = T.select([
+    { value: 'paragraphs', label: '段落' },
+    { value: 'sentences', label: '句子' },
+    { value: 'words', label: '单词' }
+  ]);
+  var count = T.el('input', { type: 'number', value: '5', min: '1', max: '100', style: 'width:80px' });
+
+  var output = T.textarea('生成结果', false);
+  output.readOnly = true;
+
+  var generateBtn = T.button('生成', generate, true);
+  var copyBtn = T.copyBtn(function () { return output.value; });
+  var downloadBtn = T.button('下载', function () {
+    T.download('lorem.txt', output.value);
+  });
+
+  var WORDS = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(' ');
+
+  function getWord() {
+    return WORDS[Math.floor(Math.random() * WORDS.length)];
+  }
+
+  function getSentence() {
+    var len = 8 + Math.floor(Math.random() * 12);
+    var words = [];
+    for (var i = 0; i < len; i++) words.push(getWord());
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+    return words.join(' ') + '.';
+  }
+
+  function getParagraph() {
+    var len = 4 + Math.floor(Math.random() * 4);
+    var sentences = [];
+    for (var i = 0; i < len; i++) sentences.push(getSentence());
+    return sentences.join(' ');
+  }
+
+  function generate() {
+    var n = parseInt(count.value) || 5;
+    var results = [];
+
+    switch (type.value) {
+      case 'paragraphs':
+        for (var i = 0; i < n; i++) results.push(getParagraph());
+        break;
+      case 'sentences':
+        for (var i = 0; i < n; i++) results.push(getSentence());
+        break;
+      case 'words':
+        for (var i = 0; i < n; i++) results.push(getWord());
+        break;
+    }
+    output.value = results.join('\n\n');
+  }
+
+  generateBtn.addEventListener('click', generate);
+  count.addEventListener('input', generate);
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '类型' }), type,
+    T.el('span', { text: '数量' }), count,
+    generateBtn, copyBtn, downloadBtn
+  ]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+
+  generate();
+})();
+</script>
+</body>
+</html>

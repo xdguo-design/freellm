@@ -1,0 +1,833 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/codebuddy#product",
+      "name": "CodeBuddy Tencent Cloud CodeBuddy",
+      "description": "The official personal experience plan is priced at ¥0 and includes a monthly credit allowance plus code completion. It is a tool subscription, not an unrestricted API key.",
+      "url": "https://www.codebuddy.cn/",
+      "brand": {
+        "@type": "Brand",
+        "name": "CodeBuddy"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.codebuddy.cn/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/qoder#product",
+      "name": "Qoder AI coding IDE",
+      "description": "New users can receive a one-time 14-day Pro trial with 300 credits. The free experience plan continues with basic-model messages after the trial.",
+      "url": "https://qoder.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Qoder"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://qoder.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/trae#product",
+      "name": "TRAE TraeCode China AI IDE",
+      "description": "The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.",
+      "url": "https://www.trae.cn/",
+      "brand": {
+        "@type": "Brand",
+        "name": "TraeCode CN"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.trae.cn/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/comate#product",
+      "name": "Baidu Comate AI coding assistant",
+      "description": "The official pricing page lists a free Auto-Free fallback mode. It is designed to continue serving after model quota is unavailable, with a separate hourly limit.",
+      "url": "https://comate.baidu.com/zh",
+      "brand": {
+        "@type": "Brand",
+        "name": "Baidu Comate"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://comate.baidu.com/zh",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/doubao#product",
+      "name": "Doubao 豆包 Seed Code Coding Plan",
+      "description": "This is a first-month promotion, not a free plan. The renewal price is shown next to the promotional price so overseas users do not mistake it for permanent access.",
+      "url": "https://www.volcengine.com/activity/codingplan",
+      "brand": {
+        "@type": "Brand",
+        "name": "Doubao Seed Code"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.volcengine.com/activity/codingplan",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/glm#product",
+      "name": "GLM Coding Plan Zhipu",
+      "description": "The official FAQ documents time-dependent quota consumption. The product converts the provider’s UTC+8 window into the visitor’s local time rather than claiming that every midnight is cheaper.",
+      "url": "https://open.bigmodel.cn/glm-coding?plantype=team",
+      "brand": {
+        "@type": "Brand",
+        "name": "GLM Coding Plan"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://open.bigmodel.cn/glm-coding?plantype=team",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/longcat-2-0#product",
+      "name": "LongCat-2.0",
+      "description": "LongCat-2.0 is one model with two access paths: an official API whose free quota is not confirmed, and downloadable weights whose license permits access but still requires storage and GPU infrastructure.",
+      "url": "https://longcat.ai/platform/",
+      "brand": {
+        "@type": "Brand",
+        "name": "LongCat"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://longcat.ai/platform/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/LimitedAvailability"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/qwen-download#product",
+      "name": "Qwen3 4B Alibaba 通义千问 open weights",
+      "description": "The official Hugging Face model card provides a direct model repository. This is a more realistic local starting point than trillion-parameter models for a developer laptop or a small cloud GPU.",
+      "url": "https://huggingface.co/Qwen/Qwen3-4B",
+      "brand": {
+        "@type": "Brand",
+        "name": "Alibaba Qwen3-4B / 通义千问"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://huggingface.co/Qwen/Qwen3-4B",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/glm-download#product",
+      "name": "GLM 4.7 Flash Zhipu open weights",
+      "description": "The official Zhipu repository lists GLM-4.7-Flash download links for Hugging Face and ModelScope. The page surfaces both because international users often have better access to Hugging Face.",
+      "url": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+      "brand": {
+        "@type": "Brand",
+        "name": "GLM-4.7-Flash"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/sensecore#product",
+      "name": "SenseTime SenseNova Token Plan",
+      "description": "商汤官方 Token Plan 页面显示：公测期 Free 档免费，配额为 60,000 积分 / 5 小时，最多 20 个 API Key，提供 OpenAI 兼容接口。官方页面当前列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast 两个模型；2026 年 5 月发布时的公开报道覆盖 6.7 Flash-Lite、U1 Fast、DeepSeek V4 Flash 且描述各模型配额独立计数。积分规则与特殊模型排除项以控制台实际显示为准。",
+      "url": "https://platform.sensenova.cn/token-plan",
+      "brand": {
+        "@type": "Brand",
+        "name": "SenseNova"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://platform.sensenova.cn/token-plan",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/deepseek#product",
+      "name": "DeepSeek API official",
+      "description": "DeepSeek is useful as a cost benchmark, but it is not a free quota entry. The directory keeps low-cost pay-as-you-go offers visible without calling them free.",
+      "url": "https://platform.deepseek.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "DeepSeek API"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://platform.deepseek.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/opencode-zen-free#product",
+      "name": "OpenCode Zen free models",
+      "description": "OpenCode's official Zen documentation lists selected hosted coding models at Free input, output and cache pricing for a limited time. This is a provider-hosted free model pool, not a claim that every upstream model is free everywhere.",
+      "url": "https://opencode.ai/",
+      "brand": {
+        "@type": "Brand",
+        "name": "OpenCode Zen"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://opencode.ai/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/github-copilot-free#product",
+      "name": "GitHub Copilot Free",
+      "description": "GitHub's official Free plan provides a recurring monthly allowance for code completions and chat/agent use across supported editors, GitHub and Copilot CLI. It is a limited free developer plan, not unlimited model access.",
+      "url": "https://github.com/features/copilot",
+      "brand": {
+        "@type": "Brand",
+        "name": "GitHub Copilot"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://github.com/features/copilot",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/cursor-hobby#product",
+      "name": "Cursor Hobby",
+      "description": "Cursor's official pricing and plan documentation list a $0 Hobby plan with access to core editor features, limited Agent requests and limited Tab completions. The exact cap is not presented as a fixed public number, so this entry does not invent one.",
+      "url": "https://cursor.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Cursor"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://cursor.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/amazon-q-free#product",
+      "name": "Amazon Q Developer Free",
+      "description": "AWS documents a perpetual Amazon Q Developer Free tier with monthly limits for IDE and CLI use. The official pricing page lists 50 agentic requests per month and 25 AWS resource queries per account.",
+      "url": "https://aws.amazon.com/q/developer/getting-started/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Amazon Q Developer"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aws.amazon.com/q/developer/getting-started/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/google-antigravity-free#product",
+      "name": "Google Antigravity Individual",
+      "description": "Google Antigravity's official pricing page lists a $0 Individual plan with unlimited tab completions and command requests, subject to basic weekly rate limits. Google has positioned it as the migration path for former consumer Gemini Code Assist and Gemini CLI users.",
+      "url": "https://antigravity.google/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Google Antigravity"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://antigravity.google/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/aliyun-qwen-free-quota#product",
+      "name": "Alibaba Qwen / 通义千问 new-user quota",
+      "description": "Alibaba Cloud Model Studio automatically grants eligible new users free quota for supported models. This makes Qwen a clear free API route, but the quota is regional, one-time and time-limited rather than a permanent unlimited plan.",
+      "url": "https://bailian.console.aliyun.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Alibaba Cloud Model Studio / 阿里云百炼"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://bailian.console.aliyun.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/keenable-search-free#product",
+      "name": "Keenable Search API",
+      "description": "Keenable publishes a monthly free request allowance and a simple per-request price after the free allowance.",
+      "url": "https://keenable.ai/console",
+      "brand": {
+        "@type": "Brand",
+        "name": "Keenable"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://keenable.ai/console",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/tinyfish-search-fetch-free#product",
+      "name": "TinyFish Search + Fetch",
+      "description": "TinyFish keeps Search and Fetch free and limits them by rate instead of deducting wallet balance.",
+      "url": "https://future.tinyfish.io/",
+      "brand": {
+        "@type": "Brand",
+        "name": "TinyFish"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://future.tinyfish.io/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/tinyfish-agent-browser-metered#product",
+      "name": "TinyFish Agent + Browser",
+      "description": "TinyFish separates paid web execution from its free Search and Fetch primitives.",
+      "url": "https://future.tinyfish.io/",
+      "brand": {
+        "@type": "Brand",
+        "name": "TinyFish"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://future.tinyfish.io/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/tavily-web-free-credits#product",
+      "name": "Tavily Web APIs",
+      "description": "Tavily exposes Search, Extract, Crawl and Map behind one credit model with a recurring no-card free tier.",
+      "url": "https://app.tavily.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Tavily"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://app.tavily.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/exa-web-free-credits#product",
+      "name": "Exa Search + Agent APIs",
+      "description": "Exa provides monthly dollar credits with access to Search, Contents and Agent endpoints and publishes separate QPS and unit prices.",
+      "url": "https://dashboard.exa.ai/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Exa"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://dashboard.exa.ai/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/you-web-free-tier#product",
+      "name": "You.com Web APIs",
+      "description": "You.com combines a keyless daily Search tier with a separate dollar credit allowance and low-cost Contents extraction.",
+      "url": "https://you.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "You.com"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://you.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/firecrawl-web-free-credits#product",
+      "name": "Firecrawl Web APIs",
+      "description": "Firecrawl uses one credit balance across Search, Scrape, Crawl, Map and browser interaction with explicit free limits.",
+      "url": "https://www.firecrawl.dev/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Firecrawl"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.firecrawl.dev/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Credit card required",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/brave-search-free-credits#product",
+      "name": "Brave Search API",
+      "description": "Brave Search applies $5 of free credits every month to its Search API and publishes a 50 QPS capacity.",
+      "url": "https://brave.com/search/api/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Brave Search"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://brave.com/search/api/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/browserbase-free-tier#product",
+      "name": "Browserbase Web APIs",
+      "description": "Browserbase packages browser runtime with free Search, Fetch and Agent allowances in one free plan.",
+      "url": "https://www.browserbase.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Browserbase"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://www.browserbase.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/google-ai-studio-free#product",
+      "name": "Google AI Studio / Gemini API free tier",
+      "description": "Google's official Gemini API pricing page shows a Free Tier column where input, output and context caching prices are listed as 'Free of charge'. The free tier is rate limited and, per the same page, free-tier data may be used to improve Google products.",
+      "url": "https://aistudio.google.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Google AI Studio"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://aistudio.google.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/groq-free#product",
+      "name": "Groq free plan",
+      "description": "Groq's official rate limits documentation publishes a 'Free Plan Limits' table with per-model RPM, RPD and TPM caps (for example openai/gpt-oss-120b: 30 RPM, 1K RPD, 8K TPM), alongside a paid Developer plan for higher limits.",
+      "url": "https://console.groq.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Groq"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://console.groq.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/cerebras-free#product",
+      "name": "Cerebras Inference free credits",
+      "description": "The official Cerebras pricing page lists an 'Inference API access / Free Trial' tier: 'Get started with $5 in free credits after making an account. Access to all Cerebras powered models'. The docs also note free accounts have lower per-minute limits than paid accounts.",
+      "url": "https://cloud.cerebras.ai/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Cerebras"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://cloud.cerebras.ai/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/openrouter-free#product",
+      "name": "OpenRouter free model variants",
+      "description": "OpenRouter's official limits documentation defines free usage limits for model variants whose ID ends in ':free': 20 requests per minute, and 50 requests per day for accounts that purchased less than 10 credits (1000 requests per day at 10 or more credits).",
+      "url": "https://openrouter.ai/",
+      "brand": {
+        "@type": "Brand",
+        "name": "OpenRouter"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://openrouter.ai/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/mistral-free-mode#product",
+      "name": "Mistral La Plateforme free mode",
+      "description": "The official Mistral help center states: 'Free mode (the default) has the lowest limits, intended for evaluation and prototyping', with pay-as-you-go tiers unlocking higher limits.",
+      "url": "https://console.mistral.ai/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Mistral AI"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://console.mistral.ai/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/cohere-trial-key#product",
+      "name": "Cohere trial API key",
+      "description": "Cohere's official pricing page FAQ states: 'API calls made from a Trial API key are free. However, trial keys are rate limited and are not permitted to be used for production or commercial purposes.' Every new account begins with trial access.",
+      "url": "https://dashboard.cohere.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Cohere"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://dashboard.cohere.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/hf-inference-free#product",
+      "name": "Hugging Face Inference Providers free tier",
+      "description": "The official Inference Providers documentation states: 'Get Started for Free: Inference Providers includes a generous free tier, with additional credits for PRO users and Team & Enterprise organizations.'",
+      "url": "https://huggingface.co/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Hugging Face"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://huggingface.co/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/siliconflow-free-models#product",
+      "name": "SiliconFlow free listed models",
+      "description": "The official SiliconFlow price page lists multiple models at 免费/¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.",
+      "url": "https://cloud.siliconflow.cn/",
+      "brand": {
+        "@type": "Brand",
+        "name": "SiliconFlow"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://cloud.siliconflow.cn/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/modelscope-api-inference-free#product",
+      "name": "ModelScope API-Inference",
+      "description": "Official docs state API-Inference is provided free to ModelScope registered users ('API-Inference面向ModelScope注册用户免费提供'), backed by Aliyun compute; usage requires Aliyun account binding with real-name verification, applies dynamic per-model rate limits, and supports 魔粒 deduction tiers (0.5 / 1 / 2 per call by model size).",
+      "url": "https://modelscope.cn/my/myaccesstoken",
+      "brand": {
+        "@type": "Brand",
+        "name": "ModelScope"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://modelscope.cn/my/myaccesstoken",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/agnes-ai-free#product",
+      "name": "Agnes AI Free/default API",
+      "description": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方模型目录列出文本、图片和视频模型，并给出 free/default 层的公开速率限制。它适合作为一个可直接试用的多模态 API 入口，但不是无限免费承诺。",
+      "url": "https://agnes-ai.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Agnes AI"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://agnes-ai.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/stepfun-limited-time-free#product",
+      "name": "StepFun limited-time free models",
+      "description": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
+      "url": "https://platform.stepfun.com/",
+      "brand": {
+        "@type": "Brand",
+        "name": "StepFun"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://platform.stepfun.com/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/dots-api-free#product",
+      "name": "Dots API Dots3 Note Preview",
+      "description": "Dots 官方国内平台提供 Dots3-Note Preview 模型入口；注册可使用小红书账号或手机号，官方文档给出国内 Base URL 与 API 调用说明。",
+      "url": "https://dots.ai/platform",
+      "brand": {
+        "@type": "Brand",
+        "name": "Dots API（国内）"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://dots.ai/platform",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://freellm.top/offers/manus-free-agent#product",
+      "name": "Manus AI free plan",
+      "description": "Manus 官方帮助中心说明免费用户可获得注册赠送 credits 与每日刷新 credits；官方注册页提供多种登录方式，适合作为 AI Agent、网页构建和自动化任务入口。",
+      "url": "https://manus.im/invitation/I0KFAXGLOOOWJ",
+      "brand": {
+        "@type": "Brand",
+        "name": "Manus AI"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://manus.im/invitation/I0KFAXGLOOOWJ",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/xiaomi-mimo-desktop#product",
+      "name": "Xiaomi MiMo Desktop invitation beta",
+      "description": "小米 MiMo 官方公告宣布 MiMo Desktop 开启邀请制测试。获批申请者可在测试期间免费体验 MiMo-X-Pro-Preview 与 MiMo-X-Flash-Preview，但官方明确这是限时、限额的 Preview 体验，不是长期免费桌面应用承诺。",
+      "url": "https://mimo.xiaomimimo.com/desktop/invite/",
+      "brand": {
+        "@type": "Brand",
+        "name": "Xiaomi MiMo"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://mimo.xiaomimimo.com/desktop/invite/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/cnb-ai#product",
+      "name": "CNB Cloud Native Build AI",
+      "description": "CNB 不仅是代码托管和 DevOps 平台，还把 CodeBuddy NPC、WebIDE、AI 问答、问题分析和变更分析集成到仓库协作流程中，适合作为独立的 AI 代码协作入口收录。",
+      "url": "https://cnb.cool/",
+      "brand": {
+        "@type": "Brand",
+        "name": "CNB"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://cnb.cool/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://freellm.top/offers/astudio#product",
+      "name": "iFlytek AStudio desktop AI workbench",
+      "description": "科大讯飞 2026-09-15 正式发布 AStudio 桌面 AI 生产力工作台，基于星火 X2.5 与 ACode Harness 智能体内核，围绕目标自主规划任务并交付文档、网页、代码等成果；官方文档明确新用户赠送 1,000 积分、体验版每日登录领 100 积分，是 Manus 类通用 Agent 的国产桌面替代入口。",
+      "url": "https://agent.xfyun.cn/",
+      "brand": {
+        "@type": "Brand",
+        "name": "iFlytek AStudio"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://agent.xfyun.cn/",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "price": "0"
+      }
+    }
+  ]
+}
+</script>

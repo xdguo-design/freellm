@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHA 哈希 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('SHA 哈希', 'SHA-1/256/384/512 哈希计算', 'sha');
+
+  var algo = T.select([
+    { value: 'SHA-1', label: 'SHA-1' },
+    { value: 'SHA-256', label: 'SHA-256' },
+    { value: 'SHA-384', label: 'SHA-384' },
+    { value: 'SHA-512', label: 'SHA-512' }
+  ]);
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('哈希值', false);
+  output.readOnly = true;
+
+  var fileBtn = T.button('计算文件哈希', function () {
+    T.readFile('/*', async function (data) {
+      var hash = await crypto.subtle.digest(algo.value, data);
+      output.value = Array.from(new Uint8Array(hash)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }, true);
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  async function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    try {
+      var bytes = new TextEncoder().encode(v);
+      var hash = await crypto.subtle.digest(algo.value, bytes);
+      output.value = Array.from(new Uint8Array(hash)).map(function (b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    } catch (e) {
+      output.value = '⚠ 计算失败: ' + e.message;
+    }
+  }
+
+  algo.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [algo, fileBtn, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

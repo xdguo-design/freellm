@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JWT 解析 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('JWT 解析', 'JWT Header/Payload 在线解码', 'jwt');
+
+  var input = T.textarea('粘贴 JWT Token...');
+  var header = T.el('div', { class: 'output dark', style: 'font-family:monospace;white-space:pre-wrap' });
+  var payload = T.el('div', { class: 'output dark', style: 'font-family:monospace;white-space:pre-wrap' });
+
+  var copyHeader = T.copyBtn(function () { return header.textContent; });
+  var copyPayload = T.copyBtn(function () { return payload.textContent; });
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { header.textContent = ''; payload.textContent = ''; return; }
+
+    var parts = v.split('.');
+    if (parts.length < 2) {
+      header.textContent = '无效 JWT 格式';
+      payload.textContent = '';
+      return;
+    }
+
+    try {
+      var h = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')));
+      header.textContent = JSON.stringify(h, null, 2);
+    } catch (e) {
+      header.textContent = 'Header 解码失败: ' + e.message;
+    }
+
+    try {
+      var p = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      payload.textContent = JSON.stringify(p, null, 2);
+    } catch (e) {
+      payload.textContent = 'Payload 解码失败: ' + e.message;
+    }
+  }
+
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'field', text: 'Header:' }));
+  app.appendChild(T.el('div', { class: 'row' }, [copyHeader]));
+  app.appendChild(header);
+  app.appendChild(T.el('div', { class: 'field', text: 'Payload:' }));
+  app.appendChild(T.el('div', { class: 'row' }, [copyPayload]));
+  app.appendChild(payload);
+  app.appendChild(T.el('div', { class: 'field', text: '输入:' }));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+})();
+</script>
+</body>
+</html>

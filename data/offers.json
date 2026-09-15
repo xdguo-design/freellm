@@ -3782,7 +3782,9 @@
     "cardRequired": "unknown",
     "commercialUse": "Check Dots official terms",
     "productType": "api",
-    "capabilities": ["model_api"],
+    "capabilities": [
+      "model_api"
+    ],
     "id": "dots-api-free",
     "order": 39,
     "name": "Dots API Dots3 Note Preview",
@@ -3792,10 +3794,16 @@
     "providerMetaEn": "Xiaohongshu Dots · China",
     "model": "Dots3-Note Preview",
     "modelMeta": "Dots Studio domestic API route",
-    "type": ["api", "free"],
+    "type": [
+      "api",
+      "free"
+    ],
     "usageGuide": {
       "summary": "通过小红书 Dots 国内平台注册并调用 Dots3-Note Preview",
-      "prerequisites": ["小红书账号或手机号", "Dots API Key"],
+      "prerequisites": [
+        "小红书账号或手机号",
+        "Dots API Key"
+      ],
       "steps": [
         "打开 Dots 国内平台并使用小红书账号或手机号登录",
         "进入 API Keys 页面创建 API Key",
@@ -3810,7 +3818,11 @@
       "docsUrl": "https://dots.ai/platform/docs"
     },
     "kicker": "CHINA FREE API",
-    "badges": ["小红书登录", "限时免费", "60 RPM"],
+    "badges": [
+      "小红书登录",
+      "限时免费",
+      "60 RPM"
+    ],
     "freeSummary": "Dots3-Note Preview 当前免费试用，按官方限速使用",
     "validitySummary": "限时免费；额度和模型可用性以 Dots 官方页面为准",
     "accessSummary": "小红书账号或手机号登录 Dots 国内平台",
@@ -3825,17 +3837,31 @@
     "register": "https://dots.ai/platform",
     "registerLabel": "Dots 国内平台",
     "links": [
-      ["Dots 注册入口", "https://dots.ai/platform"],
-      ["Dots 官方文档", "https://dots.ai/platform/docs"]
+      [
+        "Dots 注册入口",
+        "https://dots.ai/platform"
+      ],
+      [
+        "Dots 官方文档",
+        "https://dots.ai/platform/docs"
+      ]
     ],
     "originCountry": "China",
     "availability": "China domestic route; account and region availability may vary",
     "freeMechanism": "limited_time_free",
     "pricingModel": "limited_time_free",
-    "freePolicy": {"type": "limited_time_free", "amount": null, "unit": "model", "period": "while officially available"},
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": null,
+      "unit": "model",
+      "period": "while officially available"
+    },
     "quota": "60 requests/minute; 1,500,000 tokens/minute",
     "renewal": "No fixed renewal; limited-free status can change",
-    "sourceUrls": ["https://dots.ai/platform", "https://dots.ai/platform/docs"],
+    "sourceUrls": [
+      "https://dots.ai/platform",
+      "https://dots.ai/platform/docs"
+    ],
     "evidence": "Dots provider access record verified on 2026-09-10; official docs identify the domestic platform, model ID and rate limits.",
     "confidence": "high",
     "notes": "小红书账号登录入口与手机号登录入口以 Dots 官方页面当前选项为准。"
@@ -3849,7 +3875,9 @@
     "cardRequired": "unknown",
     "commercialUse": "Check Manus official terms",
     "productType": "web_infrastructure",
-    "capabilities": ["agent"],
+    "capabilities": [
+      "agent"
+    ],
     "id": "manus-free-agent",
     "order": 40,
     "name": "Manus AI free plan",
@@ -3859,10 +3887,17 @@
     "providerMetaEn": "Manus AI · International",
     "model": "Manus AI agent and Chat Mode",
     "modelMeta": "Browser-based autonomous agent platform",
-    "type": ["web", "agent", "free"],
+    "type": [
+      "web",
+      "agent",
+      "free"
+    ],
     "usageGuide": {
       "summary": "注册 Manus 后使用 Chat Mode 和免费 Agent 额度",
-      "prerequisites": ["Manus account", "Google, Microsoft, Apple or email sign-in"],
+      "prerequisites": [
+        "Manus account",
+        "Google, Microsoft, Apple or email sign-in"
+      ],
       "steps": [
         "打开 Manus 邀请注册入口",
         "选择 Google、Microsoft、Apple 或邮箱注册；注册方式会绑定到该账号",
@@ -3872,11 +3907,17 @@
       "endpoint": "https://api.manus.ai",
       "method": "POST",
       "authentication": "API key according to the Manus API authentication documentation",
-      "examples": {"web": "Open https://manus.im/invitation/I0KFAXGLOOOWJ and follow the signup flow."},
+      "examples": {
+        "web": "Open https://manus.im/invitation/I0KFAXGLOOOWJ and follow the signup flow."
+      },
       "docsUrl": "https://manus.im/docs/introduction/welcome"
     },
     "kicker": "FREE AGENT",
-    "badges": ["1,000 SIGNUP CREDITS", "300 DAILY CREDITS", "AGENT"],
+    "badges": [
+      "1,000 SIGNUP CREDITS",
+      "300 DAILY CREDITS",
+      "AGENT"
+    ],
     "freeSummary": "新用户注册赠送 1,000 credits；免费计划每天刷新 300 credits",
     "validitySummary": "免费计划持续提供；额度、模型和计划内容可能调整",
     "accessSummary": "浏览器访问；支持 Google、Microsoft、Apple 或邮箱登录",
@@ -3891,20 +3932,56 @@
     "register": "https://manus.im/invitation/I0KFAXGLOOOWJ",
     "registerLabel": "Manus 邀请注册入口",
     "links": [
-      ["Manus 邀请注册入口", "https://manus.im/invitation/I0KFAXGLOOOWJ"],
-      ["Manus 官方注册页（备用）", "https://manus.im/login?type=signUp"],
-      ["登录方式说明", "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods"],
-      ["免费计划与价格", "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus"],
-      ["注册优惠与额度", "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers"],
-      ["Manus API 文档", "https://open.manus.ai/docs/v2/introduction"]
+      [
+        "Manus 邀请注册入口",
+        "https://manus.im/invitation/I0KFAXGLOOOWJ"
+      ],
+      [
+        "Manus 官方注册页（备用）",
+        "https://manus.im/login?type=signUp"
+      ],
+      [
+        "登录方式说明",
+        "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods"
+      ],
+      [
+        "免费计划与价格",
+        "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus"
+      ],
+      [
+        "注册优惠与额度",
+        "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers"
+      ],
+      [
+        "Manus API 文档",
+        "https://open.manus.ai/docs/v2/introduction"
+      ]
     ],
     "originCountry": "International",
     "availability": "Global web access; login and feature availability may vary by region",
     "freeMechanism": "daily_quota",
     "pricingModel": "free_credits",
-    "freePolicy": {"type": "credits", "amount": 300, "unit": "credits", "period": "day", "signupBonus": 1000},
-    "limits": {"requestsPerMinute": null, "requestsPerHour": null, "requestsPerMonth": null, "urlsPerMinute": null, "concurrency": 1},
-    "billing": {"walletRequired": false, "cardRequired": "unknown", "autoReload": "unknown", "overageBehavior": "stop", "prices": []},
+    "freePolicy": {
+      "type": "credits",
+      "amount": 300,
+      "unit": "credits",
+      "period": "day",
+      "signupBonus": 1000
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": 1
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": []
+    },
     "providerId": "manus",
     "productId": "manus-web",
     "offerVariant": "free-agent-plan",
@@ -3928,7 +4005,9 @@
     "cardRequired": "unknown",
     "commercialUse": "Check Xiaomi MiMo Desktop beta terms",
     "productType": "desktop_ai_app",
-    "capabilities": ["desktop_app"],
+    "capabilities": [
+      "desktop_app"
+    ],
     "id": "xiaomi-mimo-desktop",
     "order": 41,
     "name": "Xiaomi MiMo Desktop invitation beta",
@@ -3938,11 +4017,18 @@
     "providerMetaEn": "Xiaomi MiMo · China / Overseas",
     "model": "MiMo-X-Pro-Preview · MiMo-X-Flash-Preview",
     "modelMeta": "Preview models included in the invitation-only desktop beta",
-    "type": ["desktop", "agent", "free"],
+    "type": [
+      "desktop",
+      "agent",
+      "free"
+    ],
     "usageGuide": {
       "summary": "申请 Xiaomi MiMo Desktop 邀请制测试，获批后下载并使用 Preview 模型",
       "summaryEn": "Apply for the Xiaomi MiMo Desktop invitation beta, then download and use the Preview models if approved",
-      "prerequisites": ["Xiaomi MiMo account", "Invitation approval"],
+      "prerequisites": [
+        "Xiaomi MiMo account",
+        "Invitation approval"
+      ],
       "steps": [
         "打开国内或海外官方申请入口并提交 MiMo Desktop 测试申请",
         "申请获批后按官方通知下载 MiMo Desktop",
@@ -3954,7 +4040,11 @@
       "docsUrl": "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"
     },
     "kicker": "DESKTOP BETA",
-    "badges": ["INVITATION ONLY", "LIMITED TIME", "LIMITED QUOTA"],
+    "badges": [
+      "INVITATION ONLY",
+      "LIMITED TIME",
+      "LIMITED QUOTA"
+    ],
     "freeSummary": "获批申请者可在邀请制测试期间免费体验两款 Preview 模型",
     "freeSummaryEn": "Approved applicants can try two Preview models for free during the invitation beta",
     "validitySummary": "Invitation beta / limited time and quota",
@@ -3973,16 +4063,33 @@
     "registerLabel": "MiMo Desktop 国内申请",
     "registerLabelEn": "Apply for MiMo Desktop",
     "links": [
-      ["MiMo Desktop 官方公告", "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"],
-      ["国内申请入口", "https://mimo.xiaomimimo.com/desktop/invite/"],
-      ["海外申请入口", "https://mimo-ai.xiaomimimo.com/desktop/invite/"],
-      ["MiMo FAQ（独立 App 说明）", "https://mimo.mi.com/docs/en-US/quick-start/faq/others"]
+      [
+        "MiMo Desktop 官方公告",
+        "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"
+      ],
+      [
+        "国内申请入口",
+        "https://mimo.xiaomimimo.com/desktop/invite/"
+      ],
+      [
+        "海外申请入口",
+        "https://mimo-ai.xiaomimimo.com/desktop/invite/"
+      ],
+      [
+        "MiMo FAQ（独立 App 说明）",
+        "https://mimo.mi.com/docs/en-US/quick-start/faq/others"
+      ]
     ],
     "originCountry": "China",
     "availability": "Domestic and overseas invitation routes; existing Open Platform users are prioritized",
     "freeMechanism": "limited_time_free",
     "pricingModel": "limited_time_free",
-    "freePolicy": {"type": "limited_time_free", "amount": null, "unit": "preview_models", "period": "during invitation beta"},
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": null,
+      "unit": "preview_models",
+      "period": "during invitation beta"
+    },
     "quota": "Two Preview models are free for a limited time and with limited quota during the invitation-only testing period",
     "renewal": "No renewal promise; beta access and quota can end or change",
     "sourceUrls": [
@@ -3995,5 +4102,234 @@
     "confidence": "high",
     "confidenceReason": "The beta status, application routes, Preview model names and limited free terms are stated on Xiaomi MiMo's official announcement; invitation approval remains account-dependent.",
     "notes": "Use only the official application links. Do not present this as an unrestricted or permanently free standalone app; wait for invitation approval and recheck the official announcement for current quota and availability."
+  },
+  {
+    "id": "cnb-ai",
+    "order": 42,
+    "date": "2026-09-15",
+    "name": "CNB Cloud Native Build AI",
+    "providerMark": "CNB",
+    "provider": "CNB",
+    "providerMeta": "Cloud Native Build · China",
+    "model": "CodeBuddy NPC + CodeBuddy Web",
+    "modelMeta": "AI code collaboration and cloud workspace platform",
+    "type": [
+      "ide",
+      "web",
+      "agent",
+      "free"
+    ],
+    "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "在 CNB 仓库中使用 CodeBuddy NPC 或 Workspaces WebIDE",
+      "prerequisites": [
+        "CNB 账号",
+        "一个可访问的代码仓库或测试项目"
+      ],
+      "steps": [
+        "打开 CNB 并登录账号",
+        "进入代码仓库，在 Issue 或 PR 评论中 @CodeBuddy 触发 NPC",
+        "或从仓库的 Workspaces 入口打开 CodeBuddy Web，直接用自然语言编写和修改代码",
+        "先用不含生产密钥的测试项目验证 AI 生成、评审和提交行为"
+      ],
+      "examples": {
+        "action": "打开 https://cnb.cool/，进入仓库后在 Issue 或 PR 中评论 @CodeBuddy 请检查这段代码"
+      },
+      "docsUrl": "https://docs.cnb.cool/zh/ai/intro.html"
+    },
+    "kicker": "AI CODE PLATFORM",
+    "badges": [
+      "CODE HOSTING",
+      "CODEBUDDY NPC",
+      "WEBIDE"
+    ],
+    "freeSummary": "CNB 平台内置 CodeBuddy Web、CodeBuddy NPC、AI 问答及代码分析能力",
+    "validitySummary": "平台功能；额度、模型和工作模式以官方账号与平台政策为准",
+    "accessSummary": "CNB 账号；仓库、Issue、PR 和 Workspaces 权限可能影响功能",
+    "checkedSummary": "2026-09-15 / CNB 官方 AI 文档",
+    "title": "CNB · Cloud Native Build AI",
+    "titleZh": "CNB · 云原生构建 AI",
+    "why": "CNB 不仅是代码托管和 DevOps 平台，还把 CodeBuddy NPC、WebIDE、AI 问答、问题分析和变更分析集成到仓库协作流程中，适合作为独立的 AI 代码协作入口收录。",
+    "mechanism": "代码仓库、Issue、PR 和 Workspaces 中的内置 AI 能力",
+    "validity": "免费入口与 AI 功能以 CNB 当前平台规则为准",
+    "access": "注册并登录 CNB；部分仓库操作需要相应协作权限",
+    "command": "Open CNB, select a repository, then use @CodeBuddy in an Issue/PR or launch CodeBuddy Web from Workspaces.",
+    "register": "https://cnb.cool/",
+    "registerLabel": "打开 CNB",
+    "links": [
+      [
+        "CNB 官方平台",
+        "https://cnb.cool/"
+      ],
+      [
+        "CNB AI 助手说明",
+        "https://docs.cnb.cool/zh/ai/intro.html"
+      ],
+      [
+        "CodeBuddy Web",
+        "https://docs.cnb.cool/en/workspaces/codebuddy-web.html"
+      ],
+      [
+        "CodeBuddy NPC 示例",
+        "https://cnb.cool/cnb/cool/default-codebuddy-npc"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "CNB account and repository access; China-focused platform",
+    "freeMechanism": "permanent",
+    "pricingModel": "permanent_free",
+    "freePolicy": {
+      "type": "platform_included",
+      "amount": null,
+      "unit": "AI features",
+      "period": "while available on CNB"
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "unknown",
+      "prices": []
+    },
+    "providerId": "cnb",
+    "productId": "cnb-ai",
+    "offerVariant": "platform-ai-features",
+    "sourceUrls": [
+      "https://cnb.cool/",
+      "https://docs.cnb.cool/zh/ai/intro.html",
+      "https://docs.cnb.cool/en/workspaces/codebuddy-web.html",
+      "https://cnb.cool/cnb/cool/default-codebuddy-npc"
+    ],
+    "evidence": "CNB 官方 AI 文档列出 CodeBuddy NPC、Workspaces WebIDE 内置 CodeBuddy、AI 问答、知识库、问题分析和变更分析；CodeBuddy Web 文档说明可在浏览器中使用 CodeBuddy Code 的 AI 编程能力。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-15",
+    "checkedBy": "manual",
+    "notes": "这是 CNB 平台 AI 能力的独立收录，不等同于独立 CodeBuddy IDE；具体模型、额度和工作模式可能按账号、仓库及平台政策变化。"
+  },
+  {
+    "id": "astudio",
+    "order": 43,
+    "date": "2026-09-15",
+    "name": "iFlytek AStudio desktop AI workbench",
+    "providerMark": "讯",
+    "provider": "iFlytek AStudio",
+    "providerMeta": "iFlytek · China",
+    "providerMetaEn": "iFlytek · China",
+    "model": "Spark X2.5（星火 X2.5）",
+    "modelMeta": "Desktop agent workbench powered by Spark X2.5 on domestic compute",
+    "type": [
+      "desktop",
+      "agent",
+      "free"
+    ],
+    "productType": "desktop_ai_app",
+    "capabilities": [
+      "desktop_app"
+    ],
+    "usageGuide": {
+      "summary": "下载 AStudio 桌面客户端并登录，领取新用户积分后用自然语言交付文档、网页、代码等成果",
+      "prerequisites": [
+        "AStudio 客户端（Windows 10/11 64 位或 macOS M 系列芯片）",
+        "讯飞/星火账号"
+      ],
+      "steps": [
+        "打开 agent.xfyun.cn 下载 Windows 或 macOS 客户端并安装",
+        "登录账号，新用户可领取 1,000 积分（3 个月有效）",
+        "在中间任务区描述目标、添加文件并发送任务",
+        "在右侧预览区查看成果，点选编辑或继续对话迭代；日常/项目模式按任务复杂度切换"
+      ],
+      "examples": {
+        "action": "打开 https://agent.xfyun.cn/ 下载 AStudio 客户端，登录后新建任务体验自主规划与成果交付"
+      },
+      "docsUrl": "https://agent.xfyun.cn/studio-guide/quickstart"
+    },
+    "kicker": "DESKTOP AGENT",
+    "badges": [
+      "1,000 SIGNUP CREDITS",
+      "100 DAILY CREDITS",
+      "SPARK X2.5"
+    ],
+    "freeSummary": "新用户登录客户端领 1,000 积分（3 个月有效）；体验版每日登录免费领 100 积分",
+    "validitySummary": "积分规则与套餐以官方价格页为准；发布初期规则可能调整",
+    "accessSummary": "Windows 10/11 64 位或 macOS M 系列芯片；需登录账号",
+    "checkedSummary": "2026-09-15 / AStudio 官方文档与发布报道",
+    "title": "iFlytek AStudio · desktop AI workbench",
+    "titleZh": "讯飞 AStudio · 桌面 AI 生产力工作台",
+    "why": "科大讯飞 2026-09-15 正式发布 AStudio 桌面 AI 生产力工作台，基于星火 X2.5 与 ACode Harness 智能体内核，围绕目标自主规划任务并交付文档、网页、代码等成果；官方文档明确新用户赠送 1,000 积分、体验版每日登录领 100 积分，是 Manus 类通用 Agent 的国产桌面替代入口。",
+    "mechanism": "桌面端 Agent 工作台，按积分消耗任务；ACode Harness 内核自主拆解任务、调用工具、读写文件并运行代码",
+    "validity": "1,000 积分新用户赠送有效期 3 个月；体验版每日登录刷新 100 积分；积分消耗率与付费套餐以官方价格页为准",
+    "access": "Windows 10/11 64 位与 macOS M 系列芯片客户端；登录后使用，Plan/Goal（日常/项目）双模式",
+    "command": "Download the AStudio client from agent.xfyun.cn, sign in to claim signup credits, then create a task and iterate on the delivered result.",
+    "register": "https://agent.xfyun.cn/",
+    "registerLabel": "打开 AStudio 官网",
+    "links": [
+      [
+        "AStudio 官网",
+        "https://agent.xfyun.cn/"
+      ],
+      [
+        "官方产品介绍",
+        "https://agent.xfyun.cn/studio-guide/intro"
+      ],
+      [
+        "快速上手（积分说明）",
+        "https://agent.xfyun.cn/studio-guide/quickstart"
+      ],
+      [
+        "发布报道（新浪财经）",
+        "https://finance.sina.com.cn/tech/roll/2026-09-15/doc-inirxatw3678232.shtml"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China-focused; Windows 10/11 64-bit and macOS Apple silicon clients",
+    "freeMechanism": "daily_quota",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "credits",
+      "amount": 100,
+      "unit": "credits",
+      "period": "day",
+      "signupBonus": 1000
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "unknown",
+      "prices": []
+    },
+    "providerId": "iflytek-spark",
+    "productId": "astudio",
+    "offerVariant": "desktop-workbench",
+    "sourceUrls": [
+      "https://agent.xfyun.cn/studio-guide/intro",
+      "https://agent.xfyun.cn/studio-guide/quickstart",
+      "https://finance.sina.com.cn/tech/roll/2026-09-15/doc-inirxatw3678232.shtml",
+      "https://www.163.com/dy/article/L6SNIKC70534A4SC.html"
+    ],
+    "evidence": "AStudio 官方介绍页描述其为新一代全场景 AI 生产力工作台并列出理解目标/自主执行/成果交付/协同迭代四大能力；官方快速上手文档说明客户端平台要求、日常与项目模式、新用户 1,000 积分（3 个月有效）与体验版每日 100 积分；新浪财经与界面新闻报道 2026-09-15 正式发布、星火 X2.5 与 ACode Harness 内核。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-15",
+    "checkedBy": "manual",
+    "notes": "发布当日收录。每积分对应的任务消耗与付费套餐价格暂未能核验（官网价格页为动态渲染），使用前请以客户端内价格页为准；每日 100 积分适用于体验版。"
   }
 ]

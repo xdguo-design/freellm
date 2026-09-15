@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进制转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('进制转换', '2/8/10/16 进制互转', 'radix-convert');
+
+  var inputs = {};
+  var labels = ['二进制', '八进制', '十进制', '十六进制'];
+  var bases = [2, 8, 10, 16];
+  var fields = [];
+
+  labels.forEach(function (label, i) {
+    inputs[bases[i]] = T.el('input', { type: 'text', placeholder: label, style: 'flex:1;font-family:monospace' });
+    fields.push(T.el('div', { class: 'row' }, [
+      T.el('span', { text: label, style: 'width:60px' }),
+      inputs[bases[i]]
+    ]));
+  });
+
+  function run(source) {
+    var val = inputs[source].value.trim();
+    if (!val) {
+      Object.keys(inputs).forEach(function (k) { if (k != source) inputs[k].value = ''; });
+      return;
+    }
+
+    try {
+      var num = parseInt(val, source);
+      if (isNaN(num)) throw new Error('Invalid number');
+
+      bases.forEach(function (base) {
+        if (base !== source) {
+          inputs[base].value = num.toString(base).toUpperCase();
+        }
+      });
+    } catch (e) {
+      bases.forEach(function (base) {
+        if (base !== source) inputs[base].value = '';
+      });
+    }
+  }
+
+  bases.forEach(function (base) {
+    inputs[base].addEventListener('input', function () { run(base); });
+  });
+
+  fields.forEach(function (f) { app.appendChild(f); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日期计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('日期计算器', '日期间隔/日期加减计算', 'date-calc');
+
+  var mode = T.select([
+    { value: 'diff', label: '计算间隔' },
+    { value: 'add', label: '日期加法' },
+    { value: 'sub', label: '日期减法' }
+  ]);
+
+  var date1 = T.el('input', { type: 'date', style: 'flex:1' });
+  var date2 = T.el('input', { type: 'date', style: 'flex:1' });
+  var days = T.el('input', { type: 'number', value: '30', min: '1', style: 'width:80px' });
+
+  var result = T.el('div', { class: 'output dark', style: 'text-align:center;padding:20px;font-size:1.1em' });
+
+  var copyBtn = T.copyBtn(function () { return result.textContent; });
+
+  function run() {
+    var d1 = new Date(date1.value);
+    var d2 = new Date(date2.value);
+    var n = parseInt(days.value) || 30;
+
+    if (mode.value === 'diff') {
+      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
+        result.textContent = '请选择两个日期';
+        return;
+      }
+      var diff = Math.abs(d2 - d1);
+      var daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var weeks = Math.floor(daysDiff / 7);
+      var months = Math.floor(daysDiff / 30);
+      var years = Math.floor(daysDiff / 365);
+      result.textContent = daysDiff + ' 天\n' + weeks + ' 周\n' + months + ' 个月\n' + years + ' 年';
+    } else {
+      if (isNaN(d1.getTime())) {
+        result.textContent = '请选择起始日期';
+        return;
+      }
+      var resultDate = new Date(d1);
+      if (mode.value === 'add') {
+        resultDate.setDate(resultDate.getDate() + n);
+      } else {
+        resultDate.setDate(resultDate.getDate() - n);
+      }
+      date2.value = resultDate.toISOString().slice(0, 10);
+      result.textContent = resultDate.toLocaleDateString('zh-CN', { 
+        year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
+      });
+    }
+  }
+
+  mode.addEventListener('change', function () {
+    date2.disabled = mode.value !== 'diff';
+    days.disabled = mode.value === 'diff';
+    run();
+  });
+  date1.addEventListener('change', run);
+  date2.addEventListener('change', run);
+  days.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'field', text: '模式:' }));
+  app.appendChild(mode);
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '日期1' }), date1,
+    T.el('span', { text: '日期2' }), date2,
+    T.el('span', { text: '天数' }), days
+  ]));
+  app.appendChild(T.el('div', { class: 'row' }, [result, copyBtn]));
+
+  var today = new Date().toISOString().slice(0, 10);
+  date1.value = today;
+  date2.value = today;
+  mode.dispatchEvent(new Event('change'));
+})();
+</script>
+</body>
+</html>

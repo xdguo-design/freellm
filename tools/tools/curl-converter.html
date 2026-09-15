@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curl 转代码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Curl 转代码', 'Curl 命令转 Python/JS/Go/Java', 'curl-converter');
+
+  var lang = T.select([
+    { value: 'python', label: 'Python (requests)' },
+    { value: 'javascript', label: 'JavaScript (fetch)' },
+    { value: 'go', label: 'Go (net/http)' },
+    { value: 'java', label: 'Java (HttpURLConnection)' }
+  ]);
+
+  var input = T.textarea('粘贴 Curl 命令...\n\ncurl -X GET "https://api.example.com/users" -H "Authorization: Bearer token"');
+  var output = T.textarea('生成的代码', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function parseCurl(curl) {
+    var result = { method: 'GET', url: '', headers: {}, data: null };
+    
+    var urlMatch = curl.match(/curl\s+['"]?([^'"\s]+)/i);
+    if (urlMatch) result.url = urlMatch[1];
+
+    var methodMatch = curl.match(/-X\s+['"]?(\w+)/i);
+    if (methodMatch) result.method = methodMatch[1].toUpperCase();
+
+    var headerRegex = /-H\s+['"]([^'"]+)['"]/gi;
+    var headerMatch;
+    while ((headerMatch = headerRegex.exec(curl)) !== null) {
+      var [key, value] = headerMatch[1].split(':').map(s => s.trim());
+      result.headers[key] = value;
+    }
+
+    if (curl.includes('-d ') || curl.includes('--data')) {
+      result.method = result.method === 'GET' ? 'POST' : result.method;
+      var dataMatch = curl.match(/(?:--data|-d)\s+['"](.+?)['"]/);
+      if (dataMatch) result.data = dataMatch[1];
+    }
+
+    return result;
+  }
+
+  function generate() {
+    var curl = input.value.trim();
+    if (!curl) { output.value = ''; return; }
+
+    var parsed = parseCurl(curl);
+    var code = '';
+
+    switch (lang.value) {
+      case 'python':
+        code = `import requests\n\n`;
+        code += `url = "${parsed.url}"\n`;
+        if (Object.keys(parsed.headers).length) {
+          code += `headers = ${JSON.stringify(parsed.headers, null, 4)}\n`;
+        }
+        code += `\nresponse = requests.${parsed.method.toLowerCase()}(url`;
+        if (Object.keys(parsed.headers).length) code += `, headers=headers`;
+        if (parsed.data) code += `, data='${parsed.data}'`;
+        code += `)\n\nprint(response.status_code)\nprint(response.json())`;
+        break;
+
+      case 'javascript':
+        code = `const response = await fetch("${parsed.url}", {\n`;
+        code += `  method: "${parsed.method}",\n`;
+        if (Object.keys(parsed.headers).length) {
+          code += `  headers: ${JSON.stringify(parsed.headers, null, 4)},\n`;
+        }
+        if (parsed.data) {
+          code += `  body: JSON.stringify(${parsed.data})\n`;
+        }
+        code += `});\n\nconst data = await response.json();\nconsole.log(data);`;
+        break;
+
+      case 'go':
+        code = `package main\n\nimport (\n\t"fmt"\n\t"net/http"\n\t"io"\n`;
+        if (parsed.data) code += `\t"strings"\n`;
+        code += `)\n\nfunc main() {\n`;
+        code += `\turl := "${parsed.url}"\n`;
+        if (parsed.data) {
+          code += `\tbody := strings.NewReader(\`${parsed.data}\`)\n`;
+          code += `\treq, _ := http.NewRequest("${parsed.method}", url, body)\n`;
+        } else {
+          code += `\treq, _ := http.NewRequest("${parsed.method}", url, nil)\n`;
+        }
+        Object.keys(parsed.headers).forEach(k => {
+          code += `\treq.Header.Set("${k}", "${parsed.headers[k]}")\n`;
+        });
+        code += `\tresp, _ := http.DefaultClient.Do(req)\n\tdefer resp.Body.Close()\n\n`;
+        code += `\tbytes, _ := io.ReadAll(resp.Body)\n\tfmt.Println(string(bytes))\n}`;
+        break;
+
+      case 'java':
+        code = `import java.net.*;\nimport java.io.*;\n\n`;
+        code += `public class Main {\n  public static void main(String[] args) throws Exception {\n`;
+        code += `    URL url = new URL("${parsed.url}");\n`;
+        code += `    HttpURLConnection conn = (HttpURLConnection) url.openConnection();\n`;
+        code += `    conn.setRequestMethod("${parsed.method}");\n`;
+        Object.keys(parsed.headers).forEach(k => {
+          code += `    conn.setRequestProperty("${k}", "${parsed.headers[k]}");\n`;
+        });
+        code += `\n    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));\n`;
+        code += `    String line;\n    while ((line = in.readLine()) != null) {\n      System.out.println(line);\n    }\n  }\n}`;
+        break;
+    }
+
+    output.value = code;
+  }
+
+  lang.addEventListener('change', generate);
+  input.addEventListener('input', function () { setTimeout(generate, 200); });
+
+  app.appendChild(T.el('div', { class: 'field', text: '输出语言:' }));
+  app.appendChild(lang);
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'row' }, [output, copyBtn]));
+
+  generate();
+})();
+</script>
+</body>
+</html>

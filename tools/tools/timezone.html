@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>时区转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('时区转换', '不同时区时间互转', 'timezone');
+
+  var fromTz = T.el('select', { style: 'flex:1' });
+  var toTz = T.el('select', { style: 'flex:1' });
+  var timeInput = T.el('input', { type: 'time', style: 'flex:1' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.2em' });
+
+  var timezones = [
+    'Asia/Shanghai', 'Asia/Tokyo', 'Asia/Seoul', 'Asia/Singapore',
+    'America/New_York', 'America/Los_Angeles', 'America/Chicago',
+    'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Moscow',
+    'Australia/Sydney', 'Pacific/Auckland'
+  ];
+
+  timezones.forEach(function (tz) {
+    fromTz.appendChild(T.el('option', { value: tz, text: tz.split('/').pop().replace(/_/g, ' ') }));
+    toTz.appendChild(T.el('option', { value: tz, text: tz.split('/').pop().replace(/_/g, ' ') }));
+  });
+  toTz.value = 'America/New_York';
+
+  function convert() {
+    var time = timeInput.value;
+    if (!time) { result.textContent = '请输入时间'; return; }
+
+    var now = new Date();
+    var [hours, minutes] = time.split(':');
+    now.setHours(parseInt(hours), parseInt(minutes), 0);
+
+    var fromTime = now.toLocaleString('en-US', { timeZone: fromTz.value });
+    var fromDate = new Date(fromTime);
+    
+    var resultTime = fromDate.toLocaleString('en-US', { timeZone: toTz.value, hour: '2-digit', minute: '2-digit', hour12: false });
+    var resultDate = fromDate.toLocaleString('zh-CN', { timeZone: toTz.value, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    var fromName = fromTz.value.split('/').pop().replace(/_/g, ' ');
+    var toName = toTz.value.split('/').pop().replace(/_/g, ' ');
+
+    result.innerHTML = '<strong>' + fromName + '</strong> ' + time + ' → <strong>' + toName + '</strong> ' + resultTime +
+      '<br><span style="font-size:0.8em;color:var(--muted)">' + resultDate + '</span>';
+  }
+
+  fromTz.addEventListener('change', convert);
+  toTz.addEventListener('change', convert);
+  timeInput.addEventListener('input', function () { setTimeout(convert, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '从' }), fromTz]));
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '到' }), toTz]));
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '时间' }), timeInput]));
+  app.appendChild(result);
+
+  var now = new Date();
+  timeInput.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  convert();
+})();
+</script>
+</body>
+</html>

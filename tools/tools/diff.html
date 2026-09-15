@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文本对比 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('文本对比', '快速找出两段文本之间的差异', 'diff');
+
+  var input1 = T.textarea('原始文本...');
+  var input2 = T.textarea('修改后的文本...');
+  var output = T.el('div', { class: 'output dark', style: 'white-space:pre-wrap;font-family:monospace;line-height:1.6' });
+
+  function run() {
+    var a = input1.value.split('\n');
+    var b = input2.value.split('\n');
+    var result = [];
+    var maxLen = Math.max(a.length, b.length);
+
+    for (var i = 0; i < maxLen; i++) {
+      var lineA = a[i];
+      var lineB = b[i];
+
+      if (lineA === lineB) {
+        result.push('  ' + (lineA || ''));
+      } else {
+        if (lineA !== undefined) result.push('- ' + lineA);
+        if (lineB !== undefined) result.push('+ ' + lineB);
+      }
+    }
+
+    output.innerHTML = result.map(function (line) {
+      if (line.startsWith('-')) return '<span style="color:#ff6b6b">' + escapeHtml(line) + '</span>';
+      if (line.startsWith('+')) return '<span style="color:#51cf66">' + escapeHtml(line) + '</span>';
+      return escapeHtml(line);
+    }).join('\n');
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  input1.addEventListener('input', function () { setTimeout(run, 100); });
+  input2.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row', style: 'gap:10px' }, [
+    T.el('div', { class: 'field', style: 'flex:1', text: '原始文本' }),
+    T.el('div', { class: 'field', style: 'flex:1', text: '修改后' })
+  ]));
+  app.appendChild(T.el('div', { class: 'row', style: 'gap:10px' }, [
+    T.el('div', { class: 'pane', style: 'flex:1' }, [input1]),
+    T.el('div', { class: 'pane', style: 'flex:1' }, [input2])
+  ]));
+  app.appendChild(T.el('div', { class: 'field', text: '对比结果:' }));
+  app.appendChild(output);
+})();
+</script>
+</body>
+</html>

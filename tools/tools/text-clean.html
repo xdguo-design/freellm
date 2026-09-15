@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文本清理 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('文本清理', '去除多余空行/空格/特殊字符', 'text-clean');
+
+  var opts = {
+    trimLines: T.el('label', { html: '<input type="checkbox" checked> 去除行首尾空格' }),
+    removeEmpty: T.el('label', { html: '<input type="checkbox" checked> 删除空行' }),
+    removeSpaces: T.el('label', { html: '<input type="checkbox"> 压缩连续空格' }),
+    removeSpecial: T.el('label', { html: '<input type="checkbox"> 去除特殊字符' }),
+    removeNewlines: T.el('label', { html: '<input type="checkbox"> 删除换行符' })
+  };
+
+  var input = T.textarea('输入文本...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+
+    if (opts.trimLines.checked) {
+      v = v.split('\n').map(function (l) { return l.trim(); }).join('\n');
+    }
+    if (opts.removeEmpty.checked) {
+      v = v.replace(/\n\s*\n/g, '\n');
+    }
+    if (opts.removeSpaces.checked) {
+      v = v.replace(/ {2,}/g, ' ');
+    }
+    if (opts.removeSpecial.checked) {
+      v = v.replace(/[^\w\s\u4e00-\u9fa5]/g, '');
+    }
+    if (opts.removeNewlines.checked) {
+      v = v.replace(/\n/g, ' ');
+    }
+
+    output.value = v;
+  }
+
+  Object.values(opts).forEach(function (el) {
+    el.querySelector('input').addEventListener('change', run);
+  });
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row', style: 'flex-wrap:wrap' }, Object.values(opts)));
+  app.appendChild(T.el('div', { class: 'row' }, [copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

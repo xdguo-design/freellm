@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数据传输计算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('数据传输计算', '下载时间/上传时间估算', 'data-transfer');
+
+  var fileSize = T.el('input', { type: 'number', value: '100', min: '0.01', style: 'flex:1' });
+  var fileUnit = T.select([
+    { value: 'MB', label: 'MB' },
+    { value: 'GB', label: 'GB' },
+    { value: 'KB', label: 'KB' },
+    { value: 'TB', label: 'TB' }
+  ]);
+  var speed = T.el('input', { type: 'number', value: '100', min: '0.01', style: 'flex:1' });
+  var speedUnit = T.select([
+    { value: 'Mbps', label: 'Mbps' },
+    { value: 'MBps', label: 'MB/s' },
+    { value: 'Kbps', label: 'Kbps' },
+    { value: 'Gbps', label: 'Gbps' }
+  ]);
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  function calculate() {
+    var sizeMB = parseFloat(fileSize.value) || 0;
+    switch (fileUnit.value) {
+      case 'KB': sizeMB /= 1024; break;
+      case 'GB': sizeMB *= 1024; break;
+      case 'TB': sizeMB *= 1024 * 1024; break;
+    }
+
+    var speedMBps = parseFloat(speed.value) || 0;
+    switch (speedUnit.value) {
+      case 'Kbps': speedMBps /= 8 * 1024; break;
+      case 'Mbps': speedMBps /= 8; break;
+      case 'Gbps': speedMBps *= 1024 / 8; break;
+    }
+
+    if (sizeMB <= 0 || speedMBps <= 0) {
+      result.textContent = '请输入有效数值';
+      return;
+    }
+
+    var seconds = sizeMB / speedMBps;
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var secs = Math.floor(seconds % 60);
+
+    var timeStr;
+    if (hours > 0) timeStr = hours + '小时' + minutes + '分钟' + secs + '秒';
+    else if (minutes > 0) timeStr = minutes + '分钟' + secs + '秒';
+    else timeStr = secs + '秒';
+
+    result.innerHTML = '<strong>预计时间:</strong> ' + timeStr + '<br><br>' +
+      '文件大小: ' + sizeMB.toFixed(2) + ' MB<br>' +
+      '传输速度: ' + speedMBps.toFixed(2) + ' MB/s<br>' +
+      '精确时间: ' + seconds.toFixed(1) + ' 秒';
+  }
+
+  [fileSize, fileUnit, speed, speedUnit].forEach(function (el) {
+    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function () { setTimeout(calculate, 100); });
+  });
+
+  app.appendChild(T.el('div', { class: 'field', text: '文件大小:' }));
+  app.appendChild(T.el('div', { class: 'row' }, [fileSize, fileUnit]));
+  app.appendChild(T.el('div', { class: 'field', text: '传输速度:' }));
+  app.appendChild(T.el('div', { class: 'row' }, [speed, speedUnit]));
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

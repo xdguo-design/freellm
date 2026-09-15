@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unicode 转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Unicode 转换', '\\uXXXX 与中文/Emoji 互转', 'unicode');
+
+  var mode = T.select([
+    { value: 'toUnicode', label: '文本 → Unicode' },
+    { value: 'fromUnicode', label: 'Unicode → 文本' }
+  ]);
+  var input = T.textarea('输入文本或 Unicode 编码...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+    try {
+      if (mode.value === 'toUnicode') {
+        var result = '';
+        for (var i = 0; i < v.length; i++) {
+          var code = v.charCodeAt(i);
+          if (code > 127) {
+            result += '\\u' + code.toString(16).padStart(4, '0');
+          } else {
+            result += v[i];
+          }
+        }
+        output.value = result;
+      } else {
+        var str = v.replace(/\\u([0-9a-fA-F]{4})/g, function (m, h) {
+          return String.fromCharCode(parseInt(h, 16));
+        });
+        output.value = str;
+      }
+    } catch (e) {
+      output.value = '⚠ 转换失败: ' + e.message;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

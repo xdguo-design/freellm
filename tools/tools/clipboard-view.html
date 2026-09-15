@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>剪贴板查看 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('剪贴板查看', '读取剪贴板内容', 'clipboard-view');
+
+  var output = T.el('div', { class: 'output dark', style: 'min-height:200px;white-space:pre-wrap;font-family:monospace;padding:16px' });
+  var readBtn = T.button('读取剪贴板', readClipboard, true);
+  var copyBtn = T.copyBtn(function () { return output.textContent; });
+  var clearBtn = T.button('清空', function () { output.textContent = ''; });
+
+  async function readClipboard() {
+    try {
+      var text = await navigator.clipboard.readText();
+      output.textContent = text || '(空)';
+    } catch (e) {
+      output.textContent = '无法读取剪贴板: ' + e.message + '\n\n请确保已授予剪贴板权限';
+    }
+  }
+
+  // Auto-read on load
+  readClipboard();
+
+  app.appendChild(T.el('div', { class: 'row' }, [readBtn, copyBtn, clearBtn]));
+  app.appendChild(output);
+})();
+</script>
+</body>
+</html>

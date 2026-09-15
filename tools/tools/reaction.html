@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>反应速度测试 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('反应速度测试', '点击测反应时间 ms', 'reaction');
+
+  var area = T.el('div', {
+    style: 'width:100%;height:300px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5em;cursor:pointer;transition:background 0.2s;background:#e74c3c;color:#fff;text-align:center',
+    text: '点击开始测试'
+  });
+
+  var result = T.el('div', { class: 'output dark', style: 'text-align:center;padding:20px;font-size:1.2em' });
+  var history = [];
+
+  var state = 'idle'; // idle, waiting, ready, done
+  var startTime = 0;
+  var timeout = 0;
+
+  area.addEventListener('click', function () {
+    switch (state) {
+      case 'idle':
+        state = 'waiting';
+        area.style.background = '#3498db';
+        area.textContent = '等待变绿...';
+        timeout = setTimeout(function () {
+          state = 'ready';
+          area.style.background = '#2ecc71';
+          area.textContent = '点击！';
+          startTime = Date.now();
+        }, 1000 + Math.random() * 4000);
+        break;
+      case 'waiting':
+        clearTimeout(timeout);
+        state = 'idle';
+        area.style.background = '#e74c3c';
+        area.textContent = '太早了！点击重试';
+        break;
+      case 'ready':
+        var reactionTime = Date.now() - startTime;
+        state = 'idle';
+        area.style.background = '#9b59b6';
+        area.textContent = reactionTime + ' ms\n点击继续';
+        history.unshift(reactionTime);
+        updateResult();
+        break;
+    }
+  });
+
+  function updateResult() {
+    var avg = Math.round(history.reduce(function (a, b) { return a + b; }, 0) / history.length);
+    var min = Math.min(...history);
+    var max = Math.max(...history);
+    result.innerHTML = '当前: ' + history[0] + ' ms | 平均: ' + avg + ' ms | 最快: ' + min + ' ms | 最慢: ' + max + ' ms';
+  }
+
+  app.appendChild(area);
+  app.appendChild(result);
+})();
+</script>
+</body>
+</html>

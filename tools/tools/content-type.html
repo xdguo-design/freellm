@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content-Type 大全 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Content-Type 大全', 'MIME 类型速查', 'content-type');
+
+  var search = T.el('input', { type: 'search', placeholder: '搜索 MIME 类型或扩展名...', style: 'width:100%' });
+
+  var TYPES = [
+    ['text/html', '.html, .htm', 'HTML 文档'],
+    ['text/css', '.css', 'CSS 样式表'],
+    ['text/javascript, application/javascript', '.js', 'JavaScript'],
+    ['text/plain', '.txt', '纯文本'],
+    ['text/xml', '.xml', 'XML 文档'],
+    ['text/csv', '.csv', 'CSV 数据'],
+    ['application/json', '.json', 'JSON 数据'],
+    ['application/xml', '.xml', 'XML 数据'],
+    ['application/x-yaml, text/yaml', '.yml, .yaml', 'YAML 数据'],
+    ['application/pdf', '.pdf', 'PDF 文档'],
+    ['application/zip', '.zip', 'ZIP 压缩包'],
+    ['application/gzip, application/x-gzip', '.gz', 'Gzip 压缩包'],
+    ['application/x-tar', '.tar', 'TAR 归档'],
+    ['application/x-bzip2', '.bz2', 'Bzip2 压缩'],
+    ['application/x-7z-compressed', '.7z', '7z 压缩包'],
+    ['application/msword', '.doc', 'Word 文档'],
+    ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.docx', 'Word 文档 (OOXML)'],
+    ['application/vnd.ms-excel', '.xls', 'Excel 表格'],
+    ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx', 'Excel 表格 (OOXML)'],
+    ['application/vnd.ms-powerpoint', '.ppt', 'PowerPoint 演示'],
+    ['application/vnd.openxmlformats-officedocument.presentationml.presentation', '.pptx', 'PowerPoint (OOXML)'],
+    ['image/jpeg', '.jpg, .jpeg', 'JPEG 图片'],
+    ['image/png', '.png', 'PNG 图片'],
+    ['image/gif', '.gif', 'GIF 图片'],
+    ['image/webp', '.webp', 'WebP 图片'],
+    ['image/svg+xml', '.svg', 'SVG 矢量图'],
+    ['image/avif', '.avif', 'AVIF 图片'],
+    ['image/tiff', '.tiff, .tif', 'TIFF 图片'],
+    ['image/x-icon', '.ico', 'ICO 图标'],
+    ['image/bmp', '.bmp', 'BMP 位图'],
+    ['audio/mpeg', '.mp3', 'MP3 音频'],
+    ['audio/wav', '.wav', 'WAV 音频'],
+    ['audio/ogg', '.ogg', 'OGG 音频'],
+    ['audio/flac', '.flac', 'FLAC 音频'],
+    ['audio/aac', '.aac', 'AAC 音频'],
+    ['video/mp4', '.mp4', 'MP4 视频'],
+    ['video/webm', '.webm', 'WebM 视频'],
+    ['video/ogg', '.ogg', 'OGG 视频'],
+    ['video/quicktime', '.mov', 'MOV 视频'],
+    ['video/x-msvideo', '.avi', 'AVI 视频'],
+    ['application/octet-stream', '.*', '二进制流'],
+    ['application/x-www-form-urlencoded', '表单', 'URL 编码表单'],
+    ['multipart/form-data', '表单', '多部分表单（文件上传）']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var filtered = TYPES.filter(function (t) {
+      if (!q) return true;
+      return t[0].toLowerCase().includes(q) || t[1].toLowerCase().includes(q) || t[2].toLowerCase().includes(q);
+    });
+
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">MIME 类型</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">扩展名</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
+    html += '<tbody>';
+    filtered.forEach(function (t) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + t[0] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace">' + t[1] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + t[2] + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+
+  app.appendChild(search);
+  app.appendChild(table);
+  render();
+})();
+</script>
+</body>
+</html>

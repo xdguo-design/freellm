@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS 圆角生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('CSS 圆角生成器', 'Border Radius 可视化调节', 'css-border');
+
+  var tl = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
+  var tr = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
+  var br = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
+  var bl = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
+
+  var preview = T.el('div', { 
+    style: 'width:150px;height:150px;background:linear-gradient(135deg,#667eea,#764ba2);margin:20px auto;transition:border-radius 0.2s'
+  });
+
+  var cssOutput = T.el('div', { class: 'output dark', style: 'font-family:monospace;padding:12px' });
+  var copyBtn = T.copyBtn(function () { return cssOutput.textContent; });
+
+  function update() {
+    var r = tl.value + 'px ' + tr.value + 'px ' + br.value + 'px ' + bl.value + 'px';
+    preview.style.borderRadius = r;
+    cssOutput.textContent = 'border-radius: ' + r + ';';
+  }
+
+  [tl, tr, br, bl].forEach(function (el) { el.addEventListener('input', update); });
+
+  var labels = ['左上', '右上', '右下', '左下'];
+  [tl, tr, br, bl].forEach(function (el, i) {
+    app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: labels[i], style: 'width:40px' }), el]));
+  });
+
+  app.appendChild(preview);
+  app.appendChild(T.el('div', { class: 'row' }, [cssOutput, copyBtn]));
+
+  update();
+})();
+</script>
+</body>
+</html>

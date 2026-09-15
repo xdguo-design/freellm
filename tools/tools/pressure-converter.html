@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>压力单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('压力单位换算', 'Pa/Bar/PSI/atm 等', 'pressure-converter');
+
+  var units = [
+    { id: 'pa', name: '帕斯卡 (Pa)' },
+    { id: 'kpa', name: '千帕 (kPa)' },
+    { id: 'bar', name: '巴 (bar)' },
+    { id: 'mbar', name: '毫巴 (mbar)' },
+    { id: 'atm', name: '标准大气压 (atm)' },
+    { id: 'psi', name: '磅/平方英寸 (PSI)' },
+    { id: 'mmhg', name: '毫米汞柱 (mmHg)' },
+    { id: 'torr', name: '托 (Torr)' }
+  ];
+
+  var factors = { pa: 1, kpa: 1000, bar: 100000, mbar: 100, atm: 101325, psi: 6894.76, mmhg: 133.322, torr: 133.322 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var pa = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (pa / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:140px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.atm.value = '1';
+  run('atm');
+})();
+</script>
+</body>
+</html>

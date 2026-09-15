@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>特殊符号大全 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('特殊符号大全', '分类速查点击复制', 'symbols');
+
+  var search = T.el('input', { type: 'search', placeholder: '搜索符号...', style: 'width:100%' });
+
+  var CATEGORIES = {
+    '标点符号': '。，、；：？！""''【】（）《》「」『』〔〕—…～・',
+    '数学符号': '±×÷∑∏∫√∞≈≠≤≥⊂⊃∪∩∈∉∏√∛∜∝∠⊥∥∧∨¬⊕⊗',
+    '货币符号': '$€£¥¢₠₡₣₤₥₦₧₨₩₪₫€₭₮₯₰₱₲₳₵₶₷₸₹₺₻₽',
+    '箭头符号': '←→↑↓↖↗↙↔↕⇐⇒⇑⇓مدرسة Haut←→↑↓◀▶▲▼►◄',
+    '星号符号': '★☆✧✦✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹ulin✨',
+    '扑克牌': '♠♣♥♦♤♧♡♢',
+    '括号符号': '()[]{}⟨⟩⌈⌉⌊⌋⟪⟫⟮⟯',
+    '制表符号': '─│┌┐└┘├┤┬┴┼═║╔╗╚╝╠╣╦╩╬',
+    '希腊字母': 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω',
+    '数学字母': 'ℂℍℕℙℚℝℤ.niiℑℜ',
+    '杂项符号': '❤❣❦❧♠♣♥♦⚡✓✗✘☺☻☹☕☘☙☚☛☜☞☚☟☞',
+    '技术符号': '#*+-.{}/\\|~`@$%^&'
+  };
+
+  var container = T.el('div');
+
+  function render(filter) {
+    var q = (filter || '').toLowerCase();
+    var html = '';
+
+    Object.keys(CATEGORIES).forEach(function (cat) {
+      var symbols = CATEGORIES[cat].split('');
+      var filtered = symbols.filter(function (s) {
+        if (!q) return true;
+        return cat.toLowerCase().includes(q) || s.includes(q);
+      });
+
+      if (filtered.length) {
+        html += '<h3 style="margin:16px 0 8px;font-size:1em">' + cat + '</h3>';
+        html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+        filtered.forEach(function (s) {
+          html += '<div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.2em;border:1px solid var(--line);border-radius:4px;cursor:pointer" title="点击复制: ' + s + '" onclick="navigator.clipboard.writeText(\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</div>';
+        });
+        html += '</div>';
+      }
+    });
+
+    container.innerHTML = html || '<p style="color:var(--muted)">未找到匹配的符号</p>';
+  }
+
+  search.addEventListener('input', function () { render(search.value); });
+
+  app.appendChild(search);
+  app.appendChild(container);
+  render();
+})();
+</script>
+</body>
+</html>

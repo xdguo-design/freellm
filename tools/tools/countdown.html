@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>倒计时器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('倒计时器', '设定目标日期的实时倒计时', 'countdown');
+
+  var targetDate = T.el('input', { type: 'datetime-local', style: 'flex:1' });
+  var title = T.el('input', { type: 'text', placeholder: '事件名称', value: '新年', style: 'flex:1' });
+
+  var display = T.el('div', {
+    style: 'font-size:2.5em;font-family:monospace;text-align:center;padding:30px;background:var(--bg);border-radius:12px;border:1px solid var(--line)',
+    text: '00天 00:00:00'
+  });
+
+  var eventName = T.el('div', { class: 'badge blue', style: 'font-size:1.2em;text-align:center;margin:16px 0' });
+
+  var timer = null;
+
+  function update() {
+    var target = new Date(targetDate.value);
+    if (isNaN(target.getTime())) {
+      display.textContent = '请设置目标时间';
+      return;
+    }
+
+    var now = new Date();
+    var diff = target - now;
+
+    if (diff <= 0) {
+      display.textContent = '⏰ 时间到！';
+      display.style.color = '#e74c3c';
+      clearInterval(timer);
+      return;
+    }
+
+    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    display.textContent = days + '天 ' + 
+      String(hours).padStart(2, '0') + ':' + 
+      String(minutes).padStart(2, '0') + ':' + 
+      String(seconds).padStart(2, '0');
+    display.style.color = '';
+
+    eventName.textContent = title.value || '倒计时';
+  }
+
+  function start() {
+    clearInterval(timer);
+    update();
+    timer = setInterval(update, 1000);
+  }
+
+  targetDate.addEventListener('change', start);
+  title.addEventListener('input', update);
+
+  // Default: next new year
+  var now = new Date();
+  var nextYear = new Date(now.getFullYear() + 1, 0, 1);
+  targetDate.value = nextYear.toISOString().slice(0, 16);
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '事件' }), title]));
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '目标时间' }), targetDate]));
+  app.appendChild(eventName);
+  app.appendChild(display);
+
+  start();
+})();
+</script>
+</body>
+</html>

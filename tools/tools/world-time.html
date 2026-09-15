@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>世界时间表 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('世界时间表', '全球主要城市当前时间', 'world-time');
+
+  var cities = [
+    { name: '北京', tz: 'Asia/Shanghai', flag: '🇨🇳' },
+    { name: '东京', tz: 'Asia/Tokyo', flag: '🇯🇵' },
+    { name: '纽约', tz: 'America/New_York', flag: '🇺🇸' },
+    { name: '伦敦', tz: 'Europe/London', flag: '🇬🇧' },
+    { name: '巴黎', tz: 'Europe/Paris', flag: '🇫🇷' },
+    { name: '悉尼', tz: 'Australia/Sydney', flag: '🇦🇺' },
+    { name: '迪拜', tz: 'Asia/Dubai', flag: '🇦🇪' },
+    { name: '新加坡', tz: 'Asia/Singapore', flag: '🇸🇬' },
+    { name: '洛杉矶', tz: 'America/Los_Angeles', flag: '🇺🇸' },
+    { name: '莫斯科', tz: 'Europe/Moscow', flag: '🇷🇺' },
+    { name: '首尔', tz: 'Asia/Seoul', flag: '🇰🇷' },
+    { name: '孟买', tz: 'Asia/Kolkata', flag: '🇮🇳' }
+  ];
+
+  var container = T.el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px' });
+
+  function update() {
+    var html = '';
+    cities.forEach(function (city) {
+      var now = new Date();
+      var options = { timeZone: city.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      var dateOptions = { timeZone: city.tz, weekday: 'short', month: 'short', day: 'numeric' };
+      var time = now.toLocaleTimeString('zh-CN', options);
+      var date = now.toLocaleDateString('zh-CN', dateOptions);
+      
+      html += '<div style="padding:16px;background:var(--bg);border:1px solid var(--line);border-radius:8px;text-align:center">';
+      html += '<div style="font-size:1.5em;margin-bottom:4px">' + city.flag + '</div>';
+      html += '<div style="font-weight:bold;margin-bottom:4px">' + city.name + '</div>';
+      html += '<div style="font-family:monospace;font-size:1.3em;color:var(--accent)">' + time + '</div>';
+      html += '<div style="font-size:0.85em;color:var(--muted)">' + date + '</div>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  update();
+  setInterval(update, 1000);
+
+  app.appendChild(container);
+})();
+</script>
+</body>
+</html>

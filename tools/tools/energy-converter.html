@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>能量单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('能量单位换算', 'Joule/Kcal/kWh 等', 'energy-converter');
+
+  var units = [
+    { id: 'j', name: '焦耳 (J)' },
+    { id: 'kj', name: '千焦 (kJ)' },
+    { id: 'cal', name: '卡路里 (cal)' },
+    { id: 'kcal', name: '千卡 (kcal)' },
+    { id: 'wh', name: '瓦时 (Wh)' },
+    { id: 'kwh', name: '千瓦时 (kWh)' },
+    { id: 'ev', name: '电子伏特 (eV)' },
+    { id: 'btu', name: '英热单位 (BTU)' }
+  ];
+
+  var factors = { j: 1, kj: 1000, cal: 4.184, kcal: 4184, wh: 3600, kwh: 3600000, ev: 1.602e-19, btu: 1055.06 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var j = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        var result = j / factors[u.id];
+        inputs[u.id].value = result < 0.0001 && result > 0 ? result.toExponential(4) : result.toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.kcal.value = '1';
+  run('kcal');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>掷骰子 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('掷骰子', '3D 动画骰子', 'dice');
+
+  var diceCount = T.el('input', { type: 'number', value: '1', min: '1', max: '10', style: 'width:80px' });
+  var rollBtn = T.button('掷骰子', roll, true);
+  var diceContainer = T.el('div', { style: 'display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:20px 0' });
+  var result = T.el('div', { class: 'badge blue', style: 'font-size:1.5em;text-align:center' });
+
+  var DICE_FACES = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+  function createDice(value) {
+    var dice = T.el('div', {
+      style: 'width:80px;height:80px;font-size:3em;display:flex;align-items:center;justify-content:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:transform 0.3s',
+      text: DICE_FACES[value - 1]
+    });
+    return dice;
+  }
+
+  function roll() {
+    var count = parseInt(diceCount.value) || 1;
+    diceContainer.innerHTML = '';
+    var total = 0;
+    var diceList = [];
+
+    for (var i = 0; i < count; i++) {
+      var value = Math.floor(Math.random() * 6) + 1;
+      var dice = createDice(value);
+      diceList.push({ dice: dice, target: value });
+      total += value;
+      diceContainer.appendChild(dice);
+    }
+
+    // Animate
+    var frame = 0;
+    var interval = setInterval(function () {
+      frame++;
+      diceList.forEach(function (d) {
+        var randomValue = Math.floor(Math.random() * 6) + 1;
+        d.dice.textContent = DICE_FACES[randomValue - 1];
+      });
+      if (frame > 10) {
+        clearInterval(interval);
+        diceList.forEach(function (d) {
+          d.dice.textContent = DICE_FACES[d.target - 1];
+        });
+        result.textContent = count > 1 ? '总点数: ' + total : '点数: ' + total;
+      }
+    }, 50);
+  }
+
+  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' }, [
+    T.el('span', { text: '骰子数量' }), diceCount, rollBtn
+  ]));
+  app.appendChild(diceContainer);
+  app.appendChild(result);
+
+  roll();
+})();
+</script>
+</body>
+</html>

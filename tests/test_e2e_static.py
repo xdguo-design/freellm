@@ -116,7 +116,7 @@ class StaticContractTests(unittest.TestCase):
             ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
             ">297 ",
             ">25 ",
-            ">40</strong>",
+            ">41</strong>",
         ):
             self.assertIn(needle, log)
         self.assertNotIn("首次建立基线", log)
@@ -174,6 +174,18 @@ class StaticContractTests(unittest.TestCase):
             'target="_blank" rel="noreferrer noopener"',
             'renderOfferModels',
             'class="offer-model-row"',
+        ):
+            self.assertIn(needle, self.html)
+
+    def test_catalog_search_indexes_nested_models_and_cards_have_stable_height(self):
+        for needle in (
+            "const modelSearchText = (item.freeModels || []).flatMap",
+            ".offer-grid .offer { height: 500px; min-height: 0; align-self: start; }",
+            ".offer-grid .offer.model-expanded { height: auto; }",
+            ".offer-grid .offer { height: auto; min-height: 0; align-self: stretch; }",
+            "placeholder=\"搜索模型、平台或功能，例如 DeepSeek、Qwen3\"",
+            "searchPlaceholder: '搜索模型、平台或功能，例如 DeepSeek、Qwen3'",
+            "searchPlaceholder: 'Search models, platforms or capabilities, e.g. DeepSeek, Qwen3'",
         ):
             self.assertIn(needle, self.html)
 

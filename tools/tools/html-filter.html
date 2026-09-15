@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML 标签过滤 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('HTML 标签过滤', '保留或移除指定标签', 'html-filter');
+
+  var mode = T.select([
+    { value: 'strip', label: '移除所有标签' },
+    { value: 'keep', label: '保留指定标签' },
+    { value: 'remove', label: '移除指定标签' }
+  ]);
+  var tags = T.el('input', { type: 'text', placeholder: '标签列表（逗号分隔）: p,div,span', style: 'flex:1' });
+  var input = T.textarea('输入 HTML...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.value = ''; return; }
+
+    if (mode.value === 'strip') {
+      output.value = v.replace(/<[^>]*>/g, '');
+      return;
+    }
+
+    var tagList = tags.value.split(',').map(function (t) { return t.trim().toLowerCase(); }).filter(Boolean);
+    if (!tagList.length) { output.value = v; return; }
+
+    if (mode.value === 'keep') {
+      output.value = v.replace(/<[^>]*>/g, function (match) {
+        var tag = match.match(/<(\w+)/);
+        if (tag && tagList.includes(tag[1].toLowerCase())) return match;
+        return '';
+      });
+    } else {
+      output.value = v.replace(/<[^>]*>/g, function (match) {
+        var tag = match.match(/<(\w+)/);
+        if (tag && tagList.includes(tag[1].toLowerCase())) return '';
+        return match;
+      });
+    }
+  }
+
+  mode.addEventListener('change', run);
+  tags.addEventListener('input', function () { setTimeout(run, 100); });
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, tags, copyBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

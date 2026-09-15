@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>频率单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('频率单位换算', 'Hz/KHz/MHz/GHz 等', 'frequency-converter');
+
+  var units = [
+    { id: 'hz', name: '赫兹 (Hz)' },
+    { id: 'khz', name: '千赫 (kHz)' },
+    { id: 'mhz', name: '兆赫 (MHz)' },
+    { id: 'ghz', name: '吉赫 (GHz)' },
+    { id: 'rpm', name: '转/分 (RPM)' },
+    { id: 'rad', name: '弧度/秒 (rad/s)' }
+  ];
+
+  var factors = { hz: 1, khz: 1000, mhz: 1e6, ghz: 1e9, rpm: 1/60, rad: 1/(2*Math.PI) };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var hz = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        var result = hz / factors[u.id];
+        inputs[u.id].value = result < 0.0001 && result > 0 ? result.toExponential(4) : result.toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.mhz.value = '100';
+  run('mhz');
+})();
+</script>
+</body>
+</html>

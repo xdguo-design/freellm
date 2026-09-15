@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS 单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('CSS 单位换算', 'px/rem/em/vw/vh/pt 互转', 'css-unit');
+
+  var baseFont = T.el('input', { type: 'number', value: '16', min: '1', style: 'width:80px' });
+
+  var units = ['px', 'rem', 'em', 'vw', 'vh', 'pt', 'in', 'cm', 'mm'];
+  var inputs = {};
+
+  units.forEach(function (u) {
+    inputs[u] = T.el('input', { type: 'number', placeholder: u, style: 'flex:1' });
+  });
+
+  var preview = T.el('div', { style: 'padding:20px;border:1px solid var(--line);border-radius:8px;margin-top:16px;text-align:center' });
+  var previewBox = T.el('div', { style: 'background:var(--accent);display:inline-block;transition:all 0.3s', text: '预览' });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    var base = parseFloat(baseFont.value) || 16;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u !== source) inputs[u].value = ''; });
+      return;
+    }
+
+    var px;
+    switch (source) {
+      case 'px': px = val; break;
+      case 'rem': case 'em': px = val * base; break;
+      case 'vw': px = val * vw / 100; break;
+      case 'vh': px = val * vh / 100; break;
+      case 'pt': px = val * 96 / 72; break;
+      case 'in': px = val * 96; break;
+      case 'cm': px = val * 96 / 2.54; break;
+      case 'mm': px = val * 96 / 25.4; break;
+    }
+
+    units.forEach(function (u) {
+      if (u !== source) {
+        var result;
+        switch (u) {
+          case 'px': result = px; break;
+          case 'rem': case 'em': result = px / base; break;
+          case 'vw': result = px / vw * 100; break;
+          case 'vh': result = px / vh * 100; break;
+          case 'pt': result = px * 72 / 96; break;
+          case 'in': result = px / 96; break;
+          case 'cm': result = px * 2.54 / 96; break;
+          case 'mm': result = px * 25.4 / 96; break;
+        }
+        inputs[u].value = result.toFixed(4).replace(/\.?0+$/, '');
+      }
+    });
+
+    previewBox.style.width = Math.min(px, 400) + 'px';
+    previewBox.style.height = Math.min(px, 200) + 'px';
+  }
+
+  baseFont.addEventListener('input', function () { run('px'); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '基础字号 (px)' }), baseFont
+  ]));
+
+  units.forEach(function (u) {
+    inputs[u].addEventListener('input', function () { setTimeout(function () { run(u); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u, style: 'width:40px;font-family:monospace' }),
+      inputs[u]
+    ]));
+  });
+
+  preview.appendChild(previewBox);
+  app.appendChild(preview);
+
+  inputs.px.value = '16';
+  run('px');
+})();
+</script>
+</body>
+</html>

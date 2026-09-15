@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件哈希 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('文件哈希', '浏览器端计算文件 MD5/SHA 哈希', 'file-hash');
+
+  var algo = T.select([
+    { value: 'MD5', label: 'MD5' },
+    { value: 'SHA-1', label: 'SHA-1' },
+    { value: 'SHA-256', label: 'SHA-256' },
+    { value: 'SHA-384', label: 'SHA-384' },
+    { value: 'SHA-512', label: 'SHA-512' }
+  ]);
+
+  var dropZone = T.el('div', { 
+    class: 'pane', 
+    style: 'text-align:center;padding:40px;border:2px dashed var(--line);border-radius:8px;cursor:pointer',
+    html: '<p>拖拽文件到此处，或点击选择文件</p>'
+  });
+
+  var output = T.el('div', { class: 'output dark', style: 'white-space:pre-wrap;font-family:monospace' });
+  var fileInput = T.el('input', { type: 'file', style: 'display:none' });
+
+  dropZone.addEventListener('click', function () { fileInput.click(); });
+  dropZone.addEventListener('dragover', function (e) { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
+  dropZone.addEventListener('dragleave', function () { dropZone.style.borderColor = 'var(--line)'; });
+  dropZone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--line)';
+    if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length) processFile(fileInput.files[0]);
+  });
+
+  async function processFile(file) {
+    var buffer = await file.arrayBuffer();
+    var results = [];
+
+    if (algo.value === 'MD5') {
+      var md5 = await computeMD5(new Uint8Array(buffer));
+      results.push('MD5:    ' + md5);
+    }
+
+    var hashes = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
+    for (var h of hashes) {
+      if (algo.value === 'MD5' || algo.value === h) {
+        var hash = await crypto.subtle.digest(h, buffer);
+        var hex = Array.from(new Uint8Array(hash)).map(function (b) {
+          return b.toString(16).padStart(2, '0');
+        }).join('');
+        results.push(h.padEnd(8) + hex);
+      }
+    }
+
+    output.textContent = '文件: ' + file.name + '\n大小: ' + file.size + ' bytes\n\n' + results.join('\n');
+  }
+
+  async function computeMD5(bytes) {
+    function md5cycle(x, k) {
+      var a = x[0], b = x[1], c = x[2], d = x[3];
+      a = ff(a, b, c, d, k[0], 7, -680876936); d = ff(d, a, b, c, k[1], 12, -389564586);
+      c = ff(c, d, a, b, k[2], 17, 606105819); b = ff(b, c, d, a, k[3], 22, -1044525330);
+      a = ff(a, b, c, d, k[4], 7, -176418897); d = ff(d, a, b, c, k[5], 12, 1200080426);
+      c = ff(c, d, a, b, k[6], 17, -1473231341); b = ff(b, c, d, a, k[7], 22, -45705983);
+      a = ff(a, b, c, d, k[8], 7, 1770035416); d = ff(d, a, b, c, k[9], 12, -1958414417);
+      c = ff(c, d, a, b, k[10], 17, -42063); b = ff(b, c, d, a, k[11], 22, -1990404162);
+      a = ff(a, b, c, d, k[12], 7, 1804603682); d = ff(d, a, b, c, k[13], 12, -40341101);
+      c = ff(c, d, a, b, k[14], 17, -1502002290); b = ff(b, c, d, a, k[15], 22, 1236535329);
+      x[0] = add32(a, x[0]); x[1] = add32(b, x[1]);
+      x[2] = add32(c, x[2]); x[3] = add32(d, x[3]);
+    }
+    function cmn(q, a, b, x, s, t) {
+      a = add32(add32(a, q), add32(x, t));
+      return add32((a << s) | (a >>> (32 - s)), b);
+    }
+    function ff(a, b, c, d, x, s, t) { return cmn((b & c) | ((~b) & d), a, b, x, s, t); }
+    function add32(a, b) { return (a + b) & 0xFFFFFFFF; }
+    function hex(x) {
+      var h = '';
+      for (var i = 0; i < 4; i++) {
+        h += ((x[i] >> (i * 8 + 8)) & 0xFF).toString(16).padStart(2, '0');
+        h += ((x[i] >> (i * 8)) & 0xFF).toString(16).padStart(2, '0');
+      }
+      return h;
+    }
+    var str = '';
+    for (var i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+    var state = [1732584193, -271733879, -1732584194, 271733878];
+    var n = str.length, i;
+    for (i = 64; i <= n; i += 64) {
+      var blk = [];
+      for (var j = 0; j < 64; j += 4) {
+        blk[j >> 2] = str.charCodeAt(i - 64 + j) + (str.charCodeAt(i - 64 + j + 1) << 8) +
+          (str.charCodeAt(i - 64 + j + 2) << 16) + (str.charCodeAt(i - 64 + j + 3) << 24);
+      }
+      md5cycle(state, blk);
+    }
+    var tail = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var rem = n % 64;
+    for (i = 0; i < rem; i++) {
+      tail[i >> 2] |= str.charCodeAt(n - rem + i) << ((i % 4) << 3);
+    }
+    tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+    if (rem > 55) { md5cycle(state, tail); tail = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; }
+    tail[14] = n * 8;
+    md5cycle(state, tail);
+    return hex(state);
+  }
+
+  algo.addEventListener('change', function () { output.textContent = ''; });
+
+  app.appendChild(T.el('div', { class: 'row' }, [algo]));
+  app.appendChild(dropZone);
+  app.appendChild(output);
+  app.appendChild(fileInput);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>复利计算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('复利计算器', '复利/投资收益计算', 'compound');
+
+  var principal = T.el('input', { type: 'number', value: '100000', placeholder: '初始金额', style: 'flex:1' });
+  var monthly = T.el('input', { type: 'number', value: '1000', placeholder: '每月投入', style: 'flex:1' });
+  var rate = T.el('input', { type: 'number', value: '5', step: '0.1', placeholder: '年化收益率 %', style: 'flex:1' });
+  var years = T.el('input', { type: 'number', value: '10', min: '1', max: '50', style: 'width:80px' });
+
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var copyBtn = T.copyBtn(function () { return result.textContent; });
+
+  function calculate() {
+    var P = parseFloat(principal.value) || 0;
+    var M = parseFloat(monthly.value) || 0;
+    var r = (parseFloat(rate.value) || 0) / 100 / 12;
+    var n = (parseInt(years.value) || 10) * 12;
+
+    var balance = P;
+    var totalContributed = P;
+    var history = [];
+
+    for (var i = 0; i < n; i++) {
+      balance = (balance + M) * (1 + r);
+      totalContributed += M;
+      if ((i + 1) % 12 === 0) {
+        history.push({ year: (i + 1) / 12, balance: balance, contributed: totalContributed });
+      }
+    }
+
+    var totalInterest = balance - totalContributed;
+
+    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td style="padding:8px;color:var(--muted)">初始金额</td><td style="padding:8px;text-align:right">¥' + P.toLocaleString() + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">每月投入</td><td style="padding:8px;text-align:right">¥' + M.toLocaleString() + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">年化收益率</td><td style="padding:8px;text-align:right">' + (r * 1200).toFixed(1) + '%</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">投资年限</td><td style="padding:8px;text-align:right">' + (n / 12) + ' 年</td></tr>' +
+      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">总投入</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right">¥' + totalContributed.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">总收益</td><td style="padding:8px;text-align:right;color:var(--green)">¥' + totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '<tr><td style="padding:8px;color:var(--muted)">最终金额</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">¥' + balance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
+      '</table>';
+  }
+
+  [principal, monthly, rate, years].forEach(function (el) { el.addEventListener('input', function () { setTimeout(calculate, 100); }); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '初始' }), principal, T.el('span', { text: '月投' }), monthly]));
+  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '利率' }), rate, T.el('span', { text: '年限' }), years, copyBtn]));
+  app.appendChild(result);
+
+  calculate();
+})();
+</script>
+</body>
+</html>

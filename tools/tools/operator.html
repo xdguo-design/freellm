@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>运算符优先级 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('运算符优先级', '多语言运算符优先级', 'operator');
+
+  var OPERATORS = [
+    [1, '最高', '[] () .', '成员访问、函数调用'],
+    [1, '最高', '++ --', '后缀自增/自减'],
+    [2, '高', '! ~ + -', '一元运算符、类型转换'],
+    [2, '高', '++ --', '前缀自增/自减'],
+    [2, '高', 'typeof sizeof void delete', '类型/大小/删除'],
+    [3, '中高', '**', '幂运算'],
+    [4, '中', '* / %', '乘、除、取模'],
+    [5, '中', '+ -', '加、减'],
+    [6, '中', '<< >>', '位移'],
+    [7, '中低', '< <= > >=', '关系比较'],
+    [8, '低', '== != === !==', '相等比较'],
+    [9, '低', '&', '按位与'],
+    [10, '低', '^', '按位异或'],
+    [11, '低', '|', '按位或'],
+    [12, '更低', '&&', '逻辑与'],
+    [13, '更低', '||', '逻辑或'],
+    [14, '更低', '??', '空值合并'],
+    [15, '最低', '= += -= *= /= 等', '赋值运算'],
+    [16, '最低', ',', '逗号运算']
+  ];
+
+  var table = T.el('div', { class: 'output dark' });
+
+  function render() {
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">优先级</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">级别</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">运算符</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
+    html += '<tbody>';
+    OPERATORS.forEach(function (o) {
+      html += '<tr>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line);text-align:center;font-weight:bold">' + o[0] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + o[1] + '</td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + o[2] + '</code></td>';
+      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + o[3] + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+
+  render();
+  app.appendChild(table);
+})();
+</script>
+</body>
+</html>

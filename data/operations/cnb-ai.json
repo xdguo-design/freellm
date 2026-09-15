@@ -1,0 +1,38 @@
+{
+  "providerId": "cnb",
+  "provider": "CNB",
+  "lastVerifiedAt": "2026-09-15",
+  "offerIds": ["cnb-ai"],
+  "paths": [
+    {
+      "id": "npc",
+      "label": "CodeBuddy NPC",
+      "productType": "web",
+      "prerequisites": ["CNB 账号", "可访问的仓库、Issue 或 PR"],
+      "steps": [
+        {"title": "打开仓库协作页面", "detail": "进入 CNB 仓库的 Issue 或 Pull Request 页面。"},
+        {"title": "提及 CodeBuddy", "detail": "在评论中输入 @CodeBuddy 并描述需要完成的代码评审、分析或修改任务。"},
+        {"title": "检查 AI 产出", "detail": "查看 NPC 的回复、提交和 PR，确认变更后再合并。"}
+      ],
+      "validation": "在测试仓库 Issue 或 PR 中发送一次 @CodeBuddy 请求，并确认平台返回 AI 回复或任务结果。",
+      "limits": "NPC 是否可以写代码、推送代码或创建 PR 取决于仓库配置、工作模式和权限。",
+      "commonIssues": ["没有响应时检查是否已启用 NPC 或仓库角色配置。", "首次验证不要使用含生产密钥的仓库。"],
+      "sourceUrls": ["https://docs.cnb.cool/zh/ai/intro.html", "https://cnb.cool/cnb/cool/default-codebuddy-npc"]
+    },
+    {
+      "id": "codebuddy-web",
+      "label": "CodeBuddy Web",
+      "productType": "ide",
+      "prerequisites": ["CNB 账号", "已创建或可访问的 Workspaces"],
+      "steps": [
+        {"title": "打开 Workspaces", "detail": "从仓库分支页或工作空间列表进入 Workspaces。"},
+        {"title": "选择 CodeBuddy Web", "detail": "在工作空间入口中选择 CodeBuddy Web，使用浏览器直接进入 AI 编程界面。"},
+        {"title": "验证任务", "detail": "让 CodeBuddy 解释、生成或修改一处测试代码，并检查结果。"}
+      ],
+      "validation": "在 CodeBuddy Web 中完成一次小型代码解释或修改任务，并确认结果写入工作空间。",
+      "limits": "CodeBuddy Web 需要工作空间镜像内置满足版本要求的 codebuddy 命令；功能和模型以平台当前状态为准。",
+      "commonIssues": ["看不到 CodeBuddy Web 时检查工作空间镜像中的 codebuddy 版本。", "浏览器入口与完整 WebIDE 的交互定位不同。"],
+      "sourceUrls": ["https://docs.cnb.cool/en/workspaces/codebuddy-web.html"]
+    }
+  ]
+}

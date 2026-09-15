@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cron 表达式 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Cron 表达式', 'Cron 表达式解析与验证', 'cron');
+
+  var input = T.el('input', { type: 'text', value: '*/5 * * * *', placeholder: '* * * * *', style: 'width:100%;font-family:monospace;font-size:1.2em;text-align:center;padding:12px' });
+  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
+  var nextRuns = T.el('div', { class: 'output dark', style: 'padding:16px' });
+
+  var presets = T.el('div', { class: 'row', style: 'flex-wrap:wrap;gap:8px' });
+  var PRESETS = [
+    ['每分钟', '* * * * *'],
+    ['每5分钟', '*/5 * * * *'],
+    ['每小时', '0 * * * *'],
+    ['每天零点', '0 0 * * *'],
+    ['每周一9点', '0 9 * * 1'],
+    ['每月1号', '0 0 1 * *'],
+    ['每季度', '0 0 1 1,4,7,10 *'],
+    ['每年元旦', '0 0 1 1 *']
+  ];
+
+  PRESETS.forEach(function (p) {
+    var btn = T.button(p[0], function () { input.value = p[1]; parse(); });
+    presets.appendChild(btn);
+  });
+
+  function parse() {
+    var v = input.value.trim();
+    if (!v) { result.textContent = ''; nextRuns.textContent = ''; return; }
+
+    var parts = v.split(/\s+/);
+    if (parts.length !== 5) {
+      result.innerHTML = '<span style="color:var(--red)">✗ 需要 5 个字段: 分 时 日 月 周</span>';
+      nextRuns.textContent = '';
+      return;
+    }
+
+    var fields = ['分钟 (0-59)', '小时 (0-23)', '日期 (1-31)', '月份 (1-12)', '星期 (0-7)'];
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    html += '<thead><tr><th style="text-align:left;padding:4px">字段</th><th style="text-align:left;padding:4px">值</th><th style="text-align:left;padding:4px">描述</th></tr></thead>';
+    html += '<tbody>';
+
+    parts.forEach(function (p, i) {
+      var desc = describeField(p, i);
+      html += '<tr><td style="padding:4px;border-bottom:1px solid var(--line)">' + fields[i] + '</td>';
+      html += '<td style="padding:4px;border-bottom:1px solid var(--line);font-family:monospace;color:var(--accent)">' + p + '</td>';
+      html += '<td style="padding:4px;border-bottom:1px solid var(--line)">' + desc + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    result.innerHTML = html;
+
+    // Calculate next runs
+    var runs = [];
+    var now = new Date();
+    var check = new Date(now);
+    for (var i = 0; i < 10 && runs.length < 5; i++) {
+      check.setMinutes(check.getMinutes() + 1);
+      if (matchCron(check, parts)) {
+        runs.push(check.toLocaleString('zh-CN'));
+      }
+    }
+    nextRuns.innerHTML = '<strong>下次执行时间:</strong><br>' + (runs.length ? runs.join('<br>') : '无法计算');
+  }
+
+  function describeField(val, idx) {
+    if (val === '*') return '每' + ['分钟', '小时', '天', '月', '周'][idx];
+    if (val.includes('/')) return '每 ' + val.split('/')[1] + ' 个单位';
+    if (val.includes('-')) return '从 ' + val.replace('-', ' 到 ');
+    if (val.includes(',')) return '在 ' + val.replace(/,/g, ', ') + ' 时';
+    return '在 ' + val + ' 时';
+  }
+
+  function matchCron(date, parts) {
+    var min = date.getMinutes();
+    var hour = date.getHours();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var dow = date.getDay();
+
+    return matchPart(parts[0], min, 0, 59) &&
+           matchPart(parts[1], hour, 0, 23) &&
+           matchPart(parts[2], day, 1, 31) &&
+           matchPart(parts[3], month, 1, 12) &&
+           matchPart(parts[4], dow, 0, 7);
+  }
+
+  function matchPart(part, val, min, max) {
+    if (part === '*') return true;
+    if (part.includes('/')) {
+      var step = parseInt(part.split('/')[1]);
+      return val % step === 0;
+    }
+    if (part.includes(',')) {
+      return part.split(',').includes(String(val));
+    }
+    if (part.includes('-')) {
+      var range = part.split('-');
+      return val >= parseInt(range[0]) && val <= parseInt(range[1]);
+    }
+    return parseInt(part) === val;
+  }
+
+  input.addEventListener('input', function () { setTimeout(parse, 100); });
+
+  app.appendChild(T.el('div', { class: 'field', text: '预设:' }));
+  app.appendChild(presets);
+  app.appendChild(T.el('div', { class: 'field', text: 'Cron 表达式 (分 时 日 月 周):' }));
+  app.appendChild(input);
+  app.appendChild(result);
+  app.appendChild(T.el('div', { class: 'field', text: '下次执行:' }));
+  app.appendChild(nextRuns);
+  parse();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>随机字符串 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('随机字符串', '随机数字/字母/混合字符串生成', 'random-string');
+
+  var length = T.el('input', { type: 'number', value: '16', min: '1', max: '1000', style: 'width:80px' });
+  var count = T.el('input', { type: 'number', value: '5', min: '1', max: '100', style: 'width:80px' });
+  var charset = T.select([
+    { value: 'alnum', label: '字母+数字' },
+    { value: 'alpha', label: '仅字母' },
+    { value: 'numeric', label: '仅数字' },
+    { value: 'hex', label: '十六进制' },
+    { value: 'binary', label: '二进制' },
+    { value: 'custom', label: '自定义' }
+  ]);
+  var customChars = T.el('input', { type: 'text', placeholder: '自定义字符集', style: 'flex:1' });
+
+  var output = T.textarea('生成结果', false);
+  output.readOnly = true;
+
+  var generateBtn = T.button('生成', generate, true);
+  var copyBtn = T.copyBtn(function () { return output.value; });
+
+  function generate() {
+    var len = parseInt(length.value) || 16;
+    var n = parseInt(count.value) || 5;
+    var chars = '';
+
+    switch (charset.value) {
+      case 'alnum': chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; break;
+      case 'alpha': chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; break;
+      case 'numeric': chars = '0123456789'; break;
+      case 'hex': chars = '0123456789abcdef'; break;
+      case 'binary': chars = '01'; break;
+      case 'custom': chars = customChars.value; break;
+    }
+
+    if (!chars) { output.value = '请选择或输入字符集'; return; }
+
+    var results = [];
+    for (var j = 0; j < n; j++) {
+      var result = '';
+      var array = new Uint32Array(len);
+      crypto.getRandomValues(array);
+      for (var i = 0; i < len; i++) {
+        result += chars[array[i] % chars.length];
+      }
+      results.push(result);
+    }
+    output.value = results.join('\n');
+  }
+
+  charset.addEventListener('change', function () {
+    customChars.style.display = charset.value === 'custom' ? 'flex' : 'none';
+  });
+  generateBtn.addEventListener('click', generate);
+
+  app.appendChild(T.el('div', { class: 'row' }, [
+    T.el('span', { text: '长度' }), length,
+    T.el('span', { text: '数量' }), count,
+    charset, customChars,
+    generateBtn, copyBtn
+  ]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+
+  customChars.style.display = 'none';
+  generate();
+})();
+</script>
+</body>
+</html>

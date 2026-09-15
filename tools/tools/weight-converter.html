@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>重量单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('重量单位换算', 'g/kg/斤/磅/盎司 等', 'weight-converter');
+
+  var units = [
+    { id: 'mg', name: '毫克 (mg)' },
+    { id: 'g', name: '克 (g)' },
+    { id: 'kg', name: '千克 (kg)' },
+    { id: 't', name: '吨 (t)' },
+    { id: 'jin', name: '斤' },
+    { id: 'lb', name: '磅 (lb)' },
+    { id: 'oz', name: '盎司 (oz)' },
+    { id: 'ct', name: '克拉 (ct)' }
+  ];
+
+  var factors = { mg: 0.000001, g: 0.001, kg: 1, t: 1000, jin: 0.5, lb: 0.453592, oz: 0.0283495, ct: 0.0002 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var kg = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (kg / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:100px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.kg.value = '1';
+  run('kg');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在线工具合集 · FreeLLM</title>
+<meta name="description" content="FreeLLM 精选在线工具合集：编码加密、格式化、生成器、CSS 工具、文本处理、计算转换、日期时间、速查参考、开发工具、图片工具与实用小工具，全部纯前端运行，无需下载安装。">
+<link rel="canonical" href="https://freellm.top/tools/">
+<link rel="stylesheet" href="/tools/css/tools.css">
+</head>
+<body data-static-locale="true">
+<main class="tools-page">
+  <header class="tools-header">
+    <a class="brand" href="/">
+      <span class="brand-mark">✦</span>
+      <span>
+        <span class="brand-name">FreeLLM</span>
+        <span class="brand-sub">免费 AI 资源导航</span>
+      </span>
+    </a>
+    <div class="header-right">
+      <nav class="top-nav" aria-label="Page sections">
+        <a href="/logs/">每日更新</a>
+        <a href="/models/">资源目录</a>
+        <a href="/models/center/">模型中心</a>
+        <a href="/providers/">按厂家</a>
+        <a href="/skills/">Skills</a>
+        <a href="/tools/" aria-current="page">工具合集</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式">
+        <span class="icon-moon">☾</span>
+        <span class="icon-sun">☀️</span>
+      </button>
+      <button id="gh-login" class="gh-login" type="button" title="GitHub 登录以同步配置" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.765.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span id="gh-login-text">GitHub</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="tools-hero">
+    <div>
+      <div class="eyebrow">ONLINE TOOLKIT / 实用工具箱</div>
+      <h1>打开即用的在线工具合集</h1>
+      <p class="hero-copy">从编码加密、代码格式化到 CSS 可视化与图片处理，精选高频开发工具。所有工具均在浏览器端运行，无需上传数据，无需下载安装。</p>
+    </div>
+    <aside class="hero-note">
+      <span class="hero-note-label">CURATED TOOLS / 精选工具</span>
+      <div class="hero-note-value">
+        <strong id="tool-total">0</strong>
+        <span>个实用工具</span>
+      </div>
+      <p>覆盖多个分类，按使用频率与实用性精选。点击卡片在页内直接使用。</p>
+    </aside>
+  </section>
+
+  <section class="tools-toolbar" aria-label="工具筛选">
+    <input id="tool-search" class="tools-search" type="search" placeholder="搜索工具名称、用途或分类…" aria-label="搜索工具">
+    <span id="tool-count" class="tools-count">显示 0 / 0</span>
+  </section>
+
+  <div class="tool-category-tabs" id="tool-category-tabs"></div>
+  <section id="tool-grid" class="tool-grid" aria-live="polite"></section>
+
+  <div id="favorites-section" class="favorites-section" hidden>
+    <h3 class="favorites-title">
+      <span>⭐</span> 我的收藏
+      <button id="clear-favorites" class="clear-btn" type="button" title="清空收藏">清空</button>
+    </h3>
+    <div id="favorites-grid" class="tool-grid"></div>
+  </div>
+
+  <div id="history-section" class="history-section" hidden>
+    <h3 class="history-title">
+      <span>🕐</span> 最近使用
+      <button id="clear-history" class="clear-btn" type="button" title="清空历史">清空</button>
+    </h3>
+    <div id="history-list" class="history-list"></div>
+  </div>
+
+  <footer class="tools-footer">
+    <p>所有工具均在浏览器本地运行，不收集任何输入数据。</p>
+    <p>数据更新：汇率/节假日/黄历由 <a href="https://github.com/freellm/freellm-tools-data" target="_blank" rel="noopener">GitHub Actions</a> 定时刷新。</p>
+    <p>© 2026 FreeLLM · <a href="/tools/">工具合集</a></p>
+  </footer>
+</main>
+
+<div class="tool-modal" id="tool-modal">
+  <div class="tool-modal-backdrop" onclick="closeToolModal()"></div>
+  <div class="tool-modal-body">
+    <div class="tool-modal-header">
+      <span class="tool-modal-title" id="tool-modal-title"></span>
+      <div class="tool-modal-actions">
+        <button id="fav-btn" class="tool-modal-fav" type="button" title="收藏">
+          <span id="fav-icon">☆</span>
+        </button>
+        <button class="tool-modal-close" onclick="closeToolModal()" aria-label="关闭">✕</button>
+      </div>
+    </div>
+    <iframe class="tool-modal-frame" id="tool-modal-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+    <div class="tool-modal-fallback" id="tool-modal-fallback">
+      <p>该工具无法内嵌显示</p>
+      <a id="tool-modal-fallback-link" href="#" target="_blank" rel="noopener">在新标签页中打开</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/js/freellm-sync.js"></script>
+<script src="/js/freellm-data.js"></script>
+<script src="/tools/js/utils.js"></script>
+<script src="/tools/js/tools.js"></script>
+<script src="/tools/js/app.js"></script>
+</body>
+</html>

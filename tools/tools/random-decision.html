@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>随机决策 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('随机决策', '转盘随机选择/掷骰子', 'random-decision');
+
+  var input = T.textarea('输入选项（每行一个）...\n选项1\n选项2\n选项3\n选项4');
+
+  var wheel = T.el('canvas', { width: '300', height: '300', style: 'cursor:pointer' });
+  var result = T.el('div', { class: 'badge blue', style: 'font-size:1.5em;text-align:center;margin:16px 0' });
+  var spinBtn = T.button('开始', spin, true);
+
+  var spinning = false;
+  var rotation = 0;
+
+  var COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#34495e'];
+
+  function getOptions() {
+    return input.value.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+  }
+
+  function drawWheel() {
+    var ctx = wheel.getContext('2d');
+    var options = getOptions();
+    if (!options.length) return;
+
+    var cx = 150, cy = 150, r = 140;
+    var arc = (2 * Math.PI) / options.length;
+
+    ctx.clearRect(0, 0, 300, 300);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
+
+    options.forEach(function (opt, i) {
+      var startAngle = i * arc - Math.PI / 2;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, r, startAngle, startAngle + arc);
+      ctx.fillStyle = COLORS[i % COLORS.length];
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.save();
+      ctx.rotate(startAngle + arc / 2);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(opt.slice(0, 8), r * 0.6, 5);
+      ctx.restore();
+    });
+
+    ctx.restore();
+
+    // Arrow
+    ctx.beginPath();
+    ctx.moveTo(150, 5);
+    ctx.lineTo(140, 25);
+    ctx.lineTo(160, 25);
+    ctx.fillStyle = '#333';
+    ctx.fill();
+  }
+
+  function spin() {
+    if (spinning) return;
+    var options = getOptions();
+    if (!options.length) return;
+
+    spinning = true;
+    result.textContent = '';
+
+    var totalRotation = Math.PI * 2 * (5 + Math.random() * 5);
+    var startTime = Date.now();
+    var duration = 3000;
+
+    function animate() {
+      var elapsed = Date.now() - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      rotation = totalRotation * ease;
+      drawWheel();
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        spinning = false;
+        var arc = (2 * Math.PI) / options.length;
+        var normalizedRotation = rotation % (2 * Math.PI);
+        var idx = Math.floor((2 * Math.PI - normalizedRotation) / arc) % options.length;
+        result.textContent = options[idx];
+      }
+    }
+
+    animate();
+  }
+
+  wheel.addEventListener('click', spin);
+  input.addEventListener('input', drawWheel);
+
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { style: 'text-align:center' }, [wheel]));
+  app.appendChild(result);
+  app.appendChild(T.el('div', { style: 'text-align:center' }, [spinBtn]));
+
+  drawWheel();
+})();
+</script>
+</body>
+</html>

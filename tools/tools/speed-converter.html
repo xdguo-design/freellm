@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速度单位换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('速度单位换算', 'km/h ↔ mph ↔ m/s 等', 'speed-converter');
+
+  var units = [
+    { id: 'ms', name: '米/秒 (m/s)' },
+    { id: 'kmh', name: '千米/时 (km/h)' },
+    { id: 'mph', name: '英里/时 (mph)' },
+    { id: 'kn', name: '节 (kn)' },
+    { id: 'mach', name: '马赫 (Mach)' },
+    { id: 'fts', name: '英尺/秒 (ft/s)' }
+  ];
+
+  var factors = { ms: 1, kmh: 0.277778, mph: 0.44704, kn: 0.514444, mach: 340.29, fts: 0.3048 };
+
+  var inputs = {};
+  units.forEach(function (u) {
+    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+  });
+
+  function run(source) {
+    var val = parseFloat(inputs[source].value);
+    if (isNaN(val)) {
+      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
+      return;
+    }
+
+    var ms = val * factors[source];
+    units.forEach(function (u) {
+      if (u.id !== source) {
+        inputs[u.id].value = (ms / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
+      }
+    });
+  }
+
+  units.forEach(function (u) {
+    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
+    app.appendChild(T.el('div', { class: 'row' }, [
+      T.el('span', { text: u.name, style: 'width:120px' }),
+      inputs[u.id]
+    ]));
+  });
+
+  inputs.ms.value = '1';
+  run('ms');
+})();
+</script>
+</body>
+</html>

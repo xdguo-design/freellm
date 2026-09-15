@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Base64 编解码 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('Base64 编解码', 'Base64 编码与解码，支持文本和图片', 'base64');
+
+  var mode = T.select([
+    { value: 'encode', label: '编码' },
+    { value: 'decode', label: '解码' }
+  ]);
+  var input = T.textarea('输入文本或 Base64...');
+  var output = T.textarea('结果', false);
+  output.readOnly = true;
+
+  var fileBtn = T.button('选择图片', function () {
+    T.readFile('image/*', function (dataURL) {
+      input.value = dataURL;
+      run();
+    }, true);
+  });
+
+  var copyBtn = T.copyBtn(function () { return output.value; });
+  var downloadBtn = T.button('下载结果', function () {
+    T.download('base64-result.txt', output.value);
+  });
+
+  function run() {
+    var v = input.value.trim();
+    if (!v) { output.value = ''; return; }
+    try {
+      if (mode.value === 'encode') {
+        output.value = btoa(unescape(encodeURIComponent(v)));
+      } else {
+        output.value = decodeURIComponent(escape(atob(v)));
+      }
+    } catch (e) {
+      output.value = '⚠ 解码失败: ' + e.message;
+    }
+  }
+
+  mode.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [mode, fileBtn, copyBtn, downloadBtn]));
+  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+})();
+</script>
+</body>
+</html>

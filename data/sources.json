@@ -1,30 +1,348 @@
 [
-  {"offerId":"codebuddy","providerId":"china-ai-ides","urls":["https://www.codebuddy.cn/docs/ide/Account/pricing","https://www.codebuddy.cn/"],"allowedDomains":["www.codebuddy.cn"]},
-  {"offerId":"qoder","providerId":"china-ai-ides","urls":["https://docs.qoder.com/zh/account/pricing","https://qoder.com/"],"allowedDomains":["docs.qoder.com","qoder.com"]},
-  {"offerId":"trae","providerId":"china-ai-ides","urls":["https://www.trae.cn/pricing","https://www.trae.cn/"],"allowedDomains":["www.trae.cn"]},
-  {"offerId":"comate","providerId":"china-ai-ides","urls":["https://comate.baidu.com/zh/pricing/payment?type=vip","https://comate.baidu.com/zh"],"allowedDomains":["comate.baidu.com"]},
-  {"offerId":"doubao","providerId":"volcengine-ark","urls":["https://developer.volcengine.com/articles/7575446945372897322","https://www.volcengine.com/activity/codingplan"],"allowedDomains":["developer.volcengine.com","www.volcengine.com"]},
-  {"offerId":"aliyun-qwen-free-quota","providerId":"aliyun-bailian","urls":["https://help.aliyun.com/zh/model-studio/new-free-quota","https://bailian.console.aliyun.com/"],"allowedDomains":["help.aliyun.com","bailian.console.aliyun.com"]},
-  {"offerId":"glm","providerId":"zhipu-glm","urls":["https://docs.bigmodel.cn/cn/coding-plan/faq","https://docs.bigmodel.cn/cn/coding-plan/quick-start"],"allowedDomains":["docs.bigmodel.cn","open.bigmodel.cn"]},
-  {"offerId":"longcat-api","providerId":"meituan-longcat","urls":["https://longcat.ai/platform/docs/zh/","https://longcat.ai/platform/docs/zh/faq"],"allowedDomains":["longcat.ai"]},
-  {"offerId":"longcat-download","providerId":"meituan-longcat","urls":["https://github.com/meituan-longcat/LongCat-2.0","https://huggingface.co/meituan-longcat/LongCat-2.0"],"allowedDomains":["github.com","huggingface.co"]},
-  {"offerId":"qwen-download","providerId":"qwen","urls":["https://huggingface.co/Qwen/Qwen3-4B","https://github.com/QwenLM/Qwen3"],"allowedDomains":["huggingface.co","github.com"]},
-  {"offerId":"glm-download","providerId":"zhipu-glm","urls":["https://huggingface.co/zai-org/GLM-4.7-Flash","https://github.com/zai-org/GLM-4.5"],"allowedDomains":["huggingface.co","github.com"]},
-  {"offerId":"sensecore","providerId":"sensecore","urls":["https://www.sensecore.cn/help/docs/model-as-a-service/nova","https://console.sensecore.cn/"],"allowedDomains":["www.sensecore.cn","console.sensecore.cn"]},
-  {"offerId":"deepseek","providerId":"deepseek","urls":["https://api-docs.deepseek.com/quick_start/pricing","https://api-docs.deepseek.com/"],"allowedDomains":["api-docs.deepseek.com","platform.deepseek.com"]},
-  {"offerId":"opencode-zen-free","providerId":"opencode","urls":["https://dev.opencode.ai/docs/zen/","https://opencode.ai/docs/providers"],"allowedDomains":["dev.opencode.ai","opencode.ai"]},
-  {"offerId":"github-copilot-free","providerId":"github-copilot","urls":["https://github.com/features/copilot/plans","https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-self"],"allowedDomains":["github.com","docs.github.com"]},
-  {"offerId":"cursor-hobby","providerId":"cursor","urls":["https://cursor.com/pricing","https://prod.cursor.com/help/account-and-billing/pricing"],"allowedDomains":["cursor.com","prod.cursor.com"]},
-  {"offerId":"amazon-q-free","providerId":"amazon-q-developer","urls":["https://aws.amazon.com/q/developer/pricing/","https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"],"allowedDomains":["aws.amazon.com","docs.aws.amazon.com"]},
-  {"offerId":"google-antigravity-free","providerId":"google-antigravity","urls":["https://antigravity.google/pricing","https://antigravity.google/docs/plans","https://antigravity.google/docs/ide/extensions/"],"allowedDomains":["antigravity.google"]},
-  {"offerId":"keenable-search-free","providerId":"keenable","urls":["https://keenable.ai/pricing","https://docs.keenable.ai/cli"],"allowedDomains":["keenable.ai","docs.keenable.ai"]},
-  {"offerId":"tinyfish-search-fetch-free","providerId":"tinyfish","urls":["https://future.tinyfish.io/pricing"],"allowedDomains":["future.tinyfish.io"]},
-  {"offerId":"tinyfish-agent-browser-metered","providerId":"tinyfish","urls":["https://future.tinyfish.io/pricing"],"allowedDomains":["future.tinyfish.io"]},
-  {"offerId":"tavily-web-free-credits","providerId":"tavily","urls":["https://www.tavily.com/pricing","https://docs.tavily.com/documentation/api-credits","https://docs.tavily.com/documentation/api-reference/introduction"],"allowedDomains":["www.tavily.com","docs.tavily.com"]},
-  {"offerId":"exa-web-free-credits","providerId":"exa","urls":["https://exa.ai/pricing"],"allowedDomains":["exa.ai"]},
-  {"offerId":"you-web-free-tier","providerId":"you-com","urls":["https://about.you.com/pricing","https://you.com/docs/quickstart"],"allowedDomains":["about.you.com","you.com"]},
-  {"offerId":"firecrawl-web-free-credits","providerId":"firecrawl","urls":["https://www.firecrawl.dev/pricing","https://docs.firecrawl.dev"],"allowedDomains":["www.firecrawl.dev","docs.firecrawl.dev"]},
-  {"offerId":"brave-search-free-credits","providerId":"brave-search","urls":["https://brave.com/search/api/"],"allowedDomains":["brave.com"]},
-  {"offerId":"browserbase-free-tier","providerId":"browserbase","urls":["https://www.browserbase.com/pricing"],"allowedDomains":["www.browserbase.com"]},
-  {"offerId":"stepfun-limited-time-free","providerId":"stepfun","urls":["https://platform.stepfun.com/docs/zh/guides/pricing/details","https://platform.stepfun.com/docs/zh/quickstart/overview","https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"],"allowedDomains":["platform.stepfun.com","api.stepfun.com"]}
+  {
+    "offerId": "codebuddy",
+    "providerId": "china-ai-ides",
+    "urls": [
+      "https://www.codebuddy.cn/docs/ide/Account/pricing",
+      "https://www.codebuddy.cn/"
+    ],
+    "allowedDomains": [
+      "www.codebuddy.cn"
+    ]
+  },
+  {
+    "offerId": "cnb-ai",
+    "providerId": "cnb",
+    "urls": [
+      "https://docs.cnb.cool/zh/ai/intro.html",
+      "https://docs.cnb.cool/en/workspaces/codebuddy-web.html"
+    ],
+    "allowedDomains": [
+      "docs.cnb.cool"
+    ]
+  },
+  {
+    "offerId": "qoder",
+    "providerId": "china-ai-ides",
+    "urls": [
+      "https://docs.qoder.com/zh/account/pricing",
+      "https://qoder.com/"
+    ],
+    "allowedDomains": [
+      "docs.qoder.com",
+      "qoder.com"
+    ]
+  },
+  {
+    "offerId": "trae",
+    "providerId": "china-ai-ides",
+    "urls": [
+      "https://www.trae.cn/pricing",
+      "https://www.trae.cn/"
+    ],
+    "allowedDomains": [
+      "www.trae.cn"
+    ]
+  },
+  {
+    "offerId": "comate",
+    "providerId": "china-ai-ides",
+    "urls": [
+      "https://comate.baidu.com/zh/pricing/payment?type=vip",
+      "https://comate.baidu.com/zh"
+    ],
+    "allowedDomains": [
+      "comate.baidu.com"
+    ]
+  },
+  {
+    "offerId": "doubao",
+    "providerId": "volcengine-ark",
+    "urls": [
+      "https://developer.volcengine.com/articles/7575446945372897322",
+      "https://www.volcengine.com/activity/codingplan"
+    ],
+    "allowedDomains": [
+      "developer.volcengine.com",
+      "www.volcengine.com"
+    ]
+  },
+  {
+    "offerId": "aliyun-qwen-free-quota",
+    "providerId": "aliyun-bailian",
+    "urls": [
+      "https://help.aliyun.com/zh/model-studio/new-free-quota",
+      "https://bailian.console.aliyun.com/"
+    ],
+    "allowedDomains": [
+      "help.aliyun.com",
+      "bailian.console.aliyun.com"
+    ]
+  },
+  {
+    "offerId": "glm",
+    "providerId": "zhipu-glm",
+    "urls": [
+      "https://docs.bigmodel.cn/cn/coding-plan/faq",
+      "https://docs.bigmodel.cn/cn/coding-plan/quick-start"
+    ],
+    "allowedDomains": [
+      "docs.bigmodel.cn",
+      "open.bigmodel.cn"
+    ]
+  },
+  {
+    "offerId": "longcat-api",
+    "providerId": "meituan-longcat",
+    "urls": [
+      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.ai/platform/docs/zh/faq"
+    ],
+    "allowedDomains": [
+      "longcat.ai"
+    ]
+  },
+  {
+    "offerId": "longcat-download",
+    "providerId": "meituan-longcat",
+    "urls": [
+      "https://github.com/meituan-longcat/LongCat-2.0",
+      "https://huggingface.co/meituan-longcat/LongCat-2.0"
+    ],
+    "allowedDomains": [
+      "github.com",
+      "huggingface.co"
+    ]
+  },
+  {
+    "offerId": "qwen-download",
+    "providerId": "qwen",
+    "urls": [
+      "https://huggingface.co/Qwen/Qwen3-4B",
+      "https://github.com/QwenLM/Qwen3"
+    ],
+    "allowedDomains": [
+      "huggingface.co",
+      "github.com"
+    ]
+  },
+  {
+    "offerId": "glm-download",
+    "providerId": "zhipu-glm",
+    "urls": [
+      "https://huggingface.co/zai-org/GLM-4.7-Flash",
+      "https://github.com/zai-org/GLM-4.5"
+    ],
+    "allowedDomains": [
+      "huggingface.co",
+      "github.com"
+    ]
+  },
+  {
+    "offerId": "sensecore",
+    "providerId": "sensecore",
+    "urls": [
+      "https://www.sensecore.cn/help/docs/model-as-a-service/nova",
+      "https://console.sensecore.cn/"
+    ],
+    "allowedDomains": [
+      "www.sensecore.cn",
+      "console.sensecore.cn"
+    ]
+  },
+  {
+    "offerId": "deepseek",
+    "providerId": "deepseek",
+    "urls": [
+      "https://api-docs.deepseek.com/quick_start/pricing",
+      "https://api-docs.deepseek.com/"
+    ],
+    "allowedDomains": [
+      "api-docs.deepseek.com",
+      "platform.deepseek.com"
+    ]
+  },
+  {
+    "offerId": "opencode-zen-free",
+    "providerId": "opencode",
+    "urls": [
+      "https://dev.opencode.ai/docs/zen/",
+      "https://opencode.ai/docs/providers"
+    ],
+    "allowedDomains": [
+      "dev.opencode.ai",
+      "opencode.ai"
+    ]
+  },
+  {
+    "offerId": "github-copilot-free",
+    "providerId": "github-copilot",
+    "urls": [
+      "https://github.com/features/copilot/plans",
+      "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-self"
+    ],
+    "allowedDomains": [
+      "github.com",
+      "docs.github.com"
+    ]
+  },
+  {
+    "offerId": "cursor-hobby",
+    "providerId": "cursor",
+    "urls": [
+      "https://cursor.com/pricing",
+      "https://prod.cursor.com/help/account-and-billing/pricing"
+    ],
+    "allowedDomains": [
+      "cursor.com",
+      "prod.cursor.com"
+    ]
+  },
+  {
+    "offerId": "amazon-q-free",
+    "providerId": "amazon-q-developer",
+    "urls": [
+      "https://aws.amazon.com/q/developer/pricing/",
+      "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"
+    ],
+    "allowedDomains": [
+      "aws.amazon.com",
+      "docs.aws.amazon.com"
+    ]
+  },
+  {
+    "offerId": "google-antigravity-free",
+    "providerId": "google-antigravity",
+    "urls": [
+      "https://antigravity.google/pricing",
+      "https://antigravity.google/docs/plans",
+      "https://antigravity.google/docs/ide/extensions/"
+    ],
+    "allowedDomains": [
+      "antigravity.google"
+    ]
+  },
+  {
+    "offerId": "keenable-search-free",
+    "providerId": "keenable",
+    "urls": [
+      "https://keenable.ai/pricing",
+      "https://docs.keenable.ai/cli"
+    ],
+    "allowedDomains": [
+      "keenable.ai",
+      "docs.keenable.ai"
+    ]
+  },
+  {
+    "offerId": "tinyfish-search-fetch-free",
+    "providerId": "tinyfish",
+    "urls": [
+      "https://future.tinyfish.io/pricing"
+    ],
+    "allowedDomains": [
+      "future.tinyfish.io"
+    ]
+  },
+  {
+    "offerId": "tinyfish-agent-browser-metered",
+    "providerId": "tinyfish",
+    "urls": [
+      "https://future.tinyfish.io/pricing"
+    ],
+    "allowedDomains": [
+      "future.tinyfish.io"
+    ]
+  },
+  {
+    "offerId": "tavily-web-free-credits",
+    "providerId": "tavily",
+    "urls": [
+      "https://www.tavily.com/pricing",
+      "https://docs.tavily.com/documentation/api-credits",
+      "https://docs.tavily.com/documentation/api-reference/introduction"
+    ],
+    "allowedDomains": [
+      "www.tavily.com",
+      "docs.tavily.com"
+    ]
+  },
+  {
+    "offerId": "exa-web-free-credits",
+    "providerId": "exa",
+    "urls": [
+      "https://exa.ai/pricing"
+    ],
+    "allowedDomains": [
+      "exa.ai"
+    ]
+  },
+  {
+    "offerId": "you-web-free-tier",
+    "providerId": "you-com",
+    "urls": [
+      "https://about.you.com/pricing",
+      "https://you.com/docs/quickstart"
+    ],
+    "allowedDomains": [
+      "about.you.com",
+      "you.com"
+    ]
+  },
+  {
+    "offerId": "firecrawl-web-free-credits",
+    "providerId": "firecrawl",
+    "urls": [
+      "https://www.firecrawl.dev/pricing",
+      "https://docs.firecrawl.dev"
+    ],
+    "allowedDomains": [
+      "www.firecrawl.dev",
+      "docs.firecrawl.dev"
+    ]
+  },
+  {
+    "offerId": "brave-search-free-credits",
+    "providerId": "brave-search",
+    "urls": [
+      "https://brave.com/search/api/"
+    ],
+    "allowedDomains": [
+      "brave.com"
+    ]
+  },
+  {
+    "offerId": "browserbase-free-tier",
+    "providerId": "browserbase",
+    "urls": [
+      "https://www.browserbase.com/pricing"
+    ],
+    "allowedDomains": [
+      "www.browserbase.com"
+    ]
+  },
+  {
+    "offerId": "stepfun-limited-time-free",
+    "providerId": "stepfun",
+    "urls": [
+      "https://platform.stepfun.com/docs/zh/guides/pricing/details",
+      "https://platform.stepfun.com/docs/zh/quickstart/overview",
+      "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
+    ],
+    "allowedDomains": [
+      "platform.stepfun.com",
+      "api.stepfun.com"
+    ]
+  },
+  {
+    "offerId": "astudio",
+    "providerId": "iflytek-spark",
+    "urls": [
+      "https://agent.xfyun.cn/studio-guide/intro",
+      "https://agent.xfyun.cn/studio-guide/quickstart"
+    ],
+    "allowedDomains": [
+      "agent.xfyun.cn"
+    ]
+  }
 ]

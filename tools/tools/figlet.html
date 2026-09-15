@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASCII 艺术字 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+  var T = ToolCommon;
+  var app = T.head('ASCII 艺术字', 'FIGlet 风格 ASCII 文字', 'figlet');
+
+  var font = T.select([
+    { value: 'standard', label: 'Standard' },
+    { value: 'slant', label: 'Slant' },
+    { value: 'big', label: 'Big' },
+    { value: 'banner', label: 'Banner' }
+  ]);
+  var input = T.el('input', { type: 'text', value: 'Hello', placeholder: '输入文本...', style: 'flex:1' });
+  var output = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace;overflow-x:auto' });
+
+  var copyBtn = T.copyBtn(function () { return output.textContent; });
+
+  var FONTS = {
+    standard: [
+      ' ██╗  ██╗███████╗██╗     ██╗      ██████╗ ',
+      ' ██║  ██║██╔════╝██║     ██║     ██╔═══██╗',
+      ' ███████║█████╗  ██║     ██║     ██║   ██║',
+      ' ██╔══██║██╔══╝  ██║     ██║     ██║   ██║',
+      ' ██║  ██║███████╗███████╗███████╗╚██████╔╝',
+      ' ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝'
+    ],
+    slant: [
+      '    __  ________  __  __',
+      '   / / / /_  __/ / / / /',
+      '  / /_/ / / /   / /_/ / ',
+      ' / __  / / /   / __  /  ',
+      '/_/ /_/ /_/   /_/ /_/   '
+    ],
+    big: [
+      '  ___  ____  __ __  ___ ',
+      ' / _ \\/ __ \\/ //_// _ \\',
+      '/  __/ /_/ / ,<  /  __/',
+      '\\___/\\____/_/|_| \\___/ '
+    ],
+    banner: [
+      '####  ####  #  #  ####',
+      '#     #      ##   #    ',
+      '#     ###    ##   ###  ',
+      '#     #      # #  #    ',
+      '####  ####  #  #  ####'
+    ]
+  };
+
+  function run() {
+    var v = input.value;
+    if (!v) { output.textContent = ''; return; }
+    var lines = FONTS[font.value] || FONTS.standard;
+    output.textContent = lines.join('\n');
+  }
+
+  font.addEventListener('change', run);
+  input.addEventListener('input', function () { setTimeout(run, 100); });
+
+  app.appendChild(T.el('div', { class: 'row' }, [font, input, copyBtn]));
+  app.appendChild(output);
+  run();
+})();
+</script>
+</body>
+</html>
