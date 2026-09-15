@@ -318,6 +318,85 @@
       "reason": "previously absent or offline and observed again"
     },
     {
+      "kind": "model",
+      "eventType": "new",
+      "id": "cline/cline-free-deepseek-v4-1-flash",
+      "title": "Deepseek-v4.1-Flash",
+      "asOf": "2026-09-15",
+      "details": {
+        "id": "cline/cline-free-deepseek-v4-1-flash",
+        "providerId": "cline",
+        "provider": "Cline",
+        "model": "Deepseek-v4.1-Flash",
+        "score": 38,
+        "context": "0",
+        "maxOutput": "",
+        "modality": [
+          "text"
+        ],
+        "rateLimit": "See provider page",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://freellm.net/models/cline/cline-free-deepseek-v4-1-flash",
+        "sourceKind": "third_party_directory",
+        "lastSeenAt": "2026-09-15",
+        "directoryFree": true,
+        "directoryNoCard": false,
+        "directoryVerified": true,
+        "tierType": "permanent"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "offline",
+      "id": "cline/cline-free-longcat-2-0",
+      "title": "LongCat-2.0",
+      "asOf": "2026-09-15",
+      "details": {
+        "id": "cline/cline-free-longcat-2-0",
+        "providerId": "cline",
+        "provider": "Cline",
+        "model": "LongCat-2.0",
+        "sourceUrl": "https://freellm.net/models/cline/cline-free-longcat-2-0",
+        "status": "online"
+      },
+      "reason": "missing from the successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "offline",
+      "id": "cline/deepseek-deepseek-v4-flash",
+      "title": "deepseek-v4-flash",
+      "asOf": "2026-09-15",
+      "details": {
+        "id": "cline/deepseek-deepseek-v4-flash",
+        "providerId": "cline",
+        "provider": "Cline",
+        "model": "deepseek-v4-flash",
+        "sourceUrl": "https://freellm.net/models/cline/deepseek-deepseek-v4-flash",
+        "status": "online"
+      },
+      "reason": "missing from the successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "offline",
+      "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro-0813",
+      "title": "deepseek-ai/deepseek-v4-pro-0813",
+      "asOf": "2026-09-15",
+      "details": {
+        "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro-0813",
+        "providerId": "nvidia-nim",
+        "provider": "NVIDIA NIM",
+        "model": "deepseek-ai/deepseek-v4-pro-0813",
+        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro-0813",
+        "status": "online"
+      },
+      "reason": "missing from the successful snapshot"
+    },
+    {
       "kind": "offer",
       "eventType": "new",
       "id": "cnb-ai",
@@ -4978,6 +5057,61 @@
         "freeSummary": "100 Search queries / day + $100 credits",
         "validitySummary": "Daily free tier; PAYG API prices",
         "accessSummary": "Global · API key or keyless tier"
+      },
+      {
+        "id": "astudio",
+        "title": "iFlytek AStudio · desktop AI workbench",
+        "name": "iFlytek AStudio desktop AI workbench",
+        "provider": "iFlytek AStudio",
+        "productType": "desktop_ai_app",
+        "status": "verified",
+        "register": "https://agent.xfyun.cn/",
+        "registerLabel": "打开 AStudio 官网",
+        "sourceUrls": [
+          "https://agent.xfyun.cn/studio-guide/intro",
+          "https://agent.xfyun.cn/studio-guide/quickstart",
+          "https://finance.sina.com.cn/tech/roll/2026-09-15/doc-inirxatw3678232.shtml",
+          "https://www.163.com/dy/article/L6SNIKC70534A4SC.html"
+        ],
+        "links": [
+          [
+            "AStudio 官网",
+            "https://agent.xfyun.cn/"
+          ],
+          [
+            "官方产品介绍",
+            "https://agent.xfyun.cn/studio-guide/intro"
+          ],
+          [
+            "快速上手（积分说明）",
+            "https://agent.xfyun.cn/studio-guide/quickstart"
+          ],
+          [
+            "发布报道（新浪财经）",
+            "https://finance.sina.com.cn/tech/roll/2026-09-15/doc-inirxatw3678232.shtml"
+          ]
+        ],
+        "usageGuide": {
+          "summary": "下载 AStudio 桌面客户端并登录，领取新用户积分后用自然语言交付文档、网页、代码等成果",
+          "prerequisites": [
+            "AStudio 客户端（Windows 10/11 64 位或 macOS M 系列芯片）",
+            "讯飞/星火账号"
+          ],
+          "steps": [
+            "打开 agent.xfyun.cn 下载 Windows 或 macOS 客户端并安装",
+            "登录账号，新用户可领取 1,000 积分（3 个月有效）",
+            "在中间任务区描述目标、添加文件并发送任务",
+            "在右侧预览区查看成果，点选编辑或继续对话迭代；日常/项目模式按任务复杂度切换"
+          ],
+          "examples": {
+            "action": "打开 https://agent.xfyun.cn/ 下载 AStudio 客户端，登录后新建任务体验自主规划与成果交付"
+          },
+          "docsUrl": "https://agent.xfyun.cn/studio-guide/quickstart"
+        },
+        "evidence": "AStudio 官方介绍页描述其为新一代全场景 AI 生产力工作台并列出理解目标/自主执行/成果交付/协同迭代四大能力；官方快速上手文档说明客户端平台要求、日常与项目模式、新用户 1,000 积分（3 个月有效）与体验版每日 100 积分；新浪财经与界面新闻报道 2026-09-15 正式发布、星火 X2.5 与 ACode Harness 内核。",
+        "freeSummary": "新用户登录客户端领 1,000 积分（3 个月有效）；体验版每日登录免费领 100 积分",
+        "validitySummary": "积分规则与套餐以官方价格页为准；发布初期规则可能调整",
+        "accessSummary": "Windows 10/11 64 位或 macOS M 系列芯片；需登录账号"
       }
     ]
   },
