@@ -116,7 +116,7 @@ class StaticContractTests(unittest.TestCase):
             ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
             ">297 ",
             ">25 ",
-            ">41</strong>",
+            ">42</strong>",
         ):
             self.assertIn(needle, log)
         self.assertNotIn("首次建立基线", log)
