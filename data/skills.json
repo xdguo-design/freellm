@@ -1,442 +1,2843 @@
 [
   {
-    "id": "prd-write-skill",
-    "name": "prd-write-skill",
-    "category": "product-design",
-    "description": "撰写产品需求文档，自动拆分背景、目标、用户故事、功能清单和非功能需求。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/prd-write",
-    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "user-story-skill",
-    "name": "user-story-skill",
-    "category": "product-design",
-    "description": "把需求转成用户故事，定义验收标准，并拆分为小型可迭代任务。",
-    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/user-story",
-    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "wireframe-prompt-skill",
-    "name": "wireframe-prompt-skill",
-    "category": "product-design",
-    "description": "生成线框图 AI 提示词，描述页面结构、模块和交互，适配 Figma AI 插件。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/wireframe-prompt",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "product-roadmap-skill",
-    "name": "product-roadmap-skill",
-    "category": "product-design",
-    "description": "生成产品路线图，划分版本规划、里程碑和优先级评估。",
-    "githubUrl": "https://github.com/product-agent/roadmap-skill",
-    "cloneCommand": "git clone https://github.com/product-agent/roadmap-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "requirement-review-skill",
-    "name": "requirement-review-skill",
-    "category": "product-design",
-    "description": "评审 PRD，识别需求冲突、遗漏边界和逻辑漏洞。",
-    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/requirement-review",
+    "id": "anthropics-docx",
+    "name": "docx",
+    "category": "documents",
+    "description": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files) or Word templates (.dotx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', '.dotx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx or .dotx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/docx",
     "cloneCommand": "git clone https://github.com/anthropics/skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-docx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/docx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 6911,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
   },
   {
-    "id": "user-persona-skill",
-    "name": "user-persona-skill",
-    "category": "product-design",
-    "description": "根据业务描述生成用户画像，整理痛点、目标和使用场景。",
-    "githubUrl": "https://github.com/product-agent/user-persona-skill",
-    "cloneCommand": "git clone https://github.com/product-agent/user-persona-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "flowchart-md-skill",
-    "name": "flowchart-md-skill",
-    "category": "product-design",
-    "description": "输出 Mermaid 流程图语法，覆盖用户流程、业务流程和状态流转图。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/flowchart-md",
-    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "api-spec-skill",
-    "name": "api-spec-skill",
-    "category": "product-design",
-    "description": "自动生成 OpenAPI 接口文档，整理入参、出参和错误码定义。",
-    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/api-spec",
-    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "usability-test-skill",
-    "name": "usability-test-skill",
-    "category": "product-design",
-    "description": "设计可用性测试方案，生成测试任务、问卷和结果分析模板。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/usability-test",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "changelog-skill",
-    "name": "changelog-skill",
-    "category": "product-design",
-    "description": "撰写版本更新日志，区分功能新增、优化和 Bug 修复。",
-    "githubUrl": "https://github.com/product-agent/changelog-skill",
-    "cloneCommand": "git clone https://github.com/product-agent/changelog-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "product-copy-skill",
-    "name": "product-copy-skill",
-    "category": "ecommerce",
-    "description": "提炼商品卖点，生成短标题、长描述和多平台详情文案。",
-    "githubUrl": "https://github.com/ecom-agent/product-copy-skill",
-    "cloneCommand": "git clone https://github.com/ecom-agent/product-copy-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "sku-manage-skill",
-    "name": "sku-manage-skill",
-    "category": "ecommerce",
-    "description": "梳理商品规格、属性组合、库存预警规则和命名规范。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/sku-manage",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "ad-copy-skill",
-    "name": "ad-copy-skill",
-    "category": "ecommerce",
-    "description": "生成电商广告创意文案，提供直通车、千川等渠道的多风格 A/B 版本。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/ad-copy",
-    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "review-analyze-skill",
-    "name": "review-analyze-skill",
-    "category": "ecommerce",
-    "description": "分析商品评论，提取好评卖点、差评痛点和高频问题。",
-    "githubUrl": "https://github.com/ecom-agent/review-analyze-skill",
-    "cloneCommand": "git clone https://github.com/ecom-agent/review-analyze-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "promotion-plan-skill",
-    "name": "promotion-plan-skill",
-    "category": "ecommerce",
-    "description": "策划满减、优惠券和限时活动，生成活动规则与预算测算。",
-    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/promotion-plan",
-    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "price-strategy-skill",
-    "name": "price-strategy-skill",
-    "category": "ecommerce",
-    "description": "对比竞品价格，设计定价、毛利和阶梯价方案。",
-    "githubUrl": "https://github.com/ecom-agent/price-strategy-skill",
-    "cloneCommand": "git clone https://github.com/ecom-agent/price-strategy-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "order-excel-skill",
-    "name": "order-excel-skill",
-    "category": "ecommerce",
-    "description": "解析订单表格，汇总销量、客单价并输出销售报表。",
-    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/order-excel",
+    "id": "anthropics-pdf",
+    "name": "pdf",
+    "category": "documents",
+    "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/pdf",
     "cloneCommand": "git clone https://github.com/anthropics/skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-pdf.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/pdf/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 8072,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
   },
   {
-    "id": "faq-gen-skill",
-    "name": "faq-gen-skill",
-    "category": "ecommerce",
-    "description": "自动生成商品 FAQ 和售前客服话术库。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/faq-gen",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "id": "anthropics-doc-coauthoring",
+    "name": "doc-coauthoring",
+    "category": "documents",
+    "description": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-doc-coauthoring.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/doc-coauthoring/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 15815,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
   },
   {
-    "id": "inventory-report-skill",
-    "name": "inventory-report-skill",
-    "category": "ecommerce",
-    "description": "整理库存报表，识别滞销品并生成补货建议。",
-    "githubUrl": "https://github.com/ecom-agent/inventory-report-skill",
-    "cloneCommand": "git clone https://github.com/ecom-agent/inventory-report-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "id": "anthropics-xlsx",
+    "name": "xlsx",
+    "category": "data-office",
+    "description": "Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .xltx, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \\\"the xlsx in my downloads\\\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/xlsx",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-xlsx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/xlsx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 8598,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
   },
   {
-    "id": "shop-kpi-skill",
-    "name": "shop-kpi-skill",
-    "category": "ecommerce",
-    "description": "拆解转化率、点击率、ROI 等店铺指标，生成运营周报。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/shop-kpi",
+    "id": "anthropics-pptx",
+    "name": "pptx",
+    "category": "presentations",
+    "description": "Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx or .potx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates (.potx), layouts, speaker notes, or comments. Trigger whenever the user mentions \\\"deck,\\\" \\\"slides,\\\" \\\"presentation,\\\" or references a .pptx or .potx filename, regardless of what they plan to do with the content afterward. If a .pptx or .potx file needs to be opened, created, or touched, use this skill.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/pptx",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-pptx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/pptx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 20796,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-frontend-design",
+    "name": "frontend-design",
+    "category": "product-design",
+    "description": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-frontend-design.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/frontend-design/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9390,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-canvas-design",
+    "name": "canvas-design",
+    "category": "product-design",
+    "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/canvas-design",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-canvas-design.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/canvas-design/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 11939,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-brand-guidelines",
+    "name": "brand-guidelines",
+    "category": "product-design",
+    "description": "Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/brand-guidelines",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-brand-guidelines.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/brand-guidelines/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 2235,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-theme-factory",
+    "name": "theme-factory",
+    "category": "product-design",
+    "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/theme-factory",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-theme-factory.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/theme-factory/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 3124,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-algorithmic-art",
+    "name": "algorithmic-art",
+    "category": "product-design",
+    "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/algorithmic-art",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-algorithmic-art.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/algorithmic-art/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 19769,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-internal-comms",
+    "name": "internal-comms",
+    "category": "email-office",
+    "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/internal-comms",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-internal-comms.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/internal-comms/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 1511,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-mcp-builder",
+    "name": "mcp-builder",
+    "category": "development",
+    "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/mcp-builder",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-mcp-builder.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/mcp-builder/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9092,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-skill-creator",
+    "name": "skill-creator",
+    "category": "development",
+    "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/skill-creator",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-skill-creator.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/skill-creator/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 33168,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-web-artifacts-builder",
+    "name": "web-artifacts-builder",
+    "category": "development",
+    "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-web-artifacts-builder.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/web-artifacts-builder/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 3087,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "anthropics-webapp-testing",
+    "name": "webapp-testing",
+    "category": "development",
+    "description": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 176459,
+      "forks": 20888,
+      "pushedAt": "2026-09-10T19:44:11Z"
+    },
+    "contentPath": "skill-content/anthropics-webapp-testing.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/webapp-testing/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 3913,
+    "reviews": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ]
+  },
+  {
+    "id": "obra-brainstorming",
+    "name": "brainstorming",
+    "category": "planning-office",
+    "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/brainstorming",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-brainstorming.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/brainstorming/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 15456,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-writing-plans",
+    "name": "writing-plans",
+    "category": "planning-office",
+    "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/writing-plans",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-writing-plans.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/writing-plans/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 7053,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-executing-plans",
+    "name": "executing-plans",
+    "category": "planning-office",
+    "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/executing-plans",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-executing-plans.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/executing-plans/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 2305,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-systematic-debugging",
+    "name": "systematic-debugging",
+    "category": "planning-office",
+    "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/systematic-debugging",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-systematic-debugging.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/systematic-debugging/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9465,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-test-driven-development",
+    "name": "test-driven-development",
+    "category": "planning-office",
+    "description": "Use when implementing any feature or bugfix, before writing implementation code",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/test-driven-development",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-test-driven-development.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/test-driven-development/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9015,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-requesting-code-review",
+    "name": "requesting-code-review",
+    "category": "planning-office",
+    "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/requesting-code-review",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-requesting-code-review.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/requesting-code-review/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 2956,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-receiving-code-review",
+    "name": "receiving-code-review",
+    "category": "planning-office",
+    "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/receiving-code-review",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-receiving-code-review.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/receiving-code-review/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 6203,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-verification-before-completion",
+    "name": "verification-before-completion",
+    "category": "planning-office",
+    "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/verification-before-completion",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-verification-before-completion.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/verification-before-completion/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 3646,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-subagent-driven-development",
+    "name": "subagent-driven-development",
+    "category": "planning-office",
+    "description": "Use when executing implementation plans with independent tasks in the current session",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/subagent-driven-development",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-subagent-driven-development.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/subagent-driven-development/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 32339,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "obra-writing-skills",
+    "name": "writing-skills",
+    "category": "development",
+    "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/writing-skills",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 287049,
+      "forks": 25670,
+      "pushedAt": "2026-09-14T18:42:08Z"
+    },
+    "contentPath": "skill-content/obra-writing-skills.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/writing-skills/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 26360,
+    "reviews": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ]
+  },
+  {
+    "id": "vercel-labs-composition-patterns",
+    "name": "vercel-composition-patterns",
+    "category": "development",
+    "description": "React composition patterns that scale. Use when refactoring components with",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/composition-patterns",
     "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 31221,
+      "forks": 2753,
+      "pushedAt": "2026-08-28T13:36:31Z"
+    },
+    "contentPath": "skill-content/vercel-labs-composition-patterns.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/composition-patterns/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 2886,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46623875",
+        "date": "2026-01-14",
+        "quote": "Agent Skills: AI Agents for React and Next.js Workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
   },
   {
-    "id": "keyword-research-skill",
-    "name": "keyword-research-skill",
-    "category": "seo-content",
-    "description": "挖掘核心词和长尾词，分类搜索意图并评估关键词难度。",
-    "githubUrl": "https://github.com/seo-agent/keyword-research-skill",
-    "cloneCommand": "git clone https://github.com/seo-agent/keyword-research-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "article-seo-skill",
-    "name": "article-seo-skill",
-    "category": "seo-content",
-    "description": "优化文章 SEO，规划关键词植入、Title、Meta 和 H 标签结构。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/article-seo",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "meta-gen-skill",
-    "name": "meta-gen-skill",
-    "category": "seo-content",
-    "description": "批量生成网页 Title、Description 和 OG 标签，适配搜索引擎。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/meta-gen",
+    "id": "vercel-labs-react-best-practices",
+    "name": "vercel-react-best-practices",
+    "category": "development",
+    "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices",
     "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 31221,
+      "forks": 2753,
+      "pushedAt": "2026-08-28T13:36:31Z"
+    },
+    "contentPath": "skill-content/vercel-labs-react-best-practices.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/react-best-practices/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 7251,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46623875",
+        "date": "2026-01-14",
+        "quote": "Agent Skills: AI Agents for React and Next.js Workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
   },
   {
-    "id": "content-outline-seo-skill",
-    "name": "content-outline-seo-skill",
+    "id": "vercel-labs-react-native-skills",
+    "name": "vercel-react-native-skills",
+    "category": "development",
+    "description": "React Native and Expo best practices for building performant mobile apps. Use",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-native-skills",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 31221,
+      "forks": 2753,
+      "pushedAt": "2026-08-28T13:36:31Z"
+    },
+    "contentPath": "skill-content/vercel-labs-react-native-skills.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/react-native-skills/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 4439,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46623875",
+        "date": "2026-01-14",
+        "quote": "Agent Skills: AI Agents for React and Next.js Workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
+  },
+  {
+    "id": "vercel-labs-web-design-guidelines",
+    "name": "web-design-guidelines",
+    "category": "product-design",
+    "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 31221,
+      "forks": 2753,
+      "pushedAt": "2026-08-28T13:36:31Z"
+    },
+    "contentPath": "skill-content/vercel-labs-web-design-guidelines.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/web-design-guidelines/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 1231,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46623875",
+        "date": "2026-01-14",
+        "quote": "Agent Skills: AI Agents for React and Next.js Workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
+  },
+  {
+    "id": "blader-humanizer",
+    "name": "humanizer",
+    "category": "writing",
+    "description": "Rewrite AI-sounding text so it reads like the writer without changing what it says. Use when editing or reviewing prose for AI tells: not-X-but-Y contrasts, one-line closers, staged openers, forced triads, dashes everywhere, inflated claims, sales language, stock AI words, bold labels, or filler. Based on Wikipedia's \"Signs of AI writing.\"",
+    "githubUrl": "https://github.com/blader/humanizer/tree/main",
+    "cloneCommand": "git clone https://github.com/blader/humanizer.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 48424,
+      "forks": 3935,
+      "pushedAt": "2026-09-06T20:26:10Z"
+    },
+    "contentPath": "skill-content/blader-humanizer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/blader/humanizer@main/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 28728,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46694489",
+        "date": "2026-01-20",
+        "quote": "Humanizer: Claude Code skill that removes signs of AI-generated writing",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
+  },
+  {
+    "id": "jimliu-baoyu-infographic",
+    "name": "baoyu-infographic",
+    "category": "writing",
+    "description": "Generate professional infographics with 21 layout types and 22 visual styles. Analyzes content, recommends layout×style combinations, and generates publication-ready infographics. Use when user asks to create \"infographic\", \"信息图\", \"visual summary\", \"可视化\", or \"高密度信息大图\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-infographic",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-infographic.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-infographic/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 19957,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-markdown-to-html",
+    "name": "baoyu-markdown-to-html",
+    "category": "writing",
+    "description": "Converts Markdown to styled HTML with WeChat-compatible themes. Supports code highlighting, math, Mermaid (rendered to PNG via headless Chrome), PlantUML, footnotes, alerts, infographics, and optional bottom citations for external links. Use when user asks for \"markdown to html\", \"convert md to html\", \"md 转 html\", \"微信外链转底部引用\", or needs styled HTML output from markdown.",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-markdown-to-html",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-markdown-to-html.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-markdown-to-html/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 10060,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-url-to-markdown",
+    "name": "baoyu-url-to-markdown",
+    "category": "writing",
+    "description": "Fetch any URL and convert to markdown using baoyu-fetch CLI (Chrome CDP with site-specific adapters). Built-in adapters for X/Twitter, YouTube transcripts, Hacker News threads, and generic pages via Defuddle. Handles login/CAPTCHA via interaction wait modes. Use when user wants to save a webpage as markdown.",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-url-to-markdown",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-url-to-markdown.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-url-to-markdown/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 8520,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-article-illustrator",
+    "name": "baoyu-article-illustrator",
+    "category": "writing",
+    "description": "Analyzes article structure, identifies positions requiring visual aids, generates illustrations with Type × Style × Palette three-dimension approach. Use when user asks to \"illustrate article\", \"add images\", \"generate images for article\", or \"为文章配图\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-article-illustrator",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-article-illustrator.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-article-illustrator/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 17179,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-slide-deck",
+    "name": "baoyu-slide-deck",
+    "category": "presentations",
+    "description": "Generates professional slide deck images from content. Creates outlines with style instructions, then generates individual slide images. Use when user asks to \"create slides\", \"make a presentation\", \"generate deck\", \"slide deck\", or \"PPT\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-slide-deck",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-slide-deck.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-slide-deck/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 23350,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-post-to-wechat",
+    "name": "baoyu-post-to-wechat",
     "category": "seo-content",
-    "description": "对标排名页面生成文章大纲，规划章节结构和内容覆盖。",
-    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/content-outline-seo",
+    "description": "Posts content to WeChat Official Account (微信公众号) via API or Chrome CDP. Supports article posting (文章) with HTML, markdown, or plain text input, and image-text posting (贴图, formerly 图文) with multiple images. Markdown article workflows default to converting ordinary external links into bottom citations for WeChat-friendly output. Use when user mentions \"发布公众号\", \"post to wechat\", \"微信公众号\", or \"贴图/图文/文章\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-post-to-wechat",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-post-to-wechat.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-post-to-wechat/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 14864,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-post-to-x",
+    "name": "baoyu-post-to-x",
+    "category": "seo-content",
+    "description": "Posts content and articles to X (Twitter). Supports regular posts with images/videos and X Articles (long-form Markdown). In Codex, honor explicit requests for the Codex Chrome plugin/@chrome by using the Chrome Extension workflow; otherwise use Chrome Computer Use when available and fall back to real Chrome CDP scripts only when allowed. Use when user asks to \"post to X\", \"tweet\", \"publish to Twitter\", or \"share on X\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-post-to-x",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-post-to-x.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-post-to-x/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 17668,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-xhs-images",
+    "name": "baoyu-xhs-images",
+    "category": "seo-content",
+    "description": "Generates infographic image card series with 12 visual styles, 8 layouts, and 3 color palettes. Breaks content into 1-10 cartoon-style image cards optimized for social media engagement. Use when user mentions \"小红书图片\", \"小红书种草\", \"小绿书\", \"微信图文\", \"微信贴图\", \"image cards\", \"图片卡片\", baoyu-xhs-images, or wants social media infographic series.",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-xhs-images",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-xhs-images.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-xhs-images/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 29570,
+    "reviews": []
+  },
+  {
+    "id": "jimliu-baoyu-cover-image",
+    "name": "baoyu-cover-image",
+    "category": "seo-content",
+    "description": "Generates article cover images with 5 dimensions (type, palette, rendering, text, mood) combining 11 color palettes and 7 rendering styles. Supports cinematic (2.35:1), widescreen (16:9), and square (1:1) aspects. Use when user asks to \"generate cover image\", \"create article cover\", or \"make cover\".",
+    "githubUrl": "https://github.com/jimliu/baoyu-skills/tree/main/skills/baoyu-cover-image",
+    "cloneCommand": "git clone https://github.com/jimliu/baoyu-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 25921,
+      "forks": 2869,
+      "pushedAt": "2026-09-10T15:13:43Z"
+    },
+    "contentPath": "skill-content/jimliu-baoyu-cover-image.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JimLiu/baoyu-skills@main/skills/baoyu-cover-image/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 17931,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli",
+    "name": "officecli",
+    "category": "documents",
+    "description": "Create, analyze, proofread, and modify Office documents (.docx, .xlsx, .pptx) using the officecli CLI tool. Use when the user wants to create, inspect, check formatting, find issues, add charts, or modify Office documents.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 25974,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-docx",
+    "name": "officecli-docx",
+    "category": "documents",
+    "description": "Use this skill any time a .docx file is involved -- as input, output, or both. This includes: creating Word documents, reports, letters, memos, or proposals; reading, parsing, or extracting text from any .docx file; editing, modifying, or updating existing documents; working with templates, tracked changes, comments, headers/footers, or tables of contents. Trigger whenever the user mentions 'Word doc', 'document', 'report', 'letter', 'memo', or references a .docx filename.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-docx",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-docx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-docx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 42878,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-academic-paper",
+    "name": "officecli-academic-paper",
+    "category": "documents",
+    "description": "Use this skill to build academic-style .docx output: journal / conference / thesis chapters carrying formal citation style (APA, Chicago, IEEE, MLA), numbered equations, figure & table cross-references, footnotes/endnotes, bibliography, or multi-column journal layout. Trigger on: 'research paper', 'journal paper', 'conference paper', 'manuscript', 'thesis', 'APA', 'MLA', 'Chicago', 'IEEE two-column', 'bibliography', 'hanging indent', 'citation style', 'abstract + keywords', 'equation numbering', 'cross-reference', paper with footnotes/endnotes. Output is a single .docx.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-academic-paper",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-academic-paper.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-academic-paper/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 45705,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-word-form",
+    "name": "officecli-word-form",
+    "category": "documents",
+    "description": "Use this skill to create fillable Word forms (.docx) with real Content Controls (SDT) + legacy FormField checkboxes + MERGEFIELD mail-merge placeholders + document protection. Trigger on: 'fillable form', 'form fields', 'content controls', 'SDT', 'word form', 'fill in', 'only editable fields', 'protect document', 'onboarding form', 'HR intake', 'survey template', 'contract / SOW template', 'mail-merge template', 'compliance checklist', 'medical intake questionnaire'. Output is a single .docx where specific fields are editable and the rest is locked. This skill is INDEPENDENT, not a scene layer on docx — payload is `<w:sdt>` + `<w:ffData>` + `<w:fldChar>` + `documentProtection`, none of which docx base skill covers. Do NOT trigger for regular reports, letters, memos, academic papers, pitch decks, or any document with no user-fillable fields — route those to officecli-docx or its scene layers.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-word-form",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-word-form.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-word-form/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 46899,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-morph-ppt",
+    "name": "morph-ppt",
+    "category": "presentations",
+    "description": "Use this skill when the user wants a .pptx with smooth cross-slide animation — PowerPoint Morph transitions, Keynote-style continuous motion, shapes that grow / move / rotate as the slide advances. Trigger on: 'morph', 'morph transition', 'smooth transition', 'continuous animation across slides', 'Keynote-style transition', 'animated slide sequence', 'shape continuity across slides'. Output is a single .pptx. This skill is a scene layer on top of officecli-pptx — inherits every pptx v2 rule (visual floor, grid, palettes, connector canon, Delivery Gate 1–5a). DO NOT invoke for a generic deck, pitch deck, or board review without cross-slide motion — route those to officecli-pptx base or officecli-pitch-deck.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/morph-ppt",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-morph-ppt.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/morph-ppt/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 48768,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-pptx",
+    "name": "officecli-pptx",
+    "category": "presentations",
+    "description": "Use this skill any time a .pptx file is involved -- as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file; editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions 'deck', 'slides', 'presentation', 'pitch', or references a .pptx filename.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-pptx",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-pptx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-pptx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 44849,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-pitch-deck",
+    "name": "officecli-pitch-deck",
+    "category": "presentations",
+    "description": "Use this skill when the user is building a fundraising / investor pitch deck — seed, Series A / B / C, convertible note, SAFE round, strategic raise. Trigger on: 'pitch deck', 'investor deck', 'Series A deck', 'Series B deck', 'Series C deck', 'fundraising deck', 'seed pitch', 'VC deck', 'raising capital', 'term sheet presentation'. Output is a single .pptx. This skill is a scene layer on top of officecli-pptx — inherits every pptx v2 rule (visual floor, grid, palettes, connector canon, Delivery Gate). DO NOT invoke for a generic board review, sales deck, all-hands, or product launch — route those to officecli-pptx base.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-pitch-deck",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-pitch-deck.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-pitch-deck/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 66735,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-xlsx",
+    "name": "officecli-xlsx",
+    "category": "data-office",
+    "description": "Use this skill any time a .xlsx file is involved -- as input, output, or both. This includes: creating spreadsheets, financial models, dashboards, or trackers; reading, parsing, or extracting data from any .xlsx file; editing, modifying, or updating existing workbooks; working with formulas, charts, pivot tables, or templates; importing CSV/TSV data into Excel format. Trigger whenever the user mentions 'spreadsheet', 'workbook', 'Excel', 'financial model', 'tracker', 'dashboard', or references a .xlsx/.csv filename.",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-xlsx",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-xlsx.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-xlsx/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 35305,
+    "reviews": []
+  },
+  {
+    "id": "iofficeai-officecli-data-dashboard",
+    "name": "officecli-data-dashboard",
+    "category": "data-office",
+    "description": "Use this skill to build a multi-element Excel dashboard — Dashboard sheet on open, multiple formula-driven KPI cards, multiple charts, sparklines, and conditional formatting — from CSV or tabular input. Trigger on: 'dashboard', 'KPI dashboard', 'analytics dashboard', 'executive dashboard', 'metrics dashboard', 'CSV to dashboard', 'data visualization'. Output is a single .xlsx. Scene-layer on officecli-xlsx: inherits every xlsx hard rule. DO NOT invoke for: a single budget tracker / one-sheet CSV-with-formatting (use xlsx), a 3-statement / DCF / LBO financial model (use financial-model), a weekly report with ≤ 1 chart and < 10 rows (use xlsx).",
+    "githubUrl": "https://github.com/iofficeai/officecli/tree/main/skills/officecli-data-dashboard",
+    "cloneCommand": "git clone https://github.com/iofficeai/officecli.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 30618,
+      "forks": 2089,
+      "pushedAt": "2026-09-14T20:50:08Z"
+    },
+    "contentPath": "skill-content/iofficeai-officecli-data-dashboard.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/iOfficeAI/OfficeCLI@main/skills/officecli-data-dashboard/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 29873,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-file-organizer",
+    "name": "file-organizer",
+    "category": "file-office",
+    "description": "Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks. Reduces cognitive load and keeps your digital workspace tidy without manual effort.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/file-organizer",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-file-organizer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/file-organizer/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 11312,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-invoice-organizer",
+    "name": "invoice-organizer",
+    "category": "file-office",
+    "description": "Automatically organizes invoices and receipts for tax preparation by reading messy files, extracting key information, renaming them consistently, and sorting them into logical folders. Turns hours of manual bookkeeping into minutes of automated organization.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/invoice-organizer",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-invoice-organizer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/invoice-organizer/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 12010,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-content-research-writer",
+    "name": "content-research-writer",
+    "category": "writing",
+    "description": "Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time feedback on each section. Transforms your writing process from solo effort to collaborative partnership.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/content-research-writer",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-content-research-writer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/content-research-writer/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 14244,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-meeting-insights-analyzer",
+    "name": "meeting-insights-analyzer",
+    "category": "planning-office",
+    "description": "Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies when you avoid conflict, use filler words, dominate conversations, or miss opportunities to listen. Perfect for professionals seeking to improve their communication and leadership skills.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/meeting-insights-analyzer",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-meeting-insights-analyzer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/meeting-insights-analyzer/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 10177,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-tailored-resume-generator",
+    "name": "tailored-resume-generator",
+    "category": "resume",
+    "description": "Analyzes job descriptions and generates tailored resumes that highlight relevant experience, skills, and achievements to maximize interview chances",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/tailored-resume-generator",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-tailored-resume-generator.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/tailored-resume-generator/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 12408,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-competitive-ads-extractor",
+    "name": "competitive-ads-extractor",
+    "category": "ecommerce",
+    "description": "Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand what messaging, problems, and creative approaches are working. Helps inspire and improve your own ad campaigns.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/competitive-ads-extractor",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-competitive-ads-extractor.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/competitive-ads-extractor/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 7912,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-lead-research-assistant",
+    "name": "lead-research-assistant",
+    "category": "ecommerce",
+    "description": "Identifies high-quality leads for your product or service by analyzing your business, searching for target companies, and providing actionable contact strategies. Perfect for sales, business development, and marketing professionals.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/lead-research-assistant",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-lead-research-assistant.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/lead-research-assistant/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 6587,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-twitter-algorithm-optimizer",
+    "name": "twitter-algorithm-optimizer",
+    "category": "seo-content",
+    "description": "Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrite and edit user tweets to improve engagement and visibility based on how the recommendation system ranks content.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/twitter-algorithm-optimizer",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-twitter-algorithm-optimizer.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/twitter-algorithm-optimizer/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 12932,
+    "reviews": []
+  },
+  {
+    "id": "composiohq-changelog-generator",
+    "name": "changelog-generator",
+    "category": "development",
+    "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation.",
+    "githubUrl": "https://github.com/composiohq/awesome-claude-skills/tree/master/changelog-generator",
+    "cloneCommand": "git clone https://github.com/composiohq/awesome-claude-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 75068,
+      "forks": 8679,
+      "pushedAt": "2026-08-10T21:45:44Z"
+    },
+    "contentPath": "skill-content/composiohq-changelog-generator.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/ComposioHQ/awesome-claude-skills@master/changelog-generator/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 3096,
+    "reviews": []
+  },
+  {
+    "id": "michalparkola-article-extractor",
+    "name": "article-extractor",
+    "category": "seo-content",
+    "description": "Extract clean article content from URLs (blog posts, articles, tutorials) and save as readable text. Use when user wants to download, extract, or save an article/blog post from a URL without ads, navigation, or clutter.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/article-extractor",
     "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-article-extractor.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/article-extractor/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9641,
+    "reviews": []
   },
   {
-    "id": "internal-link-skill",
-    "name": "internal-link-skill",
+    "id": "michalparkola-youtube-transcript",
+    "name": "youtube-transcript",
     "category": "seo-content",
-    "description": "规划网站内链，推荐关联页面并生成锚文本建议。",
-    "githubUrl": "https://github.com/seo-agent/internal-link-skill",
-    "cloneCommand": "git clone https://github.com/seo-agent/internal-link-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "sitemap-skill",
-    "name": "sitemap-skill",
-    "category": "seo-content",
-    "description": "生成 XML 站点地图，检查死链并配置页面优先级。",
-    "githubUrl": "https://github.com/ComposioHQ/awesome-claude-skills/tree/master/sitemap",
-    "cloneCommand": "git clone https://github.com/ComposioHQ/awesome-claude-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "seo-audit-skill",
-    "name": "seo-audit-skill",
-    "category": "seo-content",
-    "description": "巡检页面速度、移动端适配、重复内容和缺失标签等 SEO 问题。",
-    "githubUrl": "https://github.com/seo-agent/seo-audit-skill",
-    "cloneCommand": "git clone https://github.com/seo-agent/seo-audit-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "competitor-seo-skill",
-    "name": "competitor-seo-skill",
-    "category": "seo-content",
-    "description": "分析竞品站点，挖掘竞品关键词和内容布局策略。",
-    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/competitor-seo",
-    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
-  },
-  {
-    "id": "image-alt-skill",
-    "name": "image-alt-skill",
-    "category": "seo-content",
-    "description": "批量生成图片 Alt 文本，完善图片 SEO。",
-    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/image-alt",
+    "description": "Download YouTube video transcripts when user provides a YouTube URL or asks to download/get/fetch a transcript from YouTube. Also use when user wants to transcribe or get captions/subtitles from a YouTube video.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/youtube-transcript",
     "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-youtube-transcript.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/youtube-transcript/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 13729,
+    "reviews": []
   },
   {
-    "id": "rank-report-skill",
-    "name": "rank-report-skill",
-    "category": "seo-content",
-    "description": "整理关键词排名报表，汇总流量变化并输出 SEO 月度报告。",
-    "githubUrl": "https://github.com/seo-agent/rank-report-skill",
-    "cloneCommand": "git clone https://github.com/seo-agent/rank-report-skill.git",
-    "compatibility": ["Claude Code", "OpenCode", "Codex"],
-    "status": "needs_review",
-    "source": "user-submitted",
-    "lastCheckedAt": null
+    "id": "michalparkola-learn-this",
+    "name": "learn-this",
+    "category": "planning-office",
+    "description": "Unified content extraction and action planning. Use when user says \"learn-this <URL>\", \"learn this <URL>\", \"weave <URL>\", \"help me plan <URL>\", \"extract and plan <URL>\", \"make this actionable <URL>\", or similar phrases indicating they want to extract content and create an action plan. Automatically detects content type (YouTube video, article, PDF) and processes accordingly.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/learn-this",
+    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-learn-this.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/learn-this/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 12650,
+    "reviews": []
   },
-  {"id":"email-compose-skill","name":"email-compose-skill","category":"email-office","description":"撰写正式、简洁或委婉的商务邮件，补全上下文和附件说明。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/email-compose","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"email-parse-skill","name":"email-parse-skill","category":"email-office","description":"解析邮件正文，提取需求、时间节点和待办事项。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/email-parse","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"email-classify-skill","name":"email-classify-skill","category":"email-office","description":"按通知、审批、客户咨询等类型给邮件分类并打标签。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/email-classify","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"email-reply-skill","name":"email-reply-skill","category":"email-office","description":"根据原始邮件上下文生成可调整语气的回复草稿。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/email-reply","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"mail-merge-skill","name":"mail-merge-skill","category":"email-office","description":"读取名单表格，批量生成个性化邮件正文。","githubUrl":"https://github.com/office-ai-agent/mail-merge-skill","cloneCommand":"git clone https://github.com/office-ai-agent/mail-merge-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"email-summary-skill","name":"email-summary-skill","category":"email-office","description":"压缩长邮件线程，梳理多轮对话历史并提炼结论。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/email-summary","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"schedule-mail-skill","name":"schedule-mail-skill","category":"email-office","description":"生成提醒邮件、会议通知和定时发送模板。","githubUrl":"https://github.com/office-ai-agent/schedule-mail-skill","cloneCommand":"git clone https://github.com/office-ai-agent/schedule-mail-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"email-pii-redact-skill","name":"email-pii-redact-skill","category":"email-office","description":"识别并脱敏邮件中的手机号、证件号和银行卡号。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/email-pii-redact","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"signature-skill","name":"signature-skill","category":"email-office","description":"生成多套商务邮件签名，支持按岗位切换版本。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/signature","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"outlook-automate-skill","name":"outlook-automate-skill","category":"email-office","description":"创建日历事件、发送会议邀请并整理 Outlook 待办。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/outlook-automate","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"meeting-note-skill","name":"meeting-note-skill","category":"planning-office","description":"清洗会议转写，提炼纪要、行动项、责任人和截止日期。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/meeting-notes","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"meeting-agenda-skill","name":"meeting-agenda-skill","category":"planning-office","description":"根据会议主题生成议程，并估算每个环节时长。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/meeting-agenda","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"task-breakdown-skill","name":"task-breakdown-skill","category":"planning-office","description":"把大项目拆成阶段、子任务、依赖关系和交付物。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/task-breakdown","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"calendar-skill","name":"calendar-skill","category":"planning-office","description":"解析日程、识别时间冲突并生成会议邀约。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/calendar-skill","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"todo-manage-skill","name":"todo-manage-skill","category":"planning-office","description":"管理待办清单，为任务打优先级并区分紧急与重要。","githubUrl":"https://github.com/office-ai-agent/todo-manage-skill","cloneCommand":"git clone https://github.com/office-ai-agent/todo-manage-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"risk-assess-skill","name":"risk-assess-skill","category":"planning-office","description":"识别项目任务风险，输出风险点与应对预案。","githubUrl":"https://github.com/office-ai-agent/risk-assess-skill","cloneCommand":"git clone https://github.com/office-ai-agent/risk-assess-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"minutes-review-skill","name":"minutes-review-skill","category":"planning-office","description":"校对会议纪要，检查行动项完整性和时间表达。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/minutes-review","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"standup-report-skill","name":"standup-report-skill","category":"planning-office","description":"生成站会和周报简报，突出计划、阻塞点和进展。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/standup-report","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"meeting-prep-skill","name":"meeting-prep-skill","category":"planning-office","description":"整理会前背景资料、摘要和准备清单。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/meeting-prep","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"followup-skill","name":"followup-skill","category":"planning-office","description":"生成会后跟进文案，追踪待办完成情况。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/followup","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"data-analyze-skill","name":"data-analyze-skill","category":"data-office","description":"读取 CSV 或 Excel，输出结构化的数据分析结论。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/data-analyze","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"chart-gen-skill","name":"chart-gen-skill","category":"data-office","description":"根据数据描述生成柱状图、折线图和饼图配置。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/chart-gen","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"sql-write-skill","name":"sql-write-skill","category":"data-office","description":"把自然语言问题转换为 SQL，并进行基础语法检查。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/sql-write","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"data-clean-skill","name":"data-clean-skill","category":"data-office","description":"识别表格空值、重复行和异常值，并给出清洗建议。","githubUrl":"https://github.com/office-ai-agent/data-clean-skill","cloneCommand":"git clone https://github.com/office-ai-agent/data-clean-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"kpi-report-skill","name":"kpi-report-skill","category":"data-office","description":"解读月度或季度 KPI，生成指标分析报告。","githubUrl":"https://github.com/office-ai-agent/kpi-report-skill","cloneCommand":"git clone https://github.com/office-ai-agent/kpi-report-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"pivot-skill","name":"pivot-skill","category":"data-office","description":"建议数据透视表的维度、汇总字段和分析切片。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/pivot-skill","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"data-interpret-skill","name":"data-interpret-skill","category":"data-office","description":"解读图表图片，提取趋势、拐点和异常点。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/data-interpret","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"export-dashboard-skill","name":"export-dashboard-skill","category":"data-office","description":"根据业务指标生成简易 Markdown 数据看板。","githubUrl":"https://github.com/office-ai-agent/export-dashboard-skill","cloneCommand":"git clone https://github.com/office-ai-agent/export-dashboard-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"data-compare-skill","name":"data-compare-skill","category":"data-office","description":"对比两份报表，找出差异行与差异数值并输出报告。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/data-compare","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"form-parse-skill","name":"form-parse-skill","category":"data-office","description":"批量提取表单与问卷数据，汇总收集结果。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/form-parse","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-organize-skill","name":"file-organize-skill","category":"file-office","description":"按日期、类型或项目批量整理文件和目录结构。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/file-organize","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-index-skill","name":"file-index-skill","category":"file-office","description":"扫描本地文档，生成文件索引、摘要和目录。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/file-index","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"rename-batch-skill","name":"rename-batch-skill","category":"file-office","description":"生成批量文件重命名规则，支持正则和编号。","githubUrl":"https://github.com/office-ai-agent/rename-batch-skill","cloneCommand":"git clone https://github.com/office-ai-agent/rename-batch-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"archive-skill","name":"archive-skill","category":"file-office","description":"筛选过期文件，设计归档命名与打包方案。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/archive-skill","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-compare-skill","name":"file-compare-skill","category":"file-office","description":"对比两个文档版本，输出变更摘要和重点差异。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/file-compare","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"ocr-skill","name":"ocr-skill","category":"file-office","description":"从图片或 PDF 扫描件提取可编辑文字。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/ocr-skill","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-metadata-skill","name":"file-metadata-skill","category":"file-office","description":"读取或批量设置文档标题、备注和标签等元信息。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/file-metadata","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"backup-check-skill","name":"backup-check-skill","category":"file-office","description":"检查备份缺失文件并校验备份完整性清单。","githubUrl":"https://github.com/office-ai-agent/backup-check-skill","cloneCommand":"git clone https://github.com/office-ai-agent/backup-check-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-search-skill","name":"file-search-skill","category":"file-office","description":"按文档内容语义检索，根据描述定位相关文件。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/file-search","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"watermark-skill","name":"watermark-skill","category":"file-office","description":"给 PDF 或图片添加文字、版权和批量水印。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/watermark","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"docx-skill","name":"docx-skill","category":"documents","description":"创建和编辑 Word 文档，支持修订、批注、目录和模板填充。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/docx","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"pdf-skill","name":"pdf-skill","category":"documents","description":"读取、OCR、合并拆分 PDF，提取表格并填写表单。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/pdf","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"xlsx-skill","name":"xlsx-skill","category":"documents","description":"读写 Excel，生成图表、计算公式并清洗表格数据。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/xlsx","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"officecli-skill","name":"officecli-skill","category":"documents","description":"通过命令行自动化控制 Word、Excel 和 PPT 文档。","githubUrl":"https://github.com/iOfficeAI/OfficeCLI","cloneCommand":"git clone https://github.com/iOfficeAI/OfficeCLI.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"doc-coauthoring-skill","name":"doc-coauthoring-skill","category":"documents","description":"逐段审阅、修改润色文档，并生成协同批注。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"article-extractor-skill","name":"article-extractor-skill","category":"documents","description":"提取网页纯净正文，去掉广告导航并保存为 Markdown 或 Word。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/article-extractor","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"md-to-epub-skill","name":"md-to-epub-skill","category":"documents","description":"把 Markdown 批量转换为 EPUB，自动生成封面和目录。","githubUrl":"https://github.com/smerchek/md-to-epub-skill","cloneCommand":"git clone https://github.com/smerchek/md-to-epub-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"weekly-report-skill","name":"weekly-report-skill","category":"documents","description":"汇总工作记录生成结构化周报，支持自定义模板。","githubUrl":"https://github.com/username/weekly-report-skill","cloneCommand":"git clone https://github.com/username/weekly-report-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"doc-format-check-skill","name":"doc-format-check-skill","category":"documents","description":"检查文档字体、行距、页眉页码和附件完整性。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/doc-format-check","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"file-convert-skill","name":"file-convert-skill","category":"documents","description":"批量转换 Markdown、Word、PDF 和 HTML 文档。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/file-convert","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"pptx-skill","name":"pptx-skill","category":"presentations","description":"生成和修改原生 PPTX，检查版式、图表、备注和文字溢出。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/pptx","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"ppt-master-skill","name":"ppt-master-skill","category":"presentations","description":"从文档生成可编辑 PPTX，自动排版图文和商务模板。","githubUrl":"https://github.com/hugohe3/ppt-master","cloneCommand":"git clone https://github.com/hugohe3/ppt-master.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"guizang-ppt-skill","name":"guizang-ppt-skill","category":"presentations","description":"制作杂志风 HTML 幻灯片，支持演讲者模式和浏览器演示。","githubUrl":"https://github.com/lewislulu/guizang-ppt-skill","cloneCommand":"git clone https://github.com/lewislulu/guizang-ppt-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"dashi-ppt-skill","name":"dashi-ppt-skill","category":"presentations","description":"生成可在线编辑网页 PPT，支持多套主题和 PPTX 导出。","githubUrl":"https://github.com/op7418/dashi-ppt-skill","cloneCommand":"git clone https://github.com/op7418/dashi-ppt-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"NanoBanana-PPT-Skills","name":"NanoBanana-PPT-Skills","category":"presentations","description":"把文档转为带 AI 配图和转场视频的演示页面。","githubUrl":"https://github.com/op7418/NanoBanana-PPT-Skills","cloneCommand":"git clone https://github.com/op7418/NanoBanana-PPT-Skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"html-ppt-skill","name":"html-ppt-skill","category":"presentations","description":"制作轻量网页幻灯片，适合技术分享和代码演示。","githubUrl":"https://github.com/lewislulu/html-ppt-skill","cloneCommand":"git clone https://github.com/lewislulu/html-ppt-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"PPTAgent-skill","name":"PPTAgent-skill","category":"presentations","description":"面向学术演示生成参考文献、公式排版和内容质量检查。","githubUrl":"https://github.com/xxx/PPTAgent","cloneCommand":"git clone https://github.com/xxx/PPTAgent.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"gorden-ppt-skill","name":"gorden-ppt-skill","category":"presentations","description":"在职场 PPT 模板中替换文字，保留原有版式和配色。","githubUrl":"https://github.com/gorden/gorden-ppt-skill","cloneCommand":"git clone https://github.com/gorden/gorden-ppt-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"slide-export-skill","name":"slide-export-skill","category":"presentations","description":"把网页幻灯片批量导出为 PDF 或图片并打包。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/slide-export","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"ppt-outline-skill","name":"ppt-outline-skill","category":"presentations","description":"输入主题生成 PPT 大纲，拆分每页要点并优化叙事逻辑。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/ppt-outline","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"tailored-resume-generator-skill","name":"tailored-resume-generator-skill","category":"resume","description":"读取岗位 JD 定制简历，匹配关键词并优化 ATS 可读性。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/tailored-resume-generator","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"resume-builder-skill","name":"resume-builder-skill","category":"resume","description":"用结构化信息套用简历模板，支持中英文 PDF 导出。","githubUrl":"https://github.com/offer-toolkit-skill/resume-builder-skill","cloneCommand":"git clone https://github.com/offer-toolkit-skill/resume-builder-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"html-resume-beautifier-skill","name":"html-resume-beautifier-skill","category":"resume","description":"把简历转成 HTML，做隐私审计并导出 PNG 或 PDF。","githubUrl":"https://github.com/JZCreative/HTML-resume-beautifier","cloneCommand":"git clone https://github.com/JZCreative/HTML-resume-beautifier.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"resume-matcher-skill","name":"resume-matcher-skill","category":"resume","description":"计算简历和 JD 的匹配度，提示能力缺口并给出优化方向。","githubUrl":"https://github.com/srbhr/Resume-Matcher","cloneCommand":"git clone https://github.com/srbhr/Resume-Matcher.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"rendercv-skill","name":"rendercv-skill","category":"resume","description":"用 YAML 编写简历并渲染为专业的技术或学术版式。","githubUrl":"https://github.com/rendercv/rendercv","cloneCommand":"git clone https://github.com/rendercv/rendercv.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"open-resume-skill","name":"open-resume-skill","category":"resume","description":"构建 ATS 友好简历，解析旧简历并重构内容。","githubUrl":"https://github.com/xitanggg/open-resume","cloneCommand":"git clone https://github.com/xitanggg/open-resume.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"interview-story-skill","name":"interview-story-skill","category":"resume","description":"根据经历生成面试 STAR 故事和行为面试素材。","githubUrl":"https://github.com/offer-toolkit-skill/bq-skill","cloneCommand":"git clone https://github.com/offer-toolkit-skill/bq-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"jd-decoder-skill","name":"jd-decoder-skill","category":"resume","description":"解析招聘 JD，提炼核心要求和隐藏门槛。","githubUrl":"https://github.com/offer-toolkit-skill/job-description-skill","cloneCommand":"git clone https://github.com/offer-toolkit-skill/job-description-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"offer-compare-skill","name":"offer-compare-skill","category":"resume","description":"对比多份 offer，折算薪资并输出风险评估。","githubUrl":"https://github.com/offer-toolkit-skill/offer-compare-skill","cloneCommand":"git clone https://github.com/offer-toolkit-skill/offer-compare-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"resume-format-check-skill","name":"resume-format-check-skill","category":"resume","description":"检查简历页数、错别字、敏感信息和排版规范。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/resume-format-check","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"khazix-write-skill","name":"khazix-write-skill","category":"writing","description":"按多层自检流程撰写公众号长文，减少模板化表达。","githubUrl":"https://github.com/JimLiu/khazix-skills","cloneCommand":"git clone https://github.com/JimLiu/khazix-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"humanizer-skill","name":"humanizer-skill","category":"writing","description":"改写机器腔文本，保留原意并提升自然度。","githubUrl":"https://github.com/blader/humanizer","cloneCommand":"git clone https://github.com/blader/humanizer.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"baoyu-content-skill","name":"baoyu-content-skill","category":"writing","description":"覆盖文案、封面文案、信息图说明和脚本的内容创作工具。","githubUrl":"https://github.com/JimLiu/baoyu-skills","cloneCommand":"git clone https://github.com/JimLiu/baoyu-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"outline-write-skill","name":"outline-write-skill","category":"writing","description":"拆解长文或小说大纲，管理人物、节点和知识网络。","githubUrl":"https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/tapestry","cloneCommand":"git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"abstract-skill","name":"abstract-skill","category":"writing","description":"提炼长文章摘要，支持精简版和详细版输出。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/abstract","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"copywriting-skill","name":"copywriting-skill","category":"writing","description":"生成营销文案、产品介绍和短广告语，支持风格切换。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/copywriting","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"meeting-minutes-skill","name":"meeting-minutes-skill","category":"writing","description":"从会议录音或纪要中提取行动项、责任人和截止时间。","githubUrl":"https://github.com/anthropics/skills/tree/main/skills/meeting-minutes","cloneCommand":"git clone https://github.com/anthropics/skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"story-write-skill","name":"story-write-skill","category":"writing","description":"生成故事或小说章节，保持人物对话和情节推进一致。","githubUrl":"https://github.com/xxx/story-write-skill","cloneCommand":"git clone https://github.com/xxx/story-write-skill.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"translation-skill","name":"translation-skill","category":"writing","description":"翻译技术和商务文本，保持术语统一和语气一致。","githubUrl":"https://github.com/vercel-labs/agent-skills/tree/main/translation","cloneCommand":"git clone https://github.com/vercel-labs/agent-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null},
-  {"id":"text-proofread-skill","name":"text-proofread-skill","category":"writing","description":"检查错别字、语病、逻辑、格式和重复语句。","githubUrl":"https://github.com/ComposioHQ/awesome-claude-skills/tree/master/text-proofread","cloneCommand":"git clone https://github.com/ComposioHQ/awesome-claude-skills.git","compatibility":["Claude Code","OpenCode","Codex"],"status":"needs_review","source":"user-submitted","lastCheckedAt":null}
+  {
+    "id": "michalparkola-ship-learn-next",
+    "name": "ship-learn-next",
+    "category": "planning-office",
+    "description": "Transform learning content (like YouTube transcripts, articles, tutorials) into actionable implementation plans using the Ship-Learn-Next framework. Use when user wants to turn advice, lessons, or educational content into concrete action steps, reps, or a learning quest.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/ship-learn-next",
+    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-ship-learn-next.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/ship-learn-next/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 9411,
+    "reviews": []
+  },
+  {
+    "id": "michalparkola-unblock-action",
+    "name": "unblock-action",
+    "category": "planning-office",
+    "description": "Help the user unblock a vague or stuck action item by clarifying the intended output, scoping it to today, and identifying the concrete next action. Use when user says \"unblock\", \"unstick\", \"I'm stuck on\", or presents a vague task they can't start.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/unblock-action",
+    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-unblock-action.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/unblock-action/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 4093,
+    "reviews": []
+  },
+  {
+    "id": "michalparkola-scrum-sage",
+    "name": "scrum-sage",
+    "category": "planning-office",
+    "description": "AI-powered Scrum Master and Enterprise Agility Coach based on Jeff Sutherland, Taiichi Ohno, and First Principles thinking. Use when user needs help with Scrum, sprint analysis, backlog refinement, scaling advice, impediment removal, team dynamics, or agile coaching. Activate for questions about Scrum mechanics, Scrum@Scale, flow optimization, or team performance.",
+    "githubUrl": "https://github.com/michalparkola/tapestry-skills-for-claude-code/tree/main/scrum-sage",
+    "cloneCommand": "git clone https://github.com/michalparkola/tapestry-skills-for-claude-code.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 543,
+      "forks": 64,
+      "pushedAt": "2026-03-11T22:36:51Z"
+    },
+    "contentPath": "skill-content/michalparkola-scrum-sage.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/michalparkola/tapestry-skills-for-claude-code@main/scrum-sage/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 5888,
+    "reviews": []
+  },
+  {
+    "id": "hugohe3-ppt-master",
+    "name": "ppt-master",
+    "category": "presentations",
+    "description": "AI-driven presentation workflow for generating editable PPTX decks and slides, reconstructing page visuals, creating reusable Brand/Style/Layout/Deck workspaces, filling native PPTX templates, and enhancing finished PPTX files. Use when the user asks to create, generate, reconstruct, regenerate, beautify, redesign, template, fill, or enhance a presentation, PPT, PPTX, slide deck, or courseware — including adding narration or animation to one — requests a presentation-authored narrated/self-running video, or mentions ppt-master.",
+    "githubUrl": "https://github.com/hugohe3/ppt-master/tree/main/skills/ppt-master",
+    "cloneCommand": "git clone https://github.com/hugohe3/ppt-master.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54555,
+      "forks": 4331,
+      "pushedAt": "2026-09-15T13:02:48Z"
+    },
+    "contentPath": "skill-content/hugohe3-ppt-master.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/hugohe3/ppt-master@main/skills/ppt-master/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 10043,
+    "reviews": []
+  },
+  {
+    "id": "op7418-nanobanana-ppt-skills",
+    "name": "NanoBanana-PPT-Skills",
+    "category": "presentations",
+    "description": "NanoBanana PPT Skills 基于 AI 自动生成高质量 PPT 图片和视频的强大工具，支持智能转场和交互式播放",
+    "githubUrl": "https://github.com/op7418/nanobanana-ppt-skills/tree/main",
+    "cloneCommand": "git clone https://github.com/op7418/nanobanana-ppt-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 3248,
+      "forks": 343,
+      "pushedAt": "2026-01-19T03:07:23Z"
+    },
+    "contentPath": "skill-content/op7418-nanobanana-ppt-skills.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/op7418/NanoBanana-PPT-Skills@main/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 15970,
+    "reviews": []
+  },
+  {
+    "id": "lewislulu-html-ppt-skill",
+    "name": "html-ppt",
+    "category": "presentations",
+    "description": "HTML PPT Studio — author professional static HTML presentations in many styles, layouts, and animations, all driven by templates. Use when the user asks for a presentation, PPT, slides, keynote, deck, slideshow, \"幻灯片\", \"演讲稿\", \"做一份 PPT\", \"做一份 slides\", a reveal-style HTML deck, a 小红书 图文, or any kind of multi-slide pitch/report/sharing document that should look tasteful and be usable with keyboard navigation. Triggers include keywords like \"presentation\", \"ppt\", \"slides\", \"deck\", \"keynote\", \"reveal\", \"slideshow\", \"幻灯片\", \"演讲稿\", \"分享稿\", \"小红书图文\", \"talk slides\", \"pitch deck\", \"tech sharing\", \"technical presentation\".",
+    "githubUrl": "https://github.com/lewislulu/html-ppt-skill/tree/main",
+    "cloneCommand": "git clone https://github.com/lewislulu/html-ppt-skill.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 8373,
+      "forks": 716,
+      "pushedAt": "2026-09-14T07:36:59Z"
+    },
+    "contentPath": "skill-content/lewislulu-html-ppt-skill.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/lewislulu/html-ppt-skill@main/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 19834,
+    "reviews": []
+  },
+  {
+    "id": "rendercv-rendercv",
+    "name": "rendercv",
+    "category": "resume",
+    "description": "Create professional CVs and resumes with perfect typography using RenderCV (v2.8). Users write content in YAML, and RenderCV produces publication-quality PDFs via Typst typesetting. Full control over every visual detail: colors, fonts, margins, spacing, section title styles, entry layouts, and more. 6 built-in themes with unlimited customization. Any language supported (22 built-in, or define your own). Outputs PDF, PNG, HTML, and Markdown. Use when the user wants to create, edit, customize, or render a CV or resume.",
+    "githubUrl": "https://github.com/rendercv/rendercv-skill/tree/main/skills/rendercv",
+    "cloneCommand": "git clone https://github.com/rendercv/rendercv-skill.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 17,
+      "forks": 7,
+      "pushedAt": "2026-03-21T00:47:04Z"
+    },
+    "contentPath": "skill-content/rendercv-rendercv.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/rendercv/rendercv-skill@main/skills/rendercv/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 26384,
+    "reviews": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "RenderCV was simple to use and did exactly what I wanted.",
+        "sentiment": "positive",
+        "note": "针对 RenderCV 本体（100 points / 41 comments），官方 skill 由 rendercv 仓库自动生成"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "First of all, thank you for making this. I used it in my recent job search and it was fantastic.",
+        "sentiment": "positive",
+        "note": "评论者 smnrchrds；同帖也反馈升级后兼容性问题"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "Could you please follow SemVer? I tried rendering my resume again last week, only 3 or 4 months after having made it originally.",
+        "sentiment": "mixed",
+        "note": "评论者 smnrchrds 反映版本升级破坏兼容"
+      }
+    ]
+  },
+  {
+    "id": "jzcreative-html-resume-beautifier",
+    "name": "resume-beautifier",
+    "category": "resume",
+    "description": "Create polished, privacy-safe A4 resume designs from structured resume content or existing resume files. Use when Codex needs to extract resume facts, remove personal example data, choose a visual style, generate an editable HTML resume, add client-side PNG/PDF export, audit for private information before open sourcing, or prepare a reusable resume-design workflow.",
+    "githubUrl": "https://github.com/jzcreative/html-resume-beautifier/tree/main",
+    "cloneCommand": "git clone https://github.com/jzcreative/html-resume-beautifier.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-09-15",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 11,
+      "forks": 1,
+      "pushedAt": "2026-05-25T04:05:09Z"
+    },
+    "contentPath": "skill-content/jzcreative-html-resume-beautifier.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/JZCreative/HTML-resume-beautifier@main/SKILL.md",
+    "contentFetchedAt": "2026-09-15",
+    "contentBytes": 4355,
+    "reviews": []
+  }
 ]

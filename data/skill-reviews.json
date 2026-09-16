@@ -1,0 +1,204 @@
+{
+  "checkedAt": "2026-09-15",
+  "method": "评价条目全部来自可公开访问的页面（Hacker News / 技术博客），引用为原文或原文标题；note 字段为 FreeLLM 的语境标注。未检索到可靠第三方评价的仓库仅保留 GitHub 社区数据（star / fork）。",
+  "repos": {
+    "anthropics/skills": [
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "The core simplicity of the skills design is why I'm so excited about it.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Simon Willison",
+        "url": "https://simonwillison.net/2025/Oct/16/claude-skills/",
+        "date": "2025-10-16",
+        "quote": "I expect we'll see a Cambrian explosion in Skills which will make this year's MCP rush look pedestrian by comparison.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "Claude Skills are awesome, maybe a bigger deal than MCP",
+        "sentiment": "positive",
+        "note": "738 points / 370 comments，Skills 话题最热的社区讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "When a new version is published: task claude code to distill the entire library down to a skill, then bundle that in with the npm package",
+        "sentiment": "positive",
+        "note": "评论者 827a 分享把内部库蒸馏成 Skill 随包分发的实践"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=45619537",
+        "date": "2025-10-17",
+        "quote": "I'm not sure I totally see the disdain for MCP. These skills also rely on tools, having a standard way to add tools to an agent is good.",
+        "sentiment": "mixed",
+        "note": "评论者 didibus 认为 Skills 与 MCP 互补而非替代"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47475832",
+        "date": "2026-03-22",
+        "quote": "Skills are quietly becoming the unit of agent knowledge",
+        "sentiment": "positive",
+        "note": "9 points / 13 comments；SKILL.md 正成为各 Agent 运行时的通用格式"
+      }
+    ],
+    "obra/superpowers": [
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "It has made my use of Claude Code so much more productive.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "emschwartz.me",
+        "url": "https://emschwartz.me/a-rave-review-of-superpowers-for-claude-code/",
+        "date": "2026-04",
+        "quote": "I feel better about tradeoffs being made and much more confident that the code written does what I want.",
+        "sentiment": "positive"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=47623101",
+        "date": "2026-04-03",
+        "quote": "A Rave Review of Superpowers (For Claude Code)",
+        "sentiment": "positive",
+        "note": "50 points / 25 comments"
+      }
+    ],
+    "blader/humanizer": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46694489",
+        "date": "2026-01-20",
+        "quote": "Humanizer: Claude Code skill that removes signs of AI-generated writing",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ],
+    "srbhr/Resume-Matcher": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=38461101",
+        "date": "2023-11-29",
+        "quote": "You could sell an ATS system that randomly selected n resumes from the total and it would be almost as effective.",
+        "sentiment": "negative",
+        "note": "145 points / 54 comments；评论者 jimbokun 对 JD 关键词匹配类工具整体价值的质疑"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=38461101",
+        "date": "2023-11-29",
+        "quote": "I see it's Apache licensed, somebody should be running it somewhere as a service with an easy, small payments option.",
+        "sentiment": "neutral",
+        "note": "评论者 m3047"
+      }
+    ],
+    "rendercv/rendercv-skill": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "RenderCV was simple to use and did exactly what I wanted.",
+        "sentiment": "positive",
+        "note": "针对 RenderCV 本体（100 points / 41 comments），官方 skill 由 rendercv 仓库自动生成"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "First of all, thank you for making this. I used it in my recent job search and it was fantastic.",
+        "sentiment": "positive",
+        "note": "评论者 smnrchrds；同帖也反馈升级后兼容性问题"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46344616",
+        "date": "2025-12-21",
+        "quote": "Could you please follow SemVer? I tried rendering my resume again last week, only 3 or 4 months after having made it originally.",
+        "sentiment": "mixed",
+        "note": "评论者 smnrchrds 反映版本升级破坏兼容"
+      }
+    ],
+    "xitanggg/open-resume": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=36470297",
+        "date": "2023-06-25",
+        "quote": "Show HN: Open-source resume builder and parser",
+        "sentiment": "positive",
+        "note": "656 points / 198 comments 的 Show HN 首页讨论"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=38250661",
+        "date": "2023-11",
+        "quote": "OpenResume has been excellent for me",
+        "sentiment": "positive",
+        "note": "评论者 takoid"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=42628907",
+        "date": "2025-01",
+        "quote": "Openresume really butchers mine despite using a pretty standard latex template.",
+        "sentiment": "negative",
+        "note": "评论者 __turbobrew__ 指出解析器对部分 PDF 准确度不佳"
+      }
+    ],
+    "iOfficeAI/OfficeCLI": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=48807225",
+        "date": "2026-07-06",
+        "quote": "That is great.. Only the possibility of minimizing token usage when dealing with Office docs makes this very handy.",
+        "sentiment": "positive",
+        "note": "215 points 首页讨论；评论者 umutm"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=48807225",
+        "date": "2026-07-06",
+        "quote": "Nice, but I don't see a lot of ECMA 376 test cases.",
+        "sentiment": "mixed",
+        "note": "评论者 rcarmo 质疑 OOXML 兼容性测试覆盖"
+      },
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=48807225",
+        "date": "2026-07-06",
+        "quote": "I think agents making Word docs and PowerPoints is going to go away. I think something like small docs is the future.",
+        "sentiment": "negative",
+        "note": "评论者 nimonian 对『Agent 编辑 Office 文件』方向的质疑"
+      }
+    ],
+    "ComposioHQ/awesome-claude-skills": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46597679",
+        "date": "2026-01-13",
+        "quote": "List of Claude Skills, resources, and tools for customizing Claude AI workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用；该清单在 GitHub 收获约 7.5 万 star"
+      }
+    ],
+    "vercel-labs/agent-skills": [
+      {
+        "source": "Hacker News",
+        "url": "https://news.ycombinator.com/item?id=46623875",
+        "date": "2026-01-14",
+        "quote": "Agent Skills: AI Agents for React and Next.js Workflows",
+        "sentiment": "neutral",
+        "note": "提交标题引用"
+      }
+    ]
+  }
+}

@@ -1,98 +1,97 @@
 [
   {
-    "id": "idea-to-prd",
-    "title": "从一句想法到可执行 PRD",
+    "id": "idea-to-plan",
+    "title": "从一句想法到可执行计划",
     "kicker": "PRODUCT / 01",
-    "description": "把模糊想法压成团队能评审、能排期、能验收的产品任务。",
+    "description": "把模糊想法压成团队能评审、能排期、能验收的实施计划。",
     "input": "一句想法、目标用户和已知约束",
-    "output": "带验收标准、风险边界和流程图的 PRD",
-    "why": "先澄清问题，再写文档，最后把讨论变成下一步动作。",
-    "tags": ["产品设计", "需求落地"],
+    "output": "带验收标准、风险边界和执行步骤的实施计划",
+    "why": "先澄清问题，再写计划，最后把讨论变成下一步动作。",
+    "tags": ["产品设计", "工程计划"],
     "steps": [
-      {"skillId":"user-story-skill","label":"把想法变成用户故事","detail":"补上角色、场景、价值和可验证的验收标准。"},
-      {"skillId":"prd-write-skill","label":"生成第一版 PRD","detail":"把背景、目标、功能和非功能需求组织成文档。"},
-      {"skillId":"requirement-review-skill","label":"找出遗漏和冲突","detail":"检查边界、异常路径、依赖和不可执行的表述。"},
-      {"skillId":"flowchart-md-skill","label":"补上流程与状态","detail":"用 Mermaid 把关键流程和状态变化画出来。"}
-    ]
-  },
-  {
-    "id": "meeting-to-action",
-    "title": "从会议记录到团队推进",
-    "kicker": "OPERATIONS / 02",
-    "description": "把一段会议记录变成有负责人、有截止日期、可追踪的行动面板。",
-    "input": "会议录音、聊天记录或零散笔记",
-    "output": "纪要、行动项、风险清单和跟进邮件",
-    "why": "会议的价值不在总结，而在让下一步有人接、有人做、有人验收。",
-    "tags": ["会议管理", "执行跟进"],
-    "steps": [
-      {"skillId":"meeting-note-skill","label":"清洗会议记录","detail":"去掉口头重复，保留决策、争议和上下文。"},
-      {"skillId":"minutes-review-skill","label":"校验行动项","detail":"检查每项任务是否有清晰的负责人、时间和结果。"},
-      {"skillId":"risk-assess-skill","label":"补一张风险清单","detail":"把阻塞、依赖和潜在延期变成可处理的风险。"},
-      {"skillId":"followup-skill","label":"发出跟进消息","detail":"根据不同对象生成简洁、可回复的跟进文案。"}
-    ]
-  },
-  {
-    "id": "keyword-to-publish",
-    "title": "从关键词到 SEO 内容发布",
-    "kicker": "GROWTH / 03",
-    "description": "把关键词机会变成一篇结构清楚、可上线、可复用的内容资产。",
-    "input": "主题、关键词、目标读者和站点定位",
-    "output": "文章大纲、正文、Meta 信息和内链建议",
-    "why": "把搜索意图、内容结构和发布检查放进一条流水线。",
-    "tags": ["SEO", "内容增长"],
-    "steps": [
-      {"skillId":"keyword-research-skill","label":"拆解关键词意图","detail":"区分核心词、长尾词和用户真正想解决的问题。"},
-      {"skillId":"content-outline-seo-skill","label":"搭出内容骨架","detail":"围绕搜索意图规划章节、覆盖点和信息顺序。"},
-      {"skillId":"article-seo-skill","label":"写正文并做 SEO","detail":"把关键词自然放入标题、段落和页面结构。"},
-      {"skillId":"meta-gen-skill","label":"生成发布元信息","detail":"一次产出 Title、Description、OG 和摘要版本。"}
-    ]
-  },
-  {
-    "id": "product-launch-pack",
-    "title": "从商品资料到完整上新包",
-    "kicker": "COMMERCE / 04",
-    "description": "把一份商品资料变成商品页、客服 FAQ、广告文案和首周经营检查表。",
-    "input": "商品参数、目标人群、成本和竞品信息",
-    "output": "商品详情页、FAQ、广告 A/B 文案和经营指标表",
-    "why": "上新不是写一段卖点，而是让内容、客服和经营动作同时到位。",
-    "tags": ["电商", "上新"],
-    "steps": [
-      {"skillId":"product-copy-skill","label":"提炼商品卖点","detail":"把参数翻译成用户能感知、能比较的购买理由。"},
-      {"skillId":"review-analyze-skill","label":"借评论补痛点","detail":"用真实反馈校准卖点、疑虑和客服表达。"},
-      {"skillId":"faq-gen-skill","label":"生成售前 FAQ","detail":"把高频问题整理成客服可直接复用的话术。"},
-      {"skillId":"shop-kpi-skill","label":"设置首周观察指标","detail":"把点击、转化、客单和 ROI 变成复盘清单。"}
+      {"skillId":"obra-brainstorming","label":"把想法聊透","detail":"在动手前系统性地探索需求、方案和取舍。"},
+      {"skillId":"obra-writing-plans","label":"写成实施计划","detail":"把已确认的方案拆成有验收标准的任务清单。"},
+      {"skillId":"obra-executing-plans","label":"按计划逐项执行","detail":"按任务逐个实现，保持每步都可验证。"},
+      {"skillId":"obra-verification-before-completion","label":"交付前验证","detail":"在宣布完成前逐条核对证据，拒绝“应该没问题”。"}
     ]
   },
   {
     "id": "data-to-deck",
-    "title": "从数据表到经营汇报",
-    "kicker": "INSIGHTS / 05",
-    "description": "把一张没人想看的数据表，变成有结论、有证据、有动作的汇报结构。",
+    "title": "从数据表到汇报演示",
+    "kicker": "INSIGHTS / 02",
+    "description": "把一张没人想看的数据表，变成有结论、有图表、能汇报的演示文稿。",
     "input": "CSV、Excel 或一组业务指标",
-    "output": "数据结论、关键图表、KPI 解读和 PPT 大纲",
+    "output": "数据结论、图表看板和正式 PPTX 演示文稿",
     "why": "先回答业务问题，再决定图表和页面，不让 PPT 变成数据搬运。",
     "tags": ["数据分析", "经营汇报"],
     "steps": [
-      {"skillId":"data-analyze-skill","label":"读懂数据表","detail":"识别指标口径、趋势、异常和需要追问的地方。"},
-      {"skillId":"data-interpret-skill","label":"提炼关键变化","detail":"把变化写成面向业务的结论，而不是复述数字。"},
-      {"skillId":"chart-gen-skill","label":"选择证据图表","detail":"为每个结论配最少但有效的图表表达。"},
-      {"skillId":"ppt-outline-skill","label":"组织汇报叙事","detail":"将结论、证据和下一步动作拆成可讲述的页面。"}
+      {"skillId":"anthropics-xlsx","label":"读懂数据表","detail":"用公式、透视和图表把原始表格整理成可分析的口径。"},
+      {"skillId":"iofficeai-officecli-xlsx","label":"核对与汇总","detail":"用 CLI 批量读写 Excel，输出合并后的关键指标。"},
+      {"skillId":"iofficeai-officecli-data-dashboard","label":"生成数据看板","detail":"把关键指标排布成多元素 Excel 仪表板。"},
+      {"skillId":"anthropics-pptx","label":"组织汇报叙事","detail":"将结论、证据和下一步动作生成正式的 PPTX 文件。"}
     ]
   },
   {
-    "id": "job-search-sprint",
-    "title": "从招聘 JD 到面试准备",
-    "kicker": "CAREER / 06",
-    "description": "把岗位描述拆成准备清单，让简历、经历和面试回答围绕同一组能力对齐。",
-    "input": "目标岗位 JD、个人简历和项目经历",
-    "output": "岗位拆解、定制简历、匹配缺口和 STAR 故事",
-    "why": "不是把简历写得更长，而是让每个证据都回答岗位真正关心的问题。",
-    "tags": ["求职", "面试"],
+    "id": "document-polish",
+    "title": "从草稿到正式文档",
+    "kicker": "DOCUMENTS / 03",
+    "description": "把粗糙草稿逐段打磨成可对外发送的 Word / PDF 正式文档。",
+    "input": "初稿、背景说明和格式要求",
+    "output": "逐段润色后的 Word 文档和 PDF 版本",
+    "why": "协作润色、原生排版、PDF 定稿各司其职，一步到位。",
+    "tags": ["办公文档", "协作润色"],
     "steps": [
-      {"skillId":"jd-decoder-skill","label":"拆解岗位要求","detail":"区分硬技能、软能力、业务目标和隐藏门槛。"},
-      {"skillId":"tailored-resume-generator-skill","label":"定制简历版本","detail":"围绕岗位语言重排经历，突出可验证的成果。"},
-      {"skillId":"resume-matcher-skill","label":"找出能力缺口","detail":"对照 JD 标记证据不足和需要补充的关键词。"},
-      {"skillId":"interview-story-skill","label":"准备 STAR 故事","detail":"把真实经历整理成面试可复述、可追问的答案。"}
+      {"skillId":"anthropics-doc-coauthoring","label":"逐段审阅润色","detail":"按段落给出修改建议并协同定稿。"},
+      {"skillId":"anthropics-docx","label":"排版成 Word","detail":"用修订、批注和模板填充生成正式 .docx。"},
+      {"skillId":"anthropics-pdf","label":"输出 PDF 定稿","detail":"生成、合并 PDF 并处理表单与提取。"}
+    ]
+  },
+  {
+    "id": "content-to-wechat",
+    "title": "从选题到公众号发布",
+    "kicker": "GROWTH / 04",
+    "description": "把一个选题变成有配图、有排版、可直接发布到公众号的内容资产。",
+    "input": "主题、目标读者和参考资料链接",
+    "output": "调研整理后的图文、公众号排版 HTML 和发布",
+    "why": "调研、配图、排版、发布放进同一条流水线，内容生产不再断档。",
+    "tags": ["内容创作", "公众号运营"],
+    "steps": [
+      {"skillId":"composiohq-content-research-writer","label":"选题调研与写作","detail":"围绕主题做资料调研，产出高质量初稿。"},
+      {"skillId":"jimliu-baoyu-cover-image","label":"生成文章封面","detail":"从类型、情绪等五个维度生成匹配的封面图。"},
+      {"skillId":"jimliu-baoyu-markdown-to-html","label":"排版成公众号 HTML","detail":"把 Markdown 转成微信兼容的排版格式。"},
+      {"skillId":"jimliu-baoyu-post-to-wechat","label":"发布到公众号","detail":"通过公众号 API 直接发布草稿或正式内容。"}
+    ]
+  },
+  {
+    "id": "resume-to-offer",
+    "title": "从经历到定制简历",
+    "kicker": "CAREER / 05",
+    "description": "把一段工作经历变成针对目标岗位定制、排版专业、没有 AI 腔的简历。",
+    "input": "工作经历、目标岗位 JD",
+    "output": "定制化的专业简历（PDF / HTML）",
+    "why": "结构化排版保证专业观感，按 JD 定制保证命中率，去 AI 味保证真实感。",
+    "tags": ["简历", "求职"],
+    "steps": [
+      {"skillId":"rendercv-rendercv","label":"用 YAML 生成专业简历","detail":"结构化内容一键渲染成排版级 PDF。"},
+      {"skillId":"composiohq-tailored-resume-generator","label":"按 JD 定制内容","detail":"分析岗位描述，针对性地调整简历重点。"},
+      {"skillId":"jzcreative-html-resume-beautifier","label":"美化并导出","detail":"转成 HTML 精排版本，可导出 PNG 或 PDF。"},
+      {"skillId":"blader-humanizer","label":"去掉 AI 腔调","detail":"改写机械表达，让简历读起来像真人写的。"}
+    ]
+  },
+  {
+    "id": "react-feature-delivery",
+    "title": "从需求到 React 功能交付",
+    "kicker": "DEV / 06",
+    "description": "把一个前端需求，按 Vercel 官方最佳实践实现、构建并测试通过。",
+    "input": "产品需求、现有 React / Next.js 代码库",
+    "output": "符合规范的组件实现和通过测试的页面",
+    "why": "大厂最佳实践打底，AI 生成的组件才不会偏离工程规范。",
+    "tags": ["React", "前端工程"],
+    "steps": [
+      {"skillId":"vercel-labs-react-best-practices","label":"对齐最佳实践","detail":"加载 Vercel 官方的 React / Next.js 性能与规范准则。"},
+      {"skillId":"vercel-labs-composition-patterns","label":"设计组件组合","detail":"用可扩展的组合模式组织组件结构。"},
+      {"skillId":"anthropics-web-artifacts-builder","label":"构建多组件应用","detail":"按规范搭建复杂的多组件前端应用。"},
+      {"skillId":"anthropics-webapp-testing","label":"本地端到端测试","detail":"驱动浏览器验证页面交互和渲染结果。"}
     ]
   }
 ]

@@ -1,0 +1,701 @@
+{
+  "updatedAt": "2026-09-16",
+  "note": "每个 Skill 的呈现样式档案：format = 产出物形态；summary = 该 Skill 定义的视觉样式/排版规范概览；items = SKILL.md 中点名的样式/主题/色板（截取至多 30 个）；total = 原文声明的可选样式总数；hasStyles = 是否提供可选择或明确约定的视觉样式。来源为各 Skill 的 SKILL.md 原文（data/skill-content/）。",
+  "entries": {
+    "anthropics-docx": {
+      "format": ".docx 文档",
+      "summary": "Word 创建/编辑/批注工作流，仅技术规范（页面尺寸、表格、TOC、修订），无预设视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-pdf": {
+      "format": "PDF 文档",
+      "summary": "PDF 读取/合并/拆分/表单/OCR 处理指南，无预设视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-doc-coauthoring": {
+      "format": "Markdown / artifact 协作文档",
+      "summary": "三阶段协同写作工作流（Context Gathering → Refinement → Reader Testing），规范过程而非视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-xlsx": {
+      "format": ".xlsx 表格",
+      "summary": "内置财务建模配色约定：蓝=输入、黑=公式、绿=跨表链接、红=外部链接、黄=关键假设填充，配专业字体与数字格式规范",
+      "items": [],
+      "hasStyles": true
+    },
+    "anthropics-pptx": {
+      "format": ".pptx 幻灯片",
+      "summary": "内置 10 个命名配色方案与安全字体排版规范（Safe fonts 清单、字号表）",
+      "items": [
+        "Midnight Executive",
+        "Forest & Moss",
+        "Coral Energy",
+        "Warm Terracotta",
+        "Ocean Gradient",
+        "Charcoal Minimal",
+        "Teal Trust",
+        "Berry & Cream",
+        "Sage Calm",
+        "Cherry Bold"
+      ],
+      "total": 10,
+      "hasStyles": true
+    },
+    "anthropics-frontend-design": {
+      "format": "Web UI / 前端页面",
+      "summary": "按 brief 现定 4–6 色 palette、字体与布局 token 的设计方法论，并列出需避开的 AI 默认风格，无预设主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-canvas-design": {
+      "format": "PNG / PDF 视觉艺术作品",
+      "summary": "先创写美学运动宣言再视觉化为单页作品；给出 8 个示例方向（Brutalist Joy 等），风格按主题现创",
+      "items": [
+        "Brutalist Joy",
+        "Chromatic Silence",
+        "Metabolist Dreams",
+        "Concrete Poetry",
+        "Chromatic Language",
+        "Analog Meditation",
+        "Organic Systems",
+        "Geometric Silence"
+      ],
+      "hasStyles": true
+    },
+    "anthropics-brand-guidelines": {
+      "format": "品牌样式应用层（作用于 artifact 配色与字体）",
+      "summary": "Anthropic 官方品牌规范：4 主色 + 3 强调色，标题 Poppins、正文 Lora（含回退字体）",
+      "items": [
+        "Poppins (headings)",
+        "Lora (body)",
+        "Orange #d97757",
+        "Blue #6a9bcc",
+        "Green #788c5d"
+      ],
+      "hasStyles": true
+    },
+    "anthropics-theme-factory": {
+      "format": "主题样式应用层（幻灯片/文档/HTML）",
+      "summary": "内置 10 个配色+字体主题，可套用到任意 artifact，也支持按描述生成自定义主题",
+      "items": [
+        "Ocean Depths",
+        "Sunset Boulevard",
+        "Forest Canopy",
+        "Modern Minimalist",
+        "Golden Hour",
+        "Arctic Frost",
+        "Desert Rose",
+        "Tech Innovation",
+        "Botanical Garden",
+        "Midnight Galaxy"
+      ],
+      "total": 10,
+      "hasStyles": true
+    },
+    "anthropics-algorithmic-art": {
+      "format": "自包含交互 HTML（p5.js 生成艺术）",
+      "summary": "查看器 UI 固定 Anthropic 品牌（Poppins/Lora）；艺术风格按 5 个示例哲学现创，无可选主题库",
+      "items": [
+        "Organic Turbulence",
+        "Quantum Harmonics",
+        "Recursive Whispers",
+        "Field Dynamics",
+        "Stochastic Crystallization"
+      ],
+      "hasStyles": false
+    },
+    "anthropics-internal-comms": {
+      "format": "内部沟通文本文档（Markdown 模板）",
+      "summary": "定义 3P updates、company newsletter、FAQ 等 7 种沟通文体的格式与语气模板，无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-mcp-builder": {
+      "format": "MCP 服务器代码（TypeScript/Python）",
+      "summary": "MCP 服务器开发四阶段指南（研究/实现/测试/评估），面向工具设计与代码质量，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-skill-creator": {
+      "format": "SKILL.md 与评估用例",
+      "summary": "skill 创建-测试-评估迭代方法论，Writing Style 仅约束 SKILL.md 行文，无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-web-artifacts-builder": {
+      "format": "claude.ai 单文件 HTML artifact（React + Tailwind）",
+      "summary": "React 18 + Tailwind + shadcn/ui 打包套件；仅含反 AI slop 设计禁令（禁紫色渐变、Inter 等），无预设主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "anthropics-webapp-testing": {
+      "format": "Playwright 测试脚本",
+      "summary": "本地 Web 应用测试决策树与侦察模式，纯测试方法论，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-brainstorming": {
+      "format": "设计文档（spec）",
+      "summary": "产出 docs/superpowers/specs/ 日期命名 spec；无视觉主题，可选 Visual Companion 浏览器展示 mockup",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-writing-plans": {
+      "format": "Markdown 实施计划文档",
+      "summary": "计划文档固定模板：文件头（Goal/Architecture/Tech Stack）、Global Constraints、Task N checkbox 步骤；无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-executing-plans": {
+      "format": "无固定产物（执行方法论）",
+      "summary": "按计划逐任务执行并设审查检查点，不定义文档模板或视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-systematic-debugging": {
+      "format": "无固定产物（调试方法论）",
+      "summary": "根因优先的四阶段调试流程（调查/模式/假设/实现），无文档模板或视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-test-driven-development": {
+      "format": "无固定产物（TDD 方法论）",
+      "summary": "RED-GREEN-REFACTOR 循环纪律，配 Good/Bad 代码对照清单，无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-requesting-code-review": {
+      "format": "代码审查请求模板",
+      "summary": "用 code-reviewer.md 模板派发审查子代理，返回 Strengths/Issues/Assessment；无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-receiving-code-review": {
+      "format": "无固定产物（沟通准则）",
+      "summary": "接收审查反馈的六步响应模式与措辞规范，属沟通行为准则，无文档模板或视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-verification-before-completion": {
+      "format": "无固定产物（验证纪律）",
+      "summary": "完成声明前必须运行验证命令并出示证据的门禁清单，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-subagent-driven-development": {
+      "format": "编排工作流（progress.md 台账 + 模板）",
+      "summary": "每任务派实现子代理并两阶段审查，维护 progress.md 台账；无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "obra-writing-skills": {
+      "format": "SKILL.md 结构模板",
+      "summary": "规定 SKILL.md 固定结构：frontmatter + Overview/When to Use/Core Pattern 等小节模板；无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "vercel-labs-composition-patterns": {
+      "format": "React 组合模式规则集",
+      "summary": "4 类带前缀代码规则（architecture-/state-/patterns-/react19-），每条配正误代码示例；代码规范，无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "vercel-labs-react-best-practices": {
+      "format": "React/Next.js 性能规则集",
+      "summary": "8 类 70 条带前缀性能规则，各配正误代码示例；纯代码规范，无视觉主题或色板",
+      "items": [],
+      "total": 70,
+      "hasStyles": false
+    },
+    "vercel-labs-react-native-skills": {
+      "format": "React Native/Expo 规则集",
+      "summary": "8 类带前缀规则（list-performance-/animation-/ui- 等）覆盖列表、动画、UI 模式，配正误示例；无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "vercel-labs-web-design-guidelines": {
+      "format": "UI 代码审查清单",
+      "summary": "按 Web Interface Guidelines 审查 UI 代码，以 file:line 简报输出；是设计规则而非可选主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "blader-humanizer": {
+      "format": "纯文本（人味改写）",
+      "summary": "无视觉样式；定义 25 类 AI 文风特征（not-X-but-Y、强行排比、滥用破折号等）的改写规则",
+      "items": [],
+      "total": 25,
+      "hasStyles": false
+    },
+    "jimliu-baoyu-infographic": {
+      "format": "信息图 PNG",
+      "summary": "21 种版式 × 22 种视觉风格自由组合，默认 bento-grid + craft-handmade",
+      "items": [
+        "craft-handmade",
+        "claymation",
+        "kawaii",
+        "storybook-watercolor",
+        "chalkboard",
+        "cyberpunk-neon",
+        "bold-graphic",
+        "aged-academia",
+        "corporate-memphis",
+        "technical-schematic",
+        "origami",
+        "pixel-art",
+        "ui-wireframe",
+        "subway-map",
+        "ikea-manual",
+        "knolling",
+        "lego-brick",
+        "pop-laboratory",
+        "morandi-journal",
+        "retro-pop-grid",
+        "hand-drawn-edu",
+        "retro-popup-pop"
+      ],
+      "total": 22,
+      "hasStyles": true
+    },
+    "jimliu-baoyu-markdown-to-html": {
+      "format": "微信排版 HTML",
+      "summary": "4 套主题（default/grace/simple/modern）+ 13 个色板预设，可调字体（sans/serif/mono）与 14–18px 字号",
+      "items": [
+        "default",
+        "grace",
+        "simple",
+        "modern",
+        "blue",
+        "green",
+        "vermilion",
+        "yellow",
+        "purple",
+        "sky",
+        "rose",
+        "olive",
+        "black",
+        "gray",
+        "pink",
+        "red",
+        "orange"
+      ],
+      "hasStyles": true
+    },
+    "jimliu-baoyu-url-to-markdown": {
+      "format": "网页转 Markdown（可选 JSON）",
+      "summary": "纯抓取转换流程（X/YouTube/HN/通用适配器），无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "jimliu-baoyu-article-illustrator": {
+      "format": "文章配图 PNG",
+      "summary": "Type × Style × Palette 三维组合：6 类图型、12 风格、9 色板，另有 edu-visual 教育图预设",
+      "items": [
+        "infographic",
+        "scene",
+        "flowchart",
+        "comparison",
+        "framework",
+        "timeline",
+        "notion",
+        "warm",
+        "minimal",
+        "blueprint",
+        "watercolor",
+        "elegant",
+        "macaron",
+        "neon",
+        "minimal-flat",
+        "sci-fi",
+        "hand-drawn",
+        "editorial",
+        "poster",
+        "edu-visual"
+      ],
+      "hasStyles": true
+    },
+    "jimliu-baoyu-slide-deck": {
+      "format": "幻灯片图片（可合并 PPTX/PDF）",
+      "summary": "17 种风格预设（blueprint 默认、chalkboard、notion、vintage 等），每个预设是 texture/mood/typography/density 四维组合",
+      "items": [
+        "blueprint",
+        "chalkboard",
+        "corporate",
+        "minimal",
+        "sketch-notes",
+        "hand-drawn-edu",
+        "watercolor",
+        "dark-atmospheric",
+        "notion",
+        "bold-editorial",
+        "editorial-infographic",
+        "fantasy-animation",
+        "intuition-machine",
+        "pixel-art",
+        "scientific",
+        "vector-illustration",
+        "vintage"
+      ],
+      "total": 17,
+      "hasStyles": true
+    },
+    "jimliu-baoyu-post-to-wechat": {
+      "format": "公众号文章草稿与贴图发布",
+      "summary": "发布流程自带排版选项：沿用 4 主题（default/grace/simple/modern）与 13 色预设，默认外链转底部引用",
+      "items": [
+        "default",
+        "grace",
+        "simple",
+        "modern",
+        "blue",
+        "green",
+        "vermilion",
+        "yellow",
+        "purple",
+        "sky",
+        "rose",
+        "olive",
+        "black",
+        "gray",
+        "pink",
+        "red",
+        "orange"
+      ],
+      "hasStyles": true
+    },
+    "jimliu-baoyu-post-to-x": {
+      "format": "X 帖子 / 长文 Article",
+      "summary": "X 发布流程（帖子/视频/引用推文/Markdown 长文），无内置视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "jimliu-baoyu-xhs-images": {
+      "format": "小红书图片卡系列 PNG",
+      "summary": "12 风格 × 8 版式 × 3 色板（macaron/warm/neon），另有 knowledge-card、cute-share 等 26 个预设组合",
+      "items": [
+        "cute",
+        "fresh",
+        "warm",
+        "bold",
+        "minimal",
+        "retro",
+        "pop",
+        "notion",
+        "chalkboard",
+        "study-notes",
+        "screen-print",
+        "sketch-notes"
+      ],
+      "total": 12,
+      "hasStyles": true
+    },
+    "jimliu-baoyu-cover-image": {
+      "format": "文章封面图 PNG",
+      "summary": "5 维定制：11 色板 × 7 渲染风格 × 6 类型 × 4 文字层级 × 3 氛围，支持 2.35:1 / 16:9 / 1:1 画幅",
+      "items": [
+        "warm",
+        "elegant",
+        "cool",
+        "dark",
+        "earth",
+        "vivid",
+        "pastel",
+        "mono",
+        "retro",
+        "duotone",
+        "macaron",
+        "flat-vector",
+        "hand-drawn",
+        "painterly",
+        "digital",
+        "pixel",
+        "chalk",
+        "screen-print"
+      ],
+      "hasStyles": true
+    },
+    "iofficeai-officecli": {
+      "format": ".docx/.pptx/.xlsx 通用 CLI 指令层",
+      "summary": "不定义视觉样式，仅规定颜色取值格式（hex/RGB/命名白名单/accent1..6 主题色），设计规范由专项子 skill 承担",
+      "items": [],
+      "hasStyles": false
+    },
+    "iofficeai-officecli-docx": {
+      "format": ".docx 文档",
+      "summary": "排版硬底线：H1≥18pt / H2 14pt / H3 12pt、正文 11–12pt 单一字体 + 单一强调色、封面≥60% 填充、行距 1.15–1.5x；无命名色板",
+      "items": [],
+      "hasStyles": true
+    },
+    "iofficeai-officecli-academic-paper": {
+      "format": ".docx 学术论文",
+      "summary": "四引用格式族决定排版：Times New Roman 11–12pt 正文、APA 双倍行距、IEEE 10pt 双栏、图注下/表注上",
+      "items": [
+        "APA 7",
+        "Chicago 17 (Notes-Bib)",
+        "IEEE",
+        "MLA 9"
+      ],
+      "hasStyles": true
+    },
+    "iofficeai-officecli-word-form": {
+      "format": ".docx 交互式表单",
+      "summary": "排版刻度表：标题 20pt 粗体、字段标签 11pt 粗体、说明 11pt 斜体 #666666、中文表单微软雅黑、CONFIDENTIAL 水印规格",
+      "items": [],
+      "hasStyles": true
+    },
+    "iofficeai-morph-ppt": {
+      "format": ".pptx Morph 动画幻灯片",
+      "summary": "继承 pptx v2 十二列网格与视觉底线，4 个规范色板，另有 52 个视觉风格目录（按 dark/light/warm/vivid/bw/mixed 分 mood）",
+      "items": [
+        "Executive navy",
+        "Forest & moss",
+        "Warm terracotta",
+        "Charcoal minimal"
+      ],
+      "hasStyles": true
+    },
+    "iofficeai-officecli-pptx": {
+      "format": ".pptx 幻灯片",
+      "summary": "10 个命名色板主题（五角色全配 hex）+ 8 组命名字体搭配；十二列网格、标题≥36pt / 正文≥18pt 视觉底线",
+      "items": [
+        "Coral Energy",
+        "Midnight Executive",
+        "Forest & Moss",
+        "Charcoal Minimal",
+        "Warm Terracotta",
+        "Berry & Cream",
+        "Ocean Gradient",
+        "Teal Trust",
+        "Sage Calm",
+        "Cherry Bold"
+      ],
+      "total": 10,
+      "hasStyles": true
+    },
+    "iofficeai-officecli-pitch-deck": {
+      "format": ".pptx 融资路演 deck",
+      "summary": "继承十色板与网格；6 种命名版式（C.1–C.5b）与 5 大赛道叙事模板（B2B SaaS/Consumer/Deep Tech 等），深色渐变封面规范",
+      "items": [
+        "C.1 Title / Cover",
+        "C.2 3-Stat callout row",
+        "C.3 4-Stat callout row",
+        "C.4 Chart + Context",
+        "C.5 Icon-in-circle grid",
+        "C.5b 2×2 Feature grid"
+      ],
+      "total": 6,
+      "hasStyles": true
+    },
+    "iofficeai-officecli-xlsx": {
+      "format": ".xlsx 工作簿",
+      "summary": "金融建模五色语义色标（蓝=硬输入/黑=公式/绿=跨表/红=外部链接/黄=待审假设）+ 单一专业字体 + 无 ### 视觉底线",
+      "items": [],
+      "hasStyles": true
+    },
+    "iofficeai-officecli-data-dashboard": {
+      "format": ".xlsx 数据看板",
+      "summary": "7 个图表预设 × 3 种命名布局（executive summary/ops console/scorecard），good/bad/neutral 语义色与 KPI 卡规范",
+      "items": [
+        "minimal",
+        "dashboard",
+        "corporate",
+        "magazine",
+        "colorful",
+        "monochrome",
+        "dark",
+        "executive summary",
+        "ops console",
+        "scorecard"
+      ],
+      "hasStyles": true
+    },
+    "composiohq-file-organizer": {
+      "format": "Markdown 整理计划 + 文件树",
+      "summary": "固定两套 Markdown 模板（Organization Plan / 完成摘要）与命名规范，无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "composiohq-invoice-organizer": {
+      "format": "规范化发票文件树 + CSV 汇总",
+      "summary": "统一命名格式「YYYY-MM-DD Vendor - Invoice」与 4 种归档结构，产出 invoice-summary.csv，无视觉主题",
+      "items": [
+        "By Vendor (Simple)",
+        "By Year and Category (Tax-Friendly)",
+        "By Quarter (Detailed Tracking)",
+        "By Tax Category (Accountant-Ready)"
+      ],
+      "hasStyles": false
+    },
+    "composiohq-content-research-writer": {
+      "format": "Markdown 文章草稿",
+      "summary": "大纲与逐节反馈固定模板（What Works/Suggestions/Line Edits），3 种引用格式可选；无视觉主题",
+      "items": [
+        "Inline Citations",
+        "Numbered References",
+        "Footnote Style"
+      ],
+      "hasStyles": false
+    },
+    "composiohq-meeting-insights-analyzer": {
+      "format": "Markdown 沟通分析报告",
+      "summary": "Meeting Insights Summary 固定报告小节（关键模式/优势/成长点/发言统计/下一步）；无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "composiohq-tailored-resume-generator": {
+      "format": "简历文档（Markdown/纯文本）",
+      "summary": "简历固定小节 + ATS 排版规则，格式可选 ATS-optimized / creative / traditional / modern",
+      "items": [
+        "ATS-optimized",
+        "creative",
+        "traditional",
+        "modern",
+        "functional or hybrid"
+      ],
+      "hasStyles": true
+    },
+    "composiohq-competitive-ads-extractor": {
+      "format": "广告截图库 + 分析报告 + CSV",
+      "summary": "5 种产物形态（Screenshots/Analysis Report/Spreadsheet/Presentation/Pattern Library），无视觉主题",
+      "items": [
+        "Screenshots",
+        "Analysis Report",
+        "Spreadsheet",
+        "Presentation",
+        "Pattern Library"
+      ],
+      "hasStyles": false
+    },
+    "composiohq-lead-research-assistant": {
+      "format": "Markdown 线索研究报告",
+      "summary": "Lead Research Results 固定模板：汇总 + 每条线索字段（评分/决策人/价值主张/接触策略），无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "composiohq-twitter-algorithm-optimizer": {
+      "format": "推文改写建议（对话式）",
+      "summary": "对话式改写对比结构（Original/Algorithm Analysis/Optimized/Why It Works），无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "composiohq-changelog-generator": {
+      "format": "Markdown 更新日志",
+      "summary": "分类小节模板（✨ New Features/🔧 Improvements/🐛 Fixes），支持 CHANGELOG_STYLE.md 自定义，无视觉主题",
+      "items": [
+        "✨ New Features",
+        "🔧 Improvements",
+        "🐛 Fixes"
+      ],
+      "hasStyles": false
+    },
+    "michalparkola-article-extractor": {
+      "format": "纯文本文章（.txt）",
+      "summary": "去除导航/广告的干净正文 txt，以文章标题命名并预览；未定义视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "michalparkola-youtube-transcript": {
+      "format": "字幕/纯文本转写（.vtt/.txt）",
+      "summary": "仅 VTT 与纯文本两种输出格式，无视觉样式",
+      "items": [
+        "VTT format (.vtt)",
+        "Plain text (.txt)"
+      ],
+      "hasStyles": false
+    },
+    "michalparkola-learn-this": {
+      "format": "行动计划 Markdown",
+      "summary": "Extract → Plan → Ship → Learn → Next 流程，产出 Ship-Learn-Next 行动计划，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "michalparkola-ship-learn-next": {
+      "format": "迭代计划 Markdown",
+      "summary": "把学习内容转成 Ship-Learn-Next 迭代行动计划，约定直接、提问式对话风格，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "michalparkola-unblock-action": {
+      "format": "行动卡文本",
+      "summary": "2–3 轮提问把卡住的任务澄清为行动卡，Style Rules 仅约束语气，无视觉样式",
+      "items": [],
+      "hasStyles": false
+    },
+    "michalparkola-scrum-sage": {
+      "format": "Scrum 教练对话",
+      "summary": "RESPONSE STYLE 约定结构化输出框架（Sprint Health Dashboard 等），无视觉主题",
+      "items": [],
+      "hasStyles": false
+    },
+    "hugohe3-ppt-master": {
+      "format": "PPTX 幻灯片",
+      "summary": "可编辑 PPTX 路由工作流；无内置命名主题，定义文本/几何/图像/绘画表达范围与 187 种 Office 形状预设",
+      "items": [],
+      "hasStyles": false
+    },
+    "op7418-nanobanana-ppt-skills": {
+      "format": "PPT 图片（HTML 播放器 + 转场视频）",
+      "summary": "AI 生成 PPT 图片与转场视频；内置 2 种风格：渐变毛玻璃卡片、矢量插画，支持 styles/ 自定义",
+      "items": [
+        "渐变毛玻璃卡片 (gradient-glass)",
+        "矢量插画 (vector-illustration)"
+      ],
+      "total": 2,
+      "hasStyles": true
+    },
+    "lewislulu-html-ppt-skill": {
+      "format": "HTML 幻灯片",
+      "summary": "静态 HTML 幻灯片工作室：36 套主题、36 版式、15 整套模板、27 CSS 动画，T 键循环切换主题",
+      "items": [
+        "minimal-white",
+        "editorial-serif",
+        "soft-pastel",
+        "sharp-mono",
+        "arctic-cool",
+        "sunset-warm",
+        "catppuccin-latte/mocha",
+        "dracula",
+        "tokyo-night",
+        "nord",
+        "solarized-light",
+        "gruvbox-dark",
+        "rose-pine",
+        "neo-brutalism",
+        "glassmorphism",
+        "bauhaus",
+        "swiss-grid",
+        "terminal-green",
+        "xiaohongshu-white",
+        "rainbow-gradient",
+        "aurora",
+        "blueprint",
+        "memphis-pop",
+        "cyberpunk-neon"
+      ],
+      "total": 36,
+      "hasStyles": true
+    },
+    "rendercv-rendercv": {
+      "format": "PDF 简历（Typst 排版）",
+      "summary": "YAML 经 Typst 排版输出 PDF 简历；6 个内置主题，颜色/字体/边距字段级自定义，可自建主题",
+      "items": [
+        "classic",
+        "harvard",
+        "engineeringresumes",
+        "engineeringclassic",
+        "sb2nov",
+        "moderncv"
+      ],
+      "total": 6,
+      "hasStyles": true
+    },
+    "jzcreative-html-resume-beautifier": {
+      "format": "HTML 简历（A4，PNG/PDF 导出）",
+      "summary": "自包含 A4 HTML 简历（打印 CSS + html2canvas 导出）；主题为品牌灵感 style tokens，正式简历建议克制风格",
+      "items": [],
+      "hasStyles": true
+    }
+  }
+}
