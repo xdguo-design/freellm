@@ -40,5 +40,5 @@
 ## 任务 4：发布验证
 
 - [x] 检查 `git status --short`，确认只保留用户现有截图未跟踪状态。
-- [ ] 提交翻译和渲染变更，推送 GitHub `main`。
-- [ ] 发布生产站点，使用 `Invoke-WebRequest https://freellm.top/skills/` 验证 HTTP 200、中文简介和双语切换标记存在。
+- [x] 提交翻译和渲染变更，推送 GitHub `main`。
+- [x] 发布生产站点，使用 `Invoke-WebRequest https://freellm.top/skills/` 验证 HTTP 200、中文简介和双语切换标记存在。
