@@ -35,6 +35,14 @@ class SkillsDataTests(unittest.TestCase):
             stats = item.get("repoStats") or {}
             self.assertIsInstance(stats.get("stars"), int, f"{prefix} must record GitHub stars")
 
+    def test_every_entry_has_a_non_empty_chinese_display_description(self):
+        translations_path = ROOT / "data" / "skills-i18n.json"
+        translations = json.loads(translations_path.read_text(encoding="utf-8"))
+        self.assertEqual(set(translations), {item["id"] for item in self.skills})
+        for skill_id, description in translations.items():
+            self.assertIsInstance(description.get("description_zh"), str, skill_id)
+            self.assertTrue(description["description_zh"].strip(), skill_id)
+
     def test_reviews_are_attributed_and_linked(self):
         for item in self.skills:
             for review in item.get("reviews") or []:
@@ -230,6 +238,19 @@ class SkillsBuildTests(unittest.TestCase):
             "renderPreview",
         ):
             self.assertIn(needle, page)
+
+    def test_skills_page_exposes_bilingual_skill_descriptions_and_searches_them(self):
+        from scripts.build_seo_pages import build_site
+
+        with tempfile.TemporaryDirectory() as directory:
+            output_root = Path(directory)
+            build_site(ROOT / "data" / "offers.json", output_root, site_url="https://example.test")
+            page = (output_root / "skills" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('class="skill-description-zh" lang="zh-CN"', page)
+        self.assertIn('class="skill-description-en" lang="en"', page)
+        self.assertIn("description_zh", page)
+        self.assertIn("skill.description_zh", page)
 
     def test_skill_lab_page_exposes_workflow_behaviors_and_seo(self):
         from scripts.build_seo_pages import build_site
