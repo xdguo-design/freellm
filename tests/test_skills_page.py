@@ -211,6 +211,26 @@ class SkillsBuildTests(unittest.TestCase):
             self.assertIn(needle, page)
         self.assertIn("component-dialog-styles", lab)
 
+    def test_skills_page_exposes_compact_cards_and_visual_preview(self):
+        from scripts.build_seo_pages import build_site
+
+        with tempfile.TemporaryDirectory() as directory:
+            output_root = Path(directory)
+            build_site(ROOT / "data" / "offers.json", output_root, site_url="https://example.test")
+            page = (output_root / "skills" / "index.html").read_text(encoding="utf-8")
+
+        for needle in (
+            "align-items:start",
+            "-webkit-line-clamp:4",
+            ".skill-preview-canvas",
+            "section.id = 'dialog-skill-preview'",
+            'id="dialog-preview-format"',
+            'id="dialog-preview-tags"',
+            'id="dialog-preview-canvas"',
+            "renderPreview",
+        ):
+            self.assertIn(needle, page)
+
     def test_skill_lab_page_exposes_workflow_behaviors_and_seo(self):
         from scripts.build_seo_pages import build_site
 
