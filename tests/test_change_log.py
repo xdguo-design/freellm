@@ -1,6 +1,6 @@
 import json
 
-from crawler.change_log import build_daily_log
+from crawler.change_log import build_daily_log, merge_daily_log
 from crawler.cli import main as cli_main
 
 
@@ -212,3 +212,124 @@ def test_log_cli_reads_previous_log_and_writes_date_partitioned_json(tmp_path):
     written = json.loads(output_path.read_text(encoding="utf-8"))
     assert written["date"] == "2026-09-10"
     assert {event["eventType"] for event in written["events"]} == {"new", "new_route", "offline"}
+
+
+def test_same_day_merge_unions_events_from_both_runs_without_duplicates():
+    previous = log_with([model("alpha/old", model="Old Model")], [offer("old")])
+    morning = build_daily_log(
+        previous,
+        [model("alpha/old", model="Old Model"), model("alpha/morning", model="Morning Model")],
+        [offer("old")],
+        "2026-09-10",
+        {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    )
+    evening = build_daily_log(
+        previous,
+        [
+            model("alpha/old", model="Old Model"),
+            model("alpha/morning", model="Morning Model"),
+            model("alpha/evening", model="Evening Model"),
+        ],
+        [offer("old")],
+        "2026-09-10",
+        {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    )
+
+    merged = merge_daily_log(morning, evening)
+
+    new_ids = [event["id"] for event in merged["events"] if event["eventType"] == "new"]
+    assert sorted(new_ids) == ["alpha/evening", "alpha/morning"]
+    assert merged["date"] == "2026-09-10"
+    observed_ids = {item["id"] for item in merged["observed"]["models"]}
+    assert observed_ids == {"alpha/old", "alpha/morning", "alpha/evening"}
+
+
+def test_same_day_merge_prefers_latest_events_and_keeps_curated_entries():
+    previous = log_with(
+        [model(), model("alpha/flip", model="Flip Model"), model("alpha/morning-only", model="Morning Only")],
+        [offer()],
+    )
+    morning = build_daily_log(
+        previous,
+        [model()],
+        [offer()],
+        "2026-09-10",
+        {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    )
+    morning["curatedEvents"] = [{
+        "kind": "offer",
+        "eventType": "new",
+        "id": "hand-curated",
+        "title": "人工确认新增",
+        "asOf": "2026-09-10",
+        "details": {},
+    }]
+    evening = build_daily_log(
+        previous,
+        [model(), model("alpha/flip", model="Flip Model")],
+        [offer()],
+        "2026-09-10",
+        {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    )
+
+    merged = merge_daily_log(morning, evening)
+
+    assert [event["id"] for event in merged["curatedEvents"]] == ["hand-curated"]
+    # 两次运行都报告了同样的 offline 事件，合并后按 (kind, eventType, id) 去重。
+    offline_ids = [event["id"] for event in merged["events"] if event["eventType"] == "offline"]
+    assert sorted(offline_ids) == ["alpha/flip", "alpha/morning-only"]
+    # 盘中恢复的项目不再保留早上误报的 offline 之外的事件，但仍留在当日快照里。
+    observed_ids = {item["id"] for item in merged["observed"]["models"]}
+    known_ids = {item["id"] for item in merged["known"]["models"]}
+    assert observed_ids == {"alpha/model-x", "alpha/flip"}
+    assert "alpha/morning-only" in known_ids
+    assert "alpha/morning-only" not in observed_ids
+
+
+def test_merge_rejects_logs_from_different_dates():
+    morning = log_with([model()])
+    morning["date"] = "2026-09-10"
+    evening = log_with([model()])
+    evening["date"] = "2026-09-11"
+
+    try:
+        merge_daily_log(morning, evening)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("merge_daily_log should reject different dates")
+
+
+def test_log_cli_merge_accumulates_same_day_reruns(tmp_path):
+    models_path = tmp_path / "models.json"
+    offers_path = tmp_path / "offers.json"
+    previous_path = tmp_path / "2026-09-09.json"
+    output_path = tmp_path / "2026-09-10.json"
+    models_path.write_text(json.dumps([model("alpha/model-x", model="Model X")]), encoding="utf-8")
+    offers_path.write_text(json.dumps([offer()]), encoding="utf-8")
+    previous_path.write_text(
+        json.dumps(log_with([model("alpha/old", model="Old Model")], [offer("old")])),
+        encoding="utf-8",
+    )
+
+    common = [
+        "log",
+        "--models", str(models_path),
+        "--offers", str(offers_path),
+        "--previous", str(previous_path),
+        "--out", str(output_path),
+        "--as-of", "2026-09-10",
+    ]
+    assert cli_main(common) == 0
+    models_path.write_text(
+        json.dumps([model("alpha/model-x", model="Model X"), model("alpha/second", model="Second Model")]),
+        encoding="utf-8",
+    )
+    assert cli_main(common + ["--merge"]) == 0
+
+    written = json.loads(output_path.read_text(encoding="utf-8"))
+    new_ids = sorted(
+        event["id"] for event in written["events"]
+        if event["eventType"] == "new" and event["kind"] == "model"
+    )
+    assert new_ids == ["alpha/model-x", "alpha/second"]

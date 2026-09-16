@@ -38,6 +38,7 @@ class DiscoveryWorkflowTests(unittest.TestCase):
             "contents: write",
             "scripts/build_model_catalog.py",
             "python -m crawler.cli log",
+            "--merge",
             "data/daily-log",
             "scripts/build_seo_pages.py",
             "logs/index.html",
@@ -45,4 +46,6 @@ class DiscoveryWorkflowTests(unittest.TestCase):
         ):
             self.assertIn(needle, workflow)
         self.assertIn("--models-status", workflow)
+        # 每日更新只保留北京时间 07:00 的一次调度（UTC 23:00）。
+        self.assertIn('cron: "0 23 * * *"', workflow)
         self.assertNotIn("git add data/offers.json", workflow)

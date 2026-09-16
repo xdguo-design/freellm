@@ -167,6 +167,66 @@ def build_daily_log(
     }
 
 
+def merge_daily_log(existing: dict, incoming: dict) -> dict:
+    """Fold a same-day re-run into the existing log so repeated runs only add events.
+
+    Events are deduplicated by (kind, eventType, id) with the incoming scan
+    winning conflicts; hand-curated events always survive a rebuild. Snapshot
+    maps are merged so records seen only by an earlier run stay known.
+    """
+    existing_date = _validate_date(str(existing.get("date") or ""))
+    incoming_date = _validate_date(str(incoming.get("date") or ""))
+    if existing_date != incoming_date:
+        raise ValueError("merge_daily_log requires two logs for the same date")
+
+    def event_key(event: dict) -> tuple[str, str, str]:
+        return (str(event.get("kind") or ""), str(event.get("eventType") or ""), str(event.get("id") or ""))
+
+    events: dict[tuple[str, str, str], dict] = {}
+    for source in (existing, incoming):
+        for event in source.get("events") or []:
+            if isinstance(event, dict) and any(event_key(event)):
+                events[event_key(event)] = event
+
+    curated: dict[tuple[str, str, str], dict] = {}
+    for source in (incoming, existing):
+        for event in source.get("curatedEvents") or []:
+            if isinstance(event, dict) and any(event_key(event)):
+                curated.setdefault(event_key(event), event)
+
+    observed: dict[str, list[dict]] = {}
+    known: dict[str, list[dict]] = {}
+    initialized: dict[str, bool] = {}
+    for plural in KINDS:
+        incoming_observed = {_record_id(item): item for item in _records((incoming.get("observed") or {}).get(plural))}
+        existing_observed = {_record_id(item): item for item in _records((existing.get("observed") or {}).get(plural))}
+        known_now = {
+            _record_id(item): item
+            for source in (existing, incoming)
+            for item in _records((source.get("known") or {}).get(plural))
+        }
+        known_now.update({
+            item_id: item for item_id, item in existing_observed.items() if item_id not in incoming_observed
+        })
+        observed[plural] = [incoming_observed[item_id] for item_id in sorted(incoming_observed)]
+        known[plural] = [known_now[item_id] for item_id in sorted(known_now) if item_id not in incoming_observed]
+        initialized[plural] = bool(
+            ((existing.get("initialized") or {}).get(plural))
+            or ((incoming.get("initialized") or {}).get(plural))
+        )
+
+    merged = dict(incoming)
+    merged["date"] = incoming_date
+    merged["baseline"] = bool(incoming.get("baseline") or existing.get("baseline"))
+    merged["events"] = [events[key] for key in sorted(events)]
+    if curated:
+        merged["curatedEvents"] = [curated[key] for key in sorted(curated)]
+    merged["observed"] = observed
+    merged["known"] = known
+    merged["initialized"] = initialized
+    return merged
+
+
 def write_daily_log(path: str | Path, log: dict) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
