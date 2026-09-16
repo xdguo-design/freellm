@@ -180,9 +180,11 @@ class StaticContractTests(unittest.TestCase):
     def test_catalog_search_indexes_nested_models_and_cards_have_stable_height(self):
         for needle in (
             "const modelSearchText = (item.freeModels || []).flatMap",
-            ".offer-grid .offer { height: 500px; min-height: 0; align-self: start; }",
-            ".offer-grid .offer.model-expanded { height: auto; }",
-            ".offer-grid .offer { height: auto; min-height: 0; align-self: stretch; }",
+            ".offer-grid .offer-card-body.is-clamped { max-height: 236px;",
+            ".offer-grid .offer.model-expanded .offer-card-body.is-clamped { max-height: none;",
+            "const OFFER_BODY_CLAMP = 236;",
+            "applyOfferBodyClamps",
+            'class="offer-models-toggle offer-body-toggle" hidden',
             "placeholder=\"搜索模型、平台或功能，例如 DeepSeek、Qwen3\"",
             "searchPlaceholder: '搜索模型、平台或功能，例如 DeepSeek、Qwen3'",
             "searchPlaceholder: 'Search models, platforms or capabilities, e.g. DeepSeek, Qwen3'",

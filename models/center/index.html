@@ -759,7 +759,7 @@
     .catalog-list-wrap { overflow: visible; border: 0; background: transparent; }
     .catalog-list-wrap .table-head { display: none; }
     .offer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .offer-grid .offer { min-width: 0; min-height: 245px; padding: 17px; border: 1px solid var(--ink); background: white; display: grid; grid-template-rows: auto auto 1fr auto; gap: 13px; align-items: initial; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+    .offer-grid .offer { min-width: 0; min-height: 245px; padding: 17px; border: 1px solid var(--ink); background: white; display: grid; grid-template-rows: auto 1fr auto; gap: 13px; align-self: start; align-items: initial; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
     .offer-grid .offer:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--line); background: white; }
     .offer-grid .offer.hidden { display: none; }
     .offer-grid .provider { align-items: start; }
@@ -1126,13 +1126,16 @@
   .offer-models-toggle .less-label { display: none; }
   .offer.model-expanded .offer-models-toggle .more-label { display: none; }
   .offer.model-expanded .offer-models-toggle .less-label { display: inline; }
-  /* Keep desktop cards aligned without letting the tallest card stretch its siblings. */
-  @media (min-width: 701px) {
-    .offer-grid .offer { height: 500px; min-height: 0; align-self: start; }
-    .offer-grid .offer.model-expanded { height: auto; }
-  }
+  /* Cards size to their content; a body taller than the standard cap (236px, keep in
+     sync with OFFER_BODY_CLAMP in the offer script) clamps behind a More toggle. */
+  .offer-grid .offer-card-body { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 13px; }
+  .offer-grid .offer-card-body.is-clamped { max-height: 236px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%); mask-image: linear-gradient(180deg, #000 78%, transparent 100%); }
+  .offer-grid .offer.model-expanded .offer-card-body.is-clamped { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .offer-models-toggle[hidden] { display: none; }
+  /* When the body toggle governs, hide an inner model-list toggle that would sit below the clamp cut. */
+  .offer-grid .offer:has(.offer-card-body.is-clamped) .offer-card-model > .offer-models-toggle { display: none; }
   @media (max-width: 700px) {
-    .offer-grid .offer { height: auto; min-height: 0; align-self: stretch; }
+    .offer-grid .offer { min-height: 0; }
   }
   /* Fullscreen density: offer cards flow into 3+ columns on wide viewports */
   @media (min-width: 1100px) {
@@ -5863,7 +5866,7 @@
       const validity = localizedOfferText(item, 'validitySummary', localizedOfferText(item, 'validity'));
       const access = localizedOfferText(item, 'accessSummary', localizedOfferText(item, 'access'));
       const modelMeta = localeValue(item.modelMeta || alternateLabels, 'Model details');
-      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div>${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model">${renderOfferModels(item)}<small>${escapeHtml(modelMeta)}</small></div>${renderModelContext(item)}${renderOfferAccessPaths(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(localeValue(item.badges?.[0], 'OPEN'))}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small>${renderOfferSource(item)}<a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div><div class="offer-card-body">${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model">${renderOfferModels(item)}<small>${escapeHtml(modelMeta)}</small></div>${renderModelContext(item)}${renderOfferAccessPaths(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(localeValue(item.badges?.[0], 'OPEN'))}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div></div><button type="button" class="offer-models-toggle offer-body-toggle" hidden aria-expanded="false"><span class="more-label">展开全部 · Show more</span><span class="less-label">收起 · Collapse</span></button><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small>${renderOfferSource(item)}<a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
     };
     const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString(currentLocale, { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
@@ -5882,6 +5885,19 @@
         ]
       }, null, 2);
     };
+    const OFFER_BODY_CLAMP = 236; // keep in sync with .offer-card-body.is-clamped max-height
+    const applyOfferBodyClamps = container => {
+      container.querySelectorAll('.offer').forEach(card => {
+        const body = card.querySelector('.offer-card-body');
+        const toggle = card.querySelector('.offer-body-toggle');
+        if (!body || !toggle) return;
+        card.classList.remove('model-expanded');
+        const overLimit = body.scrollHeight > OFFER_BODY_CLAMP + 4;
+        body.classList.toggle('is-clamped', overLimit);
+        toggle.hidden = !overLimit;
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    };
     const renderOffers = items => {
       loadedOffers = items;
       offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
@@ -5889,6 +5905,7 @@
       container.innerHTML = items.map(rowArticleMarkup).join('');
       hydrateProviderIcons(container);
       rows = [...container.querySelectorAll('.offer')];
+      applyOfferBodyClamps(container);
 
       const countCategory = category => items.filter(item => offerCategories(item).includes(category)).length;
       const setCount = (filter, count) => {
