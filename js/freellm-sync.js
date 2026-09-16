@@ -288,6 +288,73 @@
     });
   }
 
+  /* ---------- GitHub OAuth 登录（经 /api/gh-oauth 换票，见 docs/github-oauth.md） ---------- */
+  var OAUTH_EP = '/api/gh-oauth';
+  var OAUTH_ST = 'freellm-gh-oauth';
+  var _clientId; // undefined=未查询, null=不可用, 字符串=可用
+  function oauthClientId() {
+    if (_clientId !== undefined) return Promise.resolve(_clientId);
+    return fetch(OAUTH_EP, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { _clientId = (d && d.clientId) || null; return _clientId; })
+      .catch(function () { _clientId = null; return null; });
+  }
+
+  function startOAuth() {
+    return oauthClientId().then(function (cid) {
+      if (!cid) {
+        toast('当前站点未配置 GitHub OAuth，请使用下方 Token 方式');
+        return false;
+      }
+      var bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      var st = Array.from(bytes).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      try {
+        // 存相对路径：location.origin 在个别上下文会取到字符串 "null"，不可靠
+        sessionStorage.setItem(OAUTH_ST, JSON.stringify({ state: st, back: location.pathname + location.search }));
+      } catch (e) {}
+      location.href = 'https://github.com/login/oauth/authorize' +
+        '?client_id=' + encodeURIComponent(cid) +
+        '&scope=gist' +
+        '&state=' + encodeURIComponent(st) +
+        '&redirect_uri=' + encodeURIComponent(location.origin + '/');
+      return true;
+    });
+  }
+
+  /* 授权回跳处理：/?code=…&state=… → 换票 → setToken → 清洗 URL 回原页面 */
+  function handleOAuthRedirect() {
+    var q;
+    try { q = new URLSearchParams(location.search); } catch (e) { return; }
+    var code = q.get('code');
+    var st = q.get('state');
+    if (!code || !st) return;
+    var saved = null;
+    try { saved = JSON.parse(sessionStorage.getItem(OAUTH_ST) || 'null'); } catch (e) {}
+    try { sessionStorage.removeItem(OAUTH_ST); } catch (e) {}
+    var back = (saved && typeof saved.back === 'string' && saved.back.charAt(0) === '/') ? saved.back : '/';
+    if (!saved || saved.state !== st) {
+      history.replaceState(null, '', back);
+      return;
+    }
+    fetch(OAUTH_EP, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.d && res.d.token) {
+          toast('GitHub 登录成功，正在同步…');
+          setToken(res.d.token);
+        } else {
+          toast('GitHub 登录失败：' + ((res.d && res.d.error) || '未知错误'));
+        }
+      })
+      .catch(function () { toast('GitHub 登录失败：网络错误'); })
+      .then(function () { history.replaceState(null, '', back); });
+  }
+
   /* ---------- 认证 ---------- */
   function setToken(token) {
     state.token = token ? String(token).trim() : null;
@@ -325,6 +392,14 @@
       '.fl-auth-actions{display:flex;gap:8px;justify-content:flex-end;}',
       '.fl-auth-actions button{padding:8px 16px;border-radius:6px;border:1px solid var(--line,#EAEAEA);cursor:pointer;font-size:13px;background:var(--surface,#fff);color:inherit;}',
       '.fl-auth-actions button.primary{background:var(--accent,#1744E8);border-color:var(--accent);color:#fff;}',
+      '.fl-oauth{width:100%;display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:10px 16px;',
+      'border:1px solid var(--accent,#1744E8);border-radius:6px;background:var(--accent,#1744E8);color:#fff;cursor:pointer;',
+      'font-size:13.5px;font-weight:600;font-family:inherit;margin-bottom:6px;transition:opacity .15s;}',
+      '.fl-oauth:hover{opacity:.9;}',
+      '.fl-auth-modal details.fl-pat{margin:0 0 14px;}',
+      '.fl-auth-modal details.fl-pat summary{cursor:pointer;font-size:12.5px;color:var(--ink-secondary,#787774);padding:4px 0;}',
+      '.fl-pat-hint{font-size:12px;margin:8px 0 10px;}',
+      '.fl-pat input{margin-bottom:10px;}',
       '.fl-sync-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:3001;padding:10px 18px;border-radius:9999px;',
       'background:var(--ink,#111);color:var(--surface,#fff);font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.2);',
       'font-family:var(--font-sans,system-ui,sans-serif);animation:flToastIn .25s ease;}',
@@ -354,23 +429,34 @@
     return new Promise(function (resolve) {
       var mask = document.createElement('div');
       mask.className = 'fl-auth-mask';
+      var GH_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.765.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>';
       mask.innerHTML =
         '<div class="fl-auth-modal">' +
         '<h3>连接 GitHub 同步</h3>' +
-        '<p>粘贴一个带 <code>gist</code> 权限的 ' +
+        '<p>使用 GitHub 一键登录，收藏与浏览历史将同步到你名下的<b>私有 Gist</b>。凭据仅保存在本机浏览器。</p>' +
+        '<button type="button" class="fl-oauth">' + GH_SVG + '<span>使用 GitHub 登录</span></button>' +
+        '<details class="fl-pat">' +
+        '<summary>或粘贴 Personal Access Token（高级）</summary>' +
+        '<p class="fl-pat-hint">创建一个带 <code>gist</code> 权限的 ' +
         '<a href="https://github.com/settings/tokens/new?scopes=gist&description=FreeLLM%20sync" target="_blank" rel="noopener">Personal Access Token</a>，' +
-        '收藏与历史将同步到你名下的私有 Gist。Token 仅保存在本机浏览器。</p>' +
+        '适用于未部署 OAuth 服务的镜像站。</p>' +
         '<input type="password" placeholder="ghp_… 或 github_pat_…" spellcheck="false">' +
         '<div class="fl-auth-actions">' +
         '<button type="button" class="fl-cancel">取消</button>' +
         '<button type="button" class="primary fl-save">保存并同步</button>' +
-        '</div></div>';
+        '</div>' +
+        '</details>' +
+        '<div class="fl-auth-actions"><button type="button" class="fl-cancel">取消</button></div>' +
+        '</div>';
       document.body.appendChild(mask);
       var input = mask.querySelector('input');
-      input.focus();
-      function close(val) { mask.remove(); resolve(val); }
-      mask.querySelector('.fl-cancel').addEventListener('click', function () { close(null); });
+      mask.querySelectorAll('.fl-cancel').forEach(function (b) {
+        b.addEventListener('click', function () { close(null); });
+      });
       mask.addEventListener('click', function (e) { if (e.target === mask) close(null); });
+      mask.querySelector('.fl-oauth').addEventListener('click', function () {
+        startOAuth().then(function (started) { if (started) close(null); });
+      });
       mask.querySelector('.fl-save').addEventListener('click', function () {
         var v = input.value.trim();
         if (!v) return;
@@ -382,6 +468,16 @@
         if (e.key === 'Enter') mask.querySelector('.fl-save').click();
         if (e.key === 'Escape') close(null);
       });
+      // OAuth 不可用（未配置 / 镜像站）时退回纯 PAT 模式
+      oauthClientId().then(function (cid) {
+        if (cid) return;
+        mask.querySelector('.fl-oauth').style.display = 'none';
+        var det = mask.querySelector('.fl-pat');
+        det.open = true;
+        det.querySelector('summary').style.display = 'none';
+        input.focus();
+      });
+      function close(val) { mask.remove(); resolve(val); }
     });
   }
 
@@ -402,6 +498,7 @@
         authModal().then(paint);
       }
     });
+    on('auth', paint);
     paint();
   }
 
@@ -477,6 +574,7 @@
   }
 
   function init() {
+    handleOAuthRedirect();
     applyTheme();
     bind(document);
     autoBind(document);
@@ -516,6 +614,7 @@
     setToken: setToken,
     hasToken: hasToken,
     getUser: getUser,
+    startOAuth: startOAuth,
     pushNow: pushNow,
     pullNow: pullNow,
     authModal: authModal
