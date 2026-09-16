@@ -547,8 +547,8 @@
   }
 
   /* ---------- 自动绑定：站点详情页链接（免逐页配置） ---------- */
-  var DETAIL_RE = /^\/(models|providers|skills|guides)\/[^/]+\/?$/;
-  var DETAIL_TYPE = { models: 'model', providers: 'provider', skills: 'skill', guides: 'guide' };
+  var DETAIL_RE = /^\/(models|providers|skills|guides|offers)\/[^/]+\/?$/;
+  var DETAIL_TYPE = { models: 'model', providers: 'provider', skills: 'skill', guides: 'guide', offers: 'offer' };
 
   function autoName(a) {
     var zh = a.querySelector('[lang="zh-CN"]');

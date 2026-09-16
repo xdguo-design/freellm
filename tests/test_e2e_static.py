@@ -23,6 +23,7 @@ SITEMAP_PATH = ROOT / "sitemap.xml"
 ADS_PATH = ROOT / "ads.txt"
 GUIDE_PATH = ROOT / "guides" / "free-llm" / "index.html"
 LOG_PATH = ROOT / "logs" / "index.html"
+SUBMIT_PATH = ROOT / "submit" / "index.html"
 
 
 def read_offers() -> list:
@@ -62,6 +63,19 @@ class StaticContractTests(unittest.TestCase):
         self.assertNotIn('"id":"longcat-api"', self.html)
         self.assertNotIn('"id":"longcat-download"', self.html)
 
+    def test_homepage_exposes_real_action_and_filter_hooks(self):
+        for needle in (
+            'href="/submit/"',
+            '<script src="/js/freellm-sync.js"></script>',
+            'id="catalog-method-filter"',
+            'id="catalog-capability-filter"',
+            'id="catalog-region-filter"',
+            'id="catalog-freshness-filter"',
+            'window.FreeLLM?.Sync?.bind(container)',
+        ):
+            self.assertIn(needle, self.html)
+        self.assertNotIn('<div class="app legacy-app">', self.html)
+
     def test_seo_guides_are_linked_from_the_homepage(self):
         for href in (
             '/guides/free-openai-api-alternatives/',
@@ -76,6 +90,11 @@ class StaticContractTests(unittest.TestCase):
             canonical = re.search(r'<link rel="canonical" href="([^"]+)"', page)
             self.assertIsNotNone(canonical)
             self.assertIn(f'<meta name="twitter:url" content="{canonical.group(1)}"', page)
+
+    def test_submit_page_explains_evidence_requirements(self):
+        page = SUBMIT_PATH.read_text(encoding="utf-8")
+        for needle in ("官方链接", "免费方式", "地区限制", "官方价格页", "xdguo0527@gmail.com"):
+            self.assertIn(needle, page)
 
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
         """Narrow screens must keep the directory navigation discoverable."""
@@ -365,6 +384,7 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("Allow: /", robots)
         self.assertIn("Sitemap: https://freellm.top/sitemap.xml", robots)
         self.assertIn("<loc>https://freellm.top/</loc>", sitemap)
+        self.assertIn("<loc>https://freellm.top/submit/</loc>", sitemap)
 
     def test_ads_txt_declares_current_adsense_publisher(self):
         self.assertTrue(ADS_PATH.is_file())
@@ -517,15 +537,15 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertEqual(self.visible_offers(page), 27)
-        self.assertEqual(page.locator("#heroCount").inner_text(), "27")
-        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "08")
-        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "08")
-        self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), "08")
+        self.assertEqual(self.visible_offers(page), len(read_offers()))
+        self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
+        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "19")
+        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "19")
+        self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), "09")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
         self.assertEqual(page.locator("#studentList .student-item").count(), 2)
-        self.assertEqual(page.locator(".offer .provider-icon-img").count(), 27)
-        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), 27)
+        self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
+        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_mobile_navigation_exposes_core_directory_entries(self):
@@ -547,7 +567,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
         page.click(".category-card[data-filter='ide']")
-        self.assertEqual(self.visible_offers(page), 8)
+        self.assertEqual(self.visible_offers(page), 9)
 
         page.fill("#catalog-search", "Qwen3")
         self.assertEqual(self.visible_offers(page), 1)
@@ -572,7 +592,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="ide"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 8)
+        self.assertEqual(self.visible_offers(page), 19)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
@@ -584,7 +604,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 8)
+        self.assertEqual(self.visible_offers(page), 9)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):
@@ -607,9 +627,9 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        self.assertEqual(self.visible_offers(page), 27)
+        self.assertEqual(self.visible_offers(page), len(read_offers()))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
-        self.assertEqual(len(item_list), 27)
+        self.assertEqual(len(item_list), len(read_offers()))
         self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
         self.assertEqual(len(page.problems), 0, page.problems)
 
@@ -647,7 +667,7 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), 27)
+            self.assertEqual(self.visible_offers(page), len(read_offers()))
             self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_missing_data_shows_readable_error(self):
