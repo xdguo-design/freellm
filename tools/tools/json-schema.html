@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSON Schema 校验 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON Schema 校验', '校验 JSON 是否符合 Schema：类型 / 必填 / 枚举 / 数值与字符串边界', 'json-schema');
+var schemaIn = T.textarea('{"type":"object","required":["name"],"properties":{"name":{"type":"string","minLength":1},"age":{"type":"integer","minimum":0}}}');
+schemaIn.value = '{"type":"object","required":["name"],"properties":{"name":{"type":"string","minLength":1},"age":{"type":"integer","minimum":0}}}';
+var dataIn = T.textarea('{"name":"张三","age":25}');
+dataIn.value = '{"name":"张三","age":25}';
+var output = T.out('');
+function validate(data, schema, path, errors) {
+  var t = schema.type;
+  var actual = Array.isArray(data) ? 'array' : data === null ? 'null' : typeof data;
+  if (t) {
+    var types = Array.isArray(t) ? t : [t];
+    var ok = types.some(function (tt) {
+      if (tt === 'integer') return actual === 'number' && Number.isInteger(data);
+      if (tt === 'number') return actual === 'number';
+      return actual === tt;
+    });
+    if (!ok) { errors.push(path + ': 类型应为 ' + types.join('/') + '，实际 ' + actual); return; }
+  }
+  if (schema.enum && schema.enum.indexOf(data) < 0) errors.push(path + ': 值不在枚举 ' + JSON.stringify(schema.enum) + ' 中');
+  if (actual === 'number') {
+    if (schema.minimum != null && data < schema.minimum) errors.push(path + ': 不能小于 ' + schema.minimum);
+    if (schema.maximum != null && data > schema.maximum) errors.push(path + ': 不能大于 ' + schema.maximum);
+  }
+  if (actual === 'string') {
+    if (schema.minLength != null && data.length < schema.minLength) errors.push(path + ': 长度不足 ' + schema.minLength);
+    if (schema.maxLength != null && data.length > schema.maxLength) errors.push(path + ': 长度超过 ' + schema.maxLength);
+    if (schema.pattern) { try { if (!new RegExp(schema.pattern).test(data)) errors.push(path + ': 不匹配正则 ' + schema.pattern); } catch (e) {} }
+  }
+  if (actual === 'array' && schema.items) data.forEach(function (item, i) { validate(item, schema.items, path + '[' + i + ']', errors); });
+  if (actual === 'object') {
+    (schema.required || []).forEach(function (req) {
+      if (!(req in data)) errors.push(path + '.' + req + ': 缺少必填字段');
+    });
+    if (schema.properties) Object.keys(schema.properties).forEach(function (k) {
+      if (k in data) validate(data[k], schema.properties[k], path + '.' + k, errors);
+    });
+  }
+}
+function run() {
+  try {
+    var schema = T.parseJSON(schemaIn.value);
+    var data = T.parseJSON(dataIn.value);
+    var errors = [];
+    validate(data, schema, '$', errors);
+    output.value = errors.length ? '✗ 校验失败（' + errors.length + ' 项）：\n' + errors.map(function (e, i) { return (i + 1) + '. ' + e; }).join('\n') : '✓ 校验通过';
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[schemaIn, dataIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('Schema', schemaIn), T.field('数据', dataIn)]));
+app.appendChild(T.pane([T.field('校验结果', output)], true));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "json-schema", "title": "JSON Schema 校验", "desc": "校验 JSON 是否符合 Schema：类型 / 必填 / 枚举 / 数值与字符串边界", "scripts": "", "code": "var schemaIn = T.textarea('{\"type\":\"object\",\"required\":[\"name\"],\"properties\":{\"name\":{\"type\":\"string\",\"minLength\":1},\"age\":{\"type\":\"integer\",\"minimum\":0}}}');\nschemaIn.value = '{\"type\":\"object\",\"required\":[\"name\"],\"properties\":{\"name\":{\"type\":\"string\",\"minLength\":1},\"age\":{\"type\":\"integer\",\"minimum\":0}}}';\nvar dataIn = T.textarea('{\"name\":\"张三\",\"age\":25}');\ndataIn.value = '{\"name\":\"张三\",\"age\":25}';\nvar output = T.out('');\nfunction validate(data, schema, path, errors) {\n  var t = schema.type;\n  var actual = Array.isArray(data) ? 'array' : data === null ? 'null' : typeof data;\n  if (t) {\n    var types = Array.isArray(t) ? t : [t];\n    var ok = types.some(function (tt) {\n      if (tt === 'integer') return actual === 'number' && Number.isInteger(data);\n      if (tt === 'number') return actual === 'number';\n      return actual === tt;\n    });\n    if (!ok) { errors.push(path + ': 类型应为 ' + types.join('/') + '，实际 ' + actual); return; }\n  }\n  if (schema.enum && schema.enum.indexOf(data) \u003c 0) errors.push(path + ': 值不在枚举 ' + JSON.stringify(schema.enum) + ' 中');\n  if (actual === 'number') {\n    if (schema.minimum != null && data \u003c schema.minimum) errors.push(path + ': 不能小于 ' + schema.minimum);\n    if (schema.maximum != null && data > schema.maximum) errors.push(path + ': 不能大于 ' + schema.maximum);\n  }\n  if (actual === 'string') {\n    if (schema.minLength != null && data.length \u003c schema.minLength) errors.push(path + ': 长度不足 ' + schema.minLength);\n    if (schema.maxLength != null && data.length > schema.maxLength) errors.push(path + ': 长度超过 ' + schema.maxLength);\n    if (schema.pattern) { try { if (!new RegExp(schema.pattern).test(data)) errors.push(path + ': 不匹配正则 ' + schema.pattern); } catch (e) {} }\n  }\n  if (actual === 'array' && schema.items) data.forEach(function (item, i) { validate(item, schema.items, path + '[' + i + ']', errors); });\n  if (actual === 'object') {\n    (schema.required || []).forEach(function (req) {\n      if (!(req in data)) errors.push(path + '.' + req + ': 缺少必填字段');\n    });\n    if (schema.properties) Object.keys(schema.properties).forEach(function (k) {\n      if (k in data) validate(data[k], schema.properties[k], path + '.' + k, errors);\n    });\n  }\n}\nfunction run() {\n  try {\n    var schema = T.parseJSON(schemaIn.value);\n    var data = T.parseJSON(dataIn.value);\n    var errors = [];\n    validate(data, schema, '$', errors);\n    output.value = errors.length ? '✗ 校验失败（' + errors.length + ' 项）：\\n' + errors.map(function (e, i) { return (i + 1) + '. ' + e; }).join('\\n') : '✓ 校验通过';\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[schemaIn, dataIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('Schema', schemaIn), T.field('数据', dataIn)]));\napp.appendChild(T.pane([T.field('校验结果', output)], true));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

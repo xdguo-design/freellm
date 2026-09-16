@@ -2,63 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>体积单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('体积单位换算', 'L/mL/m³ 等', 'volume-converter');
-
-  var units = [
-    { id: 'ml', name: '毫升 (mL)' },
-    { id: 'l', name: '升 (L)' },
-    { id: 'm3', name: '立方米 (m³)' },
-    { id: 'cm3', name: '立方厘米 (cm³)' },
-    { id: 'gal', name: '加仑 (gal)' },
-    { id: 'qt', name: '夸脱 (qt)' },
-    { id: 'pt', name: '品脱 (pt)' },
-    { id: 'cup', name: '杯 (cup)' },
-    { id: 'floz', name: '液盎司 (fl oz)' }
-  ];
-
-  var factors = { ml: 0.001, l: 1, m3: 1000, cm3: 0.001, gal: 3.78541, qt: 0.946353, pt: 0.473176, cup: 0.236588, floz: 0.0295735 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('体积单位换算', 'L / mL / m³ / 加仑 / 杯', 'volume-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "L (升)", "label": "L (升)"}, {"value": "mL (毫升)", "label": "mL (毫升)"}, {"value": "m³", "label": "m³"}, {"value": "gal (美制加仑)", "label": "gal (美制加仑)"}, {"value": "qt (夸脱)", "label": "qt (夸脱)"}, {"value": "pt (品脱)", "label": "pt (品脱)"}, {"value": "cup (杯)", "label": "cup (杯)"}, {"value": "fl oz (液盎司)", "label": "fl oz (液盎司)"}, {"value": "汤匙", "label": "汤匙"}, {"value": "茶匙", "label": "茶匙"}], "L (升)");
+var to = T.select([{"value": "L (升)", "label": "L (升)"}, {"value": "mL (毫升)", "label": "mL (毫升)"}, {"value": "m³", "label": "m³"}, {"value": "gal (美制加仑)", "label": "gal (美制加仑)"}, {"value": "qt (夸脱)", "label": "qt (夸脱)"}, {"value": "pt (品脱)", "label": "pt (品脱)"}, {"value": "cup (杯)", "label": "cup (杯)"}, {"value": "fl oz (液盎司)", "label": "fl oz (液盎司)"}, {"value": "汤匙", "label": "汤匙"}, {"value": "茶匙", "label": "茶匙"}], "L (升)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"L (升)": 1, "mL (毫升)": 0.001, "m³": 1000, "gal (美制加仑)": 3.785411784, "qt (夸脱)": 0.946352946, "pt (品脱)": 0.473176473, "cup (杯)": 0.2365882365, "fl oz (液盎司)": 0.0295735296, "汤匙": 0.0147868, "茶匙": 0.00492892};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var liters = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (liters / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:100px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.l.value = '1';
-  run('l');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "volume-converter", "title": "体积单位换算", "desc": "L / mL / m³ / 加仑 / 杯", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"L (升)\", \"label\": \"L (升)\"}, {\"value\": \"mL (毫升)\", \"label\": \"mL (毫升)\"}, {\"value\": \"m³\", \"label\": \"m³\"}, {\"value\": \"gal (美制加仑)\", \"label\": \"gal (美制加仑)\"}, {\"value\": \"qt (夸脱)\", \"label\": \"qt (夸脱)\"}, {\"value\": \"pt (品脱)\", \"label\": \"pt (品脱)\"}, {\"value\": \"cup (杯)\", \"label\": \"cup (杯)\"}, {\"value\": \"fl oz (液盎司)\", \"label\": \"fl oz (液盎司)\"}, {\"value\": \"汤匙\", \"label\": \"汤匙\"}, {\"value\": \"茶匙\", \"label\": \"茶匙\"}], \"L (升)\");\nvar to = T.select([{\"value\": \"L (升)\", \"label\": \"L (升)\"}, {\"value\": \"mL (毫升)\", \"label\": \"mL (毫升)\"}, {\"value\": \"m³\", \"label\": \"m³\"}, {\"value\": \"gal (美制加仑)\", \"label\": \"gal (美制加仑)\"}, {\"value\": \"qt (夸脱)\", \"label\": \"qt (夸脱)\"}, {\"value\": \"pt (品脱)\", \"label\": \"pt (品脱)\"}, {\"value\": \"cup (杯)\", \"label\": \"cup (杯)\"}, {\"value\": \"fl oz (液盎司)\", \"label\": \"fl oz (液盎司)\"}, {\"value\": \"汤匙\", \"label\": \"汤匙\"}, {\"value\": \"茶匙\", \"label\": \"茶匙\"}], \"L (升)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"L (升)\": 1, \"mL (毫升)\": 0.001, \"m³\": 1000, \"gal (美制加仑)\": 3.785411784, \"qt (夸脱)\": 0.946352946, \"pt (品脱)\": 0.473176473, \"cup (杯)\": 0.2365882365, \"fl oz (液盎司)\": 0.0295735296, \"汤匙\": 0.0147868, \"茶匙\": 0.00492892};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

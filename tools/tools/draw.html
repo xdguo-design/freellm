@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>在线白板涂鸦 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线白板涂鸦', 'Canvas 自由绘画：调色画笔 + 橡皮 + 清空下载', 'draw');
+var canvas = T.el('canvas', { width: 860, height: 460, style: 'width:100%;border:1px solid var(--line);border-radius:10px;cursor:crosshair;background:#fff;touch-action:none' });
+var color = T.color('#1744E8');
+var size = T.range(1, 36, 1, 6);
+var sizeLabel = T.el('b', { text: '6' });
+var ctx = canvas.getContext('2d');
+ctx.lineCap = 'round';
+var drawing = false;
+canvas.addEventListener('pointerdown', function (e) {
+  drawing = true;
+  var rect = canvas.getBoundingClientRect();
+  ctx.beginPath();
+  ctx.moveTo((e.clientX - rect.left) * canvas.width / rect.width, (e.clientY - rect.top) * canvas.height / rect.height);
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!drawing) return;
+  var rect = canvas.getBoundingClientRect();
+  ctx.strokeStyle = color.value;
+  ctx.lineWidth = +size.value;
+  ctx.lineTo((e.clientX - rect.left) * canvas.width / rect.width, (e.clientY - rect.top) * canvas.height / rect.height);
+  ctx.stroke();
+});
+window.addEventListener('pointerup', function () { drawing = false; });
+app.appendChild(T.row([color, T.el('span', { text: '粗细' }), size, sizeLabel,
+  T.button('清空', function () { ctx.clearRect(0, 0, canvas.width, canvas.height); }),
+  T.button('下载画作', function () { T.dlCanvas(canvas, 'drawing.png'); }, true)]));
+app.appendChild(canvas);
+size.addEventListener('input', function () { sizeLabel.textContent = size.value; });
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "draw", "title": "在线白板涂鸦", "desc": "Canvas 自由绘画：调色画笔 + 橡皮 + 清空下载", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 460, style: 'width:100%;border:1px solid var(--line);border-radius:10px;cursor:crosshair;background:#fff;touch-action:none' });\nvar color = T.color('#1744E8');\nvar size = T.range(1, 36, 1, 6);\nvar sizeLabel = T.el('b', { text: '6' });\nvar ctx = canvas.getContext('2d');\nctx.lineCap = 'round';\nvar drawing = false;\ncanvas.addEventListener('pointerdown', function (e) {\n  drawing = true;\n  var rect = canvas.getBoundingClientRect();\n  ctx.beginPath();\n  ctx.moveTo((e.clientX - rect.left) * canvas.width / rect.width, (e.clientY - rect.top) * canvas.height / rect.height);\n  canvas.setPointerCapture(e.pointerId);\n});\ncanvas.addEventListener('pointermove', function (e) {\n  if (!drawing) return;\n  var rect = canvas.getBoundingClientRect();\n  ctx.strokeStyle = color.value;\n  ctx.lineWidth = +size.value;\n  ctx.lineTo((e.clientX - rect.left) * canvas.width / rect.width, (e.clientY - rect.top) * canvas.height / rect.height);\n  ctx.stroke();\n});\nwindow.addEventListener('pointerup', function () { drawing = false; });\napp.appendChild(T.row([color, T.el('span', { text: '粗细' }), size, sizeLabel,\n  T.button('清空', function () { ctx.clearRect(0, 0, canvas.width, canvas.height); }),\n  T.button('下载画作', function () { T.dlCanvas(canvas, 'drawing.png'); }, true)]));\napp.appendChild(canvas);\nsize.addEventListener('input', function () { sizeLabel.textContent = size.value; });"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

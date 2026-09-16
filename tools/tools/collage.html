@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片拼图 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片拼图', '多张图片拼成一张：宫格 / 自由布局，自动等分', 'collage');
+var layout = T.select([
+  { value: '2x1', label: '2 图横排' },
+  { value: '1x2', label: '2 图竖排' },
+  { value: '2x2', label: '4 图宫格' },
+  { value: '3x3', label: '9 图宫格' }
+], '2x2');
+var gap = T.range(0, 30, 1, 8);
+var bg = T.color('#FFFFFF');
+var list = T.el('div', { class: 'row' });
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var imgs = [];
+var multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });
+document.body.appendChild(multi);
+multi.addEventListener('change', function () {
+  var files = Array.from(multi.files);
+  var loaded = 0;
+  files.forEach(function (f) {
+    T.loadImage(function (img) {
+      imgs.push(img);
+      loaded++;
+      if (loaded === files.length) { renderList(); render(); }
+    });
+  });
+});
+function renderList() {
+  T.clearEl(list);
+  imgs.forEach(function (img, i) {
+    var c = T.el('canvas', { width: 56, height: 56, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击移除' });
+    var ctx = c.getContext('2d');
+    var scale = Math.max(56 / img.width, 56 / img.height);
+    ctx.drawImage(img, (56 - img.width * scale) / 2, (56 - img.height * scale) / 2, img.width * scale, img.height * scale);
+    c.addEventListener('click', function () { imgs.splice(i, 1); renderList(); render(); });
+    list.appendChild(c);
+  });
+}
+function render() {
+  if (!imgs.length) return;
+  var parts = layout.value.split('x');
+  var cols = +parts[0], rows = +parts[1];
+  var need = cols * rows;
+  if (imgs.length < need) { T.toast('该布局需要 ' + need + ' 张图（已有 ' + imgs.length + '）'); return; }
+  var g = +gap.value;
+  var cell = 400;
+  canvas.width = cols * cell + (cols - 1) * g;
+  canvas.height = rows * cell + (rows - 1) * g;
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = bg.value;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < need; i++) {
+    var x = (i % cols) * (cell + g);
+    var y = Math.floor(i / cols) * (cell + g);
+    var im = imgs[i];
+    var scale = Math.max(cell / im.width, cell / im.height);
+    ctx.drawImage(im, x + (cell - im.width * scale) / 2, y + (cell - im.height * scale) / 2, im.width * scale, im.height * scale);
+  }
+  canvas.style.display = '';
+}
+[layout, gap, bg].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.row([T.button('添加图片（按顺序）', function () { multi.click(); }, true), layout]));
+app.appendChild(list);
+app.appendChild(T.row([T.el('span', { text: '间距' }), gap, T.el('span', { text: '背景' }), bg]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载拼图', function () { T.dlCanvas(canvas, 'collage.png'); }, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "collage", "title": "图片拼图", "desc": "多张图片拼成一张：宫格 / 自由布局，自动等分", "scripts": "", "code": "var layout = T.select([\n  { value: '2x1', label: '2 图横排' },\n  { value: '1x2', label: '2 图竖排' },\n  { value: '2x2', label: '4 图宫格' },\n  { value: '3x3', label: '9 图宫格' }\n], '2x2');\nvar gap = T.range(0, 30, 1, 8);\nvar bg = T.color('#FFFFFF');\nvar list = T.el('div', { class: 'row' });\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar imgs = [];\nvar multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });\ndocument.body.appendChild(multi);\nmulti.addEventListener('change', function () {\n  var files = Array.from(multi.files);\n  var loaded = 0;\n  files.forEach(function (f) {\n    T.loadImage(function (img) {\n      imgs.push(img);\n      loaded++;\n      if (loaded === files.length) { renderList(); render(); }\n    });\n  });\n});\nfunction renderList() {\n  T.clearEl(list);\n  imgs.forEach(function (img, i) {\n    var c = T.el('canvas', { width: 56, height: 56, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击移除' });\n    var ctx = c.getContext('2d');\n    var scale = Math.max(56 / img.width, 56 / img.height);\n    ctx.drawImage(img, (56 - img.width * scale) / 2, (56 - img.height * scale) / 2, img.width * scale, img.height * scale);\n    c.addEventListener('click', function () { imgs.splice(i, 1); renderList(); render(); });\n    list.appendChild(c);\n  });\n}\nfunction render() {\n  if (!imgs.length) return;\n  var parts = layout.value.split('x');\n  var cols = +parts[0], rows = +parts[1];\n  var need = cols * rows;\n  if (imgs.length \u003c need) { T.toast('该布局需要 ' + need + ' 张图（已有 ' + imgs.length + '）'); return; }\n  var g = +gap.value;\n  var cell = 400;\n  canvas.width = cols * cell + (cols - 1) * g;\n  canvas.height = rows * cell + (rows - 1) * g;\n  var ctx = canvas.getContext('2d');\n  ctx.fillStyle = bg.value;\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  for (var i = 0; i \u003c need; i++) {\n    var x = (i % cols) * (cell + g);\n    var y = Math.floor(i / cols) * (cell + g);\n    var im = imgs[i];\n    var scale = Math.max(cell / im.width, cell / im.height);\n    ctx.drawImage(im, x + (cell - im.width * scale) / 2, y + (cell - im.height * scale) / 2, im.width * scale, im.height * scale);\n  }\n  canvas.style.display = '';\n}\n[layout, gap, bg].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.row([T.button('添加图片（按顺序）', function () { multi.click(); }, true), layout]));\napp.appendChild(list);\napp.appendChild(T.row([T.el('span', { text: '间距' }), gap, T.el('span', { text: '背景' }), bg]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载拼图', function () { T.dlCanvas(canvas, 'collage.png'); }, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

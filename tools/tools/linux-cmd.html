@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Linux 命令速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Linux 命令速查', '分类 Linux 命令参考：文件 / 文本 / 进程 / 网络 / 磁盘', 'linux-cmd');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  return search;
+}
+
+var DATA = [
+  ['ls -la', '文件', '列出所有文件（含隐藏）与权限'],
+  ['cd -', '文件', '回到上一个目录'],
+  ['pwd', '文件', '显示当前目录'],
+  ['cp -r src dst', '文件', '递归复制目录'],
+  ['mv old new', '文件', '移动 / 重命名'],
+  ['rm -rf dir', '文件', '强制递归删除（慎用）'],
+  ['mkdir -p a/b/c', '文件', '多级创建目录'],
+  ['ln -s target link', '文件', '创建软链接'],
+  ['find . -name "*.log"', '文件', '按名查找文件'],
+  ['du -sh *', '磁盘', '统计各目录大小'],
+  ['df -h', '磁盘', '查看磁盘使用率'],
+  ['cat / tac', '文本', '正序 / 倒序输出文件'],
+  ['less file', '文本', '分页查看（q 退出）'],
+  ['head -n 20 / tail -f', '文本', '前 20 行 / 实时追踪'],
+  ['grep -rn "kw" dir', '文本', '递归搜索关键词'],
+  ['grep -v "x"', '文本', '反向匹配（排除）'],
+  ['sed "s/old/new/g" f', '文本', '批量替换'],
+  ['awk \'{print $1}\'', '文本', '按列提取'],
+  ['sort -rn / uniq -c', '文本', '数值倒序排序 / 计数去重'],
+  ['wc -l', '文本', '统计行数'],
+  ['cut -d: -f1', '文本', '按分隔符取列'],
+  ['ps aux | grep nginx', '进程', '查找进程'],
+  ['top / htop', '进程', '实时资源监控'],
+  ['kill -9 PID', '进程', '强杀进程'],
+  ['nohup cmd &', '进程', '后台运行'],
+  ['jobs / fg / bg', '进程', '任务管理'],
+  ['kill -l', '进程', '列出全部信号'],
+  ['ping -c 4 host', '网络', '连通性测试'],
+  ['curl -I url', '网络', '查看响应头'],
+  ['wget url', '网络', '下载文件'],
+  ['ss -tlnp', '网络', '查看监听端口（netstat 替代）'],
+  ['ssh user@host', '网络', '远程登录'],
+  ['scp file host:path', '网络', '远程拷贝'],
+  ['rsync -avz src dst', '网络', '增量同步'],
+  ['chmod 755 f', '权限', '修改权限'],
+  ['chown user:group f', '权限', '修改属主'],
+  ['sudo !!', '权限', '以 sudo 重跑上一条命令'],
+  ['tar -czf out.tgz dir', '压缩', '打包压缩'],
+  ['tar -xzf a.tgz', '压缩', '解压 .tgz'],
+  ['tar -xf a.tar.xz', '压缩', '解压（自动识别格式）'],
+  ['systemctl status nginx', '系统', '服务状态'],
+  ['journalctl -u nginx -f', '系统', '服务日志追踪'],
+  ['crontab -e', '系统', '编辑定时任务'],
+  ['uname -a / lsblsk', '系统', '内核信息 / 块设备'],
+  ['lsof -i :8080', '系统', '查端口占用进程'],
+  ['history | grep ssh', '系统', '历史命令搜索'],
+  ['alias ll=\'ls -la\'', '系统', '设置别名'],
+  ['watch -n 2 cmd', '系统', '每 2 秒重复执行']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制命令' })]));
+app.appendChild(wrap);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "linux-cmd", "title": "Linux 命令速查", "desc": "分类 Linux 命令参考：文件 / 文本 / 进程 / 网络 / 磁盘", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['ls -la', '文件', '列出所有文件（含隐藏）与权限'],\n  ['cd -', '文件', '回到上一个目录'],\n  ['pwd', '文件', '显示当前目录'],\n  ['cp -r src dst', '文件', '递归复制目录'],\n  ['mv old new', '文件', '移动 / 重命名'],\n  ['rm -rf dir', '文件', '强制递归删除（慎用）'],\n  ['mkdir -p a/b/c', '文件', '多级创建目录'],\n  ['ln -s target link', '文件', '创建软链接'],\n  ['find . -name \"*.log\"', '文件', '按名查找文件'],\n  ['du -sh *', '磁盘', '统计各目录大小'],\n  ['df -h', '磁盘', '查看磁盘使用率'],\n  ['cat / tac', '文本', '正序 / 倒序输出文件'],\n  ['less file', '文本', '分页查看（q 退出）'],\n  ['head -n 20 / tail -f', '文本', '前 20 行 / 实时追踪'],\n  ['grep -rn \"kw\" dir', '文本', '递归搜索关键词'],\n  ['grep -v \"x\"', '文本', '反向匹配（排除）'],\n  ['sed \"s/old/new/g\" f', '文本', '批量替换'],\n  ['awk \\'{print $1}\\'', '文本', '按列提取'],\n  ['sort -rn / uniq -c', '文本', '数值倒序排序 / 计数去重'],\n  ['wc -l', '文本', '统计行数'],\n  ['cut -d: -f1', '文本', '按分隔符取列'],\n  ['ps aux | grep nginx', '进程', '查找进程'],\n  ['top / htop', '进程', '实时资源监控'],\n  ['kill -9 PID', '进程', '强杀进程'],\n  ['nohup cmd &', '进程', '后台运行'],\n  ['jobs / fg / bg', '进程', '任务管理'],\n  ['kill -l', '进程', '列出全部信号'],\n  ['ping -c 4 host', '网络', '连通性测试'],\n  ['curl -I url', '网络', '查看响应头'],\n  ['wget url', '网络', '下载文件'],\n  ['ss -tlnp', '网络', '查看监听端口（netstat 替代）'],\n  ['ssh user@host', '网络', '远程登录'],\n  ['scp file host:path', '网络', '远程拷贝'],\n  ['rsync -avz src dst', '网络', '增量同步'],\n  ['chmod 755 f', '权限', '修改权限'],\n  ['chown user:group f', '权限', '修改属主'],\n  ['sudo !!', '权限', '以 sudo 重跑上一条命令'],\n  ['tar -czf out.tgz dir', '压缩', '打包压缩'],\n  ['tar -xzf a.tgz', '压缩', '解压 .tgz'],\n  ['tar -xf a.tar.xz', '压缩', '解压（自动识别格式）'],\n  ['systemctl status nginx', '系统', '服务状态'],\n  ['journalctl -u nginx -f', '系统', '服务日志追踪'],\n  ['crontab -e', '系统', '编辑定时任务'],\n  ['uname -a / lsblsk', '系统', '内核信息 / 块设备'],\n  ['lsof -i :8080', '系统', '查端口占用进程'],\n  ['history | grep ssh', '系统', '历史命令搜索'],\n  ['alias ll=\\'ls -la\\'', '系统', '设置别名'],\n  ['watch -n 2 cmd', '系统', '每 2 秒重复执行']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制命令' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

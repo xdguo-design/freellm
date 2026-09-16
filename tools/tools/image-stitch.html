@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片拼接 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片拼接', '多图拼长图 / 横幅 / 宫格，间距与背景可调', 'image-stitch');
+var mode = T.select([{value:'v',label:'纵向长图'},{value:'h',label:'横向横幅'},{value:'g9',label:'九宫格'}],'v');
+var gap = T.range(0, 40, 1, 8);
+var bg = T.color('#FFFFFF');
+var width = T.num(800, { style: 'width:90px' });
+var list = T.el('div', { class: 'row' });
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var imgs = [];
+var multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });
+document.body.appendChild(multi);
+multi.addEventListener('change', function () {
+  var files = Array.from(multi.files);
+  var loaded = 0;
+  files.forEach(function (f) {
+    T.loadImage(function (img) {
+      imgs.push(img);
+      loaded++;
+      if (loaded === files.length) { renderList(); render(); }
+    });
+  });
+});
+function renderList() {
+  T.clearEl(list);
+  imgs.forEach(function (img, i) {
+    var c = T.el('canvas', { width: 60, height: 60, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击移除' });
+    var ctx = c.getContext('2d');
+    var scale = Math.max(60 / img.width, 60 / img.height);
+    ctx.drawImage(img, (60 - img.width * scale) / 2, (60 - img.height * scale) / 2, img.width * scale, img.height * scale);
+    c.addEventListener('click', function () { imgs.splice(i, 1); renderList(); render(); });
+    list.appendChild(c);
+  });
+}
+function render() {
+  if (!imgs.length) return;
+  var W = +width.value;
+  var g = +gap.value;
+  var ctx;
+  if (mode.value === 'v') {
+    var totalH = imgs.reduce(function (s, im) { return s + Math.round(im.height / im.width * W) + g; }, -g);
+    canvas.width = W;
+    canvas.height = totalH;
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, W, totalH);
+    var y = 0;
+    imgs.forEach(function (im) {
+      var h = Math.round(im.height / im.width * W);
+      ctx.drawImage(im, 0, y, W, h);
+      y += h + g;
+    });
+  } else if (mode.value === 'h') {
+    var scaled = imgs.map(function (im) { return { w: Math.round(im.width / im.height * 400), h: 400, im: im }; });
+    var totalW = scaled.reduce(function (s, x) { return s + x.w + g; }, -g);
+    canvas.width = totalW;
+    canvas.height = 400;
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, totalW, 400);
+    var x = 0;
+    scaled.forEach(function (s) {
+      ctx.drawImage(s.im, x, 0, s.w, s.h);
+      x += s.w + g;
+    });
+  } else {
+    var count = Math.min(9, imgs.length);
+    var cell = Math.floor((W - g * 4) / 3);
+    canvas.width = W;
+    canvas.height = cell * 3 + g * 2;
+    ctx = canvas.getContext('2d');
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < count; i++) {
+      var cx = (i % 3) * (cell + g);
+      var cy = Math.floor(i / 3) * (cell + g);
+      var im = imgs[i];
+      var scale2 = Math.max(cell / im.width, cell / im.height);
+      ctx.drawImage(im, cx + (cell - im.width * scale2) / 2, cy + (cell - im.height * scale2) / 2, im.width * scale2, im.height * scale2);
+    }
+  }
+  canvas.style.display = '';
+}
+[mode, gap, bg, width].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.row([T.button('添加图片（可多选，按顺序）', function () { multi.click(); }, true), status || T.el('span', {})]));
+app.appendChild(list);
+app.appendChild(T.row([mode, T.el('span', { text: '间距' }), gap, T.el('span', { text: '背景' }), bg, T.el('span', { text: '宽度' }), width]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载拼接结果', function () { T.dlCanvas(canvas, 'stitched.png'); }, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-stitch", "title": "图片拼接", "desc": "多图拼长图 / 横幅 / 宫格，间距与背景可调", "scripts": "", "code": "var mode = T.select([{value:'v',label:'纵向长图'},{value:'h',label:'横向横幅'},{value:'g9',label:'九宫格'}],'v');\nvar gap = T.range(0, 40, 1, 8);\nvar bg = T.color('#FFFFFF');\nvar width = T.num(800, { style: 'width:90px' });\nvar list = T.el('div', { class: 'row' });\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar imgs = [];\nvar multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });\ndocument.body.appendChild(multi);\nmulti.addEventListener('change', function () {\n  var files = Array.from(multi.files);\n  var loaded = 0;\n  files.forEach(function (f) {\n    T.loadImage(function (img) {\n      imgs.push(img);\n      loaded++;\n      if (loaded === files.length) { renderList(); render(); }\n    });\n  });\n});\nfunction renderList() {\n  T.clearEl(list);\n  imgs.forEach(function (img, i) {\n    var c = T.el('canvas', { width: 60, height: 60, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击移除' });\n    var ctx = c.getContext('2d');\n    var scale = Math.max(60 / img.width, 60 / img.height);\n    ctx.drawImage(img, (60 - img.width * scale) / 2, (60 - img.height * scale) / 2, img.width * scale, img.height * scale);\n    c.addEventListener('click', function () { imgs.splice(i, 1); renderList(); render(); });\n    list.appendChild(c);\n  });\n}\nfunction render() {\n  if (!imgs.length) return;\n  var W = +width.value;\n  var g = +gap.value;\n  var ctx;\n  if (mode.value === 'v') {\n    var totalH = imgs.reduce(function (s, im) { return s + Math.round(im.height / im.width * W) + g; }, -g);\n    canvas.width = W;\n    canvas.height = totalH;\n    ctx = canvas.getContext('2d');\n    ctx.fillStyle = bg.value;\n    ctx.fillRect(0, 0, W, totalH);\n    var y = 0;\n    imgs.forEach(function (im) {\n      var h = Math.round(im.height / im.width * W);\n      ctx.drawImage(im, 0, y, W, h);\n      y += h + g;\n    });\n  } else if (mode.value === 'h') {\n    var scaled = imgs.map(function (im) { return { w: Math.round(im.width / im.height * 400), h: 400, im: im }; });\n    var totalW = scaled.reduce(function (s, x) { return s + x.w + g; }, -g);\n    canvas.width = totalW;\n    canvas.height = 400;\n    ctx = canvas.getContext('2d');\n    ctx.fillStyle = bg.value;\n    ctx.fillRect(0, 0, totalW, 400);\n    var x = 0;\n    scaled.forEach(function (s) {\n      ctx.drawImage(s.im, x, 0, s.w, s.h);\n      x += s.w + g;\n    });\n  } else {\n    var count = Math.min(9, imgs.length);\n    var cell = Math.floor((W - g * 4) / 3);\n    canvas.width = W;\n    canvas.height = cell * 3 + g * 2;\n    ctx = canvas.getContext('2d');\n    ctx.fillStyle = bg.value;\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n    for (var i = 0; i \u003c count; i++) {\n      var cx = (i % 3) * (cell + g);\n      var cy = Math.floor(i / 3) * (cell + g);\n      var im = imgs[i];\n      var scale2 = Math.max(cell / im.width, cell / im.height);\n      ctx.drawImage(im, cx + (cell - im.width * scale2) / 2, cy + (cell - im.height * scale2) / 2, im.width * scale2, im.height * scale2);\n    }\n  }\n  canvas.style.display = '';\n}\n[mode, gap, bg, width].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.row([T.button('添加图片（可多选，按顺序）', function () { multi.click(); }, true), status || T.el('span', {})]));\napp.appendChild(list);\napp.appendChild(T.row([mode, T.el('span', { text: '间距' }), gap, T.el('span', { text: '背景' }), bg, T.el('span', { text: '宽度' }), width]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载拼接结果', function () { T.dlCanvas(canvas, 'stitched.png'); }, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

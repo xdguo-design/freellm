@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>头像生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('头像生成', '生成个性化头像：几何图案 / 文字头像 / 随机配色', 'avatar-maker');
+var style = T.select([{value:'geo',label:'几何图案（自动生成）'},{value:'text',label:'文字头像'},{value:'identicon',label:'Identicon 风格'}],'geo');
+var text = T.input('FL', { class: 'grow', placeholder: '文字头像内容（1-2 字）' });
+var color = T.color('#1744E8');
+var size = T.select([{value:'256',label:'256px'},{value:'512',label:'512px'}],'512');
+var canvas = T.el('canvas', { style: 'width:280px;height:280px;border-radius:16px;border:1px solid var(--line)' });
+function render() {
+  var S = +size.value;
+  canvas.width = S;
+  canvas.height = S;
+  var ctx = canvas.getContext('2d');
+  var seedRand = function () { var x = Math.sin(Date.now() / 10000) * 10000; return x - Math.floor(x); };
+  var c = LU.Color.parse(color.value);
+  var hsl = LU.Color.rgbToHsl(c.r, c.g, c.b);
+  if (style.value === 'text') {
+    ctx.fillStyle = color.value;
+    ctx.fillRect(0, 0, S, S);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 ' + S / 2.2 + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText((text.value || 'A').slice(0, 2), S / 2, S / 2 + S / 40);
+  } else if (style.value === 'identicon') {
+    ctx.fillStyle = '#F0F0EE';
+    ctx.fillRect(0, 0, S, S);
+    ctx.fillStyle = color.value;
+    var cells = 5;
+    var cs = S / cells;
+    var rnd = function () { return Math.random(); };
+    for (var col = 0; col < Math.ceil(cells / 2); col++) {
+      for (var row = 0; row < cells; row++) {
+        if (rnd() > 0.5) {
+          ctx.fillRect(col * cs, row * cs, cs, cs);
+          ctx.fillRect((cells - 1 - col) * cs, row * cs, cs, cs);
+        }
+      }
+    }
+  } else {
+    var grad = ctx.createLinearGradient(0, 0, S, S);
+    grad.addColorStop(0, color.value);
+    grad.addColorStop(1, LU.Color.hex(LU.Color.hslToRgb(((hsl.h + 60) % 360) / 360, hsl.s, hsl.l)));
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(S / 2, S / 2, S / 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    var shapes = 5;
+    for (var i = 0; i < shapes; i++) {
+      var cx = S * (0.2 + Math.random() * 0.6);
+      var cy = S * (0.2 + Math.random() * 0.6);
+      var rr = S * (0.06 + Math.random() * 0.14);
+      ctx.beginPath();
+      if (Math.random() > 0.5) ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+      else ctx.rect(cx - rr, cy - rr, rr * 2, rr * 2);
+      ctx.fill();
+    }
+  }
+}
+[color, text, style].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.row([style, T.el('span', { text: '主色' }), color]));
+app.appendChild(T.row([text]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('换一批图案', function () { render(); }, true),
+  T.button('下载头像', function () { T.dlCanvas(canvas, 'avatar-' + size.value + '.png'); })]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "avatar-maker", "title": "头像生成", "desc": "生成个性化头像：几何图案 / 文字头像 / 随机配色", "scripts": "", "code": "var style = T.select([{value:'geo',label:'几何图案（自动生成）'},{value:'text',label:'文字头像'},{value:'identicon',label:'Identicon 风格'}],'geo');\nvar text = T.input('FL', { class: 'grow', placeholder: '文字头像内容（1-2 字）' });\nvar color = T.color('#1744E8');\nvar size = T.select([{value:'256',label:'256px'},{value:'512',label:'512px'}],'512');\nvar canvas = T.el('canvas', { style: 'width:280px;height:280px;border-radius:16px;border:1px solid var(--line)' });\nfunction render() {\n  var S = +size.value;\n  canvas.width = S;\n  canvas.height = S;\n  var ctx = canvas.getContext('2d');\n  var seedRand = function () { var x = Math.sin(Date.now() / 10000) * 10000; return x - Math.floor(x); };\n  var c = LU.Color.parse(color.value);\n  var hsl = LU.Color.rgbToHsl(c.r, c.g, c.b);\n  if (style.value === 'text') {\n    ctx.fillStyle = color.value;\n    ctx.fillRect(0, 0, S, S);\n    ctx.fillStyle = '#fff';\n    ctx.font = '600 ' + S / 2.2 + 'px sans-serif';\n    ctx.textAlign = 'center';\n    ctx.textBaseline = 'middle';\n    ctx.fillText((text.value || 'A').slice(0, 2), S / 2, S / 2 + S / 40);\n  } else if (style.value === 'identicon') {\n    ctx.fillStyle = '#F0F0EE';\n    ctx.fillRect(0, 0, S, S);\n    ctx.fillStyle = color.value;\n    var cells = 5;\n    var cs = S / cells;\n    var rnd = function () { return Math.random(); };\n    for (var col = 0; col \u003c Math.ceil(cells / 2); col++) {\n      for (var row = 0; row \u003c cells; row++) {\n        if (rnd() > 0.5) {\n          ctx.fillRect(col * cs, row * cs, cs, cs);\n          ctx.fillRect((cells - 1 - col) * cs, row * cs, cs, cs);\n        }\n      }\n    }\n  } else {\n    var grad = ctx.createLinearGradient(0, 0, S, S);\n    grad.addColorStop(0, color.value);\n    grad.addColorStop(1, LU.Color.hex(LU.Color.hslToRgb(((hsl.h + 60) % 360) / 360, hsl.s, hsl.l)));\n    ctx.fillStyle = grad;\n    ctx.beginPath();\n    ctx.arc(S / 2, S / 2, S / 2, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.fillStyle = 'rgba(255,255,255,.85)';\n    var shapes = 5;\n    for (var i = 0; i \u003c shapes; i++) {\n      var cx = S * (0.2 + Math.random() * 0.6);\n      var cy = S * (0.2 + Math.random() * 0.6);\n      var rr = S * (0.06 + Math.random() * 0.14);\n      ctx.beginPath();\n      if (Math.random() > 0.5) ctx.arc(cx, cy, rr, 0, Math.PI * 2);\n      else ctx.rect(cx - rr, cy - rr, rr * 2, rr * 2);\n      ctx.fill();\n    }\n  }\n}\n[color, text, style].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.row([style, T.el('span', { text: '主色' }), color]));\napp.appendChild(T.row([text]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('换一批图案', function () { render(); }, true),\n  T.button('下载头像', function () { T.dlCanvas(canvas, 'avatar-' + size.value + '.png'); })]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

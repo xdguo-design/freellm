@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>在线万年历 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线万年历', '可视化月历：农历 / 节气 / 节日标注，可翻页查询', 'calendar');
+function renderLunar(solarDate, box) {
+  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];
+  var lunar = LU.Lunar.solarToLunar(s);
+  var gzY = LU.Ganzhi.year(s[0]);
+  var gzD = LU.Ganzhi.day(solarDate);
+  var fests = LU.Fest.ofDate(solarDate);
+  var rows = [];
+  if (lunar) {
+    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);
+    var lunarGz = LU.Ganzhi.year(lunar.y);
+    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);
+  } else {
+    rows.push(['农历', '超出 1900-2098 支持范围']);
+  }
+  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);
+  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);
+  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);
+  T.clearEl(box).appendChild(T.kvTable(rows));
+}
+
+var cur = new Date();
+var grid = T.el('div');
+var title = T.el('span', { class: 'field', text: '' });
+function render() {
+  T.clearEl(grid);
+  var y = cur.getFullYear(), m = cur.getMonth();
+  title.textContent = y + ' 年 ' + (m + 1) + ' 月';
+  var first = new Date(y, m, 1);
+  var days = new Date(y, m + 1, 0).getDate();
+  var table = T.el('table', { class: 'ref', style: 'text-align:center' });
+  var thead = T.el('thead');
+  var trh = T.el('tr');
+  ['一', '二', '三', '四', '五', '六', '日'].forEach(function (w) {
+    trh.appendChild(T.el('th', { text: w, style: 'text-align:center' }));
+  });
+  thead.appendChild(trh);
+  table.appendChild(thead);
+  var tbody = T.el('tbody');
+  var tr = T.el('tr');
+  var startCol = (first.getDay() + 6) % 7;
+  for (var i = 0; i < startCol; i++) tr.appendChild(T.el('td'));
+  var terms = LU.Jieqi.yearTerms(y);
+  for (var day = 1; day <= days; day++) {
+    var d = new Date(y, m, day);
+    var lunar = LU.Lunar.solarToLunar([y, m + 1, day]);
+    var sub = '';
+    var fests = LU.Fest.ofDate(d);
+    var term = terms.find(function (t) { return t.month === m + 1 && t.day === day; });
+    if (term) sub = term.name;
+    else if (lunar && lunar.day === 1) sub = LU.Lunar.monthName(lunar.month, lunar.leap);
+    else if (fests.length) sub = fests[0];
+    else if (lunar) sub = LU.Lunar.dayName(lunar.day);
+    var today = T.fmtDate(d) === T.today();
+    var td = T.el('td', { style: 'padding:6px 2px;vertical-align:top;' + (today ? 'background:var(--accent-soft);border-radius:8px' : '') });
+    td.appendChild(T.el('div', { text: String(day), style: 'font-weight:' + (today ? '700' : '400') + ';font-size:15px' + (d.getDay() === 0 || d.getDay() === 6 ? ';color:var(--err)' : '') }));
+    td.appendChild(T.el('div', { text: sub, style: 'font-size:10px;color:var(--ink2);white-space:nowrap' }));
+    tr.appendChild(td);
+    if ((startCol + day) % 7 === 0) {
+      tbody.appendChild(tr);
+      tr = T.el('tr');
+    }
+  }
+  if (tr.children.length) tbody.appendChild(tr);
+  table.appendChild(tbody);
+  grid.appendChild(table);
+}
+LU.Lunar.load().then(render);
+app.appendChild(T.row([
+  T.button('‹ 上月', function () { cur.setMonth(cur.getMonth() - 1); render(); }),
+  title,
+  T.button('下月 ›', function () { cur.setMonth(cur.getMonth() + 1); render(); }),
+  T.button('今天', function () { cur = new Date(); render(); }, true)
+]));
+app.appendChild(grid);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "calendar", "title": "在线万年历", "desc": "可视化月历：农历 / 节气 / 节日标注，可翻页查询", "scripts": "", "code": "function renderLunar(solarDate, box) {\n  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];\n  var lunar = LU.Lunar.solarToLunar(s);\n  var gzY = LU.Ganzhi.year(s[0]);\n  var gzD = LU.Ganzhi.day(solarDate);\n  var fests = LU.Fest.ofDate(solarDate);\n  var rows = [];\n  if (lunar) {\n    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);\n    var lunarGz = LU.Ganzhi.year(lunar.y);\n    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);\n  } else {\n    rows.push(['农历', '超出 1900-2098 支持范围']);\n  }\n  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);\n  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);\n  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);\n  T.clearEl(box).appendChild(T.kvTable(rows));\n}\n\nvar cur = new Date();\nvar grid = T.el('div');\nvar title = T.el('span', { class: 'field', text: '' });\nfunction render() {\n  T.clearEl(grid);\n  var y = cur.getFullYear(), m = cur.getMonth();\n  title.textContent = y + ' 年 ' + (m + 1) + ' 月';\n  var first = new Date(y, m, 1);\n  var days = new Date(y, m + 1, 0).getDate();\n  var table = T.el('table', { class: 'ref', style: 'text-align:center' });\n  var thead = T.el('thead');\n  var trh = T.el('tr');\n  ['一', '二', '三', '四', '五', '六', '日'].forEach(function (w) {\n    trh.appendChild(T.el('th', { text: w, style: 'text-align:center' }));\n  });\n  thead.appendChild(trh);\n  table.appendChild(thead);\n  var tbody = T.el('tbody');\n  var tr = T.el('tr');\n  var startCol = (first.getDay() + 6) % 7;\n  for (var i = 0; i \u003c startCol; i++) tr.appendChild(T.el('td'));\n  var terms = LU.Jieqi.yearTerms(y);\n  for (var day = 1; day \u003c= days; day++) {\n    var d = new Date(y, m, day);\n    var lunar = LU.Lunar.solarToLunar([y, m + 1, day]);\n    var sub = '';\n    var fests = LU.Fest.ofDate(d);\n    var term = terms.find(function (t) { return t.month === m + 1 && t.day === day; });\n    if (term) sub = term.name;\n    else if (lunar && lunar.day === 1) sub = LU.Lunar.monthName(lunar.month, lunar.leap);\n    else if (fests.length) sub = fests[0];\n    else if (lunar) sub = LU.Lunar.dayName(lunar.day);\n    var today = T.fmtDate(d) === T.today();\n    var td = T.el('td', { style: 'padding:6px 2px;vertical-align:top;' + (today ? 'background:var(--accent-soft);border-radius:8px' : '') });\n    td.appendChild(T.el('div', { text: String(day), style: 'font-weight:' + (today ? '700' : '400') + ';font-size:15px' + (d.getDay() === 0 || d.getDay() === 6 ? ';color:var(--err)' : '') }));\n    td.appendChild(T.el('div', { text: sub, style: 'font-size:10px;color:var(--ink2);white-space:nowrap' }));\n    tr.appendChild(td);\n    if ((startCol + day) % 7 === 0) {\n      tbody.appendChild(tr);\n      tr = T.el('tr');\n    }\n  }\n  if (tr.children.length) tbody.appendChild(tr);\n  table.appendChild(tbody);\n  grid.appendChild(table);\n}\nLU.Lunar.load().then(render);\napp.appendChild(T.row([\n  T.button('‹ 上月', function () { cur.setMonth(cur.getMonth() - 1); render(); }),\n  title,\n  T.button('下月 ›', function () { cur.setMonth(cur.getMonth() + 1); render(); }),\n  T.button('今天', function () { cur = new Date(); render(); }, true)\n]));\napp.appendChild(grid);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

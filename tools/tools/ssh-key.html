@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>SSH 密钥生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('SSH 密钥生成', '生成 RSA SSH 密钥对：OpenSSH 格式公钥 + PEM 私钥', 'ssh-key');
+var bits = T.select([{value:'2048',label:'RSA-2048'},{value:'4096',label:'RSA-4096'}],'2048');
+var comment = T.input('user@host', { class: 'grow mono' });
+var pubOut = T.out('OpenSSH 公钥…');
+var privOut = T.out('PEM 私钥…');
+function toPem(b64, label) {
+  return '-----BEGIN ' + label + '-----\n' + b64.match(/.{1,64}/g).join('\n') + '\n-----END ' + label + '-----';
+}
+function sshString(bytes) {
+  return new Uint8Array([0, 0, 0, bytes.length].concat(Array.from(bytes)));
+}
+function u32(n) {
+  return new Uint8Array([(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255]);
+}
+function concat(arrs) {
+  var len = arrs.reduce(function (s, a) { return s + a.length; }, 0);
+  var out = new Uint8Array(len), off = 0;
+  arrs.forEach(function (a) { out.set(a, off); off += a.length; });
+  return out;
+}
+app.appendChild(T.pane([T.field('OpenSSH 公钥（authorized_keys 可直接使用）', pubOut), T.field('私钥 (PEM，保存为 id_rsa)', privOut)]));
+app.appendChild(T.row([T.el('span', { text: '长度' }), bits, T.el('span', { text: '备注' }), comment,
+  T.button('生成', function () {
+    crypto.subtle.generateKey(
+      { name: 'RSA-OAEP', modulusLength: +bits.value, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+      true, ['encrypt', 'decrypt']).then(function (kp) {
+      return Promise.all([
+        crypto.subtle.exportKey('spki', kp.publicKey),
+        crypto.subtle.exportKey('pkcs8', kp.privateKey)
+      ]);
+    }).then(function (keys) {
+      privOut.value = toPem(T.bytesToB64(keys[1]), 'PRIVATE KEY');
+      var D = (function (u8) {
+        var p = 0;
+        function tv() {
+          var tag = u8[p++], len = u8[p++];
+          if (len & 0x80) { var n = len & 0x7f; len = 0; for (var i = 0; i < n; i++) len = len * 256 + u8[p++]; }
+          var s = p; p += len;
+          return { tag: tag, start: s, len: len, end: p };
+        }
+        function children(t) {
+          var save = p, out = []; p = t.start;
+          while (p < t.end) { var c = tv(); out.push(c); }
+          p = save;
+          return out;
+        }
+        function int(t) { return u8.subarray(t.start, t.end); }
+        return { tv: tv, children: children, int: int };
+      })(keys[0]);
+      var seq = D.tv();
+      var spki = D.children(seq)[1];
+      var pk = D.children(spki)[1];
+      var ints = D.children(pk);
+      var e = ints[0], n = ints[1];
+      var eBytes = e.len > 1 && keys[0][e.start] === 0 ? keys[0].subarray(e.start + 1, e.end) : keys[0].subarray(e.start, e.end);
+      var nBytes = keys[0].subarray(n.start + 1, n.end);
+      var wire = concat([sshString(new TextEncoder().encode('ssh-rsa')), sshString(eBytes), sshString(nBytes)]);
+      pubOut.value = 'ssh-rsa ' + T.bytesToB64(wire) + ' ' + (comment.value || '');
+      T.toast('生成完成，公钥可直接放入 authorized_keys');
+    }).catch(function (err) { T.toast('失败：' + err.message); });
+  }, true),
+  T.button('下载私钥', function () { T.download('id_rsa', privOut.value); })]));
+T.el('div', {});
+app.appendChild(T.msg('提示：私钥请下载后保存到 ~/.ssh/id_rsa 并执行 chmod 600；OpenSSH 新版建议配合 ssh-keygen 转换为 openssh 格式。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "ssh-key", "title": "SSH 密钥生成", "desc": "生成 RSA SSH 密钥对：OpenSSH 格式公钥 + PEM 私钥", "scripts": "", "code": "var bits = T.select([{value:'2048',label:'RSA-2048'},{value:'4096',label:'RSA-4096'}],'2048');\nvar comment = T.input('user@host', { class: 'grow mono' });\nvar pubOut = T.out('OpenSSH 公钥…');\nvar privOut = T.out('PEM 私钥…');\nfunction toPem(b64, label) {\n  return '-----BEGIN ' + label + '-----\\n' + b64.match(/.{1,64}/g).join('\\n') + '\\n-----END ' + label + '-----';\n}\nfunction sshString(bytes) {\n  return new Uint8Array([0, 0, 0, bytes.length].concat(Array.from(bytes)));\n}\nfunction u32(n) {\n  return new Uint8Array([(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255]);\n}\nfunction concat(arrs) {\n  var len = arrs.reduce(function (s, a) { return s + a.length; }, 0);\n  var out = new Uint8Array(len), off = 0;\n  arrs.forEach(function (a) { out.set(a, off); off += a.length; });\n  return out;\n}\napp.appendChild(T.pane([T.field('OpenSSH 公钥（authorized_keys 可直接使用）', pubOut), T.field('私钥 (PEM，保存为 id_rsa)', privOut)]));\napp.appendChild(T.row([T.el('span', { text: '长度' }), bits, T.el('span', { text: '备注' }), comment,\n  T.button('生成', function () {\n    crypto.subtle.generateKey(\n      { name: 'RSA-OAEP', modulusLength: +bits.value, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },\n      true, ['encrypt', 'decrypt']).then(function (kp) {\n      return Promise.all([\n        crypto.subtle.exportKey('spki', kp.publicKey),\n        crypto.subtle.exportKey('pkcs8', kp.privateKey)\n      ]);\n    }).then(function (keys) {\n      privOut.value = toPem(T.bytesToB64(keys[1]), 'PRIVATE KEY');\n      var D = (function (u8) {\n        var p = 0;\n        function tv() {\n          var tag = u8[p++], len = u8[p++];\n          if (len & 0x80) { var n = len & 0x7f; len = 0; for (var i = 0; i \u003c n; i++) len = len * 256 + u8[p++]; }\n          var s = p; p += len;\n          return { tag: tag, start: s, len: len, end: p };\n        }\n        function children(t) {\n          var save = p, out = []; p = t.start;\n          while (p \u003c t.end) { var c = tv(); out.push(c); }\n          p = save;\n          return out;\n        }\n        function int(t) { return u8.subarray(t.start, t.end); }\n        return { tv: tv, children: children, int: int };\n      })(keys[0]);\n      var seq = D.tv();\n      var spki = D.children(seq)[1];\n      var pk = D.children(spki)[1];\n      var ints = D.children(pk);\n      var e = ints[0], n = ints[1];\n      var eBytes = e.len > 1 && keys[0][e.start] === 0 ? keys[0].subarray(e.start + 1, e.end) : keys[0].subarray(e.start, e.end);\n      var nBytes = keys[0].subarray(n.start + 1, n.end);\n      var wire = concat([sshString(new TextEncoder().encode('ssh-rsa')), sshString(eBytes), sshString(nBytes)]);\n      pubOut.value = 'ssh-rsa ' + T.bytesToB64(wire) + ' ' + (comment.value || '');\n      T.toast('生成完成，公钥可直接放入 authorized_keys');\n    }).catch(function (err) { T.toast('失败：' + err.message); });\n  }, true),\n  T.button('下载私钥', function () { T.download('id_rsa', privOut.value); })]));\nT.el('div', {});\napp.appendChild(T.msg('提示：私钥请下载后保存到 ~/.ssh/id_rsa 并执行 chmod 600；OpenSSH 新版建议配合 ssh-keygen 转换为 openssh 格式。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

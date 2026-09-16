@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSV ↔ Markdown 表格 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSV ↔ Markdown 表格', 'CSV 与 Markdown 表格互转', 'csv2md');
+var input = T.textarea('name,age\n张三,25\n李四,30');
+input.value = 'name,age\n张三,25\n李四,30';
+var output = T.out('');
+var mode = T.select([{value:'c2m',label:'CSV → Markdown'},{value:'m2c',label:'Markdown → CSV'}],'c2m');
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    if (mode.value === 'c2m') {
+      var rows = LF.Csv.parse(v);
+      var md = '| ' + rows[0].join(' | ') + ' |\n|' + rows[0].map(function () { return ' --- |'; }).join('') + '\n';
+      rows.slice(1).forEach(function (r) { md += '| ' + r.join(' | ') + ' |\n'; });
+      output.value = md.trim();
+    } else {
+      var rows2 = v.split('\n').filter(function (l) { return l.trim() && !/^\s*\|[\s:|-]+\|\s*$/.test(l); })
+        .map(function (l) { return l.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map(function (c) { return c.trim(); }); });
+      output.value = LF.Csv.stringify(rows2);
+    }
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "csv2md", "title": "CSV ↔ Markdown 表格", "desc": "CSV 与 Markdown 表格互转", "scripts": "", "code": "var input = T.textarea('name,age\\n张三,25\\n李四,30');\ninput.value = 'name,age\\n张三,25\\n李四,30';\nvar output = T.out('');\nvar mode = T.select([{value:'c2m',label:'CSV → Markdown'},{value:'m2c',label:'Markdown → CSV'}],'c2m');\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    if (mode.value === 'c2m') {\n      var rows = LF.Csv.parse(v);\n      var md = '| ' + rows[0].join(' | ') + ' |\\n|' + rows[0].map(function () { return ' --- |'; }).join('') + '\\n';\n      rows.slice(1).forEach(function (r) { md += '| ' + r.join(' | ') + ' |\\n'; });\n      output.value = md.trim();\n    } else {\n      var rows2 = v.split('\\n').filter(function (l) { return l.trim() && !/^\\s*\\|[\\s:|-]+\\|\\s*$/.test(l); })\n        .map(function (l) { return l.replace(/^\\s*\\|/, '').replace(/\\|\\s*$/, '').split('|').map(function (c) { return c.trim(); }); });\n      output.value = LF.Csv.stringify(rows2);\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

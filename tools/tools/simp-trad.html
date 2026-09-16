@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>简繁体转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('简繁体转换', '简体 ↔ 繁体中文互转（离线字级映射，覆盖常用汉字）', 'simp-trad');
+var input = T.textarea('免费工具，在线使用，无需安装。');
+input.value = '免费工具，在线使用，无需安装。';
+var output = T.out('');
+var mode = T.select([{value:'s2t',label:'简 → 繁'},{value:'t2s',label:'繁 → 简'}],'s2t');
+var status = T.badge('加载映射…');
+var MAP = null;
+fetch('/tools/data/s2t.json').then(function (r) { return r.json(); }).then(function (d) {
+  MAP = d;
+  status.textContent = '映射就绪（简→繁 ' + Object.keys(d.s2t).length + ' 字）';
+  status.className = 'badge ok';
+  run();
+});
+function run() {
+  if (!MAP || !input.value) { output.value = ''; return; }
+  var map = mode.value === 's2t' ? MAP.s2t : MAP.t2s;
+  output.value = Array.from(input.value).map(function (ch) { return map[ch] || ch; }).join('');
+}
+input.addEventListener('input', T.debounce(run, 200));
+app.appendChild(T.pane([T.field('文本', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, status, T.btnCopy(function () { return output.value; }),
+  T.el('span', { text: '字级转换，个别词汇差异（如 软件/軟體）需人工校对' })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "simp-trad", "title": "简繁体转换", "desc": "简体 ↔ 繁体中文互转（离线字级映射，覆盖常用汉字）", "scripts": "", "code": "var input = T.textarea('免费工具，在线使用，无需安装。');\ninput.value = '免费工具，在线使用，无需安装。';\nvar output = T.out('');\nvar mode = T.select([{value:'s2t',label:'简 → 繁'},{value:'t2s',label:'繁 → 简'}],'s2t');\nvar status = T.badge('加载映射…');\nvar MAP = null;\nfetch('/tools/data/s2t.json').then(function (r) { return r.json(); }).then(function (d) {\n  MAP = d;\n  status.textContent = '映射就绪（简→繁 ' + Object.keys(d.s2t).length + ' 字）';\n  status.className = 'badge ok';\n  run();\n});\nfunction run() {\n  if (!MAP || !input.value) { output.value = ''; return; }\n  var map = mode.value === 's2t' ? MAP.s2t : MAP.t2s;\n  output.value = Array.from(input.value).map(function (ch) { return map[ch] || ch; }).join('');\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('文本', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, status, T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '字级转换，个别词汇差异（如 软件/軟體）需人工校对' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

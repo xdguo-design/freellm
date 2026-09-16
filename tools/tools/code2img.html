@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>代码转图片 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('代码转图片', '代码截图美化：生成带窗口样式的代码图片（PNG 下载）', 'code2img');
+var input = T.textarea('function hello() {\n  console.log("Hello, FreeLLM!");\n}');
+input.value = 'function hello() {\n  console.log("Hello, FreeLLM!");\n}';
+var title = T.input('hello.js', { class: 'grow mono' });
+var theme = T.select([{value:'dark',label:'深色'},{value:'light',label:'浅色'}],'dark');
+var pad = T.range(16, 80, 2, 40);
+var canvas = T.el('canvas', { style: 'max-width:100%;border-radius:12px;border:1px solid var(--line)' });
+var STYLE_D = { bg: '#1E2127', win: '#2F3440', text: '#ECEAE6', dot: ['#FF5F56', '#FFBD2E', '#27C93F'], dotbg: '#3A3F4B' };
+var STYLE_L = { bg: '#F4F2EE', win: '#FFFFFF', text: '#2F3437', dot: ['#FF5F56', '#FFBD2E', '#27C93F'], dotbg: '#EAEAEA' };
+function render() {
+  var code = input.value || ' ';
+  var lines = code.split('\n');
+  var st = theme.value === 'dark' ? STYLE_D : STYLE_L;
+  var fs = 14, lh = 22;
+  var measure = T.el('canvas').getContext('2d');
+  measure.font = fs + 'px monospace';
+  var maxLen = Math.max.apply(null, lines.map(function (l) { return l.length; }));
+  var winW = Math.max(420, measure.measureText('x'.repeat(Math.min(maxLen, 90))).width + 60);
+  var winH = lines.length * lh + 66;
+  var W = winW + pad.value * 2, H = winH + pad.value * 2;
+  canvas.width = W * 2;
+  canvas.height = H * 2;
+  var ctx = canvas.getContext('2d');
+  ctx.scale(2, 2);
+  ctx.fillStyle = st.bg;
+  ctx.fillRect(0, 0, W, H);
+  var x = pad.value, y = pad.value;
+  ctx.fillStyle = st.dotbg;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x, y, winW, winH, 10);
+  else ctx.rect(x, y, winW, winH);
+  ctx.fill();
+  STYLE_D.dot.forEach(function (c, i) {
+    ctx.fillStyle = c;
+    ctx.beginPath();
+    ctx.arc(x + 20 + i * 18, y + 18, 5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.fillStyle = 'rgba(255,255,255,.5)';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(title.value, x + winW / 2, y + 22);
+  ctx.textAlign = 'left';
+  ctx.font = fs + 'px monospace';
+  ctx.fillStyle = st.text;
+  lines.forEach(function (l, i) {
+    ctx.fillText(l, x + 20, y + 48 + i * lh);
+  });
+}
+[input, title, theme, pad].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.pane([T.field('代码', input)], true));
+app.appendChild(T.row([T.el('span', { text: '窗口标题' }), title, theme, T.el('span', { text: '边距' }), pad]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载 PNG（2x 高清）', function () { T.dlCanvas(canvas, title.value.replace(/\.\w+$/, '') + '.png'); }, true),
+  T.button('复制到剪贴板', function () {
+    canvas.toBlob(function (b) {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': b })]).then(function () { T.toast('已复制图片'); }, function () { T.toast('复制失败，请使用下载'); });
+    });
+  })]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "code2img", "title": "代码转图片", "desc": "代码截图美化：生成带窗口样式的代码图片（PNG 下载）", "scripts": "", "code": "var input = T.textarea('function hello() {\\n  console.log(\"Hello, FreeLLM!\");\\n}');\ninput.value = 'function hello() {\\n  console.log(\"Hello, FreeLLM!\");\\n}';\nvar title = T.input('hello.js', { class: 'grow mono' });\nvar theme = T.select([{value:'dark',label:'深色'},{value:'light',label:'浅色'}],'dark');\nvar pad = T.range(16, 80, 2, 40);\nvar canvas = T.el('canvas', { style: 'max-width:100%;border-radius:12px;border:1px solid var(--line)' });\nvar STYLE_D = { bg: '#1E2127', win: '#2F3440', text: '#ECEAE6', dot: ['#FF5F56', '#FFBD2E', '#27C93F'], dotbg: '#3A3F4B' };\nvar STYLE_L = { bg: '#F4F2EE', win: '#FFFFFF', text: '#2F3437', dot: ['#FF5F56', '#FFBD2E', '#27C93F'], dotbg: '#EAEAEA' };\nfunction render() {\n  var code = input.value || ' ';\n  var lines = code.split('\\n');\n  var st = theme.value === 'dark' ? STYLE_D : STYLE_L;\n  var fs = 14, lh = 22;\n  var measure = T.el('canvas').getContext('2d');\n  measure.font = fs + 'px monospace';\n  var maxLen = Math.max.apply(null, lines.map(function (l) { return l.length; }));\n  var winW = Math.max(420, measure.measureText('x'.repeat(Math.min(maxLen, 90))).width + 60);\n  var winH = lines.length * lh + 66;\n  var W = winW + pad.value * 2, H = winH + pad.value * 2;\n  canvas.width = W * 2;\n  canvas.height = H * 2;\n  var ctx = canvas.getContext('2d');\n  ctx.scale(2, 2);\n  ctx.fillStyle = st.bg;\n  ctx.fillRect(0, 0, W, H);\n  var x = pad.value, y = pad.value;\n  ctx.fillStyle = st.dotbg;\n  ctx.beginPath();\n  if (ctx.roundRect) ctx.roundRect(x, y, winW, winH, 10);\n  else ctx.rect(x, y, winW, winH);\n  ctx.fill();\n  STYLE_D.dot.forEach(function (c, i) {\n    ctx.fillStyle = c;\n    ctx.beginPath();\n    ctx.arc(x + 20 + i * 18, y + 18, 5, 0, Math.PI * 2);\n    ctx.fill();\n  });\n  ctx.fillStyle = 'rgba(255,255,255,.5)';\n  ctx.font = '12px sans-serif';\n  ctx.textAlign = 'center';\n  ctx.fillText(title.value, x + winW / 2, y + 22);\n  ctx.textAlign = 'left';\n  ctx.font = fs + 'px monospace';\n  ctx.fillStyle = st.text;\n  lines.forEach(function (l, i) {\n    ctx.fillText(l, x + 20, y + 48 + i * lh);\n  });\n}\n[input, title, theme, pad].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.pane([T.field('代码', input)], true));\napp.appendChild(T.row([T.el('span', { text: '窗口标题' }), title, theme, T.el('span', { text: '边距' }), pad]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载 PNG（2x 高清）', function () { T.dlCanvas(canvas, title.value.replace(/\\.\\w+$/, '') + '.png'); }, true),\n  T.button('复制到剪贴板', function () {\n    canvas.toBlob(function (b) {\n      navigator.clipboard.write([new ClipboardItem({ 'image/png': b })]).then(function () { T.toast('已复制图片'); }, function () { T.toast('复制失败，请使用下载'); });\n    });\n  })]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

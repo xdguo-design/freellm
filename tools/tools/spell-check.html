@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>拼写检查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('拼写检查', '英文拼写检查：浏览器原生校对 + 常见拼写错误模式 + 重复词检测', 'spell-check');
+var input = T.textarea('Thsi is a tset of teh spell checker. I I like free tools.');
+input.value = 'Thsi is a tset of teh spell checker. I I like free tools.';
+var box = T.el('div');
+var note = T.el('div', { class: 'msg', style: 'background:var(--accent-soft);color:var(--accent)' });
+note.textContent = '下方输入框已启用浏览器原生拼写校对（红色下划线）。此外自动检测：重复单词、i 未大写、常见错拼模式。';
+var checkArea = T.el('textarea', { rows: '6', spellcheck: 'true', style: 'width:100%' });
+checkArea.value = input.value;
+checkArea.addEventListener('input', function () { input.value = checkArea.value; run(); });
+var TYPOS = { teh: 'the', recieve: 'receive', seperate: 'separate', definately: 'definitely', occured: 'occurred', untill: 'until', wich: 'which', becuase: 'because', accomodate: 'accommodate', embarass: 'embarrass', goverment: 'government', tommorow: 'tomorrow', lenght: 'length', wiht: 'with', thier: 'their', freind: 'friend', beleive: 'believe', acheive: 'achieve', calender: 'calendar', occurence: 'occurrence' };
+function run() {
+  T.clearEl(box);
+  var v = checkArea.value;
+  var issues = [];
+  var tokens = v.match(/[A-Za-z']+|\s+|[^\sA-Za-z']+/g) || [];
+  var prevWord = '';
+  tokens.forEach(function (tk, i) {
+    var low = tk.toLowerCase();
+    if (TYPOS[low]) issues.push(['错拼「' + tk + '」→ 建议 ' + TYPOS[low], '…' + v.slice(Math.max(0, v.indexOf(tk) - 20), v.indexOf(tk) + 20) + '…']);
+    else if (/^[a-z]+$/.test(tk) && tk === 'i') issues.push(['字母 i 应大写', '第 ' + i + ' 个词']);
+    if (/^[A-Za-z]+$/.test(tk) && low === prevWord.toLowerCase()) issues.push(['重复单词「' + tk + '」', '连续出现']);
+    if (/^[A-Za-z']+$/.test(tk)) prevWord = tk; else prevWord = '';
+  });
+  var words = (v.match(/[A-Za-z']+/g) || []);
+  box.appendChild(T.el('p', { text: '共 ' + words.length + ' 个英文单词，发现 ' + issues.length + ' 个疑似问题', style: 'color:var(--ink2)' }));
+  if (issues.length) {
+    box.appendChild(T.refTable(['问题', '上下文'], issues));
+  } else {
+    box.appendChild(T.msg('✓ 未发现常见拼写问题', 'ok'));
+  }
+}
+app.appendChild(note);
+app.appendChild(T.pane([T.field('检查文本（已启用浏览器拼写校对）', checkArea)], true));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "spell-check", "title": "拼写检查", "desc": "英文拼写检查：浏览器原生校对 + 常见拼写错误模式 + 重复词检测", "scripts": "", "code": "var input = T.textarea('Thsi is a tset of teh spell checker. I I like free tools.');\ninput.value = 'Thsi is a tset of teh spell checker. I I like free tools.';\nvar box = T.el('div');\nvar note = T.el('div', { class: 'msg', style: 'background:var(--accent-soft);color:var(--accent)' });\nnote.textContent = '下方输入框已启用浏览器原生拼写校对（红色下划线）。此外自动检测：重复单词、i 未大写、常见错拼模式。';\nvar checkArea = T.el('textarea', { rows: '6', spellcheck: 'true', style: 'width:100%' });\ncheckArea.value = input.value;\ncheckArea.addEventListener('input', function () { input.value = checkArea.value; run(); });\nvar TYPOS = { teh: 'the', recieve: 'receive', seperate: 'separate', definately: 'definitely', occured: 'occurred', untill: 'until', wich: 'which', becuase: 'because', accomodate: 'accommodate', embarass: 'embarrass', goverment: 'government', tommorow: 'tomorrow', lenght: 'length', wiht: 'with', thier: 'their', freind: 'friend', beleive: 'believe', acheive: 'achieve', calender: 'calendar', occurence: 'occurrence' };\nfunction run() {\n  T.clearEl(box);\n  var v = checkArea.value;\n  var issues = [];\n  var tokens = v.match(/[A-Za-z']+|\\s+|[^\\sA-Za-z']+/g) || [];\n  var prevWord = '';\n  tokens.forEach(function (tk, i) {\n    var low = tk.toLowerCase();\n    if (TYPOS[low]) issues.push(['错拼「' + tk + '」→ 建议 ' + TYPOS[low], '…' + v.slice(Math.max(0, v.indexOf(tk) - 20), v.indexOf(tk) + 20) + '…']);\n    else if (/^[a-z]+$/.test(tk) && tk === 'i') issues.push(['字母 i 应大写', '第 ' + i + ' 个词']);\n    if (/^[A-Za-z]+$/.test(tk) && low === prevWord.toLowerCase()) issues.push(['重复单词「' + tk + '」', '连续出现']);\n    if (/^[A-Za-z']+$/.test(tk)) prevWord = tk; else prevWord = '';\n  });\n  var words = (v.match(/[A-Za-z']+/g) || []);\n  box.appendChild(T.el('p', { text: '共 ' + words.length + ' 个英文单词，发现 ' + issues.length + ' 个疑似问题', style: 'color:var(--ink2)' }));\n  if (issues.length) {\n    box.appendChild(T.refTable(['问题', '上下文'], issues));\n  } else {\n    box.appendChild(T.msg('✓ 未发现常见拼写问题', 'ok'));\n  }\n}\napp.appendChild(note);\napp.appendChild(T.pane([T.field('检查文本（已启用浏览器拼写校对）', checkArea)], true));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

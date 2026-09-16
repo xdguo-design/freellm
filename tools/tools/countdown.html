@@ -2,82 +2,75 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>倒计时器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('倒计时器', '设定目标日期的实时倒计时', 'countdown');
-
-  var targetDate = T.el('input', { type: 'datetime-local', style: 'flex:1' });
-  var title = T.el('input', { type: 'text', placeholder: '事件名称', value: '新年', style: 'flex:1' });
-
-  var display = T.el('div', {
-    style: 'font-size:2.5em;font-family:monospace;text-align:center;padding:30px;background:var(--bg);border-radius:12px;border:1px solid var(--line)',
-    text: '00天 00:00:00'
-  });
-
-  var eventName = T.el('div', { class: 'badge blue', style: 'font-size:1.2em;text-align:center;margin:16px 0' });
-
-  var timer = null;
-
-  function update() {
-    var target = new Date(targetDate.value);
-    if (isNaN(target.getTime())) {
-      display.textContent = '请设置目标时间';
-      return;
-    }
-
-    var now = new Date();
-    var diff = target - now;
-
-    if (diff <= 0) {
-      display.textContent = '⏰ 时间到！';
-      display.style.color = '#e74c3c';
-      clearInterval(timer);
-      return;
-    }
-
-    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    display.textContent = days + '天 ' + 
-      String(hours).padStart(2, '0') + ':' + 
-      String(minutes).padStart(2, '0') + ':' + 
-      String(seconds).padStart(2, '0');
-    display.style.color = '';
-
-    eventName.textContent = title.value || '倒计时';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('倒计时器', '目标日期实时倒计时：天 / 时 / 分 / 秒', 'countdown');
+var target = T.el('input', { type: 'datetime-local', style: 'flex:1' });
+var defaultTarget = new Date(Date.now() + 86400000);
+target.value = new Date(defaultTarget.getTime() - defaultTarget.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+var big = T.el('div', { style: 'display:flex;gap:14px;justify-content:center;margin:26px 0;flex-wrap:wrap' });
+var cells = [];
+['天', '时', '分', '秒'].forEach(function (label) {
+  var cell = T.el('div', { style: 'text-align:center;min-width:86px;padding:14px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)' });
+  var v = T.el('div', { text: '00', style: 'font:400 42px/1 var(--font-serif)' });
+  var l = T.el('div', { text: label, style: 'color:var(--ink2);font-size:12px;margin-top:4px' });
+  cell.appendChild(v); cell.appendChild(l);
+  big.appendChild(cell);
+  cells.push(v);
+});
+var status = T.badge('—');
+var done = false;
+function tick() {
+  if (!target.value) return;
+  var diff = new Date(target.value) - new Date();
+  if (diff <= 0) {
+    cells.forEach(function (c) { c.textContent = '00'; });
+    status.textContent = '🎉 时间到！';
+    status.className = 'badge ok';
+    document.title = '🎉 时间到';
+    return;
   }
-
-  function start() {
-    clearInterval(timer);
-    update();
-    timer = setInterval(update, 1000);
-  }
-
-  targetDate.addEventListener('change', start);
-  title.addEventListener('input', update);
-
-  // Default: next new year
-  var now = new Date();
-  var nextYear = new Date(now.getFullYear() + 1, 0, 1);
-  targetDate.value = nextYear.toISOString().slice(0, 16);
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '事件' }), title]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '目标时间' }), targetDate]));
-  app.appendChild(eventName);
-  app.appendChild(display);
-
-  start();
+  done = false;
+  status.textContent = '倒计时中';
+  status.className = 'badge blue';
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor(diff % 86400000 / 3600000);
+  var m = Math.floor(diff % 3600000 / 60000);
+  var s = Math.floor(diff % 60000 / 1000);
+  [d, h, m, s].forEach(function (val, i) { cells[i].textContent = String(val).padStart(2, '0'); });
+}
+setInterval(tick, 250);
+app.appendChild(T.row([T.el('span', { text: '目标时间' }), target, status]));
+app.appendChild(big);
+app.appendChild(T.row([T.button('设为明天', function () {
+  var t = new Date(Date.now() + 86400000);
+  target.value = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+  tick();
+}), T.button('10 分钟后', function () {
+  var t = new Date(Date.now() + 600000);
+  target.value = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+  tick();
+})]));
+tick();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "countdown", "title": "倒计时器", "desc": "目标日期实时倒计时：天 / 时 / 分 / 秒", "scripts": "", "code": "var target = T.el('input', { type: 'datetime-local', style: 'flex:1' });\nvar defaultTarget = new Date(Date.now() + 86400000);\ntarget.value = new Date(defaultTarget.getTime() - defaultTarget.getTimezoneOffset() * 60000).toISOString().slice(0, 19);\nvar big = T.el('div', { style: 'display:flex;gap:14px;justify-content:center;margin:26px 0;flex-wrap:wrap' });\nvar cells = [];\n['天', '时', '分', '秒'].forEach(function (label) {\n  var cell = T.el('div', { style: 'text-align:center;min-width:86px;padding:14px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)' });\n  var v = T.el('div', { text: '00', style: 'font:400 42px/1 var(--font-serif)' });\n  var l = T.el('div', { text: label, style: 'color:var(--ink2);font-size:12px;margin-top:4px' });\n  cell.appendChild(v); cell.appendChild(l);\n  big.appendChild(cell);\n  cells.push(v);\n});\nvar status = T.badge('—');\nvar done = false;\nfunction tick() {\n  if (!target.value) return;\n  var diff = new Date(target.value) - new Date();\n  if (diff \u003c= 0) {\n    cells.forEach(function (c) { c.textContent = '00'; });\n    status.textContent = '🎉 时间到！';\n    status.className = 'badge ok';\n    document.title = '🎉 时间到';\n    return;\n  }\n  done = false;\n  status.textContent = '倒计时中';\n  status.className = 'badge blue';\n  var d = Math.floor(diff / 86400000);\n  var h = Math.floor(diff % 86400000 / 3600000);\n  var m = Math.floor(diff % 3600000 / 60000);\n  var s = Math.floor(diff % 60000 / 1000);\n  [d, h, m, s].forEach(function (val, i) { cells[i].textContent = String(val).padStart(2, '0'); });\n}\nsetInterval(tick, 250);\napp.appendChild(T.row([T.el('span', { text: '目标时间' }), target, status]));\napp.appendChild(big);\napp.appendChild(T.row([T.button('设为明天', function () {\n  var t = new Date(Date.now() + 86400000);\n  target.value = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 19);\n  tick();\n}), T.button('10 分钟后', function () {\n  var t = new Date(Date.now() + 600000);\n  target.value = new Date(t.getTime() - t.getTimezoneOffset() * 60000).toISOString().slice(0, 19);\n  tick();\n})]));\ntick();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

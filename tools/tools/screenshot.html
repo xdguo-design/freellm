@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>屏幕截图 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('屏幕截图', '浏览器截图（屏幕 / 窗口 / 标签页）+ 标注，需授权', 'screenshot');
+var btn = T.button('开始截图（选择屏幕/窗口/标签页）', null, true);
+var video = T.el('video', { autoplay: '', muted: '', style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none;cursor:crosshair' });
+var color = T.color('#FF3B30');
+var width = T.range(2, 20, 1, 6);
+var status = T.badge('未开始');
+var stream = null;
+var drawing = false, ctx2 = null;
+btn.onclick = function () {
+  navigator.mediaDevices.getDisplayMedia({ video: true }).then(function (s) {
+    stream = s;
+    video.srcObject = s;
+    video.style.display = '';
+    status.textContent = '共享中：点击"捕捉当前画面"定格标注';
+    s.getVideoTracks()[0].addEventListener('ended', function () {
+      status.textContent = '共享已结束';
+    });
+  }).catch(function (e) { T.toast('未授权或取消：' + e.message); });
+};
+function capture() {
+  if (!video.videoWidth) { T.toast('请先开始共享'); return; }
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx2 = canvas.getContext('2d');
+  ctx2.drawImage(video, 0, 0);
+  canvas.style.display = '';
+  status.textContent = '已捕捉，可在图上拖拽画笔标注';
+}
+function undo() {
+  if (!ctx2) return;
+  if (video.videoWidth) {
+    ctx2.drawImage(video, 0, 0);
+    T.toast('已重绘（标注清除）');
+  }
+}
+canvas.addEventListener('pointerdown', function (e) {
+  drawing = true;
+  var rect = canvas.getBoundingClientRect();
+  var sx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  var sy = (e.clientY - rect.top) * (canvas.height / rect.height);
+  ctx2.strokeStyle = color.value;
+  ctx2.lineWidth = +width.value;
+  ctx2.lineCap = 'round';
+  ctx2.beginPath();
+  ctx2.moveTo(sx, sy);
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!drawing) return;
+  var rect = canvas.getBoundingClientRect();
+  ctx2.lineTo((e.clientX - rect.left) * (canvas.width / rect.width), (e.clientY - rect.top) * (canvas.height / rect.height));
+  ctx2.stroke();
+});
+window.addEventListener('pointerup', function () { drawing = false; });
+app.appendChild(T.row([btn, T.button('捕捉当前画面', capture), status]));
+app.appendChild(video);
+app.appendChild(T.row([T.el('span', { text: '画笔颜色' }), color, T.el('span', { text: '粗细' }), width,
+  T.button('清除标注', undo), T.button('下载截图', function () { T.dlCanvas(canvas, 'screenshot.png'); }, true)]));
+app.appendChild(canvas);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "screenshot", "title": "屏幕截图", "desc": "浏览器截图（屏幕 / 窗口 / 标签页）+ 标注，需授权", "scripts": "", "code": "var btn = T.button('开始截图（选择屏幕/窗口/标签页）', null, true);\nvar video = T.el('video', { autoplay: '', muted: '', style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none;cursor:crosshair' });\nvar color = T.color('#FF3B30');\nvar width = T.range(2, 20, 1, 6);\nvar status = T.badge('未开始');\nvar stream = null;\nvar drawing = false, ctx2 = null;\nbtn.onclick = function () {\n  navigator.mediaDevices.getDisplayMedia({ video: true }).then(function (s) {\n    stream = s;\n    video.srcObject = s;\n    video.style.display = '';\n    status.textContent = '共享中：点击\"捕捉当前画面\"定格标注';\n    s.getVideoTracks()[0].addEventListener('ended', function () {\n      status.textContent = '共享已结束';\n    });\n  }).catch(function (e) { T.toast('未授权或取消：' + e.message); });\n};\nfunction capture() {\n  if (!video.videoWidth) { T.toast('请先开始共享'); return; }\n  canvas.width = video.videoWidth;\n  canvas.height = video.videoHeight;\n  ctx2 = canvas.getContext('2d');\n  ctx2.drawImage(video, 0, 0);\n  canvas.style.display = '';\n  status.textContent = '已捕捉，可在图上拖拽画笔标注';\n}\nfunction undo() {\n  if (!ctx2) return;\n  if (video.videoWidth) {\n    ctx2.drawImage(video, 0, 0);\n    T.toast('已重绘（标注清除）');\n  }\n}\ncanvas.addEventListener('pointerdown', function (e) {\n  drawing = true;\n  var rect = canvas.getBoundingClientRect();\n  var sx = (e.clientX - rect.left) * (canvas.width / rect.width);\n  var sy = (e.clientY - rect.top) * (canvas.height / rect.height);\n  ctx2.strokeStyle = color.value;\n  ctx2.lineWidth = +width.value;\n  ctx2.lineCap = 'round';\n  ctx2.beginPath();\n  ctx2.moveTo(sx, sy);\n  canvas.setPointerCapture(e.pointerId);\n});\ncanvas.addEventListener('pointermove', function (e) {\n  if (!drawing) return;\n  var rect = canvas.getBoundingClientRect();\n  ctx2.lineTo((e.clientX - rect.left) * (canvas.width / rect.width), (e.clientY - rect.top) * (canvas.height / rect.height));\n  ctx2.stroke();\n});\nwindow.addEventListener('pointerup', function () { drawing = false; });\napp.appendChild(T.row([btn, T.button('捕捉当前画面', capture), status]));\napp.appendChild(video);\napp.appendChild(T.row([T.el('span', { text: '画笔颜色' }), color, T.el('span', { text: '粗细' }), width,\n  T.button('清除标注', undo), T.button('下载截图', function () { T.dlCanvas(canvas, 'screenshot.png'); }, true)]));\napp.appendChild(canvas);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

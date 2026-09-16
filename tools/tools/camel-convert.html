@@ -2,79 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>变量名转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('变量名转换', '驼峰/下划线/短横线命名互转', 'camel-convert');
-
-  var mode = T.select([
-    { value: 'camel', label: '驼峰命名 (camelCase)' },
-    { value: 'pascal', label: '帕斯卡命名 (PascalCase)' },
-    { value: 'snake', label: '下划线命名 (snake_case)' },
-    { value: 'kebab', label: '短横线命名 (kebab-case)' },
-    { value: 'constant', label: '常量命名 (CONSTANT_CASE)' },
-    { value: 'dot', label: '点号命名 (dot.case)' }
-  ]);
-  var input = T.textarea('输入变量名（支持任意格式）...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function toWords(str) {
-    return str
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
-      .replace(/[-_./\\]/g, ' ')
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(Boolean);
-  }
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; return; }
-    var words = toWords(v);
-    switch (mode.value) {
-      case 'camel':
-        output.value = words.map(function (w, i) {
-          return i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1);
-        }).join('');
-        break;
-      case 'pascal':
-        output.value = words.map(function (w) {
-          return w.charAt(0).toUpperCase() + w.slice(1);
-        }).join('');
-        break;
-      case 'snake':
-        output.value = words.join('_');
-        break;
-      case 'kebab':
-        output.value = words.join('-');
-        break;
-      case 'constant':
-        output.value = words.map(function (w) { return w.toUpperCase(); }).join('_');
-        break;
-      case 'dot':
-        output.value = words.join('.');
-        break;
-    }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('变量名转换', 'camelCase / PascalCase / snake_case / kebab-case / CONSTANT_CASE 互转', 'camel-convert');
+var input = T.input('userProfileData', { class: 'grow mono' });
+var box = T.el('div', { class: 'pane single' });
+function words(s) {
+  return s.replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .split(/[\s_\-\.]+/)
+    .filter(Boolean)
+    .map(function (w) { return w.toLowerCase(); });
+}
+function run() {
+  var w = words(input.value.trim());
+  if (!w.length) { T.clearEl(box); return; }
+  var camel = w[0] + w.slice(1).map(function (x) { return x[0].toUpperCase() + x.slice(1); }).join('');
+  var pascal = w.map(function (x) { return x[0].toUpperCase() + x.slice(1); }).join('');
+  var snake = w.join('_');
+  var kebab = w.join('-');
+  var constant = w.join('_').toUpperCase();
+  T.clearEl(box).appendChild(T.kvTable([
+    ['camelCase', camel], ['PascalCase', pascal], ['snake_case', snake],
+    ['kebab-case', kebab], ['CONSTANT_CASE', constant]
+  ]));
+}
+input.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '变量名' }), input, T.el('span', { text: '输入任意命名风格自动识别分词' })]));
+app.appendChild(box);
+app.appendChild(T.row([T.button('复制全部', function () {
+  var rows = Array.from(box.querySelectorAll('tr')).map(function (tr) {
+    var tds = tr.querySelectorAll('td');
+    return tds[0].textContent + ' = ' + tds[1].textContent;
+  });
+  T.copy(rows.join('\n'));
+})]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "camel-convert", "title": "变量名转换", "desc": "camelCase / PascalCase / snake_case / kebab-case / CONSTANT_CASE 互转", "scripts": "", "code": "var input = T.input('userProfileData', { class: 'grow mono' });\nvar box = T.el('div', { class: 'pane single' });\nfunction words(s) {\n  return s.replace(/([a-z0-9])([A-Z])/g, '$1 $2')\n    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')\n    .split(/[\\s_\\-\\.]+/)\n    .filter(Boolean)\n    .map(function (w) { return w.toLowerCase(); });\n}\nfunction run() {\n  var w = words(input.value.trim());\n  if (!w.length) { T.clearEl(box); return; }\n  var camel = w[0] + w.slice(1).map(function (x) { return x[0].toUpperCase() + x.slice(1); }).join('');\n  var pascal = w.map(function (x) { return x[0].toUpperCase() + x.slice(1); }).join('');\n  var snake = w.join('_');\n  var kebab = w.join('-');\n  var constant = w.join('_').toUpperCase();\n  T.clearEl(box).appendChild(T.kvTable([\n    ['camelCase', camel], ['PascalCase', pascal], ['snake_case', snake],\n    ['kebab-case', kebab], ['CONSTANT_CASE', constant]\n  ]));\n}\ninput.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '变量名' }), input, T.el('span', { text: '输入任意命名风格自动识别分词' })]));\napp.appendChild(box);\napp.appendChild(T.row([T.button('复制全部', function () {\n  var rows = Array.from(box.querySelectorAll('tr')).map(function (tr) {\n    var tds = tr.querySelectorAll('td');\n    return tds[0].textContent + ' = ' + tds[1].textContent;\n  });\n  T.copy(rows.join('\\n'));\n})]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

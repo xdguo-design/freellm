@@ -2,43 +2,49 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>字数统计 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('字数统计', '字符/单词/行/段落计数', 'word-count');
-
-  var input = T.textarea('输入文本...');
-  var stats = T.el('div', { class: 'output dark', style: 'white-space:pre-wrap' });
-
-  var copyBtn = T.copyBtn(function () { return stats.textContent; });
-
-  function run() {
-    var v = input.value;
-    if (!v) {
-      stats.textContent = '字符: 0\n单词: 0\n行数: 0\n段落: 0\n中文字符: 0';
-      return;
-    }
-    var chars = v.length;
-    var words = v.trim() ? v.trim().split(/\s+/).length : 0;
-    var lines = v.split('\n').length;
-    var paragraphs = v.trim() ? v.trim().split(/\n\s*\n/).length : 0;
-    var chinese = (v.match(/[\u4e00-\u9fa5]/g) || []).length;
-    stats.textContent = '字符: ' + chars + '\n单词: ' + words + '\n行数: ' + lines + '\n段落: ' + paragraphs + '\n中文字符: ' + chinese;
-  }
-
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(stats);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('字数统计', '字符 / 单词 / 中文字 / 行 / 段落计数，预估阅读时长', 'word-count');
+var input = T.textarea('在此粘贴或输入文本…');
+var box = T.el('div', { class: 'row' });
+var stats = T.el('div');
+function run() {
+  var v = input.value;
+  var chars = v.length;
+  var noSpace = v.replace(/\s/g, '').length;
+  var cn = (v.match(/[\u4e00-\u9fff]/g) || []).length;
+  var en = (v.match(/[a-zA-Z]+/g) || []).length;
+  var lines = v ? v.split('\n').length : 0;
+  var paras = v.trim() ? v.trim().split(/\n\s*\n/).length : 0;
+  var words = en + Math.ceil(cn / 2);
+  var minutes = Math.max(1, Math.round(words / 400));
+  var arr = [[chars, '字符'], [noSpace, '字符(不含空格)'], [cn, '中文字符'], [en, '英文单词'], [lines, '行数'], [paras, '段落'], ['约 ' + minutes + ' 分钟', '阅读时长']];
+  T.clearEl(box);
+  arr.forEach(function (p) { box.appendChild(T.stat(p[0], p[1])); });
+}
+input.addEventListener('input', T.debounce(run, 150));
+app.appendChild(T.pane([T.field('文本', input)], true));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "word-count", "title": "字数统计", "desc": "字符 / 单词 / 中文字 / 行 / 段落计数，预估阅读时长", "scripts": "", "code": "var input = T.textarea('在此粘贴或输入文本…');\nvar box = T.el('div', { class: 'row' });\nvar stats = T.el('div');\nfunction run() {\n  var v = input.value;\n  var chars = v.length;\n  var noSpace = v.replace(/\\s/g, '').length;\n  var cn = (v.match(/[\\u4e00-\\u9fff]/g) || []).length;\n  var en = (v.match(/[a-zA-Z]+/g) || []).length;\n  var lines = v ? v.split('\\n').length : 0;\n  var paras = v.trim() ? v.trim().split(/\\n\\s*\\n/).length : 0;\n  var words = en + Math.ceil(cn / 2);\n  var minutes = Math.max(1, Math.round(words / 400));\n  var arr = [[chars, '字符'], [noSpace, '字符(不含空格)'], [cn, '中文字符'], [en, '英文单词'], [lines, '行数'], [paras, '段落'], ['约 ' + minutes + ' 分钟', '阅读时长']];\n  T.clearEl(box);\n  arr.forEach(function (p) { box.appendChild(T.stat(p[0], p[1])); });\n}\ninput.addEventListener('input', T.debounce(run, 150));\napp.appendChild(T.pane([T.field('文本', input)], true));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

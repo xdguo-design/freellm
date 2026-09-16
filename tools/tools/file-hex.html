@@ -2,79 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>文件与 Hex 互转 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('文件与 Hex 互转', '文件与十六进制字符串互转', 'file-hex');
-
-  var mode = T.select([
-    { value: 'toHex', label: '文件 → Hex' },
-    { value: 'toFile', label: 'Hex → 文件' }
-  ]);
-
-  var fileBtn = T.button('选择文件', function () {
-    T.readFile('/*', function (data, file) {
-      var hex = Array.from(new Uint8Array(data)).map(function (b) {
-        return b.toString(16).padStart(2, '0');
-      }).join('');
-      output.value = hex;
-      fileName.textContent = file.name + ' (' + file.size + ' bytes)';
-    });
-  }, true);
-
-  var input = T.textarea('输入十六进制字符串...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var fileName = T.el('span', { class: 'badge', text: '未选择文件' });
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载文件', function () {
-    var hex = output.value.replace(/\s/g, '');
-    var bytes = new Uint8Array(hex.length / 2);
-    for (var i = 0; i < bytes.length; i++) {
-      bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
-    }
-    T.download('output.bin', bytes);
-  });
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; return; }
-    try {
-      var clean = v.replace(/[^0-9a-fA-F]/g, '');
-      if (clean.length % 2) throw new Error('Hex 长度必须为偶数');
-      var bytes = new Uint8Array(clean.length / 2);
-      for (var i = 0; i < bytes.length; i++) {
-        bytes[i] = parseInt(clean.substr(i * 2, 2), 16);
-      }
-      output.value = new TextDecoder().decode(bytes);
-    } catch (e) {
-      output.value = '⚠ 转换失败: ' + e.message;
-    }
-  }
-
-  mode.addEventListener('change', function () {
-    if (mode.value === 'toHex') {
-      input.placeholder = '请上方选择文件...';
-      output.placeholder = '结果';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文件与 Hex 互转', '任意文件 ↔ 十六进制字符串，支持拖拽与下载还原', 'file-hex');
+var input = T.textarea('粘贴十六进制字符串，或选择文件…');
+var output = T.out('输出…');
+var dir = T.select([{value:'f2h',label:'文件 → Hex'},{value:'h2f',label:'Hex → 文件'}],'f2h');
+var info = T.badge('—');
+function run() {
+  var v = input.value;
+  if (!v) { output.value = ''; return; }
+  try {
+    if (dir.value === 'f2h') {
+      var inp = T.el('input', { type: 'file', style: 'display:none' });
+      inp.addEventListener('change', function () {
+        var f = inp.files[0]; if (!f) return;
+        var fr = new FileReader();
+        fr.onload = function () {
+          output.value = T.bytesToHex(new Uint8Array(fr.result));
+          info.textContent = f.name + ' · ' + T.fmtBytes(f.size);
+        };
+        fr.readAsArrayBuffer(f);
+      });
+      document.body.appendChild(inp); inp.click();
     } else {
-      input.placeholder = '输入十六进制字符串...';
-      output.placeholder = '文件内容';
+      var bytes = T.hexToBytes(v);
+      output.value = '(Uint8Array ' + bytes.length + ' 字节，点击下方按钮下载)';
+      info.textContent = bytes.length + ' 字节';
+      window._hexBytes = bytes;
     }
-  });
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, fileBtn, fileName, copyBtn, downloadBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([dir, T.button('执行', run, true), T.button('下载还原的文件', function () {
+  if (window._hexBytes) T.download('restored.bin', window._hexBytes);
+  else T.toast('请先执行 Hex → 文件');
+}), info]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "file-hex", "title": "文件与 Hex 互转", "desc": "任意文件 ↔ 十六进制字符串，支持拖拽与下载还原", "scripts": "", "code": "var input = T.textarea('粘贴十六进制字符串，或选择文件…');\nvar output = T.out('输出…');\nvar dir = T.select([{value:'f2h',label:'文件 → Hex'},{value:'h2f',label:'Hex → 文件'}],'f2h');\nvar info = T.badge('—');\nfunction run() {\n  var v = input.value;\n  if (!v) { output.value = ''; return; }\n  try {\n    if (dir.value === 'f2h') {\n      var inp = T.el('input', { type: 'file', style: 'display:none' });\n      inp.addEventListener('change', function () {\n        var f = inp.files[0]; if (!f) return;\n        var fr = new FileReader();\n        fr.onload = function () {\n          output.value = T.bytesToHex(new Uint8Array(fr.result));\n          info.textContent = f.name + ' · ' + T.fmtBytes(f.size);\n        };\n        fr.readAsArrayBuffer(f);\n      });\n      document.body.appendChild(inp); inp.click();\n    } else {\n      var bytes = T.hexToBytes(v);\n      output.value = '(Uint8Array ' + bytes.length + ' 字节，点击下方按钮下载)';\n      info.textContent = bytes.length + ' 字节';\n      window._hexBytes = bytes;\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([dir, T.button('执行', run, true), T.button('下载还原的文件', function () {\n  if (window._hexBytes) T.download('restored.bin', window._hexBytes);\n  else T.toast('请先执行 Hex → 文件');\n}), info]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

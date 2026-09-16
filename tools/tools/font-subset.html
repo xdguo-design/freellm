@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>字体子集化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('字体子集化', '提取文本用到的字符 + 生成 unicode-range 按需加载方案', 'font-subset');
+var fontPick = T.el('input', { type: 'file', accept: '.ttf,.otf,.woff,.woff2', style: 'display:none' });
+document.body.appendChild(fontPick);
+var textIn = T.textarea('输入实际会用到字符的文本。例如文章标题、菜单、按钮文字。\n字体文件只会显示统计信息；子集方案用 unicode-range 按需拆分。', true);
+var rangeOut = T.out('');
+var info = T.badge('—');
+var fontName = T.input('MyFont', { class: 'grow mono' });
+var chars = [];
+function analyze() {
+  var unique = Array.from(new Set(Array.from(textIn.value))).filter(function (c) { return /\S/.test(c); });
+  chars = unique;
+  var cps = unique.map(function (c) { return c.codePointAt(0); }).sort(function (a, b) { return a - b; });
+  if (!cps.length) { rangeOut.value = ''; info.textContent = '输入文本后生成'; return; }
+  var ranges = [];
+  var start = cps[0], prev = cps[0];
+  for (var i = 1; i <= cps.length; i++) {
+    if (cps[i] !== prev + 1) {
+      if (start === prev) ranges.push('U+' + start.toString(16).toUpperCase().padStart(4, '0'));
+      else ranges.push('U+' + start.toString(16).toUpperCase().padStart(4, '0') + '-' + prev.toString(16).toUpperCase().padStart(4, '0'));
+      start = cps[i];
+    }
+    prev = cps[i];
+  }
+  var rangeStr = ranges.join(', ');
+  rangeOut.value = '/* 仅加载以下字符区间，浏览器按需下载字体 */\n@font-face {\n  font-family: "' + fontName.value + '";\n  src: url("./fonts/subset.woff2") format("woff2");\n  unicode-range: ' + rangeStr + ';\n  font-display: swap;\n}';
+  info.textContent = '共 ' + unique.length + ' 个唯一字符 · ' + ranges.length + ' 个区间';
+  info.className = 'badge ok';
+}
+fontPick.addEventListener('change', function () {
+  var f = fontPick.files[0];
+  if (f) {
+    info.textContent = f.name + '（' + T.fmtBytes(f.size) + '）· 浏览器无法直接重打包字体，请配合 pyftsubset 使用';
+    info.className = 'badge blue';
+  }
+});
+[textIn, fontName].forEach(function (el) { el.addEventListener('input', T.debounce(analyze, 300)); });
+app.appendChild(T.row([T.button('选择字体文件（查看信息）', function () { fontPick.click(); }), info]));
+app.appendChild(T.pane([T.field('使用的文本', textIn)], true));
+app.appendChild(T.row([T.el('span', { text: '字体族名' }), fontName]));
+app.appendChild(T.pane([T.field('unicode-range 按需加载 CSS', rangeOut)], true));
+app.appendChild(T.row([T.btnCopy(function () { return rangeOut.value; }), T.button('下载字符清单', function () {
+  T.download('subset-chars.txt', chars.join(''));
+}), T.el('span', { text: '完整子集化命令：pyftsubset font.ttf --text-file=chars.txt --flavor=woff2' })]));
+analyze();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "font-subset", "title": "字体子集化", "desc": "提取文本用到的字符 + 生成 unicode-range 按需加载方案", "scripts": "", "code": "var fontPick = T.el('input', { type: 'file', accept: '.ttf,.otf,.woff,.woff2', style: 'display:none' });\ndocument.body.appendChild(fontPick);\nvar textIn = T.textarea('输入实际会用到字符的文本。例如文章标题、菜单、按钮文字。\\n字体文件只会显示统计信息；子集方案用 unicode-range 按需拆分。', true);\nvar rangeOut = T.out('');\nvar info = T.badge('—');\nvar fontName = T.input('MyFont', { class: 'grow mono' });\nvar chars = [];\nfunction analyze() {\n  var unique = Array.from(new Set(Array.from(textIn.value))).filter(function (c) { return /\\S/.test(c); });\n  chars = unique;\n  var cps = unique.map(function (c) { return c.codePointAt(0); }).sort(function (a, b) { return a - b; });\n  if (!cps.length) { rangeOut.value = ''; info.textContent = '输入文本后生成'; return; }\n  var ranges = [];\n  var start = cps[0], prev = cps[0];\n  for (var i = 1; i \u003c= cps.length; i++) {\n    if (cps[i] !== prev + 1) {\n      if (start === prev) ranges.push('U+' + start.toString(16).toUpperCase().padStart(4, '0'));\n      else ranges.push('U+' + start.toString(16).toUpperCase().padStart(4, '0') + '-' + prev.toString(16).toUpperCase().padStart(4, '0'));\n      start = cps[i];\n    }\n    prev = cps[i];\n  }\n  var rangeStr = ranges.join(', ');\n  rangeOut.value = '/* 仅加载以下字符区间，浏览器按需下载字体 */\\n@font-face {\\n  font-family: \"' + fontName.value + '\";\\n  src: url(\"./fonts/subset.woff2\") format(\"woff2\");\\n  unicode-range: ' + rangeStr + ';\\n  font-display: swap;\\n}';\n  info.textContent = '共 ' + unique.length + ' 个唯一字符 · ' + ranges.length + ' 个区间';\n  info.className = 'badge ok';\n}\nfontPick.addEventListener('change', function () {\n  var f = fontPick.files[0];\n  if (f) {\n    info.textContent = f.name + '（' + T.fmtBytes(f.size) + '）· 浏览器无法直接重打包字体，请配合 pyftsubset 使用';\n    info.className = 'badge blue';\n  }\n});\n[textIn, fontName].forEach(function (el) { el.addEventListener('input', T.debounce(analyze, 300)); });\napp.appendChild(T.row([T.button('选择字体文件（查看信息）', function () { fontPick.click(); }), info]));\napp.appendChild(T.pane([T.field('使用的文本', textIn)], true));\napp.appendChild(T.row([T.el('span', { text: '字体族名' }), fontName]));\napp.appendChild(T.pane([T.field('unicode-range 按需加载 CSS', rangeOut)], true));\napp.appendChild(T.row([T.btnCopy(function () { return rangeOut.value; }), T.button('下载字符清单', function () {\n  T.download('subset-chars.txt', chars.join(''));\n}), T.el('span', { text: '完整子集化命令：pyftsubset font.ttf --text-file=chars.txt --flavor=woff2' })]));\nanalyze();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

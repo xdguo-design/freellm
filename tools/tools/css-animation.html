@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS 动画生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS 动画生成器', '关键帧动画可视化：属性 / 时长 / 缓动 / 延迟 / 循环', 'css-animation');
+var prop = T.select([{value:'translateX',label:'位移 translateX'},{value:'rotate',label:'旋转 rotate'},{value:'scale',label:'缩放 scale'},{value:'opacity',label:'透明度 opacity'}],'translateX');
+var from = T.num(0, { style: 'width:70px' }), to = T.num(120, { style: 'width:70px' });
+var dur = T.range(0.2, 5, 0.1, 1.5), delay = T.range(0, 2, 0.1, 0);
+var ease = T.select(['ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(.68,-.55,.27,1.55)'], 'ease-in-out');
+var infinite = T.check('无限循环', true);
+var alternate = T.check('往复 alternate', true);
+var stage = T.el('div', { style: 'height:120px;display:flex;align-items:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px;padding-left:10px' });
+var ball = T.el('div', { style: 'width:44px;height:44px;border-radius:50%;background:var(--accent)' });
+stage.appendChild(ball);
+var output = T.out('');
+function unit(v) { return prop.value === 'opacity' ? String(v) : prop.value === 'rotate' ? v + 'deg' : v + 'px'; }
+function run() {
+  var kf = '@keyframes freellm-anim {\n  from { ' + prop.value + ': ' + unit(+from.value) + '; }\n  to { ' + prop.value + ': ' + unit(+to.value) + '; }\n}';
+  var style = 'freellm-anim ' + dur.value + 's ' + ease.value + ' ' + delay.value + 's ' + (infinite._input.checked ? 'infinite ' : '1 ') + (alternate._input.checked ? 'alternate' : 'normal');
+  ball.style.animation = 'none';
+  void ball.offsetWidth;
+  ball.style.animation = style;
+  output.value = kf + '\n\n.animated {\n  animation: ' + style + ';\n}';
+}
+[prop, from, to, dur, delay, ease, infinite._input, alternate._input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(stage);
+app.appendChild(T.row([T.el('span', { text: '属性' }), prop, T.el('span', { text: '从' }), from, T.el('span', { text: '到' }), to]));
+app.appendChild(T.row([T.el('span', { text: '时长' }), dur, T.el('span', { text: '延迟' }), delay, T.el('span', { text: '缓动' }), ease]));
+app.appendChild(T.row([infinite, alternate]));
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-animation", "title": "CSS 动画生成器", "desc": "关键帧动画可视化：属性 / 时长 / 缓动 / 延迟 / 循环", "scripts": "", "code": "var prop = T.select([{value:'translateX',label:'位移 translateX'},{value:'rotate',label:'旋转 rotate'},{value:'scale',label:'缩放 scale'},{value:'opacity',label:'透明度 opacity'}],'translateX');\nvar from = T.num(0, { style: 'width:70px' }), to = T.num(120, { style: 'width:70px' });\nvar dur = T.range(0.2, 5, 0.1, 1.5), delay = T.range(0, 2, 0.1, 0);\nvar ease = T.select(['ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(.68,-.55,.27,1.55)'], 'ease-in-out');\nvar infinite = T.check('无限循环', true);\nvar alternate = T.check('往复 alternate', true);\nvar stage = T.el('div', { style: 'height:120px;display:flex;align-items:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px;padding-left:10px' });\nvar ball = T.el('div', { style: 'width:44px;height:44px;border-radius:50%;background:var(--accent)' });\nstage.appendChild(ball);\nvar output = T.out('');\nfunction unit(v) { return prop.value === 'opacity' ? String(v) : prop.value === 'rotate' ? v + 'deg' : v + 'px'; }\nfunction run() {\n  var kf = '@keyframes freellm-anim {\\n  from { ' + prop.value + ': ' + unit(+from.value) + '; }\\n  to { ' + prop.value + ': ' + unit(+to.value) + '; }\\n}';\n  var style = 'freellm-anim ' + dur.value + 's ' + ease.value + ' ' + delay.value + 's ' + (infinite._input.checked ? 'infinite ' : '1 ') + (alternate._input.checked ? 'alternate' : 'normal');\n  ball.style.animation = 'none';\n  void ball.offsetWidth;\n  ball.style.animation = style;\n  output.value = kf + '\\n\\n.animated {\\n  animation: ' + style + ';\\n}';\n}\n[prop, from, to, dur, delay, ease, infinite._input, alternate._input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(stage);\napp.appendChild(T.row([T.el('span', { text: '属性' }), prop, T.el('span', { text: '从' }), from, T.el('span', { text: '到' }), to]));\napp.appendChild(T.row([T.el('span', { text: '时长' }), dur, T.el('span', { text: '延迟' }), delay, T.el('span', { text: '缓动' }), ease]));\napp.appendChild(T.row([infinite, alternate]));\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

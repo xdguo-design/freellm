@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>连续处理工作台 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('连续处理工作台', '多步流水线批量处理：调整尺寸 → 滤镜 → 加水印，流程自动保存', 'image-workspace');
+var steps = [];
+try { steps = JSON.parse(localStorage.getItem('freellm-workspace-steps') || '[]'); } catch (e) {}
+var img = null;
+var drop = T.msg('① 点击载入一张图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '20px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var pipeline = T.el('div');
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var STEP_TYPES = {
+  resize: { label: '调整尺寸', params: [{ k: 'width', label: '宽度', def: 800 }, { k: 'height', label: '高度', def: 0 }] },
+  grayscale: { label: '灰度', params: [] },
+  brightness: { label: '亮度', params: [{ k: 'value', label: '%', def: 120 }] },
+  contrast: { label: '对比度', params: [{ k: 'value', label: '%', def: 120 }] },
+  saturate: { label: '饱和度', params: [{ k: 'value', label: '%', def: 140 }] },
+  blur: { label: '模糊', params: [{ k: 'value', label: 'px', def: 3 }] },
+  rotate: { label: '旋转', params: [{ k: 'value', label: '角度', def: 90 }] },
+  watermark: { label: '文字水印', params: [{ k: 'text', label: '文字', def: '© FreeLLM' }] }
+};
+function saveSteps() { localStorage.setItem('freellm-workspace-steps', JSON.stringify(steps)); }
+function addStep(type) {
+  var st = STEP_TYPES[type];
+  var step = { type: type, params: {} };
+  st.params.forEach(function (p) { step.params[p.k] = p.def; });
+  steps.push(step);
+  saveSteps();
+  renderPipeline();
+}
+function renderPipeline() {
+  T.clearEl(pipeline);
+  steps.forEach(function (step, i) {
+    var st = STEP_TYPES[step.type];
+    var row = T.row([T.badge((i + 1) + '. ' + st.label)]);
+    st.params.forEach(function (p) {
+      var inp2 = T.input(step.params[p.k], { class: 'mono', style: 'width:110px', placeholder: p.label });
+      inp2.addEventListener('input', function () { step.params[p.k] = inp2.value; saveSteps(); apply(); });
+      row.appendChild(T.el('span', { text: p.label }));
+      row.appendChild(inp2);
+    });
+    row.appendChild(T.button('↑', function () {
+      if (i > 0) { var t = steps[i - 1]; steps[i - 1] = steps[i]; steps[i] = t; saveSteps(); renderPipeline(); apply(); }
+    }));
+    row.appendChild(T.button('✕', function () { steps.splice(i, 1); saveSteps(); renderPipeline(); apply(); }));
+    pipeline.appendChild(row);
+  });
+}
+function apply() {
+  if (!img) return;
+  var cur = T.el('canvas');
+  cur.width = img.width;
+  cur.height = img.height;
+  cur.getContext('2d').drawImage(img, 0, 0);
+  steps.forEach(function (step) {
+    var ctx = cur.getContext('2d');
+    if (step.type === 'resize') {
+      var nw = +step.params.width || cur.width;
+      var nh = +step.params.height || Math.round(cur.height / cur.width * nw);
+      var next = T.el('canvas');
+      next.width = nw;
+      next.height = nh;
+      next.getContext('2d').drawImage(cur, 0, 0, nw, nh);
+      cur = next;
+    } else if (step.type === 'rotate') {
+      var rad = (+step.params.value || 90) * Math.PI / 180;
+      var sin = Math.abs(Math.sin(rad)), cos = Math.abs(Math.cos(rad));
+      var next2 = T.el('canvas');
+      next2.width = cur.width * cos + cur.height * sin;
+      next2.height = cur.width * sin + cur.height * cos;
+      var c2 = next2.getContext('2d');
+      c2.translate(next2.width / 2, next2.height / 2);
+      c2.rotate(rad);
+      c2.drawImage(cur, -cur.width / 2, -cur.height / 2);
+      cur = next2;
+    } else if (step.type === 'watermark') {
+      ctx.font = '600 ' + Math.max(14, cur.width / 30) + 'px sans-serif';
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = '#fff';
+      ctx.fillText(step.params.text, 20, cur.height - 24);
+      ctx.globalAlpha = 1;
+    } else {
+      var filters = { grayscale: 'grayscale(1)', brightness: 'brightness(' + step.params.value + '%)', contrast: 'contrast(' + step.params.value + '%)', saturate: 'saturate(' + step.params.value + '%)', blur: 'blur(' + step.params.value + 'px)' };
+      var next3 = T.el('canvas');
+      next3.width = cur.width;
+      next3.height = cur.height;
+      var c3 = next3.getContext('2d');
+      c3.filter = filters[step.type];
+      c3.drawImage(cur, 0, 0);
+      cur = next3;
+    }
+  });
+  canvas.width = cur.width;
+  canvas.height = cur.height;
+  canvas.getContext('2d').drawImage(cur, 0, 0);
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; drop.textContent = '② 已载入 ' + i.width + '×' + i.height + '，点击下方步骤加工'; apply(); }); });
+drop.addEventListener('click', function () { inp.click(); });
+app.appendChild(drop);
+app.appendChild(T.el('span', { text: '② 添加处理步骤（顺序执行）', class: 'field' }));
+var typeRow = T.el('div', { class: 'row' });
+Object.keys(STEP_TYPES).forEach(function (k) {
+  typeRow.appendChild(T.button(STEP_TYPES[k].label, function () { addStep(k); }));
+});
+app.appendChild(typeRow);
+app.appendChild(pipeline);
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载结果', function () { T.dlCanvas(canvas, 'workspace.png'); }, true),
+  T.button('清空流程', function () { steps = []; saveSteps(); renderPipeline(); }),
+  T.el('span', { text: '流程配置自动保存在本地' })]));
+renderPipeline();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-workspace", "title": "连续处理工作台", "desc": "多步流水线批量处理：调整尺寸 → 滤镜 → 加水印，流程自动保存", "scripts": "", "code": "var steps = [];\ntry { steps = JSON.parse(localStorage.getItem('freellm-workspace-steps') || '[]'); } catch (e) {}\nvar img = null;\nvar drop = T.msg('① 点击载入一张图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '20px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar pipeline = T.el('div');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar STEP_TYPES = {\n  resize: { label: '调整尺寸', params: [{ k: 'width', label: '宽度', def: 800 }, { k: 'height', label: '高度', def: 0 }] },\n  grayscale: { label: '灰度', params: [] },\n  brightness: { label: '亮度', params: [{ k: 'value', label: '%', def: 120 }] },\n  contrast: { label: '对比度', params: [{ k: 'value', label: '%', def: 120 }] },\n  saturate: { label: '饱和度', params: [{ k: 'value', label: '%', def: 140 }] },\n  blur: { label: '模糊', params: [{ k: 'value', label: 'px', def: 3 }] },\n  rotate: { label: '旋转', params: [{ k: 'value', label: '角度', def: 90 }] },\n  watermark: { label: '文字水印', params: [{ k: 'text', label: '文字', def: '© FreeLLM' }] }\n};\nfunction saveSteps() { localStorage.setItem('freellm-workspace-steps', JSON.stringify(steps)); }\nfunction addStep(type) {\n  var st = STEP_TYPES[type];\n  var step = { type: type, params: {} };\n  st.params.forEach(function (p) { step.params[p.k] = p.def; });\n  steps.push(step);\n  saveSteps();\n  renderPipeline();\n}\nfunction renderPipeline() {\n  T.clearEl(pipeline);\n  steps.forEach(function (step, i) {\n    var st = STEP_TYPES[step.type];\n    var row = T.row([T.badge((i + 1) + '. ' + st.label)]);\n    st.params.forEach(function (p) {\n      var inp2 = T.input(step.params[p.k], { class: 'mono', style: 'width:110px', placeholder: p.label });\n      inp2.addEventListener('input', function () { step.params[p.k] = inp2.value; saveSteps(); apply(); });\n      row.appendChild(T.el('span', { text: p.label }));\n      row.appendChild(inp2);\n    });\n    row.appendChild(T.button('↑', function () {\n      if (i > 0) { var t = steps[i - 1]; steps[i - 1] = steps[i]; steps[i] = t; saveSteps(); renderPipeline(); apply(); }\n    }));\n    row.appendChild(T.button('✕', function () { steps.splice(i, 1); saveSteps(); renderPipeline(); apply(); }));\n    pipeline.appendChild(row);\n  });\n}\nfunction apply() {\n  if (!img) return;\n  var cur = T.el('canvas');\n  cur.width = img.width;\n  cur.height = img.height;\n  cur.getContext('2d').drawImage(img, 0, 0);\n  steps.forEach(function (step) {\n    var ctx = cur.getContext('2d');\n    if (step.type === 'resize') {\n      var nw = +step.params.width || cur.width;\n      var nh = +step.params.height || Math.round(cur.height / cur.width * nw);\n      var next = T.el('canvas');\n      next.width = nw;\n      next.height = nh;\n      next.getContext('2d').drawImage(cur, 0, 0, nw, nh);\n      cur = next;\n    } else if (step.type === 'rotate') {\n      var rad = (+step.params.value || 90) * Math.PI / 180;\n      var sin = Math.abs(Math.sin(rad)), cos = Math.abs(Math.cos(rad));\n      var next2 = T.el('canvas');\n      next2.width = cur.width * cos + cur.height * sin;\n      next2.height = cur.width * sin + cur.height * cos;\n      var c2 = next2.getContext('2d');\n      c2.translate(next2.width / 2, next2.height / 2);\n      c2.rotate(rad);\n      c2.drawImage(cur, -cur.width / 2, -cur.height / 2);\n      cur = next2;\n    } else if (step.type === 'watermark') {\n      ctx.font = '600 ' + Math.max(14, cur.width / 30) + 'px sans-serif';\n      ctx.globalAlpha = 0.5;\n      ctx.fillStyle = '#fff';\n      ctx.fillText(step.params.text, 20, cur.height - 24);\n      ctx.globalAlpha = 1;\n    } else {\n      var filters = { grayscale: 'grayscale(1)', brightness: 'brightness(' + step.params.value + '%)', contrast: 'contrast(' + step.params.value + '%)', saturate: 'saturate(' + step.params.value + '%)', blur: 'blur(' + step.params.value + 'px)' };\n      var next3 = T.el('canvas');\n      next3.width = cur.width;\n      next3.height = cur.height;\n      var c3 = next3.getContext('2d');\n      c3.filter = filters[step.type];\n      c3.drawImage(cur, 0, 0);\n      cur = next3;\n    }\n  });\n  canvas.width = cur.width;\n  canvas.height = cur.height;\n  canvas.getContext('2d').drawImage(cur, 0, 0);\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; drop.textContent = '② 已载入 ' + i.width + '×' + i.height + '，点击下方步骤加工'; apply(); }); });\ndrop.addEventListener('click', function () { inp.click(); });\napp.appendChild(drop);\napp.appendChild(T.el('span', { text: '② 添加处理步骤（顺序执行）', class: 'field' }));\nvar typeRow = T.el('div', { class: 'row' });\nObject.keys(STEP_TYPES).forEach(function (k) {\n  typeRow.appendChild(T.button(STEP_TYPES[k].label, function () { addStep(k); }));\n});\napp.appendChild(typeRow);\napp.appendChild(pipeline);\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载结果', function () { T.dlCanvas(canvas, 'workspace.png'); }, true),\n  T.button('清空流程', function () { steps = []; saveSteps(); renderPipeline(); }),\n  T.el('span', { text: '流程配置自动保存在本地' })]));\nrenderPipeline();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

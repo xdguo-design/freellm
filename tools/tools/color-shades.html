@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>色阶生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('色阶生成器', '颜色深浅渐变序列（Tints & Shades），10 级可复制', 'color-shades');
+var color = T.color('#1744E8');
+var steps = T.num(10, { min: 3, max: 20, style: 'width:70px' });
+var box = T.el('div');
+var strip = T.el('div', { style: 'display:flex;gap:4px;height:70px;margin:12px 0;border-radius:10px;overflow:hidden' });
+function run() {
+  var rgb = LU.Color.parse(color.value);
+  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);
+  var n = +steps.value || 10;
+  T.clearEl(strip);
+  var rows = [];
+  for (var i = 0; i < n; i++) {
+    var t = i / (n - 1);
+    var l = t < 0.5 ? hsl.l + (1 - hsl.l) * (0.5 - t) * 2 : hsl.l - hsl.l * (t - 0.5) * 2;
+    var c = LU.Color.hex(LU.Color.hslToRgb(hsl.h / 360, hsl.s, Math.max(0, Math.min(1, l))));
+    var d = T.el('div', { style: 'flex:1;background:' + c + ';cursor:pointer;position:relative', title: c + '（点击复制）' });
+    var idx = Math.round(t * 100);
+    d.setAttribute('data-label', idx + '%');
+    d.addEventListener('click', function () { T.copy(this.title.split('（')[0]); });
+    strip.appendChild(d);
+    rows.push([idx + '%', c]);
+  }
+  T.clearEl(box).appendChild(T.refTable(['深浅', 'HEX'], rows));
+}
+[color, steps].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '基准色' }), color, T.el('span', { text: '级数' }), steps]));
+app.appendChild(strip);
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "color-shades", "title": "色阶生成器", "desc": "颜色深浅渐变序列（Tints & Shades），10 级可复制", "scripts": "", "code": "var color = T.color('#1744E8');\nvar steps = T.num(10, { min: 3, max: 20, style: 'width:70px' });\nvar box = T.el('div');\nvar strip = T.el('div', { style: 'display:flex;gap:4px;height:70px;margin:12px 0;border-radius:10px;overflow:hidden' });\nfunction run() {\n  var rgb = LU.Color.parse(color.value);\n  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);\n  var n = +steps.value || 10;\n  T.clearEl(strip);\n  var rows = [];\n  for (var i = 0; i \u003c n; i++) {\n    var t = i / (n - 1);\n    var l = t \u003c 0.5 ? hsl.l + (1 - hsl.l) * (0.5 - t) * 2 : hsl.l - hsl.l * (t - 0.5) * 2;\n    var c = LU.Color.hex(LU.Color.hslToRgb(hsl.h / 360, hsl.s, Math.max(0, Math.min(1, l))));\n    var d = T.el('div', { style: 'flex:1;background:' + c + ';cursor:pointer;position:relative', title: c + '（点击复制）' });\n    var idx = Math.round(t * 100);\n    d.setAttribute('data-label', idx + '%');\n    d.addEventListener('click', function () { T.copy(this.title.split('（')[0]); });\n    strip.appendChild(d);\n    rows.push([idx + '%', c]);\n  }\n  T.clearEl(box).appendChild(T.refTable(['深浅', 'HEX'], rows));\n}\n[color, steps].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '基准色' }), color, T.el('span', { text: '级数' }), steps]));\napp.appendChild(strip);\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

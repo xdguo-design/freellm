@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>ECC 密钥生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ECC 密钥生成', '生成 ECDSA P-256 / P-384 / P-521 椭圆曲线密钥对（PEM）', 'ecc');
+var curve = T.select([{value:'P-256',label:'P-256 (secp256r1)'},{value:'P-384',label:'P-384'},{value:'P-521',label:'P-521'}],'P-256');
+var pubOut = T.out('公钥 PEM…');
+var privOut = T.out('私钥 PEM…');
+function toPem(b64, label) {
+  return '-----BEGIN ' + label + '-----\n' + b64.match(/.{1,64}/g).join('\n') + '\n-----END ' + label + '-----';
+}
+app.appendChild(T.pane([T.field('公钥 (SPKI)', pubOut), T.field('私钥 (PKCS#8)', privOut)]));
+app.appendChild(T.row([T.el('span', { text: '曲线' }), curve,
+  T.button('生成密钥对', function () {
+    crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: curve.value }, true, ['sign', 'verify'])
+      .then(function (kp) {
+        return Promise.all([
+          crypto.subtle.exportKey('spki', kp.publicKey),
+          crypto.subtle.exportKey('pkcs8', kp.privateKey)
+        ]);
+      }).then(function (keys) {
+        pubOut.value = toPem(T.bytesToB64(keys[0]), 'PUBLIC KEY');
+        privOut.value = toPem(T.bytesToB64(keys[1]), 'PRIVATE KEY');
+        T.toast('生成完成');
+      }).catch(function (e) { T.toast('失败：' + e.message); });
+  }, true),
+  T.button('复制公钥', function () { T.copy(pubOut.value); }),
+  T.button('下载私钥 .pem', function () { T.download('ecc-private.pem', privOut.value); })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "ecc", "title": "ECC 密钥生成", "desc": "生成 ECDSA P-256 / P-384 / P-521 椭圆曲线密钥对（PEM）", "scripts": "", "code": "var curve = T.select([{value:'P-256',label:'P-256 (secp256r1)'},{value:'P-384',label:'P-384'},{value:'P-521',label:'P-521'}],'P-256');\nvar pubOut = T.out('公钥 PEM…');\nvar privOut = T.out('私钥 PEM…');\nfunction toPem(b64, label) {\n  return '-----BEGIN ' + label + '-----\\n' + b64.match(/.{1,64}/g).join('\\n') + '\\n-----END ' + label + '-----';\n}\napp.appendChild(T.pane([T.field('公钥 (SPKI)', pubOut), T.field('私钥 (PKCS#8)', privOut)]));\napp.appendChild(T.row([T.el('span', { text: '曲线' }), curve,\n  T.button('生成密钥对', function () {\n    crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: curve.value }, true, ['sign', 'verify'])\n      .then(function (kp) {\n        return Promise.all([\n          crypto.subtle.exportKey('spki', kp.publicKey),\n          crypto.subtle.exportKey('pkcs8', kp.privateKey)\n        ]);\n      }).then(function (keys) {\n        pubOut.value = toPem(T.bytesToB64(keys[0]), 'PUBLIC KEY');\n        privOut.value = toPem(T.bytesToB64(keys[1]), 'PRIVATE KEY');\n        T.toast('生成完成');\n      }).catch(function (e) { T.toast('失败：' + e.message); });\n  }, true),\n  T.button('复制公钥', function () { T.copy(pubOut.value); }),\n  T.button('下载私钥 .pem', function () { T.download('ecc-private.pem', privOut.value); })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

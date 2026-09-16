@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSON ↔ YAML · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON ↔ YAML', 'JSON 与 YAML 子集互转（映射 / 列表 / 标量 / 行内集合）', 'json-yaml');
+var input = T.textarea('粘贴 JSON 或 YAML…');
+var output = T.out('');
+var mode = T.select([{value:'j2y',label:'JSON → YAML'},{value:'y2j',label:'YAML → JSON'}],'j2y');
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    if (mode.value === 'j2y') output.value = LF.Yaml.stringify(T.parseJSON(v));
+    else output.value = JSON.stringify(LF.Yaml.parse(v), null, 2);
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, T.btnCopy(function () { return output.value; }),
+  T.el('span', { text: '支持嵌套映射/列表/标量；锚点、多行块等高级语法不支持' })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "json-yaml", "title": "JSON ↔ YAML", "desc": "JSON 与 YAML 子集互转（映射 / 列表 / 标量 / 行内集合）", "scripts": "", "code": "var input = T.textarea('粘贴 JSON 或 YAML…');\nvar output = T.out('');\nvar mode = T.select([{value:'j2y',label:'JSON → YAML'},{value:'y2j',label:'YAML → JSON'}],'j2y');\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    if (mode.value === 'j2y') output.value = LF.Yaml.stringify(T.parseJSON(v));\n    else output.value = JSON.stringify(LF.Yaml.parse(v), null, 2);\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '支持嵌套映射/列表/标量；锚点、多行块等高级语法不支持' })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Nginx 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Nginx 格式化', 'Nginx 配置缩进美化，保留注释与字符串', 'nginx-formatter');
+var input = T.textarea('server{listen 80;server_name example.com;location /{proxy_pass http://backend;}}');
+input.value = 'server{listen 80;server_name example.com;location /{proxy_pass http://backend;}}';
+var output = T.out('');
+function run() {
+  var v = input.value.replace(/\r\n?/g, '\n');
+  if (!v.trim()) { output.value = ''; return; }
+  var depth = 0, out = [], line = '';
+  var inComment = false, inStr = false;
+  for (var i = 0; i < v.length; i++) {
+    var c = v[i], next = v[i + 1];
+    if (c === '#' && !inStr) inComment = true;
+    if (c === '\n') inComment = false;
+    if (c === '"' || c === "'") inStr = !inStr;
+    if (!inStr && !inComment && c === '{') {
+      line = line.trim();
+      if (line) { out.push('    '.repeat(depth) + line); line = ''; }
+      out.push('    '.repeat(depth) + '{');
+      depth++;
+      while (v[i + 1] === ' ' || v[i + 1] === '\n') i++;
+      continue;
+    }
+    if (!inStr && !inComment && c === '}') {
+      if (line.trim()) { out.push('    '.repeat(depth) + line.trim()); line = ''; }
+      depth = Math.max(0, depth - 1);
+      out.push('    '.repeat(depth) + '}');
+      continue;
+    }
+    if (!inStr && !inComment && c === ';') {
+      out.push('    '.repeat(depth) + (line.trim() + ';'));
+      line = '';
+      continue;
+    }
+    if (c === '\n') {
+      if (line.trim()) out.push('    '.repeat(depth) + line.trim());
+      line = '';
+      while (v[i + 1] === ' ' || v[i + 1] === '\t') i++;
+      continue;
+    }
+    line += c;
+  }
+  if (line.trim()) out.push(line.trim());
+  output.value = out.join('\n');
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('Nginx 配置', input), T.field('格式化结果', output)]));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "nginx-formatter", "title": "Nginx 格式化", "desc": "Nginx 配置缩进美化，保留注释与字符串", "scripts": "", "code": "var input = T.textarea('server{listen 80;server_name example.com;location /{proxy_pass http://backend;}}');\ninput.value = 'server{listen 80;server_name example.com;location /{proxy_pass http://backend;}}';\nvar output = T.out('');\nfunction run() {\n  var v = input.value.replace(/\\r\\n?/g, '\\n');\n  if (!v.trim()) { output.value = ''; return; }\n  var depth = 0, out = [], line = '';\n  var inComment = false, inStr = false;\n  for (var i = 0; i \u003c v.length; i++) {\n    var c = v[i], next = v[i + 1];\n    if (c === '#' && !inStr) inComment = true;\n    if (c === '\\n') inComment = false;\n    if (c === '\"' || c === \"'\") inStr = !inStr;\n    if (!inStr && !inComment && c === '{') {\n      line = line.trim();\n      if (line) { out.push('    '.repeat(depth) + line); line = ''; }\n      out.push('    '.repeat(depth) + '{');\n      depth++;\n      while (v[i + 1] === ' ' || v[i + 1] === '\\n') i++;\n      continue;\n    }\n    if (!inStr && !inComment && c === '}') {\n      if (line.trim()) { out.push('    '.repeat(depth) + line.trim()); line = ''; }\n      depth = Math.max(0, depth - 1);\n      out.push('    '.repeat(depth) + '}');\n      continue;\n    }\n    if (!inStr && !inComment && c === ';') {\n      out.push('    '.repeat(depth) + (line.trim() + ';'));\n      line = '';\n      continue;\n    }\n    if (c === '\\n') {\n      if (line.trim()) out.push('    '.repeat(depth) + line.trim());\n      line = '';\n      while (v[i + 1] === ' ' || v[i + 1] === '\\t') i++;\n      continue;\n    }\n    line += c;\n  }\n  if (line.trim()) out.push(line.trim());\n  output.value = out.join('\\n');\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('Nginx 配置', input), T.field('格式化结果', output)]));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

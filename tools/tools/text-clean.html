@@ -2,65 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>文本清理 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('文本清理', '去除多余空行/空格/特殊字符', 'text-clean');
-
-  var opts = {
-    trimLines: T.el('label', { html: '<input type="checkbox" checked> 去除行首尾空格' }),
-    removeEmpty: T.el('label', { html: '<input type="checkbox" checked> 删除空行' }),
-    removeSpaces: T.el('label', { html: '<input type="checkbox"> 压缩连续空格' }),
-    removeSpecial: T.el('label', { html: '<input type="checkbox"> 去除特殊字符' }),
-    removeNewlines: T.el('label', { html: '<input type="checkbox"> 删除换行符' })
-  };
-
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-
-    if (opts.trimLines.checked) {
-      v = v.split('\n').map(function (l) { return l.trim(); }).join('\n');
-    }
-    if (opts.removeEmpty.checked) {
-      v = v.replace(/\n\s*\n/g, '\n');
-    }
-    if (opts.removeSpaces.checked) {
-      v = v.replace(/ {2,}/g, ' ');
-    }
-    if (opts.removeSpecial.checked) {
-      v = v.replace(/[^\w\s\u4e00-\u9fa5]/g, '');
-    }
-    if (opts.removeNewlines.checked) {
-      v = v.replace(/\n/g, ' ');
-    }
-
-    output.value = v;
-  }
-
-  Object.values(opts).forEach(function (el) {
-    el.querySelector('input').addEventListener('change', run);
-  });
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row', style: 'flex-wrap:wrap' }, Object.values(opts)));
-  app.appendChild(T.el('div', { class: 'row' }, [copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文本清理', '去除多余空行 / 空格 / 特殊字符 / 表情符号', 'text-clean');
+var input = T.textarea('  多余　空格　与\n\n\n\n空行…①②③ test🎉  ');
+input.value = '  多余　空格　与\n\n\n\n空行…①②③ test🎉  ';
+var output = T.out('');
+var o1 = T.check('合并连续空白', true);
+var o2 = T.check('压缩连续空行为一段', true);
+var o3 = T.check('去除行首尾空白', true);
+var o4 = T.check('去除全角空格', true);
+var o5 = T.check('去除 Emoji/表情');
+var o6 = T.check('去除中文标点间多余空格', true);
+function run() {
+  var v = input.value;
+  if (o5._input.checked) v = v.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu, '');
+  if (o1._input.checked) v = v.replace(/[ \t]{2,}/g, ' ');
+  if (o4._input.checked) v = v.replace(/\u3000/g, ' ');
+  if (o3._input.checked) v = v.split('\n').map(function (l) { return l.replace(/^\s+|\s+$/g, ''); }).join('\n');
+  if (o2._input.checked) v = v.replace(/\n{3,}/g, '\n\n');
+  if (o6._input.checked) v = v.replace(/([\u4e00-\u9fff，。！？；：、])\s+([\u4e00-\u9fff，。！？；：、])/g, '$1$2');
+  output.value = v;
+}
+[o1._input, o2._input, o3._input, o4._input, o5._input, o6._input].forEach(function (el) { el.addEventListener('change', run); });
+input.addEventListener('input', T.debounce(run, 250));
+var wrap1 = T.row([o1, o2, o3]); wrap1.style.marginBottom = '4px';
+var wrap2 = T.row([o4, o5, o6]); wrap2.style.marginBottom = '4px';
+app.appendChild(T.pane([T.field('原文', input), T.field('清理结果', output)]));
+app.appendChild(wrap1);
+app.appendChild(wrap2);
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "text-clean", "title": "文本清理", "desc": "去除多余空行 / 空格 / 特殊字符 / 表情符号", "scripts": "", "code": "var input = T.textarea('  多余　空格　与\\n\\n\\n\\n空行…①②③ test🎉  ');\ninput.value = '  多余　空格　与\\n\\n\\n\\n空行…①②③ test🎉  ';\nvar output = T.out('');\nvar o1 = T.check('合并连续空白', true);\nvar o2 = T.check('压缩连续空行为一段', true);\nvar o3 = T.check('去除行首尾空白', true);\nvar o4 = T.check('去除全角空格', true);\nvar o5 = T.check('去除 Emoji/表情');\nvar o6 = T.check('去除中文标点间多余空格', true);\nfunction run() {\n  var v = input.value;\n  if (o5._input.checked) v = v.replace(/[\\u{1F000}-\\u{1FAFF}\\u{2600}-\\u{27BF}\\u{FE0F}\\u{200D}]/gu, '');\n  if (o1._input.checked) v = v.replace(/[ \\t]{2,}/g, ' ');\n  if (o4._input.checked) v = v.replace(/\\u3000/g, ' ');\n  if (o3._input.checked) v = v.split('\\n').map(function (l) { return l.replace(/^\\s+|\\s+$/g, ''); }).join('\\n');\n  if (o2._input.checked) v = v.replace(/\\n{3,}/g, '\\n\\n');\n  if (o6._input.checked) v = v.replace(/([\\u4e00-\\u9fff，。！？；：、])\\s+([\\u4e00-\\u9fff，。！？；：、])/g, '$1$2');\n  output.value = v;\n}\n[o1._input, o2._input, o3._input, o4._input, o5._input, o6._input].forEach(function (el) { el.addEventListener('change', run); });\ninput.addEventListener('input', T.debounce(run, 250));\nvar wrap1 = T.row([o1, o2, o3]); wrap1.style.marginBottom = '4px';\nvar wrap2 = T.row([o4, o5, o6]); wrap2.style.marginBottom = '4px';\napp.appendChild(T.pane([T.field('原文', input), T.field('清理结果', output)]));\napp.appendChild(wrap1);\napp.appendChild(wrap2);\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

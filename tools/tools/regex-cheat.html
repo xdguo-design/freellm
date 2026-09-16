@@ -2,75 +2,69 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>正则大全 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('正则大全', '常用正则表达式速查', 'regex-cheat');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索正则表达式...', style: 'width:100%' });
-
-  var REGEX = [
-    ['邮箱', /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/],
-    ['手机号（中国）', /^1[3-9]\d{9}$/],
-    ['固定电话', /^(0\d{2,3}-?)?\d{7,8}$/],
-    ['身份证号', /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]$/],
-    ['URL', /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/],
-    ['IP地址（v4）', /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/],
-    ['日期（YYYY-MM-DD）', /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/],
-    ['日期（YYYY/MM/DD）', /^\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/],
-    ['时间（HH:MM）', /^([01]\d|2[0-3]):[0-5]\d$/],
-    ['时间（HH:MM:SS）', /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/],
-    ['十六进制颜色', /^#?([a-f\d]{3}|[a-f\d]{6})$/i],
-    ['RGB颜色', /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
-    ['中文字符', /[\u4e00-\u9fa5]/],
-    ['双字节字符', /[^\x00-\xff]/],
-    ['HTML标签', /<([a-z]+)([^<]*)>([^<]*)<\/\1>/i],
-    ['去除HTML标签', /<[^>]+>/g],
-    ['银行卡号', /^[1-9]\d{12,18}$/],
-    ['邮政编码（中国）', /^[1-9]\d{5}$/],
-    ['QQ号', /^[1-9]\d{4,10}$/],
-    ['微信号', /^[a-zA-Z][\w-]{5,19}$/],
-    ['车牌号', /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤川青藏琼宁][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4,5}[A-HJ-NP-Z0-9挂学警港澳]$/],
-    ['强密码', /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/],
-    ['IP地址（v6）', /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/]
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = REGEX.filter(function (r) {
-      if (!q) return true;
-      return r[0].toLowerCase().includes(q) || r[1].source.toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('正则大全', '常用正则表达式速查：校验 / 提取 / 替换场景', 'regex-cheat');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">用途</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">正则表达式</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">操作</th></tr></thead>';
-    html += '<tbody>';
-    filtered.forEach(function (r) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);white-space:nowrap">' + r[0] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="word-break:break-all">' + r[1].source + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><button onclick="navigator.clipboard.writeText(\'' + r[1].source.replace(/'/g, "\\'") + '\')" style="padding:4px 8px;cursor:pointer">复制</button></td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var DATA = [
+  ['手机号（中国）', '^1[3-9]\\d{9}$', '校验 11 位手机号'],
+  ['邮箱', '^[\\w.-]+@[\\w-]+(\\.[\\w-]+)+$', '标准邮箱'],
+  ['身份证（18位）', '^\\d{17}[\\dXx]$', '含末位 X'],
+  ['URL', '^https?://[^\\s/$.?#].[^\\s]*$', 'http/https 链接'],
+  ['IPv4', '^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)){3}$', '点分十进制'],
+  ['IPv6（简化）', '^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$', '完整格式'],
+  ['日期 (YYYY-MM-DD)', '^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$', '合法月日'],
+  ['时间 (HH:mm:ss)', '^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$', '24 小时制'],
+  ['中国邮政编码', '^[1-9]\\d{5}$', '6 位数字'],
+  ['整数', '^-?\\d+$', '含负数'],
+  ['正整数', '^\\d+$', '不含符号'],
+  ['金额（两位小数）', '^\\d+(\\.\\d{1,2})?$', '价格'],
+  ['强密码', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\s]).{8,}$', '四类字符至少8位'],
+  ['中文字符', '[\\u4e00-\\u9fff]+', '匹配汉字'],
+  ['QQ 号', '^[1-9]\\d{4,10}$', '5-11 位'],
+  ['车牌（普通）', '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]$', '民用车牌'],
+  ['HTML 标签', '<(\\w+)[^>]*>.*?</\\1>|<\\w+[^>]*/>', '成对或自闭合'],
+  ['十六进制颜色', '^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', '#fff 或 #ffffff'],
+  ['Base64', '^[A-Za-z0-9+/]+={0,2}$', '标准 Base64'],
+  ['版本号', '^\\d+\\.\\d+\\.\\d+$', '语义化版本 x.y.z'],
+  ['提取中文', '[\\u4e00-\\u9fff]', '配合 g 标志'],
+  ['空白字符', '\\\\s+', '匹配所有空白'],
+  ['重复单词', '\\\\b(\\\\w+)\\\\s+\\\\1\\\\b', '查找连续重复（配合反向引用）'],
+  ['千分位替换', '(\\d)(?=(\\d{3})+$)', '替换为 $1,（配合 g）']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['场景', '正则', '说明'], DATA, function (r) { T.copy(r[1]); }));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制正则' })]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "regex-cheat", "title": "正则大全", "desc": "常用正则表达式速查：校验 / 提取 / 替换场景", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['手机号（中国）', '^1[3-9]\\\\d{9}$', '校验 11 位手机号'],\n  ['邮箱', '^[\\\\w.-]+@[\\\\w-]+(\\\\.[\\\\w-]+)+$', '标准邮箱'],\n  ['身份证（18位）', '^\\\\d{17}[\\\\dXx]$', '含末位 X'],\n  ['URL', '^https?://[^\\\\s/$.?#].[^\\\\s]*$', 'http/https 链接'],\n  ['IPv4', '^(25[0-5]|2[0-4]\\\\d|1\\\\d\\\\d|[1-9]?\\\\d)(\\\\.(25[0-5]|2[0-4]\\\\d|1\\\\d\\\\d|[1-9]?\\\\d)){3}$', '点分十进制'],\n  ['IPv6（简化）', '^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$', '完整格式'],\n  ['日期 (YYYY-MM-DD)', '^\\\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\\\d|3[01])$', '合法月日'],\n  ['时间 (HH:mm:ss)', '^([01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d$', '24 小时制'],\n  ['中国邮政编码', '^[1-9]\\\\d{5}$', '6 位数字'],\n  ['整数', '^-?\\\\d+$', '含负数'],\n  ['正整数', '^\\\\d+$', '不含符号'],\n  ['金额（两位小数）', '^\\\\d+(\\\\.\\\\d{1,2})?$', '价格'],\n  ['强密码', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\d)(?=.*[^\\\\w\\\\s]).{8,}$', '四类字符至少8位'],\n  ['中文字符', '[\\\\u4e00-\\\\u9fff]+', '匹配汉字'],\n  ['QQ 号', '^[1-9]\\\\d{4,10}$', '5-11 位'],\n  ['车牌（普通）', '^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]$', '民用车牌'],\n  ['HTML 标签', '\u003c(\\\\w+)[^>]*>.*?\u003c/\\\\1>|\u003c\\\\w+[^>]*/>', '成对或自闭合'],\n  ['十六进制颜色', '^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', '#fff 或 #ffffff'],\n  ['Base64', '^[A-Za-z0-9+/]+={0,2}$', '标准 Base64'],\n  ['版本号', '^\\\\d+\\\\.\\\\d+\\\\.\\\\d+$', '语义化版本 x.y.z'],\n  ['提取中文', '[\\\\u4e00-\\\\u9fff]', '配合 g 标志'],\n  ['空白字符', '\\\\\\\\s+', '匹配所有空白'],\n  ['重复单词', '\\\\\\\\b(\\\\\\\\w+)\\\\\\\\s+\\\\\\\\1\\\\\\\\b', '查找连续重复（配合反向引用）'],\n  ['千分位替换', '(\\\\d)(?=(\\\\d{3})+$)', '替换为 $1,（配合 g）']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['场景', '正则', '说明'], DATA, function (r) { T.copy(r[1]); }));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制正则' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

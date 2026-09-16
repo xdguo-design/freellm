@@ -2,59 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Base64 编解码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Base64 编解码', 'Base64 编码与解码，支持文本和图片', 'base64');
-
-  var mode = T.select([
-    { value: 'encode', label: '编码' },
-    { value: 'decode', label: '解码' }
-  ]);
-  var input = T.textarea('输入文本或 Base64...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var fileBtn = T.button('选择图片', function () {
-    T.readFile('image/*', function (dataURL) {
-      input.value = dataURL;
-      run();
-    }, true);
-  });
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载结果', function () {
-    T.download('base64-result.txt', output.value);
-  });
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; return; }
-    try {
-      if (mode.value === 'encode') {
-        output.value = btoa(unescape(encodeURIComponent(v)));
-      } else {
-        output.value = decodeURIComponent(escape(atob(v)));
-      }
-    } catch (e) {
-      output.value = '⚠ 解码失败: ' + e.message;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Base64 编解码', 'UTF-8 文本与 Base64 互转，支持 URL-Safe 变体与文件转 Base64', 'base64');
+var input = T.textarea('输入文本或 Base64…');
+var output = T.out('输出…');
+var mode = T.select([{value:'enc',label:'文本 → Base64'},{value:'dec',label:'Base64 → 文本'}],'enc');
+var safe = T.check('URL-Safe（-_ 替代 +/）');
+var info = T.badge('—');
+function run() {
+  var v = input.value;
+  if (!v) { output.value = ''; info.textContent = '—'; return; }
+  try {
+    if (mode.value === 'enc') {
+      var b = T.bytesToB64(T.textToBytes(v));
+      output.value = safe._input.checked ? b.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') : b;
+      info.textContent = v.length + ' 字符 → ' + output.value.length + ' 字符';
+    } else {
+      var s = safe._input.checked ? v.replace(/-/g, '+').replace(/_/g, '/') : v;
+      while (s.length % 4) s += '=';
+      output.value = T.bytesToText(T.b64ToBytes(s));
+      info.textContent = '解码成功';
     }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, fileBtn, copyBtn, downloadBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; info.textContent = '出错'; }
+}
+[input, mode, safe._input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([T.el('span', { text: '方向' }), mode, safe, info,
+  T.button('复制输出', function () { T.copy(output.value); })]));
+app.appendChild(T.row([T.filePick('选择文件转 Base64', '', function (dataURL, file) {
+  T.copy(dataURL.split(',')[1] || '');
+  T.toast('已复制文件 Base64（' + T.fmtBytes(file.size) + '）');
+}, true),
+T.button('解码并下载为文件', function () {
+  try { T.download('decoded.bin', T.b64ToBytes(output.value)); } catch (e) { T.toast(e.message); }
+})]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "base64", "title": "Base64 编解码", "desc": "UTF-8 文本与 Base64 互转，支持 URL-Safe 变体与文件转 Base64", "scripts": "", "code": "var input = T.textarea('输入文本或 Base64…');\nvar output = T.out('输出…');\nvar mode = T.select([{value:'enc',label:'文本 → Base64'},{value:'dec',label:'Base64 → 文本'}],'enc');\nvar safe = T.check('URL-Safe（-_ 替代 +/）');\nvar info = T.badge('—');\nfunction run() {\n  var v = input.value;\n  if (!v) { output.value = ''; info.textContent = '—'; return; }\n  try {\n    if (mode.value === 'enc') {\n      var b = T.bytesToB64(T.textToBytes(v));\n      output.value = safe._input.checked ? b.replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '') : b;\n      info.textContent = v.length + ' 字符 → ' + output.value.length + ' 字符';\n    } else {\n      var s = safe._input.checked ? v.replace(/-/g, '+').replace(/_/g, '/') : v;\n      while (s.length % 4) s += '=';\n      output.value = T.bytesToText(T.b64ToBytes(s));\n      info.textContent = '解码成功';\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; info.textContent = '出错'; }\n}\n[input, mode, safe._input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([T.el('span', { text: '方向' }), mode, safe, info,\n  T.button('复制输出', function () { T.copy(output.value); })]));\napp.appendChild(T.row([T.filePick('选择文件转 Base64', '', function (dataURL, file) {\n  T.copy(dataURL.split(',')[1] || '');\n  T.toast('已复制文件 Base64（' + T.fmtBytes(file.size) + '）');\n}, true),\nT.button('解码并下载为文件', function () {\n  try { T.download('decoded.bin', T.b64ToBytes(output.value)); } catch (e) { T.toast(e.message); }\n})]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

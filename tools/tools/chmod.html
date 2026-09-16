@@ -2,100 +2,77 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Chmod 计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Chmod 计算器', 'Linux 权限数字与符号互转', 'chmod');
-
-  var numeric = T.el('input', { type: 'text', value: '755', placeholder: '数字权限 (如 755)', style: 'flex:1;font-family:monospace;font-size:1.2em' });
-  var symbolic = T.el('span', { class: 'badge blue', text: 'rwxr-xr-x', style: 'font-family:monospace;font-size:1.2em' });
-
-  var output = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace' });
-
-  var checkboxes = {};
-  var perms = ['r', 'w', 'x'];
-  var owners = ['所有者', '用户组', '其他人'];
-  var values = [4, 2, 1];
-
-  var table = T.el('table', { class: 'ref' });
-  var thead = T.el('thead');
-  var headerRow = T.el('tr');
-  headerRow.appendChild(T.el('th', { text: '' }));
-  owners.forEach(function (o) { headerRow.appendChild(T.el('th', { text: o })); });
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  var tbody = T.el('tbody');
-  perms.forEach(function (perm, pi) {
-    var tr = T.el('tr');
-    tr.appendChild(T.el('td', { text: perm + ' (' + values[pi] + ')' }));
-    owners.forEach(function (owner, oi) {
-      var td = T.el('td', { style: 'text-align:center' });
-      var cb = T.el('input', { type: 'checkbox' });
-      cb.checked = perm === 'r' || (perm === 'x' && (oi === 0 || oi === 2));
-      checkboxes[perm + oi] = cb;
-      td.appendChild(cb);
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Chmod 计算器', 'Linux 文件权限：数字 ↔ 符号（rwx 三组）互转', 'chmod');
+var GROUPS = [['所有者 user', 'u'], ['组 group', 'g'], ['其他 others', 'o']];
+var checks = {};
+var wrap = T.el('div');
+var octOut = T.input('644', { class: 'mono', style: 'width:90px', readonly: '' });
+var symOut = T.input('', { class: 'mono grow', readonly: '' });
+GROUPS.forEach(function (g) {
+  var row = T.row([T.el('span', { text: g[0], style: 'width:110px' })]);
+  ['r(4) 读', 'w(2) 写', 'x(1) 执行'].forEach(function (label, i) {
+    var c = T.check(label);
+    var key = g[1] + i;
+    checks[key] = c._input;
+    if ((g[1] === 'u' && [true, true, false][i]) || (g[1] === 'g' && [true, false, false][i]) || (g[1] === 'o' && [true, false, false][i])) c._input.checked = true;
+    c._input.addEventListener('change', calc);
+    row.appendChild(c);
   });
-  table.appendChild(tbody);
-
-  function update() {
-    var num = 0;
-    perms.forEach(function (perm, pi) {
-      owners.forEach(function (owner, oi) {
-        if (checkboxes[perm + oi].checked) num += values[pi] * Math.pow(8, 2 - oi);
-      });
-    });
-    numeric.value = num.toString();
-
-    var sym = '';
-    owners.forEach(function (owner, oi) {
-      perms.forEach(function (perm, pi) {
-        sym += checkboxes[perm + oi].checked ? perm : '-';
-      });
-    });
-    symbolic.textContent = sym;
-
-    output.textContent = 'chmod ' + num + ' ' + sym + '\n' +
-      owners.map(function (o, oi) {
-        return o + ': ' + perms.map(function (p, pi) {
-          return checkboxes[p + oi].checked ? p : '-';
-        }).join('');
-      }).join('\n');
-  }
-
-  function updateFromNumeric() {
-    var num = parseInt(numeric.value);
-    if (isNaN(num) || num < 0 || num > 777) return;
-    var str = num.toString().padStart(3, '0');
-    str.split('').forEach(function (d, oi) {
-      perms.forEach(function (perm, pi) {
-        checkboxes[perm + oi].checked = (parseInt(d) & values[pi]) > 0;
-      });
-    });
-    update();
-  }
-
-  Object.values(checkboxes).forEach(function (cb) {
-    cb.addEventListener('change', update);
+  wrap.appendChild(row);
+});
+function calcFromChecks() {
+  var oct = '', sym = '';
+  ['u', 'g', 'o'].forEach(function (g) {
+    var n = 0;
+    var s = '';
+    for (var i = 0; i < 3; i++) {
+      if (checks[g + i].checked) { n += [4, 2, 1][i]; s += 'rwx'[i]; }
+      else s += '-';
+    }
+    oct += n;
+    sym += s;
   });
-  numeric.addEventListener('input', function () { setTimeout(updateFromNumeric, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '权限' }), numeric, symbolic]));
-  app.appendChild(table);
-  app.appendChild(output);
-
-  update();
+  octOut.value = oct;
+  symOut.value = '-' + sym;
+}
+function calcFromOct() {
+  var v = octOut.value.replace(/[^0-7]/g, '').slice(0, 3).padStart(3, '0');
+  ['u', 'g', 'o'].forEach(function (g, gi) {
+    var n = +v[gi];
+    for (var i = 0; i < 3; i++) checks[g + i].checked = !!(n & [4, 2, 1][i]);
+  });
+  calcFromChecks();
+}
+var syncing = false;
+function calc() { if (syncing) return; syncing = true; calcFromChecks(); syncing = false; }
+octOut.readonly = '';
+octOut.addEventListener('input', function () { syncing = true; calcFromOct(); syncing = false; });
+calcFromOct();
+app.appendChild(wrap);
+app.appendChild(T.row([T.el('span', { text: '八进制' }), octOut, T.el('span', { text: '符号' }), symOut]));
+app.appendChild(T.row([T.button('复制命令 chmod ' + octOut.value, function () { T.copy('chmod ' + octOut.value + ' file'); }),
+  T.el('span', { text: '常见：755 目录/脚本 · 644 普通文件 · 600 私钥 · 777 全开放（慎用）' })]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "chmod", "title": "Chmod 计算器", "desc": "Linux 文件权限：数字 ↔ 符号（rwx 三组）互转", "scripts": "", "code": "var GROUPS = [['所有者 user', 'u'], ['组 group', 'g'], ['其他 others', 'o']];\nvar checks = {};\nvar wrap = T.el('div');\nvar octOut = T.input('644', { class: 'mono', style: 'width:90px', readonly: '' });\nvar symOut = T.input('', { class: 'mono grow', readonly: '' });\nGROUPS.forEach(function (g) {\n  var row = T.row([T.el('span', { text: g[0], style: 'width:110px' })]);\n  ['r(4) 读', 'w(2) 写', 'x(1) 执行'].forEach(function (label, i) {\n    var c = T.check(label);\n    var key = g[1] + i;\n    checks[key] = c._input;\n    if ((g[1] === 'u' && [true, true, false][i]) || (g[1] === 'g' && [true, false, false][i]) || (g[1] === 'o' && [true, false, false][i])) c._input.checked = true;\n    c._input.addEventListener('change', calc);\n    row.appendChild(c);\n  });\n  wrap.appendChild(row);\n});\nfunction calcFromChecks() {\n  var oct = '', sym = '';\n  ['u', 'g', 'o'].forEach(function (g) {\n    var n = 0;\n    var s = '';\n    for (var i = 0; i \u003c 3; i++) {\n      if (checks[g + i].checked) { n += [4, 2, 1][i]; s += 'rwx'[i]; }\n      else s += '-';\n    }\n    oct += n;\n    sym += s;\n  });\n  octOut.value = oct;\n  symOut.value = '-' + sym;\n}\nfunction calcFromOct() {\n  var v = octOut.value.replace(/[^0-7]/g, '').slice(0, 3).padStart(3, '0');\n  ['u', 'g', 'o'].forEach(function (g, gi) {\n    var n = +v[gi];\n    for (var i = 0; i \u003c 3; i++) checks[g + i].checked = !!(n & [4, 2, 1][i]);\n  });\n  calcFromChecks();\n}\nvar syncing = false;\nfunction calc() { if (syncing) return; syncing = true; calcFromChecks(); syncing = false; }\noctOut.readonly = '';\noctOut.addEventListener('input', function () { syncing = true; calcFromOct(); syncing = false; });\ncalcFromOct();\napp.appendChild(wrap);\napp.appendChild(T.row([T.el('span', { text: '八进制' }), octOut, T.el('span', { text: '符号' }), symOut]));\napp.appendChild(T.row([T.button('复制命令 chmod ' + octOut.value, function () { T.copy('chmod ' + octOut.value + ' file'); }),\n  T.el('span', { text: '常见：755 目录/脚本 · 644 普通文件 · 600 私钥 · 777 全开放（慎用）' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

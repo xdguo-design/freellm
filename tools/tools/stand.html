@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>站立提醒 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('站立提醒', '久坐提醒：定时提醒起身活动，可统计今日次数', 'stand');
+var interval = T.num(45, { min: 5, max: 180, style: 'width:80px' });
+var status = T.badge('未开启');
+var countEl = T.stat(0, '今日已站');
+var lastEl = T.el('span', { style: 'color:var(--ink2);font-size:12px' });
+var timer = 0;
+var today = T.today();
+var data = {};
+try { data = JSON.parse(localStorage.getItem('freellm-stand') || '{}'); } catch (e) {}
+if (data.date !== today) data = { date: today, count: 0 };
+countEl.firstChild.textContent = data.count;
+function save() { localStorage.setItem('freellm-stand', JSON.stringify(data)); }
+function beep() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.connect(g).connect(ctx.destination);
+    osc.frequency.value = 660; g.gain.value = 0.3;
+    osc.start();
+    var n = 0;
+    var iv = setInterval(function () { n++; if (n > 5) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 550 : 750; }, 260);
+  } catch (e) {}
+}
+function start() {
+  if (timer) clearInterval(timer);
+  timer = setInterval(function () {
+    beep();
+    T.toast('🧍 起身活动一下！已经坐了 ' + interval.value + ' 分钟');
+    alert('🧍 久坐提醒：起身活动 3-5 分钟');
+  }, +interval.value * 60000);
+  status.textContent = '每 ' + interval.value + ' 分钟提醒';
+  status.className = 'badge ok';
+  status._on = true;
+  startBtn.firstChild.textContent = '⏸ 暂停提醒';
+}
+function stopT() {
+  clearInterval(timer);
+  timer = 0;
+  status.textContent = '已暂停';
+  status.className = 'badge';
+  startBtn.firstChild.textContent = '▶ 开始提醒';
+}
+var startBtn = T.button('▶ 开始提醒', function () { timer ? stopT() : start(); }, true);
+app.appendChild(T.row([T.el('span', { text: '间隔(分)' }), interval, startBtn, status]));
+app.appendChild(T.row([countEl, T.button('✅ 我站起来了', function () {
+  data.count++;
+  countEl.firstChild.textContent = data.count;
+  save();
+  T.toast('记录成功，棒！');
+  if (timer) { clearInterval(timer); start(); }
+}), lastEl]));
+app.appendChild(T.el('p', { text: '建议每坐 45-60 分钟起身活动 3 分钟。提醒依赖页面保持打开。', style: 'color:var(--ink2);font-size:12px' }));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "stand", "title": "站立提醒", "desc": "久坐提醒：定时提醒起身活动，可统计今日次数", "scripts": "", "code": "var interval = T.num(45, { min: 5, max: 180, style: 'width:80px' });\nvar status = T.badge('未开启');\nvar countEl = T.stat(0, '今日已站');\nvar lastEl = T.el('span', { style: 'color:var(--ink2);font-size:12px' });\nvar timer = 0;\nvar today = T.today();\nvar data = {};\ntry { data = JSON.parse(localStorage.getItem('freellm-stand') || '{}'); } catch (e) {}\nif (data.date !== today) data = { date: today, count: 0 };\ncountEl.firstChild.textContent = data.count;\nfunction save() { localStorage.setItem('freellm-stand', JSON.stringify(data)); }\nfunction beep() {\n  try {\n    var ctx = new (window.AudioContext || window.webkitAudioContext)();\n    var osc = ctx.createOscillator(), g = ctx.createGain();\n    osc.connect(g).connect(ctx.destination);\n    osc.frequency.value = 660; g.gain.value = 0.3;\n    osc.start();\n    var n = 0;\n    var iv = setInterval(function () { n++; if (n > 5) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 550 : 750; }, 260);\n  } catch (e) {}\n}\nfunction start() {\n  if (timer) clearInterval(timer);\n  timer = setInterval(function () {\n    beep();\n    T.toast('🧍 起身活动一下！已经坐了 ' + interval.value + ' 分钟');\n    alert('🧍 久坐提醒：起身活动 3-5 分钟');\n  }, +interval.value * 60000);\n  status.textContent = '每 ' + interval.value + ' 分钟提醒';\n  status.className = 'badge ok';\n  status._on = true;\n  startBtn.firstChild.textContent = '⏸ 暂停提醒';\n}\nfunction stopT() {\n  clearInterval(timer);\n  timer = 0;\n  status.textContent = '已暂停';\n  status.className = 'badge';\n  startBtn.firstChild.textContent = '▶ 开始提醒';\n}\nvar startBtn = T.button('▶ 开始提醒', function () { timer ? stopT() : start(); }, true);\napp.appendChild(T.row([T.el('span', { text: '间隔(分)' }), interval, startBtn, status]));\napp.appendChild(T.row([countEl, T.button('✅ 我站起来了', function () {\n  data.count++;\n  countEl.firstChild.textContent = data.count;\n  save();\n  T.toast('记录成功，棒！');\n  if (timer) { clearInterval(timer); start(); }\n}), lastEl]));\napp.appendChild(T.el('p', { text: '建议每坐 45-60 分钟起身活动 3 分钟。提醒依赖页面保持打开。', style: 'color:var(--ink2);font-size:12px' }));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

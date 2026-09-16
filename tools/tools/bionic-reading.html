@@ -2,47 +2,45 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Bionic Reading · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Bionic Reading', '单词前部加粗提升阅读速度', 'bionic-reading');
-
-  var ratio = T.el('input', { type: 'range', min: '20', max: '80', value: '50' });
-  var ratioLabel = T.el('span', { text: '50%' });
-  var input = T.textarea('输入文本...');
-  var output = T.el('div', { class: 'output', style: 'line-height:2;word-wrap:break-word' });
-
-  var copyBtn = T.copyBtn(function () { return output.textContent; });
-
-  function run() {
-    var v = input.value;
-    var r = parseInt(ratio.value) / 100;
-    ratioLabel.textContent = ratio.value + '%';
-    if (!v) { output.innerHTML = ''; return; }
-
-    output.innerHTML = v.replace(/(\S+)/g, function (word) {
-      var len = word.length;
-      var boldLen = Math.max(1, Math.ceil(len * r));
-      return '<b>' + word.slice(0, boldLen) + '</b>' + word.slice(boldLen);
-    });
-  }
-
-  ratio.addEventListener('input', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '加粗比例' }), ratio, ratioLabel, copyBtn
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(output);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Bionic Reading', '单词前部加粗，提升英文阅读速度与专注度', 'bionic-reading');
+var input = T.textarea('Bionic Reading helps you read faster by guiding your eyes with bolded word beginnings.');
+input.value = 'Bionic Reading helps you read faster by guiding your eyes with bolded word beginnings.';
+var box = T.el('div', { class: 'output', style: 'min-height:140px;font-family:var(--font-sans);font-size:16px;line-height:1.9;white-space:pre-wrap' });
+var strength = T.select([{value:'0.4',label:'40% 加粗（推荐）'},{value:'0.6',label:'60% 加粗'},{value:'0.25',label:'25% 加粗'}],'0.4');
+function run() {
+  var html = input.value.replace(/([A-Za-z']+)/g, function (w) {
+    var n = Math.max(1, Math.round(w.length * +strength.value));
+    return '<b>' + T.esc(w.slice(0, n)) + '</b>' + T.esc(w.slice(n));
+  });
+  box.innerHTML = html;
+}
+input.addEventListener('input', run);
+app.appendChild(T.pane([T.field('英文文本', input)], true));
+app.appendChild(T.row([T.el('span', { text: '加粗比例' }), strength]));
+app.appendChild(T.el('span', { text: '预览', class: 'field' }));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "bionic-reading", "title": "Bionic Reading", "desc": "单词前部加粗，提升英文阅读速度与专注度", "scripts": "", "code": "var input = T.textarea('Bionic Reading helps you read faster by guiding your eyes with bolded word beginnings.');\ninput.value = 'Bionic Reading helps you read faster by guiding your eyes with bolded word beginnings.';\nvar box = T.el('div', { class: 'output', style: 'min-height:140px;font-family:var(--font-sans);font-size:16px;line-height:1.9;white-space:pre-wrap' });\nvar strength = T.select([{value:'0.4',label:'40% 加粗（推荐）'},{value:'0.6',label:'60% 加粗'},{value:'0.25',label:'25% 加粗'}],'0.4');\nfunction run() {\n  var html = input.value.replace(/([A-Za-z']+)/g, function (w) {\n    var n = Math.max(1, Math.round(w.length * +strength.value));\n    return '\u003cb>' + T.esc(w.slice(0, n)) + '\u003c/b>' + T.esc(w.slice(n));\n  });\n  box.innerHTML = html;\n}\ninput.addEventListener('input', run);\napp.appendChild(T.pane([T.field('英文文本', input)], true));\napp.appendChild(T.row([T.el('span', { text: '加粗比例' }), strength]));\napp.appendChild(T.el('span', { text: '预览', class: 'field' }));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

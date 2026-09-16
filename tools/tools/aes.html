@@ -2,74 +2,69 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>AES 加解密 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('AES 加解密', 'AES-GCM/CBC 对称加解密', 'aes');
-
-  var mode = T.select([
-    { value: 'encrypt', label: '加密' },
-    { value: 'decrypt', label: '解密' }
-  ]);
-  var algo = T.select([
-    { value: 'AES-GCM', label: 'AES-GCM' },
-    { value: 'AES-CBC', label: 'AES-CBC' }
-  ]);
-  var key = T.el('input', { type: 'text', placeholder: '密钥（16/24/32字节）', style: 'flex:1' });
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  async function getKey(keyStr) {
-    var keyBytes = new TextEncoder().encode(keyStr.padEnd(32, '\0').slice(0, 32));
-    return await crypto.subtle.importKey('raw', keyBytes, algo.value, false, ['encrypt', 'decrypt']);
-  }
-
-  async function run() {
-    var v = input.value;
-    var k = key.value;
-    if (!v || !k) { output.value = ''; return; }
-    try {
-      if (mode.value === 'encrypt') {
-        var iv = crypto.getRandomValues(new Uint8Array(12));
-        var keyObj = await getKey(k);
-        var encrypted = await crypto.subtle.encrypt({ name: algo.value, iv: iv }, keyObj, new TextEncoder().encode(v));
-        var result = btoa(String.fromCharCode(...iv, ...new Uint8Array(encrypted)));
-        output.value = result;
-      } else {
-        var data = atob(v);
-        var bytes = new Uint8Array(data.length);
-        for (var i = 0; i < data.length; i++) bytes[i] = data.charCodeAt(i);
-        var iv = bytes.slice(0, 12);
-        var encrypted = bytes.slice(12);
-        var keyObj = await getKey(k);
-        var decrypted = await crypto.subtle.decrypt({ name: algo.value, iv: iv }, keyObj, encrypted);
-        output.value = new TextDecoder().decode(decrypted);
-      }
-    } catch (e) {
-      output.value = '⚠ 操作失败: ' + e.message;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('AES 加解密', 'AES-GCM / AES-CBC 对称加解密，口令经 PBKDF2 派生密钥', 'aes');
+var input = T.textarea('输入明文…');
+var output = T.out('输出（Base64）…');
+var mode = T.select([{value:'enc',label:'加密'},{value:'dec',label:'解密'}],'enc');
+var algo = T.select([{value:'AES-GCM',label:'AES-GCM（推荐）'},{value:'AES-CBC',label:'AES-CBC'}],'AES-GCM');
+var pass = T.input('', { type: 'password', placeholder: '口令', class: 'grow mono' });
+var ivOut = T.input('', { placeholder: 'IV（Base64，自动生成/粘贴）', class: 'grow mono' });
+async function deriveKey(pwd, usages) {
+  var base = await crypto.subtle.importKey('raw', T.textToBytes(pwd), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: T.textToBytes('freellm-aes-salt'), iterations: 100000, hash: 'SHA-256' },
+    base, { name: algo.value, length: 256 }, false, usages);
+}
+async function run() {
+  var v = input.value;
+  if (!v || !pass.value) { output.value = ''; return; }
+  try {
+    if (mode.value === 'enc') {
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      var key = await deriveKey(pass.value, ['encrypt']);
+      var ct = new Uint8Array(await crypto.subtle.encrypt({ name: algo.value, iv: iv }, key, T.textToBytes(v)));
+      output.value = T.bytesToB64(ct);
+      ivOut.value = T.bytesToB64(iv);
+    } else {
+      var iv2 = T.b64ToBytes(ivOut.value || '');
+      var key2 = await deriveKey(pass.value, ['decrypt']);
+      var pt = await crypto.subtle.decrypt({ name: algo.value, iv: iv2 }, key2, T.b64ToBytes(v));
+      output.value = T.bytesToText(new Uint8Array(pt));
     }
-  }
-
-  mode.addEventListener('change', run);
-  algo.addEventListener('change', run);
-  key.addEventListener('input', function () { setTimeout(run, 100); });
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, algo]));
-  app.appendChild(T.el('div', { class: 'row' }, [key]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'row' }, [output, copyBtn]));
+  } catch (e) { output.value = '⚠ 加解密失败：口令错误或数据损坏'; }
+}
+[T.input, mode, algo].forEach(function () {});
+input.addEventListener('change', run);
+mode.addEventListener('change', function () {
+  if (mode.value === 'dec') input.placeholder = '输入密文（Base64）…';
+  else input.placeholder = '输入明文…';
+});
+app.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 (Base64)', input), T.field('结果', output)]));
+var runBtn = T.button('执行', run, true);
+app.appendChild(T.row([T.el('span', { text: '方向' }), mode, T.el('span', { text: '算法' }), algo]));
+app.appendChild(T.row([T.el('span', { text: '口令' }), pass, runBtn]));
+app.appendChild(T.row([T.el('span', { text: 'IV' }), ivOut, T.el('span', { text: '加密后自动生成；解密需粘贴原 IV' })]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "aes", "title": "AES 加解密", "desc": "AES-GCM / AES-CBC 对称加解密，口令经 PBKDF2 派生密钥", "scripts": "", "code": "var input = T.textarea('输入明文…');\nvar output = T.out('输出（Base64）…');\nvar mode = T.select([{value:'enc',label:'加密'},{value:'dec',label:'解密'}],'enc');\nvar algo = T.select([{value:'AES-GCM',label:'AES-GCM（推荐）'},{value:'AES-CBC',label:'AES-CBC'}],'AES-GCM');\nvar pass = T.input('', { type: 'password', placeholder: '口令', class: 'grow mono' });\nvar ivOut = T.input('', { placeholder: 'IV（Base64，自动生成/粘贴）', class: 'grow mono' });\nasync function deriveKey(pwd, usages) {\n  var base = await crypto.subtle.importKey('raw', T.textToBytes(pwd), 'PBKDF2', false, ['deriveKey']);\n  return crypto.subtle.deriveKey(\n    { name: 'PBKDF2', salt: T.textToBytes('freellm-aes-salt'), iterations: 100000, hash: 'SHA-256' },\n    base, { name: algo.value, length: 256 }, false, usages);\n}\nasync function run() {\n  var v = input.value;\n  if (!v || !pass.value) { output.value = ''; return; }\n  try {\n    if (mode.value === 'enc') {\n      var iv = crypto.getRandomValues(new Uint8Array(12));\n      var key = await deriveKey(pass.value, ['encrypt']);\n      var ct = new Uint8Array(await crypto.subtle.encrypt({ name: algo.value, iv: iv }, key, T.textToBytes(v)));\n      output.value = T.bytesToB64(ct);\n      ivOut.value = T.bytesToB64(iv);\n    } else {\n      var iv2 = T.b64ToBytes(ivOut.value || '');\n      var key2 = await deriveKey(pass.value, ['decrypt']);\n      var pt = await crypto.subtle.decrypt({ name: algo.value, iv: iv2 }, key2, T.b64ToBytes(v));\n      output.value = T.bytesToText(new Uint8Array(pt));\n    }\n  } catch (e) { output.value = '⚠ 加解密失败：口令错误或数据损坏'; }\n}\n[T.input, mode, algo].forEach(function () {});\ninput.addEventListener('change', run);\nmode.addEventListener('change', function () {\n  if (mode.value === 'dec') input.placeholder = '输入密文（Base64）…';\n  else input.placeholder = '输入明文…';\n});\napp.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 (Base64)', input), T.field('结果', output)]));\nvar runBtn = T.button('执行', run, true);\napp.appendChild(T.row([T.el('span', { text: '方向' }), mode, T.el('span', { text: '算法' }), algo]));\napp.appendChild(T.row([T.el('span', { text: '口令' }), pass, runBtn]));\napp.appendChild(T.row([T.el('span', { text: 'IV' }), ivOut, T.el('span', { text: '加密后自动生成；解密需粘贴原 IV' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

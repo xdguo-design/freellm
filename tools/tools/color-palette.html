@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>调色板生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('调色板生成器', '输入主色自动生成配色：类比 / 互补 / 三角 / 四角 / 单色 + 语义色', 'color-palette');
+var primary = T.color('#1744E8');
+var scheme = T.select([{value:'analogous',label:'类比色'},{value:'complementary',label:'互补色'},{value:'triadic',label:'三角配色'},{value:'tetradic',label:'四角配色'},{value:'monochrome',label:'单色系'}],'analogous');
+var box = T.el('div', { style: 'display:flex;flex-direction:column;gap:8px;margin:12px 0' });
+var output = T.out('');
+function hexShift(hsl, dh, ds, dl) {
+  return LU.Color.hex(LU.Color.hslToRgb(((((hsl.h + dh) % 360) + 360) % 360) / 360, Math.max(0, Math.min(1, hsl.s + ds)), Math.max(0, Math.min(1, hsl.l + dl))));
+}
+function run() {
+  var rgb = LU.Color.parse(primary.value);
+  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);
+  var colors;
+  if (scheme.value === 'analogous') colors = [hexShift(hsl, -40, 0, 0), primary.value, hexShift(hsl, 40, 0, 0)];
+  else if (scheme.value === 'complementary') colors = [primary.value, hexShift(hsl, 180, 0, 0)];
+  else if (scheme.value === 'triadic') colors = [primary.value, hexShift(hsl, 120, 0, 0), hexShift(hsl, 240, 0, 0)];
+  else if (scheme.value === 'tetradic') colors = [primary.value, hexShift(hsl, 90, 0, 0), hexShift(hsl, 180, 0, 0), hexShift(hsl, 270, 0, 0)];
+  else colors = [hexShift(hsl, 0, 0, .3), hexShift(hsl, 0, 0, .15), primary.value, hexShift(hsl, 0, 0, -.15), hexShift(hsl, 0, 0, -.3)];
+  var semantic = {
+    'primary': primary.value,
+    'primary-hover': hexShift(hsl, 0, 0, -0.08),
+    'primary-light': hexShift(hsl, 0, 0, 0.85),
+    'success': hexShift(hsl, 120, -0.05, 0),
+    'warning': hexShift(hsl, 45, 0, 0),
+    'danger': hexShift(hsl, 180, 0, 0),
+    'info': hexShift(hsl, -30, 0, 0.05)
+  };
+  T.clearEl(box);
+  var row = T.el('div', { style: 'display:flex;gap:6px;height:52px' });
+  colors.forEach(function (c) {
+    var d = T.el('div', { style: 'flex:1;border-radius:8px;background:' + c + ';cursor:pointer;min-width:0', title: c + '（点击复制）' });
+    d.addEventListener('click', function () { T.copy(c); });
+    row.appendChild(d);
+  });
+  box.appendChild(row);
+  Object.keys(semantic).forEach(function (k) {
+    var r2 = T.el('div', { style: 'display:flex;gap:10px;align-items:center' });
+    var d2 = T.el('div', { style: 'width:52px;height:26px;border-radius:6px;background:' + semantic[k] + ';border:1px solid var(--line);cursor:pointer' });
+    d2.addEventListener('click', function () { T.copy(semantic[k]); });
+    r2.appendChild(d2);
+    r2.appendChild(T.el('span', { text: k + '  ' + semantic[k], style: 'font-family:var(--font-mono);font-size:12px' }));
+    box.appendChild(r2);
+  });
+  output.value = ':root {\n' + Object.keys(semantic).map(function (k) { return '  --' + k + ': ' + semantic[k] + ';'; }).join('\n') + '\n}';
+}
+app.appendChild(T.row([T.el('span', { text: '主色' }), primary, T.el('span', { text: '配色方案' }), scheme]));
+app.appendChild(box);
+app.appendChild(T.pane([T.field('语义色 CSS 变量', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+[primary, scheme].forEach(function (el) { el.addEventListener('input', run); });
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "color-palette", "title": "调色板生成器", "desc": "输入主色自动生成配色：类比 / 互补 / 三角 / 四角 / 单色 + 语义色", "scripts": "", "code": "var primary = T.color('#1744E8');\nvar scheme = T.select([{value:'analogous',label:'类比色'},{value:'complementary',label:'互补色'},{value:'triadic',label:'三角配色'},{value:'tetradic',label:'四角配色'},{value:'monochrome',label:'单色系'}],'analogous');\nvar box = T.el('div', { style: 'display:flex;flex-direction:column;gap:8px;margin:12px 0' });\nvar output = T.out('');\nfunction hexShift(hsl, dh, ds, dl) {\n  return LU.Color.hex(LU.Color.hslToRgb(((((hsl.h + dh) % 360) + 360) % 360) / 360, Math.max(0, Math.min(1, hsl.s + ds)), Math.max(0, Math.min(1, hsl.l + dl))));\n}\nfunction run() {\n  var rgb = LU.Color.parse(primary.value);\n  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);\n  var colors;\n  if (scheme.value === 'analogous') colors = [hexShift(hsl, -40, 0, 0), primary.value, hexShift(hsl, 40, 0, 0)];\n  else if (scheme.value === 'complementary') colors = [primary.value, hexShift(hsl, 180, 0, 0)];\n  else if (scheme.value === 'triadic') colors = [primary.value, hexShift(hsl, 120, 0, 0), hexShift(hsl, 240, 0, 0)];\n  else if (scheme.value === 'tetradic') colors = [primary.value, hexShift(hsl, 90, 0, 0), hexShift(hsl, 180, 0, 0), hexShift(hsl, 270, 0, 0)];\n  else colors = [hexShift(hsl, 0, 0, .3), hexShift(hsl, 0, 0, .15), primary.value, hexShift(hsl, 0, 0, -.15), hexShift(hsl, 0, 0, -.3)];\n  var semantic = {\n    'primary': primary.value,\n    'primary-hover': hexShift(hsl, 0, 0, -0.08),\n    'primary-light': hexShift(hsl, 0, 0, 0.85),\n    'success': hexShift(hsl, 120, -0.05, 0),\n    'warning': hexShift(hsl, 45, 0, 0),\n    'danger': hexShift(hsl, 180, 0, 0),\n    'info': hexShift(hsl, -30, 0, 0.05)\n  };\n  T.clearEl(box);\n  var row = T.el('div', { style: 'display:flex;gap:6px;height:52px' });\n  colors.forEach(function (c) {\n    var d = T.el('div', { style: 'flex:1;border-radius:8px;background:' + c + ';cursor:pointer;min-width:0', title: c + '（点击复制）' });\n    d.addEventListener('click', function () { T.copy(c); });\n    row.appendChild(d);\n  });\n  box.appendChild(row);\n  Object.keys(semantic).forEach(function (k) {\n    var r2 = T.el('div', { style: 'display:flex;gap:10px;align-items:center' });\n    var d2 = T.el('div', { style: 'width:52px;height:26px;border-radius:6px;background:' + semantic[k] + ';border:1px solid var(--line);cursor:pointer' });\n    d2.addEventListener('click', function () { T.copy(semantic[k]); });\n    r2.appendChild(d2);\n    r2.appendChild(T.el('span', { text: k + '  ' + semantic[k], style: 'font-family:var(--font-mono);font-size:12px' }));\n    box.appendChild(r2);\n  });\n  output.value = ':root {\\n' + Object.keys(semantic).map(function (k) { return '  --' + k + ': ' + semantic[k] + ';'; }).join('\\n') + '\\n}';\n}\napp.appendChild(T.row([T.el('span', { text: '主色' }), primary, T.el('span', { text: '配色方案' }), scheme]));\napp.appendChild(box);\napp.appendChild(T.pane([T.field('语义色 CSS 变量', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\n[primary, scheme].forEach(function (el) { el.addEventListener('input', run); });\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

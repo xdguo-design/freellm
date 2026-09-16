@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>MySQL 语法速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('MySQL 语法速查', 'MySQL 常用语法参考：CRUD / 聚合 / 连接 / 索引 / 事务', 'mysql-syntax');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  return search;
+}
+
+var DATA = [
+  ['CREATE DATABASE db CHARSET utf8mb4;', '库表', '建库（utf8mb4 支持 emoji）'],
+  ['CREATE TABLE t (id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(64) NOT NULL DEFAULT \'\', created DATETIME DEFAULT CURRENT_TIMESTAMP);', '库表', '建表'],
+  ['SHOW TABLES; DESC t;', '库表', '查看表结构与字段'],
+  ['ALTER TABLE t ADD COLUMN age INT DEFAULT 0;', '库表', '加字段'],
+  ['DROP TABLE IF EXISTS t;', '库表', '删表（危险）'],
+  ['INSERT INTO t (name) VALUES (\'a\'), (\'b\');', '增', '批量插入'],
+  ['INSERT ... ON DUPLICATE KEY UPDATE name=VALUES(name);', '增', '存在则更新（upsert）'],
+  ['REPLACE INTO t VALUES (...);', '增', '先删后插（注意自增 ID 变化）'],
+  ['SELECT * FROM t WHERE id = 1 LIMIT 10 OFFSET 20;', '查', '条件 + 分页'],
+  ['SELECT DISTINCT city FROM users;', '查', '去重'],
+  ['SELECT COUNT(*), AVG(age) FROM users GROUP BY city HAVING AVG(age) > 20;', '聚合', '分组聚合 + HAVING'],
+  ['ORDER BY age DESC, id ASC;', '查', '多字段排序'],
+  ['SELECT a.*, b.name FROM orders a LEFT JOIN users b ON a.uid = b.id;', '连接', '左连接（保留左表全部）'],
+  ['SELECT * FROM t WHERE name LIKE \'张%\';', '查', '前缀匹配（可走索引）'],
+  ['SELECT * FROM t WHERE id IN (SELECT uid FROM vip);', '查', '子查询（大表建议改 JOIN）'],
+  ['SELECT * FROM t WHERE created BETWEEN \'2026-01-01\' AND \'2026-12-31\';', '查', '范围查询'],
+  ['UPDATE t SET age = age + 1 WHERE id = 1;', '改', '条件更新（无 WHERE 全表危险）'],
+  ['DELETE FROM t WHERE created < \'2020-01-01\';', '删', '条件删除'],
+  ['ALTER TABLE t ADD INDEX idx_name (name);', '索引', '普通索引'],
+  ['ALTER TABLE t ADD UNIQUE INDEX uk_phone (phone);', '索引', '唯一索引'],
+  ['EXPLAIN SELECT ...;', '优化', '执行计划（关注 type/rows/key）'],
+  ['SHOW INDEX FROM t;', '索引', '查看表索引'],
+  ['BEGIN; ... COMMIT; / ROLLBACK;', '事务', 'ACID 事务'],
+  ['SELECT * FROM t FOR UPDATE;', '事务', '悲观锁（行锁）'],
+  ['SELECT GET_LOCK(\'k\', 10);', '事务', '命名锁'],
+  ['SELECT NOW(), DATE_FORMAT(NOW(), \'%Y-%m-%d %H:%i:%s\');', '函数', '时间与格式化'],
+  ['SELECT DATEDIFF(d1, d2), TIMESTAMPDIFF(HOUR, t1, t2);', '函数', '日期差'],
+  ['SELECT IF(age > 18, \'成年\', \'未成年\'), CASE WHEN score>=90 THEN \'A\' ELSE \'B\' END;', '函数', '条件表达式'],
+  ['SELECT GROUP_CONCAT(name SEPARATOR \',\');', '函数', '分组拼接'],
+  ['SHOW PROCESSLIST;', '运维', '当前连接与执行中的 SQL'],
+  ['KILL <id>;', '运维', '终止查询'],
+  ['mysqldump -u root -p db > backup.sql', '运维', '备份（命令行）'],
+  ['SELECT @@version, @@innodb_buffer_pool_size;', '运维', '版本与配置']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['语法', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "mysql-syntax", "title": "MySQL 语法速查", "desc": "MySQL 常用语法参考：CRUD / 聚合 / 连接 / 索引 / 事务", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['CREATE DATABASE db CHARSET utf8mb4;', '库表', '建库（utf8mb4 支持 emoji）'],\n  ['CREATE TABLE t (id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(64) NOT NULL DEFAULT \\'\\', created DATETIME DEFAULT CURRENT_TIMESTAMP);', '库表', '建表'],\n  ['SHOW TABLES; DESC t;', '库表', '查看表结构与字段'],\n  ['ALTER TABLE t ADD COLUMN age INT DEFAULT 0;', '库表', '加字段'],\n  ['DROP TABLE IF EXISTS t;', '库表', '删表（危险）'],\n  ['INSERT INTO t (name) VALUES (\\'a\\'), (\\'b\\');', '增', '批量插入'],\n  ['INSERT ... ON DUPLICATE KEY UPDATE name=VALUES(name);', '增', '存在则更新（upsert）'],\n  ['REPLACE INTO t VALUES (...);', '增', '先删后插（注意自增 ID 变化）'],\n  ['SELECT * FROM t WHERE id = 1 LIMIT 10 OFFSET 20;', '查', '条件 + 分页'],\n  ['SELECT DISTINCT city FROM users;', '查', '去重'],\n  ['SELECT COUNT(*), AVG(age) FROM users GROUP BY city HAVING AVG(age) > 20;', '聚合', '分组聚合 + HAVING'],\n  ['ORDER BY age DESC, id ASC;', '查', '多字段排序'],\n  ['SELECT a.*, b.name FROM orders a LEFT JOIN users b ON a.uid = b.id;', '连接', '左连接（保留左表全部）'],\n  ['SELECT * FROM t WHERE name LIKE \\'张%\\';', '查', '前缀匹配（可走索引）'],\n  ['SELECT * FROM t WHERE id IN (SELECT uid FROM vip);', '查', '子查询（大表建议改 JOIN）'],\n  ['SELECT * FROM t WHERE created BETWEEN \\'2026-01-01\\' AND \\'2026-12-31\\';', '查', '范围查询'],\n  ['UPDATE t SET age = age + 1 WHERE id = 1;', '改', '条件更新（无 WHERE 全表危险）'],\n  ['DELETE FROM t WHERE created \u003c \\'2020-01-01\\';', '删', '条件删除'],\n  ['ALTER TABLE t ADD INDEX idx_name (name);', '索引', '普通索引'],\n  ['ALTER TABLE t ADD UNIQUE INDEX uk_phone (phone);', '索引', '唯一索引'],\n  ['EXPLAIN SELECT ...;', '优化', '执行计划（关注 type/rows/key）'],\n  ['SHOW INDEX FROM t;', '索引', '查看表索引'],\n  ['BEGIN; ... COMMIT; / ROLLBACK;', '事务', 'ACID 事务'],\n  ['SELECT * FROM t FOR UPDATE;', '事务', '悲观锁（行锁）'],\n  ['SELECT GET_LOCK(\\'k\\', 10);', '事务', '命名锁'],\n  ['SELECT NOW(), DATE_FORMAT(NOW(), \\'%Y-%m-%d %H:%i:%s\\');', '函数', '时间与格式化'],\n  ['SELECT DATEDIFF(d1, d2), TIMESTAMPDIFF(HOUR, t1, t2);', '函数', '日期差'],\n  ['SELECT IF(age > 18, \\'成年\\', \\'未成年\\'), CASE WHEN score>=90 THEN \\'A\\' ELSE \\'B\\' END;', '函数', '条件表达式'],\n  ['SELECT GROUP_CONCAT(name SEPARATOR \\',\\');', '函数', '分组拼接'],\n  ['SHOW PROCESSLIST;', '运维', '当前连接与执行中的 SQL'],\n  ['KILL \u003cid>;', '运维', '终止查询'],\n  ['mysqldump -u root -p db > backup.sql', '运维', '备份（命令行）'],\n  ['SELECT @@version, @@innodb_buffer_pool_size;', '运维', '版本与配置']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['语法', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

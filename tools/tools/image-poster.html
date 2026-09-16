@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>海报制作 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('海报制作', '图片 + 标题文字 + 副标题，生成社媒分享海报', 'image-poster');
+var img = null;
+var drop = T.msg('点击选择背景图（可选）', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '16px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var title = T.input('FreeLLM 工具合集', { class: 'grow' });
+var subtitle = T.input('打开即用的 300+ 在线工具', { class: 'grow' });
+var footer = T.input('freellm.top', { class: 'grow mono' });
+var accent = T.color('#1744E8');
+var textColor = T.color('#FFFFFF');
+var canvas = T.el('canvas', { width: 1080, height: 1440, style: 'max-width:100%;border:1px solid var(--line);border-radius:12px' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+function render() {
+  var W = 1080, H = 1440;
+  var ctx = canvas.getContext('2d');
+  var grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, LU.Color.hex(LU.Color.parse(accent.value)));
+  var hsl = LU.Color.rgbToHsl(LU.Color.parse(accent.value).r, LU.Color.parse(accent.value).g, LU.Color.parse(accent.value).b);
+  grad.addColorStop(1, LU.Color.hex(LU.Color.hslToRgb(((hsl.h + 40) % 360) / 360, hsl.s, Math.max(0.3, hsl.l - 0.1))));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  if (img) {
+    ctx.globalAlpha = 0.25;
+    var scale = Math.max(W / img.width, H / img.height);
+    ctx.drawImage(img, (W - img.width * scale) / 2, (H - img.height * scale) / 2, img.width * scale, img.height * scale);
+    ctx.globalAlpha = 1;
+  }
+  ctx.fillStyle = textColor.value;
+  ctx.textAlign = 'center';
+  ctx.font = '700 92px sans-serif';
+  var lines = title.value.split('\n');
+  var startY = H / 2 - (lines.length - 1) * 60;
+  lines.forEach(function (l, i) {
+    ctx.fillText(l, W / 2, startY + i * 120);
+  });
+  ctx.font = '400 40px sans-serif';
+  ctx.globalAlpha = 0.9;
+  ctx.fillText(subtitle.value, W / 2, startY + lines.length * 120 + 20);
+  ctx.globalAlpha = 1;
+  ctx.font = '500 30px monospace';
+  ctx.fillText(footer.value, W / 2, H - 80);
+  ctx.strokeStyle = 'rgba(255,255,255,.5)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(60, 60, W - 120, H - 120);
+}
+inp.addEventListener('change', function () {
+  T.loadImage(function (i) { img = i; render(); drop.textContent = '已选择背景图（点击更换）'; });
+});
+drop.addEventListener('click', function () { inp.click(); });
+[title, subtitle, footer, accent, textColor].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(T.pane([T.field('主标题（可换行）', title), T.field('副标题', subtitle)]));
+app.appendChild(T.row([T.el('span', { text: '底部文字' }), footer, T.el('span', { text: '主色' }), accent, T.el('span', { text: '文字色' }), textColor]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载海报 PNG（1080×1440）', function () { T.dlCanvas(canvas, 'poster.png'); }, true)]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-poster", "title": "海报制作", "desc": "图片 + 标题文字 + 副标题，生成社媒分享海报", "scripts": "", "code": "var img = null;\nvar drop = T.msg('点击选择背景图（可选）', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '16px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar title = T.input('FreeLLM 工具合集', { class: 'grow' });\nvar subtitle = T.input('打开即用的 300+ 在线工具', { class: 'grow' });\nvar footer = T.input('freellm.top', { class: 'grow mono' });\nvar accent = T.color('#1744E8');\nvar textColor = T.color('#FFFFFF');\nvar canvas = T.el('canvas', { width: 1080, height: 1440, style: 'max-width:100%;border:1px solid var(--line);border-radius:12px' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nfunction render() {\n  var W = 1080, H = 1440;\n  var ctx = canvas.getContext('2d');\n  var grad = ctx.createLinearGradient(0, 0, W, H);\n  grad.addColorStop(0, LU.Color.hex(LU.Color.parse(accent.value)));\n  var hsl = LU.Color.rgbToHsl(LU.Color.parse(accent.value).r, LU.Color.parse(accent.value).g, LU.Color.parse(accent.value).b);\n  grad.addColorStop(1, LU.Color.hex(LU.Color.hslToRgb(((hsl.h + 40) % 360) / 360, hsl.s, Math.max(0.3, hsl.l - 0.1))));\n  ctx.fillStyle = grad;\n  ctx.fillRect(0, 0, W, H);\n  if (img) {\n    ctx.globalAlpha = 0.25;\n    var scale = Math.max(W / img.width, H / img.height);\n    ctx.drawImage(img, (W - img.width * scale) / 2, (H - img.height * scale) / 2, img.width * scale, img.height * scale);\n    ctx.globalAlpha = 1;\n  }\n  ctx.fillStyle = textColor.value;\n  ctx.textAlign = 'center';\n  ctx.font = '700 92px sans-serif';\n  var lines = title.value.split('\\n');\n  var startY = H / 2 - (lines.length - 1) * 60;\n  lines.forEach(function (l, i) {\n    ctx.fillText(l, W / 2, startY + i * 120);\n  });\n  ctx.font = '400 40px sans-serif';\n  ctx.globalAlpha = 0.9;\n  ctx.fillText(subtitle.value, W / 2, startY + lines.length * 120 + 20);\n  ctx.globalAlpha = 1;\n  ctx.font = '500 30px monospace';\n  ctx.fillText(footer.value, W / 2, H - 80);\n  ctx.strokeStyle = 'rgba(255,255,255,.5)';\n  ctx.lineWidth = 2;\n  ctx.strokeRect(60, 60, W - 120, H - 120);\n}\ninp.addEventListener('change', function () {\n  T.loadImage(function (i) { img = i; render(); drop.textContent = '已选择背景图（点击更换）'; });\n});\ndrop.addEventListener('click', function () { inp.click(); });\n[title, subtitle, footer, accent, textColor].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(T.pane([T.field('主标题（可换行）', title), T.field('副标题', subtitle)]));\napp.appendChild(T.row([T.el('span', { text: '底部文字' }), footer, T.el('span', { text: '主色' }), accent, T.el('span', { text: '文字色' }), textColor]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载海报 PNG（1080×1440）', function () { T.dlCanvas(canvas, 'poster.png'); }, true)]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

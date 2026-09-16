@@ -2,79 +2,44 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Base85 编码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Base85 编码', 'Base85 编码与解码（Ascii85）', 'base85');
-
-  var mode = T.select([
-    { value: 'encode', label: '编码' },
-    { value: 'decode', label: '解码' }
-  ]);
-  var input = T.textarea('输入文本或 Base85...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%()*+,-./:;<=>?@[]^_`{|}~';
-
-  function encode(str) {
-    var bytes = new TextEncoder().encode(str);
-    var result = '';
-    for (var i = 0; i < bytes.length; i += 4) {
-      var chunk = 0;
-      for (var j = 0; j < 4; j++) {
-        chunk = chunk * 256 + (bytes[i + j] || 0);
-      }
-      var encoded = '';
-      for (var j = 0; j < 5; j++) {
-        encoded = CHARS[chunk % 85] + encoded;
-        chunk = Math.floor(chunk / 85);
-      }
-      result += encoded;
-    }
-    return result;
-  }
-
-  function decode(str) {
-    var bytes = [];
-    for (var i = 0; i < str.length; i += 5) {
-      var chunk = 0;
-      for (var j = 0; j < 5; j++) {
-        chunk = chunk * 85 + CHARS.indexOf(str[i + j] || '~');
-      }
-      for (var j = 3; j >= 0; j--) {
-        bytes.push((chunk >> (j * 8)) & 0xFF);
-      }
-    }
-    return new TextDecoder().decode(new Uint8Array(bytes));
-  }
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; return; }
-    try {
-      output.value = mode.value === 'encode' ? encode(v) : decode(v);
-    } catch (e) {
-      output.value = '⚠ 解码失败: ' + e.message;
-    }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Base85 编码', 'Ascii85 编码与解码（PDF / Git 风格）', 'base85');
+var input = T.textarea('输入文本（编码）或 Ascii85（解码）…');
+var output = T.out('输出…');
+var dir = T.select([{value:'enc',label:'编码'},{value:'dec',label:'解码'}],'enc');
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    output.value = dir.value === 'enc'
+      ? LC.b85encode(T.textToBytes(v))
+      : T.bytesToText(LC.b85decode(v));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, dir].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([dir, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "base85", "title": "Base85 编码", "desc": "Ascii85 编码与解码（PDF / Git 风格）", "scripts": "", "code": "var input = T.textarea('输入文本（编码）或 Ascii85（解码）…');\nvar output = T.out('输出…');\nvar dir = T.select([{value:'enc',label:'编码'},{value:'dec',label:'解码'}],'enc');\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    output.value = dir.value === 'enc'\n      ? LC.b85encode(T.textToBytes(v))\n      : T.bytesToText(LC.b85decode(v));\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, dir].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([dir, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

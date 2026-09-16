@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>代码格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('代码格式化', 'HTML / CSS / JS / JSON 代码缩进美化（轻量规则）', 'code-formatter');
+var input = T.textarea('粘贴代码…');
+var output = T.out('');
+var lang = T.select([{value:'js',label:'JavaScript'},{value:'css',label:'CSS'},{value:'html',label:'HTML'},{value:'json',label:'JSON'}],'js');
+function reindent(src, openers, closers) {
+  var depth = 0, out = [], line = '';
+  var tokens = src.replace(/\r\n?/g, '\n');
+  for (var i = 0; i < tokens.length; i++) {
+    var c = tokens[i];
+    if (openers.includes(c)) {
+      line += c;
+      out.push('  '.repeat(depth) + line.trim());
+      line = '';
+      depth++;
+    } else if (closers.includes(c)) {
+      if (line.trim()) { out.push('  '.repeat(depth) + line.trim()); line = ''; }
+      depth = Math.max(0, depth - 1);
+      out.push('  '.repeat(depth) + c);
+    } else if (c === ';' && lang.value !== 'html') {
+      line += c;
+      out.push('  '.repeat(depth) + line.trim());
+      line = '';
+    } else if (c === '\n') {
+      if (line.trim()) { out.push('  '.repeat(depth) + line.trim()); }
+      line = '';
+    } else line += c;
+  }
+  if (line.trim()) out.push('  '.repeat(depth) + line.trim());
+  return out.filter(function (l, ix) { return l.trim() || (ix > 0 && out[ix - 1].trim()); }).join('\n');
+}
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    if (lang.value === 'json') output.value = JSON.stringify(JSON.parse(v), null, 2);
+    else if (lang.value === 'css') output.value = reindent(v, '{', '}');
+    else if (lang.value === 'js') output.value = reindent(v.replace(/\s*\/\/[^\n]*/g, ''), '{[', '}]');
+    else {
+      var pretty = v.replace(/>\s*</g, '>\n<');
+      var depth = 0;
+      output.value = pretty.split('\n').map(function (l) {
+        if (/^<\//.test(l.trim())) depth = Math.max(0, depth - 1);
+        var res = '  '.repeat(depth) + l.trim();
+        if (/^<[^/!][^>]*[^/]>$/.test(l.trim()) && !/^<(br|img|input|meta|link|hr)/i.test(l.trim())) depth++;
+        return res;
+      }).join('\n');
+    }
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, lang].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('代码', input), T.field('格式化结果', output)]));
+app.appendChild(T.row([T.el('span', { text: '语言' }), lang, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "code-formatter", "title": "代码格式化", "desc": "HTML / CSS / JS / JSON 代码缩进美化（轻量规则）", "scripts": "", "code": "var input = T.textarea('粘贴代码…');\nvar output = T.out('');\nvar lang = T.select([{value:'js',label:'JavaScript'},{value:'css',label:'CSS'},{value:'html',label:'HTML'},{value:'json',label:'JSON'}],'js');\nfunction reindent(src, openers, closers) {\n  var depth = 0, out = [], line = '';\n  var tokens = src.replace(/\\r\\n?/g, '\\n');\n  for (var i = 0; i \u003c tokens.length; i++) {\n    var c = tokens[i];\n    if (openers.includes(c)) {\n      line += c;\n      out.push('  '.repeat(depth) + line.trim());\n      line = '';\n      depth++;\n    } else if (closers.includes(c)) {\n      if (line.trim()) { out.push('  '.repeat(depth) + line.trim()); line = ''; }\n      depth = Math.max(0, depth - 1);\n      out.push('  '.repeat(depth) + c);\n    } else if (c === ';' && lang.value !== 'html') {\n      line += c;\n      out.push('  '.repeat(depth) + line.trim());\n      line = '';\n    } else if (c === '\\n') {\n      if (line.trim()) { out.push('  '.repeat(depth) + line.trim()); }\n      line = '';\n    } else line += c;\n  }\n  if (line.trim()) out.push('  '.repeat(depth) + line.trim());\n  return out.filter(function (l, ix) { return l.trim() || (ix > 0 && out[ix - 1].trim()); }).join('\\n');\n}\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    if (lang.value === 'json') output.value = JSON.stringify(JSON.parse(v), null, 2);\n    else if (lang.value === 'css') output.value = reindent(v, '{', '}');\n    else if (lang.value === 'js') output.value = reindent(v.replace(/\\s*\\/\\/[^\\n]*/g, ''), '{[', '}]');\n    else {\n      var pretty = v.replace(/>\\s*\u003c/g, '>\\n\u003c');\n      var depth = 0;\n      output.value = pretty.split('\\n').map(function (l) {\n        if (/^\u003c\\//.test(l.trim())) depth = Math.max(0, depth - 1);\n        var res = '  '.repeat(depth) + l.trim();\n        if (/^\u003c[^/!][^>]*[^/]>$/.test(l.trim()) && !/^\u003c(br|img|input|meta|link|hr)/i.test(l.trim())) depth++;\n        return res;\n      }).join('\\n');\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, lang].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('代码', input), T.field('格式化结果', output)]));\napp.appendChild(T.row([T.el('span', { text: '语言' }), lang, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

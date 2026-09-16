@@ -2,58 +2,52 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>像素密度计算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('像素密度计算', 'DPI/PPI 计算', 'pixel-density');
-
-  var diagonal = T.el('input', { type: 'number', value: '15.6', step: '0.1', placeholder: '屏幕对角线 (英寸)', style: 'flex:1' });
-  var widthRes = T.el('input', { type: 'number', value: '1920', placeholder: '水平分辨率', style: 'flex:1' });
-  var heightRes = T.el('input', { type: 'number', value: '1080', placeholder: '垂直分辨率', style: 'flex:1' });
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function calculate() {
-    var d = parseFloat(diagonal.value) || 15.6;
-    var w = parseInt(widthRes.value) || 1920;
-    var h = parseInt(heightRes.value) || 1080;
-
-    var ppi = Math.sqrt(w * w + h * h) / d;
-    var physicalWidth = w / ppi * 25.4;
-    var physicalHeight = h / ppi * 25.4;
-
-    var category;
-    if (ppi < 100) category = '低密度';
-    else if (ppi < 200) category = '中密度';
-    else if (ppi < 300) category = '高密度 (视网膜)';
-    else category = '超高密度';
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px;color:var(--muted)">PPI</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">' + ppi.toFixed(1) + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">密度等级</td><td style="padding:8px;text-align:right">' + category + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">物理宽度</td><td style="padding:8px;text-align:right">' + physicalWidth.toFixed(1) + ' mm (' + (physicalWidth / 10).toFixed(1) + ' cm)</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">物理高度</td><td style="padding:8px;text-align:right">' + physicalHeight.toFixed(1) + ' mm (' + (physicalHeight / 10).toFixed(1) + ' cm)</td></tr>' +
-      '</table>';
-  }
-
-  [diagonal, widthRes, heightRes].forEach(function (el) {
-    el.addEventListener('input', function () { setTimeout(calculate, 100); });
-  });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '对角线' }), diagonal]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '宽度' }), widthRes, T.el('span', { text: '高度' }), heightRes, copyBtn]));
-  app.appendChild(result);
-
-  calculate();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('像素密度计算', '屏幕分辨率 + 对角线英寸 → PPI / 点距 / 宽高', 'pixel-density');
+var w = T.num(2560, { min: 1, style: 'width:100px' });
+var h = T.num(1440, { min: 1, style: 'width:100px' });
+var diag = T.num(27, { step: 0.1, style: 'width:90px' });
+var box = T.el('div');
+function run() {
+  var W = +w.value, H = +h.value, D = +diag.value;
+  T.clearEl(box);
+  if (!W || !H || !D) return;
+  var dp = Math.sqrt(W * W + H * H);
+  var ppi = dp / D;
+  box.appendChild(T.kvTable([
+    ['对角线像素', Math.round(dp).toLocaleString() + ' px'],
+    ['PPI（像素/英寸）', ppi.toFixed(2)],
+    ['点距 Dot Pitch', (25.4 / ppi).toFixed(4) + ' mm'],
+    ['物理尺寸', (W / ppi * 2.54).toFixed(1) + ' × ' + (H / ppi * 2.54).toFixed(1) + ' cm'],
+    ['总像素', (W * H / 1e6).toFixed(2) + ' MP'],
+    ['Retina（≥300 PPI）', ppi >= 300 ? '✓ 达标' : '✗ 未达标（' + ppi.toFixed(0) + ' PPI）']
+  ]));
+}
+[w, h, diag].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('宽度 px', w), T.field('高度 px', h)]));
+app.appendChild(T.row([T.el('span', { text: '对角线（英寸）' }), diag]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "pixel-density", "title": "像素密度计算", "desc": "屏幕分辨率 + 对角线英寸 → PPI / 点距 / 宽高", "scripts": "", "code": "var w = T.num(2560, { min: 1, style: 'width:100px' });\nvar h = T.num(1440, { min: 1, style: 'width:100px' });\nvar diag = T.num(27, { step: 0.1, style: 'width:90px' });\nvar box = T.el('div');\nfunction run() {\n  var W = +w.value, H = +h.value, D = +diag.value;\n  T.clearEl(box);\n  if (!W || !H || !D) return;\n  var dp = Math.sqrt(W * W + H * H);\n  var ppi = dp / D;\n  box.appendChild(T.kvTable([\n    ['对角线像素', Math.round(dp).toLocaleString() + ' px'],\n    ['PPI（像素/英寸）', ppi.toFixed(2)],\n    ['点距 Dot Pitch', (25.4 / ppi).toFixed(4) + ' mm'],\n    ['物理尺寸', (W / ppi * 2.54).toFixed(1) + ' × ' + (H / ppi * 2.54).toFixed(1) + ' cm'],\n    ['总像素', (W * H / 1e6).toFixed(2) + ' MP'],\n    ['Retina（≥300 PPI）', ppi >= 300 ? '✓ 达标' : '✗ 未达标（' + ppi.toFixed(0) + ' PPI）']\n  ]));\n}\n[w, h, diag].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('宽度 px', w), T.field('高度 px', h)]));\napp.appendChild(T.row([T.el('span', { text: '对角线（英寸）' }), diag]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

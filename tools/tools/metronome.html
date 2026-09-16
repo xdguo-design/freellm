@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>节拍器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('节拍器', '可调 BPM 电子节拍器：强弱拍 + 拍号设置', 'metronome');
+var bpm = T.range(30, 240, 1, 100);
+var bpmLabel = T.el('b', { text: '100 BPM' });
+var beats = T.select([{value:'2',label:'2/2'},{value:'3',label:'3/4 圆舞曲'},{value:'4',label:'4/4 常用'},{value:'6',label:'6/8'}],'4');
+var status = T.badge('未开始');
+var dots = T.el('div', { style: 'display:flex;gap:10px;justify-content:center;margin:20px 0' });
+var ctx = null, timer = 0, beat = 0;
+function drawDots() {
+  T.clearEl(dots);
+  for (var i = 0; i < +beats.value; i++) {
+    dots.appendChild(T.el('div', { style: 'width:26px;height:26px;border-radius:50%;background:' + (i === beat % +beats.value && ctx ? (i === 0 ? 'var(--err)' : 'var(--accent)') : 'var(--line)') }));
+  }
+}
+function click(strong) {
+  var c = ctx;
+  var osc = c.createOscillator();
+  var gain = c.createGain();
+  osc.frequency.value = strong ? 1200 : 800;
+  gain.gain.setValueAtTime(strong ? 0.5 : 0.3, c.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.08);
+  osc.connect(gain).connect(c.destination);
+  osc.start();
+  osc.stop(c.currentTime + 0.09);
+}
+function start() {
+  stop();
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  var interval = 60000 / +bpm.value;
+  beat = 0;
+  function tickBeat() {
+    click(beat % +beats.value === 0);
+    drawDots();
+    beat++;
+  }
+  tickBeat();
+  timer = setInterval(tickBeat, interval);
+  status.textContent = '节拍中';
+  status.className = 'badge ok';
+}
+function stop() {
+  if (timer) clearInterval(timer);
+  timer = 0;
+  if (ctx) { try { ctx.close(); } catch (e) {} ctx = null; }
+  drawDots();
+}
+bpm.addEventListener('input', function () {
+  bpmLabel.textContent = bpm.value + ' BPM';
+  if (timer) start();
+});
+beats.addEventListener('change', function () { beat = 0; drawDots(); if (timer) start(); });
+app.appendChild(T.row([T.el('span', { text: '速度' }), bpm, bpmLabel, beats, T.button('▶ 开始', function () { timer ? stop() : start(); }, true), T.button('⏹ 停止', stop), status]));
+app.appendChild(dots);
+drawDots();
+app.appendChild(T.el('p', { text: '常用 BPM：慢板 60-76 · 行板 76-108 · 快板 108-168 · 急板 168+。红点为强拍。', style: 'color:var(--ink2);font-size:12px' }));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "metronome", "title": "节拍器", "desc": "可调 BPM 电子节拍器：强弱拍 + 拍号设置", "scripts": "", "code": "var bpm = T.range(30, 240, 1, 100);\nvar bpmLabel = T.el('b', { text: '100 BPM' });\nvar beats = T.select([{value:'2',label:'2/2'},{value:'3',label:'3/4 圆舞曲'},{value:'4',label:'4/4 常用'},{value:'6',label:'6/8'}],'4');\nvar status = T.badge('未开始');\nvar dots = T.el('div', { style: 'display:flex;gap:10px;justify-content:center;margin:20px 0' });\nvar ctx = null, timer = 0, beat = 0;\nfunction drawDots() {\n  T.clearEl(dots);\n  for (var i = 0; i \u003c +beats.value; i++) {\n    dots.appendChild(T.el('div', { style: 'width:26px;height:26px;border-radius:50%;background:' + (i === beat % +beats.value && ctx ? (i === 0 ? 'var(--err)' : 'var(--accent)') : 'var(--line)') }));\n  }\n}\nfunction click(strong) {\n  var c = ctx;\n  var osc = c.createOscillator();\n  var gain = c.createGain();\n  osc.frequency.value = strong ? 1200 : 800;\n  gain.gain.setValueAtTime(strong ? 0.5 : 0.3, c.currentTime);\n  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.08);\n  osc.connect(gain).connect(c.destination);\n  osc.start();\n  osc.stop(c.currentTime + 0.09);\n}\nfunction start() {\n  stop();\n  ctx = new (window.AudioContext || window.webkitAudioContext)();\n  var interval = 60000 / +bpm.value;\n  beat = 0;\n  function tickBeat() {\n    click(beat % +beats.value === 0);\n    drawDots();\n    beat++;\n  }\n  tickBeat();\n  timer = setInterval(tickBeat, interval);\n  status.textContent = '节拍中';\n  status.className = 'badge ok';\n}\nfunction stop() {\n  if (timer) clearInterval(timer);\n  timer = 0;\n  if (ctx) { try { ctx.close(); } catch (e) {} ctx = null; }\n  drawDots();\n}\nbpm.addEventListener('input', function () {\n  bpmLabel.textContent = bpm.value + ' BPM';\n  if (timer) start();\n});\nbeats.addEventListener('change', function () { beat = 0; drawDots(); if (timer) start(); });\napp.appendChild(T.row([T.el('span', { text: '速度' }), bpm, bpmLabel, beats, T.button('▶ 开始', function () { timer ? stop() : start(); }, true), T.button('⏹ 停止', stop), status]));\napp.appendChild(dots);\ndrawDots();\napp.appendChild(T.el('p', { text: '常用 BPM：慢板 60-76 · 行板 76-108 · 快板 108-168 · 急板 168+。红点为强拍。', style: 'color:var(--ink2);font-size:12px' }));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

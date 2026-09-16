@@ -2,60 +2,59 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>网页定时刷新 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('网页定时刷新', '设间隔自动刷新网页', 'auto-refresh');
-
-  var url = T.el('input', { type: 'url', value: window.location.href, placeholder: '输入网址', style: 'flex:1' });
-  var interval = T.el('input', { type: 'number', value: '30', min: '1', style: 'width:80px' });
-  var countdown = T.el('span', { class: 'badge blue', text: '30' });
-
-  var startBtn = T.button('开始刷新', start, true);
-  var stopBtn = T.button('停止', stop);
-
-  var timer = null;
-  var countTimer = null;
-  var timeLeft = 30;
-
-  function start() {
-    stop();
-    timeLeft = parseInt(interval.value) || 30;
-    countdown.textContent = timeLeft;
-
-    countTimer = setInterval(function () {
-      timeLeft--;
-      countdown.textContent = timeLeft;
-      if (timeLeft <= 0) {
-        window.location.href = url.value;
-      }
-    }, 1000);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('网页定时刷新', '按设定间隔自动刷新页面（iframe 预览或本页刷新）', 'auto-refresh');
+var interval = T.num(10, { min: 1, max: 3600, style: 'width:90px' });
+var unit = T.select([{value:'1',label:'秒'},{value:'60',label:'分钟'}],'1');
+var mode = T.select([{value:'self',label:'刷新本页'},{value:'frame',label:'iframe 加载目标网址并定时刷新'}],'frame');
+var url = T.input('https://freellm.top', { class: 'grow mono', placeholder: '目标网址（iframe 模式）' });
+var frame = T.el('iframe', { sandbox: 'allow-scripts allow-same-origin allow-forms', style: 'width:100%;height:420px;border:1px solid var(--line);border-radius:10px;display:none;background:#fff' });
+var status = T.badge('未启动');
+var timer = 0;
+function start() {
+  stop();
+  var ms = Math.max(1, +interval.value) * +unit.value * 1000;
+  if (mode.value === 'frame') {
+    frame.style.display = '';
+    frame.src = url.value;
   }
-
-  function stop() {
-    clearInterval(countTimer);
-    countdown.textContent = interval.value;
-    timeLeft = parseInt(interval.value) || 30;
-  }
-
-  interval.addEventListener('input', function () {
-    timeLeft = parseInt(interval.value) || 30;
-    countdown.textContent = timeLeft;
-  });
-
-  app.appendChild(T.el('div', { class: 'field', text: '刷新网址:' }));
-  app.appendChild(url);
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '间隔 (秒)' }), interval, countdown, startBtn, stopBtn
-  ]));
+  timer = setInterval(function () {
+    if (mode.value === 'self') location.reload();
+    else frame.src = url.value;
+  }, ms);
+  status.textContent = '每 ' + (unit.value === '60' ? interval.value + ' 分钟' : interval.value + ' 秒') + ' 刷新一次';
+  status.className = 'badge ok';
+}
+function stop() {
+  if (timer) clearInterval(timer);
+  timer = 0;
+  status.textContent = '已停止';
+  status.className = 'badge';
+}
+app.appendChild(T.pane([T.field('刷新间隔', interval), T.field('', unit)]));
+app.appendChild(T.row([mode, url]));
+app.appendChild(T.row([T.button('▶ 启动', start, true), T.button('⏹ 停止', stop), status]));
+app.appendChild(frame);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "auto-refresh", "title": "网页定时刷新", "desc": "按设定间隔自动刷新页面（iframe 预览或本页刷新）", "scripts": "", "code": "var interval = T.num(10, { min: 1, max: 3600, style: 'width:90px' });\nvar unit = T.select([{value:'1',label:'秒'},{value:'60',label:'分钟'}],'1');\nvar mode = T.select([{value:'self',label:'刷新本页'},{value:'frame',label:'iframe 加载目标网址并定时刷新'}],'frame');\nvar url = T.input('https://freellm.top', { class: 'grow mono', placeholder: '目标网址（iframe 模式）' });\nvar frame = T.el('iframe', { sandbox: 'allow-scripts allow-same-origin allow-forms', style: 'width:100%;height:420px;border:1px solid var(--line);border-radius:10px;display:none;background:#fff' });\nvar status = T.badge('未启动');\nvar timer = 0;\nfunction start() {\n  stop();\n  var ms = Math.max(1, +interval.value) * +unit.value * 1000;\n  if (mode.value === 'frame') {\n    frame.style.display = '';\n    frame.src = url.value;\n  }\n  timer = setInterval(function () {\n    if (mode.value === 'self') location.reload();\n    else frame.src = url.value;\n  }, ms);\n  status.textContent = '每 ' + (unit.value === '60' ? interval.value + ' 分钟' : interval.value + ' 秒') + ' 刷新一次';\n  status.className = 'badge ok';\n}\nfunction stop() {\n  if (timer) clearInterval(timer);\n  timer = 0;\n  status.textContent = '已停止';\n  status.className = 'badge';\n}\napp.appendChild(T.pane([T.field('刷新间隔', interval), T.field('', unit)]));\napp.appendChild(T.row([mode, url]));\napp.appendChild(T.row([T.button('▶ 启动', start, true), T.button('⏹ 停止', stop), status]));\napp.appendChild(frame);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

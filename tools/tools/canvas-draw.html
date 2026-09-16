@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>白板涂鸦 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('白板涂鸦', 'Canvas 自由绘画：画笔 / 橡皮 / 颜色 / 粗细，导出 PNG', 'canvas-draw');
+var canvas = T.el('canvas', { width: 860, height: 480, style: 'width:100%;border:1px solid var(--line);border-radius:10px;cursor:crosshair;background:#fff;touch-action:none' });
+var color = T.color('#2F3437');
+var size = T.range(1, 40, 1, 4);
+var sizeLabel = T.el('b', { text: '4' });
+var eraser = false;
+var drawing = false, ctx = canvas.getContext('2d');
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+canvas.addEventListener('pointerdown', function (e) {
+  drawing = true;
+  var rect = canvas.getBoundingClientRect();
+  var x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  var y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!drawing) return;
+  var rect = canvas.getBoundingClientRect();
+  var x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  var y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  ctx.strokeStyle = eraser ? '#FFFFFF' : color.value;
+  ctx.lineWidth = eraser ? +size.value * 3 : +size.value;
+  ctx.lineTo(x, y);
+  ctx.stroke();
+});
+window.addEventListener('pointerup', function () { drawing = false; });
+app.appendChild(T.row([color, T.el('span', { text: '粗细' }), size, sizeLabel,
+  T.button(eraser ? '✏️ 画笔' : '🧽 橡皮', function () {
+    eraser = !eraser;
+    this.firstChild.textContent = eraser ? '✏️ 画笔' : '🧽 橡皮';
+  }),
+  T.button('清空', function () { ctx.clearRect(0, 0, canvas.width, canvas.height); }),
+  T.button('下载 PNG', function () { T.dlCanvas(canvas, 'drawing.png'); }, true)]));
+app.appendChild(canvas);
+size.addEventListener('input', function () { sizeLabel.textContent = size.value; });
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "canvas-draw", "title": "白板涂鸦", "desc": "Canvas 自由绘画：画笔 / 橡皮 / 颜色 / 粗细，导出 PNG", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 480, style: 'width:100%;border:1px solid var(--line);border-radius:10px;cursor:crosshair;background:#fff;touch-action:none' });\nvar color = T.color('#2F3437');\nvar size = T.range(1, 40, 1, 4);\nvar sizeLabel = T.el('b', { text: '4' });\nvar eraser = false;\nvar drawing = false, ctx = canvas.getContext('2d');\nctx.lineCap = 'round';\nctx.lineJoin = 'round';\ncanvas.addEventListener('pointerdown', function (e) {\n  drawing = true;\n  var rect = canvas.getBoundingClientRect();\n  var x = (e.clientX - rect.left) * (canvas.width / rect.width);\n  var y = (e.clientY - rect.top) * (canvas.height / rect.height);\n  ctx.beginPath();\n  ctx.moveTo(x, y);\n  canvas.setPointerCapture(e.pointerId);\n});\ncanvas.addEventListener('pointermove', function (e) {\n  if (!drawing) return;\n  var rect = canvas.getBoundingClientRect();\n  var x = (e.clientX - rect.left) * (canvas.width / rect.width);\n  var y = (e.clientY - rect.top) * (canvas.height / rect.height);\n  ctx.strokeStyle = eraser ? '#FFFFFF' : color.value;\n  ctx.lineWidth = eraser ? +size.value * 3 : +size.value;\n  ctx.lineTo(x, y);\n  ctx.stroke();\n});\nwindow.addEventListener('pointerup', function () { drawing = false; });\napp.appendChild(T.row([color, T.el('span', { text: '粗细' }), size, sizeLabel,\n  T.button(eraser ? '✏️ 画笔' : '🧽 橡皮', function () {\n    eraser = !eraser;\n    this.firstChild.textContent = eraser ? '✏️ 画笔' : '🧽 橡皮';\n  }),\n  T.button('清空', function () { ctx.clearRect(0, 0, canvas.width, canvas.height); }),\n  T.button('下载 PNG', function () { T.dlCanvas(canvas, 'drawing.png'); }, true)]));\napp.appendChild(canvas);\nsize.addEventListener('input', function () { sizeLabel.textContent = size.value; });"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

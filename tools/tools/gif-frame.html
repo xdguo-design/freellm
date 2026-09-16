@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>GIF 转帧 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('GIF 转帧', 'GIF 分解为逐帧 PNG（使用浏览器 ImageDecoder，Chrome/Edge）', 'gif-frame');
+var pick = T.el('input', { type: 'file', accept: '.gif,image/gif', style: 'display:none' });
+document.body.appendChild(pick);
+var status = T.badge('—');
+var box = T.el('div');
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  if (!window.ImageDecoder) {
+    status.textContent = '当前浏览器不支持 ImageDecoder（需 Chrome/Edge 94+）';
+    status.className = 'badge warn';
+    return;
+  }
+  status.textContent = '解码中…';
+  f.arrayBuffer().then(function (buf) {
+    var decoder = new ImageDecoder({ data: buf, type: 'image/gif' });
+    return decoder.tracks.ready.then(function () {
+      var track = decoder.tracks.selectedTrack;
+      var count = Math.min(track.frameCount || 1, 60);
+      var frames = [];
+      var p = Promise.resolve();
+      for (var i = 0; i < count; i++) {
+        (function (idx) {
+          p = p.then(function () {
+            return decoder.decode({ frameIndex: idx }).then(function (r) {
+              frames.push(r.image);
+              status.textContent = '解码 ' + (idx + 1) + '/' + count;
+            });
+          });
+        })(i);
+      }
+      return p.then(function () {
+        T.clearEl(box);
+        frames.forEach(function (img, i) {
+          var c = T.el('canvas', { width: img.width, height: img.height, style: 'width:120px;border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击下载第 ' + (i + 1) + ' 帧' });
+          c.getContext('2d').drawImage(img, 0, 0);
+          c.addEventListener('click', function () { T.dlCanvas(c, 'frame-' + String(i + 1).padStart(3, '0') + '.png'); });
+          box.appendChild(c);
+        });
+        status.textContent = '✓ 共 ' + frames.length + ' 帧（点击帧下载）';
+        status.className = 'badge ok';
+      });
+    });
+  }).catch(function (e) {
+    status.textContent = '解码失败：' + e.message;
+    status.className = 'badge warn';
+  });
+});
+app.appendChild(T.row([T.button('选择 GIF 文件', function () { pick.click(); }, true), status]));
+app.appendChild(T.el('p', { text: '最多解码 60 帧，点击任意帧下载 PNG。', style: 'color:var(--ink2);font-size:12px' }));
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "gif-frame", "title": "GIF 转帧", "desc": "GIF 分解为逐帧 PNG（使用浏览器 ImageDecoder，Chrome/Edge）", "scripts": "", "code": "var pick = T.el('input', { type: 'file', accept: '.gif,image/gif', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar status = T.badge('—');\nvar box = T.el('div');\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  if (!window.ImageDecoder) {\n    status.textContent = '当前浏览器不支持 ImageDecoder（需 Chrome/Edge 94+）';\n    status.className = 'badge warn';\n    return;\n  }\n  status.textContent = '解码中…';\n  f.arrayBuffer().then(function (buf) {\n    var decoder = new ImageDecoder({ data: buf, type: 'image/gif' });\n    return decoder.tracks.ready.then(function () {\n      var track = decoder.tracks.selectedTrack;\n      var count = Math.min(track.frameCount || 1, 60);\n      var frames = [];\n      var p = Promise.resolve();\n      for (var i = 0; i \u003c count; i++) {\n        (function (idx) {\n          p = p.then(function () {\n            return decoder.decode({ frameIndex: idx }).then(function (r) {\n              frames.push(r.image);\n              status.textContent = '解码 ' + (idx + 1) + '/' + count;\n            });\n          });\n        })(i);\n      }\n      return p.then(function () {\n        T.clearEl(box);\n        frames.forEach(function (img, i) {\n          var c = T.el('canvas', { width: img.width, height: img.height, style: 'width:120px;border:1px solid var(--line);border-radius:6px;cursor:pointer', title: '点击下载第 ' + (i + 1) + ' 帧' });\n          c.getContext('2d').drawImage(img, 0, 0);\n          c.addEventListener('click', function () { T.dlCanvas(c, 'frame-' + String(i + 1).padStart(3, '0') + '.png'); });\n          box.appendChild(c);\n        });\n        status.textContent = '✓ 共 ' + frames.length + ' 帧（点击帧下载）';\n        status.className = 'badge ok';\n      });\n    });\n  }).catch(function (e) {\n    status.textContent = '解码失败：' + e.message;\n    status.className = 'badge warn';\n  });\n});\napp.appendChild(T.row([T.button('选择 GIF 文件', function () { pick.click(); }, true), status]));\napp.appendChild(T.el('p', { text: '最多解码 60 帧，点击任意帧下载 PNG。', style: 'color:var(--ink2);font-size:12px' }));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

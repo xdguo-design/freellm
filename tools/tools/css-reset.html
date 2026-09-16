@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS Reset 生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS Reset 生成', '按需生成 CSS Reset：盒模型 / 媒体 / 表单 / 列表 / 排版基线', 'css-reset');
+var opts = [
+  T.check('盒模型 box-sizing', true),
+  T.check('外边距清零', true),
+  T.check('媒体元素自适应（img/video）', true),
+  T.check('表单元素继承字体', true),
+  T.check('列表清除', false),
+  T.check('链接样式', true),
+  T.check('smooth 滚动 + 文字渲染', true),
+  T.check('现代精简版（2024 风格）', true)
+];
+var output = T.out('');
+function run() {
+  var modern = opts[7]._input.checked;
+  var lines = [];
+  if (opts[0]._input.checked) lines.push(modern ? '*, *::before, *::after { box-sizing: border-box; }' : 'html { box-sizing: border-box; }\n*, *::before, *::after { box-sizing: inherit; }');
+  if (opts[1]._input.checked) lines.push('* { margin: 0; }');
+  if (opts[2]._input.checked) lines.push('img, picture, video, canvas, svg { display: block; max-width: 100%; }');
+  if (opts[3]._input.checked) lines.push('input, button, textarea, select { font: inherit; }');
+  if (opts[4]._input.checked) lines.push('ol, ul { list-style: none; padding: 0; }');
+  if (opts[5]._input.checked) lines.push('a { color: inherit; text-decoration: none; }');
+  if (opts[6]._input.checked) lines.push('html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }');
+  if (modern) {
+    lines.push('p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }');
+    if (opts[1]._input.checked) lines.push('body { min-height: 100vh; line-height: 1.5; -webkit-font-smoothing: antialiased; }');
+  }
+  output.value = lines.join('\n\n') + '\n';
+}
+opts.forEach(function (o) { o._input.addEventListener('change', run); });
+var wrap = T.el('div', { class: 'row' });
+opts.forEach(function (o) { wrap.appendChild(o); });
+app.appendChild(wrap);
+app.appendChild(T.pane([T.field('Reset CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; }), T.button('下载 reset.css', function () { T.download('reset.css', output.value, 'text/css'); })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-reset", "title": "CSS Reset 生成", "desc": "按需生成 CSS Reset：盒模型 / 媒体 / 表单 / 列表 / 排版基线", "scripts": "", "code": "var opts = [\n  T.check('盒模型 box-sizing', true),\n  T.check('外边距清零', true),\n  T.check('媒体元素自适应（img/video）', true),\n  T.check('表单元素继承字体', true),\n  T.check('列表清除', false),\n  T.check('链接样式', true),\n  T.check('smooth 滚动 + 文字渲染', true),\n  T.check('现代精简版（2024 风格）', true)\n];\nvar output = T.out('');\nfunction run() {\n  var modern = opts[7]._input.checked;\n  var lines = [];\n  if (opts[0]._input.checked) lines.push(modern ? '*, *::before, *::after { box-sizing: border-box; }' : 'html { box-sizing: border-box; }\\n*, *::before, *::after { box-sizing: inherit; }');\n  if (opts[1]._input.checked) lines.push('* { margin: 0; }');\n  if (opts[2]._input.checked) lines.push('img, picture, video, canvas, svg { display: block; max-width: 100%; }');\n  if (opts[3]._input.checked) lines.push('input, button, textarea, select { font: inherit; }');\n  if (opts[4]._input.checked) lines.push('ol, ul { list-style: none; padding: 0; }');\n  if (opts[5]._input.checked) lines.push('a { color: inherit; text-decoration: none; }');\n  if (opts[6]._input.checked) lines.push('html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }');\n  if (modern) {\n    lines.push('p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }');\n    if (opts[1]._input.checked) lines.push('body { min-height: 100vh; line-height: 1.5; -webkit-font-smoothing: antialiased; }');\n  }\n  output.value = lines.join('\\n\\n') + '\\n';\n}\nopts.forEach(function (o) { o._input.addEventListener('change', run); });\nvar wrap = T.el('div', { class: 'row' });\nopts.forEach(function (o) { wrap.appendChild(o); });\napp.appendChild(wrap);\napp.appendChild(T.pane([T.field('Reset CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; }), T.button('下载 reset.css', function () { T.download('reset.css', output.value, 'text/css'); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

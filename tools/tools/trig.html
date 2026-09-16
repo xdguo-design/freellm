@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>三角函数计算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('三角函数计算', 'sin / cos / tan / asin / acos / atan，角度弧度切换', 'trig');
+var input = T.num(30, { step: 'any', style: 'width:140px' });
+var mode = T.select([{value:'deg',label:'角度制 °'},{value:'rad',label:'弧度制 rad'}],'deg');
+var box = T.el('div');
+function toRad(v) { return mode.value === 'deg' ? v * Math.PI / 180 : v; }
+function fmt(x) { return Math.abs(x) < 1e-12 ? '0' : +x.toPrecision(10); }
+function run() {
+  var v = +input.value;
+  if (isNaN(v)) { T.clearEl(box); return; }
+  var r = toRad(v);
+  var rows = [
+    ['sin', fmt(Math.sin(r))], ['cos', fmt(Math.cos(r))],
+    ['tan', Math.abs(Math.cos(r)) < 1e-12 ? '∞ (undefined)' : fmt(Math.tan(r))],
+    ['csc', fmt(1 / Math.sin(r))], ['sec', fmt(1 / Math.cos(r))],
+    ['cot', Math.abs(Math.sin(r)) < 1e-12 ? '∞' : fmt(1 / Math.tan(r))]
+  ];
+  T.clearEl(box).appendChild(T.kvTable(rows));
+  var inv = [];
+  if (v >= -1 && v <= 1) {
+    inv.push(['asin', fmt(mode.value === 'deg' ? Math.asin(v) * 180 / Math.PI : Math.asin(v))]);
+    inv.push(['acos', fmt(mode.value === 'deg' ? Math.acos(v) * 180 / Math.PI : Math.acos(v))]);
+  }
+  inv.push(['atan', fmt(mode.value === 'deg' ? Math.atan(v) * 180 / Math.PI : Math.atan(v))]);
+  box.appendChild(T.el('span', { text: '反三角（输入作为比值，仅当 |x|≤1 时 asin/acos 有效）', class: 'field' }));
+  box.appendChild(T.kvTable(inv));
+}
+[input, mode].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '输入' }), input, mode]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "trig", "title": "三角函数计算", "desc": "sin / cos / tan / asin / acos / atan，角度弧度切换", "scripts": "", "code": "var input = T.num(30, { step: 'any', style: 'width:140px' });\nvar mode = T.select([{value:'deg',label:'角度制 °'},{value:'rad',label:'弧度制 rad'}],'deg');\nvar box = T.el('div');\nfunction toRad(v) { return mode.value === 'deg' ? v * Math.PI / 180 : v; }\nfunction fmt(x) { return Math.abs(x) \u003c 1e-12 ? '0' : +x.toPrecision(10); }\nfunction run() {\n  var v = +input.value;\n  if (isNaN(v)) { T.clearEl(box); return; }\n  var r = toRad(v);\n  var rows = [\n    ['sin', fmt(Math.sin(r))], ['cos', fmt(Math.cos(r))],\n    ['tan', Math.abs(Math.cos(r)) \u003c 1e-12 ? '∞ (undefined)' : fmt(Math.tan(r))],\n    ['csc', fmt(1 / Math.sin(r))], ['sec', fmt(1 / Math.cos(r))],\n    ['cot', Math.abs(Math.sin(r)) \u003c 1e-12 ? '∞' : fmt(1 / Math.tan(r))]\n  ];\n  T.clearEl(box).appendChild(T.kvTable(rows));\n  var inv = [];\n  if (v >= -1 && v \u003c= 1) {\n    inv.push(['asin', fmt(mode.value === 'deg' ? Math.asin(v) * 180 / Math.PI : Math.asin(v))]);\n    inv.push(['acos', fmt(mode.value === 'deg' ? Math.acos(v) * 180 / Math.PI : Math.acos(v))]);\n  }\n  inv.push(['atan', fmt(mode.value === 'deg' ? Math.atan(v) * 180 / Math.PI : Math.atan(v))]);\n  box.appendChild(T.el('span', { text: '反三角（输入作为比值，仅当 |x|≤1 时 asin/acos 有效）', class: 'field' }));\n  box.appendChild(T.kvTable(inv));\n}\n[input, mode].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '输入' }), input, mode]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

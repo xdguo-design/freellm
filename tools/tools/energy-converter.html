@@ -2,63 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>能量单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('能量单位换算', 'Joule/Kcal/kWh 等', 'energy-converter');
-
-  var units = [
-    { id: 'j', name: '焦耳 (J)' },
-    { id: 'kj', name: '千焦 (kJ)' },
-    { id: 'cal', name: '卡路里 (cal)' },
-    { id: 'kcal', name: '千卡 (kcal)' },
-    { id: 'wh', name: '瓦时 (Wh)' },
-    { id: 'kwh', name: '千瓦时 (kWh)' },
-    { id: 'ev', name: '电子伏特 (eV)' },
-    { id: 'btu', name: '英热单位 (BTU)' }
-  ];
-
-  var factors = { j: 1, kj: 1000, cal: 4.184, kcal: 4184, wh: 3600, kwh: 3600000, ev: 1.602e-19, btu: 1055.06 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('能量单位换算', 'J / kcal / kWh / BTU 等', 'energy-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "J (焦耳)", "label": "J (焦耳)"}, {"value": "kJ", "label": "kJ"}, {"value": "cal (卡)", "label": "cal (卡)"}, {"value": "kcal (大卡)", "label": "kcal (大卡)"}, {"value": "Wh", "label": "Wh"}, {"value": "kWh (度)", "label": "kWh (度)"}, {"value": "BTU", "label": "BTU"}, {"value": "eV", "label": "eV"}], "kJ");
+var to = T.select([{"value": "J (焦耳)", "label": "J (焦耳)"}, {"value": "kJ", "label": "kJ"}, {"value": "cal (卡)", "label": "cal (卡)"}, {"value": "kcal (大卡)", "label": "kcal (大卡)"}, {"value": "Wh", "label": "Wh"}, {"value": "kWh (度)", "label": "kWh (度)"}, {"value": "BTU", "label": "BTU"}, {"value": "eV", "label": "eV"}], "J (焦耳)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"J (焦耳)": 1, "kJ": 1000.0, "cal (卡)": 4.184, "kcal (大卡)": 4184, "Wh": 3600, "kWh (度)": 3600000.0, "BTU": 1055.06, "eV": 1.602176634e-19};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var j = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        var result = j / factors[u.id];
-        inputs[u.id].value = result < 0.0001 && result > 0 ? result.toExponential(4) : result.toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:120px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.kcal.value = '1';
-  run('kcal');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "energy-converter", "title": "能量单位换算", "desc": "J / kcal / kWh / BTU 等", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"J (焦耳)\", \"label\": \"J (焦耳)\"}, {\"value\": \"kJ\", \"label\": \"kJ\"}, {\"value\": \"cal (卡)\", \"label\": \"cal (卡)\"}, {\"value\": \"kcal (大卡)\", \"label\": \"kcal (大卡)\"}, {\"value\": \"Wh\", \"label\": \"Wh\"}, {\"value\": \"kWh (度)\", \"label\": \"kWh (度)\"}, {\"value\": \"BTU\", \"label\": \"BTU\"}, {\"value\": \"eV\", \"label\": \"eV\"}], \"kJ\");\nvar to = T.select([{\"value\": \"J (焦耳)\", \"label\": \"J (焦耳)\"}, {\"value\": \"kJ\", \"label\": \"kJ\"}, {\"value\": \"cal (卡)\", \"label\": \"cal (卡)\"}, {\"value\": \"kcal (大卡)\", \"label\": \"kcal (大卡)\"}, {\"value\": \"Wh\", \"label\": \"Wh\"}, {\"value\": \"kWh (度)\", \"label\": \"kWh (度)\"}, {\"value\": \"BTU\", \"label\": \"BTU\"}, {\"value\": \"eV\", \"label\": \"eV\"}], \"J (焦耳)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"J (焦耳)\": 1, \"kJ\": 1000.0, \"cal (卡)\": 4.184, \"kcal (大卡)\": 4184, \"Wh\": 3600, \"kWh (度)\": 3600000.0, \"BTU\": 1055.06, \"eV\": 1.602176634e-19};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

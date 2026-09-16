@@ -2,89 +2,71 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>日期计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('日期计算器', '日期间隔/日期加减计算', 'date-calc');
-
-  var mode = T.select([
-    { value: 'diff', label: '计算间隔' },
-    { value: 'add', label: '日期加法' },
-    { value: 'sub', label: '日期减法' }
-  ]);
-
-  var date1 = T.el('input', { type: 'date', style: 'flex:1' });
-  var date2 = T.el('input', { type: 'date', style: 'flex:1' });
-  var days = T.el('input', { type: 'number', value: '30', min: '1', style: 'width:80px' });
-
-  var result = T.el('div', { class: 'output dark', style: 'text-align:center;padding:20px;font-size:1.1em' });
-
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function run() {
-    var d1 = new Date(date1.value);
-    var d2 = new Date(date2.value);
-    var n = parseInt(days.value) || 30;
-
-    if (mode.value === 'diff') {
-      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
-        result.textContent = '请选择两个日期';
-        return;
-      }
-      var diff = Math.abs(d2 - d1);
-      var daysDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
-      var weeks = Math.floor(daysDiff / 7);
-      var months = Math.floor(daysDiff / 30);
-      var years = Math.floor(daysDiff / 365);
-      result.textContent = daysDiff + ' 天\n' + weeks + ' 周\n' + months + ' 个月\n' + years + ' 年';
-    } else {
-      if (isNaN(d1.getTime())) {
-        result.textContent = '请选择起始日期';
-        return;
-      }
-      var resultDate = new Date(d1);
-      if (mode.value === 'add') {
-        resultDate.setDate(resultDate.getDate() + n);
-      } else {
-        resultDate.setDate(resultDate.getDate() - n);
-      }
-      date2.value = resultDate.toISOString().slice(0, 10);
-      result.textContent = resultDate.toLocaleDateString('zh-CN', { 
-        year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
-      });
-    }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('日期计算器', '日期间隔天数 / 日期加减 N 天 / 周 / 月 / 年', 'date-calc');
+var d1 = T.dateInput(T.today());
+var d2 = T.dateInput(T.fmtDate(new Date(Date.now() + 86400000 * 30)));
+var base = T.dateInput(T.today());
+var amount = T.num(100, { style: 'width:80px' });
+var unitSel = T.select([{value:'d',label:'天'},{value:'w',label:'周'},{value:'m',label:'月'},{value:'y',label:'年'}],'d');
+var dir = T.select([{value:'add',label:'之后 +'},{value:'sub',label:'之前 -'}],'add');
+var diffBox = T.el('div');
+var calcBox = T.el('div');
+function run() {
+  T.clearEl(diffBox);
+  if (d1.value && d2.value) {
+    var a = new Date(d1.value), b = new Date(d2.value);
+    var days = Math.round((b - a) / 86400000);
+    var workHint = '';
+    diffBox.appendChild(T.kvTable([
+      ['间隔', Math.abs(days).toLocaleString() + ' 天（' + (days >= 0 ? 'B 在 A 之后' : 'B 在 A 之前') + '）'],
+      ['折合', (Math.abs(days) / 7).toFixed(1) + ' 周 · ' + (Math.abs(days) / 30.44).toFixed(1) + ' 月 · ' + (Math.abs(days) / 365.25).toFixed(1) + ' 年'],
+      ['精确到', '共 ' + (Math.abs(days) + 1) + ' 个自然日（含首尾）']
+    ]));
   }
-
-  mode.addEventListener('change', function () {
-    date2.disabled = mode.value !== 'diff';
-    days.disabled = mode.value === 'diff';
-    run();
-  });
-  date1.addEventListener('change', run);
-  date2.addEventListener('change', run);
-  days.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'field', text: '模式:' }));
-  app.appendChild(mode);
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '日期1' }), date1,
-    T.el('span', { text: '日期2' }), date2,
-    T.el('span', { text: '天数' }), days
+}
+function runAdd() {
+  T.clearEl(calcBox);
+  if (!base.value || !amount.value) return;
+  var d = new Date(base.value);
+  var n = +amount.value * (dir.value === 'sub' ? -1 : 1);
+  if (unitSel.value === 'd') d.setDate(d.getDate() + n);
+  else if (unitSel.value === 'w') d.setDate(d.getDate() + n * 7);
+  else if (unitSel.value === 'm') d.setMonth(d.getMonth() + n);
+  else d.setFullYear(d.getFullYear() + n);
+  calcBox.appendChild(T.kvTable([
+    ['结果日期', T.fmtDate(d) + '（' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()] + '）'],
+    ['时间戳', Math.floor(d.getTime() / 1000).toLocaleString()]
   ]));
-  app.appendChild(T.el('div', { class: 'row' }, [result, copyBtn]));
-
-  var today = new Date().toISOString().slice(0, 10);
-  date1.value = today;
-  date2.value = today;
-  mode.dispatchEvent(new Event('change'));
+}
+[d1, d2].forEach(function (el) { el.addEventListener('input', run); });
+[base, amount, unitSel, dir].forEach(function (el) { el.addEventListener('input', runAdd); });
+app.appendChild(T.pane([T.field('起始日期 A', d1), T.field('结束日期 B', d2)]));
+app.appendChild(diffBox);
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.row([T.el('span', { text: '基准' }), base, dir, amount, unitSel]));
+app.appendChild(calcBox);
+run(); runAdd();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "date-calc", "title": "日期计算器", "desc": "日期间隔天数 / 日期加减 N 天 / 周 / 月 / 年", "scripts": "", "code": "var d1 = T.dateInput(T.today());\nvar d2 = T.dateInput(T.fmtDate(new Date(Date.now() + 86400000 * 30)));\nvar base = T.dateInput(T.today());\nvar amount = T.num(100, { style: 'width:80px' });\nvar unitSel = T.select([{value:'d',label:'天'},{value:'w',label:'周'},{value:'m',label:'月'},{value:'y',label:'年'}],'d');\nvar dir = T.select([{value:'add',label:'之后 +'},{value:'sub',label:'之前 -'}],'add');\nvar diffBox = T.el('div');\nvar calcBox = T.el('div');\nfunction run() {\n  T.clearEl(diffBox);\n  if (d1.value && d2.value) {\n    var a = new Date(d1.value), b = new Date(d2.value);\n    var days = Math.round((b - a) / 86400000);\n    var workHint = '';\n    diffBox.appendChild(T.kvTable([\n      ['间隔', Math.abs(days).toLocaleString() + ' 天（' + (days >= 0 ? 'B 在 A 之后' : 'B 在 A 之前') + '）'],\n      ['折合', (Math.abs(days) / 7).toFixed(1) + ' 周 · ' + (Math.abs(days) / 30.44).toFixed(1) + ' 月 · ' + (Math.abs(days) / 365.25).toFixed(1) + ' 年'],\n      ['精确到', '共 ' + (Math.abs(days) + 1) + ' 个自然日（含首尾）']\n    ]));\n  }\n}\nfunction runAdd() {\n  T.clearEl(calcBox);\n  if (!base.value || !amount.value) return;\n  var d = new Date(base.value);\n  var n = +amount.value * (dir.value === 'sub' ? -1 : 1);\n  if (unitSel.value === 'd') d.setDate(d.getDate() + n);\n  else if (unitSel.value === 'w') d.setDate(d.getDate() + n * 7);\n  else if (unitSel.value === 'm') d.setMonth(d.getMonth() + n);\n  else d.setFullYear(d.getFullYear() + n);\n  calcBox.appendChild(T.kvTable([\n    ['结果日期', T.fmtDate(d) + '（' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()] + '）'],\n    ['时间戳', Math.floor(d.getTime() / 1000).toLocaleString()]\n  ]));\n}\n[d1, d2].forEach(function (el) { el.addEventListener('input', run); });\n[base, amount, unitSel, dir].forEach(function (el) { el.addEventListener('input', runAdd); });\napp.appendChild(T.pane([T.field('起始日期 A', d1), T.field('结束日期 B', d2)]));\napp.appendChild(diffBox);\napp.appendChild(T.el('hr', { class: 'hr' }));\napp.appendChild(T.row([T.el('span', { text: '基准' }), base, dir, amount, unitSel]));\napp.appendChild(calcBox);\nrun(); runAdd();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

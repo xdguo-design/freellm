@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS Filter 生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS Filter 生成', '滤镜参数可视化：模糊 / 亮度 / 对比度 / 饱和 / 色相 / 灰度等', 'css-filter');
+var blur = T.range(0, 20, 0.5, 0), brightness = T.range(20, 200, 1, 100);
+var contrast = T.range(20, 200, 1, 100), saturate = T.range(0, 300, 5, 100);
+var hue = T.range(0, 360, 1, 0), gray = T.range(0, 100, 1, 0);
+var sepia = T.range(0, 100, 1, 0), invert = T.range(0, 100, 1, 0);
+var box = T.el('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px' });
+var bgc = 'linear-gradient(135deg,#1744E8,#7BC0E5,#FFB88C)';
+var imgBox = T.el('div', { style: 'height:160px;border-radius:10px;background:' + bgc });
+var rawBox = T.el('div', { style: 'height:160px;border-radius:10px;background:' + bgc });
+box.appendChild(imgBox); box.appendChild(rawBox);
+var output = T.out('');
+function run() {
+  var parts = [];
+  if (+blur.value) parts.push('blur(' + blur.value + 'px)');
+  if (+brightness.value !== 100) parts.push('brightness(' + brightness.value + '%)');
+  if (+contrast.value !== 100) parts.push('contrast(' + contrast.value + '%)');
+  if (+saturate.value !== 100) parts.push('saturate(' + saturate.value + '%)');
+  if (+hue.value) parts.push('hue-rotate(' + hue.value + 'deg)');
+  if (+gray.value) parts.push('grayscale(' + gray.value + '%)');
+  if (+sepia.value) parts.push('sepia(' + sepia.value + '%)');
+  if (+invert.value) parts.push('invert(' + invert.value + '%)');
+  imgBox.style.filter = parts.join(' ');
+  output.value = '.filtered {\n  filter: ' + (parts.join(' ') || 'none') + ';\n}';
+}
+[blur, brightness, contrast, saturate, hue, gray, sepia, invert].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(box);
+app.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '亮度' }), brightness]));
+app.appendChild(T.row([T.el('span', { text: '对比' }), contrast, T.el('span', { text: '饱和' }), saturate]));
+app.appendChild(T.row([T.el('span', { text: '色相' }), hue, T.el('span', { text: '灰度' }), gray]));
+app.appendChild(T.row([T.el('span', { text: '怀旧' }), sepia, T.el('span', { text: '反色' }), invert]));
+app.appendChild(T.pane([T.field('CSS（左为效果，右为原图）', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-filter", "title": "CSS Filter 生成", "desc": "滤镜参数可视化：模糊 / 亮度 / 对比度 / 饱和 / 色相 / 灰度等", "scripts": "", "code": "var blur = T.range(0, 20, 0.5, 0), brightness = T.range(20, 200, 1, 100);\nvar contrast = T.range(20, 200, 1, 100), saturate = T.range(0, 300, 5, 100);\nvar hue = T.range(0, 360, 1, 0), gray = T.range(0, 100, 1, 0);\nvar sepia = T.range(0, 100, 1, 0), invert = T.range(0, 100, 1, 0);\nvar box = T.el('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px' });\nvar bgc = 'linear-gradient(135deg,#1744E8,#7BC0E5,#FFB88C)';\nvar imgBox = T.el('div', { style: 'height:160px;border-radius:10px;background:' + bgc });\nvar rawBox = T.el('div', { style: 'height:160px;border-radius:10px;background:' + bgc });\nbox.appendChild(imgBox); box.appendChild(rawBox);\nvar output = T.out('');\nfunction run() {\n  var parts = [];\n  if (+blur.value) parts.push('blur(' + blur.value + 'px)');\n  if (+brightness.value !== 100) parts.push('brightness(' + brightness.value + '%)');\n  if (+contrast.value !== 100) parts.push('contrast(' + contrast.value + '%)');\n  if (+saturate.value !== 100) parts.push('saturate(' + saturate.value + '%)');\n  if (+hue.value) parts.push('hue-rotate(' + hue.value + 'deg)');\n  if (+gray.value) parts.push('grayscale(' + gray.value + '%)');\n  if (+sepia.value) parts.push('sepia(' + sepia.value + '%)');\n  if (+invert.value) parts.push('invert(' + invert.value + '%)');\n  imgBox.style.filter = parts.join(' ');\n  output.value = '.filtered {\\n  filter: ' + (parts.join(' ') || 'none') + ';\\n}';\n}\n[blur, brightness, contrast, saturate, hue, gray, sepia, invert].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(box);\napp.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '亮度' }), brightness]));\napp.appendChild(T.row([T.el('span', { text: '对比' }), contrast, T.el('span', { text: '饱和' }), saturate]));\napp.appendChild(T.row([T.el('span', { text: '色相' }), hue, T.el('span', { text: '灰度' }), gray]));\napp.appendChild(T.row([T.el('span', { text: '怀旧' }), sepia, T.el('span', { text: '反色' }), invert]));\napp.appendChild(T.pane([T.field('CSS（左为效果，右为原图）', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

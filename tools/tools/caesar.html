@@ -2,52 +2,57 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>凯撒密码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('凯撒密码', '经典凯撒加密解密', 'caesar');
-
-  var mode = T.select([
-    { value: 'encrypt', label: '加密' },
-    { value: 'decrypt', label: '解码' }
-  ]);
-  var shift = T.el('input', { type: 'number', value: '3', min: '1', max: '25', style: 'width:80px' });
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function caesar(text, shift, encrypt) {
-    var s = encrypt ? shift : -shift;
-    return text.replace(/[a-zA-Z]/g, function (c) {
-      var base = c <= 'Z' ? 65 : 97;
-      return String.fromCharCode(((c.charCodeAt(0) - base + s + 26) % 26) + base);
-    });
-  }
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    var s = parseInt(shift.value) || 3;
-    output.value = caesar(v, s, mode.value === 'encrypt');
-  }
-
-  mode.addEventListener('change', run);
-  shift.addEventListener('input', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, T.el('span', { text: '偏移量' }), shift, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('凯撒密码', '经典凯撒移位加密解密，支持一键枚举全部移位', 'caesar');
+var input = T.textarea('输入文本…');
+var output = T.out('输出…');
+var shift = T.num(3, { min: 1, max: 25, style: 'width:80px' });
+var dir = T.select([{value:'enc',label:'加密'},{value:'dec',label:'解密'}],'enc');
+function caesar(s, k) {
+  return s.replace(/[a-zA-Z]/g, function (c) {
+    var base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + k + 26) % 26 + base);
+  });
+}
+function run() {
+  var k = (+shift.value || 0) * (dir.value === 'enc' ? 1 : -1);
+  output.value = caesar(input.value, k);
+}
+[input, shift, dir].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([dir, T.el('span', { text: '移位' }), shift, T.btnCopy(function () { return output.value; })]));
+var all = T.out('全部 25 种移位结果…');
+all.style.minHeight = '220px';
+function brute() {
+  if (!input.value) { all.value = ''; return; }
+  var lines = [];
+  for (var k = 1; k <= 25; k++) lines.push('移位 ' + String(k).padStart(2, ' ') + '：' + caesar(input.value, -k));
+  all.value = lines.join('\n');
+}
+input.addEventListener('input', T.debounce(brute, 300));
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.field('暴力枚举（解密方向 1-25，找可读行）', all));
+run(); brute();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "caesar", "title": "凯撒密码", "desc": "经典凯撒移位加密解密，支持一键枚举全部移位", "scripts": "", "code": "var input = T.textarea('输入文本…');\nvar output = T.out('输出…');\nvar shift = T.num(3, { min: 1, max: 25, style: 'width:80px' });\nvar dir = T.select([{value:'enc',label:'加密'},{value:'dec',label:'解密'}],'enc');\nfunction caesar(s, k) {\n  return s.replace(/[a-zA-Z]/g, function (c) {\n    var base = c \u003c= 'Z' ? 65 : 97;\n    return String.fromCharCode((c.charCodeAt(0) - base + k + 26) % 26 + base);\n  });\n}\nfunction run() {\n  var k = (+shift.value || 0) * (dir.value === 'enc' ? 1 : -1);\n  output.value = caesar(input.value, k);\n}\n[input, shift, dir].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([dir, T.el('span', { text: '移位' }), shift, T.btnCopy(function () { return output.value; })]));\nvar all = T.out('全部 25 种移位结果…');\nall.style.minHeight = '220px';\nfunction brute() {\n  if (!input.value) { all.value = ''; return; }\n  var lines = [];\n  for (var k = 1; k \u003c= 25; k++) lines.push('移位 ' + String(k).padStart(2, ' ') + '：' + caesar(input.value, -k));\n  all.value = lines.join('\\n');\n}\ninput.addEventListener('input', T.debounce(brute, 300));\napp.appendChild(T.el('hr', { class: 'hr' }));\napp.appendChild(T.field('暴力枚举（解密方向 1-25，找可读行）', all));\nrun(); brute();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

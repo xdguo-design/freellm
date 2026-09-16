@@ -2,59 +2,51 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>小费计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('小费计算器', '计算小费与总账单', 'tip');
-
-  var bill = T.el('input', { type: 'number', value: '100', placeholder: '账单金额', style: 'flex:1' });
-  var tipPercent = T.el('input', { type: 'range', min: '0', max: '50', value: '15' });
-  var tipLabel = T.el('span', { text: '15%' });
-  var people = T.el('input', { type: 'number', value: '1', min: '1', max: '50', style: 'width:80px' });
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px;font-size:1.1em' });
-
-  var quickTips = T.el('div', { class: 'row', style: 'gap:8px' });
-  [10, 15, 18, 20, 25].forEach(function (p) {
-    var btn = T.button(p + '%', function () { tipPercent.value = p; tipLabel.textContent = p + '%'; calculate(); });
-    quickTips.appendChild(btn);
-  });
-
-  function calculate() {
-    var b = parseFloat(bill.value) || 0;
-    var t = parseInt(tipPercent.value) || 0;
-    var p = parseInt(people.value) || 1;
-
-    var tipAmount = b * t / 100;
-    var total = b + tipAmount;
-    var perPerson = total / p;
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px">小费金额</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">¥' + tipAmount.toFixed(2) + '</td></tr>' +
-      '<tr><td style="padding:8px">总计</td><td style="padding:8px;text-align:right;font-weight:bold">¥' + total.toFixed(2) + '</td></tr>' +
-      (p > 1 ? '<tr><td style="padding:8px;border-top:2px solid var(--line)">每人</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;font-weight:bold;color:var(--green)">¥' + perPerson.toFixed(2) + '</td></tr>' : '') +
-      '</table>';
-  }
-
-  bill.addEventListener('input', function () { setTimeout(calculate, 100); });
-  tipPercent.addEventListener('input', function () { tipLabel.textContent = tipPercent.value + '%'; calculate(); });
-  people.addEventListener('input', function () { setTimeout(calculate, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '账单' }), bill, T.el('span', { text: '人数' }), people]));
-  app.appendChild(T.el('div', { class: 'field', text: '小费比例' }));
-  app.appendChild(T.el('div', { class: 'row' }, [tipPercent, tipLabel]));
-  app.appendChild(quickTips);
-  app.appendChild(result);
-
-  calculate();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('小费计算器', '账单 + 小费比例 + 人数分摊，人均应付一目了然', 'tip');
+var bill = T.num(288, { min: 0, step: 1, style: 'width:120px' });
+var tip = T.range(0, 30, 1, 15);
+var tipLabel = T.el('b', { text: '15%' });
+var people = T.num(2, { min: 1, max: 50, style: 'width:70px' });
+var box = T.el('div');
+function run() {
+  tipLabel.textContent = tip.value + '%';
+  var b = +bill.value || 0, p = Math.max(1, +people.value || 1);
+  var tipAmt = b * +tip.value / 100;
+  var total = b + tipAmt;
+  box.appendChild(T.kvTable([
+    ['小费金额', '¥ ' + tipAmt.toFixed(2)],
+    ['应付总额', '¥ ' + total.toFixed(2)],
+    ['人均（' + p + ' 人）', '¥ ' + (total / p).toFixed(2)],
+    ['人均小费', '¥ ' + (tipAmt / p).toFixed(2)]
+  ]));
+}
+[bill, people].forEach(function (el) { el.addEventListener('input', run); });
+tip.addEventListener('input', run);
+app.appendChild(T.pane([T.field('账单金额（元）', bill), T.field('人数', people)]));
+app.appendChild(T.row([T.el('span', { text: '小费比例' }), tip, tipLabel]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "tip", "title": "小费计算器", "desc": "账单 + 小费比例 + 人数分摊，人均应付一目了然", "scripts": "", "code": "var bill = T.num(288, { min: 0, step: 1, style: 'width:120px' });\nvar tip = T.range(0, 30, 1, 15);\nvar tipLabel = T.el('b', { text: '15%' });\nvar people = T.num(2, { min: 1, max: 50, style: 'width:70px' });\nvar box = T.el('div');\nfunction run() {\n  tipLabel.textContent = tip.value + '%';\n  var b = +bill.value || 0, p = Math.max(1, +people.value || 1);\n  var tipAmt = b * +tip.value / 100;\n  var total = b + tipAmt;\n  box.appendChild(T.kvTable([\n    ['小费金额', '¥ ' + tipAmt.toFixed(2)],\n    ['应付总额', '¥ ' + total.toFixed(2)],\n    ['人均（' + p + ' 人）', '¥ ' + (total / p).toFixed(2)],\n    ['人均小费', '¥ ' + (tipAmt / p).toFixed(2)]\n  ]));\n}\n[bill, people].forEach(function (el) { el.addEventListener('input', run); });\ntip.addEventListener('input', run);\napp.appendChild(T.pane([T.field('账单金额（元）', bill), T.field('人数', people)]));\napp.appendChild(T.row([T.el('span', { text: '小费比例' }), tip, tipLabel]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

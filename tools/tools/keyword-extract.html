@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>关键词提取 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('关键词提取', '词频统计与 TF 加权关键词提取（中英文均可）', 'keyword-extract');
+var input = T.textarea('免费 AI 工具是开发者的好帮手。AI 工具包含 AI 编码、AI 搜索等。免费的 AI 资源导航收录了大量免费 AI 工具。');
+input.value = '免费 AI 工具是开发者的好帮手。AI 工具包含 AI 编码、AI 搜索等。免费的 AI 资源导航收录了大量免费 AI 工具。';
+var topN = T.num(12, { min: 3, max: 50, style: 'width:70px' });
+var box = T.el('div');
+var STOP_EN = new Set('the a an and or of to in on for with is are was were be been it its this that as at by from'.split(' '));
+var STOP_CN = new Set('的了和是与及在对于上下的有无需个'.split(''));
+function extract(text) {
+  var freq = {};
+  var enWords = text.toLowerCase().match(/[a-z]{2,}/g) || [];
+  enWords.forEach(function (w) {
+    if (STOP_EN.has(w)) return;
+    freq[w] = (freq[w] || 0) + 2;
+  });
+  var cnRuns = text.match(/[\u4e00-\u9fff]+/g) || [];
+  cnRuns.forEach(function (run) {
+    for (var n = 2; n <= 3; n++) {
+      for (var i = 0; i + n <= run.length; i++) {
+        var g = run.slice(i, i + n);
+        if (STOP_CN.has(g[0]) || STOP_CN.has(g[g.length - 1])) continue;
+        freq[g] = (freq[g] || 0) + (n === 2 ? 1.2 : 1);
+      }
+    }
+    Array.from(run).forEach(function (ch) {
+      if (!STOP_CN.has(ch)) freq[ch] = (freq[ch] || 0) + 0.3;
+    });
+  });
+  return Object.keys(freq).map(function (k) { return [k, freq[k]]; })
+    .sort(function (a, b) { return b[1] - a[1]; });
+}
+function run() {
+  var list = extract(input.value).slice(0, +topN.value || 12);
+  var max = list.length ? list[0][1] : 1;
+  T.clearEl(box);
+  if (!list.length) return;
+  box.appendChild(T.refTable(['关键词', '权重', '强度'], list.map(function (p) {
+    return [p[0], p[1].toFixed(1), '█'.repeat(Math.max(1, Math.round(p[1] / max * 20)))];
+  })));
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('文本', input)], true));
+app.appendChild(T.row([T.el('span', { text: 'Top N' }), topN]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "keyword-extract", "title": "关键词提取", "desc": "词频统计与 TF 加权关键词提取（中英文均可）", "scripts": "", "code": "var input = T.textarea('免费 AI 工具是开发者的好帮手。AI 工具包含 AI 编码、AI 搜索等。免费的 AI 资源导航收录了大量免费 AI 工具。');\ninput.value = '免费 AI 工具是开发者的好帮手。AI 工具包含 AI 编码、AI 搜索等。免费的 AI 资源导航收录了大量免费 AI 工具。';\nvar topN = T.num(12, { min: 3, max: 50, style: 'width:70px' });\nvar box = T.el('div');\nvar STOP_EN = new Set('the a an and or of to in on for with is are was were be been it its this that as at by from'.split(' '));\nvar STOP_CN = new Set('的了和是与及在对于上下的有无需个'.split(''));\nfunction extract(text) {\n  var freq = {};\n  var enWords = text.toLowerCase().match(/[a-z]{2,}/g) || [];\n  enWords.forEach(function (w) {\n    if (STOP_EN.has(w)) return;\n    freq[w] = (freq[w] || 0) + 2;\n  });\n  var cnRuns = text.match(/[\\u4e00-\\u9fff]+/g) || [];\n  cnRuns.forEach(function (run) {\n    for (var n = 2; n \u003c= 3; n++) {\n      for (var i = 0; i + n \u003c= run.length; i++) {\n        var g = run.slice(i, i + n);\n        if (STOP_CN.has(g[0]) || STOP_CN.has(g[g.length - 1])) continue;\n        freq[g] = (freq[g] || 0) + (n === 2 ? 1.2 : 1);\n      }\n    }\n    Array.from(run).forEach(function (ch) {\n      if (!STOP_CN.has(ch)) freq[ch] = (freq[ch] || 0) + 0.3;\n    });\n  });\n  return Object.keys(freq).map(function (k) { return [k, freq[k]]; })\n    .sort(function (a, b) { return b[1] - a[1]; });\n}\nfunction run() {\n  var list = extract(input.value).slice(0, +topN.value || 12);\n  var max = list.length ? list[0][1] : 1;\n  T.clearEl(box);\n  if (!list.length) return;\n  box.appendChild(T.refTable(['关键词', '权重', '强度'], list.map(function (p) {\n    return [p[0], p[1].toFixed(1), '█'.repeat(Math.max(1, Math.round(p[1] / max * 20)))];\n  })));\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('文本', input)], true));\napp.appendChild(T.row([T.el('span', { text: 'Top N' }), topN]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

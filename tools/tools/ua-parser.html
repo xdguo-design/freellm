@@ -2,80 +2,70 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>UA 解析 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('UA 解析', 'User-Agent 浏览器信息解析', 'ua-parser');
-
-  var input = T.el('input', { type: 'text', value: navigator.userAgent, placeholder: '输入 User-Agent...', style: 'width:100%;font-family:monospace;font-size:0.9em' });
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function parse(ua) {
-    var info = {
-      browser: 'Unknown',
-      browserVersion: '',
-      os: 'Unknown',
-      osVersion: '',
-      device: 'Desktop',
-      engine: 'Unknown'
-    };
-
-    // Browser
-    if (ua.includes('Firefox/')) { info.browser = 'Firefox'; info.browserVersion = ua.match(/Firefox\/([\d.]+)/)?.[1]; }
-    else if (ua.includes('Edg/')) { info.browser = 'Edge'; info.browserVersion = ua.match(/Edg\/([\d.]+)/)?.[1]; }
-    else if (ua.includes('Chrome/')) { info.browser = 'Chrome'; info.browserVersion = ua.match(/Chrome\/([\d.]+)/)?.[1]; }
-    else if (ua.includes('Safari/') && ua.includes('Version/')) { info.browser = 'Safari'; info.browserVersion = ua.match(/Version\/([\d.]+)/)?.[1]; }
-    else if (ua.includes('OPR/')) { info.browser = 'Opera'; info.browserVersion = ua.match(/OPR\/([\d.]+)/)?.[1]; }
-
-    // Engine
-    if (ua.includes('Gecko/')) info.engine = 'Gecko';
-    else if (ua.includes('AppleWebKit/')) info.engine = 'WebKit/Blink';
-    else if (ua.includes('Trident/')) info.engine = 'Trident';
-
-    // OS
-    if (ua.includes('Windows NT 10')) { info.os = 'Windows 10/11'; }
-    else if (ua.includes('Windows NT 6.3')) { info.os = 'Windows 8.1'; }
-    else if (ua.includes('Windows NT 6.1')) { info.os = 'Windows 7'; }
-    else if (ua.includes('Mac OS X')) { info.os = 'macOS'; info.osVersion = ua.match(/Mac OS X ([\d_]+)/)?.[1]?.replace(/_/g, '.'); }
-    else if (ua.includes('Linux')) { info.os = 'Linux'; }
-    else if (ua.includes('Android')) { info.os = 'Android'; info.osVersion = ua.match(/Android ([\d.]+)/)?.[1]; }
-    else if (ua.includes('iPhone') || ua.includes('iPad')) { info.os = 'iOS'; info.osVersion = ua.match(/OS ([\d_]+)/)?.[1]?.replace(/_/g, '.'); }
-
-    // Device
-    if (ua.includes('Mobile') || ua.includes('Android')) info.device = 'Mobile';
-    else if (ua.includes('iPad') || ua.includes('Tablet')) info.device = 'Tablet';
-
-    return info;
-  }
-
-  function run() {
-    var ua = input.value.trim();
-    if (!ua) { result.textContent = ''; return; }
-
-    var info = parse(ua);
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px;color:var(--muted)">浏览器</td><td style="padding:8px"><strong>' + info.browser + '</strong> ' + (info.browserVersion || '') + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">引擎</td><td style="padding:8px">' + info.engine + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">操作系统</td><td style="padding:8px">' + info.os + ' ' + (info.osVersion || '') + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">设备类型</td><td style="padding:8px">' + info.device + '</td></tr>' +
-      '</table>';
-  }
-
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [input, copyBtn]));
-  app.appendChild(result);
-  run();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('UA 解析', 'User-Agent 解析：浏览器 / 引擎 / 系统 / 设备类型', 'ua-parser');
+var input = T.textarea(navigator.userAgent, true);
+input.setAttribute('rows', '3');
+var box = T.el('div');
+function parse(ua) {
+  var r = {};
+  r.browser = /Edg\/([\d.]+)/.test(ua) ? 'Edge ' + RegExp.$1
+    : /OPR\/([\d.]+)/.test(ua) ? 'Opera ' + RegExp.$1
+    : /Firefox\/([\d.]+)/.test(ua) ? 'Firefox ' + RegExp.$1
+    : /Chrome\/([\d.]+)/.test(ua) ? 'Chrome ' + RegExp.$1
+    : /Version\/([\d.]+).*Safari/.test(ua) ? 'Safari ' + RegExp.$1
+    : '未知';
+  r.engine = /Gecko\/|Firefox/.test(ua) && !/like Gecko/.test(ua) ? 'Gecko'
+    : /AppleWebKit/.test(ua) && /Chrome|Edg|OPR/.test(ua) ? 'Blink'
+    : /AppleWebKit/.test(ua) ? 'WebKit'
+    : /Trident/.test(ua) ? 'Trident (IE)' : '未知';
+  r.os = /Windows NT 10/.test(ua) ? 'Windows 10/11'
+    : /Windows NT 6\.1/.test(ua) ? 'Windows 7'
+    : /Windows/.test(ua) ? 'Windows'
+    : /Mac OS X ([\d_]+)/.test(ua) ? 'macOS ' + RegExp.$1.replace(/_/g, '.')
+    : /Android ([\d.]+)/.test(ua) ? 'Android ' + RegExp.$1
+    : /iPhone|iPad/.test(ua) ? (/OS ([\d_]+)/.test(ua) ? 'iOS ' + RegExp.$1.replace(/_/g, '.') : 'iOS')
+    : /Linux/.test(ua) ? 'Linux' : '未知';
+  r.device = /Mobile|Android.*Mobile|iPhone/.test(ua) ? '📱 手机'
+    : /iPad|Tablet/.test(ua) ? '💻 平板' : '🖥 桌面';
+  r.bot = /bot|spider|crawl|slurp|bingpreview/i.test(ua) ? '🤖 是爬虫' : '否';
+  r.wechat = /MicroMessenger/.test(ua);
+  return r;
+}
+function run() {
+  var r = parse(input.value);
+  var rows = [
+    ['浏览器', r.browser], ['内核', r.engine], ['操作系统', r.os],
+    ['设备类型', r.device], ['爬虫', r.bot]
+  ];
+  if (r.wechat) rows.push(['特殊', '微信内置浏览器']);
+  T.clearEl(box).appendChild(T.kvTable(rows));
+}
+input.addEventListener('input', T.debounce(run, 200));
+app.appendChild(T.pane([T.field('User-Agent', input)], true));
+app.appendChild(box);
+app.appendChild(T.row([T.button('复制 UA', function () { T.copy(input.value); })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "ua-parser", "title": "UA 解析", "desc": "User-Agent 解析：浏览器 / 引擎 / 系统 / 设备类型", "scripts": "", "code": "var input = T.textarea(navigator.userAgent, true);\ninput.setAttribute('rows', '3');\nvar box = T.el('div');\nfunction parse(ua) {\n  var r = {};\n  r.browser = /Edg\\/([\\d.]+)/.test(ua) ? 'Edge ' + RegExp.$1\n    : /OPR\\/([\\d.]+)/.test(ua) ? 'Opera ' + RegExp.$1\n    : /Firefox\\/([\\d.]+)/.test(ua) ? 'Firefox ' + RegExp.$1\n    : /Chrome\\/([\\d.]+)/.test(ua) ? 'Chrome ' + RegExp.$1\n    : /Version\\/([\\d.]+).*Safari/.test(ua) ? 'Safari ' + RegExp.$1\n    : '未知';\n  r.engine = /Gecko\\/|Firefox/.test(ua) && !/like Gecko/.test(ua) ? 'Gecko'\n    : /AppleWebKit/.test(ua) && /Chrome|Edg|OPR/.test(ua) ? 'Blink'\n    : /AppleWebKit/.test(ua) ? 'WebKit'\n    : /Trident/.test(ua) ? 'Trident (IE)' : '未知';\n  r.os = /Windows NT 10/.test(ua) ? 'Windows 10/11'\n    : /Windows NT 6\\.1/.test(ua) ? 'Windows 7'\n    : /Windows/.test(ua) ? 'Windows'\n    : /Mac OS X ([\\d_]+)/.test(ua) ? 'macOS ' + RegExp.$1.replace(/_/g, '.')\n    : /Android ([\\d.]+)/.test(ua) ? 'Android ' + RegExp.$1\n    : /iPhone|iPad/.test(ua) ? (/OS ([\\d_]+)/.test(ua) ? 'iOS ' + RegExp.$1.replace(/_/g, '.') : 'iOS')\n    : /Linux/.test(ua) ? 'Linux' : '未知';\n  r.device = /Mobile|Android.*Mobile|iPhone/.test(ua) ? '📱 手机'\n    : /iPad|Tablet/.test(ua) ? '💻 平板' : '🖥 桌面';\n  r.bot = /bot|spider|crawl|slurp|bingpreview/i.test(ua) ? '🤖 是爬虫' : '否';\n  r.wechat = /MicroMessenger/.test(ua);\n  return r;\n}\nfunction run() {\n  var r = parse(input.value);\n  var rows = [\n    ['浏览器', r.browser], ['内核', r.engine], ['操作系统', r.os],\n    ['设备类型', r.device], ['爬虫', r.bot]\n  ];\n  if (r.wechat) rows.push(['特殊', '微信内置浏览器']);\n  T.clearEl(box).appendChild(T.kvTable(rows));\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('User-Agent', input)], true));\napp.appendChild(box);\napp.appendChild(T.row([T.button('复制 UA', function () { T.copy(input.value); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

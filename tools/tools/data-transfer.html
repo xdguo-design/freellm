@@ -2,83 +2,59 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>数据传输计算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('数据传输计算', '下载时间/上传时间估算', 'data-transfer');
-
-  var fileSize = T.el('input', { type: 'number', value: '100', min: '0.01', style: 'flex:1' });
-  var fileUnit = T.select([
-    { value: 'MB', label: 'MB' },
-    { value: 'GB', label: 'GB' },
-    { value: 'KB', label: 'KB' },
-    { value: 'TB', label: 'TB' }
-  ]);
-  var speed = T.el('input', { type: 'number', value: '100', min: '0.01', style: 'flex:1' });
-  var speedUnit = T.select([
-    { value: 'Mbps', label: 'Mbps' },
-    { value: 'MBps', label: 'MB/s' },
-    { value: 'Kbps', label: 'Kbps' },
-    { value: 'Gbps', label: 'Gbps' }
-  ]);
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  function calculate() {
-    var sizeMB = parseFloat(fileSize.value) || 0;
-    switch (fileUnit.value) {
-      case 'KB': sizeMB /= 1024; break;
-      case 'GB': sizeMB *= 1024; break;
-      case 'TB': sizeMB *= 1024 * 1024; break;
-    }
-
-    var speedMBps = parseFloat(speed.value) || 0;
-    switch (speedUnit.value) {
-      case 'Kbps': speedMBps /= 8 * 1024; break;
-      case 'Mbps': speedMBps /= 8; break;
-      case 'Gbps': speedMBps *= 1024 / 8; break;
-    }
-
-    if (sizeMB <= 0 || speedMBps <= 0) {
-      result.textContent = '请输入有效数值';
-      return;
-    }
-
-    var seconds = sizeMB / speedMBps;
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds % 3600) / 60);
-    var secs = Math.floor(seconds % 60);
-
-    var timeStr;
-    if (hours > 0) timeStr = hours + '小时' + minutes + '分钟' + secs + '秒';
-    else if (minutes > 0) timeStr = minutes + '分钟' + secs + '秒';
-    else timeStr = secs + '秒';
-
-    result.innerHTML = '<strong>预计时间:</strong> ' + timeStr + '<br><br>' +
-      '文件大小: ' + sizeMB.toFixed(2) + ' MB<br>' +
-      '传输速度: ' + speedMBps.toFixed(2) + ' MB/s<br>' +
-      '精确时间: ' + seconds.toFixed(1) + ' 秒';
-  }
-
-  [fileSize, fileUnit, speed, speedUnit].forEach(function (el) {
-    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function () { setTimeout(calculate, 100); });
-  });
-
-  app.appendChild(T.el('div', { class: 'field', text: '文件大小:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [fileSize, fileUnit]));
-  app.appendChild(T.el('div', { class: 'field', text: '传输速度:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [speed, speedUnit]));
-  app.appendChild(result);
-
-  calculate();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('数据传输计算', '文件大小 + 带宽 → 下载 / 上传时间估算', 'data-transfer');
+var size = T.num(10, { step: 'any', style: 'width:110px' });
+var sizeUnit = T.select([{value:'1',label:'MB'},{value:'1024',label:'GB'},{value:'0.001',label:'KB'},{value:'1e-6',label:'B'}],'1024');
+var speed = T.num(100, { step: 'any', style: 'width:110px' });
+var speedUnit = T.select([{value:'1',label:'Mbps'},{value:'1000',label:'Gbps'},{value:'0.125',label:'MB/s（字节）'}],'1');
+var box = T.el('div');
+function fmtTime(s) {
+  if (s < 1) return (s * 1000).toFixed(0) + ' 毫秒';
+  if (s < 60) return s.toFixed(1) + ' 秒';
+  if (s < 3600) return Math.floor(s / 60) + ' 分 ' + Math.round(s % 60) + ' 秒';
+  if (s < 86400) return Math.floor(s / 3600) + ' 小时 ' + Math.round(s % 3600 / 60) + ' 分';
+  return (s / 86400).toFixed(1) + ' 天';
+}
+function run() {
+  var s = +size.value * +sizeUnit.value * 8;
+  var v = +speed.value * +speedUnit.value;
+  T.clearEl(box);
+  if (!s || !v) return;
+  var sec = s / v;
+  box.appendChild(T.kvTable([
+    ['文件大小', (+size.value) + ' ' + sizeUnit.selectedOptions[0].text + ' = ' + (s / 8).toFixed(2) + ' MB'],
+    ['带宽', (+speed.value) + ' ' + speedUnit.selectedOptions[0].text + ' = ' + (v / 8).toFixed(2) + ' MB/s'],
+    ['理论耗时', fmtTime(sec)],
+    ['实际估算（80% 效率）', fmtTime(sec / 0.8)],
+    ['每小时可传', ((v / 8) * 3600).toFixed(1) + ' MB ≈ ' + ((v / 8) * 3600 / 1024).toFixed(2) + ' GB']
+  ]));
+}
+[size, sizeUnit, speed, speedUnit].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('文件大小', size), T.field('', sizeUnit)]));
+app.appendChild(T.pane([T.field('带宽', speed), T.field('', speedUnit)]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "data-transfer", "title": "数据传输计算", "desc": "文件大小 + 带宽 → 下载 / 上传时间估算", "scripts": "", "code": "var size = T.num(10, { step: 'any', style: 'width:110px' });\nvar sizeUnit = T.select([{value:'1',label:'MB'},{value:'1024',label:'GB'},{value:'0.001',label:'KB'},{value:'1e-6',label:'B'}],'1024');\nvar speed = T.num(100, { step: 'any', style: 'width:110px' });\nvar speedUnit = T.select([{value:'1',label:'Mbps'},{value:'1000',label:'Gbps'},{value:'0.125',label:'MB/s（字节）'}],'1');\nvar box = T.el('div');\nfunction fmtTime(s) {\n  if (s \u003c 1) return (s * 1000).toFixed(0) + ' 毫秒';\n  if (s \u003c 60) return s.toFixed(1) + ' 秒';\n  if (s \u003c 3600) return Math.floor(s / 60) + ' 分 ' + Math.round(s % 60) + ' 秒';\n  if (s \u003c 86400) return Math.floor(s / 3600) + ' 小时 ' + Math.round(s % 3600 / 60) + ' 分';\n  return (s / 86400).toFixed(1) + ' 天';\n}\nfunction run() {\n  var s = +size.value * +sizeUnit.value * 8;\n  var v = +speed.value * +speedUnit.value;\n  T.clearEl(box);\n  if (!s || !v) return;\n  var sec = s / v;\n  box.appendChild(T.kvTable([\n    ['文件大小', (+size.value) + ' ' + sizeUnit.selectedOptions[0].text + ' = ' + (s / 8).toFixed(2) + ' MB'],\n    ['带宽', (+speed.value) + ' ' + speedUnit.selectedOptions[0].text + ' = ' + (v / 8).toFixed(2) + ' MB/s'],\n    ['理论耗时', fmtTime(sec)],\n    ['实际估算（80% 效率）', fmtTime(sec / 0.8)],\n    ['每小时可传', ((v / 8) * 3600).toFixed(1) + ' MB ≈ ' + ((v / 8) * 3600 / 1024).toFixed(2) + ' GB']\n  ]));\n}\n[size, sizeUnit, speed, speedUnit].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('文件大小', size), T.field('', sizeUnit)]));\napp.appendChild(T.pane([T.field('带宽', speed), T.field('', speedUnit)]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

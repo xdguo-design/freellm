@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>HTML 标签速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 标签速查', 'HTML 标签参考：结构 / 文本 / 表单 / 媒体 / 语义', 'html-tags');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  return search;
+}
+
+var DATA = [
+  ['<html> <head> <body>', '结构', '文档骨架'],
+  ['<meta charset="utf-8">', '结构', '字符编码声明'],
+  ['<meta name="viewport">', '结构', '移动端视口：width=device-width, initial-scale=1'],
+  ['<title>', '结构', '标签页标题（SEO 关键）'],
+  ['<link rel="stylesheet">', '结构', '引入 CSS'],
+  ['<script defer/async>', '结构', 'defer 保持顺序延后执行；async 下载完即执行'],
+  ['<header> <footer> <nav>', '语义', '页眉 / 页脚 / 导航'],
+  ['<main> <section> <article>', '语义', '主体 / 区块 / 独立内容（利于 SEO）'],
+  ['<aside> <figure> <figcaption>', '语义', '侧栏 / 插图容器 / 图注'],
+  ['<h1>-<h6>', '文本', '标题层级（每页一个 h1）'],
+  ['<p> <br> <hr>', '文本', '段落 / 换行 / 分隔线'],
+  ['<strong> <em>', '文本', '强调（有语义，优于 b/i）'],
+  ['<code> <pre> <kbd>', '文本', '行内代码 / 预格式 / 键盘输入'],
+  ['<blockquote> <q> <cite>', '文本', '引用块 / 短引用 / 引用来源'],
+  ['<ul> <ol> <li>', '文本', '无序 / 有序列表'],
+  ['<a href target=_blank rel>', '链接', 'rel="noopener noreferrer" 安全打开新窗'],
+  ['<img src alt loading=lazy>', '媒体', '图片：alt 必填，loading 懒加载'],
+  ['<picture> <source>', '媒体', '响应式图片多格式'],
+  ['<video controls poster muted>', '媒体', '视频播放'],
+  ['<audio controls>', '媒体', '音频播放'],
+  ['<iframe sandbox>', '媒体', '内嵌页面，sandbox 提升安全'],
+  ['<canvas>', '媒体', '位图画布（配合 JS）'],
+  ['<svg>', '媒体', '矢量图形'],
+  ['<form action method>', '表单', '表单容器'],
+  ['<input type=text/email/password...>', '表单', '多种输入类型'],
+  ['<textarea rows>', '表单', '多行文本'],
+  ['<select> <option> <optgroup>', '表单', '下拉选择'],
+  ['<button type=submit/button>', '表单', '按钮（表单内默认 submit）'],
+  ['<label for>', '表单', '绑定控件提升可访问性'],
+  ['<fieldset> <legend>', '表单', '控件分组'],
+  ['<datalist>', '表单', '输入建议列表'],
+  ['<output>', '表单', '计算结果输出'],
+  ['<details> <summary>', '交互', '原生折叠面板（无需 JS）'],
+  ['<dialog open>', '交互', '原生对话框（showModal()）'],
+  ['<progress value max>', '交互', '进度条'],
+  ['<meter>', '交互', '度量值（磁盘用量等）'],
+  ['<table> <thead> <tbody> <tr> <th> <td>', '表格', '数据表格，th 为表头'],
+  ['<colgroup> <col>', '表格', '列样式分组'],
+  ['<template>', '脚本', '不可见模板，JS 克隆使用'],
+  ['<noscript>', '脚本', '禁用 JS 时的降级内容']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['标签', '分类', '说明'], DATA));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "html-tags", "title": "HTML 标签速查", "desc": "HTML 标签参考：结构 / 文本 / 表单 / 媒体 / 语义", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['\u003chtml> \u003chead> \u003cbody>', '结构', '文档骨架'],\n  ['\u003cmeta charset=\"utf-8\">', '结构', '字符编码声明'],\n  ['\u003cmeta name=\"viewport\">', '结构', '移动端视口：width=device-width, initial-scale=1'],\n  ['\u003ctitle>', '结构', '标签页标题（SEO 关键）'],\n  ['\u003clink rel=\"stylesheet\">', '结构', '引入 CSS'],\n  ['\u003cscript defer/async>', '结构', 'defer 保持顺序延后执行；async 下载完即执行'],\n  ['\u003cheader> \u003cfooter> \u003cnav>', '语义', '页眉 / 页脚 / 导航'],\n  ['\u003cmain> \u003csection> \u003carticle>', '语义', '主体 / 区块 / 独立内容（利于 SEO）'],\n  ['\u003caside> \u003cfigure> \u003cfigcaption>', '语义', '侧栏 / 插图容器 / 图注'],\n  ['\u003ch1>-\u003ch6>', '文本', '标题层级（每页一个 h1）'],\n  ['\u003cp> \u003cbr> \u003chr>', '文本', '段落 / 换行 / 分隔线'],\n  ['\u003cstrong> \u003cem>', '文本', '强调（有语义，优于 b/i）'],\n  ['\u003ccode> \u003cpre> \u003ckbd>', '文本', '行内代码 / 预格式 / 键盘输入'],\n  ['\u003cblockquote> \u003cq> \u003ccite>', '文本', '引用块 / 短引用 / 引用来源'],\n  ['\u003cul> \u003col> \u003cli>', '文本', '无序 / 有序列表'],\n  ['\u003ca href target=_blank rel>', '链接', 'rel=\"noopener noreferrer\" 安全打开新窗'],\n  ['\u003cimg src alt loading=lazy>', '媒体', '图片：alt 必填，loading 懒加载'],\n  ['\u003cpicture> \u003csource>', '媒体', '响应式图片多格式'],\n  ['\u003cvideo controls poster muted>', '媒体', '视频播放'],\n  ['\u003caudio controls>', '媒体', '音频播放'],\n  ['\u003ciframe sandbox>', '媒体', '内嵌页面，sandbox 提升安全'],\n  ['\u003ccanvas>', '媒体', '位图画布（配合 JS）'],\n  ['\u003csvg>', '媒体', '矢量图形'],\n  ['\u003cform action method>', '表单', '表单容器'],\n  ['\u003cinput type=text/email/password...>', '表单', '多种输入类型'],\n  ['\u003ctextarea rows>', '表单', '多行文本'],\n  ['\u003cselect> \u003coption> \u003coptgroup>', '表单', '下拉选择'],\n  ['\u003cbutton type=submit/button>', '表单', '按钮（表单内默认 submit）'],\n  ['\u003clabel for>', '表单', '绑定控件提升可访问性'],\n  ['\u003cfieldset> \u003clegend>', '表单', '控件分组'],\n  ['\u003cdatalist>', '表单', '输入建议列表'],\n  ['\u003coutput>', '表单', '计算结果输出'],\n  ['\u003cdetails> \u003csummary>', '交互', '原生折叠面板（无需 JS）'],\n  ['\u003cdialog open>', '交互', '原生对话框（showModal()）'],\n  ['\u003cprogress value max>', '交互', '进度条'],\n  ['\u003cmeter>', '交互', '度量值（磁盘用量等）'],\n  ['\u003ctable> \u003cthead> \u003ctbody> \u003ctr> \u003cth> \u003ctd>', '表格', '数据表格，th 为表头'],\n  ['\u003ccolgroup> \u003ccol>', '表格', '列样式分组'],\n  ['\u003ctemplate>', '脚本', '不可见模板，JS 克隆使用'],\n  ['\u003cnoscript>', '脚本', '禁用 JS 时的降级内容']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['标签', '分类', '说明'], DATA));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

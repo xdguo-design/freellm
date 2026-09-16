@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>XPath 测试 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('XPath 测试', 'XPath 表达式在线测试（对粘贴的 XML / HTML 求值）', 'xpath');
+var docIn = T.textarea('<bookstore><book><title>三体</title><price>45</price></book><book><title>活着</title><price>30</price></book></bookstore>', true);
+docIn.value = '<bookstore><book><title>三体</title><price>45</price></book><book><title>活着</title><price>30</price></book></bookstore>';
+docIn.value = '<?xml version="1.0"?>\n<bookstore>\n  <book category="sf"><title>三体</title><price>45</price></book>\n  <book category="novel"><title>活着</title><price>30</price></book>\n</bookstore>';
+var expr = T.input('//book[price>35]/title/text()', { class: 'grow mono' });
+var output = T.out('');
+var status = T.badge('—');
+function run() {
+  var v = docIn.value.trim();
+  if (!v || !expr.value) { output.value = ''; return; }
+  try {
+    var doc = new DOMParser().parseFromString(v, 'text/xml');
+    if (doc.querySelector('parsererror')) throw new Error('XML 解析失败');
+    var result = doc.evaluate(expr.value, doc, null, XPathResult.ANY_TYPE, null);
+    var lines = [], node;
+    var count = 0;
+    while ((node = result.iterateNext()) && count < 100) {
+      if (node.nodeType === 1) lines.push('<' + node.nodeName + '> ' + node.textContent.trim().slice(0, 200));
+      else lines.push(node.textContent);
+      count++;
+    }
+    output.value = count + ' 个结果：\n' + lines.join('\n');
+    status.textContent = '✓ ' + count + ' 个结果';
+    status.className = 'badge ok';
+  } catch (e) {
+    output.value = '⚠ ' + e.message;
+    status.textContent = '出错';
+    status.className = 'badge warn';
+  }
+}
+[docIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('XML / HTML 文档', docIn)], true));
+app.appendChild(T.row([T.el('span', { text: 'XPath' }), expr, status]));
+app.appendChild(T.pane([T.field('结果', output)], true));
+app.appendChild(T.el('p', { text: '示例：//book/title · //book[1] · //@category · //book[price>35]/title · bookstore/book[last()]', style: 'color:var(--ink2);font-size:12px' }));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "xpath", "title": "XPath 测试", "desc": "XPath 表达式在线测试（对粘贴的 XML / HTML 求值）", "scripts": "", "code": "var docIn = T.textarea('\u003cbookstore>\u003cbook>\u003ctitle>三体\u003c/title>\u003cprice>45\u003c/price>\u003c/book>\u003cbook>\u003ctitle>活着\u003c/title>\u003cprice>30\u003c/price>\u003c/book>\u003c/bookstore>', true);\ndocIn.value = '\u003cbookstore>\u003cbook>\u003ctitle>三体\u003c/title>\u003cprice>45\u003c/price>\u003c/book>\u003cbook>\u003ctitle>活着\u003c/title>\u003cprice>30\u003c/price>\u003c/book>\u003c/bookstore>';\ndocIn.value = '\u003c?xml version=\"1.0\"?>\\n\u003cbookstore>\\n  \u003cbook category=\"sf\">\u003ctitle>三体\u003c/title>\u003cprice>45\u003c/price>\u003c/book>\\n  \u003cbook category=\"novel\">\u003ctitle>活着\u003c/title>\u003cprice>30\u003c/price>\u003c/book>\\n\u003c/bookstore>';\nvar expr = T.input('//book[price>35]/title/text()', { class: 'grow mono' });\nvar output = T.out('');\nvar status = T.badge('—');\nfunction run() {\n  var v = docIn.value.trim();\n  if (!v || !expr.value) { output.value = ''; return; }\n  try {\n    var doc = new DOMParser().parseFromString(v, 'text/xml');\n    if (doc.querySelector('parsererror')) throw new Error('XML 解析失败');\n    var result = doc.evaluate(expr.value, doc, null, XPathResult.ANY_TYPE, null);\n    var lines = [], node;\n    var count = 0;\n    while ((node = result.iterateNext()) && count \u003c 100) {\n      if (node.nodeType === 1) lines.push('\u003c' + node.nodeName + '> ' + node.textContent.trim().slice(0, 200));\n      else lines.push(node.textContent);\n      count++;\n    }\n    output.value = count + ' 个结果：\\n' + lines.join('\\n');\n    status.textContent = '✓ ' + count + ' 个结果';\n    status.className = 'badge ok';\n  } catch (e) {\n    output.value = '⚠ ' + e.message;\n    status.textContent = '出错';\n    status.className = 'badge warn';\n  }\n}\n[docIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('XML / HTML 文档', docIn)], true));\napp.appendChild(T.row([T.el('span', { text: 'XPath' }), expr, status]));\napp.appendChild(T.pane([T.field('结果', output)], true));\napp.appendChild(T.el('p', { text: '示例：//book/title · //book[1] · //@category · //book[price>35]/title · bookstore/book[last()]', style: 'color:var(--ink2);font-size:12px' }));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

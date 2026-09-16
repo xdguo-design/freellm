@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>WebSocket 测试 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('WebSocket 测试', '在线 WebSocket 连接调试：收发消息与事件日志', 'websocket-test');
+var url = T.input('wss://echo.websocket.org', { class: 'grow mono' });
+var log = T.el('div', { class: 'output', style: 'min-height:220px;white-space:pre-wrap;font-family:var(--font-mono)' });
+var status = T.badge('未连接');
+var msgIn = T.input('', { class: 'grow mono', placeholder: '要发送的消息…' });
+var ws = null;
+function logLine(text, cls) {
+  var line = T.el('div', { text: '[' + new Date().toLocaleTimeString('zh-CN') + '] ' + text, style: 'padding:1px 0;color:' + (cls === 'err' ? 'var(--err)' : cls === 'out' ? 'var(--accent)' : 'var(--ok-text)') });
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+function connect() {
+  if (ws) { ws.close(); }
+  logLine('连接 ' + url.value + ' …');
+  try { ws = new WebSocket(url.value); }
+  catch (e) { logLine('URL 无效：' + e.message, 'err'); return; }
+  ws.onopen = function () { status.textContent = '✓ 已连接'; status.className = 'badge ok'; logLine('✓ 连接已建立'); };
+  ws.onmessage = function (e) { logLine('← 收到: ' + (typeof e.data === 'string' ? e.data.slice(0, 500) : '[二进制 ' + e.data.size + ' 字节]')); };
+  ws.onerror = function () { logLine('⚠ 连接错误', 'err'); };
+  ws.onclose = function (e) { status.textContent = '已断开 (' + e.code + ')'; status.className = 'badge warn'; logLine('连接关闭 code=' + e.code + ' ' + (e.reason || '')); };
+}
+function send() {
+  if (!ws || ws.readyState !== 1) { T.toast('请先连接'); return; }
+  ws.send(msgIn.value);
+  logLine('→ 发送: ' + msgIn.value, 'out');
+  msgIn.value = '';
+}
+app.appendChild(T.row([T.el('span', { text: '地址' }), url, T.button('连接', connect, true), status]));
+app.appendChild(log);
+app.appendChild(T.row([msgIn, T.button('发送', send), T.button('清空日志', function () { T.clearEl(log); }),
+  T.button('断开', function () { if (ws) ws.close(); })]));
+msgIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "websocket-test", "title": "WebSocket 测试", "desc": "在线 WebSocket 连接调试：收发消息与事件日志", "scripts": "", "code": "var url = T.input('wss://echo.websocket.org', { class: 'grow mono' });\nvar log = T.el('div', { class: 'output', style: 'min-height:220px;white-space:pre-wrap;font-family:var(--font-mono)' });\nvar status = T.badge('未连接');\nvar msgIn = T.input('', { class: 'grow mono', placeholder: '要发送的消息…' });\nvar ws = null;\nfunction logLine(text, cls) {\n  var line = T.el('div', { text: '[' + new Date().toLocaleTimeString('zh-CN') + '] ' + text, style: 'padding:1px 0;color:' + (cls === 'err' ? 'var(--err)' : cls === 'out' ? 'var(--accent)' : 'var(--ok-text)') });\n  log.appendChild(line);\n  log.scrollTop = log.scrollHeight;\n}\nfunction connect() {\n  if (ws) { ws.close(); }\n  logLine('连接 ' + url.value + ' …');\n  try { ws = new WebSocket(url.value); }\n  catch (e) { logLine('URL 无效：' + e.message, 'err'); return; }\n  ws.onopen = function () { status.textContent = '✓ 已连接'; status.className = 'badge ok'; logLine('✓ 连接已建立'); };\n  ws.onmessage = function (e) { logLine('← 收到: ' + (typeof e.data === 'string' ? e.data.slice(0, 500) : '[二进制 ' + e.data.size + ' 字节]')); };\n  ws.onerror = function () { logLine('⚠ 连接错误', 'err'); };\n  ws.onclose = function (e) { status.textContent = '已断开 (' + e.code + ')'; status.className = 'badge warn'; logLine('连接关闭 code=' + e.code + ' ' + (e.reason || '')); };\n}\nfunction send() {\n  if (!ws || ws.readyState !== 1) { T.toast('请先连接'); return; }\n  ws.send(msgIn.value);\n  logLine('→ 发送: ' + msgIn.value, 'out');\n  msgIn.value = '';\n}\napp.appendChild(T.row([T.el('span', { text: '地址' }), url, T.button('连接', connect, true), status]));\napp.appendChild(log);\napp.appendChild(T.row([msgIn, T.button('发送', send), T.button('清空日志', function () { T.clearEl(log); }),\n  T.button('断开', function () { if (ws) ws.close(); })]));\nmsgIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

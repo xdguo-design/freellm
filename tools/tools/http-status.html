@@ -2,114 +2,79 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HTTP 状态码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HTTP 状态码', '全部 HTTP 状态码速查表', 'http-status');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索状态码或描述...', style: 'width:100%' });
-
-  var STATUS = [
-    [100, 'Continue', '继续。客户端应继续其请求'],
-    [101, 'Switching Protocols', '切换协议。服务器根据客户端的请求切换协议'],
-    [102, 'Processing', '处理中。服务器已收到请求并正在处理'],
-    [103, 'Early Hints', '早期提示。服务器正在准备发送响应'],
-    [200, 'OK', '请求成功。一般用于GET与POST请求'],
-    [201, 'Created', '已创建。成功请求并创建了新的资源'],
-    [202, 'Accepted', '已接受。已经接受请求，但未处理完成'],
-    [203, 'Non-Authoritative Information', '非授权信息。请求成功'],
-    [204, 'No Content', '无内容。服务器成功处理，但未返回内容'],
-    [205, 'Reset Content', '重置内容。服务器处理成功，用户终端应重置文档视图'],
-    [206, 'Partial Content', '部分内容。服务器成功处理了部分GET请求'],
-    [207, 'Multi-Status', '多状态。代表之后的消息体将是一个XML消息'],
-    [208, 'Already Reported', '已报告。DAV绑定的成员已经在(多状态)响应中列出'],
-    [226, 'IM Used', '服务器满足了请求并返回了一个IM实例响应'],
-    [300, 'Multiple Choices', '多种选择。请求的资源可包括多个位置'],
-    [301, 'Moved Permanently', '永久重定向。请求的资源已被永久移动到新URI'],
-    [302, 'Found', '临时重定向。服务器目前从不同位置的URI响应请求'],
-    [303, 'See Other', '查看其他地址。对应当前请求的响应可以在另一个URI上被找到'],
-    [304, 'Not Modified', '未修改。自从上次请求后，请求的资源未修改过'],
-    [305, 'Use Proxy', '使用代理。请求的资源必须通过指定的代理访问'],
-    [306, 'Unused', '未使用。已废弃'],
-    [307, 'Temporary Redirect', '临时重定向。服务器目前从不同位置的URI响应请求'],
-    [308, 'Permanent Redirect', '永久重定向。请求的资源已被永久移动到新URI'],
-    [400, 'Bad Request', '错误请求。服务器无法理解请求的格式'],
-    [401, 'Unauthorized', '未授权。请求要求用户的身份认证'],
-    [402, 'Payment Required', '保留。将来可能使用的预留代码'],
-    [403, 'Forbidden', '禁止。服务器拒绝请求'],
-    [404, 'Not Found', '未找到。服务器找不到请求的资源'],
-    [405, 'Method Not Allowed', '方法禁用。禁用请求中指定的方法'],
-    [406, 'Not Acceptable', '无法使用。无法使用请求的内容特性响应请求的页面'],
-    [407, 'Proxy Authentication Required', '需要代理授权。请求需要代理的身份认证'],
-    [408, 'Request Time-out', '请求超时。服务器等候请求时发生超时'],
-    [409, 'Conflict', '冲突。服务器在完成请求时发生冲突'],
-    [410, 'Gone', '删除。请求的资源被永久删除'],
-    [411, 'Length Required', '需要有效长度。服务器拒绝不带Content-Length的请求'],
-    [412, 'Precondition Failed', '未满足前提条件。服务器未满足请求者在请求中设置的其中一个前提条件'],
-    [413, 'Request Entity Too Large', '请求实体过大。请求的实体过大，服务器无法处理'],
-    [414, 'Request-URI Too Large', '请求URI过长。请求的URI过长，服务器无法处理'],
-    [415, 'Unsupported Media Type', '不支持的媒体类型。请求的格式不受请求页面的支持'],
-    [416, 'Requested range not satisfiable', '请求范围无法满足。请求中包含的Range头字段无法满足'],
-    [417, 'Expectation Failed', '未满足期望值。请求头Expect字段无法满足'],
-    [418, "I'm a teapot", '我是一个茶壶。意外的茶壶状态'],
-    [421, 'Misdirected Request', '错误定向的请求。请求被定向到无法生成响应的服务器'],
-    [422, 'Unprocessable Entity', '不可处理的实体。请求格式正确，但语义错误'],
-    [423, 'Locked', '已锁定。资源被锁定'],
-    [424, 'Failed Dependency', '失败的依赖。请求失败因为依赖的请求失败'],
-    [425, 'Too Early', '太早。服务器担心处理可能被重放'],
-    [426, 'Upgrade Required', '需要升级。客户端应切换到TLS/1.0'],
-    [428, 'Precondition Required', '需要先决条件。请求需要先决条件'],
-    [429, 'Too Many Requests', '太多请求。客户端在给定时间内发送了太多请求'],
-    [431, 'Request Header Fields Too Large', '请求头字段过大。请求头字段太大'],
-    [451, 'Unavailable For Legal Reasons', '因法律原因不可用。服务器因为法律原因无法提供请求的资源'],
-    [500, 'Internal Server Error', '服务器内部错误。服务器遇到了意外的情况'],
-    [501, 'Not Implemented', '未实现。服务器不具备完成请求的功能'],
-    [502, 'Bad Gateway', '错误网关。作为网关或代理的服务器从上游服务器收到无效响应'],
-    [503, 'Service Unavailable', '服务不可用。服务器目前无法使用(由于超载或停机维护)'],
-    [504, 'Gateway Time-out', '网关超时。作为网关或代理的服务器未从上游服务器及时收到请求'],
-    [505, 'HTTP Version not supported', 'HTTP版本不受支持。服务器不支持请求中使用的HTTP协议版本'],
-    [506, 'Variant Also Negotiates', '变体也协商。服务器存在内部配置错误'],
-    [507, 'Insufficient Storage', '存储空间不足。服务器无法存储完成请求所需的表示'],
-    [508, 'Loop Detected', '检测到循环。服务器在处理请求时检测到无限循环'],
-    [510, 'Not Extended', '未扩展。客户端请求的扩展需要服务器进一步扩展请求'],
-    [511, 'Network Authentication Required', '需要网络认证。客户端需要先进行网络认证']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = STATUS.filter(function (s) {
-      if (!q) return true;
-      return String(s[0]).includes(q) || s[1].toLowerCase().includes(q) || s[2].toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTTP 状态码', '全部 HTTP 状态码速查：1xx-5xx 分类释义', 'http-status');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">代码</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">状态</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
-    html += '<tbody>';
-    filtered.forEach(function (s) {
-      var color = s[0] < 300 ? '#2ecc71' : s[0] < 400 ? '#f1c40f' : s[0] < 500 ? '#e67e22' : '#e74c3c';
-      html += '<tr><td style="padding:8px;border-bottom:1px solid var(--line);color:' + color + ';font-weight:bold">' + s[0] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code>' + s[1] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + s[2] + '</td></tr>';
-    });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var DATA = [
+  ['100', 'Continue', '继续，客户端应继续请求', '1xx 信息'],
+  ['101', 'Switching Protocols', '切换协议（如升级 WebSocket）', '1xx 信息'],
+  ['200', 'OK', '请求成功', '2xx 成功'],
+  ['201', 'Created', '已创建（POST/PUT 成功）', '2xx 成功'],
+  ['202', 'Accepted', '已接受，处理中', '2xx 成功'],
+  ['204', 'No Content', '成功但无返回体', '2xx 成功'],
+  ['206', 'Partial Content', '范围请求成功（断点续传）', '2xx 成功'],
+  ['301', 'Moved Permanently', '永久重定向', '3xx 重定向'],
+  ['302', 'Found', '临时重定向', '3xx 重定向'],
+  ['303', 'See Other', '用 GET 访问另一 URL', '3xx 重定向'],
+  ['304', 'Not Modified', '缓存有效（协商缓存命中）', '3xx 重定向'],
+  ['307', 'Temporary Redirect', '临时重定向（保持方法）', '3xx 重定向'],
+  ['308', 'Permanent Redirect', '永久重定向（保持方法）', '3xx 重定向'],
+  ['400', 'Bad Request', '请求语法错误', '4xx 客户端错误'],
+  ['401', 'Unauthorized', '未认证（登录/Token）', '4xx 客户端错误'],
+  ['402', 'Payment Required', '保留（付费）', '4xx 客户端错误'],
+  ['403', 'Forbidden', '已认证但无权限', '4xx 客户端错误'],
+  ['404', 'Not Found', '资源不存在', '4xx 客户端错误'],
+  ['405', 'Method Not Allowed', 'HTTP 方法不允许', '4xx 客户端错误'],
+  ['406', 'Not Acceptable', '无法满足 Accept 头', '4xx 客户端错误'],
+  ['408', 'Request Timeout', '请求超时', '4xx 客户端错误'],
+  ['409', 'Conflict', '资源冲突', '4xx 客户端错误'],
+  ['410', 'Gone', '资源已永久删除', '4xx 客户端错误'],
+  ['413', 'Payload Too Large', '请求体过大', '4xx 客户端错误'],
+  ['415', 'Unsupported Media Type', '不支持的媒体类型', '4xx 客户端错误'],
+  ['422', 'Unprocessable Entity', '语义错误（校验失败）', '4xx 客户端错误'],
+  ['429', 'Too Many Requests', '请求过于频繁（限流）', '4xx 客户端错误'],
+  ['451', 'Unavailable For Legal Reasons', '因法律原因不可用', '4xx 客户端错误'],
+  ['500', 'Internal Server Error', '服务器内部错误', '5xx 服务器错误'],
+  ['501', 'Not Implemented', '未实现', '5xx 服务器错误'],
+  ['502', 'Bad Gateway', '网关收到无效响应', '5xx 服务器错误'],
+  ['503', 'Service Unavailable', '服务不可用（过载/维护）', '5xx 服务器错误'],
+  ['504', 'Gateway Timeout', '网关超时', '5xx 服务器错误'],
+  ['505', 'HTTP Version Not Supported', 'HTTP 版本不支持', '5xx 服务器错误']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['状态码', '名称', '含义', '分类'], DATA));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "http-status", "title": "HTTP 状态码", "desc": "全部 HTTP 状态码速查：1xx-5xx 分类释义", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['100', 'Continue', '继续，客户端应继续请求', '1xx 信息'],\n  ['101', 'Switching Protocols', '切换协议（如升级 WebSocket）', '1xx 信息'],\n  ['200', 'OK', '请求成功', '2xx 成功'],\n  ['201', 'Created', '已创建（POST/PUT 成功）', '2xx 成功'],\n  ['202', 'Accepted', '已接受，处理中', '2xx 成功'],\n  ['204', 'No Content', '成功但无返回体', '2xx 成功'],\n  ['206', 'Partial Content', '范围请求成功（断点续传）', '2xx 成功'],\n  ['301', 'Moved Permanently', '永久重定向', '3xx 重定向'],\n  ['302', 'Found', '临时重定向', '3xx 重定向'],\n  ['303', 'See Other', '用 GET 访问另一 URL', '3xx 重定向'],\n  ['304', 'Not Modified', '缓存有效（协商缓存命中）', '3xx 重定向'],\n  ['307', 'Temporary Redirect', '临时重定向（保持方法）', '3xx 重定向'],\n  ['308', 'Permanent Redirect', '永久重定向（保持方法）', '3xx 重定向'],\n  ['400', 'Bad Request', '请求语法错误', '4xx 客户端错误'],\n  ['401', 'Unauthorized', '未认证（登录/Token）', '4xx 客户端错误'],\n  ['402', 'Payment Required', '保留（付费）', '4xx 客户端错误'],\n  ['403', 'Forbidden', '已认证但无权限', '4xx 客户端错误'],\n  ['404', 'Not Found', '资源不存在', '4xx 客户端错误'],\n  ['405', 'Method Not Allowed', 'HTTP 方法不允许', '4xx 客户端错误'],\n  ['406', 'Not Acceptable', '无法满足 Accept 头', '4xx 客户端错误'],\n  ['408', 'Request Timeout', '请求超时', '4xx 客户端错误'],\n  ['409', 'Conflict', '资源冲突', '4xx 客户端错误'],\n  ['410', 'Gone', '资源已永久删除', '4xx 客户端错误'],\n  ['413', 'Payload Too Large', '请求体过大', '4xx 客户端错误'],\n  ['415', 'Unsupported Media Type', '不支持的媒体类型', '4xx 客户端错误'],\n  ['422', 'Unprocessable Entity', '语义错误（校验失败）', '4xx 客户端错误'],\n  ['429', 'Too Many Requests', '请求过于频繁（限流）', '4xx 客户端错误'],\n  ['451', 'Unavailable For Legal Reasons', '因法律原因不可用', '4xx 客户端错误'],\n  ['500', 'Internal Server Error', '服务器内部错误', '5xx 服务器错误'],\n  ['501', 'Not Implemented', '未实现', '5xx 服务器错误'],\n  ['502', 'Bad Gateway', '网关收到无效响应', '5xx 服务器错误'],\n  ['503', 'Service Unavailable', '服务不可用（过载/维护）', '5xx 服务器错误'],\n  ['504', 'Gateway Timeout', '网关超时', '5xx 服务器错误'],\n  ['505', 'HTTP Version Not Supported', 'HTTP 版本不支持', '5xx 服务器错误']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['状态码', '名称', '含义', '分类'], DATA));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

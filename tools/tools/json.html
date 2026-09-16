@@ -2,55 +2,67 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>JSON 格式化 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('JSON 格式化', 'JSON 数据美化、校验与转换', 'json');
-
-  var indent = T.select([
-    { value: '2', label: '2 空格' },
-    { value: '4', label: '4 空格' },
-    { value: 'tab', label: 'Tab' }
-  ]);
-  var input = T.textarea('粘贴 JSON 数据...');
-  var output = T.textarea('格式化结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载', function () {
-    T.download('formatted.json', output.value, 'application/json');
-  });
-  var error = T.el('span', { class: 'badge', text: '' });
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; error.textContent = ''; return; }
-    try {
-      var obj = JSON.parse(v);
-      var indentVal = indent.value === 'tab' ? '\t' : parseInt(indent.value);
-      output.value = JSON.stringify(obj, null, indentVal);
-      error.textContent = '✓ 有效 JSON';
-      error.style.color = 'var(--green)';
-    } catch (e) {
-      error.textContent = '✗ ' + e.message;
-      error.style.color = 'var(--red)';
-    }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON 格式化', 'JSON 美化 / 压缩 / 校验，错误定位到行列', 'json');
+var input = T.textarea('粘贴 JSON…');
+var output = T.out('');
+var indent = T.select([{value:'2',label:'2 空格'},{value:'4',label:'4 空格'},{value:'tab',label:'Tab'}],'2');
+var status = T.badge('—');
+function fmt(v) {
+  var n = +v;
+  return JSON.stringify(T.parseJSON(input.value), null, v === 'tab' ? '\t' : n);
+}
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; status.textContent = '—'; return; }
+  try {
+    var obj = JSON.parse(v);
+    output.value = JSON.stringify(obj, null, indent.value === 'tab' ? '\t' : +indent.value);
+    status.textContent = '✓ 合法 JSON';
+    status.className = 'badge ok';
+  } catch (e) {
+    output.value = '';
+    var m = e.message.match(/position (\d+)/);
+    if (m) {
+      var pos = +m[1];
+      var before = v.slice(0, pos);
+      var line = before.split('\n').length;
+      var col = pos - before.lastIndexOf('\n');
+      status.textContent = '✗ 语法错误：第 ' + line + ' 行第 ' + col + ' 列附近';
+    } else status.textContent = '✗ ' + e.message;
+    status.className = 'badge warn';
   }
-
-  indent.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 200); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [indent, error, copyBtn, downloadBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+}
+input.addEventListener('input', T.debounce(run, 250));
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([T.el('span', { text: '缩进' }), indent,
+  T.button('压缩为单行', function () {
+    try { output.value = JSON.stringify(T.parseJSON(input.value)); status.textContent = '✓ 已压缩'; status.className = 'badge ok'; }
+    catch (e) { T.toast(e.message); }
+  }),
+  T.button('转义为字符串', function () { T.copy(JSON.stringify(input.value)); }),
+  T.btnCopy(function () { return output.value; }), status]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "json", "title": "JSON 格式化", "desc": "JSON 美化 / 压缩 / 校验，错误定位到行列", "scripts": "", "code": "var input = T.textarea('粘贴 JSON…');\nvar output = T.out('');\nvar indent = T.select([{value:'2',label:'2 空格'},{value:'4',label:'4 空格'},{value:'tab',label:'Tab'}],'2');\nvar status = T.badge('—');\nfunction fmt(v) {\n  var n = +v;\n  return JSON.stringify(T.parseJSON(input.value), null, v === 'tab' ? '\\t' : n);\n}\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; status.textContent = '—'; return; }\n  try {\n    var obj = JSON.parse(v);\n    output.value = JSON.stringify(obj, null, indent.value === 'tab' ? '\\t' : +indent.value);\n    status.textContent = '✓ 合法 JSON';\n    status.className = 'badge ok';\n  } catch (e) {\n    output.value = '';\n    var m = e.message.match(/position (\\d+)/);\n    if (m) {\n      var pos = +m[1];\n      var before = v.slice(0, pos);\n      var line = before.split('\\n').length;\n      var col = pos - before.lastIndexOf('\\n');\n      status.textContent = '✗ 语法错误：第 ' + line + ' 行第 ' + col + ' 列附近';\n    } else status.textContent = '✗ ' + e.message;\n    status.className = 'badge warn';\n  }\n}\ninput.addEventListener('input', T.debounce(run, 250));\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([T.el('span', { text: '缩进' }), indent,\n  T.button('压缩为单行', function () {\n    try { output.value = JSON.stringify(T.parseJSON(input.value)); status.textContent = '✓ 已压缩'; status.className = 'badge ok'; }\n    catch (e) { T.toast(e.message); }\n  }),\n  T.button('转义为字符串', function () { T.copy(JSON.stringify(input.value)); }),\n  T.btnCopy(function () { return output.value; }), status]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

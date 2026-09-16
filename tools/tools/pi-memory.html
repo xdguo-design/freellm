@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>π 记忆挑战 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('π 记忆挑战', '圆周率记忆训练：输入小数位，挑战 100 位', 'pi-memory');
+var PI = '3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196';
+var input = T.input('', { class: 'grow mono', placeholder: '输入你记住的 π（从 3 开始）…' });
+var status = T.badge('开始输入，错了会提示位置');
+var best = +(localStorage.getItem('freellm-pi-best') || 0);
+var bestEl = T.stat(best, '最佳位数');
+var display = T.el('div', { class: 'output', style: 'min-height:80px;font-size:15px;letter-spacing:2px', text: PI.slice(0, 60) + '…' });
+input.addEventListener('input', function () {
+  var v = input.value.replace(/[^0-9.]/g, '');
+  if (!v) { status.textContent = '开始输入…'; return; }
+  var ok = 0;
+  for (var i = 0; i < v.length; i++) {
+    if (v[i] === PI[i]) ok++;
+    else {
+      status.textContent = '✗ 第 ' + (i + 1) + ' 位错了（应为 ' + PI[i] + '），正确记录 ' + ok + ' 位';
+      status.className = 'badge warn';
+      if (ok > best) { best = ok; localStorage.setItem('freellm-pi-best', best); bestEl.firstChild.textContent = best; }
+      return;
+    }
+  }
+  status.textContent = '✓ 已正确 ' + v.length + ' 位，继续！';
+  status.className = 'badge ok';
+  if (v.length > best) { best = v.length; localStorage.setItem('freellm-pi-best', best); bestEl.firstChild.textContent = best; }
+  if (v.length >= 40) display.textContent = PI.slice(0, 100);
+});
+app.appendChild(T.row([bestEl, status]));
+app.appendChild(display);
+app.appendChild(T.pane([T.field('你的输入', input)], true));
+app.appendChild(T.row([T.button('显示前 100 位', function () { display.textContent = PI; })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "pi-memory", "title": "π 记忆挑战", "desc": "圆周率记忆训练：输入小数位，挑战 100 位", "scripts": "", "code": "var PI = '3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196';\nvar input = T.input('', { class: 'grow mono', placeholder: '输入你记住的 π（从 3 开始）…' });\nvar status = T.badge('开始输入，错了会提示位置');\nvar best = +(localStorage.getItem('freellm-pi-best') || 0);\nvar bestEl = T.stat(best, '最佳位数');\nvar display = T.el('div', { class: 'output', style: 'min-height:80px;font-size:15px;letter-spacing:2px', text: PI.slice(0, 60) + '…' });\ninput.addEventListener('input', function () {\n  var v = input.value.replace(/[^0-9.]/g, '');\n  if (!v) { status.textContent = '开始输入…'; return; }\n  var ok = 0;\n  for (var i = 0; i \u003c v.length; i++) {\n    if (v[i] === PI[i]) ok++;\n    else {\n      status.textContent = '✗ 第 ' + (i + 1) + ' 位错了（应为 ' + PI[i] + '），正确记录 ' + ok + ' 位';\n      status.className = 'badge warn';\n      if (ok > best) { best = ok; localStorage.setItem('freellm-pi-best', best); bestEl.firstChild.textContent = best; }\n      return;\n    }\n  }\n  status.textContent = '✓ 已正确 ' + v.length + ' 位，继续！';\n  status.className = 'badge ok';\n  if (v.length > best) { best = v.length; localStorage.setItem('freellm-pi-best', best); bestEl.firstChild.textContent = best; }\n  if (v.length >= 40) display.textContent = PI.slice(0, 100);\n});\napp.appendChild(T.row([bestEl, status]));\napp.appendChild(display);\napp.appendChild(T.pane([T.field('你的输入', input)], true));\napp.appendChild(T.row([T.button('显示前 100 位', function () { display.textContent = PI; })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

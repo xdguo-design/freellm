@@ -2,69 +2,62 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>温度单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('温度单位换算', '摄氏/华氏/开氏 等', 'temp-converter');
-
-  var units = [
-    { id: 'c', name: '摄氏度 (°C)' },
-    { id: 'f', name: '华氏度 (°F)' },
-    { id: 'k', name: '开尔文 (K)' }
-  ];
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
-  });
-
-  function convert(val, from) {
-    var celsius;
-    switch (from) {
-      case 'c': celsius = val; break;
-      case 'f': celsius = (val - 32) * 5 / 9; break;
-      case 'k': celsius = val - 273.15; break;
-    }
-    return {
-      c: celsius,
-      f: celsius * 9 / 5 + 32,
-      k: celsius + 273.15
-    };
-  }
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var results = convert(val, source);
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = results[u.id].toFixed(2);
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:120px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.c.value = '0';
-  run('c');
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('温度单位换算', '摄氏 / 华氏 / 开氏 / 兰氏互转，附常识提示', 'temp-converter');
+var value = T.num(25, { style: 'width:130px' });
+var from = T.select([{value:'C',label:'摄氏 °C'},{value:'F',label:'华氏 °F'},{value:'K',label:'开氏 K'},{value:'R',label:'兰氏 °R'}],'C');
+var table = T.el('div');
+function toC(v, f) {
+  if (f === 'C') return v;
+  if (f === 'F') return (v - 32) * 5 / 9;
+  if (f === 'K') return v - 273.15;
+  return (v - 491.67) * 5 / 9;
+}
+function fromC(c) {
+  return {
+    '摄氏 °C': c,
+    '华氏 °F': c * 9 / 5 + 32,
+    '开氏 K': c + 273.15,
+    '兰氏 °R': (c + 273.15) * 9 / 5
+  };
+}
+function run() {
+  var c = toC(+value.value, from.value);
+  var rows = [];
+  var ref = fromC(c);
+  var names = { 'C': '摄氏 °C', 'F': '华氏 °F', 'K': '开氏 K', 'R': '兰氏 °R' };
+  Object.keys(names).forEach(function (k) { rows.push([names[k], +ref[names[k]].toFixed(4)]); });
+  var extra = [];
+  if (c <= 0) extra.push('水的冰点及以下 ❄');
+  if (c >= 100) extra.push('水的沸点及以上 ♨');
+  if (c >= 36 && c <= 38) extra.push('接近人体体温');
+  if (extra.length) rows.push(['备注', extra.join(' · ')]);
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from]));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "temp-converter", "title": "温度单位换算", "desc": "摄氏 / 华氏 / 开氏 / 兰氏互转，附常识提示", "scripts": "", "code": "var value = T.num(25, { style: 'width:130px' });\nvar from = T.select([{value:'C',label:'摄氏 °C'},{value:'F',label:'华氏 °F'},{value:'K',label:'开氏 K'},{value:'R',label:'兰氏 °R'}],'C');\nvar table = T.el('div');\nfunction toC(v, f) {\n  if (f === 'C') return v;\n  if (f === 'F') return (v - 32) * 5 / 9;\n  if (f === 'K') return v - 273.15;\n  return (v - 491.67) * 5 / 9;\n}\nfunction fromC(c) {\n  return {\n    '摄氏 °C': c,\n    '华氏 °F': c * 9 / 5 + 32,\n    '开氏 K': c + 273.15,\n    '兰氏 °R': (c + 273.15) * 9 / 5\n  };\n}\nfunction run() {\n  var c = toC(+value.value, from.value);\n  var rows = [];\n  var ref = fromC(c);\n  var names = { 'C': '摄氏 °C', 'F': '华氏 °F', 'K': '开氏 K', 'R': '兰氏 °R' };\n  Object.keys(names).forEach(function (k) { rows.push([names[k], +ref[names[k]].toFixed(4)]); });\n  var extra = [];\n  if (c \u003c= 0) extra.push('水的冰点及以下 ❄');\n  if (c >= 100) extra.push('水的沸点及以上 ♨');\n  if (c >= 36 && c \u003c= 38) extra.push('接近人体体温');\n  if (extra.length) rows.push(['备注', extra.join(' · ')]);\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from]));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

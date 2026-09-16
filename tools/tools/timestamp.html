@@ -2,65 +2,64 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>时间戳转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('时间戳转换', 'Unix 时间戳与日期时间互转', 'timestamp');
-
-  var now = T.el('span', { class: 'badge blue', style: 'font-family:monospace' });
-  var refresh = function () {
-    now.textContent = '当前时间戳: ' + Math.floor(Date.now() / 1000);
-  };
-  refresh();
-  setInterval(refresh, 1000);
-
-  var tsInput = T.el('input', { type: 'number', placeholder: '输入时间戳（秒或毫秒）', style: 'flex:1;font-family:monospace' });
-  var dateInput = T.el('input', { type: 'datetime-local', step: '1', style: 'flex:1' });
-
-  var tsResult = T.el('div', { class: 'output dark', style: 'font-family:monospace' });
-  var dateResult = T.el('div', { class: 'output dark', style: 'font-family:monospace' });
-
-  var copyTs = T.copyBtn(function () { return tsResult.textContent; });
-  var copyDate = T.copyBtn(function () { return dateResult.textContent; });
-
-  function tsToDate() {
-    var v = tsInput.value.trim();
-    if (!v) { tsResult.textContent = ''; return; }
-    var ts = parseInt(v);
-    if (v.length <= 10) ts *= 1000;
-    var d = new Date(ts);
-    if (isNaN(d.getTime())) { tsResult.textContent = '无效时间戳'; return; }
-    dateInput.value = d.toISOString().slice(0, 19);
-    tsResult.textContent = '本地时间: ' + d.toLocaleString() + '\nISO 8601: ' + d.toISOString() + '\nUTC: ' + d.toUTCString();
-  }
-
-  function dateToTs() {
-    var v = dateInput.value;
-    if (!v) { dateResult.textContent = ''; return; }
-    var d = new Date(v);
-    if (isNaN(d.getTime())) { dateResult.textContent = '无效日期'; return; }
-    tsInput.value = Math.floor(d.getTime() / 1000);
-    dateResult.textContent = '秒: ' + Math.floor(d.getTime() / 1000) + '\n毫秒: ' + d.getTime();
-  }
-
-  tsInput.addEventListener('input', function () { setTimeout(tsToDate, 100); });
-  dateInput.addEventListener('input', function () { setTimeout(dateToTs, 100); });
-
-  app.appendChild(now);
-  app.appendChild(T.el('div', { class: 'field', text: '时间戳 → 日期:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [tsInput, copyTs]));
-  app.appendChild(tsResult);
-  app.appendChild(T.el('div', { class: 'field', text: '日期 → 时间戳:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [dateInput, copyDate]));
-  app.appendChild(dateResult);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('时间戳转换', 'Unix 时间戳与日期时间互转（秒 / 毫秒），当前时间实时刷新', 'timestamp');
+var now = T.stat('—', '当前时间戳（秒）');
+var input = T.input(String(Math.floor(Date.now() / 1000)), { class: 'grow mono' });
+var unit = T.select([{value:'s',label:'秒 (10位)'},{value:'ms',label:'毫秒 (13位)'},{value:'us',label:'微秒 (16位)'},{value:'ns',label:'纳秒 (19位)'}],'s');
+var box = T.el('div');
+var dateIn = T.el('input', { type: 'datetime-local', style: 'flex:1' });
+dateIn.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+function tsToDate() {
+  var v = +input.value;
+  if (isNaN(v)) { box.textContent = '⚠ 请输入数字时间戳'; return; }
+  var div = { s: 1000, ms: 1, us: 0.001, ns: 1e-6 }[unit.value];
+  var d = new Date(v * div);
+  if (isNaN(d.getTime())) { box.textContent = '⚠ 时间戳超出范围'; return; }
+  var rows = [
+    ['本地时间', T.fmtTime(d)],
+    ['UTC', d.toISOString().replace('T', ' ').replace('Z', ' UTC')],
+    ['相对现在', Math.round((d - Date.now()) / 1000).toLocaleString() + ' 秒（负为过去）']
+  ];
+  T.clearEl(box).appendChild(T.kvTable(rows));
+  dateIn.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+}
+function dateToTs() {
+  if (!dateIn.value) return;
+  var d = new Date(dateIn.value);
+  input.value = String(Math.floor(d.getTime() / 1000));
+  unit.value = 's';
+  tsToDate();
+}
+input.addEventListener('input', tsToDate);
+unit.addEventListener('change', tsToDate);
+dateIn.addEventListener('change', dateToTs);
+setInterval(function () { now.firstChild.textContent = Math.floor(Date.now() / 1000).toLocaleString(); }, 1000);
+app.appendChild(T.row([now, T.button('复制当前秒级时间戳', function () { T.copy(String(Math.floor(Date.now() / 1000))); })]));
+app.appendChild(T.row([T.el('span', { text: '时间戳' }), input, unit, T.button('转换 →', tsToDate)]));
+app.appendChild(T.row([T.el('span', { text: '日期时间' }), dateIn]));
+app.appendChild(box);
+tsToDate();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "timestamp", "title": "时间戳转换", "desc": "Unix 时间戳与日期时间互转（秒 / 毫秒），当前时间实时刷新", "scripts": "", "code": "var now = T.stat('—', '当前时间戳（秒）');\nvar input = T.input(String(Math.floor(Date.now() / 1000)), { class: 'grow mono' });\nvar unit = T.select([{value:'s',label:'秒 (10位)'},{value:'ms',label:'毫秒 (13位)'},{value:'us',label:'微秒 (16位)'},{value:'ns',label:'纳秒 (19位)'}],'s');\nvar box = T.el('div');\nvar dateIn = T.el('input', { type: 'datetime-local', style: 'flex:1' });\ndateIn.value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);\nfunction tsToDate() {\n  var v = +input.value;\n  if (isNaN(v)) { box.textContent = '⚠ 请输入数字时间戳'; return; }\n  var div = { s: 1000, ms: 1, us: 0.001, ns: 1e-6 }[unit.value];\n  var d = new Date(v * div);\n  if (isNaN(d.getTime())) { box.textContent = '⚠ 时间戳超出范围'; return; }\n  var rows = [\n    ['本地时间', T.fmtTime(d)],\n    ['UTC', d.toISOString().replace('T', ' ').replace('Z', ' UTC')],\n    ['相对现在', Math.round((d - Date.now()) / 1000).toLocaleString() + ' 秒（负为过去）']\n  ];\n  T.clearEl(box).appendChild(T.kvTable(rows));\n  dateIn.value = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19);\n}\nfunction dateToTs() {\n  if (!dateIn.value) return;\n  var d = new Date(dateIn.value);\n  input.value = String(Math.floor(d.getTime() / 1000));\n  unit.value = 's';\n  tsToDate();\n}\ninput.addEventListener('input', tsToDate);\nunit.addEventListener('change', tsToDate);\ndateIn.addEventListener('change', dateToTs);\nsetInterval(function () { now.firstChild.textContent = Math.floor(Date.now() / 1000).toLocaleString(); }, 1000);\napp.appendChild(T.row([now, T.button('复制当前秒级时间戳', function () { T.copy(String(Math.floor(Date.now() / 1000))); })]));\napp.appendChild(T.row([T.el('span', { text: '时间戳' }), input, unit, T.button('转换 →', tsToDate)]));\napp.appendChild(T.row([T.el('span', { text: '日期时间' }), dateIn]));\napp.appendChild(box);\ntsToDate();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

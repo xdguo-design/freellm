@@ -2,48 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>屏幕信息 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('屏幕信息', '当前设备屏幕参数', 'screen-info');
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function update() {
-    var info = [
-      ['屏幕宽度', screen.width + 'px'],
-      ['屏幕高度', screen.height + 'px'],
-      ['可用宽度', screen.availWidth + 'px'],
-      ['可用高度', screen.availHeight + 'px'],
-      ['窗口宽度', window.innerWidth + 'px'],
-      ['窗口高度', window.innerHeight + 'px'],
-      ['设备像素比', window.devicePixelRatio],
-      ['颜色深度', screen.colorDepth + 'bit'],
-      ['像素深度', screen.pixelDepth + 'bit'],
-      ['方向', screen.orientation?.type || '未知'],
-      ['DPI', Math.round(screen.width / (screen.width / 96)) + 'dpi']
-    ];
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      info.map(function (i) {
-        return '<tr><td style="padding:8px;border-bottom:1px solid var(--line);color:var(--muted)">' + i[0] + '</td><td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace">' + i[1] + '</td></tr>';
-      }).join('') + '</table>';
-  }
-
-  window.addEventListener('resize', update);
-  update();
-
-  app.appendChild(T.el('div', { class: 'row' }, [copyBtn]));
-  app.appendChild(result);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('屏幕信息', '当前设备屏幕参数：分辨率 / 色深 / 像素比 / 视口', 'screen-info');
+var info = T.el('div', { class: 'pane single' });
+function render() {
+  var rows = [
+    ['屏幕分辨率', screen.width + ' × ' + screen.height],
+    ['可用区域', screen.availWidth + ' × ' + screen.availHeight + '（去除任务栏）'],
+    ['色深', screen.colorDepth + ' bit'],
+    ['像素深度', screen.pixelDepth + ' bit'],
+    ['设备像素比 DPR', window.devicePixelRatio],
+    ['物理分辨率估算', Math.round(screen.width * devicePixelRatio) + ' × ' + Math.round(screen.height * devicePixelRatio)],
+    ['浏览器视口', window.innerWidth + ' × ' + window.innerHeight],
+    ['窗口位置', '(' + window.screenX + ', ' + window.screenY + ')'],
+    ['页面滚动位置', 'x=' + window.scrollX + ', y=' + window.scrollY],
+    ['屏幕方向', (screen.orientation && screen.orientation.type) || '未知'],
+    ['逻辑 CPU 数', navigator.hardwareConcurrency || '未知'],
+    ['设备内存', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '未知'],
+    ['语言', navigator.language],
+    ['平台', navigator.platform],
+    ['是否触屏', 'ontouchstart' in window ? '✓ 支持' : '✗ 不支持']
+  ];
+  T.clearEl(info).appendChild(T.kvTable(rows));
+}
+render();
+window.addEventListener('resize', T.debounce(render, 200));
+app.appendChild(T.el('p', { text: '窗口尺寸变化时自动刷新。', style: 'color:var(--ink2);font-size:12px' }));
+app.appendChild(info);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "screen-info", "title": "屏幕信息", "desc": "当前设备屏幕参数：分辨率 / 色深 / 像素比 / 视口", "scripts": "", "code": "var info = T.el('div', { class: 'pane single' });\nfunction render() {\n  var rows = [\n    ['屏幕分辨率', screen.width + ' × ' + screen.height],\n    ['可用区域', screen.availWidth + ' × ' + screen.availHeight + '（去除任务栏）'],\n    ['色深', screen.colorDepth + ' bit'],\n    ['像素深度', screen.pixelDepth + ' bit'],\n    ['设备像素比 DPR', window.devicePixelRatio],\n    ['物理分辨率估算', Math.round(screen.width * devicePixelRatio) + ' × ' + Math.round(screen.height * devicePixelRatio)],\n    ['浏览器视口', window.innerWidth + ' × ' + window.innerHeight],\n    ['窗口位置', '(' + window.screenX + ', ' + window.screenY + ')'],\n    ['页面滚动位置', 'x=' + window.scrollX + ', y=' + window.scrollY],\n    ['屏幕方向', (screen.orientation && screen.orientation.type) || '未知'],\n    ['逻辑 CPU 数', navigator.hardwareConcurrency || '未知'],\n    ['设备内存', navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '未知'],\n    ['语言', navigator.language],\n    ['平台', navigator.platform],\n    ['是否触屏', 'ontouchstart' in window ? '✓ 支持' : '✗ 不支持']\n  ];\n  T.clearEl(info).appendChild(T.kvTable(rows));\n}\nrender();\nwindow.addEventListener('resize', T.debounce(render, 200));\napp.appendChild(T.el('p', { text: '窗口尺寸变化时自动刷新。', style: 'color:var(--ink2);font-size:12px' }));\napp.appendChild(info);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

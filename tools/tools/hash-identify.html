@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Hash 类型识别 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Hash 类型识别', '根据长度与前缀特征识别可能的哈希算法', 'hash-identify');
+var input = T.input('', { class: 'grow mono', placeholder: '粘贴 hash 值…' });
+var info = T.el('div');
+function identify(h) {
+  var out = [];
+  var add = function (name, conf) { out.push([name, conf]); };
+  if (/^[a-f0-9]{4}$/i.test(h)) add('CRC-16', '可能');
+  if (/^[a-f0-9]{8}$/i.test(h)) { add('CRC-32', '可能'); add('Adler-32', '可能'); }
+  if (/^[a-f0-9]{32}$/i.test(h)) {
+    add('MD5', '很可能');
+    add('MD4 / MD2 / NTLM / LM', '可能');
+    add('RIPEMD-128', '可能');
+    if (/^\$1\$/.test(h)) add('MD5 Crypt (Unix)', '前缀 $1$ 确认');
+  }
+  if (/^[a-f0-9]{40}$/i.test(h)) { add('SHA-1', '很可能'); add('RIPEMD-160', '可能'); add('MySQL5', '可能'); }
+  if (/^[a-f0-9]{56}$/i.test(h)) { add('SHA-224', '很可能'); add('SHA3-224', '可能'); }
+  if (/^[a-f0-9]{64}$/i.test(h)) { add('SHA-256', '很可能'); add('SHA3-256 / BLAKE2s-256', '可能'); }
+  if (/^[a-f0-9]{96}$/i.test(h)) { add('SHA-384', '很可能'); add('SHA3-384', '可能'); }
+  if (/^[a-f0-9]{128}$/i.test(h)) { add('SHA-512', '很可能'); add('Whirlpool / SHA3-512', '可能'); }
+  if (/^\$2[aby]\$/.test(h)) add('bcrypt', '前缀 $2 确认');
+  if (/^\$6\$/.test(h)) add('SHA-512 Crypt (Unix)', '前缀 $6$ 确认');
+  if (/^\$5\$/.test(h)) add('SHA-256 Crypt (Unix)', '前缀 $5$ 确认');
+  if (/^\$argon2(i|id)\$/.test(h)) add('Argon2', '前缀确认');
+  if (/^\$scrypt\$/.test(h) || /^scrypt\$/.test(h)) add('scrypt', '前缀确认');
+  if (/^[A-Za-z0-9+/]{43}=$/.test(h)) add('SHA-256（Base64）', '可能');
+  if (/^[A-Fa-f0-9]{32}:[A-Fa-f0-9]{32}$/.test(h)) add('MD5 + Salt / NTLM 对', '可能');
+  return out;
+}
+function report() {
+  var h = input.value.trim();
+  T.clearEl(info);
+  if (!h) return;
+  var res = identify(h);
+  if (!res.length) {
+    info.appendChild(T.msg('无法识别：长度 ' + h.length + '（' + (/^[a-f0-9]+$/i.test(h) ? '纯 hex' : '非纯 hex') + '）。若为 hex 且长度为 4 的倍数，可能为截断哈希或 HMAC。', ''));
+    return;
+  }
+  info.appendChild(T.kvTable(res.map(function (r) { return [r[0] + '（长度 32/' + '—'.slice(0, 0) + h.length + '）', r[1]]; })));
+}
+input.addEventListener('input', T.debounce(report, 200));
+app.appendChild(T.row([T.el('span', { text: 'Hash' }), input]));
+app.appendChild(info);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "hash-identify", "title": "Hash 类型识别", "desc": "根据长度与前缀特征识别可能的哈希算法", "scripts": "", "code": "var input = T.input('', { class: 'grow mono', placeholder: '粘贴 hash 值…' });\nvar info = T.el('div');\nfunction identify(h) {\n  var out = [];\n  var add = function (name, conf) { out.push([name, conf]); };\n  if (/^[a-f0-9]{4}$/i.test(h)) add('CRC-16', '可能');\n  if (/^[a-f0-9]{8}$/i.test(h)) { add('CRC-32', '可能'); add('Adler-32', '可能'); }\n  if (/^[a-f0-9]{32}$/i.test(h)) {\n    add('MD5', '很可能');\n    add('MD4 / MD2 / NTLM / LM', '可能');\n    add('RIPEMD-128', '可能');\n    if (/^\\$1\\$/.test(h)) add('MD5 Crypt (Unix)', '前缀 $1$ 确认');\n  }\n  if (/^[a-f0-9]{40}$/i.test(h)) { add('SHA-1', '很可能'); add('RIPEMD-160', '可能'); add('MySQL5', '可能'); }\n  if (/^[a-f0-9]{56}$/i.test(h)) { add('SHA-224', '很可能'); add('SHA3-224', '可能'); }\n  if (/^[a-f0-9]{64}$/i.test(h)) { add('SHA-256', '很可能'); add('SHA3-256 / BLAKE2s-256', '可能'); }\n  if (/^[a-f0-9]{96}$/i.test(h)) { add('SHA-384', '很可能'); add('SHA3-384', '可能'); }\n  if (/^[a-f0-9]{128}$/i.test(h)) { add('SHA-512', '很可能'); add('Whirlpool / SHA3-512', '可能'); }\n  if (/^\\$2[aby]\\$/.test(h)) add('bcrypt', '前缀 $2 确认');\n  if (/^\\$6\\$/.test(h)) add('SHA-512 Crypt (Unix)', '前缀 $6$ 确认');\n  if (/^\\$5\\$/.test(h)) add('SHA-256 Crypt (Unix)', '前缀 $5$ 确认');\n  if (/^\\$argon2(i|id)\\$/.test(h)) add('Argon2', '前缀确认');\n  if (/^\\$scrypt\\$/.test(h) || /^scrypt\\$/.test(h)) add('scrypt', '前缀确认');\n  if (/^[A-Za-z0-9+/]{43}=$/.test(h)) add('SHA-256（Base64）', '可能');\n  if (/^[A-Fa-f0-9]{32}:[A-Fa-f0-9]{32}$/.test(h)) add('MD5 + Salt / NTLM 对', '可能');\n  return out;\n}\nfunction report() {\n  var h = input.value.trim();\n  T.clearEl(info);\n  if (!h) return;\n  var res = identify(h);\n  if (!res.length) {\n    info.appendChild(T.msg('无法识别：长度 ' + h.length + '（' + (/^[a-f0-9]+$/i.test(h) ? '纯 hex' : '非纯 hex') + '）。若为 hex 且长度为 4 的倍数，可能为截断哈希或 HMAC。', ''));\n    return;\n  }\n  info.appendChild(T.kvTable(res.map(function (r) { return [r[0] + '（长度 32/' + '—'.slice(0, 0) + h.length + '）', r[1]]; })));\n}\ninput.addEventListener('input', T.debounce(report, 200));\napp.appendChild(T.row([T.el('span', { text: 'Hash' }), input]));\napp.appendChild(info);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

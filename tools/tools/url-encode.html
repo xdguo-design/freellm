@@ -2,52 +2,47 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>URL 编解码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('URL 编解码', 'URL encode / decode 编码解码', 'url-encode');
-
-  var mode = T.select([
-    { value: 'encode', label: '编码' },
-    { value: 'decode', label: '解码' },
-    { value: 'encodeComponent', label: '编码(组件)' },
-    { value: 'decodeComponent', label: '解码(组件)' }
-  ]);
-  var input = T.textarea('输入 URL 或编码后的字符串...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    try {
-      switch (mode.value) {
-        case 'encode': output.value = encodeURI(v); break;
-        case 'decode': output.value = decodeURI(v); break;
-        case 'encodeComponent': output.value = encodeURIComponent(v); break;
-        case 'decodeComponent': output.value = decodeURIComponent(v); break;
-      }
-    } catch (e) {
-      output.value = '⚠ 解码失败: ' + e.message;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('URL 编解码', 'encodeURIComponent / encodeURL 全 URL 与组件级编码互转', 'url-encode');
+var input = T.textarea('输入 URL 或文本…');
+var output = T.out('输出…');
+var mode = T.select([{value:'enc',label:'编码'},{value:'dec',label:'解码'}],'enc');
+var comp = T.select([{value:'component',label:'组件编码 (encodeURIComponent)'},{value:'full',label:'整段 URL (encodeURI)'}],'component');
+function run() {
+  var v = input.value;
+  try {
+    if (mode.value === 'enc') {
+      output.value = comp.value === 'component' ? encodeURIComponent(v) : encodeURI(v);
+    } else {
+      output.value = comp.value === 'component' ? decodeURIComponent(v) : decodeURI(v);
     }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode, comp].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([T.el('span', { text: '模式' }), mode, comp,
+  T.button('复制', function () { T.copy(output.value); })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "url-encode", "title": "URL 编解码", "desc": "encodeURIComponent / encodeURL 全 URL 与组件级编码互转", "scripts": "", "code": "var input = T.textarea('输入 URL 或文本…');\nvar output = T.out('输出…');\nvar mode = T.select([{value:'enc',label:'编码'},{value:'dec',label:'解码'}],'enc');\nvar comp = T.select([{value:'component',label:'组件编码 (encodeURIComponent)'},{value:'full',label:'整段 URL (encodeURI)'}],'component');\nfunction run() {\n  var v = input.value;\n  try {\n    if (mode.value === 'enc') {\n      output.value = comp.value === 'component' ? encodeURIComponent(v) : encodeURI(v);\n    } else {\n      output.value = comp.value === 'component' ? decodeURIComponent(v) : decodeURI(v);\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode, comp].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([T.el('span', { text: '模式' }), mode, comp,\n  T.button('复制', function () { T.copy(output.value); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

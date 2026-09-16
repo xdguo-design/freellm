@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>条形码识别 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+<script src="/tools/js/vendor/zxing-index.min.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('条形码识别', '上传图片识别 Code128 / EAN / QR 等条码内容（ZXing）', 'barcode-scan');
+var result = T.out('识别结果…');
+var fmt = T.badge('—');
+var preview = T.el('img', { style: 'max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line)' });
+function scan(dataURL) {
+  preview.src = dataURL;
+  var reader = new ZXing.BrowserMultiFormatReader();
+  var img = new Image();
+  img.onload = function () {
+    try {
+      var res = reader.decodeFromImage(img);
+      if (res) {
+        result.value = res.text;
+        fmt.textContent = '格式：' + (res.result && res.result.getBarcodeFormat != null ? res.result.getBarcodeFormat() : '已识别');
+        fmt.className = 'badge ok';
+      } else { fmt.textContent = '未识别'; fmt.className = 'badge warn'; }
+    } catch (e) { fmt.textContent = '未识别到条形码'; fmt.className = 'badge warn'; }
+  };
+  img.src = dataURL;
+}
+app.appendChild(T.row([T.filePick('上传条形码图片', 'image/*', function (dataURL) { scan(dataURL); }, true)]));
+app.appendChild(T.row([preview, fmt]));
+app.appendChild(T.pane([T.field('识别结果', result)], true));
+app.appendChild(T.row([T.btnCopy(function () { return result.value; })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "barcode-scan", "title": "条形码识别", "desc": "上传图片识别 Code128 / EAN / QR 等条码内容（ZXing）", "scripts": "\u003cscript src=\"/tools/js/vendor/zxing-index.min.js\">\u003c/script>", "code": "var result = T.out('识别结果…');\nvar fmt = T.badge('—');\nvar preview = T.el('img', { style: 'max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line)' });\nfunction scan(dataURL) {\n  preview.src = dataURL;\n  var reader = new ZXing.BrowserMultiFormatReader();\n  var img = new Image();\n  img.onload = function () {\n    try {\n      var res = reader.decodeFromImage(img);\n      if (res) {\n        result.value = res.text;\n        fmt.textContent = '格式：' + (res.result && res.result.getBarcodeFormat != null ? res.result.getBarcodeFormat() : '已识别');\n        fmt.className = 'badge ok';\n      } else { fmt.textContent = '未识别'; fmt.className = 'badge warn'; }\n    } catch (e) { fmt.textContent = '未识别到条形码'; fmt.className = 'badge warn'; }\n  };\n  img.src = dataURL;\n}\napp.appendChild(T.row([T.filePick('上传条形码图片', 'image/*', function (dataURL) { scan(dataURL); }, true)]));\napp.appendChild(T.row([preview, fmt]));\napp.appendChild(T.pane([T.field('识别结果', result)], true));\napp.appendChild(T.row([T.btnCopy(function () { return result.value; })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

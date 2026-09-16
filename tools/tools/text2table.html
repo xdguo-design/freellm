@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>文本转表格 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文本转表格', '按分隔符 / 正则把文本切成表格，可导出 CSV', 'text2table');
+var input = T.textarea('张三|25|北京\n李四|30|上海');
+input.value = '张三|25|北京\n李四|30|上海';
+var output = T.out('');
+var mode = T.select([{value:'str',label:'分隔符'},{value:'re',label:'正则'}],'str');
+var delim = T.input('|', { class: 'mono', style: 'width:80px' });
+var box = T.el('div');
+function run() {
+  T.clearEl(box);
+  var v = input.value.trim();
+  if (!v) return;
+  var rows;
+  try {
+    var pattern = mode.value === 'str' ? delim.value : new RegExp(delim.value, 'g');
+    rows = v.split('\n').map(function (l) { return l.split(pattern).map(function (c) { return c.trim(); }); });
+    box.appendChild(T.refTable(rows[0].map(function (_, i) { return '列' + (i + 1); }), rows.slice(1)));
+  } catch (e) { box.appendChild(T.msg('⚠ ' + e.message, 'err')); return; }
+  output.value = LF.Csv.stringify(rows);
+}
+[input, delim, mode].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('文本（每行一条记录）', input)], true));
+app.appendChild(T.row([mode, T.el('span', { text: mode.value === 'str' ? '分隔符' : '正则' }), delim]));
+app.appendChild(box);
+app.appendChild(T.row([T.el('span', { text: 'CSV' }), T.btnCopy(function () { return output.value; })]));
+app.appendChild(output);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "text2table", "title": "文本转表格", "desc": "按分隔符 / 正则把文本切成表格，可导出 CSV", "scripts": "", "code": "var input = T.textarea('张三|25|北京\\n李四|30|上海');\ninput.value = '张三|25|北京\\n李四|30|上海';\nvar output = T.out('');\nvar mode = T.select([{value:'str',label:'分隔符'},{value:'re',label:'正则'}],'str');\nvar delim = T.input('|', { class: 'mono', style: 'width:80px' });\nvar box = T.el('div');\nfunction run() {\n  T.clearEl(box);\n  var v = input.value.trim();\n  if (!v) return;\n  var rows;\n  try {\n    var pattern = mode.value === 'str' ? delim.value : new RegExp(delim.value, 'g');\n    rows = v.split('\\n').map(function (l) { return l.split(pattern).map(function (c) { return c.trim(); }); });\n    box.appendChild(T.refTable(rows[0].map(function (_, i) { return '列' + (i + 1); }), rows.slice(1)));\n  } catch (e) { box.appendChild(T.msg('⚠ ' + e.message, 'err')); return; }\n  output.value = LF.Csv.stringify(rows);\n}\n[input, delim, mode].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('文本（每行一条记录）', input)], true));\napp.appendChild(T.row([mode, T.el('span', { text: mode.value === 'str' ? '分隔符' : '正则' }), delim]));\napp.appendChild(box);\napp.appendChild(T.row([T.el('span', { text: 'CSV' }), T.btnCopy(function () { return output.value; })]));\napp.appendChild(output);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

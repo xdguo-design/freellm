@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSV 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSV 格式化', 'CSV 校验 / 转表格预览 / 更换分隔符 / 压缩', 'csv-format');
+var input = T.textarea('name,age\n张三,25\n李四,30');
+input.value = 'name,age\n张三,25\n李四,30';
+var box = T.el('div');
+var delim = T.select([{value:',',label:'逗号'},{value:'\t',label:'Tab'},{value:';',label:'分号'},{value:'|',label:'竖线'}],',');
+var output = T.out('');
+function run() {
+  T.clearEl(box);
+  var v = input.value.trim();
+  if (!v) return;
+  try {
+    var rows = LF.Csv.parse(v, delim.value);
+    if (!rows.length) return;
+    var cols = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+    box.appendChild(T.refTable(rows[0].map(function (_, i) { return '列' + (i + 1); }), rows.slice(1)));
+    box.appendChild(T.el('p', { text: rows.length + ' 行 × ' + cols + ' 列', style: 'color:var(--ink2);font-size:12px' }));
+  } catch (e) { box.appendChild(T.msg(e.message, 'err')); }
+}
+function reformat() {
+  output.value = LF.Csv.stringify(LF.Csv.parse(input.value, delim.value), delim.value);
+}
+[input, delim].forEach(function (el) { el.addEventListener('input', T.debounce(function () { run(); reformat(); }, 300)); });
+app.appendChild(T.pane([T.field('CSV', input)], true));
+app.appendChild(T.row([T.el('span', { text: '分隔符' }), delim, T.button('重新序列化', reformat), T.btnCopy(function () { return output.value; })]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "csv-format", "title": "CSV 格式化", "desc": "CSV 校验 / 转表格预览 / 更换分隔符 / 压缩", "scripts": "", "code": "var input = T.textarea('name,age\\n张三,25\\n李四,30');\ninput.value = 'name,age\\n张三,25\\n李四,30';\nvar box = T.el('div');\nvar delim = T.select([{value:',',label:'逗号'},{value:'\\t',label:'Tab'},{value:';',label:'分号'},{value:'|',label:'竖线'}],',');\nvar output = T.out('');\nfunction run() {\n  T.clearEl(box);\n  var v = input.value.trim();\n  if (!v) return;\n  try {\n    var rows = LF.Csv.parse(v, delim.value);\n    if (!rows.length) return;\n    var cols = Math.max.apply(null, rows.map(function (r) { return r.length; }));\n    box.appendChild(T.refTable(rows[0].map(function (_, i) { return '列' + (i + 1); }), rows.slice(1)));\n    box.appendChild(T.el('p', { text: rows.length + ' 行 × ' + cols + ' 列', style: 'color:var(--ink2);font-size:12px' }));\n  } catch (e) { box.appendChild(T.msg(e.message, 'err')); }\n}\nfunction reformat() {\n  output.value = LF.Csv.stringify(LF.Csv.parse(input.value, delim.value), delim.value);\n}\n[input, delim].forEach(function (el) { el.addEventListener('input', T.debounce(function () { run(); reformat(); }, 300)); });\napp.appendChild(T.pane([T.field('CSV', input)], true));\napp.appendChild(T.row([T.el('span', { text: '分隔符' }), delim, T.button('重新序列化', reformat), T.btnCopy(function () { return output.value; })]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

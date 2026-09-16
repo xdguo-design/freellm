@@ -2,48 +2,51 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>CSS 圆角生成器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('CSS 圆角生成器', 'Border Radius 可视化调节', 'css-border');
-
-  var tl = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
-  var tr = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
-  var br = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
-  var bl = T.el('input', { type: 'range', min: '0', max: '100', value: '0' });
-
-  var preview = T.el('div', { 
-    style: 'width:150px;height:150px;background:linear-gradient(135deg,#667eea,#764ba2);margin:20px auto;transition:border-radius 0.2s'
-  });
-
-  var cssOutput = T.el('div', { class: 'output dark', style: 'font-family:monospace;padding:12px' });
-  var copyBtn = T.copyBtn(function () { return cssOutput.textContent; });
-
-  function update() {
-    var r = tl.value + 'px ' + tr.value + 'px ' + br.value + 'px ' + bl.value + 'px';
-    preview.style.borderRadius = r;
-    cssOutput.textContent = 'border-radius: ' + r + ';';
-  }
-
-  [tl, tr, br, bl].forEach(function (el) { el.addEventListener('input', update); });
-
-  var labels = ['左上', '右上', '右下', '左下'];
-  [tl, tr, br, bl].forEach(function (el, i) {
-    app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: labels[i], style: 'width:40px' }), el]));
-  });
-
-  app.appendChild(preview);
-  app.appendChild(T.el('div', { class: 'row' }, [cssOutput, copyBtn]));
-
-  update();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS 圆角生成器', 'Border Radius 四角独立调节，胶囊 / 圆形一键预设', 'css-border');
+var tl = T.range(0, 150, 1, 16), tr = T.range(0, 150, 1, 16);
+var br = T.range(0, 150, 1, 16), bl = T.range(0, 150, 1, 16);
+var box = T.el('div', { style: 'height:200px;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px' });
+var card = T.el('div', { style: 'width:150px;height:110px;background:var(--accent);opacity:.85' });
+box.appendChild(card);
+var output = T.out('');
+function run() {
+  var v = tl.value + 'px ' + tr.value + 'px ' + br.value + 'px ' + bl.value + 'px';
+  card.style.borderRadius = v;
+  output.value = 'border-radius: ' + v + ';';
+}
+[tl, tr, br, bl].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(box);
+app.appendChild(T.row([T.el('span', { text: '左上' }), tl, T.el('span', { text: '右上' }), tr]));
+app.appendChild(T.row([T.el('span', { text: '左下' }), bl, T.el('span', { text: '右下' }), br]));
+app.appendChild(T.row([
+  T.button('统一 16px', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 16; }); run(); }),
+  T.button('胶囊 pill', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 75; }); run(); }),
+  T.button('圆形', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 150; }); run(); })
+]));
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "css-border", "title": "CSS 圆角生成器", "desc": "Border Radius 四角独立调节，胶囊 / 圆形一键预设", "scripts": "", "code": "var tl = T.range(0, 150, 1, 16), tr = T.range(0, 150, 1, 16);\nvar br = T.range(0, 150, 1, 16), bl = T.range(0, 150, 1, 16);\nvar box = T.el('div', { style: 'height:200px;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px' });\nvar card = T.el('div', { style: 'width:150px;height:110px;background:var(--accent);opacity:.85' });\nbox.appendChild(card);\nvar output = T.out('');\nfunction run() {\n  var v = tl.value + 'px ' + tr.value + 'px ' + br.value + 'px ' + bl.value + 'px';\n  card.style.borderRadius = v;\n  output.value = 'border-radius: ' + v + ';';\n}\n[tl, tr, br, bl].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(box);\napp.appendChild(T.row([T.el('span', { text: '左上' }), tl, T.el('span', { text: '右上' }), tr]));\napp.appendChild(T.row([T.el('span', { text: '左下' }), bl, T.el('span', { text: '右下' }), br]));\napp.appendChild(T.row([\n  T.button('统一 16px', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 16; }); run(); }),\n  T.button('胶囊 pill', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 75; }); run(); }),\n  T.button('圆形', function () { [tl, tr, br, bl].forEach(function (s) { s.value = 150; }); run(); })\n]));\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

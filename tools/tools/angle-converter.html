@@ -2,60 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>角度单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('角度单位换算', '度/弧度/梯度 等', 'angle-converter');
-
-  var units = [
-    { id: 'deg', name: '度 (°)' },
-    { id: 'rad', name: '弧度 (rad)' },
-    { id: 'grad', name: '梯度 (grad)' },
-    { id: 'min', name: '角分 (\'') },
-    { id: 'sec', name: '角秒 (\")' },
-    { id: 'rev', name: '周 (rev)' }
-  ];
-
-  var factors = { deg: 1, rad: 180/Math.PI, grad: 0.9, min: 1/60, sec: 1/3600, rev: 360 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('角度单位换算', '度 / 弧度 / 梯度 / 圆周', 'angle-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "度 (°)", "label": "度 (°)"}, {"value": "弧度 (rad)", "label": "弧度 (rad)"}, {"value": "梯度 (gon)", "label": "梯度 (gon)"}, {"value": "圆周 (turn)", "label": "圆周 (turn)"}, {"value": "角分 (′)", "label": "角分 (′)"}, {"value": "角秒 (″)", "label": "角秒 (″)"}], "度 (°)");
+var to = T.select([{"value": "度 (°)", "label": "度 (°)"}, {"value": "弧度 (rad)", "label": "弧度 (rad)"}, {"value": "梯度 (gon)", "label": "梯度 (gon)"}, {"value": "圆周 (turn)", "label": "圆周 (turn)"}, {"value": "角分 (′)", "label": "角分 (′)"}, {"value": "角秒 (″)", "label": "角秒 (″)"}], "度 (°)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"度 (°)": 1, "弧度 (rad)": 57.29577951308232, "梯度 (gon)": 0.9, "圆周 (turn)": 360, "角分 (′)": 0.016666666666666666, "角秒 (″)": 0.0002777777777777778};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var deg = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (deg / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:100px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.deg.value = '180';
-  run('deg');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "angle-converter", "title": "角度单位换算", "desc": "度 / 弧度 / 梯度 / 圆周", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"度 (°)\", \"label\": \"度 (°)\"}, {\"value\": \"弧度 (rad)\", \"label\": \"弧度 (rad)\"}, {\"value\": \"梯度 (gon)\", \"label\": \"梯度 (gon)\"}, {\"value\": \"圆周 (turn)\", \"label\": \"圆周 (turn)\"}, {\"value\": \"角分 (′)\", \"label\": \"角分 (′)\"}, {\"value\": \"角秒 (″)\", \"label\": \"角秒 (″)\"}], \"度 (°)\");\nvar to = T.select([{\"value\": \"度 (°)\", \"label\": \"度 (°)\"}, {\"value\": \"弧度 (rad)\", \"label\": \"弧度 (rad)\"}, {\"value\": \"梯度 (gon)\", \"label\": \"梯度 (gon)\"}, {\"value\": \"圆周 (turn)\", \"label\": \"圆周 (turn)\"}, {\"value\": \"角分 (′)\", \"label\": \"角分 (′)\"}, {\"value\": \"角秒 (″)\", \"label\": \"角秒 (″)\"}], \"度 (°)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"度 (°)\": 1, \"弧度 (rad)\": 57.29577951308232, \"梯度 (gon)\": 0.9, \"圆周 (turn)\": 360, \"角分 (′)\": 0.016666666666666666, \"角秒 (″)\": 0.0002777777777777778};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

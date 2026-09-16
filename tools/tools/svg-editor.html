@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>SVG 在线编辑 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('SVG 在线编辑', '可视化编辑 SVG 图形：改属性 / 实时预览 / 导出', 'svg-editor');
+var input = T.textarea('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160" viewBox="0 0 240 160">\n  <rect x="10" y="10" width="100" height="60" rx="10" fill="#1744E8"/>\n  <circle cx="180" cy="80" r="50" fill="#FFB88C"/>\n  <text x="120" y="140" text-anchor="middle" font-size="16" fill="#787774">SVG 编辑器</text>\n</svg>', true);
+input.value = '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160" viewBox="0 0 240 160">\n  <rect x="10" y="10" width="100" height="60" rx="10" fill="#1744E8"/>\n  <circle cx="180" cy="80" r="50" fill="#FFB88C"/>\n  <text x="120" y="140" text-anchor="middle" font-size="16" fill="#787774">SVG 编辑器</text>\n</svg>';
+input.style.minHeight = '220px';
+var preview = T.el('div', { class: 'output', style: 'min-height:220px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:auto' });
+function run() {
+  try {
+    preview.innerHTML = input.value;
+  } catch (e) { preview.textContent = '⚠ ' + e.message; }
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('SVG 源码', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), preview])]));
+app.appendChild(T.row([
+  T.button('下载 SVG', function () { T.download('shape.svg', input.value, 'image/svg+xml'); }, true),
+  T.button('复制源码', function () { T.copy(input.value); }),
+  T.button('导出 PNG', function () {
+    var svg = preview.querySelector('svg');
+    if (!svg) return;
+    var img = new Image();
+    img.onload = function () {
+      var c = T.el('canvas');
+      c.width = img.width || 480;
+      c.height = img.height || 320;
+      c.getContext('2d').drawImage(img, 0, 0);
+      T.dlCanvas(c, 'shape.png');
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(input.value);
+  })
+]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "svg-editor", "title": "SVG 在线编辑", "desc": "可视化编辑 SVG 图形：改属性 / 实时预览 / 导出", "scripts": "", "code": "var input = T.textarea('\u003csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"160\" viewBox=\"0 0 240 160\">\\n  \u003crect x=\"10\" y=\"10\" width=\"100\" height=\"60\" rx=\"10\" fill=\"#1744E8\"/>\\n  \u003ccircle cx=\"180\" cy=\"80\" r=\"50\" fill=\"#FFB88C\"/>\\n  \u003ctext x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" fill=\"#787774\">SVG 编辑器\u003c/text>\\n\u003c/svg>', true);\ninput.value = '\u003csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"240\" height=\"160\" viewBox=\"0 0 240 160\">\\n  \u003crect x=\"10\" y=\"10\" width=\"100\" height=\"60\" rx=\"10\" fill=\"#1744E8\"/>\\n  \u003ccircle cx=\"180\" cy=\"80\" r=\"50\" fill=\"#FFB88C\"/>\\n  \u003ctext x=\"120\" y=\"140\" text-anchor=\"middle\" font-size=\"16\" fill=\"#787774\">SVG 编辑器\u003c/text>\\n\u003c/svg>';\ninput.style.minHeight = '220px';\nvar preview = T.el('div', { class: 'output', style: 'min-height:220px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:auto' });\nfunction run() {\n  try {\n    preview.innerHTML = input.value;\n  } catch (e) { preview.textContent = '⚠ ' + e.message; }\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('SVG 源码', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), preview])]));\napp.appendChild(T.row([\n  T.button('下载 SVG', function () { T.download('shape.svg', input.value, 'image/svg+xml'); }, true),\n  T.button('复制源码', function () { T.copy(input.value); }),\n  T.button('导出 PNG', function () {\n    var svg = preview.querySelector('svg');\n    if (!svg) return;\n    var img = new Image();\n    img.onload = function () {\n      var c = T.el('canvas');\n      c.width = img.width || 480;\n      c.height = img.height || 320;\n      c.getContext('2d').drawImage(img, 0, 0);\n      T.dlCanvas(c, 'shape.png');\n    };\n    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(input.value);\n  })\n]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

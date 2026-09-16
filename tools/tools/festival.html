@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>传统节日查询 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('传统节日查询', '公历节日 + 农历传统节日 + 节气节日全年对照表', 'festival');
+var year = T.num(2026, { min: 1900, max: 2098, style: 'width:100px' });
+var box = T.el('div');
+function run() {
+  T.clearEl(box);
+  var y = +year.value;
+  if (!y) return;
+  var rows = [];
+  Object.keys(LU.Fest.solarFests).forEach(function (k) {
+    var mm = k.split('-')[0], dd = k.split('-')[1];
+    var d = new Date(y, mm - 1, +dd);
+    rows.push([LU.Fest.solarFests[k], T.fmtDate(d), '公历 ' + mm + ' 月 ' + (+dd) + ' 日', ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]]);
+  });
+  box.appendChild(T.el('span', { text: '公历节日', class: 'field' }));
+  box.appendChild(T.refTable(['节日', '日期', '说明', '星期'], rows));
+  var lunarRows = [];
+  LU.Lunar.load().then(function () {
+    Object.keys(LU.Fest.lunarFests).forEach(function (k) {
+      var mm = +k.split('-')[0], dd = +k.split('-')[1];
+      var res = LU.Lunar.lunarToSolar({ y: y, month: mm, day: dd, leap: false });
+      if (!res) return;
+      var d = new Date(res[0], res[1] - 1, res[2]);
+      lunarRows.push([LU.Fest.lunarFests[k], '农历 ' + LU.Lunar.monthName(mm, false) + LU.Lunar.dayName(dd), T.fmtDate(d), ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]]);
+    });
+    var cxi = LU.Lunar.lunarToSolar({ y: y + 1, month: 1, day: 1, leap: false });
+    var cxiD = new Date(cxi[0], cxi[1] - 1, cxi[2] - 1);
+    lunarRows.push(['除夕', '农历 腊月最后一天', T.fmtDate(cxiD), ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][cxiD.getDay()]]);
+    lunarRows.sort(function (a, b) { return a[2] < b[2] ? -1 : 1; });
+    T.clearEl(box2).appendChild(T.refTable(['节日', '农历', '公历日期', '星期'], lunarRows));
+  });
+  var box2 = T.el('div');
+  box.appendChild(T.el('span', { text: '农历传统节日', class: 'field' }));
+  box.appendChild(box2);
+}
+year.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '年份' }), year]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "festival", "title": "传统节日查询", "desc": "公历节日 + 农历传统节日 + 节气节日全年对照表", "scripts": "", "code": "var year = T.num(2026, { min: 1900, max: 2098, style: 'width:100px' });\nvar box = T.el('div');\nfunction run() {\n  T.clearEl(box);\n  var y = +year.value;\n  if (!y) return;\n  var rows = [];\n  Object.keys(LU.Fest.solarFests).forEach(function (k) {\n    var mm = k.split('-')[0], dd = k.split('-')[1];\n    var d = new Date(y, mm - 1, +dd);\n    rows.push([LU.Fest.solarFests[k], T.fmtDate(d), '公历 ' + mm + ' 月 ' + (+dd) + ' 日', ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]]);\n  });\n  box.appendChild(T.el('span', { text: '公历节日', class: 'field' }));\n  box.appendChild(T.refTable(['节日', '日期', '说明', '星期'], rows));\n  var lunarRows = [];\n  LU.Lunar.load().then(function () {\n    Object.keys(LU.Fest.lunarFests).forEach(function (k) {\n      var mm = +k.split('-')[0], dd = +k.split('-')[1];\n      var res = LU.Lunar.lunarToSolar({ y: y, month: mm, day: dd, leap: false });\n      if (!res) return;\n      var d = new Date(res[0], res[1] - 1, res[2]);\n      lunarRows.push([LU.Fest.lunarFests[k], '农历 ' + LU.Lunar.monthName(mm, false) + LU.Lunar.dayName(dd), T.fmtDate(d), ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]]);\n    });\n    var cxi = LU.Lunar.lunarToSolar({ y: y + 1, month: 1, day: 1, leap: false });\n    var cxiD = new Date(cxi[0], cxi[1] - 1, cxi[2] - 1);\n    lunarRows.push(['除夕', '农历 腊月最后一天', T.fmtDate(cxiD), ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][cxiD.getDay()]]);\n    lunarRows.sort(function (a, b) { return a[2] \u003c b[2] ? -1 : 1; });\n    T.clearEl(box2).appendChild(T.refTable(['节日', '农历', '公历日期', '星期'], lunarRows));\n  });\n  var box2 = T.el('div');\n  box.appendChild(T.el('span', { text: '农历传统节日', class: 'field' }));\n  box.appendChild(box2);\n}\nyear.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '年份' }), year]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

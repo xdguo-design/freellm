@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>XML 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('XML 格式化', 'XML 美化缩进 / 压缩单行 / 结构校验', 'xml-format');
+var input = T.textarea('<root><item id="1">内容</item></root>');
+input.value = '<root><item id="1">内容</item></root>';
+var output = T.out('');
+function parse() {
+  var doc = new DOMParser().parseFromString(input.value, 'application/xml');
+  var err = doc.querySelector('parsererror');
+  if (err) throw new Error(err.textContent.slice(0, 140));
+  return doc.documentElement;
+}
+function serialize(node, depth) {
+  var pad = '  '.repeat(depth);
+  var attrs = Array.from(node.attributes || []).map(function (a) { return ' ' + a.name + '="' + a.value.replace(/"/g, '&quot;') + '"'; }).join('');
+  var kids = Array.from(node.childNodes).filter(function (c) { return c.nodeType === 1; });
+  var text = Array.from(node.childNodes).filter(function (c) { return c.nodeType === 3; }).map(function (c) { return c.nodeValue.trim(); }).join('');
+  if (!kids.length) return pad + '<' + node.tagName + attrs + '>' + text + '</' + node.tagName + '>';
+  var inner = kids.map(function (k) { return serialize(k, depth + 1); }).join('\n');
+  return pad + '<' + node.tagName + attrs + '>\n' + inner + '\n' + pad + '</' + node.tagName + '>';
+}
+function run(mode) {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    var root = parse();
+    if (mode === 'min') output.value = v.replace(/>\s+</g, '><');
+    else output.value = '<?xml version="1.0" encoding="UTF-8"?>\n' + serialize(root, 0);
+    T.toast('✓ XML 结构合法');
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+app.appendChild(T.pane([T.field('XML', input), T.field('输出', output)]));
+app.appendChild(T.row([T.button('格式化', function () { run(); }, true), T.button('压缩单行', function () { run('min'); }),
+  T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "xml-format", "title": "XML 格式化", "desc": "XML 美化缩进 / 压缩单行 / 结构校验", "scripts": "", "code": "var input = T.textarea('\u003croot>\u003citem id=\"1\">内容\u003c/item>\u003c/root>');\ninput.value = '\u003croot>\u003citem id=\"1\">内容\u003c/item>\u003c/root>';\nvar output = T.out('');\nfunction parse() {\n  var doc = new DOMParser().parseFromString(input.value, 'application/xml');\n  var err = doc.querySelector('parsererror');\n  if (err) throw new Error(err.textContent.slice(0, 140));\n  return doc.documentElement;\n}\nfunction serialize(node, depth) {\n  var pad = '  '.repeat(depth);\n  var attrs = Array.from(node.attributes || []).map(function (a) { return ' ' + a.name + '=\"' + a.value.replace(/\"/g, '&quot;') + '\"'; }).join('');\n  var kids = Array.from(node.childNodes).filter(function (c) { return c.nodeType === 1; });\n  var text = Array.from(node.childNodes).filter(function (c) { return c.nodeType === 3; }).map(function (c) { return c.nodeValue.trim(); }).join('');\n  if (!kids.length) return pad + '\u003c' + node.tagName + attrs + '>' + text + '\u003c/' + node.tagName + '>';\n  var inner = kids.map(function (k) { return serialize(k, depth + 1); }).join('\\n');\n  return pad + '\u003c' + node.tagName + attrs + '>\\n' + inner + '\\n' + pad + '\u003c/' + node.tagName + '>';\n}\nfunction run(mode) {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    var root = parse();\n    if (mode === 'min') output.value = v.replace(/>\\s+\u003c/g, '>\u003c');\n    else output.value = '\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n' + serialize(root, 0);\n    T.toast('✓ XML 结构合法');\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\napp.appendChild(T.pane([T.field('XML', input), T.field('输出', output)]));\napp.appendChild(T.row([T.button('格式化', function () { run(); }, true), T.button('压缩单行', function () { run('min'); }),\n  T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

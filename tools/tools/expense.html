@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>记账本 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('记账本', '简单记账：收入 / 支出分类，本地保存 + 月度汇总', 'expense');
+var amount = T.num(0, { min: 0, step: 0.01, style: 'width:110px' });
+var type = T.select([{value:'out',label:'支出'},{value:'in',label:'收入'}],'out');
+var cat = T.select(['餐饮', '交通', '购物', '居住', '娱乐', '医疗', '教育', '工资', '其他'].map(function (c) { return { value: c, label: c }; }), '餐饮');
+var noteIn = T.input('', { class: 'grow', placeholder: '备注（可选）' });
+var list = T.el('div');
+var monthStat = T.el('div', { class: 'row' });
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-expense') || '[]'); } catch (e) {}
+function save() { localStorage.setItem('freellm-expense', JSON.stringify(items)); }
+function render() {
+  T.clearEl(list);
+  var thisMonth = T.today().slice(0, 7);
+  var monthItems = items.filter(function (it) { return it.date.startsWith(thisMonth); });
+  var income = 0, outcome = 0;
+  monthItems.forEach(function (it) { it.type === 'in' ? income += it.amount : outcome += it.amount; });
+  T.clearEl(monthStat);
+  monthStat.appendChild(T.stat('¥ ' + income.toFixed(2), '本月收入'));
+  monthStat.appendChild(T.stat('¥ ' + outcome.toFixed(2), '本月支出'));
+  monthStat.appendChild(T.stat('¥ ' + (income - outcome).toFixed(2), '结余'));
+  var byCat = {};
+  monthItems.forEach(function (it) { if (it.type === 'out') byCat[it.cat] = (byCat[it.cat] || 0) + it.amount; });
+  var catRows = Object.keys(byCat).map(function (k) { return [k, '¥ ' + byCat[k].toFixed(2), '█'.repeat(Math.ceil(byCat[k] / Math.max(1, outcome) * 20))]; })
+    .sort(function (a, b) { return b[1].slice(2) > a[1].slice(2) ? -1 : 1; });
+  if (catRows.length) {
+    list.appendChild(T.el('span', { text: '本月支出分类', class: 'field' }));
+    list.appendChild(T.refTable(['分类', '金额', '占比'], catRows));
+  }
+  list.appendChild(T.el('span', { text: '最近记录', class: 'field' }));
+  items.slice(0, 20).forEach(function (it, i) {
+    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)' });
+    row.appendChild(T.el('span', { text: it.date.slice(5), style: 'color:var(--ink3);font-family:var(--font-mono);font-size:12px' }));
+    row.appendChild(T.el('span', { text: it.cat + (it.note ? ' · ' + it.note : ''), style: 'flex:1;font-size:13px' }));
+    row.appendChild(T.el('b', { text: (it.type === 'in' ? '+' : '-') + it.amount.toFixed(2), style: 'color:' + (it.type === 'in' ? 'var(--ok-text)' : 'var(--err)') + ';font-family:var(--font-mono)' }));
+    row.appendChild(T.button('✕', function () { items.splice(i, 1); save(); render(); }));
+    list.appendChild(row);
+  });
+  if (!items.length) list.appendChild(T.el('p', { text: '添加第一笔记录。', style: 'color:var(--ink3)' }));
+}
+app.appendChild(monthStat);
+app.appendChild(T.row([amount, type, cat, noteIn, T.button('记一笔', function () {
+  if (!+amount.value) { T.toast('请输入金额'); return; }
+  items.unshift({ date: T.today(), type: type.value, cat: cat.value, amount: +amount.value, note: noteIn.value });
+  save();
+  amount.value = 0;
+  noteIn.value = '';
+  render();
+}, true)]));
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "expense", "title": "记账本", "desc": "简单记账：收入 / 支出分类，本地保存 + 月度汇总", "scripts": "", "code": "var amount = T.num(0, { min: 0, step: 0.01, style: 'width:110px' });\nvar type = T.select([{value:'out',label:'支出'},{value:'in',label:'收入'}],'out');\nvar cat = T.select(['餐饮', '交通', '购物', '居住', '娱乐', '医疗', '教育', '工资', '其他'].map(function (c) { return { value: c, label: c }; }), '餐饮');\nvar noteIn = T.input('', { class: 'grow', placeholder: '备注（可选）' });\nvar list = T.el('div');\nvar monthStat = T.el('div', { class: 'row' });\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-expense') || '[]'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-expense', JSON.stringify(items)); }\nfunction render() {\n  T.clearEl(list);\n  var thisMonth = T.today().slice(0, 7);\n  var monthItems = items.filter(function (it) { return it.date.startsWith(thisMonth); });\n  var income = 0, outcome = 0;\n  monthItems.forEach(function (it) { it.type === 'in' ? income += it.amount : outcome += it.amount; });\n  T.clearEl(monthStat);\n  monthStat.appendChild(T.stat('¥ ' + income.toFixed(2), '本月收入'));\n  monthStat.appendChild(T.stat('¥ ' + outcome.toFixed(2), '本月支出'));\n  monthStat.appendChild(T.stat('¥ ' + (income - outcome).toFixed(2), '结余'));\n  var byCat = {};\n  monthItems.forEach(function (it) { if (it.type === 'out') byCat[it.cat] = (byCat[it.cat] || 0) + it.amount; });\n  var catRows = Object.keys(byCat).map(function (k) { return [k, '¥ ' + byCat[k].toFixed(2), '█'.repeat(Math.ceil(byCat[k] / Math.max(1, outcome) * 20))]; })\n    .sort(function (a, b) { return b[1].slice(2) > a[1].slice(2) ? -1 : 1; });\n  if (catRows.length) {\n    list.appendChild(T.el('span', { text: '本月支出分类', class: 'field' }));\n    list.appendChild(T.refTable(['分类', '金额', '占比'], catRows));\n  }\n  list.appendChild(T.el('span', { text: '最近记录', class: 'field' }));\n  items.slice(0, 20).forEach(function (it, i) {\n    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)' });\n    row.appendChild(T.el('span', { text: it.date.slice(5), style: 'color:var(--ink3);font-family:var(--font-mono);font-size:12px' }));\n    row.appendChild(T.el('span', { text: it.cat + (it.note ? ' · ' + it.note : ''), style: 'flex:1;font-size:13px' }));\n    row.appendChild(T.el('b', { text: (it.type === 'in' ? '+' : '-') + it.amount.toFixed(2), style: 'color:' + (it.type === 'in' ? 'var(--ok-text)' : 'var(--err)') + ';font-family:var(--font-mono)' }));\n    row.appendChild(T.button('✕', function () { items.splice(i, 1); save(); render(); }));\n    list.appendChild(row);\n  });\n  if (!items.length) list.appendChild(T.el('p', { text: '添加第一笔记录。', style: 'color:var(--ink3)' }));\n}\napp.appendChild(monthStat);\napp.appendChild(T.row([amount, type, cat, noteIn, T.button('记一笔', function () {\n  if (!+amount.value) { T.toast('请输入金额'); return; }\n  items.unshift({ date: T.today(), type: type.value, cat: cat.value, amount: +amount.value, note: noteIn.value });\n  save();\n  amount.value = 0;\n  noteIn.value = '';\n  render();\n}, true)]));\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

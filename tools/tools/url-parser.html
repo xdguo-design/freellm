@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>URL 参数解析 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('URL 参数解析', 'URL 结构化解析：协议/域名/路径/哈希 + 查询参数表', 'url-parser');
+var input = T.input('https://freellm.top/tools/?tool=base64&utm_source=nav#top', { class: 'grow mono' });
+var info = T.el('div', { class: 'pane single' });
+function run() {
+  T.clearEl(info);
+  var v = input.value.trim();
+  if (!v) return;
+  try {
+    var u = new URL(v);
+    info.appendChild(T.kvTable([
+      ['协议 protocol', u.protocol], ['主机 host', u.host],
+      ['端口 port', u.port || '(默认)'], ['路径 pathname', u.pathname],
+      ['哈希 hash', u.hash || '(无)'], ['来源 origin', u.origin]
+    ]));
+    var params = [];
+    u.searchParams.forEach(function (val, key) { params.push([key, decodeURIComponent(val)]); });
+    if (params.length) {
+      info.appendChild(T.el('span', { text: '查询参数', class: 'field' }));
+      info.appendChild(T.refTable(['参数', '值'], params));
+    }
+  } catch (e) {
+    info.appendChild(T.msg('⚠ 不是合法的绝对 URL：' + e.message, 'err'));
+  }
+}
+input.addEventListener('input', T.debounce(run, 250));
+app.appendChild(T.row([T.el('span', { text: 'URL' }), input]));
+app.appendChild(info);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "url-parser", "title": "URL 参数解析", "desc": "URL 结构化解析：协议/域名/路径/哈希 + 查询参数表", "scripts": "", "code": "var input = T.input('https://freellm.top/tools/?tool=base64&utm_source=nav#top', { class: 'grow mono' });\nvar info = T.el('div', { class: 'pane single' });\nfunction run() {\n  T.clearEl(info);\n  var v = input.value.trim();\n  if (!v) return;\n  try {\n    var u = new URL(v);\n    info.appendChild(T.kvTable([\n      ['协议 protocol', u.protocol], ['主机 host', u.host],\n      ['端口 port', u.port || '(默认)'], ['路径 pathname', u.pathname],\n      ['哈希 hash', u.hash || '(无)'], ['来源 origin', u.origin]\n    ]));\n    var params = [];\n    u.searchParams.forEach(function (val, key) { params.push([key, decodeURIComponent(val)]); });\n    if (params.length) {\n      info.appendChild(T.el('span', { text: '查询参数', class: 'field' }));\n      info.appendChild(T.refTable(['参数', '值'], params));\n    }\n  } catch (e) {\n    info.appendChild(T.msg('⚠ 不是合法的绝对 URL：' + e.message, 'err'));\n  }\n}\ninput.addEventListener('input', T.debounce(run, 250));\napp.appendChild(T.row([T.el('span', { text: 'URL' }), input]));\napp.appendChild(info);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

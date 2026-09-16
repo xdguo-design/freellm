@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>条形码生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('条形码生成', 'Code128（B/C 自动）条形码生成，SVG / PNG 下载', 'barcode');
+var text = T.input('FRELLM-2026', { class: 'grow mono', placeholder: '内容（ASCII）' });
+var h = T.num(80, { min: 30, max: 200, style: 'width:80px' });
+var scale = T.select([{value:'2',label:'2x'},{value:'3',label:'3x'},{value:'4',label:'4x'}],'2');
+var box = T.el('div', { style: 'padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px;display:inline-block' });
+function render() {
+  try {
+    box.innerHTML = LU.code128Svg(text.value, +h.value, +scale.value);
+  } catch (e) { box.innerHTML = '<span style="color:var(--err)">' + T.esc(e.message) + '</span>'; }
+}
+[text, h, scale].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.pane([T.field('内容', text)], true));
+app.appendChild(T.row([T.el('span', { text: '高度' }), h, T.el('span', { text: '模块宽度' }), scale]));
+app.appendChild(box);
+app.appendChild(T.row([T.button('下载 PNG', function () {
+  var svg = box.querySelector('svg');
+  var img = new Image();
+  img.onload = function () {
+    var c = T.el('canvas');
+    c.width = img.width; c.height = img.height;
+    c.getContext('2d').drawImage(img, 0, 0);
+    T.dlCanvas(c, 'barcode.png');
+  };
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(box.innerHTML);
+}), T.button('下载 SVG', function () {
+  T.download('barcode.svg', box.innerHTML, 'image/svg+xml');
+})]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "barcode", "title": "条形码生成", "desc": "Code128（B/C 自动）条形码生成，SVG / PNG 下载", "scripts": "", "code": "var text = T.input('FRELLM-2026', { class: 'grow mono', placeholder: '内容（ASCII）' });\nvar h = T.num(80, { min: 30, max: 200, style: 'width:80px' });\nvar scale = T.select([{value:'2',label:'2x'},{value:'3',label:'3x'},{value:'4',label:'4x'}],'2');\nvar box = T.el('div', { style: 'padding:10px;background:#fff;border:1px solid var(--line);border-radius:8px;display:inline-block' });\nfunction render() {\n  try {\n    box.innerHTML = LU.code128Svg(text.value, +h.value, +scale.value);\n  } catch (e) { box.innerHTML = '\u003cspan style=\"color:var(--err)\">' + T.esc(e.message) + '\u003c/span>'; }\n}\n[text, h, scale].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.pane([T.field('内容', text)], true));\napp.appendChild(T.row([T.el('span', { text: '高度' }), h, T.el('span', { text: '模块宽度' }), scale]));\napp.appendChild(box);\napp.appendChild(T.row([T.button('下载 PNG', function () {\n  var svg = box.querySelector('svg');\n  var img = new Image();\n  img.onload = function () {\n    var c = T.el('canvas');\n    c.width = img.width; c.height = img.height;\n    c.getContext('2d').drawImage(img, 0, 0);\n    T.dlCanvas(c, 'barcode.png');\n  };\n  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(box.innerHTML);\n}), T.button('下载 SVG', function () {\n  T.download('barcode.svg', box.innerHTML, 'image/svg+xml');\n})]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>表格转 CSV · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('表格转 CSV', '粘贴 HTML 表格片段 → 提取为 CSV', 'table2csv');
+var input = T.textarea('<table><tr><th>名称</th><th>价格</th></tr><tr><td>苹果</td><td>5.5</td></tr></table>');
+input.value = '<table><tr><th>名称</th><th>价格</th></tr><tr><td>苹果</td><td>5.5</td></tr></table>';
+var output = T.out('');
+var delim = T.select([{value:',',label:'逗号'},{value:'\t',label:'Tab'}],',');
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    var doc = new DOMParser().parseFromString(v, 'text/html');
+    var rows = Array.from(doc.querySelectorAll('tr'));
+    if (!rows.length) throw new Error('未找到 <tr> 行');
+    var data = rows.map(function (tr) {
+      return Array.from(tr.children).map(function (td) {
+        return td.textContent.trim().replace(/\s+/g, ' ');
+      });
+    });
+    output.value = LF.Csv.stringify(data, delim.value);
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, delim].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('HTML 表格', input), T.field('CSV', output)]));
+app.appendChild(T.row([T.el('span', { text: '分隔符' }), delim, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "table2csv", "title": "表格转 CSV", "desc": "粘贴 HTML 表格片段 → 提取为 CSV", "scripts": "", "code": "var input = T.textarea('\u003ctable>\u003ctr>\u003cth>名称\u003c/th>\u003cth>价格\u003c/th>\u003c/tr>\u003ctr>\u003ctd>苹果\u003c/td>\u003ctd>5.5\u003c/td>\u003c/tr>\u003c/table>');\ninput.value = '\u003ctable>\u003ctr>\u003cth>名称\u003c/th>\u003cth>价格\u003c/th>\u003c/tr>\u003ctr>\u003ctd>苹果\u003c/td>\u003ctd>5.5\u003c/td>\u003c/tr>\u003c/table>';\nvar output = T.out('');\nvar delim = T.select([{value:',',label:'逗号'},{value:'\\t',label:'Tab'}],',');\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    var doc = new DOMParser().parseFromString(v, 'text/html');\n    var rows = Array.from(doc.querySelectorAll('tr'));\n    if (!rows.length) throw new Error('未找到 \u003ctr> 行');\n    var data = rows.map(function (tr) {\n      return Array.from(tr.children).map(function (td) {\n        return td.textContent.trim().replace(/\\s+/g, ' ');\n      });\n    });\n    output.value = LF.Csv.stringify(data, delim.value);\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, delim].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('HTML 表格', input), T.field('CSV', output)]));\napp.appendChild(T.row([T.el('span', { text: '分隔符' }), delim, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

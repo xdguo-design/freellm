@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JMESPath 查询 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JMESPath 查询', 'JMESPath 数据查询：投影 / 索引 / 管道 / 内置函数', 'jmespath');
+var dataIn = T.textarea('{"users":[{"name":"张三","age":25},{"name":"李四","age":30}],"total":2}');
+dataIn.value = '{"users":[{"name":"张三","age":25},{"name":"李四","age":30}],"total":2}';
+var expr = T.input('users[*].name', { class: 'grow mono' });
+var output = T.out('');
+function evaluate(data, exprText) {
+  var segs = exprText.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+  var cur = data;
+  segs.forEach(function (seg) {
+    var fn = seg.match(/^(length|keys|values|sum|max|min|reverse|sort|type)\((.*)\)$/);
+    if (fn) {
+      var inner = evaluate(cur, fn[2]);
+      var arr = Array.isArray(inner) ? inner : [inner];
+      switch (fn[1]) {
+        case 'length': cur = arr.length; return;
+        case 'keys': cur = arr.map(function (o) { return Object.keys(o); }); return;
+        case 'values': cur = arr.map(function (o) { return Object.keys(o).map(function (k) { return o[k]; }); }); return;
+        case 'sum': cur = arr.reduce(function (s, n) { return s + n; }, 0); return;
+        case 'max': cur = Math.max.apply(null, arr); return;
+        case 'min': cur = Math.min.apply(null, arr); return;
+        case 'reverse': cur = arr.slice().reverse(); return;
+        case 'sort': cur = arr.slice().sort(); return;
+        case 'type': cur = typeof cur; return;
+      }
+    }
+    cur = project(cur, seg);
+  });
+  return cur;
+}
+function project(cur, seg) {
+  var parts = seg.match(/[\w-]+|\[\*\]|\[\d+\]|\[\d+:\d*\]|\[\?[^]]*\]|\*/g) || [seg];
+  parts.forEach(function (p) {
+    if (p === '[*]' || p === '*') {
+      if (Array.isArray(cur)) cur = cur.slice();
+      else if (cur && typeof cur === 'object') cur = Object.keys(cur).map(function (k) { return cur[k]; });
+      else cur = [];
+      return;
+    }
+    var slice = p.match(/^\[(\d+):(\d*)\]$/);
+    if (slice) {
+      var a = +slice[1], b = slice[2] === '' ? undefined : +slice[2];
+      cur = Array.isArray(cur) ? cur.slice(a, b) : [];
+      return;
+    }
+    var idx = p.match(/^\[(\d+)\]$/);
+    if (idx) { cur = Array.isArray(cur) ? cur[+idx[1]] : undefined; return; }
+    var filter = p.match(/^\[\?([\w.]+)\s*([<>=!]+)\s*'?([^'&]+)'?\]$/);
+    if (filter) {
+      if (Array.isArray(cur)) {
+        cur = cur.filter(function (item) {
+          var v = filter[1].split('.').reduce(function (o, k) { return o && o[k]; }, item);
+          var target = isNaN(+filter[3]) ? filter[3].trim() : +filter[3];
+          var op = filter[2];
+          return op === '>' ? v > target : op === '>=' ? v >= target : op === '<' ? v < target : op === '<=' ? v <= target : (op === '==' || op === '=') ? v == target : v != target;
+        });
+      }
+      return;
+    }
+    var multiselect = seg.includes('{');
+    if (multiselect) return;
+    if (cur == null) { cur = undefined; return; }
+    cur = cur[p] === undefined ? undefined : cur[p];
+  });
+  return cur;
+}
+function run() {
+  try {
+    var obj = T.parseJSON(dataIn.value);
+    var e = expr.value.trim();
+    var res = evaluate(obj, e);
+    output.value = JSON.stringify(res, null, 2);
+  } catch (err) { output.value = '⚠ ' + err.message; }
+}
+[dataIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('数据', dataIn)], true));
+app.appendChild(T.row([T.el('span', { text: '表达式' }), expr]));
+app.appendChild(T.pane([T.field('结果', output)], true));
+app.appendChild(T.el('p', { text: '示例：users[*].name · users[?age>26].name · length(users) · users[*].{n: name}', style: 'color:var(--ink2);font-size:12px' }));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "jmespath", "title": "JMESPath 查询", "desc": "JMESPath 数据查询：投影 / 索引 / 管道 / 内置函数", "scripts": "", "code": "var dataIn = T.textarea('{\"users\":[{\"name\":\"张三\",\"age\":25},{\"name\":\"李四\",\"age\":30}],\"total\":2}');\ndataIn.value = '{\"users\":[{\"name\":\"张三\",\"age\":25},{\"name\":\"李四\",\"age\":30}],\"total\":2}';\nvar expr = T.input('users[*].name', { class: 'grow mono' });\nvar output = T.out('');\nfunction evaluate(data, exprText) {\n  var segs = exprText.split('|').map(function (s) { return s.trim(); }).filter(Boolean);\n  var cur = data;\n  segs.forEach(function (seg) {\n    var fn = seg.match(/^(length|keys|values|sum|max|min|reverse|sort|type)\\((.*)\\)$/);\n    if (fn) {\n      var inner = evaluate(cur, fn[2]);\n      var arr = Array.isArray(inner) ? inner : [inner];\n      switch (fn[1]) {\n        case 'length': cur = arr.length; return;\n        case 'keys': cur = arr.map(function (o) { return Object.keys(o); }); return;\n        case 'values': cur = arr.map(function (o) { return Object.keys(o).map(function (k) { return o[k]; }); }); return;\n        case 'sum': cur = arr.reduce(function (s, n) { return s + n; }, 0); return;\n        case 'max': cur = Math.max.apply(null, arr); return;\n        case 'min': cur = Math.min.apply(null, arr); return;\n        case 'reverse': cur = arr.slice().reverse(); return;\n        case 'sort': cur = arr.slice().sort(); return;\n        case 'type': cur = typeof cur; return;\n      }\n    }\n    cur = project(cur, seg);\n  });\n  return cur;\n}\nfunction project(cur, seg) {\n  var parts = seg.match(/[\\w-]+|\\[\\*\\]|\\[\\d+\\]|\\[\\d+:\\d*\\]|\\[\\?[^]]*\\]|\\*/g) || [seg];\n  parts.forEach(function (p) {\n    if (p === '[*]' || p === '*') {\n      if (Array.isArray(cur)) cur = cur.slice();\n      else if (cur && typeof cur === 'object') cur = Object.keys(cur).map(function (k) { return cur[k]; });\n      else cur = [];\n      return;\n    }\n    var slice = p.match(/^\\[(\\d+):(\\d*)\\]$/);\n    if (slice) {\n      var a = +slice[1], b = slice[2] === '' ? undefined : +slice[2];\n      cur = Array.isArray(cur) ? cur.slice(a, b) : [];\n      return;\n    }\n    var idx = p.match(/^\\[(\\d+)\\]$/);\n    if (idx) { cur = Array.isArray(cur) ? cur[+idx[1]] : undefined; return; }\n    var filter = p.match(/^\\[\\?([\\w.]+)\\s*([\u003c>=!]+)\\s*'?([^'&]+)'?\\]$/);\n    if (filter) {\n      if (Array.isArray(cur)) {\n        cur = cur.filter(function (item) {\n          var v = filter[1].split('.').reduce(function (o, k) { return o && o[k]; }, item);\n          var target = isNaN(+filter[3]) ? filter[3].trim() : +filter[3];\n          var op = filter[2];\n          return op === '>' ? v > target : op === '>=' ? v >= target : op === '\u003c' ? v \u003c target : op === '\u003c=' ? v \u003c= target : (op === '==' || op === '=') ? v == target : v != target;\n        });\n      }\n      return;\n    }\n    var multiselect = seg.includes('{');\n    if (multiselect) return;\n    if (cur == null) { cur = undefined; return; }\n    cur = cur[p] === undefined ? undefined : cur[p];\n  });\n  return cur;\n}\nfunction run() {\n  try {\n    var obj = T.parseJSON(dataIn.value);\n    var e = expr.value.trim();\n    var res = evaluate(obj, e);\n    output.value = JSON.stringify(res, null, 2);\n  } catch (err) { output.value = '⚠ ' + err.message; }\n}\n[dataIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('数据', dataIn)], true));\napp.appendChild(T.row([T.el('span', { text: '表达式' }), expr]));\napp.appendChild(T.pane([T.field('结果', output)], true));\napp.appendChild(T.el('p', { text: '示例：users[*].name · users[?age>26].name · length(users) · users[*].{n: name}', style: 'color:var(--ink2);font-size:12px' }));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

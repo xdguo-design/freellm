@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>PBKDF2 派生 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('PBKDF2 派生', 'WebCrypto PBKDF2 密钥派生：迭代次数 / 哈希 / 盐可调', 'pbkdf2');
+var pass = T.input('', { type: 'password', class: 'grow mono', placeholder: '口令…' });
+var salt = T.input('freellm-salt', { class: 'grow mono', placeholder: '盐（文本）…' });
+var iter = T.num(100000, { min: 1000, step: 1000, style: 'width:120px' });
+var algo = T.select(['SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');
+var len = T.select([{value:'256',label:'256 bit'},{value:'128',label:'128 bit'},{value:'512',label:'512 bit'}],'256');
+var output = T.out('');
+function run() {
+  if (!pass.value) { output.value = ''; return; }
+  crypto.subtle.importKey('raw', T.textToBytes(pass.value), 'PBKDF2', false, ['deriveKey'])
+    .then(function (base) {
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: T.textToBytes(salt.value), iterations: +iter.value, hash: algo.value },
+        base, { name: 'AES-GCM', length: +len.value }, true, ['encrypt']);
+    })
+    .then(function (key) { return crypto.subtle.exportKey('raw', key); })
+    .then(function (raw) { output.value = T.bytesToHex(raw); })
+    .catch(function (e) { output.value = '⚠ ' + e.message; });
+}
+[pass, salt, iter, algo, len].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });
+app.appendChild(T.pane([T.field('派生密钥 (hex)', output)], true));
+app.appendChild(T.row([T.el('span', { text: '口令' }), pass]));
+app.appendChild(T.row([T.el('span', { text: '盐' }), salt, T.el('span', { text: '迭代' }), iter]));
+app.appendChild(T.row([T.el('span', { text: '哈希' }), algo, T.el('span', { text: '长度' }), len]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "pbkdf2", "title": "PBKDF2 派生", "desc": "WebCrypto PBKDF2 密钥派生：迭代次数 / 哈希 / 盐可调", "scripts": "", "code": "var pass = T.input('', { type: 'password', class: 'grow mono', placeholder: '口令…' });\nvar salt = T.input('freellm-salt', { class: 'grow mono', placeholder: '盐（文本）…' });\nvar iter = T.num(100000, { min: 1000, step: 1000, style: 'width:120px' });\nvar algo = T.select(['SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');\nvar len = T.select([{value:'256',label:'256 bit'},{value:'128',label:'128 bit'},{value:'512',label:'512 bit'}],'256');\nvar output = T.out('');\nfunction run() {\n  if (!pass.value) { output.value = ''; return; }\n  crypto.subtle.importKey('raw', T.textToBytes(pass.value), 'PBKDF2', false, ['deriveKey'])\n    .then(function (base) {\n      return crypto.subtle.deriveKey(\n        { name: 'PBKDF2', salt: T.textToBytes(salt.value), iterations: +iter.value, hash: algo.value },\n        base, { name: 'AES-GCM', length: +len.value }, true, ['encrypt']);\n    })\n    .then(function (key) { return crypto.subtle.exportKey('raw', key); })\n    .then(function (raw) { output.value = T.bytesToHex(raw); })\n    .catch(function (e) { output.value = '⚠ ' + e.message; });\n}\n[pass, salt, iter, algo, len].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });\napp.appendChild(T.pane([T.field('派生密钥 (hex)', output)], true));\napp.appendChild(T.row([T.el('span', { text: '口令' }), pass]));\napp.appendChild(T.row([T.el('span', { text: '盐' }), salt, T.el('span', { text: '迭代' }), iter]));\napp.appendChild(T.row([T.el('span', { text: '哈希' }), algo, T.el('span', { text: '长度' }), len]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

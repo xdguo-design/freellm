@@ -2,107 +2,89 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>在线闹钟 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('在线闹钟', '设定时间到点响铃', 'alarm');
-
-  var alarmTime = T.el('input', { type: 'time', style: 'flex:1' });
-  var setBtn = T.button('设置闹钟', setAlarm, true);
-  var clearBtn = T.button('清除', clearAlarm);
-
-  var display = T.el('div', {
-    style: 'font-size:3em;font-family:monospace;text-align:center;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--line)',
-    text: '--:--:--'
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线闹钟', '到点响铃提醒：设定时间 + 提示音 + 文字标签（需保持页面打开）', 'alarm');
+var time = T.el('input', { type: 'time', style: 'flex:1' });
+var label = T.input('起立活动一下', { class: 'grow', placeholder: '提醒内容' });
+var list = T.el('div');
+var alarms = [];
+function tryCreateAudio() {
+  try { return new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ…'); }
+  catch (e) { return null; }
+}
+function beep() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.value = 0.3;
+    osc.start();
+    var n = 0;
+    var iv = setInterval(function () {
+      n++;
+      if (n > 10) { clearInterval(iv); osc.stop(); ctx.close(); return; }
+      osc.frequency.value = n % 2 ? 660 : 880;
+    }, 250);
+  } catch (e) { T.toast('当前环境无法播放提示音'); }
+}
+setInterval(function () {
+  var now = new Date();
+  var hhmm = T.pad2(now.getHours()) + ':' + T.pad2(now.getMinutes());
+  alarms.forEach(function (a) {
+    if (!a.done && a.time === hhmm) {
+      a.done = true;
+      beep();
+      T.toast('⏰ ' + (a.label || '闹钟时间到'));
+      alert('⏰ 闹钟：' + (a.label || hhmm));
+      render();
+    }
   });
-
-  var status = T.el('div', { class: 'badge', text: '未设置' });
-  var alarms = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  var clockTimer = null;
-  var alarmTimer = null;
-  var setAlarms = [];
-
-  function updateClock() {
-    var now = new Date();
-    display.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-    checkAlarms(now);
+}, 1000);
+function render() {
+  T.clearEl(list);
+  if (!alarms.length) {
+    list.appendChild(T.el('p', { text: '暂无闹钟，上方设定时间后点击添加。', style: 'color:var(--ink3)' }));
+    return;
   }
-
-  function checkAlarms(now) {
-    var timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setAlarms.forEach(function (a, i) {
-      if (a.time === timeStr.slice(0, 5) && !a.triggered) {
-        a.triggered = true;
-        ring();
-        status.textContent = '⏰ ' + a.time + ' 闹钟响了！';
-        status.style.color = '#e74c3c';
-      }
-    });
-  }
-
-  function ring() {
-    try {
-      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      var frequencies = [523, 659, 784, 1047];
-      frequencies.forEach(function (freq, i) {
-        var oscillator = audioCtx.createOscillator();
-        var gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = freq;
-        oscillator.type = 'sine';
-        gainNode.gain.value = 0.3;
-        oscillator.start(audioCtx.currentTime + i * 0.2);
-        oscillator.stop(audioCtx.currentTime + i * 0.2 + 0.3);
-      });
-    } catch (e) {}
-  }
-
-  function setAlarm() {
-    var time = alarmTime.value;
-    if (!time) return;
-
-    setAlarms.push({ time: time, triggered: false });
-    setAlarms.sort(function (a, b) { return a.time.localeCompare(b.time); });
-    status.textContent = '已设置 ' + setAlarms.length + ' 个闹钟';
-    status.style.color = '';
-    renderAlarms();
-  }
-
-  function clearAlarm() {
-    setAlarms = [];
-    status.textContent = '未设置';
-    status.style.color = '';
-    renderAlarms();
-  }
-
-  function renderAlarms() {
-    alarms.innerHTML = setAlarms.length ? 
-      setAlarms.map(function (a, i) {
-        return '<div style="padding:8px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between">' +
-          '<span>' + a.time + '</span>' +
-          '<span style="color:var(--muted)">' + (a.triggered ? '已响' : '等待中') + '</span></div>';
-      }).join('') : '<p style="color:var(--muted);text-align:center">无闹钟</p>';
-  }
-
-  clockTimer = setInterval(updateClock, 1000);
-
-  app.appendChild(display);
-  app.appendChild(status);
-  app.appendChild(T.el('div', { class: 'row' }, [alarmTime, setBtn, clearBtn]));
-  app.appendChild(T.el('div', { class: 'field', text: '已设置的闹钟:' }));
-  app.appendChild(alarms);
-
-  updateClock();
+  alarms.forEach(function (a, i) {
+    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)' });
+    row.appendChild(T.el('b', { text: a.time, style: 'font:500 22px var(--font-mono)' }));
+    row.appendChild(T.el('span', { text: a.label, class: 'grow' }));
+    row.appendChild(T.badge(a.done ? '已响' : '待响', a.done ? '' : 'ok'));
+    row.appendChild(T.button('删除', function () { alarms.splice(i, 1); render(); }));
+    list.appendChild(row);
+  });
+}
+app.appendChild(T.row([T.el('span', { text: '时间' }), time, label, T.button('添加闹钟', function () {
+  if (!time.value) { T.toast('请先选择时间'); return; }
+  alarms.push({ time: time.value, label: label.value, done: false });
+  render();
+}, true)]));
+app.appendChild(list);
+render();
+app.appendChild(T.msg('注意：闹钟依赖页面保持打开；浏览器休眠标签页时可能延迟。', ''));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "alarm", "title": "在线闹钟", "desc": "到点响铃提醒：设定时间 + 提示音 + 文字标签（需保持页面打开）", "scripts": "", "code": "var time = T.el('input', { type: 'time', style: 'flex:1' });\nvar label = T.input('起立活动一下', { class: 'grow', placeholder: '提醒内容' });\nvar list = T.el('div');\nvar alarms = [];\nfunction tryCreateAudio() {\n  try { return new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ…'); }\n  catch (e) { return null; }\n}\nfunction beep() {\n  try {\n    var ctx = new (window.AudioContext || window.webkitAudioContext)();\n    var osc = ctx.createOscillator();\n    var gain = ctx.createGain();\n    osc.connect(gain); gain.connect(ctx.destination);\n    osc.frequency.value = 880;\n    gain.gain.value = 0.3;\n    osc.start();\n    var n = 0;\n    var iv = setInterval(function () {\n      n++;\n      if (n > 10) { clearInterval(iv); osc.stop(); ctx.close(); return; }\n      osc.frequency.value = n % 2 ? 660 : 880;\n    }, 250);\n  } catch (e) { T.toast('当前环境无法播放提示音'); }\n}\nsetInterval(function () {\n  var now = new Date();\n  var hhmm = T.pad2(now.getHours()) + ':' + T.pad2(now.getMinutes());\n  alarms.forEach(function (a) {\n    if (!a.done && a.time === hhmm) {\n      a.done = true;\n      beep();\n      T.toast('⏰ ' + (a.label || '闹钟时间到'));\n      alert('⏰ 闹钟：' + (a.label || hhmm));\n      render();\n    }\n  });\n}, 1000);\nfunction render() {\n  T.clearEl(list);\n  if (!alarms.length) {\n    list.appendChild(T.el('p', { text: '暂无闹钟，上方设定时间后点击添加。', style: 'color:var(--ink3)' }));\n    return;\n  }\n  alarms.forEach(function (a, i) {\n    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)' });\n    row.appendChild(T.el('b', { text: a.time, style: 'font:500 22px var(--font-mono)' }));\n    row.appendChild(T.el('span', { text: a.label, class: 'grow' }));\n    row.appendChild(T.badge(a.done ? '已响' : '待响', a.done ? '' : 'ok'));\n    row.appendChild(T.button('删除', function () { alarms.splice(i, 1); render(); }));\n    list.appendChild(row);\n  });\n}\napp.appendChild(T.row([T.el('span', { text: '时间' }), time, label, T.button('添加闹钟', function () {\n  if (!time.value) { T.toast('请先选择时间'); return; }\n  alarms.push({ time: time.value, label: label.value, done: false });\n  render();\n}, true)]));\napp.appendChild(list);\nrender();\napp.appendChild(T.msg('注意：闹钟依赖页面保持打开；浏览器休眠标签页时可能延迟。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -2,61 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>功率单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('功率单位换算', 'Watt/KW/Horsepower 等', 'power-converter');
-
-  var units = [
-    { id: 'w', name: '瓦特 (W)' },
-    { id: 'kw', name: '千瓦 (kW)' },
-    { id: 'mw', name: '兆瓦 (MW)' },
-    { id: 'hp', name: '马力 (hp)' },
-    { id: 'ps', name: '公制马力 (PS)' },
-    { id: 'btuh', name: '英热/时 (BTU/h)' },
-    { id: 'kcalh', name: '千卡/时 (kcal/h)' }
-  ];
-
-  var factors = { w: 1, kw: 1000, mw: 1000000, hp: 745.7, ps: 735.5, btuh: 0.293071, kcalh: 1.163 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('功率单位换算', 'W / kW / 马力 等', 'power-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "W (瓦特)", "label": "W (瓦特)"}, {"value": "kW", "label": "kW"}, {"value": "MW", "label": "MW"}, {"value": "hp (机械马力)", "label": "hp (机械马力)"}, {"value": "hp (公制马力)", "label": "hp (公制马力)"}, {"value": "ft·lb/s", "label": "ft·lb/s"}], "kW");
+var to = T.select([{"value": "W (瓦特)", "label": "W (瓦特)"}, {"value": "kW", "label": "kW"}, {"value": "MW", "label": "MW"}, {"value": "hp (机械马力)", "label": "hp (机械马力)"}, {"value": "hp (公制马力)", "label": "hp (公制马力)"}, {"value": "ft·lb/s", "label": "ft·lb/s"}], "W (瓦特)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"W (瓦特)": 1, "kW": 1000.0, "MW": 1000000.0, "hp (机械马力)": 745.6999, "hp (公制马力)": 735.4988, "ft·lb/s": 1.35582};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var w = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (w / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:120px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.kw.value = '1';
-  run('kw');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "power-converter", "title": "功率单位换算", "desc": "W / kW / 马力 等", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"W (瓦特)\", \"label\": \"W (瓦特)\"}, {\"value\": \"kW\", \"label\": \"kW\"}, {\"value\": \"MW\", \"label\": \"MW\"}, {\"value\": \"hp (机械马力)\", \"label\": \"hp (机械马力)\"}, {\"value\": \"hp (公制马力)\", \"label\": \"hp (公制马力)\"}, {\"value\": \"ft·lb/s\", \"label\": \"ft·lb/s\"}], \"kW\");\nvar to = T.select([{\"value\": \"W (瓦特)\", \"label\": \"W (瓦特)\"}, {\"value\": \"kW\", \"label\": \"kW\"}, {\"value\": \"MW\", \"label\": \"MW\"}, {\"value\": \"hp (机械马力)\", \"label\": \"hp (机械马力)\"}, {\"value\": \"hp (公制马力)\", \"label\": \"hp (公制马力)\"}, {\"value\": \"ft·lb/s\", \"label\": \"ft·lb/s\"}], \"W (瓦特)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"W (瓦特)\": 1, \"kW\": 1000.0, \"MW\": 1000000.0, \"hp (机械马力)\": 745.6999, \"hp (公制马力)\": 735.4988, \"ft·lb/s\": 1.35582};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

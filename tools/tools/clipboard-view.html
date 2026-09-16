@@ -2,38 +2,47 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>剪贴板查看 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('剪贴板查看', '读取剪贴板内容', 'clipboard-view');
-
-  var output = T.el('div', { class: 'output dark', style: 'min-height:200px;white-space:pre-wrap;font-family:monospace;padding:16px' });
-  var readBtn = T.button('读取剪贴板', readClipboard, true);
-  var copyBtn = T.copyBtn(function () { return output.textContent; });
-  var clearBtn = T.button('清空', function () { output.textContent = ''; });
-
-  async function readClipboard() {
-    try {
-      var text = await navigator.clipboard.readText();
-      output.textContent = text || '(空)';
-    } catch (e) {
-      output.textContent = '无法读取剪贴板: ' + e.message + '\n\n请确保已授予剪贴板权限';
-    }
-  }
-
-  // Auto-read on load
-  readClipboard();
-
-  app.appendChild(T.el('div', { class: 'row' }, [readBtn, copyBtn, clearBtn]));
-  app.appendChild(output);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('剪贴板查看', '读取剪贴板内容（文本），需浏览器授权', 'clipboard-view');
+var output = T.out('剪贴板内容将显示在这里…');
+var info = T.badge('—');
+function read() {
+  navigator.clipboard.readText().then(function (text) {
+    output.value = text;
+    info.textContent = text.length + ' 个字符';
+    info.className = 'badge ok';
+  }).catch(function (e) {
+    info.textContent = '读取失败：' + e.message + '（需授权且页面处于前台）';
+    info.className = 'badge warn';
+  });
+}
+T.button('📋 读取剪贴板', read, true)
+app.appendChild(T.row([T.button('📋 读取剪贴板', read, true), info]));
+app.appendChild(T.pane([T.field('剪贴板内容', output)], true));
+app.appendChild(T.row([T.button('复制内容', function () { T.copy(output.value); }),
+  T.button('清空统计（写空值）', function () {
+    navigator.clipboard.writeText('').then(function () { T.toast('已写入空内容'); });
+  })]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "clipboard-view", "title": "剪贴板查看", "desc": "读取剪贴板内容（文本），需浏览器授权", "scripts": "", "code": "var output = T.out('剪贴板内容将显示在这里…');\nvar info = T.badge('—');\nfunction read() {\n  navigator.clipboard.readText().then(function (text) {\n    output.value = text;\n    info.textContent = text.length + ' 个字符';\n    info.className = 'badge ok';\n  }).catch(function (e) {\n    info.textContent = '读取失败：' + e.message + '（需授权且页面处于前台）';\n    info.className = 'badge warn';\n  });\n}\nT.button('📋 读取剪贴板', read, true)\napp.appendChild(T.row([T.button('📋 读取剪贴板', read, true), info]));\napp.appendChild(T.pane([T.field('剪贴板内容', output)], true));\napp.appendChild(T.row([T.button('复制内容', function () { T.copy(output.value); }),\n  T.button('清空统计（写空值）', function () {\n    navigator.clipboard.writeText('').then(function () { T.toast('已写入空内容'); });\n  })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

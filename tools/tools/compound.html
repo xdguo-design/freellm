@@ -2,65 +2,66 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>复利计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('复利计算器', '复利/投资收益计算', 'compound');
-
-  var principal = T.el('input', { type: 'number', value: '100000', placeholder: '初始金额', style: 'flex:1' });
-  var monthly = T.el('input', { type: 'number', value: '1000', placeholder: '每月投入', style: 'flex:1' });
-  var rate = T.el('input', { type: 'number', value: '5', step: '0.1', placeholder: '年化收益率 %', style: 'flex:1' });
-  var years = T.el('input', { type: 'number', value: '10', min: '1', max: '50', style: 'width:80px' });
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function calculate() {
-    var P = parseFloat(principal.value) || 0;
-    var M = parseFloat(monthly.value) || 0;
-    var r = (parseFloat(rate.value) || 0) / 100 / 12;
-    var n = (parseInt(years.value) || 10) * 12;
-
-    var balance = P;
-    var totalContributed = P;
-    var history = [];
-
-    for (var i = 0; i < n; i++) {
-      balance = (balance + M) * (1 + r);
-      totalContributed += M;
-      if ((i + 1) % 12 === 0) {
-        history.push({ year: (i + 1) / 12, balance: balance, contributed: totalContributed });
-      }
-    }
-
-    var totalInterest = balance - totalContributed;
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px;color:var(--muted)">初始金额</td><td style="padding:8px;text-align:right">¥' + P.toLocaleString() + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">每月投入</td><td style="padding:8px;text-align:right">¥' + M.toLocaleString() + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">年化收益率</td><td style="padding:8px;text-align:right">' + (r * 1200).toFixed(1) + '%</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">投资年限</td><td style="padding:8px;text-align:right">' + (n / 12) + ' 年</td></tr>' +
-      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">总投入</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right">¥' + totalContributed.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">总收益</td><td style="padding:8px;text-align:right;color:var(--green)">¥' + totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">最终金额</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">¥' + balance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '</td></tr>' +
-      '</table>';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('复利计算器', '复利 / 定投收益计算：本金 + 月投 + 年利率 + 年数', 'compound');
+var principal = T.num(100000, { min: 0, step: 1000, style: 'width:120px' });
+var monthly = T.num(1000, { min: 0, step: 100, style: 'width:100px' });
+var rate = T.num(5, { step: 0.1, style: 'width:80px' });
+var years = T.num(10, { min: 1, max: 60, style: 'width:80px' });
+var box = T.el('div');
+var table = T.el('div');
+function run() {
+  var P = +principal.value, m = +monthly.value, r = +rate.value / 100, y = +years.value;
+  T.clearEl(box);
+  T.clearEl(table);
+  if (!y) return;
+  var mr = r / 12;
+  var rows = [];
+  for (var yy = 1; yy <= y; yy++) {
+    var months = yy * 12;
+    var pv = P * Math.pow(1 + mr, months);
+    var fvM = mr === 0 ? m * months : m * (Math.pow(1 + mr, months) - 1) / mr;
+    var total = pv + fvM;
+    var invested = P + m * months;
+    rows.push([yy + ' 年', invested.toFixed(0), total.toFixed(0), '+' + (total - invested).toFixed(0)]);
   }
-
-  [principal, monthly, rate, years].forEach(function (el) { el.addEventListener('input', function () { setTimeout(calculate, 100); }); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '初始' }), principal, T.el('span', { text: '月投' }), monthly]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '利率' }), rate, T.el('span', { text: '年限' }), years, copyBtn]));
-  app.appendChild(result);
-
-  calculate();
+  var last = rows[rows.length - 1];
+  box.appendChild(T.kvTable([
+    ['总投入', '¥ ' + (+last[1]).toLocaleString()],
+    ['期末资产', '¥ ' + (+last[2]).toLocaleString()],
+    ['累计收益', '¥ ' + (+last[3].replace('+', '')).toLocaleString()],
+    ['收益率', ((last[2] / last[1] - 1) * 100).toFixed(1) + '%']
+  ]));
+  table.appendChild(T.refTable(['年份', '总投入', '期末资产', '累计收益'], rows.map(function (r2) {
+    return [r2[0], (+r2[1]).toLocaleString(), (+r2[2]).toLocaleString(), r2[3]];
+  })));
+}
+[principal, monthly, rate, years].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('初始本金（元）', principal), T.field('每月定投（元）', monthly)]));
+app.appendChild(T.pane([T.field('年利率 %', rate), T.field('投资年限', years)]));
+app.appendChild(box);
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "compound", "title": "复利计算器", "desc": "复利 / 定投收益计算：本金 + 月投 + 年利率 + 年数", "scripts": "", "code": "var principal = T.num(100000, { min: 0, step: 1000, style: 'width:120px' });\nvar monthly = T.num(1000, { min: 0, step: 100, style: 'width:100px' });\nvar rate = T.num(5, { step: 0.1, style: 'width:80px' });\nvar years = T.num(10, { min: 1, max: 60, style: 'width:80px' });\nvar box = T.el('div');\nvar table = T.el('div');\nfunction run() {\n  var P = +principal.value, m = +monthly.value, r = +rate.value / 100, y = +years.value;\n  T.clearEl(box);\n  T.clearEl(table);\n  if (!y) return;\n  var mr = r / 12;\n  var rows = [];\n  for (var yy = 1; yy \u003c= y; yy++) {\n    var months = yy * 12;\n    var pv = P * Math.pow(1 + mr, months);\n    var fvM = mr === 0 ? m * months : m * (Math.pow(1 + mr, months) - 1) / mr;\n    var total = pv + fvM;\n    var invested = P + m * months;\n    rows.push([yy + ' 年', invested.toFixed(0), total.toFixed(0), '+' + (total - invested).toFixed(0)]);\n  }\n  var last = rows[rows.length - 1];\n  box.appendChild(T.kvTable([\n    ['总投入', '¥ ' + (+last[1]).toLocaleString()],\n    ['期末资产', '¥ ' + (+last[2]).toLocaleString()],\n    ['累计收益', '¥ ' + (+last[3].replace('+', '')).toLocaleString()],\n    ['收益率', ((last[2] / last[1] - 1) * 100).toFixed(1) + '%']\n  ]));\n  table.appendChild(T.refTable(['年份', '总投入', '期末资产', '累计收益'], rows.map(function (r2) {\n    return [r2[0], (+r2[1]).toLocaleString(), (+r2[2]).toLocaleString(), r2[3]];\n  })));\n}\n[principal, monthly, rate, years].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('初始本金（元）', principal), T.field('每月定投（元）', monthly)]));\napp.appendChild(T.pane([T.field('年利率 %', rate), T.field('投资年限', years)]));\napp.appendChild(box);\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

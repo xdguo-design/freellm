@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>生肖星座 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('生肖星座', '出生年份 → 生肖 + 星座，附性格标签（娱乐向）', 'zodiac');
+var dateIn = T.dateInput('1995-06-15');
+var box = T.el('div');
+var ZODIAC_TRAITS = {
+  鼠: '机敏灵活，善于积累', 牛: '勤恳踏实，坚韧不拔', 虎: '勇猛果敢，敢为人先', 兔: '温和谨慎，人缘极佳',
+  龙: '气度不凡，志向远大', 蛇: '冷静睿智，直觉敏锐', 马: '热情奔放，行动力强', 羊: '温柔体贴，富有同理心',
+  猴: '聪明多变，创意十足', 鸡: '勤奋守时，注重细节', 狗: '忠诚可靠，正义感强', 猪: '豁达乐观，福气深厚'
+};
+var STAR_TRAITS = {
+  白羊座: '热情直率，行动派', 金牛座: '稳重务实，享受生活', 双子座: '机灵善变，好奇心强', 巨蟹座: '顾家温暖，情感细腻',
+  狮子座: '自信大方，天生主角', 处女座: '细致完美，逻辑清晰', 天秤座: '优雅平衡，社交达人', 天蝎座: '深邃专注，意志坚定',
+  射手座: '自由乐观，热爱冒险', 摩羯座: '自律上进，目标导向', 水瓶座: '独立创新，思维超前', 双鱼座: '浪漫感性，想象力丰富'
+};
+function zodiacOf(y) {
+  var idx = ((y - 4) % 12 + 12) % 12;
+  return ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'][idx];
+}
+function starOf(m, d) {
+  var signs = [[1, 20, '水瓶座'], [2, 19, '双鱼座'], [3, 21, '白羊座'], [4, 20, '金牛座'], [5, 21, '双子座'], [6, 22, '巨蟹座'], [7, 23, '狮子座'], [8, 23, '处女座'], [9, 23, '天秤座'], [10, 24, '天蝎座'], [11, 23, '射手座'], [12, 22, '摩羯座']];
+  for (var i = signs.length - 1; i >= 0; i--) {
+    if (m > signs[i][0] || (m === signs[i][0] && d >= signs[i][1])) return signs[i][2];
+  }
+  return '摩羯座';
+}
+function run() {
+  T.clearEl(box);
+  if (!dateIn.value) return;
+  var d = new Date(dateIn.value + 'T00:00:00');
+  var z = zodiacOf(d.getFullYear());
+  var s = starOf(d.getMonth() + 1, d.getDate());
+  var age = new Date().getFullYear() - d.getFullYear();
+  box.appendChild(T.kvTable([
+    ['生肖', z + ' — ' + ZODIAC_TRAITS[z]],
+    ['星座', s + ' — ' + STAR_TRAITS[s]],
+    ['出生年', d.getFullYear() + ' 年（农历以立春/春节为界，此处按公历年）'],
+    ['周岁', age + ' 岁']
+  ]));
+}
+dateIn.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '出生日期' }), dateIn]));
+app.appendChild(box);
+app.appendChild(T.msg('生肖按公历年简化计算，严格意义上以立春或农历正月初一为界。性格描述为民俗娱乐内容。', ''));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "zodiac", "title": "生肖星座", "desc": "出生年份 → 生肖 + 星座，附性格标签（娱乐向）", "scripts": "", "code": "var dateIn = T.dateInput('1995-06-15');\nvar box = T.el('div');\nvar ZODIAC_TRAITS = {\n  鼠: '机敏灵活，善于积累', 牛: '勤恳踏实，坚韧不拔', 虎: '勇猛果敢，敢为人先', 兔: '温和谨慎，人缘极佳',\n  龙: '气度不凡，志向远大', 蛇: '冷静睿智，直觉敏锐', 马: '热情奔放，行动力强', 羊: '温柔体贴，富有同理心',\n  猴: '聪明多变，创意十足', 鸡: '勤奋守时，注重细节', 狗: '忠诚可靠，正义感强', 猪: '豁达乐观，福气深厚'\n};\nvar STAR_TRAITS = {\n  白羊座: '热情直率，行动派', 金牛座: '稳重务实，享受生活', 双子座: '机灵善变，好奇心强', 巨蟹座: '顾家温暖，情感细腻',\n  狮子座: '自信大方，天生主角', 处女座: '细致完美，逻辑清晰', 天秤座: '优雅平衡，社交达人', 天蝎座: '深邃专注，意志坚定',\n  射手座: '自由乐观，热爱冒险', 摩羯座: '自律上进，目标导向', 水瓶座: '独立创新，思维超前', 双鱼座: '浪漫感性，想象力丰富'\n};\nfunction zodiacOf(y) {\n  var idx = ((y - 4) % 12 + 12) % 12;\n  return ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'][idx];\n}\nfunction starOf(m, d) {\n  var signs = [[1, 20, '水瓶座'], [2, 19, '双鱼座'], [3, 21, '白羊座'], [4, 20, '金牛座'], [5, 21, '双子座'], [6, 22, '巨蟹座'], [7, 23, '狮子座'], [8, 23, '处女座'], [9, 23, '天秤座'], [10, 24, '天蝎座'], [11, 23, '射手座'], [12, 22, '摩羯座']];\n  for (var i = signs.length - 1; i >= 0; i--) {\n    if (m > signs[i][0] || (m === signs[i][0] && d >= signs[i][1])) return signs[i][2];\n  }\n  return '摩羯座';\n}\nfunction run() {\n  T.clearEl(box);\n  if (!dateIn.value) return;\n  var d = new Date(dateIn.value + 'T00:00:00');\n  var z = zodiacOf(d.getFullYear());\n  var s = starOf(d.getMonth() + 1, d.getDate());\n  var age = new Date().getFullYear() - d.getFullYear();\n  box.appendChild(T.kvTable([\n    ['生肖', z + ' — ' + ZODIAC_TRAITS[z]],\n    ['星座', s + ' — ' + STAR_TRAITS[s]],\n    ['出生年', d.getFullYear() + ' 年（农历以立春/春节为界，此处按公历年）'],\n    ['周岁', age + ' 岁']\n  ]));\n}\ndateIn.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '出生日期' }), dateIn]));\napp.appendChild(box);\napp.appendChild(T.msg('生肖按公历年简化计算，严格意义上以立春或农历正月初一为界。性格描述为民俗娱乐内容。', ''));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

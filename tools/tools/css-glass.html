@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS 毛玻璃 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS 毛玻璃', 'Glassmorphism 效果生成：模糊 / 透明度 / 圆角 / 边框光', 'css-glass');
+var blur = T.range(0, 30, 1, 12);
+var alpha = T.range(0, 100, 1, 25);
+var radius = T.range(0, 40, 1, 16);
+var border = T.range(0, 4, 0.5, 1);
+var saturate = T.range(100, 300, 10, 180);
+var card = T.el('div', { style: 'padding:22px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.4);min-height:120px' });
+card.innerHTML = '毛玻璃卡片<br><span style="font-size:12px;font-weight:400">Glassmorphism Preview</span>';
+var stage = T.el('div', { style: 'height:220px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;background:linear-gradient(135deg,#1744E8,#7BC0E5 45%,#FFB88C);overflow:hidden' });
+stage.appendChild(card);
+var output = T.out('');
+function run() {
+  card.style.backdropFilter = 'blur(' + blur.value + 'px) saturate(' + saturate.value + '%)';
+  card.style.webkitBackdropFilter = card.style.backdropFilter;
+  card.style.background = 'rgba(255,255,255,' + (alpha.value / 100) + ')';
+  card.style.borderRadius = radius.value + 'px';
+  card.style.border = border.value + 'px solid rgba(255,255,255,.4)';
+  output.value = '.glass {\n  background: rgba(255,255,255,' + (alpha.value / 100) + ');\n  backdrop-filter: blur(' + blur.value + 'px) saturate(' + saturate.value + '%);\n  -webkit-backdrop-filter: blur(' + blur.value + 'px) saturate(' + saturate.value + '%);\n  border-radius: ' + radius.value + 'px;\n  border: ' + border.value + 'px solid rgba(255,255,255,.4);\n}';
+}
+[blur, alpha, radius, border, saturate].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(stage);
+app.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '背景透明' }), alpha]));
+app.appendChild(T.row([T.el('span', { text: '圆角' }), radius, T.el('span', { text: '边框' }), border, T.el('span', { text: '饱和' }), saturate]));
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-glass", "title": "CSS 毛玻璃", "desc": "Glassmorphism 效果生成：模糊 / 透明度 / 圆角 / 边框光", "scripts": "", "code": "var blur = T.range(0, 30, 1, 12);\nvar alpha = T.range(0, 100, 1, 25);\nvar radius = T.range(0, 40, 1, 16);\nvar border = T.range(0, 4, 0.5, 1);\nvar saturate = T.range(100, 300, 10, 180);\nvar card = T.el('div', { style: 'padding:22px;color:#fff;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.4);min-height:120px' });\ncard.innerHTML = '毛玻璃卡片\u003cbr>\u003cspan style=\"font-size:12px;font-weight:400\">Glassmorphism Preview\u003c/span>';\nvar stage = T.el('div', { style: 'height:220px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;background:linear-gradient(135deg,#1744E8,#7BC0E5 45%,#FFB88C);overflow:hidden' });\nstage.appendChild(card);\nvar output = T.out('');\nfunction run() {\n  card.style.backdropFilter = 'blur(' + blur.value + 'px) saturate(' + saturate.value + '%)';\n  card.style.webkitBackdropFilter = card.style.backdropFilter;\n  card.style.background = 'rgba(255,255,255,' + (alpha.value / 100) + ')';\n  card.style.borderRadius = radius.value + 'px';\n  card.style.border = border.value + 'px solid rgba(255,255,255,.4)';\n  output.value = '.glass {\\n  background: rgba(255,255,255,' + (alpha.value / 100) + ');\\n  backdrop-filter: blur(' + blur.value + 'px) saturate(' + saturate.value + '%);\\n  -webkit-backdrop-filter: blur(' + blur.value + 'px) saturate(' + saturate.value + '%);\\n  border-radius: ' + radius.value + 'px;\\n  border: ' + border.value + 'px solid rgba(255,255,255,.4);\\n}';\n}\n[blur, alpha, radius, border, saturate].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(stage);\napp.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '背景透明' }), alpha]));\napp.appendChild(T.row([T.el('span', { text: '圆角' }), radius, T.el('span', { text: '边框' }), border, T.el('span', { text: '饱和' }), saturate]));\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

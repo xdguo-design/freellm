@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>屏幕坏点检测 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('屏幕坏点检测', '全屏纯色循环检测坏点 / 亮斑（红绿蓝白黑）', 'dead-pixel');
+var overlay = T.el('div', { style: 'display:none;position:fixed;inset:0;z-index:9999;cursor:pointer' });
+document.body.appendChild(overlay);
+var colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#000000'];
+var idx = 0;
+var iv = 0;
+var auto = false;
+function showColor() {
+  overlay.style.background = colors[idx];
+}
+overlay.addEventListener('click', function () {
+  idx = (idx + 1) % colors.length;
+  showColor();
+});
+document.addEventListener('keydown', function (e) {
+  if (!overlay.style.display || overlay.style.display === 'none') return;
+  if (e.key === 'Escape') exitFull();
+  if (e.key === ' ') { e.preventDefault(); toggleAuto(); }
+  if (e.key === 'ArrowRight') { idx = (idx + 1) % colors.length; showColor(); }
+});
+function exitFull() {
+  clearInterval(iv);
+  auto = false;
+  overlay.style.display = 'none';
+  if (document.fullscreenElement) document.exitFullscreen();
+  startBtn.firstChild.textContent = '⛶ 开始全屏检测';
+}
+function toggleAuto() {
+  auto = !auto;
+  clearInterval(iv);
+  if (auto) iv = setInterval(function () { idx = (idx + 1) % colors.length; showColor(); }, 1500);
+}
+var startBtn = T.button('⛶ 开始全屏检测', function () {
+  overlay.style.display = 'block';
+  idx = 0;
+  showColor();
+  this.firstChild.textContent = '检测中…（点击 ESC 退出）';
+  document.documentElement.requestFullscreen().catch(function () {});
+});
+app.appendChild(T.row([startBtn, T.button('自动循环切换', toggleAuto)]));
+app.appendChild(T.el('p', { text: '检测方法：全屏后依次查看 红绿蓝白黑 五种纯色，出现不发光的黑点=坏点，异常亮点=亮斑。空格=自动循环，→ 手动切换，ESC 退出。', style: 'color:var(--ink2);font-size:12px' }));
+app.appendChild(T.el('div', { style: 'display:flex;gap:6px;margin-top:10px' }, colors.map(function (c) {
+  return T.el('div', { style: 'width:52px;height:32px;background:' + c + ';border:1px solid var(--line);border-radius:6px', title: c });
+})));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "dead-pixel", "title": "屏幕坏点检测", "desc": "全屏纯色循环检测坏点 / 亮斑（红绿蓝白黑）", "scripts": "", "code": "var overlay = T.el('div', { style: 'display:none;position:fixed;inset:0;z-index:9999;cursor:pointer' });\ndocument.body.appendChild(overlay);\nvar colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#000000'];\nvar idx = 0;\nvar iv = 0;\nvar auto = false;\nfunction showColor() {\n  overlay.style.background = colors[idx];\n}\noverlay.addEventListener('click', function () {\n  idx = (idx + 1) % colors.length;\n  showColor();\n});\ndocument.addEventListener('keydown', function (e) {\n  if (!overlay.style.display || overlay.style.display === 'none') return;\n  if (e.key === 'Escape') exitFull();\n  if (e.key === ' ') { e.preventDefault(); toggleAuto(); }\n  if (e.key === 'ArrowRight') { idx = (idx + 1) % colors.length; showColor(); }\n});\nfunction exitFull() {\n  clearInterval(iv);\n  auto = false;\n  overlay.style.display = 'none';\n  if (document.fullscreenElement) document.exitFullscreen();\n  startBtn.firstChild.textContent = '⛶ 开始全屏检测';\n}\nfunction toggleAuto() {\n  auto = !auto;\n  clearInterval(iv);\n  if (auto) iv = setInterval(function () { idx = (idx + 1) % colors.length; showColor(); }, 1500);\n}\nvar startBtn = T.button('⛶ 开始全屏检测', function () {\n  overlay.style.display = 'block';\n  idx = 0;\n  showColor();\n  this.firstChild.textContent = '检测中…（点击 ESC 退出）';\n  document.documentElement.requestFullscreen().catch(function () {});\n});\napp.appendChild(T.row([startBtn, T.button('自动循环切换', toggleAuto)]));\napp.appendChild(T.el('p', { text: '检测方法：全屏后依次查看 红绿蓝白黑 五种纯色，出现不发光的黑点=坏点，异常亮点=亮斑。空格=自动循环，→ 手动切换，ESC 退出。', style: 'color:var(--ink2);font-size:12px' }));\napp.appendChild(T.el('div', { style: 'display:flex;gap:6px;margin-top:10px' }, colors.map(function (c) {\n  return T.el('div', { style: 'width:52px;height:32px;background:' + c + ';border:1px solid var(--line);border-radius:6px', title: c });\n})));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

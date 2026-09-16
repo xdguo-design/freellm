@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>正计时器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('正计时器', '跑表模式正计时：开始 / 暂停 / 目标提醒', 'timer-app');
+var big = T.el('div', { text: '00:00:00', style: 'font:400 76px/1.2 var(--font-serif);text-align:center;margin:28px 0;font-variant-numeric:tabular-nums' });
+var goalMin = T.num(30, { min: 1, style: 'width:80px' });
+var status = T.badge('未开始');
+var running = false, startAt = 0, elapsed = 0, raf = 0, notified = false;
+function fmt(ms) {
+  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000);
+  return T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);
+}
+function tickFn() {
+  var ms = elapsed + (running ? Date.now() - startAt : 0);
+  big.textContent = fmt(ms);
+  if (!notified && ms >= (+goalMin.value || 30) * 60000) {
+    notified = true;
+    status.textContent = '🎯 已达目标时长';
+    status.className = 'badge ok';
+    T.toast('🎯 目标时长达成');
+  }
+  if (running) raf = requestAnimationFrame(tickFn);
+}
+app.appendChild(big);
+app.appendChild(T.row([T.el('span', { text: '目标(分)' }), goalMin, status]));
+app.appendChild(T.row([
+  T.button('开始', function () { if (running) return; running = true; notified = false; startAt = Date.now(); tickFn(); }, true),
+  T.button('暂停', function () { if (!running) return; elapsed += Date.now() - startAt; running = false; cancelAnimationFrame(raf); big.textContent = fmt(elapsed); }),
+  T.button('清零', function () { running = false; cancelAnimationFrame(raf); elapsed = 0; notified = false; big.textContent = '00:00:00'; status.textContent = '未开始'; status.className = 'badge'; })
+]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "timer-app", "title": "正计时器", "desc": "跑表模式正计时：开始 / 暂停 / 目标提醒", "scripts": "", "code": "var big = T.el('div', { text: '00:00:00', style: 'font:400 76px/1.2 var(--font-serif);text-align:center;margin:28px 0;font-variant-numeric:tabular-nums' });\nvar goalMin = T.num(30, { min: 1, style: 'width:80px' });\nvar status = T.badge('未开始');\nvar running = false, startAt = 0, elapsed = 0, raf = 0, notified = false;\nfunction fmt(ms) {\n  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000);\n  return T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);\n}\nfunction tickFn() {\n  var ms = elapsed + (running ? Date.now() - startAt : 0);\n  big.textContent = fmt(ms);\n  if (!notified && ms >= (+goalMin.value || 30) * 60000) {\n    notified = true;\n    status.textContent = '🎯 已达目标时长';\n    status.className = 'badge ok';\n    T.toast('🎯 目标时长达成');\n  }\n  if (running) raf = requestAnimationFrame(tickFn);\n}\napp.appendChild(big);\napp.appendChild(T.row([T.el('span', { text: '目标(分)' }), goalMin, status]));\napp.appendChild(T.row([\n  T.button('开始', function () { if (running) return; running = true; notified = false; startAt = Date.now(); tickFn(); }, true),\n  T.button('暂停', function () { if (!running) return; elapsed += Date.now() - startAt; running = false; cancelAnimationFrame(raf); big.textContent = fmt(elapsed); }),\n  T.button('清零', function () { running = false; cancelAnimationFrame(raf); elapsed = 0; notified = false; big.textContent = '00:00:00'; status.textContent = '未开始'; status.className = 'badge'; })\n]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

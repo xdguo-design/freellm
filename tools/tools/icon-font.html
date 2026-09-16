@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图标字体生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图标字体生成', '多 SVG 合并为 Symbol 精灵图 + CSS 类（组件级图标方案）', 'icon-font');
+var input = T.textarea('每个 SVG 一行或空行分隔，例如：\n<svg viewBox="0 0 24 24"><path d="M12 2 L22 12 L12 22 L2 12 Z"/></svg>\n<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>', true);
+var prefix = T.input('icon', { class: 'grow mono' });
+var output = T.out('');
+var preview = T.el('div', { style: 'display:flex;gap:16px;flex-wrap:wrap;margin-top:12px' });
+function run() {
+  var svgs = input.value.split(/<\/svg>\s*/).filter(function (s) { return s.includes('<svg'); }).map(function (s) {
+    if (!s.includes('</svg>')) s += '</svg>';
+    return s;
+  });
+  T.clearEl(preview);
+  if (!svgs.length) { output.value = ''; return; }
+  var symbols = svgs.map(function (s, i) {
+    var vb = (s.match(/viewBox="([^"]+)"/) || [null, '0 0 24 24'])[1];
+    var inner = s.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+    return '<symbol id="' + prefix.value + '-' + (i + 1) + '" viewBox="' + vb + '">' + inner + '</symbol>';
+  }).join('\n');
+  var sprite = '<svg xmlns="http://www.w3.org/2000/svg" style="display:none">\n' + symbols + '\n</svg>';
+  var css = '.' + prefix.value + ' {\n  display: inline-block;\n  width: 24px;\n  height: 24px;\n  fill: currentColor;\n  vertical-align: middle;\n}';
+  var uses = svgs.map(function (_, i) {
+    return '<svg class="' + prefix.value + '"><use href="#' + prefix.value + '-' + (i + 1) + '"/></svg>';
+  }).join('\n');
+  output.value = '<!-- 1. 精灵图（放在 body 开头） -->\n' + sprite + '\n\n<!-- 2. CSS -->\n<style>\n' + css + '\n</style>\n\n<!-- 3. 使用 -->\n' + uses;
+  var holder = T.el('div');
+  holder.innerHTML = sprite + uses;
+  Array.from(holder.querySelectorAll('svg:not([style])')).forEach(function (u) {
+    u.style.cssText = 'width:32px;height:32px;fill:var(--accent);border:1px dashed var(--line);padding:6px;border-radius:8px';
+    preview.appendChild(u);
+  });
+}
+[input, prefix].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('SVG 集合', input)], true));
+app.appendChild(T.row([T.el('span', { text: '类名前缀' }), prefix]));
+app.appendChild(preview);
+app.appendChild(T.pane([T.field('生成的精灵图代码', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; }), T.button('下载 sprite.html', function () { T.download('sprite.html', output.value, 'text/html'); })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "icon-font", "title": "图标字体生成", "desc": "多 SVG 合并为 Symbol 精灵图 + CSS 类（组件级图标方案）", "scripts": "", "code": "var input = T.textarea('每个 SVG 一行或空行分隔，例如：\\n\u003csvg viewBox=\"0 0 24 24\">\u003cpath d=\"M12 2 L22 12 L12 22 L2 12 Z\"/>\u003c/svg>\\n\u003csvg viewBox=\"0 0 24 24\">\u003ccircle cx=\"12\" cy=\"12\" r=\"10\"/>\u003c/svg>', true);\nvar prefix = T.input('icon', { class: 'grow mono' });\nvar output = T.out('');\nvar preview = T.el('div', { style: 'display:flex;gap:16px;flex-wrap:wrap;margin-top:12px' });\nfunction run() {\n  var svgs = input.value.split(/\u003c\\/svg>\\s*/).filter(function (s) { return s.includes('\u003csvg'); }).map(function (s) {\n    if (!s.includes('\u003c/svg>')) s += '\u003c/svg>';\n    return s;\n  });\n  T.clearEl(preview);\n  if (!svgs.length) { output.value = ''; return; }\n  var symbols = svgs.map(function (s, i) {\n    var vb = (s.match(/viewBox=\"([^\"]+)\"/) || [null, '0 0 24 24'])[1];\n    var inner = s.replace(/^[\\s\\S]*?\u003csvg[^>]*>/, '').replace(/\u003c\\/svg>\\s*$/, '');\n    return '\u003csymbol id=\"' + prefix.value + '-' + (i + 1) + '\" viewBox=\"' + vb + '\">' + inner + '\u003c/symbol>';\n  }).join('\\n');\n  var sprite = '\u003csvg xmlns=\"http://www.w3.org/2000/svg\" style=\"display:none\">\\n' + symbols + '\\n\u003c/svg>';\n  var css = '.' + prefix.value + ' {\\n  display: inline-block;\\n  width: 24px;\\n  height: 24px;\\n  fill: currentColor;\\n  vertical-align: middle;\\n}';\n  var uses = svgs.map(function (_, i) {\n    return '\u003csvg class=\"' + prefix.value + '\">\u003cuse href=\"#' + prefix.value + '-' + (i + 1) + '\"/>\u003c/svg>';\n  }).join('\\n');\n  output.value = '\u003c!-- 1. 精灵图（放在 body 开头） -->\\n' + sprite + '\\n\\n\u003c!-- 2. CSS -->\\n\u003cstyle>\\n' + css + '\\n\u003c/style>\\n\\n\u003c!-- 3. 使用 -->\\n' + uses;\n  var holder = T.el('div');\n  holder.innerHTML = sprite + uses;\n  Array.from(holder.querySelectorAll('svg:not([style])')).forEach(function (u) {\n    u.style.cssText = 'width:32px;height:32px;fill:var(--accent);border:1px dashed var(--line);padding:6px;border-radius:8px';\n    preview.appendChild(u);\n  });\n}\n[input, prefix].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('SVG 集合', input)], true));\napp.appendChild(T.row([T.el('span', { text: '类名前缀' }), prefix]));\napp.appendChild(preview);\napp.appendChild(T.pane([T.field('生成的精灵图代码', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; }), T.button('下载 sprite.html', function () { T.download('sprite.html', output.value, 'text/html'); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

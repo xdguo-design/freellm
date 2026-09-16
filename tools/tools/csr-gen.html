@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSR 证书生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSR 证书生成', '生成私钥 + CSR（证书签名请求），用于 SSL 证书申请', 'csr-gen');
+var cn = T.input('www.example.com', { class: 'grow mono', placeholder: 'Common Name（域名）' });
+var org = T.input('My Company', { class: 'grow mono', placeholder: '组织 O（可选）' });
+var bits = T.select([{value:'2048',label:'RSA-2048'},{value:'4096',label:'RSA-4096'}],'2048');
+var keyOut = T.out('私钥 PEM（务必保密）…');
+keyOut.setAttribute('rows', '6');
+var csrOut = T.out('CSR PEM…');
+csrOut.setAttribute('rows', '6');
+function encLen(n) {
+  if (n < 128) return new Uint8Array([n]);
+  var bytes = [];
+  while (n > 0) { bytes.unshift(n & 255); n >>= 8; }
+  return new Uint8Array([0x80 | bytes.length].concat(bytes));
+}
+function tlv(tag, content) {
+  var out = new Uint8Array(1 + encLen(content.length).length + content.length);
+  out[0] = tag;
+  out.set(encLen(content.length), 1);
+  out.set(content, 1 + encLen(content.length).length);
+  return out;
+}
+function seq() { return tlv(0x30, concat(Array.from(arguments))); }
+function set() { return tlv(0x31, concat(Array.from(arguments))); }
+function int(b) { return tlv(0x02, b); }
+function oid(nums) {
+  var out = [nums[0] * 40 + nums[1]];
+  for (var i = 2; i < nums.length; i++) {
+    var v = nums[i];
+    var tmp = [v & 0x7f];
+    v >>= 7;
+    while (v > 0) { tmp.unshift((v & 0x7f) | 0x80); v >>= 7; }
+    out = out.concat(tmp);
+  }
+  return tlv(0x06, new Uint8Array(out));
+}
+function str2(tag, s) { return tlv(tag, T.textToBytes(s)); }
+function nameEntry(oidArr, value) {
+  return set(seq(oid(oidArr), str2(0x0c, value)));
+}
+function concat(arrs) {
+  var len = arrs.reduce(function (s, a) { return s + a.length; }, 0);
+  var out = new Uint8Array(len), off = 0;
+  arrs.forEach(function (a) { out.set(a, off); off += a.length; });
+  return out;
+}
+function toPem(u8, label) {
+  return '-----BEGIN ' + label + '-----\n' + T.bytesToB64(u8).match(/.{1,64}/g).join('\n') + '\n-----END ' + label + '-----';
+}
+T.button('生成密钥对 + CSR', function () {
+  if (!cn.value) { T.toast('请填写域名'); return; }
+  T.toast('生成中…');
+  crypto.subtle.generateKey(
+    { name: 'RSASSA-PKCS1-v1_5', modulusLength: +bits.value, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+    true, ['sign']).then(function (kp) {
+    return Promise.all([
+      crypto.subtle.exportKey('pkcs8', kp.privateKey),
+      crypto.subtle.exportKey('spki', kp.publicKey),
+      Promise.resolve(kp)
+    ]);
+  }).then(function (res) {
+    var pk8 = res[0], spki = res[1], kp = res[2];
+    keyOut.value = toPem(new Uint8Array(pk8), 'PRIVATE KEY');
+    var attrs = seq(
+      nameEntry([2, 5, 4, 3], cn.value));
+    if (org.value) attrs = seq(nameEntry([2, 5, 4, 3], cn.value), nameEntry([2, 5, 4, 10], org.value));
+    var tbs = seq(
+      int(new Uint8Array([0])),
+      seq(oid([1, 2, 840, 113549, 1, 1, 11]), tlv(0x05, new Uint8Array(0))),
+      attrs,
+      new Uint8Array(spki));
+    return crypto.subtle.sign('RSASSA-PKCS1-v1_5', kp.privateKey, tbs).then(function (sig) {
+      var csr = seq(tbs, seq(oid([1, 2, 840, 113549, 1, 1, 11]), tlv(0x05, new Uint8Array(0))), tlv(0x03, concat([new Uint8Array([0]), new Uint8Array(sig)])));
+      csrOut.value = toPem(new Uint8Array(csr), 'CERTIFICATE REQUEST');
+      T.toast('生成完成');
+    });
+  }).catch(function (e) { T.toast('失败：' + e.message); });
+}, true)
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "csr-gen", "title": "CSR 证书生成", "desc": "生成私钥 + CSR（证书签名请求），用于 SSL 证书申请", "scripts": "", "code": "var cn = T.input('www.example.com', { class: 'grow mono', placeholder: 'Common Name（域名）' });\nvar org = T.input('My Company', { class: 'grow mono', placeholder: '组织 O（可选）' });\nvar bits = T.select([{value:'2048',label:'RSA-2048'},{value:'4096',label:'RSA-4096'}],'2048');\nvar keyOut = T.out('私钥 PEM（务必保密）…');\nkeyOut.setAttribute('rows', '6');\nvar csrOut = T.out('CSR PEM…');\ncsrOut.setAttribute('rows', '6');\nfunction encLen(n) {\n  if (n \u003c 128) return new Uint8Array([n]);\n  var bytes = [];\n  while (n > 0) { bytes.unshift(n & 255); n >>= 8; }\n  return new Uint8Array([0x80 | bytes.length].concat(bytes));\n}\nfunction tlv(tag, content) {\n  var out = new Uint8Array(1 + encLen(content.length).length + content.length);\n  out[0] = tag;\n  out.set(encLen(content.length), 1);\n  out.set(content, 1 + encLen(content.length).length);\n  return out;\n}\nfunction seq() { return tlv(0x30, concat(Array.from(arguments))); }\nfunction set() { return tlv(0x31, concat(Array.from(arguments))); }\nfunction int(b) { return tlv(0x02, b); }\nfunction oid(nums) {\n  var out = [nums[0] * 40 + nums[1]];\n  for (var i = 2; i \u003c nums.length; i++) {\n    var v = nums[i];\n    var tmp = [v & 0x7f];\n    v >>= 7;\n    while (v > 0) { tmp.unshift((v & 0x7f) | 0x80); v >>= 7; }\n    out = out.concat(tmp);\n  }\n  return tlv(0x06, new Uint8Array(out));\n}\nfunction str2(tag, s) { return tlv(tag, T.textToBytes(s)); }\nfunction nameEntry(oidArr, value) {\n  return set(seq(oid(oidArr), str2(0x0c, value)));\n}\nfunction concat(arrs) {\n  var len = arrs.reduce(function (s, a) { return s + a.length; }, 0);\n  var out = new Uint8Array(len), off = 0;\n  arrs.forEach(function (a) { out.set(a, off); off += a.length; });\n  return out;\n}\nfunction toPem(u8, label) {\n  return '-----BEGIN ' + label + '-----\\n' + T.bytesToB64(u8).match(/.{1,64}/g).join('\\n') + '\\n-----END ' + label + '-----';\n}\nT.button('生成密钥对 + CSR', function () {\n  if (!cn.value) { T.toast('请填写域名'); return; }\n  T.toast('生成中…');\n  crypto.subtle.generateKey(\n    { name: 'RSASSA-PKCS1-v1_5', modulusLength: +bits.value, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },\n    true, ['sign']).then(function (kp) {\n    return Promise.all([\n      crypto.subtle.exportKey('pkcs8', kp.privateKey),\n      crypto.subtle.exportKey('spki', kp.publicKey),\n      Promise.resolve(kp)\n    ]);\n  }).then(function (res) {\n    var pk8 = res[0], spki = res[1], kp = res[2];\n    keyOut.value = toPem(new Uint8Array(pk8), 'PRIVATE KEY');\n    var attrs = seq(\n      nameEntry([2, 5, 4, 3], cn.value));\n    if (org.value) attrs = seq(nameEntry([2, 5, 4, 3], cn.value), nameEntry([2, 5, 4, 10], org.value));\n    var tbs = seq(\n      int(new Uint8Array([0])),\n      seq(oid([1, 2, 840, 113549, 1, 1, 11]), tlv(0x05, new Uint8Array(0))),\n      attrs,\n      new Uint8Array(spki));\n    return crypto.subtle.sign('RSASSA-PKCS1-v1_5', kp.privateKey, tbs).then(function (sig) {\n      var csr = seq(tbs, seq(oid([1, 2, 840, 113549, 1, 1, 11]), tlv(0x05, new Uint8Array(0))), tlv(0x03, concat([new Uint8Array([0]), new Uint8Array(sig)])));\n      csrOut.value = toPem(new Uint8Array(csr), 'CERTIFICATE REQUEST');\n      T.toast('生成完成');\n    });\n  }).catch(function (e) { T.toast('失败：' + e.message); });\n}, true)"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

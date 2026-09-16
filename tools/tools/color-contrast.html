@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>颜色对比度 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('颜色对比度', 'WCAG 对比度批量检测：前景 × 多个背景一键评估', 'color-contrast');
+var fg = T.color('#2F3437');
+var bgsIn = T.textarea('#FBFBFA\n#FFFFFF\n#1744E8\n#F9F9F8', true);
+bgsIn.value = '#FBFBFA\n#FFFFFF\n#1744E8\n#F9F9F8';
+bgsIn.setAttribute('rows', '5');
+var box = T.el('div');
+var sample = T.el('div', { style: 'padding:20px;border-radius:10px;border:1px solid var(--line);margin-bottom:12px' });
+function run() {
+  var f = LU.Color.parse(fg.value);
+  sample.style.color = fg.value;
+  sample.innerHTML = '示例文字 Sample Text 18px';
+  var rows = [];
+  bgsIn.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).forEach(function (bgStr) {
+    try {
+      var b = LU.Color.parse(bgStr);
+      var ratio = LU.Color.contrast(f, b);
+      var grade = ratio >= 7 ? 'AAA ✓' : ratio >= 4.5 ? 'AA ✓' : ratio >= 3 ? 'AA 大字 ✓' : '✗ 不达标';
+      rows.push([bgStr, ratio.toFixed(2) + ' : 1', grade]);
+    } catch (e) {
+      rows.push([bgStr, '—', '无法解析']);
+    }
+  });
+  T.clearEl(box).appendChild(T.refTable(['背景色', '对比度', '评级'], rows, function (r) { T.copy(r[0]); }));
+}
+[fg, bgsIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });
+app.appendChild(T.row([T.el('span', { text: '前景色' }), fg]));
+app.appendChild(T.pane([T.field('背景色列表（每行一个）', bgsIn), T.el('div', { class: 'field' }, [T.el('span', { text: '示例' }), sample])]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "color-contrast", "title": "颜色对比度", "desc": "WCAG 对比度批量检测：前景 × 多个背景一键评估", "scripts": "", "code": "var fg = T.color('#2F3437');\nvar bgsIn = T.textarea('#FBFBFA\\n#FFFFFF\\n#1744E8\\n#F9F9F8', true);\nbgsIn.value = '#FBFBFA\\n#FFFFFF\\n#1744E8\\n#F9F9F8';\nbgsIn.setAttribute('rows', '5');\nvar box = T.el('div');\nvar sample = T.el('div', { style: 'padding:20px;border-radius:10px;border:1px solid var(--line);margin-bottom:12px' });\nfunction run() {\n  var f = LU.Color.parse(fg.value);\n  sample.style.color = fg.value;\n  sample.innerHTML = '示例文字 Sample Text 18px';\n  var rows = [];\n  bgsIn.value.split('\\n').map(function (s) { return s.trim(); }).filter(Boolean).forEach(function (bgStr) {\n    try {\n      var b = LU.Color.parse(bgStr);\n      var ratio = LU.Color.contrast(f, b);\n      var grade = ratio >= 7 ? 'AAA ✓' : ratio >= 4.5 ? 'AA ✓' : ratio >= 3 ? 'AA 大字 ✓' : '✗ 不达标';\n      rows.push([bgStr, ratio.toFixed(2) + ' : 1', grade]);\n    } catch (e) {\n      rows.push([bgStr, '—', '无法解析']);\n    }\n  });\n  T.clearEl(box).appendChild(T.refTable(['背景色', '对比度', '评级'], rows, function (r) { T.copy(r[0]); }));\n}\n[fg, bgsIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });\napp.appendChild(T.row([T.el('span', { text: '前景色' }), fg]));\napp.appendChild(T.pane([T.field('背景色列表（每行一个）', bgsIn), T.el('div', { class: 'field' }, [T.el('span', { text: '示例' }), sample])]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

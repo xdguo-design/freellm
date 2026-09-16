@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>日记本 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('日记本', '本地日记：按日期记录与浏览，数据保存在浏览器', 'journal');
+var dateIn = T.dateInput(T.today());
+var input = T.textarea('今天发生了什么…', true);
+input.style.minHeight = '180px';
+var list = T.el('div');
+var entries = {};
+try { entries = JSON.parse(localStorage.getItem('freellm-journal') || '{}'); } catch (e) {}
+function save() { localStorage.setItem('freellm-journal', JSON.stringify(entries)); }
+function loadDate() {
+  input.value = entries[dateIn.value] || '';
+}
+function saveDate() {
+  if (input.value.trim()) entries[dateIn.value] = input.value;
+  else delete entries[dateIn.value];
+  save();
+  renderList();
+}
+function renderList() {
+  T.clearEl(list);
+  var keys = Object.keys(entries).sort().reverse();
+  if (!keys.length) { list.appendChild(T.el('p', { text: '还没有日记。', style: 'color:var(--ink3)' })); return; }
+  keys.slice(0, 20).forEach(function (k) {
+    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:baseline;padding:8px 4px;border-bottom:1px solid var(--line);cursor:pointer' });
+    row.appendChild(T.el('b', { text: k, style: 'font-family:var(--font-mono);font-size:13px' }));
+    row.appendChild(T.el('span', { text: entries[k].replace(/\n/g, ' ').slice(0, 50) + '…', style: 'flex:1;color:var(--ink2);font-size:13px;overflow:hidden;white-space:nowrap' }));
+    row.addEventListener('click', function () { dateIn.value = k; loadDate(); });
+    list.appendChild(row);
+  });
+}
+dateIn.addEventListener('change', loadDate);
+input.addEventListener('input', T.debounce(saveDate, 600));
+app.appendChild(T.row([T.el('span', { text: '日期' }), dateIn, T.el('span', { text: Object.keys(entries).length + ' 篇' })]));
+app.appendChild(input);
+app.appendChild(T.el('span', { text: '历史日记（点击载入）', class: 'field' }));
+app.appendChild(list);
+loadDate();
+renderList();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "journal", "title": "日记本", "desc": "本地日记：按日期记录与浏览，数据保存在浏览器", "scripts": "", "code": "var dateIn = T.dateInput(T.today());\nvar input = T.textarea('今天发生了什么…', true);\ninput.style.minHeight = '180px';\nvar list = T.el('div');\nvar entries = {};\ntry { entries = JSON.parse(localStorage.getItem('freellm-journal') || '{}'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-journal', JSON.stringify(entries)); }\nfunction loadDate() {\n  input.value = entries[dateIn.value] || '';\n}\nfunction saveDate() {\n  if (input.value.trim()) entries[dateIn.value] = input.value;\n  else delete entries[dateIn.value];\n  save();\n  renderList();\n}\nfunction renderList() {\n  T.clearEl(list);\n  var keys = Object.keys(entries).sort().reverse();\n  if (!keys.length) { list.appendChild(T.el('p', { text: '还没有日记。', style: 'color:var(--ink3)' })); return; }\n  keys.slice(0, 20).forEach(function (k) {\n    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:baseline;padding:8px 4px;border-bottom:1px solid var(--line);cursor:pointer' });\n    row.appendChild(T.el('b', { text: k, style: 'font-family:var(--font-mono);font-size:13px' }));\n    row.appendChild(T.el('span', { text: entries[k].replace(/\\n/g, ' ').slice(0, 50) + '…', style: 'flex:1;color:var(--ink2);font-size:13px;overflow:hidden;white-space:nowrap' }));\n    row.addEventListener('click', function () { dateIn.value = k; loadDate(); });\n    list.appendChild(row);\n  });\n}\ndateIn.addEventListener('change', loadDate);\ninput.addEventListener('input', T.debounce(saveDate, 600));\napp.appendChild(T.row([T.el('span', { text: '日期' }), dateIn, T.el('span', { text: Object.keys(entries).length + ' 篇' })]));\napp.appendChild(input);\napp.appendChild(T.el('span', { text: '历史日记（点击载入）', class: 'field' }));\napp.appendChild(list);\nloadDate();\nrenderList();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -2,57 +2,43 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Markdown 编辑器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Markdown 编辑器', '在线 Markdown 编辑与预览', 'markdown');
-
-  var input = T.textarea('# Hello World\n\n这是一个 **Markdown** 编辑器。\n\n## 功能\n\n- 粗体 **text**\n- 斜体 *text*\n- 删除线 ~~text~~\n- 代码 `code`\n\n## 列表\n\n1. 第一项\n2. 第二项\n3. 第三项\n\n> 引用文本\n\n```js\nconsole.log("Hello!");\n```');
-
-  var preview = T.el('div', { class: 'output', style: 'padding:16px;min-height:200px;line-height:1.6' });
-
-  var copyMd = T.copyBtn(function () { return input.value; });
-  var copyHtml = T.copyBtn(function () { return preview.innerHTML; });
-
-  function renderMarkdown(md) {
-    var html = md
-      .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre style="background:var(--code-bg);padding:12px;border-radius:8px;overflow-x:auto"><code>$2</code></pre>')
-      .replace(/`([^`]+)`/g, '<code style="background:var(--code-bg);padding:2px 6px;border-radius:4px">$1</code>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/~~(.+?)~~/g, '<del>$1</del>')
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-      .replace(/^> (.+)$/gm, '<blockquote style="border-left:4px solid var(--accent);padding-left:16px;color:var(--muted);margin:8px 0">$1</blockquote>')
-      .replace(/^- (.+)$/gm, '<li>$1</li>')
-      .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br>');
-    return '<p>' + html + '</p>';
-  }
-
-  function run() {
-    preview.innerHTML = renderMarkdown(input.value);
-  }
-
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [copyMd, copyHtml]));
-  app.appendChild(T.el('div', { class: 'row', style: 'gap:10px' }, [
-    T.el('div', { class: 'pane', style: 'flex:1' }, [input]),
-    T.el('div', { class: 'pane', style: 'flex:1' }, [preview])
-  ]));
-
-  run();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Markdown 编辑器', '在线 Markdown 编辑与实时预览，导出 HTML', 'markdown');
+var input = T.textarea('#欢迎使用 FreeLLM 编辑器\n\n在左侧输入 **Markdown**，右侧实时预览。\n\n- 支持 标题/列表/表格/代码\n- 导出 HTML 文件', true);
+input.value = '#欢迎使用 FreeLLM 编辑器\n\n在左侧输入 **Markdown**，右侧实时预览。\n\n- 支持 标题/列表/表格/代码\n- 导出 HTML 文件';
+input.style.minHeight = '320px';
+var frame = T.el('iframe', { sandbox: '', style: 'width:100%;height:356px;border:1px solid var(--line);border-radius:8px;background:#fff' });
+var STYLE = 'body{font:14px/1.7 -apple-system,system-ui,sans-serif;color:#2F3437;padding:16px;max-width:760px;margin:0 auto}pre{background:#f6f6f4;padding:12px;border-radius:8px;overflow:auto}code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}blockquote{margin:0;padding:2px 14px;border-left:3px solid #ddd;color:#787774}table{border-collapse:collapse}th,td{border:1px solid #e5e5e2;padding:6px 12px}h1,h2{border-bottom:1px solid #eee;padding-bottom:6px}img{max-width:100%}';
+function run() {
+  try { frame.srcdoc = '<style>' + STYLE + '</style>' + LF.md2html(input.value); }
+  catch (e) { frame.srcdoc = '<pre>' + T.esc(e.message) + '</pre>'; }
+}
+input.addEventListener('input', T.debounce(run, 200));
+app.appendChild(T.pane([T.field('编辑区', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), frame])]));
+app.appendChild(T.row([T.button('复制 HTML', function () { T.copy(LF.md2html(input.value)); }),
+  T.button('下载 .html', function () { T.download('document.html', '<!doctype html><meta charset="utf-8"><style>' + STYLE + '</style>' + LF.md2html(input.value), 'text/html'); }, true),
+  T.button('下载 .md', function () { T.download('document.md', input.value, 'text/markdown'); })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "markdown", "title": "Markdown 编辑器", "desc": "在线 Markdown 编辑与实时预览，导出 HTML", "scripts": "", "code": "var input = T.textarea('#欢迎使用 FreeLLM 编辑器\\n\\n在左侧输入 **Markdown**，右侧实时预览。\\n\\n- 支持 标题/列表/表格/代码\\n- 导出 HTML 文件', true);\ninput.value = '#欢迎使用 FreeLLM 编辑器\\n\\n在左侧输入 **Markdown**，右侧实时预览。\\n\\n- 支持 标题/列表/表格/代码\\n- 导出 HTML 文件';\ninput.style.minHeight = '320px';\nvar frame = T.el('iframe', { sandbox: '', style: 'width:100%;height:356px;border:1px solid var(--line);border-radius:8px;background:#fff' });\nvar STYLE = 'body{font:14px/1.7 -apple-system,system-ui,sans-serif;color:#2F3437;padding:16px;max-width:760px;margin:0 auto}pre{background:#f6f6f4;padding:12px;border-radius:8px;overflow:auto}code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}blockquote{margin:0;padding:2px 14px;border-left:3px solid #ddd;color:#787774}table{border-collapse:collapse}th,td{border:1px solid #e5e5e2;padding:6px 12px}h1,h2{border-bottom:1px solid #eee;padding-bottom:6px}img{max-width:100%}';\nfunction run() {\n  try { frame.srcdoc = '\u003cstyle>' + STYLE + '\u003c/style>' + LF.md2html(input.value); }\n  catch (e) { frame.srcdoc = '\u003cpre>' + T.esc(e.message) + '\u003c/pre>'; }\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('编辑区', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), frame])]));\napp.appendChild(T.row([T.button('复制 HTML', function () { T.copy(LF.md2html(input.value)); }),\n  T.button('下载 .html', function () { T.download('document.html', '\u003c!doctype html>\u003cmeta charset=\"utf-8\">\u003cstyle>' + STYLE + '\u003c/style>' + LF.md2html(input.value), 'text/html'); }, true),\n  T.button('下载 .md', function () { T.download('document.md', input.value, 'text/markdown'); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

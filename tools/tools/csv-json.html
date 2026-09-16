@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSV ↔ JSON · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSV ↔ JSON', 'CSV 与 JSON 数组互转，支持表头与自定义分隔符', 'csv-json');
+var input = T.textarea('name,age,city\n张三,25,北京\n李四,30,上海');
+input.value = 'name,age,city\n张三,25,北京\n李四,30,上海';
+var output = T.out('');
+var mode = T.select([{value:'j2c',label:'JSON → CSV'},{value:'c2j',label:'CSV → JSON'}],'c2j');
+var delim = T.select([{value:',',label:'逗号'},{value:'\t',label:'Tab'},{value:';',label:'分号'}],',');
+var header = T.check('首行为表头', true);
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; return; }
+  try {
+    if (mode.value === 'c2j') {
+      var rows = LF.Csv.parse(v, delim.value);
+      if (header._input.checked) {
+        var head = rows[0];
+        output.value = JSON.stringify(rows.slice(1).map(function (r) {
+          var o = {};
+          head.forEach(function (h, i) { o[h] = r[i] != null && r[i] !== '' && !isNaN(r[i]) && r[i].trim() !== '' ? +r[i] : r[i]; });
+          return o;
+        }), null, 2);
+      } else output.value = JSON.stringify(rows, null, 2);
+    } else {
+      var arr = T.parseJSON(v);
+      if (!Array.isArray(arr)) throw new Error('必须是 JSON 数组');
+      if (arr.length && typeof arr[0] === 'object' && !Array.isArray(arr[0])) {
+        var cols = [];
+        arr.forEach(function (o) { Object.keys(o).forEach(function (k) { if (cols.indexOf(k) < 0) cols.push(k); }); });
+        output.value = LF.Csv.stringify([cols].concat(arr.map(function (o) {
+          return cols.map(function (c) { return o[c] == null ? '' : o[c]; });
+        })), delim.value);
+      } else {
+        output.value = LF.Csv.stringify(arr, delim.value);
+      }
+    }
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode, delim, header._input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, T.el('span', { text: '分隔符' }), delim, header, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "csv-json", "title": "CSV ↔ JSON", "desc": "CSV 与 JSON 数组互转，支持表头与自定义分隔符", "scripts": "", "code": "var input = T.textarea('name,age,city\\n张三,25,北京\\n李四,30,上海');\ninput.value = 'name,age,city\\n张三,25,北京\\n李四,30,上海';\nvar output = T.out('');\nvar mode = T.select([{value:'j2c',label:'JSON → CSV'},{value:'c2j',label:'CSV → JSON'}],'c2j');\nvar delim = T.select([{value:',',label:'逗号'},{value:'\\t',label:'Tab'},{value:';',label:'分号'}],',');\nvar header = T.check('首行为表头', true);\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; return; }\n  try {\n    if (mode.value === 'c2j') {\n      var rows = LF.Csv.parse(v, delim.value);\n      if (header._input.checked) {\n        var head = rows[0];\n        output.value = JSON.stringify(rows.slice(1).map(function (r) {\n          var o = {};\n          head.forEach(function (h, i) { o[h] = r[i] != null && r[i] !== '' && !isNaN(r[i]) && r[i].trim() !== '' ? +r[i] : r[i]; });\n          return o;\n        }), null, 2);\n      } else output.value = JSON.stringify(rows, null, 2);\n    } else {\n      var arr = T.parseJSON(v);\n      if (!Array.isArray(arr)) throw new Error('必须是 JSON 数组');\n      if (arr.length && typeof arr[0] === 'object' && !Array.isArray(arr[0])) {\n        var cols = [];\n        arr.forEach(function (o) { Object.keys(o).forEach(function (k) { if (cols.indexOf(k) \u003c 0) cols.push(k); }); });\n        output.value = LF.Csv.stringify([cols].concat(arr.map(function (o) {\n          return cols.map(function (c) { return o[c] == null ? '' : o[c]; });\n        })), delim.value);\n      } else {\n        output.value = LF.Csv.stringify(arr, delim.value);\n      }\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode, delim, header._input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, T.el('span', { text: '分隔符' }), delim, header, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

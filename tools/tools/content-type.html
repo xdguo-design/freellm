@@ -2,95 +2,86 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Content-Type 大全 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Content-Type 大全', 'MIME 类型速查', 'content-type');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索 MIME 类型或扩展名...', style: 'width:100%' });
-
-  var TYPES = [
-    ['text/html', '.html, .htm', 'HTML 文档'],
-    ['text/css', '.css', 'CSS 样式表'],
-    ['text/javascript, application/javascript', '.js', 'JavaScript'],
-    ['text/plain', '.txt', '纯文本'],
-    ['text/xml', '.xml', 'XML 文档'],
-    ['text/csv', '.csv', 'CSV 数据'],
-    ['application/json', '.json', 'JSON 数据'],
-    ['application/xml', '.xml', 'XML 数据'],
-    ['application/x-yaml, text/yaml', '.yml, .yaml', 'YAML 数据'],
-    ['application/pdf', '.pdf', 'PDF 文档'],
-    ['application/zip', '.zip', 'ZIP 压缩包'],
-    ['application/gzip, application/x-gzip', '.gz', 'Gzip 压缩包'],
-    ['application/x-tar', '.tar', 'TAR 归档'],
-    ['application/x-bzip2', '.bz2', 'Bzip2 压缩'],
-    ['application/x-7z-compressed', '.7z', '7z 压缩包'],
-    ['application/msword', '.doc', 'Word 文档'],
-    ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', '.docx', 'Word 文档 (OOXML)'],
-    ['application/vnd.ms-excel', '.xls', 'Excel 表格'],
-    ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx', 'Excel 表格 (OOXML)'],
-    ['application/vnd.ms-powerpoint', '.ppt', 'PowerPoint 演示'],
-    ['application/vnd.openxmlformats-officedocument.presentationml.presentation', '.pptx', 'PowerPoint (OOXML)'],
-    ['image/jpeg', '.jpg, .jpeg', 'JPEG 图片'],
-    ['image/png', '.png', 'PNG 图片'],
-    ['image/gif', '.gif', 'GIF 图片'],
-    ['image/webp', '.webp', 'WebP 图片'],
-    ['image/svg+xml', '.svg', 'SVG 矢量图'],
-    ['image/avif', '.avif', 'AVIF 图片'],
-    ['image/tiff', '.tiff, .tif', 'TIFF 图片'],
-    ['image/x-icon', '.ico', 'ICO 图标'],
-    ['image/bmp', '.bmp', 'BMP 位图'],
-    ['audio/mpeg', '.mp3', 'MP3 音频'],
-    ['audio/wav', '.wav', 'WAV 音频'],
-    ['audio/ogg', '.ogg', 'OGG 音频'],
-    ['audio/flac', '.flac', 'FLAC 音频'],
-    ['audio/aac', '.aac', 'AAC 音频'],
-    ['video/mp4', '.mp4', 'MP4 视频'],
-    ['video/webm', '.webm', 'WebM 视频'],
-    ['video/ogg', '.ogg', 'OGG 视频'],
-    ['video/quicktime', '.mov', 'MOV 视频'],
-    ['video/x-msvideo', '.avi', 'AVI 视频'],
-    ['application/octet-stream', '.*', '二进制流'],
-    ['application/x-www-form-urlencoded', '表单', 'URL 编码表单'],
-    ['multipart/form-data', '表单', '多部分表单（文件上传）']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = TYPES.filter(function (t) {
-      if (!q) return true;
-      return t[0].toLowerCase().includes(q) || t[1].toLowerCase().includes(q) || t[2].toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Content-Type 大全', '常用 MIME 类型速查：文档 / 图片 / 音视频 / 数据', 'content-type');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">MIME 类型</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">扩展名</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
-    html += '<tbody>';
-    filtered.forEach(function (t) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + t[0] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace">' + t[1] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + t[2] + '</td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var DATA = [
+  ['.html', 'text/html', '网页'],
+  ['.css', 'text/css', '样式表'],
+  ['.js / .mjs', 'text/javascript', '脚本'],
+  ['.json', 'application/json', 'JSON 数据'],
+  ['.xml', 'application/xml', 'XML'],
+  ['.txt', 'text/plain', '纯文本'],
+  ['.csv', 'text/csv', 'CSV 表格'],
+  ['.pdf', 'application/pdf', 'PDF 文档'],
+  ['.zip', 'application/zip', 'ZIP 压缩包'],
+  ['.gz', 'application/gzip', 'Gzip 压缩包'],
+  ['.7z', 'application/x-7z-compressed', '7z 压缩包'],
+  ['.tar', 'application/x-tar', 'tar 归档'],
+  ['.doc', 'application/msword', 'Word 97-2003'],
+  ['.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Word 文档'],
+  ['.xls', 'application/vnd.ms-excel', 'Excel 97-2003'],
+  ['.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Excel 表格'],
+  ['.pptx', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'PPT'],
+  ['.png', 'image/png', 'PNG 图片'],
+  ['.jpg / .jpeg', 'image/jpeg', 'JPEG 图片'],
+  ['.gif', 'image/gif', 'GIF 动图'],
+  ['.webp', 'image/webp', 'WebP 图片'],
+  ['.avif', 'image/avif', 'AVIF 图片'],
+  ['.svg', 'image/svg+xml', 'SVG 矢量图'],
+  ['.ico', 'image/x-icon', '网站图标'],
+  ['.mp3', 'audio/mpeg', 'MP3 音频'],
+  ['.wav', 'audio/wav', 'WAV 音频'],
+  ['.ogg', 'audio/ogg', 'OGG 音频'],
+  ['.m4a', 'audio/mp4', 'M4A 音频'],
+  ['.mp4', 'video/mp4', 'MP4 视频'],
+  ['.webm', 'video/webm', 'WebM 视频'],
+  ['.mov', 'video/quicktime', 'QuickTime 视频'],
+  ['.woff', 'font/woff', 'WOFF 字体'],
+  ['.woff2', 'font/woff2', 'WOFF2 字体'],
+  ['.ttf', 'font/ttf', 'TrueType 字体'],
+  ['.otf', 'font/otf', 'OpenType 字体'],
+  ['.wasm', 'application/wasm', 'WebAssembly'],
+  ['.wasm (流式)', 'application/wasm', 'WebAssembly streaming'],
+  ['表单（默认）', 'application/x-www-form-urlencoded', 'HTML 表单键值对'],
+  ['表单（文件）', 'multipart/form-data', '含文件上传的表单'],
+  ['事件流', 'text/event-stream', 'SSE 服务器推送'],
+  ['任意二进制', 'application/octet-stream', '未知二进制流']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['扩展名 / 场景', 'MIME 类型', '说明'], DATA, function (r) { T.copy(r[1]); }));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制 MIME' })]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "content-type", "title": "Content-Type 大全", "desc": "常用 MIME 类型速查：文档 / 图片 / 音视频 / 数据", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['.html', 'text/html', '网页'],\n  ['.css', 'text/css', '样式表'],\n  ['.js / .mjs', 'text/javascript', '脚本'],\n  ['.json', 'application/json', 'JSON 数据'],\n  ['.xml', 'application/xml', 'XML'],\n  ['.txt', 'text/plain', '纯文本'],\n  ['.csv', 'text/csv', 'CSV 表格'],\n  ['.pdf', 'application/pdf', 'PDF 文档'],\n  ['.zip', 'application/zip', 'ZIP 压缩包'],\n  ['.gz', 'application/gzip', 'Gzip 压缩包'],\n  ['.7z', 'application/x-7z-compressed', '7z 压缩包'],\n  ['.tar', 'application/x-tar', 'tar 归档'],\n  ['.doc', 'application/msword', 'Word 97-2003'],\n  ['.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Word 文档'],\n  ['.xls', 'application/vnd.ms-excel', 'Excel 97-2003'],\n  ['.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Excel 表格'],\n  ['.pptx', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'PPT'],\n  ['.png', 'image/png', 'PNG 图片'],\n  ['.jpg / .jpeg', 'image/jpeg', 'JPEG 图片'],\n  ['.gif', 'image/gif', 'GIF 动图'],\n  ['.webp', 'image/webp', 'WebP 图片'],\n  ['.avif', 'image/avif', 'AVIF 图片'],\n  ['.svg', 'image/svg+xml', 'SVG 矢量图'],\n  ['.ico', 'image/x-icon', '网站图标'],\n  ['.mp3', 'audio/mpeg', 'MP3 音频'],\n  ['.wav', 'audio/wav', 'WAV 音频'],\n  ['.ogg', 'audio/ogg', 'OGG 音频'],\n  ['.m4a', 'audio/mp4', 'M4A 音频'],\n  ['.mp4', 'video/mp4', 'MP4 视频'],\n  ['.webm', 'video/webm', 'WebM 视频'],\n  ['.mov', 'video/quicktime', 'QuickTime 视频'],\n  ['.woff', 'font/woff', 'WOFF 字体'],\n  ['.woff2', 'font/woff2', 'WOFF2 字体'],\n  ['.ttf', 'font/ttf', 'TrueType 字体'],\n  ['.otf', 'font/otf', 'OpenType 字体'],\n  ['.wasm', 'application/wasm', 'WebAssembly'],\n  ['.wasm (流式)', 'application/wasm', 'WebAssembly streaming'],\n  ['表单（默认）', 'application/x-www-form-urlencoded', 'HTML 表单键值对'],\n  ['表单（文件）', 'multipart/form-data', '含文件上传的表单'],\n  ['事件流', 'text/event-stream', 'SSE 服务器推送'],\n  ['任意二进制', 'application/octet-stream', '未知二进制流']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['扩展名 / 场景', 'MIME 类型', '说明'], DATA, function (r) { T.copy(r[1]); }));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制 MIME' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

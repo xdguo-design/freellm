@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSON 转实体类 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON 转实体类', '从 JSON 生成 Java / C# / Go / TypeScript / Python 数据类', 'json2class');
+var input = T.textarea('{"name":"张三","age":25,"tags":["a"],"address":{"city":"北京"}}');
+input.value = '{"name":"张三","age":25,"tags":["a"],"address":{"city":"北京"}}';
+var output = T.out('');
+var langCls = T.select([{value:'ts',label:'TypeScript'},{value:'java',label:'Java'},{value:'cs',label:'C#'},{value:'go',label:'Go'},{value:'python',label:'Python'}],'ts');
+var clsName = T.input('Root', { class: 'grow mono', placeholder: '根类名' });
+function pascal(s) { return s.split(/[-_.](\w)/).map(function (w, i) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(''); }
+function camel(s) { var p = pascal(s); return p.charAt(0).toLowerCase() + p.slice(1); }
+function jsonType(v) {
+  if (v === null) return 'null';
+  if (Array.isArray(v)) return 'array';
+  return typeof v;
+}
+function generate() {
+  var root;
+  try { root = T.parseJSON(input.value); } catch (e) { output.value = '⚠ ' + e.message; return; }
+  var classes = [];
+  var lang = langCls.value;
+  function typeName(v, name) {
+    var t = jsonType(v);
+    if (t === 'object') { buildClass(v, pascal(name)); return pascal(name); }
+    if (t === 'array') {
+      if (!v.length) return lang === 'go' ? '[]interface{}' : lang === 'ts' ? 'any[]' : lang === 'java' ? 'List<Object>' : lang === 'cs' ? 'object[]' : 'list';
+      var it = typeName(v[0], name);
+      if (lang === 'go') return '[]' + it;
+      if (lang === 'ts') return it + '[]';
+      if (lang === 'java') return 'List<' + it + '>';
+      if (lang === 'cs') return it + '[]';
+      return 'list';
+    }
+    if (t === 'null') return lang === 'go' ? 'interface{}' : lang === 'ts' ? 'null' : lang === 'java' ? 'Object' : lang === 'cs' ? 'object' : 'None';
+    if (t === 'number') return lang === 'go' ? (Number.isInteger(v) ? 'int' : 'float64') : lang === 'ts' ? 'number' : lang === 'java' ? (Number.isInteger(v) ? 'int' : 'double') : lang === 'cs' ? (Number.isInteger(v) ? 'int' : 'double') : 'float';
+    if (t === 'boolean') return lang === 'go' ? 'bool' : lang === 'ts' ? 'boolean' : lang === 'java' ? 'boolean' : lang === 'cs' ? 'bool' : 'bool';
+    return lang === 'go' ? 'string' : lang === 'ts' ? 'string' : lang === 'java' ? 'String' : lang === 'cs' ? 'string' : 'str';
+  }
+  function buildClass(obj, name) {
+    var fields = [];
+    Object.keys(obj).forEach(function (k) {
+      var ft = typeName(obj[k], k);
+      if (obj[k] !== null && jsonType(obj[k]) === 'array' && obj[k].length && jsonType(obj[k][0]) === 'object') buildClass(obj[k][0], pascal(k));
+      fields.push({ json: k, name: /[a-z]/i.test(k) ? (lang === 'go' ? pascal(k) : camel(k)) : camel(k), type: ft, value: obj[k] });
+    });
+    classes.push({ name: name, fields: fields });
+  }
+  if (jsonType(root) !== 'object') { output.value = '⚠ 根节点必须是 JSON 对象'; return; }
+  buildClass(root, pascal(clsName.value || 'Root'));
+  var buf = [];
+  if (lang === 'ts') {
+    classes.forEach(function (c) {
+      buf.push('export interface ' + c.name + ' {');
+      c.fields.forEach(function (f) { buf.push('  ' + f.name + ': ' + f.type + ';'); });
+      buf.push('}\n');
+    });
+  } else if (lang === 'java') {
+    buf.push('import java.util.List;');
+    classes.forEach(function (c) {
+      buf.push('public class ' + c.name + ' {');
+      c.fields.forEach(function (f) { buf.push('    private ' + f.type + ' ' + f.name + ';'); });
+      buf.push('');
+      c.fields.forEach(function (f) {
+        var T2 = f.type.replace('List<', '').replace('>', '');
+        buf.push('    public ' + f.type + ' get' + pascal(f.name) + '() { return this.' + f.name + '; }');
+        buf.push('    public void set' + pascal(f.name) + '(' + f.type + ' ' + f.name + ') { this.' + f.name + ' = ' + f.name + '; }');
+      });
+      buf.push('}\n');
+    });
+  } else if (lang === 'cs') {
+    classes.forEach(function (c) {
+      buf.push('public class ' + c.name);
+      buf.push('{');
+      c.fields.forEach(function (f) { buf.push('    public ' + f.type + ' ' + pascal(f.name) + ' { get; set; }'); });
+      buf.push('}\n');
+    });
+  } else if (lang === 'go') {
+    classes.forEach(function (c) {
+      buf.push('type ' + c.name + ' struct {');
+      c.fields.forEach(function (f) { buf.push('\t' + pascal(f.json) + ' ' + f.type + ' `json:"' + f.json + '"`'); });
+      buf.push('}\n');
+    });
+  } else {
+    buf.push('from dataclasses import dataclass');
+    buf.push('from typing import Any, List, Optional\n');
+    classes.forEach(function (c) {
+      buf.push('@dataclass');
+      buf.push('class ' + c.name + ':');
+      c.fields.forEach(function (f) {
+        var py = f.type.replace('list', 'list').replace(/^str$/, 'str');
+        buf.push('    ' + f.name + ': ' + (f.type === 'list' ? 'list' : f.type === 'None' ? 'None' : f.type));
+      });
+      buf.push('');
+    });
+  }
+  output.value = buf.join('\n');
+}
+[input, langCls, clsName].forEach(function (el) { el.addEventListener('input', T.debounce(generate, 300)); });
+app.appendChild(T.pane([T.field('JSON', input), T.field('实体类', output)]));
+app.appendChild(T.row([T.el('span', { text: '语言' }), langCls, T.el('span', { text: '根类名' }), clsName, T.btnCopy(function () { return output.value; })]));
+generate();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "json2class", "title": "JSON 转实体类", "desc": "从 JSON 生成 Java / C# / Go / TypeScript / Python 数据类", "scripts": "", "code": "var input = T.textarea('{\"name\":\"张三\",\"age\":25,\"tags\":[\"a\"],\"address\":{\"city\":\"北京\"}}');\ninput.value = '{\"name\":\"张三\",\"age\":25,\"tags\":[\"a\"],\"address\":{\"city\":\"北京\"}}';\nvar output = T.out('');\nvar langCls = T.select([{value:'ts',label:'TypeScript'},{value:'java',label:'Java'},{value:'cs',label:'C#'},{value:'go',label:'Go'},{value:'python',label:'Python'}],'ts');\nvar clsName = T.input('Root', { class: 'grow mono', placeholder: '根类名' });\nfunction pascal(s) { return s.split(/[-_.](\\w)/).map(function (w, i) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(''); }\nfunction camel(s) { var p = pascal(s); return p.charAt(0).toLowerCase() + p.slice(1); }\nfunction jsonType(v) {\n  if (v === null) return 'null';\n  if (Array.isArray(v)) return 'array';\n  return typeof v;\n}\nfunction generate() {\n  var root;\n  try { root = T.parseJSON(input.value); } catch (e) { output.value = '⚠ ' + e.message; return; }\n  var classes = [];\n  var lang = langCls.value;\n  function typeName(v, name) {\n    var t = jsonType(v);\n    if (t === 'object') { buildClass(v, pascal(name)); return pascal(name); }\n    if (t === 'array') {\n      if (!v.length) return lang === 'go' ? '[]interface{}' : lang === 'ts' ? 'any[]' : lang === 'java' ? 'List\u003cObject>' : lang === 'cs' ? 'object[]' : 'list';\n      var it = typeName(v[0], name);\n      if (lang === 'go') return '[]' + it;\n      if (lang === 'ts') return it + '[]';\n      if (lang === 'java') return 'List\u003c' + it + '>';\n      if (lang === 'cs') return it + '[]';\n      return 'list';\n    }\n    if (t === 'null') return lang === 'go' ? 'interface{}' : lang === 'ts' ? 'null' : lang === 'java' ? 'Object' : lang === 'cs' ? 'object' : 'None';\n    if (t === 'number') return lang === 'go' ? (Number.isInteger(v) ? 'int' : 'float64') : lang === 'ts' ? 'number' : lang === 'java' ? (Number.isInteger(v) ? 'int' : 'double') : lang === 'cs' ? (Number.isInteger(v) ? 'int' : 'double') : 'float';\n    if (t === 'boolean') return lang === 'go' ? 'bool' : lang === 'ts' ? 'boolean' : lang === 'java' ? 'boolean' : lang === 'cs' ? 'bool' : 'bool';\n    return lang === 'go' ? 'string' : lang === 'ts' ? 'string' : lang === 'java' ? 'String' : lang === 'cs' ? 'string' : 'str';\n  }\n  function buildClass(obj, name) {\n    var fields = [];\n    Object.keys(obj).forEach(function (k) {\n      var ft = typeName(obj[k], k);\n      if (obj[k] !== null && jsonType(obj[k]) === 'array' && obj[k].length && jsonType(obj[k][0]) === 'object') buildClass(obj[k][0], pascal(k));\n      fields.push({ json: k, name: /[a-z]/i.test(k) ? (lang === 'go' ? pascal(k) : camel(k)) : camel(k), type: ft, value: obj[k] });\n    });\n    classes.push({ name: name, fields: fields });\n  }\n  if (jsonType(root) !== 'object') { output.value = '⚠ 根节点必须是 JSON 对象'; return; }\n  buildClass(root, pascal(clsName.value || 'Root'));\n  var buf = [];\n  if (lang === 'ts') {\n    classes.forEach(function (c) {\n      buf.push('export interface ' + c.name + ' {');\n      c.fields.forEach(function (f) { buf.push('  ' + f.name + ': ' + f.type + ';'); });\n      buf.push('}\\n');\n    });\n  } else if (lang === 'java') {\n    buf.push('import java.util.List;');\n    classes.forEach(function (c) {\n      buf.push('public class ' + c.name + ' {');\n      c.fields.forEach(function (f) { buf.push('    private ' + f.type + ' ' + f.name + ';'); });\n      buf.push('');\n      c.fields.forEach(function (f) {\n        var T2 = f.type.replace('List\u003c', '').replace('>', '');\n        buf.push('    public ' + f.type + ' get' + pascal(f.name) + '() { return this.' + f.name + '; }');\n        buf.push('    public void set' + pascal(f.name) + '(' + f.type + ' ' + f.name + ') { this.' + f.name + ' = ' + f.name + '; }');\n      });\n      buf.push('}\\n');\n    });\n  } else if (lang === 'cs') {\n    classes.forEach(function (c) {\n      buf.push('public class ' + c.name);\n      buf.push('{');\n      c.fields.forEach(function (f) { buf.push('    public ' + f.type + ' ' + pascal(f.name) + ' { get; set; }'); });\n      buf.push('}\\n');\n    });\n  } else if (lang === 'go') {\n    classes.forEach(function (c) {\n      buf.push('type ' + c.name + ' struct {');\n      c.fields.forEach(function (f) { buf.push('\\t' + pascal(f.json) + ' ' + f.type + ' `json:\"' + f.json + '\"`'); });\n      buf.push('}\\n');\n    });\n  } else {\n    buf.push('from dataclasses import dataclass');\n    buf.push('from typing import Any, List, Optional\\n');\n    classes.forEach(function (c) {\n      buf.push('@dataclass');\n      buf.push('class ' + c.name + ':');\n      c.fields.forEach(function (f) {\n        var py = f.type.replace('list', 'list').replace(/^str$/, 'str');\n        buf.push('    ' + f.name + ': ' + (f.type === 'list' ? 'list' : f.type === 'None' ? 'None' : f.type));\n      });\n      buf.push('');\n    });\n  }\n  output.value = buf.join('\\n');\n}\n[input, langCls, clsName].forEach(function (el) { el.addEventListener('input', T.debounce(generate, 300)); });\napp.appendChild(T.pane([T.field('JSON', input), T.field('实体类', output)]));\napp.appendChild(T.row([T.el('span', { text: '语言' }), langCls, T.el('span', { text: '根类名' }), clsName, T.btnCopy(function () { return output.value; })]));\ngenerate();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

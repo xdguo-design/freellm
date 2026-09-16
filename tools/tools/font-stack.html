@@ -2,56 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>字体栈推荐 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('字体栈推荐', '常用字体栈组合参考', 'font-stack');
-
-  var STACKS = [
-    ['系统默认', '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'],
-    ['Windows', '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'],
-    ['macOS/iOS', '"SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif'],
-    ['Ubuntu', '"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif'],
-    ['等宽字体 (代码)', '"SF Mono", "Monaco", "Inconsolata", "Fira Code", "Fira Mono", "Droid Sans Mono", monospace'],
-    ['中文字体', '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'],
-    ['衬线字体 (中文)', '"Noto Serif SC", "Source Han Serif SC", "SimSun", "FangSong", serif'],
-    ['衬线字体 (英文)', 'Georgia, "Times New Roman", Times, serif'],
-    ['无衬线字体', '"Helvetica Neue", Helvetica, Arial, sans-serif'],
-    ['手写风格', '"Comic Sans MS", cursive'],
-    ['网页安全', 'Arial, Helvetica, sans-serif'],
-    ['旧版 Windows', 'Tahoma, Verdana, Arial, sans-serif'],
-    ['Google Fonts', '"Inter", "Roboto", "Open Sans", "Lato", "Montserrat"'],
-    ['Fira Code', '"Fira Code", "Source Code Pro", "JetBrains Mono", monospace'],
-    ['Noto Sans', '"Noto Sans", "Noto Sans SC", sans-serif']
-  ];
-
-  var container = T.el('div');
-
-  function render() {
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">名称</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">字体栈</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">操作</th></tr></thead>';
-    html += '<tbody>';
-    STACKS.forEach(function (s) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><strong>' + s[0] + '</strong></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace;font-size:0.85em;word-break:break-all">' + s[1] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><button onclick="navigator.clipboard.writeText(\'' + s[1].replace(/'/g, "\\'") + '\')" style="padding:4px 8px;cursor:pointer">复制</button></td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    container.innerHTML = html;
-  }
-
-  render();
-  app.appendChild(container);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('字体栈推荐', '常用 CSS font-family 字体栈组合参考', 'font-stack');
+var DATA = [
+  ['系统默认（推荐）', 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', '跟随各平台系统字体，零加载成本'],
+  ['中文正文', '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif', '苹方 / 雅黑 / 思源黑体'],
+  ['中文标题（衬线）', '"Noto Serif SC", "Source Han Serif SC", "SimSun", serif', '思源宋体 / 宋体'],
+  ['英文无衬线经典', '"Helvetica Neue", Helvetica, Arial, sans-serif', '经典中性'],
+  ['英文几何现代', '"Inter", "SF Pro Display", "Segoe UI", sans-serif', 'UI 界面现代感'],
+  ['衬线阅读', 'Georgia, "Times New Roman", "Noto Serif", serif', '长文阅读舒适'],
+  ['等宽代码', 'ui-monospace, "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace', '代码 / 数字对齐'],
+  ['等宽终端', '"SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace', '终端风格'],
+  ['手写风格', '"Segoe Print", "Bradley Hand", "Comic Sans MS", cursive', '手写感（慎用正式场合）'],
+  ['圆体可爱', '"Yuanti SC", "PingFang SC", "Comic Sans MS", sans-serif', '圆体 / 儿童向'],
+  ['数字展示', '"DIN Alternate", "Bebas Neue", Impact, sans-serif', '海报数字'],
+  ['报刊排版', '"Noto Serif SC", Georgia, "Songti SC", "SimSun", serif', '衬线中文报刊风'],
+  ['UI 紧凑', '"Inter Tight", "Roboto Condensed", "Arial Narrow", sans-serif', '窄体节省空间'],
+  ['老式终端', '"IBM Plex Mono", "Courier New", monospace', '复古终端感']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['场景', '字体栈', '说明'], DATA, function (r) { T.copy(r[1]); }));
+app.appendChild(T.row([T.el('span', { text: '点击行复制字体栈' })]));
+app.appendChild(wrap);
+var demo = T.el('div');
+DATA.forEach(function (d2) {
+  var row = T.el('div', { style: 'margin-bottom:10px' });
+  row.appendChild(T.el('div', { text: d2[0] + ' — The quick brown fox 0123456789 永和九年', style: 'font-family:' + d2[1] + ';font-size:16px;border-bottom:1px solid var(--line);padding:6px 0' }));
+  demo.appendChild(row);
+});
+app.appendChild(T.el('span', { text: '本机预览效果', class: 'field' }));
+app.appendChild(demo);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "font-stack", "title": "字体栈推荐", "desc": "常用 CSS font-family 字体栈组合参考", "scripts": "", "code": "var DATA = [\n  ['系统默认（推荐）', 'system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif', '跟随各平台系统字体，零加载成本'],\n  ['中文正文', '\"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"Noto Sans CJK SC\", sans-serif', '苹方 / 雅黑 / 思源黑体'],\n  ['中文标题（衬线）', '\"Noto Serif SC\", \"Source Han Serif SC\", \"SimSun\", serif', '思源宋体 / 宋体'],\n  ['英文无衬线经典', '\"Helvetica Neue\", Helvetica, Arial, sans-serif', '经典中性'],\n  ['英文几何现代', '\"Inter\", \"SF Pro Display\", \"Segoe UI\", sans-serif', 'UI 界面现代感'],\n  ['衬线阅读', 'Georgia, \"Times New Roman\", \"Noto Serif\", serif', '长文阅读舒适'],\n  ['等宽代码', 'ui-monospace, \"JetBrains Mono\", \"Fira Code\", Consolas, \"Courier New\", monospace', '代码 / 数字对齐'],\n  ['等宽终端', '\"SF Mono\", \"Cascadia Code\", \"JetBrains Mono\", Menlo, Consolas, monospace', '终端风格'],\n  ['手写风格', '\"Segoe Print\", \"Bradley Hand\", \"Comic Sans MS\", cursive', '手写感（慎用正式场合）'],\n  ['圆体可爱', '\"Yuanti SC\", \"PingFang SC\", \"Comic Sans MS\", sans-serif', '圆体 / 儿童向'],\n  ['数字展示', '\"DIN Alternate\", \"Bebas Neue\", Impact, sans-serif', '海报数字'],\n  ['报刊排版', '\"Noto Serif SC\", Georgia, \"Songti SC\", \"SimSun\", serif', '衬线中文报刊风'],\n  ['UI 紧凑', '\"Inter Tight\", \"Roboto Condensed\", \"Arial Narrow\", sans-serif', '窄体节省空间'],\n  ['老式终端', '\"IBM Plex Mono\", \"Courier New\", monospace', '复古终端感']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['场景', '字体栈', '说明'], DATA, function (r) { T.copy(r[1]); }));\napp.appendChild(T.row([T.el('span', { text: '点击行复制字体栈' })]));\napp.appendChild(wrap);\nvar demo = T.el('div');\nDATA.forEach(function (d2) {\n  var row = T.el('div', { style: 'margin-bottom:10px' });\n  row.appendChild(T.el('div', { text: d2[0] + ' — The quick brown fox 0123456789 永和九年', style: 'font-family:' + d2[1] + ';font-size:16px;border-bottom:1px solid var(--line);padding:6px 0' }));\n  demo.appendChild(row);\n});\napp.appendChild(T.el('span', { text: '本机预览效果', class: 'field' }));\napp.appendChild(demo);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>用户反馈 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('用户反馈', '提交反馈与建议：生成 mailto / GitHub Issue 链接', 'feedback');
+var type = T.select([{value:'bug',label:'🐛 Bug 反馈'},{value:'feature',label:'💡 功能建议'},{value:'praise',label:'❤️ 好评鼓励'},{value:'other',label:'📝 其他'}],'feature');
+var tool = T.input('', { class: 'grow', placeholder: '相关工具（可选），如：JSON 格式化' });
+var body = T.textarea('请描述你的反馈…\n\n1. 问题描述：\n2. 复现步骤：\n3. 期望行为：', true);
+body.style.minHeight = '160px';
+var env = T.el('div');
+function envInfo() {
+  return '\n\n---\n环境：' + navigator.userAgent + ' · ' + screen.width + 'x' + screen.height;
+}
+function render() {
+  T.clearEl(env);
+  var title = '[' + type.value.toUpperCase() + '] ' + (tool.value || '工具站反馈');
+  var content = body.value + envInfo();
+  var gh = 'https://github.com/freellm/freellm/issues/new?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(content);
+  var mail = 'mailto:feedback@freellm.top?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(content);
+  env.appendChild(T.kvTable([
+    ['标题预览', title]
+  ]));
+  env.appendChild(T.row([T.button('通过 GitHub Issue 提交', function () { window.open(gh, '_blank'); }, true),
+    T.button('通过邮件提交', function () { location.href = mail; })]));
+}
+[type, tool, body].forEach(function (el) { el.addEventListener('input', T.debounce(render, 300)); });
+app.appendChild(T.pane([T.field('反馈类型', type), T.field('相关工具', tool)]));
+app.appendChild(body);
+app.appendChild(env);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "feedback", "title": "用户反馈", "desc": "提交反馈与建议：生成 mailto / GitHub Issue 链接", "scripts": "", "code": "var type = T.select([{value:'bug',label:'🐛 Bug 反馈'},{value:'feature',label:'💡 功能建议'},{value:'praise',label:'❤️ 好评鼓励'},{value:'other',label:'📝 其他'}],'feature');\nvar tool = T.input('', { class: 'grow', placeholder: '相关工具（可选），如：JSON 格式化' });\nvar body = T.textarea('请描述你的反馈…\\n\\n1. 问题描述：\\n2. 复现步骤：\\n3. 期望行为：', true);\nbody.style.minHeight = '160px';\nvar env = T.el('div');\nfunction envInfo() {\n  return '\\n\\n---\\n环境：' + navigator.userAgent + ' · ' + screen.width + 'x' + screen.height;\n}\nfunction render() {\n  T.clearEl(env);\n  var title = '[' + type.value.toUpperCase() + '] ' + (tool.value || '工具站反馈');\n  var content = body.value + envInfo();\n  var gh = 'https://github.com/freellm/freellm/issues/new?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(content);\n  var mail = 'mailto:feedback@freellm.top?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(content);\n  env.appendChild(T.kvTable([\n    ['标题预览', title]\n  ]));\n  env.appendChild(T.row([T.button('通过 GitHub Issue 提交', function () { window.open(gh, '_blank'); }, true),\n    T.button('通过邮件提交', function () { location.href = mail; })]));\n}\n[type, tool, body].forEach(function (el) { el.addEventListener('input', T.debounce(render, 300)); });\napp.appendChild(T.pane([T.field('反馈类型', type), T.field('相关工具', tool)]));\napp.appendChild(body);\napp.appendChild(env);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

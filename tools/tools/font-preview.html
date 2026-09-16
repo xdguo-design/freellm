@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>字体预览器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('字体预览器', '上传 TTF / OTF / WOFF 字体文件，实时预览任意文案', 'font-preview');
+var pick = T.el('input', { type: 'file', accept: '.ttf,.otf,.woff,.woff2', style: 'display:none' });
+document.body.appendChild(pick);
+var textIn = T.textarea('FreeLLM 免费工具站\nThe quick brown fox jumps over the lazy dog.\n永和九年，岁在癸丑。0123456789', true);
+textIn.value = 'FreeLLM 免费工具站\nThe quick brown fox jumps over the lazy dog.\n永和九年，岁在癸丑。0123456789';
+var size = T.range(14, 72, 1, 28);
+var preview = T.el('div', { class: 'output', style: 'min-height:220px;font-size:28px;line-height:1.6;white-space:pre-wrap;font-family:var(--font-sans)' });
+var fname = T.badge('未选择字体');
+function setFace(buf, name) {
+  var font = new FontFace('UserFont', buf);
+  font.load().then(function (f) {
+    document.fonts.add(f);
+    preview.style.fontFamily = 'UserFont';
+    fname.textContent = '✓ ' + name;
+    fname.className = 'badge ok';
+  }).catch(function (e) { T.toast('字体解析失败：' + e.message); });
+}
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () { setFace(fr.result, f.name); };
+  fr.readAsArrayBuffer(f);
+});
+function render() {
+  preview.style.fontSize = size.value + 'px';
+  preview.textContent = textIn.value;
+}
+app.appendChild(T.row([T.button('选择字体文件', function () { pick.click(); }, true), fname]));
+app.appendChild(T.row([T.el('span', { text: '字号' }), size]));
+app.appendChild(T.pane([T.field('预览文案', textIn)], true));
+app.appendChild(preview);
+textIn.addEventListener('input', render);
+size.addEventListener('input', render);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "font-preview", "title": "字体预览器", "desc": "上传 TTF / OTF / WOFF 字体文件，实时预览任意文案", "scripts": "", "code": "var pick = T.el('input', { type: 'file', accept: '.ttf,.otf,.woff,.woff2', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar textIn = T.textarea('FreeLLM 免费工具站\\nThe quick brown fox jumps over the lazy dog.\\n永和九年，岁在癸丑。0123456789', true);\ntextIn.value = 'FreeLLM 免费工具站\\nThe quick brown fox jumps over the lazy dog.\\n永和九年，岁在癸丑。0123456789';\nvar size = T.range(14, 72, 1, 28);\nvar preview = T.el('div', { class: 'output', style: 'min-height:220px;font-size:28px;line-height:1.6;white-space:pre-wrap;font-family:var(--font-sans)' });\nvar fname = T.badge('未选择字体');\nfunction setFace(buf, name) {\n  var font = new FontFace('UserFont', buf);\n  font.load().then(function (f) {\n    document.fonts.add(f);\n    preview.style.fontFamily = 'UserFont';\n    fname.textContent = '✓ ' + name;\n    fname.className = 'badge ok';\n  }).catch(function (e) { T.toast('字体解析失败：' + e.message); });\n}\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  var fr = new FileReader();\n  fr.onload = function () { setFace(fr.result, f.name); };\n  fr.readAsArrayBuffer(f);\n});\nfunction render() {\n  preview.style.fontSize = size.value + 'px';\n  preview.textContent = textIn.value;\n}\napp.appendChild(T.row([T.button('选择字体文件', function () { pick.click(); }, true), fname]));\napp.appendChild(T.row([T.el('span', { text: '字号' }), size]));\napp.appendChild(T.pane([T.field('预览文案', textIn)], true));\napp.appendChild(preview);\ntextIn.addEventListener('input', render);\nsize.addEventListener('input', render);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

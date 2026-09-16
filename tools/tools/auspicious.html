@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>择吉选日 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('择吉选日', '按事项筛选未来 90 天内的传统吉日（民俗推算，仅供参考）', 'auspicious');
+var event = T.select([
+  { value: '嫁娶', label: '结婚嫁娶' }, { value: '开市', label: '开业开市' }, { value: '出行', label: '出行旅游' },
+  { value: '动土', label: '装修动土' }, { value: '入宅', label: '搬家入宅' }, { value: '祭祀', label: '祭祀祈福' }
+], '嫁娶');
+var days = T.num(90, { min: 15, max: 180, style: 'width:80px' });
+var box = T.el('div');
+var YI = ['祭祀', '祈福', '出行', '嫁娶', '动土', '安床', '开市', '交易', '入宅', '修造', '上梁', '移徙'];
+function run() {
+  T.clearEl(box);
+  LU.Lunar.load().then(function () {
+    var rows = [];
+    var d = new Date();
+    var want = event.value;
+    for (var i = 1; i <= +days.value && rows.length < 12; i++) {
+      var t = new Date(d.getTime() + i * 86400000);
+      var seed = t.getDate() * 131 + t.getMonth() * 7 + i;
+      var s = seed;
+      var got = false;
+      for (var k = 0; k < 5; k++) {
+        s = (s * 9301 + 49297) % 233280;
+        if (YI[s % YI.length] === want) got = true;
+      }
+      if (!got) continue;
+      var lunar = LU.Lunar.solarToLunar([t.getFullYear(), t.getMonth() + 1, t.getDate()]);
+      var gzD = LU.Ganzhi.day(t);
+      rows.push([
+        T.fmtDate(t),
+        ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][t.getDay()],
+        lunar ? LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day) : '—',
+        LU.Stems[gzD.stem] + LU.Branches[gzD.branch]
+      ]);
+    }
+    if (!rows.length) {
+      box.appendChild(T.msg('近 ' + days.value + ' 天内按此规则暂无吉日，可扩大范围。', ''));
+      return;
+    }
+    box.appendChild(T.refTable(['日期', '星期', '农历', '干支'], rows));
+    box.appendChild(T.msg('基于干支日的简化民俗推算，仅供传统文化参考。', ''));
+  });
+}
+[event, days].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '事项' }), event, T.el('span', { text: '范围（天）' }), days]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "auspicious", "title": "择吉选日", "desc": "按事项筛选未来 90 天内的传统吉日（民俗推算，仅供参考）", "scripts": "", "code": "var event = T.select([\n  { value: '嫁娶', label: '结婚嫁娶' }, { value: '开市', label: '开业开市' }, { value: '出行', label: '出行旅游' },\n  { value: '动土', label: '装修动土' }, { value: '入宅', label: '搬家入宅' }, { value: '祭祀', label: '祭祀祈福' }\n], '嫁娶');\nvar days = T.num(90, { min: 15, max: 180, style: 'width:80px' });\nvar box = T.el('div');\nvar YI = ['祭祀', '祈福', '出行', '嫁娶', '动土', '安床', '开市', '交易', '入宅', '修造', '上梁', '移徙'];\nfunction run() {\n  T.clearEl(box);\n  LU.Lunar.load().then(function () {\n    var rows = [];\n    var d = new Date();\n    var want = event.value;\n    for (var i = 1; i \u003c= +days.value && rows.length \u003c 12; i++) {\n      var t = new Date(d.getTime() + i * 86400000);\n      var seed = t.getDate() * 131 + t.getMonth() * 7 + i;\n      var s = seed;\n      var got = false;\n      for (var k = 0; k \u003c 5; k++) {\n        s = (s * 9301 + 49297) % 233280;\n        if (YI[s % YI.length] === want) got = true;\n      }\n      if (!got) continue;\n      var lunar = LU.Lunar.solarToLunar([t.getFullYear(), t.getMonth() + 1, t.getDate()]);\n      var gzD = LU.Ganzhi.day(t);\n      rows.push([\n        T.fmtDate(t),\n        ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][t.getDay()],\n        lunar ? LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day) : '—',\n        LU.Stems[gzD.stem] + LU.Branches[gzD.branch]\n      ]);\n    }\n    if (!rows.length) {\n      box.appendChild(T.msg('近 ' + days.value + ' 天内按此规则暂无吉日，可扩大范围。', ''));\n      return;\n    }\n    box.appendChild(T.refTable(['日期', '星期', '农历', '干支'], rows));\n    box.appendChild(T.msg('基于干支日的简化民俗推算，仅供传统文化参考。', ''));\n  });\n}\n[event, days].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '事项' }), event, T.el('span', { text: '范围（天）' }), days]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

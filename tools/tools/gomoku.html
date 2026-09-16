@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>五子棋 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('五子棋', '双人对战五子棋（同屏轮流），五连即胜', 'gomoku');
+var N = 15;
+var board = [];
+var current = 1;
+var history = [];
+var canvas = T.el('canvas', { width: 480, height: 480, style: 'width:100%;max-width:480px;border:1px solid var(--line);border-radius:10px;display:block;margin:0 auto;background:#E8C88F;cursor:crosshair' });
+var ctx = canvas.getContext('2d');
+var turnBadge = T.badge('⚫ 黑方先行');
+function init() {
+  board = [];
+  for (var i = 0; i < N * N; i++) board.push(0);
+  history = [];
+  current = 1;
+  draw();
+}
+function draw() {
+  var CELL = canvas.width / (N + 1);
+  ctx.fillStyle = '#E8C88F';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = 'rgba(90,60,20,.55)';
+  ctx.lineWidth = 1;
+  for (var i = 1; i <= N; i++) {
+    ctx.beginPath();
+    ctx.moveTo(CELL, i * CELL);
+    ctx.lineTo(canvas.width - CELL, i * CELL);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(i * CELL, CELL);
+    ctx.lineTo(i * CELL, canvas.height - CELL);
+    ctx.stroke();
+  }
+  board.forEach(function (v, idx) {
+    if (!v) return;
+    var x = (idx % N + 1) * CELL;
+    var y = (Math.floor(idx / N) + 1) * CELL;
+    ctx.beginPath();
+    ctx.arc(x, y, CELL / 2 - 3, 0, Math.PI * 2);
+    ctx.fillStyle = v === 1 ? '#1a1a1a' : '#fafafa';
+    ctx.fill();
+    if (v === 2) { ctx.strokeStyle = '#999'; ctx.stroke(); }
+  });
+  if (history.length) {
+    var last = history[history.length - 1];
+    ctx.strokeStyle = '#E74C3C';
+    ctx.lineWidth = 2;
+    ctx.strokeRect((last % N + 1) * CELL - CELL / 2 + 3, (Math.floor(last / N) + 1) * CELL - CELL / 2 + 3, CELL - 6, CELL - 6);
+  }
+  turnBadge.textContent = current === 1 ? '⚫ 黑方落子' : '⚪ 白方落子';
+  turnBadge.className = 'badge ' + (current === 1 ? '' : 'blue');
+}
+function checkWin(idx, player) {
+  var r = Math.floor(idx / N), c = idx % N;
+  var dirs = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  for (var d = 0; d < 4; d++) {
+    var count = 1;
+    for (var sign = -1; sign <= 1; sign += 2) {
+      var rr = r + dirs[d][0] * sign, cc = c + dirs[d][1] * sign;
+      while (rr >= 0 && rr < N && cc >= 0 && cc < N && board[rr * N + cc] === player) {
+        count++;
+        rr += dirs[d][0] * sign;
+        cc += dirs[d][1] * sign;
+      }
+    }
+    if (count >= 5) return true;
+  }
+  return false;
+}
+canvas.addEventListener('click', function (e) {
+  var rect = canvas.getBoundingClientRect();
+  var CELL = canvas.width / (N + 1);
+  var x = Math.round((e.clientX - rect.left) * (canvas.width / rect.width) / CELL) - 1;
+  var y = Math.round((e.clientY - rect.top) * (canvas.height / rect.height) / CELL) - 1;
+  if (x < 0 || y < 0 || x >= N || y >= N) return;
+  var idx = y * N + x;
+  if (board[idx]) return;
+  board[idx] = current;
+  history.push(idx);
+  draw();
+  if (checkWin(idx, current)) {
+    setTimeout(function () { alert((current === 1 ? '⚫ 黑方' : '⚪ 白方') + ' 获胜！五连达成 🎉'); }, 50);
+    return;
+  }
+  current = current === 1 ? 2 : 1;
+  draw();
+});
+app.appendChild(T.row([turnBadge, T.button('悔棋', function () {
+  if (!history.length) return;
+  var last = history.pop();
+  board[last] = 0;
+  current = current === 1 ? 2 : 1;
+  draw();
+}), T.button('重新开局', init, true)]));
+app.appendChild(canvas);
+init();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "gomoku", "title": "五子棋", "desc": "双人对战五子棋（同屏轮流），五连即胜", "scripts": "", "code": "var N = 15;\nvar board = [];\nvar current = 1;\nvar history = [];\nvar canvas = T.el('canvas', { width: 480, height: 480, style: 'width:100%;max-width:480px;border:1px solid var(--line);border-radius:10px;display:block;margin:0 auto;background:#E8C88F;cursor:crosshair' });\nvar ctx = canvas.getContext('2d');\nvar turnBadge = T.badge('⚫ 黑方先行');\nfunction init() {\n  board = [];\n  for (var i = 0; i \u003c N * N; i++) board.push(0);\n  history = [];\n  current = 1;\n  draw();\n}\nfunction draw() {\n  var CELL = canvas.width / (N + 1);\n  ctx.fillStyle = '#E8C88F';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  ctx.strokeStyle = 'rgba(90,60,20,.55)';\n  ctx.lineWidth = 1;\n  for (var i = 1; i \u003c= N; i++) {\n    ctx.beginPath();\n    ctx.moveTo(CELL, i * CELL);\n    ctx.lineTo(canvas.width - CELL, i * CELL);\n    ctx.stroke();\n    ctx.beginPath();\n    ctx.moveTo(i * CELL, CELL);\n    ctx.lineTo(i * CELL, canvas.height - CELL);\n    ctx.stroke();\n  }\n  board.forEach(function (v, idx) {\n    if (!v) return;\n    var x = (idx % N + 1) * CELL;\n    var y = (Math.floor(idx / N) + 1) * CELL;\n    ctx.beginPath();\n    ctx.arc(x, y, CELL / 2 - 3, 0, Math.PI * 2);\n    ctx.fillStyle = v === 1 ? '#1a1a1a' : '#fafafa';\n    ctx.fill();\n    if (v === 2) { ctx.strokeStyle = '#999'; ctx.stroke(); }\n  });\n  if (history.length) {\n    var last = history[history.length - 1];\n    ctx.strokeStyle = '#E74C3C';\n    ctx.lineWidth = 2;\n    ctx.strokeRect((last % N + 1) * CELL - CELL / 2 + 3, (Math.floor(last / N) + 1) * CELL - CELL / 2 + 3, CELL - 6, CELL - 6);\n  }\n  turnBadge.textContent = current === 1 ? '⚫ 黑方落子' : '⚪ 白方落子';\n  turnBadge.className = 'badge ' + (current === 1 ? '' : 'blue');\n}\nfunction checkWin(idx, player) {\n  var r = Math.floor(idx / N), c = idx % N;\n  var dirs = [[0, 1], [1, 0], [1, 1], [1, -1]];\n  for (var d = 0; d \u003c 4; d++) {\n    var count = 1;\n    for (var sign = -1; sign \u003c= 1; sign += 2) {\n      var rr = r + dirs[d][0] * sign, cc = c + dirs[d][1] * sign;\n      while (rr >= 0 && rr \u003c N && cc >= 0 && cc \u003c N && board[rr * N + cc] === player) {\n        count++;\n        rr += dirs[d][0] * sign;\n        cc += dirs[d][1] * sign;\n      }\n    }\n    if (count >= 5) return true;\n  }\n  return false;\n}\ncanvas.addEventListener('click', function (e) {\n  var rect = canvas.getBoundingClientRect();\n  var CELL = canvas.width / (N + 1);\n  var x = Math.round((e.clientX - rect.left) * (canvas.width / rect.width) / CELL) - 1;\n  var y = Math.round((e.clientY - rect.top) * (canvas.height / rect.height) / CELL) - 1;\n  if (x \u003c 0 || y \u003c 0 || x >= N || y >= N) return;\n  var idx = y * N + x;\n  if (board[idx]) return;\n  board[idx] = current;\n  history.push(idx);\n  draw();\n  if (checkWin(idx, current)) {\n    setTimeout(function () { alert((current === 1 ? '⚫ 黑方' : '⚪ 白方') + ' 获胜！五连达成 🎉'); }, 50);\n    return;\n  }\n  current = current === 1 ? 2 : 1;\n  draw();\n});\napp.appendChild(T.row([turnBadge, T.button('悔棋', function () {\n  if (!history.length) return;\n  var last = history.pop();\n  board[last] = 0;\n  current = current === 1 ? 2 : 1;\n  draw();\n}), T.button('重新开局', init, true)]));\napp.appendChild(canvas);\ninit();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

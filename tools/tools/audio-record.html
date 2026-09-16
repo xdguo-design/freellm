@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>录音机 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('录音机', '浏览器录音（麦克风）→ WebM 音频下载，需授权', 'audio-record');
+var status = T.badge('未开始');
+var timeEl = T.stat('00:00', '时长');
+var list = T.el('div');
+var mediaRecorder = null, chunks = [], timer = 0, seconds = 0;
+function startRec() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+    mediaRecorder = new MediaRecorder(stream);
+    chunks = [];
+    mediaRecorder.ondataavailable = function (e) { chunks.push(e.data); };
+    mediaRecorder.onstop = function () {
+      var blob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+      var url = URL.createObjectURL(blob);
+      var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)' });
+      var audio = T.el('audio', { controls: '', src: url, style: 'flex:1;max-width:420px' });
+      row.appendChild(audio);
+      row.appendChild(T.el('span', { text: T.fmtBytes(blob.size), style: 'color:var(--ink2);font-size:12px' }));
+      row.appendChild(T.button('下载', function () { T.download('recording-' + Date.now() + '.webm', blob); }));
+      list.insertBefore(row, list.firstChild);
+      stream.getTracks().forEach(function (t) { t.stop(); });
+    };
+    mediaRecorder.start();
+    status.textContent = '🔴 录音中';
+    status.className = 'badge warn';
+    seconds = 0;
+    timer = setInterval(function () {
+      seconds++;
+      timeEl.firstChild.textContent = T.pad2(Math.floor(seconds / 60)) + ':' + T.pad2(seconds % 60);
+    }, 1000);
+  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });
+}
+function stopRec() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+    clearInterval(timer);
+    status.textContent = '已停止';
+    status.className = 'badge';
+  }
+}
+app.appendChild(T.row([T.button('开始录音', startRec, true), T.button('停止', stopRec), timeEl, status]));
+app.appendChild(list);
+app.appendChild(T.msg('需要浏览器授权麦克风；输出为 WebM/Opus 格式（各浏览器通用）。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "audio-record", "title": "录音机", "desc": "浏览器录音（麦克风）→ WebM 音频下载，需授权", "scripts": "", "code": "var status = T.badge('未开始');\nvar timeEl = T.stat('00:00', '时长');\nvar list = T.el('div');\nvar mediaRecorder = null, chunks = [], timer = 0, seconds = 0;\nfunction startRec() {\n  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {\n    mediaRecorder = new MediaRecorder(stream);\n    chunks = [];\n    mediaRecorder.ondataavailable = function (e) { chunks.push(e.data); };\n    mediaRecorder.onstop = function () {\n      var blob = new Blob(chunks, { type: mediaRecorder.mimeType || 'audio/webm' });\n      var url = URL.createObjectURL(blob);\n      var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)' });\n      var audio = T.el('audio', { controls: '', src: url, style: 'flex:1;max-width:420px' });\n      row.appendChild(audio);\n      row.appendChild(T.el('span', { text: T.fmtBytes(blob.size), style: 'color:var(--ink2);font-size:12px' }));\n      row.appendChild(T.button('下载', function () { T.download('recording-' + Date.now() + '.webm', blob); }));\n      list.insertBefore(row, list.firstChild);\n      stream.getTracks().forEach(function (t) { t.stop(); });\n    };\n    mediaRecorder.start();\n    status.textContent = '🔴 录音中';\n    status.className = 'badge warn';\n    seconds = 0;\n    timer = setInterval(function () {\n      seconds++;\n      timeEl.firstChild.textContent = T.pad2(Math.floor(seconds / 60)) + ':' + T.pad2(seconds % 60);\n    }, 1000);\n  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });\n}\nfunction stopRec() {\n  if (mediaRecorder && mediaRecorder.state !== 'inactive') {\n    mediaRecorder.stop();\n    clearInterval(timer);\n    status.textContent = '已停止';\n    status.className = 'badge';\n  }\n}\napp.appendChild(T.row([T.button('开始录音', startRec, true), T.button('停止', stopRec), timeEl, status]));\napp.appendChild(list);\napp.appendChild(T.msg('需要浏览器授权麦克风；输出为 WebM/Opus 格式（各浏览器通用）。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

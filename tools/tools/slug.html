@@ -2,54 +2,58 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>URL Slug 生成 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('URL Slug 生成', 'SEO 友好 URL 路径', 'slug');
-
-  var separator = T.select([
-    { value: '-', label: '短横线 (kebab-case)' },
-    { value: '_', label: '下划线 (snake_case)' }
-  ]);
-  var lowercase = T.el('label', { html: '<input type="checkbox" checked> 转小写' });
-  var input = T.textarea('输入标题或文本...');
-  var output = T.textarea('Slug', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { output.value = ''; return; }
-
-    var slug = v
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^\w\s\u4e00-\u9fa5-]/g, '')
-      .replace(/\s+/g, separator.value);
-
-    if (lowercase.checked) {
-      slug = slug.toLowerCase();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('URL Slug 生成', 'SEO 友好 URL 路径：中文转拼音、小写、连字符', 'slug');
+var input = T.textarea('免费 AI 资源导航 Best Free Tools!');
+input.value = '免费 AI 资源导航 Best Free Tools!';
+var output = T.out('');
+var sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');
+var keepCn = T.check('中文转 URL 编码（否则移除）');
+var PINYIN = null;
+fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });
+function toSlug(s) {
+  var parts = [];
+  var buf = '';
+  Array.from(s.toLowerCase()).forEach(function (ch) {
+    if (/[a-z0-9]/.test(ch)) buf += ch;
+    else if (/[\u4e00-\u9fff]/.test(ch)) {
+      if (PINYIN && PINYIN[ch]) buf += PINYIN[ch].normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ü/g, 'v');
+      else if (keepCn._input.checked) buf += encodeURIComponent(ch);
     }
-
-    output.value = slug;
-  }
-
-  separator.addEventListener('change', run);
-  lowercase.querySelector('input').addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [separator, lowercase, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+    else {
+      if (buf) { parts.push(buf); buf = ''; }
+    }
+  });
+  if (buf) parts.push(buf);
+  return parts.join(sep.value);
+}
+function run() {
+  output.value = toSlug(input.value);
+}
+input.addEventListener('input', T.debounce(run, 200));
+app.appendChild(T.pane([T.field('标题 / 文本', input), T.field('URL Slug', output)]));
+app.appendChild(T.row([sep, keepCn, T.btnCopy(function () { return output.value; }),
+  T.el('span', { text: '中文自动转拼音（无声调）' })]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "slug", "title": "URL Slug 生成", "desc": "SEO 友好 URL 路径：中文转拼音、小写、连字符", "scripts": "", "code": "var input = T.textarea('免费 AI 资源导航 Best Free Tools!');\ninput.value = '免费 AI 资源导航 Best Free Tools!';\nvar output = T.out('');\nvar sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');\nvar keepCn = T.check('中文转 URL 编码（否则移除）');\nvar PINYIN = null;\nfetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });\nfunction toSlug(s) {\n  var parts = [];\n  var buf = '';\n  Array.from(s.toLowerCase()).forEach(function (ch) {\n    if (/[a-z0-9]/.test(ch)) buf += ch;\n    else if (/[\\u4e00-\\u9fff]/.test(ch)) {\n      if (PINYIN && PINYIN[ch]) buf += PINYIN[ch].normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/ü/g, 'v');\n      else if (keepCn._input.checked) buf += encodeURIComponent(ch);\n    }\n    else {\n      if (buf) { parts.push(buf); buf = ''; }\n    }\n  });\n  if (buf) parts.push(buf);\n  return parts.join(sep.value);\n}\nfunction run() {\n  output.value = toSlug(input.value);\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('标题 / 文本', input), T.field('URL Slug', output)]));\napp.appendChild(T.row([sep, keepCn, T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '中文自动转拼音（无声调）' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

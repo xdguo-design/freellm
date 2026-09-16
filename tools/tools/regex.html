@@ -2,80 +2,81 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>正则表达式测试 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('正则表达式测试', '在线正则测试与匹配高亮', 'regex');
-
-  var regexInput = T.el('input', { type: 'text', placeholder: '正则表达式', style: 'flex:1;font-family:monospace' });
-  var flags = T.el('input', { type: 'text', value: 'g', placeholder: 'flags', style: 'width:60px;font-family:monospace' });
-  var input = T.textarea('输入测试文本...');
-  var output = T.el('div', { class: 'output', style: 'min-height:100px;white-space:pre-wrap;line-height:1.8' });
-  var matches = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace' });
-
-  function run() {
-    var pattern = regexInput.value;
-    var text = input.value;
-    if (!pattern || !text) {
-      output.innerHTML = '';
-      matches.textContent = '';
-      return;
-    }
-
-    try {
-      var regex = new RegExp(pattern, flags.value);
-      var html = '';
-      var lastIndex = 0;
-      var match;
-      var matchList = [];
-
-      while ((match = regex.exec(text)) !== null) {
-        html += escapeHtml(text.slice(lastIndex, match.index));
-        html += '<mark style="background:#ffd700;padding:2px;border-radius:2px">' + escapeHtml(match[0]) + '</mark>';
-        lastIndex = regex.lastIndex;
-        matchList.push({ index: match.index, value: match[0], groups: match.slice(1) });
-        if (!flags.value.includes('g')) break;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('正则表达式测试', '在线正则测试：匹配高亮、捕获组、常用标志位', 'regex');
+var pattern = T.input('\\b\\w+@\\w+\\.\\w+\\b', { class: 'grow mono', placeholder: '正则表达式（无需斜杠）' });
+var flags = T.input('g', { class: 'mono', style: 'width:70px', placeholder: 'flags' });
+var input = T.textarea('测试文本…');
+input.value = '联系我们：hello@freellm.top 或 support@example.com';
+var box = T.el('div', { class: 'output', style: 'min-height:110px;font-family:var(--font-sans)' });
+var groupInfo = T.el('div');
+function run() {
+  T.clearEl(box);
+  T.clearEl(groupInfo);
+  var v = input.value;
+  if (!pattern.value) { box.textContent = v; return; }
+  var re;
+  try { re = new RegExp(pattern.value, flags.value); }
+  catch (e) { box.textContent = '⚠ 正则错误：' + e.message; return; }
+  var last = 0, count = 0;
+  if (re.global) {
+    var m;
+    while ((m = re.exec(v)) && count < 500) {
+      if (m.index > last) box.appendChild(document.createTextNode(v.slice(last, m.index)));
+      var mark = T.el('mark', { text: m[0], style: 'background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px' });
+      mark.title = '第 ' + (count + 1) + ' 处匹配';
+      box.appendChild(mark);
+      last = m.index + m[0].length;
+      if (m[0] === '') re.lastIndex++;
+      var groups = m.slice(1);
+      if (groups.length) {
+        groupInfo.appendChild(T.el('p', { text: '第 ' + (count + 1) + ' 处：' + JSON.stringify(groups), style: 'margin:2px 0;font-family:var(--font-mono);font-size:12px' }));
       }
-      html += escapeHtml(text.slice(lastIndex));
-      output.innerHTML = html;
-
-      if (matchList.length) {
-        matches.textContent = matchList.map(function (m, i) {
-          return 'Match ' + (i + 1) + ': "' + m.value + '" at index ' + m.index;
-        }).join('\n');
-      } else {
-        matches.textContent = 'No matches found';
-      }
-    } catch (e) {
-      output.innerHTML = '<span style="color:red">' + e.message + '</span>';
-      matches.textContent = '';
+      count++;
     }
+    box.appendChild(document.createTextNode(v.slice(last)));
+  } else {
+    var m2 = re.exec(v);
+    if (m2) {
+      box.appendChild(document.createTextNode(v.slice(0, m2.index)));
+      box.appendChild(T.el('mark', { text: m2[0], style: 'background:var(--accent-soft);color:var(--accent)' }));
+      box.appendChild(document.createTextNode(v.slice(m2.index + m2[0].length)));
+      count = 1;
+    } else box.textContent = v;
   }
-
-  function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  if (!count) {
+    var none = T.el('span', { text: '（无匹配）', style: 'color:var(--ink3)' });
+    box.appendChild(none);
   }
-
-  regexInput.addEventListener('input', run);
-  flags.addEventListener('input', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '/' }), regexInput, T.el('span', { text: '/' }), flags
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'field', text: '匹配结果:' }));
-  app.appendChild(matches);
-  app.appendChild(T.el('div', { class: 'field', text: '高亮预览:' }));
-  app.appendChild(output);
+}
+[pattern, flags, input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '/ ' }), pattern, T.el('span', { text: '/ ' }), flags]));
+app.appendChild(T.el('p', { text: '常用：\\d 数字 · \\w 单词字符 · \\s 空白 · + 至少一次 · * 任意次 · ? 可选 · (…) 捕获组 · g 全局 · i 忽略大小写 · m 多行', style: 'color:var(--ink2);font-size:12px' }));
+app.appendChild(T.pane([T.field('测试文本', input)], true));
+app.appendChild(T.el('span', { text: '匹配预览', class: 'field' }));
+app.appendChild(box);
+app.appendChild(groupInfo);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "regex", "title": "正则表达式测试", "desc": "在线正则测试：匹配高亮、捕获组、常用标志位", "scripts": "", "code": "var pattern = T.input('\\\\b\\\\w+@\\\\w+\\\\.\\\\w+\\\\b', { class: 'grow mono', placeholder: '正则表达式（无需斜杠）' });\nvar flags = T.input('g', { class: 'mono', style: 'width:70px', placeholder: 'flags' });\nvar input = T.textarea('测试文本…');\ninput.value = '联系我们：hello@freellm.top 或 support@example.com';\nvar box = T.el('div', { class: 'output', style: 'min-height:110px;font-family:var(--font-sans)' });\nvar groupInfo = T.el('div');\nfunction run() {\n  T.clearEl(box);\n  T.clearEl(groupInfo);\n  var v = input.value;\n  if (!pattern.value) { box.textContent = v; return; }\n  var re;\n  try { re = new RegExp(pattern.value, flags.value); }\n  catch (e) { box.textContent = '⚠ 正则错误：' + e.message; return; }\n  var last = 0, count = 0;\n  if (re.global) {\n    var m;\n    while ((m = re.exec(v)) && count \u003c 500) {\n      if (m.index > last) box.appendChild(document.createTextNode(v.slice(last, m.index)));\n      var mark = T.el('mark', { text: m[0], style: 'background:var(--accent-soft);color:var(--accent);border-radius:3px;padding:0 2px' });\n      mark.title = '第 ' + (count + 1) + ' 处匹配';\n      box.appendChild(mark);\n      last = m.index + m[0].length;\n      if (m[0] === '') re.lastIndex++;\n      var groups = m.slice(1);\n      if (groups.length) {\n        groupInfo.appendChild(T.el('p', { text: '第 ' + (count + 1) + ' 处：' + JSON.stringify(groups), style: 'margin:2px 0;font-family:var(--font-mono);font-size:12px' }));\n      }\n      count++;\n    }\n    box.appendChild(document.createTextNode(v.slice(last)));\n  } else {\n    var m2 = re.exec(v);\n    if (m2) {\n      box.appendChild(document.createTextNode(v.slice(0, m2.index)));\n      box.appendChild(T.el('mark', { text: m2[0], style: 'background:var(--accent-soft);color:var(--accent)' }));\n      box.appendChild(document.createTextNode(v.slice(m2.index + m2[0].length)));\n      count = 1;\n    } else box.textContent = v;\n  }\n  if (!count) {\n    var none = T.el('span', { text: '（无匹配）', style: 'color:var(--ink3)' });\n    box.appendChild(none);\n  }\n}\n[pattern, flags, input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '/ ' }), pattern, T.el('span', { text: '/ ' }), flags]));\napp.appendChild(T.el('p', { text: '常用：\\\\d 数字 · \\\\w 单词字符 · \\\\s 空白 · + 至少一次 · * 任意次 · ? 可选 · (…) 捕获组 · g 全局 · i 忽略大小写 · m 多行', style: 'color:var(--ink2);font-size:12px' }));\napp.appendChild(T.pane([T.field('测试文本', input)], true));\napp.appendChild(T.el('span', { text: '匹配预览', class: 'field' }));\napp.appendChild(box);\napp.appendChild(groupInfo);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

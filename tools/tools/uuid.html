@@ -2,68 +2,54 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>UUID 生成器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('UUID 生成器', 'UUID/GUID 在线批量生成', 'uuid');
-
-  var count = T.el('input', { type: 'number', value: '10', min: '1', max: '1000', style: 'width:80px' });
-  var version = T.select([
-    { value: '4', label: 'UUID v4 (随机)' },
-    { value: '1', label: 'UUID v1 (时间)' }
-  ]);
-  var output = T.textarea('生成结果', false);
-  output.readOnly = true;
-
-  var generateBtn = T.button('生成', generate, true);
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载', function () {
-    T.download('uuids.txt', output.value);
-  });
-
-  function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0;
-      var v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('UUID 生成器', 'UUID v4 批量生成（crypto 安全随机），可选大写 / 去连字符', 'uuid');
+var count = T.num(5, { min: 1, max: 500, style: 'width:90px' });
+var upper = T.check('大写');
+var strip = T.check('去连字符');
+var braces = T.check('花括号包裹');
+var output = T.out('');
+function gen() {
+  var n = Math.max(1, +count.value || 1);
+  var lines = [];
+  for (var i = 0; i < n; i++) {
+    var b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    var hex = T.bytesToHex(b);
+    var u = hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
+    if (upper._input.checked) u = u.toUpperCase();
+    if (strip._input.checked) u = u.replace(/-/g, '');
+    if (braces._input.checked) u = '{' + u + '}';
+    lines.push(u);
   }
-
-  function uuidv1() {
-    var now = Date.now();
-    var timeHex = now.toString(16).padStart(12, '0');
-    return timeHex.slice(0, 8) + '-' + timeHex.slice(8, 12) + '-1' + 
-      Math.random().toString(16).slice(2, 5) + '-' + 
-      (8 + Math.random() * 4 | 0).toString(16) + 
-      Math.random().toString(16).slice(2, 6) + '-' + 
-      Math.random().toString(16).slice(2, 14);
-  }
-
-  function generate() {
-    var n = parseInt(count.value) || 10;
-    var results = [];
-    for (var i = 0; i < n; i++) {
-      results.push(version.value === '4' ? uuidv4() : uuidv1());
-    }
-    output.value = results.join('\n');
-  }
-
-  generateBtn.addEventListener('click', generate);
-  count.addEventListener('input', generate);
-
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '数量' }), count, version, generateBtn, copyBtn, downloadBtn
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
-  generate();
+  output.value = lines.join('\n');
+}
+[count, upper._input, strip._input, braces._input].forEach(function (el) { el.addEventListener('input', gen); });
+app.appendChild(T.pane([T.field('生成结果（每行一个）', output)], true));
+app.appendChild(T.row([T.el('span', { text: '数量' }), count, upper, strip, braces,
+  T.button('重新生成', gen, true), T.btnCopy(function () { return output.value; })]));
+gen();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "uuid", "title": "UUID 生成器", "desc": "UUID v4 批量生成（crypto 安全随机），可选大写 / 去连字符", "scripts": "", "code": "var count = T.num(5, { min: 1, max: 500, style: 'width:90px' });\nvar upper = T.check('大写');\nvar strip = T.check('去连字符');\nvar braces = T.check('花括号包裹');\nvar output = T.out('');\nfunction gen() {\n  var n = Math.max(1, +count.value || 1);\n  var lines = [];\n  for (var i = 0; i \u003c n; i++) {\n    var b = crypto.getRandomValues(new Uint8Array(16));\n    b[6] = (b[6] & 0x0f) | 0x40;\n    b[8] = (b[8] & 0x3f) | 0x80;\n    var hex = T.bytesToHex(b);\n    var u = hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);\n    if (upper._input.checked) u = u.toUpperCase();\n    if (strip._input.checked) u = u.replace(/-/g, '');\n    if (braces._input.checked) u = '{' + u + '}';\n    lines.push(u);\n  }\n  output.value = lines.join('\\n');\n}\n[count, upper._input, strip._input, braces._input].forEach(function (el) { el.addEventListener('input', gen); });\napp.appendChild(T.pane([T.field('生成结果（每行一个）', output)], true));\napp.appendChild(T.row([T.el('span', { text: '数量' }), count, upper, strip, braces,\n  T.button('重新生成', gen, true), T.btnCopy(function () { return output.value; })]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

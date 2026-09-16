@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片取色器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片取色器', '上传图片点击取色，HEX / RGB 一键复制', 'image-picker');
+var drop = T.msg('点击或拖入图片，然后在图上点击取色', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var canvas = T.el('canvas', { style: 'max-width:100%;cursor:crosshair;border:1px solid var(--line);border-radius:8px;display:none' });
+var picked = T.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:12px' });
+var current = T.badge('点击图片取色');
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var scale = 1;
+inp.addEventListener('change', function () {
+  T.loadImage(function (img) {
+    scale = Math.min(1, 860 / img.width);
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
+    canvas.style.display = '';
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  });
+});
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+canvas.addEventListener('click', function (e) {
+  var rect = canvas.getBoundingClientRect();
+  var x = Math.round((e.clientX - rect.left) * (canvas.width / rect.width));
+  var y = Math.round((e.clientY - rect.top) * (canvas.height / rect.height));
+  var d = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+  var hex = LU.Color.hex({ r: d[0], g: d[1], b: d[2] });
+  current.textContent = hex + ' · rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')';
+  current.className = 'badge blue';
+  var sw = T.el('div', { style: 'width:44px;height:32px;border-radius:6px;background:' + hex + ';cursor:pointer;border:1px solid var(--line)', title: hex + '（点击复制）' });
+  sw.addEventListener('click', function () { T.copy(hex); });
+  picked.insertBefore(sw, picked.firstChild);
+  if (picked.children.length > 12) picked.removeChild(picked.lastChild);
+});
+app.appendChild(drop);
+app.appendChild(canvas);
+app.appendChild(T.row([current, T.button('清空色板', function () { T.clearEl(picked); })]));
+app.appendChild(picked);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-picker", "title": "图片取色器", "desc": "上传图片点击取色，HEX / RGB 一键复制", "scripts": "", "code": "var drop = T.msg('点击或拖入图片，然后在图上点击取色', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar canvas = T.el('canvas', { style: 'max-width:100%;cursor:crosshair;border:1px solid var(--line);border-radius:8px;display:none' });\nvar picked = T.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;margin-top:12px' });\nvar current = T.badge('点击图片取色');\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar scale = 1;\ninp.addEventListener('change', function () {\n  T.loadImage(function (img) {\n    scale = Math.min(1, 860 / img.width);\n    canvas.width = Math.round(img.width * scale);\n    canvas.height = Math.round(img.height * scale);\n    canvas.style.display = '';\n    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);\n  });\n});\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\ncanvas.addEventListener('click', function (e) {\n  var rect = canvas.getBoundingClientRect();\n  var x = Math.round((e.clientX - rect.left) * (canvas.width / rect.width));\n  var y = Math.round((e.clientY - rect.top) * (canvas.height / rect.height));\n  var d = canvas.getContext('2d').getImageData(x, y, 1, 1).data;\n  var hex = LU.Color.hex({ r: d[0], g: d[1], b: d[2] });\n  current.textContent = hex + ' · rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')';\n  current.className = 'badge blue';\n  var sw = T.el('div', { style: 'width:44px;height:32px;border-radius:6px;background:' + hex + ';cursor:pointer;border:1px solid var(--line)', title: hex + '（点击复制）' });\n  sw.addEventListener('click', function () { T.copy(hex); });\n  picked.insertBefore(sw, picked.firstChild);\n  if (picked.children.length > 12) picked.removeChild(picked.lastChild);\n});\napp.appendChild(drop);\napp.appendChild(canvas);\napp.appendChild(T.row([current, T.button('清空色板', function () { T.clearEl(picked); })]));\napp.appendChild(picked);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

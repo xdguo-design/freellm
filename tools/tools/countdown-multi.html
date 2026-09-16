@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>多倒计时 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('多倒计时', '同时管理多个目标倒计时（考试 / 项目 / 假期），本地保存', 'countdown-multi');
+var nameIn = T.input('项目上线', { class: 'grow', placeholder: '事项名称' });
+var dateIn = T.el('input', { type: 'datetime-local' });
+var list = T.el('div');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-countdowns') || '[]'); } catch (e) {}
+function save() { localStorage.setItem('freellm-countdowns', JSON.stringify(items)); }
+function render() {
+  T.clearEl(list);
+  if (!items.length) {
+    list.appendChild(T.el('p', { text: '暂无倒计时，添加一个吧。', style: 'color:var(--ink3)' }));
+    return;
+  }
+  items.sort(function (a, b) { return a.target - b.target; });
+  items.forEach(function (it, idx) {
+    var diff = it.target - Date.now();
+    var row = T.el('div', { style: 'display:flex;gap:14px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);flex-wrap:wrap' });
+    row.appendChild(T.el('b', { text: it.name, style: 'min-width:120px' }));
+    var cd = T.el('b', { style: 'font:500 20px var(--font-mono);color:' + (diff <= 0 ? 'var(--err)' : 'var(--accent)') });
+    if (diff <= 0) cd.textContent = '已到达 🎉';
+    else {
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor(diff % 86400000 / 3600000);
+      var m = Math.floor(diff % 3600000 / 60000);
+      var s = Math.floor(diff % 60000 / 1000);
+      cd.textContent = (d ? d + '天 ' : '') + T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);
+    }
+    row.appendChild(cd);
+    row.appendChild(T.el('span', { text: T.fmtTime(new Date(it.target)), style: 'color:var(--ink2);font-size:12px;flex:1' }));
+    row.appendChild(T.button('删除', function () { items.splice(idx, 1); save(); render(); }));
+    list.appendChild(row);
+  });
+}
+setInterval(render, 1000);
+app.appendChild(T.row([nameIn, dateIn, T.button('添加', function () {
+  if (!nameIn.value || !dateIn.value) { T.toast('请填写名称与目标时间'); return; }
+  items.push({ name: nameIn.value, target: new Date(dateIn.value).getTime() });
+  save();
+  render();
+}, true)]));
+app.appendChild(list);
+render();
+app.appendChild(T.msg('数据保存在浏览器本地（localStorage）。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "countdown-multi", "title": "多倒计时", "desc": "同时管理多个目标倒计时（考试 / 项目 / 假期），本地保存", "scripts": "", "code": "var nameIn = T.input('项目上线', { class: 'grow', placeholder: '事项名称' });\nvar dateIn = T.el('input', { type: 'datetime-local' });\nvar list = T.el('div');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-countdowns') || '[]'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-countdowns', JSON.stringify(items)); }\nfunction render() {\n  T.clearEl(list);\n  if (!items.length) {\n    list.appendChild(T.el('p', { text: '暂无倒计时，添加一个吧。', style: 'color:var(--ink3)' }));\n    return;\n  }\n  items.sort(function (a, b) { return a.target - b.target; });\n  items.forEach(function (it, idx) {\n    var diff = it.target - Date.now();\n    var row = T.el('div', { style: 'display:flex;gap:14px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);flex-wrap:wrap' });\n    row.appendChild(T.el('b', { text: it.name, style: 'min-width:120px' }));\n    var cd = T.el('b', { style: 'font:500 20px var(--font-mono);color:' + (diff \u003c= 0 ? 'var(--err)' : 'var(--accent)') });\n    if (diff \u003c= 0) cd.textContent = '已到达 🎉';\n    else {\n      var d = Math.floor(diff / 86400000);\n      var h = Math.floor(diff % 86400000 / 3600000);\n      var m = Math.floor(diff % 3600000 / 60000);\n      var s = Math.floor(diff % 60000 / 1000);\n      cd.textContent = (d ? d + '天 ' : '') + T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);\n    }\n    row.appendChild(cd);\n    row.appendChild(T.el('span', { text: T.fmtTime(new Date(it.target)), style: 'color:var(--ink2);font-size:12px;flex:1' }));\n    row.appendChild(T.button('删除', function () { items.splice(idx, 1); save(); render(); }));\n    list.appendChild(row);\n  });\n}\nsetInterval(render, 1000);\napp.appendChild(T.row([nameIn, dateIn, T.button('添加', function () {\n  if (!nameIn.value || !dateIn.value) { T.toast('请填写名称与目标时间'); return; }\n  items.push({ name: nameIn.value, target: new Date(dateIn.value).getTime() });\n  save();\n  render();\n}, true)]));\napp.appendChild(list);\nrender();\napp.appendChild(T.msg('数据保存在浏览器本地（localStorage）。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

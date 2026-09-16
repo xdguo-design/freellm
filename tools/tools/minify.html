@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>代码压缩 Minify · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('代码压缩 Minify', 'JS / CSS / JSON 轻量压缩：去注释、空白与换行', 'minify');
+var input = T.textarea('粘贴代码…');
+var output = T.out('');
+var lang = T.select([{value:'js',label:'JavaScript'},{value:'css',label:'CSS'},{value:'json',label:'JSON'}],'js');
+var info = T.badge('—');
+function run() {
+  var v = input.value;
+  if (!v.trim()) { output.value = ''; info.textContent = '—'; return; }
+  try {
+    var out;
+    if (lang.value === 'json') out = JSON.stringify(JSON.parse(v));
+    else if (lang.value === 'css') out = v.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{}:;,>~+])\s*/g, '$1').replace(/;}/g, '}').trim();
+    else out = v
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/(^|[^:])\/\/[^\n]*/g, '$1')
+      .replace(/\n\s*/g, '\n')
+      .replace(/\n+/g, '\n')
+      .replace(/\s*([=+\-*/%<>!&|,;:{}()\[\]])\s*/g, '$1')
+      .replace(/\n/g, '')
+      .trim();
+    output.value = out;
+    info.textContent = T.fmtBytes(v.length) + ' → ' + T.fmtBytes(out.length) + '（-（' + (100 - out.length / v.length * 100).toFixed(1) + '%）'.slice(0, 99) + '）';
+    info.textContent = v.length + ' → ' + out.length + ' 字符';
+  } catch (e) { output.value = '⚠ ' + e.message; info.textContent = '出错'; }
+}
+[input, lang].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('代码', input), T.field('压缩结果', output)]));
+app.appendChild(T.row([T.el('span', { text: '类型' }), lang, info, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "minify", "title": "代码压缩 Minify", "desc": "JS / CSS / JSON 轻量压缩：去注释、空白与换行", "scripts": "", "code": "var input = T.textarea('粘贴代码…');\nvar output = T.out('');\nvar lang = T.select([{value:'js',label:'JavaScript'},{value:'css',label:'CSS'},{value:'json',label:'JSON'}],'js');\nvar info = T.badge('—');\nfunction run() {\n  var v = input.value;\n  if (!v.trim()) { output.value = ''; info.textContent = '—'; return; }\n  try {\n    var out;\n    if (lang.value === 'json') out = JSON.stringify(JSON.parse(v));\n    else if (lang.value === 'css') out = v.replace(/\\/\\*[\\s\\S]*?\\*\\//g, '').replace(/\\s+/g, ' ').replace(/\\s*([{}:;,>~+])\\s*/g, '$1').replace(/;}/g, '}').trim();\n    else out = v\n      .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')\n      .replace(/(^|[^:])\\/\\/[^\\n]*/g, '$1')\n      .replace(/\\n\\s*/g, '\\n')\n      .replace(/\\n+/g, '\\n')\n      .replace(/\\s*([=+\\-*/%\u003c>!&|,;:{}()\\[\\]])\\s*/g, '$1')\n      .replace(/\\n/g, '')\n      .trim();\n    output.value = out;\n    info.textContent = T.fmtBytes(v.length) + ' → ' + T.fmtBytes(out.length) + '（-（' + (100 - out.length / v.length * 100).toFixed(1) + '%）'.slice(0, 99) + '）';\n    info.textContent = v.length + ' → ' + out.length + ' 字符';\n  } catch (e) { output.value = '⚠ ' + e.message; info.textContent = '出错'; }\n}\n[input, lang].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('代码', input), T.field('压缩结果', output)]));\napp.appendChild(T.row([T.el('span', { text: '类型' }), lang, info, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

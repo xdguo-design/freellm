@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>舒尔特方格 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('舒尔特方格', '注意力训练：按 1-25 顺序点击，计时挑战', 'schulte');
+var N = 5;
+var grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:6px;justify-content:center;margin:18px auto' });
+var next = 1;
+var t0 = 0, timerIv = 0;
+var timeEl = T.stat('—', '用时');
+var bestEl = T.stat(+(localStorage.getItem('freellm-schulte-best') || 0), '最佳(秒)');
+var status = T.badge('点击开始');
+function start() {
+  next = 1;
+  var nums = [];
+  for (var i = 1; i <= N * N; i++) nums.push(i);
+  nums.sort(function () { return Math.random() - 0.5; });
+  T.clearEl(grid);
+  nums.forEach(function (n) {
+    var cell = T.el('div', { text: String(n), style: 'width:64px;height:64px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);font:500 22px var(--font-serif);cursor:pointer;user-select:none' });
+    cell.addEventListener('click', function () {
+      if (+cell.textContent !== next) { cell.style.background = 'var(--err)'; setTimeout(function () { cell.style.background = ''; }, 200); return; }
+      cell.style.visibility = 'hidden';
+      next++;
+      if (next === 2) {
+        t0 = performance.now();
+        timerIv = setInterval(function () { timeEl.firstChild.textContent = ((performance.now() - t0) / 1000).toFixed(1); }, 100);
+        status.textContent = '训练中…';
+      }
+      if (next > N * N) {
+        clearInterval(timerIv);
+        var sec = (performance.now() - t0) / 1000;
+        status.textContent = '🎉 完成！' + sec.toFixed(1) + ' 秒';
+        status.className = 'badge ok';
+        if (!+(localStorage.getItem('freellm-schulte-best') || 0) || sec < +(localStorage.getItem('freellm-schulte-best') || 0)) {
+          localStorage.setItem('freellm-schulte-best', sec.toFixed(1));
+          bestEl.firstChild.textContent = sec.toFixed(1);
+        }
+      }
+    });
+    grid.appendChild(cell);
+  });
+  status.textContent = '按 1 → 25 顺序点击';
+  status.className = 'badge blue';
+}
+app.appendChild(T.row([timeEl, bestEl, status, T.button('重新开始', start, true)]));
+app.appendChild(grid);
+app.appendChild(T.el('p', { text: '成人 25 格平均 25-30 秒；坚持训练可提升视觉搜索与注意力。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));
+start();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "schulte", "title": "舒尔特方格", "desc": "注意力训练：按 1-25 顺序点击，计时挑战", "scripts": "", "code": "var N = 5;\nvar grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:6px;justify-content:center;margin:18px auto' });\nvar next = 1;\nvar t0 = 0, timerIv = 0;\nvar timeEl = T.stat('—', '用时');\nvar bestEl = T.stat(+(localStorage.getItem('freellm-schulte-best') || 0), '最佳(秒)');\nvar status = T.badge('点击开始');\nfunction start() {\n  next = 1;\n  var nums = [];\n  for (var i = 1; i \u003c= N * N; i++) nums.push(i);\n  nums.sort(function () { return Math.random() - 0.5; });\n  T.clearEl(grid);\n  nums.forEach(function (n) {\n    var cell = T.el('div', { text: String(n), style: 'width:64px;height:64px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:var(--surface);font:500 22px var(--font-serif);cursor:pointer;user-select:none' });\n    cell.addEventListener('click', function () {\n      if (+cell.textContent !== next) { cell.style.background = 'var(--err)'; setTimeout(function () { cell.style.background = ''; }, 200); return; }\n      cell.style.visibility = 'hidden';\n      next++;\n      if (next === 2) {\n        t0 = performance.now();\n        timerIv = setInterval(function () { timeEl.firstChild.textContent = ((performance.now() - t0) / 1000).toFixed(1); }, 100);\n        status.textContent = '训练中…';\n      }\n      if (next > N * N) {\n        clearInterval(timerIv);\n        var sec = (performance.now() - t0) / 1000;\n        status.textContent = '🎉 完成！' + sec.toFixed(1) + ' 秒';\n        status.className = 'badge ok';\n        if (!+(localStorage.getItem('freellm-schulte-best') || 0) || sec \u003c +(localStorage.getItem('freellm-schulte-best') || 0)) {\n          localStorage.setItem('freellm-schulte-best', sec.toFixed(1));\n          bestEl.firstChild.textContent = sec.toFixed(1);\n        }\n      }\n    });\n    grid.appendChild(cell);\n  });\n  status.textContent = '按 1 → 25 顺序点击';\n  status.className = 'badge blue';\n}\napp.appendChild(T.row([timeEl, bestEl, status, T.button('重新开始', start, true)]));\napp.appendChild(grid);\napp.appendChild(T.el('p', { text: '成人 25 格平均 25-30 秒；坚持训练可提升视觉搜索与注意力。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));\nstart();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>YAML 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('YAML 格式化', 'YAML 校验 / 美化重排 / 压缩为单行 JSON', 'yaml-format');
+var input = T.textarea('name: freellm\nitems:\n  - id: 1\n    hot: true\n  - id: 2');
+input.value = 'name: freellm\nitems:\n  - id: 1\n    hot: true\n  - id: 2';
+var output = T.out('');
+var status = T.badge('—');
+function run() {
+  var v = input.value.trim();
+  if (!v) { output.value = ''; status.textContent = '—'; return; }
+  try {
+    var obj = LF.Yaml.parse(v);
+    output.value = LF.Yaml.stringify(obj);
+    status.textContent = '✓ YAML 合法';
+    status.className = 'badge ok';
+  } catch (e) {
+    status.textContent = '✗ ' + e.message;
+    status.className = 'badge warn';
+  }
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('YAML', input), T.field('美化结果', output)]));
+app.appendChild(T.row([T.button('转单行 JSON', function () {
+  try { output.value = JSON.stringify(LF.Yaml.parse(input.value)); } catch (e) { T.toast(e.message); }
+}), T.btnCopy(function () { return output.value; }), status]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "yaml-format", "title": "YAML 格式化", "desc": "YAML 校验 / 美化重排 / 压缩为单行 JSON", "scripts": "", "code": "var input = T.textarea('name: freellm\\nitems:\\n  - id: 1\\n    hot: true\\n  - id: 2');\ninput.value = 'name: freellm\\nitems:\\n  - id: 1\\n    hot: true\\n  - id: 2';\nvar output = T.out('');\nvar status = T.badge('—');\nfunction run() {\n  var v = input.value.trim();\n  if (!v) { output.value = ''; status.textContent = '—'; return; }\n  try {\n    var obj = LF.Yaml.parse(v);\n    output.value = LF.Yaml.stringify(obj);\n    status.textContent = '✓ YAML 合法';\n    status.className = 'badge ok';\n  } catch (e) {\n    status.textContent = '✗ ' + e.message;\n    status.className = 'badge warn';\n  }\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('YAML', input), T.field('美化结果', output)]));\napp.appendChild(T.row([T.button('转单行 JSON', function () {\n  try { output.value = JSON.stringify(LF.Yaml.parse(input.value)); } catch (e) { T.toast(e.message); }\n}), T.btnCopy(function () { return output.value; }), status]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

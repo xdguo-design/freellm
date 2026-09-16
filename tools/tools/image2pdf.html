@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片转 PDF · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片转 PDF', '多张图片合并为一个 PDF（JPEG 嵌入，浏览器本地生成）', 'image2pdf');
+var pages = [];
+var list = T.el('div', { class: 'row' });
+var pageSize = T.select([
+  { value: 'fit', label: '按图片尺寸' },
+  { value: 'a4p', label: 'A4 竖版' },
+  { value: 'a4l', label: 'A4 横版' }
+], 'fit');
+var status = T.badge('未添加图片');
+var outBlob = null;
+var multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });
+document.body.appendChild(multi);
+multi.addEventListener('change', function () {
+  var files = Array.from(multi.files);
+  var loaded = 0;
+  files.forEach(function (f) {
+    T.loadImage(function (img) {
+      pages.push(img);
+      loaded++;
+      if (loaded === files.length) renderList();
+    });
+  });
+});
+function renderList() {
+  T.clearEl(list);
+  pages.forEach(function (img, i) {
+    var c = T.el('canvas', { width: 80, height: 100, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer;position:relative', title: '点击移除' });
+    var ctx = c.getContext('2d');
+    var scale = Math.max(80 / img.width, 100 / img.height);
+    ctx.drawImage(img, (80 - img.width * scale) / 2, (100 - img.height * scale) / 2, img.width * scale, img.height * scale);
+    c.addEventListener('click', function () { pages.splice(i, 1); renderList(); });
+    list.appendChild(c);
+  });
+  status.textContent = pages.length + ' 页';
+  status.className = 'badge ' + (pages.length ? 'ok' : '');
+}
+app.appendChild(T.row([T.button('添加图片（可多选，按顺序）', function () { multi.click(); }, true),
+  T.el('span', { text: '点击缩略图可移除' }), status]));
+app.appendChild(list);
+app.appendChild(T.row([T.el('span', { text: '页面尺寸' }), pageSize,
+  T.button('生成 PDF', function () {
+    if (!pages.length) { T.toast('请先添加图片'); return; }
+    status.textContent = '生成中…';
+    var jobs = pages.map(function (img) {
+      return new Promise(function (resolve) {
+        var c = T.el('canvas');
+        c.width = img.width;
+        c.height = img.height;
+        c.getContext('2d').drawImage(img, 0, 0);
+        c.toBlob(function (b) {
+          b.arrayBuffer().then(function (buf) {
+            resolve({ w: img.width, h: img.height, jpeg: new Uint8Array(buf) });
+          });
+        }, 'image/jpeg', 0.92);
+      });
+    });
+    Promise.all(jobs).then(function (jpegs) {
+      var fit = pageSize.value === 'fit';
+      var a4 = pageSize.value !== 'fit';
+      var outPages = jpegs.map(function (p) {
+        if (!a4) return { w: p.w, h: p.h, jpeg: p.jpeg };
+        var pw = pageSize.value === 'a4p' ? 595 : 842;
+        var ph = pageSize.value === 'a4p' ? 842 : 595;
+        return { w: pw, h: ph, jpeg: p.jpeg, fitW: p.w, fitH: p.h };
+      });
+      var pdfPages = outPages.map(function (p) {
+        if (!p.fitW) return p;
+        var scale = Math.min((p.w - 40) / p.fitW, (p.h - 40) / p.fitH);
+        return { w: p.w, h: p.h, jpeg: p.jpeg, drawW: p.fitW * scale, drawH: p.fitH * scale };
+      });
+      outBlob = LU.Pdf.fromJpegs(pdfPages.map(function (p) {
+        return { w: p.w, h: p.h, jpeg: p.jpeg };
+      }));
+      status.textContent = '✓ ' + T.fmtBytes(outBlob.size);
+      status.className = 'badge ok';
+      T.download('images.pdf', outBlob);
+    });
+  }, true)]));
+app.appendChild(T.msg('说明：图片以 JPEG 92% 质量嵌入 PDF；A4 模式按页面等比居中。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image2pdf", "title": "图片转 PDF", "desc": "多张图片合并为一个 PDF（JPEG 嵌入，浏览器本地生成）", "scripts": "", "code": "var pages = [];\nvar list = T.el('div', { class: 'row' });\nvar pageSize = T.select([\n  { value: 'fit', label: '按图片尺寸' },\n  { value: 'a4p', label: 'A4 竖版' },\n  { value: 'a4l', label: 'A4 横版' }\n], 'fit');\nvar status = T.badge('未添加图片');\nvar outBlob = null;\nvar multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });\ndocument.body.appendChild(multi);\nmulti.addEventListener('change', function () {\n  var files = Array.from(multi.files);\n  var loaded = 0;\n  files.forEach(function (f) {\n    T.loadImage(function (img) {\n      pages.push(img);\n      loaded++;\n      if (loaded === files.length) renderList();\n    });\n  });\n});\nfunction renderList() {\n  T.clearEl(list);\n  pages.forEach(function (img, i) {\n    var c = T.el('canvas', { width: 80, height: 100, style: 'border:1px solid var(--line);border-radius:6px;cursor:pointer;position:relative', title: '点击移除' });\n    var ctx = c.getContext('2d');\n    var scale = Math.max(80 / img.width, 100 / img.height);\n    ctx.drawImage(img, (80 - img.width * scale) / 2, (100 - img.height * scale) / 2, img.width * scale, img.height * scale);\n    c.addEventListener('click', function () { pages.splice(i, 1); renderList(); });\n    list.appendChild(c);\n  });\n  status.textContent = pages.length + ' 页';\n  status.className = 'badge ' + (pages.length ? 'ok' : '');\n}\napp.appendChild(T.row([T.button('添加图片（可多选，按顺序）', function () { multi.click(); }, true),\n  T.el('span', { text: '点击缩略图可移除' }), status]));\napp.appendChild(list);\napp.appendChild(T.row([T.el('span', { text: '页面尺寸' }), pageSize,\n  T.button('生成 PDF', function () {\n    if (!pages.length) { T.toast('请先添加图片'); return; }\n    status.textContent = '生成中…';\n    var jobs = pages.map(function (img) {\n      return new Promise(function (resolve) {\n        var c = T.el('canvas');\n        c.width = img.width;\n        c.height = img.height;\n        c.getContext('2d').drawImage(img, 0, 0);\n        c.toBlob(function (b) {\n          b.arrayBuffer().then(function (buf) {\n            resolve({ w: img.width, h: img.height, jpeg: new Uint8Array(buf) });\n          });\n        }, 'image/jpeg', 0.92);\n      });\n    });\n    Promise.all(jobs).then(function (jpegs) {\n      var fit = pageSize.value === 'fit';\n      var a4 = pageSize.value !== 'fit';\n      var outPages = jpegs.map(function (p) {\n        if (!a4) return { w: p.w, h: p.h, jpeg: p.jpeg };\n        var pw = pageSize.value === 'a4p' ? 595 : 842;\n        var ph = pageSize.value === 'a4p' ? 842 : 595;\n        return { w: pw, h: ph, jpeg: p.jpeg, fitW: p.w, fitH: p.h };\n      });\n      var pdfPages = outPages.map(function (p) {\n        if (!p.fitW) return p;\n        var scale = Math.min((p.w - 40) / p.fitW, (p.h - 40) / p.fitH);\n        return { w: p.w, h: p.h, jpeg: p.jpeg, drawW: p.fitW * scale, drawH: p.fitH * scale };\n      });\n      outBlob = LU.Pdf.fromJpegs(pdfPages.map(function (p) {\n        return { w: p.w, h: p.h, jpeg: p.jpeg };\n      }));\n      status.textContent = '✓ ' + T.fmtBytes(outBlob.size);\n      status.className = 'badge ok';\n      T.download('images.pdf', outBlob);\n    });\n  }, true)]));\napp.appendChild(T.msg('说明：图片以 JPEG 92% 质量嵌入 PDF；A4 模式按页面等比居中。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

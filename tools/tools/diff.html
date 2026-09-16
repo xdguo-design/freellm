@@ -2,65 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>文本对比 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('文本对比', '快速找出两段文本之间的差异', 'diff');
-
-  var input1 = T.textarea('原始文本...');
-  var input2 = T.textarea('修改后的文本...');
-  var output = T.el('div', { class: 'output dark', style: 'white-space:pre-wrap;font-family:monospace;line-height:1.6' });
-
-  function run() {
-    var a = input1.value.split('\n');
-    var b = input2.value.split('\n');
-    var result = [];
-    var maxLen = Math.max(a.length, b.length);
-
-    for (var i = 0; i < maxLen; i++) {
-      var lineA = a[i];
-      var lineB = b[i];
-
-      if (lineA === lineB) {
-        result.push('  ' + (lineA || ''));
-      } else {
-        if (lineA !== undefined) result.push('- ' + lineA);
-        if (lineB !== undefined) result.push('+ ' + lineB);
-      }
-    }
-
-    output.innerHTML = result.map(function (line) {
-      if (line.startsWith('-')) return '<span style="color:#ff6b6b">' + escapeHtml(line) + '</span>';
-      if (line.startsWith('+')) return '<span style="color:#51cf66">' + escapeHtml(line) + '</span>';
-      return escapeHtml(line);
-    }).join('\n');
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  input1.addEventListener('input', function () { setTimeout(run, 100); });
-  input2.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row', style: 'gap:10px' }, [
-    T.el('div', { class: 'field', style: 'flex:1', text: '原始文本' }),
-    T.el('div', { class: 'field', style: 'flex:1', text: '修改后' })
-  ]));
-  app.appendChild(T.el('div', { class: 'row', style: 'gap:10px' }, [
-    T.el('div', { class: 'pane', style: 'flex:1' }, [input1]),
-    T.el('div', { class: 'pane', style: 'flex:1' }, [input2])
-  ]));
-  app.appendChild(T.el('div', { class: 'field', text: '对比结果:' }));
-  app.appendChild(output);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文本对比', '两段文本逐行对比，差异行高亮标注', 'diff');
+var aIn = T.textarea('原始文本…\n第二行');
+aIn.value = '原始文本…\n第二行';
+var bIn = T.textarea('修改后文本…\n第二行');
+bIn.value = '修改后文本…\n第二行';
+aIn.style.minHeight = '140px';
+bIn.style.minHeight = '140px';
+var box = T.el('div', { class: 'output', style: 'min-height:160px;font-family:var(--font-sans);white-space:pre' });
+var summary = T.badge('—');
+function run() {
+  T.clearEl(box);
+  var ops = LF.Diff.diff(aIn.value, bIn.value);
+  var add = 0, del = 0, same = 0;
+  ops.forEach(function (o) {
+    var line;
+    if (o.t === '=') { same++; line = T.el('div', { text: '  ' + o.a, style: 'padding:0 6px' }); }
+    else if (o.t === '-') { del++; line = T.el('div', { text: '- ' + o.a, style: 'background:rgba(192,57,43,.12);color:var(--err);padding:0 6px' }); }
+    else { add++; line = T.el('div', { text: '+ ' + o.a, style: 'background:var(--ok-bg);color:var(--ok-text);padding:0 6px' }); }
+    box.appendChild(line);
+  });
+  summary.textContent = same + ' 相同 · ' + add + ' 新增 · ' + del + ' 删除';
+  summary.className = 'badge ' + (add + del ? 'warn' : 'ok');
+}
+[aIn, bIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });
+app.appendChild(T.pane([T.field('文本 A（原）', aIn), T.field('文本 B（改）', bIn)]));
+app.appendChild(T.row([summary]));
+app.appendChild(T.el('span', { text: '差异', class: 'field' }));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "diff", "title": "文本对比", "desc": "两段文本逐行对比，差异行高亮标注", "scripts": "", "code": "var aIn = T.textarea('原始文本…\\n第二行');\naIn.value = '原始文本…\\n第二行';\nvar bIn = T.textarea('修改后文本…\\n第二行');\nbIn.value = '修改后文本…\\n第二行';\naIn.style.minHeight = '140px';\nbIn.style.minHeight = '140px';\nvar box = T.el('div', { class: 'output', style: 'min-height:160px;font-family:var(--font-sans);white-space:pre' });\nvar summary = T.badge('—');\nfunction run() {\n  T.clearEl(box);\n  var ops = LF.Diff.diff(aIn.value, bIn.value);\n  var add = 0, del = 0, same = 0;\n  ops.forEach(function (o) {\n    var line;\n    if (o.t === '=') { same++; line = T.el('div', { text: '  ' + o.a, style: 'padding:0 6px' }); }\n    else if (o.t === '-') { del++; line = T.el('div', { text: '- ' + o.a, style: 'background:rgba(192,57,43,.12);color:var(--err);padding:0 6px' }); }\n    else { add++; line = T.el('div', { text: '+ ' + o.a, style: 'background:var(--ok-bg);color:var(--ok-text);padding:0 6px' }); }\n    box.appendChild(line);\n  });\n  summary.textContent = same + ' 相同 · ' + add + ' 新增 · ' + del + ' 删除';\n  summary.className = 'badge ' + (add + del ? 'warn' : 'ok');\n}\n[aIn, bIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });\napp.appendChild(T.pane([T.field('文本 A（原）', aIn), T.field('文本 B（改）', bIn)]));\napp.appendChild(T.row([summary]));\napp.appendChild(T.el('span', { text: '差异', class: 'field' }));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

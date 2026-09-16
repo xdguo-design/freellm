@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>语言切换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('语言切换', '界面语言偏好设置（中 / 英），供支持多语言的页面读取', 'lang-switch');
+var cur = 'zh';
+try { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').lang || 'zh'; } catch (e) {}
+var DICT = {
+  greeting: { zh: '你好，欢迎使用 FreeLLM 工具！', en: 'Hello, welcome to FreeLLM Tools!' },
+  search: { zh: '搜索工具…', en: 'Search tools…' },
+  favorites: { zh: '我的收藏', en: 'My Favorites' },
+  all: { zh: '全部', en: 'All' },
+  copy: { zh: '复制', en: 'Copy' },
+  download: { zh: '下载', en: 'Download' }
+};
+var preview = T.el('div', { class: 'output', style: 'min-height:140px;font-family:var(--font-sans)' });
+function render() {
+  var lines = Object.keys(DICT).map(function (k) {
+    return k + ': ' + DICT[k][cur] + (cur === 'zh' ? '' : '');
+  });
+  preview.textContent = lines.join('\n') + '\n\n当前语言: ' + (cur === 'zh' ? '中文 (zh-CN)' : 'English (en)');
+}
+render();
+var row = T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' });
+function renderBtns() {
+  T.clearEl(row);
+  [['zh', '🇨🇳 中文'], ['en', '🇺🇸 English']].forEach(function (m) {
+    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () {
+      cur = m[0];
+      var settings = {};
+      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}
+      settings.lang = cur;
+      localStorage.setItem('freellm-settings', JSON.stringify(settings));
+      T.toast('Language: ' + (cur === 'zh' ? '中文' : 'English'));
+      renderBtns();
+      render();
+    }));
+  });
+}
+renderBtns();
+app.appendChild(row);
+app.appendChild(preview);
+app.appendChild(T.msg('该设置存储在 freellm-settings.lang，供页面级双语支持读取；工具站当前主体为中文。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "lang-switch", "title": "语言切换", "desc": "界面语言偏好设置（中 / 英），供支持多语言的页面读取", "scripts": "", "code": "var cur = 'zh';\ntry { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').lang || 'zh'; } catch (e) {}\nvar DICT = {\n  greeting: { zh: '你好，欢迎使用 FreeLLM 工具！', en: 'Hello, welcome to FreeLLM Tools!' },\n  search: { zh: '搜索工具…', en: 'Search tools…' },\n  favorites: { zh: '我的收藏', en: 'My Favorites' },\n  all: { zh: '全部', en: 'All' },\n  copy: { zh: '复制', en: 'Copy' },\n  download: { zh: '下载', en: 'Download' }\n};\nvar preview = T.el('div', { class: 'output', style: 'min-height:140px;font-family:var(--font-sans)' });\nfunction render() {\n  var lines = Object.keys(DICT).map(function (k) {\n    return k + ': ' + DICT[k][cur] + (cur === 'zh' ? '' : '');\n  });\n  preview.textContent = lines.join('\\n') + '\\n\\n当前语言: ' + (cur === 'zh' ? '中文 (zh-CN)' : 'English (en)');\n}\nrender();\nvar row = T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' });\nfunction renderBtns() {\n  T.clearEl(row);\n  [['zh', '🇨🇳 中文'], ['en', '🇺🇸 English']].forEach(function (m) {\n    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () {\n      cur = m[0];\n      var settings = {};\n      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}\n      settings.lang = cur;\n      localStorage.setItem('freellm-settings', JSON.stringify(settings));\n      T.toast('Language: ' + (cur === 'zh' ? '中文' : 'English'));\n      renderBtns();\n      render();\n    }));\n  });\n}\nrenderBtns();\napp.appendChild(row);\napp.appendChild(preview);\napp.appendChild(T.msg('该设置存储在 freellm-settings.lang，供页面级双语支持读取；工具站当前主体为中文。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>配置导入 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('配置导入', '从备份 JSON 恢复本地数据（收藏 / 设置 / 笔记等）', 'import-config');
+var pick = T.el('input', { type: 'file', accept: '.json', style: 'display:none' });
+document.body.appendChild(pick);
+var input = T.textarea('粘贴备份 JSON，或点击下方按钮选择备份文件…', true);
+var preview = T.el('div');
+var KNOWN = ['freellm-favorites', 'freellm-history', 'freellm-settings', 'freellm-todos', 'freellm-notes', 'freellm-journal', 'freellm-habits', 'freellm-expense', 'freellm-mood', 'freellm-water', 'freellm-stand', 'freellm-countdown-adv', 'freellm-snippets', 'freellm-bookmarks', 'freellm-a11y'];
+function analyze() {
+  T.clearEl(preview);
+  try {
+    var data = T.parseJSON(input.value);
+    var rows = [];
+    KNOWN.forEach(function (k) {
+      if (data[k] != null) {
+        var size = JSON.stringify(data[k]).length;
+        rows.push([k.replace('freellm-', ''), size + ' 字节', '可恢复']);
+      }
+    });
+    if (rows.length) preview.appendChild(T.refTable(['数据项', '大小', '状态'], rows));
+    else preview.appendChild(T.msg('未识别到可恢复的数据项', ''));
+    window._importData = data;
+  } catch (e) {
+    preview.appendChild(T.msg('⚠ JSON 解析失败：' + e.message, 'err'));
+  }
+}
+input.addEventListener('input', T.debounce(analyze, 300));
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () { input.value = fr.result; analyze(); };
+  fr.readAsText(f);
+});
+app.appendChild(T.row([T.button('选择备份文件', function () { pick.click(); }), T.el('span', { text: '或直接粘贴 JSON' })]));
+app.appendChild(T.pane([T.field('备份内容', input)], true));
+app.appendChild(preview);
+app.appendChild(T.row([T.button('⚠ 恢复所选数据（覆盖现有）', function () {
+  var data = window._importData;
+  if (!data) { T.toast('请先载入有效备份'); return; }
+  var count = 0;
+  KNOWN.forEach(function (k) {
+    if (data[k] != null) {
+      localStorage.setItem(k, JSON.stringify(data[k]));
+      count++;
+    }
+  });
+  T.toast('已恢复 ' + count + ' 项数据');
+}, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "import-config", "title": "配置导入", "desc": "从备份 JSON 恢复本地数据（收藏 / 设置 / 笔记等）", "scripts": "", "code": "var pick = T.el('input', { type: 'file', accept: '.json', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar input = T.textarea('粘贴备份 JSON，或点击下方按钮选择备份文件…', true);\nvar preview = T.el('div');\nvar KNOWN = ['freellm-favorites', 'freellm-history', 'freellm-settings', 'freellm-todos', 'freellm-notes', 'freellm-journal', 'freellm-habits', 'freellm-expense', 'freellm-mood', 'freellm-water', 'freellm-stand', 'freellm-countdown-adv', 'freellm-snippets', 'freellm-bookmarks', 'freellm-a11y'];\nfunction analyze() {\n  T.clearEl(preview);\n  try {\n    var data = T.parseJSON(input.value);\n    var rows = [];\n    KNOWN.forEach(function (k) {\n      if (data[k] != null) {\n        var size = JSON.stringify(data[k]).length;\n        rows.push([k.replace('freellm-', ''), size + ' 字节', '可恢复']);\n      }\n    });\n    if (rows.length) preview.appendChild(T.refTable(['数据项', '大小', '状态'], rows));\n    else preview.appendChild(T.msg('未识别到可恢复的数据项', ''));\n    window._importData = data;\n  } catch (e) {\n    preview.appendChild(T.msg('⚠ JSON 解析失败：' + e.message, 'err'));\n  }\n}\ninput.addEventListener('input', T.debounce(analyze, 300));\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  var fr = new FileReader();\n  fr.onload = function () { input.value = fr.result; analyze(); };\n  fr.readAsText(f);\n});\napp.appendChild(T.row([T.button('选择备份文件', function () { pick.click(); }), T.el('span', { text: '或直接粘贴 JSON' })]));\napp.appendChild(T.pane([T.field('备份内容', input)], true));\napp.appendChild(preview);\napp.appendChild(T.row([T.button('⚠ 恢复所选数据（覆盖现有）', function () {\n  var data = window._importData;\n  if (!data) { T.toast('请先载入有效备份'); return; }\n  var count = 0;\n  KNOWN.forEach(function (k) {\n    if (data[k] != null) {\n      localStorage.setItem(k, JSON.stringify(data[k]));\n      count++;\n    }\n  });\n  T.toast('已恢复 ' + count + ' 项数据');\n}, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -2,63 +2,59 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>BMI 计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('BMI 计算器', '身体质量指数', 'bmi');
-
-  var height = T.el('input', { type: 'number', placeholder: '身高 (cm)', min: '1', max: '300', style: 'flex:1' });
-  var weight = T.el('input', { type: 'number', placeholder: '体重 (kg)', min: '1', max: '500', style: 'flex:1' });
-
-  var result = T.el('div', { class: 'output dark', style: 'text-align:center;padding:20px' });
-  var bar = T.el('div', { style: 'height:20px;border-radius:10px;background:linear-gradient(to right,#3498db,#2ecc71,#f1c40f,#e67e22,#e74c3c);margin:16px 0' });
-  var marker = T.el('div', { style: 'width:4px;height:30px;background:#000;position:absolute;top:-5px;transition:left 0.3s' });
-
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function run() {
-    var h = parseFloat(height.value);
-    var w = parseFloat(weight.value);
-    if (!h || !w || h <= 0 || w <= 0) {
-      result.textContent = '请输入身高和体重';
-      marker.style.left = '0';
-      return;
-    }
-
-    var bmi = w / ((h / 100) * (h / 100));
-    var category, color;
-    if (bmi < 18.5) { category = '偏瘦'; color = '#3498db'; }
-    else if (bmi < 24) { category = '正常'; color = '#2ecc71'; }
-    else if (bmi < 28) { category = '偏胖'; color = '#f1c40f'; }
-    else { category = '肥胖'; color = '#e74c3c'; }
-
-    result.textContent = 'BMI: ' + bmi.toFixed(1) + ' (' + category + ')';
-    result.style.color = color;
-
-    var pos = Math.min(100, Math.max(0, (bmi - 15) / 30 * 100));
-    marker.style.left = pos + '%';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('BMI 计算器', '身体质量指数：BMI 值 + 中国 / WHO 标准分级', 'bmi');
+var h = T.num(170, { min: 50, max: 250, style: 'width:110px' });
+var w = T.num(65, { min: 10, max: 400, step: 0.1, style: 'width:110px' });
+var std = T.select([{value:'cn',label:'中国标准'},{value:'who',label:'WHO 标准'}],'cn');
+var big = T.stat('—', 'BMI');
+var box = T.el('div');
+function run() {
+  var height = +h.value / 100, weight = +w.value;
+  T.clearEl(box);
+  if (!height || !weight) return;
+  var bmi = weight / (height * height);
+  big.firstChild.textContent = bmi.toFixed(1);
+  var levels = std.value === 'cn'
+    ? [[18.5, '偏瘦', 'ok'], [24, '正常', 'ok'], [28, '超重', 'warn'], [Infinity, '肥胖', 'warn']]
+    : [[18.5, '偏瘦 Underweight', 'ok'], [25, '正常 Normal', 'ok'], [30, '超重 Overweight', 'warn'], [Infinity, '肥胖 Obese', 'warn']];
+  var cur = levels[0];
+  for (var i = 0; i < levels.length; i++) {
+    if (bmi < levels[i][0]) { cur = levels[i]; break; }
   }
-
-  height.addEventListener('input', function () { setTimeout(run, 100); });
-  weight.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [height, weight, copyBtn]));
-  app.appendChild(result);
-  app.appendChild(T.el('div', { style: 'position:relative' }, [bar, marker]));
-  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:space-between;font-size:0.8em;color:var(--muted)' }, [
-    T.el('span', { text: '偏瘦 <18.5' }),
-    T.el('span', { text: '正常 18.5-24' }),
-    T.el('span', { text: '偏胖 24-28' }),
-    T.el('span', { text: '肥胖 >28' })
+  var ideal1 = 18.5 * height * height, ideal2 = (std.value === 'cn' ? 23.9 : 24.9) * height * height;
+  box.appendChild(T.kvTable([
+    ['分级', cur[1]],
+    ['健康体重范围', (ideal1).toFixed(1) + ' ~ ' + (ideal2).toFixed(1) + ' kg'],
+    ['理想体重', ((ideal1 + ideal2) / 2).toFixed(1) + ' kg'],
+    ['距离健康范围', weight < ideal1 ? '还需增重 ' + (ideal1 - weight).toFixed(1) + ' kg' : weight > ideal2 ? '还需减重 ' + (weight - ideal2).toFixed(1) + ' kg' : '✓ 处于健康区间']
   ]));
+}
+[h, w, std].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('身高 (cm)', h), T.field('体重 (kg)', w)]));
+app.appendChild(T.row([big, std]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "bmi", "title": "BMI 计算器", "desc": "身体质量指数：BMI 值 + 中国 / WHO 标准分级", "scripts": "", "code": "var h = T.num(170, { min: 50, max: 250, style: 'width:110px' });\nvar w = T.num(65, { min: 10, max: 400, step: 0.1, style: 'width:110px' });\nvar std = T.select([{value:'cn',label:'中国标准'},{value:'who',label:'WHO 标准'}],'cn');\nvar big = T.stat('—', 'BMI');\nvar box = T.el('div');\nfunction run() {\n  var height = +h.value / 100, weight = +w.value;\n  T.clearEl(box);\n  if (!height || !weight) return;\n  var bmi = weight / (height * height);\n  big.firstChild.textContent = bmi.toFixed(1);\n  var levels = std.value === 'cn'\n    ? [[18.5, '偏瘦', 'ok'], [24, '正常', 'ok'], [28, '超重', 'warn'], [Infinity, '肥胖', 'warn']]\n    : [[18.5, '偏瘦 Underweight', 'ok'], [25, '正常 Normal', 'ok'], [30, '超重 Overweight', 'warn'], [Infinity, '肥胖 Obese', 'warn']];\n  var cur = levels[0];\n  for (var i = 0; i \u003c levels.length; i++) {\n    if (bmi \u003c levels[i][0]) { cur = levels[i]; break; }\n  }\n  var ideal1 = 18.5 * height * height, ideal2 = (std.value === 'cn' ? 23.9 : 24.9) * height * height;\n  box.appendChild(T.kvTable([\n    ['分级', cur[1]],\n    ['健康体重范围', (ideal1).toFixed(1) + ' ~ ' + (ideal2).toFixed(1) + ' kg'],\n    ['理想体重', ((ideal1 + ideal2) / 2).toFixed(1) + ' kg'],\n    ['距离健康范围', weight \u003c ideal1 ? '还需增重 ' + (ideal1 - weight).toFixed(1) + ' kg' : weight > ideal2 ? '还需减重 ' + (weight - ideal2).toFixed(1) + ' kg' : '✓ 处于健康区间']\n  ]));\n}\n[h, w, std].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('身高 (cm)', h), T.field('体重 (kg)', w)]));\napp.appendChild(T.row([big, std]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

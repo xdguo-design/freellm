@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>HTML 转 Markdown · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 转 Markdown', '解析 HTML 结构生成 Markdown（标题/列表/链接/表格/代码块）', 'html2md');
+var input = T.textarea('粘贴 HTML 源码…');
+var output = T.out('');
+function inline(node) {
+  var s = '';
+  node.childNodes.forEach(function (c) {
+    if (c.nodeType === 3) { s += c.nodeValue.replace(/\s+/g, ' '); return; }
+    if (c.nodeType !== 1) return;
+    var tag = c.tagName.toLowerCase();
+    var kids = function () { return Array.from(c.childNodes).map(inline).join(''); }();
+    if (tag === 'strong' || tag === 'b') s += '**' + kids.trim() + '**';
+    else if (tag === 'em' || tag === 'i') s += '*' + kids.trim() + '*';
+    else if (tag === 'code') s += '`' + c.textContent + '`';
+    else if (tag === 'del' || tag === 's') s += '~~' + kids.trim() + '~~';
+    else if (tag === 'a') s += '[' + kids.trim() + '](' + (c.getAttribute('href') || '') + ')';
+    else if (tag === 'img') s += '![' + (c.getAttribute('alt') || '') + '](' + (c.getAttribute('src') || '') + ')';
+    else if (tag === 'br') s += '\n';
+    else s += kids;
+  });
+  return s;
+}
+function convert(html) {
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  var out = [];
+  function walk(node, depth) {
+    Array.from(node.childNodes).forEach(function (c) {
+      if (c.nodeType === 3) {
+        var t = c.nodeValue.trim();
+        if (t) out.push(t);
+        return;
+      }
+      if (c.nodeType !== 1) return;
+      var tag = c.tagName.toLowerCase();
+      if (/^h[1-6]$/.test(tag)) out.push('#'.repeat(+tag[1]) + ' ' + inline(c).trim());
+      else if (tag === 'p') { var p = inline(c).trim(); if (p) out.push(p); }
+      else if (tag === 'hr') out.push('---');
+      else if (tag === 'pre') out.push('```\n' + c.textContent.replace(/\n$/, '') + '\n```');
+      else if (tag === 'blockquote') out.push(LF.md2html ? inline(c).trim().split('\n').map(function (l) { return '> ' + l; }).join('\n') : '> ' + inline(c).trim());
+      else if (tag === 'ul' || tag === 'ol') {
+        var i = 1;
+        Array.from(c.children).forEach(function (li) {
+          if (li.tagName !== 'LI') return;
+          var marker = tag === 'ol' ? (i++) + '.' : '-';
+          out.push('  '.repeat(depth) + marker + ' ' + inline(li).trim());
+          if (li.querySelector('ul,ol')) walk({ childNodes: Array.from(li.children).filter(function (x) { return /^(ul|ol)$/.test(x.tagName.toLowerCase()); }) }, depth + 1);
+        });
+      }
+      else if (tag === 'table') {
+        var rows = Array.from(c.querySelectorAll('tr'));
+        rows.forEach(function (tr, ri) {
+          var cells = Array.from(tr.children).map(function (td) { return inline(td).trim().replace(/\|/g, '\\|'); });
+          out.push('| ' + cells.join(' | ') + ' |');
+          if (ri === 0) out.push('|' + cells.map(function () { return ' --- '; }).join('|') + '|');
+        });
+      }
+      else if (tag === 'script' || tag === 'style') return;
+      else walk(c, depth);
+    });
+  }
+  walk(doc.body, 0);
+  return out.join('\n\n').replace(/\n{3,}/g, '\n\n');
+}
+function run() {
+  if (!input.value.trim()) { output.value = ''; return; }
+  try { output.value = convert(input.value); }
+  catch (e) { output.value = '⚠ ' + e.message; }
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('HTML', input), T.field('Markdown', output)]));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+input.value = '<h1>示例</h1><p>这是 <strong>加粗</strong> 与 <a href="https://freellm.top">链接</a>。</p><ul><li>列表项一</li><li>列表项二</li></ul>';
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "html2md", "title": "HTML 转 Markdown", "desc": "解析 HTML 结构生成 Markdown（标题/列表/链接/表格/代码块）", "scripts": "", "code": "var input = T.textarea('粘贴 HTML 源码…');\nvar output = T.out('');\nfunction inline(node) {\n  var s = '';\n  node.childNodes.forEach(function (c) {\n    if (c.nodeType === 3) { s += c.nodeValue.replace(/\\s+/g, ' '); return; }\n    if (c.nodeType !== 1) return;\n    var tag = c.tagName.toLowerCase();\n    var kids = function () { return Array.from(c.childNodes).map(inline).join(''); }();\n    if (tag === 'strong' || tag === 'b') s += '**' + kids.trim() + '**';\n    else if (tag === 'em' || tag === 'i') s += '*' + kids.trim() + '*';\n    else if (tag === 'code') s += '`' + c.textContent + '`';\n    else if (tag === 'del' || tag === 's') s += '~~' + kids.trim() + '~~';\n    else if (tag === 'a') s += '[' + kids.trim() + '](' + (c.getAttribute('href') || '') + ')';\n    else if (tag === 'img') s += '![' + (c.getAttribute('alt') || '') + '](' + (c.getAttribute('src') || '') + ')';\n    else if (tag === 'br') s += '\\n';\n    else s += kids;\n  });\n  return s;\n}\nfunction convert(html) {\n  var doc = new DOMParser().parseFromString(html, 'text/html');\n  var out = [];\n  function walk(node, depth) {\n    Array.from(node.childNodes).forEach(function (c) {\n      if (c.nodeType === 3) {\n        var t = c.nodeValue.trim();\n        if (t) out.push(t);\n        return;\n      }\n      if (c.nodeType !== 1) return;\n      var tag = c.tagName.toLowerCase();\n      if (/^h[1-6]$/.test(tag)) out.push('#'.repeat(+tag[1]) + ' ' + inline(c).trim());\n      else if (tag === 'p') { var p = inline(c).trim(); if (p) out.push(p); }\n      else if (tag === 'hr') out.push('---');\n      else if (tag === 'pre') out.push('```\\n' + c.textContent.replace(/\\n$/, '') + '\\n```');\n      else if (tag === 'blockquote') out.push(LF.md2html ? inline(c).trim().split('\\n').map(function (l) { return '> ' + l; }).join('\\n') : '> ' + inline(c).trim());\n      else if (tag === 'ul' || tag === 'ol') {\n        var i = 1;\n        Array.from(c.children).forEach(function (li) {\n          if (li.tagName !== 'LI') return;\n          var marker = tag === 'ol' ? (i++) + '.' : '-';\n          out.push('  '.repeat(depth) + marker + ' ' + inline(li).trim());\n          if (li.querySelector('ul,ol')) walk({ childNodes: Array.from(li.children).filter(function (x) { return /^(ul|ol)$/.test(x.tagName.toLowerCase()); }) }, depth + 1);\n        });\n      }\n      else if (tag === 'table') {\n        var rows = Array.from(c.querySelectorAll('tr'));\n        rows.forEach(function (tr, ri) {\n          var cells = Array.from(tr.children).map(function (td) { return inline(td).trim().replace(/\\|/g, '\\\\|'); });\n          out.push('| ' + cells.join(' | ') + ' |');\n          if (ri === 0) out.push('|' + cells.map(function () { return ' --- '; }).join('|') + '|');\n        });\n      }\n      else if (tag === 'script' || tag === 'style') return;\n      else walk(c, depth);\n    });\n  }\n  walk(doc.body, 0);\n  return out.join('\\n\\n').replace(/\\n{3,}/g, '\\n\\n');\n}\nfunction run() {\n  if (!input.value.trim()) { output.value = ''; return; }\n  try { output.value = convert(input.value); }\n  catch (e) { output.value = '⚠ ' + e.message; }\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('HTML', input), T.field('Markdown', output)]));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\ninput.value = '\u003ch1>示例\u003c/h1>\u003cp>这是 \u003cstrong>加粗\u003c/strong> 与 \u003ca href=\"https://freellm.top\">链接\u003c/a>。\u003c/p>\u003cul>\u003cli>列表项一\u003c/li>\u003cli>列表项二\u003c/li>\u003c/ul>';\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -2,79 +2,66 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>文字转语音 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('文字转语音', 'Web Speech API 朗读', 'tts');
-
-  var input = T.textarea('输入要朗读的文本...');
-  var voice = T.el('select', { style: 'flex:1' });
-  var rate = T.el('input', { type: 'range', min: '0.5', max: '2', step: '0.1', value: '1' });
-  var rateLabel = T.el('span', { text: '1x' });
-  var pitch = T.el('input', { type: 'range', min: '0', max: '2', step: '0.1', value: '1' });
-  var pitchLabel = T.el('span', { text: '1' });
-
-  var speakBtn = T.button('朗读', speak, true);
-  var pauseBtn = T.button('暂停', pause);
-  var stopBtn = T.button('停止', stop);
-
-  var voices = [];
-
-  function loadVoices() {
-    voices = speechSynthesis.getVoices();
-    voice.innerHTML = '';
-    voices.forEach(function (v, i) {
-      var opt = T.el('option', { value: i, text: v.name + ' (' + v.lang + ')' });
-      voice.appendChild(opt);
-    });
-  }
-
-  if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = loadVoices;
-  }
-  loadVoices();
-
-  function speak() {
-    speechSynthesis.cancel();
-    var text = input.value.trim();
-    if (!text) return;
-
-    var utterance = new SpeechSynthesisUtterance(text);
-    if (voices[voice.value]) utterance.voice = voices[voice.value];
-    utterance.rate = parseFloat(rate.value);
-    utterance.pitch = parseFloat(pitch.value);
-    speechSynthesis.speak(utterance);
-  }
-
-  function pause() {
-    if (speechSynthesis.speaking) {
-      speechSynthesis.paused ? speechSynthesis.resume() : speechSynthesis.pause();
-    }
-  }
-
-  function stop() {
-    speechSynthesis.cancel();
-  }
-
-  rate.addEventListener('input', function () { rateLabel.textContent = rate.value + 'x'; });
-  pitch.addEventListener('input', function () { pitchLabel.textContent = pitch.value; });
-
-  app.appendChild(T.el('div', { class: 'field', text: '语音:' }));
-  app.appendChild(voice);
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '语速' }), rate, rateLabel,
-    T.el('span', { text: '音调' }), pitch, pitchLabel
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'row' }, [speakBtn, pauseBtn, stopBtn]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文字转语音', 'Web Speech API 朗读：语速 / 音调 / 音色可调', 'tts');
+var input = T.textarea('你好，欢迎使用 FreeLLM 在线工具。The quick brown fox jumps over the lazy dog.', true);
+input.value = '你好，欢迎使用 FreeLLM 在线工具。The quick brown fox jumps over the lazy dog.';
+var voiceSel = T.select([], '');
+var rate = T.range(0.5, 2, 0.1, 1);
+var pitch = T.range(0.5, 2, 0.1, 1);
+var status = T.badge('—');
+function fillVoices() {
+  var voices = speechSynthesis.getVoices();
+  T.clearEl(voiceSel);
+  var zh = voices.filter(function (v) { return /zh|Chinese/i.test(v.lang); });
+  var others = voices.filter(function (v) { return !/zh|Chinese/i.test(v.lang); });
+  zh.concat(others).slice(0, 40).forEach(function (v) {
+    voiceSel.appendChild(T.el('option', { value: v.name, text: v.name + '（' + v.lang + '）' }));
+  });
+  if (!voices.length) status.textContent = '未检测到系统语音';
+}
+fillVoices();
+speechSynthesis.onvoiceschanged = fillVoices;
+function speak() {
+  speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(input.value);
+  var voices = speechSynthesis.getVoices();
+  var v = voices.find(function (x) { return x.name === voiceSel.value; });
+  if (v) u.voice = v;
+  u.rate = +rate.value;
+  u.pitch = +pitch.value;
+  u.onstart = function () { status.textContent = '朗读中…'; status.className = 'badge blue'; };
+  u.onend = function () { status.textContent = '✓ 朗读完成'; status.className = 'badge ok'; };
+  u.onerror = function () { status.textContent = '朗读失败'; status.className = 'badge warn'; };
+  speechSynthesis.speak(u);
+}
+app.appendChild(T.pane([T.field('朗读文本', input)], true));
+app.appendChild(T.row([T.el('span', { text: '音色' }), voiceSel]));
+app.appendChild(T.row([T.el('span', { text: '语速' }), rate, T.el('span', { text: '音调' }), pitch]));
+app.appendChild(T.row([T.button('▶ 朗读', speak, true),
+  T.button('⏸ 暂停', function () { speechSynthesis.pause(); }),
+  T.button('▶ 继续', function () { speechSynthesis.resume(); }),
+  T.button('⏹ 停止', function () { speechSynthesis.cancel(); }), status]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "tts", "title": "文字转语音", "desc": "Web Speech API 朗读：语速 / 音调 / 音色可调", "scripts": "", "code": "var input = T.textarea('你好，欢迎使用 FreeLLM 在线工具。The quick brown fox jumps over the lazy dog.', true);\ninput.value = '你好，欢迎使用 FreeLLM 在线工具。The quick brown fox jumps over the lazy dog.';\nvar voiceSel = T.select([], '');\nvar rate = T.range(0.5, 2, 0.1, 1);\nvar pitch = T.range(0.5, 2, 0.1, 1);\nvar status = T.badge('—');\nfunction fillVoices() {\n  var voices = speechSynthesis.getVoices();\n  T.clearEl(voiceSel);\n  var zh = voices.filter(function (v) { return /zh|Chinese/i.test(v.lang); });\n  var others = voices.filter(function (v) { return !/zh|Chinese/i.test(v.lang); });\n  zh.concat(others).slice(0, 40).forEach(function (v) {\n    voiceSel.appendChild(T.el('option', { value: v.name, text: v.name + '（' + v.lang + '）' }));\n  });\n  if (!voices.length) status.textContent = '未检测到系统语音';\n}\nfillVoices();\nspeechSynthesis.onvoiceschanged = fillVoices;\nfunction speak() {\n  speechSynthesis.cancel();\n  var u = new SpeechSynthesisUtterance(input.value);\n  var voices = speechSynthesis.getVoices();\n  var v = voices.find(function (x) { return x.name === voiceSel.value; });\n  if (v) u.voice = v;\n  u.rate = +rate.value;\n  u.pitch = +pitch.value;\n  u.onstart = function () { status.textContent = '朗读中…'; status.className = 'badge blue'; };\n  u.onend = function () { status.textContent = '✓ 朗读完成'; status.className = 'badge ok'; };\n  u.onerror = function () { status.textContent = '朗读失败'; status.className = 'badge warn'; };\n  speechSynthesis.speak(u);\n}\napp.appendChild(T.pane([T.field('朗读文本', input)], true));\napp.appendChild(T.row([T.el('span', { text: '音色' }), voiceSel]));\napp.appendChild(T.row([T.el('span', { text: '语速' }), rate, T.el('span', { text: '音调' }), pitch]));\napp.appendChild(T.row([T.button('▶ 朗读', speak, true),\n  T.button('⏸ 暂停', function () { speechSynthesis.pause(); }),\n  T.button('▶ 继续', function () { speechSynthesis.resume(); }),\n  T.button('⏹ 停止', function () { speechSynthesis.cancel(); }), status]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

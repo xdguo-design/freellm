@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>X.509 证书解析 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('X.509 证书解析', '解析 SSL/TLS 证书：主体、签发者、有效期、算法、密钥长度', 'x509');
+function _der(u8) {
+  var p = 0;
+  function tv() {
+    if (p >= u8.length) return null;
+    var tag = u8[p++];
+    var len = u8[p++];
+    if (len & 0x80) {
+      var n = len & 0x7f; len = 0;
+      for (var i = 0; i < n; i++) len = len * 256 + u8[p++];
+    }
+    var start = p; p += len;
+    return { tag: tag, start: start, len: len, end: p };
+  }
+  function children(t) {
+    var save = p, out = [];
+    p = t.start;
+    while (p < t.end) { var c = tv(); if (!c) break; out.push(c); }
+    p = save;
+    return out;
+  }
+  function oid(t) {
+    var b = u8.subarray(t.start, t.end);
+    var s = Math.floor(b[0] / 40) + '.' + (b[0] % 40);
+    var val = 0;
+    for (var i = 1; i < b.length; i++) {
+      val = val * 128 + (b[i] & 0x7f);
+      if (!(b[i] & 0x80)) { s += '.' + val; val = 0; }
+    }
+    return s;
+  }
+  function str(t) { return new TextDecoder().decode(u8.subarray(t.start, t.end)); }
+  function int(t) {
+    var b = u8.subarray(t.start, t.end), v = 0;
+    for (var i = 0; i < b.length; i++) v = v * 256 + b[i];
+    return v;
+  }
+  function time(t) {
+    var s = str(t);
+    if (s.endsWith('Z')) s = s.slice(0, -1);
+    if (t.tag === 23) return '20' + s.slice(0, 2) + '-' + s.slice(2, 4) + '-' + s.slice(4, 6) + ' ' + s.slice(6, 8) + ':' + s.slice(8, 10) + ':' + (s.slice(10, 12) || '00');
+    return s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8) + ' ' + s.slice(8, 10) + ':' + s.slice(10, 12) + ':' + (s.slice(12, 14) || '00');
+  }
+  function name(t) {
+    var parts = [];
+    var NAMES = { '2.5.4.3': 'CN', '2.5.4.6': 'C', '2.5.4.7': 'L', '2.5.4.8': 'ST', '2.5.4.10': 'O', '2.5.4.11': 'OU', '2.5.4.5': 'serialNumber', '1.2.840.113549.1.9.1': 'email' };
+    children(t).forEach(function (set) {
+      children(set).forEach(function (attr) {
+        var f = children(attr);
+        var o = oid(f[0]);
+        parts.push((NAMES[o] || o) + '=' + str(f[1]));
+      });
+    });
+    return parts.join(', ');
+  }
+  return { tv: tv, children: children, oid: oid, str: str, int: int, time: time, name: name };
+}
+function _pemToDer(pem) {
+  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\s+/g, '');
+  return T.b64ToBytes(b64);
+}
+function _parseX509(pem) {
+  var u8 = _pemToDer(pem);
+  var D = _der(u8);
+  var cert = D.tv();
+  var f = D.children(cert);
+  var tbs = D.children(f[0]);
+  var i = 0, version = 1;
+  if (tbs[0].tag === 0xA0) { version = D.int(D.children(tbs[0])[0]) + 1; i = 1; }
+  var serialT = tbs[i + 1];
+  var serial = T.bytesToHex(u8.subarray(serialT.start, serialT.end));
+  if (serial.length > 40) serial = serial.slice(0, 40) + '…';
+  var ALGS = { '1.2.840.113549.1.1.5': 'SHA1 + RSA', '1.2.840.113549.1.1.11': 'SHA256 + RSA', '1.2.840.113549.1.1.12': 'SHA384 + RSA', '1.2.840.113549.1.1.13': 'SHA512 + RSA', '1.2.840.10045.4.3.2': 'SHA256 + ECDSA', '1.2.840.10045.4.3.3': 'SHA384 + ECDSA', '1.2.840.10045.4.3.4': 'SHA512 + ECDSA' };
+  var sigAlg = ALGS[D.oid(tbs[i + 2])] || D.oid(tbs[i + 2]);
+  var issuer = D.name(tbs[i + 3]);
+  var validity = D.children(tbs[i + 4]);
+  var subject = D.name(tbs[i + 5]);
+  var spki = D.children(tbs[i + 6]);
+  var pkAlgOid = D.oid(spki[0]);
+  var pkAlg = ({ '1.2.840.113549.1.1.1': 'RSA', '1.2.840.10045.2.1': 'EC' })[pkAlgOid] || pkAlgOid;
+  var keyBits = '';
+  if (pkAlg === 'RSA') {
+    var pk = D.children(spki[1]);
+    var ints = D.children(pk[1]);
+    keyBits = (ints[0].len - 1) * 8 + ' bit';
+  } else if (pkAlg === 'EC') {
+    var ecParams = D.children(spki[0])[1];
+    var ECURVES = { '1.2.840.10045.3.1.7': 'P-256', '1.3.132.0.34': 'P-384', '1.3.132.0.35': 'P-521' };
+    keyBits = ECURVES[D.oid(ecParams)] || D.str(ecParams);
+  }
+  var notBefore = D.time(validity[0]), notAfter = D.time(validity[1]);
+  var expired = new Date(notAfter.replace(' ', 'T') + 'Z') < new Date();
+  return { version: version, serial: serial, sigAlg: sigAlg, issuer: issuer, subject: subject,
+    notBefore: notBefore, notAfter: notAfter, expired: expired, pkAlg: pkAlg, keyBits: keyBits };
+}
+
+var input = T.textarea('粘贴 PEM 证书（-----BEGIN CERTIFICATE-----…）…', true);
+input.setAttribute('rows', '6');
+var info = T.el('div', { class: 'pane single' });
+function show() {
+  T.clearEl(info);
+  if (!input.value.includes('BEGIN CERTIFICATE')) return;
+  try {
+    var c = _parseX509(input.value);
+    info.appendChild(T.kvTable([
+      ['版本', 'v' + c.version],
+      ['序列号', c.serial],
+      ['签名算法', c.sigAlg],
+      ['主体 Subject', c.subject],
+      ['签发者 Issuer', c.issuer],
+      ['生效时间', c.notBefore + ' UTC'],
+      ['过期时间', c.notAfter + ' UTC' + (c.expired ? '（已过期 ⚠）' : '（有效 ✓）')],
+      ['公钥算法', c.pkAlg + ' · ' + c.keyBits]
+    ]));
+  } catch (e) {
+    info.appendChild(T.msg('⚠ 证书解析失败：' + e.message, 'err'));
+  }
+}
+input.addEventListener('input', T.debounce(show, 300));
+app.appendChild(T.pane([T.field('证书 (PEM)', input)], true));
+app.appendChild(info);
+show();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "x509", "title": "X.509 证书解析", "desc": "解析 SSL/TLS 证书：主体、签发者、有效期、算法、密钥长度", "scripts": "", "code": "function _der(u8) {\n  var p = 0;\n  function tv() {\n    if (p >= u8.length) return null;\n    var tag = u8[p++];\n    var len = u8[p++];\n    if (len & 0x80) {\n      var n = len & 0x7f; len = 0;\n      for (var i = 0; i \u003c n; i++) len = len * 256 + u8[p++];\n    }\n    var start = p; p += len;\n    return { tag: tag, start: start, len: len, end: p };\n  }\n  function children(t) {\n    var save = p, out = [];\n    p = t.start;\n    while (p \u003c t.end) { var c = tv(); if (!c) break; out.push(c); }\n    p = save;\n    return out;\n  }\n  function oid(t) {\n    var b = u8.subarray(t.start, t.end);\n    var s = Math.floor(b[0] / 40) + '.' + (b[0] % 40);\n    var val = 0;\n    for (var i = 1; i \u003c b.length; i++) {\n      val = val * 128 + (b[i] & 0x7f);\n      if (!(b[i] & 0x80)) { s += '.' + val; val = 0; }\n    }\n    return s;\n  }\n  function str(t) { return new TextDecoder().decode(u8.subarray(t.start, t.end)); }\n  function int(t) {\n    var b = u8.subarray(t.start, t.end), v = 0;\n    for (var i = 0; i \u003c b.length; i++) v = v * 256 + b[i];\n    return v;\n  }\n  function time(t) {\n    var s = str(t);\n    if (s.endsWith('Z')) s = s.slice(0, -1);\n    if (t.tag === 23) return '20' + s.slice(0, 2) + '-' + s.slice(2, 4) + '-' + s.slice(4, 6) + ' ' + s.slice(6, 8) + ':' + s.slice(8, 10) + ':' + (s.slice(10, 12) || '00');\n    return s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8) + ' ' + s.slice(8, 10) + ':' + s.slice(10, 12) + ':' + (s.slice(12, 14) || '00');\n  }\n  function name(t) {\n    var parts = [];\n    var NAMES = { '2.5.4.3': 'CN', '2.5.4.6': 'C', '2.5.4.7': 'L', '2.5.4.8': 'ST', '2.5.4.10': 'O', '2.5.4.11': 'OU', '2.5.4.5': 'serialNumber', '1.2.840.113549.1.9.1': 'email' };\n    children(t).forEach(function (set) {\n      children(set).forEach(function (attr) {\n        var f = children(attr);\n        var o = oid(f[0]);\n        parts.push((NAMES[o] || o) + '=' + str(f[1]));\n      });\n    });\n    return parts.join(', ');\n  }\n  return { tv: tv, children: children, oid: oid, str: str, int: int, time: time, name: name };\n}\nfunction _pemToDer(pem) {\n  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\\s+/g, '');\n  return T.b64ToBytes(b64);\n}\nfunction _parseX509(pem) {\n  var u8 = _pemToDer(pem);\n  var D = _der(u8);\n  var cert = D.tv();\n  var f = D.children(cert);\n  var tbs = D.children(f[0]);\n  var i = 0, version = 1;\n  if (tbs[0].tag === 0xA0) { version = D.int(D.children(tbs[0])[0]) + 1; i = 1; }\n  var serialT = tbs[i + 1];\n  var serial = T.bytesToHex(u8.subarray(serialT.start, serialT.end));\n  if (serial.length > 40) serial = serial.slice(0, 40) + '…';\n  var ALGS = { '1.2.840.113549.1.1.5': 'SHA1 + RSA', '1.2.840.113549.1.1.11': 'SHA256 + RSA', '1.2.840.113549.1.1.12': 'SHA384 + RSA', '1.2.840.113549.1.1.13': 'SHA512 + RSA', '1.2.840.10045.4.3.2': 'SHA256 + ECDSA', '1.2.840.10045.4.3.3': 'SHA384 + ECDSA', '1.2.840.10045.4.3.4': 'SHA512 + ECDSA' };\n  var sigAlg = ALGS[D.oid(tbs[i + 2])] || D.oid(tbs[i + 2]);\n  var issuer = D.name(tbs[i + 3]);\n  var validity = D.children(tbs[i + 4]);\n  var subject = D.name(tbs[i + 5]);\n  var spki = D.children(tbs[i + 6]);\n  var pkAlgOid = D.oid(spki[0]);\n  var pkAlg = ({ '1.2.840.113549.1.1.1': 'RSA', '1.2.840.10045.2.1': 'EC' })[pkAlgOid] || pkAlgOid;\n  var keyBits = '';\n  if (pkAlg === 'RSA') {\n    var pk = D.children(spki[1]);\n    var ints = D.children(pk[1]);\n    keyBits = (ints[0].len - 1) * 8 + ' bit';\n  } else if (pkAlg === 'EC') {\n    var ecParams = D.children(spki[0])[1];\n    var ECURVES = { '1.2.840.10045.3.1.7': 'P-256', '1.3.132.0.34': 'P-384', '1.3.132.0.35': 'P-521' };\n    keyBits = ECURVES[D.oid(ecParams)] || D.str(ecParams);\n  }\n  var notBefore = D.time(validity[0]), notAfter = D.time(validity[1]);\n  var expired = new Date(notAfter.replace(' ', 'T') + 'Z') \u003c new Date();\n  return { version: version, serial: serial, sigAlg: sigAlg, issuer: issuer, subject: subject,\n    notBefore: notBefore, notAfter: notAfter, expired: expired, pkAlg: pkAlg, keyBits: keyBits };\n}\n\nvar input = T.textarea('粘贴 PEM 证书（-----BEGIN CERTIFICATE-----…）…', true);\ninput.setAttribute('rows', '6');\nvar info = T.el('div', { class: 'pane single' });\nfunction show() {\n  T.clearEl(info);\n  if (!input.value.includes('BEGIN CERTIFICATE')) return;\n  try {\n    var c = _parseX509(input.value);\n    info.appendChild(T.kvTable([\n      ['版本', 'v' + c.version],\n      ['序列号', c.serial],\n      ['签名算法', c.sigAlg],\n      ['主体 Subject', c.subject],\n      ['签发者 Issuer', c.issuer],\n      ['生效时间', c.notBefore + ' UTC'],\n      ['过期时间', c.notAfter + ' UTC' + (c.expired ? '（已过期 ⚠）' : '（有效 ✓）')],\n      ['公钥算法', c.pkAlg + ' · ' + c.keyBits]\n    ]));\n  } catch (e) {\n    info.appendChild(T.msg('⚠ 证书解析失败：' + e.message, 'err'));\n  }\n}\ninput.addEventListener('input', T.debounce(show, 300));\napp.appendChild(T.pane([T.field('证书 (PEM)', input)], true));\napp.appendChild(info);\nshow();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

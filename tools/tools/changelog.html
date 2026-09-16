@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>更新日志 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('更新日志', '工具站功能更新历史', 'changelog');
+var LOG = [
+  ['2026-09-15', 'v1.0 正式版', [
+    '全部 290 个工具页面上线，覆盖 13 个分类',
+    '工具集线器：搜索 / 分类 / 收藏 / 历史 / 模态框内嵌',
+    '纯前端运行，不收集任何输入数据'
+  ]],
+  ['2026-09-14', 'v0.9 Beta', [
+    '新增图片工作台（多步流水线处理）',
+    '农历 / 黄历 / 八字等中国传统工具',
+    '接入全站 GitHub 同步（收藏与历史漫游）'
+  ]],
+  ['2026-09-13', 'v0.8 Alpha', [
+    '工具注册表与分类体系定型',
+    '共享组件库 tool-common / lib-crypto / lib-format / lib-utils',
+    '二维码生成等首批工具上线'
+  ]]
+];
+LOG.forEach(function (entry) {
+  var card = T.el('div', { style: 'border-left:3px solid var(--accent);padding:2px 0 2px 16px;margin-bottom:22px' });
+  card.appendChild(T.row([T.el('b', { text: entry[1], style: 'font-size:16px' }), T.badge(entry[0])]));
+  var ul = T.el('ul', { style: 'margin:8px 0 0;padding-left:18px;color:var(--ink2);font-size:13.5px' });
+  entry[2].forEach(function (item) {
+    ul.appendChild(T.el('li', { text: item, style: 'margin:4px 0' }));
+  });
+  card.appendChild(ul);
+  app.appendChild(card);
+});
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "changelog", "title": "更新日志", "desc": "工具站功能更新历史", "scripts": "", "code": "var LOG = [\n  ['2026-09-15', 'v1.0 正式版', [\n    '全部 290 个工具页面上线，覆盖 13 个分类',\n    '工具集线器：搜索 / 分类 / 收藏 / 历史 / 模态框内嵌',\n    '纯前端运行，不收集任何输入数据'\n  ]],\n  ['2026-09-14', 'v0.9 Beta', [\n    '新增图片工作台（多步流水线处理）',\n    '农历 / 黄历 / 八字等中国传统工具',\n    '接入全站 GitHub 同步（收藏与历史漫游）'\n  ]],\n  ['2026-09-13', 'v0.8 Alpha', [\n    '工具注册表与分类体系定型',\n    '共享组件库 tool-common / lib-crypto / lib-format / lib-utils',\n    '二维码生成等首批工具上线'\n  ]]\n];\nLOG.forEach(function (entry) {\n  var card = T.el('div', { style: 'border-left:3px solid var(--accent);padding:2px 0 2px 16px;margin-bottom:22px' });\n  card.appendChild(T.row([T.el('b', { text: entry[1], style: 'font-size:16px' }), T.badge(entry[0])]));\n  var ul = T.el('ul', { style: 'margin:8px 0 0;padding-left:18px;color:var(--ink2);font-size:13.5px' });\n  entry[2].forEach(function (item) {\n    ul.appendChild(T.el('li', { text: item, style: 'margin:4px 0' }));\n  });\n  card.appendChild(ul);\n  app.appendChild(card);\n});"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

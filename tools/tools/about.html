@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>关于 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('关于', '关于 FreeLLM 工具站：理念 / 隐私 / 技术栈', 'about');
+var hero = T.el('div', { style: 'text-align:center;margin:26px 0' });
+hero.appendChild(T.el('div', { text: '✦', style: 'font-size:44px;color:var(--accent)' }));
+hero.appendChild(T.el('h2', { text: 'FreeLLM 工具合集', style: 'font:400 30px var(--font-serif);margin:8px 0' }));
+hero.appendChild(T.el('p', { text: '打开即用的 290 个在线工具 · 全部浏览器本地运行', style: 'color:var(--ink2)' }));
+app.appendChild(hero);
+app.appendChild(T.kvTable([
+  ['🎯 理念', '免费、无广告、无需注册；数据永不上传'],
+  ['🔒 隐私', '所有工具均在浏览器端运行，输入内容不经过任何服务器'],
+  ['⚡ 技术', '纯静态 HTML/CSS/JS + WebCrypto/WebAudio/Canvas，无框架无构建'],
+  ['📦 收录', '编码加密 / 格式化 / 生成器 / CSS / 文本 / 计算 / 日期 / 速查 / 开发 / 图片 / 娱乐 / 实用'],
+  ['🔄 同步', '收藏与历史可选 GitHub Gist 跨设备漫游'],
+  ['📮 联系', 'feedback@freellm.top']
+]));
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.el('p', { text: '© 2026 FreeLLM · 部分 colorblind 矩阵与农历算法基于公开资料实现。', style: 'color:var(--ink3);font-size:12px;text-align:center' }));
+app.appendChild(T.row([T.button('前往工具集线器', function () { location.href = '/tools/'; }, true),
+  T.button('查看每日更新', function () { location.href = '/logs/'; })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "about", "title": "关于", "desc": "关于 FreeLLM 工具站：理念 / 隐私 / 技术栈", "scripts": "", "code": "var hero = T.el('div', { style: 'text-align:center;margin:26px 0' });\nhero.appendChild(T.el('div', { text: '✦', style: 'font-size:44px;color:var(--accent)' }));\nhero.appendChild(T.el('h2', { text: 'FreeLLM 工具合集', style: 'font:400 30px var(--font-serif);margin:8px 0' }));\nhero.appendChild(T.el('p', { text: '打开即用的 290 个在线工具 · 全部浏览器本地运行', style: 'color:var(--ink2)' }));\napp.appendChild(hero);\napp.appendChild(T.kvTable([\n  ['🎯 理念', '免费、无广告、无需注册；数据永不上传'],\n  ['🔒 隐私', '所有工具均在浏览器端运行，输入内容不经过任何服务器'],\n  ['⚡ 技术', '纯静态 HTML/CSS/JS + WebCrypto/WebAudio/Canvas，无框架无构建'],\n  ['📦 收录', '编码加密 / 格式化 / 生成器 / CSS / 文本 / 计算 / 日期 / 速查 / 开发 / 图片 / 娱乐 / 实用'],\n  ['🔄 同步', '收藏与历史可选 GitHub Gist 跨设备漫游'],\n  ['📮 联系', 'feedback@freellm.top']\n]));\napp.appendChild(T.el('hr', { class: 'hr' }));\napp.appendChild(T.el('p', { text: '© 2026 FreeLLM · 部分 colorblind 矩阵与农历算法基于公开资料实现。', style: 'color:var(--ink3);font-size:12px;text-align:center' }));\napp.appendChild(T.row([T.button('前往工具集线器', function () { location.href = '/tools/'; }, true),\n  T.button('查看每日更新', function () { location.href = '/logs/'; })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>IEEE 754 转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('IEEE 754 转换', '浮点数 ↔ 32 / 64 位二进制表示（符号 / 指数 / 尾数）', 'ieee754');
+var input = T.num(3.1415926, { step: 'any', style: 'width:180px' });
+var bitsSel = T.select([{value:'32',label:'32 位 (float)'},{value:'64',label:'64 位 (double)'}],'64');
+var box = T.el('div');
+function run() {
+  var v = +input.value;
+  T.clearEl(box);
+  if (isNaN(v)) return;
+  var buf = new ArrayBuffer(8);
+  var dv = new DataView(buf);
+  var bits, expBits, manBits;
+  if (bitsSel.value === '32') {
+    dv.setFloat32(0, v);
+    bits = 32; expBits = 8; manBits = 23;
+  } else {
+    dv.setFloat64(0, v);
+    bits = 64; expBits = 11; manBits = 52;
+  }
+  var bin = '';
+  for (var i = 0; i < bits / 8; i++) bin += dv.getUint8(i).toString(2).padStart(8, '0');
+  var sign = bin[0];
+  var exp = bin.slice(1, 1 + expBits);
+  var man = bin.slice(1 + expBits);
+  var hex = T.bytesToHex(new Uint8Array(buf).slice(0, bits / 8));
+  box.appendChild(T.el('div', { class: 'output', style: 'white-space:pre' }));
+  box.firstChild.textContent =
+    '符号 (1 bit)   : ' + sign + (sign === '1' ? '  负' : '  正') + '\n' +
+    '指数 (' + expBits + ' bits): ' + exp + '  = ' + parseInt(exp, 2) + ' (偏移 ' + (Math.pow(2, expBits - 1) - 1) + ')\n' +
+    '尾数 (' + manBits + ' bits): ' + man + '\n' +
+    '二进制完整     : ' + bin + '\n' +
+    '十六进制       : ' + hex;
+  box.appendChild(T.kvTable([
+    ['十进制值', v], ['Hex', '0x' + hex.toUpperCase()],
+    ['还原验证', bitsSel.value === '32' ? dv.getFloat32(0) : dv.getFloat64(0)]
+  ]));
+}
+[input, bitsSel].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '精度' }), bitsSel]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "ieee754", "title": "IEEE 754 转换", "desc": "浮点数 ↔ 32 / 64 位二进制表示（符号 / 指数 / 尾数）", "scripts": "", "code": "var input = T.num(3.1415926, { step: 'any', style: 'width:180px' });\nvar bitsSel = T.select([{value:'32',label:'32 位 (float)'},{value:'64',label:'64 位 (double)'}],'64');\nvar box = T.el('div');\nfunction run() {\n  var v = +input.value;\n  T.clearEl(box);\n  if (isNaN(v)) return;\n  var buf = new ArrayBuffer(8);\n  var dv = new DataView(buf);\n  var bits, expBits, manBits;\n  if (bitsSel.value === '32') {\n    dv.setFloat32(0, v);\n    bits = 32; expBits = 8; manBits = 23;\n  } else {\n    dv.setFloat64(0, v);\n    bits = 64; expBits = 11; manBits = 52;\n  }\n  var bin = '';\n  for (var i = 0; i \u003c bits / 8; i++) bin += dv.getUint8(i).toString(2).padStart(8, '0');\n  var sign = bin[0];\n  var exp = bin.slice(1, 1 + expBits);\n  var man = bin.slice(1 + expBits);\n  var hex = T.bytesToHex(new Uint8Array(buf).slice(0, bits / 8));\n  box.appendChild(T.el('div', { class: 'output', style: 'white-space:pre' }));\n  box.firstChild.textContent =\n    '符号 (1 bit)   : ' + sign + (sign === '1' ? '  负' : '  正') + '\\n' +\n    '指数 (' + expBits + ' bits): ' + exp + '  = ' + parseInt(exp, 2) + ' (偏移 ' + (Math.pow(2, expBits - 1) - 1) + ')\\n' +\n    '尾数 (' + manBits + ' bits): ' + man + '\\n' +\n    '二进制完整     : ' + bin + '\\n' +\n    '十六进制       : ' + hex;\n  box.appendChild(T.kvTable([\n    ['十进制值', v], ['Hex', '0x' + hex.toUpperCase()],\n    ['还原验证', bitsSel.value === '32' ? dv.getFloat32(0) : dv.getFloat64(0)]\n  ]));\n}\n[input, bitsSel].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '精度' }), bitsSel]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>ECDH 密钥交换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ECDH 密钥交换', '椭圆曲线 Diffie-Hellman：双方从各自密钥对推导出相同共享密钥', 'ecdh');
+var curve = T.select([{value:'P-256',label:'P-256'},{value:'P-384',label:'P-384'}],'P-256');
+var myPub = T.out('我的公钥（发给对方）…');
+myPub.setAttribute('rows', '4');
+var peerPub = T.textarea('粘贴对方公钥（PEM）…', true);
+peerPub.setAttribute('rows', '4');
+var myPriv = T.out('我的私钥（PKCS#8）…');
+myPriv.setAttribute('rows', '4');
+var shared = T.out('共享密钥 (hex)…');
+var kp = null;
+function toPem(b64) {
+  return '-----BEGIN PUBLIC KEY-----\n' + b64.match(/.{1,64}/g).join('\n') + '\n-----END PUBLIC KEY-----';
+}
+function gen() {
+  crypto.subtle.generateKey({ name: 'ECDH', namedCurve: curve.value }, true, ['deriveKey'])
+    .then(function (k) {
+      kp = k;
+      return crypto.subtle.exportKey('spki', k.publicKey);
+    })
+    .then(function (spki) {
+      myPub.value = toPem(T.bytesToB64(spki));
+      return crypto.subtle.exportKey('pkcs8', kp.privateKey);
+    })
+    .then(function (pk8) {
+      myPriv.value = '-----BEGIN PRIVATE KEY-----\n' + T.bytesToB64(pk8).match(/.{1,64}/g).join('\n') + '\n-----END PRIVATE KEY-----';
+    });
+}
+function derive() {
+  if (!kp || !peerPub.value) { T.toast('请先生成密钥对并粘贴对方公钥'); return; }
+  crypto.subtle.importKey('spki', _peerDer(peerPub.value), { name: 'ECDH', namedCurve: curve.value }, false, [])
+    .then(function (peer) {
+      return crypto.subtle.deriveKey({ name: 'ECDH', public: peer }, kp.privateKey, { name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+    })
+    .then(function (secret) { return crypto.subtle.exportKey('raw', secret); })
+    .then(function (raw) { shared.value = T.bytesToHex(raw); })
+    .catch(function (e) { shared.value = '⚠ ' + e.message; });
+}
+function _peerDer(pem) {
+  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\s+/g, '');
+  return T.b64ToBytes(b64);
+}
+app.appendChild(T.pane([T.field('我的公钥', myPub), T.field('对方公钥', peerPub)]));
+app.appendChild(T.pane([T.field('我的私钥（妥善保管）', myPriv), T.field('共享密钥（双方一致）', shared)]));
+app.appendChild(T.row([T.el('span', { text: '曲线' }), curve,
+  T.button('生成我的密钥对', gen, true), T.button('推导共享密钥', derive)]));
+gen();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "ecdh", "title": "ECDH 密钥交换", "desc": "椭圆曲线 Diffie-Hellman：双方从各自密钥对推导出相同共享密钥", "scripts": "", "code": "var curve = T.select([{value:'P-256',label:'P-256'},{value:'P-384',label:'P-384'}],'P-256');\nvar myPub = T.out('我的公钥（发给对方）…');\nmyPub.setAttribute('rows', '4');\nvar peerPub = T.textarea('粘贴对方公钥（PEM）…', true);\npeerPub.setAttribute('rows', '4');\nvar myPriv = T.out('我的私钥（PKCS#8）…');\nmyPriv.setAttribute('rows', '4');\nvar shared = T.out('共享密钥 (hex)…');\nvar kp = null;\nfunction toPem(b64) {\n  return '-----BEGIN PUBLIC KEY-----\\n' + b64.match(/.{1,64}/g).join('\\n') + '\\n-----END PUBLIC KEY-----';\n}\nfunction gen() {\n  crypto.subtle.generateKey({ name: 'ECDH', namedCurve: curve.value }, true, ['deriveKey'])\n    .then(function (k) {\n      kp = k;\n      return crypto.subtle.exportKey('spki', k.publicKey);\n    })\n    .then(function (spki) {\n      myPub.value = toPem(T.bytesToB64(spki));\n      return crypto.subtle.exportKey('pkcs8', kp.privateKey);\n    })\n    .then(function (pk8) {\n      myPriv.value = '-----BEGIN PRIVATE KEY-----\\n' + T.bytesToB64(pk8).match(/.{1,64}/g).join('\\n') + '\\n-----END PRIVATE KEY-----';\n    });\n}\nfunction derive() {\n  if (!kp || !peerPub.value) { T.toast('请先生成密钥对并粘贴对方公钥'); return; }\n  crypto.subtle.importKey('spki', _peerDer(peerPub.value), { name: 'ECDH', namedCurve: curve.value }, false, [])\n    .then(function (peer) {\n      return crypto.subtle.deriveKey({ name: 'ECDH', public: peer }, kp.privateKey, { name: 'AES-GCM', length: 256 }, true, ['encrypt']);\n    })\n    .then(function (secret) { return crypto.subtle.exportKey('raw', secret); })\n    .then(function (raw) { shared.value = T.bytesToHex(raw); })\n    .catch(function (e) { shared.value = '⚠ ' + e.message; });\n}\nfunction _peerDer(pem) {\n  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\\s+/g, '');\n  return T.b64ToBytes(b64);\n}\napp.appendChild(T.pane([T.field('我的公钥', myPub), T.field('对方公钥', peerPub)]));\napp.appendChild(T.pane([T.field('我的私钥（妥善保管）', myPriv), T.field('共享密钥（双方一致）', shared)]));\napp.appendChild(T.row([T.el('span', { text: '曲线' }), curve,\n  T.button('生成我的密钥对', gen, true), T.button('推导共享密钥', derive)]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

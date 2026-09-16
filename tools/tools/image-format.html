@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片格式转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片格式转换', 'PNG ↔ JPEG ↔ WebP 互转，透明通道自动处理', 'image-format');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var fmt = T.select([{value:'image/png',label:'PNG（无损/透明）'},{value:'image/jpeg',label:'JPEG（体积小）'},{value:'image/webp',label:'WebP（更小）'}],'image/webp');
+var quality = T.range(0.1, 1, 0.05, 0.9);
+var bg = T.color('#FFFFFF');
+var info = T.badge('—');
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+function render() {
+  if (!img) return;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext('2d');
+  if (fmt.value !== 'image/png') {
+    ctx.fillStyle = bg.value;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+  ctx.drawImage(img, 0, 0);
+  canvas.style.display = '';
+  canvas.toBlob(function (b) {
+    if (b) info.textContent = '转换后 ' + T.fmtBytes(b.size) + '（' + fmt.value.split('/')[1].toUpperCase() + '）';
+  }, fmt.value, +quality.value);
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+[fmt, quality, bg].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '目标格式' }), fmt, T.el('span', { text: '质量' }), quality, T.el('span', { text: '透明填充' }), bg, info]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载转换结果', function () {
+  var ext = fmt.value.split('/')[1].replace('jpeg', 'jpg');
+  canvas.toBlob(function (b) { T.download('converted.' + ext, b); }, fmt.value, +quality.value);
+}, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-format", "title": "图片格式转换", "desc": "PNG ↔ JPEG ↔ WebP 互转，透明通道自动处理", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar fmt = T.select([{value:'image/png',label:'PNG（无损/透明）'},{value:'image/jpeg',label:'JPEG（体积小）'},{value:'image/webp',label:'WebP（更小）'}],'image/webp');\nvar quality = T.range(0.1, 1, 0.05, 0.9);\nvar bg = T.color('#FFFFFF');\nvar info = T.badge('—');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  canvas.width = img.width;\n  canvas.height = img.height;\n  var ctx = canvas.getContext('2d');\n  if (fmt.value !== 'image/png') {\n    ctx.fillStyle = bg.value;\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n  }\n  ctx.drawImage(img, 0, 0);\n  canvas.style.display = '';\n  canvas.toBlob(function (b) {\n    if (b) info.textContent = '转换后 ' + T.fmtBytes(b.size) + '（' + fmt.value.split('/')[1].toUpperCase() + '）';\n  }, fmt.value, +quality.value);\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\n[fmt, quality, bg].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '目标格式' }), fmt, T.el('span', { text: '质量' }), quality, T.el('span', { text: '透明填充' }), bg, info]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载转换结果', function () {\n  var ext = fmt.value.split('/')[1].replace('jpeg', 'jpg');\n  canvas.toBlob(function (b) { T.download('converted.' + ext, b); }, fmt.value, +quality.value);\n}, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

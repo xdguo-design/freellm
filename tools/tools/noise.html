@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>噪声纹理 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('噪声纹理', 'Canvas 噪声纹理生成：灰度 / 彩色 / 云雾（简单 Perlin 风格）', 'noise');
+var mode = T.select([{value:'gray',label:'灰度噪声'},{value:'color',label:'彩色噪声'},{value:'cloud',label:'云雾（平滑）'}],'gray');
+var density = T.range(0, 100, 1, 50);
+var canvas = T.el('canvas', { width: 480, height: 320, style: 'width:100%;max-width:480px;border:1px solid var(--line);border-radius:10px' });
+function valueNoise(w, h, scale) {
+  var gw = Math.ceil(w / scale) + 2, gh = Math.ceil(h / scale) + 2;
+  var g = [];
+  for (var i = 0; i < gw * gh; i++) g.push(Math.random());
+  var out = [];
+  for (var y = 0; y < h; y++) {
+    out[y] = [];
+    for (var x = 0; x < w; x++) {
+      var gx = x / scale, gy = y / scale;
+      var x0 = Math.floor(gx), y0 = Math.floor(gy);
+      var fx = gx - x0, fy = gy - y0;
+      var sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+      var v = (g[y0 * gw + x0] * (1 - sx) + g[y0 * gw + x0 + 1] * sx) * (1 - sy) +
+        (g[(y0 + 1) * gw + x0] * (1 - sx) + g[(y0 + 1) * gw + x0 + 1] * sx) * sy;
+      out[y][x] = v;
+    }
+  }
+  return out;
+}
+function render() {
+  var ctx = canvas.getContext('2d');
+  var d = ctx.createImageData(canvas.width, canvas.height);
+  var cells = [];
+  if (mode.value === 'cloud') {
+    var base = valueNoise(canvas.width, canvas.height, 64);
+    var mid = valueNoise(canvas.width, canvas.height, 24);
+    var fine = valueNoise(canvas.width, canvas.height, 8);
+    for (var y = 0; y < canvas.height; y++) for (var x = 0; x < canvas.width; x++) {
+      var v = base[y][x] * 0.6 + mid[y][x] * 0.28 + fine[y][x] * 0.12;
+      var c = Math.round(v * 255);
+      var i = (y * canvas.width + x) * 4;
+      d.data[i] = c; d.data[i + 1] = c; d.data[i + 2] = c; d.data[i + 3] = 255;
+    }
+  } else {
+    for (y = 0; y < canvas.height; y++) for (x = 0; x < canvas.width; x++) {
+      i = (y * canvas.width + x) * 4;
+      if (mode.value === 'gray') {
+        var g = Math.random() * 255 * (density.value / 100) + 128 * (1 - density.value / 100);
+        d.data[i] = d.data[i + 1] = d.data[i + 2] = g;
+      } else {
+        d.data[i] = Math.random() * 255;
+        d.data[i + 1] = Math.random() * 255;
+        d.data[i + 2] = Math.random() * 255;
+      }
+      d.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(d, 0, 0);
+}
+app.appendChild(canvas);
+app.appendChild(T.row([mode, T.el('span', { text: '密度（灰度）' }), density,
+  T.button('重新生成', render, true),
+  T.button('下载 PNG', function () { T.dlCanvas(canvas, 'noise.png'); })]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "noise", "title": "噪声纹理", "desc": "Canvas 噪声纹理生成：灰度 / 彩色 / 云雾（简单 Perlin 风格）", "scripts": "", "code": "var mode = T.select([{value:'gray',label:'灰度噪声'},{value:'color',label:'彩色噪声'},{value:'cloud',label:'云雾（平滑）'}],'gray');\nvar density = T.range(0, 100, 1, 50);\nvar canvas = T.el('canvas', { width: 480, height: 320, style: 'width:100%;max-width:480px;border:1px solid var(--line);border-radius:10px' });\nfunction valueNoise(w, h, scale) {\n  var gw = Math.ceil(w / scale) + 2, gh = Math.ceil(h / scale) + 2;\n  var g = [];\n  for (var i = 0; i \u003c gw * gh; i++) g.push(Math.random());\n  var out = [];\n  for (var y = 0; y \u003c h; y++) {\n    out[y] = [];\n    for (var x = 0; x \u003c w; x++) {\n      var gx = x / scale, gy = y / scale;\n      var x0 = Math.floor(gx), y0 = Math.floor(gy);\n      var fx = gx - x0, fy = gy - y0;\n      var sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);\n      var v = (g[y0 * gw + x0] * (1 - sx) + g[y0 * gw + x0 + 1] * sx) * (1 - sy) +\n        (g[(y0 + 1) * gw + x0] * (1 - sx) + g[(y0 + 1) * gw + x0 + 1] * sx) * sy;\n      out[y][x] = v;\n    }\n  }\n  return out;\n}\nfunction render() {\n  var ctx = canvas.getContext('2d');\n  var d = ctx.createImageData(canvas.width, canvas.height);\n  var cells = [];\n  if (mode.value === 'cloud') {\n    var base = valueNoise(canvas.width, canvas.height, 64);\n    var mid = valueNoise(canvas.width, canvas.height, 24);\n    var fine = valueNoise(canvas.width, canvas.height, 8);\n    for (var y = 0; y \u003c canvas.height; y++) for (var x = 0; x \u003c canvas.width; x++) {\n      var v = base[y][x] * 0.6 + mid[y][x] * 0.28 + fine[y][x] * 0.12;\n      var c = Math.round(v * 255);\n      var i = (y * canvas.width + x) * 4;\n      d.data[i] = c; d.data[i + 1] = c; d.data[i + 2] = c; d.data[i + 3] = 255;\n    }\n  } else {\n    for (y = 0; y \u003c canvas.height; y++) for (x = 0; x \u003c canvas.width; x++) {\n      i = (y * canvas.width + x) * 4;\n      if (mode.value === 'gray') {\n        var g = Math.random() * 255 * (density.value / 100) + 128 * (1 - density.value / 100);\n        d.data[i] = d.data[i + 1] = d.data[i + 2] = g;\n      } else {\n        d.data[i] = Math.random() * 255;\n        d.data[i + 1] = Math.random() * 255;\n        d.data[i + 2] = Math.random() * 255;\n      }\n      d.data[i + 3] = 255;\n    }\n  }\n  ctx.putImageData(d, 0, 0);\n}\napp.appendChild(canvas);\napp.appendChild(T.row([mode, T.el('span', { text: '密度（灰度）' }), density,\n  T.button('重新生成', render, true),\n  T.button('下载 PNG', function () { T.dlCanvas(canvas, 'noise.png'); })]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

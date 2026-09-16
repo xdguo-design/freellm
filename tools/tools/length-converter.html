@@ -2,63 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>长度单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('长度单位换算', 'mm/cm/m/in/ft/px 等', 'length-converter');
-
-  var units = [
-    { id: 'mm', name: '毫米 (mm)' },
-    { id: 'cm', name: '厘米 (cm)' },
-    { id: 'm', name: '米 (m)' },
-    { id: 'km', name: '千米 (km)' },
-    { id: 'in', name: '英寸 (in)' },
-    { id: 'ft', name: '英尺 (ft)' },
-    { id: 'yd', name: '码 (yd)' },
-    { id: 'mi', name: '英里 (mi)' },
-    { id: 'px', name: '像素 (px)' }
-  ];
-
-  var factors = { mm: 0.001, cm: 0.01, m: 1, km: 1000, 'in': 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344, px: 0.000264583333 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('长度单位换算', 'mm / cm / m / inch / ft / 尺寸', 'length-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "m (米)", "label": "m (米)"}, {"value": "mm (毫米)", "label": "mm (毫米)"}, {"value": "cm (厘米)", "label": "cm (厘米)"}, {"value": "km (千米)", "label": "km (千米)"}, {"value": "in (英寸)", "label": "in (英寸)"}, {"value": "ft (英尺)", "label": "ft (英尺)"}, {"value": "yd (码)", "label": "yd (码)"}, {"value": "mi (英里)", "label": "mi (英里)"}, {"value": "nmi (海里)", "label": "nmi (海里)"}, {"value": "尺", "label": "尺"}, {"value": "寸", "label": "寸"}, {"value": "px (96dpi)", "label": "px (96dpi)"}], "cm (厘米)");
+var to = T.select([{"value": "m (米)", "label": "m (米)"}, {"value": "mm (毫米)", "label": "mm (毫米)"}, {"value": "cm (厘米)", "label": "cm (厘米)"}, {"value": "km (千米)", "label": "km (千米)"}, {"value": "in (英寸)", "label": "in (英寸)"}, {"value": "ft (英尺)", "label": "ft (英尺)"}, {"value": "yd (码)", "label": "yd (码)"}, {"value": "mi (英里)", "label": "mi (英里)"}, {"value": "nmi (海里)", "label": "nmi (海里)"}, {"value": "尺", "label": "尺"}, {"value": "寸", "label": "寸"}, {"value": "px (96dpi)", "label": "px (96dpi)"}], "m (米)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"m (米)": 1, "mm (毫米)": 0.001, "cm (厘米)": 0.01, "km (千米)": 1000, "in (英寸)": 0.0254, "ft (英尺)": 0.3048, "yd (码)": 0.9144, "mi (英里)": 1609.344, "nmi (海里)": 1852, "尺": 0.3333333333333333, "寸": 0.03333333333333333, "px (96dpi)": 0.0002645833};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var meters = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (meters / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:100px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.m.value = '1';
-  run('m');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "length-converter", "title": "长度单位换算", "desc": "mm / cm / m / inch / ft / 尺寸", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"m (米)\", \"label\": \"m (米)\"}, {\"value\": \"mm (毫米)\", \"label\": \"mm (毫米)\"}, {\"value\": \"cm (厘米)\", \"label\": \"cm (厘米)\"}, {\"value\": \"km (千米)\", \"label\": \"km (千米)\"}, {\"value\": \"in (英寸)\", \"label\": \"in (英寸)\"}, {\"value\": \"ft (英尺)\", \"label\": \"ft (英尺)\"}, {\"value\": \"yd (码)\", \"label\": \"yd (码)\"}, {\"value\": \"mi (英里)\", \"label\": \"mi (英里)\"}, {\"value\": \"nmi (海里)\", \"label\": \"nmi (海里)\"}, {\"value\": \"尺\", \"label\": \"尺\"}, {\"value\": \"寸\", \"label\": \"寸\"}, {\"value\": \"px (96dpi)\", \"label\": \"px (96dpi)\"}], \"cm (厘米)\");\nvar to = T.select([{\"value\": \"m (米)\", \"label\": \"m (米)\"}, {\"value\": \"mm (毫米)\", \"label\": \"mm (毫米)\"}, {\"value\": \"cm (厘米)\", \"label\": \"cm (厘米)\"}, {\"value\": \"km (千米)\", \"label\": \"km (千米)\"}, {\"value\": \"in (英寸)\", \"label\": \"in (英寸)\"}, {\"value\": \"ft (英尺)\", \"label\": \"ft (英尺)\"}, {\"value\": \"yd (码)\", \"label\": \"yd (码)\"}, {\"value\": \"mi (英里)\", \"label\": \"mi (英里)\"}, {\"value\": \"nmi (海里)\", \"label\": \"nmi (海里)\"}, {\"value\": \"尺\", \"label\": \"尺\"}, {\"value\": \"寸\", \"label\": \"寸\"}, {\"value\": \"px (96dpi)\", \"label\": \"px (96dpi)\"}], \"m (米)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"m (米)\": 1, \"mm (毫米)\": 0.001, \"cm (厘米)\": 0.01, \"km (千米)\": 1000, \"in (英寸)\": 0.0254, \"ft (英尺)\": 0.3048, \"yd (码)\": 0.9144, \"mi (英里)\": 1609.344, \"nmi (海里)\": 1852, \"尺\": 0.3333333333333333, \"寸\": 0.03333333333333333, \"px (96dpi)\": 0.0002645833};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

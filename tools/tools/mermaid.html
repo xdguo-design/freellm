@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Mermaid 编辑器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+<script src="/tools/js/vendor/mermaid.min.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Mermaid 编辑器', '流程图 / 时序图 / 甘特图在线编辑渲染（本地渲染库）', 'mermaid');
+if (typeof mermaid === 'undefined') { document.getElementById('app').innerHTML = '<div class="msg err">渲染库加载失败，请刷新重试</div>'; return; }
+mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+var input = T.textarea('graph TD\n  A[开始] --> B{是否免费?}\n  B -- 是 --> C[FreeLLM]\n  B -- 否 --> D[跳过]');
+input.value = 'graph TD\n  A[开始] --> B{是否免费?}\n  B -- 是 --> C[FreeLLM]\n  B -- 否 --> D[跳过]';
+input.style.minHeight = '240px';
+var preview = T.el('div', { class: 'output', style: 'min-height:240px;background:#fff;display:flex;justify-content:center;overflow:auto' });
+var status = T.badge('—');
+var serial = 0;
+function render() {
+  var code = input.value;
+  if (!code.trim()) { preview.innerHTML = ''; return; }
+  serial++;
+  mermaid.render('mmd' + serial, code).then(function (res) {
+    preview.innerHTML = res.svg;
+    status.textContent = '✓ 渲染成功';
+    status.className = 'badge ok';
+  }).catch(function (e) {
+    status.textContent = '⚠ 语法错误';
+    status.className = 'badge warn';
+  });
+}
+input.addEventListener('input', T.debounce(render, 400));
+app.appendChild(T.pane([T.field('Mermaid 源码', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), preview])]));
+app.appendChild(T.row([status,
+  T.button('下载 SVG', function () {
+    var svg = preview.querySelector('svg');
+    if (svg) T.download('diagram.svg', new XMLSerializer().serializeToString(svg), 'image/svg+xml');
+  }),
+  T.button('复制源码', function () { T.copy(input.value); })]));
+app.appendChild(T.el('p', { text: '语法示例：graph TD 流程图 · sequenceDiagram 时序图 · gantt 甘特图 · pie 饼图 · stateDiagram-v2 状态图', style: 'color:var(--ink2);font-size:12px' }));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "mermaid", "title": "Mermaid 编辑器", "desc": "流程图 / 时序图 / 甘特图在线编辑渲染（本地渲染库）", "scripts": "\u003cscript src=\"/tools/js/vendor/mermaid.min.js\">\u003c/script>", "code": "if (typeof mermaid === 'undefined') { document.getElementById('app').innerHTML = '\u003cdiv class=\"msg err\">渲染库加载失败，请刷新重试\u003c/div>'; return; }\nmermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });\nvar input = T.textarea('graph TD\\n  A[开始] --> B{是否免费?}\\n  B -- 是 --> C[FreeLLM]\\n  B -- 否 --> D[跳过]');\ninput.value = 'graph TD\\n  A[开始] --> B{是否免费?}\\n  B -- 是 --> C[FreeLLM]\\n  B -- 否 --> D[跳过]';\ninput.style.minHeight = '240px';\nvar preview = T.el('div', { class: 'output', style: 'min-height:240px;background:#fff;display:flex;justify-content:center;overflow:auto' });\nvar status = T.badge('—');\nvar serial = 0;\nfunction render() {\n  var code = input.value;\n  if (!code.trim()) { preview.innerHTML = ''; return; }\n  serial++;\n  mermaid.render('mmd' + serial, code).then(function (res) {\n    preview.innerHTML = res.svg;\n    status.textContent = '✓ 渲染成功';\n    status.className = 'badge ok';\n  }).catch(function (e) {\n    status.textContent = '⚠ 语法错误';\n    status.className = 'badge warn';\n  });\n}\ninput.addEventListener('input', T.debounce(render, 400));\napp.appendChild(T.pane([T.field('Mermaid 源码', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), preview])]));\napp.appendChild(T.row([status,\n  T.button('下载 SVG', function () {\n    var svg = preview.querySelector('svg');\n    if (svg) T.download('diagram.svg', new XMLSerializer().serializeToString(svg), 'image/svg+xml');\n  }),\n  T.button('复制源码', function () { T.copy(input.value); })]));\napp.appendChild(T.el('p', { text: '语法示例：graph TD 流程图 · sequenceDiagram 时序图 · gantt 甘特图 · pie 饼图 · stateDiagram-v2 状态图', style: 'color:var(--ink2);font-size:12px' }));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>字体切换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('字体切换', '切换界面字体偏好：系统 / 衬线 / 等宽 / 圆体', 'font-switch');
+var FONTS = {
+  system: { label: '系统默认（推荐）', stack: 'system-ui, -apple-system, sans-serif' },
+  serif: { label: '衬线 Serif', stack: 'Georgia, "Noto Serif SC", serif' },
+  mono: { label: '等宽 Mono', stack: 'ui-monospace, "JetBrains Mono", Consolas, monospace' },
+  rounded: { label: '圆体 Rounded', stack: '"Yuanti SC", "PingFang SC", "Comic Sans MS", sans-serif' }
+};
+var cur = 'system';
+try { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').font || 'system'; } catch (e) {}
+var preview = T.el('div', { class: 'output', style: 'min-height:120px;font-family:var(--font-sans);line-height:2' });
+function render() {
+  T.clearEl(preview);
+  preview.style.fontFamily = FONTS[cur].stack;
+  preview.appendChild(T.el('div', { text: '永和九年，岁在癸丑。The quick brown fox 0123456789', style: 'font-size:17px' }));
+  preview.appendChild(T.el('div', { text: '当前字体：' + FONTS[cur].label, style: 'font-size:12px;color:var(--ink3)' }));
+}
+render();
+var row = T.el('div', { class: 'row' });
+function renderBtns() {
+  T.clearEl(row);
+  Object.keys(FONTS).forEach(function (k) {
+    row.appendChild(T.button(FONTS[k].label + (cur === k ? ' ✓' : ''), function () {
+      cur = k;
+      var settings = {};
+      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}
+      settings.font = cur;
+      localStorage.setItem('freellm-settings', JSON.stringify(settings));
+      renderBtns();
+      render();
+    }));
+  });
+}
+renderBtns();
+app.appendChild(row);
+app.appendChild(preview);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "font-switch", "title": "字体切换", "desc": "切换界面字体偏好：系统 / 衬线 / 等宽 / 圆体", "scripts": "", "code": "var FONTS = {\n  system: { label: '系统默认（推荐）', stack: 'system-ui, -apple-system, sans-serif' },\n  serif: { label: '衬线 Serif', stack: 'Georgia, \"Noto Serif SC\", serif' },\n  mono: { label: '等宽 Mono', stack: 'ui-monospace, \"JetBrains Mono\", Consolas, monospace' },\n  rounded: { label: '圆体 Rounded', stack: '\"Yuanti SC\", \"PingFang SC\", \"Comic Sans MS\", sans-serif' }\n};\nvar cur = 'system';\ntry { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').font || 'system'; } catch (e) {}\nvar preview = T.el('div', { class: 'output', style: 'min-height:120px;font-family:var(--font-sans);line-height:2' });\nfunction render() {\n  T.clearEl(preview);\n  preview.style.fontFamily = FONTS[cur].stack;\n  preview.appendChild(T.el('div', { text: '永和九年，岁在癸丑。The quick brown fox 0123456789', style: 'font-size:17px' }));\n  preview.appendChild(T.el('div', { text: '当前字体：' + FONTS[cur].label, style: 'font-size:12px;color:var(--ink3)' }));\n}\nrender();\nvar row = T.el('div', { class: 'row' });\nfunction renderBtns() {\n  T.clearEl(row);\n  Object.keys(FONTS).forEach(function (k) {\n    row.appendChild(T.button(FONTS[k].label + (cur === k ? ' ✓' : ''), function () {\n      cur = k;\n      var settings = {};\n      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}\n      settings.font = cur;\n      localStorage.setItem('freellm-settings', JSON.stringify(settings));\n      renderBtns();\n      render();\n    }));\n  });\n}\nrenderBtns();\napp.appendChild(row);\napp.appendChild(preview);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

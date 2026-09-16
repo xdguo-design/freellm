@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片自由裁剪 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片自由裁剪', '拖拽选择裁剪区域，支持固定比例（1:1 / 16:9 等）', 'image-crop');
+var drop = T.msg('点击或拖入图片，然后在图上拖拽选择裁剪区域', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var ratio = T.select([{value:'free',label:'自由'},{value:'1',label:'1:1'},{value:'4/3',label:'4:3'},{value:'16/9',label:'16:9'},{value:'9/16',label:'9:16'}],'free');
+var canvas = T.el('canvas', { style: 'max-width:100%;cursor:crosshair;border:1px solid var(--line);border-radius:8px;display:none' });
+var info = T.badge('—');
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null, sel = null, dragging = false, sx = 0, sy = 0, scale = 1;
+function redraw() {
+  if (!img) return;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  if (sel) {
+    ctx.fillStyle = 'rgba(0,0,0,.45)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    var x = Math.min(sel.x0, sel.x1), y = Math.min(sel.y0, sel.y1);
+    var w = Math.abs(sel.x1 - sel.x0), h = Math.abs(sel.y1 - sel.y0);
+    ctx.clearRect(x, y, w, h);
+    ctx.drawImage(img, x / scale, y / scale, w / scale, h / scale, x, y, w, h);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, w, h);
+    info.textContent = '选区 ' + Math.round(w / scale) + '×' + Math.round(h / scale);
+  }
+}
+canvas.addEventListener('pointerdown', function (e) {
+  var rect = canvas.getBoundingClientRect();
+  scale = img.width / rect.width;
+  dragging = true;
+  sx = (e.clientX - rect.left) * scale;
+  sy = (e.clientY - rect.top) * scale;
+  sel = { x0: sx, y0: sy, x1: sx, y1: sy };
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!dragging) return;
+  var rect = canvas.getBoundingClientRect();
+  var mx = Math.max(0, Math.min(canvas.width, (e.clientX - rect.left) * scale));
+  var my = Math.max(0, Math.min(canvas.height, (e.clientY - rect.top) * scale));
+  var r = ratio.value;
+  sel.x1 = mx;
+  sel.y1 = my;
+  if (r !== 'free') {
+    var ar = eval(ratio.value);
+    var w = Math.abs(mx - sx), h = Math.abs(my - sy);
+    if (w / h > ar) sel.y1 = sy + Math.sign(my - sy || 1) * w / ar;
+    else sel.x1 = sx + Math.sign(mx - sx || 1) * h * ar;
+  }
+  redraw();
+});
+window.addEventListener('pointerup', function () { dragging = false; });
+inp.addEventListener('change', function () {
+  T.loadImage(function (i) {
+    img = i;
+    var maxW = 860;
+    scale = Math.min(1, maxW / i.width);
+    canvas.width = Math.round(i.width * scale);
+    canvas.height = Math.round(i.height * scale);
+    canvas.style.display = '';
+    sel = null;
+    redraw();
+  });
+});
+drop.addEventListener('click', function () { inp.click(); });
+ratio.addEventListener('change', function () { sel = null; redraw(); });
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '比例' }), ratio, info]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('裁剪并下载 PNG', function () {
+  if (!sel || Math.abs(sel.x1 - sel.x0) < 4) { T.toast('请先在图上拖拽选区'); return; }
+  var x = Math.round(Math.min(sel.x0, sel.x1) / scale), y = Math.round(Math.min(sel.y0, sel.y1) / scale);
+  var w = Math.round(Math.abs(sel.x1 - sel.x0) / scale), h = Math.round(Math.abs(sel.y1 - sel.y0) / scale);
+  var out = T.el('canvas');
+  out.width = w;
+  out.height = h;
+  out.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
+  T.dlCanvas(out, 'cropped-' + w + 'x' + h + '.png');
+}, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-crop", "title": "图片自由裁剪", "desc": "拖拽选择裁剪区域，支持固定比例（1:1 / 16:9 等）", "scripts": "", "code": "var drop = T.msg('点击或拖入图片，然后在图上拖拽选择裁剪区域', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar ratio = T.select([{value:'free',label:'自由'},{value:'1',label:'1:1'},{value:'4/3',label:'4:3'},{value:'16/9',label:'16:9'},{value:'9/16',label:'9:16'}],'free');\nvar canvas = T.el('canvas', { style: 'max-width:100%;cursor:crosshair;border:1px solid var(--line);border-radius:8px;display:none' });\nvar info = T.badge('—');\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null, sel = null, dragging = false, sx = 0, sy = 0, scale = 1;\nfunction redraw() {\n  if (!img) return;\n  var ctx = canvas.getContext('2d');\n  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);\n  if (sel) {\n    ctx.fillStyle = 'rgba(0,0,0,.45)';\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n    var x = Math.min(sel.x0, sel.x1), y = Math.min(sel.y0, sel.y1);\n    var w = Math.abs(sel.x1 - sel.x0), h = Math.abs(sel.y1 - sel.y0);\n    ctx.clearRect(x, y, w, h);\n    ctx.drawImage(img, x / scale, y / scale, w / scale, h / scale, x, y, w, h);\n    ctx.strokeStyle = '#fff';\n    ctx.lineWidth = 2;\n    ctx.strokeRect(x, y, w, h);\n    info.textContent = '选区 ' + Math.round(w / scale) + '×' + Math.round(h / scale);\n  }\n}\ncanvas.addEventListener('pointerdown', function (e) {\n  var rect = canvas.getBoundingClientRect();\n  scale = img.width / rect.width;\n  dragging = true;\n  sx = (e.clientX - rect.left) * scale;\n  sy = (e.clientY - rect.top) * scale;\n  sel = { x0: sx, y0: sy, x1: sx, y1: sy };\n});\ncanvas.addEventListener('pointermove', function (e) {\n  if (!dragging) return;\n  var rect = canvas.getBoundingClientRect();\n  var mx = Math.max(0, Math.min(canvas.width, (e.clientX - rect.left) * scale));\n  var my = Math.max(0, Math.min(canvas.height, (e.clientY - rect.top) * scale));\n  var r = ratio.value;\n  sel.x1 = mx;\n  sel.y1 = my;\n  if (r !== 'free') {\n    var ar = eval(ratio.value);\n    var w = Math.abs(mx - sx), h = Math.abs(my - sy);\n    if (w / h > ar) sel.y1 = sy + Math.sign(my - sy || 1) * w / ar;\n    else sel.x1 = sx + Math.sign(mx - sx || 1) * h * ar;\n  }\n  redraw();\n});\nwindow.addEventListener('pointerup', function () { dragging = false; });\ninp.addEventListener('change', function () {\n  T.loadImage(function (i) {\n    img = i;\n    var maxW = 860;\n    scale = Math.min(1, maxW / i.width);\n    canvas.width = Math.round(i.width * scale);\n    canvas.height = Math.round(i.height * scale);\n    canvas.style.display = '';\n    sel = null;\n    redraw();\n  });\n});\ndrop.addEventListener('click', function () { inp.click(); });\nratio.addEventListener('change', function () { sel = null; redraw(); });\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '比例' }), ratio, info]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('裁剪并下载 PNG', function () {\n  if (!sel || Math.abs(sel.x1 - sel.x0) \u003c 4) { T.toast('请先在图上拖拽选区'); return; }\n  var x = Math.round(Math.min(sel.x0, sel.x1) / scale), y = Math.round(Math.min(sel.y0, sel.y1) / scale);\n  var w = Math.round(Math.abs(sel.x1 - sel.x0) / scale), h = Math.round(Math.abs(sel.y1 - sel.y0) / scale);\n  var out = T.el('canvas');\n  out.width = w;\n  out.height = h;\n  out.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);\n  T.dlCanvas(out, 'cropped-' + w + 'x' + h + '.png');\n}, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

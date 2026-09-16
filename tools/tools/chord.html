@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>和弦生成器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('和弦生成器', '常用和弦试听：大三 / 小三 / 七和弦，选调试听琶音与柱式', 'chord');
+var root = T.select(['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'], 'C');
+var CHORD_TYPES = { maj: [4, 7], min: [3, 7], maj7: [4, 7, 11], min7: [3, 7, 10], dom7: [4, 7, 10], dim7: [3, 6, 9] };
+var type = T.select([
+  { value: 'maj', label: '大三和弦 Major' },
+  { value: 'min', label: '小三和弦 Minor' },
+  { value: 'maj7', label: '大七 Major7' },
+  { value: 'min7', label: '小七 Minor7' },
+  { value: 'dom7', label: '属七 Dominant7' },
+  { value: 'dim7', label: '减七 Dim7' }
+], 'maj');
+function intervalsOf() { return CHORD_TYPES[type.value]; }
+var base = T.select([{value:'4',label:'C4 基准（261.63Hz）'}],'4');
+var status = T.badge('—');
+var freqs = [];
+function noteFreq(semi) {
+  return 261.63 * Math.pow(2, semi / 12);
+}
+function intervals() {
+  var roots = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+  var r = roots[root.value];
+  var arr = [r];
+  intervalsOf().forEach(function (iv) { arr.push(r + iv); });
+  return arr.map(noteFreq);
+}
+function playChord(freqArr, stagger) {
+  var ctx = new (window.AudioContext || window.webkitAudioContext)();
+  freqArr.forEach(function (f, i) {
+    setTimeout(function () {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 1.7);
+      osc.onended = function () { if (i === freqArr.length - 1) ctx.close(); };
+    }, i * (stagger || 0));
+  });
+}
+app.appendChild(T.row([T.el('span', { text: '根音' }), root, T.el('span', { text: '类型' }), type]));
+var names = root.value + ' ' + type.value;
+status.textContent = '当前：' + root.value + type.value + ' · ' + intervals().map(function (f) { return f.toFixed(1) + 'Hz'; }).join(' / ');
+app.appendChild(status);
+app.appendChild(T.row([
+  T.button('🎹 柱式（同时）', function () { playChord(intervals(), 0); }, true),
+  T.button('琶音（依次）', function () { playChord(intervals(), 160); }),
+  T.el('span', { text: '音符：' + (function () {
+    var NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    var roots = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+    return [roots[root.value]].concat(intervalsOf().map(function (iv) { return roots[root.value] + iv; })).map(function (s) { return NAMES[s % 12]; }).join(' - ');
+  })() })
+]));
+[root, type].forEach(function (el) {
+  el.addEventListener('change', function () {
+    status.textContent = '当前：' + root.value + type.value + ' · ' + intervals().map(function (f) { return f.toFixed(1) + 'Hz'; }).join(' / ');
+  });
+});
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "chord", "title": "和弦生成器", "desc": "常用和弦试听：大三 / 小三 / 七和弦，选调试听琶音与柱式", "scripts": "", "code": "var root = T.select(['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'], 'C');\nvar CHORD_TYPES = { maj: [4, 7], min: [3, 7], maj7: [4, 7, 11], min7: [3, 7, 10], dom7: [4, 7, 10], dim7: [3, 6, 9] };\nvar type = T.select([\n  { value: 'maj', label: '大三和弦 Major' },\n  { value: 'min', label: '小三和弦 Minor' },\n  { value: 'maj7', label: '大七 Major7' },\n  { value: 'min7', label: '小七 Minor7' },\n  { value: 'dom7', label: '属七 Dominant7' },\n  { value: 'dim7', label: '减七 Dim7' }\n], 'maj');\nfunction intervalsOf() { return CHORD_TYPES[type.value]; }\nvar base = T.select([{value:'4',label:'C4 基准（261.63Hz）'}],'4');\nvar status = T.badge('—');\nvar freqs = [];\nfunction noteFreq(semi) {\n  return 261.63 * Math.pow(2, semi / 12);\n}\nfunction intervals() {\n  var roots = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };\n  var r = roots[root.value];\n  var arr = [r];\n  intervalsOf().forEach(function (iv) { arr.push(r + iv); });\n  return arr.map(noteFreq);\n}\nfunction playChord(freqArr, stagger) {\n  var ctx = new (window.AudioContext || window.webkitAudioContext)();\n  freqArr.forEach(function (f, i) {\n    setTimeout(function () {\n      var osc = ctx.createOscillator();\n      var gain = ctx.createGain();\n      osc.type = 'triangle';\n      osc.frequency.value = f;\n      gain.gain.setValueAtTime(0.18, ctx.currentTime);\n      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.6);\n      osc.connect(gain).connect(ctx.destination);\n      osc.start();\n      osc.stop(ctx.currentTime + 1.7);\n      osc.onended = function () { if (i === freqArr.length - 1) ctx.close(); };\n    }, i * (stagger || 0));\n  });\n}\napp.appendChild(T.row([T.el('span', { text: '根音' }), root, T.el('span', { text: '类型' }), type]));\nvar names = root.value + ' ' + type.value;\nstatus.textContent = '当前：' + root.value + type.value + ' · ' + intervals().map(function (f) { return f.toFixed(1) + 'Hz'; }).join(' / ');\napp.appendChild(status);\napp.appendChild(T.row([\n  T.button('🎹 柱式（同时）', function () { playChord(intervals(), 0); }, true),\n  T.button('琶音（依次）', function () { playChord(intervals(), 160); }),\n  T.el('span', { text: '音符：' + (function () {\n    var NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];\n    var roots = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };\n    return [roots[root.value]].concat(intervalsOf().map(function (iv) { return roots[root.value] + iv; })).map(function (s) { return NAMES[s % 12]; }).join(' - ');\n  })() })\n]));\n[root, type].forEach(function (el) {\n  el.addEventListener('change', function () {\n    status.textContent = '当前：' + root.value + type.value + ' · ' + intervals().map(function (f) { return f.toFixed(1) + 'Hz'; }).join(' / ');\n  });\n});"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

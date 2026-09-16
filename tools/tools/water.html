@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>喝水提醒 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('喝水提醒', '每日饮水量追踪：目标杯数 + 定时提醒 + 今日进度', 'water');
+var goal = T.num(8, { min: 1, max: 30, style: 'width:70px' });
+var cupMl = T.num(250, { min: 50, style: 'width:80px' });
+var remindMin = T.num(60, { min: 5, style: 'width:80px' });
+var status = T.badge('提醒未开启');
+var today = T.today();
+var data = {};
+try { data = JSON.parse(localStorage.getItem('freellm-water') || '{}'); } catch (e) {}
+if (data.date !== today) data = { date: today, cups: 0 };
+function save() { localStorage.setItem('freellm-water', JSON.stringify(data)); }
+var cups = T.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0' });
+var progress = T.stat('0', '今日杯数');
+var mlEl = T.stat('0 ml', '累计');
+var timer = 0;
+function render() {
+  T.clearEl(cups);
+  var total = Math.max(goal.value, data.cups);
+  for (var i = 0; i < total; i++) {
+    var filled = i < data.cups;
+    cups.appendChild(T.el('div', { text: filled ? '💧' : '🥛', style: 'font-size:34px;cursor:pointer;opacity:' + (filled ? 1 : 0.35) + ';transition:all .2s', title: '第 ' + (i + 1) + ' 杯' }));
+  }
+  progress.firstChild.textContent = data.cups + '/' + goal.value;
+  mlEl.firstChild.textContent = (data.cups * +cupMl.value).toLocaleString() + ' ml';
+}
+function drink() {
+  data.cups++;
+  save();
+  render();
+  T.toast('💧 +1 杯，继续保持！');
+  if (data.cups === +goal.value) {
+    status.textContent = '🎉 今日目标达成！';
+    status.className = 'badge ok';
+  }
+}
+function toggleRemind() {
+  if (timer) {
+    clearInterval(timer);
+    timer = 0;
+    status.textContent = '提醒已关闭';
+    status.className = 'badge';
+    return;
+  }
+  timer = setInterval(function () {
+    if (data.cups < +goal.value) {
+      T.toast('⏰ 该喝杯水啦（今日 ' + data.cups + '/' + goal.value + ' 杯）');
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator(), g = ctx.createGain();
+        osc.connect(g).connect(ctx.destination);
+        osc.frequency.value = 880; g.gain.value = 0.2;
+        osc.start(); setTimeout(function () { osc.stop(); ctx.close(); }, 300);
+      } catch (e) {}
+    }
+  }, +remindMin.value * 60000);
+  status.textContent = '每 ' + remindMin.value + ' 分钟提醒一次';
+  status.className = 'badge ok';
+}
+app.appendChild(T.row([T.el('span', { text: '目标(杯)' }), goal, T.el('span', { text: '每杯(ml)' }), cupMl]));
+app.appendChild(cups);
+app.appendChild(T.row([progress, mlEl]));
+app.appendChild(T.row([T.button('💧 喝一杯', drink, true), T.button('撤销一杯', function () { if (data.cups > 0) { data.cups--; save(); render(); } }),
+  T.el('span', { text: '提醒间隔(分)' }), remindMin, T.button('开启提醒', toggleRemind), status]));
+goal.addEventListener('input', render);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "water", "title": "喝水提醒", "desc": "每日饮水量追踪：目标杯数 + 定时提醒 + 今日进度", "scripts": "", "code": "var goal = T.num(8, { min: 1, max: 30, style: 'width:70px' });\nvar cupMl = T.num(250, { min: 50, style: 'width:80px' });\nvar remindMin = T.num(60, { min: 5, style: 'width:80px' });\nvar status = T.badge('提醒未开启');\nvar today = T.today();\nvar data = {};\ntry { data = JSON.parse(localStorage.getItem('freellm-water') || '{}'); } catch (e) {}\nif (data.date !== today) data = { date: today, cups: 0 };\nfunction save() { localStorage.setItem('freellm-water', JSON.stringify(data)); }\nvar cups = T.el('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0' });\nvar progress = T.stat('0', '今日杯数');\nvar mlEl = T.stat('0 ml', '累计');\nvar timer = 0;\nfunction render() {\n  T.clearEl(cups);\n  var total = Math.max(goal.value, data.cups);\n  for (var i = 0; i \u003c total; i++) {\n    var filled = i \u003c data.cups;\n    cups.appendChild(T.el('div', { text: filled ? '💧' : '🥛', style: 'font-size:34px;cursor:pointer;opacity:' + (filled ? 1 : 0.35) + ';transition:all .2s', title: '第 ' + (i + 1) + ' 杯' }));\n  }\n  progress.firstChild.textContent = data.cups + '/' + goal.value;\n  mlEl.firstChild.textContent = (data.cups * +cupMl.value).toLocaleString() + ' ml';\n}\nfunction drink() {\n  data.cups++;\n  save();\n  render();\n  T.toast('💧 +1 杯，继续保持！');\n  if (data.cups === +goal.value) {\n    status.textContent = '🎉 今日目标达成！';\n    status.className = 'badge ok';\n  }\n}\nfunction toggleRemind() {\n  if (timer) {\n    clearInterval(timer);\n    timer = 0;\n    status.textContent = '提醒已关闭';\n    status.className = 'badge';\n    return;\n  }\n  timer = setInterval(function () {\n    if (data.cups \u003c +goal.value) {\n      T.toast('⏰ 该喝杯水啦（今日 ' + data.cups + '/' + goal.value + ' 杯）');\n      try {\n        var ctx = new (window.AudioContext || window.webkitAudioContext)();\n        var osc = ctx.createOscillator(), g = ctx.createGain();\n        osc.connect(g).connect(ctx.destination);\n        osc.frequency.value = 880; g.gain.value = 0.2;\n        osc.start(); setTimeout(function () { osc.stop(); ctx.close(); }, 300);\n      } catch (e) {}\n    }\n  }, +remindMin.value * 60000);\n  status.textContent = '每 ' + remindMin.value + ' 分钟提醒一次';\n  status.className = 'badge ok';\n}\napp.appendChild(T.row([T.el('span', { text: '目标(杯)' }), goal, T.el('span', { text: '每杯(ml)' }), cupMl]));\napp.appendChild(cups);\napp.appendChild(T.row([progress, mlEl]));\napp.appendChild(T.row([T.button('💧 喝一杯', drink, true), T.button('撤销一杯', function () { if (data.cups > 0) { data.cups--; save(); render(); } }),\n  T.el('span', { text: '提醒间隔(分)' }), remindMin, T.button('开启提醒', toggleRemind), status]));\ngoal.addEventListener('input', render);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>OG Meta 标签 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('OG Meta 标签', 'Open Graph / Twitter Card 标签生成与预览', 'og-meta');
+var fields = {
+  title: T.input('FreeLLM - 免费 AI 资源导航', { class: 'grow' }),
+  desc: T.input('精选免费 AI 资源、模型与工具', { class: 'grow' }),
+  url: T.input('https://freellm.top', { class: 'grow mono' }),
+  img: T.input('/freellm-01-hero.png', { class: 'grow mono' }),
+  site: T.input('FreeLLM', { class: 'grow' }),
+  type: T.select([{value:'website',label:'website'},{value:'article',label:'article'}],'website')
+};
+var output = T.out('');
+function run() {
+  var t = fields.title.value, d = fields.desc.value, u = fields.url.value, im = fields.img.value, s = fields.site.value, ty = fields.type.value;
+  var e = T.esc;
+  output.value =
+    '<!-- Open Graph -->\n' +
+    '<meta property="og:title" content="' + e(t) + '">\n' +
+    '<meta property="og:description" content="' + e(d) + '">\n' +
+    '<meta property="og:url" content="' + e(u) + '">\n' +
+    '<meta property="og:image" content="' + e(im) + '">\n' +
+    '<meta property="og:site_name" content="' + e(s) + '">\n' +
+    '<meta property="og:type" content="' + ty + '">\n\n' +
+    '<!-- Twitter Card -->\n' +
+    '<meta name="twitter:card" content="summary_large_image">\n' +
+    '<meta name="twitter:title" content="' + e(t) + '">\n' +
+    '<meta name="twitter:description" content="' + e(d) + '">\n' +
+    '<meta name="twitter:image" content="' + e(im) + '">';
+  preview();
+}
+function preview() {
+  var box = document.getElementById('og-preview');
+  if (!box) return;
+  box.innerHTML =
+    '<div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:420px;background:var(--surface)">' +
+    '<div style="height:160px;background:var(--accent-soft) url(' + T.esc(fields.img.value) + ') center/cover"></div>' +
+    '<div style="padding:10px 14px"><div style="color:var(--ink3);font-size:11px">' + T.esc(fields.site.value) + '</div>' +
+    '<div style="font-weight:600;margin:4px 0">' + T.esc(fields.title.value) + '</div>' +
+    '<div style="color:var(--ink2);font-size:12px">' + T.esc(fields.desc.value) + '</div></div></div>';
+}
+Object.keys(fields).forEach(function (k) { fields[k].addEventListener('input', run); });
+app.appendChild(T.pane([T.field('标题', fields.title), T.field('描述', fields.desc)]));
+app.appendChild(T.pane([T.field('URL', fields.url), T.field('图片 URL', fields.img)]));
+app.appendChild(T.row([T.el('span', { text: '站点名' }), fields.site, T.el('span', { text: '类型' }), fields.type]));
+app.appendChild(T.pane([T.field('Meta 代码', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+app.appendChild(T.el('span', { text: '卡片预览', class: 'field' }));
+var pv = T.el('div', { id: 'og-preview' });
+app.appendChild(pv);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "og-meta", "title": "OG Meta 标签", "desc": "Open Graph / Twitter Card 标签生成与预览", "scripts": "", "code": "var fields = {\n  title: T.input('FreeLLM - 免费 AI 资源导航', { class: 'grow' }),\n  desc: T.input('精选免费 AI 资源、模型与工具', { class: 'grow' }),\n  url: T.input('https://freellm.top', { class: 'grow mono' }),\n  img: T.input('/freellm-01-hero.png', { class: 'grow mono' }),\n  site: T.input('FreeLLM', { class: 'grow' }),\n  type: T.select([{value:'website',label:'website'},{value:'article',label:'article'}],'website')\n};\nvar output = T.out('');\nfunction run() {\n  var t = fields.title.value, d = fields.desc.value, u = fields.url.value, im = fields.img.value, s = fields.site.value, ty = fields.type.value;\n  var e = T.esc;\n  output.value =\n    '\u003c!-- Open Graph -->\\n' +\n    '\u003cmeta property=\"og:title\" content=\"' + e(t) + '\">\\n' +\n    '\u003cmeta property=\"og:description\" content=\"' + e(d) + '\">\\n' +\n    '\u003cmeta property=\"og:url\" content=\"' + e(u) + '\">\\n' +\n    '\u003cmeta property=\"og:image\" content=\"' + e(im) + '\">\\n' +\n    '\u003cmeta property=\"og:site_name\" content=\"' + e(s) + '\">\\n' +\n    '\u003cmeta property=\"og:type\" content=\"' + ty + '\">\\n\\n' +\n    '\u003c!-- Twitter Card -->\\n' +\n    '\u003cmeta name=\"twitter:card\" content=\"summary_large_image\">\\n' +\n    '\u003cmeta name=\"twitter:title\" content=\"' + e(t) + '\">\\n' +\n    '\u003cmeta name=\"twitter:description\" content=\"' + e(d) + '\">\\n' +\n    '\u003cmeta name=\"twitter:image\" content=\"' + e(im) + '\">';\n  preview();\n}\nfunction preview() {\n  var box = document.getElementById('og-preview');\n  if (!box) return;\n  box.innerHTML =\n    '\u003cdiv style=\"border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:420px;background:var(--surface)\">' +\n    '\u003cdiv style=\"height:160px;background:var(--accent-soft) url(' + T.esc(fields.img.value) + ') center/cover\">\u003c/div>' +\n    '\u003cdiv style=\"padding:10px 14px\">\u003cdiv style=\"color:var(--ink3);font-size:11px\">' + T.esc(fields.site.value) + '\u003c/div>' +\n    '\u003cdiv style=\"font-weight:600;margin:4px 0\">' + T.esc(fields.title.value) + '\u003c/div>' +\n    '\u003cdiv style=\"color:var(--ink2);font-size:12px\">' + T.esc(fields.desc.value) + '\u003c/div>\u003c/div>\u003c/div>';\n}\nObject.keys(fields).forEach(function (k) { fields[k].addEventListener('input', run); });\napp.appendChild(T.pane([T.field('标题', fields.title), T.field('描述', fields.desc)]));\napp.appendChild(T.pane([T.field('URL', fields.url), T.field('图片 URL', fields.img)]));\napp.appendChild(T.row([T.el('span', { text: '站点名' }), fields.site, T.el('span', { text: '类型' }), fields.type]));\napp.appendChild(T.pane([T.field('Meta 代码', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\napp.appendChild(T.el('span', { text: '卡片预览', class: 'field' }));\nvar pv = T.el('div', { id: 'og-preview' });\napp.appendChild(pv);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

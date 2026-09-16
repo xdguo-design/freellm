@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Favicon 制作 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Favicon 制作', '图片转多尺寸 favicon.ico（16-256px，PNG 编码 ICO）', 'favicon-maker');
+var preview = T.el('img', { style: 'max-width:128px;image-rendering:auto;border:1px solid var(--line);border-radius:8px' });
+var sizesBox = T.el('div', { class: 'row' });
+var SIZES = [16, 32, 48, 64, 128, 256];
+var checks = SIZES.map(function (s, i) {
+  return T.check(s + 'px', i === 1 || i === 2);
+});
+var status = T.badge('—');
+var lastImg = null;
+app.appendChild(T.row([T.filePick('选择图片（建议正方形 PNG）', 'image/*', function (dataURL, file) {
+  lastImg = new Image();
+  lastImg.onload = function () { preview.src = dataURL; status.textContent = file.name + ' · ' + lastImg.width + '×' + lastImg.height; };
+  lastImg.src = dataURL;
+}, true)]));
+app.appendChild(T.row([preview]));
+sizesBox.style.marginBottom = '10px';
+checks.forEach(function (c) { sizesBox.appendChild(c); });
+app.appendChild(sizesBox);
+app.appendChild(T.row([
+  T.button('生成并下载 favicon.ico', function () {
+    if (!lastImg) { T.toast('请先选择图片'); return; }
+    var items = [];
+    checks.forEach(function (c, i) {
+      if (!c._input.checked) return;
+      var s = SIZES[i];
+      var c2 = T.el('canvas', { width: s, height: s });
+      var ctx = c2.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(lastImg, 0, 0, s, s);
+      items.push({ size: s, blob: new Promise(function (res) { c2.toBlob(res, 'image/png'); }) });
+    });
+    if (!items.length) { T.toast('至少选择一个尺寸'); return; }
+    LU.Ico.fromCanvases(items).then(function (blob) {
+      T.download('favicon.ico', blob);
+      status.textContent = '已生成 ' + items.length + ' 个尺寸';
+    });
+  }, true),
+  T.button('下载 PNG (512px)', function () {
+    if (!lastImg) { T.toast('请先选择图片'); return; }
+    var c = T.el('canvas', { width: 512, height: 512 });
+    c.getContext('2d').drawImage(lastImg, 0, 0, 512, 512);
+    T.dlCanvas(c, 'favicon-512.png');
+  }),
+  status
+]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "favicon-maker", "title": "Favicon 制作", "desc": "图片转多尺寸 favicon.ico（16-256px，PNG 编码 ICO）", "scripts": "", "code": "var preview = T.el('img', { style: 'max-width:128px;image-rendering:auto;border:1px solid var(--line);border-radius:8px' });\nvar sizesBox = T.el('div', { class: 'row' });\nvar SIZES = [16, 32, 48, 64, 128, 256];\nvar checks = SIZES.map(function (s, i) {\n  return T.check(s + 'px', i === 1 || i === 2);\n});\nvar status = T.badge('—');\nvar lastImg = null;\napp.appendChild(T.row([T.filePick('选择图片（建议正方形 PNG）', 'image/*', function (dataURL, file) {\n  lastImg = new Image();\n  lastImg.onload = function () { preview.src = dataURL; status.textContent = file.name + ' · ' + lastImg.width + '×' + lastImg.height; };\n  lastImg.src = dataURL;\n}, true)]));\napp.appendChild(T.row([preview]));\nsizesBox.style.marginBottom = '10px';\nchecks.forEach(function (c) { sizesBox.appendChild(c); });\napp.appendChild(sizesBox);\napp.appendChild(T.row([\n  T.button('生成并下载 favicon.ico', function () {\n    if (!lastImg) { T.toast('请先选择图片'); return; }\n    var items = [];\n    checks.forEach(function (c, i) {\n      if (!c._input.checked) return;\n      var s = SIZES[i];\n      var c2 = T.el('canvas', { width: s, height: s });\n      var ctx = c2.getContext('2d');\n      ctx.imageSmoothingEnabled = true;\n      ctx.drawImage(lastImg, 0, 0, s, s);\n      items.push({ size: s, blob: new Promise(function (res) { c2.toBlob(res, 'image/png'); }) });\n    });\n    if (!items.length) { T.toast('至少选择一个尺寸'); return; }\n    LU.Ico.fromCanvases(items).then(function (blob) {\n      T.download('favicon.ico', blob);\n      status.textContent = '已生成 ' + items.length + ' 个尺寸';\n    });\n  }, true),\n  T.button('下载 PNG (512px)', function () {\n    if (!lastImg) { T.toast('请先选择图片'); return; }\n    var c = T.el('canvas', { width: 512, height: 512 });\n    c.getContext('2d').drawImage(lastImg, 0, 0, 512, 512);\n    T.dlCanvas(c, 'favicon-512.png');\n  }),\n  status\n]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

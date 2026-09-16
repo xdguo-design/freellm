@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>占位图片 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('占位图片', '生成自定义尺寸 / 颜色 / 文字的占位图与头像，PNG / SVG 下载', 'lorem-pixel');
+var w = T.num(400, { min: 1, max: 4096, style: 'width:90px' });
+var h = T.num(300, { min: 1, max: 4096, style: 'width:90px' });
+var bg = T.color('#5B8DEF');
+var fg = T.color('#FFFFFF');
+var text = T.input('FreeLLM', { class: 'grow', placeholder: '显示文字（留空显示尺寸）' });
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px' });
+function render() {
+  var W = Math.min(4096, +w.value || 400), H = Math.min(4096, +h.value || 300);
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = bg.value;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = fg.value;
+  ctx.font = '600 ' + Math.max(12, Math.floor(Math.min(W, H) / 8)) + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text.value || (W + ' × ' + H), W / 2, H / 2);
+}
+[w, h, bg, fg, text].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.row([T.el('span', { text: '宽' }), w, T.el('span', { text: '高' }), h,
+  T.el('span', { text: '背景' }), bg, T.el('span', { text: '文字色' }), fg]));
+app.appendChild(T.row([text]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'placeholder-' + w.value + 'x' + h.value + '.png'); }, true),
+  T.button('下载 SVG', function () {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w.value + '" height="' + h.value + '">' +
+      '<rect width="100%" height="100%" fill="' + bg.value + '"/>' +
+      '<text x="50%" y="50%" fill="' + fg.value + '" font-family="sans-serif" font-size="' + Math.max(12, Math.min(+w.value, +h.value) / 8) + '" text-anchor="middle" dominant-baseline="middle">' + T.esc(text.value || w.value + ' × ' + h.value) + '</text></svg>';
+    T.download('placeholder.svg', svg, 'image/svg+xml');
+  })]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "lorem-pixel", "title": "占位图片", "desc": "生成自定义尺寸 / 颜色 / 文字的占位图与头像，PNG / SVG 下载", "scripts": "", "code": "var w = T.num(400, { min: 1, max: 4096, style: 'width:90px' });\nvar h = T.num(300, { min: 1, max: 4096, style: 'width:90px' });\nvar bg = T.color('#5B8DEF');\nvar fg = T.color('#FFFFFF');\nvar text = T.input('FreeLLM', { class: 'grow', placeholder: '显示文字（留空显示尺寸）' });\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px' });\nfunction render() {\n  var W = Math.min(4096, +w.value || 400), H = Math.min(4096, +h.value || 300);\n  canvas.width = W; canvas.height = H;\n  var ctx = canvas.getContext('2d');\n  ctx.fillStyle = bg.value;\n  ctx.fillRect(0, 0, W, H);\n  ctx.fillStyle = fg.value;\n  ctx.font = '600 ' + Math.max(12, Math.floor(Math.min(W, H) / 8)) + 'px sans-serif';\n  ctx.textAlign = 'center';\n  ctx.textBaseline = 'middle';\n  ctx.fillText(text.value || (W + ' × ' + H), W / 2, H / 2);\n}\n[w, h, bg, fg, text].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.row([T.el('span', { text: '宽' }), w, T.el('span', { text: '高' }), h,\n  T.el('span', { text: '背景' }), bg, T.el('span', { text: '文字色' }), fg]));\napp.appendChild(T.row([text]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'placeholder-' + w.value + 'x' + h.value + '.png'); }, true),\n  T.button('下载 SVG', function () {\n    var svg = '\u003csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"' + w.value + '\" height=\"' + h.value + '\">' +\n      '\u003crect width=\"100%\" height=\"100%\" fill=\"' + bg.value + '\"/>' +\n      '\u003ctext x=\"50%\" y=\"50%\" fill=\"' + fg.value + '\" font-family=\"sans-serif\" font-size=\"' + Math.max(12, Math.min(+w.value, +h.value) / 8) + '\" text-anchor=\"middle\" dominant-baseline=\"middle\">' + T.esc(text.value || w.value + ' × ' + h.value) + '\u003c/text>\u003c/svg>';\n    T.download('placeholder.svg', svg, 'image/svg+xml');\n  })]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

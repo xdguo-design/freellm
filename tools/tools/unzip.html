@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>ZIP 解压查看 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ZIP 解压查看', '在线解压 ZIP：浏览文件列表、预览文本、下载单个文件', 'unzip');
+var pick = T.el('input', { type: 'file', accept: '.zip', style: 'display:none' });
+document.body.appendChild(pick);
+var info = T.badge('—');
+var box = T.el('div');
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () {
+    try {
+      var entries = LU.Zip.read(new Uint8Array(fr.result));
+      render(entries);
+      info.textContent = f.name + ' · ' + entries.length + ' 项';
+      info.className = 'badge ok';
+    } catch (e) {
+      T.toast('解压失败：' + e.message);
+    }
+  };
+  fr.readAsArrayBuffer(f);
+});
+function render(entries) {
+  T.clearEl(box);
+  var rows = entries.map(function (e, i) {
+    return [i + 1, e.name, e.isDir ? '📁 目录' : T.fmtBytes(e.size), e.method === 0 ? 'store' : 'deflate', e];
+  });
+  var table = T.refTable(['#', '文件名', '原始大小', '压缩', ''], rows.map(function (r) {
+    return [r[0], r[1], r[2], r[3], r[4]];
+  }), function (r) {
+    var entry = r[4];
+    if (entry.isDir) return;
+    entry.getData().then(function (data) {
+      T.download(entry.name.split('/').pop(), data);
+    }).catch(function (err) { T.toast(err.message); });
+  });
+  box.appendChild(table);
+  box.appendChild(T.el('p', { text: '点击行下载该文件（目录除外）', style: 'color:var(--ink2);font-size:12px' }));
+}
+app.appendChild(T.row([T.button('选择 ZIP 文件', function () { pick.click(); }, true), info]));
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "unzip", "title": "ZIP 解压查看", "desc": "在线解压 ZIP：浏览文件列表、预览文本、下载单个文件", "scripts": "", "code": "var pick = T.el('input', { type: 'file', accept: '.zip', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar info = T.badge('—');\nvar box = T.el('div');\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  var fr = new FileReader();\n  fr.onload = function () {\n    try {\n      var entries = LU.Zip.read(new Uint8Array(fr.result));\n      render(entries);\n      info.textContent = f.name + ' · ' + entries.length + ' 项';\n      info.className = 'badge ok';\n    } catch (e) {\n      T.toast('解压失败：' + e.message);\n    }\n  };\n  fr.readAsArrayBuffer(f);\n});\nfunction render(entries) {\n  T.clearEl(box);\n  var rows = entries.map(function (e, i) {\n    return [i + 1, e.name, e.isDir ? '📁 目录' : T.fmtBytes(e.size), e.method === 0 ? 'store' : 'deflate', e];\n  });\n  var table = T.refTable(['#', '文件名', '原始大小', '压缩', ''], rows.map(function (r) {\n    return [r[0], r[1], r[2], r[3], r[4]];\n  }), function (r) {\n    var entry = r[4];\n    if (entry.isDir) return;\n    entry.getData().then(function (data) {\n      T.download(entry.name.split('/').pop(), data);\n    }).catch(function (err) { T.toast(err.message); });\n  });\n  box.appendChild(table);\n  box.appendChild(T.el('p', { text: '点击行下载该文件（目录除外）', style: 'color:var(--ink2);font-size:12px' }));\n}\napp.appendChild(T.row([T.button('选择 ZIP 文件', function () { pick.click(); }, true), info]));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

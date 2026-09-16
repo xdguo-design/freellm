@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>记忆卡片 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('记忆卡片', '翻牌记忆配对游戏：8 对 Emoji，记步数与用时', 'memory-cards');
+var grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(4,76px);gap:8px;justify-content:center;margin:18px auto' });
+var movesEl = T.stat(0, '步数');
+var pairsEl = T.stat(0, '配对');
+var timeEl = T.stat('0s', '用时');
+var status = T.badge('点击卡片开始');
+var EMOJIS = ['🎮', '🚀', '🌟', '🎧', '🍕', '🐼', '⚽', '🌈'];
+var cards, flipped, matched, moves, timer, seconds, started;
+function init() {
+  var deck = EMOJIS.concat(EMOJIS).sort(function () { return Math.random() - 0.5; });
+  cards = deck.map(function (e) { return { emoji: e, open: false, done: false }; });
+  flipped = [];
+  matched = 0;
+  moves = 0;
+  seconds = 0;
+  started = false;
+  clearInterval(timer);
+  movesEl.firstChild.textContent = 0;
+  pairsEl.firstChild.textContent = 0;
+  timeEl.firstChild.textContent = '0s';
+  status.textContent = '点击卡片开始';
+  status.className = 'badge';
+  render();
+}
+function render() {
+  T.clearEl(grid);
+  cards.forEach(function (card, i) {
+    var cell = T.el('div', { text: card.open || card.done ? card.emoji : '', style: 'width:76px;height:76px;display:flex;align-items:center;justify-content:center;font-size:34px;border-radius:10px;cursor:pointer;user-select:none;transition:all .2s;background:' + (card.done ? 'var(--ok-bg)' : card.open ? 'var(--accent-soft)' : 'var(--surface)') + ';border:1px solid var(--line)' });
+    cell.addEventListener('click', function () { flip(i); });
+    grid.appendChild(cell);
+  });
+}
+function flip(i) {
+  var card = cards[i];
+  if (card.open || card.done || flipped.length >= 2) return;
+  if (!started) {
+    started = true;
+    timer = setInterval(function () { seconds++; timeEl.firstChild.textContent = seconds + 's'; }, 1000);
+    status.textContent = '配对中…';
+  }
+  card.open = true;
+  flipped.push(i);
+  moves++;
+  movesEl.firstChild.textContent = moves;
+  render();
+  if (flipped.length === 2) {
+    var a = cards[flipped[0]], b = cards[flipped[1]];
+    if (a.emoji === b.emoji) {
+      a.done = b.done = true;
+      matched++;
+      pairsEl.firstChild.textContent = matched;
+      flipped = [];
+      if (matched === EMOJIS.length) {
+        clearInterval(timer);
+        status.textContent = '🎉 全部配对！' + moves + ' 步 · ' + seconds + ' 秒';
+        status.className = 'badge ok';
+      }
+      render();
+    } else {
+      setTimeout(function () {
+        a.open = b.open = false;
+        flipped = [];
+        render();
+      }, 650);
+    }
+  }
+}
+app.appendChild(T.row([movesEl, pairsEl, timeEl, status, T.button('重新开始', init, true)]));
+app.appendChild(grid);
+init();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "memory-cards", "title": "记忆卡片", "desc": "翻牌记忆配对游戏：8 对 Emoji，记步数与用时", "scripts": "", "code": "var grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(4,76px);gap:8px;justify-content:center;margin:18px auto' });\nvar movesEl = T.stat(0, '步数');\nvar pairsEl = T.stat(0, '配对');\nvar timeEl = T.stat('0s', '用时');\nvar status = T.badge('点击卡片开始');\nvar EMOJIS = ['🎮', '🚀', '🌟', '🎧', '🍕', '🐼', '⚽', '🌈'];\nvar cards, flipped, matched, moves, timer, seconds, started;\nfunction init() {\n  var deck = EMOJIS.concat(EMOJIS).sort(function () { return Math.random() - 0.5; });\n  cards = deck.map(function (e) { return { emoji: e, open: false, done: false }; });\n  flipped = [];\n  matched = 0;\n  moves = 0;\n  seconds = 0;\n  started = false;\n  clearInterval(timer);\n  movesEl.firstChild.textContent = 0;\n  pairsEl.firstChild.textContent = 0;\n  timeEl.firstChild.textContent = '0s';\n  status.textContent = '点击卡片开始';\n  status.className = 'badge';\n  render();\n}\nfunction render() {\n  T.clearEl(grid);\n  cards.forEach(function (card, i) {\n    var cell = T.el('div', { text: card.open || card.done ? card.emoji : '', style: 'width:76px;height:76px;display:flex;align-items:center;justify-content:center;font-size:34px;border-radius:10px;cursor:pointer;user-select:none;transition:all .2s;background:' + (card.done ? 'var(--ok-bg)' : card.open ? 'var(--accent-soft)' : 'var(--surface)') + ';border:1px solid var(--line)' });\n    cell.addEventListener('click', function () { flip(i); });\n    grid.appendChild(cell);\n  });\n}\nfunction flip(i) {\n  var card = cards[i];\n  if (card.open || card.done || flipped.length >= 2) return;\n  if (!started) {\n    started = true;\n    timer = setInterval(function () { seconds++; timeEl.firstChild.textContent = seconds + 's'; }, 1000);\n    status.textContent = '配对中…';\n  }\n  card.open = true;\n  flipped.push(i);\n  moves++;\n  movesEl.firstChild.textContent = moves;\n  render();\n  if (flipped.length === 2) {\n    var a = cards[flipped[0]], b = cards[flipped[1]];\n    if (a.emoji === b.emoji) {\n      a.done = b.done = true;\n      matched++;\n      pairsEl.firstChild.textContent = matched;\n      flipped = [];\n      if (matched === EMOJIS.length) {\n        clearInterval(timer);\n        status.textContent = '🎉 全部配对！' + moves + ' 步 · ' + seconds + ' 秒';\n        status.className = 'badge ok';\n      }\n      render();\n    } else {\n      setTimeout(function () {\n        a.open = b.open = false;\n        flipped = [];\n        render();\n      }, 650);\n    }\n  }\n}\napp.appendChild(T.row([movesEl, pairsEl, timeEl, status, T.button('重新开始', init, true)]));\napp.appendChild(grid);\ninit();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Unicode 字符表 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Unicode 字符表', '常用 Unicode 区块速览：输入十进制 / 十六进制查看字符', 'unicode-table');
+var input = T.input('4E2D', { class: 'grow mono', placeholder: '输入码点（如 4E2D / 6587 / 1F600），或粘贴字符反查' });
+var box = T.el('div');
+var BLOCKS = [
+  ['基本拉丁', '0000-007F'], ['拉丁-1 补充', '0080-00FF'], ['希腊字母', '0370-03FF'],
+  ['西里尔字母', '0400-04FF'], ['常用标点', '2000-206F'], ['货币符号', '20A0-20CF'],
+  ['箭头', '2190-21FF'], ['数学运算符', '2200-22FF'], ['制表符', '2500-257F'],
+  ['几何图形', '25A0-25FF'], ['杂项符号', '2600-26FF'], ['装饰符号', '2700-27BF'],
+  ['CJK 部首', '2E80-2EFF'], ['CJK 符号标点', '3000-303F'], ['平假名', '3040-309F'],
+  ['片假名', '30A0-30FF'], ['CJK 统一汉字', '4E00-9FFF'], ['韩文谚文', 'AC00-D7AF'],
+  [' emoji 表情', '1F300-1F5FF'], ['补充符号', '1F600-1F64F'], ['交通地图', '1F680-1F6FF']
+];
+function showChar(cp) {
+  T.clearEl(box);
+  if (cp < 0 || cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF)) {
+    box.appendChild(T.msg('⚠ 无效码点', 'err'));
+    return;
+  }
+  var ch = String.fromCodePoint(cp);
+  box.appendChild(T.kvTable([
+    ['字符', ch],
+    ['十进制', cp],
+    ['十六进制', 'U+' + cp.toString(16).toUpperCase().padStart(4, '0')],
+    ['HTML 实体', '&#' + cp + '; / &#x' + cp.toString(16) + ';'],
+    ['JS 转义', cp > 0xFFFF ? '\\u{' + cp.toString(16) + '}' : '\\u' + cp.toString(16).padStart(4, '0')],
+    ['CSS 转义', '\\\\' + cp.toString(16)],
+    ['UTF-8 字节', T.bytesToHex(new TextEncoder().encode(ch)).replace(/../g, '$& ').trim()]
+  ]));
+  box.appendChild(T.el('div', { text: ch, style: 'font-size:80px;text-align:center;margin:16px 0' }));
+}
+function run() {
+  var v = input.value.trim();
+  T.clearEl(box);
+  if (!v) return;
+  if (/^[0-9]+$/.test(v)) { showChar(+v); return; }
+  var hexm = v.replace(/^[Uu]\+?0*|^0[xX]/, '');
+  if (/^[0-9a-fA-F]{1,6}$/.test(hexm)) { showChar(parseInt(hexm, 16)); return; }
+  var ch = Array.from(v)[0];
+  showChar(ch.codePointAt(0));
+}
+input.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '码点/字符' }), input]));
+app.appendChild(box);
+app.appendChild(T.el('span', { text: '常用区块', class: 'field' }));
+app.appendChild(T.refTable(['区块', '码点范围'], BLOCKS.map(function (b) {
+  return [b[0], 'U+' + b[1]];
+})));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "unicode-table", "title": "Unicode 字符表", "desc": "常用 Unicode 区块速览：输入十进制 / 十六进制查看字符", "scripts": "", "code": "var input = T.input('4E2D', { class: 'grow mono', placeholder: '输入码点（如 4E2D / 6587 / 1F600），或粘贴字符反查' });\nvar box = T.el('div');\nvar BLOCKS = [\n  ['基本拉丁', '0000-007F'], ['拉丁-1 补充', '0080-00FF'], ['希腊字母', '0370-03FF'],\n  ['西里尔字母', '0400-04FF'], ['常用标点', '2000-206F'], ['货币符号', '20A0-20CF'],\n  ['箭头', '2190-21FF'], ['数学运算符', '2200-22FF'], ['制表符', '2500-257F'],\n  ['几何图形', '25A0-25FF'], ['杂项符号', '2600-26FF'], ['装饰符号', '2700-27BF'],\n  ['CJK 部首', '2E80-2EFF'], ['CJK 符号标点', '3000-303F'], ['平假名', '3040-309F'],\n  ['片假名', '30A0-30FF'], ['CJK 统一汉字', '4E00-9FFF'], ['韩文谚文', 'AC00-D7AF'],\n  [' emoji 表情', '1F300-1F5FF'], ['补充符号', '1F600-1F64F'], ['交通地图', '1F680-1F6FF']\n];\nfunction showChar(cp) {\n  T.clearEl(box);\n  if (cp \u003c 0 || cp > 0x10FFFF || (cp >= 0xD800 && cp \u003c= 0xDFFF)) {\n    box.appendChild(T.msg('⚠ 无效码点', 'err'));\n    return;\n  }\n  var ch = String.fromCodePoint(cp);\n  box.appendChild(T.kvTable([\n    ['字符', ch],\n    ['十进制', cp],\n    ['十六进制', 'U+' + cp.toString(16).toUpperCase().padStart(4, '0')],\n    ['HTML 实体', '&#' + cp + '; / &#x' + cp.toString(16) + ';'],\n    ['JS 转义', cp > 0xFFFF ? '\\\\u{' + cp.toString(16) + '}' : '\\\\u' + cp.toString(16).padStart(4, '0')],\n    ['CSS 转义', '\\\\\\\\' + cp.toString(16)],\n    ['UTF-8 字节', T.bytesToHex(new TextEncoder().encode(ch)).replace(/../g, '$& ').trim()]\n  ]));\n  box.appendChild(T.el('div', { text: ch, style: 'font-size:80px;text-align:center;margin:16px 0' }));\n}\nfunction run() {\n  var v = input.value.trim();\n  T.clearEl(box);\n  if (!v) return;\n  if (/^[0-9]+$/.test(v)) { showChar(+v); return; }\n  var hexm = v.replace(/^[Uu]\\+?0*|^0[xX]/, '');\n  if (/^[0-9a-fA-F]{1,6}$/.test(hexm)) { showChar(parseInt(hexm, 16)); return; }\n  var ch = Array.from(v)[0];\n  showChar(ch.codePointAt(0));\n}\ninput.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '码点/字符' }), input]));\napp.appendChild(box);\napp.appendChild(T.el('span', { text: '常用区块', class: 'field' }));\napp.appendChild(T.refTable(['区块', '码点范围'], BLOCKS.map(function (b) {\n  return [b[0], 'U+' + b[1]];\n})));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

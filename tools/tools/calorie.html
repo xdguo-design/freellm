@@ -2,68 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>卡路里计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('卡路里计算器', '基础代谢 + 日常消耗计算', 'calorie');
-
-  var gender = T.select([{ value: 'male', label: '男' }, { value: 'female', label: '女' }]);
-  var age = T.el('input', { type: 'number', value: '25', min: '10', max: '100', style: 'width:80px' });
-  var height = T.el('input', { type: 'number', value: '175', min: '100', max: '250', style: 'width:80px' });
-  var weight = T.el('input', { type: 'number', value: '70', min: '30', max: '200', style: 'width:80px' });
-  var activity = T.select([
-    { value: '1.2', label: '久坐不动' },
-    { value: '1.375', label: '轻度运动 (1-3天/周)' },
-    { value: '1.55', label: '中度运动 (3-5天/周)' },
-    { value: '1.725', label: '重度运动 (6-7天/周)' },
-    { value: '1.9', label: '专业运动' }
-  ]);
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-  var copyBtn = T.copyBtn(function () { return result.textContent; });
-
-  function calculate() {
-    var g = gender.value === 'male' ? 1 : 0;
-    var a = parseInt(age.value) || 25;
-    var h = parseInt(height.value) || 175;
-    var w = parseInt(weight.value) || 70;
-    var act = parseFloat(activity.value) || 1.2;
-
-    // Mifflin-St Jeor
-    var bmr = 10 * w + 6.25 * h - 5 * a + (g ? 5 : -161);
-    var tdee = bmr * act;
-
-    var lose = tdee - 500;
-    var maintain = tdee;
-    var gain = tdee + 500;
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px;color:var(--muted)">基础代谢率 (BMR)</td><td style="padding:8px;text-align:right;font-weight:bold">' + Math.round(bmr) + ' kcal/天</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">每日总消耗 (TDEE)</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">' + Math.round(tdee) + ' kcal/天</td></tr>' +
-      '<tr><td style="padding:8px;border-top:2px solid var(--line)">减肥 (减500kcal)</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right;color:var(--green)">' + Math.round(lose) + ' kcal/天</td></tr>' +
-      '<tr><td style="padding:8px">维持体重</td><td style="padding:8px;text-align:right">' + Math.round(maintain) + ' kcal/天</td></tr>' +
-      '<tr><td style="padding:8px">增重 (加500kcal)</td><td style="padding:8px;text-align:right;color:var(--red)">' + Math.round(gain) + ' kcal/天</td></tr>' +
-      '</table>';
-  }
-
-  [gender, age, height, weight, activity].forEach(function (el) {
-    el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function () { setTimeout(calculate, 100); });
-  });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '性别' }), gender, T.el('span', { text: '年龄' }), age]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '身高' }), height, T.el('span', { text: '体重' }), weight]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '运动量' }), activity, copyBtn]));
-  app.appendChild(result);
-
-  calculate();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('卡路里计算器', '基础代谢 BMR（Mifflin-St Jeor）+ 活动系数 → 每日消耗 TDEE', 'calorie');
+var gender = T.select([{value:'m',label:'男'},{value:'f',label:'女'}],'m');
+var age = T.num(28, { min: 10, max: 100, style: 'width:80px' });
+var h = T.num(170, { style: 'width:90px' });
+var w = T.num(65, { step: 0.1, style: 'width:90px' });
+var act = T.select([
+  { value: '1.2', label: '久坐不动' },
+  { value: '1.375', label: '轻度活动（每周1-3次）' },
+  { value: '1.55', label: '中度活动（每周3-5次）' },
+  { value: '1.725', label: '高度活动（每周6-7次）' },
+  { value: '1.9', label: '极高强度（体力劳动）' }
+], '1.375');
+var box = T.el('div');
+function run() {
+  var g = gender.value, a = +age.value, hh = +h.value, ww = +w.value;
+  T.clearEl(box);
+  if (!a || !hh || !ww) return;
+  var bmr = 10 * ww + 6.25 * hh - 5 * a + (g === 'm' ? 5 : -161);
+  var tdee = bmr * +act.value;
+  box.appendChild(T.kvTable([
+    ['基础代谢 BMR', Math.round(bmr) + ' kcal/天'],
+    ['每日总消耗 TDEE', Math.round(tdee) + ' kcal/天'],
+    ['减重建议摄入', Math.round(tdee - 500) + ' kcal/天（约每周减 0.45kg）'],
+    ['增重建议摄入', Math.round(tdee + 300) + ' kcal/天'],
+    ['维持体重', Math.round(tdee) + ' kcal/天'],
+    ['蛋白质建议', Math.round(ww * 1.5) + ' ~ ' + Math.round(ww * 2) + ' g/天']
+  ]));
+}
+[gender, age, h, w, act].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('性别', gender), T.field('年龄', age)]));
+app.appendChild(T.pane([T.field('身高 (cm)', h), T.field('体重 (kg)', w)]));
+app.appendChild(T.row([T.el('span', { text: '活动量' }), act]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "calorie", "title": "卡路里计算器", "desc": "基础代谢 BMR（Mifflin-St Jeor）+ 活动系数 → 每日消耗 TDEE", "scripts": "", "code": "var gender = T.select([{value:'m',label:'男'},{value:'f',label:'女'}],'m');\nvar age = T.num(28, { min: 10, max: 100, style: 'width:80px' });\nvar h = T.num(170, { style: 'width:90px' });\nvar w = T.num(65, { step: 0.1, style: 'width:90px' });\nvar act = T.select([\n  { value: '1.2', label: '久坐不动' },\n  { value: '1.375', label: '轻度活动（每周1-3次）' },\n  { value: '1.55', label: '中度活动（每周3-5次）' },\n  { value: '1.725', label: '高度活动（每周6-7次）' },\n  { value: '1.9', label: '极高强度（体力劳动）' }\n], '1.375');\nvar box = T.el('div');\nfunction run() {\n  var g = gender.value, a = +age.value, hh = +h.value, ww = +w.value;\n  T.clearEl(box);\n  if (!a || !hh || !ww) return;\n  var bmr = 10 * ww + 6.25 * hh - 5 * a + (g === 'm' ? 5 : -161);\n  var tdee = bmr * +act.value;\n  box.appendChild(T.kvTable([\n    ['基础代谢 BMR', Math.round(bmr) + ' kcal/天'],\n    ['每日总消耗 TDEE', Math.round(tdee) + ' kcal/天'],\n    ['减重建议摄入', Math.round(tdee - 500) + ' kcal/天（约每周减 0.45kg）'],\n    ['增重建议摄入', Math.round(tdee + 300) + ' kcal/天'],\n    ['维持体重', Math.round(tdee) + ' kcal/天'],\n    ['蛋白质建议', Math.round(ww * 1.5) + ' ~ ' + Math.round(ww * 2) + ' g/天']\n  ]));\n}\n[gender, age, h, w, act].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('性别', gender), T.field('年龄', age)]));\napp.appendChild(T.pane([T.field('身高 (cm)', h), T.field('体重 (kg)', w)]));\napp.appendChild(T.row([T.el('span', { text: '活动量' }), act]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

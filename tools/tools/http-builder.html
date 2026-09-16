@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>HTTP 请求构建 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTTP 请求构建', '构建 HTTP 请求报文：方法 / 头 / 体，生成原始报文并可实际发送', 'http-builder');
+var method = T.select(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'], 'GET');
+var url = T.input('https://httpbin.org/get', { class: 'grow mono' });
+var headersIn = T.textarea('Content-Type: application/json\nX-Request-Id: freellm-001', true);
+headersIn.value = 'Content-Type: application/json\nX-Request-Id: freellm-001';
+headersIn.setAttribute('rows', '4');
+var bodyIn = T.textarea('{"q": "freellm"}', true);
+bodyIn.value = '{"q": "freellm"}';
+bodyIn.setAttribute('rows', '4');
+var rawOut = T.out('');
+var respBox = T.el('div', { class: 'output', style: 'min-height:120px;white-space:pre-wrap' });
+function build() {
+  var lines = [method.value + ' ' + (function () { try { return new URL(url.value).pathname + new URL(url.value).search; } catch (e) { return '/'; } })() + ' HTTP/1.1'];
+  try { lines.push('Host: ' + new URL(url.value).host); } catch (e) {}
+  headersIn.value.split('\n').forEach(function (l) { if (l.trim()) lines.push(l.trim()); });
+  if (bodyIn.value.trim() && method.value !== 'GET') {
+    lines.push('Content-Length: ' + new Blob([bodyIn.value]).size);
+    lines.push('');
+    lines.push(bodyIn.value);
+  }
+  rawOut.value = lines.join('\n');
+}
+function send() {
+  var headers = {};
+  headersIn.value.split('\n').forEach(function (l) {
+    var i = l.indexOf(':');
+    if (i > 0) headers[l.slice(0, i).trim()] = l.slice(i + 1).trim();
+  });
+  var opts = { method: method.value, headers: headers };
+  if (bodyIn.value.trim() && method.value !== 'GET') opts.body = bodyIn.value;
+  var t0 = performance.now();
+  respBox.textContent = '请求中…';
+  fetch(url.value, opts).then(function (res) {
+    return res.text().then(function (text) {
+      var ms = Math.round(performance.now() - t0);
+      respBox.textContent = 'HTTP ' + res.status + ' ' + res.statusText + '（' + ms + ' ms）\n\n' + text.slice(0, 4000);
+    });
+  }).catch(function (e) {
+    respBox.textContent = '⚠ 请求失败：' + e.message + '\n（目标站点可能不允许跨域 CORS）';
+  });
+}
+[method, url, headersIn, bodyIn].forEach(function (el) { el.addEventListener('input', build); });
+app.appendChild(T.row([method, url]));
+app.appendChild(T.pane([T.field('Headers（每行一个）', headersIn), T.field('Body', bodyIn)]));
+app.appendChild(T.el('span', { text: '原始报文', class: 'field' }));
+app.appendChild(rawOut);
+app.appendChild(T.row([T.button('发送请求', send, true), T.btnCopy(function () { return rawOut.value; })]));
+app.appendChild(T.el('span', { text: '响应', class: 'field' }));
+app.appendChild(respBox);
+build();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "http-builder", "title": "HTTP 请求构建", "desc": "构建 HTTP 请求报文：方法 / 头 / 体，生成原始报文并可实际发送", "scripts": "", "code": "var method = T.select(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'], 'GET');\nvar url = T.input('https://httpbin.org/get', { class: 'grow mono' });\nvar headersIn = T.textarea('Content-Type: application/json\\nX-Request-Id: freellm-001', true);\nheadersIn.value = 'Content-Type: application/json\\nX-Request-Id: freellm-001';\nheadersIn.setAttribute('rows', '4');\nvar bodyIn = T.textarea('{\"q\": \"freellm\"}', true);\nbodyIn.value = '{\"q\": \"freellm\"}';\nbodyIn.setAttribute('rows', '4');\nvar rawOut = T.out('');\nvar respBox = T.el('div', { class: 'output', style: 'min-height:120px;white-space:pre-wrap' });\nfunction build() {\n  var lines = [method.value + ' ' + (function () { try { return new URL(url.value).pathname + new URL(url.value).search; } catch (e) { return '/'; } })() + ' HTTP/1.1'];\n  try { lines.push('Host: ' + new URL(url.value).host); } catch (e) {}\n  headersIn.value.split('\\n').forEach(function (l) { if (l.trim()) lines.push(l.trim()); });\n  if (bodyIn.value.trim() && method.value !== 'GET') {\n    lines.push('Content-Length: ' + new Blob([bodyIn.value]).size);\n    lines.push('');\n    lines.push(bodyIn.value);\n  }\n  rawOut.value = lines.join('\\n');\n}\nfunction send() {\n  var headers = {};\n  headersIn.value.split('\\n').forEach(function (l) {\n    var i = l.indexOf(':');\n    if (i > 0) headers[l.slice(0, i).trim()] = l.slice(i + 1).trim();\n  });\n  var opts = { method: method.value, headers: headers };\n  if (bodyIn.value.trim() && method.value !== 'GET') opts.body = bodyIn.value;\n  var t0 = performance.now();\n  respBox.textContent = '请求中…';\n  fetch(url.value, opts).then(function (res) {\n    return res.text().then(function (text) {\n      var ms = Math.round(performance.now() - t0);\n      respBox.textContent = 'HTTP ' + res.status + ' ' + res.statusText + '（' + ms + ' ms）\\n\\n' + text.slice(0, 4000);\n    });\n  }).catch(function (e) {\n    respBox.textContent = '⚠ 请求失败：' + e.message + '\\n（目标站点可能不允许跨域 CORS）';\n  });\n}\n[method, url, headersIn, bodyIn].forEach(function (el) { el.addEventListener('input', build); });\napp.appendChild(T.row([method, url]));\napp.appendChild(T.pane([T.field('Headers（每行一个）', headersIn), T.field('Body', bodyIn)]));\napp.appendChild(T.el('span', { text: '原始报文', class: 'field' }));\napp.appendChild(rawOut);\napp.appendChild(T.row([T.button('发送请求', send, true), T.btnCopy(function () { return rawOut.value; })]));\napp.appendChild(T.el('span', { text: '响应', class: 'field' }));\napp.appendChild(respBox);\nbuild();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

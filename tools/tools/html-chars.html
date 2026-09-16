@@ -2,83 +2,63 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HTML 特殊字符 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HTML 特殊字符', '常用 HTML 字符实体速查', 'html-chars');
-
-  var CHARS = [
-    ['&amp;', '&', '和号'],
-    ['&lt;', '<', '小于号'],
-    ['&gt;', '>', '大于号'],
-    ['&quot;', '"', '双引号'],
-    ['&apos;', "'", '单引号'],
-    ['&nbsp;', ' ', '空格'],
-    ['&copy;', '©', '版权'],
-    ['&reg;', '®', '注册商标'],
-    ['&trade;', '™', '商标'],
-    ['&euro;', '€', '欧元'],
-    ['&pound;', '£', '英镑'],
-    ['&yen;', '¥', '日元/人民币'],
-    ['&cent;', '¢', '分'],
-    ['&deg;', '°', '度'],
-    ['&plusmn;', '±', '正负号'],
-    ['&times;', '×', '乘号'],
-    ['&divide;', '÷', '除号'],
-    ['&micro;', 'µ', '微'],
-    ['&para;', '¶', '段落'],
-    ['&sect;', '§', '节'],
-    ['&alpha;', 'α', 'Alpha'],
-    ['&beta;', 'β', 'Beta'],
-    ['&gamma;', 'γ', 'Gamma'],
-    ['&delta;', 'δ', 'Delta'],
-    ['&epsilon;', 'ε', 'Epsilon'],
-    ['&lambda;', 'λ', 'Lambda'],
-    ['&pi;', 'π', 'Pi'],
-    ['&sigma;', 'σ', 'Sigma'],
-    ['&omega;', 'ω', 'Omega'],
-    ['&infin;', '∞', '无穷'],
-    ['&ne;', '≠', '不等于'],
-    ['&le;', '≤', '小于等于'],
-    ['&ge;', '≥', '大于等于'],
-    ['&larr;', '←', '左箭头'],
-    ['&uarr;', '↑', '上箭头'],
-    ['&rarr;', '→', '右箭头'],
-    ['&darr;', '↓', '下箭头'],
-    ['&hearts;', '♥', '红心'],
-    ['&diams;', '♦', '方块'],
-    ['&clubs;', '♣', '梅花'],
-    ['&spades;', '♠', '黑桃']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render() {
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">实体</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">字符</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">操作</th></tr></thead>';
-    html += '<tbody>';
-    CHARS.forEach(function (c) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code>' + c[0] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-size:1.2em">' + c[1] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + c[2] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><button onclick="navigator.clipboard.writeText(\'' + c[0] + '\')" style="padding:4px 8px;cursor:pointer">复制</button></td>';
-      html += '</tr>';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 特殊字符', '常用 HTML 字符实体速查：保留字符 / 符号 / 希腊字母', 'html-chars');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
+  });
+  return search;
+}
 
-  render();
-  app.appendChild(table);
+var DATA = [
+  ['&amp;', '&', 'and 符号（保留字）'], ['&lt;', '<', '小于号（保留字）'], ['&gt;', '>', '大于号（保留字）'],
+  ['&quot;', '"', '双引号（保留字）'], ['&#39;', "'", '单引号（保留字）'], ['&nbsp;', ' ', '不换行空格'],
+  ['&copy;', '©', '版权'], ['&reg;', '®', '注册商标'], ['&trade;', '™', '商标'],
+  ['&hellip;', '…', '省略号'], ['&mdash;', '—', '长破折号'], ['&ndash;', '–', '短破折号'],
+  ['&lsquo;', '\u2018', '左单引号'], ['&rsquo;', '\u2019', '右单引号'], ['&ldquo;', '\u201c', '左双引号'], ['&rdquo;', '\u201d', '右双引号'],
+  ['&laquo;', '«', '左书名号'], ['&raquo;', '»', '右书名号'],
+  ['&deg;', '°', '度'], ['&plusmn;', '±', '正负号'], ['&times;', '×', '乘号'], ['&divide;', '÷', '除号'],
+  ['&frac12;', '½', '二分之一'], ['&frac14;', '¼', '四分之一'], ['&frac34;', '¾', '四分之三'],
+  ['&micro;', 'µ', '微'], ['&para;', '¶', '段落符'], ['&sect;', '§', '章节符'], ['&dagger;', '†', '剑号'],
+  ['&larr;', '←', '左箭头'], ['&uarr;', '↑', '上箭头'], ['&rarr;', '→', '右箭头'], ['&darr;', '↓', '下箭头'],
+  ['&harr;', '↔', '左右箭头'], ['&spades;', '♠', '黑桃'], ['&clubs;', '♣', '梅花'], ['&hearts;', '♥', '红桃'], ['&diams;', '♦', '方块'],
+  ['&alpha;', 'α', '希腊字母 alpha'], ['&beta;', 'β', 'beta'], ['&gamma;', 'γ', 'gamma'], ['&delta;', 'δ', 'delta'],
+  ['&epsilon;', 'ε', 'epsilon'], ['&theta;', 'θ', 'theta'], ['&lambda;', 'λ', 'lambda'], ['&mu;', 'μ', 'mu'],
+  ['&pi;', 'π', 'pi'], ['&rho;', 'ρ', 'rho'], ['&sigma;', 'σ', 'sigma'], ['&phi;', 'φ', 'phi'], ['&omega;', 'ω', 'omega'],
+  ['&Alpha;', 'Α', 'Alpha 大写'], ['&Beta;', 'Β', 'Beta 大写'], ['&Delta;', 'Δ', 'Delta 大写'], ['&Omega;', 'Ω', 'Omega 大写'],
+  ['&infin;', '∞', '无穷'], ['&ne;', '≠', '不等于'], ['&le;', '≤', '小于等于'], ['&ge;', '≥', '大于等于'],
+  ['&sum;', '∑', '求和'], ['&radic;', '√', '根号'], ['&int;', '∫', '积分'], ['&part;', '∂', '偏导'], ['&nabla;', '∇', '梯度'],
+  ['&there4;', '∴', '所以'], ['&because;', '∵', '因为'], ['&prop;', '∝', '正比'], ['&ang;', '∠', '角'], ['&perp;', '⊥', '垂直']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['实体', '显示', '说明'], DATA, function (r) { T.copy(r[0]); }));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制实体代码' })]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "html-chars", "title": "HTML 特殊字符", "desc": "常用 HTML 字符实体速查：保留字符 / 符号 / 希腊字母", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['&amp;', '&', 'and 符号（保留字）'], ['&lt;', '\u003c', '小于号（保留字）'], ['&gt;', '>', '大于号（保留字）'],\n  ['&quot;', '\"', '双引号（保留字）'], ['&#39;', \"'\", '单引号（保留字）'], ['&nbsp;', ' ', '不换行空格'],\n  ['&copy;', '©', '版权'], ['&reg;', '®', '注册商标'], ['&trade;', '™', '商标'],\n  ['&hellip;', '…', '省略号'], ['&mdash;', '—', '长破折号'], ['&ndash;', '–', '短破折号'],\n  ['&lsquo;', '\\u2018', '左单引号'], ['&rsquo;', '\\u2019', '右单引号'], ['&ldquo;', '\\u201c', '左双引号'], ['&rdquo;', '\\u201d', '右双引号'],\n  ['&laquo;', '«', '左书名号'], ['&raquo;', '»', '右书名号'],\n  ['&deg;', '°', '度'], ['&plusmn;', '±', '正负号'], ['&times;', '×', '乘号'], ['&divide;', '÷', '除号'],\n  ['&frac12;', '½', '二分之一'], ['&frac14;', '¼', '四分之一'], ['&frac34;', '¾', '四分之三'],\n  ['&micro;', 'µ', '微'], ['&para;', '¶', '段落符'], ['&sect;', '§', '章节符'], ['&dagger;', '†', '剑号'],\n  ['&larr;', '←', '左箭头'], ['&uarr;', '↑', '上箭头'], ['&rarr;', '→', '右箭头'], ['&darr;', '↓', '下箭头'],\n  ['&harr;', '↔', '左右箭头'], ['&spades;', '♠', '黑桃'], ['&clubs;', '♣', '梅花'], ['&hearts;', '♥', '红桃'], ['&diams;', '♦', '方块'],\n  ['&alpha;', 'α', '希腊字母 alpha'], ['&beta;', 'β', 'beta'], ['&gamma;', 'γ', 'gamma'], ['&delta;', 'δ', 'delta'],\n  ['&epsilon;', 'ε', 'epsilon'], ['&theta;', 'θ', 'theta'], ['&lambda;', 'λ', 'lambda'], ['&mu;', 'μ', 'mu'],\n  ['&pi;', 'π', 'pi'], ['&rho;', 'ρ', 'rho'], ['&sigma;', 'σ', 'sigma'], ['&phi;', 'φ', 'phi'], ['&omega;', 'ω', 'omega'],\n  ['&Alpha;', 'Α', 'Alpha 大写'], ['&Beta;', 'Β', 'Beta 大写'], ['&Delta;', 'Δ', 'Delta 大写'], ['&Omega;', 'Ω', 'Omega 大写'],\n  ['&infin;', '∞', '无穷'], ['&ne;', '≠', '不等于'], ['&le;', '≤', '小于等于'], ['&ge;', '≥', '大于等于'],\n  ['&sum;', '∑', '求和'], ['&radic;', '√', '根号'], ['&int;', '∫', '积分'], ['&part;', '∂', '偏导'], ['&nabla;', '∇', '梯度'],\n  ['&there4;', '∴', '所以'], ['&because;', '∵', '因为'], ['&prop;', '∝', '正比'], ['&ang;', '∠', '角'], ['&perp;', '⊥', '垂直']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['实体', '显示', '说明'], DATA, function (r) { T.copy(r[0]); }));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制实体代码' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

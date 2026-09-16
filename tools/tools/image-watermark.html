@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片加水印 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片加水印', '文字 / 平铺水印：字号 / 颜色 / 透明度 / 位置可调', 'image-watermark');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var text = T.input('© FreeLLM', { class: 'grow' });
+var size = T.range(10, 120, 1, 28);
+var alpha = T.range(5, 100, 1, 40);
+var color = T.color('#FFFFFF');
+var tile = T.check('平铺整个画面');
+var pos = T.select([{value:'br',label:'右下'},{value:'bl',label:'左下'},{value:'tr',label:'右上'},{value:'tl',label:'左上'},{value:'c',label:'正中'}],'br');
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+function render() {
+  if (!img) return;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  ctx.globalAlpha = alpha.value / 100;
+  ctx.fillStyle = color.value;
+  ctx.font = '600 ' + size.value + 'px sans-serif';
+  if (tile._input.checked) {
+    ctx.rotate(-Math.PI / 12);
+    var step = size.value * 8;
+    for (var y = -canvas.height; y < canvas.height * 2; y += step) {
+      for (var x = -canvas.width; x < canvas.width * 2; x += step * 2) {
+        ctx.fillText(text.value, x, y);
+      }
+    }
+  } else {
+    var m = size.value;
+    var x = pos.value[1] === 'l' ? m : pos.value === 'c' ? (canvas.width - ctx.measureText(text.value).width) / 2 : canvas.width - ctx.measureText(text.value).width - m;
+    var y = pos.value[0] === 't' ? m + size.value : pos.value === 'c' ? canvas.height / 2 : canvas.height - m;
+    ctx.fillText(text.value, x, y);
+  }
+  ctx.globalAlpha = 1;
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () {
+  T.loadImage(function (i) { img = i; render(); });
+});
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+[text, size, alpha, color, tile._input, pos].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(T.row([text, color]));
+app.appendChild(T.row([T.el('span', { text: '字号' }), size, T.el('span', { text: '透明度' }), alpha, pos, tile]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'watermarked.png'); }, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-watermark", "title": "图片加水印", "desc": "文字 / 平铺水印：字号 / 颜色 / 透明度 / 位置可调", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar text = T.input('© FreeLLM', { class: 'grow' });\nvar size = T.range(10, 120, 1, 28);\nvar alpha = T.range(5, 100, 1, 40);\nvar color = T.color('#FFFFFF');\nvar tile = T.check('平铺整个画面');\nvar pos = T.select([{value:'br',label:'右下'},{value:'bl',label:'左下'},{value:'tr',label:'右上'},{value:'tl',label:'左上'},{value:'c',label:'正中'}],'br');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  canvas.width = img.width;\n  canvas.height = img.height;\n  var ctx = canvas.getContext('2d');\n  ctx.drawImage(img, 0, 0);\n  ctx.globalAlpha = alpha.value / 100;\n  ctx.fillStyle = color.value;\n  ctx.font = '600 ' + size.value + 'px sans-serif';\n  if (tile._input.checked) {\n    ctx.rotate(-Math.PI / 12);\n    var step = size.value * 8;\n    for (var y = -canvas.height; y \u003c canvas.height * 2; y += step) {\n      for (var x = -canvas.width; x \u003c canvas.width * 2; x += step * 2) {\n        ctx.fillText(text.value, x, y);\n      }\n    }\n  } else {\n    var m = size.value;\n    var x = pos.value[1] === 'l' ? m : pos.value === 'c' ? (canvas.width - ctx.measureText(text.value).width) / 2 : canvas.width - ctx.measureText(text.value).width - m;\n    var y = pos.value[0] === 't' ? m + size.value : pos.value === 'c' ? canvas.height / 2 : canvas.height - m;\n    ctx.fillText(text.value, x, y);\n  }\n  ctx.globalAlpha = 1;\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () {\n  T.loadImage(function (i) { img = i; render(); });\n});\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\n[text, size, alpha, color, tile._input, pos].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(T.row([text, color]));\napp.appendChild(T.row([T.el('span', { text: '字号' }), size, T.el('span', { text: '透明度' }), alpha, pos, tile]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'watermarked.png'); }, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

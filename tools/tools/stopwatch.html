@@ -2,100 +2,71 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>在线秒表 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('在线秒表', '开始/暂停/计次/复位', 'stopwatch');
-
-  var display = T.el('div', { 
-    style: 'font-size:3em;font-family:monospace;text-align:center;padding:20px;background:var(--bg);border-radius:12px;border:1px solid var(--line)',
-    text: '00:00:00.000'
-  });
-
-  var laps = T.el('div', { class: 'output dark', style: 'max-height:200px;overflow-y:auto' });
-  var lapList = [];
-
-  var startBtn = T.button('开始', start, true);
-  var lapBtn = T.button('计次', lap);
-  var resetBtn = T.button('复位', reset);
-
-  var startTime = 0;
-  var elapsed = 0;
-  var running = false;
-  var timer = null;
-
-  function formatTime(ms) {
-    var hours = Math.floor(ms / 3600000);
-    var minutes = Math.floor((ms % 3600000) / 60000);
-    var seconds = Math.floor((ms % 60000) / 1000);
-    var millis = ms % 1000;
-    return String(hours).padStart(2, '0') + ':' +
-           String(minutes).padStart(2, '0') + ':' +
-           String(seconds).padStart(2, '0') + '.' +
-           String(millis).padStart(3, '0');
-  }
-
-  function update() {
-    elapsed = Date.now() - startTime;
-    display.textContent = formatTime(elapsed);
-  }
-
-  function start() {
-    if (running) {
-      clearInterval(timer);
-      running = false;
-      startBtn.textContent = '继续';
-    } else {
-      startTime = Date.now() - elapsed;
-      timer = setInterval(update, 10);
-      running = true;
-      startBtn.textContent = '暂停';
-    }
-  }
-
-  function lap() {
-    if (!running) return;
-    lapList.unshift(elapsed);
-    renderLaps();
-  }
-
-  function reset() {
-    clearInterval(timer);
-    running = false;
-    elapsed = 0;
-    startTime = 0;
-    display.textContent = '00:00:00.000';
-    startBtn.textContent = '开始';
-    lapList = [];
-    renderLaps();
-  }
-
-  function renderLaps() {
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:4px">计次</th><th style="text-align:right;padding:4px">时间</th><th style="text-align:right;padding:4px">间隔</th></tr></thead>';
-    html += '<tbody>';
-    lapList.forEach(function (t, i) {
-      var prev = lapList[i + 1] || 0;
-      html += '<tr><td style="padding:4px;border-bottom:1px solid var(--line)">#' + (lapList.length - i) + '</td>';
-      html += '<td style="padding:4px;border-bottom:1px solid var(--line);text-align:right;font-family:monospace">' + formatTime(t) + '</td>';
-      html += '<td style="padding:4px;border-bottom:1px solid var(--line);text-align:right;font-family:monospace;color:var(--muted)">' + formatTime(t - prev) + '</td></tr>';
-    });
-    html += '</tbody></table>';
-    laps.innerHTML = html;
-  }
-
-  app.appendChild(display);
-  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' }, [startBtn, lapBtn, resetBtn]));
-  app.appendChild(T.el('div', { class: 'field', text: '计次记录:' }));
-  app.appendChild(laps);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线秒表', '开始 / 暂停 / 计次 / 复位，精确到 10 毫秒', 'stopwatch');
+var big = T.el('div', { text: '00:00:00.0', style: 'font:400 64px/1.2 var(--font-serif);text-align:center;margin:30px 0;font-variant-numeric:tabular-nums' });
+var laps = T.el('div');
+var running = false, startAt = 0, elapsed = 0, raf = 0;
+function fmt(ms) {
+  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000), d = Math.floor(ms % 1000 / 100);
+  return (h ? String(h).padStart(2, '0') + ':' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + '.' + d;
+}
+function tickFn() {
+  big.textContent = fmt(elapsed + (running ? Date.now() - startAt : 0));
+  raf = requestAnimationFrame(tickFn);
+}
+var lapCount = 0;
+app.appendChild(big);
+app.appendChild(T.row([T.button('开始', function () {
+  if (running) return;
+  running = true;
+  startAt = Date.now();
+  tickFn();
+}, true),
+T.button('暂停', function () {
+  if (!running) return;
+  elapsed += Date.now() - startAt;
+  running = false;
+  cancelAnimationFrame(raf);
+  big.textContent = fmt(elapsed);
+}),
+T.button('计次', function () {
+  lapCount++;
+  var t = fmt(elapsed + (running ? Date.now() - startAt : 0));
+  var row = T.el('div', { style: 'display:flex;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono)' });
+  row.appendChild(T.el('span', { text: '第 ' + lapCount + ' 次' }));
+  row.appendChild(T.el('span', { text: t }));
+  laps.insertBefore(row, laps.firstChild);
+}),
+T.button('复位', function () {
+  running = false;
+  cancelAnimationFrame(raf);
+  elapsed = 0;
+  lapCount = 0;
+  big.textContent = '00:00:00.0';
+  T.clearEl(laps);
+})]));
+app.appendChild(laps);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "stopwatch", "title": "在线秒表", "desc": "开始 / 暂停 / 计次 / 复位，精确到 10 毫秒", "scripts": "", "code": "var big = T.el('div', { text: '00:00:00.0', style: 'font:400 64px/1.2 var(--font-serif);text-align:center;margin:30px 0;font-variant-numeric:tabular-nums' });\nvar laps = T.el('div');\nvar running = false, startAt = 0, elapsed = 0, raf = 0;\nfunction fmt(ms) {\n  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000), d = Math.floor(ms % 1000 / 100);\n  return (h ? String(h).padStart(2, '0') + ':' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + '.' + d;\n}\nfunction tickFn() {\n  big.textContent = fmt(elapsed + (running ? Date.now() - startAt : 0));\n  raf = requestAnimationFrame(tickFn);\n}\nvar lapCount = 0;\napp.appendChild(big);\napp.appendChild(T.row([T.button('开始', function () {\n  if (running) return;\n  running = true;\n  startAt = Date.now();\n  tickFn();\n}, true),\nT.button('暂停', function () {\n  if (!running) return;\n  elapsed += Date.now() - startAt;\n  running = false;\n  cancelAnimationFrame(raf);\n  big.textContent = fmt(elapsed);\n}),\nT.button('计次', function () {\n  lapCount++;\n  var t = fmt(elapsed + (running ? Date.now() - startAt : 0));\n  var row = T.el('div', { style: 'display:flex;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--line);font-family:var(--font-mono)' });\n  row.appendChild(T.el('span', { text: '第 ' + lapCount + ' 次' }));\n  row.appendChild(T.el('span', { text: t }));\n  laps.insertBefore(row, laps.firstChild);\n}),\nT.button('复位', function () {\n  running = false;\n  cancelAnimationFrame(raf);\n  elapsed = 0;\n  lapCount = 0;\n  big.textContent = '00:00:00.0';\n  T.clearEl(laps);\n})]));\napp.appendChild(laps);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

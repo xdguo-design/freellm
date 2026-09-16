@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>压到指定 KB · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('压到指定 KB', '自动调整质量把图片压到目标体积以内', 'image-target-kb');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var targetKB = T.num(200, { min: 5, style: 'width:90px' });
+var format = T.select([{value:'image/jpeg',label:'JPEG'},{value:'image/webp',label:'WebP'}],'image/jpeg');
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var status = T.badge('—');
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+var finalBlob = null;
+function compress(quality) {
+  return new Promise(function (resolve) {
+    canvas.toBlob(resolve, format.value, quality);
+  });
+}
+function run() {
+  var target = +targetKB.value * 1024;
+  status.textContent = '二分搜索质量中…';
+  status.className = 'badge blue';
+  var lo = 0.05, hi = 0.96, best = null;
+  function step() {
+    var mid = (lo + hi) / 2;
+    compress(mid).then(function (b) {
+      if (b.size <= target) { best = { blob: b, q: mid }; lo = mid; }
+      else hi = mid;
+      if (hi - lo < 0.02) {
+        if (best) {
+          finalBlob = best.blob;
+          status.textContent = '✓ ' + T.fmtBytes(best.blob.size) + '（质量 ' + Math.round(best.q * 100) + '%，目标 ' + targetKB.value + 'KB）';
+          status.className = 'badge ok';
+        } else {
+          finalBlob = b;
+          status.textContent = '⚠ 最低质量仍 ' + T.fmtBytes(b.size) + '，试试缩小尺寸或换 WebP';
+          status.className = 'badge warn';
+        }
+        return;
+      }
+      step();
+    });
+  }
+  step();
+}
+inp.addEventListener('change', function () {
+  T.loadImage(function (i) {
+    img = i;
+    canvas.width = i.width;
+    canvas.height = i.height;
+    canvas.getContext('2d').drawImage(i, 0, 0);
+    canvas.style.display = '';
+  });
+});
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '目标体积 KB' }), targetKB, format, T.button('开始压缩', run, true), status]));
+app.appendChild(canvas);
+app.appendChild(T.button('下载最终结果', function () {
+  var ext = format.value === 'image/webp' ? 'webp' : 'jpg';
+  if (finalBlob) T.download('compressed-' + targetKB.value + 'kb.' + ext, finalBlob);
+  else T.toast('请先执行压缩');
+}, true));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-target-kb", "title": "压到指定 KB", "desc": "自动调整质量把图片压到目标体积以内", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar targetKB = T.num(200, { min: 5, style: 'width:90px' });\nvar format = T.select([{value:'image/jpeg',label:'JPEG'},{value:'image/webp',label:'WebP'}],'image/jpeg');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar status = T.badge('—');\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nvar finalBlob = null;\nfunction compress(quality) {\n  return new Promise(function (resolve) {\n    canvas.toBlob(resolve, format.value, quality);\n  });\n}\nfunction run() {\n  var target = +targetKB.value * 1024;\n  status.textContent = '二分搜索质量中…';\n  status.className = 'badge blue';\n  var lo = 0.05, hi = 0.96, best = null;\n  function step() {\n    var mid = (lo + hi) / 2;\n    compress(mid).then(function (b) {\n      if (b.size \u003c= target) { best = { blob: b, q: mid }; lo = mid; }\n      else hi = mid;\n      if (hi - lo \u003c 0.02) {\n        if (best) {\n          finalBlob = best.blob;\n          status.textContent = '✓ ' + T.fmtBytes(best.blob.size) + '（质量 ' + Math.round(best.q * 100) + '%，目标 ' + targetKB.value + 'KB）';\n          status.className = 'badge ok';\n        } else {\n          finalBlob = b;\n          status.textContent = '⚠ 最低质量仍 ' + T.fmtBytes(b.size) + '，试试缩小尺寸或换 WebP';\n          status.className = 'badge warn';\n        }\n        return;\n      }\n      step();\n    });\n  }\n  step();\n}\ninp.addEventListener('change', function () {\n  T.loadImage(function (i) {\n    img = i;\n    canvas.width = i.width;\n    canvas.height = i.height;\n    canvas.getContext('2d').drawImage(i, 0, 0);\n    canvas.style.display = '';\n  });\n});\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '目标体积 KB' }), targetKB, format, T.button('开始压缩', run, true), status]));\napp.appendChild(canvas);\napp.appendChild(T.button('下载最终结果', function () {\n  var ext = format.value === 'image/webp' ? 'webp' : 'jpg';\n  if (finalBlob) T.download('compressed-' + targetKB.value + 'kb.' + ext, finalBlob);\n  else T.toast('请先执行压缩');\n}, true));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

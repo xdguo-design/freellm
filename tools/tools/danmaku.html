@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>手持弹幕 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('手持弹幕', '手机全屏滚动 LED 弹幕：文字 + 颜色 + 速度（演唱会应援）', 'danmaku');
+var text = T.input('FreeLLM 加油！', { class: 'grow', placeholder: '弹幕文字' });
+var speed = T.range(1, 20, 1, 6);
+var color = T.color('#FF3B6B');
+var bgc = T.color('#000000');
+var fs = T.range(40, 200, 5, 90);
+var marquee = T.el('div', { style: 'white-space:nowrap;font-weight:900;display:flex;align-items:center;height:200px;overflow:hidden;border-radius:12px;margin:16px 0' });
+var inner = T.el('span', { style: 'display:inline-block;white-space:nowrap;padding-left:100%' });
+marquee.appendChild(inner);
+function render() {
+  inner.textContent = text.value || ' ';
+  inner.style.color = color.value;
+  inner.style.fontSize = fs.value + 'px';
+  marquee.style.background = bgc.value;
+  inner.style.animation = 'none';
+  void inner.offsetWidth;
+  inner.style.animation = 'danmaku-scroll ' + (60 / speed.value) + 's linear infinite';
+}
+var style = document.createElement('style');
+style.textContent = '@keyframes danmaku-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}';
+document.head.appendChild(style);
+[text, speed, color, bgc, fs].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.pane([T.field('文字', text)], true));
+app.appendChild(T.row([T.el('span', { text: '速度' }), speed, T.el('span', { text: '字号' }), fs]));
+app.appendChild(T.row([T.el('span', { text: '文字色' }), color, T.el('span', { text: '背景色' }), bgc,
+  T.button('⛶ 全屏播放', function () {
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    marquee.style.height = '100vh';
+    document.documentElement.requestFullscreen().then(function () {}).catch(function () { T.toast('全屏被拒绝，可手动最大化窗口'); });
+  })]));
+app.appendChild(marquee);
+render();
+document.addEventListener('fullscreenchange', function () {
+  marquee.style.height = document.fullscreenElement ? '100vh' : '200px';
+});
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "danmaku", "title": "手持弹幕", "desc": "手机全屏滚动 LED 弹幕：文字 + 颜色 + 速度（演唱会应援）", "scripts": "", "code": "var text = T.input('FreeLLM 加油！', { class: 'grow', placeholder: '弹幕文字' });\nvar speed = T.range(1, 20, 1, 6);\nvar color = T.color('#FF3B6B');\nvar bgc = T.color('#000000');\nvar fs = T.range(40, 200, 5, 90);\nvar marquee = T.el('div', { style: 'white-space:nowrap;font-weight:900;display:flex;align-items:center;height:200px;overflow:hidden;border-radius:12px;margin:16px 0' });\nvar inner = T.el('span', { style: 'display:inline-block;white-space:nowrap;padding-left:100%' });\nmarquee.appendChild(inner);\nfunction render() {\n  inner.textContent = text.value || ' ';\n  inner.style.color = color.value;\n  inner.style.fontSize = fs.value + 'px';\n  marquee.style.background = bgc.value;\n  inner.style.animation = 'none';\n  void inner.offsetWidth;\n  inner.style.animation = 'danmaku-scroll ' + (60 / speed.value) + 's linear infinite';\n}\nvar style = document.createElement('style');\nstyle.textContent = '@keyframes danmaku-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}';\ndocument.head.appendChild(style);\n[text, speed, color, bgc, fs].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.pane([T.field('文字', text)], true));\napp.appendChild(T.row([T.el('span', { text: '速度' }), speed, T.el('span', { text: '字号' }), fs]));\napp.appendChild(T.row([T.el('span', { text: '文字色' }), color, T.el('span', { text: '背景色' }), bgc,\n  T.button('⛶ 全屏播放', function () {\n    if (document.fullscreenElement) { document.exitFullscreen(); return; }\n    marquee.style.height = '100vh';\n    document.documentElement.requestFullscreen().then(function () {}).catch(function () { T.toast('全屏被拒绝，可手动最大化窗口'); });\n  })]));\napp.appendChild(marquee);\nrender();\ndocument.addEventListener('fullscreenchange', function () {\n  marquee.style.height = document.fullscreenElement ? '100vh' : '200px';\n});"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

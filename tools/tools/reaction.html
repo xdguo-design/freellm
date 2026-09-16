@@ -2,70 +2,73 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>反应速度测试 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('反应速度测试', '点击测反应时间 ms', 'reaction');
-
-  var area = T.el('div', {
-    style: 'width:100%;height:300px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5em;cursor:pointer;transition:background 0.2s;background:#e74c3c;color:#fff;text-align:center',
-    text: '点击开始测试'
-  });
-
-  var result = T.el('div', { class: 'output dark', style: 'text-align:center;padding:20px;font-size:1.2em' });
-  var history = [];
-
-  var state = 'idle'; // idle, waiting, ready, done
-  var startTime = 0;
-  var timeout = 0;
-
-  area.addEventListener('click', function () {
-    switch (state) {
-      case 'idle':
-        state = 'waiting';
-        area.style.background = '#3498db';
-        area.textContent = '等待变绿...';
-        timeout = setTimeout(function () {
-          state = 'ready';
-          area.style.background = '#2ecc71';
-          area.textContent = '点击！';
-          startTime = Date.now();
-        }, 1000 + Math.random() * 4000);
-        break;
-      case 'waiting':
-        clearTimeout(timeout);
-        state = 'idle';
-        area.style.background = '#e74c3c';
-        area.textContent = '太早了！点击重试';
-        break;
-      case 'ready':
-        var reactionTime = Date.now() - startTime;
-        state = 'idle';
-        area.style.background = '#9b59b6';
-        area.textContent = reactionTime + ' ms\n点击继续';
-        history.unshift(reactionTime);
-        updateResult();
-        break;
-    }
-  });
-
-  function updateResult() {
-    var avg = Math.round(history.reduce(function (a, b) { return a + b; }, 0) / history.length);
-    var min = Math.min(...history);
-    var max = Math.max(...history);
-    result.innerHTML = '当前: ' + history[0] + ' ms | 平均: ' + avg + ' ms | 最快: ' + min + ' ms | 最慢: ' + max + ' ms';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('反应速度测试', '点击测反应时间：等待变绿瞬间点击，测 5 次取平均', 'reaction');
+var box = T.el('div', { style: 'height:260px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--surface-soft);border:1px solid var(--line);user-select:none;text-align:center;padding:20px' });
+var results = T.el('div', { class: 'row' });
+var state = 'idle';
+var startTime = 0, timeout = 0;
+var times = [];
+box.textContent = '点击开始测试';
+box.addEventListener('click', function () {
+  if (state === 'idle' || state === 'done') {
+    state = 'waiting';
+    box.style.background = '#C0392B';
+    box.style.color = '#fff';
+    box.textContent = '等待变绿…（提前点击将重置）';
+    timeout = setTimeout(function () {
+      state = 'ready';
+      startTime = performance.now();
+      box.style.background = '#27AE60';
+      box.textContent = '现在点击！';
+    }, 1200 + Math.random() * 2800);
+  } else if (state === 'waiting') {
+    clearTimeout(timeout);
+    state = 'idle';
+    box.style.background = '';
+    box.style.color = '';
+    box.textContent = '太早了！点击重新开始';
+  } else if (state === 'ready') {
+    var ms = Math.round(performance.now() - startTime);
+    times.push(ms);
+    state = 'done';
+    box.style.background = '';
+    box.style.color = '';
+    var grade = ms < 200 ? '电光石火 ⚡' : ms < 250 ? '反应极佳' : ms < 320 ? '反应良好' : ms < 450 ? '正常水平' : '还要练练';
+    box.textContent = ms + ' ms — ' + grade + (times.length < 5 ? '（再测 ' + (5 - times.length) + ' 次）' : '') + '，点击继续';
+    renderResults();
   }
-
-  app.appendChild(area);
-  app.appendChild(result);
+});
+function renderResults() {
+  T.clearEl(results);
+  results.appendChild(T.stat(times.length ? Math.round(times.reduce(function (a, b) { return a + b; }) / times.length) : '—', '平均 ms'));
+  results.appendChild(T.stat(times.length ? Math.min.apply(null, times) : '—', '最快 ms'));
+  results.appendChild(T.stat(times.length, '已测次数'));
+}
+app.appendChild(box);
+app.appendChild(results);
+app.appendChild(T.row([T.button('重置成绩', function () { times = []; renderResults(); box.textContent = '点击开始测试'; }), T.el('span', { text: '人类平均反应约 250ms；电竞选手可达 150ms' })]));
+renderResults();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "reaction", "title": "反应速度测试", "desc": "点击测反应时间：等待变绿瞬间点击，测 5 次取平均", "scripts": "", "code": "var box = T.el('div', { style: 'height:260px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--surface-soft);border:1px solid var(--line);user-select:none;text-align:center;padding:20px' });\nvar results = T.el('div', { class: 'row' });\nvar state = 'idle';\nvar startTime = 0, timeout = 0;\nvar times = [];\nbox.textContent = '点击开始测试';\nbox.addEventListener('click', function () {\n  if (state === 'idle' || state === 'done') {\n    state = 'waiting';\n    box.style.background = '#C0392B';\n    box.style.color = '#fff';\n    box.textContent = '等待变绿…（提前点击将重置）';\n    timeout = setTimeout(function () {\n      state = 'ready';\n      startTime = performance.now();\n      box.style.background = '#27AE60';\n      box.textContent = '现在点击！';\n    }, 1200 + Math.random() * 2800);\n  } else if (state === 'waiting') {\n    clearTimeout(timeout);\n    state = 'idle';\n    box.style.background = '';\n    box.style.color = '';\n    box.textContent = '太早了！点击重新开始';\n  } else if (state === 'ready') {\n    var ms = Math.round(performance.now() - startTime);\n    times.push(ms);\n    state = 'done';\n    box.style.background = '';\n    box.style.color = '';\n    var grade = ms \u003c 200 ? '电光石火 ⚡' : ms \u003c 250 ? '反应极佳' : ms \u003c 320 ? '反应良好' : ms \u003c 450 ? '正常水平' : '还要练练';\n    box.textContent = ms + ' ms — ' + grade + (times.length \u003c 5 ? '（再测 ' + (5 - times.length) + ' 次）' : '') + '，点击继续';\n    renderResults();\n  }\n});\nfunction renderResults() {\n  T.clearEl(results);\n  results.appendChild(T.stat(times.length ? Math.round(times.reduce(function (a, b) { return a + b; }) / times.length) : '—', '平均 ms'));\n  results.appendChild(T.stat(times.length ? Math.min.apply(null, times) : '—', '最快 ms'));\n  results.appendChild(T.stat(times.length, '已测次数'));\n}\napp.appendChild(box);\napp.appendChild(results);\napp.appendChild(T.row([T.button('重置成绩', function () { times = []; renderResults(); box.textContent = '点击开始测试'; }), T.el('span', { text: '人类平均反应约 250ms；电竞选手可达 150ms' })]));\nrenderResults();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

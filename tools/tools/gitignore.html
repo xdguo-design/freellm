@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>.gitignore 生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('.gitignore 生成', '按语言 / 框架 / IDE 组合生成 .gitignore', 'gitignore');
+var box = T.el('div', { class: 'row' });
+var output = T.out('');
+var TPL = {
+  'Node': ['node_modules/', 'dist/', '.env', '.env.*', 'npm-debug.log*', 'coverage/', '.npm'],
+  'Python': ['__pycache__/', '*.py[cod]', '.venv/', 'venv/', 'dist/', 'build/', '*.egg-info/', '.pytest_cache/', '.mypy_cache/'],
+  'Java': ['target/', '*.class', '*.jar', '*.war', '.gradle/', 'build/', '.idea/'],
+  'Go': ['bin/', 'vendor/', '*.exe', '*.test', '*.out'],
+  'Rust': ['target/', 'Cargo.lock'],
+  'C/C++': ['*.o', '*.obj', '*.exe', '*.dll', '*.so', '*.dylib', 'build/', 'cmake-build-*/'],
+  'Vue': ['node_modules/', 'dist/', '.vuepress/dist/', '.env.local'],
+  'React': ['node_modules/', 'build/', '.env', '.env.local', '.eslintcache'],
+  'macOS': ['.DS_Store', '.AppleDouble', '.LSOverride', 'Icon?'],
+  'Windows': ['Thumbs.db', 'Desktop.ini', '$RECYCLE.BIN/', '*.lnk'],
+  'Linux': ['*~', '.directory', '.Trash-*'],
+  'VS Code': ['.vscode/*', '!.vscode/settings.json', '!.vscode/extensions.json', 'history/'],
+  'JetBrains': ['.idea/', '*.iml', '*.ipr', '*.iws', 'out/'],
+  'Vim': ['[._]*.s[a-v][a-z]', '[._]*.sw[a-p]', '.netrwhist', 'tags'],
+  'Logs': ['logs/', '*.log', 'npm-debug.log*', 'yarn-debug.log*', 'yarn-error.log*'],
+  'Env': ['.env', '.env.local', '.env.*.local'],
+  'Docker': ['**/Dockerfile.dockerignore']
+};
+Object.keys(TPL).forEach(function (k) {
+  box.appendChild(T.check(k, k === 'Node' || k === 'macOS' || k === 'Env'));
+});
+function run() {
+  var lines = [];
+  Array.from(box.querySelectorAll('input')).forEach(function (inp, i) {
+    if (!inp.checked) return;
+    var k = Object.keys(TPL)[i];
+    lines.push('# === ' + k + ' ===');
+    lines = lines.concat(TPL[k]);
+    lines.push('');
+  });
+  output.value = lines.join('\n');
+}
+box.querySelectorAll('input').forEach ? null : null;
+setTimeout(function () { Array.from(box.querySelectorAll('input')).forEach(function (inp) { inp.addEventListener('change', run); }); run(); });
+app.appendChild(box);
+app.appendChild(T.pane([T.field('.gitignore', output)], true));
+app.appendChild(T.row([T.button('下载 .gitignore', function () { T.download('.gitignore', output.value); }, true), T.btnCopy(function () { return output.value; })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "gitignore", "title": ".gitignore 生成", "desc": "按语言 / 框架 / IDE 组合生成 .gitignore", "scripts": "", "code": "var box = T.el('div', { class: 'row' });\nvar output = T.out('');\nvar TPL = {\n  'Node': ['node_modules/', 'dist/', '.env', '.env.*', 'npm-debug.log*', 'coverage/', '.npm'],\n  'Python': ['__pycache__/', '*.py[cod]', '.venv/', 'venv/', 'dist/', 'build/', '*.egg-info/', '.pytest_cache/', '.mypy_cache/'],\n  'Java': ['target/', '*.class', '*.jar', '*.war', '.gradle/', 'build/', '.idea/'],\n  'Go': ['bin/', 'vendor/', '*.exe', '*.test', '*.out'],\n  'Rust': ['target/', 'Cargo.lock'],\n  'C/C++': ['*.o', '*.obj', '*.exe', '*.dll', '*.so', '*.dylib', 'build/', 'cmake-build-*/'],\n  'Vue': ['node_modules/', 'dist/', '.vuepress/dist/', '.env.local'],\n  'React': ['node_modules/', 'build/', '.env', '.env.local', '.eslintcache'],\n  'macOS': ['.DS_Store', '.AppleDouble', '.LSOverride', 'Icon?'],\n  'Windows': ['Thumbs.db', 'Desktop.ini', '$RECYCLE.BIN/', '*.lnk'],\n  'Linux': ['*~', '.directory', '.Trash-*'],\n  'VS Code': ['.vscode/*', '!.vscode/settings.json', '!.vscode/extensions.json', 'history/'],\n  'JetBrains': ['.idea/', '*.iml', '*.ipr', '*.iws', 'out/'],\n  'Vim': ['[._]*.s[a-v][a-z]', '[._]*.sw[a-p]', '.netrwhist', 'tags'],\n  'Logs': ['logs/', '*.log', 'npm-debug.log*', 'yarn-debug.log*', 'yarn-error.log*'],\n  'Env': ['.env', '.env.local', '.env.*.local'],\n  'Docker': ['**/Dockerfile.dockerignore']\n};\nObject.keys(TPL).forEach(function (k) {\n  box.appendChild(T.check(k, k === 'Node' || k === 'macOS' || k === 'Env'));\n});\nfunction run() {\n  var lines = [];\n  Array.from(box.querySelectorAll('input')).forEach(function (inp, i) {\n    if (!inp.checked) return;\n    var k = Object.keys(TPL)[i];\n    lines.push('# === ' + k + ' ===');\n    lines = lines.concat(TPL[k]);\n    lines.push('');\n  });\n  output.value = lines.join('\\n');\n}\nbox.querySelectorAll('input').forEach ? null : null;\nsetTimeout(function () { Array.from(box.querySelectorAll('input')).forEach(function (inp) { inp.addEventListener('change', run); }); run(); });\napp.appendChild(box);\napp.appendChild(T.pane([T.field('.gitignore', output)], true));\napp.appendChild(T.row([T.button('下载 .gitignore', function () { T.download('.gitignore', output.value); }, true), T.btnCopy(function () { return output.value; })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

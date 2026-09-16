@@ -2,107 +2,94 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>番茄钟 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('番茄钟', '番茄工作法计时器', 'pomodoro');
-
-  var display = T.el('div', {
-    style: 'font-size:4em;font-family:monospace;text-align:center;padding:30px;background:var(--bg);border-radius:16px;border:2px solid var(--line)',
-    text: '25:00'
-  });
-
-  var mode = T.select([
-    { value: '25', label: '工作 25分钟' },
-    { value: '5', label: '短休 5分钟' },
-    { value: '15', label: '长休 15分钟' }
-  ]);
-
-  var startBtn = T.button('开始', start, true);
-  var resetBtn = T.button('重置', reset);
-  var skipBtn = T.button('跳过', skip);
-
-  var sessions = T.el('div', { class: 'output dark', style: 'text-align:center;padding:16px' });
-  var sessionCount = 0;
-  var completedPomodoros = 0;
-
-  var timer = null;
-  var timeLeft = 25 * 60;
-  var running = false;
-
-  function formatTime(seconds) {
-    var m = Math.floor(seconds / 60);
-    var s = seconds % 60;
-    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-  }
-
-  function updateDisplay() {
-    display.textContent = formatTime(timeLeft);
-    document.title = formatTime(timeLeft) + ' - 番茄钟';
-  }
-
-  function start() {
-    if (running) {
-      clearInterval(timer);
-      running = false;
-      startBtn.textContent = '继续';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('番茄钟', '番茄工作法计时器：25 分钟专注 + 5 分钟休息循环', 'pomodoro');
+var workMin = T.num(25, { min: 1, max: 90, style: 'width:70px' });
+var breakMin = T.num(5, { min: 1, max: 30, style: 'width:70px' });
+var big = T.el('div', { text: '25:00', style: 'font:400 84px/1.2 var(--font-serif);text-align:center;margin:24px 0;font-variant-numeric:tabular-nums' });
+var phaseBadge = T.badge('专注阶段');
+var cyclesEl = T.stat(0, '完成番茄数');
+var mode = 'work';
+var remain = 25 * 60;
+var timer = 0, running = false, cycles = 0;
+function beep() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = 880; gain.gain.value = 0.3;
+    osc.start();
+    var n = 0;
+    var iv = setInterval(function () { n++; if (n > 6) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 660 : 880; }, 220);
+  } catch (e) {}
+}
+function tick() {
+  remain--;
+  if (remain <= 0) {
+    beep();
+    if (mode === 'work') {
+      cycles++;
+      cyclesEl.firstChild.textContent = cycles;
+      mode = 'break';
+      remain = (+breakMin.value || 5) * 60;
+      phaseBadge.textContent = '☕ 休息阶段';
+      phaseBadge.className = 'badge blue';
+      T.toast('专注完成！休息 ' + breakMin.value + ' 分钟');
     } else {
-      timer = setInterval(function () {
-        timeLeft--;
-        updateDisplay();
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          running = false;
-          completedPomodoros++;
-          updateSessions();
-          startBtn.textContent = '开始';
-          alert('时间到！' + (mode.value === '25' ? '工作' : '休息') + '结束');
-        }
-      }, 1000);
-      running = true;
-      startBtn.textContent = '暂停';
+      mode = 'work';
+      remain = (+workMin.value || 25) * 60;
+      phaseBadge.textContent = '专注阶段';
+      phaseBadge.className = 'badge warn';
+      T.toast('休息结束，开始下一个番茄');
     }
   }
-
-  function reset() {
+  var m = Math.floor(remain / 60), s = remain % 60;
+  big.textContent = T.pad2(m) + ':' + T.pad2(s);
+  document.title = big.textContent + ' ' + (mode === 'work' ? '专注' : '休息');
+}
+app.appendChild(T.row([T.el('span', { text: '专注(分)' }), workMin, T.el('span', { text: '休息(分)' }), breakMin, cyclesEl]));
+app.appendChild(phaseBadge);
+app.appendChild(big);
+app.appendChild(T.row([
+  T.button('开始 / 暂停', function () {
+    running = !running;
+    if (running) timer = setInterval(tick, 1000);
+    else clearInterval(timer);
+  }, true),
+  T.button('跳过当前', function () { remain = 1; if (!running) tick(); }),
+  T.button('重置', function () {
     clearInterval(timer);
     running = false;
-    timeLeft = parseInt(mode.value) * 60;
-    updateDisplay();
-    startBtn.textContent = '开始';
-  }
-
-  function skip() {
-    clearInterval(timer);
-    running = false;
-    completedPomodoros++;
-    updateSessions();
-    timeLeft = parseInt(mode.value) * 60;
-    updateDisplay();
-    startBtn.textContent = '开始';
-  }
-
-  function updateSessions() {
-    var icons = '';
-    for (var i = 0; i < completedPomodoros; i++) icons += '🍅';
-    sessions.innerHTML = '完成的番茄: ' + (icons || '无') + '<br>总计: ' + completedPomodoros + ' 个';
-  }
-
-  mode.addEventListener('change', reset);
-
-  app.appendChild(display);
-  app.appendChild(mode);
-  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' }, [startBtn, resetBtn, skipBtn]));
-  app.appendChild(sessions);
-  updateDisplay();
+    mode = 'work';
+    remain = (+workMin.value || 25) * 60;
+    cycles = 0;
+    cyclesEl.firstChild.textContent = 0;
+    phaseBadge.textContent = '专注阶段';
+    phaseBadge.className = 'badge warn';
+    big.textContent = T.pad2(Math.floor(remain / 60)) + ':' + T.pad2(remain % 60);
+  })
+]));
+app.appendChild(T.el('p', { text: '经典番茄工作法：25 分钟专注 + 5 分钟休息，每 4 个番茄长休 15 分钟。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "pomodoro", "title": "番茄钟", "desc": "番茄工作法计时器：25 分钟专注 + 5 分钟休息循环", "scripts": "", "code": "var workMin = T.num(25, { min: 1, max: 90, style: 'width:70px' });\nvar breakMin = T.num(5, { min: 1, max: 30, style: 'width:70px' });\nvar big = T.el('div', { text: '25:00', style: 'font:400 84px/1.2 var(--font-serif);text-align:center;margin:24px 0;font-variant-numeric:tabular-nums' });\nvar phaseBadge = T.badge('专注阶段');\nvar cyclesEl = T.stat(0, '完成番茄数');\nvar mode = 'work';\nvar remain = 25 * 60;\nvar timer = 0, running = false, cycles = 0;\nfunction beep() {\n  try {\n    var ctx = new (window.AudioContext || window.webkitAudioContext)();\n    var osc = ctx.createOscillator(), gain = ctx.createGain();\n    osc.connect(gain); gain.connect(ctx.destination);\n    osc.frequency.value = 880; gain.gain.value = 0.3;\n    osc.start();\n    var n = 0;\n    var iv = setInterval(function () { n++; if (n > 6) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 660 : 880; }, 220);\n  } catch (e) {}\n}\nfunction tick() {\n  remain--;\n  if (remain \u003c= 0) {\n    beep();\n    if (mode === 'work') {\n      cycles++;\n      cyclesEl.firstChild.textContent = cycles;\n      mode = 'break';\n      remain = (+breakMin.value || 5) * 60;\n      phaseBadge.textContent = '☕ 休息阶段';\n      phaseBadge.className = 'badge blue';\n      T.toast('专注完成！休息 ' + breakMin.value + ' 分钟');\n    } else {\n      mode = 'work';\n      remain = (+workMin.value || 25) * 60;\n      phaseBadge.textContent = '专注阶段';\n      phaseBadge.className = 'badge warn';\n      T.toast('休息结束，开始下一个番茄');\n    }\n  }\n  var m = Math.floor(remain / 60), s = remain % 60;\n  big.textContent = T.pad2(m) + ':' + T.pad2(s);\n  document.title = big.textContent + ' ' + (mode === 'work' ? '专注' : '休息');\n}\napp.appendChild(T.row([T.el('span', { text: '专注(分)' }), workMin, T.el('span', { text: '休息(分)' }), breakMin, cyclesEl]));\napp.appendChild(phaseBadge);\napp.appendChild(big);\napp.appendChild(T.row([\n  T.button('开始 / 暂停', function () {\n    running = !running;\n    if (running) timer = setInterval(tick, 1000);\n    else clearInterval(timer);\n  }, true),\n  T.button('跳过当前', function () { remain = 1; if (!running) tick(); }),\n  T.button('重置', function () {\n    clearInterval(timer);\n    running = false;\n    mode = 'work';\n    remain = (+workMin.value || 25) * 60;\n    cycles = 0;\n    cyclesEl.firstChild.textContent = 0;\n    phaseBadge.textContent = '专注阶段';\n    phaseBadge.className = 'badge warn';\n    big.textContent = T.pad2(Math.floor(remain / 60)) + ':' + T.pad2(remain % 60);\n  })\n]));\napp.appendChild(T.el('p', { text: '经典番茄工作法：25 分钟专注 + 5 分钟休息，每 4 个番茄长休 15 分钟。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

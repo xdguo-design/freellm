@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Markdown 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Markdown 格式化', 'Markdown 清理：规范空行 / 列表标记 / 标题空格 / 去多余空白', 'md-format');
+var input = T.textarea('#标题\n-   项目1\n*项目2\n\n\n\n正文  多余  空格。');
+input.value = '#标题\n-   项目1\n*项目2\n\n\n\n正文  多余  空格。';
+var output = T.out('');
+function run() {
+  var v = input.value.replace(/\r\n?/g, '\n');
+  if (!v.trim()) { output.value = ''; return; }
+  var lines = v.split('\n');
+  var out = [];
+  var inCode = false;
+  lines.forEach(function (l) {
+    if (/^```/.test(l.trim())) inCode = !inCode;
+    if (inCode) { out.push(l); return; }
+    l = l.replace(/[ \t]+$/g, '');
+    l = l.replace(/^(#{1,6})([^#\s])/, '$1 $2');
+    l = l.replace(/^(\s*)[-*+]\s+/, '$1- ');
+    l = l.replace(/^(#{1,6})\s+/, function (m) { return m.replace(/\s+/, ' '); });
+    l = l.replace(/(\S)  +(\S)/g, '$1 $2');
+    out.push(l);
+  });
+  var res = out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+  output.value = res;
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('Markdown', input), T.field('清理结果', output)]));
+app.appendChild(T.row([T.el('span', { text: '规则' }), T.el('span', { text: '标题后补空格 · 列表统一 "-" · 去行尾空白 · 压缩连续空行' }), T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "md-format", "title": "Markdown 格式化", "desc": "Markdown 清理：规范空行 / 列表标记 / 标题空格 / 去多余空白", "scripts": "", "code": "var input = T.textarea('#标题\\n-   项目1\\n*项目2\\n\\n\\n\\n正文  多余  空格。');\ninput.value = '#标题\\n-   项目1\\n*项目2\\n\\n\\n\\n正文  多余  空格。';\nvar output = T.out('');\nfunction run() {\n  var v = input.value.replace(/\\r\\n?/g, '\\n');\n  if (!v.trim()) { output.value = ''; return; }\n  var lines = v.split('\\n');\n  var out = [];\n  var inCode = false;\n  lines.forEach(function (l) {\n    if (/^```/.test(l.trim())) inCode = !inCode;\n    if (inCode) { out.push(l); return; }\n    l = l.replace(/[ \\t]+$/g, '');\n    l = l.replace(/^(#{1,6})([^#\\s])/, '$1 $2');\n    l = l.replace(/^(\\s*)[-*+]\\s+/, '$1- ');\n    l = l.replace(/^(#{1,6})\\s+/, function (m) { return m.replace(/\\s+/, ' '); });\n    l = l.replace(/(\\S)  +(\\S)/g, '$1 $2');\n    out.push(l);\n  });\n  var res = out.join('\\n').replace(/\\n{3,}/g, '\\n\\n').trim() + '\\n';\n  output.value = res;\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('Markdown', input), T.field('清理结果', output)]));\napp.appendChild(T.row([T.el('span', { text: '规则' }), T.el('span', { text: '标题后补空格 · 列表统一 \"-\" · 去行尾空白 · 压缩连续空行' }), T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

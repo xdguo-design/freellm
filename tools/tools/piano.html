@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>在线钢琴 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线钢琴', '可弹奏钢琴键盘：鼠标点击 / 键盘按键，WebAudio 合成', 'piano');
+var NOTES = [
+  { n: 'C4', f: 261.63, key: 'a', black: false }, { n: 'C#4', f: 277.18, key: 'w', black: true },
+  { n: 'D4', f: 293.66, key: 's', black: false }, { n: 'D#4', f: 311.13, key: 'e', black: true },
+  { n: 'E4', f: 329.63, key: 'd', black: false }, { n: 'F4', f: 349.23, key: 'f', black: false },
+  { n: 'F#4', f: 369.99, key: 't', black: true }, { n: 'G4', f: 392.0, key: 'g', black: false },
+  { n: 'G#4', f: 415.30, key: 'y', black: true }, { n: 'A4', f: 440.0, key: 'h', black: false },
+  { n: 'A#4', f: 466.16, key: 'u', black: true }, { n: 'B4', f: 493.88, key: 'j', black: false },
+  { n: 'C5', f: 523.25, key: 'k', black: false }, { n: 'C#5', f: 554.37, key: 'o', black: true },
+  { n: 'D5', f: 587.33, key: 'l', black: false }, { n: 'D#5', f: 622.25, key: 'p', black: true },
+  { n: 'E5', f: 659.25, key: ';', black: false }
+];
+var wave = T.select(['sine', 'triangle', 'square', 'sawtooth'], 'triangle');
+var volume = T.range(0, 100, 1, 40);
+var keyboard = T.el('div', { style: 'position:relative;height:190px;margin:18px 0;user-select:none' });
+var keyMap = {};
+var whiteIdx = 0;
+NOTES.forEach(function (note) {
+  var el = T.el('div', { style: 'position:absolute;top:0;bottom:' + (note.black ? 'auto' : '0') + ';height:' + (note.black ? '58%' : '100%') + ';width:' + (note.black ? '5%' : '8.6%') + ';' + (note.black ? 'left:calc(' + (whiteIdx - 0.5) * 8.6 + '% - 2.5%);' : 'left:' + whiteIdx * 8.6 + '%;') + 'background:' + (note.black ? '#222' : '#fff') + ';border:1px solid #999;border-radius:0 0 6px 6px;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;color:' + (note.black ? '#aaa' : '#888') + ';font-size:11px;box-shadow:0 3px 0 #999;transition:all .06s', text: note.key });
+  function press() {
+    play(note.f);
+    el.style.transform = 'translateY(3px)';
+    el.style.boxShadow = 'none';
+    setTimeout(function () { el.style.transform = ''; el.style.boxShadow = '0 3px 0 #999'; }, 150);
+  }
+  el.addEventListener('pointerdown', press);
+  keyMap[note.key] = press;
+  if (!note.black) whiteIdx++;
+  keyboard.appendChild(el);
+});
+document.addEventListener('keydown', function (e) {
+  if (keyMap[e.key] && !e.repeat) keyMap[e.key]();
+});
+function play(freq) {
+  var ctx = new (window.AudioContext || window.webkitAudioContext)();
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = wave.value;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume.value / 100 * 0.5, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 1.3);
+  osc.onended = function () { ctx.close(); };
+}
+app.appendChild(T.row([T.el('span', { text: '音色' }), wave, T.el('span', { text: '音量' }), volume]));
+app.appendChild(keyboard);
+app.appendChild(T.el('p', { text: '键盘按键 a w s e d f t g y h u j k o l p ; 对应琴键（一个半八度）。', style: 'color:var(--ink2);font-size:12px' }));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "piano", "title": "在线钢琴", "desc": "可弹奏钢琴键盘：鼠标点击 / 键盘按键，WebAudio 合成", "scripts": "", "code": "var NOTES = [\n  { n: 'C4', f: 261.63, key: 'a', black: false }, { n: 'C#4', f: 277.18, key: 'w', black: true },\n  { n: 'D4', f: 293.66, key: 's', black: false }, { n: 'D#4', f: 311.13, key: 'e', black: true },\n  { n: 'E4', f: 329.63, key: 'd', black: false }, { n: 'F4', f: 349.23, key: 'f', black: false },\n  { n: 'F#4', f: 369.99, key: 't', black: true }, { n: 'G4', f: 392.0, key: 'g', black: false },\n  { n: 'G#4', f: 415.30, key: 'y', black: true }, { n: 'A4', f: 440.0, key: 'h', black: false },\n  { n: 'A#4', f: 466.16, key: 'u', black: true }, { n: 'B4', f: 493.88, key: 'j', black: false },\n  { n: 'C5', f: 523.25, key: 'k', black: false }, { n: 'C#5', f: 554.37, key: 'o', black: true },\n  { n: 'D5', f: 587.33, key: 'l', black: false }, { n: 'D#5', f: 622.25, key: 'p', black: true },\n  { n: 'E5', f: 659.25, key: ';', black: false }\n];\nvar wave = T.select(['sine', 'triangle', 'square', 'sawtooth'], 'triangle');\nvar volume = T.range(0, 100, 1, 40);\nvar keyboard = T.el('div', { style: 'position:relative;height:190px;margin:18px 0;user-select:none' });\nvar keyMap = {};\nvar whiteIdx = 0;\nNOTES.forEach(function (note) {\n  var el = T.el('div', { style: 'position:absolute;top:0;bottom:' + (note.black ? 'auto' : '0') + ';height:' + (note.black ? '58%' : '100%') + ';width:' + (note.black ? '5%' : '8.6%') + ';' + (note.black ? 'left:calc(' + (whiteIdx - 0.5) * 8.6 + '% - 2.5%);' : 'left:' + whiteIdx * 8.6 + '%;') + 'background:' + (note.black ? '#222' : '#fff') + ';border:1px solid #999;border-radius:0 0 6px 6px;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;color:' + (note.black ? '#aaa' : '#888') + ';font-size:11px;box-shadow:0 3px 0 #999;transition:all .06s', text: note.key });\n  function press() {\n    play(note.f);\n    el.style.transform = 'translateY(3px)';\n    el.style.boxShadow = 'none';\n    setTimeout(function () { el.style.transform = ''; el.style.boxShadow = '0 3px 0 #999'; }, 150);\n  }\n  el.addEventListener('pointerdown', press);\n  keyMap[note.key] = press;\n  if (!note.black) whiteIdx++;\n  keyboard.appendChild(el);\n});\ndocument.addEventListener('keydown', function (e) {\n  if (keyMap[e.key] && !e.repeat) keyMap[e.key]();\n});\nfunction play(freq) {\n  var ctx = new (window.AudioContext || window.webkitAudioContext)();\n  var osc = ctx.createOscillator();\n  var gain = ctx.createGain();\n  osc.type = wave.value;\n  osc.frequency.value = freq;\n  gain.gain.setValueAtTime(volume.value / 100 * 0.5, ctx.currentTime);\n  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);\n  osc.connect(gain).connect(ctx.destination);\n  osc.start();\n  osc.stop(ctx.currentTime + 1.3);\n  osc.onended = function () { ctx.close(); };\n}\napp.appendChild(T.row([T.el('span', { text: '音色' }), wave, T.el('span', { text: '音量' }), volume]));\napp.appendChild(keyboard);\napp.appendChild(T.el('p', { text: '键盘按键 a w s e d f t g y h u j k o l p ; 对应琴键（一个半八度）。', style: 'color:var(--ink2);font-size:12px' }));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

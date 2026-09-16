@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>API 测试工具 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('API 测试工具', '离线 API 请求模拟：方法 / URL / 头 / 体，查看响应与耗时', 'api-test');
+var method = T.select(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], 'GET');
+var url = T.input('https://httpbin.org/json', { class: 'grow mono' });
+var headersIn = T.textarea('Accept: application/json', true);
+headersIn.value = 'Accept: application/json';
+headersIn.setAttribute('rows', '3');
+var bodyIn = T.textarea('', true);
+bodyIn.value = '';
+bodyIn.setAttribute('rows', '4');
+var status = T.badge('—');
+var timing = T.el('span', { style: 'color:var(--ink2);font-size:12px' });
+var respHeaders = T.el('div');
+var respBody = T.el('div', { class: 'output', style: 'min-height:160px;white-space:pre-wrap' });
+function send() {
+  var headers = {};
+  headersIn.value.split('\n').forEach(function (l) {
+    var i = l.indexOf(':');
+    if (i > 0) headers[l.slice(0, i).trim()] = l.slice(i + 1).trim();
+  });
+  var opts = { method: method.value, headers: headers };
+  if (bodyIn.value.trim() && method.value !== 'GET') opts.body = bodyIn.value;
+  status.textContent = '请求中…';
+  status.className = 'badge blue';
+  var t0 = performance.now();
+  fetch(url.value, opts).then(function (res) {
+    var ms = Math.round(performance.now() - t0);
+    status.textContent = 'HTTP ' + res.status;
+    status.className = 'badge ' + (res.ok ? 'ok' : 'warn');
+    timing.textContent = '耗时 ' + ms + ' ms · ' + (res.headers.get('content-type') || '');
+    T.clearEl(respHeaders);
+    var rows = [];
+    res.headers.forEach(function (v, k) { rows.push([k, v]); });
+    respHeaders.appendChild(T.refTable(['响应头', '值'], rows));
+    return res.text();
+  }).then(function (text) {
+    try { respBody.textContent = JSON.stringify(JSON.parse(text), null, 2); }
+    catch (e) { respBody.textContent = text.slice(0, 5000); }
+  }).catch(function (e) {
+    status.textContent = '请求失败';
+    status.className = 'badge warn';
+    respBody.textContent = e.message + '\n\n提示：浏览器直连受 CORS 限制，目标 API 需允许跨域。';
+  });
+}
+app.appendChild(T.row([method, url, T.button('发送', send, true)]));
+app.appendChild(T.pane([T.field('请求头', headersIn), T.field('请求体', bodyIn)]));
+app.appendChild(T.row([status, timing]));
+app.appendChild(T.el('span', { text: '响应头', class: 'field' }));
+app.appendChild(respHeaders);
+app.appendChild(T.el('span', { text: '响应体', class: 'field' }));
+app.appendChild(respBody);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "api-test", "title": "API 测试工具", "desc": "离线 API 请求模拟：方法 / URL / 头 / 体，查看响应与耗时", "scripts": "", "code": "var method = T.select(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], 'GET');\nvar url = T.input('https://httpbin.org/json', { class: 'grow mono' });\nvar headersIn = T.textarea('Accept: application/json', true);\nheadersIn.value = 'Accept: application/json';\nheadersIn.setAttribute('rows', '3');\nvar bodyIn = T.textarea('', true);\nbodyIn.value = '';\nbodyIn.setAttribute('rows', '4');\nvar status = T.badge('—');\nvar timing = T.el('span', { style: 'color:var(--ink2);font-size:12px' });\nvar respHeaders = T.el('div');\nvar respBody = T.el('div', { class: 'output', style: 'min-height:160px;white-space:pre-wrap' });\nfunction send() {\n  var headers = {};\n  headersIn.value.split('\\n').forEach(function (l) {\n    var i = l.indexOf(':');\n    if (i > 0) headers[l.slice(0, i).trim()] = l.slice(i + 1).trim();\n  });\n  var opts = { method: method.value, headers: headers };\n  if (bodyIn.value.trim() && method.value !== 'GET') opts.body = bodyIn.value;\n  status.textContent = '请求中…';\n  status.className = 'badge blue';\n  var t0 = performance.now();\n  fetch(url.value, opts).then(function (res) {\n    var ms = Math.round(performance.now() - t0);\n    status.textContent = 'HTTP ' + res.status;\n    status.className = 'badge ' + (res.ok ? 'ok' : 'warn');\n    timing.textContent = '耗时 ' + ms + ' ms · ' + (res.headers.get('content-type') || '');\n    T.clearEl(respHeaders);\n    var rows = [];\n    res.headers.forEach(function (v, k) { rows.push([k, v]); });\n    respHeaders.appendChild(T.refTable(['响应头', '值'], rows));\n    return res.text();\n  }).then(function (text) {\n    try { respBody.textContent = JSON.stringify(JSON.parse(text), null, 2); }\n    catch (e) { respBody.textContent = text.slice(0, 5000); }\n  }).catch(function (e) {\n    status.textContent = '请求失败';\n    status.className = 'badge warn';\n    respBody.textContent = e.message + '\\n\\n提示：浏览器直连受 CORS 限制，目标 API 需允许跨域。';\n  });\n}\napp.appendChild(T.row([method, url, T.button('发送', send, true)]));\napp.appendChild(T.pane([T.field('请求头', headersIn), T.field('请求体', bodyIn)]));\napp.appendChild(T.row([status, timing]));\napp.appendChild(T.el('span', { text: '响应头', class: 'field' }));\napp.appendChild(respHeaders);\napp.appendChild(T.el('span', { text: '响应体', class: 'field' }));\napp.appendChild(respBody);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

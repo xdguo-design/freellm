@@ -2,60 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>速度单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('速度单位换算', 'km/h ↔ mph ↔ m/s 等', 'speed-converter');
-
-  var units = [
-    { id: 'ms', name: '米/秒 (m/s)' },
-    { id: 'kmh', name: '千米/时 (km/h)' },
-    { id: 'mph', name: '英里/时 (mph)' },
-    { id: 'kn', name: '节 (kn)' },
-    { id: 'mach', name: '马赫 (Mach)' },
-    { id: 'fts', name: '英尺/秒 (ft/s)' }
-  ];
-
-  var factors = { ms: 1, kmh: 0.277778, mph: 0.44704, kn: 0.514444, mach: 340.29, fts: 0.3048 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('速度单位换算', 'km/h ↔ mph ↔ m/s ↔ 节 等', 'speed-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "m/s (米/秒)", "label": "m/s (米/秒)"}, {"value": "km/h (千米/时)", "label": "km/h (千米/时)"}, {"value": "mph (英里/时)", "label": "mph (英里/时)"}, {"value": "knot (节)", "label": "knot (节)"}, {"value": "ft/s (英尺/秒)", "label": "ft/s (英尺/秒)"}, {"value": "Mach (海平面声速)", "label": "Mach (海平面声速)"}], "km/h (千米/时)");
+var to = T.select([{"value": "m/s (米/秒)", "label": "m/s (米/秒)"}, {"value": "km/h (千米/时)", "label": "km/h (千米/时)"}, {"value": "mph (英里/时)", "label": "mph (英里/时)"}, {"value": "knot (节)", "label": "knot (节)"}, {"value": "ft/s (英尺/秒)", "label": "ft/s (英尺/秒)"}, {"value": "Mach (海平面声速)", "label": "Mach (海平面声速)"}], "m/s (米/秒)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"m/s (米/秒)": 1, "km/h (千米/时)": 3.6, "mph (英里/时)": 1.609344, "knot (节)": 1.852, "ft/s (英尺/秒)": 0.3048, "Mach (海平面声速)": 340.29};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var ms = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (ms / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:120px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.ms.value = '1';
-  run('ms');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "speed-converter", "title": "速度单位换算", "desc": "km/h ↔ mph ↔ m/s ↔ 节 等", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"m/s (米/秒)\", \"label\": \"m/s (米/秒)\"}, {\"value\": \"km/h (千米/时)\", \"label\": \"km/h (千米/时)\"}, {\"value\": \"mph (英里/时)\", \"label\": \"mph (英里/时)\"}, {\"value\": \"knot (节)\", \"label\": \"knot (节)\"}, {\"value\": \"ft/s (英尺/秒)\", \"label\": \"ft/s (英尺/秒)\"}, {\"value\": \"Mach (海平面声速)\", \"label\": \"Mach (海平面声速)\"}], \"km/h (千米/时)\");\nvar to = T.select([{\"value\": \"m/s (米/秒)\", \"label\": \"m/s (米/秒)\"}, {\"value\": \"km/h (千米/时)\", \"label\": \"km/h (千米/时)\"}, {\"value\": \"mph (英里/时)\", \"label\": \"mph (英里/时)\"}, {\"value\": \"knot (节)\", \"label\": \"knot (节)\"}, {\"value\": \"ft/s (英尺/秒)\", \"label\": \"ft/s (英尺/秒)\"}, {\"value\": \"Mach (海平面声速)\", \"label\": \"Mach (海平面声速)\"}], \"m/s (米/秒)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"m/s (米/秒)\": 1, \"km/h (千米/时)\": 3.6, \"mph (英里/时)\": 1.609344, \"knot (节)\": 1.852, \"ft/s (英尺/秒)\": 0.3048, \"Mach (海平面声速)\": 340.29};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

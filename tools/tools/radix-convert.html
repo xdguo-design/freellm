@@ -2,60 +2,73 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>进制转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('进制转换', '2/8/10/16 进制互转', 'radix-convert');
-
-  var inputs = {};
-  var labels = ['二进制', '八进制', '十进制', '十六进制'];
-  var bases = [2, 8, 10, 16];
-  var fields = [];
-
-  labels.forEach(function (label, i) {
-    inputs[bases[i]] = T.el('input', { type: 'text', placeholder: label, style: 'flex:1;font-family:monospace' });
-    fields.push(T.el('div', { class: 'row' }, [
-      T.el('span', { text: label, style: 'width:60px' }),
-      inputs[bases[i]]
-    ]));
-  });
-
-  function run(source) {
-    var val = inputs[source].value.trim();
-    if (!val) {
-      Object.keys(inputs).forEach(function (k) { if (k != source) inputs[k].value = ''; });
-      return;
-    }
-
-    try {
-      var num = parseInt(val, source);
-      if (isNaN(num)) throw new Error('Invalid number');
-
-      bases.forEach(function (base) {
-        if (base !== source) {
-          inputs[base].value = num.toString(base).toUpperCase();
-        }
-      });
-    } catch (e) {
-      bases.forEach(function (base) {
-        if (base !== source) inputs[base].value = '';
-      });
-    }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('进制转换', '2 / 8 / 10 / 16 及任意 2-36 进制互转，支持小数', 'radix-convert');
+var input = T.input('255', { class: 'grow mono' });
+var from = T.num(10, { min: 2, max: 36, style: 'width:70px' });
+var box = T.el('div');
+function run() {
+  var v = input.value.trim().toLowerCase().replace(/^0[xbo]/, '');
+  var b = +from.value;
+  T.clearEl(box);
+  if (!v) return;
+  var neg = v.startsWith('-');
+  if (neg) v = v.slice(1);
+  var parts = v.split('.');
+  var intPart = parseInt(parts[0] || '0', b);
+  if (isNaN(intPart)) { box.appendChild(T.msg('⚠ ' + b + ' 进制下存在非法字符', 'err')); return; }
+  var frac = 0;
+  if (parts[1]) {
+    parts[1].split('').forEach(function (c) {
+      frac += parseInt(c, b) / b;
+    });
   }
-
-  bases.forEach(function (base) {
-    inputs[base].addEventListener('input', function () { run(base); });
+  var val = (neg ? -1 : 1) * (intPart + frac);
+  var toBase = function (num, base, prec) {
+    if (num === 0) return '0';
+    var digits = '0123456789abcdefghijklmnopqrstuvwxyz';
+    var intP = Math.floor(num);
+    var fracP = num - intP;
+    var s = '';
+    while (intP > 0) { s = digits[intP % base] + s; intP = Math.floor(intP / base); }
+    if (fracP > 0 && prec !== 0) {
+      s += '.';
+      var n = 0;
+      while (fracP > 0 && n < 12) { fracP *= base; s += digits[Math.floor(fracP)]; fracP -= Math.floor(fracP); n++; }
+    }
+    return s;
+  };
+  var rows = [];
+  [2, 8, 10, 16].forEach(function (tb) {
+    rows.push([tb + ' 进制', (neg ? '-' : '') + toBase(val, tb)]);
   });
-
-  fields.forEach(function (f) { app.appendChild(f); });
+  [3, 5, 12, 20, 32, 36].forEach(function (tb) { rows.push([tb + ' 进制', (neg ? '-' : '') + toBase(val, tb)]); });
+  box.appendChild(T.kvTable(rows));
+}
+[input, from].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '原进制' }), from]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "radix-convert", "title": "进制转换", "desc": "2 / 8 / 10 / 16 及任意 2-36 进制互转，支持小数", "scripts": "", "code": "var input = T.input('255', { class: 'grow mono' });\nvar from = T.num(10, { min: 2, max: 36, style: 'width:70px' });\nvar box = T.el('div');\nfunction run() {\n  var v = input.value.trim().toLowerCase().replace(/^0[xbo]/, '');\n  var b = +from.value;\n  T.clearEl(box);\n  if (!v) return;\n  var neg = v.startsWith('-');\n  if (neg) v = v.slice(1);\n  var parts = v.split('.');\n  var intPart = parseInt(parts[0] || '0', b);\n  if (isNaN(intPart)) { box.appendChild(T.msg('⚠ ' + b + ' 进制下存在非法字符', 'err')); return; }\n  var frac = 0;\n  if (parts[1]) {\n    parts[1].split('').forEach(function (c) {\n      frac += parseInt(c, b) / b;\n    });\n  }\n  var val = (neg ? -1 : 1) * (intPart + frac);\n  var toBase = function (num, base, prec) {\n    if (num === 0) return '0';\n    var digits = '0123456789abcdefghijklmnopqrstuvwxyz';\n    var intP = Math.floor(num);\n    var fracP = num - intP;\n    var s = '';\n    while (intP > 0) { s = digits[intP % base] + s; intP = Math.floor(intP / base); }\n    if (fracP > 0 && prec !== 0) {\n      s += '.';\n      var n = 0;\n      while (fracP > 0 && n \u003c 12) { fracP *= base; s += digits[Math.floor(fracP)]; fracP -= Math.floor(fracP); n++; }\n    }\n    return s;\n  };\n  var rows = [];\n  [2, 8, 10, 16].forEach(function (tb) {\n    rows.push([tb + ' 进制', (neg ? '-' : '') + toBase(val, tb)]);\n  });\n  [3, 5, 12, 20, 32, 36].forEach(function (tb) { rows.push([tb + ' 进制', (neg ? '-' : '') + toBase(val, tb)]); });\n  box.appendChild(T.kvTable(rows));\n}\n[input, from].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '原进制' }), from]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Scrypt 派生 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Scrypt 派生', 'RFC 7914 scrypt 密钥派生（纯前端实现，抗 GPU/ASIC）', 'scrypt');
+var pass = T.input('', { type: 'password', class: 'grow mono', placeholder: '口令…' });
+var salt = T.input('freellm-salt', { class: 'grow mono', placeholder: '盐（文本）…' });
+var N = T.select([{value:'1024',label:'N=1024 (r=8,p=1) 快'},{value:'4096',label:'N=4096'},{value:'16384',label:'N=16384 (128MB 内存) 慢'}],'4096');
+var output = T.out('');
+var status = T.badge('—');
+function run() {
+  if (!pass.value) { output.value = ''; return; }
+  status.textContent = '计算中…';
+  setTimeout(function () {
+    try {
+      var t0 = performance.now();
+      var dk = LC.scrypt(T.textToBytes(pass.value), T.textToBytes(salt.value), +N.value, 8, 1, 32);
+      output.value = T.bytesToHex(dk);
+      status.textContent = '完成，耗时 ' + Math.round(performance.now() - t0) + ' ms';
+    } catch (e) { output.value = '⚠ ' + e.message; status.textContent = '出错'; }
+  }, 30);
+}
+[pass, salt, N].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('派生密钥 (hex, 32 字节)', output)], true));
+app.appendChild(T.row([T.el('span', { text: '口令' }), pass]));
+app.appendChild(T.row([T.el('span', { text: '盐' }), salt]));
+app.appendChild(T.row([T.el('span', { text: '强度' }), N, status]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "scrypt", "title": "Scrypt 派生", "desc": "RFC 7914 scrypt 密钥派生（纯前端实现，抗 GPU/ASIC）", "scripts": "", "code": "var pass = T.input('', { type: 'password', class: 'grow mono', placeholder: '口令…' });\nvar salt = T.input('freellm-salt', { class: 'grow mono', placeholder: '盐（文本）…' });\nvar N = T.select([{value:'1024',label:'N=1024 (r=8,p=1) 快'},{value:'4096',label:'N=4096'},{value:'16384',label:'N=16384 (128MB 内存) 慢'}],'4096');\nvar output = T.out('');\nvar status = T.badge('—');\nfunction run() {\n  if (!pass.value) { output.value = ''; return; }\n  status.textContent = '计算中…';\n  setTimeout(function () {\n    try {\n      var t0 = performance.now();\n      var dk = LC.scrypt(T.textToBytes(pass.value), T.textToBytes(salt.value), +N.value, 8, 1, 32);\n      output.value = T.bytesToHex(dk);\n      status.textContent = '完成，耗时 ' + Math.round(performance.now() - t0) + ' ms';\n    } catch (e) { output.value = '⚠ ' + e.message; status.textContent = '出错'; }\n  }, 30);\n}\n[pass, salt, N].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('派生密钥 (hex, 32 字节)', output)], true));\napp.appendChild(T.row([T.el('span', { text: '口令' }), pass]));\napp.appendChild(T.row([T.el('span', { text: '盐' }), salt]));\napp.appendChild(T.row([T.el('span', { text: '强度' }), N, status]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

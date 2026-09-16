@@ -2,61 +2,65 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Unicode 转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Unicode 转换', '\\uXXXX 与中文/Emoji 互转', 'unicode');
-
-  var mode = T.select([
-    { value: 'toUnicode', label: '文本 → Unicode' },
-    { value: 'fromUnicode', label: 'Unicode → 文本' }
-  ]);
-  var input = T.textarea('输入文本或 Unicode 编码...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    try {
-      if (mode.value === 'toUnicode') {
-        var result = '';
-        for (var i = 0; i < v.length; i++) {
-          var code = v.charCodeAt(i);
-          if (code > 127) {
-            result += '\\u' + code.toString(16).padStart(4, '0');
-          } else {
-            result += v[i];
-          }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Unicode 转换', '文本与 Unicode 转义互转：\\uXXXX / \\u{...} / HTML 实体，含代理对', 'unicode');
+var input = T.textarea('输入文本或转义串…');
+var output = T.out('输出…');
+var style = T.select([
+  { value: 'u4', label: '\\uXXXX（\\uD83D\\uDE00 代理对）' },
+  { value: 'ub', label: '\\u{1F600}（ES6 码点）' },
+  { value: 'hex', label: '&#x1F600;（HTML 十六进制）' },
+  { value: 'dec', label: '&#128512;（HTML 十进制）' }
+], 'u4');
+var mode = T.select([{value:'enc',label:'文本 → 转义'},{value:'dec',label:'转义 → 文本'}],'enc');
+function run() {
+  var v = input.value;
+  try {
+    if (mode.value === 'enc') {
+      output.value = Array.from(v).map(function (ch) {
+        var cp = ch.codePointAt(0);
+        if (cp < 128) return ch;
+        if (style.value === 'u4') {
+          var h = cp.toString(16).padStart(4, '0');
+          return cp > 0xFFFF ? Array.from(ch).map(function (s) { return '\\u' + s.charCodeAt(0).toString(16).padStart(4, '0'); }).join('') : '\\u' + h;
         }
-        output.value = result;
-      } else {
-        var str = v.replace(/\\u([0-9a-fA-F]{4})/g, function (m, h) {
-          return String.fromCharCode(parseInt(h, 16));
-        });
-        output.value = str;
-      }
-    } catch (e) {
-      output.value = '⚠ 转换失败: ' + e.message;
+        if (style.value === 'ub') return '\\u{' + cp.toString(16) + '}';
+        if (style.value === 'hex') return '&#x' + cp.toString(16) + ';';
+        return '&#' + cp + ';';
+      }).join('');
+    } else {
+      output.value = v
+        .replace(/\\u\{([0-9a-fA-F]+)\}/g, function (m, h) { return String.fromCodePoint(parseInt(h, 16)); })
+        .replace(/&#x([0-9a-fA-F]+);/gi, function (m, h) { return String.fromCodePoint(parseInt(h, 16)); })
+        .replace(/&#(\d+);/g, function (m, d) { return String.fromCodePoint(+d); })
+        .replace(/\\u([0-9a-fA-F]{4})/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); });
     }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, style, mode].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, style, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "unicode", "title": "Unicode 转换", "desc": "文本与 Unicode 转义互转：\\\\uXXXX / \\\\u{...} / HTML 实体，含代理对", "scripts": "", "code": "var input = T.textarea('输入文本或转义串…');\nvar output = T.out('输出…');\nvar style = T.select([\n  { value: 'u4', label: '\\\\uXXXX（\\\\uD83D\\\\uDE00 代理对）' },\n  { value: 'ub', label: '\\\\u{1F600}（ES6 码点）' },\n  { value: 'hex', label: '&#x1F600;（HTML 十六进制）' },\n  { value: 'dec', label: '&#128512;（HTML 十进制）' }\n], 'u4');\nvar mode = T.select([{value:'enc',label:'文本 → 转义'},{value:'dec',label:'转义 → 文本'}],'enc');\nfunction run() {\n  var v = input.value;\n  try {\n    if (mode.value === 'enc') {\n      output.value = Array.from(v).map(function (ch) {\n        var cp = ch.codePointAt(0);\n        if (cp \u003c 128) return ch;\n        if (style.value === 'u4') {\n          var h = cp.toString(16).padStart(4, '0');\n          return cp > 0xFFFF ? Array.from(ch).map(function (s) { return '\\\\u' + s.charCodeAt(0).toString(16).padStart(4, '0'); }).join('') : '\\\\u' + h;\n        }\n        if (style.value === 'ub') return '\\\\u{' + cp.toString(16) + '}';\n        if (style.value === 'hex') return '&#x' + cp.toString(16) + ';';\n        return '&#' + cp + ';';\n      }).join('');\n    } else {\n      output.value = v\n        .replace(/\\\\u\\{([0-9a-fA-F]+)\\}/g, function (m, h) { return String.fromCodePoint(parseInt(h, 16)); })\n        .replace(/&#x([0-9a-fA-F]+);/gi, function (m, h) { return String.fromCodePoint(parseInt(h, 16)); })\n        .replace(/&#(\\d+);/g, function (m, d) { return String.fromCodePoint(+d); })\n        .replace(/\\\\u([0-9a-fA-F]{4})/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); });\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, style, mode].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, style, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

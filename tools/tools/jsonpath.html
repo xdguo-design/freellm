@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSONPath 查询 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSONPath 查询', '用 JSONPath 表达式提取 JSON 数据（$ . [] .. * ?() 支持）', 'jsonpath');
+var dataIn = T.textarea('{"store":{"book":[{"title":"三体","price":45},{"title":"活着","price":30}],"location":"北京"}}');
+dataIn.value = '{"store":{"book":[{"title":"三体","price":45},{"title":"活着","price":30}],"location":"北京"}}';
+var expr = T.input('$.store.book[*].title', { class: 'grow mono' });
+var output = T.out('');
+function query(obj, path) {
+  var results = [obj];
+  var tokens = path.startsWith('$') ? path.slice(1).replace(/^\./, '').split('.') : path.split('.');
+  tokens.forEach(function (tk) {
+    if (!tk) return;
+    var next = [];
+    results.forEach(function (cur) {
+      var parts = tk.match(/([\w-]+|\*)|\[(\*|\d+|'[^']*'|"[^"]*")\]|\[\?\(@?([\w.]+)([<>=!]+)([^)]+\)?)\]\]/g) || [tk];
+      parts.forEach(function (p) {
+        var mm;
+        if ((mm = p.match(/^\[\?\(@?([\w.]+)([<>=!]=?|<[>=]?|>=?|!=)(.+?)\)\]$/))) {
+          var field = mm[1], op = mm[2], val = parseFloat(mm[3]) || mm[3].replace(/^['"]|['"]$/g, '');
+          cur.forEach && null;
+          if (Array.isArray(cur)) {
+            cur.forEach(function (item) {
+              var v = field.split('.').reduce(function (o, k) { return o && o[k]; }, item);
+              var cmp;
+              if (typeof val === 'number') cmp = typeof v === 'number';
+              if (cmp) {
+                var pass = op === '<' ? v < val : op === '<=' ? v <= val : op === '>' ? v > val : op === '>=' ? v >= val : op === '==' || op === '=' ? v == val : v != val;
+                if (pass) next.push(item);
+              }
+            });
+          }
+          return;
+        }
+        if (p === '*') {
+          if (Array.isArray(cur)) next = next.concat(cur);
+          else if (cur && typeof cur === 'object') Object.keys(cur).forEach(function (k) { next.push(cur[k]); });
+          return;
+        }
+        if (cur == null) return;
+        var key = p.replace(/^\['|^\["|'\]$|"\]$/g, '').replace(/^\[/, '').replace(/\]$/, '');
+        if (key === 'length') { next.push((cur.length != null ? cur.length : Object.keys(cur).length)); return; }
+        var idx = /^\d+$/.test(key) ? +key : key;
+        if (cur[idx] !== undefined) next.push(cur[idx]);
+      });
+    });
+    results = next;
+  });
+  return results;
+}
+function run() {
+  try {
+    var obj = T.parseJSON(dataIn.value);
+    var res = query(obj, expr.value.trim());
+    output.value = res.length + ' 个结果：\n' + res.map(function (r) { return JSON.stringify(r); }).join('\n');
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[dataIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });
+app.appendChild(T.pane([T.field('数据', dataIn)], true));
+app.appendChild(T.row([T.el('span', { text: '表达式' }), expr]));
+app.appendChild(T.pane([T.field('结果', output)], true));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "jsonpath", "title": "JSONPath 查询", "desc": "用 JSONPath 表达式提取 JSON 数据（$ . [] .. * ?() 支持）", "scripts": "", "code": "var dataIn = T.textarea('{\"store\":{\"book\":[{\"title\":\"三体\",\"price\":45},{\"title\":\"活着\",\"price\":30}],\"location\":\"北京\"}}');\ndataIn.value = '{\"store\":{\"book\":[{\"title\":\"三体\",\"price\":45},{\"title\":\"活着\",\"price\":30}],\"location\":\"北京\"}}';\nvar expr = T.input('$.store.book[*].title', { class: 'grow mono' });\nvar output = T.out('');\nfunction query(obj, path) {\n  var results = [obj];\n  var tokens = path.startsWith('$') ? path.slice(1).replace(/^\\./, '').split('.') : path.split('.');\n  tokens.forEach(function (tk) {\n    if (!tk) return;\n    var next = [];\n    results.forEach(function (cur) {\n      var parts = tk.match(/([\\w-]+|\\*)|\\[(\\*|\\d+|'[^']*'|\"[^\"]*\")\\]|\\[\\?\\(@?([\\w.]+)([\u003c>=!]+)([^)]+\\)?)\\]\\]/g) || [tk];\n      parts.forEach(function (p) {\n        var mm;\n        if ((mm = p.match(/^\\[\\?\\(@?([\\w.]+)([\u003c>=!]=?|\u003c[>=]?|>=?|!=)(.+?)\\)\\]$/))) {\n          var field = mm[1], op = mm[2], val = parseFloat(mm[3]) || mm[3].replace(/^['\"]|['\"]$/g, '');\n          cur.forEach && null;\n          if (Array.isArray(cur)) {\n            cur.forEach(function (item) {\n              var v = field.split('.').reduce(function (o, k) { return o && o[k]; }, item);\n              var cmp;\n              if (typeof val === 'number') cmp = typeof v === 'number';\n              if (cmp) {\n                var pass = op === '\u003c' ? v \u003c val : op === '\u003c=' ? v \u003c= val : op === '>' ? v > val : op === '>=' ? v >= val : op === '==' || op === '=' ? v == val : v != val;\n                if (pass) next.push(item);\n              }\n            });\n          }\n          return;\n        }\n        if (p === '*') {\n          if (Array.isArray(cur)) next = next.concat(cur);\n          else if (cur && typeof cur === 'object') Object.keys(cur).forEach(function (k) { next.push(cur[k]); });\n          return;\n        }\n        if (cur == null) return;\n        var key = p.replace(/^\\['|^\\[\"|'\\]$|\"\\]$/g, '').replace(/^\\[/, '').replace(/\\]$/, '');\n        if (key === 'length') { next.push((cur.length != null ? cur.length : Object.keys(cur).length)); return; }\n        var idx = /^\\d+$/.test(key) ? +key : key;\n        if (cur[idx] !== undefined) next.push(cur[idx]);\n      });\n    });\n    results = next;\n  });\n  return results;\n}\nfunction run() {\n  try {\n    var obj = T.parseJSON(dataIn.value);\n    var res = query(obj, expr.value.trim());\n    output.value = res.length + ' 个结果：\\n' + res.map(function (r) { return JSON.stringify(r); }).join('\\n');\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[dataIn, expr].forEach(function (el) { el.addEventListener('input', T.debounce(run, 300)); });\napp.appendChild(T.pane([T.field('数据', dataIn)], true));\napp.appendChild(T.row([T.el('span', { text: '表达式' }), expr]));\napp.appendChild(T.pane([T.field('结果', output)], true));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

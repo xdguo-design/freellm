@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>八字五行 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('八字五行', '出生时间 → 四柱八字 + 五行分析（含节气月柱，仅供参考）', 'bazi');
+function renderLunar(solarDate, box) {
+  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];
+  var lunar = LU.Lunar.solarToLunar(s);
+  var gzY = LU.Ganzhi.year(s[0]);
+  var gzD = LU.Ganzhi.day(solarDate);
+  var fests = LU.Fest.ofDate(solarDate);
+  var rows = [];
+  if (lunar) {
+    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);
+    var lunarGz = LU.Ganzhi.year(lunar.y);
+    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);
+  } else {
+    rows.push(['农历', '超出 1900-2098 支持范围']);
+  }
+  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);
+  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);
+  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);
+  T.clearEl(box).appendChild(T.kvTable(rows));
+}
+
+var dateIn = T.dateInput('1995-06-15');
+var timeIn = T.el('input', { type: 'time', value: '12:30' });
+var box = T.el('div');
+function pillars(d) {
+  var y = LU.Ganzhi.year(d.getFullYear());
+  if (d.getMonth() + 1 < 2 || (d.getMonth() + 1 === 2 && d.getDate() < 4)) y = LU.Ganzhi.year(d.getFullYear() - 1);
+  var mo = LU.Ganzhi.month(d);
+  var day = LU.Ganzhi.day(d);
+  var hr = LU.Ganzhi.hour(d);
+  return [
+    { label: '年柱', gz: [y.stem, y.branch] },
+    { label: '月柱', gz: [mo.stem, mo.branch] },
+    { label: '日柱', gz: [day.stem, day.branch] },
+    { label: '时柱', gz: [hr.stem, hr.branch] }
+  ];
+}
+function run() {
+  T.clearEl(box);
+  if (!dateIn.value) return;
+  var parts = (timeIn.value || '12:00').split(':');
+  var d = new Date(dateIn.value + 'T00:00:00');
+  d.setHours(+parts[0], +parts[1]);
+  var ps = pillars(d);
+  var table = T.el('table', { class: 'ref', style: 'text-align:center' });
+  var tr1 = T.el('tr'), tr2 = T.el('tr');
+  ps.forEach(function (p) {
+    tr1.appendChild(T.el('th', { text: p.label }));
+    tr2.appendChild(T.el('td', { text: LU.Stems[p.gz[0]] + ' ' + LU.Branches[p.gz[1]], style: 'font-size:20px;text-align:center' }));
+  });
+  table.appendChild(tr1);
+  table.appendChild(tr2);
+  box.appendChild(table);
+  var wx = { 木: 0, 火: 0, 土: 0, 金: 0, 水: 0 };
+  ps.forEach(function (p) {
+    wx[LU.Ganzhi.wuxingOfStem(p.gz[0])]++;
+    wx[LU.Ganzhi.wuxingOfBranch(p.gz[1])]++;
+  });
+  var total = 8;
+  var wxRows = Object.keys(wx).map(function (k) {
+    return [k, wx[k] + ' 个（' + Math.round(wx[k] / total * 100) + '%）', '█'.repeat(wx[k] * 2 || 1)];
+  });
+  box.appendChild(T.el('span', { text: '五行分布', class: 'field' }));
+  box.appendChild(T.refTable(['五行', '数量', '分布'], wxRows));
+  var lack = Object.keys(wx).filter(function (k) { return wx[k] === 0; });
+  var strong = Object.keys(wx).sort(function (a, b) { return wx[b] - wx[a]; })[0];
+  box.appendChild(T.kvTable([
+    ['日主', LU.Stems[ps[2].gz[0]] + LU.Ganzhi.wuxingOfStem(ps[2].gz[0])],
+    ['最旺', strong + '（' + wx[strong] + ' 个）'],
+    ['所缺', lack.length ? lack.join('、') : '无（五行俱全）']
+  ]));
+  box.appendChild(T.msg('八字按公历以近似立春（2月4日）分界、月柱按近似节气分界计算，存在 ±1 天误差；仅供传统文化参考。', ''));
+}
+[dateIn, timeIn].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('出生日期（公历）', dateIn), T.field('出生时间', timeIn)]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "bazi", "title": "八字五行", "desc": "出生时间 → 四柱八字 + 五行分析（含节气月柱，仅供参考）", "scripts": "", "code": "function renderLunar(solarDate, box) {\n  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];\n  var lunar = LU.Lunar.solarToLunar(s);\n  var gzY = LU.Ganzhi.year(s[0]);\n  var gzD = LU.Ganzhi.day(solarDate);\n  var fests = LU.Fest.ofDate(solarDate);\n  var rows = [];\n  if (lunar) {\n    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);\n    var lunarGz = LU.Ganzhi.year(lunar.y);\n    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);\n  } else {\n    rows.push(['农历', '超出 1900-2098 支持范围']);\n  }\n  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);\n  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);\n  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);\n  T.clearEl(box).appendChild(T.kvTable(rows));\n}\n\nvar dateIn = T.dateInput('1995-06-15');\nvar timeIn = T.el('input', { type: 'time', value: '12:30' });\nvar box = T.el('div');\nfunction pillars(d) {\n  var y = LU.Ganzhi.year(d.getFullYear());\n  if (d.getMonth() + 1 \u003c 2 || (d.getMonth() + 1 === 2 && d.getDate() \u003c 4)) y = LU.Ganzhi.year(d.getFullYear() - 1);\n  var mo = LU.Ganzhi.month(d);\n  var day = LU.Ganzhi.day(d);\n  var hr = LU.Ganzhi.hour(d);\n  return [\n    { label: '年柱', gz: [y.stem, y.branch] },\n    { label: '月柱', gz: [mo.stem, mo.branch] },\n    { label: '日柱', gz: [day.stem, day.branch] },\n    { label: '时柱', gz: [hr.stem, hr.branch] }\n  ];\n}\nfunction run() {\n  T.clearEl(box);\n  if (!dateIn.value) return;\n  var parts = (timeIn.value || '12:00').split(':');\n  var d = new Date(dateIn.value + 'T00:00:00');\n  d.setHours(+parts[0], +parts[1]);\n  var ps = pillars(d);\n  var table = T.el('table', { class: 'ref', style: 'text-align:center' });\n  var tr1 = T.el('tr'), tr2 = T.el('tr');\n  ps.forEach(function (p) {\n    tr1.appendChild(T.el('th', { text: p.label }));\n    tr2.appendChild(T.el('td', { text: LU.Stems[p.gz[0]] + ' ' + LU.Branches[p.gz[1]], style: 'font-size:20px;text-align:center' }));\n  });\n  table.appendChild(tr1);\n  table.appendChild(tr2);\n  box.appendChild(table);\n  var wx = { 木: 0, 火: 0, 土: 0, 金: 0, 水: 0 };\n  ps.forEach(function (p) {\n    wx[LU.Ganzhi.wuxingOfStem(p.gz[0])]++;\n    wx[LU.Ganzhi.wuxingOfBranch(p.gz[1])]++;\n  });\n  var total = 8;\n  var wxRows = Object.keys(wx).map(function (k) {\n    return [k, wx[k] + ' 个（' + Math.round(wx[k] / total * 100) + '%）', '█'.repeat(wx[k] * 2 || 1)];\n  });\n  box.appendChild(T.el('span', { text: '五行分布', class: 'field' }));\n  box.appendChild(T.refTable(['五行', '数量', '分布'], wxRows));\n  var lack = Object.keys(wx).filter(function (k) { return wx[k] === 0; });\n  var strong = Object.keys(wx).sort(function (a, b) { return wx[b] - wx[a]; })[0];\n  box.appendChild(T.kvTable([\n    ['日主', LU.Stems[ps[2].gz[0]] + LU.Ganzhi.wuxingOfStem(ps[2].gz[0])],\n    ['最旺', strong + '（' + wx[strong] + ' 个）'],\n    ['所缺', lack.length ? lack.join('、') : '无（五行俱全）']\n  ]));\n  box.appendChild(T.msg('八字按公历以近似立春（2月4日）分界、月柱按近似节气分界计算，存在 ±1 天误差；仅供传统文化参考。', ''));\n}\n[dateIn, timeIn].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('出生日期（公历）', dateIn), T.field('出生时间', timeIn)]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

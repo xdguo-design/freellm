@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>秒表增强 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('秒表增强', '分段计次秒表：单圈 / 累计时间 + 导出 CSV', 'stopwatch-adv');
+var big = T.el('div', { text: '00:00:00.00', style: 'font:400 56px/1.3 var(--font-serif);text-align:center;margin:24px 0;font-variant-numeric:tabular-nums' });
+var laps = [];
+var lapList = T.el('div', { style: 'max-height:260px;overflow:auto' });
+var running = false, startAt = 0, elapsed = 0, raf = 0;
+function fmt(ms) {
+  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000), c = Math.floor(ms % 1000 / 10);
+  return T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s) + '.' + T.pad2(c);
+}
+function tickFn() {
+  big.textContent = fmt(elapsed + (running ? Date.now() - startAt : 0));
+  if (running) raf = requestAnimationFrame(tickFn);
+}
+function lap() {
+  var total = elapsed + (running ? Date.now() - startAt : 0);
+  var prev = laps.length ? laps[laps.length - 1].total : 0;
+  laps.push({ n: laps.length + 1, lap: total - prev, total: total });
+  renderLaps();
+}
+function renderLaps() {
+  T.clearEl(lapList);
+  if (!laps.length) return;
+  var rows = laps.slice().reverse().map(function (l) {
+    return [String(l.n), fmt(l.lap), fmt(l.total)];
+  });
+  lapList.appendChild(T.refTable(['#', '单圈', '累计'], rows));
+}
+app.appendChild(big);
+app.appendChild(T.row([
+  T.button('开始', function () { if (running) return; running = true; startAt = Date.now(); tickFn(); }, true),
+  T.button('暂停', function () { if (!running) return; elapsed += Date.now() - startAt; running = false; cancelAnimationFrame(raf); big.textContent = fmt(elapsed); }),
+  T.button('计次', lap),
+  T.button('复位', function () { running = false; cancelAnimationFrame(raf); elapsed = 0; laps = []; big.textContent = '00:00:00.00'; renderLaps(); }),
+  T.button('导出 CSV', function () {
+    if (!laps.length) { T.toast('暂无计次数据'); return; }
+    var csv = '圈数,单圈时间,累计时间\n' + laps.map(function (l) { return l.n + ',' + fmt(l.lap) + ',' + fmt(l.total); }).join('\n');
+    T.download('stopwatch.csv', csv, 'text/csv');
+  })
+]));
+app.appendChild(lapList);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "stopwatch-adv", "title": "秒表增强", "desc": "分段计次秒表：单圈 / 累计时间 + 导出 CSV", "scripts": "", "code": "var big = T.el('div', { text: '00:00:00.00', style: 'font:400 56px/1.3 var(--font-serif);text-align:center;margin:24px 0;font-variant-numeric:tabular-nums' });\nvar laps = [];\nvar lapList = T.el('div', { style: 'max-height:260px;overflow:auto' });\nvar running = false, startAt = 0, elapsed = 0, raf = 0;\nfunction fmt(ms) {\n  var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000), s = Math.floor(ms % 60000 / 1000), c = Math.floor(ms % 1000 / 10);\n  return T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s) + '.' + T.pad2(c);\n}\nfunction tickFn() {\n  big.textContent = fmt(elapsed + (running ? Date.now() - startAt : 0));\n  if (running) raf = requestAnimationFrame(tickFn);\n}\nfunction lap() {\n  var total = elapsed + (running ? Date.now() - startAt : 0);\n  var prev = laps.length ? laps[laps.length - 1].total : 0;\n  laps.push({ n: laps.length + 1, lap: total - prev, total: total });\n  renderLaps();\n}\nfunction renderLaps() {\n  T.clearEl(lapList);\n  if (!laps.length) return;\n  var rows = laps.slice().reverse().map(function (l) {\n    return [String(l.n), fmt(l.lap), fmt(l.total)];\n  });\n  lapList.appendChild(T.refTable(['#', '单圈', '累计'], rows));\n}\napp.appendChild(big);\napp.appendChild(T.row([\n  T.button('开始', function () { if (running) return; running = true; startAt = Date.now(); tickFn(); }, true),\n  T.button('暂停', function () { if (!running) return; elapsed += Date.now() - startAt; running = false; cancelAnimationFrame(raf); big.textContent = fmt(elapsed); }),\n  T.button('计次', lap),\n  T.button('复位', function () { running = false; cancelAnimationFrame(raf); elapsed = 0; laps = []; big.textContent = '00:00:00.00'; renderLaps(); }),\n  T.button('导出 CSV', function () {\n    if (!laps.length) { T.toast('暂无计次数据'); return; }\n    var csv = '圈数,单圈时间,累计时间\\n' + laps.map(function (l) { return l.n + ',' + fmt(l.lap) + ',' + fmt(l.total); }).join('\\n');\n    T.download('stopwatch.csv', csv, 'text/csv');\n  })\n]));\napp.appendChild(lapList);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

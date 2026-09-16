@@ -2,62 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>压力单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('压力单位换算', 'Pa/Bar/PSI/atm 等', 'pressure-converter');
-
-  var units = [
-    { id: 'pa', name: '帕斯卡 (Pa)' },
-    { id: 'kpa', name: '千帕 (kPa)' },
-    { id: 'bar', name: '巴 (bar)' },
-    { id: 'mbar', name: '毫巴 (mbar)' },
-    { id: 'atm', name: '标准大气压 (atm)' },
-    { id: 'psi', name: '磅/平方英寸 (PSI)' },
-    { id: 'mmhg', name: '毫米汞柱 (mmHg)' },
-    { id: 'torr', name: '托 (Torr)' }
-  ];
-
-  var factors = { pa: 1, kpa: 1000, bar: 100000, mbar: 100, atm: 101325, psi: 6894.76, mmhg: 133.322, torr: 133.322 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('压力单位换算', 'Pa / Bar / PSI / atm / mmHg 等', 'pressure-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "Pa (帕斯卡)", "label": "Pa (帕斯卡)"}, {"value": "kPa", "label": "kPa"}, {"value": "MPa", "label": "MPa"}, {"value": "bar", "label": "bar"}, {"value": "mbar", "label": "mbar"}, {"value": "atm (标准大气压)", "label": "atm (标准大气压)"}, {"value": "psi (磅/英寸²)", "label": "psi (磅/英寸²)"}, {"value": "mmHg (托)", "label": "mmHg (托)"}], "bar");
+var to = T.select([{"value": "Pa (帕斯卡)", "label": "Pa (帕斯卡)"}, {"value": "kPa", "label": "kPa"}, {"value": "MPa", "label": "MPa"}, {"value": "bar", "label": "bar"}, {"value": "mbar", "label": "mbar"}, {"value": "atm (标准大气压)", "label": "atm (标准大气压)"}, {"value": "psi (磅/英寸²)", "label": "psi (磅/英寸²)"}, {"value": "mmHg (托)", "label": "mmHg (托)"}], "Pa (帕斯卡)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"Pa (帕斯卡)": 1, "kPa": 1000.0, "MPa": 1000000.0, "bar": 100000.0, "mbar": 100, "atm (标准大气压)": 101325, "psi (磅/英寸²)": 6894.757, "mmHg (托)": 133.322};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var pa = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (pa / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:140px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.atm.value = '1';
-  run('atm');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "pressure-converter", "title": "压力单位换算", "desc": "Pa / Bar / PSI / atm / mmHg 等", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"Pa (帕斯卡)\", \"label\": \"Pa (帕斯卡)\"}, {\"value\": \"kPa\", \"label\": \"kPa\"}, {\"value\": \"MPa\", \"label\": \"MPa\"}, {\"value\": \"bar\", \"label\": \"bar\"}, {\"value\": \"mbar\", \"label\": \"mbar\"}, {\"value\": \"atm (标准大气压)\", \"label\": \"atm (标准大气压)\"}, {\"value\": \"psi (磅/英寸²)\", \"label\": \"psi (磅/英寸²)\"}, {\"value\": \"mmHg (托)\", \"label\": \"mmHg (托)\"}], \"bar\");\nvar to = T.select([{\"value\": \"Pa (帕斯卡)\", \"label\": \"Pa (帕斯卡)\"}, {\"value\": \"kPa\", \"label\": \"kPa\"}, {\"value\": \"MPa\", \"label\": \"MPa\"}, {\"value\": \"bar\", \"label\": \"bar\"}, {\"value\": \"mbar\", \"label\": \"mbar\"}, {\"value\": \"atm (标准大气压)\", \"label\": \"atm (标准大气压)\"}, {\"value\": \"psi (磅/英寸²)\", \"label\": \"psi (磅/英寸²)\"}, {\"value\": \"mmHg (托)\", \"label\": \"mmHg (托)\"}], \"Pa (帕斯卡)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"Pa (帕斯卡)\": 1, \"kPa\": 1000.0, \"MPa\": 1000000.0, \"bar\": 100000.0, \"mbar\": 100, \"atm (标准大气压)\": 101325, \"psi (磅/英寸²)\": 6894.757, \"mmHg (托)\": 133.322};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

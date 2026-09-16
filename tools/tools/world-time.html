@@ -2,59 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>世界时间表 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('世界时间表', '全球主要城市当前时间', 'world-time');
-
-  var cities = [
-    { name: '北京', tz: 'Asia/Shanghai', flag: '🇨🇳' },
-    { name: '东京', tz: 'Asia/Tokyo', flag: '🇯🇵' },
-    { name: '纽约', tz: 'America/New_York', flag: '🇺🇸' },
-    { name: '伦敦', tz: 'Europe/London', flag: '🇬🇧' },
-    { name: '巴黎', tz: 'Europe/Paris', flag: '🇫🇷' },
-    { name: '悉尼', tz: 'Australia/Sydney', flag: '🇦🇺' },
-    { name: '迪拜', tz: 'Asia/Dubai', flag: '🇦🇪' },
-    { name: '新加坡', tz: 'Asia/Singapore', flag: '🇸🇬' },
-    { name: '洛杉矶', tz: 'America/Los_Angeles', flag: '🇺🇸' },
-    { name: '莫斯科', tz: 'Europe/Moscow', flag: '🇷🇺' },
-    { name: '首尔', tz: 'Asia/Seoul', flag: '🇰🇷' },
-    { name: '孟买', tz: 'Asia/Kolkata', flag: '🇮🇳' }
-  ];
-
-  var container = T.el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px' });
-
-  function update() {
-    var html = '';
-    cities.forEach(function (city) {
-      var now = new Date();
-      var options = { timeZone: city.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      var dateOptions = { timeZone: city.tz, weekday: 'short', month: 'short', day: 'numeric' };
-      var time = now.toLocaleTimeString('zh-CN', options);
-      var date = now.toLocaleDateString('zh-CN', dateOptions);
-      
-      html += '<div style="padding:16px;background:var(--bg);border:1px solid var(--line);border-radius:8px;text-align:center">';
-      html += '<div style="font-size:1.5em;margin-bottom:4px">' + city.flag + '</div>';
-      html += '<div style="font-weight:bold;margin-bottom:4px">' + city.name + '</div>';
-      html += '<div style="font-family:monospace;font-size:1.3em;color:var(--accent)">' + time + '</div>';
-      html += '<div style="font-size:0.85em;color:var(--muted)">' + date + '</div>';
-      html += '</div>';
-    });
-    container.innerHTML = html;
-  }
-
-  update();
-  setInterval(update, 1000);
-
-  app.appendChild(container);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('世界时间表', '全球主要城市当前时间，夏令时自动处理', 'world-time');
+var refTime = Date.now();
+var box = T.el('div');
+var CITIES = [
+  ['北京', 'Asia/Shanghai'], ['香港', 'Asia/Hong_Kong'], ['台北', 'Asia/Taipei'],
+  ['东京', 'Asia/Tokyo'], ['首尔', 'Asia/Seoul'], ['新加坡', 'Asia/Singapore'],
+  ['悉尼', 'Australia/Sydney'], ['奥克兰', 'Pacific/Auckland'],
+  ['伦敦', 'Europe/London'], ['巴黎', 'Europe/Paris'], ['柏林', 'Europe/Berlin'],
+  ['莫斯科', 'Europe/Moscow'], ['迪拜', 'Asia/Dubai'], ['孟买', 'Asia/Kolkata'],
+  ['纽约', 'America/New_York'], ['洛杉矶', 'America/Los_Angeles'],
+  ['芝加哥', 'America/Chicago'], ['多伦多', 'America/Toronto'],
+  ['圣保罗', 'America/Sao_Paulo'], ['开罗', 'Africa/Cairo']
+];
+function localParts(tz, date) {
+  var fmt = new Intl.DateTimeFormat('zh-CN', { timeZone: tz, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  return fmt.format(date);
+}
+function offsetHours(tz, date) {
+  var s = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour12: false }).format(date);
+  return null;
+}
+function render() {
+  var now = new Date();
+  var rows = CITIES.map(function (c) {
+    var local = new Date(now.toLocaleString('en-US', { timeZone: c[1] }));
+    var diff = Math.round((local - new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }))) / 3600000 * 10) / 10;
+    return [c[0], localParts(c[1], now), (diff > 0 ? '+' : '') + diff + 'h', local.getHours() >= 6 && local.getHours() < 18 ? '☀ 白天' : '🌙 夜间'];
+  });
+  T.clearEl(box).appendChild(T.refTable(['城市', '当地日期时间', '与北京时差', '状态'], rows));
+}
+setInterval(render, 1000);
+app.appendChild(T.el('span', { text: '当前时间实时刷新（时区由浏览器 IANA 数据库提供，自动处理夏令时）', class: 'field' }));
+app.appendChild(box);
+render();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "world-time", "title": "世界时间表", "desc": "全球主要城市当前时间，夏令时自动处理", "scripts": "", "code": "var refTime = Date.now();\nvar box = T.el('div');\nvar CITIES = [\n  ['北京', 'Asia/Shanghai'], ['香港', 'Asia/Hong_Kong'], ['台北', 'Asia/Taipei'],\n  ['东京', 'Asia/Tokyo'], ['首尔', 'Asia/Seoul'], ['新加坡', 'Asia/Singapore'],\n  ['悉尼', 'Australia/Sydney'], ['奥克兰', 'Pacific/Auckland'],\n  ['伦敦', 'Europe/London'], ['巴黎', 'Europe/Paris'], ['柏林', 'Europe/Berlin'],\n  ['莫斯科', 'Europe/Moscow'], ['迪拜', 'Asia/Dubai'], ['孟买', 'Asia/Kolkata'],\n  ['纽约', 'America/New_York'], ['洛杉矶', 'America/Los_Angeles'],\n  ['芝加哥', 'America/Chicago'], ['多伦多', 'America/Toronto'],\n  ['圣保罗', 'America/Sao_Paulo'], ['开罗', 'Africa/Cairo']\n];\nfunction localParts(tz, date) {\n  var fmt = new Intl.DateTimeFormat('zh-CN', { timeZone: tz, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });\n  return fmt.format(date);\n}\nfunction offsetHours(tz, date) {\n  var s = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour12: false }).format(date);\n  return null;\n}\nfunction render() {\n  var now = new Date();\n  var rows = CITIES.map(function (c) {\n    var local = new Date(now.toLocaleString('en-US', { timeZone: c[1] }));\n    var diff = Math.round((local - new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }))) / 3600000 * 10) / 10;\n    return [c[0], localParts(c[1], now), (diff > 0 ? '+' : '') + diff + 'h', local.getHours() >= 6 && local.getHours() \u003c 18 ? '☀ 白天' : '🌙 夜间'];\n  });\n  T.clearEl(box).appendChild(T.refTable(['城市', '当地日期时间', '与北京时差', '状态'], rows));\n}\nsetInterval(render, 1000);\napp.appendChild(T.el('span', { text: '当前时间实时刷新（时区由浏览器 IANA 数据库提供，自动处理夏令时）', class: 'field' }));\napp.appendChild(box);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

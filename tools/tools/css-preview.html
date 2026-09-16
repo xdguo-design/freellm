@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS 实时预览 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS 实时预览', '实时 CSS 效果预览，自带示例 DOM', 'css-preview');
+var input = T.textarea('.card {\n  background: linear-gradient(135deg, #1744E8, #7BC0E5);\n  border-radius: 16px;\n  padding: 24px;\n  color: #fff;\n  box-shadow: 0 10px 30px rgba(23,68,232,.3);\n  transition: transform .3s;\n}\n.card:hover { transform: translateY(-6px); }', true);
+input.value = '.card {\n  background: linear-gradient(135deg, #1744E8, #7BC0E5);\n  border-radius: 16px;\n  padding: 24px;\n  color: #fff;\n  box-shadow: 0 10px 30px rgba(23,68,232,.3);\n  transition: transform .3s;\n}\n.card:hover { transform: translateY(-6px); }';
+var frame = T.el('iframe', { sandbox: 'allow-scripts', style: 'width:100%;height:300px;border:1px solid var(--line);border-radius:8px;background:#fff' });
+var DEMO = '<div class="card"><h2>CSS 卡片</h2><p>在左侧修改样式，右侧实时预览。</p><button>按钮</button></div><div class="card" style="margin-top:12px"><h2>第二张</h2><p>样式同时作用于两个元素。</p></div>';
+function run() {
+  frame.srcdoc = '<style>' + input.value + '</style><body style="font-family:system-ui;padding:16px;background:#FBFBFA">' + DEMO;
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('CSS', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), frame])]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-preview", "title": "CSS 实时预览", "desc": "实时 CSS 效果预览，自带示例 DOM", "scripts": "", "code": "var input = T.textarea('.card {\\n  background: linear-gradient(135deg, #1744E8, #7BC0E5);\\n  border-radius: 16px;\\n  padding: 24px;\\n  color: #fff;\\n  box-shadow: 0 10px 30px rgba(23,68,232,.3);\\n  transition: transform .3s;\\n}\\n.card:hover { transform: translateY(-6px); }', true);\ninput.value = '.card {\\n  background: linear-gradient(135deg, #1744E8, #7BC0E5);\\n  border-radius: 16px;\\n  padding: 24px;\\n  color: #fff;\\n  box-shadow: 0 10px 30px rgba(23,68,232,.3);\\n  transition: transform .3s;\\n}\\n.card:hover { transform: translateY(-6px); }';\nvar frame = T.el('iframe', { sandbox: 'allow-scripts', style: 'width:100%;height:300px;border:1px solid var(--line);border-radius:8px;background:#fff' });\nvar DEMO = '\u003cdiv class=\"card\">\u003ch2>CSS 卡片\u003c/h2>\u003cp>在左侧修改样式，右侧实时预览。\u003c/p>\u003cbutton>按钮\u003c/button>\u003c/div>\u003cdiv class=\"card\" style=\"margin-top:12px\">\u003ch2>第二张\u003c/h2>\u003cp>样式同时作用于两个元素。\u003c/p>\u003c/div>';\nfunction run() {\n  frame.srcdoc = '\u003cstyle>' + input.value + '\u003c/style>\u003cbody style=\"font-family:system-ui;padding:16px;background:#FBFBFA\">' + DEMO;\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('CSS', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), frame])]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

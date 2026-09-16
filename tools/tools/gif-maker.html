@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>GIF 制作 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('GIF 制作', '多张图片合成 GIF 动画：帧间隔 / 尺寸 / 色数可调', 'gif-maker');
+var frames = [];
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var list = T.el('div', { class: 'row' });
+var delay = T.range(50, 2000, 50, 200);
+var delayLabel = T.el('b', { text: '200ms' });
+var width = T.select([{value:'320',label:'宽 320px'},{value:'480',label:'宽 480px'},{value:'640',label:'宽 640px'},{value:'原图',label:'原图宽'}],'480');
+var status = T.badge('添加 ≥2 张图片');
+var previewGif = T.el('img', { style: 'max-width:100%;border-radius:8px;display:none' });
+var outBlob = null;
+var multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });
+document.body.appendChild(multi);
+multi.addEventListener('change', function () {
+  var files = Array.from(multi.files);
+  var loaded = 0;
+  files.forEach(function (f) {
+    T.loadImage(function (img) {
+      frames.push(img);
+      loaded++;
+      if (loaded === files.length) { renderList(); play(); }
+    });
+  });
+});
+function renderList() {
+  T.clearEl(list);
+  frames.forEach(function (f, i) {
+    var cell = T.el('div', { style: 'position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:80px;height:80px' });
+    var c = T.el('canvas', { width: 80, height: 80 });
+    var ctx = c.getContext('2d');
+    var scale = Math.max(80 / f.width, 80 / f.height);
+    ctx.drawImage(f, (80 - f.width * scale) / 2, (80 - f.height * scale) / 2, f.width * scale, f.height * scale);
+    cell.appendChild(c);
+    var del = T.el('button', { text: '×', style: 'position:absolute;top:2px;right:2px;padding:0 6px;border:none;background:rgba(0,0,0,.5);color:#fff;border-radius:4px;cursor:pointer' });
+    del.addEventListener('click', function () { frames.splice(i, 1); renderList(); });
+    cell.appendChild(del);
+    list.appendChild(cell);
+  });
+  status.textContent = frames.length + ' 帧' + (frames.length >= 2 ? '，可生成' : '');
+  status.className = 'badge ' + (frames.length >= 2 ? 'ok' : '');
+}
+var playing = true, playIdx = 0, playTimer = 0;
+function play() {
+  if (!frames.length) return;
+  var W = width.value === '原图' ? frames[0].width : +width.value;
+  var H = Math.round(frames[0].height / frames[0].width * W);
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.display = '';
+  clearInterval(playTimer);
+  playTimer = setInterval(function () {
+    if (!playing || !frames.length) return;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(frames[playIdx % frames.length], 0, 0, W, H);
+    playIdx++;
+  }, delay.value);
+}
+delay.addEventListener('input', function () { delayLabel.textContent = delay.value + 'ms'; play(); });
+app.appendChild(T.row([T.button('添加图片（可多选）', function () { multi.click(); }, true),
+  T.button('清空', function () { frames = []; renderList(); canvas.style.display = 'none'; previewGif.style.display = 'none'; })]));
+app.appendChild(list);
+app.appendChild(T.row([T.el('span', { text: '帧间隔' }), delay, delayLabel, T.el('span', { text: '宽度' }), width, status]));
+app.appendChild(canvas);
+app.appendChild(previewGif);
+app.appendChild(T.row([T.button('生成 GIF', function () {
+  if (frames.length < 2) { T.toast('至少需要 2 帧'); return; }
+  status.textContent = '编码中…';
+  setTimeout(function () {
+    var W = width.value === '原图' ? frames[0].width : +width.value;
+    var H = Math.round(frames[0].height / frames[0].width * W);
+    var data = frames.map(function (f) {
+      var c = T.el('canvas');
+      c.width = W;
+      c.height = H;
+      var ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(f, 0, 0, W, H);
+      return { data: ctx.getImageData(0, 0, W, H).data, width: W, height: H, delay: +delay.value };
+    });
+    outBlob = LU.Gif.encode(data, { colors: 256 });
+    previewGif.src = URL.createObjectURL(outBlob);
+    previewGif.style.display = '';
+    status.textContent = '✓ ' + T.fmtBytes(outBlob.size);
+    status.className = 'badge ok';
+  }, 50);
+}, true), T.button('下载 GIF', function () { if (outBlob) T.download('animation.gif', outBlob); })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "gif-maker", "title": "GIF 制作", "desc": "多张图片合成 GIF 动画：帧间隔 / 尺寸 / 色数可调", "scripts": "", "code": "var frames = [];\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar list = T.el('div', { class: 'row' });\nvar delay = T.range(50, 2000, 50, 200);\nvar delayLabel = T.el('b', { text: '200ms' });\nvar width = T.select([{value:'320',label:'宽 320px'},{value:'480',label:'宽 480px'},{value:'640',label:'宽 640px'},{value:'原图',label:'原图宽'}],'480');\nvar status = T.badge('添加 ≥2 张图片');\nvar previewGif = T.el('img', { style: 'max-width:100%;border-radius:8px;display:none' });\nvar outBlob = null;\nvar multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });\ndocument.body.appendChild(multi);\nmulti.addEventListener('change', function () {\n  var files = Array.from(multi.files);\n  var loaded = 0;\n  files.forEach(function (f) {\n    T.loadImage(function (img) {\n      frames.push(img);\n      loaded++;\n      if (loaded === files.length) { renderList(); play(); }\n    });\n  });\n});\nfunction renderList() {\n  T.clearEl(list);\n  frames.forEach(function (f, i) {\n    var cell = T.el('div', { style: 'position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:80px;height:80px' });\n    var c = T.el('canvas', { width: 80, height: 80 });\n    var ctx = c.getContext('2d');\n    var scale = Math.max(80 / f.width, 80 / f.height);\n    ctx.drawImage(f, (80 - f.width * scale) / 2, (80 - f.height * scale) / 2, f.width * scale, f.height * scale);\n    cell.appendChild(c);\n    var del = T.el('button', { text: '×', style: 'position:absolute;top:2px;right:2px;padding:0 6px;border:none;background:rgba(0,0,0,.5);color:#fff;border-radius:4px;cursor:pointer' });\n    del.addEventListener('click', function () { frames.splice(i, 1); renderList(); });\n    cell.appendChild(del);\n    list.appendChild(cell);\n  });\n  status.textContent = frames.length + ' 帧' + (frames.length >= 2 ? '，可生成' : '');\n  status.className = 'badge ' + (frames.length >= 2 ? 'ok' : '');\n}\nvar playing = true, playIdx = 0, playTimer = 0;\nfunction play() {\n  if (!frames.length) return;\n  var W = width.value === '原图' ? frames[0].width : +width.value;\n  var H = Math.round(frames[0].height / frames[0].width * W);\n  canvas.width = W;\n  canvas.height = H;\n  canvas.style.display = '';\n  clearInterval(playTimer);\n  playTimer = setInterval(function () {\n    if (!playing || !frames.length) return;\n    var ctx = canvas.getContext('2d');\n    ctx.drawImage(frames[playIdx % frames.length], 0, 0, W, H);\n    playIdx++;\n  }, delay.value);\n}\ndelay.addEventListener('input', function () { delayLabel.textContent = delay.value + 'ms'; play(); });\napp.appendChild(T.row([T.button('添加图片（可多选）', function () { multi.click(); }, true),\n  T.button('清空', function () { frames = []; renderList(); canvas.style.display = 'none'; previewGif.style.display = 'none'; })]));\napp.appendChild(list);\napp.appendChild(T.row([T.el('span', { text: '帧间隔' }), delay, delayLabel, T.el('span', { text: '宽度' }), width, status]));\napp.appendChild(canvas);\napp.appendChild(previewGif);\napp.appendChild(T.row([T.button('生成 GIF', function () {\n  if (frames.length \u003c 2) { T.toast('至少需要 2 帧'); return; }\n  status.textContent = '编码中…';\n  setTimeout(function () {\n    var W = width.value === '原图' ? frames[0].width : +width.value;\n    var H = Math.round(frames[0].height / frames[0].width * W);\n    var data = frames.map(function (f) {\n      var c = T.el('canvas');\n      c.width = W;\n      c.height = H;\n      var ctx = c.getContext('2d', { willReadFrequently: true });\n      ctx.drawImage(f, 0, 0, W, H);\n      return { data: ctx.getImageData(0, 0, W, H).data, width: W, height: H, delay: +delay.value };\n    });\n    outBlob = LU.Gif.encode(data, { colors: 256 });\n    previewGif.src = URL.createObjectURL(outBlob);\n    previewGif.style.display = '';\n    status.textContent = '✓ ' + T.fmtBytes(outBlob.size);\n    status.className = 'badge ok';\n  }, 50);\n}, true), T.button('下载 GIF', function () { if (outBlob) T.download('animation.gif', outBlob); })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

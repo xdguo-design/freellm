@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>公历农历转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('公历农历转换', '公历 ↔ 农历日期互转，附干支 / 生肖 / 节气（1900-2098）', 'lunar-calendar');
+function renderLunar(solarDate, box) {
+  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];
+  var lunar = LU.Lunar.solarToLunar(s);
+  var gzY = LU.Ganzhi.year(s[0]);
+  var gzD = LU.Ganzhi.day(solarDate);
+  var fests = LU.Fest.ofDate(solarDate);
+  var rows = [];
+  if (lunar) {
+    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);
+    var lunarGz = LU.Ganzhi.year(lunar.y);
+    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);
+  } else {
+    rows.push(['农历', '超出 1900-2098 支持范围']);
+  }
+  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);
+  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);
+  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);
+  T.clearEl(box).appendChild(T.kvTable(rows));
+}
+
+var mode = T.select([{value:'s2l',label:'公历 → 农历'},{value:'l2s',label:'农历 → 公历'}],'s2l');
+var solar = T.dateInput(T.today());
+var lYear = T.num(2026, { min: 1900, max: 2098, style: 'width:90px' });
+var lMonth = T.num(8, { min: 1, max: 12, style: 'width:70px' });
+var lDay = T.num(15, { min: 1, max: 30, style: 'width:70px' });
+var lLeap = T.check('闰月');
+var lOut = T.el('div');
+var sOut = T.el('div');
+function runS2L() {
+  if (!solar.value) return;
+  renderLunar(new Date(solar.value + 'T00:00:00'), lOut);
+}
+function runL2S() {
+  T.clearEl(sOut);
+  var res = LU.Lunar.lunarToSolar({ y: +lYear.value, month: +lMonth.value, day: +lDay.value, leap: lLeap._input.checked });
+  if (!res) { sOut.appendChild(T.msg('⚠ 无法转换：请检查日期与闰月设置', 'err')); return; }
+  var d = new Date(res[0], res[1] - 1, res[2]);
+  sOut.appendChild(T.kvTable([
+    ['公历日期', T.fmtDate(d) + '（' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()] + '）']
+  ]));
+  renderLunar(d, sOut);
+}
+LU.Lunar.load().then(function () {
+  runS2L(); runL2S();
+});
+solar.addEventListener('input', runS2L);
+[lYear, lMonth, lDay, lLeap._input].forEach(function (el) { el.addEventListener('input', runL2S); });
+app.appendChild(T.row([mode]));
+app.appendChild(T.row([T.el('span', { text: '公历' }), solar]));
+app.appendChild(lOut);
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.row([T.el('span', { text: '农历年' }), lYear, T.el('span', { text: '月' }), lMonth, T.el('span', { text: '日' }), lDay, lLeap]));
+app.appendChild(sOut);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "lunar-calendar", "title": "公历农历转换", "desc": "公历 ↔ 农历日期互转，附干支 / 生肖 / 节气（1900-2098）", "scripts": "", "code": "function renderLunar(solarDate, box) {\n  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];\n  var lunar = LU.Lunar.solarToLunar(s);\n  var gzY = LU.Ganzhi.year(s[0]);\n  var gzD = LU.Ganzhi.day(solarDate);\n  var fests = LU.Fest.ofDate(solarDate);\n  var rows = [];\n  if (lunar) {\n    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);\n    var lunarGz = LU.Ganzhi.year(lunar.y);\n    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);\n  } else {\n    rows.push(['农历', '超出 1900-2098 支持范围']);\n  }\n  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);\n  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);\n  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);\n  T.clearEl(box).appendChild(T.kvTable(rows));\n}\n\nvar mode = T.select([{value:'s2l',label:'公历 → 农历'},{value:'l2s',label:'农历 → 公历'}],'s2l');\nvar solar = T.dateInput(T.today());\nvar lYear = T.num(2026, { min: 1900, max: 2098, style: 'width:90px' });\nvar lMonth = T.num(8, { min: 1, max: 12, style: 'width:70px' });\nvar lDay = T.num(15, { min: 1, max: 30, style: 'width:70px' });\nvar lLeap = T.check('闰月');\nvar lOut = T.el('div');\nvar sOut = T.el('div');\nfunction runS2L() {\n  if (!solar.value) return;\n  renderLunar(new Date(solar.value + 'T00:00:00'), lOut);\n}\nfunction runL2S() {\n  T.clearEl(sOut);\n  var res = LU.Lunar.lunarToSolar({ y: +lYear.value, month: +lMonth.value, day: +lDay.value, leap: lLeap._input.checked });\n  if (!res) { sOut.appendChild(T.msg('⚠ 无法转换：请检查日期与闰月设置', 'err')); return; }\n  var d = new Date(res[0], res[1] - 1, res[2]);\n  sOut.appendChild(T.kvTable([\n    ['公历日期', T.fmtDate(d) + '（' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()] + '）']\n  ]));\n  renderLunar(d, sOut);\n}\nLU.Lunar.load().then(function () {\n  runS2L(); runL2S();\n});\nsolar.addEventListener('input', runS2L);\n[lYear, lMonth, lDay, lLeap._input].forEach(function (el) { el.addEventListener('input', runL2S); });\napp.appendChild(T.row([mode]));\napp.appendChild(T.row([T.el('span', { text: '公历' }), solar]));\napp.appendChild(lOut);\napp.appendChild(T.el('hr', { class: 'hr' }));\napp.appendChild(T.row([T.el('span', { text: '农历年' }), lYear, T.el('span', { text: '月' }), lMonth, T.el('span', { text: '日' }), lDay, lLeap]));\napp.appendChild(sOut);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

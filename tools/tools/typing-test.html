@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>打字速度测试 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('打字速度测试', '测打字速度（WPM）与准确率：60 秒英文句子挑战', 'typing-test');
+var SENTENCES = [
+  'the quick brown fox jumps over the lazy dog',
+  'practice makes perfect so keep typing every day',
+  'a journey of a thousand miles begins with a single step',
+  'actions speak louder than words in every language',
+  'free tools for developers make life easier and faster',
+  'the best way to predict the future is to create it'
+];
+var target = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
+var display = T.el('div', { class: 'output', style: 'min-height:80px;font-family:var(--font-sans);font-size:17px;line-height:1.9;white-space:pre-wrap' });
+var input = T.textarea('在此输入上方文字（计时从第一个字符开始）…', true);
+input.setAttribute('rows', '4');
+var wpmEl = T.stat('—', 'WPM');
+var accEl = T.stat('—', '准确率');
+var timeEl = T.stat('0s', '用时');
+var status = T.badge('待开始');
+var startTime = 0, timer = 0;
+function render() {
+  var typed = input.value;
+  var html = '';
+  for (var i = 0; i < target.length; i++) {
+    if (i < typed.length) {
+      html += typed[i] === target[i] ? '<span style="color:var(--ok-text)">' + T.esc(target[i]) + '</span>' : '<span style="color:var(--err);background:rgba(192,57,43,.15)">' + T.esc(target[i]) + '</span>';
+    } else if (i === typed.length) {
+      html += '<span style="background:var(--accent);color:#fff">' + T.esc(target[i]) + '</span>';
+    } else html += T.esc(target[i]);
+  }
+  display.innerHTML = html;
+}
+input.addEventListener('input', function () {
+  if (!startTime && input.value.length) {
+    startTime = Date.now();
+    timer = setInterval(function () {
+      timeEl.firstChild.textContent = Math.round((Date.now() - startTime) / 1000) + 's';
+    }, 500);
+    status.textContent = '打字中…';
+  }
+  render();
+  var correct = 0;
+  for (var i = 0; i < input.value.length; i++) {
+    if (input.value[i] === target[i]) correct++;
+  }
+  var acc = input.value.length ? Math.round(correct / input.value.length * 100) : 100;
+  accEl.firstChild.textContent = acc + '%';
+  var minutes = (Date.now() - startTime) / 60000;
+  if (minutes > 0) wpmEl.firstChild.textContent = Math.round(correct / 5 / minutes);
+  if (input.value.length >= target.length) {
+    clearInterval(timer);
+    status.textContent = acc === 100 ? '🎉 完美完成！' : '完成！准确率 ' + acc + '%';
+    status.className = 'badge ok';
+  }
+});
+app.appendChild(T.row([wpmEl, accEl, timeEl, status]));
+app.appendChild(display);
+app.appendChild(input);
+app.appendChild(T.row([T.button('换一句 / 重来', function () {
+  target = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
+  input.value = '';
+  startTime = 0;
+  clearInterval(timer);
+  wpmEl.firstChild.textContent = '—';
+  accEl.firstChild.textContent = '—';
+  timeEl.firstChild.textContent = '0s';
+  status.textContent = '待开始';
+  render();
+}, true)]));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "typing-test", "title": "打字速度测试", "desc": "测打字速度（WPM）与准确率：60 秒英文句子挑战", "scripts": "", "code": "var SENTENCES = [\n  'the quick brown fox jumps over the lazy dog',\n  'practice makes perfect so keep typing every day',\n  'a journey of a thousand miles begins with a single step',\n  'actions speak louder than words in every language',\n  'free tools for developers make life easier and faster',\n  'the best way to predict the future is to create it'\n];\nvar target = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];\nvar display = T.el('div', { class: 'output', style: 'min-height:80px;font-family:var(--font-sans);font-size:17px;line-height:1.9;white-space:pre-wrap' });\nvar input = T.textarea('在此输入上方文字（计时从第一个字符开始）…', true);\ninput.setAttribute('rows', '4');\nvar wpmEl = T.stat('—', 'WPM');\nvar accEl = T.stat('—', '准确率');\nvar timeEl = T.stat('0s', '用时');\nvar status = T.badge('待开始');\nvar startTime = 0, timer = 0;\nfunction render() {\n  var typed = input.value;\n  var html = '';\n  for (var i = 0; i \u003c target.length; i++) {\n    if (i \u003c typed.length) {\n      html += typed[i] === target[i] ? '\u003cspan style=\"color:var(--ok-text)\">' + T.esc(target[i]) + '\u003c/span>' : '\u003cspan style=\"color:var(--err);background:rgba(192,57,43,.15)\">' + T.esc(target[i]) + '\u003c/span>';\n    } else if (i === typed.length) {\n      html += '\u003cspan style=\"background:var(--accent);color:#fff\">' + T.esc(target[i]) + '\u003c/span>';\n    } else html += T.esc(target[i]);\n  }\n  display.innerHTML = html;\n}\ninput.addEventListener('input', function () {\n  if (!startTime && input.value.length) {\n    startTime = Date.now();\n    timer = setInterval(function () {\n      timeEl.firstChild.textContent = Math.round((Date.now() - startTime) / 1000) + 's';\n    }, 500);\n    status.textContent = '打字中…';\n  }\n  render();\n  var correct = 0;\n  for (var i = 0; i \u003c input.value.length; i++) {\n    if (input.value[i] === target[i]) correct++;\n  }\n  var acc = input.value.length ? Math.round(correct / input.value.length * 100) : 100;\n  accEl.firstChild.textContent = acc + '%';\n  var minutes = (Date.now() - startTime) / 60000;\n  if (minutes > 0) wpmEl.firstChild.textContent = Math.round(correct / 5 / minutes);\n  if (input.value.length >= target.length) {\n    clearInterval(timer);\n    status.textContent = acc === 100 ? '🎉 完美完成！' : '完成！准确率 ' + acc + '%';\n    status.className = 'badge ok';\n  }\n});\napp.appendChild(T.row([wpmEl, accEl, timeEl, status]));\napp.appendChild(display);\napp.appendChild(input);\napp.appendChild(T.row([T.button('换一句 / 重来', function () {\n  target = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];\n  input.value = '';\n  startTime = 0;\n  clearInterval(timer);\n  wpmEl.firstChild.textContent = '—';\n  accEl.firstChild.textContent = '—';\n  timeEl.firstChild.textContent = '0s';\n  status.textContent = '待开始';\n  render();\n}, true)]));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

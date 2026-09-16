@@ -2,74 +2,41 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>ASCII 艺术字 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('ASCII 艺术字', 'FIGlet 风格 ASCII 文字', 'figlet');
-
-  var font = T.select([
-    { value: 'standard', label: 'Standard' },
-    { value: 'slant', label: 'Slant' },
-    { value: 'big', label: 'Big' },
-    { value: 'banner', label: 'Banner' }
-  ]);
-  var input = T.el('input', { type: 'text', value: 'Hello', placeholder: '输入文本...', style: 'flex:1' });
-  var output = T.el('div', { class: 'output dark', style: 'white-space:pre;font-family:monospace;overflow-x:auto' });
-
-  var copyBtn = T.copyBtn(function () { return output.textContent; });
-
-  var FONTS = {
-    standard: [
-      ' ██╗  ██╗███████╗██╗     ██╗      ██████╗ ',
-      ' ██║  ██║██╔════╝██║     ██║     ██╔═══██╗',
-      ' ███████║█████╗  ██║     ██║     ██║   ██║',
-      ' ██╔══██║██╔══╝  ██║     ██║     ██║   ██║',
-      ' ██║  ██║███████╗███████╗███████╗╚██████╔╝',
-      ' ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝'
-    ],
-    slant: [
-      '    __  ________  __  __',
-      '   / / / /_  __/ / / / /',
-      '  / /_/ / / /   / /_/ / ',
-      ' / __  / / /   / __  /  ',
-      '/_/ /_/ /_/   /_/ /_/   '
-    ],
-    big: [
-      '  ___  ____  __ __  ___ ',
-      ' / _ \\/ __ \\/ //_// _ \\',
-      '/  __/ /_/ / ,<  /  __/',
-      '\\___/\\____/_/|_| \\___/ '
-    ],
-    banner: [
-      '####  ####  #  #  ####',
-      '#     #      ##   #    ',
-      '#     ###    ##   ###  ',
-      '#     #      # #  #    ',
-      '####  ####  #  #  ####'
-    ]
-  };
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.textContent = ''; return; }
-    var lines = FONTS[font.value] || FONTS.standard;
-    output.textContent = lines.join('\n');
-  }
-
-  font.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [font, input, copyBtn]));
-  app.appendChild(output);
-  run();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ASCII 艺术字', 'FIGlet 风格大字：英文与数字转 5 行块状 ASCII 字符画', 'figlet');
+var input = T.input('FreeLLM', { class: 'grow mono', placeholder: '输入英文 / 数字…' });
+var fill = T.select(['█', '#', '@', '*', '$', '%'], '█');
+var output = T.out('');
+output.style.minHeight = '160px';
+function run() {
+  var r = LU.figlet(input.value, fill.value);
+  output.value = r.art + (r.unknown.length ? '\n（未支持字符：' + r.unknown.join(' ') + '，以 ? 显示）' : '');
+}
+[input, fill].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('文本', input)], true));
+app.appendChild(T.row([T.el('span', { text: '填充字符' }), fill, T.btnCopy(function () { return output.value; })]));
+app.appendChild(output);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "figlet", "title": "ASCII 艺术字", "desc": "FIGlet 风格大字：英文与数字转 5 行块状 ASCII 字符画", "scripts": "", "code": "var input = T.input('FreeLLM', { class: 'grow mono', placeholder: '输入英文 / 数字…' });\nvar fill = T.select(['█', '#', '@', '*', '$', '%'], '█');\nvar output = T.out('');\noutput.style.minHeight = '160px';\nfunction run() {\n  var r = LU.figlet(input.value, fill.value);\n  output.value = r.art + (r.unknown.length ? '\\n（未支持字符：' + r.unknown.join(' ') + '，以 ? 显示）' : '');\n}\n[input, fill].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('文本', input)], true));\napp.appendChild(T.row([T.el('span', { text: '填充字符' }), fill, T.btnCopy(function () { return output.value; })]));\napp.appendChild(output);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Markdown 转 HTML · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Markdown 转 HTML', 'Markdown 渲染为 HTML，实时预览 + 源码输出', 'md2html');
+var input = T.textarea('# 标题\n\n**加粗** *斜体* `code`\n\n- 列表项\n- 列表项二\n\n> 引用\n\n```js\nconsole.log(1);\n```');
+input.value = '# 标题\n\n**加粗** *斜体* `code`\n\n- 列表项\n- 列表项二\n\n> 引用\n\n```js\nconsole.log(1);\n```';
+var htmlOut = T.out('');
+var frame = T.el('iframe', { sandbox: '', style: 'width:100%;height:260px;border:1px solid var(--line);border-radius:8px;background:#fff' });
+var STYLE = 'body{font:14px/1.7 -apple-system,system-ui,sans-serif;color:#2F3437;max-width:760px;margin:0 auto;padding:16px}pre{background:#f6f6f4;padding:12px;border-radius:8px;overflow:auto}code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}blockquote{margin:0;padding:2px 14px;border-left:3px solid #ddd;color:#787774}table{border-collapse:collapse}th,td{border:1px solid #e5e5e2;padding:6px 12px}h1,h2{border-bottom:1px solid #eee;padding-bottom:6px}';
+function run() {
+  if (!input.value.trim()) { htmlOut.value = ''; frame.srcdoc = ''; return; }
+  try {
+    var html = LF.md2html(input.value);
+    htmlOut.value = html;
+    frame.srcdoc = '<style>' + STYLE + '</style>' + html;
+  } catch (e) { htmlOut.value = '⚠ ' + e.message; }
+}
+input.addEventListener('input', T.debounce(run, 250));
+app.appendChild(T.pane([T.field('Markdown', input)], true));
+app.appendChild(T.el('span', { text: '预览', class: 'field' }));
+app.appendChild(frame);
+app.appendChild(T.pane([T.field('HTML 源码', htmlOut)], true));
+app.appendChild(T.row([T.button('复制 HTML', function () { T.copy(htmlOut.value); }),
+  T.button('下载 .html', function () { T.download('preview.html', '<!doctype html><meta charset="utf-8"><style>' + STYLE + '</style>' + htmlOut.value, 'text/html'); })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "md2html", "title": "Markdown 转 HTML", "desc": "Markdown 渲染为 HTML，实时预览 + 源码输出", "scripts": "", "code": "var input = T.textarea('# 标题\\n\\n**加粗** *斜体* `code`\\n\\n- 列表项\\n- 列表项二\\n\\n> 引用\\n\\n```js\\nconsole.log(1);\\n```');\ninput.value = '# 标题\\n\\n**加粗** *斜体* `code`\\n\\n- 列表项\\n- 列表项二\\n\\n> 引用\\n\\n```js\\nconsole.log(1);\\n```';\nvar htmlOut = T.out('');\nvar frame = T.el('iframe', { sandbox: '', style: 'width:100%;height:260px;border:1px solid var(--line);border-radius:8px;background:#fff' });\nvar STYLE = 'body{font:14px/1.7 -apple-system,system-ui,sans-serif;color:#2F3437;max-width:760px;margin:0 auto;padding:16px}pre{background:#f6f6f4;padding:12px;border-radius:8px;overflow:auto}code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}blockquote{margin:0;padding:2px 14px;border-left:3px solid #ddd;color:#787774}table{border-collapse:collapse}th,td{border:1px solid #e5e5e2;padding:6px 12px}h1,h2{border-bottom:1px solid #eee;padding-bottom:6px}';\nfunction run() {\n  if (!input.value.trim()) { htmlOut.value = ''; frame.srcdoc = ''; return; }\n  try {\n    var html = LF.md2html(input.value);\n    htmlOut.value = html;\n    frame.srcdoc = '\u003cstyle>' + STYLE + '\u003c/style>' + html;\n  } catch (e) { htmlOut.value = '⚠ ' + e.message; }\n}\ninput.addEventListener('input', T.debounce(run, 250));\napp.appendChild(T.pane([T.field('Markdown', input)], true));\napp.appendChild(T.el('span', { text: '预览', class: 'field' }));\napp.appendChild(frame);\napp.appendChild(T.pane([T.field('HTML 源码', htmlOut)], true));\napp.appendChild(T.row([T.button('复制 HTML', function () { T.copy(htmlOut.value); }),\n  T.button('下载 .html', function () { T.download('preview.html', '\u003c!doctype html>\u003cmeta charset=\"utf-8\">\u003cstyle>' + STYLE + '\u003c/style>' + htmlOut.value, 'text/html'); })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

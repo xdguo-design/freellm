@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>主题切换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('主题切换', '亮色 / 暗色 / 自动跟随系统，与全站设置同步', 'theme-switch');
+var cur = 'auto';
+try { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').theme || 'auto'; } catch (e) {}
+var preview = T.el('div', { style: 'height:140px;border-radius:12px;border:1px solid var(--line);margin:14px 0;display:flex;flex-direction:column;gap:8px;padding:16px' });
+var apply = function (mode) {
+  cur = mode;
+  var settings = {};
+  try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}
+  settings.theme = mode;
+  localStorage.setItem('freellm-settings', JSON.stringify(settings));
+  var dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  preview.style.background = dark ? '#181B20' : '#FFFFFF';
+  preview.style.color = dark ? '#ECEAE6' : '#2F3437';
+  T.clearEl(preview);
+  preview.appendChild(T.el('div', { text: '标题文字 Heading', style: 'font:600 20px sans-serif' }));
+  preview.appendChild(T.el('div', { text: '正文内容 Body text — 当前模式：' + (mode === 'auto' ? '自动（跟随系统 ' + (dark ? '暗' : '亮') + '）' : mode === 'dark' ? '暗色' : '亮色'), style: 'font-size:13px;opacity:.7' }));
+  preview.appendChild(T.el('button', { text: '按钮 Button', style: 'padding:6px 14px;border-radius:6px;border:1px solid ' + (dark ? '#26292F' : '#EAEAEA') + ';background:' + (dark ? '#0E2533' : '#E9EEFF') + ';color:' + (dark ? '#7BC0E5' : '#1744E8') }));
+  T.toast('已切换：' + (mode === 'auto' ? '自动' : mode === 'dark' ? '暗色' : '亮色'));
+};
+apply(cur);
+var row = T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' });
+[['auto', '🌗 自动'], ['light', '☀️ 亮色'], ['dark', '🌙 暗色']].forEach(function (m) {
+  row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () { apply(m[0]); render(); }));
+});
+function render() {
+  T.clearEl(row);
+  [['auto', '🌗 自动'], ['light', '☀️ 亮色'], ['dark', '🌙 暗色']].forEach(function (m) {
+    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () { apply(m[0]); render(); }));
+  });
+}
+render();
+app.appendChild(row);
+app.appendChild(preview);
+app.appendChild(T.msg('设置保存后，工具集线器与各工具页会读取同一配置。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "theme-switch", "title": "主题切换", "desc": "亮色 / 暗色 / 自动跟随系统，与全站设置同步", "scripts": "", "code": "var cur = 'auto';\ntry { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').theme || 'auto'; } catch (e) {}\nvar preview = T.el('div', { style: 'height:140px;border-radius:12px;border:1px solid var(--line);margin:14px 0;display:flex;flex-direction:column;gap:8px;padding:16px' });\nvar apply = function (mode) {\n  cur = mode;\n  var settings = {};\n  try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}\n  settings.theme = mode;\n  localStorage.setItem('freellm-settings', JSON.stringify(settings));\n  var dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);\n  preview.style.background = dark ? '#181B20' : '#FFFFFF';\n  preview.style.color = dark ? '#ECEAE6' : '#2F3437';\n  T.clearEl(preview);\n  preview.appendChild(T.el('div', { text: '标题文字 Heading', style: 'font:600 20px sans-serif' }));\n  preview.appendChild(T.el('div', { text: '正文内容 Body text — 当前模式：' + (mode === 'auto' ? '自动（跟随系统 ' + (dark ? '暗' : '亮') + '）' : mode === 'dark' ? '暗色' : '亮色'), style: 'font-size:13px;opacity:.7' }));\n  preview.appendChild(T.el('button', { text: '按钮 Button', style: 'padding:6px 14px;border-radius:6px;border:1px solid ' + (dark ? '#26292F' : '#EAEAEA') + ';background:' + (dark ? '#0E2533' : '#E9EEFF') + ';color:' + (dark ? '#7BC0E5' : '#1744E8') }));\n  T.toast('已切换：' + (mode === 'auto' ? '自动' : mode === 'dark' ? '暗色' : '亮色'));\n};\napply(cur);\nvar row = T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' });\n[['auto', '🌗 自动'], ['light', '☀️ 亮色'], ['dark', '🌙 暗色']].forEach(function (m) {\n  row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () { apply(m[0]); render(); }));\n});\nfunction render() {\n  T.clearEl(row);\n  [['auto', '🌗 自动'], ['light', '☀️ 亮色'], ['dark', '🌙 暗色']].forEach(function (m) {\n    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () { apply(m[0]); render(); }));\n  });\n}\nrender();\napp.appendChild(row);\napp.appendChild(preview);\napp.appendChild(T.msg('设置保存后，工具集线器与各工具页会读取同一配置。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

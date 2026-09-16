@@ -2,120 +2,100 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>随机决策 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('随机决策', '转盘随机选择/掷骰子', 'random-decision');
-
-  var input = T.textarea('输入选项（每行一个）...\n选项1\n选项2\n选项3\n选项4');
-
-  var wheel = T.el('canvas', { width: '300', height: '300', style: 'cursor:pointer' });
-  var result = T.el('div', { class: 'badge blue', style: 'font-size:1.5em;text-align:center;margin:16px 0' });
-  var spinBtn = T.button('开始', spin, true);
-
-  var spinning = false;
-  var rotation = 0;
-
-  var COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#34495e'];
-
-  function getOptions() {
-    return input.value.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
-  }
-
-  function drawWheel() {
-    var ctx = wheel.getContext('2d');
-    var options = getOptions();
-    if (!options.length) return;
-
-    var cx = 150, cy = 150, r = 140;
-    var arc = (2 * Math.PI) / options.length;
-
-    ctx.clearRect(0, 0, 300, 300);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('随机决策', '转盘随机选择 / 掷骰子 / 抛硬币，多种决策方式', 'random-decision');
+var itemsIn = T.input('火锅, 烧烤, 面条, 汉堡, 沙拉', { class: 'grow' });
+var canvas = T.el('canvas', { width: 320, height: 320, style: 'display:block;margin:0 auto' });
+var result = T.badge('—');
+var spinning = false;
+var rotation = 0;
+function drawWheel() {
+  var items = itemsIn.value.split(/[,，\n]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  var ctx = canvas.getContext('2d');
+  var cx = 160, cy = 160, r = 150;
+  ctx.clearRect(0, 0, 320, 320);
+  if (!items.length) return;
+  var colors = ['#FF9A8B', '#FFB88C', '#FFD380', '#B8E986', '#7ED8F7', '#B39DDB', '#F48FB1', '#80CBC4'];
+  items.forEach(function (item, i) {
+    var a0 = (i / items.length) * Math.PI * 2 + rotation;
+    var a1 = ((i + 1) / items.length) * Math.PI * 2 + rotation;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, a0, a1);
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(rotation);
-
-    options.forEach(function (opt, i) {
-      var startAngle = i * arc - Math.PI / 2;
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, r, startAngle, startAngle + arc);
-      ctx.fillStyle = COLORS[i % COLORS.length];
-      ctx.fill();
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.save();
-      ctx.rotate(startAngle + arc / 2);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(opt.slice(0, 8), r * 0.6, 5);
-      ctx.restore();
-    });
-
+    ctx.rotate((a0 + a1) / 2);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 13px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(item.slice(0, 6), r - 10, 4);
     ctx.restore();
-
-    // Arrow
-    ctx.beginPath();
-    ctx.moveTo(150, 5);
-    ctx.lineTo(140, 25);
-    ctx.lineTo(160, 25);
-    ctx.fillStyle = '#333';
-    ctx.fill();
-  }
-
-  function spin() {
-    if (spinning) return;
-    var options = getOptions();
-    if (!options.length) return;
-
-    spinning = true;
-    result.textContent = '';
-
-    var totalRotation = Math.PI * 2 * (5 + Math.random() * 5);
-    var startTime = Date.now();
-    var duration = 3000;
-
-    function animate() {
-      var elapsed = Date.now() - startTime;
-      var progress = Math.min(elapsed / duration, 1);
-      var ease = 1 - Math.pow(1 - progress, 3);
-      rotation = totalRotation * ease;
-      drawWheel();
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        spinning = false;
-        var arc = (2 * Math.PI) / options.length;
-        var normalizedRotation = rotation % (2 * Math.PI);
-        var idx = Math.floor((2 * Math.PI - normalizedRotation) / arc) % options.length;
-        result.textContent = options[idx];
-      }
+  });
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx - 10, 6);
+  ctx.lineTo(cx + 10, 6);
+  ctx.lineTo(cx, 28);
+  ctx.closePath();
+  ctx.fillStyle = 'var(--ink)';
+  ctx.fillStyle = '#2F3437';
+  ctx.fill();
+}
+function spin() {
+  var items = itemsIn.value.split(/[,，\n]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  if (!items.length || spinning) return;
+  spinning = true;
+  result.textContent = '转动中…';
+  var target = rotation + Math.PI * 2 * (4 + Math.random() * 3) + Math.random() * Math.PI * 2;
+  var start = rotation, t0 = performance.now(), dur = 3000;
+  function anim(t) {
+    var p = Math.min(1, (t - t0) / dur);
+    var ease = 1 - Math.pow(1 - p, 3);
+    rotation = start + (target - start) * ease;
+    drawWheel();
+    if (p < 1) requestAnimationFrame(anim);
+    else {
+      var n = items.length;
+      var pointer = (Math.PI * 1.5 - rotation) % (Math.PI * 2);
+      var idx = Math.floor((pointer + Math.PI * 2) % (Math.PI * 2) / (Math.PI * 2) * n) % n;
+      result.textContent = '🎉 ' + items[idx];
+      spinning = false;
     }
-
-    animate();
   }
-
-  wheel.addEventListener('click', spin);
-  input.addEventListener('input', drawWheel);
-
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { style: 'text-align:center' }, [wheel]));
-  app.appendChild(result);
-  app.appendChild(T.el('div', { style: 'text-align:center' }, [spinBtn]));
-
-  drawWheel();
+  requestAnimationFrame(anim);
+}
+itemsIn.addEventListener('input', drawWheel);
+app.appendChild(T.pane([T.field('选项（逗号分隔）', itemsIn)], true));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('开始转盘', spin, true), result,
+  T.button('掷骰子', function () { result.textContent = '🎲 ' + (1 + Math.floor(Math.random() * 6)); }),
+  T.button('抛硬币', function () { result.textContent = '🪙 ' + (Math.random() < 0.5 ? '正面' : '反面'); })]));
+drawWheel();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "random-decision", "title": "随机决策", "desc": "转盘随机选择 / 掷骰子 / 抛硬币，多种决策方式", "scripts": "", "code": "var itemsIn = T.input('火锅, 烧烤, 面条, 汉堡, 沙拉', { class: 'grow' });\nvar canvas = T.el('canvas', { width: 320, height: 320, style: 'display:block;margin:0 auto' });\nvar result = T.badge('—');\nvar spinning = false;\nvar rotation = 0;\nfunction drawWheel() {\n  var items = itemsIn.value.split(/[,，\\n]/).map(function (s) { return s.trim(); }).filter(Boolean);\n  var ctx = canvas.getContext('2d');\n  var cx = 160, cy = 160, r = 150;\n  ctx.clearRect(0, 0, 320, 320);\n  if (!items.length) return;\n  var colors = ['#FF9A8B', '#FFB88C', '#FFD380', '#B8E986', '#7ED8F7', '#B39DDB', '#F48FB1', '#80CBC4'];\n  items.forEach(function (item, i) {\n    var a0 = (i / items.length) * Math.PI * 2 + rotation;\n    var a1 = ((i + 1) / items.length) * Math.PI * 2 + rotation;\n    ctx.beginPath();\n    ctx.moveTo(cx, cy);\n    ctx.arc(cx, cy, r, a0, a1);\n    ctx.fillStyle = colors[i % colors.length];\n    ctx.fill();\n    ctx.save();\n    ctx.translate(cx, cy);\n    ctx.rotate((a0 + a1) / 2);\n    ctx.fillStyle = '#fff';\n    ctx.font = '600 13px sans-serif';\n    ctx.textAlign = 'right';\n    ctx.fillText(item.slice(0, 6), r - 10, 4);\n    ctx.restore();\n  });\n  ctx.beginPath();\n  ctx.arc(cx, cy, 24, 0, Math.PI * 2);\n  ctx.fillStyle = '#fff';\n  ctx.fill();\n  ctx.beginPath();\n  ctx.moveTo(cx - 10, 6);\n  ctx.lineTo(cx + 10, 6);\n  ctx.lineTo(cx, 28);\n  ctx.closePath();\n  ctx.fillStyle = 'var(--ink)';\n  ctx.fillStyle = '#2F3437';\n  ctx.fill();\n}\nfunction spin() {\n  var items = itemsIn.value.split(/[,，\\n]/).map(function (s) { return s.trim(); }).filter(Boolean);\n  if (!items.length || spinning) return;\n  spinning = true;\n  result.textContent = '转动中…';\n  var target = rotation + Math.PI * 2 * (4 + Math.random() * 3) + Math.random() * Math.PI * 2;\n  var start = rotation, t0 = performance.now(), dur = 3000;\n  function anim(t) {\n    var p = Math.min(1, (t - t0) / dur);\n    var ease = 1 - Math.pow(1 - p, 3);\n    rotation = start + (target - start) * ease;\n    drawWheel();\n    if (p \u003c 1) requestAnimationFrame(anim);\n    else {\n      var n = items.length;\n      var pointer = (Math.PI * 1.5 - rotation) % (Math.PI * 2);\n      var idx = Math.floor((pointer + Math.PI * 2) % (Math.PI * 2) / (Math.PI * 2) * n) % n;\n      result.textContent = '🎉 ' + items[idx];\n      spinning = false;\n    }\n  }\n  requestAnimationFrame(anim);\n}\nitemsIn.addEventListener('input', drawWheel);\napp.appendChild(T.pane([T.field('选项（逗号分隔）', itemsIn)], true));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('开始转盘', spin, true), result,\n  T.button('掷骰子', function () { result.textContent = '🎲 ' + (1 + Math.floor(Math.random() * 6)); }),\n  T.button('抛硬币', function () { result.textContent = '🪙 ' + (Math.random() \u003c 0.5 ? '正面' : '反面'); })]));\ndrawWheel();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

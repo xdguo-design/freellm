@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片滤镜 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片滤镜', '亮度 / 对比度 / 饱和度 / 灰度 / 模糊 / 复古滤镜实时调节', 'image-filter');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var brightness = T.range(20, 200, 1, 100);
+var contrast = T.range(20, 200, 1, 100);
+var saturate = T.range(0, 300, 5, 100);
+var grayscale = T.range(0, 100, 1, 0);
+var blur = T.range(0, 20, 0.5, 0);
+var sepia = T.range(0, 100, 1, 0);
+var hue = T.range(0, 360, 1, 0);
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+var PRESETS = { '原图': {}, '黑白': { grayscale: 100, contrast: 115 }, '复古': { sepia: 60, brightness: 105, saturate: 85 }, '冷色': { hue: 200, saturate: 120 }, '鲜艳': { saturate: 180, contrast: 110 }, '模糊': { blur: 4 } };
+var presetRow = T.el('div', { class: 'row' });
+Object.keys(PRESETS).forEach(function (name) {
+  presetRow.appendChild(T.button(name, function () {
+    var p = PRESETS[name];
+    brightness.value = p.brightness || 100;
+    contrast.value = p.contrast || 100;
+    saturate.value = p.saturate || 100;
+    grayscale.value = p.grayscale || 0;
+    blur.value = p.blur || 0;
+    sepia.value = p.sepia || 0;
+    hue.value = p.hue || 0;
+    render();
+  }));
+});
+function render() {
+  if (!img) return;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext('2d');
+  ctx.filter = 'brightness(' + brightness.value + '%) contrast(' + contrast.value + '%) saturate(' + saturate.value + '%) grayscale(' + grayscale.value + '%) blur(' + blur.value + 'px) sepia(' + sepia.value + '%) hue-rotate(' + hue.value + 'deg)';
+  ctx.drawImage(img, 0, 0);
+  ctx.filter = 'none';
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+[brightness, contrast, saturate, grayscale, blur, sepia, hue].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(presetRow);
+app.appendChild(T.row([T.el('span', { text: '亮度' }), brightness, T.el('span', { text: '对比' }), contrast]));
+app.appendChild(T.row([T.el('span', { text: '饱和' }), saturate, T.el('span', { text: '灰度' }), grayscale]));
+app.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '复古' }), sepia, T.el('span', { text: '色相' }), hue]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载处理结果', function () { T.dlCanvas(canvas, 'filtered.png'); }, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-filter", "title": "图片滤镜", "desc": "亮度 / 对比度 / 饱和度 / 灰度 / 模糊 / 复古滤镜实时调节", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar brightness = T.range(20, 200, 1, 100);\nvar contrast = T.range(20, 200, 1, 100);\nvar saturate = T.range(0, 300, 5, 100);\nvar grayscale = T.range(0, 100, 1, 0);\nvar blur = T.range(0, 20, 0.5, 0);\nvar sepia = T.range(0, 100, 1, 0);\nvar hue = T.range(0, 360, 1, 0);\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nvar PRESETS = { '原图': {}, '黑白': { grayscale: 100, contrast: 115 }, '复古': { sepia: 60, brightness: 105, saturate: 85 }, '冷色': { hue: 200, saturate: 120 }, '鲜艳': { saturate: 180, contrast: 110 }, '模糊': { blur: 4 } };\nvar presetRow = T.el('div', { class: 'row' });\nObject.keys(PRESETS).forEach(function (name) {\n  presetRow.appendChild(T.button(name, function () {\n    var p = PRESETS[name];\n    brightness.value = p.brightness || 100;\n    contrast.value = p.contrast || 100;\n    saturate.value = p.saturate || 100;\n    grayscale.value = p.grayscale || 0;\n    blur.value = p.blur || 0;\n    sepia.value = p.sepia || 0;\n    hue.value = p.hue || 0;\n    render();\n  }));\n});\nfunction render() {\n  if (!img) return;\n  canvas.width = img.width;\n  canvas.height = img.height;\n  var ctx = canvas.getContext('2d');\n  ctx.filter = 'brightness(' + brightness.value + '%) contrast(' + contrast.value + '%) saturate(' + saturate.value + '%) grayscale(' + grayscale.value + '%) blur(' + blur.value + 'px) sepia(' + sepia.value + '%) hue-rotate(' + hue.value + 'deg)';\n  ctx.drawImage(img, 0, 0);\n  ctx.filter = 'none';\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\n[brightness, contrast, saturate, grayscale, blur, sepia, hue].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(presetRow);\napp.appendChild(T.row([T.el('span', { text: '亮度' }), brightness, T.el('span', { text: '对比' }), contrast]));\napp.appendChild(T.row([T.el('span', { text: '饱和' }), saturate, T.el('span', { text: '灰度' }), grayscale]));\napp.appendChild(T.row([T.el('span', { text: '模糊' }), blur, T.el('span', { text: '复古' }), sepia, T.el('span', { text: '色相' }), hue]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载处理结果', function () { T.dlCanvas(canvas, 'filtered.png'); }, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

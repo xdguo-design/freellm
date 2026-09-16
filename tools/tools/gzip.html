@@ -2,70 +2,54 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Gzip 压缩 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Gzip 压缩', '文本压缩/解压，显示压缩率', 'gzip');
-
-  var mode = T.select([
-    { value: 'compress', label: '压缩' },
-    { value: 'decompress', label: '解压' }
-  ]);
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载结果', function () {
-    T.download('gzip-result.bin', output.value);
-  });
-
-  var info = T.el('span', { class: 'badge', text: '' });
-
-  async function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; info.textContent = ''; return; }
-    try {
-      if (mode.value === 'compress') {
-        var stream = new Blob([v]).stream().pipeThrough(new CompressionStream('gzip'));
-        var compressed = await new Response(stream).arrayBuffer();
-        var hex = Array.from(new Uint8Array(compressed)).map(function (b) {
-          return b.toString(16).padStart(2, '0');
-        }).join('');
-        output.value = hex;
-        var ratio = ((1 - compressed.byteLength / new TextEncoder().encode(v).byteLength) * 100).toFixed(1);
-        info.textContent = '压缩率: ' + ratio + '% (' + compressed.byteLength + ' bytes)';
-      } else {
-        var clean = v.replace(/[^0-9a-fA-F]/g, '');
-        var bytes = new Uint8Array(clean.length / 2);
-        for (var i = 0; i < bytes.length; i++) {
-          bytes[i] = parseInt(clean.substr(i * 2, 2), 16);
-        }
-        var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-        var decompressed = await new Response(stream).text();
-        output.value = decompressed;
-        info.textContent = '解压完成';
-      }
-    } catch (e) {
-      output.value = '⚠ 操作失败: ' + e.message;
-      info.textContent = '';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Gzip 压缩', '文本 Gzip / Deflate 压缩解压，显示压缩率（Base64 传输）', 'gzip');
+var input = T.textarea('输入文本（压缩）或 Base64（解压）…');
+var output = T.out('输出…');
+var mode = T.select([{value:'gzip',label:'Gzip'},{value:'deflate',label:'Deflate'}],'gzip');
+var dir = T.select([{value:'enc',label:'压缩'},{value:'dec',label:'解压'}],'enc');
+var info = T.badge('—');
+async function run() {
+  var v = input.value;
+  if (!v) { output.value = ''; return; }
+  try {
+    if (dir.value === 'enc') {
+      var cs = new CompressionStream(mode.value);
+      var blob = new Blob([T.textToBytes(v)]);
+      var buf = await new Response(blob.stream().pipeThrough(cs)).arrayBuffer();
+      var u8 = new Uint8Array(buf);
+      output.value = T.bytesToB64(u8);
+      info.textContent = T.fmtBytes(v.length) + ' → ' + T.fmtBytes(u8.length) + '（压缩率 ' + (100 - u8.length / v.length * 100).toFixed(1) + '%）';
+    } else {
+      var ds = new DecompressionStream(mode.value);
+      var buf2 = await new Response(new Blob([T.b64ToBytes(v)]).stream().pipeThrough(ds)).arrayBuffer();
+      output.value = T.bytesToText(new Uint8Array(buf2));
+      info.textContent = '解压成功';
     }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 200); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, info, copyBtn, downloadBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([T.el('span', { text: '算法' }), mode, T.el('span', { text: '方向' }), dir, T.button('执行', run, true), info]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "gzip", "title": "Gzip 压缩", "desc": "文本 Gzip / Deflate 压缩解压，显示压缩率（Base64 传输）", "scripts": "", "code": "var input = T.textarea('输入文本（压缩）或 Base64（解压）…');\nvar output = T.out('输出…');\nvar mode = T.select([{value:'gzip',label:'Gzip'},{value:'deflate',label:'Deflate'}],'gzip');\nvar dir = T.select([{value:'enc',label:'压缩'},{value:'dec',label:'解压'}],'enc');\nvar info = T.badge('—');\nasync function run() {\n  var v = input.value;\n  if (!v) { output.value = ''; return; }\n  try {\n    if (dir.value === 'enc') {\n      var cs = new CompressionStream(mode.value);\n      var blob = new Blob([T.textToBytes(v)]);\n      var buf = await new Response(blob.stream().pipeThrough(cs)).arrayBuffer();\n      var u8 = new Uint8Array(buf);\n      output.value = T.bytesToB64(u8);\n      info.textContent = T.fmtBytes(v.length) + ' → ' + T.fmtBytes(u8.length) + '（压缩率 ' + (100 - u8.length / v.length * 100).toFixed(1) + '%）';\n    } else {\n      var ds = new DecompressionStream(mode.value);\n      var buf2 = await new Response(new Blob([T.b64ToBytes(v)]).stream().pipeThrough(ds)).arrayBuffer();\n      output.value = T.bytesToText(new Uint8Array(buf2));\n      info.textContent = '解压成功';\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([T.el('span', { text: '算法' }), mode, T.el('span', { text: '方向' }), dir, T.button('执行', run, true), info]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

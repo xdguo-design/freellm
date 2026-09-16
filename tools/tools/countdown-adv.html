@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>倒计时增强 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('倒计时增强', '多倒计时管理：创建多个目标 + 提醒音 + 本地保存', 'countdown-adv');
+var nameIn = T.input('', { class: 'grow', placeholder: '倒计时名称' });
+var dateIn = T.el('input', { type: 'datetime-local' });
+var list = T.el('div');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-countdown-adv') || '[]'); } catch (e) {}
+items.forEach(function (it) { it.alerted = false; });
+function save() { localStorage.setItem('freellm-countdown-adv', JSON.stringify(items)); }
+function beep() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.connect(g).connect(ctx.destination);
+    osc.frequency.value = 880; g.gain.value = 0.25;
+    osc.start();
+    var n = 0;
+    var iv = setInterval(function () { n++; if (n > 8) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 660 : 880; }, 240);
+  } catch (e) {}
+}
+setInterval(function () {
+  items.forEach(function (it) {
+    if (!it.alerted && it.target <= Date.now()) {
+      it.alerted = true;
+      save();
+      beep();
+      T.toast('⏰「' + it.name + '」时间到！');
+    }
+  });
+}, 1000);
+function render() {
+  T.clearEl(list);
+  if (!items.length) { list.appendChild(T.el('p', { text: '暂无倒计时。', style: 'color:var(--ink3)' })); return; }
+  items.sort(function (a, b) { return a.target - b.target; });
+  items.forEach(function (it, idx) {
+    var diff = it.target - Date.now();
+    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);flex-wrap:wrap' });
+    row.appendChild(T.el('b', { text: it.name, style: 'min-width:110px' }));
+    var cd = T.el('b', { style: 'font:500 20px var(--font-mono);color:' + (diff <= 0 ? 'var(--err)' : 'var(--accent)') });
+    if (diff <= 0) cd.textContent = '已到达 🎉';
+    else {
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor(diff % 86400000 / 3600000);
+      var m = Math.floor(diff % 3600000 / 60000);
+      var s = Math.floor(diff % 60000 / 1000);
+      cd.textContent = (d ? d + '天 ' : '') + T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);
+    }
+    row.appendChild(cd);
+    row.appendChild(T.el('span', { text: T.fmtTime(new Date(it.target)), style: 'color:var(--ink2);font-size:12px;flex:1' }));
+    row.appendChild(T.button('✕', function () { items.splice(idx, 1); save(); render(); }));
+    list.appendChild(row);
+  });
+}
+setInterval(render, 1000);
+app.appendChild(T.row([nameIn, dateIn, T.button('添加', function () {
+  if (!nameIn.value || !dateIn.value) { T.toast('请填写名称与时间'); return; }
+  items.push({ name: nameIn.value, target: new Date(dateIn.value).getTime(), alerted: false });
+  save();
+  render();
+}, true)]));
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "countdown-adv", "title": "倒计时增强", "desc": "多倒计时管理：创建多个目标 + 提醒音 + 本地保存", "scripts": "", "code": "var nameIn = T.input('', { class: 'grow', placeholder: '倒计时名称' });\nvar dateIn = T.el('input', { type: 'datetime-local' });\nvar list = T.el('div');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-countdown-adv') || '[]'); } catch (e) {}\nitems.forEach(function (it) { it.alerted = false; });\nfunction save() { localStorage.setItem('freellm-countdown-adv', JSON.stringify(items)); }\nfunction beep() {\n  try {\n    var ctx = new (window.AudioContext || window.webkitAudioContext)();\n    var osc = ctx.createOscillator(), g = ctx.createGain();\n    osc.connect(g).connect(ctx.destination);\n    osc.frequency.value = 880; g.gain.value = 0.25;\n    osc.start();\n    var n = 0;\n    var iv = setInterval(function () { n++; if (n > 8) { clearInterval(iv); osc.stop(); ctx.close(); return; } osc.frequency.value = n % 2 ? 660 : 880; }, 240);\n  } catch (e) {}\n}\nsetInterval(function () {\n  items.forEach(function (it) {\n    if (!it.alerted && it.target \u003c= Date.now()) {\n      it.alerted = true;\n      save();\n      beep();\n      T.toast('⏰「' + it.name + '」时间到！');\n    }\n  });\n}, 1000);\nfunction render() {\n  T.clearEl(list);\n  if (!items.length) { list.appendChild(T.el('p', { text: '暂无倒计时。', style: 'color:var(--ink3)' })); return; }\n  items.sort(function (a, b) { return a.target - b.target; });\n  items.forEach(function (it, idx) {\n    var diff = it.target - Date.now();\n    var row = T.el('div', { style: 'display:flex;gap:12px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);flex-wrap:wrap' });\n    row.appendChild(T.el('b', { text: it.name, style: 'min-width:110px' }));\n    var cd = T.el('b', { style: 'font:500 20px var(--font-mono);color:' + (diff \u003c= 0 ? 'var(--err)' : 'var(--accent)') });\n    if (diff \u003c= 0) cd.textContent = '已到达 🎉';\n    else {\n      var d = Math.floor(diff / 86400000);\n      var h = Math.floor(diff % 86400000 / 3600000);\n      var m = Math.floor(diff % 3600000 / 60000);\n      var s = Math.floor(diff % 60000 / 1000);\n      cd.textContent = (d ? d + '天 ' : '') + T.pad2(h) + ':' + T.pad2(m) + ':' + T.pad2(s);\n    }\n    row.appendChild(cd);\n    row.appendChild(T.el('span', { text: T.fmtTime(new Date(it.target)), style: 'color:var(--ink2);font-size:12px;flex:1' }));\n    row.appendChild(T.button('✕', function () { items.splice(idx, 1); save(); render(); }));\n    list.appendChild(row);\n  });\n}\nsetInterval(render, 1000);\napp.appendChild(T.row([nameIn, dateIn, T.button('添加', function () {\n  if (!nameIn.value || !dateIn.value) { T.toast('请填写名称与时间'); return; }\n  items.push({ name: nameIn.value, target: new Date(dateIn.value).getTime(), alerted: false });\n  save();\n  render();\n}, true)]));\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>单位换算器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('单位换算器', '综合换算：长度 / 重量 / 面积 / 体积 / 温度 / 速度 / 数据 / 压力', 'unit-convert');
+var CATS = {
+  '长度': { '毫米': 0.001, '厘米': 0.01, '米': 1, '千米': 1000, '英寸': 0.0254, '英尺': 0.3048, '英里': 1609.344 },
+  '重量': { '克': 1, '千克': 1000, '吨': 1e6, '斤': 500, '磅': 453.59237, '盎司': 28.34952 },
+  '面积': { '平方米': 1, '公顷': 10000, '平方公里': 1e6, '亩': 666.6667, '平方英尺': 0.092903 },
+  '体积': { '毫升': 0.001, '升': 1, '立方米': 1000, '加仑(美)': 3.785412 },
+  '速度': { '米/秒': 1, '千米/时': 3.6, '英里/时': 1.609344, '节': 1.852 },
+  '数据': { 'B': 1, 'KB': 1024, 'MB': 1048576, 'GB': 1073741824, 'TB': 1099511627776 },
+  '压力': { 'Pa': 1, 'kPa': 1e3, 'bar': 1e5, 'atm': 101325, 'psi': 6894.757 }
+};
+var cat = T.select(Object.keys(CATS).map(function (k) { return { value: k, label: k }; }), '长度');
+var value = T.num(1, { style: 'width:120px' });
+var from = T.select([], '米');
+var to = T.select([], '千米');
+var result = T.input('', { class: 'grow mono', readonly: '' });
+var tempRow = T.el('div', { class: 'row' });
+var tempIn = T.num(25, { style: 'width:90px' });
+var tempSel = T.select([{value:'C',label:'°C'},{value:'F',label:'°F'},{value:'K',label:'K'}],'C');
+var tempOut = T.input('', { class: 'grow mono', readonly: '' });
+function fill() {
+  var units = Object.keys(CATS[cat.value]);
+  T.clearEl(from);
+  T.clearEl(to);
+  units.forEach(function (u) {
+    from.appendChild(T.el('option', { value: u, text: u }));
+    to.appendChild(T.el('option', { value: u, text: u }));
+  });
+  from.value = units[2] || units[0];
+  to.value = units[3] || units[0];
+  run();
+}
+function run() {
+  if (cat.value === '温度') {
+    var v = +tempIn.value, f = tempSel.value;
+    var c = f === 'C' ? v : f === 'F' ? (v - 32) * 5 / 9 : v - 273.15;
+    tempOut.value = '°C ' + c.toFixed(2) + ' · °F ' + (c * 9 / 5 + 32).toFixed(2) + ' · K ' + (c + 273.15).toFixed(2);
+    return;
+  }
+  var U = CATS[cat.value];
+  var v2 = +value.value;
+  if (!U[from.value] || isNaN(v2)) { result.value = ''; return; }
+  result.value = +(v2 * U[from.value] / U[to.value]).toPrecision(10) + ' ' + to.value;
+}
+cat.addEventListener('change', function () {
+  tempRow.hidden = cat.value !== '温度';
+  document.getElementById('conv-row').hidden = cat.value === '温度';
+  if (cat.value === '温度') { run(); return; }
+  fill();
+});
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+[tempIn, tempSel].forEach(function (el) { el.addEventListener('input', run); });
+var convRow = T.row([value, from, T.el('span', { text: '→' }), to, result]);
+convRow.id = 'conv-row';
+app.appendChild(T.row([T.el('span', { text: '类别' }), cat]));
+app.appendChild(convRow);
+tempRow.appendChild(T.el('span', { text: '温度' }));
+tempRow.appendChild(tempIn);
+tempRow.appendChild(tempSel);
+tempRow.appendChild(tempOut);
+tempRow.hidden = true;
+app.appendChild(tempRow);
+fill();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "unit-convert", "title": "单位换算器", "desc": "综合换算：长度 / 重量 / 面积 / 体积 / 温度 / 速度 / 数据 / 压力", "scripts": "", "code": "var CATS = {\n  '长度': { '毫米': 0.001, '厘米': 0.01, '米': 1, '千米': 1000, '英寸': 0.0254, '英尺': 0.3048, '英里': 1609.344 },\n  '重量': { '克': 1, '千克': 1000, '吨': 1e6, '斤': 500, '磅': 453.59237, '盎司': 28.34952 },\n  '面积': { '平方米': 1, '公顷': 10000, '平方公里': 1e6, '亩': 666.6667, '平方英尺': 0.092903 },\n  '体积': { '毫升': 0.001, '升': 1, '立方米': 1000, '加仑(美)': 3.785412 },\n  '速度': { '米/秒': 1, '千米/时': 3.6, '英里/时': 1.609344, '节': 1.852 },\n  '数据': { 'B': 1, 'KB': 1024, 'MB': 1048576, 'GB': 1073741824, 'TB': 1099511627776 },\n  '压力': { 'Pa': 1, 'kPa': 1e3, 'bar': 1e5, 'atm': 101325, 'psi': 6894.757 }\n};\nvar cat = T.select(Object.keys(CATS).map(function (k) { return { value: k, label: k }; }), '长度');\nvar value = T.num(1, { style: 'width:120px' });\nvar from = T.select([], '米');\nvar to = T.select([], '千米');\nvar result = T.input('', { class: 'grow mono', readonly: '' });\nvar tempRow = T.el('div', { class: 'row' });\nvar tempIn = T.num(25, { style: 'width:90px' });\nvar tempSel = T.select([{value:'C',label:'°C'},{value:'F',label:'°F'},{value:'K',label:'K'}],'C');\nvar tempOut = T.input('', { class: 'grow mono', readonly: '' });\nfunction fill() {\n  var units = Object.keys(CATS[cat.value]);\n  T.clearEl(from);\n  T.clearEl(to);\n  units.forEach(function (u) {\n    from.appendChild(T.el('option', { value: u, text: u }));\n    to.appendChild(T.el('option', { value: u, text: u }));\n  });\n  from.value = units[2] || units[0];\n  to.value = units[3] || units[0];\n  run();\n}\nfunction run() {\n  if (cat.value === '温度') {\n    var v = +tempIn.value, f = tempSel.value;\n    var c = f === 'C' ? v : f === 'F' ? (v - 32) * 5 / 9 : v - 273.15;\n    tempOut.value = '°C ' + c.toFixed(2) + ' · °F ' + (c * 9 / 5 + 32).toFixed(2) + ' · K ' + (c + 273.15).toFixed(2);\n    return;\n  }\n  var U = CATS[cat.value];\n  var v2 = +value.value;\n  if (!U[from.value] || isNaN(v2)) { result.value = ''; return; }\n  result.value = +(v2 * U[from.value] / U[to.value]).toPrecision(10) + ' ' + to.value;\n}\ncat.addEventListener('change', function () {\n  tempRow.hidden = cat.value !== '温度';\n  document.getElementById('conv-row').hidden = cat.value === '温度';\n  if (cat.value === '温度') { run(); return; }\n  fill();\n});\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\n[tempIn, tempSel].forEach(function (el) { el.addEventListener('input', run); });\nvar convRow = T.row([value, from, T.el('span', { text: '→' }), to, result]);\nconvRow.id = 'conv-row';\napp.appendChild(T.row([T.el('span', { text: '类别' }), cat]));\napp.appendChild(convRow);\ntempRow.appendChild(T.el('span', { text: '温度' }));\ntempRow.appendChild(tempIn);\ntempRow.appendChild(tempSel);\ntempRow.appendChild(tempOut);\ntempRow.hidden = true;\napp.appendChild(tempRow);\nfill();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

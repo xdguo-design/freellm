@@ -2,71 +2,58 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>时区转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('时区转换', '不同时区时间互转', 'timezone');
-
-  var fromTz = T.el('select', { style: 'flex:1' });
-  var toTz = T.el('select', { style: 'flex:1' });
-  var timeInput = T.el('input', { type: 'time', style: 'flex:1' });
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.2em' });
-
-  var timezones = [
-    'Asia/Shanghai', 'Asia/Tokyo', 'Asia/Seoul', 'Asia/Singapore',
-    'America/New_York', 'America/Los_Angeles', 'America/Chicago',
-    'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Moscow',
-    'Australia/Sydney', 'Pacific/Auckland'
-  ];
-
-  timezones.forEach(function (tz) {
-    fromTz.appendChild(T.el('option', { value: tz, text: tz.split('/').pop().replace(/_/g, ' ') }));
-    toTz.appendChild(T.el('option', { value: tz, text: tz.split('/').pop().replace(/_/g, ' ') }));
-  });
-  toTz.value = 'America/New_York';
-
-  function convert() {
-    var time = timeInput.value;
-    if (!time) { result.textContent = '请输入时间'; return; }
-
-    var now = new Date();
-    var [hours, minutes] = time.split(':');
-    now.setHours(parseInt(hours), parseInt(minutes), 0);
-
-    var fromTime = now.toLocaleString('en-US', { timeZone: fromTz.value });
-    var fromDate = new Date(fromTime);
-    
-    var resultTime = fromDate.toLocaleString('en-US', { timeZone: toTz.value, hour: '2-digit', minute: '2-digit', hour12: false });
-    var resultDate = fromDate.toLocaleString('zh-CN', { timeZone: toTz.value, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-    var fromName = fromTz.value.split('/').pop().replace(/_/g, ' ');
-    var toName = toTz.value.split('/').pop().replace(/_/g, ' ');
-
-    result.innerHTML = '<strong>' + fromName + '</strong> ' + time + ' → <strong>' + toName + '</strong> ' + resultTime +
-      '<br><span style="font-size:0.8em;color:var(--muted)">' + resultDate + '</span>';
-  }
-
-  fromTz.addEventListener('change', convert);
-  toTz.addEventListener('change', convert);
-  timeInput.addEventListener('input', function () { setTimeout(convert, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '从' }), fromTz]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '到' }), toTz]));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '时间' }), timeInput]));
-  app.appendChild(result);
-
-  var now = new Date();
-  timeInput.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  convert();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('时区转换', '不同时区时间互转：源时区时间 → 目标时区时间', 'timezone');
+var ZONES = ['Asia/Shanghai', 'Asia/Tokyo', 'Asia/Singapore', 'Asia/Dubai', 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Moscow', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'Australia/Sydney', 'Pacific/Auckland', 'UTC'];
+var when = T.el('input', { type: 'datetime-local', style: 'flex:1' });
+var n = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
+when.value = n.toISOString().slice(0, 19);
+var zoneOpts = ZONES.map(function (z) { return { value: z, label: z.split('/').pop().replace('_', ' ') + ' (' + z + ')' }; });
+var from = T.select(zoneOpts, 'Asia/Shanghai');
+var to = T.select(zoneOpts, 'America/New_York');
+var box = T.el('div');
+function partsIn(tz, date) {
+  return new Date(date.toLocaleString('en-US', { timeZone: tz }));
+}
+function run() {
+  T.clearEl(box);
+  if (!when.value) return;
+  var local = new Date(when.value);
+  var src = partsIn(from.value, local);
+  var dst = partsIn(to.value, local);
+  var diff = Math.round((dst - src) / 3600000 * 10) / 10;
+  box.appendChild(T.kvTable([
+    ['源时区 ' + from.value, T.fmtTime(src)],
+    ['目标时区 ' + to.value, T.fmtTime(dst)],
+    ['时差', (diff >= 0 ? '+' : '') + diff + ' 小时'],
+    ['目标时区日期', dst.toDateString() !== src.toDateString() ? (dst > src ? '⚠ 比源时区晚一天' : '⚠ 比源时区早一天') : '同一天 ✓']
+  ]));
+}
+[when, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('参考时间（本地）', when)], true));
+app.appendChild(T.pane([T.field('源时区', from), T.field('目标时区', to)]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "timezone", "title": "时区转换", "desc": "不同时区时间互转：源时区时间 → 目标时区时间", "scripts": "", "code": "var ZONES = ['Asia/Shanghai', 'Asia/Tokyo', 'Asia/Singapore', 'Asia/Dubai', 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Moscow', 'America/New_York', 'America/Chicago', 'America/Los_Angeles', 'Australia/Sydney', 'Pacific/Auckland', 'UTC'];\nvar when = T.el('input', { type: 'datetime-local', style: 'flex:1' });\nvar n = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);\nwhen.value = n.toISOString().slice(0, 19);\nvar zoneOpts = ZONES.map(function (z) { return { value: z, label: z.split('/').pop().replace('_', ' ') + ' (' + z + ')' }; });\nvar from = T.select(zoneOpts, 'Asia/Shanghai');\nvar to = T.select(zoneOpts, 'America/New_York');\nvar box = T.el('div');\nfunction partsIn(tz, date) {\n  return new Date(date.toLocaleString('en-US', { timeZone: tz }));\n}\nfunction run() {\n  T.clearEl(box);\n  if (!when.value) return;\n  var local = new Date(when.value);\n  var src = partsIn(from.value, local);\n  var dst = partsIn(to.value, local);\n  var diff = Math.round((dst - src) / 3600000 * 10) / 10;\n  box.appendChild(T.kvTable([\n    ['源时区 ' + from.value, T.fmtTime(src)],\n    ['目标时区 ' + to.value, T.fmtTime(dst)],\n    ['时差', (diff >= 0 ? '+' : '') + diff + ' 小时'],\n    ['目标时区日期', dst.toDateString() !== src.toDateString() ? (dst > src ? '⚠ 比源时区晚一天' : '⚠ 比源时区早一天') : '同一天 ✓']\n  ]));\n}\n[when, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('参考时间（本地）', when)], true));\napp.appendChild(T.pane([T.field('源时区', from), T.field('目标时区', to)]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

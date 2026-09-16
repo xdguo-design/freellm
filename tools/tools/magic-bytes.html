@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>文件格式识别 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文件格式识别', 'Magic Bytes 检测文件真实格式（不看扩展名）', 'magic-bytes');
+var SIGS = [
+  { sig: [0xFF, 0xD8, 0xFF], name: 'JPEG 图片', ext: 'jpg' },
+  { sig: [0x89, 0x50, 0x4E, 0x47], name: 'PNG 图片', ext: 'png' },
+  { sig: [0x47, 0x49, 0x46, 0x38], name: 'GIF 图片', ext: 'gif' },
+  { sig: [0x42, 0x4D], name: 'BMP 图片', ext: 'bmp' },
+  { sig: [0x25, 0x50, 0x44, 0x46], name: 'PDF 文档', ext: 'pdf' },
+  { sig: [0x50, 0x4B, 0x03, 0x04], name: 'ZIP / Office 文档', ext: 'zip/docx/xlsx' },
+  { sig: [0x52, 0x61, 0x72, 0x21], name: 'RAR 压缩包', ext: 'rar' },
+  { sig: [0x37, 0x7A, 0xBC, 0xAF], name: '7Z 压缩包', ext: '7z' },
+  { sig: [0x1F, 0x8B], name: 'Gzip 压缩', ext: 'gz' },
+  { sig: [0x49, 0x44, 0x33], name: 'MP3 音频', ext: 'mp3' },
+  { sig: [0x66, 0x4C, 0x61, 0x43], name: 'FLAC 音频', ext: 'flac' },
+  { sig: [0x00, 0x00, 0x01, 0x00], name: 'ICO 图标', ext: 'ico' },
+  { sig: [0x00, 0x00, 0x02, 0x00], name: 'CUR 光标', ext: 'cur' },
+  { sig: [0x77, 0x4F, 0x46, 0x32], name: 'WOFF2 字体', ext: 'woff2' },
+  { sig: [0x00, 0x01, 0x00, 0x00], name: 'TTF 字体', ext: 'ttf' },
+  { sig: [0x4F, 0x54, 0x54, 0x4F], name: 'OTF 字体', ext: 'otf' },
+  { sig: [0x1A, 0x45, 0xDF, 0xA3], name: 'Matroska / WebM', ext: 'mkv/webm' },
+  { sig: [0x52, 0x49, 0x46, 0x46], name: 'RIFF 容器 (WAV/WebP/AVI)', ext: 'wav/webp/avi' },
+  { sig: [0x49, 0x49, 0x2A, 0x00], name: 'TIFF (小端)', ext: 'tif' },
+  { sig: [0x4D, 0x4D, 0x00, 0x2A], name: 'TIFF (大端)', ext: 'tif' },
+  { sig: [0x53, 0x51, 0x4C, 0x69], name: 'SQLite 数据库', ext: 'db' }
+];
+
+var drop = T.msg('点击选择文件或拖拽到此处', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '30px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var box = T.el('div');
+var inp = T.el('input', { type: 'file', style: 'display:none' });
+document.body.appendChild(inp);
+function detect(u8) {
+  var results = [];
+  SIGS.forEach(function (s) {
+    var ok = s.sig.every(function (b, i) { return u8[i] === b; });
+    if (ok) results.push(s.name + '（.' + s.ext + '）');
+  });
+  var hex = T.bytesToHex(u8.slice(0, 16)).toUpperCase().replace(/(..)/g, '$1 ').trim();
+  return { results: results, hex: hex };
+}
+function handle(f) {
+  var fr = new FileReader();
+  fr.onload = function () {
+    var u8 = new Uint8Array(fr.result.slice(0, 64));
+    var r = detect(u8);
+    T.clearEl(box).appendChild(T.kvTable([
+      ['文件名', f.name],
+      ['扩展名声称', f.type || '（浏览器未知）'],
+      ['大小', T.fmtBytes(f.size)],
+      ['文件头 (hex)', r.hex],
+      ['真实格式', r.results.length ? '✓ ' + r.results.join(' / ') : '⚠ 未知格式（纯文本或其他）']
+    ]));
+  };
+  fr.readAsArrayBuffer(f);
+}
+inp.addEventListener('change', function () { if (inp.files[0]) handle(inp.files[0]); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) {
+  e.preventDefault();
+  if (e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);
+});
+app.appendChild(drop);
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "magic-bytes", "title": "文件格式识别", "desc": "Magic Bytes 检测文件真实格式（不看扩展名）", "scripts": "", "code": "var SIGS = [\n  { sig: [0xFF, 0xD8, 0xFF], name: 'JPEG 图片', ext: 'jpg' },\n  { sig: [0x89, 0x50, 0x4E, 0x47], name: 'PNG 图片', ext: 'png' },\n  { sig: [0x47, 0x49, 0x46, 0x38], name: 'GIF 图片', ext: 'gif' },\n  { sig: [0x42, 0x4D], name: 'BMP 图片', ext: 'bmp' },\n  { sig: [0x25, 0x50, 0x44, 0x46], name: 'PDF 文档', ext: 'pdf' },\n  { sig: [0x50, 0x4B, 0x03, 0x04], name: 'ZIP / Office 文档', ext: 'zip/docx/xlsx' },\n  { sig: [0x52, 0x61, 0x72, 0x21], name: 'RAR 压缩包', ext: 'rar' },\n  { sig: [0x37, 0x7A, 0xBC, 0xAF], name: '7Z 压缩包', ext: '7z' },\n  { sig: [0x1F, 0x8B], name: 'Gzip 压缩', ext: 'gz' },\n  { sig: [0x49, 0x44, 0x33], name: 'MP3 音频', ext: 'mp3' },\n  { sig: [0x66, 0x4C, 0x61, 0x43], name: 'FLAC 音频', ext: 'flac' },\n  { sig: [0x00, 0x00, 0x01, 0x00], name: 'ICO 图标', ext: 'ico' },\n  { sig: [0x00, 0x00, 0x02, 0x00], name: 'CUR 光标', ext: 'cur' },\n  { sig: [0x77, 0x4F, 0x46, 0x32], name: 'WOFF2 字体', ext: 'woff2' },\n  { sig: [0x00, 0x01, 0x00, 0x00], name: 'TTF 字体', ext: 'ttf' },\n  { sig: [0x4F, 0x54, 0x54, 0x4F], name: 'OTF 字体', ext: 'otf' },\n  { sig: [0x1A, 0x45, 0xDF, 0xA3], name: 'Matroska / WebM', ext: 'mkv/webm' },\n  { sig: [0x52, 0x49, 0x46, 0x46], name: 'RIFF 容器 (WAV/WebP/AVI)', ext: 'wav/webp/avi' },\n  { sig: [0x49, 0x49, 0x2A, 0x00], name: 'TIFF (小端)', ext: 'tif' },\n  { sig: [0x4D, 0x4D, 0x00, 0x2A], name: 'TIFF (大端)', ext: 'tif' },\n  { sig: [0x53, 0x51, 0x4C, 0x69], name: 'SQLite 数据库', ext: 'db' }\n];\n\nvar drop = T.msg('点击选择文件或拖拽到此处', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '30px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar box = T.el('div');\nvar inp = T.el('input', { type: 'file', style: 'display:none' });\ndocument.body.appendChild(inp);\nfunction detect(u8) {\n  var results = [];\n  SIGS.forEach(function (s) {\n    var ok = s.sig.every(function (b, i) { return u8[i] === b; });\n    if (ok) results.push(s.name + '（.' + s.ext + '）');\n  });\n  var hex = T.bytesToHex(u8.slice(0, 16)).toUpperCase().replace(/(..)/g, '$1 ').trim();\n  return { results: results, hex: hex };\n}\nfunction handle(f) {\n  var fr = new FileReader();\n  fr.onload = function () {\n    var u8 = new Uint8Array(fr.result.slice(0, 64));\n    var r = detect(u8);\n    T.clearEl(box).appendChild(T.kvTable([\n      ['文件名', f.name],\n      ['扩展名声称', f.type || '（浏览器未知）'],\n      ['大小', T.fmtBytes(f.size)],\n      ['文件头 (hex)', r.hex],\n      ['真实格式', r.results.length ? '✓ ' + r.results.join(' / ') : '⚠ 未知格式（纯文本或其他）']\n    ]));\n  };\n  fr.readAsArrayBuffer(f);\n}\ninp.addEventListener('change', function () { if (inp.files[0]) handle(inp.files[0]); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) {\n  e.preventDefault();\n  if (e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);\n});\napp.appendChild(drop);\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

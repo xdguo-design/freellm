@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>SQL 格式化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('SQL 格式化', 'SQL 语句美化：关键字大写、子句换行缩进', 'sql-formatter');
+var input = T.textarea('SELECT * FROM users WHERE age > 18 ORDER BY id;…');
+var output = T.out('');
+function run() {
+  if (!input.value.trim()) { output.value = ''; return; }
+  try { output.value = LF.sqlFormat(input.value); }
+  catch (e) { output.value = '⚠ ' + e.message; }
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('SQL', input), T.field('格式化结果', output)]));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; }),
+  T.el('span', { text: '支持 SELECT/INSERT/UPDATE/DELETE/JOIN/UNION 等常用子句' })]));
+input.value = 'select u.id,u.name,o.total from users u left join orders o on u.id=o.user_id where o.total>100 and u.status=1 group by u.id order by o.total desc limit 20;';
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "sql-formatter", "title": "SQL 格式化", "desc": "SQL 语句美化：关键字大写、子句换行缩进", "scripts": "", "code": "var input = T.textarea('SELECT * FROM users WHERE age > 18 ORDER BY id;…');\nvar output = T.out('');\nfunction run() {\n  if (!input.value.trim()) { output.value = ''; return; }\n  try { output.value = LF.sqlFormat(input.value); }\n  catch (e) { output.value = '⚠ ' + e.message; }\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('SQL', input), T.field('格式化结果', output)]));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '支持 SELECT/INSERT/UPDATE/DELETE/JOIN/UNION 等常用子句' })]));\ninput.value = 'select u.id,u.name,o.total from users u left join orders o on u.id=o.user_id where o.total>100 and u.status=1 group by u.id order by o.total desc limit 20;';\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

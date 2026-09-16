@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>图片镜像翻转 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('图片镜像翻转', '水平 / 垂直翻转图片，一键导出', 'image-mirror');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+function draw(fx, fy) {
+  if (!img) return;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext('2d');
+  ctx.translate(fx ? canvas.width : 0, fy ? canvas.height : 0);
+  ctx.scale(fx ? -1 : 1, fy ? -1 : 1);
+  ctx.drawImage(img, 0, 0);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; draw(false, false); }); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+app.appendChild(drop);
+app.appendChild(T.row([T.button('⇋ 水平镜像', function () { draw(true, false); }, true),
+  T.button('⇵ 垂直镜像', function () { draw(false, true); }),
+  T.button('对角镜像', function () { draw(true, true); })]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载', function () { T.dlCanvas(canvas, 'mirrored.png'); })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-mirror", "title": "图片镜像翻转", "desc": "水平 / 垂直翻转图片，一键导出", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction draw(fx, fy) {\n  if (!img) return;\n  canvas.width = img.width;\n  canvas.height = img.height;\n  var ctx = canvas.getContext('2d');\n  ctx.translate(fx ? canvas.width : 0, fy ? canvas.height : 0);\n  ctx.scale(fx ? -1 : 1, fy ? -1 : 1);\n  ctx.drawImage(img, 0, 0);\n  ctx.setTransform(1, 0, 0, 1, 0, 0);\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; draw(false, false); }); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\napp.appendChild(drop);\napp.appendChild(T.row([T.button('⇋ 水平镜像', function () { draw(true, false); }, true),\n  T.button('⇵ 垂直镜像', function () { draw(false, true); }),\n  T.button('对角镜像', function () { draw(true, true); })]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载', function () { T.dlCanvas(canvas, 'mirrored.png'); })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

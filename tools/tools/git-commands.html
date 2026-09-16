@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Git 命令速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Git 命令速查', 'Git 常用命令：基础 / 分支 / 远程 / 撤销 / 储藏 / 排查', 'git-commands');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  return search;
+}
+
+var DATA = [
+  ['git init', '基础', '初始化仓库'],
+  ['git clone <url>', '基础', '克隆远程仓库'],
+  ['git status -sb', '基础', '简洁状态'],
+  ['git add -p', '基础', '交互式分块暂存'],
+  ['git commit -m "msg"', '基础', '提交'],
+  ['git commit --amend', '基础', '修正上次提交（未推送时）'],
+  ['git log --oneline --graph --all', '基础', '图形化日志'],
+  ['git diff / git diff --staged', '基础', '未暂存 / 已暂存的改动'],
+  ['git show <commit>', '基础', '查看提交详情'],
+  ['git blame <file>', '基础', '逐行追溯修改人'],
+  ['git switch -c feat/x', '分支', '创建并切换分支'],
+  ['git branch -d feat/x', '分支', '删除已合并分支'],
+  ['git merge --no-ff feat/x', '分支', '合并（保留合并节点）'],
+  ['git rebase main', '分支', '变基到 main（线性历史）'],
+  ['git cherry-pick <sha>', '分支', '摘取单个提交'],
+  ['git remote -v', '远程', '查看远程'],
+  ['git remote add origin <url>', '远程', '添加远程'],
+  ['git push -u origin main', '远程', '首次推送并关联'],
+  ['git push --force-with-lease', '远程', '安全强推（先检查远端无新提交）'],
+  ['git fetch --prune', '远程', '拉取并清理已删远程分支'],
+  ['git pull --rebase', '远程', '变基方式拉取'],
+  ['git restore <file>', '撤销', '丢弃工作区改动'],
+  ['git restore --staged <file>', '撤销', '取消暂存（保留改动）'],
+  ['git reset --soft HEAD~1', '撤销', '撤销提交，保留改动在暂存区'],
+  ['git reset --hard HEAD~1', '撤销', '撤销提交并丢弃改动（危险）'],
+  ['git revert <sha>', '撤销', '生成反向提交（已推送时用）'],
+  ['git checkout <sha> -- <file>', '撤销', '从历史提交恢复单个文件'],
+  ['git stash push -m "wip"', '储藏', '暂存工作现场'],
+  ['git stash list / pop / drop', '储藏', '查看 / 恢复 / 删除'],
+  ['git stash apply stash@{2}', '储藏', '恢复指定储藏'],
+  ['git bisect start', '排查', '二分定位 bug 提交'],
+  ['git reflog', '排查', '找回"丢失"的提交'],
+  ['git fsck --lost-found', '排查', '查找悬空对象'],
+  ['git tag -a v1.0 -m "release"', '标签', '附注标签'],
+  ['git push origin --tags', '标签', '推送标签'],
+  ['git worktree add ../hotfix hotfix/x', '高级', '多工作树并行'],
+  ['git config alias.co checkout', '高级', '设置别名'],
+  ['git shortlog -sn', '统计', '按作者统计提交数']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "git-commands", "title": "Git 命令速查", "desc": "Git 常用命令：基础 / 分支 / 远程 / 撤销 / 储藏 / 排查", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['git init', '基础', '初始化仓库'],\n  ['git clone \u003curl>', '基础', '克隆远程仓库'],\n  ['git status -sb', '基础', '简洁状态'],\n  ['git add -p', '基础', '交互式分块暂存'],\n  ['git commit -m \"msg\"', '基础', '提交'],\n  ['git commit --amend', '基础', '修正上次提交（未推送时）'],\n  ['git log --oneline --graph --all', '基础', '图形化日志'],\n  ['git diff / git diff --staged', '基础', '未暂存 / 已暂存的改动'],\n  ['git show \u003ccommit>', '基础', '查看提交详情'],\n  ['git blame \u003cfile>', '基础', '逐行追溯修改人'],\n  ['git switch -c feat/x', '分支', '创建并切换分支'],\n  ['git branch -d feat/x', '分支', '删除已合并分支'],\n  ['git merge --no-ff feat/x', '分支', '合并（保留合并节点）'],\n  ['git rebase main', '分支', '变基到 main（线性历史）'],\n  ['git cherry-pick \u003csha>', '分支', '摘取单个提交'],\n  ['git remote -v', '远程', '查看远程'],\n  ['git remote add origin \u003curl>', '远程', '添加远程'],\n  ['git push -u origin main', '远程', '首次推送并关联'],\n  ['git push --force-with-lease', '远程', '安全强推（先检查远端无新提交）'],\n  ['git fetch --prune', '远程', '拉取并清理已删远程分支'],\n  ['git pull --rebase', '远程', '变基方式拉取'],\n  ['git restore \u003cfile>', '撤销', '丢弃工作区改动'],\n  ['git restore --staged \u003cfile>', '撤销', '取消暂存（保留改动）'],\n  ['git reset --soft HEAD~1', '撤销', '撤销提交，保留改动在暂存区'],\n  ['git reset --hard HEAD~1', '撤销', '撤销提交并丢弃改动（危险）'],\n  ['git revert \u003csha>', '撤销', '生成反向提交（已推送时用）'],\n  ['git checkout \u003csha> -- \u003cfile>', '撤销', '从历史提交恢复单个文件'],\n  ['git stash push -m \"wip\"', '储藏', '暂存工作现场'],\n  ['git stash list / pop / drop', '储藏', '查看 / 恢复 / 删除'],\n  ['git stash apply stash@{2}', '储藏', '恢复指定储藏'],\n  ['git bisect start', '排查', '二分定位 bug 提交'],\n  ['git reflog', '排查', '找回\"丢失\"的提交'],\n  ['git fsck --lost-found', '排查', '查找悬空对象'],\n  ['git tag -a v1.0 -m \"release\"', '标签', '附注标签'],\n  ['git push origin --tags', '标签', '推送标签'],\n  ['git worktree add ../hotfix hotfix/x', '高级', '多工作树并行'],\n  ['git config alias.co checkout', '高级', '设置别名'],\n  ['git shortlog -sn', '统计', '按作者统计提交数']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

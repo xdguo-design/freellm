@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>RSA 加解密 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('RSA 加解密', 'RSA-OAEP 公钥加密 / 私钥解密，密钥支持粘贴 PEM', 'rsa-encrypt');
+function _pemToDer(pem) {
+  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\s+/g, '');
+  return T.b64ToBytes(b64);
+}
+var input = T.textarea('输入明文…');
+var output = T.out('输出…');
+var mode = T.select([{value:'enc',label:'公钥加密'},{value:'dec',label:'私钥解密'}],'enc');
+var keyText = T.textarea('粘贴 PEM 密钥（加密用公钥，解密用私钥）…', true);
+keyText.setAttribute('rows', '5');
+async function run() {
+  if (!input.value || !keyText.value) { output.value = ''; return; }
+  try {
+    if (mode.value === 'enc') {
+      var pub = await crypto.subtle.importKey('spki', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
+      var ct = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pub, T.textToBytes(input.value));
+      output.value = T.bytesToB64(ct);
+    } else {
+      var priv = await crypto.subtle.importKey('pkcs8', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+      var pt = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, priv, T.b64ToBytes(input.value.trim()));
+      output.value = T.bytesToText(new Uint8Array(pt));
+    }
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+app.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 (Base64)', input), T.field('结果', output)]));
+app.appendChild(T.field('密钥 (PEM)', keyText));
+app.appendChild(T.row([mode, T.button('执行', run, true),
+  T.el('span', { text: 'RSA-OAEP + SHA-256 · 2048 位密钥最多加密 190 字节明文' })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "rsa-encrypt", "title": "RSA 加解密", "desc": "RSA-OAEP 公钥加密 / 私钥解密，密钥支持粘贴 PEM", "scripts": "", "code": "function _pemToDer(pem) {\n  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\\s+/g, '');\n  return T.b64ToBytes(b64);\n}\nvar input = T.textarea('输入明文…');\nvar output = T.out('输出…');\nvar mode = T.select([{value:'enc',label:'公钥加密'},{value:'dec',label:'私钥解密'}],'enc');\nvar keyText = T.textarea('粘贴 PEM 密钥（加密用公钥，解密用私钥）…', true);\nkeyText.setAttribute('rows', '5');\nasync function run() {\n  if (!input.value || !keyText.value) { output.value = ''; return; }\n  try {\n    if (mode.value === 'enc') {\n      var pub = await crypto.subtle.importKey('spki', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);\n      var ct = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pub, T.textToBytes(input.value));\n      output.value = T.bytesToB64(ct);\n    } else {\n      var priv = await crypto.subtle.importKey('pkcs8', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);\n      var pt = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, priv, T.b64ToBytes(input.value.trim()));\n      output.value = T.bytesToText(new Uint8Array(pt));\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\napp.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 (Base64)', input), T.field('结果', output)]));\napp.appendChild(T.field('密钥 (PEM)', keyText));\napp.appendChild(T.row([mode, T.button('执行', run, true),\n  T.el('span', { text: 'RSA-OAEP + SHA-256 · 2048 位密钥最多加密 190 字节明文' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

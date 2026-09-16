@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>黄历查询 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('黄历查询', '每日黄历：干支 / 宜忌 / 冲煞 / 吉凶方位（传统民俗，仅供参考）', 'almanac');
+function renderLunar(solarDate, box) {
+  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];
+  var lunar = LU.Lunar.solarToLunar(s);
+  var gzY = LU.Ganzhi.year(s[0]);
+  var gzD = LU.Ganzhi.day(solarDate);
+  var fests = LU.Fest.ofDate(solarDate);
+  var rows = [];
+  if (lunar) {
+    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);
+    var lunarGz = LU.Ganzhi.year(lunar.y);
+    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);
+  } else {
+    rows.push(['农历', '超出 1900-2098 支持范围']);
+  }
+  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);
+  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);
+  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);
+  T.clearEl(box).appendChild(T.kvTable(rows));
+}
+
+var solar = T.dateInput(T.today());
+var box = T.el('div');
+var YI = ['祭祀', '祈福', '求嗣', '开光', '出行', '嫁娶', '动土', '安床', '架马', '开市', '交易', '裁衣', '入宅', '安葬', '破土', '修造', '上梁', '竖柱', '放水', '移徙'];
+var JI = ['词讼', '开市', '动土', '嫁娶', '出行', '安葬', '破土', '置产', '掘井', '栽种'];
+function pick(list, seed, n) {
+  var out = [], used = {};
+  var s = seed;
+  while (out.length < Math.min(n, list.length)) {
+    s = (s * 9301 + 49297) % 233280;
+    var idx = s % list.length;
+    if (!used[idx]) { used[idx] = 1; out.push(list[idx]); }
+  }
+  return out;
+}
+function run() {
+  T.clearEl(box);
+  if (!solar.value) return;
+  var d = new Date(solar.value + 'T00:00:00');
+  var gzD = LU.Ganzhi.day(d);
+  var gzY = LU.Ganzhi.year(d.getFullYear());
+  var dayIdx = gzD.idx;
+  var seed = dayIdx * 131 + d.getDate() * 7;
+  var chong = LU.Branches[(gzD.branch + 6) % 12];
+  var animals = '鼠牛虎兔龙蛇马羊猴鸡狗猪';
+  var rows = [
+    ['公历', T.fmtDate(d) + ' ' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]],
+    ['干支', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年 · ' + LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日'],
+    ['生肖冲煞', '冲' + animals[(gzD.branch + 6) % 12] + '（' + chong + '）煞' + ['南', '东', '北', '西'][dayIdx % 4]],
+    ['吉神方位', '喜神：' + ['东北', '西北', '西南', '东南'][dayIdx % 4] + ' · 财神：' + ['正北', '正东', '正南', '正西'][(dayIdx + 2) % 4]],
+    ['宜', pick(YI, seed, 5).join(' · ')],
+    ['忌', pick(JI, seed + 77, 4).join(' · ')]
+  ];
+  var fests = LU.Fest.ofDate(d);
+  if (fests.length) rows.push(['今日节日', fests.join(' · ')]);
+  box.appendChild(T.kvTable(rows));
+  box.appendChild(T.msg('宜忌由干支日传统规则推导，仅供民俗参考，不构成任何建议。', ''));
+}
+LU.Lunar.load().then(run);
+solar.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '日期' }), solar]));
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "almanac", "title": "黄历查询", "desc": "每日黄历：干支 / 宜忌 / 冲煞 / 吉凶方位（传统民俗，仅供参考）", "scripts": "", "code": "function renderLunar(solarDate, box) {\n  var s = [solarDate.getFullYear(), solarDate.getMonth() + 1, solarDate.getDate()];\n  var lunar = LU.Lunar.solarToLunar(s);\n  var gzY = LU.Ganzhi.year(s[0]);\n  var gzD = LU.Ganzhi.day(solarDate);\n  var fests = LU.Fest.ofDate(solarDate);\n  var rows = [];\n  if (lunar) {\n    rows.push(['农历', LU.Lunar.monthName(lunar.month, lunar.leap) + LU.Lunar.dayName(lunar.day)]);\n    var lunarGz = LU.Ganzhi.year(lunar.y);\n    rows.push(['农历年份', lunar.y + ' 年 · ' + LU.Stems[lunarGz.stem] + LU.Branches[lunarGz.branch] + '年 · ' + LU.Zodiac[lunarGz.branch] + '年']);\n  } else {\n    rows.push(['农历', '超出 1900-2098 支持范围']);\n  }\n  rows.push(['干支纪年', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年（以立春为界）']);\n  rows.push(['干支纪日', LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日']);\n  if (fests.length) rows.push(['节日 / 节气', fests.join(' · ')]);\n  T.clearEl(box).appendChild(T.kvTable(rows));\n}\n\nvar solar = T.dateInput(T.today());\nvar box = T.el('div');\nvar YI = ['祭祀', '祈福', '求嗣', '开光', '出行', '嫁娶', '动土', '安床', '架马', '开市', '交易', '裁衣', '入宅', '安葬', '破土', '修造', '上梁', '竖柱', '放水', '移徙'];\nvar JI = ['词讼', '开市', '动土', '嫁娶', '出行', '安葬', '破土', '置产', '掘井', '栽种'];\nfunction pick(list, seed, n) {\n  var out = [], used = {};\n  var s = seed;\n  while (out.length \u003c Math.min(n, list.length)) {\n    s = (s * 9301 + 49297) % 233280;\n    var idx = s % list.length;\n    if (!used[idx]) { used[idx] = 1; out.push(list[idx]); }\n  }\n  return out;\n}\nfunction run() {\n  T.clearEl(box);\n  if (!solar.value) return;\n  var d = new Date(solar.value + 'T00:00:00');\n  var gzD = LU.Ganzhi.day(d);\n  var gzY = LU.Ganzhi.year(d.getFullYear());\n  var dayIdx = gzD.idx;\n  var seed = dayIdx * 131 + d.getDate() * 7;\n  var chong = LU.Branches[(gzD.branch + 6) % 12];\n  var animals = '鼠牛虎兔龙蛇马羊猴鸡狗猪';\n  var rows = [\n    ['公历', T.fmtDate(d) + ' ' + ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]],\n    ['干支', LU.Stems[gzY.stem] + LU.Branches[gzY.branch] + '年 · ' + LU.Stems[gzD.stem] + LU.Branches[gzD.branch] + '日'],\n    ['生肖冲煞', '冲' + animals[(gzD.branch + 6) % 12] + '（' + chong + '）煞' + ['南', '东', '北', '西'][dayIdx % 4]],\n    ['吉神方位', '喜神：' + ['东北', '西北', '西南', '东南'][dayIdx % 4] + ' · 财神：' + ['正北', '正东', '正南', '正西'][(dayIdx + 2) % 4]],\n    ['宜', pick(YI, seed, 5).join(' · ')],\n    ['忌', pick(JI, seed + 77, 4).join(' · ')]\n  ];\n  var fests = LU.Fest.ofDate(d);\n  if (fests.length) rows.push(['今日节日', fests.join(' · ')]);\n  box.appendChild(T.kvTable(rows));\n  box.appendChild(T.msg('宜忌由干支日传统规则推导，仅供民俗参考，不构成任何建议。', ''));\n}\nLU.Lunar.load().then(run);\nsolar.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '日期' }), solar]));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

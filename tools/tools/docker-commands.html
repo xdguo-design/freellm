@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Docker 命令速查 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Docker 命令速查', 'Docker 常用命令：镜像 / 容器 / 网络 / 卷 / 编排', 'docker-commands');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+  return search;
+}
+
+var DATA = [
+  ['docker pull nginx:alpine', '镜像', '拉取镜像（推荐 alpine 小镜像）'],
+  ['docker images', '镜像', '列出本地镜像'],
+  ['docker build -t app:1.0 .', '镜像', '构建镜像'],
+  ['docker tag app:1.0 user/app:1.0', '镜像', '打标签'],
+  ['docker push user/app:1.0', '镜像', '推送到仓库'],
+  ['docker rmi <image>', '镜像', '删除镜像'],
+  ['docker image prune -a', '镜像', '清理未使用镜像'],
+  ['docker save/load', '镜像', '离线导出/导入镜像'],
+  ['docker run -d --name web -p 8080:80 nginx', '容器', '后台运行 + 端口映射'],
+  ['docker run --rm -it ubuntu bash', '容器', '交互式临时容器'],
+  ['docker run -v $(pwd):/app -w /app node:20 node app.js', '容器', '挂载目录运行'],
+  ['docker ps / docker ps -a', '容器', '运行中 / 全部容器'],
+  ['docker exec -it web bash', '容器', '进入容器'],
+  ['docker logs -f --tail 100 web', '容器', '追踪日志'],
+  ['docker stop / start / restart web', '容器', '停止 / 启动 / 重启'],
+  ['docker rm -f web', '容器', '删除容器'],
+  ['docker stats', '容器', '实时资源占用'],
+  ['docker cp web:/etc/nginx/nginx.conf .', '容器', '容器与主机拷贝文件'],
+  ['docker inspect web', '容器', '查看容器详情'],
+  ['docker commit web snapshot:1', '容器', '容器固化为镜像（不推荐替代 Dockerfile）'],
+  ['docker network create app-net', '网络', '创建网络'],
+  ['docker network connect app-net web', '网络', '容器加入网络（可用容器名互访）'],
+  ['docker port web', '网络', '查看端口映射'],
+  ['docker volume create data', '卷', '创建数据卷'],
+  ['docker run -v data:/var/lib/mysql mysql', '卷', '挂载数据卷'],
+  ['docker volume ls / prune', '卷', '列出 / 清理卷'],
+  ['docker system df', '清理', '磁盘占用统计'],
+  ['docker system prune -a --volumes', '清理', '深度清理（危险）'],
+  ['docker compose up -d', '编排', '启动 compose 服务'],
+  ['docker compose logs -f', '编排', '查看服务日志'],
+  ['docker compose down -v', '编排', '停止并删除（含卷）'],
+  ['docker compose build / pull', '编排', '构建 / 拉取服务镜像'],
+  ['docker buildx build --platform linux/amd64,linux/arm64 -t app .', '高级', '多架构构建'],
+  ['docker run --cpus=2 --memory=1g ...', '高级', '限制 CPU / 内存'],
+  ['docker run --user 1000:1000 --read-only ...', '安全', '降权 + 只读根文件系统'],
+  ['docker scan / sbom', '安全', '镜像漏洞扫描']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "docker-commands", "title": "Docker 命令速查", "desc": "Docker 常用命令：镜像 / 容器 / 网络 / 卷 / 编排", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['docker pull nginx:alpine', '镜像', '拉取镜像（推荐 alpine 小镜像）'],\n  ['docker images', '镜像', '列出本地镜像'],\n  ['docker build -t app:1.0 .', '镜像', '构建镜像'],\n  ['docker tag app:1.0 user/app:1.0', '镜像', '打标签'],\n  ['docker push user/app:1.0', '镜像', '推送到仓库'],\n  ['docker rmi \u003cimage>', '镜像', '删除镜像'],\n  ['docker image prune -a', '镜像', '清理未使用镜像'],\n  ['docker save/load', '镜像', '离线导出/导入镜像'],\n  ['docker run -d --name web -p 8080:80 nginx', '容器', '后台运行 + 端口映射'],\n  ['docker run --rm -it ubuntu bash', '容器', '交互式临时容器'],\n  ['docker run -v $(pwd):/app -w /app node:20 node app.js', '容器', '挂载目录运行'],\n  ['docker ps / docker ps -a', '容器', '运行中 / 全部容器'],\n  ['docker exec -it web bash', '容器', '进入容器'],\n  ['docker logs -f --tail 100 web', '容器', '追踪日志'],\n  ['docker stop / start / restart web', '容器', '停止 / 启动 / 重启'],\n  ['docker rm -f web', '容器', '删除容器'],\n  ['docker stats', '容器', '实时资源占用'],\n  ['docker cp web:/etc/nginx/nginx.conf .', '容器', '容器与主机拷贝文件'],\n  ['docker inspect web', '容器', '查看容器详情'],\n  ['docker commit web snapshot:1', '容器', '容器固化为镜像（不推荐替代 Dockerfile）'],\n  ['docker network create app-net', '网络', '创建网络'],\n  ['docker network connect app-net web', '网络', '容器加入网络（可用容器名互访）'],\n  ['docker port web', '网络', '查看端口映射'],\n  ['docker volume create data', '卷', '创建数据卷'],\n  ['docker run -v data:/var/lib/mysql mysql', '卷', '挂载数据卷'],\n  ['docker volume ls / prune', '卷', '列出 / 清理卷'],\n  ['docker system df', '清理', '磁盘占用统计'],\n  ['docker system prune -a --volumes', '清理', '深度清理（危险）'],\n  ['docker compose up -d', '编排', '启动 compose 服务'],\n  ['docker compose logs -f', '编排', '查看服务日志'],\n  ['docker compose down -v', '编排', '停止并删除（含卷）'],\n  ['docker compose build / pull', '编排', '构建 / 拉取服务镜像'],\n  ['docker buildx build --platform linux/amd64,linux/arm64 -t app .', '高级', '多架构构建'],\n  ['docker run --cpus=2 --memory=1g ...', '高级', '限制 CPU / 内存'],\n  ['docker run --user 1000:1000 --read-only ...', '安全', '降权 + 只读根文件系统'],\n  ['docker scan / sbom', '安全', '镜像漏洞扫描']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['命令', '分类', '说明'], DATA, function (r) { T.copy(r[0]); }));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

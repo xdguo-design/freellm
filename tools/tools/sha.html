@@ -2,60 +2,58 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>SHA 哈希 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('SHA 哈希', 'SHA-1/256/384/512 哈希计算', 'sha');
-
-  var algo = T.select([
-    { value: 'SHA-1', label: 'SHA-1' },
-    { value: 'SHA-256', label: 'SHA-256' },
-    { value: 'SHA-384', label: 'SHA-384' },
-    { value: 'SHA-512', label: 'SHA-512' }
-  ]);
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('哈希值', false);
-  output.readOnly = true;
-
-  var fileBtn = T.button('计算文件哈希', function () {
-    T.readFile('/*', async function (data) {
-      var hash = await crypto.subtle.digest(algo.value, data);
-      output.value = Array.from(new Uint8Array(hash)).map(function (b) {
-        return b.toString(16).padStart(2, '0');
-      }).join('');
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('SHA 哈希', 'WebCrypto 计算 SHA-1 / SHA-256 / SHA-384 / SHA-512', 'sha');
+var input = T.textarea('输入文本…');
+var algo = T.select(['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');
+var upper = T.check('大写输出');
+var box = T.el('div', { class: 'pane single' });
+function run() {
+  if (!input.value) { T.clearEl(box); return; }
+  crypto.subtle.digest(algo.value, T.textToBytes(input.value)).then(function (buf) {
+    var h = T.bytesToHex(buf);
+    if (upper._input.checked) h = h.toUpperCase();
+    T.clearEl(box).appendChild(T.field(algo.value + ' (160/256/384/512 bit)', (function () {
+      var o = T.out(''); o.value = h; return o;
+    })()));
+  });
+}
+input.addEventListener('input', T.debounce(run, 250));
+algo.addEventListener('change', run);
+upper._input.addEventListener('change', run);
+app.appendChild(T.pane([T.field('输入', input)], true));
+app.appendChild(T.row([T.el('span', { text: '算法' }), algo, upper, T.el('span', { text: '所有摘要' })]));
+app.appendChild(box);
+app.appendChild(T.row([T.button('计算全部算法', function () {
+  T.clearEl(box);
+  ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].forEach(function (a) {
+    crypto.subtle.digest(a, T.textToBytes(input.value)).then(function (buf) {
+      var o = T.out(''); o.value = T.bytesToHex(buf);
+      box.appendChild(T.field(a, o));
     });
-  }, true);
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  async function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    try {
-      var bytes = new TextEncoder().encode(v);
-      var hash = await crypto.subtle.digest(algo.value, bytes);
-      output.value = Array.from(new Uint8Array(hash)).map(function (b) {
-        return b.toString(16).padStart(2, '0');
-      }).join('');
-    } catch (e) {
-      output.value = '⚠ 计算失败: ' + e.message;
-    }
-  }
-
-  algo.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [algo, fileBtn, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  });
+}, true)]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "sha", "title": "SHA 哈希", "desc": "WebCrypto 计算 SHA-1 / SHA-256 / SHA-384 / SHA-512", "scripts": "", "code": "var input = T.textarea('输入文本…');\nvar algo = T.select(['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');\nvar upper = T.check('大写输出');\nvar box = T.el('div', { class: 'pane single' });\nfunction run() {\n  if (!input.value) { T.clearEl(box); return; }\n  crypto.subtle.digest(algo.value, T.textToBytes(input.value)).then(function (buf) {\n    var h = T.bytesToHex(buf);\n    if (upper._input.checked) h = h.toUpperCase();\n    T.clearEl(box).appendChild(T.field(algo.value + ' (160/256/384/512 bit)', (function () {\n      var o = T.out(''); o.value = h; return o;\n    })()));\n  });\n}\ninput.addEventListener('input', T.debounce(run, 250));\nalgo.addEventListener('change', run);\nupper._input.addEventListener('change', run);\napp.appendChild(T.pane([T.field('输入', input)], true));\napp.appendChild(T.row([T.el('span', { text: '算法' }), algo, upper, T.el('span', { text: '所有摘要' })]));\napp.appendChild(box);\napp.appendChild(T.row([T.button('计算全部算法', function () {\n  T.clearEl(box);\n  ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].forEach(function (a) {\n    crypto.subtle.digest(a, T.textToBytes(input.value)).then(function (buf) {\n      var o = T.out(''); o.value = T.bytesToHex(buf);\n      box.appendChild(T.field(a, o));\n    });\n  });\n}, true)]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

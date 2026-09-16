@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Excel ↔ JSON/CSV · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+<script src="/tools/js/vendor/xlsx.full.min.js"></script>
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Excel ↔ JSON/CSV', '上传 xlsx / xls / csv，转换为 JSON 或 CSV（SheetJS）', 'excel-convert');
+var pick = T.el('input', { type: 'file', accept: '.xlsx,.xls,.csv', style: 'display:none' });
+document.body.appendChild(pick);
+var sheetSel = T.select([], '');
+var box = T.el('div');
+var jsonOut = T.out('');
+var csvOut = T.out('');
+function toAoa(wb, name) {
+  return XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: false });
+}
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function () {
+    try {
+      var wb = XLSX.read(fr.result, { type: 'array' });
+      T.clearEl(sheetSel);
+      wb.SheetNames.forEach(function (n) {
+        var o = T.el('option', { value: n, text: n });
+        sheetSel.appendChild(o);
+      });
+      sheetSel.onchange = render;
+      render();
+      T.toast('已读取 ' + f.name + '，共 ' + wb.SheetNames.length + ' 个工作表');
+    } catch (e) { T.toast('解析失败：' + e.message); }
+  };
+  fr.readAsArrayBuffer(f);
+});
+function render() {
+  var name = sheetSel.value;
+  if (!name || !window._wb) return;
+  var aoa = toAoa(window._wb, name);
+  T.clearEl(box);
+  if (!aoa.length) return;
+  box.appendChild(T.refTable(aoa[0].map(function (_, i) { return '列' + (i + 1); }), aoa.slice(1, 51)));
+  if (aoa.length > 51) box.appendChild(T.el('p', { text: '预览前 50 行，共 ' + (aoa.length - 1) + ' 行数据', style: 'color:var(--ink2);font-size:12px' }));
+}
+app.appendChild(T.row([T.filePick('选择 Excel / CSV 文件', '.xlsx,.xls,.csv', function (buf, file) {
+  try {
+    var wb = XLSX.read(buf, { type: 'array' });
+    pick._wb = buf;
+    window._wb = wb;
+    T.clearEl(sheetSel);
+    wb.SheetNames.forEach(function (n) { sheetSel.appendChild(T.el('option', { value: n, text: n })); });
+    sheetSel.onchange = render;
+    render();
+  } catch (e) { T.toast('解析失败：' + e.message); }
+}, true)]));
+app.appendChild(T.row([T.el('span', { text: '工作表' }), sheetSel]));
+app.appendChild(T.pane([T.field('JSON', jsonOut), T.field('CSV', csvOut)]));
+app.appendChild(T.row([
+  T.button('导出 JSON', function () {
+    var aoa = toAoa(window._wb, sheetSel.value);
+    var head = aoa[0] || [];
+    var arr = aoa.slice(1).map(function (r) {
+      var o = {};
+      head.forEach(function (h, i) { o[h] = r[i]; });
+      return o;
+    });
+    jsonOut.value = JSON.stringify(arr, null, 2);
+  }, true),
+  T.button('导出 CSV', function () {
+    var aoa = toAoa(window._wb, sheetSel.value);
+    csvOut.value = LF.Csv.stringify(aoa);
+  }),
+  T.button('下载 JSON', function () { T.download('data.json', jsonOut.value, 'application/json'); }),
+  T.button('下载 CSV', function () { T.download('data.csv', csvOut.value, 'text/csv'); })
+]));
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "excel-convert", "title": "Excel ↔ JSON/CSV", "desc": "上传 xlsx / xls / csv，转换为 JSON 或 CSV（SheetJS）", "scripts": "\u003cscript src=\"/tools/js/vendor/xlsx.full.min.js\">\u003c/script>", "code": "var pick = T.el('input', { type: 'file', accept: '.xlsx,.xls,.csv', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar sheetSel = T.select([], '');\nvar box = T.el('div');\nvar jsonOut = T.out('');\nvar csvOut = T.out('');\nfunction toAoa(wb, name) {\n  return XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: false });\n}\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  var fr = new FileReader();\n  fr.onload = function () {\n    try {\n      var wb = XLSX.read(fr.result, { type: 'array' });\n      T.clearEl(sheetSel);\n      wb.SheetNames.forEach(function (n) {\n        var o = T.el('option', { value: n, text: n });\n        sheetSel.appendChild(o);\n      });\n      sheetSel.onchange = render;\n      render();\n      T.toast('已读取 ' + f.name + '，共 ' + wb.SheetNames.length + ' 个工作表');\n    } catch (e) { T.toast('解析失败：' + e.message); }\n  };\n  fr.readAsArrayBuffer(f);\n});\nfunction render() {\n  var name = sheetSel.value;\n  if (!name || !window._wb) return;\n  var aoa = toAoa(window._wb, name);\n  T.clearEl(box);\n  if (!aoa.length) return;\n  box.appendChild(T.refTable(aoa[0].map(function (_, i) { return '列' + (i + 1); }), aoa.slice(1, 51)));\n  if (aoa.length > 51) box.appendChild(T.el('p', { text: '预览前 50 行，共 ' + (aoa.length - 1) + ' 行数据', style: 'color:var(--ink2);font-size:12px' }));\n}\napp.appendChild(T.row([T.filePick('选择 Excel / CSV 文件', '.xlsx,.xls,.csv', function (buf, file) {\n  try {\n    var wb = XLSX.read(buf, { type: 'array' });\n    pick._wb = buf;\n    window._wb = wb;\n    T.clearEl(sheetSel);\n    wb.SheetNames.forEach(function (n) { sheetSel.appendChild(T.el('option', { value: n, text: n })); });\n    sheetSel.onchange = render;\n    render();\n  } catch (e) { T.toast('解析失败：' + e.message); }\n}, true)]));\napp.appendChild(T.row([T.el('span', { text: '工作表' }), sheetSel]));\napp.appendChild(T.pane([T.field('JSON', jsonOut), T.field('CSV', csvOut)]));\napp.appendChild(T.row([\n  T.button('导出 JSON', function () {\n    var aoa = toAoa(window._wb, sheetSel.value);\n    var head = aoa[0] || [];\n    var arr = aoa.slice(1).map(function (r) {\n      var o = {};\n      head.forEach(function (h, i) { o[h] = r[i]; });\n      return o;\n    });\n    jsonOut.value = JSON.stringify(arr, null, 2);\n  }, true),\n  T.button('导出 CSV', function () {\n    var aoa = toAoa(window._wb, sheetSel.value);\n    csvOut.value = LF.Csv.stringify(aoa);\n  }),\n  T.button('下载 JSON', function () { T.download('data.json', jsonOut.value, 'application/json'); }),\n  T.button('下载 CSV', function () { T.download('data.csv', csvOut.value, 'text/csv'); })\n]));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

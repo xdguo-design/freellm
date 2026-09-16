@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>代码片段管理 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('代码片段管理', '保存和管理常用代码片段（浏览器本地存储）', 'snippets');
+var titleIn = T.input('', { class: 'grow', placeholder: '片段标题' });
+var langIn = T.select(['javascript', 'python', 'css', 'html', 'sql', 'shell', 'other'], 'javascript');
+var bodyIn = T.textarea('粘贴代码…', true);
+bodyIn.style.minHeight = '140px';
+var list = T.el('div');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-snippets') || '[]'); } catch (e) {}
+function save() { localStorage.setItem('freellm-snippets', JSON.stringify(items)); }
+function render() {
+  T.clearEl(list);
+  if (!items.length) { list.appendChild(T.el('p', { text: '暂无片段。', style: 'color:var(--ink3)' })); return; }
+  items.forEach(function (s, i) {
+    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--surface)' });
+    var head = T.row([T.el('b', { text: s.title }), T.badge(s.lang), T.el('span', { style: 'flex:1' }),
+      T.button('复制', function () { T.copy(s.code); }),
+      T.button('载入', function () { titleIn.value = s.title; langIn.value = s.lang; bodyIn.value = s.code; }),
+      T.button('删除', function () { items.splice(i, 1); save(); render(); })]);
+    head.style.marginBottom = '8px';
+    card.appendChild(head);
+    var pre = T.el('div', { class: 'output', style: 'max-height:160px;white-space:pre;font-size:12px', text: s.code.slice(0, 600) });
+    card.appendChild(pre);
+    list.appendChild(card);
+  });
+}
+app.appendChild(T.row([titleIn, langIn]));
+app.appendChild(bodyIn);
+app.appendChild(T.row([T.button('保存片段', function () {
+  if (!titleIn.value || !bodyIn.value.trim()) { T.toast('请填写标题与代码'); return; }
+  items.unshift({ title: titleIn.value, lang: langIn.value, code: bodyIn.value, ts: Date.now() });
+  save();
+  render();
+  titleIn.value = '';
+  bodyIn.value = '';
+  T.toast('已保存');
+}, true), T.el('span', { text: '片段保存在浏览器本地' })]));
+app.appendChild(T.el('span', { text: '已保存片段', class: 'field' }));
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "snippets", "title": "代码片段管理", "desc": "保存和管理常用代码片段（浏览器本地存储）", "scripts": "", "code": "var titleIn = T.input('', { class: 'grow', placeholder: '片段标题' });\nvar langIn = T.select(['javascript', 'python', 'css', 'html', 'sql', 'shell', 'other'], 'javascript');\nvar bodyIn = T.textarea('粘贴代码…', true);\nbodyIn.style.minHeight = '140px';\nvar list = T.el('div');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-snippets') || '[]'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-snippets', JSON.stringify(items)); }\nfunction render() {\n  T.clearEl(list);\n  if (!items.length) { list.appendChild(T.el('p', { text: '暂无片段。', style: 'color:var(--ink3)' })); return; }\n  items.forEach(function (s, i) {\n    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--surface)' });\n    var head = T.row([T.el('b', { text: s.title }), T.badge(s.lang), T.el('span', { style: 'flex:1' }),\n      T.button('复制', function () { T.copy(s.code); }),\n      T.button('载入', function () { titleIn.value = s.title; langIn.value = s.lang; bodyIn.value = s.code; }),\n      T.button('删除', function () { items.splice(i, 1); save(); render(); })]);\n    head.style.marginBottom = '8px';\n    card.appendChild(head);\n    var pre = T.el('div', { class: 'output', style: 'max-height:160px;white-space:pre;font-size:12px', text: s.code.slice(0, 600) });\n    card.appendChild(pre);\n    list.appendChild(card);\n  });\n}\napp.appendChild(T.row([titleIn, langIn]));\napp.appendChild(bodyIn);\napp.appendChild(T.row([T.button('保存片段', function () {\n  if (!titleIn.value || !bodyIn.value.trim()) { T.toast('请填写标题与代码'); return; }\n  items.unshift({ title: titleIn.value, lang: langIn.value, code: bodyIn.value, ts: Date.now() });\n  save();\n  render();\n  titleIn.value = '';\n  bodyIn.value = '';\n  T.toast('已保存');\n}, true), T.el('span', { text: '片段保存在浏览器本地' })]));\napp.appendChild(T.el('span', { text: '已保存片段', class: 'field' }));\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

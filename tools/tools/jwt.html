@@ -2,62 +2,79 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JWT 解析 · FreeLLM</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JWT 编解码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('JWT 解析', 'JWT Header/Payload 在线解码', 'jwt');
-
-  var input = T.textarea('粘贴 JWT Token...');
-  var header = T.el('div', { class: 'output dark', style: 'font-family:monospace;white-space:pre-wrap' });
-  var payload = T.el('div', { class: 'output dark', style: 'font-family:monospace;white-space:pre-wrap' });
-
-  var copyHeader = T.copyBtn(function () { return header.textContent; });
-  var copyPayload = T.copyBtn(function () { return payload.textContent; });
-
-  function run() {
-    var v = input.value.trim();
-    if (!v) { header.textContent = ''; payload.textContent = ''; return; }
-
-    var parts = v.split('.');
-    if (parts.length < 2) {
-      header.textContent = '无效 JWT 格式';
-      payload.textContent = '';
-      return;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JWT 编解码', '解析 JWT Header / Payload，HS256 支持签名校验', 'jwt');
+var input = T.textarea('粘贴 JWT（eyJhbGciOi…）…');
+var info = T.el('div', { class: 'pane single' });
+var secret = T.input('', { placeholder: 'HS256 校验密钥（可选）', class: 'grow mono' });
+var verdict = T.badge('—');
+function b64url(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  return T.bytesToText(T.b64ToBytes(s));
+}
+function show() {
+  T.clearEl(info);
+  verdict.textContent = '—';
+  var parts = input.value.trim().split('.');
+  if (parts.length < 2) return;
+  try {
+    var header = T.parseJSON(b64url(parts[0]));
+    var payload = T.parseJSON(b64url(parts[1]));
+    var fmt = function (obj) {
+      var o = T.out(''); o.value = JSON.stringify(obj, null, 2); return o;
+    };
+    var payloadShow = Object.assign({}, payload);
+    ['exp', 'iat', 'nbf'].forEach(function (k) {
+      if (payloadShow[k]) payloadShow[k + '_readable'] = new Date(payloadShow[k] * 1000).toLocaleString('zh-CN');
+    });
+    if (payload.exp) {
+      if (payload.exp * 1000 < Date.now()) { verdict.textContent = '⚠ Token 已过期'; verdict.className = 'badge warn'; }
+      else { verdict.textContent = '✓ 未过期（至 ' + new Date(payload.exp * 1000).toLocaleString('zh-CN') + '）'; verdict.className = 'badge ok'; }
     }
-
-    try {
-      var h = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')));
-      header.textContent = JSON.stringify(h, null, 2);
-    } catch (e) {
-      header.textContent = 'Header 解码失败: ' + e.message;
-    }
-
-    try {
-      var p = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-      payload.textContent = JSON.stringify(p, null, 2);
-    } catch (e) {
-      payload.textContent = 'Payload 解码失败: ' + e.message;
-    }
+    info.appendChild(T.field('Header', fmt(header)));
+    info.appendChild(T.field('Payload', fmt(payloadShow)));
+    if (parts[2]) info.appendChild(T.field('Signature (base64url)', fmt({ signature: parts[2] })));
+  } catch (e) {
+    info.appendChild(T.msg('⚠ JWT 解析失败：' + e.message, 'err'));
   }
-
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'field', text: 'Header:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [copyHeader]));
-  app.appendChild(header);
-  app.appendChild(T.el('div', { class: 'field', text: 'Payload:' }));
-  app.appendChild(T.el('div', { class: 'row' }, [copyPayload]));
-  app.appendChild(payload);
-  app.appendChild(T.el('div', { class: 'field', text: '输入:' }));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
+}
+input.addEventListener('input', T.debounce(show, 250));
+app.appendChild(T.pane([T.field('JWT', input)], true));
+app.appendChild(T.row([T.el('span', { text: 'HS256 密钥' }), secret,
+  T.button('校验签名', function () {
+    var parts = input.value.trim().split('.');
+    if (parts.length < 3 || !secret.value) { T.toast('需要完整 JWT 与密钥'); return; }
+    crypto.subtle.importKey('raw', T.textToBytes(secret.value), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+      .then(function (k) { return crypto.subtle.sign('HMAC', k, T.textToBytes(parts[0] + '.' + parts[1])); })
+      .then(function (sig) {
+        var expect = T.bytesToB64(sig).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        if (expect === parts[2]) { verdict.textContent = '✓ 签名校验通过'; verdict.className = 'badge ok'; }
+        else { verdict.textContent = '✗ 签名不匹配'; verdict.className = 'badge warn'; }
+      });
+  }), verdict]));
+app.appendChild(info);
+show();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "jwt", "title": "JWT 编解码", "desc": "解析 JWT Header / Payload，HS256 支持签名校验", "scripts": "", "code": "var input = T.textarea('粘贴 JWT（eyJhbGciOi…）…');\nvar info = T.el('div', { class: 'pane single' });\nvar secret = T.input('', { placeholder: 'HS256 校验密钥（可选）', class: 'grow mono' });\nvar verdict = T.badge('—');\nfunction b64url(s) {\n  s = s.replace(/-/g, '+').replace(/_/g, '/');\n  while (s.length % 4) s += '=';\n  return T.bytesToText(T.b64ToBytes(s));\n}\nfunction show() {\n  T.clearEl(info);\n  verdict.textContent = '—';\n  var parts = input.value.trim().split('.');\n  if (parts.length \u003c 2) return;\n  try {\n    var header = T.parseJSON(b64url(parts[0]));\n    var payload = T.parseJSON(b64url(parts[1]));\n    var fmt = function (obj) {\n      var o = T.out(''); o.value = JSON.stringify(obj, null, 2); return o;\n    };\n    var payloadShow = Object.assign({}, payload);\n    ['exp', 'iat', 'nbf'].forEach(function (k) {\n      if (payloadShow[k]) payloadShow[k + '_readable'] = new Date(payloadShow[k] * 1000).toLocaleString('zh-CN');\n    });\n    if (payload.exp) {\n      if (payload.exp * 1000 \u003c Date.now()) { verdict.textContent = '⚠ Token 已过期'; verdict.className = 'badge warn'; }\n      else { verdict.textContent = '✓ 未过期（至 ' + new Date(payload.exp * 1000).toLocaleString('zh-CN') + '）'; verdict.className = 'badge ok'; }\n    }\n    info.appendChild(T.field('Header', fmt(header)));\n    info.appendChild(T.field('Payload', fmt(payloadShow)));\n    if (parts[2]) info.appendChild(T.field('Signature (base64url)', fmt({ signature: parts[2] })));\n  } catch (e) {\n    info.appendChild(T.msg('⚠ JWT 解析失败：' + e.message, 'err'));\n  }\n}\ninput.addEventListener('input', T.debounce(show, 250));\napp.appendChild(T.pane([T.field('JWT', input)], true));\napp.appendChild(T.row([T.el('span', { text: 'HS256 密钥' }), secret,\n  T.button('校验签名', function () {\n    var parts = input.value.trim().split('.');\n    if (parts.length \u003c 3 || !secret.value) { T.toast('需要完整 JWT 与密钥'); return; }\n    crypto.subtle.importKey('raw', T.textToBytes(secret.value), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])\n      .then(function (k) { return crypto.subtle.sign('HMAC', k, T.textToBytes(parts[0] + '.' + parts[1])); })\n      .then(function (sig) {\n        var expect = T.bytesToB64(sig).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');\n        if (expect === parts[2]) { verdict.textContent = '✓ 签名校验通过'; verdict.className = 'badge ok'; }\n        else { verdict.textContent = '✗ 签名不匹配'; verdict.className = 'badge warn'; }\n      });\n  }), verdict]));\napp.appendChild(info);\nshow();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -2,108 +2,85 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>JS API 速查 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('JS API 速查', '常用 JavaScript API 参考', 'js-api');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索 API...', style: 'width:100%' });
-
-  var APIS = [
-    ['String', 'charAt() 返回指定位置的字符'],
-    ['String', 'charCodeAt() 返回指定位置的字符编码'],
-    ['String', 'concat() 连接字符串'],
-    ['String', 'includes() 检查是否包含'],
-    ['String', 'indexOf() 返回第一次出现的位置'],
-    ['String', 'lastIndexOf() 返回最后一次出现的位置'],
-    ['String', 'slice() 截取字符串'],
-    ['String', 'split() 分割字符串'],
-    ['String', 'toLowerCase() 转小写'],
-    ['String', 'toUpperCase() 转大写'],
-    ['String', 'trim() 去除首尾空白'],
-    ['Array', 'push() 末尾添加元素'],
-    ['Array', 'pop() 末尾移除元素'],
-    ['Array', 'shift() 开头移除元素'],
-    ['Array', 'unshift() 开头添加元素'],
-    ['Array', 'splice() 添加/删除元素'],
-    ['Array', 'slice() 截取数组'],
-    ['Array', 'concat() 连接数组'],
-    ['Array', 'join() 数组转字符串'],
-    ['Array', 'reverse() 反转数组'],
-    ['Array', 'sort() 排序'],
-    ['Array', 'map() 映射转换'],
-    ['Array', 'filter() 过滤'],
-    ['Array', 'reduce() 归约'],
-    ['Array', 'forEach() 遍历'],
-    ['Array', 'find() 查找元素'],
-    ['Array', 'includes() 检查是否包含'],
-    ['Object', 'keys() 获取所有键'],
-    ['Object', 'values() 获取所有值'],
-    ['Object', 'entries() 获取键值对'],
-    ['Object', 'assign() 合并对象'],
-    ['Object', 'freeze() 冻结对象'],
-    ['JSON', 'parse() 解析 JSON'],
-    ['JSON', 'stringify() 序列化 JSON'],
-    ['Math', 'abs() 绝对值'],
-    ['Math', 'ceil() 向上取整'],
-    ['Math', 'floor() 向下取整'],
-    ['Math', 'round() 四舍五入'],
-    ['Math', 'max() 最大值'],
-    ['Math', 'min() 最小值'],
-    ['Math', 'random() 随机数'],
-    ['Math', 'sqrt() 平方根'],
-    ['Date', 'now() 当前时间戳'],
-    ['Date', 'getDate() 日期'],
-    ['Date', 'getMonth() 月份'],
-    ['Date', 'getFullYear() 年份'],
-    ['Date', 'getHours() 小时'],
-    ['Date', 'getMinutes() 分钟'],
-    ['Date', 'getSeconds() 秒'],
-    ['Promise', 'then() 成功回调'],
-    ['Promise', 'catch() 失败回调'],
-    ['Promise', 'all() 并行等待'],
-    ['Promise', 'race() 竞速'],
-    ['fetch', '发送网络请求'],
-    ['localStorage', 'getItem() / setItem() / removeItem()'],
-    ['sessionStorage', '同 localStorage，会话级'],
-    ['navigator', 'geolocation.getCurrentPosition() 获取位置']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = APIS.filter(function (a) {
-      if (!q) return true;
-      return a[0].toLowerCase().includes(q) || a[1].toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JS API 速查', '常用 JavaScript Web API 参考', 'js-api');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">类别</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">API</th></tr></thead>';
-    html += '<tbody>';
-    filtered.forEach(function (a) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + a[0] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + a[1] + '</td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var DATA = [
+  ['querySelector / querySelectorAll', 'DOM', 'CSS 选择器查找元素'],
+  ['createElement / appendChild', 'DOM', '创建并挂载节点'],
+  ['classList.add/remove/toggle', 'DOM', '类名操作'],
+  ['dataset', 'DOM', '读写 data-* 属性'],
+  ['IntersectionObserver', 'DOM', '元素进入视口回调（懒加载/曝光埋点）'],
+  ['MutationObserver', 'DOM', '监听 DOM 变更'],
+  ['ResizeObserver', 'DOM', '监听元素尺寸变化'],
+  ['fetch', '网络', 'async 请求；配合 AbortController 超时取消'],
+  ['WebSocket', '网络', '全双工通信 ws://'],
+  ['EventSource', '网络', 'SSE 服务器单向推送'],
+  ['navigator.clipboard', '设备', 'readText / writeText 剪贴板'],
+  ['navigator.mediaDevices', '设备', 'getUserMedia 摄像头麦克风'],
+  ['navigator.geolocation', '设备', 'getCurrentPosition 定位（需授权）'],
+  ['localStorage / sessionStorage', '存储', '持久 / 会话级键值存储（5MB）'],
+  ['IndexedDB', '存储', '浏览器端结构化大容量数据库'],
+  ['Cache API', '存储', 'caches.open 配合 SW 做离线缓存'],
+  ['crypto.subtle', '安全', 'digest / sign / verify / encrypt'],
+  ['crypto.getRandomValues', '安全', '密码学安全随机数'],
+  ['Notification', '系统', '桌面通知（需授权）'],
+  ['structuredClone', '数据', '深拷贝（含嵌套/日期）'],
+  ['Array.prototype.at', '数组', 'at(-1) 取末尾元素'],
+  ['Array.prototype.flatMap', '数组', 'map + flat(1)'],
+  ['Object.fromEntries', '数据', '键值对数组转对象'],
+  ['Intl.DateTimeFormat', '格式化', '时区/本地化日期格式'],
+  ['Intl.NumberFormat', '格式化', '本地化数字/货币'],
+  ['URL / URLSearchParams', '工具', 'URL 解析与查询参数'],
+  ['Blob / File / FileReader', '文件', '二进制数据与文件读取'],
+  ['FormData', '文件', '表单序列化（支持文件）'],
+  ['CompressionStream', '文件', 'gzip / deflate 压缩流'],
+  ['Web Workers', '并发', '后台线程，postMessage 通信'],
+  ['requestAnimationFrame', '渲染', '下一帧回调（动画循环）'],
+  ['requestIdleCallback', '渲染', '空闲时回调（低优任务）'],
+  ['performance.now / mark', '性能', '高精度计时与性能标记'],
+  ['matchMedia', '响应式', 'JS 查询媒体条件'],
+  ['history.pushState', '路由', 'SPA 无刷新改 URL'],
+  ['CustomEvent + dispatchEvent', '事件', '自定义事件'],
+  ['AbortController', '事件', '取消 fetch / 事件监听'],
+  ['queueMicrotask', '调度', '微任务队列'],
+  ['WeakMap / WeakRef', '数据', '不阻止垃圾回收的引用'],
+  ['Proxy / Reflect', '元编程', '拦截对象操作（Vue 响应式基础）']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['API', '分类', '说明'], DATA));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "js-api", "title": "JS API 速查", "desc": "常用 JavaScript Web API 参考", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['querySelector / querySelectorAll', 'DOM', 'CSS 选择器查找元素'],\n  ['createElement / appendChild', 'DOM', '创建并挂载节点'],\n  ['classList.add/remove/toggle', 'DOM', '类名操作'],\n  ['dataset', 'DOM', '读写 data-* 属性'],\n  ['IntersectionObserver', 'DOM', '元素进入视口回调（懒加载/曝光埋点）'],\n  ['MutationObserver', 'DOM', '监听 DOM 变更'],\n  ['ResizeObserver', 'DOM', '监听元素尺寸变化'],\n  ['fetch', '网络', 'async 请求；配合 AbortController 超时取消'],\n  ['WebSocket', '网络', '全双工通信 ws://'],\n  ['EventSource', '网络', 'SSE 服务器单向推送'],\n  ['navigator.clipboard', '设备', 'readText / writeText 剪贴板'],\n  ['navigator.mediaDevices', '设备', 'getUserMedia 摄像头麦克风'],\n  ['navigator.geolocation', '设备', 'getCurrentPosition 定位（需授权）'],\n  ['localStorage / sessionStorage', '存储', '持久 / 会话级键值存储（5MB）'],\n  ['IndexedDB', '存储', '浏览器端结构化大容量数据库'],\n  ['Cache API', '存储', 'caches.open 配合 SW 做离线缓存'],\n  ['crypto.subtle', '安全', 'digest / sign / verify / encrypt'],\n  ['crypto.getRandomValues', '安全', '密码学安全随机数'],\n  ['Notification', '系统', '桌面通知（需授权）'],\n  ['structuredClone', '数据', '深拷贝（含嵌套/日期）'],\n  ['Array.prototype.at', '数组', 'at(-1) 取末尾元素'],\n  ['Array.prototype.flatMap', '数组', 'map + flat(1)'],\n  ['Object.fromEntries', '数据', '键值对数组转对象'],\n  ['Intl.DateTimeFormat', '格式化', '时区/本地化日期格式'],\n  ['Intl.NumberFormat', '格式化', '本地化数字/货币'],\n  ['URL / URLSearchParams', '工具', 'URL 解析与查询参数'],\n  ['Blob / File / FileReader', '文件', '二进制数据与文件读取'],\n  ['FormData', '文件', '表单序列化（支持文件）'],\n  ['CompressionStream', '文件', 'gzip / deflate 压缩流'],\n  ['Web Workers', '并发', '后台线程，postMessage 通信'],\n  ['requestAnimationFrame', '渲染', '下一帧回调（动画循环）'],\n  ['requestIdleCallback', '渲染', '空闲时回调（低优任务）'],\n  ['performance.now / mark', '性能', '高精度计时与性能标记'],\n  ['matchMedia', '响应式', 'JS 查询媒体条件'],\n  ['history.pushState', '路由', 'SPA 无刷新改 URL'],\n  ['CustomEvent + dispatchEvent', '事件', '自定义事件'],\n  ['AbortController', '事件', '取消 fetch / 事件监听'],\n  ['queueMicrotask', '调度', '微任务队列'],\n  ['WeakMap / WeakRef', '数据', '不阻止垃圾回收的引用'],\n  ['Proxy / Reflect', '元编程', '拦截对象操作（Vue 响应式基础）']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['API', '分类', '说明'], DATA));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

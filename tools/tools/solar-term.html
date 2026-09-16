@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>二十四节气 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('二十四节气', '节气日期与说明：全年节气表 + 当前节气', 'solar-term');
+var year = T.num(2026, { min: 1901, max: 2099, style: 'width:100px' });
+var box = T.el('div');
+var MEANINGS = {
+  '立春': '春季开始，万物复苏', '雨水': '降雨增多，气温回升', '惊蛰': '春雷始鸣，惊醒蛰虫', '春分': '昼夜平分，春意正浓',
+  '清明': '天气清朗，踏青祭祖', '谷雨': '雨生百谷，播种时节', '立夏': '夏季开始，万物繁茂', '小满': '麦粒渐满，将熟未熟',
+  '芒种': '有芒作物成熟，忙于收种', '夏至': '白昼最长，盛夏将至', '小暑': '天气开始炎热', '大暑': '一年中最热时期',
+  '立秋': '秋季开始，暑去凉来', '处暑': '暑气至此而止', '白露': '天气转凉，露水凝白', '秋分': '昼夜再次平分',
+  '寒露': '露水增多，气温更低', '霜降': '天气渐冷，初霜出现', '立冬': '冬季开始，万物收藏', '小雪': '开始降雪，尚不大',
+  '大雪': '降雪增多，地面积雪', '冬至': '白昼最短，数九开始'
+};
+function run() {
+  T.clearEl(box);
+  var y = +year.value;
+  if (!y) return;
+  var terms = LU.Jieqi.yearTerms(y);
+  var cur = LU.Jieqi.current(new Date());
+  var rows = terms.map(function (t) {
+    var isCur = cur && cur.name === t.name && (t.month >= (new Date()).getMonth() + 1);
+    return [t.name, y + '-' + T.pad2(t.month) + '-' + T.pad2(t.day), MEANINGS[t.name] || '', isCur && cur.name === t.name ? '◀ 最近' : ''];
+  });
+  box.appendChild(T.kvTable([['当前节气', cur ? cur.name + '（' + MEANINGS[cur.name] + '）' : '—']]));
+  box.appendChild(T.el('span', { text: y + ' 年全年节气', class: 'field' }));
+  box.appendChild(T.refTable(['节气', '公历日期', '含义', ''], rows));
+}
+year.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '年份' }), year]));
+app.appendChild(box);
+app.appendChild(T.msg('节气日期采用 21 世纪通用近似公式，个别年份可能有 ±1 天误差。', ''));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "solar-term", "title": "二十四节气", "desc": "节气日期与说明：全年节气表 + 当前节气", "scripts": "", "code": "var year = T.num(2026, { min: 1901, max: 2099, style: 'width:100px' });\nvar box = T.el('div');\nvar MEANINGS = {\n  '立春': '春季开始，万物复苏', '雨水': '降雨增多，气温回升', '惊蛰': '春雷始鸣，惊醒蛰虫', '春分': '昼夜平分，春意正浓',\n  '清明': '天气清朗，踏青祭祖', '谷雨': '雨生百谷，播种时节', '立夏': '夏季开始，万物繁茂', '小满': '麦粒渐满，将熟未熟',\n  '芒种': '有芒作物成熟，忙于收种', '夏至': '白昼最长，盛夏将至', '小暑': '天气开始炎热', '大暑': '一年中最热时期',\n  '立秋': '秋季开始，暑去凉来', '处暑': '暑气至此而止', '白露': '天气转凉，露水凝白', '秋分': '昼夜再次平分',\n  '寒露': '露水增多，气温更低', '霜降': '天气渐冷，初霜出现', '立冬': '冬季开始，万物收藏', '小雪': '开始降雪，尚不大',\n  '大雪': '降雪增多，地面积雪', '冬至': '白昼最短，数九开始'\n};\nfunction run() {\n  T.clearEl(box);\n  var y = +year.value;\n  if (!y) return;\n  var terms = LU.Jieqi.yearTerms(y);\n  var cur = LU.Jieqi.current(new Date());\n  var rows = terms.map(function (t) {\n    var isCur = cur && cur.name === t.name && (t.month >= (new Date()).getMonth() + 1);\n    return [t.name, y + '-' + T.pad2(t.month) + '-' + T.pad2(t.day), MEANINGS[t.name] || '', isCur && cur.name === t.name ? '◀ 最近' : ''];\n  });\n  box.appendChild(T.kvTable([['当前节气', cur ? cur.name + '（' + MEANINGS[cur.name] + '）' : '—']]));\n  box.appendChild(T.el('span', { text: y + ' 年全年节气', class: 'field' }));\n  box.appendChild(T.refTable(['节气', '公历日期', '含义', ''], rows));\n}\nyear.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '年份' }), year]));\napp.appendChild(box);\napp.appendChild(T.msg('节气日期采用 21 世纪通用近似公式，个别年份可能有 ±1 天误差。', ''));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

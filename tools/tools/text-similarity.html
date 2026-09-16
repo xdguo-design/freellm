@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>文本相似度 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('文本相似度', '两段文本相似度对比（字符二元组 Dice 系数 + 共同片段）', 'text-similarity');
+var aIn = T.textarea('FreeLLM 收录了免费的 AI 模型与工具。');
+aIn.value = 'FreeLLM 收录了免费的 AI 模型与工具。';
+var bIn = T.textarea('FreeLLM 收录免费 AI 模型、工具和资源。');
+bIn.value = 'FreeLLM 收录免费 AI 模型、工具和资源。';
+var ratio = T.badge('—');
+var box = T.el('div');
+function run() {
+  var s = LF.Diff.similarity(aIn.value, bIn.value);
+  ratio.textContent = '相似度 ' + (s * 100).toFixed(1) + '%';
+  ratio.className = 'badge ' + (s > 0.8 ? 'ok' : s > 0.5 ? 'blue' : 'warn');
+  T.clearEl(box);
+  var ops = LF.Diff.diff(aIn.value, bIn.value);
+  var lines = [];
+  ops.forEach(function (o) {
+    if (o.t === '=') lines.push(o.a);
+    else if (o.t === '-') lines.push('【删：' + o.a + '】');
+    else lines.push('【增：' + o.a + '】');
+  });
+  box.appendChild(T.el('div', { class: 'output', style: 'min-height:100px;font-family:var(--font-sans);white-space:pre-wrap', text: lines.join('') }));
+}
+[aIn, bIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });
+app.appendChild(T.pane([T.field('文本 A', aIn), T.field('文本 B', bIn)]));
+app.appendChild(T.row([ratio]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "text-similarity", "title": "文本相似度", "desc": "两段文本相似度对比（字符二元组 Dice 系数 + 共同片段）", "scripts": "", "code": "var aIn = T.textarea('FreeLLM 收录了免费的 AI 模型与工具。');\naIn.value = 'FreeLLM 收录了免费的 AI 模型与工具。';\nvar bIn = T.textarea('FreeLLM 收录免费 AI 模型、工具和资源。');\nbIn.value = 'FreeLLM 收录免费 AI 模型、工具和资源。';\nvar ratio = T.badge('—');\nvar box = T.el('div');\nfunction run() {\n  var s = LF.Diff.similarity(aIn.value, bIn.value);\n  ratio.textContent = '相似度 ' + (s * 100).toFixed(1) + '%';\n  ratio.className = 'badge ' + (s > 0.8 ? 'ok' : s > 0.5 ? 'blue' : 'warn');\n  T.clearEl(box);\n  var ops = LF.Diff.diff(aIn.value, bIn.value);\n  var lines = [];\n  ops.forEach(function (o) {\n    if (o.t === '=') lines.push(o.a);\n    else if (o.t === '-') lines.push('【删：' + o.a + '】');\n    else lines.push('【增：' + o.a + '】');\n  });\n  box.appendChild(T.el('div', { class: 'output', style: 'min-height:100px;font-family:var(--font-sans);white-space:pre-wrap', text: lines.join('') }));\n}\n[aIn, bIn].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });\napp.appendChild(T.pane([T.field('文本 A', aIn), T.field('文本 B', bIn)]));\napp.appendChild(T.row([ratio]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

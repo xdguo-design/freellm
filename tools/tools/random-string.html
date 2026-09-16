@@ -2,81 +2,59 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>随机字符串 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('随机字符串', '随机数字/字母/混合字符串生成', 'random-string');
-
-  var length = T.el('input', { type: 'number', value: '16', min: '1', max: '1000', style: 'width:80px' });
-  var count = T.el('input', { type: 'number', value: '5', min: '1', max: '100', style: 'width:80px' });
-  var charset = T.select([
-    { value: 'alnum', label: '字母+数字' },
-    { value: 'alpha', label: '仅字母' },
-    { value: 'numeric', label: '仅数字' },
-    { value: 'hex', label: '十六进制' },
-    { value: 'binary', label: '二进制' },
-    { value: 'custom', label: '自定义' }
-  ]);
-  var customChars = T.el('input', { type: 'text', placeholder: '自定义字符集', style: 'flex:1' });
-
-  var output = T.textarea('生成结果', false);
-  output.readOnly = true;
-
-  var generateBtn = T.button('生成', generate, true);
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function generate() {
-    var len = parseInt(length.value) || 16;
-    var n = parseInt(count.value) || 5;
-    var chars = '';
-
-    switch (charset.value) {
-      case 'alnum': chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; break;
-      case 'alpha': chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'; break;
-      case 'numeric': chars = '0123456789'; break;
-      case 'hex': chars = '0123456789abcdef'; break;
-      case 'binary': chars = '01'; break;
-      case 'custom': chars = customChars.value; break;
-    }
-
-    if (!chars) { output.value = '请选择或输入字符集'; return; }
-
-    var results = [];
-    for (var j = 0; j < n; j++) {
-      var result = '';
-      var array = new Uint32Array(len);
-      crypto.getRandomValues(array);
-      for (var i = 0; i < len; i++) {
-        result += chars[array[i] % chars.length];
-      }
-      results.push(result);
-    }
-    output.value = results.join('\n');
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('随机字符串', '自定义字符集随机字符串批量生成', 'random-string');
+var len = T.num(16, { min: 1, max: 256, style: 'width:80px' });
+var count = T.num(10, { min: 1, max: 500, style: 'width:80px' });
+var preset = T.select([
+  { value: 'alnum', label: '字母+数字' },
+  { value: 'hex', label: '十六进制' },
+  { value: 'digits', label: '纯数字' },
+  { value: 'letters', label: '纯字母' },
+  { value: 'custom', label: '自定义字符集' }
+], 'alnum');
+var custom = T.input('abcdef0123456789', { class: 'grow mono', placeholder: '自定义字符集' });
+var output = T.out('');
+function gen() {
+  var pools = { alnum: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', hex: '0123456789abcdef', digits: '0123456789', letters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' };
+  var pool = preset.value === 'custom' ? custom.value : pools[preset.value];
+  if (!pool) { output.value = ''; return; }
+  var n = +count.value, L = +len.value;
+  var rnd = crypto.getRandomValues(new Uint32Array(n * L));
+  var lines = [];
+  for (var i = 0; i < n; i++) {
+    var s = '';
+    for (var j = 0; j < L; j++) s += pool[rnd[i * L + j] % pool.length];
+    lines.push(s);
   }
-
-  charset.addEventListener('change', function () {
-    customChars.style.display = charset.value === 'custom' ? 'flex' : 'none';
-  });
-  generateBtn.addEventListener('click', generate);
-
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '长度' }), length,
-    T.el('span', { text: '数量' }), count,
-    charset, customChars,
-    generateBtn, copyBtn
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
-
-  customChars.style.display = 'none';
-  generate();
+  output.value = lines.join('\n');
+}
+[len, count, custom, preset].forEach(function (el) { el.addEventListener('input', gen); });
+app.appendChild(T.pane([T.field('生成结果', output)], true));
+app.appendChild(T.row([T.el('span', { text: '预设' }), preset]));
+app.appendChild(T.row([T.el('span', { text: '长度' }), len, T.el('span', { text: '数量' }), count]));
+app.appendChild(T.row([custom, T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));
+gen();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "random-string", "title": "随机字符串", "desc": "自定义字符集随机字符串批量生成", "scripts": "", "code": "var len = T.num(16, { min: 1, max: 256, style: 'width:80px' });\nvar count = T.num(10, { min: 1, max: 500, style: 'width:80px' });\nvar preset = T.select([\n  { value: 'alnum', label: '字母+数字' },\n  { value: 'hex', label: '十六进制' },\n  { value: 'digits', label: '纯数字' },\n  { value: 'letters', label: '纯字母' },\n  { value: 'custom', label: '自定义字符集' }\n], 'alnum');\nvar custom = T.input('abcdef0123456789', { class: 'grow mono', placeholder: '自定义字符集' });\nvar output = T.out('');\nfunction gen() {\n  var pools = { alnum: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', hex: '0123456789abcdef', digits: '0123456789', letters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' };\n  var pool = preset.value === 'custom' ? custom.value : pools[preset.value];\n  if (!pool) { output.value = ''; return; }\n  var n = +count.value, L = +len.value;\n  var rnd = crypto.getRandomValues(new Uint32Array(n * L));\n  var lines = [];\n  for (var i = 0; i \u003c n; i++) {\n    var s = '';\n    for (var j = 0; j \u003c L; j++) s += pool[rnd[i * L + j] % pool.length];\n    lines.push(s);\n  }\n  output.value = lines.join('\\n');\n}\n[len, count, custom, preset].forEach(function (el) { el.addEventListener('input', gen); });\napp.appendChild(T.pane([T.field('生成结果', output)], true));\napp.appendChild(T.row([T.el('span', { text: '预设' }), preset]));\napp.appendChild(T.row([T.el('span', { text: '长度' }), len, T.el('span', { text: '数量' }), count]));\napp.appendChild(T.row([custom, T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

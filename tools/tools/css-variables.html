@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS 变量生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS 变量生成', '从主色生成 CSS 自定义属性色阶系统（含暗色覆盖）', 'css-variables');
+var primary = T.color('#1744E8');
+var prefix = T.input('--brand', { class: 'grow mono' });
+var dark = T.check('同时生成暗色变量');
+var output = T.out('');
+var previewBox = T.el('div', { style: 'display:flex;gap:6px;margin:12px 0' });
+function shade(rgb, l) {
+  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);
+  return LU.Color.hex(LU.Color.hslToRgb(hsl.h / 360, hsl.s, l));
+}
+function run() {
+  var rgb = LU.Color.parse(primary.value);
+  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);
+  var p = prefix.value || '--brand';
+  var lines = [':root {', '  ' + p + ': ' + primary.value + ';'];
+  var levels = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
+  levels.forEach(function (l, i) {
+    var name = i < 4 ? 100 + i * 100 : 500 + (i - 4) * 100;
+    lines.push('  ' + p + '-' + name + ': ' + shade(rgb, l) + ';');
+  });
+  lines.push('  ' + p + '-rgb: ' + rgb.r + ' ' + rgb.g + ' ' + rgb.b + ';');
+  lines.push('}');
+  if (dark._input.checked) {
+    lines.push('');
+    lines.push('[data-theme="dark"] {');
+    lines.push('  ' + p + ': ' + shade(rgb, Math.min(0.75, hsl.l + 0.25)) + ';');
+    lines.push('}');
+  }
+  output.value = lines.join('\n');
+  T.clearEl(previewBox);
+  [0.9, 0.7, 0.5, 0.3, 0.1].forEach(function (l) {
+    previewBox.appendChild(T.el('div', { style: 'flex:1;height:44px;border-radius:8px;background:' + shade(rgb, l) }));
+  });
+}
+app.appendChild(T.row([T.el('span', { text: '主色' }), primary, dark]));
+app.appendChild(T.row([T.el('span', { text: '变量前缀' }), prefix]));
+app.appendChild(previewBox);
+app.appendChild(T.pane([T.field('CSS 变量', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+[primary, prefix, dark._input].forEach(function (el) { el.addEventListener('input', run); });
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-variables", "title": "CSS 变量生成", "desc": "从主色生成 CSS 自定义属性色阶系统（含暗色覆盖）", "scripts": "", "code": "var primary = T.color('#1744E8');\nvar prefix = T.input('--brand', { class: 'grow mono' });\nvar dark = T.check('同时生成暗色变量');\nvar output = T.out('');\nvar previewBox = T.el('div', { style: 'display:flex;gap:6px;margin:12px 0' });\nfunction shade(rgb, l) {\n  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);\n  return LU.Color.hex(LU.Color.hslToRgb(hsl.h / 360, hsl.s, l));\n}\nfunction run() {\n  var rgb = LU.Color.parse(primary.value);\n  var hsl = LU.Color.rgbToHsl(rgb.r, rgb.g, rgb.b);\n  var p = prefix.value || '--brand';\n  var lines = [':root {', '  ' + p + ': ' + primary.value + ';'];\n  var levels = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];\n  levels.forEach(function (l, i) {\n    var name = i \u003c 4 ? 100 + i * 100 : 500 + (i - 4) * 100;\n    lines.push('  ' + p + '-' + name + ': ' + shade(rgb, l) + ';');\n  });\n  lines.push('  ' + p + '-rgb: ' + rgb.r + ' ' + rgb.g + ' ' + rgb.b + ';');\n  lines.push('}');\n  if (dark._input.checked) {\n    lines.push('');\n    lines.push('[data-theme=\"dark\"] {');\n    lines.push('  ' + p + ': ' + shade(rgb, Math.min(0.75, hsl.l + 0.25)) + ';');\n    lines.push('}');\n  }\n  output.value = lines.join('\\n');\n  T.clearEl(previewBox);\n  [0.9, 0.7, 0.5, 0.3, 0.1].forEach(function (l) {\n    previewBox.appendChild(T.el('div', { style: 'flex:1;height:44px;border-radius:8px;background:' + shade(rgb, l) }));\n  });\n}\napp.appendChild(T.row([T.el('span', { text: '主色' }), primary, dark]));\napp.appendChild(T.row([T.el('span', { text: '变量前缀' }), prefix]));\napp.appendChild(previewBox);\napp.appendChild(T.pane([T.field('CSS 变量', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\n[primary, prefix, dark._input].forEach(function (el) { el.addEventListener('input', run); });\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -2,56 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>闰年计算器 · FreeLLM</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>闰年计算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('闰年计算器', '公历/农历闰年查询', 'leap-year');
-
-  var year = T.el('input', { type: 'number', value: new Date().getFullYear(), min: '1', style: 'width:120px' });
-  var checkBtn = T.button('检查', check, true);
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.1em' });
-  var nearby = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  function isLeapYear(y) {
-    return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
-  }
-
-  function check() {
-    var y = parseInt(year.value) || 2024;
-    var leap = isLeapYear(y);
-
-    result.innerHTML = '<span style="font-size:2em">' + (leap ? '✅' : '❌') + '</span><br>' +
-      '<strong>' + y + ' 年' + (leap ? '是' : '不是') + '闰年</strong><br>' +
-      '<span style="color:var(--muted)">' + (leap ? '有 2月29日，共366天' : '无2月29日，共365天') + '</span>';
-
-    // Find nearby leap years
-    var leaps = [];
-    for (var i = y - 12; i <= y + 12; i++) {
-      if (isLeapYear(i)) leaps.push(i);
-    }
-    nearby.innerHTML = '<strong>附近的闰年:</strong><br>' + leaps.map(function (ly) {
-      var style = ly === y ? 'color:var(--accent);font-weight:bold' : '';
-      return '<span style="' + style + '">' + ly + '</span>';
-    }).join(' · ');
-  }
-
-  year.addEventListener('input', function () { setTimeout(check, 100); });
-  checkBtn.addEventListener('click', check);
-
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '年份' }), year, checkBtn]));
-  app.appendChild(result);
-  app.appendChild(nearby);
-
-  check();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('闰年计算', '公历闰年判断 + 范围内所有闰年列表', 'leap-year');
+var year = T.num(2028, { min: 1, max: 9999, style: 'width:110px' });
+var box = T.el('div');
+function isLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }
+function run() {
+  var y = +year.value;
+  T.clearEl(box);
+  if (!y) return;
+  var leap = isLeap(y);
+  var next = y + 1;
+  while (!isLeap(next)) next++;
+  var prev = y - 1;
+  while (prev > 0 && !isLeap(prev)) prev--;
+  box.appendChild(T.kvTable([
+    [y + ' 年', leap ? '✓ 闰年（366 天，2 月有 29 天）' : '✗ 平年（365 天）'],
+    ['判断规则', (y % 4 === 0 ? '✓ 能被 4 整除' : '✗ 不能被 4 整除') + (y % 100 === 0 ? ' · 且' + (y % 400 === 0 ? '能' : '不能') + '被 400 整除（世纪年）' : '（非世纪年）')],
+    ['上一个闰年', prev > 0 ? prev : '—'],
+    ['下一个闰年', next],
+    ['距今', next - y + ' 年后']
+  ]));
+  var list = [];
+  for (var i = y; list.length < 12 && i < y + 60; i++) if (isLeap(i)) list.push(i);
+  box.appendChild(T.el('span', { text: '未来 12 个闰年', class: 'field' }));
+  box.appendChild(T.el('p', { text: list.join(' · '), style: 'font-family:var(--font-mono)' }));
+}
+year.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '年份' }), year]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "leap-year", "title": "闰年计算", "desc": "公历闰年判断 + 范围内所有闰年列表", "scripts": "", "code": "var year = T.num(2028, { min: 1, max: 9999, style: 'width:110px' });\nvar box = T.el('div');\nfunction isLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }\nfunction run() {\n  var y = +year.value;\n  T.clearEl(box);\n  if (!y) return;\n  var leap = isLeap(y);\n  var next = y + 1;\n  while (!isLeap(next)) next++;\n  var prev = y - 1;\n  while (prev > 0 && !isLeap(prev)) prev--;\n  box.appendChild(T.kvTable([\n    [y + ' 年', leap ? '✓ 闰年（366 天，2 月有 29 天）' : '✗ 平年（365 天）'],\n    ['判断规则', (y % 4 === 0 ? '✓ 能被 4 整除' : '✗ 不能被 4 整除') + (y % 100 === 0 ? ' · 且' + (y % 400 === 0 ? '能' : '不能') + '被 400 整除（世纪年）' : '（非世纪年）')],\n    ['上一个闰年', prev > 0 ? prev : '—'],\n    ['下一个闰年', next],\n    ['距今', next - y + ' 年后']\n  ]));\n  var list = [];\n  for (var i = y; list.length \u003c 12 && i \u003c y + 60; i++) if (isLeap(i)) list.push(i);\n  box.appendChild(T.el('span', { text: '未来 12 个闰年', class: 'field' }));\n  box.appendChild(T.el('p', { text: list.join(' · '), style: 'font-family:var(--font-mono)' }));\n}\nyear.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '年份' }), year]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

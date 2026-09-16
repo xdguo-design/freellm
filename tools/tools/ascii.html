@@ -2,63 +2,49 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>ASCII 对照表 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('ASCII 对照表', '0-127 完整 ASCII 字符对照', 'ascii');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索字符或代码...', style: 'width:100%' });
-
-  var table = T.el('div', { class: 'output dark' });
-
-  var ASCII = [];
-  var names = {
-    0: 'NUL', 1: 'SOH', 2: 'STX', 3: 'ETX', 4: 'EOT', 5: 'ENQ', 6: 'ACK', 7: 'BEL',
-    8: 'BS', 9: 'TAB', 10: 'LF', 11: 'VT', 12: 'FF', 13: 'CR', 14: 'SO', 15: 'SI',
-    16: 'DLE', 17: 'DC1', 18: 'DC2', 19: 'DC3', 20: 'DC4', 21: 'NAK', 22: 'SYN', 23: 'ETB',
-    24: 'CAN', 25: 'EM', 26: 'SUB', 27: 'ESC', 28: 'FS', 29: 'GS', 30: 'RS', 31: 'US',
-    32: 'SPACE', 127: 'DEL'
-  };
-
-  for (var i = 0; i < 128; i++) {
-    var char = i >= 32 && i < 127 ? String.fromCharCode(i) : '';
-    var name = names[i] || '';
-    ASCII.push([i, char, name]);
-  }
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = ASCII.filter(function (a) {
-      if (!q) return true;
-      return String(a[0]).includes(q) || a[1].toLowerCase().includes(q) || a[2].toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ASCII 对照表', '0-127 完整 ASCII 字符对照（十进制 / 十六进制 / 字符）', 'ascii');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:4px">';
-    filtered.forEach(function (a) {
-      var display = a[1] || a[2] || '?';
-      var tooltip = 'Code: ' + a[0] + (a[2] ? ' (' + a[2] + ')' : '');
-      html += '<div style="padding:8px;border:1px solid var(--line);border-radius:4px;text-align:center;cursor:pointer" title="' + tooltip + '" onclick="navigator.clipboard.writeText(String.fromCharCode(' + a[0] + '))">';
-      html += '<div style="font-size:1.5em;font-family:monospace">' + (a[1] || '<span style="color:var(--muted)">·</span>') + '</div>';
-      html += '<div style="font-size:0.7em;color:var(--muted)">' + a[0] + '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var NAMES = { 0: 'NUL 空字符', 7: 'BEL 响铃', 8: 'BS 退格', 9: 'TAB 制表', 10: 'LF 换行', 13: 'CR 回车', 27: 'ESC 退出', 32: '空格', 127: 'DEL 删除' };
+var rows = [];
+for (var i = 0; i < 128; i++) {
+  var ch = i < 32 || i === 127 ? '·' : String.fromCharCode(i);
+  rows.push([i, '0x' + i.toString(16).toUpperCase().padStart(2, '0'), ch, NAMES[i] || (i < 32 ? '控制字符' : '')]);
+}
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['十进制', '十六进制', '字符', '名称'], rows, function (r) { T.copy(String(r[0])); }));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制十进制码' })]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "ascii", "title": "ASCII 对照表", "desc": "0-127 完整 ASCII 字符对照（十进制 / 十六进制 / 字符）", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar NAMES = { 0: 'NUL 空字符', 7: 'BEL 响铃', 8: 'BS 退格', 9: 'TAB 制表', 10: 'LF 换行', 13: 'CR 回车', 27: 'ESC 退出', 32: '空格', 127: 'DEL 删除' };\nvar rows = [];\nfor (var i = 0; i \u003c 128; i++) {\n  var ch = i \u003c 32 || i === 127 ? '·' : String.fromCharCode(i);\n  rows.push([i, '0x' + i.toString(16).toUpperCase().padStart(2, '0'), ch, NAMES[i] || (i \u003c 32 ? '控制字符' : '')]);\n}\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['十进制', '十六进制', '字符', '名称'], rows, function (r) { T.copy(String(r[0])); }));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '点击行复制十进制码' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

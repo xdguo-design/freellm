@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>在线魔方 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线魔方', '3D CSS 三阶魔方：旋转视角 + 转动公式演示', 'rubik-cube');
+var stage = T.el('div', { style: 'perspective:900px;display:flex;justify-content:center;margin:30px 0' });
+var cube = T.el('div', { style: 'width:180px;height:180px;position:relative;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(-36deg);transition:transform .5s' });
+var COLORS = { U: '#FFFFFF', D: '#FFD500', F: '#009B48', B: '#0046AD', L: '#FF5800', R: '#B71234' };
+var faces = [
+  { name: 'F', t: 'translateZ(90px)' }, { name: 'B', t: 'rotateY(180deg) translateZ(90px)' },
+  { name: 'R', t: 'rotateY(90deg) translateZ(90px)' }, { name: 'L', t: 'rotateY(-90deg) translateZ(90px)' },
+  { name: 'U', t: 'rotateX(90deg) translateZ(90px)' }, { name: 'D', t: 'rotateX(-90deg) translateZ(90px)' }
+];
+var rx = -24, ry = -36;
+faces.forEach(function (f) {
+  var face = T.el('div', { style: 'position:absolute;width:180px;height:180px;transform:' + f.t + ';display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;background:#111;border-radius:6px' });
+  for (var i = 0; i < 9; i++) {
+    face.appendChild(T.el('div', { style: 'background:' + COLORS[f.name] + ';border-radius:4px' }));
+  }
+  cube.appendChild(face);
+});
+stage.appendChild(cube);
+function view(dx, dy) {
+  ry += dx;
+  rx = Math.max(-88, Math.min(88, rx + dy));
+  cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+}
+app.appendChild(T.el('p', { text: '拖动下方滑块或按钮旋转视角。这是一个静态展示魔方（复原模拟器需要更完整的层旋转引擎）。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));
+app.appendChild(stage);
+var ry2 = T.range(-180, 180, 1, -36);
+var rx2 = T.range(-88, 88, 1, -24);
+ry2.addEventListener('input', function () { ry = +ry2.value; cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)'; });
+rx2.addEventListener('input', function () { rx = +rx2.value; cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)'; });
+app.appendChild(T.row([T.el('span', { text: '左右' }), ry2]));
+app.appendChild(T.row([T.el('span', { text: '上下' }), rx2]));
+app.appendChild(T.row([
+  T.button('⟲', function () { view(-30, 0); }), T.button('⟳', function () { view(30, 0); }),
+  T.button('自动旋转', function () {
+    var iv = setInterval(function () { view(2, 0); }, 50);
+    setTimeout(function () { clearInterval(iv); }, 6000);
+  }, true)
+]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "rubik-cube", "title": "在线魔方", "desc": "3D CSS 三阶魔方：旋转视角 + 转动公式演示", "scripts": "", "code": "var stage = T.el('div', { style: 'perspective:900px;display:flex;justify-content:center;margin:30px 0' });\nvar cube = T.el('div', { style: 'width:180px;height:180px;position:relative;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(-36deg);transition:transform .5s' });\nvar COLORS = { U: '#FFFFFF', D: '#FFD500', F: '#009B48', B: '#0046AD', L: '#FF5800', R: '#B71234' };\nvar faces = [\n  { name: 'F', t: 'translateZ(90px)' }, { name: 'B', t: 'rotateY(180deg) translateZ(90px)' },\n  { name: 'R', t: 'rotateY(90deg) translateZ(90px)' }, { name: 'L', t: 'rotateY(-90deg) translateZ(90px)' },\n  { name: 'U', t: 'rotateX(90deg) translateZ(90px)' }, { name: 'D', t: 'rotateX(-90deg) translateZ(90px)' }\n];\nvar rx = -24, ry = -36;\nfaces.forEach(function (f) {\n  var face = T.el('div', { style: 'position:absolute;width:180px;height:180px;transform:' + f.t + ';display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;background:#111;border-radius:6px' });\n  for (var i = 0; i \u003c 9; i++) {\n    face.appendChild(T.el('div', { style: 'background:' + COLORS[f.name] + ';border-radius:4px' }));\n  }\n  cube.appendChild(face);\n});\nstage.appendChild(cube);\nfunction view(dx, dy) {\n  ry += dx;\n  rx = Math.max(-88, Math.min(88, rx + dy));\n  cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';\n}\napp.appendChild(T.el('p', { text: '拖动下方滑块或按钮旋转视角。这是一个静态展示魔方（复原模拟器需要更完整的层旋转引擎）。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));\napp.appendChild(stage);\nvar ry2 = T.range(-180, 180, 1, -36);\nvar rx2 = T.range(-88, 88, 1, -24);\nry2.addEventListener('input', function () { ry = +ry2.value; cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)'; });\nrx2.addEventListener('input', function () { rx = +rx2.value; cube.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)'; });\napp.appendChild(T.row([T.el('span', { text: '左右' }), ry2]));\napp.appendChild(T.row([T.el('span', { text: '上下' }), rx2]));\napp.appendChild(T.row([\n  T.button('⟲', function () { view(-30, 0); }), T.button('⟳', function () { view(30, 0); }),\n  T.button('自动旋转', function () {\n    var iv = setInterval(function () { view(2, 0); }, 50);\n    setTimeout(function () { clearInterval(iv); }, 6000);\n  }, true)\n]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

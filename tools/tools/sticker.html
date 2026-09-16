@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>贴纸生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('贴纸生成', '生成带圆角 / 白边描边的贴纸风格图片（透明 PNG）', 'sticker');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var radius = T.range(0, 120, 1, 40);
+var border = T.range(0, 40, 1, 12);
+var borderColor = T.color('#FFFFFF');
+var size = T.num(512, { min: 64, style: 'width:90px' });
+var text = T.input('', { class: 'grow', placeholder: '贴纸底部文字（可选）' });
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px dashed var(--line);border-radius:8px;display:none;background:repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/16px 16px' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+function render() {
+  if (!img) return;
+  var S = +size.value;
+  canvas.width = S;
+  canvas.height = S;
+  var ctx = canvas.getContext('2d');
+  var pad = +border.value;
+  var inner = S - pad * 2;
+  ctx.fillStyle = borderColor.value;
+  var r = +radius.value;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(0, 0, S, S, r);
+  else ctx.rect(0, 0, S, S);
+  ctx.fill();
+  ctx.save();
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(pad, pad, inner, inner, Math.max(0, r - pad));
+  else ctx.rect(pad, pad, inner, inner);
+  ctx.clip();
+  var scale = Math.max(inner / img.width, inner / img.height);
+  ctx.drawImage(img, pad + (inner - img.width * scale) / 2, pad + (inner - img.height * scale) / 2, img.width * scale, img.height * scale);
+  ctx.restore();
+  if (text.value) {
+    ctx.font = '700 ' + Math.round(S / 14) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = S / 60;
+    ctx.strokeStyle = borderColor.value;
+    ctx.strokeText(text.value, S / 2, S - pad / 2 - 4);
+    ctx.fillStyle = '#2F3437';
+    ctx.fillText(text.value, S / 2, S - pad / 2 - 4);
+  }
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+[radius, border, borderColor, size, text].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '尺寸' }), size, T.el('span', { text: '圆角' }), radius, T.el('span', { text: '白边' }), border, borderColor]));
+app.appendChild(T.row([text]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载贴纸 PNG', function () { T.dlCanvas(canvas, 'sticker.png'); }, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "sticker", "title": "贴纸生成", "desc": "生成带圆角 / 白边描边的贴纸风格图片（透明 PNG）", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar radius = T.range(0, 120, 1, 40);\nvar border = T.range(0, 40, 1, 12);\nvar borderColor = T.color('#FFFFFF');\nvar size = T.num(512, { min: 64, style: 'width:90px' });\nvar text = T.input('', { class: 'grow', placeholder: '贴纸底部文字（可选）' });\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px dashed var(--line);border-radius:8px;display:none;background:repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/16px 16px' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  var S = +size.value;\n  canvas.width = S;\n  canvas.height = S;\n  var ctx = canvas.getContext('2d');\n  var pad = +border.value;\n  var inner = S - pad * 2;\n  ctx.fillStyle = borderColor.value;\n  var r = +radius.value;\n  ctx.beginPath();\n  if (ctx.roundRect) ctx.roundRect(0, 0, S, S, r);\n  else ctx.rect(0, 0, S, S);\n  ctx.fill();\n  ctx.save();\n  ctx.beginPath();\n  if (ctx.roundRect) ctx.roundRect(pad, pad, inner, inner, Math.max(0, r - pad));\n  else ctx.rect(pad, pad, inner, inner);\n  ctx.clip();\n  var scale = Math.max(inner / img.width, inner / img.height);\n  ctx.drawImage(img, pad + (inner - img.width * scale) / 2, pad + (inner - img.height * scale) / 2, img.width * scale, img.height * scale);\n  ctx.restore();\n  if (text.value) {\n    ctx.font = '700 ' + Math.round(S / 14) + 'px sans-serif';\n    ctx.textAlign = 'center';\n    ctx.lineWidth = S / 60;\n    ctx.strokeStyle = borderColor.value;\n    ctx.strokeText(text.value, S / 2, S - pad / 2 - 4);\n    ctx.fillStyle = '#2F3437';\n    ctx.fillText(text.value, S / 2, S - pad / 2 - 4);\n  }\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\n[radius, border, borderColor, size, text].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '尺寸' }), size, T.el('span', { text: '圆角' }), radius, T.el('span', { text: '白边' }), border, borderColor]));\napp.appendChild(T.row([text]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载贴纸 PNG', function () { T.dlCanvas(canvas, 'sticker.png'); }, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

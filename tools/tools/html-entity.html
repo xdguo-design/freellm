@@ -2,69 +2,54 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HTML 实体编解码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HTML 实体编解码', 'HTML 实体字符与原始字符互转', 'html-entity');
-
-  var mode = T.select([
-    { value: 'encode', label: '编码' },
-    { value: 'decode', label: '解码' }
-  ]);
-  var input = T.textarea('输入文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  var entities = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-    '/': '&#x2F;',
-    '`': '&#x60;',
-    '=': '&#x3D;'
-  };
-  var reverseEntities = {};
-  for (var k in entities) reverseEntities[entities[k]] = k;
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    if (mode.value === 'encode') {
-      output.value = v.replace(/[&<>"'`=/]/g, function (c) { return entities[c]; });
-    } else {
-      var decoded = v;
-      var entityRegex = /&(amp|lt|gt|quot|#[0-9]+|#x[0-9a-fA-F]+);/g;
-      decoded = decoded.replace(entityRegex, function (m) {
-        if (m === '&amp;') return '&';
-        if (m === '&lt;') return '<';
-        if (m === '&gt;') return '>';
-        if (m === '&quot;') return '"';
-        if (m.startsWith('&#x')) return String.fromCharCode(parseInt(m.slice(3, -1), 16));
-        if (m.startsWith('&#')) return String.fromCharCode(parseInt(m.slice(2, -1)));
-        return m;
-      });
-      output.value = decoded;
-    }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 实体编解码', 'HTML 实体字符 ↔ 原始字符互转', 'html-entity');
+var input = T.textarea('输入文本或含实体的 HTML…');
+var output = T.out('输出…');
+var mode = T.select([{value:'enc',label:'原始 → 实体'},{value:'dec',label:'实体 → 原始'}],'enc');
+var all = T.check('编码所有非 ASCII（&#xxxx;）');
+function enc(s) {
+  s = s.replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+  if (all._input.checked) {
+    s = s.replace(/[\x80-\uFFFF]/g, function (ch) { return '&#' + ch.codePointAt(0) + ';'; });
   }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  return s;
+}
+function dec(s) {
+  var el = T.el('textarea', { style: 'display:none' });
+  el.innerHTML = s;
+  return el.value;
+}
+function run() {
+  var v = input.value;
+  try {
+    output.value = mode.value === 'enc' ? enc(v) : dec(v);
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode, all._input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, all, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "html-entity", "title": "HTML 实体编解码", "desc": "HTML 实体字符 ↔ 原始字符互转", "scripts": "", "code": "var input = T.textarea('输入文本或含实体的 HTML…');\nvar output = T.out('输出…');\nvar mode = T.select([{value:'enc',label:'原始 → 实体'},{value:'dec',label:'实体 → 原始'}],'enc');\nvar all = T.check('编码所有非 ASCII（&#xxxx;）');\nfunction enc(s) {\n  s = s.replace(/[&\u003c>\"']/g, function (c) { return { '&': '&amp;', '\u003c': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[c]; });\n  if (all._input.checked) {\n    s = s.replace(/[\\x80-\\uFFFF]/g, function (ch) { return '&#' + ch.codePointAt(0) + ';'; });\n  }\n  return s;\n}\nfunction dec(s) {\n  var el = T.el('textarea', { style: 'display:none' });\n  el.innerHTML = s;\n  return el.value;\n}\nfunction run() {\n  var v = input.value;\n  try {\n    output.value = mode.value === 'enc' ? enc(v) : dec(v);\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode, all._input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, all, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

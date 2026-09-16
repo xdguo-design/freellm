@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>模板切图 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('模板切图', '按预设模板处理：九宫格 / 长图拼接 / 照片墙拼贴', 'image-template');
+var tpl = T.select([
+  { value: 'grid3', label: '九宫格发圈（3×3 独立图）' },
+  { value: 'long', label: '长图（纵向拼接）' },
+  { value: 'wall', label: '照片墙（4 图 2×2 拼贴）' }
+], 'long');
+var gap = T.range(0, 30, 1, 10);
+var multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });
+document.body.appendChild(multi);
+var imgs = [];
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var tiles = T.el('div', { class: 'row' });
+multi.addEventListener('change', function () {
+  var files = Array.from(multi.files);
+  var loaded = 0;
+  files.forEach(function (f) {
+    T.loadImage(function (img) {
+      imgs.push(img);
+      loaded++;
+      if (loaded === files.length) render();
+    });
+  });
+});
+function render() {
+  T.clearEl(tiles);
+  if (!imgs.length) return;
+  var g = +gap.value;
+  var W = 900;
+  if (tpl.value === 'grid3') {
+    var img = imgs[0];
+    if (!img) return;
+    var count = 3;
+    var tw = Math.floor(img.width / count), th = Math.floor(img.height / count);
+    T.clearEl(tiles);
+    for (var r = 0; r < count; r++) for (var c = 0; c < count; c++) {
+      var cell = T.el('canvas', { width: tw, height: th, style: 'width:90px;border-radius:6px;cursor:pointer', title: '点击下载' });
+      cell.getContext('2d').drawImage(img, c * tw, r * th, tw, th, 0, 0, tw, th);
+      (function (cnv, name) { cnv.addEventListener('click', function () { T.dlCanvas(cnv, name); }); })(cell, 'grid-' + (r + 1) + (c + 1) + '.png');
+      tiles.appendChild(cell);
+    }
+    canvas.style.display = 'none';
+    return;
+  }
+  if (tpl.value === 'long') {
+    var totalH = imgs.reduce(function (s, im) { return s + Math.round(im.height / im.width * W) + g; }, -g);
+    canvas.width = W;
+    canvas.height = totalH;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, totalH);
+    var y = 0;
+    imgs.forEach(function (im) {
+      var h = Math.round(im.height / im.width * W);
+      ctx.drawImage(im, 0, y, W, h);
+      y += h + g;
+    });
+  } else {
+    var cell2 = Math.floor((W - g) / 2);
+    canvas.width = W;
+    canvas.height = cell2 * 2 + g;
+    var ctx2 = canvas.getContext('2d');
+    ctx2.fillStyle = '#fff';
+    ctx2.fillRect(0, 0, W, canvas.height);
+    imgs.slice(0, 4).forEach(function (im, i) {
+      var x = (i % 2) * (cell2 + g);
+      var y2 = Math.floor(i / 2) * (cell2 + g);
+      var scale = Math.max(cell2 / im.width, cell2 / im.height);
+      ctx2.drawImage(im, x + (cell2 - im.width * scale) / 2, y2 + (cell2 - im.height * scale) / 2, im.width * scale, im.height * scale);
+    });
+  }
+  canvas.style.display = '';
+}
+[tpl, gap].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(T.row([T.button('添加图片', function () { multi.click(); }, true), tpl, T.el('span', { text: '间距' }), gap]));
+app.appendChild(canvas);
+app.appendChild(tiles);
+app.appendChild(T.row([T.button('下载结果', function () { T.dlCanvas(canvas, 'template.png'); })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-template", "title": "模板切图", "desc": "按预设模板处理：九宫格 / 长图拼接 / 照片墙拼贴", "scripts": "", "code": "var tpl = T.select([\n  { value: 'grid3', label: '九宫格发圈（3×3 独立图）' },\n  { value: 'long', label: '长图（纵向拼接）' },\n  { value: 'wall', label: '照片墙（4 图 2×2 拼贴）' }\n], 'long');\nvar gap = T.range(0, 30, 1, 10);\nvar multi = T.el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none' });\ndocument.body.appendChild(multi);\nvar imgs = [];\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar tiles = T.el('div', { class: 'row' });\nmulti.addEventListener('change', function () {\n  var files = Array.from(multi.files);\n  var loaded = 0;\n  files.forEach(function (f) {\n    T.loadImage(function (img) {\n      imgs.push(img);\n      loaded++;\n      if (loaded === files.length) render();\n    });\n  });\n});\nfunction render() {\n  T.clearEl(tiles);\n  if (!imgs.length) return;\n  var g = +gap.value;\n  var W = 900;\n  if (tpl.value === 'grid3') {\n    var img = imgs[0];\n    if (!img) return;\n    var count = 3;\n    var tw = Math.floor(img.width / count), th = Math.floor(img.height / count);\n    T.clearEl(tiles);\n    for (var r = 0; r \u003c count; r++) for (var c = 0; c \u003c count; c++) {\n      var cell = T.el('canvas', { width: tw, height: th, style: 'width:90px;border-radius:6px;cursor:pointer', title: '点击下载' });\n      cell.getContext('2d').drawImage(img, c * tw, r * th, tw, th, 0, 0, tw, th);\n      (function (cnv, name) { cnv.addEventListener('click', function () { T.dlCanvas(cnv, name); }); })(cell, 'grid-' + (r + 1) + (c + 1) + '.png');\n      tiles.appendChild(cell);\n    }\n    canvas.style.display = 'none';\n    return;\n  }\n  if (tpl.value === 'long') {\n    var totalH = imgs.reduce(function (s, im) { return s + Math.round(im.height / im.width * W) + g; }, -g);\n    canvas.width = W;\n    canvas.height = totalH;\n    var ctx = canvas.getContext('2d');\n    ctx.fillStyle = '#fff';\n    ctx.fillRect(0, 0, W, totalH);\n    var y = 0;\n    imgs.forEach(function (im) {\n      var h = Math.round(im.height / im.width * W);\n      ctx.drawImage(im, 0, y, W, h);\n      y += h + g;\n    });\n  } else {\n    var cell2 = Math.floor((W - g) / 2);\n    canvas.width = W;\n    canvas.height = cell2 * 2 + g;\n    var ctx2 = canvas.getContext('2d');\n    ctx2.fillStyle = '#fff';\n    ctx2.fillRect(0, 0, W, canvas.height);\n    imgs.slice(0, 4).forEach(function (im, i) {\n      var x = (i % 2) * (cell2 + g);\n      var y2 = Math.floor(i / 2) * (cell2 + g);\n      var scale = Math.max(cell2 / im.width, cell2 / im.height);\n      ctx2.drawImage(im, x + (cell2 - im.width * scale) / 2, y2 + (cell2 - im.height * scale) / 2, im.width * scale, im.height * scale);\n    });\n  }\n  canvas.style.display = '';\n}\n[tpl, gap].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(T.row([T.button('添加图片', function () { multi.click(); }, true), tpl, T.el('span', { text: '间距' }), gap]));\napp.appendChild(canvas);\napp.appendChild(tiles);\napp.appendChild(T.row([T.button('下载结果', function () { T.dlCanvas(canvas, 'template.png'); })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

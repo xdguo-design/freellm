@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>在线录屏 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线录屏', '浏览器录屏（屏幕/窗口/标签页）+ 下载 WebM，需授权', 'screen-record');
+var btn = T.button('开始录屏', null, true);
+var status = T.badge('未开始');
+var timeEl = T.stat('00:00', '时长');
+var preview = T.el('video', { autoplay: '', muted: '', style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });
+var stream = null, recorder = null, chunks = [], timer = 0, seconds = 0;
+var lastBlob = null;
+btn.onclick = function () {
+  if (stream) { stop(); return; }
+  navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false }).then(function (s) {
+    stream = s;
+    preview.srcObject = s;
+    preview.style.display = '';
+    chunks = [];
+    recorder = new MediaRecorder(s, { mimeType: MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm' });
+    recorder.ondataavailable = function (e) { chunks.push(e.data); };
+    recorder.onstop = function () {
+      lastBlob = new Blob(chunks, { type: 'video/webm' });
+      T.toast('录制完成：' + T.fmtBytes(lastBlob.size));
+    };
+    recorder.start(1000);
+    seconds = 0;
+    timer = setInterval(function () {
+      seconds++;
+      timeEl.firstChild.textContent = T.pad2(Math.floor(seconds / 60)) + ':' + T.pad2(seconds % 60);
+    }, 1000);
+    status.textContent = '🔴 录制中（再次点击按钮停止）';
+    status.className = 'badge warn';
+    btn.firstChild.textContent = '停止录制';
+    s.getVideoTracks()[0].addEventListener('ended', stop);
+  }).catch(function (e) { T.toast('未授权或取消'); });
+};
+function stop() {
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+  if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+  clearInterval(timer);
+  stream = null;
+  preview.style.display = 'none';
+  status.textContent = '已停止';
+  status.className = 'badge';
+  btn.firstChild.textContent = '开始录屏';
+}
+app.appendChild(T.row([btn, timeEl, status]));
+app.appendChild(preview);
+app.appendChild(T.row([T.button('下载录像 WebM', function () {
+  if (lastBlob) T.download('screen-' + Date.now() + '.webm', lastBlob);
+  else T.toast('还没有录制内容');
+})]));
+app.appendChild(T.msg('录制内容仅在本地处理，不上传。系统音频录制视浏览器支持而定。', ''));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "screen-record", "title": "在线录屏", "desc": "浏览器录屏（屏幕/窗口/标签页）+ 下载 WebM，需授权", "scripts": "", "code": "var btn = T.button('开始录屏', null, true);\nvar status = T.badge('未开始');\nvar timeEl = T.stat('00:00', '时长');\nvar preview = T.el('video', { autoplay: '', muted: '', style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });\nvar stream = null, recorder = null, chunks = [], timer = 0, seconds = 0;\nvar lastBlob = null;\nbtn.onclick = function () {\n  if (stream) { stop(); return; }\n  navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false }).then(function (s) {\n    stream = s;\n    preview.srcObject = s;\n    preview.style.display = '';\n    chunks = [];\n    recorder = new MediaRecorder(s, { mimeType: MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm' });\n    recorder.ondataavailable = function (e) { chunks.push(e.data); };\n    recorder.onstop = function () {\n      lastBlob = new Blob(chunks, { type: 'video/webm' });\n      T.toast('录制完成：' + T.fmtBytes(lastBlob.size));\n    };\n    recorder.start(1000);\n    seconds = 0;\n    timer = setInterval(function () {\n      seconds++;\n      timeEl.firstChild.textContent = T.pad2(Math.floor(seconds / 60)) + ':' + T.pad2(seconds % 60);\n    }, 1000);\n    status.textContent = '🔴 录制中（再次点击按钮停止）';\n    status.className = 'badge warn';\n    btn.firstChild.textContent = '停止录制';\n    s.getVideoTracks()[0].addEventListener('ended', stop);\n  }).catch(function (e) { T.toast('未授权或取消'); });\n};\nfunction stop() {\n  if (recorder && recorder.state !== 'inactive') recorder.stop();\n  if (stream) stream.getTracks().forEach(function (t) { t.stop(); });\n  clearInterval(timer);\n  stream = null;\n  preview.style.display = 'none';\n  status.textContent = '已停止';\n  status.className = 'badge';\n  btn.firstChild.textContent = '开始录屏';\n}\napp.appendChild(T.row([btn, timeEl, status]));\napp.appendChild(preview);\napp.appendChild(T.row([T.button('下载录像 WebM', function () {\n  if (lastBlob) T.download('screen-' + Date.now() + '.webm', lastBlob);\n  else T.toast('还没有录制内容');\n})]));\napp.appendChild(T.msg('录制内容仅在本地处理，不上传。系统音频录制视浏览器支持而定。', ''));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

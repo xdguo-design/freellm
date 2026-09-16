@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>频谱可视化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('频谱可视化', '麦克风音频实时频谱（WebAudio AnalyserNode），需授权', 'spectrum');
+var canvas = T.el('canvas', { width: 860, height: 300, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--code-bg)' });
+var status = T.badge('点击启动麦克风');
+var mode = T.select([{value:'bar',label:'柱状频谱'},{value:'wave',label:'波形'}],'bar');
+var ctx = canvas.getContext('2d');
+var audioCtx = null, analyser = null, running = false;
+function startMic() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    source.connect(analyser);
+    status.textContent = '🎤 采集中（对麦克风说话/播放音乐）';
+    status.className = 'badge ok';
+    if (!running) { running = true; draw(); }
+  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });
+}
+function draw() {
+  if (!running) return;
+  requestAnimationFrame(draw);
+  if (!analyser) return;
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (mode.value === 'bar') {
+    var data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    var bars = 64;
+    var bw = canvas.width / bars;
+    for (var i = 0; i < bars; i++) {
+      var v = data[Math.floor(i * data.length / bars)] / 255;
+      var h = v * canvas.height * 0.9;
+      var grad = ctx.createLinearGradient(0, canvas.height - h, 0, canvas.height);
+      grad.addColorStop(0, '#7BC0E5');
+      grad.addColorStop(1, '#1744E8');
+      ctx.fillStyle = grad;
+      ctx.fillRect(i * bw + 1, canvas.height - h, bw - 2, h);
+    }
+  } else {
+    var wave2 = new Uint8Array(analyser.fftSize);
+    analyser.getByteTimeDomainData(wave2);
+    ctx.strokeStyle = '#7BC0E5';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var j = 0; j < wave2.length; j++) {
+      var x = j / wave2.length * canvas.width;
+      var y = canvas.height / 2 + (wave2[j] - 128) / 128 * canvas.height * 0.45;
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('启动麦克风', startMic, true), mode, status]));
+draw();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "spectrum", "title": "频谱可视化", "desc": "麦克风音频实时频谱（WebAudio AnalyserNode），需授权", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 300, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--code-bg)' });\nvar status = T.badge('点击启动麦克风');\nvar mode = T.select([{value:'bar',label:'柱状频谱'},{value:'wave',label:'波形'}],'bar');\nvar ctx = canvas.getContext('2d');\nvar audioCtx = null, analyser = null, running = false;\nfunction startMic() {\n  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {\n    audioCtx = new (window.AudioContext || window.webkitAudioContext)();\n    var source = audioCtx.createMediaStreamSource(stream);\n    analyser = audioCtx.createAnalyser();\n    analyser.fftSize = 512;\n    source.connect(analyser);\n    status.textContent = '🎤 采集中（对麦克风说话/播放音乐）';\n    status.className = 'badge ok';\n    if (!running) { running = true; draw(); }\n  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });\n}\nfunction draw() {\n  if (!running) return;\n  requestAnimationFrame(draw);\n  if (!analyser) return;\n  ctx.fillStyle = '#111';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  if (mode.value === 'bar') {\n    var data = new Uint8Array(analyser.frequencyBinCount);\n    analyser.getByteFrequencyData(data);\n    var bars = 64;\n    var bw = canvas.width / bars;\n    for (var i = 0; i \u003c bars; i++) {\n      var v = data[Math.floor(i * data.length / bars)] / 255;\n      var h = v * canvas.height * 0.9;\n      var grad = ctx.createLinearGradient(0, canvas.height - h, 0, canvas.height);\n      grad.addColorStop(0, '#7BC0E5');\n      grad.addColorStop(1, '#1744E8');\n      ctx.fillStyle = grad;\n      ctx.fillRect(i * bw + 1, canvas.height - h, bw - 2, h);\n    }\n  } else {\n    var wave2 = new Uint8Array(analyser.fftSize);\n    analyser.getByteTimeDomainData(wave2);\n    ctx.strokeStyle = '#7BC0E5';\n    ctx.lineWidth = 2;\n    ctx.beginPath();\n    for (var j = 0; j \u003c wave2.length; j++) {\n      var x = j / wave2.length * canvas.width;\n      var y = canvas.height / 2 + (wave2[j] - 128) / 128 * canvas.height * 0.45;\n      if (j === 0) ctx.moveTo(x, y);\n      else ctx.lineTo(x, y);\n    }\n    ctx.stroke();\n  }\n}\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('启动麦克风', startMic, true), mode, status]));\ndraw();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -2,119 +2,88 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>在线计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('在线计算器', '科学计算器，支持多种运算', 'calculator');
-
-  var display = T.el('input', { type: 'text', readonly: true, style: 'width:100%;font-size:1.5em;font-family:monospace;text-align:right;padding:12px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px' });
-  var memory = T.el('span', { class: 'badge', text: '' });
-
-  var buttons = [
-    ['C', '±', '%', '÷'],
-    ['7', '8', '9', '×'],
-    ['4', '5', '6', '−'],
-    ['1', '2', '3', '+'],
-    ['0', '.', '⌫', '=']
-  ];
-
-  var grid = T.el('div', { style: 'display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px' });
-
-  var current = '0';
-  var previous = '';
-  var operator = '';
-  var newNumber = true;
-
-  function updateDisplay() {
-    display.value = current;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('在线计算器', '科学计算器：四则 / 幂 / 开方 / 三角 / 对数，键盘可输入', 'calculator');
+var display = T.input('', { class: 'grow mono', placeholder: '输入表达式，如 (2+3)*4^2 - sqrt(16)' });
+var result = T.stat('—', '');
+var FN = { 'sin(': 'sin(', 'cos(': 'cos(', 'tan(': 'tan(', 'sqrt(': '√', 'log(': 'log', 'ln(': 'ln', 'abs(': 'abs(' };
+var degMode = T.check('角度制（deg）', true);
+var hist = [];
+function calc() {
+  var expr = display.value.trim();
+  if (!expr) return;
+  try {
+    var sanitized = expr
+      .replace(/×/g, '*').replace(/÷/g, '/').replace(/π/g, 'PI').replace(/√/g, 'sqrt')
+      .replace(/\b(sin|cos|tan)\(/g, function (m, f) { return '_' + f + '('; })
+      .replace(/\^/g, '**')
+      .replace(/\b(sqrt|log10|log2|ln|abs|PI|E)\b/g, function (m) {
+        return { 'ln': '(Math_log)', 'log': 'Math.log10', 'log2': 'Math.log2', 'PI': 'Math.PI', 'E': 'Math.E' }[m] || 'Math.' + m;
+      })
+      .replace(/Math_log/g, 'Math.log');
+    if (!/^[0-9+\-*/%.()\s_Math.sqrtincoalgblPE10]*$/.test(sanitized)) throw new Error('含非法字符');
+    var fn = new Function('Math', 'return ' + sanitized + ';');
+    var wrapMath = Object.create(Math);
+    var deg = degMode._input.checked;
+    wrapMath.sin = function (x) { return Math.sin(deg ? x * Math.PI / 180 : x); };
+    wrapMath.cos = function (x) { return Math.cos(deg ? x * Math.PI / 180 : x); };
+    wrapMath.tan = function (x) { return Math.tan(deg ? x * Math.PI / 180 : x); };
+    var val = fn(wrapMath);
+    if (typeof val !== 'number' || isNaN(val)) throw new Error('无法计算');
+    result.firstChild.textContent = String(+val.toPrecision(12));
+    hist.unshift(expr + ' = ' + +val.toPrecision(12));
+    if (hist.length > 10) hist.pop();
+    histBox.value = hist.join('\n');
+  } catch (e) {
+    result.firstChild.textContent = '⚠ ' + e.message;
   }
-
-  function handleButton(btn) {
-    if (btn >= '0' && btn <= '9' || btn === '.') {
-      if (newNumber) {
-        current = btn === '.' ? '0.' : btn;
-        newNumber = false;
-      } else {
-        if (btn === '.' && current.includes('.')) return;
-        current += btn;
-      }
-    } else if (btn === 'C') {
-      current = '0';
-      previous = '';
-      operator = '';
-      newNumber = true;
-    } else if (btn === '±') {
-      current = String(-parseFloat(current));
-    } else if (btn === '%') {
-      current = String(parseFloat(current) / 100);
-    } else if (btn === '⌫') {
-      current = current.slice(0, -1) || '0';
-    } else if (['+', '−', '×', '÷'].includes(btn)) {
-      if (previous && operator && !newNumber) {
-        calculate();
-      }
-      previous = current;
-      operator = btn;
-      newNumber = true;
-    } else if (btn === '=') {
-      calculate();
-      operator = '';
-      previous = '';
-    }
-    updateDisplay();
-  }
-
-  function calculate() {
-    var a = parseFloat(previous);
-    var b = parseFloat(current);
-    var result;
-    switch (operator) {
-      case '+': result = a + b; break;
-      case '−': result = a - b; break;
-      case '×': result = a * b; break;
-      case '÷': result = b !== 0 ? a / b : 'Error'; break;
-    }
-    current = String(result);
-    newNumber = true;
-  }
-
-  buttons.forEach(function (row) {
-    row.forEach(function (btn) {
-      var b = T.el('button', {
-        text: btn,
-        style: 'padding:16px;font-size:1.2em;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:var(--bg);color:var(--fg)',
-        onclick: function () { handleButton(btn); }
-      });
-      if (['÷', '×', '−', '+', '='].includes(btn)) {
-        b.style.background = 'var(--accent)';
-        b.style.color = '#fff';
-      }
-      grid.appendChild(b);
-    });
+}
+var KEYS = [['7', '8', '9', '÷', '√'], ['4', '5', '6', '×', '^'], ['1', '2', '3', '-', 'π'], ['0', '.', '(', ')', '+']];
+var pad = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:8px;margin:14px 0' });
+KEYS.forEach(function (rowKeys) {
+  rowKeys.forEach(function (k) {
+    var b = T.button(k, function () { display.value += k; });
+    b.style.justifyContent = 'center';
+    pad.appendChild(b);
   });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key >= '0' && e.key <= '9') handleButton(e.key);
-    else if (e.key === '.') handleButton('.');
-    else if (e.key === '+') handleButton('+');
-    else if (e.key === '-') handleButton('−');
-    else if (e.key === '*') handleButton('×');
-    else if (e.key === '/') { e.preventDefault(); handleButton('÷'); }
-    else if (e.key === 'Enter' || e.key === '=') handleButton('=');
-    else if (e.key === 'Escape') handleButton('C');
-    else if (e.key === 'Backspace') handleButton('⌫');
-  });
-
-  app.appendChild(display);
-  app.appendChild(grid);
+});
+var cRow = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:8px;margin-bottom:8px' });
+['sin(', 'cos(', 'tan(', 'ln(', 'log('].forEach(function (k) {
+  var b = T.button(k.replace('(', ''), function () { display.value += k + (k === 'sin(' || k === 'cos(' || k === 'tan(' ? '' : '('); });
+  b.style.justifyContent = 'center';
+  cRow.appendChild(b);
+});
+var histBox = T.out('计算历史…');
+histBox.style.minHeight = '80px';
+app.appendChild(T.row([display, T.button('计算 ⏎', calc, true), result]));
+app.appendChild(T.row([degMode, T.button('清空', function () { display.value = ''; result.firstChild.textContent = '—'; }),
+  T.button('退格', function () { display.value = display.value.slice(0, -1); })]));
+app.appendChild(cRow);
+app.appendChild(pad);
+app.appendChild(histBox);
+display.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); calc(); } });
+display.value = '(2+3)*4^2 - sqrt(16)';
+calc();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "calculator", "title": "在线计算器", "desc": "科学计算器：四则 / 幂 / 开方 / 三角 / 对数，键盘可输入", "scripts": "", "code": "var display = T.input('', { class: 'grow mono', placeholder: '输入表达式，如 (2+3)*4^2 - sqrt(16)' });\nvar result = T.stat('—', '');\nvar FN = { 'sin(': 'sin(', 'cos(': 'cos(', 'tan(': 'tan(', 'sqrt(': '√', 'log(': 'log', 'ln(': 'ln', 'abs(': 'abs(' };\nvar degMode = T.check('角度制（deg）', true);\nvar hist = [];\nfunction calc() {\n  var expr = display.value.trim();\n  if (!expr) return;\n  try {\n    var sanitized = expr\n      .replace(/×/g, '*').replace(/÷/g, '/').replace(/π/g, 'PI').replace(/√/g, 'sqrt')\n      .replace(/\\b(sin|cos|tan)\\(/g, function (m, f) { return '_' + f + '('; })\n      .replace(/\\^/g, '**')\n      .replace(/\\b(sqrt|log10|log2|ln|abs|PI|E)\\b/g, function (m) {\n        return { 'ln': '(Math_log)', 'log': 'Math.log10', 'log2': 'Math.log2', 'PI': 'Math.PI', 'E': 'Math.E' }[m] || 'Math.' + m;\n      })\n      .replace(/Math_log/g, 'Math.log');\n    if (!/^[0-9+\\-*/%.()\\s_Math.sqrtincoalgblPE10]*$/.test(sanitized)) throw new Error('含非法字符');\n    var fn = new Function('Math', 'return ' + sanitized + ';');\n    var wrapMath = Object.create(Math);\n    var deg = degMode._input.checked;\n    wrapMath.sin = function (x) { return Math.sin(deg ? x * Math.PI / 180 : x); };\n    wrapMath.cos = function (x) { return Math.cos(deg ? x * Math.PI / 180 : x); };\n    wrapMath.tan = function (x) { return Math.tan(deg ? x * Math.PI / 180 : x); };\n    var val = fn(wrapMath);\n    if (typeof val !== 'number' || isNaN(val)) throw new Error('无法计算');\n    result.firstChild.textContent = String(+val.toPrecision(12));\n    hist.unshift(expr + ' = ' + +val.toPrecision(12));\n    if (hist.length > 10) hist.pop();\n    histBox.value = hist.join('\\n');\n  } catch (e) {\n    result.firstChild.textContent = '⚠ ' + e.message;\n  }\n}\nvar KEYS = [['7', '8', '9', '÷', '√'], ['4', '5', '6', '×', '^'], ['1', '2', '3', '-', 'π'], ['0', '.', '(', ')', '+']];\nvar pad = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:8px;margin:14px 0' });\nKEYS.forEach(function (rowKeys) {\n  rowKeys.forEach(function (k) {\n    var b = T.button(k, function () { display.value += k; });\n    b.style.justifyContent = 'center';\n    pad.appendChild(b);\n  });\n});\nvar cRow = T.el('div', { style: 'display:grid;grid-template-columns:repeat(5,64px);gap:8px;margin-bottom:8px' });\n['sin(', 'cos(', 'tan(', 'ln(', 'log('].forEach(function (k) {\n  var b = T.button(k.replace('(', ''), function () { display.value += k + (k === 'sin(' || k === 'cos(' || k === 'tan(' ? '' : '('); });\n  b.style.justifyContent = 'center';\n  cRow.appendChild(b);\n});\nvar histBox = T.out('计算历史…');\nhistBox.style.minHeight = '80px';\napp.appendChild(T.row([display, T.button('计算 ⏎', calc, true), result]));\napp.appendChild(T.row([degMode, T.button('清空', function () { display.value = ''; result.firstChild.textContent = '—'; }),\n  T.button('退格', function () { display.value = display.value.slice(0, -1); })]));\napp.appendChild(cRow);\napp.appendChild(pad);\napp.appendChild(histBox);\ndisplay.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); calc(); } });\ndisplay.value = '(2+3)*4^2 - sqrt(16)';\ncalc();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

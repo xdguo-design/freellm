@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>布局切换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('布局切换', '网格 / 列表布局预览切换（偏好保存到本地）', 'layout-toggle');
+var cur = 'grid';
+try { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').layout || 'grid'; } catch (e) {}
+var demo = T.el('div', { style: 'margin:14px 0' });
+var ITEMS = ['Base64 编解码', 'JSON 格式化', 'UUID 生成', '正则测试', '时间戳转换', '二维码生成'];
+function render() {
+  T.clearEl(demo);
+  if (cur === 'grid') {
+    demo.style.display = 'grid';
+    demo.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';
+    demo.style.gap = '10px';
+    ITEMS.forEach(function (it) {
+      demo.appendChild(T.el('div', { text: it, style: 'border:1px solid var(--line);border-radius:10px;padding:20px 12px;text-align:center;background:var(--surface)' }));
+    });
+  } else {
+    demo.style.display = '';
+    ITEMS.forEach(function (it) {
+      demo.appendChild(T.el('div', { text: it + '  —  工具描述占位文本', style: 'border-bottom:1px solid var(--line);padding:12px 4px;background:var(--surface)' }));
+    });
+  }
+}
+render();
+var row = T.el('div', { class: 'row' });
+function renderBtns() {
+  T.clearEl(row);
+  [['grid', '🔲 网格'], ['list', '☰ 列表']].forEach(function (m) {
+    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () {
+      cur = m[0];
+      var settings = {};
+      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}
+      settings.layout = cur;
+      localStorage.setItem('freellm-settings', JSON.stringify(settings));
+      renderBtns();
+      render();
+    }));
+  });
+}
+renderBtns();
+app.appendChild(row);
+app.appendChild(demo);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "layout-toggle", "title": "布局切换", "desc": "网格 / 列表布局预览切换（偏好保存到本地）", "scripts": "", "code": "var cur = 'grid';\ntry { cur = JSON.parse(localStorage.getItem('freellm-settings') || '{}').layout || 'grid'; } catch (e) {}\nvar demo = T.el('div', { style: 'margin:14px 0' });\nvar ITEMS = ['Base64 编解码', 'JSON 格式化', 'UUID 生成', '正则测试', '时间戳转换', '二维码生成'];\nfunction render() {\n  T.clearEl(demo);\n  if (cur === 'grid') {\n    demo.style.display = 'grid';\n    demo.style.gridTemplateColumns = 'repeat(auto-fill, minmax(180px, 1fr))';\n    demo.style.gap = '10px';\n    ITEMS.forEach(function (it) {\n      demo.appendChild(T.el('div', { text: it, style: 'border:1px solid var(--line);border-radius:10px;padding:20px 12px;text-align:center;background:var(--surface)' }));\n    });\n  } else {\n    demo.style.display = '';\n    ITEMS.forEach(function (it) {\n      demo.appendChild(T.el('div', { text: it + '  —  工具描述占位文本', style: 'border-bottom:1px solid var(--line);padding:12px 4px;background:var(--surface)' }));\n    });\n  }\n}\nrender();\nvar row = T.el('div', { class: 'row' });\nfunction renderBtns() {\n  T.clearEl(row);\n  [['grid', '🔲 网格'], ['list', '☰ 列表']].forEach(function (m) {\n    row.appendChild(T.button(m[1] + (cur === m[0] ? ' ✓' : ''), function () {\n      cur = m[0];\n      var settings = {};\n      try { settings = JSON.parse(localStorage.getItem('freellm-settings') || '{}'); } catch (e) {}\n      settings.layout = cur;\n      localStorage.setItem('freellm-settings', JSON.stringify(settings));\n      renderBtns();\n      render();\n    }));\n  });\n}\nrenderBtns();\napp.appendChild(row);\napp.appendChild(demo);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

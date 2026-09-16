@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JS 沙箱执行 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JS 沙箱执行', '安全的 JS 代码执行：捕获 console 输出与返回值', 'js-sandbox');
+var input = T.textarea('// 试试：\nconst arr = [1,2,3].map(x => x * 2);\nconsole.log("数组:", arr);\nconsole.table ? null : null;\nreturn arr.reduce((a,b)=>a+b, 0);', true);
+input.value = '// 试试：\nconst arr = [1,2,3].map(x => x * 2);\nconsole.log("数组:", arr);\nconsole.table ? null : null;\nreturn arr.reduce((a,b)=>a+b, 0);';
+input.value = 'const arr = [1,2,3].map(x => x * 2);\nconsole.log("数组:", arr);\nreturn arr.reduce((a, b) => a + b, 0);';
+input.style.minHeight = '180px';
+var output = T.el('div', { class: 'output dark', style: 'min-height:180px;white-space:pre-wrap;font-family:var(--font-mono)' });
+function run() {
+  T.clearEl(output);
+  var logs = [];
+  var fakeConsole = {
+    log: function () { logs.push(Array.from(arguments).map(function (a) { return typeof a === 'object' ? JSON.stringify(a) : String(a); }).join(' ')); },
+    warn: function () { logs.push('⚠ ' + Array.from(arguments).join(' ')); },
+    error: function () { logs.push('✗ ' + Array.from(arguments).join(' ')); },
+    info: function () { this.log.apply(this, arguments); }
+  };
+  try {
+    var fn = new Function('console', 'window', 'document', '"use strict";' + input.value);
+    var result = fn(fakeConsole, undefined, undefined);
+    logs.forEach(function (l) {
+      output.appendChild(T.el('div', { text: l, style: 'color:var(--code-text);opacity:.9' }));
+    });
+    if (result !== undefined) {
+      output.appendChild(T.el('div', { text: '⇒ 返回: ' + (typeof result === 'object' ? JSON.stringify(result) : String(result)), style: 'color:#98c379;margin-top:8px' }));
+    }
+    if (!logs.length && result === undefined) output.textContent = '(无输出)';
+  } catch (e) {
+    output.appendChild(T.el('div', { text: '✗ ' + e.message, style: 'color:#e74c3c' }));
+  }
+}
+app.appendChild(T.pane([T.field('JS 代码（支持 return）', input)], true));
+app.appendChild(T.row([T.button('运行 ▶', run, true), T.el('span', { text: '沙箱中 window/document 不可用，仅纯计算' })]));
+app.appendChild(T.el('span', { text: '控制台输出', class: 'field' }));
+app.appendChild(output);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "js-sandbox", "title": "JS 沙箱执行", "desc": "安全的 JS 代码执行：捕获 console 输出与返回值", "scripts": "", "code": "var input = T.textarea('// 试试：\\nconst arr = [1,2,3].map(x => x * 2);\\nconsole.log(\"数组:\", arr);\\nconsole.table ? null : null;\\nreturn arr.reduce((a,b)=>a+b, 0);', true);\ninput.value = '// 试试：\\nconst arr = [1,2,3].map(x => x * 2);\\nconsole.log(\"数组:\", arr);\\nconsole.table ? null : null;\\nreturn arr.reduce((a,b)=>a+b, 0);';\ninput.value = 'const arr = [1,2,3].map(x => x * 2);\\nconsole.log(\"数组:\", arr);\\nreturn arr.reduce((a, b) => a + b, 0);';\ninput.style.minHeight = '180px';\nvar output = T.el('div', { class: 'output dark', style: 'min-height:180px;white-space:pre-wrap;font-family:var(--font-mono)' });\nfunction run() {\n  T.clearEl(output);\n  var logs = [];\n  var fakeConsole = {\n    log: function () { logs.push(Array.from(arguments).map(function (a) { return typeof a === 'object' ? JSON.stringify(a) : String(a); }).join(' ')); },\n    warn: function () { logs.push('⚠ ' + Array.from(arguments).join(' ')); },\n    error: function () { logs.push('✗ ' + Array.from(arguments).join(' ')); },\n    info: function () { this.log.apply(this, arguments); }\n  };\n  try {\n    var fn = new Function('console', 'window', 'document', '\"use strict\";' + input.value);\n    var result = fn(fakeConsole, undefined, undefined);\n    logs.forEach(function (l) {\n      output.appendChild(T.el('div', { text: l, style: 'color:var(--code-text);opacity:.9' }));\n    });\n    if (result !== undefined) {\n      output.appendChild(T.el('div', { text: '⇒ 返回: ' + (typeof result === 'object' ? JSON.stringify(result) : String(result)), style: 'color:#98c379;margin-top:8px' }));\n    }\n    if (!logs.length && result === undefined) output.textContent = '(无输出)';\n  } catch (e) {\n    output.appendChild(T.el('div', { text: '✗ ' + e.message, style: 'color:#e74c3c' }));\n  }\n}\napp.appendChild(T.pane([T.field('JS 代码（支持 return）', input)], true));\napp.appendChild(T.row([T.button('运行 ▶', run, true), T.el('span', { text: '沙箱中 window/document 不可用，仅纯计算' })]));\napp.appendChild(T.el('span', { text: '控制台输出', class: 'field' }));\napp.appendChild(output);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

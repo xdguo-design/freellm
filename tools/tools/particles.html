@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>漂浮粒子 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('漂浮粒子', 'Canvas 粒子动画背景：密度 / 速度 / 连线距离可调，截图可用', 'particles');
+var canvas = T.el('canvas', { width: 860, height: 400, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--code-bg)' });
+var count = T.range(20, 200, 10, 80);
+var speed = T.range(0.2, 3, 0.1, 0.8);
+var linkDist = T.range(40, 200, 10, 120);
+var ctx = canvas.getContext('2d');
+var parts = [];
+function init() {
+  parts = [];
+  for (var i = 0; i < +count.value; i++) {
+    parts.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * +speed.value,
+      vy: (Math.random() - 0.5) * +speed.value,
+      r: 1 + Math.random() * 2.5
+    });
+  }
+}
+function step() {
+  ctx.fillStyle = '#111111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  parts.forEach(function (p, i) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#7BC0E5';
+    ctx.fill();
+    for (var j = i + 1; j < parts.length; j++) {
+      var q = parts[j];
+      var d = Math.hypot(p.x - q.x, p.y - q.y);
+      if (d < +linkDist.value) {
+        ctx.strokeStyle = 'rgba(123,192,229,' + (1 - d / linkDist.value) * 0.5 + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
+      }
+    }
+  });
+  requestAnimationFrame(step);
+}
+init();
+step();
+[count, speed, linkDist].forEach(function (el) { el.addEventListener('input', function () { init(); }); });
+app.appendChild(canvas);
+app.appendChild(T.row([T.el('span', { text: '粒子数' }), count, T.el('span', { text: '速度' }), speed, T.el('span', { text: '连线距离' }), linkDist]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "particles", "title": "漂浮粒子", "desc": "Canvas 粒子动画背景：密度 / 速度 / 连线距离可调，截图可用", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 400, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--code-bg)' });\nvar count = T.range(20, 200, 10, 80);\nvar speed = T.range(0.2, 3, 0.1, 0.8);\nvar linkDist = T.range(40, 200, 10, 120);\nvar ctx = canvas.getContext('2d');\nvar parts = [];\nfunction init() {\n  parts = [];\n  for (var i = 0; i \u003c +count.value; i++) {\n    parts.push({\n      x: Math.random() * canvas.width,\n      y: Math.random() * canvas.height,\n      vx: (Math.random() - 0.5) * +speed.value,\n      vy: (Math.random() - 0.5) * +speed.value,\n      r: 1 + Math.random() * 2.5\n    });\n  }\n}\nfunction step() {\n  ctx.fillStyle = '#111111';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  parts.forEach(function (p, i) {\n    p.x += p.vx;\n    p.y += p.vy;\n    if (p.x \u003c 0 || p.x > canvas.width) p.vx *= -1;\n    if (p.y \u003c 0 || p.y > canvas.height) p.vy *= -1;\n    ctx.beginPath();\n    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);\n    ctx.fillStyle = '#7BC0E5';\n    ctx.fill();\n    for (var j = i + 1; j \u003c parts.length; j++) {\n      var q = parts[j];\n      var d = Math.hypot(p.x - q.x, p.y - q.y);\n      if (d \u003c +linkDist.value) {\n        ctx.strokeStyle = 'rgba(123,192,229,' + (1 - d / linkDist.value) * 0.5 + ')';\n        ctx.lineWidth = 1;\n        ctx.beginPath();\n        ctx.moveTo(p.x, p.y);\n        ctx.lineTo(q.x, q.y);\n        ctx.stroke();\n      }\n    }\n  });\n  requestAnimationFrame(step);\n}\ninit();\nstep();\n[count, speed, linkDist].forEach(function (el) { el.addEventListener('input', function () { init(); }); });\napp.appendChild(canvas);\napp.appendChild(T.row([T.el('span', { text: '粒子数' }), count, T.el('span', { text: '速度' }), speed, T.el('span', { text: '连线距离' }), linkDist]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

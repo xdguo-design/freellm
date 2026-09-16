@@ -2,53 +2,57 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>季数计算器 · FreeLLM</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>季度计算器 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('季度计算器', '季度/财年计算', 'quarter');
-
-  var date = T.el('input', { type: 'date', style: 'flex:1' });
-
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  function calculate() {
-    var d = new Date(date.value);
-    if (isNaN(d.getTime())) { result.textContent = '请选择日期'; return; }
-
-    var month = d.getMonth();
-    var quarter = Math.floor(month / 3) + 1;
-    var year = d.getFullYear();
-
-    var quarterStart = new Date(year, (quarter - 1) * 3, 1);
-    var quarterEnd = new Date(year, quarter * 3, 0);
-
-    var fiscalYear = month >= 3 ? year + 1 : year;
-    var fiscalQuarter = Math.floor(((month - 3 + 12) % 12) / 3) + 1;
-
-    result.innerHTML = '<table style="width:100%;border-collapse:collapse">' +
-      '<tr><td style="padding:8px;color:var(--muted)">日期</td><td style="padding:8px;text-align:right">' + d.toLocaleDateString('zh-CN') + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">季度</td><td style="padding:8px;text-align:right;font-weight:bold;color:var(--accent)">Q' + quarter + ' ' + year + '</td></tr>' +
-      '<tr><td style="padding:8px;color:var(--muted)">季度范围</td><td style="padding:8px;text-align:right">' + quarterStart.toLocaleDateString('zh-CN') + ' - ' + quarterEnd.toLocaleDateString('zh-CN') + '</td></tr>' +
-      '<tr><td style="padding:8px;border-top:2px solid var(--line);color:var(--muted)">财年</td><td style="padding:8px;border-top:2px solid var(--line);text-align:right">FY' + fiscalYear + ' Q' + fiscalQuarter + '</td></tr>' +
-      '</table>';
-  }
-
-  date.addEventListener('change', calculate);
-
-  app.appendChild(T.el('div', { class: 'field', text: '选择日期:' }));
-  app.appendChild(date);
-  app.appendChild(result);
-
-  date.value = new Date().toISOString().slice(0, 10);
-  calculate();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('季度计算器', '日期所在季度 / 财年季度 / 季度首末日 / 剩余天数', 'quarter');
+var date = T.dateInput(T.today());
+var fiscalStart = T.select([{value:'1',label:'1 月（自然年）'},{value:'4',label:'4 月（如日本/印度财年）'},{value:'7',label:'7 月'},{value:'10',label:'10 月（如美国联邦财年）'}],'1');
+var box = T.el('div');
+function run() {
+  T.clearEl(box);
+  if (!date.value) return;
+  var d = new Date(date.value + 'T00:00:00');
+  var q = Math.floor(d.getMonth() / 3) + 1;
+  var qStart = new Date(d.getFullYear(), (q - 1) * 3, 1);
+  var qEnd = new Date(d.getFullYear(), q * 3, 0);
+  var fs = +fiscalStart.value;
+  var monthsSinceFs = (d.getMonth() - fs + 12) % 12;
+  var fq = Math.floor(monthsSinceFs / 3) + 1;
+  var fy = d.getMonth() + 1 >= fs ? d.getFullYear() : d.getFullYear() - 1;
+  var fqStart = new Date(fy, fs + (fq - 1) * 3, 1);
+  var fqEnd = new Date(fqStart.getFullYear(), fqStart.getMonth() + 3, 0);
+  box.appendChild(T.kvTable([
+    ['自然季度', 'Q' + q + '（' + d.getFullYear() + ' 年第 ' + q + ' 季度）'],
+    ['本季度首日', T.fmtDate(qStart)],
+    ['本季度末日', T.fmtDate(qEnd) + '（共 ' + Math.round((qEnd - qStart) / 86400000 + 1) + ' 天）'],
+    ['本季度剩余', Math.max(0, Math.round((qEnd - d) / 86400000)) + ' 天'],
+    ['财年', fy + ' 财年（' + fs + ' 月开始）· Q' + fq],
+    ['财季区间', T.fmtDate(fqStart) + ' ~ ' + T.fmtDate(fqEnd)]
+  ]));
+}
+[date, fiscalStart].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('日期', date), T.field('财年起始月', fiscalStart)]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "quarter", "title": "季度计算器", "desc": "日期所在季度 / 财年季度 / 季度首末日 / 剩余天数", "scripts": "", "code": "var date = T.dateInput(T.today());\nvar fiscalStart = T.select([{value:'1',label:'1 月（自然年）'},{value:'4',label:'4 月（如日本/印度财年）'},{value:'7',label:'7 月'},{value:'10',label:'10 月（如美国联邦财年）'}],'1');\nvar box = T.el('div');\nfunction run() {\n  T.clearEl(box);\n  if (!date.value) return;\n  var d = new Date(date.value + 'T00:00:00');\n  var q = Math.floor(d.getMonth() / 3) + 1;\n  var qStart = new Date(d.getFullYear(), (q - 1) * 3, 1);\n  var qEnd = new Date(d.getFullYear(), q * 3, 0);\n  var fs = +fiscalStart.value;\n  var monthsSinceFs = (d.getMonth() - fs + 12) % 12;\n  var fq = Math.floor(monthsSinceFs / 3) + 1;\n  var fy = d.getMonth() + 1 >= fs ? d.getFullYear() : d.getFullYear() - 1;\n  var fqStart = new Date(fy, fs + (fq - 1) * 3, 1);\n  var fqEnd = new Date(fqStart.getFullYear(), fqStart.getMonth() + 3, 0);\n  box.appendChild(T.kvTable([\n    ['自然季度', 'Q' + q + '（' + d.getFullYear() + ' 年第 ' + q + ' 季度）'],\n    ['本季度首日', T.fmtDate(qStart)],\n    ['本季度末日', T.fmtDate(qEnd) + '（共 ' + Math.round((qEnd - qStart) / 86400000 + 1) + ' 天）'],\n    ['本季度剩余', Math.max(0, Math.round((qEnd - d) / 86400000)) + ' 天'],\n    ['财年', fy + ' 财年（' + fs + ' 月开始）· Q' + fq],\n    ['财季区间', T.fmtDate(fqStart) + ' ~ ' + T.fmtDate(fqEnd)]\n  ]));\n}\n[date, fiscalStart].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('日期', date), T.field('财年起始月', fiscalStart)]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

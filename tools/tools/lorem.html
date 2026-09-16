@@ -2,85 +2,60 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Lorem Ipsum · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Lorem Ipsum', '占位文本段落生成', 'lorem');
-
-  var type = T.select([
-    { value: 'paragraphs', label: '段落' },
-    { value: 'sentences', label: '句子' },
-    { value: 'words', label: '单词' }
-  ]);
-  var count = T.el('input', { type: 'number', value: '5', min: '1', max: '100', style: 'width:80px' });
-
-  var output = T.textarea('生成结果', false);
-  output.readOnly = true;
-
-  var generateBtn = T.button('生成', generate, true);
-  var copyBtn = T.copyBtn(function () { return output.value; });
-  var downloadBtn = T.button('下载', function () {
-    T.download('lorem.txt', output.value);
-  });
-
-  var WORDS = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(' ');
-
-  function getWord() {
-    return WORDS[Math.floor(Math.random() * WORDS.length)];
-  }
-
-  function getSentence() {
-    var len = 8 + Math.floor(Math.random() * 12);
-    var words = [];
-    for (var i = 0; i < len; i++) words.push(getWord());
-    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
-    return words.join(' ') + '.';
-  }
-
-  function getParagraph() {
-    var len = 4 + Math.floor(Math.random() * 4);
-    var sentences = [];
-    for (var i = 0; i < len; i++) sentences.push(getSentence());
-    return sentences.join(' ');
-  }
-
-  function generate() {
-    var n = parseInt(count.value) || 5;
-    var results = [];
-
-    switch (type.value) {
-      case 'paragraphs':
-        for (var i = 0; i < n; i++) results.push(getParagraph());
-        break;
-      case 'sentences':
-        for (var i = 0; i < n; i++) results.push(getSentence());
-        break;
-      case 'words':
-        for (var i = 0; i < n; i++) results.push(getWord());
-        break;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Lorem Ipsum', '中英文占位文本生成：段落数 / 段落长度可调', 'lorem');
+var paras = T.num(3, { min: 1, max: 50, style: 'width:80px' });
+var lang = T.select([{value:'zh',label:'中文乱数假文'},{value:'en',label:'Lorem Ipsum'}],'zh');
+var output = T.out('');
+var ZH = '工具开发设计数据系统网络服务用户体验内容平台管理配置安全性能优化分析处理逻辑结构模块组件接口协议缓存索引请求响应消息队列调度算法模型训练推理部署监控日志测试版本发布迭代团队协作产品需求文档评审交付质量效率流程自动化集成兼容稳定扩展维护升级迁移备份恢复容灾高可用';
+var EN = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip ex ea commodo consequat duis aute irure in reprehenderit voluptate velit esse cillum eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt culpa qui officia deserunt mollit anim id est laborum'.split(' ');
+function gen() {
+  var n = +paras.value || 1;
+  var out = [];
+  for (var i = 0; i < n; i++) {
+    if (lang.value === 'zh') {
+      var s = '';
+      var total = 120 + Math.floor(Math.random() * 80);
+      while (s.length < total) {
+        var wl = 2 + Math.floor(Math.random() * 4);
+        var w = '';
+        for (var j = 0; j < wl; j++) w += ZH[Math.floor(Math.random() * ZH.length)];
+        s += w;
+      }
+      out.push(s + '。');
+    } else {
+      var words = [];
+      var wc = 30 + Math.floor(Math.random() * 20);
+      for (var k = 0; k < wc; k++) words.push(EN[Math.floor(Math.random() * EN.length)]);
+      var s2 = words.join(' ');
+      out.push(s2.charAt(0).toUpperCase() + s2.slice(1) + '.');
     }
-    output.value = results.join('\n\n');
   }
-
-  generateBtn.addEventListener('click', generate);
-  count.addEventListener('input', generate);
-
-  app.appendChild(T.el('div', { class: 'row' }, [
-    T.el('span', { text: '类型' }), type,
-    T.el('span', { text: '数量' }), count,
-    generateBtn, copyBtn, downloadBtn
-  ]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
-
-  generate();
+  output.value = out.join('\n\n');
+}
+app.appendChild(T.pane([T.field('占位文本', output)], true));
+app.appendChild(T.row([T.el('span', { text: '段落数' }), paras, lang, T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));
+gen();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "lorem", "title": "Lorem Ipsum", "desc": "中英文占位文本生成：段落数 / 段落长度可调", "scripts": "", "code": "var paras = T.num(3, { min: 1, max: 50, style: 'width:80px' });\nvar lang = T.select([{value:'zh',label:'中文乱数假文'},{value:'en',label:'Lorem Ipsum'}],'zh');\nvar output = T.out('');\nvar ZH = '工具开发设计数据系统网络服务用户体验内容平台管理配置安全性能优化分析处理逻辑结构模块组件接口协议缓存索引请求响应消息队列调度算法模型训练推理部署监控日志测试版本发布迭代团队协作产品需求文档评审交付质量效率流程自动化集成兼容稳定扩展维护升级迁移备份恢复容灾高可用';\nvar EN = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip ex ea commodo consequat duis aute irure in reprehenderit voluptate velit esse cillum eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt culpa qui officia deserunt mollit anim id est laborum'.split(' ');\nfunction gen() {\n  var n = +paras.value || 1;\n  var out = [];\n  for (var i = 0; i \u003c n; i++) {\n    if (lang.value === 'zh') {\n      var s = '';\n      var total = 120 + Math.floor(Math.random() * 80);\n      while (s.length \u003c total) {\n        var wl = 2 + Math.floor(Math.random() * 4);\n        var w = '';\n        for (var j = 0; j \u003c wl; j++) w += ZH[Math.floor(Math.random() * ZH.length)];\n        s += w;\n      }\n      out.push(s + '。');\n    } else {\n      var words = [];\n      var wc = 30 + Math.floor(Math.random() * 20);\n      for (var k = 0; k \u003c wc; k++) words.push(EN[Math.floor(Math.random() * EN.length)]);\n      var s2 = words.join(' ');\n      out.push(s2.charAt(0).toUpperCase() + s2.slice(1) + '.');\n    }\n  }\n  output.value = out.join('\\n\\n');\n}\napp.appendChild(T.pane([T.field('占位文本', output)], true));\napp.appendChild(T.row([T.el('span', { text: '段落数' }), paras, lang, T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

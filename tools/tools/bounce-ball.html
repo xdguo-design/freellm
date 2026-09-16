@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>弹跳小球 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('弹跳小球', '物理弹跳动画：重力 / 弹性 / 摩擦可调，小球可拖拽', 'bounce-ball');
+var canvas = T.el('canvas', { width: 860, height: 380, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:grab;touch-action:none' });
+var gravity = T.range(0.1, 2, 0.05, 0.6);
+var restitution = T.range(0.3, 0.99, 0.01, 0.82);
+var friction = T.range(0.9, 1, 0.001, 0.995);
+var balls = [];
+for (var i = 0; i < 6; i++) {
+  balls.push({
+    x: 100 + Math.random() * 660, y: 50 + Math.random() * 150,
+    vx: (Math.random() - 0.5) * 8, vy: 0,
+    r: 14 + Math.random() * 16,
+    color: ['#1744E8', '#7BC0E5', '#FFB88C', '#B8E986', '#F48FB1', '#B39DDB'][i]
+  });
+}
+var ctx = canvas.getContext('2d');
+var dragBall = null;
+canvas.addEventListener('pointerdown', function (e) {
+  var rect = canvas.getBoundingClientRect();
+  var mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  var my = (e.clientY - rect.top) * (canvas.height / rect.height);
+  balls.forEach(function (b) {
+    if (Math.hypot(b.x - mx, b.y - my) < b.r + 6) { dragBall = b; b.vx = 0; b.vy = 0; }
+  });
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!dragBall) return;
+  var rect = canvas.getBoundingClientRect();
+  dragBall.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  dragBall.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+});
+window.addEventListener('pointerup', function () {
+  if (dragBall) { dragBall.vx = (Math.random() - 0.5) * 10; dragBall.vy = 0; }
+  dragBall = null;
+});
+function step() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  balls.forEach(function (b) {
+    if (b !== dragBall) {
+      b.vy += +gravity.value;
+      b.x += b.vx;
+      b.y += b.vy;
+      b.vx *= +friction.value;
+      if (b.y + b.r > canvas.height) { b.y = canvas.height - b.r; b.vy *= -(+restitution.value); }
+      if (b.y - b.r < 0) { b.y = b.r; b.vy *= -(+restitution.value); }
+      if (b.x + b.r > canvas.width) { b.x = canvas.width - b.r; b.vx *= -(+restitution.value); }
+      if (b.x - b.r < 0) { b.x = b.r; b.vx *= -(+restitution.value); }
+    }
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fillStyle = b.color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(b.x - b.r / 3, b.y - b.r / 3, b.r / 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.fill();
+  });
+  requestAnimationFrame(step);
+}
+step();
+app.appendChild(canvas);
+app.appendChild(T.row([T.el('span', { text: '重力' }), gravity, T.el('span', { text: '弹性' }), restitution, T.el('span', { text: '摩擦' }), friction,
+  T.button('重置小球', function () { location.reload ? null : null; balls.forEach(function (b, i) { b.x = 100 + i * 120; b.y = 60; b.vy = 0; b.vx = 0; }); })]));
+app.appendChild(T.el('p', { text: '拖拽小球然后松手即可抛出。', style: 'color:var(--ink2);font-size:12px' }));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "bounce-ball", "title": "弹跳小球", "desc": "物理弹跳动画：重力 / 弹性 / 摩擦可调，小球可拖拽", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 380, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:grab;touch-action:none' });\nvar gravity = T.range(0.1, 2, 0.05, 0.6);\nvar restitution = T.range(0.3, 0.99, 0.01, 0.82);\nvar friction = T.range(0.9, 1, 0.001, 0.995);\nvar balls = [];\nfor (var i = 0; i \u003c 6; i++) {\n  balls.push({\n    x: 100 + Math.random() * 660, y: 50 + Math.random() * 150,\n    vx: (Math.random() - 0.5) * 8, vy: 0,\n    r: 14 + Math.random() * 16,\n    color: ['#1744E8', '#7BC0E5', '#FFB88C', '#B8E986', '#F48FB1', '#B39DDB'][i]\n  });\n}\nvar ctx = canvas.getContext('2d');\nvar dragBall = null;\ncanvas.addEventListener('pointerdown', function (e) {\n  var rect = canvas.getBoundingClientRect();\n  var mx = (e.clientX - rect.left) * (canvas.width / rect.width);\n  var my = (e.clientY - rect.top) * (canvas.height / rect.height);\n  balls.forEach(function (b) {\n    if (Math.hypot(b.x - mx, b.y - my) \u003c b.r + 6) { dragBall = b; b.vx = 0; b.vy = 0; }\n  });\n  canvas.setPointerCapture(e.pointerId);\n});\ncanvas.addEventListener('pointermove', function (e) {\n  if (!dragBall) return;\n  var rect = canvas.getBoundingClientRect();\n  dragBall.x = (e.clientX - rect.left) * (canvas.width / rect.width);\n  dragBall.y = (e.clientY - rect.top) * (canvas.height / rect.height);\n});\nwindow.addEventListener('pointerup', function () {\n  if (dragBall) { dragBall.vx = (Math.random() - 0.5) * 10; dragBall.vy = 0; }\n  dragBall = null;\n});\nfunction step() {\n  ctx.clearRect(0, 0, canvas.width, canvas.height);\n  balls.forEach(function (b) {\n    if (b !== dragBall) {\n      b.vy += +gravity.value;\n      b.x += b.vx;\n      b.y += b.vy;\n      b.vx *= +friction.value;\n      if (b.y + b.r > canvas.height) { b.y = canvas.height - b.r; b.vy *= -(+restitution.value); }\n      if (b.y - b.r \u003c 0) { b.y = b.r; b.vy *= -(+restitution.value); }\n      if (b.x + b.r > canvas.width) { b.x = canvas.width - b.r; b.vx *= -(+restitution.value); }\n      if (b.x - b.r \u003c 0) { b.x = b.r; b.vx *= -(+restitution.value); }\n    }\n    ctx.beginPath();\n    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);\n    ctx.fillStyle = b.color;\n    ctx.fill();\n    ctx.beginPath();\n    ctx.arc(b.x - b.r / 3, b.y - b.r / 3, b.r / 4, 0, Math.PI * 2);\n    ctx.fillStyle = 'rgba(255,255,255,.55)';\n    ctx.fill();\n  });\n  requestAnimationFrame(step);\n}\nstep();\napp.appendChild(canvas);\napp.appendChild(T.row([T.el('span', { text: '重力' }), gravity, T.el('span', { text: '弹性' }), restitution, T.el('span', { text: '摩擦' }), friction,\n  T.button('重置小球', function () { location.reload ? null : null; balls.forEach(function (b, i) { b.x = 100 + i * 120; b.y = 60; b.vy = 0; b.vx = 0; }); })]));\napp.appendChild(T.el('p', { text: '拖拽小球然后松手即可抛出。', style: 'color:var(--ink2);font-size:12px' }));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

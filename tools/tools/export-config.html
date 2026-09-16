@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>配置导出 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('配置导出', '导出收藏 / 历史 / 设置 / 待办等本地数据为 JSON 备份', 'export-config');
+var KEYS = ['freellm-favorites', 'freellm-history', 'freellm-settings', 'freellm-todos', 'freellm-notes', 'freellm-journal', 'freellm-habits', 'freellm-expense', 'freellm-mood', 'freellm-water', 'freellm-stand', 'freellm-countdown-adv', 'freellm-snippets', 'freellm-bookmarks', 'freellm-a11y'];
+var checks = KEYS.map(function (k) {
+  var has = false;
+  try { has = !!(localStorage.getItem(k) && localStorage.getItem(k) !== '[]' && localStorage.getItem(k) !== '{}'); } catch (e) {}
+  return T.check(k.replace('freellm-', '') + (has ? ' ✓有数据' : '（空）'), has);
+});
+var output = T.out('导出内容预览…');
+function build() {
+  var data = { _export: 'freellm-tools-backup', version: 1, date: new Date().toISOString() };
+  checks.forEach(function (c, i) {
+    if (!c._input.checked) return;
+    try { data[KEYS[i]] = JSON.parse(localStorage.getItem(KEYS[i]) || 'null'); } catch (e) {}
+  });
+  output.value = JSON.stringify(data, null, 2);
+  return data;
+}
+checks.forEach(function (c) { c._input.addEventListener('change', build); });
+app.appendChild(T.el('span', { text: '选择要导出的数据', class: 'field' }));
+var wrap1 = T.row(checks.slice(0, 5)); wrap1.style.marginBottom = '4px';
+var wrap2 = T.row(checks.slice(5, 10)); wrap2.style.marginBottom = '4px';
+var wrap3 = T.row(checks.slice(10)); wrap3.style.marginBottom = '4px';
+app.appendChild(wrap1);
+app.appendChild(wrap2);
+app.appendChild(wrap3);
+app.appendChild(T.pane([T.field('备份 JSON', output)], true));
+app.appendChild(T.row([T.button('生成预览', build, true),
+  T.button('下载备份文件', function () {
+    var data = build();
+    T.download('freellm-backup-' + T.today() + '.json', JSON.stringify(data), 'application/json');
+  }, true)]));
+build();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "export-config", "title": "配置导出", "desc": "导出收藏 / 历史 / 设置 / 待办等本地数据为 JSON 备份", "scripts": "", "code": "var KEYS = ['freellm-favorites', 'freellm-history', 'freellm-settings', 'freellm-todos', 'freellm-notes', 'freellm-journal', 'freellm-habits', 'freellm-expense', 'freellm-mood', 'freellm-water', 'freellm-stand', 'freellm-countdown-adv', 'freellm-snippets', 'freellm-bookmarks', 'freellm-a11y'];\nvar checks = KEYS.map(function (k) {\n  var has = false;\n  try { has = !!(localStorage.getItem(k) && localStorage.getItem(k) !== '[]' && localStorage.getItem(k) !== '{}'); } catch (e) {}\n  return T.check(k.replace('freellm-', '') + (has ? ' ✓有数据' : '（空）'), has);\n});\nvar output = T.out('导出内容预览…');\nfunction build() {\n  var data = { _export: 'freellm-tools-backup', version: 1, date: new Date().toISOString() };\n  checks.forEach(function (c, i) {\n    if (!c._input.checked) return;\n    try { data[KEYS[i]] = JSON.parse(localStorage.getItem(KEYS[i]) || 'null'); } catch (e) {}\n  });\n  output.value = JSON.stringify(data, null, 2);\n  return data;\n}\nchecks.forEach(function (c) { c._input.addEventListener('change', build); });\napp.appendChild(T.el('span', { text: '选择要导出的数据', class: 'field' }));\nvar wrap1 = T.row(checks.slice(0, 5)); wrap1.style.marginBottom = '4px';\nvar wrap2 = T.row(checks.slice(5, 10)); wrap2.style.marginBottom = '4px';\nvar wrap3 = T.row(checks.slice(10)); wrap3.style.marginBottom = '4px';\napp.appendChild(wrap1);\napp.appendChild(wrap2);\napp.appendChild(wrap3);\napp.appendChild(T.pane([T.field('备份 JSON', output)], true));\napp.appendChild(T.row([T.button('生成预览', build, true),\n  T.button('下载备份文件', function () {\n    var data = build();\n    T.download('freellm-backup-' + T.today() + '.json', JSON.stringify(data), 'application/json');\n  }, true)]));\nbuild();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

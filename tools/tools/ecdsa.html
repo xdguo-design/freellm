@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>ECDSA 数字签名 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('ECDSA 数字签名', 'P-256 椭圆曲线签名与验签', 'ecdsa');
+var msg = T.textarea('待签名消息…');
+var pubOut = T.out('公钥…'); pubOut.setAttribute('rows', '4');
+var privOut = T.out('私钥…'); privOut.setAttribute('rows', '4');
+var sigOut = T.out('签名 (base64)…'); sigOut.setAttribute('rows', '4');
+var verdict = T.badge('—');
+var kp = null;
+function gen() {
+  crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']).then(function (k) {
+    kp = k;
+    return Promise.all([crypto.subtle.exportKey('spki', k.publicKey), crypto.subtle.exportKey('pkcs8', k.privateKey)]);
+  }).then(function (keys) {
+    var pem = function (b64, l) { return '-----BEGIN ' + l + '-----\n' + b64.match(/.{1,64}/g).join('\n') + '\n-----END ' + l + '-----'; };
+    pubOut.value = pem(T.bytesToB64(keys[0]), 'PUBLIC KEY');
+    privOut.value = pem(T.bytesToB64(keys[1]), 'PRIVATE KEY');
+  });
+}
+function sign() {
+  if (!kp) { T.toast('请先生成密钥对'); return; }
+  crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, kp.privateKey, T.textToBytes(msg.value))
+    .then(function (sig) { sigOut.value = T.bytesToB64(sig); verdict.textContent = '已签名'; });
+}
+function verify() {
+  if (!kp) { T.toast('请先生成密钥对'); return; }
+  crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, kp.publicKey, T.b64ToBytes(sigOut.value.trim()), T.textToBytes(msg.value))
+    .then(function (ok) {
+      verdict.textContent = ok ? '✓ 验签通过' : '✗ 验签失败（消息或签名被改动）';
+      verdict.className = 'badge ' + (ok ? 'ok' : 'warn');
+    });
+}
+app.appendChild(T.pane([T.field('消息', msg)], true));
+app.appendChild(T.pane([T.field('公钥', pubOut), T.field('私钥', privOut)]));
+app.appendChild(T.field('签名', sigOut));
+app.appendChild(T.row([T.button('生成密钥对', gen), T.button('签名', sign, true), T.button('验签', verify), verdict]));
+gen();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "ecdsa", "title": "ECDSA 数字签名", "desc": "P-256 椭圆曲线签名与验签", "scripts": "", "code": "var msg = T.textarea('待签名消息…');\nvar pubOut = T.out('公钥…'); pubOut.setAttribute('rows', '4');\nvar privOut = T.out('私钥…'); privOut.setAttribute('rows', '4');\nvar sigOut = T.out('签名 (base64)…'); sigOut.setAttribute('rows', '4');\nvar verdict = T.badge('—');\nvar kp = null;\nfunction gen() {\n  crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']).then(function (k) {\n    kp = k;\n    return Promise.all([crypto.subtle.exportKey('spki', k.publicKey), crypto.subtle.exportKey('pkcs8', k.privateKey)]);\n  }).then(function (keys) {\n    var pem = function (b64, l) { return '-----BEGIN ' + l + '-----\\n' + b64.match(/.{1,64}/g).join('\\n') + '\\n-----END ' + l + '-----'; };\n    pubOut.value = pem(T.bytesToB64(keys[0]), 'PUBLIC KEY');\n    privOut.value = pem(T.bytesToB64(keys[1]), 'PRIVATE KEY');\n  });\n}\nfunction sign() {\n  if (!kp) { T.toast('请先生成密钥对'); return; }\n  crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, kp.privateKey, T.textToBytes(msg.value))\n    .then(function (sig) { sigOut.value = T.bytesToB64(sig); verdict.textContent = '已签名'; });\n}\nfunction verify() {\n  if (!kp) { T.toast('请先生成密钥对'); return; }\n  crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, kp.publicKey, T.b64ToBytes(sigOut.value.trim()), T.textToBytes(msg.value))\n    .then(function (ok) {\n      verdict.textContent = ok ? '✓ 验签通过' : '✗ 验签失败（消息或签名被改动）';\n      verdict.className = 'badge ' + (ok ? 'ok' : 'warn');\n    });\n}\napp.appendChild(T.pane([T.field('消息', msg)], true));\napp.appendChild(T.pane([T.field('公钥', pubOut), T.field('私钥', privOut)]));\napp.appendChild(T.field('签名', sigOut));\napp.appendChild(T.row([T.button('生成密钥对', gen), T.button('签名', sign, true), T.button('验签', verify), verdict]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

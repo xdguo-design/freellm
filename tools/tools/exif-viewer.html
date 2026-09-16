@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>EXIF 查看器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('EXIF 查看器', '上传图片查看 EXIF 元数据（相机 / 参数 / 方向 / 时间）', 'exif-viewer');
+function parseExif(buf) {
+  var dv = new DataView(buf);
+  if (dv.getUint16(0) !== 0xFFD8) return null;
+  var offset = 2;
+  var tiffStart = -1;
+  while (offset < dv.byteLength - 4) {
+    if (dv.getUint16(offset) !== 0xFFE1) {
+      if (dv.getUint16(offset) === 0xFFDA) break;
+      offset += 2 + dv.getUint16(offset + 2);
+    } else {
+      if (dv.getUint32(offset + 4) !== 0x45786966) break;
+      tiffStart = offset + 10;
+      break;
+    }
+  }
+  if (tiffStart < 0) return null;
+  var little = dv.getUint16(tiffStart) === 0x4949;
+  function get16(off) { return dv.getUint16(off, little); }
+  function get32(off) { return dv.getUint32(off, little); }
+  var ifd0 = tiffStart + get32(tiffStart + 4);
+  var TAGS = {
+    0x010F: '制造商', 0x0110: '型号', 0x0112: '方向', 0x0132: '拍摄时间',
+    0x013B: '作者', 0x8298: '版权', 0x8769: '_exifIFD', 0x8825: '_gpsIFD'
+  };
+  var EXIF_TAGS = {
+    0x829A: '曝光时间', 0x829D: '光圈值 F', 0x8827: 'ISO', 0x9003: '拍摄时间',
+    0x920A: '焦距', 0xA002: '像素宽度', 0xA003: '像素高度', 0x9209: '闪光灯', 0xA434: '镜头型号'
+  };
+  var ORIENT = { 1: '正常', 3: '旋转180°', 6: '需顺时针旋转90°', 8: '需逆时针旋转90°' };
+  var out = {};
+  function readTag(off, table) {
+    var tag = get16(off);
+    var type = get16(off + 2);
+    var num = get32(off + 4);
+    var sizes = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8 };
+    var size = (sizes[type] || 1) * num;
+    var valOff = size > 4 ? tiffStart + get32(off + 8) : off + 8;
+    if (type === 2) {
+      var s = '';
+      for (var i = 0; i < num - 1; i++) s += String.fromCharCode(dv.getUint8(valOff + i));
+      return s;
+    }
+    if (type === 3) return get16(valOff);
+    if (type === 4) return get32(valOff);
+    if (type === 5 || type === 10) {
+      var n1 = get32(valOff), d1 = get32(valOff + 4);
+      return d1 ? +(n1 / d1).toFixed(4) : null;
+    }
+    return get32(valOff);
+  }
+  var entries = get16(ifd0);
+  for (var i = 0; i < entries; i++) {
+    var off = ifd0 + 2 + i * 12;
+    var tag = get16(off);
+    var name = TAGS[tag];
+    if (!name) continue;
+    if (name === '_exifIFD' || name === '_gpsIFD') continue;
+    var v = readTag(off);
+    if (tag === 0x0112) v = ORIENT[v] || v;
+    if (v != null && v !== '') out[name] = String(v);
+  }
+  for (i = 0; i < entries; i++) {
+    off = ifd0 + 2 + i * 12;
+    if (get16(off) === 0x8769) {
+      var exifOff = tiffStart + get32(off + 8);
+      var n2 = get16(exifOff);
+      for (var j = 0; j < n2; j++) {
+        var off2 = exifOff + 2 + j * 12;
+        var t2 = get16(off2);
+        if (EXIF_TAGS[t2]) {
+          var v2 = readTag(off2);
+          if (t2 === 0x829A) v2 = v2 + ' 秒';
+          if (t2 === 0x829D && typeof v2 === 'number') v2 = 'F' + v2;
+          if (t2 === 0x920A && typeof v2 === 'number') v2 = v2 + ' mm';
+          if (v2 != null) out[EXIF_TAGS[t2]] = String(v2);
+        }
+      }
+    }
+  }
+  return out;
+}
+
+var drop = T.msg('点击选择 JPEG 图片或拖拽到此处', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '30px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var preview = T.el('img', { style: 'max-width:100%;max-height:300px;border-radius:8px;display:none' });
+var box = T.el('div');
+var inp = T.el('input', { type: 'file', accept: 'image/jpeg,image/*', style: 'display:none' });
+document.body.appendChild(inp);
+inp.addEventListener('change', function () { if (inp.files[0]) handle(inp.files[0]); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) {
+  e.preventDefault();
+  if (e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);
+});
+function handle(f) {
+  var fr = new FileReader();
+  fr.onload = function () {
+    preview.src = fr.result;
+    preview.style.display = '';
+    var exif = parseExif(fr.result);
+    T.clearEl(box);
+    if (!exif || !Object.keys(exif).length) {
+      box.appendChild(T.msg('未找到 EXIF 数据（可能已被清除，或是 PNG/WebP 等非 JPEG 格式）', ''));
+      return;
+    }
+    box.appendChild(T.kvTable(Object.keys(exif).map(function (k) { return [k, exif[k]]; })));
+  };
+  fr.readAsArrayBuffer(f);
+}
+app.appendChild(drop);
+app.appendChild(preview);
+app.appendChild(box);
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "exif-viewer", "title": "EXIF 查看器", "desc": "上传图片查看 EXIF 元数据（相机 / 参数 / 方向 / 时间）", "scripts": "", "code": "function parseExif(buf) {\n  var dv = new DataView(buf);\n  if (dv.getUint16(0) !== 0xFFD8) return null;\n  var offset = 2;\n  var tiffStart = -1;\n  while (offset \u003c dv.byteLength - 4) {\n    if (dv.getUint16(offset) !== 0xFFE1) {\n      if (dv.getUint16(offset) === 0xFFDA) break;\n      offset += 2 + dv.getUint16(offset + 2);\n    } else {\n      if (dv.getUint32(offset + 4) !== 0x45786966) break;\n      tiffStart = offset + 10;\n      break;\n    }\n  }\n  if (tiffStart \u003c 0) return null;\n  var little = dv.getUint16(tiffStart) === 0x4949;\n  function get16(off) { return dv.getUint16(off, little); }\n  function get32(off) { return dv.getUint32(off, little); }\n  var ifd0 = tiffStart + get32(tiffStart + 4);\n  var TAGS = {\n    0x010F: '制造商', 0x0110: '型号', 0x0112: '方向', 0x0132: '拍摄时间',\n    0x013B: '作者', 0x8298: '版权', 0x8769: '_exifIFD', 0x8825: '_gpsIFD'\n  };\n  var EXIF_TAGS = {\n    0x829A: '曝光时间', 0x829D: '光圈值 F', 0x8827: 'ISO', 0x9003: '拍摄时间',\n    0x920A: '焦距', 0xA002: '像素宽度', 0xA003: '像素高度', 0x9209: '闪光灯', 0xA434: '镜头型号'\n  };\n  var ORIENT = { 1: '正常', 3: '旋转180°', 6: '需顺时针旋转90°', 8: '需逆时针旋转90°' };\n  var out = {};\n  function readTag(off, table) {\n    var tag = get16(off);\n    var type = get16(off + 2);\n    var num = get32(off + 4);\n    var sizes = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8 };\n    var size = (sizes[type] || 1) * num;\n    var valOff = size > 4 ? tiffStart + get32(off + 8) : off + 8;\n    if (type === 2) {\n      var s = '';\n      for (var i = 0; i \u003c num - 1; i++) s += String.fromCharCode(dv.getUint8(valOff + i));\n      return s;\n    }\n    if (type === 3) return get16(valOff);\n    if (type === 4) return get32(valOff);\n    if (type === 5 || type === 10) {\n      var n1 = get32(valOff), d1 = get32(valOff + 4);\n      return d1 ? +(n1 / d1).toFixed(4) : null;\n    }\n    return get32(valOff);\n  }\n  var entries = get16(ifd0);\n  for (var i = 0; i \u003c entries; i++) {\n    var off = ifd0 + 2 + i * 12;\n    var tag = get16(off);\n    var name = TAGS[tag];\n    if (!name) continue;\n    if (name === '_exifIFD' || name === '_gpsIFD') continue;\n    var v = readTag(off);\n    if (tag === 0x0112) v = ORIENT[v] || v;\n    if (v != null && v !== '') out[name] = String(v);\n  }\n  for (i = 0; i \u003c entries; i++) {\n    off = ifd0 + 2 + i * 12;\n    if (get16(off) === 0x8769) {\n      var exifOff = tiffStart + get32(off + 8);\n      var n2 = get16(exifOff);\n      for (var j = 0; j \u003c n2; j++) {\n        var off2 = exifOff + 2 + j * 12;\n        var t2 = get16(off2);\n        if (EXIF_TAGS[t2]) {\n          var v2 = readTag(off2);\n          if (t2 === 0x829A) v2 = v2 + ' 秒';\n          if (t2 === 0x829D && typeof v2 === 'number') v2 = 'F' + v2;\n          if (t2 === 0x920A && typeof v2 === 'number') v2 = v2 + ' mm';\n          if (v2 != null) out[EXIF_TAGS[t2]] = String(v2);\n        }\n      }\n    }\n  }\n  return out;\n}\n\nvar drop = T.msg('点击选择 JPEG 图片或拖拽到此处', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '30px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar preview = T.el('img', { style: 'max-width:100%;max-height:300px;border-radius:8px;display:none' });\nvar box = T.el('div');\nvar inp = T.el('input', { type: 'file', accept: 'image/jpeg,image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\ninp.addEventListener('change', function () { if (inp.files[0]) handle(inp.files[0]); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) {\n  e.preventDefault();\n  if (e.dataTransfer.files[0]) handle(e.dataTransfer.files[0]);\n});\nfunction handle(f) {\n  var fr = new FileReader();\n  fr.onload = function () {\n    preview.src = fr.result;\n    preview.style.display = '';\n    var exif = parseExif(fr.result);\n    T.clearEl(box);\n    if (!exif || !Object.keys(exif).length) {\n      box.appendChild(T.msg('未找到 EXIF 数据（可能已被清除，或是 PNG/WebP 等非 JPEG 格式）', ''));\n      return;\n    }\n    box.appendChild(T.kvTable(Object.keys(exif).map(function (k) { return [k, exif[k]]; })));\n  };\n  fr.readAsArrayBuffer(f);\n}\napp.appendChild(drop);\napp.appendChild(preview);\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

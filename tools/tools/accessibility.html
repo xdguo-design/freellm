@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>无障碍设置 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('无障碍设置', '字体大小 / 高对比度 / 减少动画等无障碍偏好', 'accessibility');
+var settings = {};
+try { settings = JSON.parse(localStorage.getItem('freellm-a11y') || '{}'); } catch (e) {}
+var fontSize = T.range(80, 160, 10, settings.fontSize || 100);
+var fontLabel = T.el('b', { text: (settings.fontSize || 100) + '%' });
+var contrast = T.check('高对比度模式', settings.contrast);
+var reduceMotion = T.check('减少动画', settings.reduceMotion);
+var biggerCursor = T.check('大号光标', settings.biggerCursor);
+var preview = T.el('div', { class: 'output', style: 'min-height:120px;font-family:var(--font-sans);line-height:1.9;transition:all .2s' });
+function apply() {
+  var fs = +fontSize.value;
+  fontLabel.textContent = fs + '%';
+  preview.style.fontSize = 14 * fs / 100 + 'px';
+  if (contrast._input.checked) {
+    preview.style.background = '#000';
+    preview.style.color = '#FFF';
+  } else {
+    preview.style.background = '';
+    preview.style.color = '';
+  }
+  if (reduceMotion._input.checked) preview.style.transition = 'none';
+  else preview.style.transition = 'all .2s';
+  preview.style.cursor = biggerCursor._input.checked ? 'url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22><circle cx=%2210%22 cy=%2210%22 r=%228%22 fill=%22blue%22/></svg>") 4 4, auto' : '';
+  preview.innerHTML = '<b>无障碍示例文本 Accessibility Sample</b><br>这是一段用于预览无障碍设置的正文。The quick brown fox jumps over the lazy dog.<br><button style="padding:6px 16px;margin-top:8px">示例按钮</button>';
+}
+function saveApply() {
+  settings = { fontSize: +fontSize.value, contrast: contrast._input.checked, reduceMotion: reduceMotion._input.checked, biggerCursor: biggerCursor._input.checked };
+  localStorage.setItem('freellm-a11y', JSON.stringify(settings));
+  apply();
+}
+[fontSize, contrast._input, reduceMotion._input, biggerCursor._input].forEach(function (el) { el.addEventListener('input', saveApply); });
+app.appendChild(T.row([T.el('span', { text: '字体大小' }), fontSize, fontLabel]));
+app.appendChild(T.row([contrast, reduceMotion, biggerCursor]));
+app.appendChild(preview);
+app.appendChild(T.row([T.button('恢复默认', function () {
+  fontSize.value = 100;
+  contrast._input.checked = false;
+  reduceMotion._input.checked = false;
+  biggerCursor._input.checked = false;
+  saveApply();
+  T.toast('已恢复默认');
+})]));
+apply();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "accessibility", "title": "无障碍设置", "desc": "字体大小 / 高对比度 / 减少动画等无障碍偏好", "scripts": "", "code": "var settings = {};\ntry { settings = JSON.parse(localStorage.getItem('freellm-a11y') || '{}'); } catch (e) {}\nvar fontSize = T.range(80, 160, 10, settings.fontSize || 100);\nvar fontLabel = T.el('b', { text: (settings.fontSize || 100) + '%' });\nvar contrast = T.check('高对比度模式', settings.contrast);\nvar reduceMotion = T.check('减少动画', settings.reduceMotion);\nvar biggerCursor = T.check('大号光标', settings.biggerCursor);\nvar preview = T.el('div', { class: 'output', style: 'min-height:120px;font-family:var(--font-sans);line-height:1.9;transition:all .2s' });\nfunction apply() {\n  var fs = +fontSize.value;\n  fontLabel.textContent = fs + '%';\n  preview.style.fontSize = 14 * fs / 100 + 'px';\n  if (contrast._input.checked) {\n    preview.style.background = '#000';\n    preview.style.color = '#FFF';\n  } else {\n    preview.style.background = '';\n    preview.style.color = '';\n  }\n  if (reduceMotion._input.checked) preview.style.transition = 'none';\n  else preview.style.transition = 'all .2s';\n  preview.style.cursor = biggerCursor._input.checked ? 'url(\"data:image/svg+xml;utf8,\u003csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22>\u003ccircle cx=%2210%22 cy=%2210%22 r=%228%22 fill=%22blue%22/>\u003c/svg>\") 4 4, auto' : '';\n  preview.innerHTML = '\u003cb>无障碍示例文本 Accessibility Sample\u003c/b>\u003cbr>这是一段用于预览无障碍设置的正文。The quick brown fox jumps over the lazy dog.\u003cbr>\u003cbutton style=\"padding:6px 16px;margin-top:8px\">示例按钮\u003c/button>';\n}\nfunction saveApply() {\n  settings = { fontSize: +fontSize.value, contrast: contrast._input.checked, reduceMotion: reduceMotion._input.checked, biggerCursor: biggerCursor._input.checked };\n  localStorage.setItem('freellm-a11y', JSON.stringify(settings));\n  apply();\n}\n[fontSize, contrast._input, reduceMotion._input, biggerCursor._input].forEach(function (el) { el.addEventListener('input', saveApply); });\napp.appendChild(T.row([T.el('span', { text: '字体大小' }), fontSize, fontLabel]));\napp.appendChild(T.row([contrast, reduceMotion, biggerCursor]));\napp.appendChild(preview);\napp.appendChild(T.row([T.button('恢复默认', function () {\n  fontSize.value = 100;\n  contrast._input.checked = false;\n  reduceMotion._input.checked = false;\n  biggerCursor._input.checked = false;\n  saveApply();\n  T.toast('已恢复默认');\n})]));\napply();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

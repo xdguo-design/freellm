@@ -2,126 +2,113 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Cron 表达式 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Cron 表达式', 'Cron 表达式解析与验证', 'cron');
-
-  var input = T.el('input', { type: 'text', value: '*/5 * * * *', placeholder: '* * * * *', style: 'width:100%;font-family:monospace;font-size:1.2em;text-align:center;padding:12px' });
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px' });
-  var nextRuns = T.el('div', { class: 'output dark', style: 'padding:16px' });
-
-  var presets = T.el('div', { class: 'row', style: 'flex-wrap:wrap;gap:8px' });
-  var PRESETS = [
-    ['每分钟', '* * * * *'],
-    ['每5分钟', '*/5 * * * *'],
-    ['每小时', '0 * * * *'],
-    ['每天零点', '0 0 * * *'],
-    ['每周一9点', '0 9 * * 1'],
-    ['每月1号', '0 0 1 * *'],
-    ['每季度', '0 0 1 1,4,7,10 *'],
-    ['每年元旦', '0 0 1 1 *']
-  ];
-
-  PRESETS.forEach(function (p) {
-    var btn = T.button(p[0], function () { input.value = p[1]; parse(); });
-    presets.appendChild(btn);
-  });
-
-  function parse() {
-    var v = input.value.trim();
-    if (!v) { result.textContent = ''; nextRuns.textContent = ''; return; }
-
-    var parts = v.split(/\s+/);
-    if (parts.length !== 5) {
-      result.innerHTML = '<span style="color:var(--red)">✗ 需要 5 个字段: 分 时 日 月 周</span>';
-      nextRuns.textContent = '';
-      return;
-    }
-
-    var fields = ['分钟 (0-59)', '小时 (0-23)', '日期 (1-31)', '月份 (1-12)', '星期 (0-7)'];
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:4px">字段</th><th style="text-align:left;padding:4px">值</th><th style="text-align:left;padding:4px">描述</th></tr></thead>';
-    html += '<tbody>';
-
-    parts.forEach(function (p, i) {
-      var desc = describeField(p, i);
-      html += '<tr><td style="padding:4px;border-bottom:1px solid var(--line)">' + fields[i] + '</td>';
-      html += '<td style="padding:4px;border-bottom:1px solid var(--line);font-family:monospace;color:var(--accent)">' + p + '</td>';
-      html += '<td style="padding:4px;border-bottom:1px solid var(--line)">' + desc + '</td></tr>';
-    });
-    html += '</tbody></table>';
-    result.innerHTML = html;
-
-    // Calculate next runs
-    var runs = [];
-    var now = new Date();
-    var check = new Date(now);
-    for (var i = 0; i < 10 && runs.length < 5; i++) {
-      check.setMinutes(check.getMinutes() + 1);
-      if (matchCron(check, parts)) {
-        runs.push(check.toLocaleString('zh-CN'));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Cron 表达式', 'Cron 表达式解析说明 + 未来 5 次执行时间预览（5 字段）', 'cron');
+var input = T.input('*/5 * * * *', { class: 'grow mono', placeholder: '分 时 日 月 周' });
+var info = T.el('div', { class: 'pane single' });
+var FIELD_DESC = [
+  ['分钟', '0-59', '* / , -'],
+  ['小时', '0-23', '* / , -'],
+  ['日', '1-31', '* / , - ?'],
+  ['月', '1-12 或 JAN-DEC', '* / , -'],
+  ['星期', '0-7（0 和 7 都是周日）', '* / , - ?']
+];
+function describe(f, idx) {
+  f = f.trim();
+  var unit = FIELD_DESC[idx][0];
+  if (f === '*') return '每' + unit;
+  if (f === '*/1') return '每' + unit;
+  var step = f.match(/^\*\/(\d+)$/);
+  if (step) return '每 ' + step[1] + ' 个' + unit;
+  var range = f.match(/^(\d+)-(\d+)$/);
+  if (range) return '从 ' + range[1] + ' 到 ' + range[2] + ' ' + unit;
+  var list = f.split(',');
+  if (list.length > 1) return unit + ' = ' + f;
+  return unit + ' = ' + f;
+}
+function matchCron(d, parts) {
+  var min = d.getMinutes(), hour = d.getHours(), day = d.getDate();
+  var mon = d.getMonth() + 1, dow = d.getDay();
+  var fm = function (p, v, max) {
+    if (p === '*' || p === '?') return true;
+    var out = false;
+    p.split(',').forEach(function (seg) {
+      var step = 1, base = seg;
+      var si = seg.indexOf('/');
+      if (si >= 0) { step = +seg.slice(si + 1); base = seg.slice(0, si); }
+      var a = 0, b = max;
+      if (base !== '*' && base !== '') {
+        var rr = base.split('-');
+        a = +rr[0]; b = rr[1] ? +rr[1] : a;
       }
+      var hit = false;
+      for (var x = a; x <= b; x += step) if (x === v) hit = true;
+      if (hit) out = true;
+    });
+    return out;
+  };
+  return fm(parts[0], min, 59) && fm(parts[1], hour, 23) && fm(parts[2], day, 31) && fm(parts[3], mon, 12) && fm(parts[4], dow, 7);
+}
+function nextRuns(parts, n) {
+  var out = [];
+  var d = new Date();
+  d.setSeconds(0, 0);
+  d.setMinutes(d.getMinutes() + 1);
+  var guard = 0;
+  while (out.length < n && guard < 500000) {
+    guard++;
+    if (matchCron(d, parts)) {
+      out.push(new Date(d));
+      d.setMinutes(d.getMinutes() + 1);
+    } else {
+      d.setMinutes(d.getMinutes() + 1);
     }
-    nextRuns.innerHTML = '<strong>下次执行时间:</strong><br>' + (runs.length ? runs.join('<br>') : '无法计算');
   }
-
-  function describeField(val, idx) {
-    if (val === '*') return '每' + ['分钟', '小时', '天', '月', '周'][idx];
-    if (val.includes('/')) return '每 ' + val.split('/')[1] + ' 个单位';
-    if (val.includes('-')) return '从 ' + val.replace('-', ' 到 ');
-    if (val.includes(',')) return '在 ' + val.replace(/,/g, ', ') + ' 时';
-    return '在 ' + val + ' 时';
+  return out;
+}
+function run() {
+  T.clearEl(info);
+  var parts = input.value.trim().split(/\s+/);
+  if (parts.length !== 5) {
+    info.appendChild(T.msg('⚠ 需要 5 个字段：分 时 日 月 周', 'err'));
+    return;
   }
-
-  function matchCron(date, parts) {
-    var min = date.getMinutes();
-    var hour = date.getHours();
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var dow = date.getDay();
-
-    return matchPart(parts[0], min, 0, 59) &&
-           matchPart(parts[1], hour, 0, 23) &&
-           matchPart(parts[2], day, 1, 31) &&
-           matchPart(parts[3], month, 1, 12) &&
-           matchPart(parts[4], dow, 0, 7);
-  }
-
-  function matchPart(part, val, min, max) {
-    if (part === '*') return true;
-    if (part.includes('/')) {
-      var step = parseInt(part.split('/')[1]);
-      return val % step === 0;
-    }
-    if (part.includes(',')) {
-      return part.split(',').includes(String(val));
-    }
-    if (part.includes('-')) {
-      var range = part.split('-');
-      return val >= parseInt(range[0]) && val <= parseInt(range[1]);
-    }
-    return parseInt(part) === val;
-  }
-
-  input.addEventListener('input', function () { setTimeout(parse, 100); });
-
-  app.appendChild(T.el('div', { class: 'field', text: '预设:' }));
-  app.appendChild(presets);
-  app.appendChild(T.el('div', { class: 'field', text: 'Cron 表达式 (分 时 日 月 周):' }));
-  app.appendChild(input);
-  app.appendChild(result);
-  app.appendChild(T.el('div', { class: 'field', text: '下次执行:' }));
-  app.appendChild(nextRuns);
-  parse();
+  var rows = parts.map(function (p, i) {
+    var range = FIELD_DESC[i][1];
+    var v = p === '*' ? null : +p.split('/')[0].split('-')[0];
+    if (v != null && (isNaN(v) || v < 0)) return [FIELD_DESC[i][0], p + ' ⚠'];
+    return [describe(p, i), '范围 ' + range];
+  });
+  info.appendChild(T.kvTable(rows));
+  var nxt = nextRuns(parts, 5);
+  info.appendChild(T.el('span', { text: '未来执行时间', class: 'field' }));
+  info.appendChild(T.refTable(['#', '时间'], nxt.map(function (d, i) { return [i + 1, T.fmtTime(d)]; })));
+}
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.row([T.el('span', { text: '表达式' }), input]));
+app.appendChild(T.el('p', { text: '示例：*/5 * * * * 每5分钟 · 0 9 * * 1-5 工作日每天9点 · 30 3 1,15 * * 每月1号和15号 3:30', style: 'color:var(--ink2);font-size:12px' }));
+app.appendChild(info);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "cron", "title": "Cron 表达式", "desc": "Cron 表达式解析说明 + 未来 5 次执行时间预览（5 字段）", "scripts": "", "code": "var input = T.input('*/5 * * * *', { class: 'grow mono', placeholder: '分 时 日 月 周' });\nvar info = T.el('div', { class: 'pane single' });\nvar FIELD_DESC = [\n  ['分钟', '0-59', '* / , -'],\n  ['小时', '0-23', '* / , -'],\n  ['日', '1-31', '* / , - ?'],\n  ['月', '1-12 或 JAN-DEC', '* / , -'],\n  ['星期', '0-7（0 和 7 都是周日）', '* / , - ?']\n];\nfunction describe(f, idx) {\n  f = f.trim();\n  var unit = FIELD_DESC[idx][0];\n  if (f === '*') return '每' + unit;\n  if (f === '*/1') return '每' + unit;\n  var step = f.match(/^\\*\\/(\\d+)$/);\n  if (step) return '每 ' + step[1] + ' 个' + unit;\n  var range = f.match(/^(\\d+)-(\\d+)$/);\n  if (range) return '从 ' + range[1] + ' 到 ' + range[2] + ' ' + unit;\n  var list = f.split(',');\n  if (list.length > 1) return unit + ' = ' + f;\n  return unit + ' = ' + f;\n}\nfunction matchCron(d, parts) {\n  var min = d.getMinutes(), hour = d.getHours(), day = d.getDate();\n  var mon = d.getMonth() + 1, dow = d.getDay();\n  var fm = function (p, v, max) {\n    if (p === '*' || p === '?') return true;\n    var out = false;\n    p.split(',').forEach(function (seg) {\n      var step = 1, base = seg;\n      var si = seg.indexOf('/');\n      if (si >= 0) { step = +seg.slice(si + 1); base = seg.slice(0, si); }\n      var a = 0, b = max;\n      if (base !== '*' && base !== '') {\n        var rr = base.split('-');\n        a = +rr[0]; b = rr[1] ? +rr[1] : a;\n      }\n      var hit = false;\n      for (var x = a; x \u003c= b; x += step) if (x === v) hit = true;\n      if (hit) out = true;\n    });\n    return out;\n  };\n  return fm(parts[0], min, 59) && fm(parts[1], hour, 23) && fm(parts[2], day, 31) && fm(parts[3], mon, 12) && fm(parts[4], dow, 7);\n}\nfunction nextRuns(parts, n) {\n  var out = [];\n  var d = new Date();\n  d.setSeconds(0, 0);\n  d.setMinutes(d.getMinutes() + 1);\n  var guard = 0;\n  while (out.length \u003c n && guard \u003c 500000) {\n    guard++;\n    if (matchCron(d, parts)) {\n      out.push(new Date(d));\n      d.setMinutes(d.getMinutes() + 1);\n    } else {\n      d.setMinutes(d.getMinutes() + 1);\n    }\n  }\n  return out;\n}\nfunction run() {\n  T.clearEl(info);\n  var parts = input.value.trim().split(/\\s+/);\n  if (parts.length !== 5) {\n    info.appendChild(T.msg('⚠ 需要 5 个字段：分 时 日 月 周', 'err'));\n    return;\n  }\n  var rows = parts.map(function (p, i) {\n    var range = FIELD_DESC[i][1];\n    var v = p === '*' ? null : +p.split('/')[0].split('-')[0];\n    if (v != null && (isNaN(v) || v \u003c 0)) return [FIELD_DESC[i][0], p + ' ⚠'];\n    return [describe(p, i), '范围 ' + range];\n  });\n  info.appendChild(T.kvTable(rows));\n  var nxt = nextRuns(parts, 5);\n  info.appendChild(T.el('span', { text: '未来执行时间', class: 'field' }));\n  info.appendChild(T.refTable(['#', '时间'], nxt.map(function (d, i) { return [i + 1, T.fmtTime(d)]; })));\n}\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.row([T.el('span', { text: '表达式' }), input]));\napp.appendChild(T.el('p', { text: '示例：*/5 * * * * 每5分钟 · 0 9 * * 1-5 工作日每天9点 · 30 3 1,15 * * 每月1号和15号 3:30', style: 'color:var(--ink2);font-size:12px' }));\napp.appendChild(info);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

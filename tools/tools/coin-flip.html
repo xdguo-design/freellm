@@ -2,62 +2,66 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>翻硬币 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('翻硬币', '随机决策', 'coin-flip');
-
-  var coin = T.el('div', {
-    style: 'width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg, #f39c12, #e67e22);display:flex;align-items:center;justify-content:center;font-size:3em;cursor:pointer;transition:transform 0.6s;box-shadow:0 8px 20px rgba(0,0,0,0.3)',
-    text: '🪙',
-    onclick: flip
-  });
-
-  var result = T.el('div', { class: 'badge', style: 'font-size:1.5em;text-align:center;margin:16px 0' });
-  var stats = T.el('div', { class: 'output dark', style: 'text-align:center;padding:16px' });
-
-  var heads = 0;
-  var tails = 0;
-  var flipping = false;
-
-  function flip() {
-    if (flipping) return;
-    flipping = true;
-
-    coin.style.transform = 'rotateY(1800deg)';
-    result.textContent = '翻转中...';
-
-    setTimeout(function () {
-      var isHeads = Math.random() < 0.5;
-      coin.style.transform = 'rotateY(0deg)';
-      
-      if (isHeads) {
-        heads++;
-        result.textContent = '正面！';
-        result.style.color = '#f39c12';
-      } else {
-        tails++;
-        result.textContent = '反面！';
-        result.style.color = '#3498db';
-        coin.style.transform = 'rotateY(180deg)';
-      }
-
-      stats.textContent = '正面: ' + heads + ' | 反面: ' + tails + ' | 总计: ' + (heads + tails);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('翻硬币', '抛硬币随机决策：正面 / 反面，带翻转动画与统计', 'coin-flip');
+var coin = T.el('div', { style: 'width:150px;height:150px;border-radius:50%;margin:40px auto;display:flex;align-items:center;justify-content:center;font:700 44px var(--font-serif);background:radial-gradient(circle at 35% 30%, #FFE28A, #D4A017);color:#5C4400;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .12s;user-select:none' });
+coin.textContent = '正';
+var heads = 0, tails = 0, total = 0;
+var stats = T.el('div', { class: 'row', style: 'justify-content:center' });
+function render() {
+  T.clearEl(stats);
+  stats.appendChild(T.stat(total ? Math.round(heads / total * 100) + '%' : '—', '正面'));
+  stats.appendChild(T.stat(total ? Math.round(tails / total * 100) + '%' : '—', '反面'));
+  stats.appendChild(T.stat(total, '总次数'));
+}
+var flipping = false;
+function flip() {
+  if (flipping) return;
+  flipping = true;
+  var n = 0;
+  var iv = setInterval(function () {
+    coin.style.transform = 'rotateY(' + (n * 90) + 'deg) scale(' + (1 + Math.sin(n) * 0.08) + ')';
+    coin.textContent = n % 2 ? '反' : '正';
+    n++;
+    if (n > 14) {
+      clearInterval(iv);
+      var result = Math.random() < 0.5 ? '正' : '反';
+      coin.textContent = result;
+      coin.style.transform = 'rotateY(0)';
+      if (result === '正') heads++;
+      else tails++;
+      total++;
+      render();
+      T.toast(result === '正' ? '正面 ✨' : '反面 🌙');
       flipping = false;
-    }, 600);
-  }
-
-  app.appendChild(T.el('div', { style: 'text-align:center' }, [coin]));
-  app.appendChild(result);
-  app.appendChild(stats);
+    }
+  }, 90);
+}
+coin.addEventListener('click', flip);
+app.appendChild(coin);
+app.appendChild(T.row([T.button('抛硬币', flip, true), T.button('清空统计', function () { heads = tails = total = 0; render(); })]));
+app.appendChild(stats);
+render();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "coin-flip", "title": "翻硬币", "desc": "抛硬币随机决策：正面 / 反面，带翻转动画与统计", "scripts": "", "code": "var coin = T.el('div', { style: 'width:150px;height:150px;border-radius:50%;margin:40px auto;display:flex;align-items:center;justify-content:center;font:700 44px var(--font-serif);background:radial-gradient(circle at 35% 30%, #FFE28A, #D4A017);color:#5C4400;box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .12s;user-select:none' });\ncoin.textContent = '正';\nvar heads = 0, tails = 0, total = 0;\nvar stats = T.el('div', { class: 'row', style: 'justify-content:center' });\nfunction render() {\n  T.clearEl(stats);\n  stats.appendChild(T.stat(total ? Math.round(heads / total * 100) + '%' : '—', '正面'));\n  stats.appendChild(T.stat(total ? Math.round(tails / total * 100) + '%' : '—', '反面'));\n  stats.appendChild(T.stat(total, '总次数'));\n}\nvar flipping = false;\nfunction flip() {\n  if (flipping) return;\n  flipping = true;\n  var n = 0;\n  var iv = setInterval(function () {\n    coin.style.transform = 'rotateY(' + (n * 90) + 'deg) scale(' + (1 + Math.sin(n) * 0.08) + ')';\n    coin.textContent = n % 2 ? '反' : '正';\n    n++;\n    if (n > 14) {\n      clearInterval(iv);\n      var result = Math.random() \u003c 0.5 ? '正' : '反';\n      coin.textContent = result;\n      coin.style.transform = 'rotateY(0)';\n      if (result === '正') heads++;\n      else tails++;\n      total++;\n      render();\n      T.toast(result === '正' ? '正面 ✨' : '反面 🌙');\n      flipping = false;\n    }\n  }, 90);\n}\ncoin.addEventListener('click', flip);\napp.appendChild(coin);\napp.appendChild(T.row([T.button('抛硬币', flip, true), T.button('清空统计', function () { heads = tails = total = 0; render(); })]));\napp.appendChild(stats);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

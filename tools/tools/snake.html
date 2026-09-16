@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>贪吃蛇 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('贪吃蛇', '经典贪吃蛇：方向键控制，吃食物变长，撞墙即败', 'snake');
+var canvas = T.el('canvas', { width: 400, height: 400, style: 'width:100%;max-width:400px;border:1px solid var(--line);border-radius:10px;display:block;margin:0 auto;background:var(--surface)' });
+var scoreEl = T.stat(0, '得分');
+var bestEl = T.stat(+(localStorage.getItem('freellm-snake-best') || 0), '最佳');
+var ctx = canvas.getContext('2d');
+var G = 20, CELL = canvas.width / G;
+var snake, dir, food, score, timer = 0, speed = 130, running = false;
+function init() {
+  snake = [{ x: 10, y: 10 }];
+  dir = { x: 1, y: 0 };
+  score = 0;
+  speed = 130;
+  placeFood();
+  scoreEl.firstChild.textContent = 0;
+  if (!running) { running = true; loop(); }
+}
+function placeFood() {
+  do {
+    food = { x: Math.floor(Math.random() * G), y: Math.floor(Math.random() * G) };
+  } while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));
+}
+function loop() {
+  clearInterval(timer);
+  timer = setInterval(step, speed);
+}
+function step() {
+  if (!running) return;
+  var head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+  if (head.x < 0 || head.y < 0 || head.x >= G || head.y >= G || snake.some(function (s) { return s.x === head.x && s.y === head.y; })) {
+    running = false;
+    clearInterval(timer);
+    if (score > +(localStorage.getItem('freellm-snake-best') || 0)) localStorage.setItem('freellm-snake-best', score);
+    bestEl.firstChild.textContent = Math.max(score, +(localStorage.getItem('freellm-snake-best') || 0));
+    ctx.fillStyle = 'rgba(0,0,0,.55)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 26px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('游戏结束 · 得分 ' + score, canvas.width / 2, canvas.height / 2);
+    ctx.font = '14px sans-serif';
+    ctx.fillText('按空格或点击"重新开始"', canvas.width / 2, canvas.height / 2 + 30);
+    return;
+  }
+  snake.unshift(head);
+  if (head.x === food.x && head.y === food.y) {
+    score += 10;
+    scoreEl.firstChild.textContent = score;
+    placeFood();
+    if (speed > 65) { speed -= 4; loop(); }
+  } else snake.pop();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#E74C3C';
+  ctx.beginPath();
+  ctx.arc(food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL / 2 - 3, 0, Math.PI * 2);
+  ctx.fill();
+  snake.forEach(function (s, i) {
+    ctx.fillStyle = i === 0 ? '#1744E8' : 'rgba(23,68,232,' + Math.max(0.35, 1 - i * 0.04) + ')';
+    ctx.fillRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2);
+  });
+}
+document.addEventListener('keydown', function (e) {
+  var map = { ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }, w: { x: 0, y: -1 }, s: { x: 0, y: 1 }, a: { x: -1, y: 0 }, d: { x: 1, y: 0 } };
+  if (map[e.key]) {
+    e.preventDefault();
+    if (map[e.key].x !== -dir.x || map[e.key].y !== -dir.y) dir = map[e.key];
+  }
+  if (e.key === ' ' && !running) { e.preventDefault(); init(); }
+});
+app.appendChild(T.row([scoreEl, bestEl, T.button('重新开始', function () { running = false; setTimeout(init, 30); }, true)]));
+app.appendChild(canvas);
+app.appendChild(T.el('p', { text: '方向键 / WASD 控制，空格重开。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));
+init();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "snake", "title": "贪吃蛇", "desc": "经典贪吃蛇：方向键控制，吃食物变长，撞墙即败", "scripts": "", "code": "var canvas = T.el('canvas', { width: 400, height: 400, style: 'width:100%;max-width:400px;border:1px solid var(--line);border-radius:10px;display:block;margin:0 auto;background:var(--surface)' });\nvar scoreEl = T.stat(0, '得分');\nvar bestEl = T.stat(+(localStorage.getItem('freellm-snake-best') || 0), '最佳');\nvar ctx = canvas.getContext('2d');\nvar G = 20, CELL = canvas.width / G;\nvar snake, dir, food, score, timer = 0, speed = 130, running = false;\nfunction init() {\n  snake = [{ x: 10, y: 10 }];\n  dir = { x: 1, y: 0 };\n  score = 0;\n  speed = 130;\n  placeFood();\n  scoreEl.firstChild.textContent = 0;\n  if (!running) { running = true; loop(); }\n}\nfunction placeFood() {\n  do {\n    food = { x: Math.floor(Math.random() * G), y: Math.floor(Math.random() * G) };\n  } while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));\n}\nfunction loop() {\n  clearInterval(timer);\n  timer = setInterval(step, speed);\n}\nfunction step() {\n  if (!running) return;\n  var head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };\n  if (head.x \u003c 0 || head.y \u003c 0 || head.x >= G || head.y >= G || snake.some(function (s) { return s.x === head.x && s.y === head.y; })) {\n    running = false;\n    clearInterval(timer);\n    if (score > +(localStorage.getItem('freellm-snake-best') || 0)) localStorage.setItem('freellm-snake-best', score);\n    bestEl.firstChild.textContent = Math.max(score, +(localStorage.getItem('freellm-snake-best') || 0));\n    ctx.fillStyle = 'rgba(0,0,0,.55)';\n    ctx.fillRect(0, 0, canvas.width, canvas.height);\n    ctx.fillStyle = '#fff';\n    ctx.font = '600 26px sans-serif';\n    ctx.textAlign = 'center';\n    ctx.fillText('游戏结束 · 得分 ' + score, canvas.width / 2, canvas.height / 2);\n    ctx.font = '14px sans-serif';\n    ctx.fillText('按空格或点击\"重新开始\"', canvas.width / 2, canvas.height / 2 + 30);\n    return;\n  }\n  snake.unshift(head);\n  if (head.x === food.x && head.y === food.y) {\n    score += 10;\n    scoreEl.firstChild.textContent = score;\n    placeFood();\n    if (speed > 65) { speed -= 4; loop(); }\n  } else snake.pop();\n  ctx.clearRect(0, 0, canvas.width, canvas.height);\n  ctx.fillStyle = '#E74C3C';\n  ctx.beginPath();\n  ctx.arc(food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL / 2 - 3, 0, Math.PI * 2);\n  ctx.fill();\n  snake.forEach(function (s, i) {\n    ctx.fillStyle = i === 0 ? '#1744E8' : 'rgba(23,68,232,' + Math.max(0.35, 1 - i * 0.04) + ')';\n    ctx.fillRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2);\n  });\n}\ndocument.addEventListener('keydown', function (e) {\n  var map = { ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }, w: { x: 0, y: -1 }, s: { x: 0, y: 1 }, a: { x: -1, y: 0 }, d: { x: 1, y: 0 } };\n  if (map[e.key]) {\n    e.preventDefault();\n    if (map[e.key].x !== -dir.x || map[e.key].y !== -dir.y) dir = map[e.key];\n  }\n  if (e.key === ' ' && !running) { e.preventDefault(); init(); }\n});\napp.appendChild(T.row([scoreEl, bestEl, T.button('重新开始', function () { running = false; setTimeout(init, 30); }, true)]));\napp.appendChild(canvas);\napp.appendChild(T.el('p', { text: '方向键 / WASD 控制，空格重开。', style: 'text-align:center;color:var(--ink2);font-size:12px' }));\ninit();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

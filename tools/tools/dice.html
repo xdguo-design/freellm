@@ -2,73 +2,72 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>掷骰子 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('掷骰子', '3D 动画骰子', 'dice');
-
-  var diceCount = T.el('input', { type: 'number', value: '1', min: '1', max: '10', style: 'width:80px' });
-  var rollBtn = T.button('掷骰子', roll, true);
-  var diceContainer = T.el('div', { style: 'display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:20px 0' });
-  var result = T.el('div', { class: 'badge blue', style: 'font-size:1.5em;text-align:center' });
-
-  var DICE_FACES = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-
-  function createDice(value) {
-    var dice = T.el('div', {
-      style: 'width:80px;height:80px;font-size:3em;display:flex;align-items:center;justify-content:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:transform 0.3s',
-      text: DICE_FACES[value - 1]
-    });
-    return dice;
-  }
-
-  function roll() {
-    var count = parseInt(diceCount.value) || 1;
-    diceContainer.innerHTML = '';
-    var total = 0;
-    var diceList = [];
-
-    for (var i = 0; i < count; i++) {
-      var value = Math.floor(Math.random() * 6) + 1;
-      var dice = createDice(value);
-      diceList.push({ dice: dice, target: value });
-      total += value;
-      diceContainer.appendChild(dice);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('掷骰子', '3D 动画骰子：1-6 颗可调，摇一摇出结果', 'dice');
+var count = T.num(2, { min: 1, max: 6, style: 'width:70px' });
+var box = T.el('div', { style: 'display:flex;gap:18px;justify-content:center;margin:34px 0;flex-wrap:wrap;min-height:110px' });
+var total = T.stat('—', '总点数');
+var history = T.el('div', { style: 'color:var(--ink2);font-size:12px;text-align:center;min-height:20px' });
+var DOTS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+function renderDice(values) {
+  T.clearEl(box);
+  values.forEach(function (v) {
+    var die = T.el('div', { style: 'width:84px;height:84px;background:var(--surface);border:2px solid var(--ink);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);padding:10px;gap:2px;transform:rotate(' + (Math.random() * 14 - 7) + 'deg)' });
+    for (var i = 0; i < 9; i++) {
+      var dot = T.el('div', { style: 'border-radius:50%;background:' + (DOTS[v].includes(i) ? 'var(--ink)' : 'transparent') + ';' });
+      die.appendChild(dot);
     }
-
-    // Animate
-    var frame = 0;
-    var interval = setInterval(function () {
-      frame++;
-      diceList.forEach(function (d) {
-        var randomValue = Math.floor(Math.random() * 6) + 1;
-        d.dice.textContent = DICE_FACES[randomValue - 1];
-      });
-      if (frame > 10) {
-        clearInterval(interval);
-        diceList.forEach(function (d) {
-          d.dice.textContent = DICE_FACES[d.target - 1];
-        });
-        result.textContent = count > 1 ? '总点数: ' + total : '点数: ' + total;
-      }
-    }, 50);
-  }
-
-  app.appendChild(T.el('div', { class: 'row', style: 'justify-content:center;gap:12px' }, [
-    T.el('span', { text: '骰子数量' }), diceCount, rollBtn
-  ]));
-  app.appendChild(diceContainer);
-  app.appendChild(result);
-
-  roll();
+    box.appendChild(die);
+  });
+}
+var rolling = false;
+function roll() {
+  if (rolling) return;
+  rolling = true;
+  var n = Math.max(1, +count.value || 1);
+  var frames = 0;
+  var iv = setInterval(function () {
+    var vals = [];
+    for (var i = 0; i < n; i++) vals.push(1 + Math.floor(Math.random() * 6));
+    renderDice(vals);
+    frames++;
+    if (frames > 12) {
+      clearInterval(iv);
+      rolling = false;
+      var sum = vals.reduce(function (a, b) { return a + b; }, 0);
+      total.firstChild.textContent = sum + '（' + vals.join(' + ') + '）';
+      history.textContent = '历史：' + (history.textContent.split('历史：')[1] || '') + ' [' + vals.join(',') + ']' + ' '.slice(0, 0);
+      var hist = history.textContent;
+      if (hist.length > 160) hist = '历史：' + hist.slice(hist.length - 150);
+      history.textContent = hist;
+    }
+  }, 70);
+}
+app.appendChild(T.row([T.el('span', { text: '骰子数量' }), count, T.button('🎲 摇一摇', roll, true), total]));
+app.appendChild(box);
+app.appendChild(history);
+roll();
+setTimeout(function () { rolling = false; }, 100);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "dice", "title": "掷骰子", "desc": "3D 动画骰子：1-6 颗可调，摇一摇出结果", "scripts": "", "code": "var count = T.num(2, { min: 1, max: 6, style: 'width:70px' });\nvar box = T.el('div', { style: 'display:flex;gap:18px;justify-content:center;margin:34px 0;flex-wrap:wrap;min-height:110px' });\nvar total = T.stat('—', '总点数');\nvar history = T.el('div', { style: 'color:var(--ink2);font-size:12px;text-align:center;min-height:20px' });\nvar DOTS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };\nfunction renderDice(values) {\n  T.clearEl(box);\n  values.forEach(function (v) {\n    var die = T.el('div', { style: 'width:84px;height:84px;background:var(--surface);border:2px solid var(--ink);border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);padding:10px;gap:2px;transform:rotate(' + (Math.random() * 14 - 7) + 'deg)' });\n    for (var i = 0; i \u003c 9; i++) {\n      var dot = T.el('div', { style: 'border-radius:50%;background:' + (DOTS[v].includes(i) ? 'var(--ink)' : 'transparent') + ';' });\n      die.appendChild(dot);\n    }\n    box.appendChild(die);\n  });\n}\nvar rolling = false;\nfunction roll() {\n  if (rolling) return;\n  rolling = true;\n  var n = Math.max(1, +count.value || 1);\n  var frames = 0;\n  var iv = setInterval(function () {\n    var vals = [];\n    for (var i = 0; i \u003c n; i++) vals.push(1 + Math.floor(Math.random() * 6));\n    renderDice(vals);\n    frames++;\n    if (frames > 12) {\n      clearInterval(iv);\n      rolling = false;\n      var sum = vals.reduce(function (a, b) { return a + b; }, 0);\n      total.firstChild.textContent = sum + '（' + vals.join(' + ') + '）';\n      history.textContent = '历史：' + (history.textContent.split('历史：')[1] || '') + ' [' + vals.join(',') + ']' + ' '.slice(0, 0);\n      var hist = history.textContent;\n      if (hist.length > 160) hist = '历史：' + hist.slice(hist.length - 150);\n      history.textContent = hist;\n    }\n  }, 70);\n}\napp.appendChild(T.row([T.el('span', { text: '骰子数量' }), count, T.button('🎲 摇一摇', roll, true), total]));\napp.appendChild(box);\napp.appendChild(history);\nroll();\nsetTimeout(function () { rolling = false; }, 100);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

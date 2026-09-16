@@ -2,73 +2,75 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HTTP 请求头参考 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HTTP 请求头参考', '常见请求头详解', 'http-headers');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索请求头...', style: 'width:100%' });
-
-  var HEADERS = [
-    ['Accept', '客户端希望接收的响应内容类型', 'text/html, application/json'],
-    ['Accept-Charset', '客户端可接受的字符集', 'utf-8, iso-8859-1'],
-    ['Accept-Encoding', '客户端可接受的内容编码', 'gzip, deflate, br'],
-    ['Accept-Language', '客户端可接受的语言', 'zh-CN, zh, en'],
-    ['Authorization', 'HTTP认证凭证', 'Basic base64(user:pass)'],
-    ['Cache-Control', '缓存控制指令', 'no-cache, max-age=3600'],
-    ['Connection', '连接管理', 'keep-alive, close'],
-    ['Content-Length', '请求体长度（字节）', '3495'],
-    ['Content-Type', '请求体的MIME类型', 'application/json; charset=utf-8'],
-    ['Cookie', '存储的Cookie', 'sessionId=abc123; userId=1'],
-    ['DNT', '请勿跟踪', '1 (开启) / 0 (关闭)'],
-    ['Expect', '客户端期望的服务器行为', '100-continue'],
-    ['Host', '请求的目标主机和端口', 'www.example.com'],
-    ['If-Modified-Since', '条件请求：资源修改时间', 'Wed, 21 Oct 2023 07:28:00 GMT'],
-    ['If-None-Match', '条件请求：资源ETag', '"33a64df5"'],
-    ['Origin', '跨域请求的来源', 'https://example.com'],
-    ['Pragma', 'HTTP/1.0遗留缓存指令', 'no-cache'],
-    ['Referer', '请求来源页面', 'https://example.com/page'],
-    ['User-Agent', '客户端标识', 'Mozilla/5.0 ...'],
-    ['X-Forwarded-For', '代理链IP地址', 'client, proxy1, proxy2'],
-    ['X-Requested-With', 'AJAX请求标识', 'XMLHttpRequest']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var filtered = HEADERS.filter(function (h) {
-      if (!q) return true;
-      return h[0].toLowerCase().includes(q) || h[1].toLowerCase().includes(q);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTTP 请求头参考', '常见 HTTP 请求 / 响应头详解', 'http-headers');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+  });
+  return search;
+}
 
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">头部</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">示例值</th></tr></thead>';
-    html += '<tbody>';
-    filtered.forEach(function (h) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + h[0] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + h[1] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);font-family:monospace;font-size:0.9em">' + h[2] + '</td>';
-      html += '</tr>';
-    });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(table);
-  render();
+var DATA = [
+  ['Accept', '请求', '客户端可接受的响应类型，如 application/json'],
+  ['Accept-Encoding', '请求', '可接受的压缩算法：gzip, deflate, br'],
+  ['Authorization', '请求', '认证凭证，如 Bearer <token>、Basic <base64>'],
+  ['Cache-Control', '两者', '缓存策略：no-cache / no-store / max-age=3600 / public / private'],
+  ['Content-Disposition', '响应', 'body 展示方式：inline / attachment; filename="x"'],
+  ['Content-Encoding', '响应', 'body 压缩算法：gzip / br / deflate'],
+  ['Content-Length', '两者', 'body 字节长度'],
+  ['Content-Type', '两者', 'body 的 MIME 类型：application/json 等'],
+  ['Cookie', '请求', '客户端携带的 Cookie'],
+  ['ETag', '响应', '资源指纹，用于协商缓存（If-None-Match）'],
+  ['Expires', '响应', '缓存过期时间（HTTP/1.0 遗留）'],
+  ['Host', '请求', '目标主机与端口（HTTP/1.1 必需）'],
+  ['If-None-Match', '请求', '携带上次 ETag，命中则返回 304'],
+  ['If-Modified-Since', '请求', '携带上次时间，命中则返回 304'],
+  ['Last-Modified', '响应', '资源最后修改时间'],
+  ['Location', '响应', '重定向目标 URL（3xx）'],
+  ['Origin', '请求', '发起请求的源（CORS 关键）'],
+  ['Referer', '请求', '来源页面 URL（拼写错误是历史遗留）'],
+  ['Retry-After', '响应', '配合 503/429，建议的重试时间'],
+  ['Server', '响应', '服务器软件信息（建议隐藏）'],
+  ['Set-Cookie', '响应', '下发 Cookie，支持 HttpOnly/Secure/SameSite'],
+  ['Strict-Transport-Security', '响应', 'HSTS：强制 HTTPS，max-age=31536000; includeSubDomains'],
+  ['User-Agent', '请求', '客户端标识字符串'],
+  ['X-Content-Type-Options', '响应', 'nosniff 禁止 MIME 嗅探'],
+  ['X-Frame-Options', '响应', 'DENY / SAMEORIGIN 防点击劫持'],
+  ['X-Forwarded-For', '请求', '代理链中的客户端真实 IP'],
+  ['X-Request-Id', '两者', '请求追踪 ID（链路追踪）'],
+  ['Access-Control-Allow-Origin', '响应', 'CORS：允许的源，* 或具体源'],
+  ['Access-Control-Allow-Methods', '响应', 'CORS：允许的 HTTP 方法'],
+  ['Access-Control-Allow-Headers', '响应', 'CORS：允许的自定义请求头']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['头部', '方向', '说明'], DATA));
+app.appendChild(T.row([buildSearch(wrap)]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "http-headers", "title": "HTTP 请求头参考", "desc": "常见 HTTP 请求 / 响应头详解", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['Accept', '请求', '客户端可接受的响应类型，如 application/json'],\n  ['Accept-Encoding', '请求', '可接受的压缩算法：gzip, deflate, br'],\n  ['Authorization', '请求', '认证凭证，如 Bearer \u003ctoken>、Basic \u003cbase64>'],\n  ['Cache-Control', '两者', '缓存策略：no-cache / no-store / max-age=3600 / public / private'],\n  ['Content-Disposition', '响应', 'body 展示方式：inline / attachment; filename=\"x\"'],\n  ['Content-Encoding', '响应', 'body 压缩算法：gzip / br / deflate'],\n  ['Content-Length', '两者', 'body 字节长度'],\n  ['Content-Type', '两者', 'body 的 MIME 类型：application/json 等'],\n  ['Cookie', '请求', '客户端携带的 Cookie'],\n  ['ETag', '响应', '资源指纹，用于协商缓存（If-None-Match）'],\n  ['Expires', '响应', '缓存过期时间（HTTP/1.0 遗留）'],\n  ['Host', '请求', '目标主机与端口（HTTP/1.1 必需）'],\n  ['If-None-Match', '请求', '携带上次 ETag，命中则返回 304'],\n  ['If-Modified-Since', '请求', '携带上次时间，命中则返回 304'],\n  ['Last-Modified', '响应', '资源最后修改时间'],\n  ['Location', '响应', '重定向目标 URL（3xx）'],\n  ['Origin', '请求', '发起请求的源（CORS 关键）'],\n  ['Referer', '请求', '来源页面 URL（拼写错误是历史遗留）'],\n  ['Retry-After', '响应', '配合 503/429，建议的重试时间'],\n  ['Server', '响应', '服务器软件信息（建议隐藏）'],\n  ['Set-Cookie', '响应', '下发 Cookie，支持 HttpOnly/Secure/SameSite'],\n  ['Strict-Transport-Security', '响应', 'HSTS：强制 HTTPS，max-age=31536000; includeSubDomains'],\n  ['User-Agent', '请求', '客户端标识字符串'],\n  ['X-Content-Type-Options', '响应', 'nosniff 禁止 MIME 嗅探'],\n  ['X-Frame-Options', '响应', 'DENY / SAMEORIGIN 防点击劫持'],\n  ['X-Forwarded-For', '请求', '代理链中的客户端真实 IP'],\n  ['X-Request-Id', '两者', '请求追踪 ID（链路追踪）'],\n  ['Access-Control-Allow-Origin', '响应', 'CORS：允许的源，* 或具体源'],\n  ['Access-Control-Allow-Methods', '响应', 'CORS：允许的 HTTP 方法'],\n  ['Access-Control-Allow-Headers', '响应', 'CORS：允许的自定义请求头']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['头部', '方向', '说明'], DATA));\napp.appendChild(T.row([buildSearch(wrap)]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

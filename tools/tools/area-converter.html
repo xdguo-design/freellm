@@ -2,63 +2,53 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>面积单位换算 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('面积单位换算', 'm²/亩/平方英尺 等', 'area-converter');
-
-  var units = [
-    { id: 'mm2', name: '平方毫米 (mm²)' },
-    { id: 'cm2', name: '平方厘米 (cm²)' },
-    { id: 'm2', name: '平方米 (m²)' },
-    { id: 'km2', name: '平方千米 (km²)' },
-    { id: 'ha', name: '公顷 (ha)' },
-    { id: 'mu', name: '亩' },
-    { id: 'ft2', name: '平方英尺 (ft²)' },
-    { id: 'in2', name: '平方英寸 (in²)' },
-    { id: 'ac', name: '英亩 (ac)' }
-  ];
-
-  var factors = { mm2: 1e-6, cm2: 1e-4, m2: 1, km2: 1e6, ha: 10000, mu: 666.6667, ft2: 0.092903, 'in2': 0.00064516, ac: 4046.856 };
-
-  var inputs = {};
-  units.forEach(function (u) {
-    inputs[u.id] = T.el('input', { type: 'number', placeholder: u.name, style: 'flex:1' });
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('面积单位换算', 'm² / 亩 / 公顷 / 平方英尺', 'area-converter');
+var value = T.num(1, { style: 'width:130px' });
+var from = T.select([{"value": "m² (平方米)", "label": "m² (平方米)"}, {"value": "km² (平方千米)", "label": "km² (平方千米)"}, {"value": "cm²", "label": "cm²"}, {"value": "ha (公顷)", "label": "ha (公顷)"}, {"value": "亩", "label": "亩"}, {"value": "ft² (平方英尺)", "label": "ft² (平方英尺)"}, {"value": "in² (平方英寸)", "label": "in² (平方英寸)"}, {"value": "acre (英亩)", "label": "acre (英亩)"}, {"value": "yd² (平方码)", "label": "yd² (平方码)"}], "m² (平方米)");
+var to = T.select([{"value": "m² (平方米)", "label": "m² (平方米)"}, {"value": "km² (平方千米)", "label": "km² (平方千米)"}, {"value": "cm²", "label": "cm²"}, {"value": "ha (公顷)", "label": "ha (公顷)"}, {"value": "亩", "label": "亩"}, {"value": "ft² (平方英尺)", "label": "ft² (平方英尺)"}, {"value": "in² (平方英寸)", "label": "in² (平方英寸)"}, {"value": "acre (英亩)", "label": "acre (英亩)"}, {"value": "yd² (平方码)", "label": "yd² (平方码)"}], "m² (平方米)");
+var output = T.input('', { class: 'grow mono', readonly: '' });
+var table = T.el('div');
+var U = {"m² (平方米)": 1, "km² (平方千米)": 1000000.0, "cm²": 0.0001, "ha (公顷)": 10000, "亩": 666.6666667, "ft² (平方英尺)": 0.09290304, "in² (平方英寸)": 0.00064516, "acre (英亩)": 4046.8564224, "yd² (平方码)": 0.83612736};
+function cv(v, f, t) {
+  if (f === t) return v;
+  return v * U[f] / U[t];
+}
+function run() {
+  var v = +value.value;
+  if (isNaN(v)) { output.value = ''; return; }
+  output.value = +(cv(v, from.value, to.value).toPrecision(10));
+  var rows = [];
+  Object.keys(U).forEach(function (k) {
+    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);
   });
-
-  function run(source) {
-    var val = parseFloat(inputs[source].value);
-    if (isNaN(val)) {
-      units.forEach(function (u) { if (u.id !== source) inputs[u.id].value = ''; });
-      return;
-    }
-
-    var m2 = val * factors[source];
-    units.forEach(function (u) {
-      if (u.id !== source) {
-        inputs[u.id].value = (m2 / factors[u.id]).toFixed(6).replace(/\.?0+$/, '');
-      }
-    });
-  }
-
-  units.forEach(function (u) {
-    inputs[u.id].addEventListener('input', function () { setTimeout(function () { run(u.id); }, 100); });
-    app.appendChild(T.el('div', { class: 'row' }, [
-      T.el('span', { text: u.name, style: 'width:120px' }),
-      inputs[u.id]
-    ]));
-  });
-
-  inputs.m2.value = '1';
-  run('m2');
+  T.clearEl(table).appendChild(T.kvTable(rows));
+}
+[value, from, to].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));
+app.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));
+app.appendChild(table);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "area-converter", "title": "面积单位换算", "desc": "m² / 亩 / 公顷 / 平方英尺", "scripts": "", "code": "var value = T.num(1, { style: 'width:130px' });\nvar from = T.select([{\"value\": \"m² (平方米)\", \"label\": \"m² (平方米)\"}, {\"value\": \"km² (平方千米)\", \"label\": \"km² (平方千米)\"}, {\"value\": \"cm²\", \"label\": \"cm²\"}, {\"value\": \"ha (公顷)\", \"label\": \"ha (公顷)\"}, {\"value\": \"亩\", \"label\": \"亩\"}, {\"value\": \"ft² (平方英尺)\", \"label\": \"ft² (平方英尺)\"}, {\"value\": \"in² (平方英寸)\", \"label\": \"in² (平方英寸)\"}, {\"value\": \"acre (英亩)\", \"label\": \"acre (英亩)\"}, {\"value\": \"yd² (平方码)\", \"label\": \"yd² (平方码)\"}], \"m² (平方米)\");\nvar to = T.select([{\"value\": \"m² (平方米)\", \"label\": \"m² (平方米)\"}, {\"value\": \"km² (平方千米)\", \"label\": \"km² (平方千米)\"}, {\"value\": \"cm²\", \"label\": \"cm²\"}, {\"value\": \"ha (公顷)\", \"label\": \"ha (公顷)\"}, {\"value\": \"亩\", \"label\": \"亩\"}, {\"value\": \"ft² (平方英尺)\", \"label\": \"ft² (平方英尺)\"}, {\"value\": \"in² (平方英寸)\", \"label\": \"in² (平方英寸)\"}, {\"value\": \"acre (英亩)\", \"label\": \"acre (英亩)\"}, {\"value\": \"yd² (平方码)\", \"label\": \"yd² (平方码)\"}], \"m² (平方米)\");\nvar output = T.input('', { class: 'grow mono', readonly: '' });\nvar table = T.el('div');\nvar U = {\"m² (平方米)\": 1, \"km² (平方千米)\": 1000000.0, \"cm²\": 0.0001, \"ha (公顷)\": 10000, \"亩\": 666.6666667, \"ft² (平方英尺)\": 0.09290304, \"in² (平方英寸)\": 0.00064516, \"acre (英亩)\": 4046.8564224, \"yd² (平方码)\": 0.83612736};\nfunction cv(v, f, t) {\n  if (f === t) return v;\n  return v * U[f] / U[t];\n}\nfunction run() {\n  var v = +value.value;\n  if (isNaN(v)) { output.value = ''; return; }\n  output.value = +(cv(v, from.value, to.value).toPrecision(10));\n  var rows = [];\n  Object.keys(U).forEach(function (k) {\n    rows.push([k, +(cv(v, from.value, k).toPrecision(8))]);\n  });\n  T.clearEl(table).appendChild(T.kvTable(rows));\n}\n[value, from, to].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([value, from, T.el('span', { text: '→' }), to, output]));\napp.appendChild(T.el('span', { text: '换算到全部单位', class: 'field' }));\napp.appendChild(table);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

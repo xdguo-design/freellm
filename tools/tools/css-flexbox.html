@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS Flexbox 可视化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS Flexbox 可视化', '容器属性可视化调节，实时生成 Flexbox CSS', 'css-flexbox');
+var dir = T.select(['row', 'row-reverse', 'column', 'column-reverse'], 'row');
+var justify = T.select(['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'], 'flex-start');
+var align = T.select(['stretch', 'flex-start', 'center', 'flex-end', 'baseline'], 'stretch');
+var wrapSel = T.select(['nowrap', 'wrap'], 'nowrap');
+var gap = T.range(0, 40, 1, 10);
+var stage = T.el('div', { style: 'min-height:180px;border:1px dashed var(--line);border-radius:12px;padding:10px;background:var(--surface-soft);margin-bottom:12px' });
+var colors = ['#1744E8', '#7BC0E5', '#FFB88C', '#B8E986'];
+for (var i = 0; i < 4; i++) {
+  var it = T.el('div', { style: 'width:70px;min-height:44px;text-align:center;line-height:44px;border-radius:8px;color:#fff;font-weight:600;background:' + colors[i] });
+  it.textContent = i + 1;
+  stage.appendChild(it);
+}
+var output = T.out('');
+function run() {
+  stage.style.display = 'flex';
+  stage.style.flexDirection = dir.value;
+  stage.style.justifyContent = justify.value;
+  stage.style.alignItems = align.value;
+  stage.style.flexWrap = wrapSel.value;
+  stage.style.gap = gap.value + 'px';
+  output.value = '.container {\n  display: flex;\n  flex-direction: ' + dir.value + ';\n  justify-content: ' + justify.value + ';\n  align-items: ' + align.value + ';\n  flex-wrap: ' + wrapSel.value + ';\n  gap: ' + gap.value + 'px;\n}';
+}
+[dir, justify, align, wrapSel, gap].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(stage);
+app.appendChild(T.pane([T.field('flex-direction', dir), T.field('justify-content', justify)]));
+app.appendChild(T.pane([T.field('align-items', align), T.field('flex-wrap', wrapSel)]));
+app.appendChild(T.row([T.el('span', { text: 'gap' }), gap]));
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-flexbox", "title": "CSS Flexbox 可视化", "desc": "容器属性可视化调节，实时生成 Flexbox CSS", "scripts": "", "code": "var dir = T.select(['row', 'row-reverse', 'column', 'column-reverse'], 'row');\nvar justify = T.select(['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'], 'flex-start');\nvar align = T.select(['stretch', 'flex-start', 'center', 'flex-end', 'baseline'], 'stretch');\nvar wrapSel = T.select(['nowrap', 'wrap'], 'nowrap');\nvar gap = T.range(0, 40, 1, 10);\nvar stage = T.el('div', { style: 'min-height:180px;border:1px dashed var(--line);border-radius:12px;padding:10px;background:var(--surface-soft);margin-bottom:12px' });\nvar colors = ['#1744E8', '#7BC0E5', '#FFB88C', '#B8E986'];\nfor (var i = 0; i \u003c 4; i++) {\n  var it = T.el('div', { style: 'width:70px;min-height:44px;text-align:center;line-height:44px;border-radius:8px;color:#fff;font-weight:600;background:' + colors[i] });\n  it.textContent = i + 1;\n  stage.appendChild(it);\n}\nvar output = T.out('');\nfunction run() {\n  stage.style.display = 'flex';\n  stage.style.flexDirection = dir.value;\n  stage.style.justifyContent = justify.value;\n  stage.style.alignItems = align.value;\n  stage.style.flexWrap = wrapSel.value;\n  stage.style.gap = gap.value + 'px';\n  output.value = '.container {\\n  display: flex;\\n  flex-direction: ' + dir.value + ';\\n  justify-content: ' + justify.value + ';\\n  align-items: ' + align.value + ';\\n  flex-wrap: ' + wrapSel.value + ';\\n  gap: ' + gap.value + 'px;\\n}';\n}\n[dir, justify, align, wrapSel, gap].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(stage);\napp.appendChild(T.pane([T.field('flex-direction', dir), T.field('justify-content', justify)]));\napp.appendChild(T.pane([T.field('align-items', align), T.field('flex-wrap', wrapSel)]));\napp.appendChild(T.row([T.el('span', { text: 'gap' }), gap]));\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

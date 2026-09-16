@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>Matrix 数字雨 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Matrix 数字雨', '黑客帝国风格 Canvas 字符雨特效，截图可用', 'matrix-rain');
+var canvas = T.el('canvas', { width: 860, height: 420, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:#000' });
+var speed = T.range(20, 150, 5, 50);
+var green = T.color('#00FF41');
+var chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEFｦｧｨｩｪﬀﬁﬂ'.split('');
+var ctx = canvas.getContext('2d');
+var cols = Math.floor(canvas.width / 16);
+var drops = [];
+for (var i = 0; i < cols; i++) drops[i] = Math.random() * -100;
+var running = true;
+function draw() {
+  if (!running) return;
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '15px monospace';
+  for (i = 0; i < cols; i++) {
+    ctx.fillStyle = Math.random() > 0.975 ? '#DADADA' : green.value;
+    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, drops[i] * 16);
+    if (drops[i] * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+  setTimeout(function () { requestAnimationFrame(draw); }, 155 - speed.value);
+}
+draw();
+app.appendChild(canvas);
+app.appendChild(T.row([T.el('span', { text: '速度' }), speed, T.el('span', { text: '颜色' }), green,
+  T.button('暂停', function () { running = !running; this.firstChild.textContent = running ? '暂停' : '继续'; if (running) draw(); }),
+  T.button('截图下载', function () { T.dlCanvas(canvas, 'matrix-rain.png'); })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "matrix-rain", "title": "Matrix 数字雨", "desc": "黑客帝国风格 Canvas 字符雨特效，截图可用", "scripts": "", "code": "var canvas = T.el('canvas', { width: 860, height: 420, style: 'width:100%;border:1px solid var(--line);border-radius:10px;background:#000' });\nvar speed = T.range(20, 150, 5, 50);\nvar green = T.color('#00FF41');\nvar chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEFｦｧｨｩｪﬀﬁﬂ'.split('');\nvar ctx = canvas.getContext('2d');\nvar cols = Math.floor(canvas.width / 16);\nvar drops = [];\nfor (var i = 0; i \u003c cols; i++) drops[i] = Math.random() * -100;\nvar running = true;\nfunction draw() {\n  if (!running) return;\n  ctx.fillStyle = 'rgba(0,0,0,0.08)';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n  ctx.font = '15px monospace';\n  for (i = 0; i \u003c cols; i++) {\n    ctx.fillStyle = Math.random() > 0.975 ? '#DADADA' : green.value;\n    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, drops[i] * 16);\n    if (drops[i] * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;\n    drops[i]++;\n  }\n  setTimeout(function () { requestAnimationFrame(draw); }, 155 - speed.value);\n}\ndraw();\napp.appendChild(canvas);\napp.appendChild(T.row([T.el('span', { text: '速度' }), speed, T.el('span', { text: '颜色' }), green,\n  T.button('暂停', function () { running = !running; this.firstChild.textContent = running ? '暂停' : '继续'; if (running) draw(); }),\n  T.button('截图下载', function () { T.dlCanvas(canvas, 'matrix-rain.png'); })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

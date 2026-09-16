@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>会议时间换算 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('会议时间换算', '为跨时区团队找一个共同可行的时间段', 'meeting-time');
+var CITIES = [
+  ['北京', 'Asia/Shanghai'], ['伦敦', 'Europe/London'], ['纽约', 'America/New_York'],
+  ['旧金山', 'America/Los_Angeles'], ['东京', 'Asia/Tokyo'], ['悉尼', 'Australia/Sydney'], ['柏林', 'Europe/Berlin']
+];
+var hour = T.range(0, 23, 1, 10);
+var hourLabel = T.el('b', { text: '10:00' });
+var box = T.el('div');
+var refZone = 'Asia/Shanghai';
+function hourIn(tz, baseHour) {
+  var now = new Date();
+  var here = new Date(now.toLocaleString('en-US', { timeZone: refZone }));
+  var there = new Date(now.toLocaleString('en-US', { timeZone: tz }));
+  var offset = Math.round((there - here) / 3600000);
+  var h = (baseHour + offset + 24) % 24;
+  return h;
+}
+function badgeFor(h) {
+  if (h >= 9 && h <= 18) return '✅ 工作时间';
+  if (h >= 7 && h < 9 || h > 18 && h <= 21) return '🟡 早晚时段';
+  if (h >= 22 || h < 7) return '🔴 深夜/凌晨';
+  return '🟡';
+}
+function render() {
+  hourLabel.textContent = T.pad2(+hour.value) + ':00';
+  var rows = CITIES.map(function (c) {
+    var h = hourIn(c[1], +hour.value);
+    return [c[0], T.pad2(h) + ':00', badgeFor(h)];
+  });
+  T.clearEl(box).appendChild(T.refTable(['城市', '当地时间', '适合程度'], rows));
+  var allWork = rows.every(function (r) { return r[2].startsWith('✅'); });
+  if (allWork) box.appendChild(T.msg('🎉 这个时间所有城市都在工作时间段！', 'ok'));
+}
+hour.addEventListener('input', render);
+app.appendChild(T.row([T.el('span', { text: '北京时间' }), hour, hourLabel]));
+app.appendChild(box);
+app.appendChild(T.msg('以北京时间为基准。绿色 = 9:00-18:00 工作时间。', ''));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "meeting-time", "title": "会议时间换算", "desc": "为跨时区团队找一个共同可行的时间段", "scripts": "", "code": "var CITIES = [\n  ['北京', 'Asia/Shanghai'], ['伦敦', 'Europe/London'], ['纽约', 'America/New_York'],\n  ['旧金山', 'America/Los_Angeles'], ['东京', 'Asia/Tokyo'], ['悉尼', 'Australia/Sydney'], ['柏林', 'Europe/Berlin']\n];\nvar hour = T.range(0, 23, 1, 10);\nvar hourLabel = T.el('b', { text: '10:00' });\nvar box = T.el('div');\nvar refZone = 'Asia/Shanghai';\nfunction hourIn(tz, baseHour) {\n  var now = new Date();\n  var here = new Date(now.toLocaleString('en-US', { timeZone: refZone }));\n  var there = new Date(now.toLocaleString('en-US', { timeZone: tz }));\n  var offset = Math.round((there - here) / 3600000);\n  var h = (baseHour + offset + 24) % 24;\n  return h;\n}\nfunction badgeFor(h) {\n  if (h >= 9 && h \u003c= 18) return '✅ 工作时间';\n  if (h >= 7 && h \u003c 9 || h > 18 && h \u003c= 21) return '🟡 早晚时段';\n  if (h >= 22 || h \u003c 7) return '🔴 深夜/凌晨';\n  return '🟡';\n}\nfunction render() {\n  hourLabel.textContent = T.pad2(+hour.value) + ':00';\n  var rows = CITIES.map(function (c) {\n    var h = hourIn(c[1], +hour.value);\n    return [c[0], T.pad2(h) + ':00', badgeFor(h)];\n  });\n  T.clearEl(box).appendChild(T.refTable(['城市', '当地时间', '适合程度'], rows));\n  var allWork = rows.every(function (r) { return r[2].startsWith('✅'); });\n  if (allWork) box.appendChild(T.msg('🎉 这个时间所有城市都在工作时间段！', 'ok'));\n}\nhour.addEventListener('input', render);\napp.appendChild(T.row([T.el('span', { text: '北京时间' }), hour, hourLabel]));\napp.appendChild(box);\napp.appendChild(T.msg('以北京时间为基准。绿色 = 9:00-18:00 工作时间。', ''));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

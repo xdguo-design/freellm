@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSON 合并 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON 合并', '两个 JSON 对象深度合并，后者覆盖前者（数组可选替换/拼接）', 'json-merge');
+var aIn = T.textarea('{"a":1,"b":{"x":1,"y":2},"list":[1,2]}');
+aIn.value = '{"a":1,"b":{"x":1,"y":2},"list":[1,2]}';
+var bIn = T.textarea('{"b":{"y":9,"z":3},"list":[3],"c":true}');
+bIn.value = '{"b":{"y":9,"z":3},"list":[3],"c":true}';
+var output = T.out('');
+var arrMode = T.select([{value:'replace',label:'数组替换'},{value:'concat',label:'数组拼接'},{value:'union',label:'数组去重合并'}],'replace');
+function deepMerge(a, b) {
+  Object.keys(b).forEach(function (k) {
+    if (Array.isArray(a[k]) && Array.isArray(b[k])) {
+      if (arrMode.value === 'concat') a[k] = a[k].concat(b[k]);
+      else if (arrMode.value === 'union') a[k] = Array.from(new Set(a[k].concat(b[k]).map(function (v) { return JSON.stringify(v); }))).map(JSON.parse);
+      else a[k] = b[k];
+    } else if (a[k] && b[k] && typeof a[k] === 'object' && typeof b[k] === 'object' && !Array.isArray(a[k]) && !Array.isArray(b[k])) {
+      a[k] = deepMerge(a[k], b[k]);
+    } else a[k] = b[k];
+  });
+  return a;
+}
+function run() {
+  try {
+    var a = T.parseJSON(aIn.value || '{}');
+    var b = T.parseJSON(bIn.value || '{}');
+    output.value = JSON.stringify(deepMerge(a, b), null, 2);
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[aIn, bIn, arrMode].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('JSON A（底）', aIn), T.field('JSON B（顶，优先）', bIn)]));
+app.appendChild(T.pane([T.field('合并结果', output)], true));
+app.appendChild(T.row([T.el('span', { text: '数组策略' }), arrMode, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "json-merge", "title": "JSON 合并", "desc": "两个 JSON 对象深度合并，后者覆盖前者（数组可选替换/拼接）", "scripts": "", "code": "var aIn = T.textarea('{\"a\":1,\"b\":{\"x\":1,\"y\":2},\"list\":[1,2]}');\naIn.value = '{\"a\":1,\"b\":{\"x\":1,\"y\":2},\"list\":[1,2]}';\nvar bIn = T.textarea('{\"b\":{\"y\":9,\"z\":3},\"list\":[3],\"c\":true}');\nbIn.value = '{\"b\":{\"y\":9,\"z\":3},\"list\":[3],\"c\":true}';\nvar output = T.out('');\nvar arrMode = T.select([{value:'replace',label:'数组替换'},{value:'concat',label:'数组拼接'},{value:'union',label:'数组去重合并'}],'replace');\nfunction deepMerge(a, b) {\n  Object.keys(b).forEach(function (k) {\n    if (Array.isArray(a[k]) && Array.isArray(b[k])) {\n      if (arrMode.value === 'concat') a[k] = a[k].concat(b[k]);\n      else if (arrMode.value === 'union') a[k] = Array.from(new Set(a[k].concat(b[k]).map(function (v) { return JSON.stringify(v); }))).map(JSON.parse);\n      else a[k] = b[k];\n    } else if (a[k] && b[k] && typeof a[k] === 'object' && typeof b[k] === 'object' && !Array.isArray(a[k]) && !Array.isArray(b[k])) {\n      a[k] = deepMerge(a[k], b[k]);\n    } else a[k] = b[k];\n  });\n  return a;\n}\nfunction run() {\n  try {\n    var a = T.parseJSON(aIn.value || '{}');\n    var b = T.parseJSON(bIn.value || '{}');\n    output.value = JSON.stringify(deepMerge(a, b), null, 2);\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[aIn, bIn, arrMode].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('JSON A（底）', aIn), T.field('JSON B（顶，优先）', bIn)]));\napp.appendChild(T.pane([T.field('合并结果', output)], true));\napp.appendChild(T.row([T.el('span', { text: '数组策略' }), arrMode, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

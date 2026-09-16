@@ -2,67 +2,62 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>特殊符号大全 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('特殊符号大全', '分类速查点击复制', 'symbols');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索符号...', style: 'width:100%' });
-
-  var CATEGORIES = {
-    '标点符号': '。，、；：？！""''【】（）《》「」『』〔〕—…～・',
-    '数学符号': '±×÷∑∏∫√∞≈≠≤≥⊂⊃∪∩∈∉∏√∛∜∝∠⊥∥∧∨¬⊕⊗',
-    '货币符号': '$€£¥¢₠₡₣₤₥₦₧₨₩₪₫€₭₮₯₰₱₲₳₵₶₷₸₹₺₻₽',
-    '箭头符号': '←→↑↓↖↗↙↔↕⇐⇒⇑⇓مدرسة Haut←→↑↓◀▶▲▼►◄',
-    '星号符号': '★☆✧✦✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹ulin✨',
-    '扑克牌': '♠♣♥♦♤♧♡♢',
-    '括号符号': '()[]{}⟨⟩⌈⌉⌊⌋⟪⟫⟮⟯',
-    '制表符号': '─│┌┐└┘├┤┬┴┼═║╔╗╚╝╠╣╦╩╬',
-    '希腊字母': 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω',
-    '数学字母': 'ℂℍℕℙℚℝℤ.niiℑℜ',
-    '杂项符号': '❤❣❦❧♠♣♥♦⚡✓✗✘☺☻☹☕☘☙☚☛☜☞☚☟☞',
-    '技术符号': '#*+-.{}/\\|~`@$%^&'
-  };
-
-  var container = T.el('div');
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var html = '';
-
-    Object.keys(CATEGORIES).forEach(function (cat) {
-      var symbols = CATEGORIES[cat].split('');
-      var filtered = symbols.filter(function (s) {
-        if (!q) return true;
-        return cat.toLowerCase().includes(q) || s.includes(q);
-      });
-
-      if (filtered.length) {
-        html += '<h3 style="margin:16px 0 8px;font-size:1em">' + cat + '</h3>';
-        html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
-        filtered.forEach(function (s) {
-          html += '<div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1.2em;border:1px solid var(--line);border-radius:4px;cursor:pointer" title="点击复制: ' + s + '" onclick="navigator.clipboard.writeText(\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</div>';
-        });
-        html += '</div>';
-      }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('特殊符号大全', '分类特殊符号：标点 / 数学 / 箭头 / 希腊 / 制表 / 货币', 'symbols');
+var DATA = {
+  '标点符号': ['，', '。', '、', '；', '：', '？', '！', '"', '"', '\u2018', '\u2019', '（', '）', '【', '】', '《', '》', '——', '……', '～', '·'],
+  '数学符号': ['＋', '－', '×', '÷', '＝', '≠', '±', '√', '≤', '≥', '≈', '∞', '∑', '∏', '∫', '∂', '∇', '∈', '∉', '⊂', '∪', '∩', '∅', '∀', '∃', '∴', '∵', '⊥', '∥', '∠', '°', '′', '″', 'π', 'α', 'β', 'γ', 'θ', 'λ', 'μ', 'σ', 'φ', 'ω', 'Δ', 'Ω'],
+  '箭头符号': ['←', '↑', '→', '↓', '↔', '↕', '⇐', '⇒', '⇔', '➡', '⬅', '⬆', '⬇', '↖', '↗', '↘', '↙', '⤴', '⤵', '↺', '↻', '⇄', '⇅'],
+  '货币符号': ['¥', '$', '€', '£', '¢', '₩', '₽', '₹', '₿', '¤'],
+  '序号数字': ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑴', '⑵', '⒈', '⒉', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', '½', '⅓', '¾', '№'],
+  '几何图形': ['■', '□', '▲', '△', '▼', '▽', '◆', '◇', '○', '●', '◎', '☆', '★', '☀', '☁', '☂', '❄', '⚑', '⚑', '♠', '♣', '♥', '♦'],
+  '制表符': ['─', '│', '┌', '┐', '└', '┘', '├', '┤', '┬', '┴', '┼', '═', '║', '╔', '╗', '╚', '╝', '╠', '╣', '╦', '╩', '╬'],
+  '打勾叉号': ['✓', '✔', '✗', '✘', '☒', '☐', '☑', '×', '✚', '✖']
+};
+var box = T.el('div');
+function render(filter) {
+  T.clearEl(box);
+  Object.keys(DATA).forEach(function (cat) {
+    var list = DATA[cat];
+    if (filter && !cat.includes(filter)) return;
+    var sec = T.el('div', { style: 'margin-bottom:14px' });
+    sec.appendChild(T.el('span', { text: cat + '（' + list.length + '）', class: 'field' }));
+    var grid = T.el('div', { style: 'display:flex;flex-wrap:wrap;gap:4px' });
+    list.forEach(function (s) {
+      var b = T.button(s, function () { T.copy(s); });
+      b.style.cssText += 'font-size:16px;padding:4px 10px;justify-content:center;min-width:40px';
+      b.title = '点击复制';
+      grid.appendChild(b);
     });
-
-    container.innerHTML = html || '<p style="color:var(--muted)">未找到匹配的符号</p>';
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(container);
-  render();
+    sec.appendChild(grid);
+    box.appendChild(sec);
+  });
+}
+var search = T.input('', { class: 'grow', placeholder: '输入分类过滤（标点/数学/箭头/货币/序号/几何/制表/勾叉）…' });
+search.addEventListener('input', function () { render(search.value.trim()); });
+render('');
+app.appendChild(T.row([search]));
+app.appendChild(box);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "symbols", "title": "特殊符号大全", "desc": "分类特殊符号：标点 / 数学 / 箭头 / 希腊 / 制表 / 货币", "scripts": "", "code": "var DATA = {\n  '标点符号': ['，', '。', '、', '；', '：', '？', '！', '\"', '\"', '\\u2018', '\\u2019', '（', '）', '【', '】', '《', '》', '——', '……', '～', '·'],\n  '数学符号': ['＋', '－', '×', '÷', '＝', '≠', '±', '√', '≤', '≥', '≈', '∞', '∑', '∏', '∫', '∂', '∇', '∈', '∉', '⊂', '∪', '∩', '∅', '∀', '∃', '∴', '∵', '⊥', '∥', '∠', '°', '′', '″', 'π', 'α', 'β', 'γ', 'θ', 'λ', 'μ', 'σ', 'φ', 'ω', 'Δ', 'Ω'],\n  '箭头符号': ['←', '↑', '→', '↓', '↔', '↕', '⇐', '⇒', '⇔', '➡', '⬅', '⬆', '⬇', '↖', '↗', '↘', '↙', '⤴', '⤵', '↺', '↻', '⇄', '⇅'],\n  '货币符号': ['¥', '$', '€', '£', '¢', '₩', '₽', '₹', '₿', '¤'],\n  '序号数字': ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑴', '⑵', '⒈', '⒉', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', '½', '⅓', '¾', '№'],\n  '几何图形': ['■', '□', '▲', '△', '▼', '▽', '◆', '◇', '○', '●', '◎', '☆', '★', '☀', '☁', '☂', '❄', '⚑', '⚑', '♠', '♣', '♥', '♦'],\n  '制表符': ['─', '│', '┌', '┐', '└', '┘', '├', '┤', '┬', '┴', '┼', '═', '║', '╔', '╗', '╚', '╝', '╠', '╣', '╦', '╩', '╬'],\n  '打勾叉号': ['✓', '✔', '✗', '✘', '☒', '☐', '☑', '×', '✚', '✖']\n};\nvar box = T.el('div');\nfunction render(filter) {\n  T.clearEl(box);\n  Object.keys(DATA).forEach(function (cat) {\n    var list = DATA[cat];\n    if (filter && !cat.includes(filter)) return;\n    var sec = T.el('div', { style: 'margin-bottom:14px' });\n    sec.appendChild(T.el('span', { text: cat + '（' + list.length + '）', class: 'field' }));\n    var grid = T.el('div', { style: 'display:flex;flex-wrap:wrap;gap:4px' });\n    list.forEach(function (s) {\n      var b = T.button(s, function () { T.copy(s); });\n      b.style.cssText += 'font-size:16px;padding:4px 10px;justify-content:center;min-width:40px';\n      b.title = '点击复制';\n      grid.appendChild(b);\n    });\n    sec.appendChild(grid);\n    box.appendChild(sec);\n  });\n}\nvar search = T.input('', { class: 'grow', placeholder: '输入分类过滤（标点/数学/箭头/货币/序号/几何/制表/勾叉）…' });\nsearch.addEventListener('input', function () { render(search.value.trim()); });\nrender('');\napp.appendChild(T.row([search]));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

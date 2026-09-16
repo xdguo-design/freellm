@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>笔记应用 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('笔记应用', '本地笔记：多笔记管理 + 搜索，数据保存在浏览器', 'notes');
+var titleIn = T.input('', { class: 'grow', placeholder: '笔记标题' });
+var bodyIn = T.textarea('笔记内容…', true);
+bodyIn.style.minHeight = '160px';
+var search = T.input('', { class: 'grow', placeholder: '搜索笔记…' });
+var list = T.el('div');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-notes') || '[]'); } catch (e) {}
+var editing = -1;
+function save() { localStorage.setItem('freellm-notes', JSON.stringify(items)); }
+function render() {
+  T.clearEl(list);
+  var q = search.value.trim().toLowerCase();
+  items.forEach(function (n, i) {
+    if (q && !(n.title + n.body).toLowerCase().includes(q)) return;
+    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface);cursor:pointer' });
+    var head = T.row([T.el('b', { text: n.title || '（无标题）' }), T.el('span', { text: new Date(n.ts).toLocaleDateString('zh-CN'), style: 'color:var(--ink3);font-size:12px' })]);
+    head.style.marginBottom = '4px';
+    card.appendChild(head);
+    card.appendChild(T.el('div', { text: n.body.slice(0, 80) + (n.body.length > 80 ? '…' : ''), style: 'color:var(--ink2);font-size:13px' }));
+    var actions = T.row([T.button('编辑', function () {
+      editing = i;
+      titleIn.value = n.title;
+      bodyIn.value = n.body;
+      saveBtn.firstChild.textContent = '更新笔记';
+    }), T.button('删除', function () { items.splice(i, 1); save(); render(); })]);
+    actions.style.marginTop = '8px';
+    card.appendChild(actions);
+    list.appendChild(card);
+  });
+  if (!list.children.length) list.appendChild(T.el('p', { text: q ? '无匹配笔记' : '暂无笔记', style: 'color:var(--ink3)' }));
+}
+var saveBtn = T.button('保存笔记', function () {
+  if (!titleIn.value && !bodyIn.value.trim()) { T.toast('请填写内容'); return; }
+  if (editing >= 0) {
+    items[editing].title = titleIn.value;
+    items[editing].body = bodyIn.value;
+    editing = -1;
+    saveBtn.firstChild.textContent = '保存笔记';
+  } else {
+    items.unshift({ title: titleIn.value, body: bodyIn.value, ts: Date.now() });
+  }
+  save();
+  titleIn.value = '';
+  bodyIn.value = '';
+  render();
+}, true);
+search.addEventListener('input', T.debounce(render, 200));
+app.appendChild(T.row([titleIn, saveBtn]));
+app.appendChild(bodyIn);
+app.appendChild(T.row([search]));
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "notes", "title": "笔记应用", "desc": "本地笔记：多笔记管理 + 搜索，数据保存在浏览器", "scripts": "", "code": "var titleIn = T.input('', { class: 'grow', placeholder: '笔记标题' });\nvar bodyIn = T.textarea('笔记内容…', true);\nbodyIn.style.minHeight = '160px';\nvar search = T.input('', { class: 'grow', placeholder: '搜索笔记…' });\nvar list = T.el('div');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-notes') || '[]'); } catch (e) {}\nvar editing = -1;\nfunction save() { localStorage.setItem('freellm-notes', JSON.stringify(items)); }\nfunction render() {\n  T.clearEl(list);\n  var q = search.value.trim().toLowerCase();\n  items.forEach(function (n, i) {\n    if (q && !(n.title + n.body).toLowerCase().includes(q)) return;\n    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;background:var(--surface);cursor:pointer' });\n    var head = T.row([T.el('b', { text: n.title || '（无标题）' }), T.el('span', { text: new Date(n.ts).toLocaleDateString('zh-CN'), style: 'color:var(--ink3);font-size:12px' })]);\n    head.style.marginBottom = '4px';\n    card.appendChild(head);\n    card.appendChild(T.el('div', { text: n.body.slice(0, 80) + (n.body.length > 80 ? '…' : ''), style: 'color:var(--ink2);font-size:13px' }));\n    var actions = T.row([T.button('编辑', function () {\n      editing = i;\n      titleIn.value = n.title;\n      bodyIn.value = n.body;\n      saveBtn.firstChild.textContent = '更新笔记';\n    }), T.button('删除', function () { items.splice(i, 1); save(); render(); })]);\n    actions.style.marginTop = '8px';\n    card.appendChild(actions);\n    list.appendChild(card);\n  });\n  if (!list.children.length) list.appendChild(T.el('p', { text: q ? '无匹配笔记' : '暂无笔记', style: 'color:var(--ink3)' }));\n}\nvar saveBtn = T.button('保存笔记', function () {\n  if (!titleIn.value && !bodyIn.value.trim()) { T.toast('请填写内容'); return; }\n  if (editing >= 0) {\n    items[editing].title = titleIn.value;\n    items[editing].body = bodyIn.value;\n    editing = -1;\n    saveBtn.firstChild.textContent = '保存笔记';\n  } else {\n    items.unshift({ title: titleIn.value, body: bodyIn.value, ts: Date.now() });\n  }\n  save();\n  titleIn.value = '';\n  bodyIn.value = '';\n  render();\n}, true);\nsearch.addEventListener('input', T.debounce(render, 200));\napp.appendChild(T.row([titleIn, saveBtn]));\napp.appendChild(bodyIn);\napp.appendChild(T.row([search]));\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>正则可视化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('正则可视化', '把正则表达式解析成嵌套结构图，帮助理解复杂表达式', 'regex-visual');
+var pattern = T.input('^(\\d{4})-(\\d{2})-(?:\\d{2})$', { class: 'grow mono' });
+var box = T.el('div', { class: 'output', style: 'min-height:260px;font-family:var(--font-sans);white-space:normal' });
+var COLORS = ['#1744E8', '#7BC0E5', '#B8E986', '#FFB88C', '#F48FB1', '#B39DDB'];
+var depth = 0;
+function esc2(s) { return T.esc(s); }
+function box2(label, cls, color) {
+  return '<div style="display:inline-block;border:2px solid ' + color + ';border-radius:8px;padding:2px 8px;margin:2px;vertical-align:middle;background:var(--surface)">' +
+    '<div style="font-size:10px;color:' + color + ';font-weight:700;letter-spacing:.05em">' + cls + '</div>' +
+    '<div style="font-family:var(--font-mono);font-size:13px">' + label + '</div></div>';
+}
+function render(tokens, colorIdx) {
+  var out = '';
+  tokens.forEach(function (tk) {
+    if (tk.t === 'seq') out += box2(esc2(tk.v), '字面量', 'var(--ink3)');
+    else if (tk.t === 'class') out += box2(esc2(tk.v), '字符集', COLORS[1]);
+    else if (tk.t === 'group') {
+      var label = tk.capture ? '捕获组 ' + tk.n : tk.named ? '命名组' : '非捕获组';
+      out += '<div style="display:inline-block;border:2px solid ' + COLORS[colorIdx % COLORS.length] + ';border-radius:10px;padding:4px 10px;margin:2px;vertical-align:middle">' +
+        '<div style="font-size:10px;color:' + COLORS[colorIdx % COLORS.length] + ';font-weight:700">' + label + (tk.q || '') + '</div>' +
+        '<div>' + render(tk.v, colorIdx + 1) + '</div></div>';
+    } else if (tk.t === 'alt') {
+      out += '<div style="display:inline-block;border:2px dashed #FFB88C;border-radius:10px;padding:4px 10px;margin:2px;vertical-align:middle">' +
+        '<div style="font-size:10px;color:#FFB88C;font-weight:700">或 |</div>' +
+        tk.v.map(function (branch) { return '<div style="margin:2px 0">' + render(branch, colorIdx + 1) + '</div>'; }).join('') + '</div>';
+    } else if (tk.t === 'anchor') out += box2(esc2(tk.v), '锚点', '#B39DDB');
+    else if (tk.t === 'quant') out += box2(esc2(tk.v), '量词', '#B8E986');
+    else out += box2(esc2(tk.v), '其他', 'var(--ink3)');
+  });
+  return out;
+}
+function parse(re) {
+  var tokens = [], i = 0, groupN = 0;
+  while (i < re.length) {
+    var c = re[i];
+    if (c === '\\') {
+      tokens.push({ t: 'seq', v: re.substr(i, 2) });
+      i += 2;
+    } else if (c === '[') {
+      var j = re.indexOf(']', i + 1);
+      if (j < 0) j = re.length - 1;
+      tokens.push({ t: 'class', v: re.slice(i, j + 1) });
+      i = j + 1;
+    } else if (c === '(') {
+      var capture = true, named = false, skip = 1;
+      if (re[i + 1] === '?') {
+        if (re[i + 2] === ':') { capture = false; skip = 3; }
+        else if (re[i + 2] === 'P' || re[i + 2] === '<') { named = true; skip = re[i + 2] === '<' ? 2 : 3; }
+        else { capture = false; skip = 3; }
+      }
+      if (capture) groupN++;
+      var d = 1, k = i + skip;
+      while (k < re.length && d > 0) {
+        if (re[k] === '(') d++;
+        if (re[k] === ')') d--;
+        k++;
+      }
+      var inner = re.slice(i + skip, k - 1);
+      tokens.push({ t: 'group', v: parse(inner), capture: capture, named: named, n: groupN, q: quantOf(re, k) });
+      i = k;
+      if (/[+*?{]/.test(re[i] || '')) i += (re[i] === '{' ? (re.indexOf('}', i) - i + 1) : (re[i + 1] === '?' ? 2 : 1));
+    } else if (c === '|') {
+      var before = tokens;
+      var rest = parse(re.slice(i + 1));
+      var prevAlt = null;
+      tokens = [{ t: 'alt', v: [before].concat(rest.length && rest[0].t === 'alt' ? rest[0].v : [rest]) }];
+      i = re.length;
+      tokens = [{ t: 'alt', v: [before, rest] }];
+      var m2 = tokens[0];
+      break;
+    } else if (c === '^' || c === '$' || c === '.' || c === '\\b') {
+      tokens.push({ t: c === '.' ? 'class' : 'anchor', v: c });
+      i++;
+    } else if ('+*?'.includes(c) || c === '{') {
+      var q = c;
+      if (c === '{') { var e2 = re.indexOf('}', i); q = re.slice(i, e2 + 1); i = e2 + 1; } else i++;
+      if (re[i] === '?') { q += '?'; i++; }
+      if (tokens.length) tokens[tokens.length - 1].q = (tokens[tokens.length - 1].q || '') + ' ' + q;
+      else tokens.push({ t: 'quant', v: q });
+    } else {
+      var s = '';
+      while (i < re.length && !'\\[(|+*?{^$.]'.includes(re[i])) { s += re[i]; i++; }
+      if (!s) { s = re[i]; i++; }
+      tokens.push({ t: 'seq', v: s });
+    }
+  }
+  return tokens;
+}
+function quantOf(re, pos) {
+  var c = re[pos];
+  if (c === '+' || c === '*' || c === '?') return c;
+  if (c === '{') return re.slice(pos, re.indexOf('}', pos) + 1);
+  return '';
+}
+function run() {
+  try {
+    new RegExp(pattern.value);
+  } catch (e) { box.innerHTML = '<span style="color:var(--err)">⚠ 正则错误：' + T.esc(e.message) + '</span>'; return; }
+  depth = 0;
+  box.innerHTML = render(parse(pattern.value), 0);
+}
+pattern.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '正则' }), pattern]));
+app.appendChild(box);
+app.appendChild(T.el('p', { text: '支持：字面量、字符集、捕获/非捕获/命名组、或分支、量词、锚点。嵌套越深颜色越丰富。', style: 'color:var(--ink2);font-size:12px' }));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "regex-visual", "title": "正则可视化", "desc": "把正则表达式解析成嵌套结构图，帮助理解复杂表达式", "scripts": "", "code": "var pattern = T.input('^(\\\\d{4})-(\\\\d{2})-(?:\\\\d{2})$', { class: 'grow mono' });\nvar box = T.el('div', { class: 'output', style: 'min-height:260px;font-family:var(--font-sans);white-space:normal' });\nvar COLORS = ['#1744E8', '#7BC0E5', '#B8E986', '#FFB88C', '#F48FB1', '#B39DDB'];\nvar depth = 0;\nfunction esc2(s) { return T.esc(s); }\nfunction box2(label, cls, color) {\n  return '\u003cdiv style=\"display:inline-block;border:2px solid ' + color + ';border-radius:8px;padding:2px 8px;margin:2px;vertical-align:middle;background:var(--surface)\">' +\n    '\u003cdiv style=\"font-size:10px;color:' + color + ';font-weight:700;letter-spacing:.05em\">' + cls + '\u003c/div>' +\n    '\u003cdiv style=\"font-family:var(--font-mono);font-size:13px\">' + label + '\u003c/div>\u003c/div>';\n}\nfunction render(tokens, colorIdx) {\n  var out = '';\n  tokens.forEach(function (tk) {\n    if (tk.t === 'seq') out += box2(esc2(tk.v), '字面量', 'var(--ink3)');\n    else if (tk.t === 'class') out += box2(esc2(tk.v), '字符集', COLORS[1]);\n    else if (tk.t === 'group') {\n      var label = tk.capture ? '捕获组 ' + tk.n : tk.named ? '命名组' : '非捕获组';\n      out += '\u003cdiv style=\"display:inline-block;border:2px solid ' + COLORS[colorIdx % COLORS.length] + ';border-radius:10px;padding:4px 10px;margin:2px;vertical-align:middle\">' +\n        '\u003cdiv style=\"font-size:10px;color:' + COLORS[colorIdx % COLORS.length] + ';font-weight:700\">' + label + (tk.q || '') + '\u003c/div>' +\n        '\u003cdiv>' + render(tk.v, colorIdx + 1) + '\u003c/div>\u003c/div>';\n    } else if (tk.t === 'alt') {\n      out += '\u003cdiv style=\"display:inline-block;border:2px dashed #FFB88C;border-radius:10px;padding:4px 10px;margin:2px;vertical-align:middle\">' +\n        '\u003cdiv style=\"font-size:10px;color:#FFB88C;font-weight:700\">或 |\u003c/div>' +\n        tk.v.map(function (branch) { return '\u003cdiv style=\"margin:2px 0\">' + render(branch, colorIdx + 1) + '\u003c/div>'; }).join('') + '\u003c/div>';\n    } else if (tk.t === 'anchor') out += box2(esc2(tk.v), '锚点', '#B39DDB');\n    else if (tk.t === 'quant') out += box2(esc2(tk.v), '量词', '#B8E986');\n    else out += box2(esc2(tk.v), '其他', 'var(--ink3)');\n  });\n  return out;\n}\nfunction parse(re) {\n  var tokens = [], i = 0, groupN = 0;\n  while (i \u003c re.length) {\n    var c = re[i];\n    if (c === '\\\\') {\n      tokens.push({ t: 'seq', v: re.substr(i, 2) });\n      i += 2;\n    } else if (c === '[') {\n      var j = re.indexOf(']', i + 1);\n      if (j \u003c 0) j = re.length - 1;\n      tokens.push({ t: 'class', v: re.slice(i, j + 1) });\n      i = j + 1;\n    } else if (c === '(') {\n      var capture = true, named = false, skip = 1;\n      if (re[i + 1] === '?') {\n        if (re[i + 2] === ':') { capture = false; skip = 3; }\n        else if (re[i + 2] === 'P' || re[i + 2] === '\u003c') { named = true; skip = re[i + 2] === '\u003c' ? 2 : 3; }\n        else { capture = false; skip = 3; }\n      }\n      if (capture) groupN++;\n      var d = 1, k = i + skip;\n      while (k \u003c re.length && d > 0) {\n        if (re[k] === '(') d++;\n        if (re[k] === ')') d--;\n        k++;\n      }\n      var inner = re.slice(i + skip, k - 1);\n      tokens.push({ t: 'group', v: parse(inner), capture: capture, named: named, n: groupN, q: quantOf(re, k) });\n      i = k;\n      if (/[+*?{]/.test(re[i] || '')) i += (re[i] === '{' ? (re.indexOf('}', i) - i + 1) : (re[i + 1] === '?' ? 2 : 1));\n    } else if (c === '|') {\n      var before = tokens;\n      var rest = parse(re.slice(i + 1));\n      var prevAlt = null;\n      tokens = [{ t: 'alt', v: [before].concat(rest.length && rest[0].t === 'alt' ? rest[0].v : [rest]) }];\n      i = re.length;\n      tokens = [{ t: 'alt', v: [before, rest] }];\n      var m2 = tokens[0];\n      break;\n    } else if (c === '^' || c === '$' || c === '.' || c === '\\\\b') {\n      tokens.push({ t: c === '.' ? 'class' : 'anchor', v: c });\n      i++;\n    } else if ('+*?'.includes(c) || c === '{') {\n      var q = c;\n      if (c === '{') { var e2 = re.indexOf('}', i); q = re.slice(i, e2 + 1); i = e2 + 1; } else i++;\n      if (re[i] === '?') { q += '?'; i++; }\n      if (tokens.length) tokens[tokens.length - 1].q = (tokens[tokens.length - 1].q || '') + ' ' + q;\n      else tokens.push({ t: 'quant', v: q });\n    } else {\n      var s = '';\n      while (i \u003c re.length && !'\\\\[(|+*?{^$.]'.includes(re[i])) { s += re[i]; i++; }\n      if (!s) { s = re[i]; i++; }\n      tokens.push({ t: 'seq', v: s });\n    }\n  }\n  return tokens;\n}\nfunction quantOf(re, pos) {\n  var c = re[pos];\n  if (c === '+' || c === '*' || c === '?') return c;\n  if (c === '{') return re.slice(pos, re.indexOf('}', pos) + 1);\n  return '';\n}\nfunction run() {\n  try {\n    new RegExp(pattern.value);\n  } catch (e) { box.innerHTML = '\u003cspan style=\"color:var(--err)\">⚠ 正则错误：' + T.esc(e.message) + '\u003c/span>'; return; }\n  depth = 0;\n  box.innerHTML = render(parse(pattern.value), 0);\n}\npattern.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '正则' }), pattern]));\napp.appendChild(box);\napp.appendChild(T.el('p', { text: '支持：字面量、字符集、捕获/非捕获/命名组、或分支、量词、锚点。嵌套越深颜色越丰富。', style: 'color:var(--ink2);font-size:12px' }));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

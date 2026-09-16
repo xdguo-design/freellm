@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>书签管理 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('书签管理', '常用工具书签：本地保存 / 搜索 / 一键打开', 'bookmark');
+var titleIn = T.input('', { class: 'grow', placeholder: '名称' });
+var urlIn = T.input('', { class: 'grow mono', placeholder: 'https://…' });
+var search = T.input('', { class: 'grow', placeholder: '搜索书签…' });
+var list = T.el('div');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-bookmarks') || '[]'); } catch (e) {}
+items.push({ name: 'FreeLLM 工具合集', url: 'https://freellm.top/tools/', builtin: true });
+function save() { localStorage.setItem('freellm-bookmarks', JSON.stringify(items.filter(function (i) { return !i.builtin; }))); }
+function render() {
+  T.clearEl(list);
+  var q = search.value.trim().toLowerCase();
+  items.forEach(function (b, i) {
+    if (q && !b.name.toLowerCase().includes(q) && !b.url.toLowerCase().includes(q)) return;
+    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)' });
+    row.appendChild(T.el('b', { text: b.name }));
+    row.appendChild(T.el('span', { text: b.url, style: 'flex:1;color:var(--ink3);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }));
+    row.appendChild(T.button('打开', function () { window.open(b.url, '_blank'); }, true));
+    if (!b.builtin) row.appendChild(T.button('✕', function () { items.splice(i, 1); save(); render(); }));
+    list.appendChild(row);
+  });
+  if (!list.children.length) list.appendChild(T.el('p', { text: q ? '无匹配' : '暂无书签', style: 'color:var(--ink3)' }));
+}
+search.addEventListener('input', T.debounce(render, 200));
+app.appendChild(T.row([titleIn, urlIn, T.button('添加书签', function () {
+  if (!titleIn.value || !urlIn.value) { T.toast('请填写名称与网址'); return; }
+  var u = urlIn.value;
+  if (!/^https?:\/\//.test(u)) u = 'https://' + u;
+  items.push({ name: titleIn.value, url: u });
+  save();
+  titleIn.value = '';
+  urlIn.value = '';
+  render();
+}, true)]));
+app.appendChild(T.row([search]));
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "bookmark", "title": "书签管理", "desc": "常用工具书签：本地保存 / 搜索 / 一键打开", "scripts": "", "code": "var titleIn = T.input('', { class: 'grow', placeholder: '名称' });\nvar urlIn = T.input('', { class: 'grow mono', placeholder: 'https://…' });\nvar search = T.input('', { class: 'grow', placeholder: '搜索书签…' });\nvar list = T.el('div');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-bookmarks') || '[]'); } catch (e) {}\nitems.push({ name: 'FreeLLM 工具合集', url: 'https://freellm.top/tools/', builtin: true });\nfunction save() { localStorage.setItem('freellm-bookmarks', JSON.stringify(items.filter(function (i) { return !i.builtin; }))); }\nfunction render() {\n  T.clearEl(list);\n  var q = search.value.trim().toLowerCase();\n  items.forEach(function (b, i) {\n    if (q && !b.name.toLowerCase().includes(q) && !b.url.toLowerCase().includes(q)) return;\n    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line)' });\n    row.appendChild(T.el('b', { text: b.name }));\n    row.appendChild(T.el('span', { text: b.url, style: 'flex:1;color:var(--ink3);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }));\n    row.appendChild(T.button('打开', function () { window.open(b.url, '_blank'); }, true));\n    if (!b.builtin) row.appendChild(T.button('✕', function () { items.splice(i, 1); save(); render(); }));\n    list.appendChild(row);\n  });\n  if (!list.children.length) list.appendChild(T.el('p', { text: q ? '无匹配' : '暂无书签', style: 'color:var(--ink3)' }));\n}\nsearch.addEventListener('input', T.debounce(render, 200));\napp.appendChild(T.row([titleIn, urlIn, T.button('添加书签', function () {\n  if (!titleIn.value || !urlIn.value) { T.toast('请填写名称与网址'); return; }\n  var u = urlIn.value;\n  if (!/^https?:\\/\\//.test(u)) u = 'https://' + u;\n  items.push({ name: titleIn.value, url: u });\n  save();\n  titleIn.value = '';\n  urlIn.value = '';\n  render();\n}, true)]));\napp.appendChild(T.row([search]));\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

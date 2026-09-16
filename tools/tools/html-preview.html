@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>HTML 实时预览 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 实时预览', '实时 HTML 代码预览（沙箱 iframe，安全隔离）', 'html-preview');
+var input = T.textarea('<h1>Hello</h1>\n<p>在左侧修改代码，右侧实时预览。</p>\n<style>h1{color:#1744E8}</style>', true);
+input.value = '<h1>Hello</h1>\n<p>在左侧修改代码，右侧实时预览。</p>\n<style>h1{color:#1744E8}</style>';
+input.style.minHeight = '300px';
+var frame = T.el('iframe', { sandbox: 'allow-scripts', style: 'width:100%;height:356px;border:1px solid var(--line);border-radius:8px;background:#fff' });
+function run() { frame.srcdoc = input.value; }
+input.addEventListener('input', T.debounce(run, 300));
+app.appendChild(T.pane([T.field('HTML', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览（沙箱）' }), frame])]));
+app.appendChild(T.row([T.button('打开独立标签页', function () {
+  var w = window.open('', '_blank');
+  w.document.write(input.value);
+  w.document.close();
+})]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "html-preview", "title": "HTML 实时预览", "desc": "实时 HTML 代码预览（沙箱 iframe，安全隔离）", "scripts": "", "code": "var input = T.textarea('\u003ch1>Hello\u003c/h1>\\n\u003cp>在左侧修改代码，右侧实时预览。\u003c/p>\\n\u003cstyle>h1{color:#1744E8}\u003c/style>', true);\ninput.value = '\u003ch1>Hello\u003c/h1>\\n\u003cp>在左侧修改代码，右侧实时预览。\u003c/p>\\n\u003cstyle>h1{color:#1744E8}\u003c/style>';\ninput.style.minHeight = '300px';\nvar frame = T.el('iframe', { sandbox: 'allow-scripts', style: 'width:100%;height:356px;border:1px solid var(--line);border-radius:8px;background:#fff' });\nfunction run() { frame.srcdoc = input.value; }\ninput.addEventListener('input', T.debounce(run, 300));\napp.appendChild(T.pane([T.field('HTML', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览（沙箱）' }), frame])]));\napp.appendChild(T.row([T.button('打开独立标签页', function () {\n  var w = window.open('', '_blank');\n  w.document.write(input.value);\n  w.document.close();\n})]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

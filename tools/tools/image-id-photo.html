@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>证件照制作 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('证件照制作', '换背景色 + 常用证件照规格裁剪（一寸/二寸/小二寸）', 'image-id-photo');
+var drop = T.msg('点击或拖入照片（纯色背景效果最佳）', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var spec = T.select([
+  { value: '295x413', label: '一寸 295×413（25×35mm）' },
+  { value: '413x579', label: '二寸 413×579（35×49mm）' },
+  { value: '413x531', label: '小二寸 413×531' },
+  { value: '600x800', label: '签证 600×800' }
+], '295x413');
+var bg = T.select([{value:'#438EDB',label:'蓝底'},{value:'#FFFFFF',label:'白底'},{value:'#D9001B',label:'红底'}],'#438EDB');
+var tolerance = T.range(0, 120, 1, 40);
+var canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var img = null;
+function render() {
+  if (!img) return;
+  var dims = spec.value.split('x');
+  var W = +dims[0], H = +dims[1];
+  canvas.width = W;
+  canvas.height = H;
+  var ctx = canvas.getContext('2d', { willReadFrequently: true });
+  var off = T.el('canvas');
+  off.width = img.width;
+  off.height = img.height;
+  var octx = off.getContext('2d', { willReadFrequently: true });
+  octx.drawImage(img, 0, 0);
+  var d = octx.getImageData(0, 0, off.width, off.height);
+  var ref = [d.data[0], d.data[1], d.data[2]];
+  var t = +tolerance.value;
+  for (var i = 0; i < d.data.length; i += 4) {
+    var dist = Math.abs(d.data[i] - ref[0]) + Math.abs(d.data[i + 1] - ref[1]) + Math.abs(d.data[i + 2] - ref[2]);
+    if (dist < t * 3) d.data[i + 3] = 0;
+  }
+  octx.putImageData(d, 0, 0);
+  ctx.fillStyle = bg.value;
+  ctx.fillRect(0, 0, W, H);
+  var scale = Math.max(W / off.width, H / off.height * 0.75);
+  scale = H / off.height * 0.82;
+  var dw = off.width * scale, dh = off.height * scale;
+  ctx.drawImage(off, (W - dw) / 2, H - dh, dw, dh);
+  canvas.style.display = '';
+}
+inp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+[spec, bg, tolerance].forEach(function (el) { el.addEventListener('input', render); });
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '规格' }), spec, T.el('span', { text: '背景' }), bg]));
+app.appendChild(T.row([T.el('span', { text: '抠图容差' }), tolerance]));
+app.appendChild(canvas);
+app.appendChild(T.row([T.button('下载证件照', function () { T.dlCanvas(canvas, 'id-photo-' + spec.value + '.png'); }, true),
+  T.el('span', { text: '基于颜色的简化抠图，人像边缘建议配合专业工具' })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-id-photo", "title": "证件照制作", "desc": "换背景色 + 常用证件照规格裁剪（一寸/二寸/小二寸）", "scripts": "", "code": "var drop = T.msg('点击或拖入照片（纯色背景效果最佳）', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar spec = T.select([\n  { value: '295x413', label: '一寸 295×413（25×35mm）' },\n  { value: '413x579', label: '二寸 413×579（35×49mm）' },\n  { value: '413x531', label: '小二寸 413×531' },\n  { value: '600x800', label: '签证 600×800' }\n], '295x413');\nvar bg = T.select([{value:'#438EDB',label:'蓝底'},{value:'#FFFFFF',label:'白底'},{value:'#D9001B',label:'红底'}],'#438EDB');\nvar tolerance = T.range(0, 120, 1, 40);\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  var dims = spec.value.split('x');\n  var W = +dims[0], H = +dims[1];\n  canvas.width = W;\n  canvas.height = H;\n  var ctx = canvas.getContext('2d', { willReadFrequently: true });\n  var off = T.el('canvas');\n  off.width = img.width;\n  off.height = img.height;\n  var octx = off.getContext('2d', { willReadFrequently: true });\n  octx.drawImage(img, 0, 0);\n  var d = octx.getImageData(0, 0, off.width, off.height);\n  var ref = [d.data[0], d.data[1], d.data[2]];\n  var t = +tolerance.value;\n  for (var i = 0; i \u003c d.data.length; i += 4) {\n    var dist = Math.abs(d.data[i] - ref[0]) + Math.abs(d.data[i + 1] - ref[1]) + Math.abs(d.data[i + 2] - ref[2]);\n    if (dist \u003c t * 3) d.data[i + 3] = 0;\n  }\n  octx.putImageData(d, 0, 0);\n  ctx.fillStyle = bg.value;\n  ctx.fillRect(0, 0, W, H);\n  var scale = Math.max(W / off.width, H / off.height * 0.75);\n  scale = H / off.height * 0.82;\n  var dw = off.width * scale, dh = off.height * scale;\n  ctx.drawImage(off, (W - dw) / 2, H - dh, dw, dh);\n  canvas.style.display = '';\n}\ninp.addEventListener('change', function () { T.loadImage(function (i) { img = i; render(); }); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\n[spec, bg, tolerance].forEach(function (el) { el.addEventListener('input', render); });\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '规格' }), spec, T.el('span', { text: '背景' }), bg]));\napp.appendChild(T.row([T.el('span', { text: '抠图容差' }), tolerance]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载证件照', function () { T.dlCanvas(canvas, 'id-photo-' + spec.value + '.png'); }, true),\n  T.el('span', { text: '基于颜色的简化抠图，人像边缘建议配合专业工具' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

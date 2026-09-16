@@ -2,133 +2,105 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Curl 转代码 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Curl 转代码', 'Curl 命令转 Python/JS/Go/Java', 'curl-converter');
-
-  var lang = T.select([
-    { value: 'python', label: 'Python (requests)' },
-    { value: 'javascript', label: 'JavaScript (fetch)' },
-    { value: 'go', label: 'Go (net/http)' },
-    { value: 'java', label: 'Java (HttpURLConnection)' }
-  ]);
-
-  var input = T.textarea('粘贴 Curl 命令...\n\ncurl -X GET "https://api.example.com/users" -H "Authorization: Bearer token"');
-  var output = T.textarea('生成的代码', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function parseCurl(curl) {
-    var result = { method: 'GET', url: '', headers: {}, data: null };
-    
-    var urlMatch = curl.match(/curl\s+['"]?([^'"\s]+)/i);
-    if (urlMatch) result.url = urlMatch[1];
-
-    var methodMatch = curl.match(/-X\s+['"]?(\w+)/i);
-    if (methodMatch) result.method = methodMatch[1].toUpperCase();
-
-    var headerRegex = /-H\s+['"]([^'"]+)['"]/gi;
-    var headerMatch;
-    while ((headerMatch = headerRegex.exec(curl)) !== null) {
-      var [key, value] = headerMatch[1].split(':').map(s => s.trim());
-      result.headers[key] = value;
-    }
-
-    if (curl.includes('-d ') || curl.includes('--data')) {
-      result.method = result.method === 'GET' ? 'POST' : result.method;
-      var dataMatch = curl.match(/(?:--data|-d)\s+['"](.+?)['"]/);
-      if (dataMatch) result.data = dataMatch[1];
-    }
-
-    return result;
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Curl 转代码', 'curl 命令转 Python / JS / Go / Java / PHP 代码', 'curl-converter');
+var input = T.textarea('curl -X POST https://api.example.com/users \\\n  -H "Content-Type: application/json" \\\n  -H "Authorization: Bearer token123" \\\n  -d \'{"name":"张三","age":25}\'');
+input.value = 'curl -X POST https://api.example.com/users \\\n  -H "Content-Type: application/json" \\\n  -H "Authorization: Bearer token123" \\\n  -d \'{"name":"张三","age":25}\'';
+var lang = T.select(['python', 'javascript', 'go', 'java', 'php'], 'python');
+var output = T.out('');
+function parseCurl(cmd) {
+  var s = cmd.replace(/\\\n/g, ' ').replace(/\r/g, '').trim();
+  if (s.startsWith('curl')) s = s.slice(4);
+  var method = 'GET';
+  var url = '';
+  var headers = [];
+  var data = '';
+  var re = /(-X|--request)\s+(\w+)|(-H|--header)\s+"([^"]+)"|(-H|--header)\s+'([^']+)'|(-d|--data|--data-raw|--data-binary)\s+'([^']*)'|(-d|--data|--data-raw|--data-binary)\s+"([^"]*)"|'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)"|(https?:\/\/[^\s'"]+)/g;
+  var m;
+  while ((m = re.exec(s))) {
+    if (m[2]) method = m[2].toUpperCase();
+    else if (m[4] || m[5]) headers.push(m[4] || m[5]);
+    else if (m[8] !== undefined) data = m[8];
+    else if (m[9] !== undefined) data = m[9];
+    else if (m[10] !== undefined) { if (!url) url = m[10]; }
+    else if (m[11] !== undefined) { if (!url) url = m[11]; }
+    else if (m[12] !== undefined) { if (!url) url = m[12]; }
   }
-
-  function generate() {
-    var curl = input.value.trim();
-    if (!curl) { output.value = ''; return; }
-
-    var parsed = parseCurl(curl);
-    var code = '';
-
-    switch (lang.value) {
-      case 'python':
-        code = `import requests\n\n`;
-        code += `url = "${parsed.url}"\n`;
-        if (Object.keys(parsed.headers).length) {
-          code += `headers = ${JSON.stringify(parsed.headers, null, 4)}\n`;
-        }
-        code += `\nresponse = requests.${parsed.method.toLowerCase()}(url`;
-        if (Object.keys(parsed.headers).length) code += `, headers=headers`;
-        if (parsed.data) code += `, data='${parsed.data}'`;
-        code += `)\n\nprint(response.status_code)\nprint(response.json())`;
-        break;
-
-      case 'javascript':
-        code = `const response = await fetch("${parsed.url}", {\n`;
-        code += `  method: "${parsed.method}",\n`;
-        if (Object.keys(parsed.headers).length) {
-          code += `  headers: ${JSON.stringify(parsed.headers, null, 4)},\n`;
-        }
-        if (parsed.data) {
-          code += `  body: JSON.stringify(${parsed.data})\n`;
-        }
-        code += `});\n\nconst data = await response.json();\nconsole.log(data);`;
-        break;
-
-      case 'go':
-        code = `package main\n\nimport (\n\t"fmt"\n\t"net/http"\n\t"io"\n`;
-        if (parsed.data) code += `\t"strings"\n`;
-        code += `)\n\nfunc main() {\n`;
-        code += `\turl := "${parsed.url}"\n`;
-        if (parsed.data) {
-          code += `\tbody := strings.NewReader(\`${parsed.data}\`)\n`;
-          code += `\treq, _ := http.NewRequest("${parsed.method}", url, body)\n`;
-        } else {
-          code += `\treq, _ := http.NewRequest("${parsed.method}", url, nil)\n`;
-        }
-        Object.keys(parsed.headers).forEach(k => {
-          code += `\treq.Header.Set("${k}", "${parsed.headers[k]}")\n`;
-        });
-        code += `\tresp, _ := http.DefaultClient.Do(req)\n\tdefer resp.Body.Close()\n\n`;
-        code += `\tbytes, _ := io.ReadAll(resp.Body)\n\tfmt.Println(string(bytes))\n}`;
-        break;
-
-      case 'java':
-        code = `import java.net.*;\nimport java.io.*;\n\n`;
-        code += `public class Main {\n  public static void main(String[] args) throws Exception {\n`;
-        code += `    URL url = new URL("${parsed.url}");\n`;
-        code += `    HttpURLConnection conn = (HttpURLConnection) url.openConnection();\n`;
-        code += `    conn.setRequestMethod("${parsed.method}");\n`;
-        Object.keys(parsed.headers).forEach(k => {
-          code += `    conn.setRequestProperty("${k}", "${parsed.headers[k]}");\n`;
-        });
-        code += `\n    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));\n`;
-        code += `    String line;\n    while ((line = in.readLine()) != null) {\n      System.out.println(line);\n    }\n  }\n}`;
-        break;
-    }
-
-    output.value = code;
+  if (data && method === 'GET') method = 'POST';
+  return { method: method, url: url, headers: headers, data: data };
+}
+function generate(c) {
+  var hs = c.headers.map(function (h) { return h; });
+  var out = '';
+  if (lang.value === 'python') {
+    out = 'import requests\n\nurl = "' + c.url + '"\nheaders = {\n' + hs.map(function (h) {
+      var i = h.indexOf(':');
+      return '    "' + h.slice(0, i).trim() + '": "' + h.slice(i + 1).trim() + '",';
+    }).join('\n') + '\n}\n';
+    if (c.data) out += '\npayload = ' + c.data + '\n\nresponse = requests.' + c.method.toLowerCase() + '(url, headers=headers' + (c.data ? ', json=payload' : '') + ')\nprint(response.status_code, response.json())';
+    else out += '\nresponse = requests.' + c.method.toLowerCase() + '(url, headers=headers)\nprint(response.status_code, response.text)';
+  } else if (lang.value === 'javascript') {
+    out = 'const res = await fetch("' + c.url + '", {\n  method: "' + c.method + '",\n  headers: {\n' + hs.map(function (h) {
+      var i = h.indexOf(':');
+      return '    "' + h.slice(0, i).trim() + '": "' + h.slice(i + 1).trim() + '",';
+    }).join('\n') + '\n  }' + (c.data ? ',\n  body: JSON.stringify(' + c.data + ')' : '') + '\n});\nconsole.log(res.status, await res.text());';
+  } else if (lang.value === 'go') {
+    var bodyVar = 'nil';
+    if (c.data) bodyVar = 'strings.NewReader(`' + c.data + '`)';
+    out = 'package main\n\nimport (\n\t"fmt"\n\t"io"\n\t"net/http"\n\t"strings"\n)\n\nfunc main() {\n\treq, _ := http.NewRequest("' + c.method + '", "' + c.url + '", ' + bodyVar + ')\n';
+    hs.forEach(function (h) {
+      var i = h.indexOf(':');
+      out += '\treq.Header.Set("' + h.slice(0, i).trim() + '", "' + h.slice(i + 1).trim() + '")\n';
+    });
+    out += '\tresp, _ := http.DefaultClient.Do(req)\n\tdefer resp.Body.Close()\n\tbody, _ := io.ReadAll(resp.Body)\n\tfmt.Println(resp.StatusCode, string(body))\n}';
+  } else if (lang.value === 'java') {
+    out = 'HttpClient client = HttpClient.newHttpClient();\nHttpRequest.Builder builder = HttpRequest.newBuilder()\n    .uri(URI.create("' + c.url + '"))\n';
+    hs.forEach(function (h) {
+      var i = h.indexOf(':');
+      out += '    .header("' + h.slice(0, i).trim() + '", "' + h.slice(i + 1).trim() + '")\n';
+    });
+    out += c.data ? '    .POST(HttpRequest.BodyPublishers.ofString(String s = ' + '"""' + c.data + '"""))\n' : '    .GET();\n';
+    if (c.data) out = out.replace(/String s = /, '').replace('String s = ', '');
+    out += 'HttpResponse<String> resp = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());\nSystem.out.println(resp.statusCode() + " " + resp.body());';
+  } else {
+    out = '<?php\n$ch = curl_init("' + c.url + '");\ncurl_setopt($ch, CURLOPT_CUSTOMREQUEST, "' + c.method + '");\n';
+    out += 'curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n' + hs.map(function (h) { return '    "' + h + '",'; }).join('\n') + '\n]);\n';
+    if (c.data) out += "curl_setopt($ch, CURLOPT_POSTFIELDS, '" + c.data + "');\n";
+    out += '$resp = curl_exec($ch);\necho curl_getinfo($ch, CURLINFO_HTTP_CODE), $resp;';
   }
-
-  lang.addEventListener('change', generate);
-  input.addEventListener('input', function () { setTimeout(generate, 200); });
-
-  app.appendChild(T.el('div', { class: 'field', text: '输出语言:' }));
-  app.appendChild(lang);
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'row' }, [output, copyBtn]));
-
-  generate();
+  return out;
+}
+function run() {
+  try {
+    var c = parseCurl(input.value);
+    if (!c.url) throw new Error('未找到 URL');
+    output.value = generate(c);
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, lang].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('curl 命令', input), T.field('转换结果', output)]));
+app.appendChild(T.row([T.el('span', { text: '目标语言' }), lang, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "curl-converter", "title": "Curl 转代码", "desc": "curl 命令转 Python / JS / Go / Java / PHP 代码", "scripts": "", "code": "var input = T.textarea('curl -X POST https://api.example.com/users \\\\\\n  -H \"Content-Type: application/json\" \\\\\\n  -H \"Authorization: Bearer token123\" \\\\\\n  -d \\'{\"name\":\"张三\",\"age\":25}\\'');\ninput.value = 'curl -X POST https://api.example.com/users \\\\\\n  -H \"Content-Type: application/json\" \\\\\\n  -H \"Authorization: Bearer token123\" \\\\\\n  -d \\'{\"name\":\"张三\",\"age\":25}\\'';\nvar lang = T.select(['python', 'javascript', 'go', 'java', 'php'], 'python');\nvar output = T.out('');\nfunction parseCurl(cmd) {\n  var s = cmd.replace(/\\\\\\n/g, ' ').replace(/\\r/g, '').trim();\n  if (s.startsWith('curl')) s = s.slice(4);\n  var method = 'GET';\n  var url = '';\n  var headers = [];\n  var data = '';\n  var re = /(-X|--request)\\s+(\\w+)|(-H|--header)\\s+\"([^\"]+)\"|(-H|--header)\\s+'([^']+)'|(-d|--data|--data-raw|--data-binary)\\s+'([^']*)'|(-d|--data|--data-raw|--data-binary)\\s+\"([^\"]*)\"|'((?:[^'\\\\]|\\\\.)*)'|\"((?:[^\"\\\\]|\\\\.)*)\"|(https?:\\/\\/[^\\s'\"]+)/g;\n  var m;\n  while ((m = re.exec(s))) {\n    if (m[2]) method = m[2].toUpperCase();\n    else if (m[4] || m[5]) headers.push(m[4] || m[5]);\n    else if (m[8] !== undefined) data = m[8];\n    else if (m[9] !== undefined) data = m[9];\n    else if (m[10] !== undefined) { if (!url) url = m[10]; }\n    else if (m[11] !== undefined) { if (!url) url = m[11]; }\n    else if (m[12] !== undefined) { if (!url) url = m[12]; }\n  }\n  if (data && method === 'GET') method = 'POST';\n  return { method: method, url: url, headers: headers, data: data };\n}\nfunction generate(c) {\n  var hs = c.headers.map(function (h) { return h; });\n  var out = '';\n  if (lang.value === 'python') {\n    out = 'import requests\\n\\nurl = \"' + c.url + '\"\\nheaders = {\\n' + hs.map(function (h) {\n      var i = h.indexOf(':');\n      return '    \"' + h.slice(0, i).trim() + '\": \"' + h.slice(i + 1).trim() + '\",';\n    }).join('\\n') + '\\n}\\n';\n    if (c.data) out += '\\npayload = ' + c.data + '\\n\\nresponse = requests.' + c.method.toLowerCase() + '(url, headers=headers' + (c.data ? ', json=payload' : '') + ')\\nprint(response.status_code, response.json())';\n    else out += '\\nresponse = requests.' + c.method.toLowerCase() + '(url, headers=headers)\\nprint(response.status_code, response.text)';\n  } else if (lang.value === 'javascript') {\n    out = 'const res = await fetch(\"' + c.url + '\", {\\n  method: \"' + c.method + '\",\\n  headers: {\\n' + hs.map(function (h) {\n      var i = h.indexOf(':');\n      return '    \"' + h.slice(0, i).trim() + '\": \"' + h.slice(i + 1).trim() + '\",';\n    }).join('\\n') + '\\n  }' + (c.data ? ',\\n  body: JSON.stringify(' + c.data + ')' : '') + '\\n});\\nconsole.log(res.status, await res.text());';\n  } else if (lang.value === 'go') {\n    var bodyVar = 'nil';\n    if (c.data) bodyVar = 'strings.NewReader(`' + c.data + '`)';\n    out = 'package main\\n\\nimport (\\n\\t\"fmt\"\\n\\t\"io\"\\n\\t\"net/http\"\\n\\t\"strings\"\\n)\\n\\nfunc main() {\\n\\treq, _ := http.NewRequest(\"' + c.method + '\", \"' + c.url + '\", ' + bodyVar + ')\\n';\n    hs.forEach(function (h) {\n      var i = h.indexOf(':');\n      out += '\\treq.Header.Set(\"' + h.slice(0, i).trim() + '\", \"' + h.slice(i + 1).trim() + '\")\\n';\n    });\n    out += '\\tresp, _ := http.DefaultClient.Do(req)\\n\\tdefer resp.Body.Close()\\n\\tbody, _ := io.ReadAll(resp.Body)\\n\\tfmt.Println(resp.StatusCode, string(body))\\n}';\n  } else if (lang.value === 'java') {\n    out = 'HttpClient client = HttpClient.newHttpClient();\\nHttpRequest.Builder builder = HttpRequest.newBuilder()\\n    .uri(URI.create(\"' + c.url + '\"))\\n';\n    hs.forEach(function (h) {\n      var i = h.indexOf(':');\n      out += '    .header(\"' + h.slice(0, i).trim() + '\", \"' + h.slice(i + 1).trim() + '\")\\n';\n    });\n    out += c.data ? '    .POST(HttpRequest.BodyPublishers.ofString(String s = ' + '\"\"\"' + c.data + '\"\"\"))\\n' : '    .GET();\\n';\n    if (c.data) out = out.replace(/String s = /, '').replace('String s = ', '');\n    out += 'HttpResponse\u003cString> resp = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());\\nSystem.out.println(resp.statusCode() + \" \" + resp.body());';\n  } else {\n    out = '\u003c?php\\n$ch = curl_init(\"' + c.url + '\");\\ncurl_setopt($ch, CURLOPT_CUSTOMREQUEST, \"' + c.method + '\");\\n';\n    out += 'curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\\n' + hs.map(function (h) { return '    \"' + h + '\",'; }).join('\\n') + '\\n]);\\n';\n    if (c.data) out += \"curl_setopt($ch, CURLOPT_POSTFIELDS, '\" + c.data + \"');\\n\";\n    out += '$resp = curl_exec($ch);\\necho curl_getinfo($ch, CURLINFO_HTTP_CODE), $resp;';\n  }\n  return out;\n}\nfunction run() {\n  try {\n    var c = parseCurl(input.value);\n    if (!c.url) throw new Error('未找到 URL');\n    output.value = generate(c);\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, lang].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('curl 命令', input), T.field('转换结果', output)]));\napp.appendChild(T.row([T.el('span', { text: '目标语言' }), lang, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

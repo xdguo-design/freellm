@@ -2,49 +2,62 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>周数查询 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('周数查询', '任意日期是当年第几周', 'week-number');
-
-  var dateInput = T.el('input', { type: 'date', style: 'flex:1' });
-  var result = T.el('div', { class: 'output dark', style: 'padding:16px;text-align:center;font-size:1.2em' });
-
-  function getWeekNumber(d) {
-    var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    var dayNum = date.getUTCDay() || 7;
-    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-    var yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-  }
-
-  function update() {
-    var d = new Date(dateInput.value);
-    if (isNaN(d.getTime())) { result.textContent = '请选择日期'; return; }
-
-    var weekNum = getWeekNumber(d);
-    var dayNames = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-
-    result.innerHTML = '<strong>' + d.getFullYear() + ' 年第 ' + weekNum + ' 周</strong><br>' +
-      '<span style="color:var(--muted)">' + d.toLocaleDateString('zh-CN') + ' ' + dayNames[d.getDay()] + '</span>';
-  }
-
-  dateInput.addEventListener('change', update);
-
-  app.appendChild(T.el('div', { class: 'field', text: '选择日期:' }));
-  app.appendChild(dateInput);
-  app.appendChild(result);
-
-  dateInput.value = new Date().toISOString().slice(0, 10);
-  update();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('周数查询', '任意日期是当年第几周（ISO 8601 周一为每周开始）', 'week-number');
+var date = T.dateInput(T.today());
+var box = T.el('div');
+function isoWeek(d) {
+  var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  var dayNum = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  var weekNo = Math.ceil(((t - yearStart) / 86400000 + 1) / 7);
+  return { week: weekNo, year: t.getUTCFullYear() };
+}
+function run() {
+  T.clearEl(box);
+  if (!date.value) return;
+  var d = new Date(date.value + 'T00:00:00');
+  var iso = isoWeek(d);
+  var start = new Date(d);
+  start.setDate(start.getDate() - ((d.getDay() + 6) % 7));
+  var end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  var startYear = new Date(d.getFullYear(), 0, 1);
+  var dayOfYear = Math.floor((d - startYear) / 86400000) + 1;
+  box.appendChild(T.kvTable([
+    ['ISO 周数', iso.year + ' 年第 ' + iso.week + ' 周'],
+    ['本周区间', T.fmtDate(start) + ' ~ ' + T.fmtDate(end)],
+    ['星期', ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]],
+    ['年内第几天', '第 ' + dayOfYear + ' 天 / 共 ' + (isLeap(d.getFullYear()) ? 366 : 365) + ' 天'],
+    ['年内进度', (dayOfYear / (isLeap(d.getFullYear()) ? 366 : 365) * 100).toFixed(1) + '%']
+  ]));
+}
+function isLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }
+date.addEventListener('input', run);
+app.appendChild(T.row([T.el('span', { text: '日期' }), date]));
+app.appendChild(box);
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "week-number", "title": "周数查询", "desc": "任意日期是当年第几周（ISO 8601 周一为每周开始）", "scripts": "", "code": "var date = T.dateInput(T.today());\nvar box = T.el('div');\nfunction isoWeek(d) {\n  var t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));\n  var dayNum = t.getUTCDay() || 7;\n  t.setUTCDate(t.getUTCDate() + 4 - dayNum);\n  var yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));\n  var weekNo = Math.ceil(((t - yearStart) / 86400000 + 1) / 7);\n  return { week: weekNo, year: t.getUTCFullYear() };\n}\nfunction run() {\n  T.clearEl(box);\n  if (!date.value) return;\n  var d = new Date(date.value + 'T00:00:00');\n  var iso = isoWeek(d);\n  var start = new Date(d);\n  start.setDate(start.getDate() - ((d.getDay() + 6) % 7));\n  var end = new Date(start);\n  end.setDate(end.getDate() + 6);\n  var startYear = new Date(d.getFullYear(), 0, 1);\n  var dayOfYear = Math.floor((d - startYear) / 86400000) + 1;\n  box.appendChild(T.kvTable([\n    ['ISO 周数', iso.year + ' 年第 ' + iso.week + ' 周'],\n    ['本周区间', T.fmtDate(start) + ' ~ ' + T.fmtDate(end)],\n    ['星期', ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]],\n    ['年内第几天', '第 ' + dayOfYear + ' 天 / 共 ' + (isLeap(d.getFullYear()) ? 366 : 365) + ' 天'],\n    ['年内进度', (dayOfYear / (isLeap(d.getFullYear()) ? 366 : 365) * 100).toFixed(1) + '%']\n  ]));\n}\nfunction isLeap(y) { return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0; }\ndate.addEventListener('input', run);\napp.appendChild(T.row([T.el('span', { text: '日期' }), date]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

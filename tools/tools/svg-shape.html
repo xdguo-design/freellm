@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>SVG 形状生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('SVG 形状生成', '随机 Blob / 波浪 / 圆点阵图形，SVG 代码直接可用', 'svg-shape');
+var kind = T.select([{value:'blob',label:'Blob 斑点'},{value:'wave',label:'波浪分隔'},{value:'dots',label:'圆点阵'}],'blob');
+var seedN = T.num(1, { min: 1, max: 999, style: 'width:80px' });
+var color = T.color('#7BC0E5');
+var box = T.el('div', { style: 'padding:16px;border:1px solid var(--line);border-radius:10px;background:#fff' });
+var output = T.out('');
+function rng(seed) {
+  var s = seed;
+  return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+}
+function gen() {
+  var rnd = rng(+seedN.value * 97 + 11);
+  var svg = '';
+  if (kind.value === 'blob') {
+    var pts = [];
+    var n = 7;
+    for (var i = 0; i < n; i++) {
+      var a = i / n * Math.PI * 2;
+      var r = 80 + rnd() * 70;
+      pts.push([200 + Math.cos(a) * r, 150 + Math.sin(a) * r]);
+    }
+    var d = 'M' + pts[0][0] + ' ' + pts[0][1];
+    for (i = 0; i < n; i++) {
+      var p0 = pts[i], p1 = pts[(i + 1) % n];
+      d += ' Q' + p0[0] + ' ' + p0[1] + ' ' + (p0[0] + p1[0]) / 2 + ' ' + (p0[1] + p1[1]) / 2;
+    }
+    d += ' Z';
+    svg = '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height="220"><path d="' + d + '" fill="' + color.value + '"/></svg>';
+  } else if (kind.value === 'wave') {
+    var amp = 30 + Math.floor(rnd() * 40);
+    svg = '<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" width="100%" height="120"><path d="M0 60 Q100 ' + (60 - amp) + ' 200 60 T400 60 V120 H0 Z" fill="' + color.value + '"/></svg>';
+  } else {
+    var dots = '';
+    for (var yy = 0; yy < 8; yy++) for (var xx = 0; xx < 16; xx++) {
+      if (rnd() > 0.45) dots += '<circle cx="' + (20 + xx * 24) + '" cy="' + (20 + yy * 24) + '" r="' + (2 + rnd() * 6).toFixed(1) + '" fill="' + color.value + '"/>';
+    }
+    svg = '<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" width="100%" height="200">' + dots + '</svg>';
+  }
+  box.innerHTML = svg;
+  output.value = svg;
+}
+[kind, seedN, color].forEach(function (el) { el.addEventListener('input', gen); });
+app.appendChild(T.row([T.el('span', { text: '类型' }), kind, T.el('span', { text: '种子' }), seedN, T.el('span', { text: '颜色' }), color]));
+app.appendChild(box);
+app.appendChild(T.pane([T.field('SVG 代码', output)], true));
+app.appendChild(T.row([T.button('换一个', function () { seedN.value = +seedN.value + 1; gen(); }, true), T.btnCopy(function () { return output.value; })]));
+gen();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "svg-shape", "title": "SVG 形状生成", "desc": "随机 Blob / 波浪 / 圆点阵图形，SVG 代码直接可用", "scripts": "", "code": "var kind = T.select([{value:'blob',label:'Blob 斑点'},{value:'wave',label:'波浪分隔'},{value:'dots',label:'圆点阵'}],'blob');\nvar seedN = T.num(1, { min: 1, max: 999, style: 'width:80px' });\nvar color = T.color('#7BC0E5');\nvar box = T.el('div', { style: 'padding:16px;border:1px solid var(--line);border-radius:10px;background:#fff' });\nvar output = T.out('');\nfunction rng(seed) {\n  var s = seed;\n  return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; };\n}\nfunction gen() {\n  var rnd = rng(+seedN.value * 97 + 11);\n  var svg = '';\n  if (kind.value === 'blob') {\n    var pts = [];\n    var n = 7;\n    for (var i = 0; i \u003c n; i++) {\n      var a = i / n * Math.PI * 2;\n      var r = 80 + rnd() * 70;\n      pts.push([200 + Math.cos(a) * r, 150 + Math.sin(a) * r]);\n    }\n    var d = 'M' + pts[0][0] + ' ' + pts[0][1];\n    for (i = 0; i \u003c n; i++) {\n      var p0 = pts[i], p1 = pts[(i + 1) % n];\n      d += ' Q' + p0[0] + ' ' + p0[1] + ' ' + (p0[0] + p1[0]) / 2 + ' ' + (p0[1] + p1[1]) / 2;\n    }\n    d += ' Z';\n    svg = '\u003csvg viewBox=\"0 0 400 300\" xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" height=\"220\">\u003cpath d=\"' + d + '\" fill=\"' + color.value + '\"/>\u003c/svg>';\n  } else if (kind.value === 'wave') {\n    var amp = 30 + Math.floor(rnd() * 40);\n    svg = '\u003csvg viewBox=\"0 0 400 120\" xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" height=\"120\">\u003cpath d=\"M0 60 Q100 ' + (60 - amp) + ' 200 60 T400 60 V120 H0 Z\" fill=\"' + color.value + '\"/>\u003c/svg>';\n  } else {\n    var dots = '';\n    for (var yy = 0; yy \u003c 8; yy++) for (var xx = 0; xx \u003c 16; xx++) {\n      if (rnd() > 0.45) dots += '\u003ccircle cx=\"' + (20 + xx * 24) + '\" cy=\"' + (20 + yy * 24) + '\" r=\"' + (2 + rnd() * 6).toFixed(1) + '\" fill=\"' + color.value + '\"/>';\n    }\n    svg = '\u003csvg viewBox=\"0 0 400 200\" xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" height=\"200\">' + dots + '\u003c/svg>';\n  }\n  box.innerHTML = svg;\n  output.value = svg;\n}\n[kind, seedN, color].forEach(function (el) { el.addEventListener('input', gen); });\napp.appendChild(T.row([T.el('span', { text: '类型' }), kind, T.el('span', { text: '种子' }), seedN, T.el('span', { text: '颜色' }), color]));\napp.appendChild(box);\napp.appendChild(T.pane([T.field('SVG 代码', output)], true));\napp.appendChild(T.row([T.button('换一个', function () { seedN.value = +seedN.value + 1; gen(); }, true), T.btnCopy(function () { return output.value; })]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

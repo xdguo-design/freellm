@@ -17,22 +17,23 @@ def find_leap(year):
 def year_data(year):
     leap = find_leap(year)
     bits = (leap << 17)
+    # 月序列（闰月插在对应 regular 月之后），相邻新月间隔即各月长度
+    seq = [(m, False) for m in range(1, 13)]
     if leap:
-        ld = LunarDate(year, leap, 1, is_leap_month=True)
-        import calendar
-        nxt = LunarDate(year, leap, 1, is_leap_month=False) if leap < 12 else LunarDate(year + 1, 1, 1)
-        leap_days = (nxt.toSolarDate() - ld.toSolarDate()).days
-        if leap_days == 30:
-            bits |= 0x10000
-    for m in range(1, 13):
-        start = LunarDate(year, m, 1)
-        if m < 12:
-            nxtm = LunarDate(year, m + 1, 1, is_leap_month=False)
+        seq.insert(leap, (leap, True))
+    bounds = []
+    for (m, lp) in seq:
+        ld = LunarDate(year, m, 1, is_leap_month=lp)
+        bounds.append(ld.to_solar_date())
+    bounds.append(LunarDate(year + 1, 1, 1).to_solar_date())
+    for i, (m, lp) in enumerate(seq):
+        days = (bounds[i + 1] - bounds[i]).days
+        if lp:
+            if days == 30:
+                bits |= 0x10000
         else:
-            nxtm = LunarDate(year + 1, 1, 1)
-        days = (nxtm.toSolarDate() - start.toSolarDate()).days
-        if days == 30:
-            bits |= (1 << (m - 1))
+            if days == 30:
+                bits |= (1 << (m - 1))
     return bits
 
 table = [year_data(y) for y in range(1900, 2099)]

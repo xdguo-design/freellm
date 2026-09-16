@@ -2,65 +2,69 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HTML 标签过滤 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HTML 标签过滤', '保留或移除指定标签', 'html-filter');
-
-  var mode = T.select([
-    { value: 'strip', label: '移除所有标签' },
-    { value: 'keep', label: '保留指定标签' },
-    { value: 'remove', label: '移除指定标签' }
-  ]);
-  var tags = T.el('input', { type: 'text', placeholder: '标签列表（逗号分隔）: p,div,span', style: 'flex:1' });
-  var input = T.textarea('输入 HTML...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-
-    if (mode.value === 'strip') {
-      output.value = v.replace(/<[^>]*>/g, '');
-      return;
-    }
-
-    var tagList = tags.value.split(',').map(function (t) { return t.trim().toLowerCase(); }).filter(Boolean);
-    if (!tagList.length) { output.value = v; return; }
-
-    if (mode.value === 'keep') {
-      output.value = v.replace(/<[^>]*>/g, function (match) {
-        var tag = match.match(/<(\w+)/);
-        if (tag && tagList.includes(tag[1].toLowerCase())) return match;
-        return '';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HTML 标签过滤', '保留或移除指定 HTML 标签，净化网页片段', 'html-filter');
+var input = T.textarea('<div><p>段落 <b>加粗</b></p><span style="color:red">样式</span><a href="https://x.com">链接</a></div>', true);
+input.value = '<div><p>段落 <b>加粗</b></p><span style="color:red">样式</span><a href="https://x.com">链接</a></div>';
+input.value = '<div><p>段落 <b>加粗</b></p><span style="color:red">样式</span><a href="https://x.com">链接</a></div>';
+var output = T.out('');
+var mode = T.select([{value:'strip',label:'移除指定标签（保留内容）'},{value:'strip-all',label:'移除全部标签'},{value:'keep',label:'仅保留指定标签'}],'strip-all');
+var tags = T.input('script,style', { class: 'grow mono', placeholder: '标签名，逗号分隔' });
+function run() {
+  var v = input.value;
+  var list = tags.value.split(/[\s,]+/).filter(Boolean).map(function (t) { return t.toLowerCase(); });
+  try {
+    if (mode.value === 'strip-all') {
+      output.value = v.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    } else if (mode.value === 'strip') {
+      list.forEach(function (t) {
+        v = v.replace(new RegExp('<' + t + '(\\s[^>]*)?>[\\s\\S]*?</' + t + '>', 'gi'), '')
+          .replace(new RegExp('<' + t + '(\\s[^>]*)?/?>', 'gi'), '');
       });
+      output.value = v;
     } else {
-      output.value = v.replace(/<[^>]*>/g, function (match) {
-        var tag = match.match(/<(\w+)/);
-        if (tag && tagList.includes(tag[1].toLowerCase())) return '';
-        return match;
-      });
+      var doc = new DOMParser().parseFromString('<div>' + v + '</div>', 'text/html');
+      var walk = function (node) {
+        var out = '';
+        Array.from(node.childNodes).forEach(function (c) {
+          if (c.nodeType === 3) { out += T.esc(c.nodeValue); return; }
+          if (c.nodeType !== 1) return;
+          var tag = c.tagName.toLowerCase();
+          if (list.includes(tag)) {
+            var attrs = Array.from(c.attributes).map(function (a) { return ' ' + a.name + '="' + T.esc(a.value) + '"'; }).join('');
+            out += '<' + tag + attrs + '>' + walk(c) + '</' + tag + '>';
+          } else out += walk(c);
+        });
+        return out;
+      };
+      output.value = walk(doc.body.firstChild);
     }
-  }
-
-  mode.addEventListener('change', run);
-  tags.addEventListener('input', function () { setTimeout(run, 100); });
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, tags, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, mode, tags].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('HTML', input), T.field('输出', output)]));
+app.appendChild(T.row([mode, T.el('span', { text: '标签' }), tags, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "html-filter", "title": "HTML 标签过滤", "desc": "保留或移除指定 HTML 标签，净化网页片段", "scripts": "", "code": "var input = T.textarea('\u003cdiv>\u003cp>段落 \u003cb>加粗\u003c/b>\u003c/p>\u003cspan style=\"color:red\">样式\u003c/span>\u003ca href=\"https://x.com\">链接\u003c/a>\u003c/div>', true);\ninput.value = '\u003cdiv>\u003cp>段落 \u003cb>加粗\u003c/b>\u003c/p>\u003cspan style=\"color:red\">样式\u003c/span>\u003ca href=\"https://x.com\">链接\u003c/a>\u003c/div>';\ninput.value = '\u003cdiv>\u003cp>段落 \u003cb>加粗\u003c/b>\u003c/p>\u003cspan style=\"color:red\">样式\u003c/span>\u003ca href=\"https://x.com\">链接\u003c/a>\u003c/div>';\nvar output = T.out('');\nvar mode = T.select([{value:'strip',label:'移除指定标签（保留内容）'},{value:'strip-all',label:'移除全部标签'},{value:'keep',label:'仅保留指定标签'}],'strip-all');\nvar tags = T.input('script,style', { class: 'grow mono', placeholder: '标签名，逗号分隔' });\nfunction run() {\n  var v = input.value;\n  var list = tags.value.split(/[\\s,]+/).filter(Boolean).map(function (t) { return t.toLowerCase(); });\n  try {\n    if (mode.value === 'strip-all') {\n      output.value = v.replace(/\u003c[^>]+>/g, '').replace(/\\s+/g, ' ').trim();\n    } else if (mode.value === 'strip') {\n      list.forEach(function (t) {\n        v = v.replace(new RegExp('\u003c' + t + '(\\\\s[^>]*)?>[\\\\s\\\\S]*?\u003c/' + t + '>', 'gi'), '')\n          .replace(new RegExp('\u003c' + t + '(\\\\s[^>]*)?/?>', 'gi'), '');\n      });\n      output.value = v;\n    } else {\n      var doc = new DOMParser().parseFromString('\u003cdiv>' + v + '\u003c/div>', 'text/html');\n      var walk = function (node) {\n        var out = '';\n        Array.from(node.childNodes).forEach(function (c) {\n          if (c.nodeType === 3) { out += T.esc(c.nodeValue); return; }\n          if (c.nodeType !== 1) return;\n          var tag = c.tagName.toLowerCase();\n          if (list.includes(tag)) {\n            var attrs = Array.from(c.attributes).map(function (a) { return ' ' + a.name + '=\"' + T.esc(a.value) + '\"'; }).join('');\n            out += '\u003c' + tag + attrs + '>' + walk(c) + '\u003c/' + tag + '>';\n          } else out += walk(c);\n        });\n        return out;\n      };\n      output.value = walk(doc.body.firstChild);\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, mode, tags].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('HTML', input), T.field('输出', output)]));\napp.appendChild(T.row([mode, T.el('span', { text: '标签' }), tags, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

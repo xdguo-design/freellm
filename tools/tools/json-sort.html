@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>JSON 排序 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('JSON 排序', 'JSON 键名递归排序（字母序），可选倒序', 'json-sort');
+var input = T.textarea('{"b":2,"a":{"d":4,"c":3}}');
+input.value = '{"b":2,"a":{"d":4,"c":3}}';
+var output = T.out('');
+var desc = T.check('倒序（Z→A）');
+function sortKeys(obj) {
+  if (Array.isArray(obj)) return obj.map(sortKeys);
+  if (obj && typeof obj === 'object') {
+    var out = {};
+    Object.keys(obj).sort(function (a, b) { return desc._input.checked ? b.localeCompare(a) : a.localeCompare(b); })
+      .forEach(function (k) { out[k] = sortKeys(obj[k]); });
+    return out;
+  }
+  return obj;
+}
+function run() {
+  try { output.value = JSON.stringify(sortKeys(T.parseJSON(input.value)), null, 2); }
+  catch (e) { output.value = '⚠ ' + e.message; }
+}
+[input, desc._input].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.row([desc, T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "json-sort", "title": "JSON 排序", "desc": "JSON 键名递归排序（字母序），可选倒序", "scripts": "", "code": "var input = T.textarea('{\"b\":2,\"a\":{\"d\":4,\"c\":3}}');\ninput.value = '{\"b\":2,\"a\":{\"d\":4,\"c\":3}}';\nvar output = T.out('');\nvar desc = T.check('倒序（Z→A）');\nfunction sortKeys(obj) {\n  if (Array.isArray(obj)) return obj.map(sortKeys);\n  if (obj && typeof obj === 'object') {\n    var out = {};\n    Object.keys(obj).sort(function (a, b) { return desc._input.checked ? b.localeCompare(a) : a.localeCompare(b); })\n      .forEach(function (k) { out[k] = sortKeys(obj[k]); });\n    return out;\n  }\n  return obj;\n}\nfunction run() {\n  try { output.value = JSON.stringify(sortKeys(T.parseJSON(input.value)), null, 2); }\n  catch (e) { output.value = '⚠ ' + e.message; }\n}\n[input, desc._input].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(T.row([desc, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS Clip-path 生成 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS Clip-path 生成', '可视化裁剪路径：圆形 / 椭圆 / 三角 / 六边形 / 星形等', 'css-clip-path');
+var shape = T.select([
+  { value: 'circle', label: 'circle 圆形' },
+  { value: 'ellipse', label: 'ellipse 椭圆' },
+  { value: 'triangle', label: '三角形' },
+  { value: 'diamond', label: '菱形' },
+  { value: 'hexagon', label: '六边形' },
+  { value: 'arrow', label: '箭头' },
+  { value: 'star', label: '星形' }
+], 'circle');
+var size = T.range(40, 100, 1, 70);
+var box = T.el('div', { style: 'height:240px;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px' });
+var img = T.el('div', { style: 'width:220px;height:180px;background:linear-gradient(135deg,#1744E8,#7BC0E5,#FFB88C);transition:all .2s' });
+box.appendChild(img);
+var output = T.out('');
+function poly(pts) { return 'polygon(' + pts.map(function (p) { return p[0] + '% ' + p[1] + '%'; }).join(', ') + ')'; }
+function run() {
+  var s = +size.value;
+  var v;
+  if (shape.value === 'circle') v = 'circle(' + s / 2 + '% at 50% 50%)';
+  else if (shape.value === 'ellipse') v = 'ellipse(' + s + '% ' + (s * 0.7) + '% at 50% 50%)';
+  else if (shape.value === 'triangle') v = poly([[50, 50 - s / 2], [50 + s / 2, 50 + s / 2], [50 - s / 2, 50 + s / 2]]);
+  else if (shape.value === 'diamond') v = poly([[50, 50 - s / 2], [50 + s / 2, 50], [50, 50 + s / 2], [50 - s / 2, 50]]);
+  else if (shape.value === 'hexagon') v = poly([[50 - s / 2, 50], [50 - s / 4, 50 - s / 2], [50 + s / 4, 50 - s / 2], [50 + s / 2, 50], [50 + s / 4, 50 + s / 2], [50 - s / 4, 50 + s / 2]]);
+  else if (shape.value === 'arrow') v = poly([[0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]]);
+  else {
+    var pts = [];
+    for (var i = 0; i < 10; i++) {
+      var a = -Math.PI / 2 + i * Math.PI / 5;
+      var r = i % 2 ? s / 4.2 : s / 2;
+      pts.push([(50 + Math.cos(a) * r).toFixed(1), (50 + Math.sin(a) * r).toFixed(1)]);
+    }
+    v = poly(pts);
+  }
+  img.style.clipPath = v;
+  output.value = 'clip-path: ' + v + ';';
+}
+[shape, size].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(box);
+app.appendChild(T.row([T.el('span', { text: '形状' }), shape, T.el('span', { text: '尺寸' }), size]));
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-clip-path", "title": "CSS Clip-path 生成", "desc": "可视化裁剪路径：圆形 / 椭圆 / 三角 / 六边形 / 星形等", "scripts": "", "code": "var shape = T.select([\n  { value: 'circle', label: 'circle 圆形' },\n  { value: 'ellipse', label: 'ellipse 椭圆' },\n  { value: 'triangle', label: '三角形' },\n  { value: 'diamond', label: '菱形' },\n  { value: 'hexagon', label: '六边形' },\n  { value: 'arrow', label: '箭头' },\n  { value: 'star', label: '星形' }\n], 'circle');\nvar size = T.range(40, 100, 1, 70);\nvar box = T.el('div', { style: 'height:240px;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);border-radius:12px;margin-bottom:12px' });\nvar img = T.el('div', { style: 'width:220px;height:180px;background:linear-gradient(135deg,#1744E8,#7BC0E5,#FFB88C);transition:all .2s' });\nbox.appendChild(img);\nvar output = T.out('');\nfunction poly(pts) { return 'polygon(' + pts.map(function (p) { return p[0] + '% ' + p[1] + '%'; }).join(', ') + ')'; }\nfunction run() {\n  var s = +size.value;\n  var v;\n  if (shape.value === 'circle') v = 'circle(' + s / 2 + '% at 50% 50%)';\n  else if (shape.value === 'ellipse') v = 'ellipse(' + s + '% ' + (s * 0.7) + '% at 50% 50%)';\n  else if (shape.value === 'triangle') v = poly([[50, 50 - s / 2], [50 + s / 2, 50 + s / 2], [50 - s / 2, 50 + s / 2]]);\n  else if (shape.value === 'diamond') v = poly([[50, 50 - s / 2], [50 + s / 2, 50], [50, 50 + s / 2], [50 - s / 2, 50]]);\n  else if (shape.value === 'hexagon') v = poly([[50 - s / 2, 50], [50 - s / 4, 50 - s / 2], [50 + s / 4, 50 - s / 2], [50 + s / 2, 50], [50 + s / 4, 50 + s / 2], [50 - s / 4, 50 + s / 2]]);\n  else if (shape.value === 'arrow') v = poly([[0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]]);\n  else {\n    var pts = [];\n    for (var i = 0; i \u003c 10; i++) {\n      var a = -Math.PI / 2 + i * Math.PI / 5;\n      var r = i % 2 ? s / 4.2 : s / 2;\n      pts.push([(50 + Math.cos(a) * r).toFixed(1), (50 + Math.sin(a) * r).toFixed(1)]);\n    }\n    v = poly(pts);\n  }\n  img.style.clipPath = v;\n  output.value = 'clip-path: ' + v + ';';\n}\n[shape, size].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(box);\napp.appendChild(T.row([T.el('span', { text: '形状' }), shape, T.el('span', { text: '尺寸' }), size]));\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

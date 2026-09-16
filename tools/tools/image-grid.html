@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>九宫格切图 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('九宫格切图', '图片切 9 等份（朋友圈风格），逐格下载或整包下载', 'image-grid');
+var drop = T.msg('点击或拖入图片', '');
+drop.style.border = '1px dashed var(--line)';
+drop.style.padding = '24px';
+drop.style.textAlign = 'center';
+drop.style.cursor = 'pointer';
+var n = T.select([{value:'3',label:'3×3 九宫格'},{value:'2',label:'2×2 四宫格'},{value:'4',label:'4×4'}],'3');
+var grid = T.el('div', { style: 'display:grid;gap:4px;margin:14px 0;max-width:480px' });
+var inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+document.body.appendChild(inp);
+var tiles = [];
+function cut(img) {
+  var count = +n.value;
+  var size = Math.min(img.width, img.height);
+  tiles = [];
+  T.clearEl(grid);
+  grid.style.gridTemplateColumns = 'repeat(' + count + ', 1fr)';
+  var tw = Math.floor(img.width / count), th = Math.floor(img.height / count);
+  for (var r = 0; r < count; r++) {
+    for (var c = 0; c < count; c++) {
+      var cell = T.el('canvas', { width: tw, height: th, style: 'width:100%;cursor:pointer;border-radius:4px' });
+      cell.getContext('2d').drawImage(img, c * tw, r * th, tw, th, 0, 0, tw, th);
+      (function (cc, rr, cnv) {
+        cnv.title = '点击下载第 ' + (rr * count + cc + 1) + ' 格';
+        cnv.addEventListener('click', function () { T.dlCanvas(cnv, 'grid-' + (rr + 1) + '-' + (cc + 1) + '.png'); });
+      })(c, r, cell);
+      grid.appendChild(cell);
+      tiles.push(cell);
+    }
+  }
+}
+inp.addEventListener('change', function () { T.loadImage(cut); });
+drop.addEventListener('click', function () { inp.click(); });
+drop.addEventListener('dragover', function (e) { e.preventDefault(); });
+drop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });
+n.addEventListener('change', function () {
+  T.loadImage(function () {});
+  if (inp.files[0]) T.loadImage(cut);
+});
+app.appendChild(drop);
+app.appendChild(T.row([T.el('span', { text: '布局' }), n]));
+app.appendChild(grid);
+app.appendChild(T.row([T.el('span', { text: '点击任意格子单独下载；或整体打包：' }), T.button('逐格提示下载全部', function () {
+  tiles.forEach(function (t, i) {
+    setTimeout(function () { T.dlCanvas(t, 'grid-' + (i + 1) + '.png'); }, i * 250);
+  });
+})]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "image-grid", "title": "九宫格切图", "desc": "图片切 9 等份（朋友圈风格），逐格下载或整包下载", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar n = T.select([{value:'3',label:'3×3 九宫格'},{value:'2',label:'2×2 四宫格'},{value:'4',label:'4×4'}],'3');\nvar grid = T.el('div', { style: 'display:grid;gap:4px;margin:14px 0;max-width:480px' });\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar tiles = [];\nfunction cut(img) {\n  var count = +n.value;\n  var size = Math.min(img.width, img.height);\n  tiles = [];\n  T.clearEl(grid);\n  grid.style.gridTemplateColumns = 'repeat(' + count + ', 1fr)';\n  var tw = Math.floor(img.width / count), th = Math.floor(img.height / count);\n  for (var r = 0; r \u003c count; r++) {\n    for (var c = 0; c \u003c count; c++) {\n      var cell = T.el('canvas', { width: tw, height: th, style: 'width:100%;cursor:pointer;border-radius:4px' });\n      cell.getContext('2d').drawImage(img, c * tw, r * th, tw, th, 0, 0, tw, th);\n      (function (cc, rr, cnv) {\n        cnv.title = '点击下载第 ' + (rr * count + cc + 1) + ' 格';\n        cnv.addEventListener('click', function () { T.dlCanvas(cnv, 'grid-' + (rr + 1) + '-' + (cc + 1) + '.png'); });\n      })(c, r, cell);\n      grid.appendChild(cell);\n      tiles.push(cell);\n    }\n  }\n}\ninp.addEventListener('change', function () { T.loadImage(cut); });\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\nn.addEventListener('change', function () {\n  T.loadImage(function () {});\n  if (inp.files[0]) T.loadImage(cut);\n});\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '布局' }), n]));\napp.appendChild(grid);\napp.appendChild(T.row([T.el('span', { text: '点击任意格子单独下载；或整体打包：' }), T.button('逐格提示下载全部', function () {\n  tiles.forEach(function (t, i) {\n    setTimeout(function () { T.dlCanvas(t, 'grid-' + (i + 1) + '.png'); }, i * 250);\n  });\n})]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

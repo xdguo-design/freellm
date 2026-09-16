@@ -2,64 +2,62 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Emoji 大全 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Emoji 大全', '分类浏览 Emoji，点击复制', 'emoji');
-
-  var search = T.el('input', { type: 'search', placeholder: '搜索 Emoji...', style: 'width:100%' });
-
-  var categories = {
-    '😀 表情': '😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗😚😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳🥸😎🤓🧐😕😟🙁😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬😈👿💀☠️💩🤡👹👺👻👽👾🤖😺😸😹😻😼😽🙀😿😾',
-    '👋 手势': '👋🤚🖐✋🖖👌🤌🤏✌️🤞🤟🤘🤙👈👉👆🖕👇☝️👍👎✊👊🤛🤜👏🙌👐🤲🤝🙏✍️💅🤳💪🦾🦿🦵🦶👂🦻👃🧠🫀🫁🦷🦴👀👁👅👄',
-    '❤️ 心形': '❤️🧡💛💚💙💜🖤🤍🤎💔❣️💕💞💓💗💖💘💝💟',
-    '🐾 动物': '🐶🐱🐭🐹🐰🦊🐻🐼🐻‍❄️🐨🐯🦁🐮🐷🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🪱🐛🦋🐌🐞🐜🪰🪲🪳🦟🦗🕷🕸🦂🐢🐍🦎🦖🦕🐙🦑🦐🦞🦀🐡🐠🐟🐬🐳🐋🦈🦭🐊🐅🐆🦓🦍🦧🐘🦛🦏🐪🐫🦒🦘🦬🐃🐂🐄🐎🐖🐏🐑🦙🐐🦌🐕🐩🦮🐈🪶🐓🦃🦤🦚🦜🦢🦩🕊🐇🦝🦨🦡🦫🦦🦥🐁🐀🐿🐾',
-    '🍎 食物': '🍏🍎🍐🍊🍋🍌🍉🍇🍓🫐🍈🍒🍑🥭🍍🥥🥝🍅🍆🥑🥦🥬🥒🌶🫑🌽🥕🫒🧄🧅🥔🍠🫘🥐🥯🍞🥖🥨🧀🥚🍳🧈🥞🧇🥓🥩🍗🍖🦴🌭🍔🍟🍕🫓🥪🥙🧆🌮🌯🫔🥗🥘🥫🍝🍜🍲🍛🍣🍱🥟🦪🍤🍙🍚🍘🍥🥠🥮🍢🍡🍧🍨🍦🥧🧁🍰🎂🍮🍭🍬🍫🍿🍩🍪🌰🥜🍯🥛🍼🫖☕🍵🧃🥤🧋🍶🍺🍻🥂🍷🥃🍸🍹🧉🍾🧊🥄🍴🍽🥣🥡🥢🧂',
-    '⚽ 活动': '⚽🏀🏈⚾🥎🎾🏐🏉🥏🎱🪀🏓🏸🏒🏑🥍🏏🪃🥅⛳🪁🏹🎣🤿🥊🥋🎽⛸🥌🛷🎿🎯🪀🪁🎮🎲🧩🎭🎨🧵🧶🎼🎵🎶🎙🎚🎛🎤🎧🎷🎸🎹🎺🎻🪕🥁🪘📱💻⌨️🖥🖨🖱🖲🕹🗜💽💾💿📀📼📷📸📹🎥📽🎞📞☎️📟📠📺📻🧭⏱⏲⏰🕰⌛⏳📡🔋🔌💡🔦🕯',
-    '🏠 物品': '🧹🧺🧻🧼🧽🧯🛒🚬⚰️🪦⚱️🗿🏧🚮🚰♿🚹🚺🚻🚼🚾🛂🛃🛄🛅⚠️🚸⛔🚫🚳🚭🚯🚱🔞☢️☣️⬆️↗️➡️↘️⬇️↙️⬅️↖️↕️↔️↩️↪️⤴️⤵️🔃🔄🔙🔚🔛🔜.top⬆️↗️➡️↘️⬇️↙️⬅️↖️↕️↔️↩️↪️⤴️⤵️🔃🔄🔙🔚🔛🔜',
-    '🔴 符号': '🔴🟠🟡🟢🔵🟣🟤⚫⚪🟥🟧🟨🟩🟦🟪🟫⬛⬜◼◻◽◾◽▪️▫️ Hive⬛⬜◼◻◽◾◽▪️▫️🔶🔷🔸🔹🔺🔻💠🔘🔳🔲🏁🚩🎌🏴🏳️🏴‍☠️🇨🇳🇨🇳',
-    '🏁 国旗': '🏁🚩🎌🏴🏳️🏳️‍🌈🏳️‍⚧️🏴‍☠️'
-  };
-
-  var container = T.el('div');
-
-  function render(filter) {
-    var q = (filter || '').toLowerCase();
-    var html = '';
-
-    Object.keys(categories).forEach(function (cat) {
-      var emojis = categories[cat].split('');
-      var filtered = emojis.filter(function (e) {
-        if (!q) return true;
-        return cat.toLowerCase().includes(q) || e.includes(q);
-      });
-
-      if (filtered.length) {
-        html += '<h3 style="margin:16px 0 8px;font-size:1em">' + cat + '</h3>';
-        html += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
-        filtered.forEach(function (e) {
-          html += '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.5em;border:1px solid var(--line);border-radius:4px;cursor:pointer" title="点击复制" onclick="navigator.clipboard.writeText(\'' + e + '\')">' + e + '</div>';
-        });
-        html += '</div>';
-      }
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Emoji 大全', '分类浏览常用 Emoji，点击复制到剪贴板', 'emoji');
+var DATA = {
+  '笑脸': ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰','😘','😜','🤪','🤨','🧐','🤓','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','🤗','🤔','🤭','🤫','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕'],
+  '手势': ['👍','👎','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','✋','🤚','🖐','🖖','👋','🤝','🙏','💪','🦾','✍️','👏','🙌','🤲','🤜','🤛','✊','👊'],
+  '人物': ['👶','🧒','👦','👧','🧑','👨','👩','🧓','👴','👵','👮','🕵️','💃','🕺','🧘','🏃','🚶','🧑‍💻','👨‍🏫','👩‍🔬','🦸','🦹','🧙','🧚','🧜','🧝'],
+  '动物': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦂','🐢','🐍','🦎','🐙','🦑','🦐','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈'],
+  '食物': ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🥑','🥦','🥕','🌽','🌶','🥒','🍄','🥜','🍞','🥐','🥖','🧀','🥚','🍳','🥞','🧇','🥓','🍔','🍟','🍕','🌭','🥪','🌮','🌯','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🍤','🍚','🍥','🥟','🍦','🍰','🎂','🍫','🍬','🍭','🍩','🍪','☕','🍵','🥤','🧋','🍺','🍻'],
+  '旅行': ['🚗','🚕','🚙','🚌','🏎','🚓','🚑','🚒','🚐','🚚','🚛','🚜','🛴','🚲','🛵','🏍','✈️','🚀','🛰','🚁','⛵','🚤','🛳','⛴','🚢','🚂','🚆','🚇','🗺','🧭','🏔','🌋','🗻','🏕','🏖','🏜','🏝','🏟','🏛','🎢','🎡','⛲','⛺'],
+  '物体': ['💻','🖥','⌨️','🖱','💾','💿','📀','📱','☎️','📞','📟','📠','🔋','🔌','💡','🔦','🕯','🧯','🛢','💸','💵','💰','💳','💎','⚖️','🔧','🔨','⚙️','🧲','🔫','💊','🩹','🩺','🚪','🪑','🛏','🚿','🧼','🧹','🧺','🔔','🔑','🔒','📦','📥','📤','📫','📮','✏️','🖊','📝','📚','📖','🔖','🧾','📊','📈','📉','🗂','📋','📌','📎','🗂'],
+  '符号': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','✨','⭐','🌟','💫','⚡','🔥','🌈','☀️','🌙','⛅','☁️','❄️','💧','🌊','✅','❌','❓','❗','💯','🔔','🔕','🎵','🎶','💡','⚠️','🚫','♻️','🔒','🔓']
+};
+var box = T.el('div');
+function render(filter) {
+  T.clearEl(box);
+  Object.keys(DATA).forEach(function (cat) {
+    var list = DATA[cat].filter(function (e) { return !filter || cat.includes(filter); });
+    if (!list.length) return;
+    var sec = T.el('div', { style: 'margin-bottom:14px' });
+    sec.appendChild(T.el('span', { text: cat + '（' + list.length + '）', class: 'field' }));
+    var grid = T.el('div', { style: 'display:flex;flex-wrap:wrap;gap:4px' });
+    list.forEach(function (e) {
+      var b = T.button(e, function () { T.copy(e); });
+      b.style.cssText += 'font-size:20px;padding:4px 8px;justify-content:center';
+      b.title = '点击复制 ' + e;
+      grid.appendChild(b);
     });
-
-    container.innerHTML = html || '<p style="color:var(--muted)">未找到匹配的 Emoji</p>';
-  }
-
-  search.addEventListener('input', function () { render(search.value); });
-
-  app.appendChild(search);
-  app.appendChild(container);
-  render();
+    sec.appendChild(grid);
+    box.appendChild(sec);
+  });
+}
+var search = T.input('', { class: 'grow', placeholder: '输入分类过滤（笑脸/手势/动物/食物/旅行/物体/符号）…' });
+search.addEventListener('input', function () { render(search.value.trim()); });
+render('');
+app.appendChild(T.row([search]));
+app.appendChild(box);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "emoji", "title": "Emoji 大全", "desc": "分类浏览常用 Emoji，点击复制到剪贴板", "scripts": "", "code": "var DATA = {\n  '笑脸': ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','😉','😍','🥰','😘','😜','🤪','🤨','🧐','🤓','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','🤗','🤔','🤭','🤫','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕'],\n  '手势': ['👍','👎','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','✋','🤚','🖐','🖖','👋','🤝','🙏','💪','🦾','✍️','👏','🙌','🤲','🤜','🤛','✊','👊'],\n  '人物': ['👶','🧒','👦','👧','🧑','👨','👩','🧓','👴','👵','👮','🕵️','💃','🕺','🧘','🏃','🚶','🧑‍💻','👨‍🏫','👩‍🔬','🦸','🦹','🧙','🧚','🧜','🧝'],\n  '动物': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦂','🐢','🐍','🦎','🐙','🦑','🦐','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈'],\n  '食物': ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🥑','🥦','🥕','🌽','🌶','🥒','🍄','🥜','🍞','🥐','🥖','🧀','🥚','🍳','🥞','🧇','🥓','🍔','🍟','🍕','🌭','🥪','🌮','🌯','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🍤','🍚','🍥','🥟','🍦','🍰','🎂','🍫','🍬','🍭','🍩','🍪','☕','🍵','🥤','🧋','🍺','🍻'],\n  '旅行': ['🚗','🚕','🚙','🚌','🏎','🚓','🚑','🚒','🚐','🚚','🚛','🚜','🛴','🚲','🛵','🏍','✈️','🚀','🛰','🚁','⛵','🚤','🛳','⛴','🚢','🚂','🚆','🚇','🗺','🧭','🏔','🌋','🗻','🏕','🏖','🏜','🏝','🏟','🏛','🎢','🎡','⛲','⛺'],\n  '物体': ['💻','🖥','⌨️','🖱','💾','💿','📀','📱','☎️','📞','📟','📠','🔋','🔌','💡','🔦','🕯','🧯','🛢','💸','💵','💰','💳','💎','⚖️','🔧','🔨','⚙️','🧲','🔫','💊','🩹','🩺','🚪','🪑','🛏','🚿','🧼','🧹','🧺','🔔','🔑','🔒','📦','📥','📤','📫','📮','✏️','🖊','📝','📚','📖','🔖','🧾','📊','📈','📉','🗂','📋','📌','📎','🗂'],\n  '符号': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','✨','⭐','🌟','💫','⚡','🔥','🌈','☀️','🌙','⛅','☁️','❄️','💧','🌊','✅','❌','❓','❗','💯','🔔','🔕','🎵','🎶','💡','⚠️','🚫','♻️','🔒','🔓']\n};\nvar box = T.el('div');\nfunction render(filter) {\n  T.clearEl(box);\n  Object.keys(DATA).forEach(function (cat) {\n    var list = DATA[cat].filter(function (e) { return !filter || cat.includes(filter); });\n    if (!list.length) return;\n    var sec = T.el('div', { style: 'margin-bottom:14px' });\n    sec.appendChild(T.el('span', { text: cat + '（' + list.length + '）', class: 'field' }));\n    var grid = T.el('div', { style: 'display:flex;flex-wrap:wrap;gap:4px' });\n    list.forEach(function (e) {\n      var b = T.button(e, function () { T.copy(e); });\n      b.style.cssText += 'font-size:20px;padding:4px 8px;justify-content:center';\n      b.title = '点击复制 ' + e;\n      grid.appendChild(b);\n    });\n    sec.appendChild(grid);\n    box.appendChild(sec);\n  });\n}\nvar search = T.input('', { class: 'grow', placeholder: '输入分类过滤（笑脸/手势/动物/食物/旅行/物体/符号）…' });\nsearch.addEventListener('input', function () { render(search.value.trim()); });\nrender('');\napp.appendChild(T.row([search]));\napp.appendChild(box);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

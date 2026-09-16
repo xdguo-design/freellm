@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>扫雷 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('扫雷', '经典扫雷：左键翻开 / 右键插旗，三种难度', 'minesweeper');
+var diff = T.select([{value:'9x9x10',label:'初级 9×9 · 10 雷'},{value:'16x16x40',label:'中级 16×16 · 40 雷'},{value:'16x30x99',label:'高级 16×30 · 99 雷'}],'9x9x10');
+var grid = T.el('div', { style: 'display:grid;gap:2px;justify-content:center;margin:14px auto;width:fit-content' });
+var status = T.badge('左键翻开 · 右键插旗');
+var flagEl = T.stat('0', '剩余雷数');
+var board, rows, cols, mines, revealed, flags, over, started;
+function init() {
+  var p = diff.value.split('x');
+  rows = +p[0];
+  cols = +p[1];
+  mines = +p[2];
+  board = [];
+  for (var i = 0; i < rows * cols; i++) board.push({ mine: false, open: false, flag: false, n: 0 });
+  revealed = 0;
+  flags = 0;
+  over = false;
+  started = false;
+  flagEl.firstChild.textContent = mines;
+  status.textContent = '左键翻开 · 右键插旗';
+  status.className = 'badge';
+  render();
+}
+function neighbors(idx) {
+  var r = Math.floor(idx / cols), c = idx % cols;
+  var out = [];
+  for (var dr = -1; dr <= 1; dr++) for (var dc = -1; dc <= 1; dc++) {
+    if (!dr && !dc) continue;
+    var rr = r + dr, cc = c + dc;
+    if (rr >= 0 && rr < rows && cc >= 0 && cc < cols) out.push(rr * cols + cc);
+  }
+  return out;
+}
+function place(firstIdx) {
+  var banned = new Set([firstIdx].concat(neighbors(firstIdx)));
+  var placed = 0;
+  while (placed < mines) {
+    var idx = Math.floor(Math.random() * rows * cols);
+    if (board[idx].mine || banned.has(idx)) continue;
+    board[idx].mine = true;
+    placed++;
+  }
+  board.forEach(function (cell, i) {
+    cell.n = neighbors(i).filter(function (j) { return board[j].mine; }).length;
+  });
+}
+function open(idx) {
+  if (over || board[idx].open || board[idx].flag) return;
+  if (!started) { started = true; place(idx); }
+  board[idx].open = true;
+  revealed++;
+  if (board[idx].mine) {
+    over = true;
+    status.textContent = '💥 踩雷了！点击新游戏再来';
+    status.className = 'badge warn';
+    board.forEach(function (c) { if (c.mine) c.open = true; });
+    render();
+    return;
+  }
+  if (board[idx].n === 0) {
+    neighbors(idx).forEach(open);
+  }
+  if (revealed === rows * cols - mines) {
+    over = true;
+    status.textContent = '🎉 通关！';
+    status.className = 'badge ok';
+  }
+  render();
+}
+var NC = ['', '#7BC0E5', '#346538', '#C0392B', '#6A0DAD', '#956400', '#008080', '#000', '#787774'];
+function render() {
+  T.clearEl(grid);
+  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 28px)';
+  var cellSize = cols > 20 ? '26px' : '28px';
+  board.forEach(function (cell, i) {
+    var el = T.el('div', { style: 'width:' + cellSize + ';height:' + cellSize + ';display:flex;align-items:center;justify-content:center;font:700 13px var(--font-mono);border-radius:4px;cursor:pointer;user-select:none;background:' + (cell.open ? 'var(--surface-soft)' : 'var(--accent-soft)') + ';color:' + (cell.open && cell.n ? NC[cell.n] : 'inherit') });
+    if (cell.open) {
+      el.textContent = cell.mine ? '💣' : (cell.n || '');
+    } else if (cell.flag) {
+      el.textContent = '🚩';
+    }
+    el.addEventListener('click', function () { open(i); });
+    el.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      if (over || cell.open) return;
+      cell.flag = !cell.flag;
+      flags += cell.flag ? 1 : -1;
+      flagEl.firstChild.textContent = mines - flags;
+      render();
+    });
+    grid.appendChild(el);
+  });
+}
+diff.addEventListener('change', init);
+app.appendChild(T.row([diff, flagEl, status, T.button('新游戏', init, true)]));
+app.appendChild(grid);
+init();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "minesweeper", "title": "扫雷", "desc": "经典扫雷：左键翻开 / 右键插旗，三种难度", "scripts": "", "code": "var diff = T.select([{value:'9x9x10',label:'初级 9×9 · 10 雷'},{value:'16x16x40',label:'中级 16×16 · 40 雷'},{value:'16x30x99',label:'高级 16×30 · 99 雷'}],'9x9x10');\nvar grid = T.el('div', { style: 'display:grid;gap:2px;justify-content:center;margin:14px auto;width:fit-content' });\nvar status = T.badge('左键翻开 · 右键插旗');\nvar flagEl = T.stat('0', '剩余雷数');\nvar board, rows, cols, mines, revealed, flags, over, started;\nfunction init() {\n  var p = diff.value.split('x');\n  rows = +p[0];\n  cols = +p[1];\n  mines = +p[2];\n  board = [];\n  for (var i = 0; i \u003c rows * cols; i++) board.push({ mine: false, open: false, flag: false, n: 0 });\n  revealed = 0;\n  flags = 0;\n  over = false;\n  started = false;\n  flagEl.firstChild.textContent = mines;\n  status.textContent = '左键翻开 · 右键插旗';\n  status.className = 'badge';\n  render();\n}\nfunction neighbors(idx) {\n  var r = Math.floor(idx / cols), c = idx % cols;\n  var out = [];\n  for (var dr = -1; dr \u003c= 1; dr++) for (var dc = -1; dc \u003c= 1; dc++) {\n    if (!dr && !dc) continue;\n    var rr = r + dr, cc = c + dc;\n    if (rr >= 0 && rr \u003c rows && cc >= 0 && cc \u003c cols) out.push(rr * cols + cc);\n  }\n  return out;\n}\nfunction place(firstIdx) {\n  var banned = new Set([firstIdx].concat(neighbors(firstIdx)));\n  var placed = 0;\n  while (placed \u003c mines) {\n    var idx = Math.floor(Math.random() * rows * cols);\n    if (board[idx].mine || banned.has(idx)) continue;\n    board[idx].mine = true;\n    placed++;\n  }\n  board.forEach(function (cell, i) {\n    cell.n = neighbors(i).filter(function (j) { return board[j].mine; }).length;\n  });\n}\nfunction open(idx) {\n  if (over || board[idx].open || board[idx].flag) return;\n  if (!started) { started = true; place(idx); }\n  board[idx].open = true;\n  revealed++;\n  if (board[idx].mine) {\n    over = true;\n    status.textContent = '💥 踩雷了！点击新游戏再来';\n    status.className = 'badge warn';\n    board.forEach(function (c) { if (c.mine) c.open = true; });\n    render();\n    return;\n  }\n  if (board[idx].n === 0) {\n    neighbors(idx).forEach(open);\n  }\n  if (revealed === rows * cols - mines) {\n    over = true;\n    status.textContent = '🎉 通关！';\n    status.className = 'badge ok';\n  }\n  render();\n}\nvar NC = ['', '#7BC0E5', '#346538', '#C0392B', '#6A0DAD', '#956400', '#008080', '#000', '#787774'];\nfunction render() {\n  T.clearEl(grid);\n  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 28px)';\n  var cellSize = cols > 20 ? '26px' : '28px';\n  board.forEach(function (cell, i) {\n    var el = T.el('div', { style: 'width:' + cellSize + ';height:' + cellSize + ';display:flex;align-items:center;justify-content:center;font:700 13px var(--font-mono);border-radius:4px;cursor:pointer;user-select:none;background:' + (cell.open ? 'var(--surface-soft)' : 'var(--accent-soft)') + ';color:' + (cell.open && cell.n ? NC[cell.n] : 'inherit') });\n    if (cell.open) {\n      el.textContent = cell.mine ? '💣' : (cell.n || '');\n    } else if (cell.flag) {\n      el.textContent = '🚩';\n    }\n    el.addEventListener('click', function () { open(i); });\n    el.addEventListener('contextmenu', function (e) {\n      e.preventDefault();\n      if (over || cell.open) return;\n      cell.flag = !cell.flag;\n      flags += cell.flag ? 1 : -1;\n      flagEl.firstChild.textContent = mines - flags;\n      render();\n    });\n    grid.appendChild(el);\n  });\n}\ndiff.addEventListener('change', init);\napp.appendChild(T.row([diff, flagEl, status, T.button('新游戏', init, true)]));\napp.appendChild(grid);\ninit();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

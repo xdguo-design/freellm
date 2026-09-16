@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>心情追踪 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('心情追踪', '每日心情记录：表情打分 + 备注 + 近 14 天心情曲线', 'mood');
+var MOODS = [['😞', 1], ['🙁', 2], ['😐', 3], ['🙂', 4], ['😄', 5]];
+var note = T.input('', { class: 'grow', placeholder: '今天想记录一句话（可选）' });
+var status = T.badge('—');
+var chart = T.el('div', { style: 'display:flex;gap:4px;align-items:flex-end;height:120px;margin:18px 0' });
+var list = T.el('div');
+var data = {};
+try { data = JSON.parse(localStorage.getItem('freellm-mood') || '{}'); } catch (e) {}
+function save() { localStorage.setItem('freellm-mood', JSON.stringify(data)); }
+function render() {
+  T.clearEl(chart);
+  var days = [];
+  for (var i = 13; i >= 0; i--) days.push(T.fmtDate(new Date(Date.now() - i * 86400000)));
+  days.forEach(function (d) {
+    var v = data[d] ? data[d].score : 0;
+    var col = T.el('div', { style: 'flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px', title: d + (data[d] ? '：' + MOODS[v - 1][0] + ' ' + (data[d].note || '') : '') });
+    var barH = v ? v * 18 : 4;
+    col.appendChild(T.el('div', { text: v ? MOODS[v - 1][0] : '·', style: 'font-size:' + (v ? 20 : 12) + 'px;opacity:' + (v ? 1 : 0.3) }));
+    col.appendChild(T.el('div', { style: 'width:100%;height:' + barH + 'px;background:' + (v ? 'var(--accent)' : 'var(--line)') + ';border-radius:3px' }));
+    col.appendChild(T.el('div', { text: d.slice(8), style: 'font-size:9px;color:var(--ink3)' }));
+    chart.appendChild(col);
+  });
+  T.clearEl(list);
+  var keys = Object.keys(data).sort().reverse();
+  keys.slice(0, 10).forEach(function (k) {
+    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--line)' });
+    row.appendChild(T.el('span', { text: data[k].score + ' ' + MOODS[data[k].score - 1][0] }));
+    row.appendChild(T.el('b', { text: k, style: 'font-family:var(--font-mono);font-size:12px' }));
+    row.appendChild(T.el('span', { text: data[k].note || '', style: 'flex:1;color:var(--ink2);font-size:13px' }));
+    list.appendChild(row);
+  });
+}
+function setMood(score) {
+  data[T.today()] = { score: score, note: note.value };
+  save();
+  status.textContent = '已记录今天心情：' + MOODS[score - 1][0];
+  status.className = 'badge ok';
+  render();
+}
+var moodRow = T.el('div', { class: 'row', style: 'justify-content:center;gap:14px' });
+MOODS.forEach(function (m) {
+  var b = T.button(m[0], function () { setMood(m[1]); });
+  b.style.cssText += 'font-size:30px;padding:8px 14px;justify-content:center';
+  moodRow.appendChild(b);
+});
+app.appendChild(moodRow);
+app.appendChild(T.row([note, T.button('保存备注并打分后自动带上', function () {}, true)]));
+app.appendChild(T.el('span', { text: '近 14 天', class: 'field' }));
+app.appendChild(chart);
+app.appendChild(list);
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "mood", "title": "心情追踪", "desc": "每日心情记录：表情打分 + 备注 + 近 14 天心情曲线", "scripts": "", "code": "var MOODS = [['😞', 1], ['🙁', 2], ['😐', 3], ['🙂', 4], ['😄', 5]];\nvar note = T.input('', { class: 'grow', placeholder: '今天想记录一句话（可选）' });\nvar status = T.badge('—');\nvar chart = T.el('div', { style: 'display:flex;gap:4px;align-items:flex-end;height:120px;margin:18px 0' });\nvar list = T.el('div');\nvar data = {};\ntry { data = JSON.parse(localStorage.getItem('freellm-mood') || '{}'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-mood', JSON.stringify(data)); }\nfunction render() {\n  T.clearEl(chart);\n  var days = [];\n  for (var i = 13; i >= 0; i--) days.push(T.fmtDate(new Date(Date.now() - i * 86400000)));\n  days.forEach(function (d) {\n    var v = data[d] ? data[d].score : 0;\n    var col = T.el('div', { style: 'flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px', title: d + (data[d] ? '：' + MOODS[v - 1][0] + ' ' + (data[d].note || '') : '') });\n    var barH = v ? v * 18 : 4;\n    col.appendChild(T.el('div', { text: v ? MOODS[v - 1][0] : '·', style: 'font-size:' + (v ? 20 : 12) + 'px;opacity:' + (v ? 1 : 0.3) }));\n    col.appendChild(T.el('div', { style: 'width:100%;height:' + barH + 'px;background:' + (v ? 'var(--accent)' : 'var(--line)') + ';border-radius:3px' }));\n    col.appendChild(T.el('div', { text: d.slice(8), style: 'font-size:9px;color:var(--ink3)' }));\n    chart.appendChild(col);\n  });\n  T.clearEl(list);\n  var keys = Object.keys(data).sort().reverse();\n  keys.slice(0, 10).forEach(function (k) {\n    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:6px 4px;border-bottom:1px solid var(--line)' });\n    row.appendChild(T.el('span', { text: data[k].score + ' ' + MOODS[data[k].score - 1][0] }));\n    row.appendChild(T.el('b', { text: k, style: 'font-family:var(--font-mono);font-size:12px' }));\n    row.appendChild(T.el('span', { text: data[k].note || '', style: 'flex:1;color:var(--ink2);font-size:13px' }));\n    list.appendChild(row);\n  });\n}\nfunction setMood(score) {\n  data[T.today()] = { score: score, note: note.value };\n  save();\n  status.textContent = '已记录今天心情：' + MOODS[score - 1][0];\n  status.className = 'badge ok';\n  render();\n}\nvar moodRow = T.el('div', { class: 'row', style: 'justify-content:center;gap:14px' });\nMOODS.forEach(function (m) {\n  var b = T.button(m[0], function () { setMood(m[1]); });\n  b.style.cssText += 'font-size:30px;padding:8px 14px;justify-content:center';\n  moodRow.appendChild(b);\n});\napp.appendChild(moodRow);\napp.appendChild(T.row([note, T.button('保存备注并打分后自动带上', function () {}, true)]));\napp.appendChild(T.el('span', { text: '近 14 天', class: 'field' }));\napp.appendChild(chart);\napp.appendChild(list);\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

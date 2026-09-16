@@ -2,61 +2,65 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>运算符优先级 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('运算符优先级', '多语言运算符优先级', 'operator');
-
-  var OPERATORS = [
-    [1, '最高', '[] () .', '成员访问、函数调用'],
-    [1, '最高', '++ --', '后缀自增/自减'],
-    [2, '高', '! ~ + -', '一元运算符、类型转换'],
-    [2, '高', '++ --', '前缀自增/自减'],
-    [2, '高', 'typeof sizeof void delete', '类型/大小/删除'],
-    [3, '中高', '**', '幂运算'],
-    [4, '中', '* / %', '乘、除、取模'],
-    [5, '中', '+ -', '加、减'],
-    [6, '中', '<< >>', '位移'],
-    [7, '中低', '< <= > >=', '关系比较'],
-    [8, '低', '== != === !==', '相等比较'],
-    [9, '低', '&', '按位与'],
-    [10, '低', '^', '按位异或'],
-    [11, '低', '|', '按位或'],
-    [12, '更低', '&&', '逻辑与'],
-    [13, '更低', '||', '逻辑或'],
-    [14, '更低', '??', '空值合并'],
-    [15, '最低', '= += -= *= /= 等', '赋值运算'],
-    [16, '最低', ',', '逗号运算']
-  ];
-
-  var table = T.el('div', { class: 'output dark' });
-
-  function render() {
-    var html = '<table style="width:100%;border-collapse:collapse">';
-    html += '<thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">优先级</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">级别</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">运算符</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">描述</th></tr></thead>';
-    html += '<tbody>';
-    OPERATORS.forEach(function (o) {
-      html += '<tr>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line);text-align:center;font-weight:bold">' + o[0] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + o[1] + '</td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)"><code style="color:var(--accent)">' + o[2] + '</code></td>';
-      html += '<td style="padding:8px;border-bottom:1px solid var(--line)">' + o[3] + '</td>';
-      html += '</tr>';
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('运算符优先级', '多语言运算符优先级参考表（JS / Python / C）', 'operator');
+function buildSearch(tableWrap) {
+  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });
+  search.addEventListener('input', function () {
+    var q = search.value.trim().toLowerCase();
+    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
-    html += '</tbody></table>';
-    table.innerHTML = html;
-  }
+  });
+  return search;
+}
 
-  render();
-  app.appendChild(table);
+var DATA = [
+  ['()', '函数调用 / 分组', '最高', 'JS/Py/C'],
+  ['[] . ?. (args)', '成员访问 / 可选链', '高', 'JS'],
+  ['x++ x--', '后缀自增自减', '高', 'JS/C'],
+  ['! ~ +x -x ++x --x typeof await', '一元运算符', '较高', 'JS/C'],
+  ['**', '幂运算', '较高（右结合）', 'JS/Py'],
+  ['* / % //', '乘除取模（// 为整除）', '中高', 'JS/Py/C'],
+  ['+ -', '加减 / 字符串拼接', '中', 'JS/Py/C'],
+  ['<< >>', '位移', '中', 'JS/C'],
+  ['< <= > >= in instanceof', '比较 / 成员判断', '中', 'JS/Py'],
+  ['== != === !==', '相等判断（=== 为严格相等）', '中低', 'JS'],
+  ['&', '按位与', '低', 'JS/C'],
+  ['^', '按位异或', '低', 'JS/C'],
+  ['|', '按位或', '低', 'JS/C'],
+  ['&& and', '逻辑与', '更低', 'JS/Py'],
+  ['|| or', '逻辑或', '更低', 'JS/Py'],
+  ['??', '空值合并', '低（不能与 || 混用不加括号）', 'JS'],
+  ['? :', '三元条件', '很低', 'JS/C'],
+  ['= += -= *= /= **= ????=', '赋值（右结合）', '很低', 'JS/Py/C'],
+  ['yield', '生成器产出', '最低', 'JS/Py'],
+  [',', '逗号 / 序列', '最低', 'JS/C']
+];
+var wrap = T.el('div');
+wrap.appendChild(T.refTable(['运算符', '含义', '优先级', '语言'], DATA));
+app.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '规则：不确定时加括号；一元 ** 右结合；&& 高于 ||' })]));
+app.appendChild(wrap);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "operator", "title": "运算符优先级", "desc": "多语言运算符优先级参考表（JS / Python / C）", "scripts": "", "code": "function buildSearch(tableWrap) {\n  var search = T.input('', { class: 'grow', placeholder: '搜索过滤…' });\n  search.addEventListener('input', function () {\n    var q = search.value.trim().toLowerCase();\n    Array.from(tableWrap.querySelectorAll('tbody tr')).forEach(function (tr) {\n      tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? '' : 'none';\n    });\n  });\n  return search;\n}\n\nvar DATA = [\n  ['()', '函数调用 / 分组', '最高', 'JS/Py/C'],\n  ['[] . ?. (args)', '成员访问 / 可选链', '高', 'JS'],\n  ['x++ x--', '后缀自增自减', '高', 'JS/C'],\n  ['! ~ +x -x ++x --x typeof await', '一元运算符', '较高', 'JS/C'],\n  ['**', '幂运算', '较高（右结合）', 'JS/Py'],\n  ['* / % //', '乘除取模（// 为整除）', '中高', 'JS/Py/C'],\n  ['+ -', '加减 / 字符串拼接', '中', 'JS/Py/C'],\n  ['\u003c\u003c >>', '位移', '中', 'JS/C'],\n  ['\u003c \u003c= > >= in instanceof', '比较 / 成员判断', '中', 'JS/Py'],\n  ['== != === !==', '相等判断（=== 为严格相等）', '中低', 'JS'],\n  ['&', '按位与', '低', 'JS/C'],\n  ['^', '按位异或', '低', 'JS/C'],\n  ['|', '按位或', '低', 'JS/C'],\n  ['&& and', '逻辑与', '更低', 'JS/Py'],\n  ['|| or', '逻辑或', '更低', 'JS/Py'],\n  ['??', '空值合并', '低（不能与 || 混用不加括号）', 'JS'],\n  ['? :', '三元条件', '很低', 'JS/C'],\n  ['= += -= *= /= **= ????=', '赋值（右结合）', '很低', 'JS/Py/C'],\n  ['yield', '生成器产出', '最低', 'JS/Py'],\n  [',', '逗号 / 序列', '最低', 'JS/C']\n];\nvar wrap = T.el('div');\nwrap.appendChild(T.refTable(['运算符', '含义', '优先级', '语言'], DATA));\napp.appendChild(T.row([buildSearch(wrap), T.el('span', { text: '规则：不确定时加括号；一元 ** 右结合；&& 高于 ||' })]));\napp.appendChild(wrap);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

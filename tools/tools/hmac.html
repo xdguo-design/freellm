@@ -2,57 +2,44 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>HMAC 哈希 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('HMAC 哈希', 'HMAC 消息认证码在线计算', 'hmac');
-
-  var algo = T.select([
-    { value: 'SHA-256', label: 'HMAC-SHA256' },
-    { value: 'SHA-1', label: 'HMAC-SHA1' },
-    { value: 'SHA-384', label: 'HMAC-SHA384' },
-    { value: 'SHA-512', label: 'HMAC-SHA512' }
-  ]);
-  var key = T.el('input', { type: 'text', placeholder: '输入密钥...', style: 'flex:1' });
-  var input = T.textarea('输入消息...');
-  var output = T.textarea('HMAC 值', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  async function run() {
-    var v = input.value;
-    var k = key.value;
-    if (!v || !k) { output.value = ''; return; }
-    try {
-      var keyBytes = new TextEncoder().encode(k);
-      var msgBytes = new TextEncoder().encode(v);
-      var cryptoKey = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: algo.value }, false, ['sign']);
-      var signature = await crypto.subtle.sign('HMAC', cryptoKey, msgBytes);
-      output.value = Array.from(new Uint8Array(signature)).map(function (b) {
-        return b.toString(16).padStart(2, '0');
-      }).join('');
-    } catch (e) {
-      output.value = '⚠ 计算失败: ' + e.message;
-    }
-  }
-
-  algo.addEventListener('change', run);
-  key.addEventListener('input', function () { setTimeout(run, 100); });
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [algo, copyBtn]));
-  app.appendChild(T.el('div', { class: 'row' }, [key]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('HMAC 哈希', 'HMAC-SHA 系列消息认证码在线计算', 'hmac');
+var msg = T.textarea('消息内容…');
+var key = T.input('', { placeholder: '密钥（文本）', class: 'grow mono' });
+var algo = T.select(['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');
+var output = T.out('');
+function run() {
+  if (!msg.value || !key.value) { output.value = ''; return; }
+  crypto.subtle.importKey('raw', T.textToBytes(key.value),
+    { name: 'HMAC', hash: { name: algo.value } }, false, ['sign'])
+    .then(function (k) { return crypto.subtle.sign('HMAC', k, T.textToBytes(msg.value)); })
+    .then(function (sig) { output.value = T.bytesToHex(sig); })
+    .catch(function (e) { output.value = '⚠ ' + e.message; });
+}
+[msg, key, algo].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });
+app.appendChild(T.pane([T.field('消息', msg), T.field('HMAC (hex)', output)]));
+app.appendChild(T.row([T.el('span', { text: '密钥' }), key, T.el('span', { text: '算法' }), algo, T.btnCopy(function () { return output.value; })]));
+run();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "hmac", "title": "HMAC 哈希", "desc": "HMAC-SHA 系列消息认证码在线计算", "scripts": "", "code": "var msg = T.textarea('消息内容…');\nvar key = T.input('', { placeholder: '密钥（文本）', class: 'grow mono' });\nvar algo = T.select(['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'], 'SHA-256');\nvar output = T.out('');\nfunction run() {\n  if (!msg.value || !key.value) { output.value = ''; return; }\n  crypto.subtle.importKey('raw', T.textToBytes(key.value),\n    { name: 'HMAC', hash: { name: algo.value } }, false, ['sign'])\n    .then(function (k) { return crypto.subtle.sign('HMAC', k, T.textToBytes(msg.value)); })\n    .then(function (sig) { output.value = T.bytesToHex(sig); })\n    .catch(function (e) { output.value = '⚠ ' + e.message; });\n}\n[msg, key, algo].forEach(function (el) { el.addEventListener('input', T.debounce(run, 250)); });\napp.appendChild(T.pane([T.field('消息', msg), T.field('HMAC (hex)', output)]));\napp.appendChild(T.row([T.el('span', { text: '密钥' }), key, T.el('span', { text: '算法' }), algo, T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

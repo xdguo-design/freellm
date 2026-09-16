@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>一次性密码 TOTP · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('一次性密码 TOTP', 'RFC 6238 动态口令，兼容 Google Authenticator（Base32 密钥）', 'totp');
+var secret = T.input('JBSWY3DPEHPK3PXP', { class: 'grow mono', spellcheck: 'false' });
+var digits = T.select([{value:'6',label:'6 位'},{value:'8',label:'8 位'}],'6');
+var code = T.el('span', { class: 'stat' }, [T.el('b', { text: '———' }), T.el('span', { text: '刷新倒计时' })]);
+var bar = T.el('div', { style: 'height:4px;background:var(--line);border-radius:2px;overflow:hidden;flex:1' });
+var fill = T.el('div', { style: 'height:100%;background:var(--accent);width:100%' });
+bar.appendChild(fill);
+async function totp(now) {
+  var key = LC.b32decode(secret.value);
+  var counter = Math.floor(now / 30000);
+  var msg = new Uint8Array(8);
+  for (var i = 7; i >= 0; i--) { msg[i] = counter & 255; counter = Math.floor(counter / 256); }
+  var k = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+  var mac = new Uint8Array(await crypto.subtle.sign('HMAC', k, msg));
+  var off = mac[mac.length - 1] & 0xf;
+  var bin = ((mac[off] & 0x7f) << 24) | (mac[off + 1] << 16) | (mac[off + 2] << 8) | mac[off + 3];
+  return String(bin % Math.pow(10, +digits.value)).padStart(+digits.value, '0');
+}
+async function tick() {
+  var now = Date.now();
+  if (!secret.value.trim()) return;
+  try {
+    var c = await totp(now);
+    code.firstChild.textContent = c;
+    var remain = 30 - (now / 1000) % 30;
+    fill.style.width = (remain / 30 * 100) + '%';
+    fill.style.background = remain < 5 ? 'var(--err)' : 'var(--accent)';
+  } catch (e) { code.firstChild.textContent = '密钥格式错误'; }
+}
+setInterval(tick, 1000);
+app.appendChild(T.row([T.el('span', { text: 'Base32 密钥' }), secret,
+  T.el('span', { text: '位数' }), digits]));
+app.appendChild(T.row([code]));
+app.appendChild(T.row([bar]));
+tick();
+T.button('复制当前验证码', function () { T.copy(code.firstChild.textContent); }, true);
+app.appendChild(T.row([T.button('复制当前验证码', function () { T.copy(code.firstChild.textContent); }, true),
+  T.el('span', { text: 'SHA-1 · 30 秒步长 · RFC 6238' })]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "totp", "title": "一次性密码 TOTP", "desc": "RFC 6238 动态口令，兼容 Google Authenticator（Base32 密钥）", "scripts": "", "code": "var secret = T.input('JBSWY3DPEHPK3PXP', { class: 'grow mono', spellcheck: 'false' });\nvar digits = T.select([{value:'6',label:'6 位'},{value:'8',label:'8 位'}],'6');\nvar code = T.el('span', { class: 'stat' }, [T.el('b', { text: '———' }), T.el('span', { text: '刷新倒计时' })]);\nvar bar = T.el('div', { style: 'height:4px;background:var(--line);border-radius:2px;overflow:hidden;flex:1' });\nvar fill = T.el('div', { style: 'height:100%;background:var(--accent);width:100%' });\nbar.appendChild(fill);\nasync function totp(now) {\n  var key = LC.b32decode(secret.value);\n  var counter = Math.floor(now / 30000);\n  var msg = new Uint8Array(8);\n  for (var i = 7; i >= 0; i--) { msg[i] = counter & 255; counter = Math.floor(counter / 256); }\n  var k = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);\n  var mac = new Uint8Array(await crypto.subtle.sign('HMAC', k, msg));\n  var off = mac[mac.length - 1] & 0xf;\n  var bin = ((mac[off] & 0x7f) \u003c\u003c 24) | (mac[off + 1] \u003c\u003c 16) | (mac[off + 2] \u003c\u003c 8) | mac[off + 3];\n  return String(bin % Math.pow(10, +digits.value)).padStart(+digits.value, '0');\n}\nasync function tick() {\n  var now = Date.now();\n  if (!secret.value.trim()) return;\n  try {\n    var c = await totp(now);\n    code.firstChild.textContent = c;\n    var remain = 30 - (now / 1000) % 30;\n    fill.style.width = (remain / 30 * 100) + '%';\n    fill.style.background = remain \u003c 5 ? 'var(--err)' : 'var(--accent)';\n  } catch (e) { code.firstChild.textContent = '密钥格式错误'; }\n}\nsetInterval(tick, 1000);\napp.appendChild(T.row([T.el('span', { text: 'Base32 密钥' }), secret,\n  T.el('span', { text: '位数' }), digits]));\napp.appendChild(T.row([code]));\napp.appendChild(T.row([bar]));\ntick();\nT.button('复制当前验证码', function () { T.copy(code.firstChild.textContent); }, true);\napp.appendChild(T.row([T.button('复制当前验证码', function () { T.copy(code.firstChild.textContent); }, true),\n  T.el('span', { text: 'SHA-1 · 30 秒步长 · RFC 6238' })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

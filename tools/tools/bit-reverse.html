@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>二进制位操作 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('二进制位操作', '按位翻转 / 左移右移 / 位反转，8 / 16 / 32 位', 'bit-reverse');
+var input = T.input('0xFF00', { class: 'grow mono', placeholder: '数值（支持 0x 前缀 / 十进制 / 0b 二进制）' });
+var width = T.select([{value:'8',label:'8 位'},{value:'16',label:'16 位'},{value:'32',label:'32 位'}],'16');
+var shift = T.num(4, { min: 0, max: 31, style: 'width:70px' });
+var box = T.el('div');
+function parseVal(s) {
+  s = s.trim().toLowerCase();
+  if (s.startsWith('0x')) return parseInt(s.slice(2), 16);
+  if (s.startsWith('0b')) return parseInt(s.slice(2), 2);
+  return parseInt(s, 10);
+}
+function toBin(v, w) {
+  var mask = typeof v === 'bigint' ? (1n << BigInt(w)) - 1n : (w === 32 ? 0xFFFFFFFF : (1 << w) - 1);
+  v = v & mask;
+  var s = v.toString(2);
+  while (s.length < w) s = '0' + s;
+  return s;
+}
+function run() {
+  var v = parseVal(input.value);
+  T.clearEl(box);
+  if (isNaN(v)) { box.appendChild(T.msg('⚠ 无法解析数值', 'err')); return; }
+  var w = +width.value;
+  var bin = toBin(v, w);
+  var reversed = bin.split('').reverse().join('');
+  var sh = +shift.value || 0;
+  var mask = w === 32 ? 0xFFFFFFFF : (1 << w) - 1;
+  var shl = (v << sh) & mask;
+  var shr = (v >>> sh) & mask;
+  box.appendChild(T.kvTable([
+    ['原始', bin + '  (0x' + (v >>> 0).toString(16).toUpperCase() + ')'],
+    ['按位翻转 NOT', toBin(~v, w) + '  (0x' + ((~v >>> 0) & mask).toString(16).toUpperCase() + ')'],
+    ['位序反转 reverse', reversed + '  (0x' + (parseInt(reversed, 2) >>> 0).toString(16).toUpperCase() + ')'],
+    ['左移 ' + sh + ' 位 <<', toBin(shl, w) + '  (0x' + (shl >>> 0).toString(16).toUpperCase() + ')'],
+    ['右移 ' + sh + ' 位 >>>', toBin(shr, w) + '  (0x' + (shr >>> 0).toString(16).toUpperCase() + ')'],
+    ['字节序交换', w >= 16 ? toBin(((v & 0xFF) << 8 | (v >> 8) & 0xFF) & mask, w) + (w === 32 ? '  （低16位演示）' : '') : '（8 位无字节序）']
+  ]));
+}
+[input, width, shift].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '位宽' }), width, T.el('span', { text: '移位' }), shift]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "bit-reverse", "title": "二进制位操作", "desc": "按位翻转 / 左移右移 / 位反转，8 / 16 / 32 位", "scripts": "", "code": "var input = T.input('0xFF00', { class: 'grow mono', placeholder: '数值（支持 0x 前缀 / 十进制 / 0b 二进制）' });\nvar width = T.select([{value:'8',label:'8 位'},{value:'16',label:'16 位'},{value:'32',label:'32 位'}],'16');\nvar shift = T.num(4, { min: 0, max: 31, style: 'width:70px' });\nvar box = T.el('div');\nfunction parseVal(s) {\n  s = s.trim().toLowerCase();\n  if (s.startsWith('0x')) return parseInt(s.slice(2), 16);\n  if (s.startsWith('0b')) return parseInt(s.slice(2), 2);\n  return parseInt(s, 10);\n}\nfunction toBin(v, w) {\n  var mask = typeof v === 'bigint' ? (1n \u003c\u003c BigInt(w)) - 1n : (w === 32 ? 0xFFFFFFFF : (1 \u003c\u003c w) - 1);\n  v = v & mask;\n  var s = v.toString(2);\n  while (s.length \u003c w) s = '0' + s;\n  return s;\n}\nfunction run() {\n  var v = parseVal(input.value);\n  T.clearEl(box);\n  if (isNaN(v)) { box.appendChild(T.msg('⚠ 无法解析数值', 'err')); return; }\n  var w = +width.value;\n  var bin = toBin(v, w);\n  var reversed = bin.split('').reverse().join('');\n  var sh = +shift.value || 0;\n  var mask = w === 32 ? 0xFFFFFFFF : (1 \u003c\u003c w) - 1;\n  var shl = (v \u003c\u003c sh) & mask;\n  var shr = (v >>> sh) & mask;\n  box.appendChild(T.kvTable([\n    ['原始', bin + '  (0x' + (v >>> 0).toString(16).toUpperCase() + ')'],\n    ['按位翻转 NOT', toBin(~v, w) + '  (0x' + ((~v >>> 0) & mask).toString(16).toUpperCase() + ')'],\n    ['位序反转 reverse', reversed + '  (0x' + (parseInt(reversed, 2) >>> 0).toString(16).toUpperCase() + ')'],\n    ['左移 ' + sh + ' 位 \u003c\u003c', toBin(shl, w) + '  (0x' + (shl >>> 0).toString(16).toUpperCase() + ')'],\n    ['右移 ' + sh + ' 位 >>>', toBin(shr, w) + '  (0x' + (shr >>> 0).toString(16).toUpperCase() + ')'],\n    ['字节序交换', w >= 16 ? toBin(((v & 0xFF) \u003c\u003c 8 | (v >> 8) & 0xFF) & mask, w) + (w === 32 ? '  （低16位演示）' : '') : '（8 位无字节序）']\n  ]));\n}\n[input, width, shift].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '数值' }), input, T.el('span', { text: '位宽' }), width, T.el('span', { text: '移位' }), shift]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

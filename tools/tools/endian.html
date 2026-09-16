@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>大小端转换 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('大小端转换', 'Big / Little Endian 字节序互换：16 / 32 / 64 位十六进制', 'endian');
+var input = T.input('DEADBEEF', { class: 'grow mono', placeholder: '十六进制字节串' });
+var width = T.select([{value:'2',label:'16 位 (2字节)'},{value:'4',label:'32 位 (4字节)'},{value:'8',label:'64 位 (8字节)'}],'4');
+var box = T.el('div');
+function swap(hex, w) {
+  if (hex.length % (w * 2) !== 0) throw new Error('长度需为 ' + (w * 2) + ' 的倍数（当前 ' + hex.length + '）');
+  var out = '';
+  for (var i = 0; i < hex.length; i += w * 2) {
+    var word = hex.slice(i, i + w * 2);
+    for (var j = word.length; j > 0; j -= 2) out += word.slice(j - 2, j);
+  }
+  return out;
+}
+function run() {
+  var v = input.value.replace(/[^0-9a-fA-F]/g, '');
+  T.clearEl(box);
+  if (!v) return;
+  try {
+    var w = +width.value;
+    box.appendChild(T.kvTable([
+      ['原始 (Big Endian)', v.toUpperCase()],
+      ['交换后 (Little Endian)', swap(v, w).toUpperCase()],
+      ['按 ' + (w * 8) + ' 位分组', v.toUpperCase().match(new RegExp('.{1,' + (w * 2) + '}', 'g')).join(' ')]
+    ]));
+  } catch (e) {
+    box.appendChild(T.msg('⚠ ' + e.message, 'err'));
+  }
+}
+[input, width].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: 'HEX' }), input, T.el('span', { text: '字长' }), width]));
+app.appendChild(box);
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "endian", "title": "大小端转换", "desc": "Big / Little Endian 字节序互换：16 / 32 / 64 位十六进制", "scripts": "", "code": "var input = T.input('DEADBEEF', { class: 'grow mono', placeholder: '十六进制字节串' });\nvar width = T.select([{value:'2',label:'16 位 (2字节)'},{value:'4',label:'32 位 (4字节)'},{value:'8',label:'64 位 (8字节)'}],'4');\nvar box = T.el('div');\nfunction swap(hex, w) {\n  if (hex.length % (w * 2) !== 0) throw new Error('长度需为 ' + (w * 2) + ' 的倍数（当前 ' + hex.length + '）');\n  var out = '';\n  for (var i = 0; i \u003c hex.length; i += w * 2) {\n    var word = hex.slice(i, i + w * 2);\n    for (var j = word.length; j > 0; j -= 2) out += word.slice(j - 2, j);\n  }\n  return out;\n}\nfunction run() {\n  var v = input.value.replace(/[^0-9a-fA-F]/g, '');\n  T.clearEl(box);\n  if (!v) return;\n  try {\n    var w = +width.value;\n    box.appendChild(T.kvTable([\n      ['原始 (Big Endian)', v.toUpperCase()],\n      ['交换后 (Little Endian)', swap(v, w).toUpperCase()],\n      ['按 ' + (w * 8) + ' 位分组', v.toUpperCase().match(new RegExp('.{1,' + (w * 2) + '}', 'g')).join(' ')]\n    ]));\n  } catch (e) {\n    box.appendChild(T.msg('⚠ ' + e.message, 'err'));\n  }\n}\n[input, width].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: 'HEX' }), input, T.el('span', { text: '字长' }), width]));\napp.appendChild(box);\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

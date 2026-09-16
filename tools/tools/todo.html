@@ -2,85 +2,80 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>待办事项 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('待办事项', '本地待办清单管理', 'todo');
-
-  var input = T.el('input', { type: 'text', placeholder: '添加新任务...', style: 'flex:1' });
-  var addBtn = T.button('添加', addTodo, true);
-  var list = T.el('div');
-  var stats = T.el('div', { class: 'badge' });
-
-  var todos = JSON.parse(localStorage.getItem('freellm-todos') || '[]');
-
-  function save() {
-    localStorage.setItem('freellm-todos', JSON.stringify(todos));
-  }
-
-  function render() {
-    list.innerHTML = '';
-    todos.forEach(function (todo, i) {
-      var item = T.el('div', { 
-        class: 'row',
-        style: 'padding:8px;border-bottom:1px solid var(--line);align-items:center'
-      });
-
-      var checkbox = T.el('input', { type: 'checkbox' });
-      checkbox.checked = todo.done;
-      var text = T.el('span', { 
-        text: todo.text, 
-        style: 'flex:1;text-decoration:' + (todo.done ? 'line-through' : 'none') + ';opacity:' + (todo.done ? '0.5' : '1')
-      });
-      var deleteBtn = T.button('删除', function () { deleteTodo(i); });
-
-      checkbox.addEventListener('change', function () {
-        todo.done = checkbox.checked;
-        save();
-        render();
-      });
-
-      item.appendChild(checkbox);
-      item.appendChild(text);
-      item.appendChild(deleteBtn);
-      list.appendChild(item);
-    });
-
-    var done = todos.filter(function (t) { return t.done; }).length;
-    stats.textContent = '总计: ' + todos.length + ' | 已完成: ' + done + ' | 待完成: ' + (todos.length - done);
-  }
-
-  function addTodo() {
-    var text = input.value.trim();
-    if (!text) return;
-    todos.push({ text: text, done: false });
-    input.value = '';
-    save();
-    render();
-  }
-
-  function deleteTodo(i) {
-    todos.splice(i, 1);
-    save();
-    render();
-  }
-
-  input.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') addTodo();
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('待办事项', '本地待办清单：添加 / 完成 / 删除，数据本地保存', 'todo');
+var input = T.input('', { class: 'grow', placeholder: '新待办，回车添加…' });
+var list = T.el('div');
+var filter = T.select([{value:'all',label:'全部'},{value:'active',label:'未完成'},{value:'done',label:'已完成'}],'all');
+var statEl = T.stat('0/0', '完成');
+var items = [];
+try { items = JSON.parse(localStorage.getItem('freellm-todos') || '[]'); } catch (e) {}
+function save() { localStorage.setItem('freellm-todos', JSON.stringify(items)); }
+function render() {
+  T.clearEl(list);
+  var show = items.filter(function (it) {
+    if (filter.value === 'active') return !it.done;
+    if (filter.value === 'done') return it.done;
+    return true;
   });
-
-  app.appendChild(T.el('div', { class: 'row' }, [input, addBtn]));
-  app.appendChild(list);
-  app.appendChild(stats);
-  render();
+  show.forEach(function (it) {
+    var idx = items.indexOf(it);
+    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:10px 6px;border-bottom:1px solid var(--line)' });
+    var cb = T.el('input', { type: 'checkbox' });
+    cb.checked = it.done;
+    cb.addEventListener('change', function () { it.done = cb.checked; save(); render(); });
+    var label = T.el('span', { text: it.text, style: 'flex:1;' + (it.done ? 'text-decoration:line-through;color:var(--ink3)' : '') });
+    label.style.cursor = 'pointer';
+    label.addEventListener('click', function () { it.done = !it.done; save(); render(); });
+    row.appendChild(cb);
+    row.appendChild(label);
+    row.appendChild(T.button('✕', function () { items.splice(idx, 1); save(); render(); }));
+    list.appendChild(row);
+  });
+  var done = items.filter(function (i) { return i.done; }).length;
+  statEl.firstChild.textContent = done + '/' + items.length;
+}
+input.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && input.value.trim()) {
+    items.unshift({ text: input.value.trim(), done: false, ts: Date.now() });
+    save();
+    input.value = '';
+    render();
+  }
+});
+filter.addEventListener('change', render);
+app.appendChild(T.row([input, T.button('添加', function () {
+  if (input.value.trim()) {
+    items.unshift({ text: input.value.trim(), done: false, ts: Date.now() });
+    save();
+    input.value = '';
+    render();
+  }
+}, true), filter, statEl]));
+app.appendChild(list);
+render();
+app.appendChild(T.row([T.button('清空已完成', function () { items = items.filter(function (i) { return !i.done; }); save(); render(); }),
+  T.button('清空全部', function () { if (confirm('确定清空所有待办？')) { items = []; save(); render(); } })]));
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "todo", "title": "待办事项", "desc": "本地待办清单：添加 / 完成 / 删除，数据本地保存", "scripts": "", "code": "var input = T.input('', { class: 'grow', placeholder: '新待办，回车添加…' });\nvar list = T.el('div');\nvar filter = T.select([{value:'all',label:'全部'},{value:'active',label:'未完成'},{value:'done',label:'已完成'}],'all');\nvar statEl = T.stat('0/0', '完成');\nvar items = [];\ntry { items = JSON.parse(localStorage.getItem('freellm-todos') || '[]'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-todos', JSON.stringify(items)); }\nfunction render() {\n  T.clearEl(list);\n  var show = items.filter(function (it) {\n    if (filter.value === 'active') return !it.done;\n    if (filter.value === 'done') return it.done;\n    return true;\n  });\n  show.forEach(function (it) {\n    var idx = items.indexOf(it);\n    var row = T.el('div', { style: 'display:flex;gap:10px;align-items:center;padding:10px 6px;border-bottom:1px solid var(--line)' });\n    var cb = T.el('input', { type: 'checkbox' });\n    cb.checked = it.done;\n    cb.addEventListener('change', function () { it.done = cb.checked; save(); render(); });\n    var label = T.el('span', { text: it.text, style: 'flex:1;' + (it.done ? 'text-decoration:line-through;color:var(--ink3)' : '') });\n    label.style.cursor = 'pointer';\n    label.addEventListener('click', function () { it.done = !it.done; save(); render(); });\n    row.appendChild(cb);\n    row.appendChild(label);\n    row.appendChild(T.button('✕', function () { items.splice(idx, 1); save(); render(); }));\n    list.appendChild(row);\n  });\n  var done = items.filter(function (i) { return i.done; }).length;\n  statEl.firstChild.textContent = done + '/' + items.length;\n}\ninput.addEventListener('keydown', function (e) {\n  if (e.key === 'Enter' && input.value.trim()) {\n    items.unshift({ text: input.value.trim(), done: false, ts: Date.now() });\n    save();\n    input.value = '';\n    render();\n  }\n});\nfilter.addEventListener('change', render);\napp.appendChild(T.row([input, T.button('添加', function () {\n  if (input.value.trim()) {\n    items.unshift({ text: input.value.trim(), done: false, ts: Date.now() });\n    save();\n    input.value = '';\n    render();\n  }\n}, true), filter, statEl]));\napp.appendChild(list);\nrender();\napp.appendChild(T.row([T.button('清空已完成', function () { items = items.filter(function (i) { return !i.done; }); save(); render(); }),\n  T.button('清空全部', function () { if (confirm('确定清空所有待办？')) { items = []; save(); render(); } })]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

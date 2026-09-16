@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>CSS Grid 可视化 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('CSS Grid 可视化', 'Grid 行列数 / 列宽 / 间距可视化，生成 grid-template CSS', 'css-grid');
+var cols = T.num(3, { min: 1, max: 12, style: 'width:70px' });
+var rowsN = T.num(3, { min: 1, max: 12, style: 'width:70px' });
+var colFr = T.select([{value:'1fr',label:'1fr 均分'},{value:'auto',label:'auto 自适应'},{value:'80px',label:'固定 80px'}],'1fr');
+var gap = T.range(0, 40, 1, 10);
+var stage = T.el('div', { style: 'border:1px dashed var(--line);border-radius:12px;padding:10px;background:var(--surface-soft);margin-bottom:12px' });
+var output = T.out('');
+function run() {
+  T.clearEl(stage);
+  var c = Math.min(12, +cols.value || 1), r = Math.min(12, +rowsN.value || 1);
+  var n = Math.min(24, c * r);
+  for (var i = 0; i < n; i++) {
+    var it = T.el('div', { style: 'min-height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;background:' + (i % 2 ? '#7BC0E5' : '#1744E8') });
+    it.textContent = i + 1;
+    stage.appendChild(it);
+  }
+  stage.style.display = 'grid';
+  stage.style.gridTemplateColumns = 'repeat(' + c + ', ' + colFr.value + ')';
+  stage.style.gap = gap.value + 'px';
+  output.value = '.container {\n  display: grid;\n  grid-template-columns: repeat(' + c + ', ' + colFr.value + ');\n  grid-template-rows: repeat(' + r + ', auto);\n  gap: ' + gap.value + 'px;\n}';
+}
+[cols, rowsN, colFr, gap].forEach(function (el) { el.addEventListener('input', run); });
+app.appendChild(T.row([T.el('span', { text: '列数' }), cols, T.el('span', { text: '行数' }), rowsN]));
+app.appendChild(T.row([T.el('span', { text: '列宽' }), colFr, T.el('span', { text: 'gap' }), gap]));
+app.appendChild(stage);
+app.appendChild(T.pane([T.field('CSS', output)], true));
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+run();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "css-grid", "title": "CSS Grid 可视化", "desc": "Grid 行列数 / 列宽 / 间距可视化，生成 grid-template CSS", "scripts": "", "code": "var cols = T.num(3, { min: 1, max: 12, style: 'width:70px' });\nvar rowsN = T.num(3, { min: 1, max: 12, style: 'width:70px' });\nvar colFr = T.select([{value:'1fr',label:'1fr 均分'},{value:'auto',label:'auto 自适应'},{value:'80px',label:'固定 80px'}],'1fr');\nvar gap = T.range(0, 40, 1, 10);\nvar stage = T.el('div', { style: 'border:1px dashed var(--line);border-radius:12px;padding:10px;background:var(--surface-soft);margin-bottom:12px' });\nvar output = T.out('');\nfunction run() {\n  T.clearEl(stage);\n  var c = Math.min(12, +cols.value || 1), r = Math.min(12, +rowsN.value || 1);\n  var n = Math.min(24, c * r);\n  for (var i = 0; i \u003c n; i++) {\n    var it = T.el('div', { style: 'min-height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;background:' + (i % 2 ? '#7BC0E5' : '#1744E8') });\n    it.textContent = i + 1;\n    stage.appendChild(it);\n  }\n  stage.style.display = 'grid';\n  stage.style.gridTemplateColumns = 'repeat(' + c + ', ' + colFr.value + ')';\n  stage.style.gap = gap.value + 'px';\n  output.value = '.container {\\n  display: grid;\\n  grid-template-columns: repeat(' + c + ', ' + colFr.value + ');\\n  grid-template-rows: repeat(' + r + ', auto);\\n  gap: ' + gap.value + 'px;\\n}';\n}\n[cols, rowsN, colFr, gap].forEach(function (el) { el.addEventListener('input', run); });\napp.appendChild(T.row([T.el('span', { text: '列数' }), cols, T.el('span', { text: '行数' }), rowsN]));\napp.appendChild(T.row([T.el('span', { text: '列宽' }), colFr, T.el('span', { text: 'gap' }), gap]));\napp.appendChild(stage);\napp.appendChild(T.pane([T.field('CSS', output)], true));\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\nrun();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

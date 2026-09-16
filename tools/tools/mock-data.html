@@ -2,66 +2,78 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>Mock 数据生成 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('Mock 数据生成', '随机 JSON 假数据生成', 'mock-data');
-
-  var template = T.textarea('{\n  "name": "{{name}}",\n  "age": {{int(18,65)}},\n  "email": "{{email}}",\n  "phone": "{{phone}}",\n  "address": "{{city}}",\n  "active": {{bool}}\n}');
-  var count = T.el('input', { type: 'number', value: '5', min: '1', max: '100', style: 'width:80px' });
-  var output = T.textarea('生成结果', false);
-  output.readOnly = true;
-
-  var generateBtn = T.button('生成', generate, true);
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  var NAMES = ['张三', '李四', '王五', '赵六', '钱七', '孙八', '周九', '吴十'];
-  var CITIES = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安'];
-  var DOMAINS = ['qq.com', '163.com', 'gmail.com', 'outlook.com'];
-
-  function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-  function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-  function randPhone() { return '1' + [3,5,7,8,9][randInt(0,4)] + String(randInt(100000000, 999999999)); }
-  function randEmail() { return 'user' + randInt(1000,9999) + '@' + rand(DOMAINS); }
-
-  function generate() {
-    var tpl = template.value;
-    var n = parseInt(count.value) || 5;
-    var results = [];
-
-    for (var i = 0; i < n; i++) {
-      var item = tpl
-        .replace(/\{\{name\}\}/g, rand(NAMES))
-        .replace(/\{\{int\((\d+),(\d+)\)\}\}/g, function (m, min, max) { return randInt(parseInt(min), parseInt(max)); })
-        .replace(/\{\{email\}\}/g, randEmail())
-        .replace(/\{\{phone\}\}/g, randPhone())
-        .replace(/\{\{city\}\}/g, rand(CITIES))
-        .replace(/\{\{bool\}\}/g, Math.random() > 0.5 ? 'true' : 'false');
-      try {
-        results.push(JSON.parse(item));
-      } catch (e) {
-        results.push(item);
-      }
-    }
-    output.value = JSON.stringify(results, null, 2);
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('Mock 数据生成', '随机中文假数据：姓名 / 手机 / 邮箱 / 身份证 / 地址，JSON 输出', 'mock-data');
+var count = T.num(5, { min: 1, max: 200, style: 'width:80px' });
+var fields = [
+  T.check('姓名', true), T.check('手机号', true), T.check('邮箱', true),
+  T.check('身份证', true), T.check('地址', true), T.check('公司', true)
+];
+var output = T.out('');
+var SURNAMES = '赵钱孙李周吴郑王冯陈蒋沈韩杨朱秦许何吕施张孔曹严华金魏陶姜'.split('');
+var GIVEN = ['伟', '芳', '娜', '敏', '静', '磊', '军', '洋', '勇', '艳', '杰', '涛', '明', '超', '秀英', '国华', '建华', '雨欣', '子轩', '梦琪'];
+var CITIES = ['北京市朝阳区', '上海市浦东新区', '广州市天河区', '深圳市南山区', '杭州市西湖区', '成都市武侯区', '武汉市洪山区', '南京市鼓楼区', '西安市雁塔区', '重庆市渝北区'];
+var STREETS = ['中山路', '人民路', '解放大道', '和平街', '建设路', '科技园南区', '金融港大道', '文化街'];
+var COMPANIES = ['科技', '网络', '信息', '数据', '智能', '云计算', '软件', '数字'];
+function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+function phone() {
+  var pre = pick(['130', '135', '136', '138', '150', '155', '170', '186', '188', '199']);
+  var s = pre;
+  for (var i = 0; i < 8; i++) s += Math.floor(Math.random() * 10);
+  return s;
+}
+function idcard() {
+  var areas = ['110101', '310104', '440106', '440305', '330106', '510107', '420111', '320102'];
+  var id = pick(areas) + (1960 + Math.floor(Math.random() * 45)) + String(1 + Math.floor(Math.random() * 12)).padStart(2, '0') + String(1 + Math.floor(Math.random() * 28)).padStart(2, '0') + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+  var w = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+  var codes = '10X98765432';
+  var sum = 0;
+  for (var i = 0; i < 17; i++) sum += +id[i] * w[i];
+  return id + codes[sum % 11];
+}
+function gen() {
+  var n = +count.value || 1;
+  var arr = [];
+  for (var i = 0; i < n; i++) {
+    var o = {};
+    if (fields[0]._input.checked) o.name = pick(SURNAMES) + pick(GIVEN);
+    if (fields[1]._input.checked) o.phone = phone();
+    if (fields[2]._input.checked) o.email = 'user' + Math.floor(Math.random() * 9999) + '@' + pick(['qq.com', '163.com', 'gmail.com', 'outlook.com']);
+    if (fields[3]._input.checked) o.idcard = idcard();
+    if (fields[4]._input.checked) o.address = pick(CITIES) + pick(STREETS) + (Math.floor(Math.random() * 200) + 1) + '号';
+    if (fields[5]._input.checked) o.company = pick(CITIES).slice(0, 2) + pick(COMPANIES) + pick(['有限公司', '股份公司', '集团']);
+    arr.push(o);
   }
-
-  generateBtn.addEventListener('click', generate);
-
-  app.appendChild(T.el('div', { class: 'field', text: '模板语法: {{name}} {{int(min,max)}} {{email}} {{phone}} {{city}} {{bool}}' }));
-  app.appendChild(T.el('div', { class: 'row' }, [T.el('span', { text: '数量' }), count, generateBtn, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [template]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
-
-  generate();
+  output.value = JSON.stringify(arr, null, 2);
+}
+app.appendChild(T.pane([T.field('Mock 数据 (JSON)', output)], true));
+app.appendChild(T.row([T.el('span', { text: '数量' }), count]));
+var r1 = T.row(fields.slice(0, 3)); r1.style.marginBottom = '4px';
+var r2 = T.row(fields.slice(3)); r2.style.marginBottom = '4px';
+app.appendChild(r1);
+app.appendChild(r2);
+app.appendChild(T.row([T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));
+gen();
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "mock-data", "title": "Mock 数据生成", "desc": "随机中文假数据：姓名 / 手机 / 邮箱 / 身份证 / 地址，JSON 输出", "scripts": "", "code": "var count = T.num(5, { min: 1, max: 200, style: 'width:80px' });\nvar fields = [\n  T.check('姓名', true), T.check('手机号', true), T.check('邮箱', true),\n  T.check('身份证', true), T.check('地址', true), T.check('公司', true)\n];\nvar output = T.out('');\nvar SURNAMES = '赵钱孙李周吴郑王冯陈蒋沈韩杨朱秦许何吕施张孔曹严华金魏陶姜'.split('');\nvar GIVEN = ['伟', '芳', '娜', '敏', '静', '磊', '军', '洋', '勇', '艳', '杰', '涛', '明', '超', '秀英', '国华', '建华', '雨欣', '子轩', '梦琪'];\nvar CITIES = ['北京市朝阳区', '上海市浦东新区', '广州市天河区', '深圳市南山区', '杭州市西湖区', '成都市武侯区', '武汉市洪山区', '南京市鼓楼区', '西安市雁塔区', '重庆市渝北区'];\nvar STREETS = ['中山路', '人民路', '解放大道', '和平街', '建设路', '科技园南区', '金融港大道', '文化街'];\nvar COMPANIES = ['科技', '网络', '信息', '数据', '智能', '云计算', '软件', '数字'];\nfunction pick(a) { return a[Math.floor(Math.random() * a.length)]; }\nfunction phone() {\n  var pre = pick(['130', '135', '136', '138', '150', '155', '170', '186', '188', '199']);\n  var s = pre;\n  for (var i = 0; i \u003c 8; i++) s += Math.floor(Math.random() * 10);\n  return s;\n}\nfunction idcard() {\n  var areas = ['110101', '310104', '440106', '440305', '330106', '510107', '420111', '320102'];\n  var id = pick(areas) + (1960 + Math.floor(Math.random() * 45)) + String(1 + Math.floor(Math.random() * 12)).padStart(2, '0') + String(1 + Math.floor(Math.random() * 28)).padStart(2, '0') + String(Math.floor(Math.random() * 1000)).padStart(3, '0');\n  var w = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];\n  var codes = '10X98765432';\n  var sum = 0;\n  for (var i = 0; i \u003c 17; i++) sum += +id[i] * w[i];\n  return id + codes[sum % 11];\n}\nfunction gen() {\n  var n = +count.value || 1;\n  var arr = [];\n  for (var i = 0; i \u003c n; i++) {\n    var o = {};\n    if (fields[0]._input.checked) o.name = pick(SURNAMES) + pick(GIVEN);\n    if (fields[1]._input.checked) o.phone = phone();\n    if (fields[2]._input.checked) o.email = 'user' + Math.floor(Math.random() * 9999) + '@' + pick(['qq.com', '163.com', 'gmail.com', 'outlook.com']);\n    if (fields[3]._input.checked) o.idcard = idcard();\n    if (fields[4]._input.checked) o.address = pick(CITIES) + pick(STREETS) + (Math.floor(Math.random() * 200) + 1) + '号';\n    if (fields[5]._input.checked) o.company = pick(CITIES).slice(0, 2) + pick(COMPANIES) + pick(['有限公司', '股份公司', '集团']);\n    arr.push(o);\n  }\n  output.value = JSON.stringify(arr, null, 2);\n}\napp.appendChild(T.pane([T.field('Mock 数据 (JSON)', output)], true));\napp.appendChild(T.row([T.el('span', { text: '数量' }), count]));\nvar r1 = T.row(fields.slice(0, 3)); r1.style.marginBottom = '4px';\nvar r2 = T.row(fields.slice(3)); r2.style.marginBottom = '4px';\napp.appendChild(r1);\napp.appendChild(r2);\napp.appendChild(T.row([T.button('生成', gen, true), T.btnCopy(function () { return output.value; })]));\ngen();"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

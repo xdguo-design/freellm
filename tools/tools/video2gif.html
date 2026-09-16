@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>视频转 GIF · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('视频转 GIF', '客户端视频转 GIF：选片段 / 帧率 / 尺寸，纯浏览器处理', 'video2gif');
+var pick = T.el('input', { type: 'file', accept: 'video/*', style: 'display:none' });
+document.body.appendChild(pick);
+var video = T.el('video', { controls: '', muted: '', style: 'max-width:100%;max-height:260px;border-radius:8px;display:none' });
+var fps = T.select([{value:'8',label:'8 帧/秒'},{value:'12',label:'12 帧/秒'},{value:'15',label:'15 帧/秒'}],'12');
+var width = T.select([{value:'320',label:'宽 320px'},{value:'480',label:'宽 480px'},{value:'240',label:'宽 240px'}],'320');
+var maxFrames = T.select([{value:'60',label:'最长 60 帧'},{value:'120',label:'最长 120 帧'},{value:'200',label:'最长 200 帧'}],'120');
+var status = T.badge('—');
+var bar = T.el('div', { style: 'height:5px;background:var(--line);border-radius:3px;overflow:hidden;display:none' });
+var fill = T.el('div', { style: 'height:100%;width:0;background:var(--accent)' });
+bar.appendChild(fill);
+var outGif = T.el('img', { style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });
+var gifBlob = null;
+pick.addEventListener('change', function () {
+  var f = pick.files[0];
+  if (!f) return;
+  video.src = URL.createObjectURL(f);
+  video.style.display = '';
+  status.textContent = '视频已加载，播放到起点后点"生成 GIF"';
+  status.className = 'badge blue';
+});
+app.appendChild(T.row([T.button('选择视频', function () { pick.click(); }, true)]));
+app.appendChild(video);
+app.appendChild(T.row([T.el('span', { text: '帧率' }), fps, T.el('span', { text: '宽度' }), width, T.el('span', { text: '帧数上限' }), maxFrames,
+  T.button('从当前位置生成 GIF', function () {
+    if (!video.src) { T.toast('请先选择视频'); return; }
+    generate();
+  }, true)]));
+app.appendChild(bar);
+app.appendChild(outGif);
+app.appendChild(T.row([status, T.button('下载 GIF', function () {
+  if (gifBlob) T.download('video.gif', gifBlob);
+}, true)]));
+function generate() {
+  var frameRate = +fps.value;
+  var W = +width.value;
+  var H = Math.round(video.videoHeight / video.videoWidth * W);
+  var limit = +maxFrames.value;
+  var frames = [];
+  var canvas = T.el('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  var ctx = canvas.getContext('2d', { willReadFrequently: true });
+  status.textContent = '抽帧中…';
+  bar.style.display = '';
+  var i = 0;
+  var interval = 1000 / frameRate;
+  var t0 = video.currentTime;
+  function step() {
+    if (i >= limit || video.currentTime >= video.duration - 0.05) {
+      status.textContent = '编码 GIF 中…';
+      fill.style.width = '100%';
+      setTimeout(function () {
+        gifBlob = LU.Gif.encode(frames, { colors: 200 });
+        outGif.src = URL.createObjectURL(gifBlob);
+        outGif.style.display = '';
+        status.textContent = '✓ 完成：' + frames.length + ' 帧 · ' + T.fmtBytes(gifBlob.size);
+        status.className = 'badge ok';
+        bar.style.display = 'none';
+      }, 50);
+      return;
+    }
+    ctx.drawImage(video, 0, 0, W, H);
+    frames.push({ data: ctx.getImageData(0, 0, W, H).data, width: W, height: H, delay: interval });
+    i++;
+    fill.style.width = (i / limit * 100) + '%';
+    status.textContent = '抽帧中 ' + i + '/' + limit;
+    video.currentTime = t0 + i * interval;
+    video.addEventListener('seeked', function onseek() {
+      video.removeEventListener('seeked', onseek);
+      requestAnimationFrame(step);
+    }, { once: true });
+  }
+  step();
+}
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "video2gif", "title": "视频转 GIF", "desc": "客户端视频转 GIF：选片段 / 帧率 / 尺寸，纯浏览器处理", "scripts": "", "code": "var pick = T.el('input', { type: 'file', accept: 'video/*', style: 'display:none' });\ndocument.body.appendChild(pick);\nvar video = T.el('video', { controls: '', muted: '', style: 'max-width:100%;max-height:260px;border-radius:8px;display:none' });\nvar fps = T.select([{value:'8',label:'8 帧/秒'},{value:'12',label:'12 帧/秒'},{value:'15',label:'15 帧/秒'}],'12');\nvar width = T.select([{value:'320',label:'宽 320px'},{value:'480',label:'宽 480px'},{value:'240',label:'宽 240px'}],'320');\nvar maxFrames = T.select([{value:'60',label:'最长 60 帧'},{value:'120',label:'最长 120 帧'},{value:'200',label:'最长 200 帧'}],'120');\nvar status = T.badge('—');\nvar bar = T.el('div', { style: 'height:5px;background:var(--line);border-radius:3px;overflow:hidden;display:none' });\nvar fill = T.el('div', { style: 'height:100%;width:0;background:var(--accent)' });\nbar.appendChild(fill);\nvar outGif = T.el('img', { style: 'max-width:100%;border-radius:8px;border:1px solid var(--line);display:none' });\nvar gifBlob = null;\npick.addEventListener('change', function () {\n  var f = pick.files[0];\n  if (!f) return;\n  video.src = URL.createObjectURL(f);\n  video.style.display = '';\n  status.textContent = '视频已加载，播放到起点后点\"生成 GIF\"';\n  status.className = 'badge blue';\n});\napp.appendChild(T.row([T.button('选择视频', function () { pick.click(); }, true)]));\napp.appendChild(video);\napp.appendChild(T.row([T.el('span', { text: '帧率' }), fps, T.el('span', { text: '宽度' }), width, T.el('span', { text: '帧数上限' }), maxFrames,\n  T.button('从当前位置生成 GIF', function () {\n    if (!video.src) { T.toast('请先选择视频'); return; }\n    generate();\n  }, true)]));\napp.appendChild(bar);\napp.appendChild(outGif);\napp.appendChild(T.row([status, T.button('下载 GIF', function () {\n  if (gifBlob) T.download('video.gif', gifBlob);\n}, true)]));\nfunction generate() {\n  var frameRate = +fps.value;\n  var W = +width.value;\n  var H = Math.round(video.videoHeight / video.videoWidth * W);\n  var limit = +maxFrames.value;\n  var frames = [];\n  var canvas = T.el('canvas');\n  canvas.width = W;\n  canvas.height = H;\n  var ctx = canvas.getContext('2d', { willReadFrequently: true });\n  status.textContent = '抽帧中…';\n  bar.style.display = '';\n  var i = 0;\n  var interval = 1000 / frameRate;\n  var t0 = video.currentTime;\n  function step() {\n    if (i >= limit || video.currentTime >= video.duration - 0.05) {\n      status.textContent = '编码 GIF 中…';\n      fill.style.width = '100%';\n      setTimeout(function () {\n        gifBlob = LU.Gif.encode(frames, { colors: 200 });\n        outGif.src = URL.createObjectURL(gifBlob);\n        outGif.style.display = '';\n        status.textContent = '✓ 完成：' + frames.length + ' 帧 · ' + T.fmtBytes(gifBlob.size);\n        status.className = 'badge ok';\n        bar.style.display = 'none';\n      }, 50);\n      return;\n    }\n    ctx.drawImage(video, 0, 0, W, H);\n    frames.push({ data: ctx.getImageData(0, 0, W, H).data, width: W, height: H, delay: interval });\n    i++;\n    fill.style.width = (i / limit * 100) + '%';\n    status.textContent = '抽帧中 ' + i + '/' + limit;\n    video.currentTime = t0 + i * interval;\n    video.addEventListener('seeked', function onseek() {\n      video.removeEventListener('seeked', onseek);\n      requestAnimationFrame(step);\n    }, { once: true });\n  }\n  step();\n}"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

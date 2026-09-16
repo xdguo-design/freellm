@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>混合加密 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('混合加密', 'RSA-OAEP 包裹 AES-256-GCM 密钥，兼顾安全与大文件效率', 'hybrid-encrypt');
+function _pemToDer(pem) {
+  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\s+/g, '');
+  return T.b64ToBytes(b64);
+}
+var input = T.textarea('输入明文（长度不限）…');
+var output = T.out('输出（JSON 包裹，含被加密的 AES 密钥）…');
+var mode = T.select([{value:'enc',label:'加密（用对方公钥）'},{value:'dec',label:'解密（用自己私钥）'}],'enc');
+var keyText = T.textarea('粘贴 PEM 密钥…', true);
+keyText.setAttribute('rows', '5');
+async function run() {
+  if (!input.value || !keyText.value) { output.value = ''; return; }
+  try {
+    if (mode.value === 'enc') {
+      var pub = await crypto.subtle.importKey('spki', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
+      var aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      var ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, aesKey, T.textToBytes(input.value)));
+      var rawKey = await crypto.subtle.exportKey('raw', aesKey);
+      var wrapped = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pub, rawKey);
+      output.value = JSON.stringify({ v: 1, alg: 'RSA-OAEP-256 + AES-256-GCM', iv: T.bytesToB64(iv), key: T.bytesToB64(new Uint8Array(wrapped)), data: T.bytesToB64(ct) }, null, 2);
+    } else {
+      var bundle = T.parseJSON(input.value);
+      var priv = await crypto.subtle.importKey('pkcs8', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+      var rawKey2 = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, priv, T.b64ToBytes(bundle.key));
+      var aesKey2 = await crypto.subtle.importKey('raw', rawKey2, { name: 'AES-GCM' }, false, ['decrypt']);
+      var pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: T.b64ToBytes(bundle.iv) }, aesKey2, T.b64ToBytes(bundle.data));
+      output.value = T.bytesToText(new Uint8Array(pt));
+    }
+  } catch (e) { output.value = '⚠ ' + e.message; }
+}
+app.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 JSON', input), T.field('结果', output)]));
+app.appendChild(T.field('密钥 (PEM)', keyText));
+app.appendChild(T.row([mode, T.button('执行', run, true)]));
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "hybrid-encrypt", "title": "混合加密", "desc": "RSA-OAEP 包裹 AES-256-GCM 密钥，兼顾安全与大文件效率", "scripts": "", "code": "function _pemToDer(pem) {\n  var b64 = pem.replace(/-----(BEGIN|END)[^-]+-----/g, '').replace(/\\s+/g, '');\n  return T.b64ToBytes(b64);\n}\nvar input = T.textarea('输入明文（长度不限）…');\nvar output = T.out('输出（JSON 包裹，含被加密的 AES 密钥）…');\nvar mode = T.select([{value:'enc',label:'加密（用对方公钥）'},{value:'dec',label:'解密（用自己私钥）'}],'enc');\nvar keyText = T.textarea('粘贴 PEM 密钥…', true);\nkeyText.setAttribute('rows', '5');\nasync function run() {\n  if (!input.value || !keyText.value) { output.value = ''; return; }\n  try {\n    if (mode.value === 'enc') {\n      var pub = await crypto.subtle.importKey('spki', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);\n      var aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);\n      var iv = crypto.getRandomValues(new Uint8Array(12));\n      var ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, aesKey, T.textToBytes(input.value)));\n      var rawKey = await crypto.subtle.exportKey('raw', aesKey);\n      var wrapped = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, pub, rawKey);\n      output.value = JSON.stringify({ v: 1, alg: 'RSA-OAEP-256 + AES-256-GCM', iv: T.bytesToB64(iv), key: T.bytesToB64(new Uint8Array(wrapped)), data: T.bytesToB64(ct) }, null, 2);\n    } else {\n      var bundle = T.parseJSON(input.value);\n      var priv = await crypto.subtle.importKey('pkcs8', _pemToDer(keyText.value), { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);\n      var rawKey2 = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, priv, T.b64ToBytes(bundle.key));\n      var aesKey2 = await crypto.subtle.importKey('raw', rawKey2, { name: 'AES-GCM' }, false, ['decrypt']);\n      var pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: T.b64ToBytes(bundle.iv) }, aesKey2, T.b64ToBytes(bundle.data));\n      output.value = T.bytesToText(new Uint8Array(pt));\n    }\n  } catch (e) { output.value = '⚠ ' + e.message; }\n}\napp.appendChild(T.pane([T.field(mode.value === 'enc' ? '明文' : '密文 JSON', input), T.field('结果', output)]));\napp.appendChild(T.field('密钥 (PEM)', keyText));\napp.appendChild(T.row([mode, T.button('执行', run, true)]));"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

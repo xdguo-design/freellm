@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>习惯追踪 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('习惯追踪', '每日习惯打卡：自定义习惯 + 7 天打卡墙 + 连续天数', 'habit');
+var input = T.input('', { class: 'grow', placeholder: '新习惯，如：阅读 30 分钟' });
+var box = T.el('div');
+var habits = [];
+try { habits = JSON.parse(localStorage.getItem('freellm-habits') || '[]'); } catch (e) {}
+function save() { localStorage.setItem('freellm-habits', JSON.stringify(habits)); }
+function todayKey() { return T.today(); }
+function last7() {
+  var days = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date(Date.now() - i * 86400000);
+    days.push(T.fmtDate(d));
+  }
+  return days;
+}
+function streak(checks) {
+  var s = 0;
+  var d = new Date();
+  while (checks.includes(T.fmtDate(d))) {
+    s++;
+    d.setDate(d.getDate() - 1);
+  }
+  return s;
+}
+function render() {
+  T.clearEl(box);
+  var days = last7();
+  habits.forEach(function (h, hi) {
+    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--surface)' });
+    var head = T.row([T.el('b', { text: h.name }),
+      T.badge('连续 ' + streak(h.checks) + ' 天', streak(h.checks) ? 'ok' : ''),
+      T.el('span', { style: 'flex:1' }),
+      T.button('✕', function () { habits.splice(hi, 1); save(); render(); })]);
+    head.style.marginBottom = '10px';
+    card.appendChild(head);
+    var row = T.el('div', { style: 'display:flex;gap:6px' });
+    days.forEach(function (d) {
+      var done = h.checks.includes(d);
+      var cell = T.el('div', { text: done ? '✓' : T.fmtDate(new Date(d)).slice(8), style: 'flex:1;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-weight:700;background:' + (done ? 'var(--accent)' : 'var(--surface-soft)') + ';color:' + (done ? '#fff' : 'var(--ink3)') + ';border:1px solid var(--line)', title: d });
+      cell.addEventListener('click', function () {
+        if (done) h.checks = h.checks.filter(function (x) { return x !== d; });
+        else h.checks.push(d);
+        save();
+        render();
+      });
+      row.appendChild(cell);
+    });
+    card.appendChild(row);
+    box.appendChild(card);
+  });
+  if (!habits.length) box.appendChild(T.el('p', { text: '添加第一个习惯开始打卡。', style: 'color:var(--ink3)' }));
+}
+input.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && input.value.trim()) {
+    habits.push({ name: input.value.trim(), checks: [] });
+    save();
+    input.value = '';
+    render();
+  }
+});
+app.appendChild(T.row([input]));
+app.appendChild(box);
+app.appendChild(T.el('p', { text: '点击日期格子打卡/取消。连续天数按今天往前连续计算。', style: 'color:var(--ink2);font-size:12px' }));
+render();
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "habit", "title": "习惯追踪", "desc": "每日习惯打卡：自定义习惯 + 7 天打卡墙 + 连续天数", "scripts": "", "code": "var input = T.input('', { class: 'grow', placeholder: '新习惯，如：阅读 30 分钟' });\nvar box = T.el('div');\nvar habits = [];\ntry { habits = JSON.parse(localStorage.getItem('freellm-habits') || '[]'); } catch (e) {}\nfunction save() { localStorage.setItem('freellm-habits', JSON.stringify(habits)); }\nfunction todayKey() { return T.today(); }\nfunction last7() {\n  var days = [];\n  for (var i = 6; i >= 0; i--) {\n    var d = new Date(Date.now() - i * 86400000);\n    days.push(T.fmtDate(d));\n  }\n  return days;\n}\nfunction streak(checks) {\n  var s = 0;\n  var d = new Date();\n  while (checks.includes(T.fmtDate(d))) {\n    s++;\n    d.setDate(d.getDate() - 1);\n  }\n  return s;\n}\nfunction render() {\n  T.clearEl(box);\n  var days = last7();\n  habits.forEach(function (h, hi) {\n    var card = T.el('div', { style: 'border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;background:var(--surface)' });\n    var head = T.row([T.el('b', { text: h.name }),\n      T.badge('连续 ' + streak(h.checks) + ' 天', streak(h.checks) ? 'ok' : ''),\n      T.el('span', { style: 'flex:1' }),\n      T.button('✕', function () { habits.splice(hi, 1); save(); render(); })]);\n    head.style.marginBottom = '10px';\n    card.appendChild(head);\n    var row = T.el('div', { style: 'display:flex;gap:6px' });\n    days.forEach(function (d) {\n      var done = h.checks.includes(d);\n      var cell = T.el('div', { text: done ? '✓' : T.fmtDate(new Date(d)).slice(8), style: 'flex:1;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-weight:700;background:' + (done ? 'var(--accent)' : 'var(--surface-soft)') + ';color:' + (done ? '#fff' : 'var(--ink3)') + ';border:1px solid var(--line)', title: d });\n      cell.addEventListener('click', function () {\n        if (done) h.checks = h.checks.filter(function (x) { return x !== d; });\n        else h.checks.push(d);\n        save();\n        render();\n      });\n      row.appendChild(cell);\n    });\n    card.appendChild(row);\n    box.appendChild(card);\n  });\n  if (!habits.length) box.appendChild(T.el('p', { text: '添加第一个习惯开始打卡。', style: 'color:var(--ink3)' }));\n}\ninput.addEventListener('keydown', function (e) {\n  if (e.key === 'Enter' && input.value.trim()) {\n    habits.push({ name: input.value.trim(), checks: [] });\n    save();\n    input.value = '';\n    render();\n  }\n});\napp.appendChild(T.row([input]));\napp.appendChild(box);\napp.appendChild(T.el('p', { text: '点击日期格子打卡/取消。连续天数按今天往前连续计算。', style: 'color:var(--ink2);font-size:12px' }));\nrender();"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>

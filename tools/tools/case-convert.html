@@ -2,50 +2,51 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
 <title>大小写转换 · FreeLLM</title>
 <link rel="stylesheet" href="/tools/css/tool.css">
+
 </head>
 <body>
 <div id="app"></div>
 <script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
-  var T = ToolCommon;
-  var app = T.head('大小写转换', '英文大小写/首字母大写转换', 'case-convert');
-
-  var mode = T.select([
-    { value: 'upper', label: '全部大写' },
-    { value: 'lower', label: '全部小写' },
-    { value: 'title', label: '首字母大写' },
-    { value: 'sentence', label: '句首大写' },
-    { value: 'toggle', label: '大小写反转' }
-  ]);
-  var input = T.textarea('输入英文文本...');
-  var output = T.textarea('结果', false);
-  output.readOnly = true;
-
-  var copyBtn = T.copyBtn(function () { return output.value; });
-
-  function run() {
-    var v = input.value;
-    if (!v) { output.value = ''; return; }
-    switch (mode.value) {
-      case 'upper': output.value = v.toUpperCase(); break;
-      case 'lower': output.value = v.toLowerCase(); break;
-      case 'title': output.value = v.replace(/\w\S*/g, function (w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }); break;
-      case 'sentence': output.value = v.replace(/(^\s*|[.!?]\s+)([a-z])/g, function (m, p, c) { return p + c.toUpperCase(); }); break;
-      case 'toggle': output.value = v.split('').map(function (c) { return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(); }).join(''); break;
-    }
-  }
-
-  mode.addEventListener('change', run);
-  input.addEventListener('input', function () { setTimeout(run, 100); });
-
-  app.appendChild(T.el('div', { class: 'row' }, [mode, copyBtn]));
-  app.appendChild(T.el('div', { class: 'pane' }, [input]));
-  app.appendChild(T.el('div', { class: 'pane' }, [output]));
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('大小写转换', '全大写 / 全小写 / 首字母大写 / 句首大写 / 交换大小写', 'case-convert');
+var input = T.textarea('hello freeLLM Tools');
+input.value = 'hello freeLLM Tools';
+var output = T.out('');
+var MODES = [
+  ['全大写 UPPER', function (s) { return s.toUpperCase(); }],
+  ['全小写 lower', function (s) { return s.toLowerCase(); }],
+  ['标题 Title Case', function (s) { return s.toLowerCase().replace(/(^|\s)\w/g, function (c) { return c.toUpperCase(); }); }],
+  ['句首 Sentence case', function (s) { return s.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, function (c) { return c.toUpperCase(); }); }],
+  ['交换 SwapCASE', function (s) { return s.replace(/\w/g, function (c) { return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(); }); }]
+];
+function apply(fn) {
+  output.value = fn(input.value);
+  output._lastFn = fn;
+}
+var row = T.el('div', { class: 'row' });
+MODES.forEach(function (m) {
+  row.appendChild(T.button(m[0], function () { apply(m[1]); }));
+});
+input.addEventListener('input', function () { if (output._lastFn) apply(output._lastFn); });
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(row);
+app.appendChild(T.row([T.btnCopy(function () { return output.value; })]));
+apply(MODES[0][1]);
 })();
 </script>
+<script type="application/json" id="tool-source">{"id": "case-convert", "title": "大小写转换", "desc": "全大写 / 全小写 / 首字母大写 / 句首大写 / 交换大小写", "scripts": "", "code": "var input = T.textarea('hello freeLLM Tools');\ninput.value = 'hello freeLLM Tools';\nvar output = T.out('');\nvar MODES = [\n  ['全大写 UPPER', function (s) { return s.toUpperCase(); }],\n  ['全小写 lower', function (s) { return s.toLowerCase(); }],\n  ['标题 Title Case', function (s) { return s.toLowerCase().replace(/(^|\\s)\\w/g, function (c) { return c.toUpperCase(); }); }],\n  ['句首 Sentence case', function (s) { return s.toLowerCase().replace(/(^\\s*\\w|[.!?]\\s+\\w)/g, function (c) { return c.toUpperCase(); }); }],\n  ['交换 SwapCASE', function (s) { return s.replace(/\\w/g, function (c) { return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(); }); }]\n];\nfunction apply(fn) {\n  output.value = fn(input.value);\n  output._lastFn = fn;\n}\nvar row = T.el('div', { class: 'row' });\nMODES.forEach(function (m) {\n  row.appendChild(T.button(m[0], function () { apply(m[1]); }));\n});\ninput.addEventListener('input', function () { if (output._lastFn) apply(output._lastFn); });\napp.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));\napp.appendChild(row);\napp.appendChild(T.row([T.btnCopy(function () { return output.value; })]));\napply(MODES[0][1]);"}</script>
+<script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<title>调音器 · FreeLLM</title>
+<link rel="stylesheet" href="/tools/css/tool.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="/tools/js/tool-common.js"></script>
+<script src="/tools/js/lib-crypto.js"></script>
+<script src="/tools/js/lib-format.js"></script>
+<script src="/tools/js/lib-utils.js"></script>
+
+<script src="/js/freellm-sync.js"></script>
+<script>
+(function () {
+'use strict';
+var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
+var app = T.head('调音器', '麦克风实时音高检测：显示频率与最近音名，乐器调音', 'tuner');
+var status = T.badge('点击启动麦克风');
+var freqEl = T.stat('—', 'Hz');
+var noteEl = T.stat('—', '最近音');
+var centsEl = T.stat('—', '偏差 (cents)');
+var bar = T.el('div', { style: 'height:8px;background:var(--line);border-radius:4px;position:relative;margin:20px 0' });
+var needle = T.el('div', { style: 'position:absolute;top:-6px;left:50%;width:4px;height:20px;background:var(--accent);border-radius:2px;transition:left .1s' });
+bar.appendChild(needle);
+var NOTES = [['C', 261.63], ['C#', 277.18], ['D', 293.66], ['D#', 311.13], ['E', 329.63], ['F', 349.23], ['F#', 369.99], ['G', 392.0], ['G#', 415.3], ['A', 440.0], ['A#', 466.16], ['B', 493.88]];
+var audioCtx = null, raf = 0;
+function detectPitch(buf, sampleRate) {
+  var SIZE = buf.length;
+  var rms = 0;
+  for (var i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+  rms = Math.sqrt(rms / SIZE);
+  if (rms < 0.01) return -1;
+  var r1 = 0, r2 = SIZE - 1;
+  var thres = 0.2;
+  for (i = 0; i < SIZE / 2; i++) if (Math.abs(buf[i]) < thres) { r1 = i; break; }
+  for (i = 1; i < SIZE / 2; i++) if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; }
+  var buf2 = buf.slice(r1, r2);
+  var n = buf2.length;
+  var c = new Array(n).fill(0);
+  for (i = 0; i < n; i++) for (var j = 0; j < n - i; j++) c[i] += buf[j] * buf[j + i];
+  var d = 0;
+  while (c[d] > c[d + 1]) d++;
+  var maxval = -1, maxpos = -1;
+  for (i = d; i < n; i++) {
+    if (c[i] > maxval) { maxval = c[i]; maxpos = i; }
+  }
+  var T0 = maxpos;
+  return sampleRate / T0;
+}
+function tick() {
+  if (!audioCtx) return;
+  raf = requestAnimationFrame(tick);
+}
+T.button('启动麦克风', function () {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var source = audioCtx.createMediaStreamSource(stream);
+    var analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+    var buf = new Float32Array(2048);
+    status.textContent = '🎧 监听中…';
+    status.className = 'badge ok';
+    (function loop() {
+      analyser.getFloatTimeDomainData(buf);
+      var f = detectPitch(buf, audioCtx.sampleRate);
+      if (f > 50 && f < 2000) {
+        freqEl.firstChild.textContent = f.toFixed(1);
+        var midi = 69 + 12 * Math.log2(f / 440);
+        var nearest = Math.round(midi);
+        var cents = Math.round((midi - nearest) * 100);
+        var name = NOTES[((nearest % 12) + 12) % 12][0] + (Math.floor(nearest / 12) - 1);
+        noteEl.firstChild.textContent = name;
+        centsEl.firstChild.textContent = (cents > 0 ? '+' : '') + cents;
+        needle.style.left = (50 + Math.max(-50, Math.min(50, cents / 2))) + '%';
+        needle.style.background = Math.abs(cents) < 10 ? 'var(--ok-text)' : 'var(--err)';
+      }
+      requestAnimationFrame(loop);
+    })();
+  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });
+}, true)
+})();
+</script>
+<script type="application/json" id="tool-source">{"id": "tuner", "title": "调音器", "desc": "麦克风实时音高检测：显示频率与最近音名，乐器调音", "scripts": "", "code": "var status = T.badge('点击启动麦克风');\nvar freqEl = T.stat('—', 'Hz');\nvar noteEl = T.stat('—', '最近音');\nvar centsEl = T.stat('—', '偏差 (cents)');\nvar bar = T.el('div', { style: 'height:8px;background:var(--line);border-radius:4px;position:relative;margin:20px 0' });\nvar needle = T.el('div', { style: 'position:absolute;top:-6px;left:50%;width:4px;height:20px;background:var(--accent);border-radius:2px;transition:left .1s' });\nbar.appendChild(needle);\nvar NOTES = [['C', 261.63], ['C#', 277.18], ['D', 293.66], ['D#', 311.13], ['E', 329.63], ['F', 349.23], ['F#', 369.99], ['G', 392.0], ['G#', 415.3], ['A', 440.0], ['A#', 466.16], ['B', 493.88]];\nvar audioCtx = null, raf = 0;\nfunction detectPitch(buf, sampleRate) {\n  var SIZE = buf.length;\n  var rms = 0;\n  for (var i = 0; i \u003c SIZE; i++) rms += buf[i] * buf[i];\n  rms = Math.sqrt(rms / SIZE);\n  if (rms \u003c 0.01) return -1;\n  var r1 = 0, r2 = SIZE - 1;\n  var thres = 0.2;\n  for (i = 0; i \u003c SIZE / 2; i++) if (Math.abs(buf[i]) \u003c thres) { r1 = i; break; }\n  for (i = 1; i \u003c SIZE / 2; i++) if (Math.abs(buf[SIZE - i]) \u003c thres) { r2 = SIZE - i; break; }\n  var buf2 = buf.slice(r1, r2);\n  var n = buf2.length;\n  var c = new Array(n).fill(0);\n  for (i = 0; i \u003c n; i++) for (var j = 0; j \u003c n - i; j++) c[i] += buf[j] * buf[j + i];\n  var d = 0;\n  while (c[d] > c[d + 1]) d++;\n  var maxval = -1, maxpos = -1;\n  for (i = d; i \u003c n; i++) {\n    if (c[i] > maxval) { maxval = c[i]; maxpos = i; }\n  }\n  var T0 = maxpos;\n  return sampleRate / T0;\n}\nfunction tick() {\n  if (!audioCtx) return;\n  raf = requestAnimationFrame(tick);\n}\nT.button('启动麦克风', function () {\n  navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {\n    audioCtx = new (window.AudioContext || window.webkitAudioContext)();\n    var source = audioCtx.createMediaStreamSource(stream);\n    var analyser = audioCtx.createAnalyser();\n    analyser.fftSize = 2048;\n    source.connect(analyser);\n    var buf = new Float32Array(2048);\n    status.textContent = '🎧 监听中…';\n    status.className = 'badge ok';\n    (function loop() {\n      analyser.getFloatTimeDomainData(buf);\n      var f = detectPitch(buf, audioCtx.sampleRate);\n      if (f > 50 && f \u003c 2000) {\n        freqEl.firstChild.textContent = f.toFixed(1);\n        var midi = 69 + 12 * Math.log2(f / 440);\n        var nearest = Math.round(midi);\n        var cents = Math.round((midi - nearest) * 100);\n        var name = NOTES[((nearest % 12) + 12) % 12][0] + (Math.floor(nearest / 12) - 1);\n        noteEl.firstChild.textContent = name;\n        centsEl.firstChild.textContent = (cents > 0 ? '+' : '') + cents;\n        needle.style.left = (50 + Math.max(-50, Math.min(50, cents / 2))) + '%';\n        needle.style.background = Math.abs(cents) \u003c 10 ? 'var(--ok-text)' : 'var(--err)';\n      }\n      requestAnimationFrame(loop);\n    })();\n  }).catch(function (e) { T.toast('无法访问麦克风：' + e.message); });\n}, true)"}</script>
+<script>ToolCommon.sourcePanel();</script>
+</body>
+</html>
