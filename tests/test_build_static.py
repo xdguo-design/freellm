@@ -3,10 +3,53 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.build_static import build
+from scripts.build_static import build, update_trust_copy
 
 
 class BuildStaticTests(unittest.TestCase):
+    def test_trust_copy_distinguishes_source_and_verification_status(self):
+        rendered = update_trust_copy("每日核验 · 真实免费 / 通过人工核验，确认可免费使用")
+        self.assertIn("官方来源 · 条件透明", rendered)
+        self.assertIn("显示官方条件与最近核验日期", rendered)
+        self.assertNotIn("每日核验 · 真实免费", rendered)
+
+    def test_build_renders_current_count_static_offer_and_detail_url(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "offers.json"
+            html_path = root / "index.html"
+            offer = {
+                "id": "x", "order": 1, "date": "2026-09-06", "name": "X",
+                "provider": "X", "model": "X", "type": ["free"],
+                "productType": "api", "freeMechanism": "permanent",
+                "freeSummary": "每月免费额度", "validitySummary": "长期",
+                "accessSummary": "全球", "title": "X", "why": "x",
+                "mechanism": "x", "validity": "x", "access": "x",
+                "command": "x", "register": "https://example.com",
+                "links": [["官方", "https://example.com"]],
+                "sourceUrls": ["https://example.com"], "evidence": "x",
+                "status": "verified", "confidence": "high",
+                "lastVerifiedAt": "2026-09-06",
+            }
+            data_path.write_text(json.dumps([offer]), encoding="utf-8")
+            html_path.write_text(
+                '<b id="heroCount">27</b>'
+                '<b data-category-count="all">27</b>'
+                '<div id="catalog-offer-rows"></div>'
+                '<script type="application/json" id="offer-data">[]</script>'
+                '<script type="application/ld+json" id="ld-dynamic">'
+                '{"@graph":[{"itemListElement":[]}]}</script>',
+                encoding="utf-8",
+            )
+
+            self.assertTrue(build(data_path, html_path))
+            rendered = html_path.read_text(encoding="utf-8")
+
+            self.assertIn('<b id="heroCount">1</b>', rendered)
+            self.assertIn('<b data-category-count="all">1</b>', rendered)
+            self.assertIn('href="/offers/x/"', rendered)
+            self.assertIn('"url": "https://freellm.top/offers/x/"', rendered)
+
     def test_build_replaces_offer_data_block(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
