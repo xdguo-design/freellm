@@ -255,6 +255,7 @@ SKILL_CATEGORY_DEFINITIONS = {
     "presentations": {"name_zh": "PPT 幻灯片", "name_en": "Presentations", "accent": "violet"},
     "resume": {"name_zh": "简历与求职", "name_en": "Resume & jobs", "accent": "yellow"},
     "writing": {"name_zh": "写作与文案", "name_en": "Writing & copy", "accent": "green"},
+    "development": {"name_zh": "开发工作流", "name_en": "Development", "accent": "blue"},
 }
 SKILL_REQUIRED_FIELDS = (
     "id", "name", "category", "description", "githubUrl", "cloneCommand",
@@ -264,6 +265,9 @@ SKILL_STATUS_LABELS = {
     "candidate": ("社区候选", "Community candidate"),
     "needs_review": ("待核验", "Needs review"),
     "verified": ("已核验", "Verified"),
+}
+SKILL_LINK_CHECK_VALUES = {
+    "ok", "readme_only", "skill_file_not_found", "repo_not_found", "network_error", "invalid_url",
 }
 SKILL_RECIPE_REQUIRED_FIELDS = (
     "id", "title", "description", "input", "output", "steps",
@@ -2980,6 +2984,48 @@ def _load_daily_logs(data_path: Path) -> list[dict]:
     return logs
 
 
+def _format_star_count(value) -> str:
+    if not isinstance(value, int) or value < 0:
+        return ""
+    return f"{value / 1000:.1f}k".replace(".0k", "k") if value >= 1000 else str(value)
+
+
+def _skill_link_chip(skill: dict) -> str:
+    check = skill.get("linkCheck")
+    if check in {"ok", "readme_only"} and skill.get("contentPath"):
+        return '<span class="skill-link-chip ok"><span lang="zh-CN">原文已收录</span><span lang="en">Source indexed</span></span>'
+    if check == "repo_not_found":
+        return '<span class="skill-link-chip warn"><span lang="zh-CN">仓库无法访问</span><span lang="en">Repo unreachable</span></span>'
+    if check in {"skill_file_not_found", "invalid_url"}:
+        return '<span class="skill-link-chip warn"><span lang="zh-CN">SKILL.md 待定位</span><span lang="en">SKILL.md not located</span></span>'
+    return ""
+
+
+def _style_preview(entry: dict) -> str:
+    """One-line summary of a skill's presentation styles, e.g. "36 套主题 · tokyo-night / … +33"."""
+    summary = str(entry.get("summary") or "").strip()
+    items = [str(item).strip() for item in entry.get("items") or [] if str(item).strip()]
+    if not items:
+        return summary
+    total = entry.get("total")
+    count = total if isinstance(total, int) and not isinstance(total, bool) and total >= len(items) else len(items)
+    preview = " / ".join(items[:3])
+    extra = count - 3
+    if extra > 0:
+        preview += f" +{extra}"
+    return f"{summary} · {preview}" if summary else preview
+
+
+def _skill_style_line(skill: dict) -> str:
+    entry = skill.get("styles")
+    if not isinstance(entry, dict) or not entry.get("hasStyles"):
+        return ""
+    text = _style_preview(entry)
+    if not text:
+        return ""
+    return f'<div class="skill-style"><span class="skill-style-label">样式</span><span class="skill-style-text">{_esc(text)}</span></div>'
+
+
 def _skill_card(skill: dict) -> str:
     category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {})
     status_zh, status_en = SKILL_STATUS_LABELS.get(skill.get("status"), ("待核验", "Needs review"))
@@ -2990,17 +3036,24 @@ def _skill_card(skill: dict) -> str:
         if github else '<span class="skill-source-missing">来源链接待补充</span>'
     )
     status_class = "verified" if skill.get("status") == "verified" else "review"
+    stars = _format_star_count((skill.get("repoStats") or {}).get("stars"))
+    review_count = len(skill.get("reviews") or [])
+    meta = '<div class="skill-card-meta">'
+    meta += f'<span class="skill-stat">★ {_esc(stars)}</span>' if stars else '<span class="skill-stat is-muted">★ —</span>'
+    if review_count:
+        meta += f'<span class="skill-stat">{review_count} <span lang="zh-CN">条评价</span><span lang="en">reviews</span></span>'
+    meta += _skill_link_chip(skill) + "</div>"
     return f'''<article class="skill-card" data-skill-id="{_esc(skill.get('id'))}" data-category="{_esc(skill.get('category'))}" data-status="{_esc(skill.get('status'))}">
       <div class="skill-card-top"><span class="skill-category {category.get('accent', 'blue')}">{_esc(category.get('name_zh', 'Skill'))}</span><span class="skill-status {status_class}"><span lang="zh-CN">{_esc(status_zh)}</span><span lang="en">{_esc(status_en)}</span></span></div>
-      <h2>{_esc(skill.get('name'))}</h2><p>{_esc(skill.get('description'))}</p><div class="skill-chips">{compatibility}</div>
-      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}">查看安装方式 →</button>{source}</div>
+      <h2>{_esc(skill.get('name'))}</h2><p>{_esc(skill.get('description'))}</p>{_skill_style_line(skill)}<div class="skill-chips">{compatibility}</div>{meta}
+      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}"><span lang="zh-CN">查看内容与评价 →</span><span lang="en">Content &amp; reviews →</span></button>{source}</div>
     </article>'''
 
 
 def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     path = SKILLS_PAGE_PATH
     title = "Agent Skills 市集 · FreeLLM"
-    description = "发现适用于 Claude Code、OpenCode、Codex 等 Agent 工具的产品设计、电商运营和 SEO Skill。"
+    description = "收录经核验的 Claude Code / OpenCode / Codex Agent Skill：在线查看 SKILL.md 原文、GitHub 社区数据与第三方评价，一键复制安装命令。"
     page_url = _absolute(site_url, path)
     schema = {
         "@context": "https://schema.org",
@@ -3025,6 +3078,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     category_buttons = "".join(
         f'<button class="skill-category-tab" type="button" data-category="{_esc(key)}"><span>{_esc(value["name_zh"])}</span><small>{sum(item.get("category") == key for item in skills):02d}</small></button>'
         for key, value in SKILL_CATEGORY_DEFINITIONS.items()
+        if any(item.get("category") == key for item in skills)
     )
     style = r'''
     :root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --modal-shadow:0 20px 60px rgba(0,0,0,.12); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
@@ -3044,27 +3098,54 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     .skill-card-top,.skill-card-bottom { display:flex; gap:8px; align-items:center; justify-content:space-between; } .skill-category,.skill-status { display:inline-flex; align-items:center; padding:3px 10px; border-radius:9999px; font:500 10px/1.8 var(--font-mono); letter-spacing:.05em; white-space:nowrap; } .skill-category.blue { background:var(--accent-soft); color:var(--accent); } .skill-category.yellow { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); } .skill-category.green { background:var(--pale-green-bg); color:var(--pale-green-text); } .skill-category.violet { background:var(--pale-stone-bg); color:var(--pale-stone-text); } .skill-status.review { background:var(--pale-stone-bg); color:var(--pale-stone-text); } .skill-status.verified { background:var(--pale-green-bg); color:var(--pale-green-text); }
     .skill-card h2 { margin:20px 0 8px; font:500 16px/1.4 var(--font-mono); letter-spacing:-.01em; color:var(--ink); overflow-wrap:anywhere; } .skill-card p { min-height:68px; margin:0; color:var(--ink-secondary); font-size:13.5px; line-height:1.65; } .skill-chips { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0 auto; } .skill-chip { padding:3px 9px; border:1px solid var(--line); border-radius:9999px; color:var(--ink-secondary); font:400 10.5px/1.7 var(--font-mono); } .skill-card-bottom { gap:10px; justify-content:flex-start; margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft); } .skill-details,.skill-source-link { color:var(--accent); font-size:12.5px; font-weight:500; text-decoration:none; transition:opacity .15s; } .skill-details { padding:0; border:0; background:none; cursor:pointer; } .skill-details:hover,.skill-source-link:hover { opacity:.72; } .skill-source-link { margin-left:auto; } .skill-source-missing { margin-left:auto; color:var(--ink-tertiary); font-size:11px; }
     .skills-empty { padding:60px 18px; text-align:center; color:var(--ink-tertiary); border:1px dashed var(--line); border-radius:8px; background:var(--surface); } .skills-empty button { margin-top:10px; padding:8px 16px; border:1px solid var(--line); border-radius:6px; color:var(--accent); background:var(--surface); cursor:pointer; font-weight:500; transition:all .15s; } .skills-empty button:hover { border-color:var(--accent); }
-    dialog { width:min(620px,calc(100% - 28px)); padding:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); box-shadow:var(--modal-shadow); } dialog::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); } .skill-dialog-body { padding:28px; } .skill-dialog-close { float:right; display:grid; place-items:center; width:30px; height:30px; border:0; border-radius:50%; background:none; color:var(--ink-secondary); font-size:20px; cursor:pointer; transition:all .15s; } .skill-dialog-close:hover { background:var(--line-soft); color:var(--ink); } .skill-dialog-body h2 { margin:0 40px 10px 0; font-family:var(--font-mono); font-size:21px; font-weight:500; letter-spacing:-.01em; overflow-wrap:anywhere; } .skill-dialog-body p { color:var(--ink-secondary); line-height:1.7; } .command-box { display:flex; gap:10px; align-items:center; margin:20px 0; padding:14px; border-radius:8px; background:var(--code-bg); color:var(--code-text); } .command-box code { flex:1; overflow:auto; font:400 12px/1.6 var(--font-mono); white-space:pre-wrap; } .copy-command { padding:7px 12px; border:1px solid rgba(255,255,255,.28); border-radius:6px; color:var(--code-text); background:transparent; cursor:pointer; white-space:nowrap; font-size:12px; transition:all .15s; } .copy-command:hover { background:rgba(255,255,255,.08); } .dialog-actions { display:flex; gap:12px; align-items:center; } .dialog-actions a { color:var(--accent); font-size:13px; font-weight:500; text-decoration:none; } .dialog-actions a:hover { opacity:.72; } .muted { color:var(--ink-tertiary); font-size:12px; }
+    dialog { width:min(760px,calc(100% - 28px)); max-height:calc(100% - 40px); padding:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); box-shadow:var(--modal-shadow); } dialog::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); } .skill-dialog-body { padding:28px; } .skill-dialog-close { float:right; display:grid; place-items:center; width:30px; height:30px; border:0; border-radius:50%; background:none; color:var(--ink-secondary); font-size:20px; cursor:pointer; transition:all .15s; } .skill-dialog-close:hover { background:var(--line-soft); color:var(--ink); } .skill-dialog-body h2 { margin:0 40px 10px 0; font-family:var(--font-mono); font-size:21px; font-weight:500; letter-spacing:-.01em; overflow-wrap:anywhere; } .skill-dialog-body p { color:var(--ink-secondary); line-height:1.7; } .command-box { display:flex; gap:10px; align-items:center; margin:20px 0; padding:14px; border-radius:8px; background:var(--code-bg); color:var(--code-text); } .command-box code { flex:1; overflow:auto; font:400 12px/1.6 var(--font-mono); white-space:pre-wrap; } .copy-command { padding:7px 12px; border:1px solid rgba(255,255,255,.28); border-radius:6px; color:var(--code-text); background:transparent; cursor:pointer; white-space:nowrap; font-size:12px; transition:all .15s; } .copy-command:hover { background:rgba(255,255,255,.08); } .dialog-actions { display:flex; gap:12px; align-items:center; } .dialog-actions a { color:var(--accent); font-size:13px; font-weight:500; text-decoration:none; } .dialog-actions a:hover { opacity:.72; } .muted { color:var(--ink-tertiary); font-size:12px; }
+    .skill-dialog-stats { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0; } .skill-dialog-stats .stat-chip { padding:4px 10px; border:1px solid var(--line); border-radius:9999px; font:500 11px var(--font-mono); color:var(--ink-secondary); }
+    .skill-dialog-section { margin-top:22px; padding-top:16px; border-top:1px solid var(--line); } .skill-dialog-section h3 { margin:0 0 10px; font:500 11px/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-tertiary); }
+    .skill-content-meta { margin:0 0 8px; color:var(--ink-tertiary); font-size:11.5px; } .skill-content-meta a { color:var(--accent); text-decoration:none; } .skill-content-meta a:hover { opacity:.72; }
+    .skill-content { max-height:300px; overflow:auto; margin:0; padding:14px; border-radius:8px; background:var(--code-bg); color:var(--code-text); font:400 11.5px/1.65 var(--font-mono); white-space:pre-wrap; overflow-wrap:anywhere; } .skill-content.is-error { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
+    .skill-review-list { list-style:none; margin:0; padding:0; display:grid; gap:10px; } .skill-review-item { padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); } .skill-review-item blockquote { margin:0 0 8px; font-size:13px; line-height:1.7; color:var(--ink); } .skill-review-item .review-meta { display:flex; flex-wrap:wrap; gap:8px; align-items:center; font:500 11px var(--font-mono); color:var(--ink-tertiary); } .skill-review-item .review-meta a { color:var(--accent); text-decoration:none; } .skill-review-item.is-empty { color:var(--ink-tertiary); font-size:12.5px; }
+    .skill-sentiment { padding:2px 8px; border-radius:9999px; font:500 10px/1.8 var(--font-mono); text-transform:uppercase; letter-spacing:.05em; } .skill-sentiment.positive { background:var(--pale-green-bg); color:var(--pale-green-text); } .skill-sentiment.mixed { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); } .skill-sentiment.negative { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); } .skill-sentiment.neutral { background:var(--pale-stone-bg); color:var(--pale-stone-text); }
+    .skill-card-meta { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:14px 0 0; } .skill-stat { font:500 11px var(--font-mono); color:var(--ink-secondary); } .skill-stat.is-muted { color:var(--ink-tertiary); } .skill-link-chip { padding:3px 9px; border-radius:9999px; font:500 10px/1.8 var(--font-mono); } .skill-link-chip.ok { background:var(--pale-green-bg); color:var(--pale-green-text); } .skill-link-chip.warn { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); } .skill-dialog-body { max-height:calc(100vh - 42px); overflow:auto; }
     .skills-footer { display:flex; gap:16px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-tertiary); font-size:12.5px; line-height:1.7; } .skills-footer p { max-width:760px; margin:0; }
     @media (max-width:900px) { .skills-hero { grid-template-columns:1fr; gap:24px; padding-top:40px; } .hero-note { max-width:440px; } .skill-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    .skill-style { display:flex; gap:8px; align-items:baseline; margin:10px 0 0; padding:8px 10px; background:var(--surface-soft); border:1px solid var(--line); border-radius:6px; } .skill-style-label { flex:none; color:var(--accent); font:500 10px/1.6 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; } .skill-style-text { min-width:0; color:var(--ink-secondary); font-size:12.5px; line-height:1.55; }
+    .skill-style-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; } .skill-style-chips:empty { margin:0; } .style-chip { padding:3px 9px; border:1px solid var(--line); border-radius:999px; background:var(--surface); font:400 11.5px/1.5 var(--font-mono); color:var(--ink-secondary); } .style-more { align-self:center; color:var(--ink-tertiary); font:500 11px/1.5 var(--font-mono); }
+    #dialog-style-section .skill-style-format { margin:0; } #dialog-style-section .skill-style-format code { font:500 12px/1.5 var(--font-mono); color:var(--ink); background:var(--surface-soft); border:1px solid var(--line); border-radius:4px; padding:2px 8px; } #dialog-style-summary { margin:10px 0 0; color:var(--ink-secondary); font-size:13.5px; line-height:1.65; }
     @media (max-width:800px) { .skills-page { padding:12px 18px 48px; } .skills-header { align-items:flex-start; flex-direction:column; } .header-right { width:100%; justify-content:space-between; } .skills-count { margin-left:0; } } @media (max-width:560px) { .skills-hero h1 { font-size:36px; } .skill-grid { grid-template-columns:1fr; } .skill-card p { min-height:0; } }
     '''
     script = r'''
     (() => {
-      const skills = JSON.parse(document.getElementById('skill-data').textContent); const grid = document.getElementById('skill-grid'); const search = document.getElementById('skill-search'); const status = document.getElementById('skill-status'); const count = document.getElementById('skill-count'); const empty = document.getElementById('skill-empty'); const dialog = document.getElementById('skill-dialog'); let category = 'all';
-      const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character])); const statusLabel = value => value === 'verified' ? '已核验' : value === 'candidate' ? '社区候选' : '待核验'; const categoryLabel = value => ({ 'product-design':'产品设计', ecommerce:'电商运营', 'seo-content':'SEO & 内容流量' }[value] || 'Skill');
-      const filtered = () => { const keyword = search.value.trim().toLowerCase(); return skills.filter(skill => (category === 'all' || skill.category === category) && (status.value === 'all' || skill.status === status.value) && (!keyword || [skill.name, skill.description, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase().includes(keyword))); };
-      const card = skill => `<article class="skill-card"><div class="skill-card-top"><span class="skill-category blue">${escapeHtml(categoryLabel(skill.category))}</span><span class="skill-status review">${escapeHtml(statusLabel(skill.status))}</span></div><h2>${escapeHtml(skill.name)}</h2><p>${escapeHtml(skill.description)}</p><div class="skill-chips">${(skill.compatibility || []).map(item => `<span class="skill-chip">${escapeHtml(item)}</span>`).join('')}</div><div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="${escapeHtml(skill.id)}">查看安装方式 →</button>${skill.githubUrl ? `<a class="skill-source-link" href="${escapeHtml(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
+      const skills = JSON.parse(document.getElementById('skill-data').textContent); const grid = document.getElementById('skill-grid'); const search = document.getElementById('skill-search'); const status = document.getElementById('skill-status'); const count = document.getElementById('skill-count'); const empty = document.getElementById('skill-empty'); const dialog = document.getElementById('skill-dialog'); let category = 'all'; let current = null;
+      const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[character])); const statusLabel = value => value === 'verified' ? '已核验' : value === 'candidate' ? '社区候选' : '待核验'; const categoryLabel = value => CATEGORY_MAP[value] || 'Skill'; const isEn = () => document.documentElement.lang === 'en';
+      const formatCount = value => typeof value === 'number' && value >= 0 ? (value >= 1000 ? `${(value / 1000).toFixed(1)}k`.replace('.0k', 'k') : String(value)) : null; const reviewsOf = skill => Array.isArray(skill.reviews) ? skill.reviews : [];
+      const linkChip = skill => { const check = skill.linkCheck; if ((check === 'ok' || check === 'readme_only') && skill.contentPath) return `<span class="skill-link-chip ok"><span lang="zh-CN">原文已收录</span><span lang="en">Source indexed</span></span>`; if (check === 'repo_not_found') return `<span class="skill-link-chip warn"><span lang="zh-CN">仓库无法访问</span><span lang="en">Repo unreachable</span></span>`; if (check === 'skill_file_not_found' || check === 'invalid_url') return `<span class="skill-link-chip warn"><span lang="zh-CN">SKILL.md 待定位</span><span lang="en">SKILL.md not located</span></span>`; return ''; };
+      const metaHtml = skill => { const stars = formatCount(skill.repoStats && skill.repoStats.stars); const reviews = reviewsOf(skill).length; return `<div class="skill-card-meta">${stars ? `<span class="skill-stat">★ ${stars}</span>` : '<span class="skill-stat is-muted">★ —</span>'}${reviews ? `<span class="skill-stat">${reviews} <span lang="zh-CN">条评价</span><span lang="en">reviews</span></span>` : ''}${linkChip(skill)}</div>`; };
+      const styleEntry = skill => (skill.styles && typeof skill.styles === 'object') ? skill.styles : null; const styleItems = entry => Array.isArray(entry.items) ? entry.items : []; const stylePreview = entry => { const items = styleItems(entry); const total = typeof entry.total === 'number' && entry.total >= items.length ? entry.total : items.length; let text = entry.summary || ''; if (items.length) { text += (text ? ' · ' : '') + items.slice(0, 3).join(' / ') + (total > 3 ? ` +${total - 3}` : ''); } return text; };
+      const styleLine = skill => { const entry = styleEntry(skill); if (!entry || !entry.hasStyles) return ''; const text = stylePreview(entry); return text ? `<div class="skill-style"><span class="skill-style-label">样式</span><span class="skill-style-text">${escapeHtml(text)}</span></div>` : ''; };
+      const filtered = () => { const keyword = search.value.trim().toLowerCase(); return skills.filter(skill => (category === 'all' || skill.category === category) && (status.value === 'all' || skill.status === status.value) && (!keyword || [skill.name, skill.description, skill.githubUrl, ...(skill.compatibility || []), ...reviewsOf(skill).map(review => `${review.source || ''} ${review.quote || ''}`), ...(entry => entry ? [entry.format || '', entry.summary || '', ...styleItems(entry)] : [])(styleEntry(skill))].join(' ').toLowerCase().includes(keyword))); };
+      const card = skill => `<article class="skill-card"><div class="skill-card-top"><span class="skill-category blue">${escapeHtml(categoryLabel(skill.category))}</span><span class="skill-status review">${escapeHtml(statusLabel(skill.status))}</span></div><h2>${escapeHtml(skill.name)}</h2><p>${escapeHtml(skill.description)}</p>${styleLine(skill)}<div class="skill-chips">${(skill.compatibility || []).map(item => `<span class="skill-chip">${escapeHtml(item)}</span>`).join('')}</div>${metaHtml(skill)}<div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="${escapeHtml(skill.id)}"><span lang="zh-CN">查看内容与评价 →</span><span lang="en">Content &amp; reviews →</span></button>${skill.githubUrl ? `<a class="skill-source-link" href="${escapeHtml(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
       const render = () => { const visible = filtered(); grid.innerHTML = visible.map(card).join(''); empty.hidden = visible.length > 0; count.textContent = `显示 ${visible.length} / ${skills.length}`; };
       document.querySelectorAll('.skill-category-tab').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item === button)); render(); })); search.addEventListener('input', render); status.addEventListener('change', render);
       document.getElementById('skill-clear').addEventListener('click', () => { search.value = ''; status.value = 'all'; category = 'all'; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item.dataset.category === 'all')); render(); });
-      grid.addEventListener('click', event => { const trigger = event.target.closest('.skill-details'); if (!trigger) return; const skill = skills.find(item => item.id === trigger.dataset.skillId); if (!skill) return; document.getElementById('dialog-skill-name').textContent = skill.name; document.getElementById('dialog-skill-description').textContent = skill.description; document.getElementById('dialog-command').textContent = skill.cloneCommand; const link = document.getElementById('dialog-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; dialog.showModal(); });
+      const sentimentLabel = value => ({ positive: ['正面', 'positive'], mixed: ['有褒有贬', 'mixed'], negative: ['负面', 'negative'], neutral: ['中性', 'neutral'] }[value] || null);
+      const renderStats = skill => { const stats = skill.repoStats || {}; const chips = []; const stars = formatCount(stats.stars); if (stars) chips.push(`★ ${stars}`); const forks = formatCount(stats.forks); if (forks) chips.push(`${isEn() ? 'forks ' : 'fork '}${forks}`); if (stats.pushedAt) chips.push(`${isEn() ? 'pushed ' : '最近推送 '}${String(stats.pushedAt).slice(0, 10)}`); document.getElementById('dialog-skill-stats').innerHTML = chips.map(chip => `<span class="stat-chip">${escapeHtml(chip)}</span>`).join(''); };
+      const renderReviews = skill => { const items = reviewsOf(skill); const list = document.getElementById('dialog-skill-reviews'); if (!items.length) { list.innerHTML = `<li class="skill-review-item is-empty"><span lang="zh-CN">暂未收录针对该 Skill 的第三方评价；上方 star / fork 数据可作为社区热度参考。</span><span lang="en">No third-party review collected yet; the star / fork counts above serve as a popularity signal.</span></li>`; return; } list.innerHTML = items.map(review => { const sentiment = sentimentLabel(review.sentiment); return `<li class="skill-review-item"><blockquote>“${escapeHtml(review.quote)}”</blockquote><div class="review-meta">${sentiment ? `<span class="skill-sentiment ${sentiment[1]}"><span lang="zh-CN">${sentiment[0]}</span><span lang="en">${sentiment[1]}</span></span>` : ''}${review.date ? `<span>${escapeHtml(review.date)}</span>` : ''}<a href="${escapeHtml(review.url)}" target="_blank" rel="nofollow noopener">${escapeHtml(review.source)} ↗</a></div></li>`; }).join(''); };
+      const contentCache = {};
+      const renderContent = skill => { const pre = document.getElementById('dialog-skill-content'); const meta = document.getElementById('dialog-content-meta'); pre.classList.remove('is-error'); if (!skill.contentPath) { pre.classList.add('is-error'); meta.innerHTML = ''; pre.textContent = isEn() ? 'No SKILL.md could be verified for this entry. Open the GitHub link to inspect the source yourself.' : '该条目未能核验到 SKILL.md 原文（来源链接缺失或不可达），请打开 GitHub 自行核对。'; return; } const show = doc => { pre.textContent = doc.content; meta.innerHTML = `${escapeHtml(String(doc.bytes || ''))} bytes · ${isEn() ? 'fetched ' : '抓取于 '}${escapeHtml(String(doc.fetchedAt || '').slice(0, 10))} · <a href="${escapeHtml(doc.contentUrl || skill.githubUrl || '#')}" target="_blank" rel="nofollow noopener">raw ↗</a>`; }; if (contentCache[skill.id]) { show(contentCache[skill.id]); return; } pre.textContent = isEn() ? 'Loading SKILL.md…' : '正在加载 SKILL.md 原文…'; meta.innerHTML = ''; fetch(`content/${encodeURIComponent(skill.id)}.json`).then(response => { if (!response.ok) throw new Error('http ' + response.status); return response.json(); }).then(doc => { contentCache[skill.id] = doc; if (current && current.id === skill.id) show(doc); }).catch(() => { if (current && current.id === skill.id) { pre.classList.add('is-error'); pre.textContent = isEn() ? 'Failed to load the content. Open GitHub to read the source.' : '原文加载失败，请打开 GitHub 查看源文件。'; } }); };
+      const renderStyles = skill => { const section = document.getElementById('dialog-style-section'); const entry = styleEntry(skill); if (!entry) { section.hidden = true; return; } section.hidden = false; document.getElementById('dialog-style-format').textContent = entry.format || ''; document.getElementById('dialog-style-summary').textContent = entry.summary || ''; const items = styleItems(entry); const total = typeof entry.total === 'number' && entry.total >= items.length ? entry.total : items.length; document.getElementById('dialog-style-chips').innerHTML = items.map(item => `<code class="style-chip">${escapeHtml(item)}</code>`).join('') + (total > items.length ? `<span class="style-more">+${total - items.length}</span>` : ''); };
+      grid.addEventListener('click', event => { const trigger = event.target.closest('.skill-details'); if (!trigger) return; const skill = skills.find(item => item.id === trigger.dataset.skillId); if (!skill) return; current = skill; document.getElementById('dialog-skill-name').textContent = skill.name; document.getElementById('dialog-skill-description').textContent = skill.description; document.getElementById('dialog-command').textContent = skill.cloneCommand; const link = document.getElementById('dialog-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; renderStats(skill); renderReviews(skill); renderStyles(skill); renderContent(skill); dialog.showModal(); });
       document.querySelector('.skill-dialog-close').addEventListener('click', () => dialog.close()); document.getElementById('copy-command').addEventListener('click', async event => { const button = event.currentTarget; const command = document.getElementById('dialog-command').textContent; try { await navigator.clipboard.writeText(command); button.textContent = '已复制'; } catch { const range = document.createRange(); range.selectNodeContents(document.getElementById('dialog-command')); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); button.textContent = '请手动复制'; } setTimeout(() => { button.textContent = '复制命令'; }, 1600); });
       const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (!path.endsWith('/')) return; link.setAttribute('href', `../${path.slice(1)}index.html${window.location.search}`); }); };
       adaptFileNavigation(); render();
     })();
     '''
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>给模型装上真正好用的工作流</h1><p class="hero-copy">模型决定上限，Skill 决定你能不能把事情做完。按场景挑选可下载、可复用的 Agent Skill。</p></div><aside class="hero-note"><span class="hero-note-label">CANDIDATE SKILLS / 候选组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个候选 Skill</span></div><p>首批覆盖产品设计、电商运营和 SEO。当前条目来自社区清单，使用前请打开 GitHub 自行核对。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有首批条目均为社区候选 / 待核验。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">INSTALL GUIDE / 安装方式</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"></p><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted">使用前请自行核对仓库状态</span></div></div></dialog><script>{script}</script></body></html>'''
+    script = (
+        "const CATEGORY_MAP = "
+        + json.dumps({key: value["name_zh"] for key, value in SKILL_CATEGORY_DEFINITIONS.items()}, ensure_ascii=False)
+        + ";"
+        + script
+    )
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>给模型装上真正好用的工作流</h1><p class="hero-copy">模型决定上限，Skill 决定你能不能把事情做完。按场景挑选可下载、可复用的 Agent Skill。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
 def render_skills_page(skills: list[dict], site_url: str) -> str:
@@ -3139,6 +3220,7 @@ def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: st
     category_options = "".join(
         f'<option value="{_esc(key)}" data-category="{_esc(key)}">{_esc(value["name_zh"])} / {_esc(value["name_en"])}</option>'
         for key, value in SKILL_CATEGORY_DEFINITIONS.items()
+        if any(item.get("category") == key for item in skills)
     )
     category_map = json.dumps(
         {key: value["name_zh"] for key, value in SKILL_CATEGORY_DEFINITIONS.items()},
@@ -3163,7 +3245,7 @@ def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: st
     .workflow-card-head,.workflow-card-foot { display:flex; justify-content:space-between; align-items:center; gap:10px; } .recipe-count { color:var(--ink-tertiary); font:500 10px var(--font-mono); letter-spacing:.08em; } .workflow-card h2 { max-width:460px; margin:26px 0 9px; font-size:26px; line-height:1.15; letter-spacing:-.02em; } .workflow-card p { max-width:520px; min-height:43px; margin:0; color:var(--ink-secondary); font-size:13px; line-height:1.6; }
     .workflow-flow { display:flex; align-items:center; margin:24px 0 20px; } .flow-node { display:grid; place-items:center; width:28px; height:28px; border:1px solid var(--line); border-radius:6px; background:var(--surface-soft); color:var(--accent); font:500 10px var(--font-mono); } .flow-line { width:36px; height:1px; background:var(--line); } .workflow-card-foot { margin-top:auto; padding-top:14px; border-top:1px solid var(--line-soft); color:var(--ink-tertiary); font-size:11px; } .workflow-details { padding:0; border:0; color:var(--accent); background:none; cursor:pointer; font-size:12.5px; font-weight:600; } .workflow-details:hover { opacity:.72; }
     .component-library { margin-top:40px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); } .component-library > summary { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:22px 0; cursor:pointer; list-style:none; } .component-library > summary::-webkit-details-marker { display:none; } .component-library > summary::after { content:"＋"; font-size:20px; color:var(--ink-secondary); } .component-library[open] > summary::after { content:"－"; } .library-summary strong { display:block; font-family:var(--font-serif); font-size:22px; font-weight:400; letter-spacing:-.02em; } .library-summary span { display:block; margin-top:5px; color:var(--ink-secondary); font-size:12.5px; } .library-count { padding:5px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); font:500 10.5px var(--font-mono); letter-spacing:.06em; white-space:nowrap; } .library-body { padding:0 0 26px; } .library-tools { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; } .library-tools input,.library-tools select { min-height:40px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); padding:9px 13px; outline:none; transition:border-color .15s, box-shadow .15s; } .library-tools input { flex:1 1 300px; } .library-tools input:focus,.library-tools select:focus { border-color:var(--ink); box-shadow:0 0 0 3px var(--line-soft); } .library-tools input::placeholder { color:var(--ink-tertiary); } .library-tools select { min-width:220px; cursor:pointer; }
-    .component-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; } .component-grid .component-card { min-width:0; display:flex; flex-direction:column; padding:16px; border:1px solid var(--line); border-radius:8px; background:var(--surface); transition:box-shadow .2s; } .component-grid .component-card:hover { box-shadow:var(--card-shadow); } .component-card h3 { margin:0 0 7px; font:500 13.5px/1.5 var(--font-mono); overflow-wrap:anywhere; color:var(--ink); } .component-card p { min-height:36px; margin:0; color:var(--ink-secondary); font-size:12px; line-height:1.55; } .component-meta { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-top:14px; padding-top:10px; border-top:1px solid var(--line-soft); color:var(--ink-tertiary); font-size:10.5px; } .component-source-link { color:var(--accent); text-decoration:none; font-weight:500; } .component-source-link:hover { opacity:.72; } .component-install { margin-top:10px; padding:0; border:0; color:var(--accent); background:none; cursor:pointer; font-size:11.5px; font-weight:600; text-align:left; } .component-install:hover { opacity:.72; } .library-empty { padding:28px; color:var(--ink-tertiary); border:1px dashed var(--line); border-radius:8px; text-align:center; }
+    .component-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; } .component-grid .component-card { min-width:0; display:flex; flex-direction:column; padding:16px; border:1px solid var(--line); border-radius:8px; background:var(--surface); transition:box-shadow .2s; } .component-grid .component-card:hover { box-shadow:var(--card-shadow); } .component-card h3 { margin:0 0 7px; font:500 13.5px/1.5 var(--font-mono); overflow-wrap:anywhere; color:var(--ink); } .component-card p { min-height:36px; margin:0; color:var(--ink-secondary); font-size:12px; line-height:1.55; } .component-meta { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-top:14px; padding-top:10px; border-top:1px solid var(--line-soft); color:var(--ink-tertiary); font-size:10.5px; } .component-source-link { color:var(--accent); text-decoration:none; font-weight:500; } .component-source-link:hover { opacity:.72; } .component-install { margin-top:10px; padding:0; border:0; color:var(--accent); background:none; cursor:pointer; font-size:11.5px; font-weight:600; text-align:left; } .component-install:hover { opacity:.72; } .component-style { margin:8px 0 0; padding:6px 8px; background:var(--surface-soft); border:1px solid var(--line); border-radius:6px; color:var(--ink-secondary); font-size:11.5px; line-height:1.55; } .component-dialog-styles { margin:14px 0 0; padding:10px 12px; background:var(--surface-soft); border:1px solid var(--line); border-radius:6px; color:var(--ink-secondary); font-size:13px; line-height:1.65; } .component-dialog-styles strong { color:var(--accent); font:500 10px/1.6 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:4px; } .library-empty { padding:28px; color:var(--ink-tertiary); border:1px dashed var(--line); border-radius:8px; text-align:center; }
     .lab-footer { display:flex; justify-content:space-between; gap:18px; margin-top:48px; padding-top:18px; border-top:1px solid var(--line); color:var(--ink-tertiary); font-size:12.5px; line-height:1.7; } .lab-footer p { max-width:680px; margin:0; } .lab-footer nav { white-space:nowrap; } .lab-footer a { text-decoration:none; } .lab-footer a:hover { color:var(--accent); }
     dialog { width:min(720px,calc(100% - 28px)); max-height:calc(100% - 28px); padding:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); box-shadow:var(--modal-shadow); } dialog::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); } .workflow-dialog-body { padding:30px; background:var(--surface); } .dialog-close { float:right; display:grid; place-items:center; width:32px; height:32px; border:1px solid var(--line); border-radius:50%; background:var(--surface); color:var(--ink-secondary); cursor:pointer; font-size:16px; transition:all .15s; } .dialog-close:hover { background:var(--line-soft); color:var(--ink); } .dialog-kicker { color:var(--accent); font:500 10.5px var(--font-mono); letter-spacing:.12em; text-transform:uppercase; } .workflow-dialog-body h2 { max-width:560px; margin:12px 0 10px; font-size:32px; line-height:1.12; letter-spacing:-.02em; } .component-dialog .workflow-dialog-body h2 { font-family:var(--font-mono); font-size:22px; font-weight:500; } .dialog-intro { max-width:600px; color:var(--ink-secondary); font-size:14px; line-height:1.7; } .dialog-io { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:22px 0; } .dialog-io div { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); } .dialog-io span { display:block; color:var(--ink-tertiary); font:500 10px var(--font-mono); letter-spacing:.1em; text-transform:uppercase; } .dialog-io strong { display:block; margin-top:7px; font-size:13px; line-height:1.5; } .recipe-steps { display:grid; gap:10px; margin:18px 0 24px; } .recipe-step { display:grid; grid-template-columns:30px minmax(0,1fr); gap:12px; padding:14px 16px; border:1px solid var(--line); border-left:2px solid var(--accent); border-radius:6px; background:var(--surface); } .recipe-step-number { color:var(--accent); font:500 12px var(--font-mono); } .recipe-step strong { display:block; font-size:14px; } .recipe-step small { display:block; margin-top:4px; color:var(--ink-secondary); line-height:1.55; } .recipe-step code { display:block; margin-top:10px; color:var(--ink-tertiary); font:400 10.5px/1.6 var(--font-mono); overflow-wrap:anywhere; } .dialog-actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; padding-top:18px; border-top:1px solid var(--line); } .primary-action { padding:10px 18px; border:1px solid var(--ink-solid); border-radius:6px; color:var(--canvas); background:var(--ink-solid); cursor:pointer; font-size:13px; font-weight:600; transition:opacity .15s; } .primary-action:hover { opacity:.85; } .muted { color:var(--ink-tertiary); font-size:12px; } .command-box { display:flex; gap:10px; align-items:center; margin:20px 0; padding:14px; border-radius:8px; background:var(--code-bg); color:var(--code-text); } .command-box code { flex:1; overflow:auto; font:400 12px/1.6 var(--font-mono); white-space:pre-wrap; }
     @media (max-width:900px) { :root { --sidebar:200px; } .lab-content { padding:24px 26px 60px; } .lab-hero { grid-template-columns:1fr; gap:24px; } .lab-hero-aside { max-width:380px; } .component-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
@@ -3183,14 +3265,14 @@ def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: st
       const category = document.getElementById('skill-library-category');
       const empty = document.getElementById('library-empty');
       const commandFor = skill => skill ? String(skill.cloneCommand || '').trim() : '';
-      const componentCard = skill => '<article class="component-' + 'card"><h3>' + escapeHtml(skill.name) + '</h3><p>' + escapeHtml(skill.description) + '</p><div class="component-meta"><span>' + escapeHtml(categoryLabel(skill.category)) + '</span>' + (skill.githubUrl ? '<a class="component-source-link" href="' + escapeHtml(skill.githubUrl) + '" target="_blank" rel="nofollow noopener">GitHub ↗</a>' : '') + '</div><button class="component-install" type="button" data-skill-id="' + escapeHtml(skill.id) + '">查看安装命令 →</button></article>';
+      const componentCard = skill => '<article class="component-' + 'card"><h3>' + escapeHtml(skill.name) + '</h3><p>' + escapeHtml(skill.description) + '</p>' + (skill.styles && skill.styles.hasStyles && skill.styles.summary ? '<p class="component-style">' + escapeHtml(skill.styles.summary) + '</p>' : '') + '<div class="component-meta"><span>' + escapeHtml(categoryLabel(skill.category)) + '</span>' + (skill.githubUrl ? '<a class="component-source-link" href="' + escapeHtml(skill.githubUrl) + '" target="_blank" rel="nofollow noopener">GitHub ↗</a>' : '') + '</div><button class="component-install" type="button" data-skill-id="' + escapeHtml(skill.id) + '">查看安装命令 →</button></article>';
       const renderComponents = () => { const query = search.value.trim().toLowerCase(); const visible = skills.filter(skill => (!category.value || skill.category === category.value) && (!query || [skill.id, skill.name, skill.description, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase().includes(query))); componentGrid.innerHTML = visible.map(componentCard).join(''); empty.hidden = visible.length > 0; };
       const openRecipe = recipe => { if (!recipe) return; document.getElementById('workflow-dialog-kicker').textContent = recipe.kicker || 'WORKFLOW'; document.getElementById('workflow-dialog-title').textContent = recipe.title || ''; document.getElementById('workflow-dialog-description').textContent = recipe.description || ''; document.getElementById('workflow-input').textContent = recipe.input || ''; document.getElementById('workflow-output').textContent = recipe.output || ''; const steps = recipe.steps || []; document.getElementById('recipe-steps').innerHTML = steps.map((step, index) => { const skill = skills.find(item => item.id === step.skillId); return '<div class="recipe-step"><span class="recipe-step-number">' + String(index + 1).padStart(2, '0') + '</span><div><strong>' + escapeHtml(step.label || (skill && skill.name) || step.skillId) + '</strong><small>' + escapeHtml(step.detail || (skill && skill.description) || '') + '</small><code>' + escapeHtml(commandFor(skill)) + '</code></div></div>'; }).join(''); document.getElementById('copy-workflow-command').dataset.command = steps.map(step => commandFor(skills.find(item => item.id === step.skillId))).filter(Boolean).join('\n'); dialog.showModal(); };
       document.querySelectorAll('.workflow-details').forEach(button => button.addEventListener('click', () => openRecipe(recipes.find(recipe => recipe.id === button.dataset.recipeId))));
       document.querySelectorAll('.workflow-card').forEach(card => card.addEventListener('click', event => { if (event.target.closest('button')) return; openRecipe(recipes.find(recipe => recipe.id === card.dataset.recipeId)); }));
       document.querySelectorAll('[data-dialog-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
       search.addEventListener('input', renderComponents); category.addEventListener('change', renderComponents);
-      componentGrid.addEventListener('click', event => { const button = event.target.closest('.component-install'); if (!button) return; const skill = skills.find(item => item.id === button.dataset.skillId); if (!skill) return; document.getElementById('component-dialog-title').textContent = skill.name; document.getElementById('component-dialog-description').textContent = skill.description; document.getElementById('component-command').textContent = commandFor(skill); const link = document.getElementById('component-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; componentDialog.showModal(); });
+      componentGrid.addEventListener('click', event => { const button = event.target.closest('.component-install'); if (!button) return; const skill = skills.find(item => item.id === button.dataset.skillId); if (!skill) return; document.getElementById('component-dialog-title').textContent = skill.name; document.getElementById('component-dialog-description').textContent = skill.description; document.getElementById('component-command').textContent = commandFor(skill); const stylesNote = document.getElementById('component-dialog-styles'); const entry = (skill.styles && typeof skill.styles === 'object') ? skill.styles : null; if (entry && (entry.hasStyles || entry.summary)) { stylesNote.hidden = false; stylesNote.innerHTML = '<strong>' + (document.documentElement.lang === 'en' ? 'OUTPUT STYLE' : '呈现样式') + '</strong>' + escapeHtml([entry.format, entry.summary].filter(Boolean).join(' · ')); } else { stylesNote.hidden = true; } const link = document.getElementById('component-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; componentDialog.showModal(); });
       const copy = async (button, value) => { try { await navigator.clipboard.writeText(value); button.textContent = '已复制 ✓'; } catch { button.textContent = '请手动复制'; } setTimeout(() => { button.textContent = button.dataset.label || '复制命令'; }, 1600); };
       document.getElementById('copy-workflow-command').addEventListener('click', event => copy(event.currentTarget, event.currentTarget.dataset.command || ''));
       document.getElementById('copy-component-command').addEventListener('click', event => copy(event.currentTarget, document.getElementById('component-command').textContent));
@@ -3199,7 +3281,7 @@ def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: st
       adaptFileNavigation(); renderComponents();
     })();
     '''
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized_skills}</script><script type="application/json" id="recipe-data">{serialized_recipes}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skill-lab-page"><aside class="skill-lab-sidebar"><a class="lab-brand" href="/"><span class="lab-mark">✦</span><span><strong>FreeLLM</strong><small>SKILL LAB / 2026</small></span></a><div class="lab-side-label">EXPLORE</div><nav class="lab-side-nav" aria-label="Skill Lab 导航"><a href="/skills/" aria-current="page">工作流配方</a><a href="#component-library">组件库</a><a href="/models/">模型目录</a><a href="/logs/">每日更新</a></nav><div class="lab-side-note"><strong>{len(skills)} COMPONENTS</strong><span>组件是积木，配方才是做事的方法。先从结果出发。</span></div></aside><section class="lab-content"><div class="lab-topline"><span>FREE AI INDEX / SKILL LAB</span><div class="lab-topline-actions"><a href="/">返回 FreeLLM 首页 ↗</a><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></div><header class="lab-hero"><div><div class="lab-eyebrow">AGENT SKILLS / WORKFLOW RECIPES</div><h1>让模型<br><span class="accent-text">把事情做完。</span></h1><p class="lead">模型决定上限，Skill 决定执行路径。我们把零散能力编排成 6 套可直接复用的工作流配方，先选你要交付的结果。</p></div><aside class="lab-hero-aside"><span class="aside-label">WORKFLOW RECIPES / 工作流</span><strong>06</strong><p>套经过人工编排的工作流<br>{len(skills)} 个可检索的底层组件<br>每个来源都标记为待核验</p></aside></header><div class="lab-rule"><strong>HOW TO USE / 使用方式</strong><span>选一套配方 → 查看步骤 → 复制安装命令 → 把输入交给 Agent</span></div><section aria-labelledby="workflow-heading"><div class="workflow-section-head"><div><div class="lab-eyebrow">START WITH THE OUTCOME</div><h2 id="workflow-heading">你现在要完成什么？</h2></div><p>首屏只保留 6 个高频结果</p></div><div class="workflow-grid">{"".join(recipe_cards)}</div></section><details id="component-library" class="component-library"><summary><span class="library-summary"><strong>组件库 / Component library</strong><span>不确定从哪开始？搜索 {len(skills)} 个底层 Skill，按用途挑一块积木。</span></span><span class="library-count">{len(skills):03d} COMPONENTS</span></summary><div class="library-body"><div class="library-tools"><label class="sr-only" for="skill-library-search">搜索组件</label><input id="skill-library-search" type="search" placeholder="搜索名称、用途、仓库或框架"><label class="sr-only" for="skill-library-category">按分类筛选</label><select id="skill-library-category"><option value="">全部分类</option>{category_options}</select></div><div id="component-grid" class="component-grid" aria-live="polite"></div><div id="library-empty" class="library-empty" hidden>没有找到匹配的组件。</div></div></details><footer class="lab-footer"><p>提示：组件来自用户提交的 GitHub 清单，均标记为待核验。安装前请打开来源仓库，确认维护状态、权限要求和 Agent 目录结构。</p>{_static_locale_nav()}</footer></section></main><dialog id="workflow-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div id="workflow-dialog-kicker" class="dialog-kicker">WORKFLOW</div><h2 id="workflow-dialog-title"></h2><p id="workflow-dialog-description" class="dialog-intro"></p><div class="dialog-io"><div><span>INPUT / 输入</span><strong id="workflow-input"></strong></div><div><span>OUTPUT / 产出</span><strong id="workflow-output"></strong></div></div><div id="recipe-steps" class="recipe-steps"></div><div class="dialog-actions"><button id="copy-workflow-command" class="primary-action" type="button" data-copy-label="复制整套安装命令">复制整套安装命令</button><span class="muted">命令按步骤顺序排列</span></div></div></dialog><dialog id="component-dialog" class="component-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div class="dialog-kicker">COMPONENT / 组件</div><h2 id="component-dialog-title"></h2><p id="component-dialog-description" class="dialog-intro"></p><div class="command-box"><code id="component-command"></code></div><div class="dialog-actions"><button id="copy-component-command" class="primary-action" type="button" data-copy-label="复制安装命令">复制安装命令</button><a id="component-github" class="component-source-link" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a></div></div></dialog><script>{script}</script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized_skills}</script><script type="application/json" id="recipe-data">{serialized_recipes}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skill-lab-page"><aside class="skill-lab-sidebar"><a class="lab-brand" href="/"><span class="lab-mark">✦</span><span><strong>FreeLLM</strong><small>SKILL LAB / 2026</small></span></a><div class="lab-side-label">EXPLORE</div><nav class="lab-side-nav" aria-label="Skill Lab 导航"><a href="/skills/" aria-current="page">工作流配方</a><a href="#component-library">组件库</a><a href="/models/">模型目录</a><a href="/logs/">每日更新</a></nav><div class="lab-side-note"><strong>{len(skills)} COMPONENTS</strong><span>组件是积木，配方才是做事的方法。先从结果出发。</span></div></aside><section class="lab-content"><div class="lab-topline"><span>FREE AI INDEX / SKILL LAB</span><div class="lab-topline-actions"><a href="/">返回 FreeLLM 首页 ↗</a><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></div><header class="lab-hero"><div><div class="lab-eyebrow">AGENT SKILLS / WORKFLOW RECIPES</div><h1>让模型<br><span class="accent-text">把事情做完。</span></h1><p class="lead">模型决定上限，Skill 决定执行路径。我们把零散能力编排成 6 套可直接复用的工作流配方，先选你要交付的结果。</p></div><aside class="lab-hero-aside"><span class="aside-label">WORKFLOW RECIPES / 工作流</span><strong>06</strong><p>套经过人工编排的工作流<br>{len(skills)} 个可检索的底层组件<br>每个条目都核验过 SKILL.md 原文</p></aside></header><div class="lab-rule"><strong>HOW TO USE / 使用方式</strong><span>选一套配方 → 查看步骤 → 复制安装命令 → 把输入交给 Agent</span></div><section aria-labelledby="workflow-heading"><div class="workflow-section-head"><div><div class="lab-eyebrow">START WITH THE OUTCOME</div><h2 id="workflow-heading">你现在要完成什么？</h2></div><p>首屏只保留 6 个高频结果</p></div><div class="workflow-grid">{"".join(recipe_cards)}</div></section><details id="component-library" class="component-library"><summary><span class="library-summary"><strong>组件库 / Component library</strong><span>不确定从哪开始？搜索 {len(skills)} 个底层 Skill，按用途挑一块积木。</span></span><span class="library-count">{len(skills):03d} COMPONENTS</span></summary><div class="library-body"><div class="library-tools"><label class="sr-only" for="skill-library-search">搜索组件</label><input id="skill-library-search" type="search" placeholder="搜索名称、用途、仓库或框架"><label class="sr-only" for="skill-library-category">按分类筛选</label><select id="skill-library-category"><option value="">全部分类</option>{category_options}</select></div><div id="component-grid" class="component-grid" aria-live="polite"></div><div id="library-empty" class="library-empty" hidden>没有找到匹配的组件。</div></div></details><footer class="lab-footer"><p>提示：组件均来自已核验的 GitHub 仓库，页面内可直接查看 SKILL.md 原文。安装前请确认目标 Agent 的 skills 目录结构和权限要求。</p>{_static_locale_nav()}</footer></section></main><dialog id="workflow-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div id="workflow-dialog-kicker" class="dialog-kicker">WORKFLOW</div><h2 id="workflow-dialog-title"></h2><p id="workflow-dialog-description" class="dialog-intro"></p><div class="dialog-io"><div><span>INPUT / 输入</span><strong id="workflow-input"></strong></div><div><span>OUTPUT / 产出</span><strong id="workflow-output"></strong></div></div><div id="recipe-steps" class="recipe-steps"></div><div class="dialog-actions"><button id="copy-workflow-command" class="primary-action" type="button" data-copy-label="复制整套安装命令">复制整套安装命令</button><span class="muted">命令按步骤顺序排列</span></div></div></dialog><dialog id="component-dialog" class="component-dialog"><div class="workflow-dialog-body"><button class="dialog-close" type="button" data-dialog-close aria-label="关闭">×</button><div class="dialog-kicker">COMPONENT / 组件</div><h2 id="component-dialog-title"></h2><p id="component-dialog-description" class="dialog-intro"></p><p id="component-dialog-styles" class="component-dialog-styles" hidden></p><div class="command-box"><code id="component-command"></code></div><div class="dialog-actions"><button id="copy-component-command" class="primary-action" type="button" data-copy-label="复制安装命令">复制安装命令</button><a id="component-github" class="component-source-link" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a></div></div></dialog><script>{script}</script></body></html>'''
 
 
 def render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str) -> str:
@@ -3249,7 +3331,33 @@ def render_sitemap(
 '''
 
 
-def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None, skills: list[dict] | None = None, recipes: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
+def _skill_content_files(skills: list[dict], data_dir: Path | None) -> dict[Path, str]:
+    """Serve every collected SKILL.md as a lazily fetched JSON document under /skills/content/."""
+    base_dir = Path(data_dir) if data_dir else Path("data")
+    files: dict[Path, str] = {}
+    for skill in skills:
+        relative = str(skill.get("contentPath") or "").strip()
+        if not relative:
+            continue
+        md_path = Path(relative) if Path(relative).is_absolute() else base_dir / relative
+        if not md_path.is_file():
+            raise SystemExit(f"skill content file missing: {md_path}")
+        text = md_path.read_text(encoding="utf-8")
+        files[Path("skills") / "content" / f"{skill['id']}.json"] = json.dumps(
+            {
+                "id": skill.get("id"),
+                "githubUrl": skill.get("githubUrl"),
+                "contentUrl": skill.get("contentUrl"),
+                "fetchedAt": skill.get("contentFetchedAt"),
+                "bytes": len(text.encode("utf-8")),
+                "content": text,
+            },
+            ensure_ascii=False,
+        )
+    return files
+
+
+def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None, skills: list[dict] | None = None, recipes: list[dict] | None = None, data_dir: Path | None = None) -> tuple[dict[Path, str], list[str]]:
     categories = [
         category
         for category in CATEGORY_DEFINITIONS
@@ -3271,6 +3379,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
     }
+    files.update(_skill_content_files(skills or [], data_dir))
     if models:
         total_pages = (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
         for page_num in range(2, total_pages + 1):
@@ -3341,6 +3450,26 @@ def validate_skills(source: str | Path | list[dict]) -> list[str]:
         github_url = str(item.get("githubUrl") or "")
         if github_url and not github_url.startswith("https://github.com/"):
             errors.append(f"{prefix}.githubUrl must use https://github.com/")
+        link_check = item.get("linkCheck")
+        if link_check is not None and link_check not in SKILL_LINK_CHECK_VALUES:
+            errors.append(f"{prefix}.linkCheck is unknown: {link_check!r}")
+        content_path = item.get("contentPath")
+        if content_path is not None:
+            if not isinstance(content_path, str) or not content_path or content_path.startswith("/") or ".." in content_path:
+                errors.append(f"{prefix}.contentPath must be a relative path inside the data directory")
+        reviews = item.get("reviews")
+        if reviews is not None:
+            if not isinstance(reviews, list) or len(reviews) > 6:
+                errors.append(f"{prefix}.reviews must be an array of at most 6 items")
+            else:
+                for review_index, review in enumerate(reviews):
+                    review_prefix = f"{prefix}.reviews[{review_index}]"
+                    if not isinstance(review, dict) or not {"source", "url", "quote"} <= review.keys():
+                        errors.append(f"{review_prefix} must be an object with source/url/quote")
+                    elif not str(review.get("url") or "").startswith(("https://", "http://")):
+                        errors.append(f"{review_prefix}.url must be an absolute http(s) URL")
+                    elif not str(review.get("quote") or "").strip():
+                        errors.append(f"{review_prefix}.quote must not be empty")
     return errors
 
 
@@ -3388,6 +3517,54 @@ def validate_skill_recipes(source: str | Path | list[dict], skills: list[dict]) 
     return errors
 
 
+SKILL_STYLE_REQUIRED_FIELDS = ("format", "summary")
+SKILL_STYLE_MAX_ITEMS = 30
+
+
+def validate_skill_styles(source: str | Path | dict, skills: list[dict]) -> list[str]:
+    """Validate the curated presentation-style overlay for the skill catalog."""
+    if isinstance(source, (str, Path)):
+        path = Path(source)
+        if not path.is_file():
+            return [f"skill styles file does not exist: {path}"]
+        try:
+            source = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            return [f"skill styles file cannot be read: {error}"]
+    if not isinstance(source, dict) or not isinstance(source.get("entries"), dict):
+        return ["skill styles data must be an object with an 'entries' mapping"]
+
+    errors: list[str] = []
+    entries = source["entries"]
+    skill_ids = {str(item.get("id") or "").strip() for item in skills if isinstance(item, dict)}
+    for skill_id, entry in entries.items():
+        prefix = f"skillStyles[{skill_id}]"
+        if skill_id not in skill_ids:
+            errors.append(f"{prefix} references unknown skill id")
+            continue
+        if not isinstance(entry, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        for field in SKILL_STYLE_REQUIRED_FIELDS:
+            if not str(entry.get(field) or "").strip():
+                errors.append(f"{prefix}.{field} must not be empty")
+        if not isinstance(entry.get("hasStyles"), bool):
+            errors.append(f"{prefix}.hasStyles must be a boolean")
+        items = entry.get("items")
+        if items is not None:
+            if not isinstance(items, list) or not all(isinstance(item, str) and item.strip() for item in items):
+                errors.append(f"{prefix}.items must be a list of non-empty strings")
+            elif len(items) > SKILL_STYLE_MAX_ITEMS:
+                errors.append(f"{prefix}.items must contain at most {SKILL_STYLE_MAX_ITEMS} entries")
+        total = entry.get("total")
+        if total is not None and (isinstance(total, bool) or not isinstance(total, int) or total < 1):
+            errors.append(f"{prefix}.total must be a positive integer")
+    missing = sorted(skill_ids - set(entries))
+    if missing:
+        errors.append("skill styles must cover every catalog entry; missing: " + ", ".join(missing))
+    return errors
+
+
 def _load_skills(data_path: Path) -> list[dict]:
     skills_path = data_path.parent / "skills.json"
     if not skills_path.is_file():
@@ -3396,6 +3573,23 @@ def _load_skills(data_path: Path) -> list[dict]:
     if errors:
         raise SystemExit("Invalid skills data:\n" + "\n".join(errors))
     return json.loads(skills_path.read_text(encoding="utf-8"))
+
+
+def _load_skill_styles(data_path: Path, skills: list[dict]) -> dict[str, dict]:
+    styles_path = data_path.parent / "skill-styles.json"
+    if not styles_path.is_file():
+        return {}
+    errors = validate_skill_styles(styles_path, skills)
+    if errors:
+        raise SystemExit("Invalid skill styles data:\n" + "\n".join(errors))
+    return json.loads(styles_path.read_text(encoding="utf-8")).get("entries") or {}
+
+
+def _merge_skill_styles(skills: list[dict], styles: dict[str, dict]) -> list[dict]:
+    """Attach each skill's presentation-style entry so cards, dialogs and search can use it."""
+    if not styles:
+        return skills
+    return [{**skill, "styles": styles[skill["id"]]} if skill.get("id") in styles else skill for skill in skills]
 
 
 def _load_skill_recipes(data_path: Path, skills: list[dict]) -> list[dict]:
@@ -3513,13 +3707,17 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
     skills = _load_skills(data_path)
+    skills = _merge_skill_styles(skills, _load_skill_styles(data_path, skills))
     recipes = _load_skill_recipes(data_path, skills)
     daily_logs = _load_daily_logs(data_path)
-    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes)
-    files = {relative: _append_legal_links(content) for relative, content in files.items()}
+    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent)
+    files = {
+        relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
+        for relative, content in files.items()
+    }
     sync_tag = '<script src="/js/freellm-sync.js"></script>'
     files = {
-        relative: (content if ("freellm-sync.js" in content or "</body>" not in content)
+        relative: (content if (relative.suffix != ".html" or "freellm-sync.js" in content or "</body>" not in content)
                    else content.replace("</body>", sync_tag + "</body>", 1))
         for relative, content in files.items()
     }
@@ -3543,7 +3741,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         path.write_text(content, encoding="utf-8")
     manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}]}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=len(files))
+    # page_count counts published pages (HTML + sitemap.xml); data files such as
+    # skills/content/*.json are written and checked but are not pages.
+    page_count = sum(1 for path in files if path.suffix in {".html", ".xml"})
+    result = BuildResult(offer_count=len(offers), category_count=len(categories), page_count=page_count)
     print(f"built SEO output: {result.offer_count} offers, {result.category_count} categories, {result.page_count} files")
     return result
 

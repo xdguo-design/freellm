@@ -532,11 +532,11 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.top-nav').is_visible())
-        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/"):
+        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/", "/skills/", "/tools/"):
             self.assertGreater(page.locator(f'.top-nav a[href="{href}"]').count(), 0)
         self.assertEqual(
             page.locator('.top-nav a').evaluate_all("links => links.map(link => link.dataset.navKey)"),
-            ["daily-log", "resources", "model-center", "all-models", "providers"],
+            ["daily-log", "resources", "model-center", "all-models", "providers", "skills", "tools"],
         )
 
     def test_file_protocol_search_filter_and_drawer(self):

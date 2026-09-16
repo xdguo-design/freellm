@@ -1183,9 +1183,16 @@
   .model-center-all-models-panel .model-directory h2 { margin: 0 0 6px; font-family: var(--font-serif); font-weight: 400; font-size: clamp(23px, 3.5vw, 30px); letter-spacing: -.015em; }
   .model-center-all-models-panel .model-directory h2 small { color: var(--ink-secondary); font-size: 15px; font-weight: 400; }
   .model-center-all-models-panel .section-desc { margin: 0 0 14px; color: var(--ink-secondary); font-size: 14px; }
-  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
-  .model-center-all-models-panel .catalog-toolbar label { color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }
-  .model-center-all-models-panel .catalog-search-label, .model-center-all-models-panel .catalog-provider-label, .model-center-all-models-panel .catalog-region-label { display: grid; gap: 5px; }
+  .model-center-all-models-panel .catalog-toolbar { display: grid; grid-template-columns: max-content minmax(180px, 1.6fr) max-content minmax(140px, 1fr) max-content minmax(130px, .9fr); gap: 10px 12px; align-items: center; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); grid-template-areas: "s-label s-input p-label p-select r-label r-select" "modes modes modes modes modes count"; }
+  .model-center-all-models-panel .catalog-toolbar label { color: var(--ink-secondary); font: 500 11px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+  .model-center-all-models-panel .catalog-search-label { grid-area: s-label; }
+  .model-center-all-models-panel #model-catalog-search { grid-area: s-input; }
+  .model-center-all-models-panel .catalog-provider-label { grid-area: p-label; }
+  .model-center-all-models-panel #model-catalog-provider { grid-area: p-select; }
+  .model-center-all-models-panel .catalog-region-label { grid-area: r-label; }
+  .model-center-all-models-panel #model-catalog-region { grid-area: r-select; }
+  .model-center-all-models-panel .catalog-modes { grid-area: modes; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .model-center-all-models-panel .catalog-count { grid-area: count; align-self: center; justify-self: end; color: var(--ink-tertiary); font: 500 11px var(--font-mono); letter-spacing: .05em; white-space: nowrap; }
   .model-center-all-models-panel .catalog-toolbar input, .model-center-all-models-panel .catalog-toolbar select { min-height: 38px; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; color: var(--ink); background: var(--surface); font: inherit; }
   .model-center-all-models-panel .catalog-modes { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
   .model-center-all-models-panel .group-mode { border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; color: var(--accent); background: transparent; cursor: pointer; font: inherit; font-size: 12px; white-space: nowrap; }
@@ -1216,8 +1223,8 @@
   .model-center-all-models-panel .source-cell { min-width: 100px; white-space: nowrap; }
   .model-center-all-models-panel .freshness { color: var(--ink-secondary); }
   .model-center-all-models-panel .freshness-stale { color: var(--pale-red-text); }
-  @media (max-width: 820px) { .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr 1fr; } .model-center-all-models-panel .catalog-modes { grid-column: 1 / -1; } .model-center-all-models-panel .catalog-count { justify-self: start; } }
-  @media (max-width: 620px) { .model-center-tabs { justify-content: stretch; } .model-center-tab { flex: 1; padding: 8px 10px; } .model-center-all-models-panel { padding: 14px 8px 38px; } .model-center-all-models-panel .model-directory { border-radius: 8px; padding: 18px; } .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr; } .model-center-all-models-panel .catalog-modes { grid-column: auto; } }
+  @media (max-width: 820px) { .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr 1fr; grid-template-areas: "s-label s-input" "p-label p-select" "r-label r-select" "modes modes" "count count"; } .model-center-all-models-panel .catalog-count { justify-self: start; } }
+  @media (max-width: 620px) { .model-center-tabs { justify-content: stretch; } .model-center-tab { flex: 1; padding: 8px 10px; } .model-center-all-models-panel { padding: 14px 8px 38px; } .model-center-all-models-panel .model-directory { border-radius: 8px; padding: 18px; } .model-center-all-models-panel .catalog-toolbar { grid-template-columns: 1fr; grid-template-areas: "s-label" "s-input" "p-label" "p-select" "r-label" "r-select" "modes" "count"; } }
 </style>
 </head>
 <body class="model-center-page" data-model-center-tab="featured">
@@ -1233,7 +1240,7 @@
     <main id="catalog-top">
       <header class="catalog-header">
         <a class="brand" href="/"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">FreeLLM</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">每日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="#all-models">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a><a data-nav-key="skills" href="/skills/">Skills</a></nav>
+        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">每日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="#all-models">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a><a data-nav-key="skills" href="/skills/">Skills</a><a data-nav-key="tools" href="/tools/">在线工具</a></nav>
         <div class="header-actions"><a class="header-submit" href="#catalog-offers">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
@@ -6134,12 +6141,12 @@
     (() => {
       const copy = {
         en: {
-          'daily-log': 'Daily updates', catalog: 'Models', resources: 'Resource directory', 'model-center': 'Model center', 'all-models': 'All models', providers: 'Providers', tools: 'Developer tools', api: 'API services', rank: 'Compare', guide: 'Guide',
+          'daily-log': 'Daily updates', catalog: 'Models', resources: 'Resource directory', 'model-center': 'Model center', 'all-models': 'All models', providers: 'Providers', tools: 'Online tools', api: 'API services', rank: 'Compare', guide: 'Guide',
           freeQuota: 'Free quota', ide: 'Free IDE', apiServices: 'API services', promo: 'Timed / regional deal', studentDiscount: 'Student offer', web: 'Web tools', openWeight: 'Open weights',
           guideOpenAiAlternatives: 'OpenAI API alternatives', guideClaudeAlternatives: 'Claude Code alternatives', guideOpenAiCompatible: 'OpenAI-compatible APIs', guideCodingTools: 'Free AI coding tools', guideSearchApis: 'Free AI search APIs', guideOpenWeights: 'Open-weight models', guideContextWindows: 'Model context windows', guideChinaApi: 'Free AI APIs in China', resourceDirectory: 'Resource directory', allModelsNav: 'All models', providersDirectory: 'Browse by provider'
         },
         zh: {
-          'daily-log': '每日更新', catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '开发工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
+          'daily-log': '每日更新', catalog: '模型库', resources: '资源目录', 'model-center': '模型中心', 'all-models': '全部模型', providers: '按厂家', tools: '在线工具', api: 'API 服务', rank: '榜单', guide: '使用指南',
           freeQuota: '免费额度', ide: '免费 AI IDE', apiServices: 'AI API 服务', promo: '试用与优惠', studentDiscount: '学生优惠', web: '网页工具', openWeight: '开源权重',
           guideOpenAiAlternatives: 'OpenAI API 替代品', guideClaudeAlternatives: 'Claude Code 替代品', guideOpenAiCompatible: '免费 OpenAI 兼容 API', guideCodingTools: '免费 AI 编程工具', guideSearchApis: '免费 AI 搜索 API', guideOpenWeights: '开源权重模型', guideContextWindows: '模型上下文窗口', guideChinaApi: '国内免费 AI API', resourceDirectory: '资源目录', allModelsNav: '全部模型', providersDirectory: '按厂家浏览'
         }
