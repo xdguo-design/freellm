@@ -461,3 +461,173 @@ app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
 app.appendChild(T.row([dir, T.btnCopy(function () { return output.value; })]));
 run();
 ''')
+
+d('mixed-encode', '混合编码', '自由组合多条编码/加密规则按顺序叠加处理，解密自动逆序还原', js=r'''
+var RULES = [
+  { id: 'base64', name: 'Base64',
+    enc: function (s) { return T.bytesToB64(T.textToBytes(s)); },
+    dec: function (s) { var t = s.replace(/\s/g, ''); while (t.length % 4) t += '='; return T.bytesToText(T.b64ToBytes(t)); } },
+  { id: 'base64url', name: 'Base64（URL-Safe）',
+    enc: function (s) { return T.bytesToB64(T.textToBytes(s)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
+    dec: function (s) { var t = s.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, ''); while (t.length % 4) t += '='; return T.bytesToText(T.b64ToBytes(t)); } },
+  { id: 'base32', name: 'Base32',
+    enc: function (s) { return LC.b32encode(T.textToBytes(s)); },
+    dec: function (s) { return T.bytesToText(LC.b32decode(s)); } },
+  { id: 'base58', name: 'Base58',
+    enc: function (s) { return LC.b58encode(T.textToBytes(s)); },
+    dec: function (s) { return T.bytesToText(LC.b58decode(s)); } },
+  { id: 'base85', name: 'Base85（Ascii85）',
+    enc: function (s) { return LC.b85encode(T.textToBytes(s)); },
+    dec: function (s) { return T.bytesToText(LC.b85decode(s)); } },
+  { id: 'hex', name: 'Hex 十六进制',
+    enc: function (s) { return T.bytesToHex(T.textToBytes(s)); },
+    dec: function (s) { return T.bytesToText(T.hexToBytes(s)); } },
+  { id: 'binary', name: 'Binary 二进制',
+    enc: function (s) { var b = T.textToBytes(s), o = []; for (var i = 0; i < b.length; i++) o.push(b[i].toString(2).padStart(8, '0')); return o.join(' '); },
+    dec: function (s) { var t = s.replace(/[^01]/g, ''); if (!t.length || t.length % 8) throw new Error('二进制位数为空或不是 8 的倍数'); var b = new Uint8Array(t.length / 8); for (var i = 0; i < b.length; i++) b[i] = parseInt(t.substr(i * 8, 8), 2); return T.bytesToText(b); } },
+  { id: 'url', name: 'URL 编码',
+    enc: function (s) { return encodeURIComponent(s); },
+    dec: function (s) { return decodeURIComponent(s.replace(/%(?![0-9a-fA-F]{2})/g, '%25')); } },
+  { id: 'html', name: 'HTML 实体',
+    enc: function (s) { return s.replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); },
+    dec: function (s) { var el = T.el('textarea', { style: 'display:none' }); el.innerHTML = s; var v = el.value; el.remove(); return v; } },
+  { id: 'unicode', name: 'Unicode 转义（\\uXXXX）',
+    enc: function (s) { return Array.from(s).map(function (ch) {
+      var cp = ch.codePointAt(0);
+      if (cp < 128) return ch;
+      if (cp > 0xFFFF) return Array.from(ch).map(function (x) { return '\\u' + x.charCodeAt(0).toString(16).padStart(4, '0'); }).join('');
+      return '\\u' + cp.toString(16).padStart(4, '0');
+    }).join(''); },
+    dec: function (s) { return s
+      .replace(/\\u\{([0-9a-fA-F]+)\}/g, function (m, h) { return String.fromCodePoint(parseInt(h, 16)); })
+      .replace(/\\u([0-9a-fA-F]{4})/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); }); } },
+  { id: 'rot13', name: 'ROT13',
+    enc: function (s) { return rotN(s, 13); }, dec: function (s) { return rotN(s, 13); } },
+  { id: 'rot47', name: 'ROT47',
+    enc: function (s) { return rotX(s); }, dec: function (s) { return rotX(s); } },
+  { id: 'caesar', name: '凯撒移位', params: [{ key: 'shift', label: '移位', def: 3, min: 1, max: 25 }],
+    enc: function (s, p) { return rotN(s, p.shift); },
+    dec: function (s, p) { return rotN(s, -(p.shift % 26)); } },
+  { id: 'reverse', name: '文本倒序',
+    enc: function (s) { return Array.from(s).reverse().join(''); },
+    dec: function (s) { return Array.from(s).reverse().join(''); } }
+];
+function rotN(s, k) {
+  k = ((k % 26) + 26) % 26;
+  return s.replace(/[a-zA-Z]/g, function (c) {
+    var base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + k) % 26 + base);
+  });
+}
+function rotX(s) {
+  return s.replace(/[!-~]/g, function (c) {
+    return String.fromCharCode(33 + (c.charCodeAt(0) - 33 + 47) % 94);
+  });
+}
+function ruleById(id) {
+  for (var i = 0; i < RULES.length; i++) if (RULES[i].id === id) return RULES[i];
+  return RULES[0];
+}
+function newStep(rid) {
+  var st = { rid: rid, params: {} };
+  (ruleById(rid).params || []).forEach(function (p) { st.params[p.key] = p.def; });
+  return st;
+}
+var input = T.textarea('输入明文…');
+var output = T.out('输出…');
+var dirSel = T.select([{ value: 'enc', label: '加密（按顺序执行）' }, { value: 'dec', label: '解密（按逆序还原）' }], 'enc');
+var info = T.badge('—');
+var listEl = T.el('div');
+var logBox = T.el('div', { class: 'output dark', style: 'white-space:pre-wrap;min-height:64px;max-height:300px;overflow:auto' });
+var steps = [newStep('base64')];
+function trunc(s) {
+  s = String(s).replace(/\n/g, '\\n');
+  return s.length > 110 ? s.slice(0, 110) + '…' : s;
+}
+function renderSteps() {
+  T.clearEl(listEl);
+  if (!steps.length) {
+    var empty = T.msg('尚未添加规则：点击下方「+ 添加规则」组合你的编码链', '');
+    empty.style.cssText = 'border:1px dashed var(--line);padding:18px;text-align:center';
+    listEl.appendChild(empty);
+    return;
+  }
+  steps.forEach(function (st, i) {
+    var rule = ruleById(st.rid);
+    var sel = T.select(RULES.map(function (r) { return { value: r.id, label: r.name }; }), st.rid);
+    sel.addEventListener('change', function () {
+      st.rid = sel.value; st.params = {};
+      (ruleById(st.rid).params || []).forEach(function (p) { st.params[p.key] = p.def; });
+      renderSteps(); run();
+    });
+    var kids = [T.badge(String(i + 1)), sel];
+    (rule.params || []).forEach(function (p) {
+      var inp = T.num(st.params[p.key], { min: p.min, max: p.max, style: 'width:70px' });
+      inp.addEventListener('input', function () {
+        st.params[p.key] = Math.min(p.max, Math.max(p.min, +inp.value || 0));
+        run();
+      });
+      kids.push(T.el('span', { text: p.label }), inp);
+    });
+    kids.push(T.button('↑', function () {
+      if (i > 0) { var t = steps[i - 1]; steps[i - 1] = steps[i]; steps[i] = t; renderSteps(); run(); }
+    }));
+    kids.push(T.button('↓', function () {
+      if (i < steps.length - 1) { var t = steps[i + 1]; steps[i + 1] = steps[i]; steps[i] = t; renderSteps(); run(); }
+    }));
+    kids.push(T.button('✕', function () { steps.splice(i, 1); renderSteps(); run(); }));
+    listEl.appendChild(T.row(kids));
+  });
+}
+function renderLog(log, dir, errMsg) {
+  var out = [dir === 'enc' ? '加密：按链路顺序依次通过每条规则' : '解密：从最后一条规则开始逆序还原'];
+  log.forEach(function (l) { out.push(l.n + '. ' + l.name + ' → ' + trunc(l.out)); });
+  if (errMsg) out.push('⚠ ' + errMsg);
+  logBox.textContent = out.join('\n');
+}
+function run() {
+  var v = input.value;
+  var dir = dirSel.value;
+  input.placeholder = dir === 'enc' ? '输入明文…' : '输入密文/编码串…';
+  if (!v) { output.value = ''; info.textContent = '—'; renderLog([], dir, ''); return; }
+  var seq = steps.map(function (st, i) { return { rule: ruleById(st.rid), params: st.params || {}, n: i + 1 }; });
+  if (dir === 'dec') seq.reverse();
+  var log = [];
+  try {
+    for (var i = 0; i < seq.length; i++) {
+      var it = seq[i];
+      try { v = (dir === 'enc' ? it.rule.enc : it.rule.dec)(v, it.params); }
+      catch (e) { throw new Error('第 ' + it.n + ' 步「' + it.rule.name + '」失败：' + e.message); }
+      log.push({ n: it.n, name: it.rule.name, out: v });
+    }
+    output.value = v;
+    info.textContent = v.length + ' 字符 · ' + seq.length + ' 条规则 · ' + (dir === 'enc' ? '加密' : '解密');
+    renderLog(log, dir, '');
+  } catch (e) {
+    output.value = '';
+    info.textContent = '出错';
+    renderLog(log, dir, e.message);
+  }
+}
+input.addEventListener('input', T.debounce(run, 200));
+dirSel.addEventListener('change', run);
+app.appendChild(T.pane([T.field('输入', input), T.field('输出', output)]));
+app.appendChild(T.el('span', { text: '编码规则链（自上而下依次执行，解密时自动逆序）', class: 'field' }));
+app.appendChild(listEl);
+app.appendChild(T.row([
+  T.button('+ 添加规则', function () { steps.push(newStep('base64')); renderSteps(); run(); }, true),
+  T.button('加载示例（Base64 → ROT13 → URL）', function () {
+    input.value = '你好，FreeLLM 2026!';
+    steps = [newStep('base64'), newStep('rot13'), newStep('url')];
+    renderSteps(); run();
+  }),
+  T.el('span', { text: '方向' }), dirSel,
+  T.button('结果回填为输入', function () { input.value = output.value; run(); }),
+  info,
+  T.btnCopy(function () { return output.value; })
+]));
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.el('span', { text: '分步过程（查看中间结果 / 排查哪一步出错）', class: 'field' }));
+app.appendChild(logBox);
+renderSteps(); run();
+''')

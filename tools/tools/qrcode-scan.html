@@ -14,17 +14,31 @@
 <script src="/tools/js/lib-crypto.js"></script>
 <script src="/tools/js/lib-format.js"></script>
 <script src="/tools/js/lib-utils.js"></script>
-<script src="/tools/js/vendor/jsQR.js"></script>
+
 <script src="/js/freellm-sync.js"></script>
 <script>
 (function () {
 'use strict';
 var T = ToolCommon, LC = window.LC, LF = window.LibFormat, LU = window.LibU;
-var app = T.head('二维码扫描', '摄像头实时扫描或上传图片识别二维码内容（jsQR）', 'qrcode-scan');
+var app = T.head('二维码扫描', '摄像头实时扫描或上传图片识别二维码内容（jsQR 按需加载不拖慢打开）', 'qrcode-scan');
+var jsqrReady = null;
+function ensureJsQR() {
+  if (window.jsQR) return Promise.resolve();
+  if (!jsqrReady) {
+    jsqrReady = new Promise(function (resolve, reject) {
+      status.textContent = '正在加载识别引擎…';
+      var s = T.el('script', { src: '/tools/js/vendor/jsQR.js' });
+      s.onload = function () { resolve(); };
+      s.onerror = function () { jsqrReady = null; reject(new Error('识别引擎加载失败，请刷新重试')); };
+      document.head.appendChild(s);
+    });
+  }
+  return jsqrReady;
+}
 var video = T.el('video', { playsinline: '', muted: '', style: 'width:100%;max-width:360px;border-radius:8px;border:1px solid var(--line);background:#000' });
 var canvas = T.el('canvas', { style: 'display:none' });
 var result = T.out('扫描结果…');
-var status = T.badge('未启动');
+var status = T.badge('未启动（点按钮时加载引擎）');
 var stream = null, raf = 0;
 function tick() {
   if (!stream) return;
@@ -45,30 +59,34 @@ function tick() {
 }
 app.appendChild(T.row([
   T.button('开启摄像头扫码', function () {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function (s) {
+    ensureJsQR().then(function () {
+      return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    }).then(function (s) {
       stream = s;
       video.srcObject = s;
       video.play();
       status.textContent = '扫码中…';
       tick();
-    }).catch(function (e) { T.toast('无法访问摄像头：' + e.message); });
+    }).catch(function (e) { T.toast((String(e.message).indexOf('引擎') >= 0 ? '' : '无法访问摄像头：') + e.message); });
   }, true),
   T.button('停止', function () {
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; cancelAnimationFrame(raf); status.textContent = '已停止'; }
   }),
   T.filePick('上传图片识别', 'image/*', function (dataURL) {
-    var img = new Image();
-    img.onload = function () {
-      var c = T.el('canvas');
-      c.width = img.width; c.height = img.height;
-      var ctx = c.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      var d = ctx.getImageData(0, 0, c.width, c.height);
-      var code = jsQR(d.data, d.width, d.height);
-      if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }
-      else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }
-    };
-    img.src = dataURL;
+    ensureJsQR().then(function () {
+      var img = new Image();
+      img.onload = function () {
+        var c = T.el('canvas');
+        c.width = img.width; c.height = img.height;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        var d = ctx.getImageData(0, 0, c.width, c.height);
+        var code = jsQR(d.data, d.width, d.height);
+        if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }
+        else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }
+      };
+      img.src = dataURL;
+    }).catch(function (e) { T.toast(e.message); });
   })
 ]));
 app.appendChild(T.el('div', { class: 'row' }, [video, status]));
@@ -78,7 +96,7 @@ app.appendChild(T.row([T.btnCopy(function () { return result.value; }),
 app.appendChild(canvas);
 })();
 </script>
-<script type="application/json" id="tool-source">{"id": "qrcode-scan", "title": "二维码扫描", "desc": "摄像头实时扫描或上传图片识别二维码内容（jsQR）", "scripts": "\u003cscript src=\"/tools/js/vendor/jsQR.js\">\u003c/script>", "code": "var video = T.el('video', { playsinline: '', muted: '', style: 'width:100%;max-width:360px;border-radius:8px;border:1px solid var(--line);background:#000' });\nvar canvas = T.el('canvas', { style: 'display:none' });\nvar result = T.out('扫描结果…');\nvar status = T.badge('未启动');\nvar stream = null, raf = 0;\nfunction tick() {\n  if (!stream) return;\n  if (video.readyState === video.HAVE_ENOUGH_DATA) {\n    canvas.width = video.videoWidth;\n    canvas.height = video.videoHeight;\n    var ctx = canvas.getContext('2d');\n    ctx.drawImage(video, 0, 0);\n    var img = ctx.getImageData(0, 0, canvas.width, canvas.height);\n    var code = jsQR(img.data, img.width, img.height);\n    if (code && code.data) {\n      result.value = code.data;\n      status.textContent = '✓ 已识别';\n      status.className = 'badge ok';\n    }\n  }\n  raf = requestAnimationFrame(tick);\n}\napp.appendChild(T.row([\n  T.button('开启摄像头扫码', function () {\n    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function (s) {\n      stream = s;\n      video.srcObject = s;\n      video.play();\n      status.textContent = '扫码中…';\n      tick();\n    }).catch(function (e) { T.toast('无法访问摄像头：' + e.message); });\n  }, true),\n  T.button('停止', function () {\n    if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; cancelAnimationFrame(raf); status.textContent = '已停止'; }\n  }),\n  T.filePick('上传图片识别', 'image/*', function (dataURL) {\n    var img = new Image();\n    img.onload = function () {\n      var c = T.el('canvas');\n      c.width = img.width; c.height = img.height;\n      var ctx = c.getContext('2d');\n      ctx.drawImage(img, 0, 0);\n      var d = ctx.getImageData(0, 0, c.width, c.height);\n      var code = jsQR(d.data, d.width, d.height);\n      if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }\n      else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }\n    };\n    img.src = dataURL;\n  })\n]));\napp.appendChild(T.el('div', { class: 'row' }, [video, status]));\napp.appendChild(T.pane([T.field('识别结果', result)], true));\napp.appendChild(T.row([T.btnCopy(function () { return result.value; }),\n  T.button('打开链接', function () { if (/^https?:/.test(result.value)) window.open(result.value); })]));\napp.appendChild(canvas);"}</script>
+<script type="application/json" id="tool-source">{"id": "qrcode-scan", "title": "二维码扫描", "desc": "摄像头实时扫描或上传图片识别二维码内容（jsQR 按需加载不拖慢打开）", "scripts": "", "code": "var jsqrReady = null;\nfunction ensureJsQR() {\n  if (window.jsQR) return Promise.resolve();\n  if (!jsqrReady) {\n    jsqrReady = new Promise(function (resolve, reject) {\n      status.textContent = '正在加载识别引擎…';\n      var s = T.el('script', { src: '/tools/js/vendor/jsQR.js' });\n      s.onload = function () { resolve(); };\n      s.onerror = function () { jsqrReady = null; reject(new Error('识别引擎加载失败，请刷新重试')); };\n      document.head.appendChild(s);\n    });\n  }\n  return jsqrReady;\n}\nvar video = T.el('video', { playsinline: '', muted: '', style: 'width:100%;max-width:360px;border-radius:8px;border:1px solid var(--line);background:#000' });\nvar canvas = T.el('canvas', { style: 'display:none' });\nvar result = T.out('扫描结果…');\nvar status = T.badge('未启动（点按钮时加载引擎）');\nvar stream = null, raf = 0;\nfunction tick() {\n  if (!stream) return;\n  if (video.readyState === video.HAVE_ENOUGH_DATA) {\n    canvas.width = video.videoWidth;\n    canvas.height = video.videoHeight;\n    var ctx = canvas.getContext('2d');\n    ctx.drawImage(video, 0, 0);\n    var img = ctx.getImageData(0, 0, canvas.width, canvas.height);\n    var code = jsQR(img.data, img.width, img.height);\n    if (code && code.data) {\n      result.value = code.data;\n      status.textContent = '✓ 已识别';\n      status.className = 'badge ok';\n    }\n  }\n  raf = requestAnimationFrame(tick);\n}\napp.appendChild(T.row([\n  T.button('开启摄像头扫码', function () {\n    ensureJsQR().then(function () {\n      return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });\n    }).then(function (s) {\n      stream = s;\n      video.srcObject = s;\n      video.play();\n      status.textContent = '扫码中…';\n      tick();\n    }).catch(function (e) { T.toast((String(e.message).indexOf('引擎') >= 0 ? '' : '无法访问摄像头：') + e.message); });\n  }, true),\n  T.button('停止', function () {\n    if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; cancelAnimationFrame(raf); status.textContent = '已停止'; }\n  }),\n  T.filePick('上传图片识别', 'image/*', function (dataURL) {\n    ensureJsQR().then(function () {\n      var img = new Image();\n      img.onload = function () {\n        var c = T.el('canvas');\n        c.width = img.width; c.height = img.height;\n        var ctx = c.getContext('2d');\n        ctx.drawImage(img, 0, 0);\n        var d = ctx.getImageData(0, 0, c.width, c.height);\n        var code = jsQR(d.data, d.width, d.height);\n        if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }\n        else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }\n      };\n      img.src = dataURL;\n    }).catch(function (e) { T.toast(e.message); });\n  })\n]));\napp.appendChild(T.el('div', { class: 'row' }, [video, status]));\napp.appendChild(T.pane([T.field('识别结果', result)], true));\napp.appendChild(T.row([T.btnCopy(function () { return result.value; }),\n  T.button('打开链接', function () { if (/^https?:/.test(result.value)) window.open(result.value); })]));\napp.appendChild(canvas);"}</script>
 <script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

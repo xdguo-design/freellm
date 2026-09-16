@@ -41,6 +41,7 @@
     { id: 'base32', name: 'Base32 编码', cat: 'encode', desc: 'Base32 编码与解码' },
     { id: 'base58', name: 'Base58 编码', cat: 'encode', desc: 'Base58 编码与解码（Bitcoin 风格）' },
     { id: 'base85', name: 'Base85 编码', cat: 'encode', desc: 'Base85 编码与解码（Ascii85）' },
+    { id: 'mixed-encode', name: '混合编码', cat: 'encode', desc: '自由组合多条编码规则按顺序叠加，解密自动逆序还原' },
 
     // ===== 安全加密 =====
     { id: 'rsa', name: 'RSA 密钥生成', cat: 'crypto', desc: '生成 RSA-2048/4096 公私钥对' },
@@ -225,7 +226,7 @@
     { id: 'html-tags', name: 'HTML 标签速查', cat: 'ref', desc: 'HTML 标签参考表' },
     { id: 'mysql-syntax', name: 'MySQL 语法速查', cat: 'ref', desc: 'MySQL 常用语法参考' },
     { id: 'git-commands', name: 'Git 命令速查', cat: 'ref', desc: 'Git 常用命令参考' },
-    { id: 'docker-commands', name: 'Docker 命令速查', cat: 'ref', desc: 'Docker 常用命令参考' },
+    { id: 'docker-commands', name: 'Docker 命令大全', cat: 'ref', desc: 'Docker 命令 + Dockerfile 指令大全' },
     { id: 'unicode-table', name: 'Unicode 字符表', cat: 'ref', desc: '常用 Unicode 字符速查' },
     { id: 'color-names', name: '颜色名称对照', cat: 'ref', desc: 'CSS 颜色名称与 Hex 对照' },
     { id: 'font-stack', name: '字体栈推荐', cat: 'ref', desc: '常用字体栈组合参考' },

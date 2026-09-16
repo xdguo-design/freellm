@@ -2,31 +2,53 @@
 """开发工具类工具定义"""
 from .registry import d
 
-d('mermaid', 'Mermaid 编辑器', '流程图 / 时序图 / 甘特图在线编辑渲染（本地渲染库）',
-  scripts='<script src="/tools/js/vendor/mermaid.min.js"></script>',
+d('mermaid', 'Mermaid 编辑器', '流程图 / 时序图 / 甘特图在线编辑渲染（本地渲染库，按需加载不拖慢打开）',
   js=r'''
-if (typeof mermaid === 'undefined') { document.getElementById('app').innerHTML = '<div class="msg err">渲染库加载失败，请刷新重试</div>'; return; }
-mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
 var input = T.textarea('graph TD\n  A[开始] --> B{是否免费?}\n  B -- 是 --> C[FreeLLM]\n  B -- 否 --> D[跳过]');
 input.value = 'graph TD\n  A[开始] --> B{是否免费?}\n  B -- 是 --> C[FreeLLM]\n  B -- 否 --> D[跳过]';
 input.style.minHeight = '240px';
 var preview = T.el('div', { class: 'output', style: 'min-height:240px;background:#fff;display:flex;justify-content:center;overflow:auto' });
-var status = T.badge('—');
+var status = T.badge('输入或修改源码后自动加载渲染引擎');
 var serial = 0;
+var engineState = 'idle';
+function loadEngine() {
+  if (engineState === 'ready') return Promise.resolve();
+  if (engineState === 'failed') return Promise.reject(new Error('渲染库加载失败，请刷新重试'));
+  if (engineState === 'idle') {
+    engineState = 'loading';
+    status.textContent = '正在加载渲染引擎…';
+    var s = T.el('script', { src: '/tools/js/vendor/mermaid.min.js' });
+    s.onload = function () {
+      mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+      engineState = 'ready';
+    };
+    s.onerror = function () { engineState = 'failed'; };
+    document.head.appendChild(s);
+  }
+  return new Promise(function (resolve, reject) {
+    (function wait() {
+      if (engineState === 'ready') return resolve();
+      if (engineState === 'failed') return reject(new Error('渲染库加载失败，请刷新重试'));
+      setTimeout(wait, 120);
+    })();
+  });
+}
 function render() {
   var code = input.value;
   if (!code.trim()) { preview.innerHTML = ''; return; }
-  serial++;
-  mermaid.render('mmd' + serial, code).then(function (res) {
+  loadEngine().then(function () {
+    serial++;
+    return mermaid.render('mmd' + serial, code);
+  }).then(function (res) {
     preview.innerHTML = res.svg;
     status.textContent = '✓ 渲染成功';
     status.className = 'badge ok';
-  }).catch(function (e) {
-    status.textContent = '⚠ 语法错误';
+  }).catch(function () {
+    status.textContent = engineState === 'failed' ? '⚠ 渲染库加载失败，请刷新重试' : '⚠ 语法错误';
     status.className = 'badge warn';
   });
 }
-input.addEventListener('input', T.debounce(render, 400));
+input.addEventListener('input', T.debounce(function () { loadEngine(); render(); }, 400));
 app.appendChild(T.pane([T.field('Mermaid 源码', input), T.el('div', { class: 'field' }, [T.el('span', { text: '预览' }), preview])]));
 app.appendChild(T.row([status,
   T.button('下载 SVG', function () {
@@ -35,7 +57,6 @@ app.appendChild(T.row([status,
   }),
   T.button('复制源码', function () { T.copy(input.value); })]));
 app.appendChild(T.el('p', { text: '语法示例：graph TD 流程图 · sequenceDiagram 时序图 · gantt 甘特图 · pie 饼图 · stateDiagram-v2 状态图', style: 'color:var(--ink2);font-size:12px' }));
-render();
 ''')
 
 d('curl-converter', 'Curl 转代码', 'curl 命令转 Python / JS / Go / Java / PHP 代码', js=r'''
@@ -1061,6 +1082,34 @@ app.appendChild(T.row([
   })
 ]));
 run();
+app.appendChild(T.el('hr', { class: 'hr' }));
+app.appendChild(T.el('span', { text: 'SVG 资源导航（素材站 / 在线工具）', class: 'field' }));
+var RES = [
+  ['SVG Repo', 'https://www.svgrepo.com/', '50 万+ 免费 SVG 图标与插画，多数可商用'],
+  ['Iconify', 'https://iconify.design/', '聚合 150+ 开源图标集，在线检索导出 SVG'],
+  ['Simple Icons', 'https://simpleicons.org/', '3000+ 品牌 Logo SVG，按名称搜索'],
+  ['unDraw', 'https://undraw.co/illustrations', '可自定义主色的开源插画（SVG / PNG）'],
+  ['OpenMoji', 'https://openmoji.org/', '开源 Emoji 风格 SVG 图形库'],
+  ['SVGOMG', 'https://jakearchibald.github.io/svgomg/', '在线 SVG 瘦身压缩（SVGO 可视化版）'],
+  ['yoksel · URL-encoder for SVG', 'https://yoksel.github.io/url-encoder/', 'SVG 转 data URI，可直接内嵌 CSS background'],
+  ['yoksel · SVG Filters', 'https://yoksel.github.io/svg-filters/', 'SVG 滤镜效果在线调参与生成'],
+  ['SVG Path Editor (yqnn)', 'https://yqnn.github.io/svg-path-editor/', '路径 d 值可视化编辑、控制点拖拽预览'],
+  ['SVG Viewer', 'https://www.svgviewer.dev/', '在线预览 / 压缩 / 转 React 组件'],
+  ['Boxy SVG', 'https://boxy-svg.com/', '浏览器内的专业级 SVG 矢量编辑器'],
+  ['Haikei', 'https://haikei.app/', '生成波浪 / 斑点 / 渐变等 SVG 背景素材'],
+  ['Get Waves', 'https://getwaves.io/', '波浪分隔线 SVG 生成器'],
+  ['MDN SVG 参考', 'https://developer.mozilla.org/zh-CN/docs/Web/SVG', 'SVG 元素与属性权威文档']
+];
+var resBox = T.el('div');
+RES.forEach(function (r) {
+  var a = T.el('a', { href: r[1], target: '_blank', rel: 'noopener', text: r[0] });
+  a.style.cssText = 'display:inline-block;margin:3px 6px 3px 0;padding:5px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;text-decoration:none;color:var(--accent)';
+  a.title = r[2];
+  resBox.appendChild(a);
+  var note = T.el('span', { text: r[2] + '　', style: 'color:var(--ink3);font-size:12px' });
+  resBox.appendChild(note);
+});
+app.appendChild(resBox);
 ''')
 
 d('icon-font', '图标字体生成', '多 SVG 合并为 Symbol 精灵图 + CSS 类（组件级图标方案）', js=r'''

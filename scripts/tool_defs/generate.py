@@ -117,14 +117,27 @@ app.appendChild(T.el('div', { class: 'row', style: 'align-items:flex-start;gap:2
 render();
 ''')
 
-d('qrcode-scan', '二维码扫描', '摄像头实时扫描或上传图片识别二维码内容（jsQR）',
+d('qrcode-scan', '二维码扫描', '摄像头实时扫描或上传图片识别二维码内容（jsQR 按需加载不拖慢打开）',
   head='<meta name="permissions-policy" content="camera">',
-  scripts='<script src="/tools/js/vendor/jsQR.js"></script>',
   js=r'''
+var jsqrReady = null;
+function ensureJsQR() {
+  if (window.jsQR) return Promise.resolve();
+  if (!jsqrReady) {
+    jsqrReady = new Promise(function (resolve, reject) {
+      status.textContent = '正在加载识别引擎…';
+      var s = T.el('script', { src: '/tools/js/vendor/jsQR.js' });
+      s.onload = function () { resolve(); };
+      s.onerror = function () { jsqrReady = null; reject(new Error('识别引擎加载失败，请刷新重试')); };
+      document.head.appendChild(s);
+    });
+  }
+  return jsqrReady;
+}
 var video = T.el('video', { playsinline: '', muted: '', style: 'width:100%;max-width:360px;border-radius:8px;border:1px solid var(--line);background:#000' });
 var canvas = T.el('canvas', { style: 'display:none' });
 var result = T.out('扫描结果…');
-var status = T.badge('未启动');
+var status = T.badge('未启动（点按钮时加载引擎）');
 var stream = null, raf = 0;
 function tick() {
   if (!stream) return;
@@ -145,30 +158,34 @@ function tick() {
 }
 app.appendChild(T.row([
   T.button('开启摄像头扫码', function () {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(function (s) {
+    ensureJsQR().then(function () {
+      return navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    }).then(function (s) {
       stream = s;
       video.srcObject = s;
       video.play();
       status.textContent = '扫码中…';
       tick();
-    }).catch(function (e) { T.toast('无法访问摄像头：' + e.message); });
+    }).catch(function (e) { T.toast((String(e.message).indexOf('引擎') >= 0 ? '' : '无法访问摄像头：') + e.message); });
   }, true),
   T.button('停止', function () {
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; cancelAnimationFrame(raf); status.textContent = '已停止'; }
   }),
   T.filePick('上传图片识别', 'image/*', function (dataURL) {
-    var img = new Image();
-    img.onload = function () {
-      var c = T.el('canvas');
-      c.width = img.width; c.height = img.height;
-      var ctx = c.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      var d = ctx.getImageData(0, 0, c.width, c.height);
-      var code = jsQR(d.data, d.width, d.height);
-      if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }
-      else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }
-    };
-    img.src = dataURL;
+    ensureJsQR().then(function () {
+      var img = new Image();
+      img.onload = function () {
+        var c = T.el('canvas');
+        c.width = img.width; c.height = img.height;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        var d = ctx.getImageData(0, 0, c.width, c.height);
+        var code = jsQR(d.data, d.width, d.height);
+        if (code && code.data) { result.value = code.data; status.textContent = '✓ 已识别'; status.className = 'badge ok'; }
+        else { status.textContent = '未检测到二维码'; status.className = 'badge warn'; }
+      };
+      img.src = dataURL;
+    }).catch(function (e) { T.toast(e.message); });
   })
 ]));
 app.appendChild(T.el('div', { class: 'row' }, [video, status]));
@@ -208,27 +225,42 @@ app.appendChild(T.row([T.button('下载 PNG', function () {
 render();
 ''')
 
-d('barcode-scan', '条形码识别', '上传图片识别 Code128 / EAN / QR 等条码内容（ZXing）',
-  scripts='<script src="/tools/js/vendor/zxing-index.min.js"></script>',
+d('barcode-scan', '条形码识别', '上传图片识别 Code128 / EAN / QR 等条码内容（ZXing 按需加载不拖慢打开）',
   js=r'''
+var zxingReady = null;
+function ensureZXing() {
+  if (window.ZXing) return Promise.resolve();
+  if (!zxingReady) {
+    zxingReady = new Promise(function (resolve, reject) {
+      fmt.textContent = '正在加载识别引擎…';
+      var s = T.el('script', { src: '/tools/js/vendor/zxing-index.min.js' });
+      s.onload = function () { resolve(); };
+      s.onerror = function () { zxingReady = null; reject(new Error('识别引擎加载失败，请刷新重试')); };
+      document.head.appendChild(s);
+    });
+  }
+  return zxingReady;
+}
 var result = T.out('识别结果…');
-var fmt = T.badge('—');
+var fmt = T.badge('选图后自动加载引擎');
 var preview = T.el('img', { style: 'max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line)' });
 function scan(dataURL) {
-  preview.src = dataURL;
-  var reader = new ZXing.BrowserMultiFormatReader();
-  var img = new Image();
-  img.onload = function () {
-    try {
-      var res = reader.decodeFromImage(img);
-      if (res) {
-        result.value = res.text;
-        fmt.textContent = '格式：' + (res.result && res.result.getBarcodeFormat != null ? res.result.getBarcodeFormat() : '已识别');
-        fmt.className = 'badge ok';
-      } else { fmt.textContent = '未识别'; fmt.className = 'badge warn'; }
-    } catch (e) { fmt.textContent = '未识别到条形码'; fmt.className = 'badge warn'; }
-  };
-  img.src = dataURL;
+  ensureZXing().then(function () {
+    preview.src = dataURL;
+    var reader = new ZXing.BrowserMultiFormatReader();
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var res = reader.decodeFromImage(img);
+        if (res) {
+          result.value = res.text;
+          fmt.textContent = '格式：' + (res.result && res.result.getBarcodeFormat != null ? res.result.getBarcodeFormat() : '已识别');
+          fmt.className = 'badge ok';
+        } else { fmt.textContent = '未识别'; fmt.className = 'badge warn'; }
+      } catch (e) { fmt.textContent = '未识别到条形码'; fmt.className = 'badge warn'; }
+    };
+    img.src = dataURL;
+  }).catch(function (e) { fmt.textContent = '⚠ ' + e.message; fmt.className = 'badge warn'; });
 }
 app.appendChild(T.row([T.filePick('上传条形码图片', 'image/*', function (dataURL) { scan(dataURL); }, true)]));
 app.appendChild(T.row([preview, fmt]));
@@ -504,12 +536,15 @@ var value = T.input('passing', { class: 'grow mono' });
 var color = T.select([{value:'brightgreen',label:'brightgreen'},{value:'green',label:'green'},{value:'yellow',label:'yellow'},{value:'orange',label:'orange'},{value:'red',label:'red'},{value:'blue',label:'blue'},{value:'blueviolet',label:'blueviolet'},{value:'lightgrey',label:'lightgrey'}],'brightgreen');
 var style = T.select([{value:'flat',label:'flat'},{value:'flat-square',label:'flat-square'},{value:'for-the-badge',label:'for-the-badge'},{value:'plastic',label:'plastic'}],'flat');
 var logo = T.input('', { class: 'grow mono', placeholder: 'logo（simple-icons 名，如 github）' });
-var preview = T.el('div', { style: 'padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;display:inline-block' });
+var preview = T.el('div', { style: 'padding:14px;background:#fff;border:1px solid var(--line);border-radius:8px;display:inline-block;min-width:200px;min-height:40px;text-align:center', title: '徽章图片来自 shields.io' });
 var output = T.out('');
+var winLoaded = document.readyState === 'complete';
+window.addEventListener('load', function () { winLoaded = true; run(); });
 function run() {
   var u = 'https://img.shields.io/badge/' + encodeURIComponent(label.value || ' ') + '-' + encodeURIComponent(value.value || ' ') + '-' + color.value + '?style=' + style.value + (logo.value ? '&logo=' + encodeURIComponent(logo.value) : '');
   output.value = u;
-  preview.innerHTML = '<img src="' + T.esc(u) + '" alt="badge" onerror="this.style.opacity=.3">';
+  if (winLoaded) preview.innerHTML = '<img src="' + T.esc(u) + '" alt="badge" onerror="this.style.opacity=.3">';
+  else preview.textContent = '预览图等页面就绪后加载…';
 }
 [label, value, logo, color, style].forEach(function (el) { el.addEventListener('input', run); });
 app.appendChild(T.pane([T.field('标签', label), T.field('值', value)]));

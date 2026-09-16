@@ -34,6 +34,7 @@ SMOKE = [
     ('url-encode', 'a b/c?', 'a%20b%2Fc%3F', None, 'output'),
     ('md5', 'abc', '900150983cd24fb0d6963f7d28e17f72', None, 'output'),
     ('caesar', 'abc', 'def', None, 'output'),
+    ('mixed-encode', 'hello', 'aGVsbG8=', None, 'output'),
     ('word-count', 'hello world\n第二行', None, None, 'stats'),
     ('uuid', None, None, 'click:生成', 'output'),
     ('qrcode', 'https://freellm.top', None, None, 'canvas'),
@@ -143,7 +144,13 @@ def main():
             on_err = lambda e: collected['page'].append('pageerror: %s' % e)  # noqa: E731
             on_console = lambda m: collected['console'].append(m.text) if m.type == 'error' else None  # noqa: E731
             on_resp = lambda r: collected['res'].append('%s -> %d' % (r.url, r.status)) if r.status >= 400 else None  # noqa: E731
-            on_reqfail = lambda r: collected['res'].append('%s -> %s' % (r.url, r.failure))  # noqa: E731
+
+            def on_reqfail(r):
+                # 页面切换导航会中断上一页尚未完成的外链请求（ERR_ABORTED），属巡检噪声
+                if 'ERR_ABORTED' in str(r.failure) and not r.url.startswith(args.base):
+                    return
+                collected['res'].append('%s -> %s' % (r.url, r.failure))
+
             page.on('pageerror', on_err)
             page.on('console', on_console)
             page.on('response', on_resp)

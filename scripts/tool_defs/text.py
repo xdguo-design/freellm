@@ -307,14 +307,18 @@ input.value = '免费 AI 资源导航';
 var output = T.out('');
 var mode = T.select([{value:'tone',label:'带声调 (pīn yīn)'},{value:'num',label:'声调数字 (pin1 yin1)'},{value:'none',label:'无声调 (pin yin)'}],'tone');
 var sep = T.select([{value:' ',label:'空格分隔'},{value:"'",label:"连字符 '"},{value:'',label:'无分隔'}],' ');
-var status = T.badge('加载字典…');
+var status = T.badge('页面就绪后后台加载字典…');
 var DICT = null;
-fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {
-  DICT = d;
-  status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';
-  status.className = 'badge ok';
-  run();
-});
+function loadDict() {
+  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {
+    DICT = d;
+    status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';
+    status.className = 'badge ok';
+    run();
+  });
+}
+if (document.readyState === 'complete') loadDict();
+else window.addEventListener('load', loadDict);
 function stripTone(p) {
   var map = { 'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a', 'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e', 'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i', 'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o', 'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u', 'ü': 'v', 'ǖ': 'v', 'ǘ': 'v', 'ǚ': 'v', 'ǜ': 'v', 'ń': 'n', 'ň': 'n', 'ǹ': 'n', 'ḿ': 'm' };
   return p.replace(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜńňǹḿ]/g, function (c) { return map[c] || c; });
@@ -371,14 +375,18 @@ var input = T.textarea('免费工具，在线使用，无需安装。');
 input.value = '免费工具，在线使用，无需安装。';
 var output = T.out('');
 var mode = T.select([{value:'s2t',label:'简 → 繁'},{value:'t2s',label:'繁 → 简'}],'s2t');
-var status = T.badge('加载映射…');
+var status = T.badge('页面就绪后后台加载映射…');
 var MAP = null;
-fetch('/tools/data/s2t.json').then(function (r) { return r.json(); }).then(function (d) {
-  MAP = d;
-  status.textContent = '映射就绪（简→繁 ' + Object.keys(d.s2t).length + ' 字）';
-  status.className = 'badge ok';
-  run();
-});
+function loadMap() {
+  fetch('/tools/data/s2t.json').then(function (r) { return r.json(); }).then(function (d) {
+    MAP = d;
+    status.textContent = '映射就绪（简→繁 ' + Object.keys(d.s2t).length + ' 字）';
+    status.className = 'badge ok';
+    run();
+  });
+}
+if (document.readyState === 'complete') loadMap();
+else window.addEventListener('load', loadMap);
 function run() {
   if (!MAP || !input.value) { output.value = ''; return; }
   var map = mode.value === 's2t' ? MAP.s2t : MAP.t2s;
@@ -413,7 +421,11 @@ var output = T.out('');
 var sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');
 var keepCn = T.check('中文转 URL 编码（否则移除）');
 var PINYIN = null;
-fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });
+function loadPY() {
+  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });
+}
+if (document.readyState === 'complete') loadPY();
+else window.addEventListener('load', loadPY);
 function toSlug(s) {
   var parts = [];
   var buf = '';

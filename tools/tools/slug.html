@@ -27,7 +27,11 @@ var output = T.out('');
 var sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');
 var keepCn = T.check('中文转 URL 编码（否则移除）');
 var PINYIN = null;
-fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });
+function loadPY() {
+  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });
+}
+if (document.readyState === 'complete') loadPY();
+else window.addEventListener('load', loadPY);
 function toSlug(s) {
   var parts = [];
   var buf = '';
@@ -53,7 +57,7 @@ app.appendChild(T.row([sep, keepCn, T.btnCopy(function () { return output.value;
   T.el('span', { text: '中文自动转拼音（无声调）' })]));
 })();
 </script>
-<script type="application/json" id="tool-source">{"id": "slug", "title": "URL Slug 生成", "desc": "SEO 友好 URL 路径：中文转拼音、小写、连字符", "scripts": "", "code": "var input = T.textarea('免费 AI 资源导航 Best Free Tools!');\ninput.value = '免费 AI 资源导航 Best Free Tools!';\nvar output = T.out('');\nvar sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');\nvar keepCn = T.check('中文转 URL 编码（否则移除）');\nvar PINYIN = null;\nfetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });\nfunction toSlug(s) {\n  var parts = [];\n  var buf = '';\n  Array.from(s.toLowerCase()).forEach(function (ch) {\n    if (/[a-z0-9]/.test(ch)) buf += ch;\n    else if (/[\\u4e00-\\u9fff]/.test(ch)) {\n      if (PINYIN && PINYIN[ch]) buf += PINYIN[ch].normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/ü/g, 'v');\n      else if (keepCn._input.checked) buf += encodeURIComponent(ch);\n    }\n    else {\n      if (buf) { parts.push(buf); buf = ''; }\n    }\n  });\n  if (buf) parts.push(buf);\n  return parts.join(sep.value);\n}\nfunction run() {\n  output.value = toSlug(input.value);\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('标题 / 文本', input), T.field('URL Slug', output)]));\napp.appendChild(T.row([sep, keepCn, T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '中文自动转拼音（无声调）' })]));"}</script>
+<script type="application/json" id="tool-source">{"id": "slug", "title": "URL Slug 生成", "desc": "SEO 友好 URL 路径：中文转拼音、小写、连字符", "scripts": "", "code": "var input = T.textarea('免费 AI 资源导航 Best Free Tools!');\ninput.value = '免费 AI 资源导航 Best Free Tools!';\nvar output = T.out('');\nvar sep = T.select([{value:'-',label:'连字符 -'},{value:'_',label:'下划线 _'}],'-');\nvar keepCn = T.check('中文转 URL 编码（否则移除）');\nvar PINYIN = null;\nfunction loadPY() {\n  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) { PINYIN = d; run(); });\n}\nif (document.readyState === 'complete') loadPY();\nelse window.addEventListener('load', loadPY);\nfunction toSlug(s) {\n  var parts = [];\n  var buf = '';\n  Array.from(s.toLowerCase()).forEach(function (ch) {\n    if (/[a-z0-9]/.test(ch)) buf += ch;\n    else if (/[\\u4e00-\\u9fff]/.test(ch)) {\n      if (PINYIN && PINYIN[ch]) buf += PINYIN[ch].normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/ü/g, 'v');\n      else if (keepCn._input.checked) buf += encodeURIComponent(ch);\n    }\n    else {\n      if (buf) { parts.push(buf); buf = ''; }\n    }\n  });\n  if (buf) parts.push(buf);\n  return parts.join(sep.value);\n}\nfunction run() {\n  output.value = toSlug(input.value);\n}\ninput.addEventListener('input', T.debounce(run, 200));\napp.appendChild(T.pane([T.field('标题 / 文本', input), T.field('URL Slug', output)]));\napp.appendChild(T.row([sep, keepCn, T.btnCopy(function () { return output.value; }),\n  T.el('span', { text: '中文自动转拼音（无声调）' })]));"}</script>
 <script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

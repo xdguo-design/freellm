@@ -752,9 +752,21 @@ app.appendChild(T.row([T.el('span', { text: '规则' }), T.el('span', { text: '�
 run();
 ''')
 
-d('excel-convert', 'Excel ↔ JSON/CSV', '上传 xlsx / xls / csv，转换为 JSON 或 CSV（SheetJS）',
-  scripts='<script src="/tools/js/vendor/xlsx.full.min.js"></script>',
+d('excel-convert', 'Excel ↔ JSON/CSV', '上传 xlsx / xls / csv，转换为 JSON 或 CSV（SheetJS 按需加载不拖慢打开）',
   js=r'''
+var xlsxReady = null;
+function ensureXLSX() {
+  if (window.XLSX) return Promise.resolve();
+  if (!xlsxReady) {
+    xlsxReady = new Promise(function (resolve, reject) {
+      var s = T.el('script', { src: '/tools/js/vendor/xlsx.full.min.js' });
+      s.onload = function () { resolve(); };
+      s.onerror = function () { xlsxReady = null; reject(new Error('SheetJS 加载失败，请刷新重试')); };
+      document.head.appendChild(s);
+    });
+  }
+  return xlsxReady;
+}
 var pick = T.el('input', { type: 'file', accept: '.xlsx,.xls,.csv', style: 'display:none' });
 document.body.appendChild(pick);
 var sheetSel = T.select([], '');
@@ -767,21 +779,23 @@ function toAoa(wb, name) {
 pick.addEventListener('change', function () {
   var f = pick.files[0];
   if (!f) return;
-  var fr = new FileReader();
-  fr.onload = function () {
-    try {
-      var wb = XLSX.read(fr.result, { type: 'array' });
-      T.clearEl(sheetSel);
-      wb.SheetNames.forEach(function (n) {
-        var o = T.el('option', { value: n, text: n });
-        sheetSel.appendChild(o);
-      });
-      sheetSel.onchange = render;
-      render();
-      T.toast('已读取 ' + f.name + '，共 ' + wb.SheetNames.length + ' 个工作表');
-    } catch (e) { T.toast('解析失败：' + e.message); }
-  };
-  fr.readAsArrayBuffer(f);
+  ensureXLSX().then(function () {
+    var fr = new FileReader();
+    fr.onload = function () {
+      try {
+        var wb = XLSX.read(fr.result, { type: 'array' });
+        T.clearEl(sheetSel);
+        wb.SheetNames.forEach(function (n) {
+          var o = T.el('option', { value: n, text: n });
+          sheetSel.appendChild(o);
+        });
+        sheetSel.onchange = render;
+        render();
+        T.toast('已读取 ' + f.name + '，共 ' + wb.SheetNames.length + ' 个工作表');
+      } catch (e) { T.toast('解析失败：' + e.message); }
+    };
+    fr.readAsArrayBuffer(f);
+  }).catch(function (e) { T.toast(e.message); });
 });
 function render() {
   var name = sheetSel.value;
@@ -793,15 +807,17 @@ function render() {
   if (aoa.length > 51) box.appendChild(T.el('p', { text: '预览前 50 行，共 ' + (aoa.length - 1) + ' 行数据', style: 'color:var(--ink2);font-size:12px' }));
 }
 app.appendChild(T.row([T.filePick('选择 Excel / CSV 文件', '.xlsx,.xls,.csv', function (buf, file) {
-  try {
-    var wb = XLSX.read(buf, { type: 'array' });
-    pick._wb = buf;
-    window._wb = wb;
-    T.clearEl(sheetSel);
-    wb.SheetNames.forEach(function (n) { sheetSel.appendChild(T.el('option', { value: n, text: n })); });
-    sheetSel.onchange = render;
-    render();
-  } catch (e) { T.toast('解析失败：' + e.message); }
+  ensureXLSX().then(function () {
+    try {
+      var wb = XLSX.read(buf, { type: 'array' });
+      pick._wb = buf;
+      window._wb = wb;
+      T.clearEl(sheetSel);
+      wb.SheetNames.forEach(function (n) { sheetSel.appendChild(T.el('option', { value: n, text: n })); });
+      sheetSel.onchange = render;
+      render();
+    } catch (e) { T.toast('解析失败：' + e.message); }
+  }).catch(function (e) { T.toast(e.message); });
 }, true)]));
 app.appendChild(T.row([T.el('span', { text: '工作表' }), sheetSel]));
 app.appendChild(T.pane([T.field('JSON', jsonOut), T.field('CSV', csvOut)]));

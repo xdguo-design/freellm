@@ -26,14 +26,18 @@ input.value = '免费 AI 资源导航';
 var output = T.out('');
 var mode = T.select([{value:'tone',label:'带声调 (pīn yīn)'},{value:'num',label:'声调数字 (pin1 yin1)'},{value:'none',label:'无声调 (pin yin)'}],'tone');
 var sep = T.select([{value:' ',label:'空格分隔'},{value:"'",label:"连字符 '"},{value:'',label:'无分隔'}],' ');
-var status = T.badge('加载字典…');
+var status = T.badge('页面就绪后后台加载字典…');
 var DICT = null;
-fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {
-  DICT = d;
-  status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';
-  status.className = 'badge ok';
-  run();
-});
+function loadDict() {
+  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {
+    DICT = d;
+    status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';
+    status.className = 'badge ok';
+    run();
+  });
+}
+if (document.readyState === 'complete') loadDict();
+else window.addEventListener('load', loadDict);
 function stripTone(p) {
   var map = { 'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a', 'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e', 'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i', 'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o', 'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u', 'ü': 'v', 'ǖ': 'v', 'ǘ': 'v', 'ǚ': 'v', 'ǜ': 'v', 'ń': 'n', 'ň': 'n', 'ǹ': 'n', 'ḿ': 'm' };
   return p.replace(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜńňǹḿ]/g, function (c) { return map[c] || c; });
@@ -62,7 +66,7 @@ app.appendChild(T.pane([T.field('中文文本', input), T.field('拼音', output
 app.appendChild(T.row([mode, sep, status, T.btnCopy(function () { return output.value; })]));
 })();
 </script>
-<script type="application/json" id="tool-source">{"id": "pinyin", "title": "汉字转拼音", "desc": "离线拼音字典（含声调），支持多音字取常用音、无声调数字模式", "scripts": "", "code": "var input = T.textarea('免费 AI 资源导航');\ninput.value = '免费 AI 资源导航';\nvar output = T.out('');\nvar mode = T.select([{value:'tone',label:'带声调 (pīn yīn)'},{value:'num',label:'声调数字 (pin1 yin1)'},{value:'none',label:'无声调 (pin yin)'}],'tone');\nvar sep = T.select([{value:' ',label:'空格分隔'},{value:\"'\",label:\"连字符 '\"},{value:'',label:'无分隔'}],' ');\nvar status = T.badge('加载字典…');\nvar DICT = null;\nfetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {\n  DICT = d;\n  status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';\n  status.className = 'badge ok';\n  run();\n});\nfunction stripTone(p) {\n  var map = { 'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a', 'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e', 'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i', 'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o', 'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u', 'ü': 'v', 'ǖ': 'v', 'ǘ': 'v', 'ǚ': 'v', 'ǜ': 'v', 'ń': 'n', 'ň': 'n', 'ǹ': 'n', 'ḿ': 'm' };\n  return p.replace(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜńňǹḿ]/g, function (c) { return map[c] || c; });\n}\nfunction run() {\n  if (!DICT || !input.value) { output.value = ''; return; }\n  var out = [];\n  Array.from(input.value).forEach(function (ch) {\n    if (/[\\u4e00-\\u9fff]/.test(ch)) {\n      var p = DICT[ch];\n      if (!p) { out.push(ch); return; }\n      if (mode.value === 'num') {\n        var m = p.match(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜ]/);\n        var toneMap = { 'ā': 1, 'á': 2, 'ǎ': 3, 'à': 4, 'ē': 1, 'é': 2, 'ě': 3, 'è': 4, 'ī': 1, 'í': 2, 'ǐ': 3, 'ì': 4, 'ō': 1, 'ó': 2, 'ǒ': 3, 'ò': 4, 'ū': 1, 'ú': 2, 'ǔ': 3, 'ù': 4, 'ǖ': 1, 'ǘ': 2, 'ǚ': 3, 'ǜ': 4 };\n        out.push(stripTone(p) + (m ? toneMap[m[0]] : ''));\n      } else if (mode.value === 'none') out.push(stripTone(p));\n      else out.push(p);\n    } else if (/\\n/.test(ch)) out.push('\\n');\n    else out.push(ch);\n  });\n  output.value = out.join(sep.value === ' ' ? ' ' : sep.value).replace(/ +/g, ' ');\n}\ninput.addEventListener('input', T.debounce(run, 200));\n[mode, sep].forEach(function (el) { el.addEventListener('change', run); });\napp.appendChild(T.pane([T.field('中文文本', input), T.field('拼音', output)]));\napp.appendChild(T.row([mode, sep, status, T.btnCopy(function () { return output.value; })]));"}</script>
+<script type="application/json" id="tool-source">{"id": "pinyin", "title": "汉字转拼音", "desc": "离线拼音字典（含声调），支持多音字取常用音、无声调数字模式", "scripts": "", "code": "var input = T.textarea('免费 AI 资源导航');\ninput.value = '免费 AI 资源导航';\nvar output = T.out('');\nvar mode = T.select([{value:'tone',label:'带声调 (pīn yīn)'},{value:'num',label:'声调数字 (pin1 yin1)'},{value:'none',label:'无声调 (pin yin)'}],'tone');\nvar sep = T.select([{value:' ',label:'空格分隔'},{value:\"'\",label:\"连字符 '\"},{value:'',label:'无分隔'}],' ');\nvar status = T.badge('页面就绪后后台加载字典…');\nvar DICT = null;\nfunction loadDict() {\n  fetch('/tools/data/pinyin.json').then(function (r) { return r.json(); }).then(function (d) {\n    DICT = d;\n    status.textContent = '字典就绪（' + Object.keys(d).length + ' 字）';\n    status.className = 'badge ok';\n    run();\n  });\n}\nif (document.readyState === 'complete') loadDict();\nelse window.addEventListener('load', loadDict);\nfunction stripTone(p) {\n  var map = { 'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a', 'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e', 'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i', 'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o', 'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u', 'ü': 'v', 'ǖ': 'v', 'ǘ': 'v', 'ǚ': 'v', 'ǜ': 'v', 'ń': 'n', 'ň': 'n', 'ǹ': 'n', 'ḿ': 'm' };\n  return p.replace(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜńňǹḿ]/g, function (c) { return map[c] || c; });\n}\nfunction run() {\n  if (!DICT || !input.value) { output.value = ''; return; }\n  var out = [];\n  Array.from(input.value).forEach(function (ch) {\n    if (/[\\u4e00-\\u9fff]/.test(ch)) {\n      var p = DICT[ch];\n      if (!p) { out.push(ch); return; }\n      if (mode.value === 'num') {\n        var m = p.match(/[āáǎàēéěèīíǐìōóǒòūúǔùüǖǘǚǜ]/);\n        var toneMap = { 'ā': 1, 'á': 2, 'ǎ': 3, 'à': 4, 'ē': 1, 'é': 2, 'ě': 3, 'è': 4, 'ī': 1, 'í': 2, 'ǐ': 3, 'ì': 4, 'ō': 1, 'ó': 2, 'ǒ': 3, 'ò': 4, 'ū': 1, 'ú': 2, 'ǔ': 3, 'ù': 4, 'ǖ': 1, 'ǘ': 2, 'ǚ': 3, 'ǜ': 4 };\n        out.push(stripTone(p) + (m ? toneMap[m[0]] : ''));\n      } else if (mode.value === 'none') out.push(stripTone(p));\n      else out.push(p);\n    } else if (/\\n/.test(ch)) out.push('\\n');\n    else out.push(ch);\n  });\n  output.value = out.join(sep.value === ' ' ? ' ' : sep.value).replace(/ +/g, ' ');\n}\ninput.addEventListener('input', T.debounce(run, 200));\n[mode, sep].forEach(function (el) { el.addEventListener('change', run); });\napp.appendChild(T.pane([T.field('中文文本', input), T.field('拼音', output)]));\napp.appendChild(T.row([mode, sep, status, T.btnCopy(function () { return output.value; })]));"}</script>
 <script>ToolCommon.sourcePanel();</script>
 </body>
 </html>
