@@ -755,3 +755,37 @@ def test_expected_files_and_sitemap_include_daily_logs(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "https://freellm.top/logs/" in sitemap
+
+
+def test_rebuild_keeps_all_pages_when_nothing_is_retired(tmp_path):
+    """A rebuild must be lossless: every generated page survives a second run."""
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    manifest = json.loads((tmp_path / ".seo-pages-manifest.json").read_text(encoding="utf-8"))
+    first = sorted(manifest["files"])
+    assert first, "manifest should list the generated pages"
+
+    # Second build over the same output must not drop anything.
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    second = sorted(json.loads((tmp_path / ".seo-pages-manifest.json").read_text(encoding="utf-8"))["files"])
+    assert second == first
+    missing = [relative for relative in second if not (tmp_path / relative).is_file()]
+    assert missing == [], f"rebuild deleted pages it should have kept: {missing[:5]}"
+
+
+def test_retired_pages_are_deleted_only_after_new_ones_are_written(tmp_path):
+    """Cleanup must never empty the tree: new pages exist before old ones go."""
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    retired = tmp_path / "offers" / "no-longer-published" / "index.html"
+    retired.parent.mkdir(parents=True, exist_ok=True)
+    retired.write_text("<!doctype html><title>retired</title>", encoding="utf-8")
+    manifest_path = tmp_path / ".seo-pages-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append("offers/no-longer-published/index.html")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    assert not retired.exists(), "retired page should be removed"
+    survivors = sorted(json.loads(manifest_path.read_text(encoding="utf-8"))["files"])
+    missing = [relative for relative in survivors if not (tmp_path / relative).is_file()]
+    assert missing == [], f"retiring one page must not delete live pages: {missing[:5]}"

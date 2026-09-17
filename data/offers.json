@@ -4439,5 +4439,121 @@
   "lastVerifiedAt": "2026-09-16",
   "checkedBy": "manual",
   "notes": "WorkBuddy 专属的积分消耗率与企业版价格为动态渲染，未逐项核验；每月 500 积分来自官方定价页的个人免费体验计划（与 CodeBuddy 共享），实际可用额度以账号内积分为准。"
+ },
+ {
+  "id": "workbuddy-intl",
+  "order": 45,
+  "date": "2026-09-16",
+  "name": "Tencent WorkBuddy international edition",
+  "providerMark": "WB",
+  "provider": "WorkBuddy",
+  "providerMeta": "Tencent Buddy AI · International",
+  "providerMetaEn": "Tencent Buddy AI · International",
+  "model": "Hy4 preview / Hy3 / DeepSeek-V4.1-Flash（限免）",
+  "modelMeta": "International build of the Tencent office AI agent; several models are free to use, no card required",
+  "type": [
+   "desktop",
+   "agent",
+   "free"
+  ],
+  "productType": "desktop_ai_app",
+  "capabilities": [
+   "desktop_app"
+  ],
+  "usageGuide": {
+   "summary": "从 workbuddy.ai 下载国际版客户端，用 Google 或 GitHub 账号登录，直接选用限免模型",
+   "prerequisites": [
+    "国际版账号（Google / GitHub OAuth）",
+    "workbuddy.ai 客户端（Windows / macOS / Linux），支持与国内版共存",
+    "首次访问与 OAuth 可能需要国际网络环境"
+   ],
+   "steps": [
+    "打开 https://www.workbuddy.ai/ 下载对应平台客户端并安装",
+    "用 Google 或 GitHub 账号完成 OAuth 登录，新用户获得试用积分",
+    "在对话面板底部的模型选择器中选择 Hy4 preview 或 DeepSeek-V4.1-Flash 等限免模型",
+    "在设置 → 通用 → 语言中切换为简体中文（默认英文）",
+    "在账号页查看剩余积分；免费用户每日有基础积分重置"
+   ],
+   "examples": {
+    "action": "打开 https://www.workbuddy.ai/ 下载国际版客户端，登录后在模型选择器选用限免的 Hy4 preview"
+   },
+   "docsUrl": "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model"
+  },
+  "kicker": "FREE MODELS · INTL",
+  "badges": [
+   "HY4 PREVIEW FREE",
+   "DEEPSEEK V4.1-FLASH FREE",
+   "GOOGLE / GITHUB LOGIN"
+  ],
+  "freeSummary": "国际版多个模型限时免费（Free now, 0.00x）：Hy4 preview 全天免费、Hy3 限免、DeepSeek-V4.1-Flash 免费；新用户赠试用积分（两周有效），免费用户每日积分重置",
+  "validitySummary": "限免为限时政策，随官方模型页调整；积分规则以官方价格页为准",
+  "accessSummary": "Windows / macOS / Linux 客户端；Google 或 GitHub 登录；当前开放中国香港、中国澳门、新加坡、马来西亚、泰国、菲律宾、印度尼西亚等地区",
+  "checkedSummary": "2026-09-16 / WorkBuddy 国际版官方文档与实测对比",
+  "title": "Tencent WorkBuddy · international edition free models",
+  "titleZh": "腾讯 WorkBuddy 国际版 · 免费模型",
+  "why": "WorkBuddy 国际版（workbuddy.ai）与国内版账号和积分相互独立，模型池更偏国际化，并直接提供多个限免模型：Hy4 preview 在国际版全天免费（国内版仅夜间免费），DeepSeek-V4.1-Flash 在国际版为 0.00x 免费，而国内版需付费倍率；国际版还独有 GPT-6-Astra、GPT-5.6-Sol 等模型。对只想零成本试用国际模型的用户，这是与国内版不同的免费入口。",
+  "mechanism": "限免模型直接以 0.00x 倍率计费，不消耗积分；新用户赠试用积分，免费用户每日有基础积分重置",
+  "validity": "限免模型与倍率为限时政策，官方可能随时调整；新用户试用积分有效期约两周",
+  "access": "Windows / macOS / Linux 桌面客户端，可与国内版共存；Google / GitHub 登录；首次访问需国际网络环境",
+  "command": "Download the international client from workbuddy.ai, sign in with Google or GitHub, then pick a free model such as Hy4 preview in the model selector.",
+  "register": "https://www.workbuddy.ai/",
+  "registerLabel": "打开 WorkBuddy 国际版官网",
+  "links": [
+   [
+    "WorkBuddy 国际版官网",
+    "https://www.workbuddy.ai/"
+   ],
+   [
+    "官方模型配置文档",
+    "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model"
+   ],
+   [
+    "国际版 vs 国内版免费模型对比（实测）",
+    "https://www.xmsumi.com/detail/4135"
+   ],
+   [
+    "国际版注册与下载教程（腾讯云社区）",
+    "https://cloud.tencent.com/developer/article/2708353"
+   ]
+  ],
+  "originCountry": "China",
+  "availability": "International site; open to Hong Kong (China), Macao (China), Singapore, Malaysia, Thailand, the Philippines, Indonesia and more; mainland China not currently listed",
+  "freeMechanism": "limited_time_free",
+  "pricingModel": "permanent_free",
+  "freePolicy": {
+   "type": "free_models",
+   "amount": null,
+   "unit": "models",
+   "period": "limited time",
+   "signupBonus": null
+  },
+  "limits": {
+   "requestsPerMinute": null,
+   "requestsPerHour": null,
+   "requestsPerMonth": null,
+   "urlsPerMinute": null,
+   "concurrency": null
+  },
+  "billing": {
+   "walletRequired": false,
+   "cardRequired": "no",
+   "autoReload": "unknown",
+   "overageBehavior": "unknown",
+   "prices": []
+  },
+  "productId": "workbuddy-intl",
+  "offerVariant": "international-free-models",
+  "sourceUrls": [
+   "https://www.workbuddy.ai/",
+   "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model",
+   "https://www.xmsumi.com/detail/4135",
+   "https://cloud.tencent.com/developer/article/2708353"
+  ],
+  "evidence": "WorkBuddy 国际版官方文档确认国际站点存在内置模型与自定义模型配置；第三方实测（xmsumi）逐项对比国际版与国内版模型页，列出国际版 Hy4 preview（Free now, 0.00x）、Hy3、DeepSeek-V4.1-Flash 处于限免状态，并说明国际版独有 GPT-6-Astra、GPT-5.6-Sol；腾讯云社区教程列出国际版官网 workbuddy.ai、Google/GitHub 登录方式、新用户试用积分（两周有效）与每日积分重置。",
+  "status": "verified",
+  "confidence": "medium",
+  "lastVerifiedAt": "2026-09-16",
+  "checkedBy": "manual",
+  "notes": "限免模型清单与倍率来自第三方实测对比，官方未逐条公开免费模型名单，可能随官方模型页随时调整；国际站与国内站账号、积分互不相通。"
  }
 ]

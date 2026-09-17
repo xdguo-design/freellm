@@ -3711,19 +3711,33 @@ def _read_manifest(output_root: Path) -> list[str]:
     return [path for path in manifest.get("files", []) if isinstance(path, str)] if isinstance(manifest, dict) else []
 
 
-def _clean_previous_pages(output_root: Path) -> None:
+def _clean_previous_pages(output_root: Path, keep: set[str] | None = None) -> int:
+    """Remove pages from the previous build that this build no longer produces.
+
+    `keep` holds every relative path the current build writes. Anything absent
+    from it is a retired page and gets deleted; passing an empty set deletes
+    every managed page, so callers must always write the new pages first.
+    """
+    removed = 0
     for relative in _read_manifest(output_root):
+        if keep is not None and relative in keep:
+            continue
         path = (output_root / relative).resolve()
         root = output_root.resolve()
-        relative_path = path.relative_to(root)
+        try:
+            relative_path = path.relative_to(root)
+        except ValueError:
+            continue
         if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs", "skills"}:
             continue
         if path.is_file():
             path.unlink()
+            removed += 1
         try:
             path.parent.rmdir()
         except OSError:
             pass
+    return removed
 
 
 LEGAL_FOOTER_LINKS = (
@@ -3780,13 +3794,18 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         print(f"current SEO output: {len(files)} files")
         return True
 
-    _clean_previous_pages(output_root)
+    managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}}
+    # Write the new pages before deleting retired ones: a crash or an external
+    # delete guard must never leave the output tree emptied.
     for relative, content in files.items():
         path = output_root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
-    manifest = {"files": [path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}]}
+    removed = _clean_previous_pages(output_root, keep=managed)
+    manifest = {"files": sorted(managed)}
     (output_root / MANIFEST_NAME).write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    if removed:
+        print(f"removed {removed} retired page(s)")
     # page_count counts published pages (HTML + sitemap.xml); data files such as
     # skills/content/*.json are written and checked but are not pages.
     page_count = sum(1 for path in files if path.suffix in {".html", ".xml"})
