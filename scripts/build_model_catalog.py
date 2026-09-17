@@ -1,17 +1,31 @@
-"""Build the queryable provider/model catalog from a public directory snapshot."""
+"""Build the provider/model catalog from provider-official sources.
+
+Sources are declared in ``data/official-model-sources.json``. A row is labelled
+``sourceKind="official"`` when it comes from the provider's own catalogue and
+``sourceKind="public_api"`` when it comes from a public model API used as a
+labelled supplement. Nothing here reads a competing directory.
+
+This script only *produces a snapshot*. Reconciling that snapshot into the
+published ``data/models.json`` — preserving manual review fields and marking
+rows that stopped appearing as stale — is ``scripts/sync_model_catalog.py``'s
+job.
+"""
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from crawler.fetch import fetch_public_text_resource
-from crawler.freellm_net_discovery import discover_freellm_net_sources
+from crawler.official_model_discovery import (
+    discover_official_model_sources,
+    to_catalog_rows,
+    validate_source_registry,
+)
 
 
 def _write_json(path: str | Path, value: object) -> None:
@@ -20,54 +34,20 @@ def _write_json(path: str | Path, value: object) -> None:
     target.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def _score(value: object) -> int | None:
-    match = re.search(r"\d+", str(value or ""))
-    return int(match.group()) if match else None
-
-
-def _modality(value: object) -> list[str]:
-    return [item.strip().lower() for item in re.split(r"[,/·|]+", str(value or "")) if item.strip()]
-
-
-def _status(value: object) -> str:
-    normalized = str(value or "").strip().lower()
-    return normalized if normalized in {"online", "offline", "degraded"} else "unknown"
+def load_source_registry(path: str | Path) -> list[dict]:
+    """Read and validate the official model source registry."""
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    errors = validate_source_registry(data)
+    if errors:
+        raise ValueError("invalid official model source registry: " + "; ".join(errors))
+    return data
 
 
 def build_model_catalog(rows: list[dict], last_seen_at: str) -> list[dict]:
     """Normalize discovery rows into one stable, provider/model query record."""
-    models: list[dict] = []
-    seen_ids: set[str] = set()
-    for row in rows:
-        provider_id = str(row.get("directoryProviderSlug") or "").strip()
-        model_slug = str(row.get("modelSlug") or "").strip()
-        if not provider_id or not model_slug:
-            continue
-        model_id = f"{provider_id}/{model_slug}"
-        if model_id in seen_ids:
-            continue
-        seen_ids.add(model_id)
-        models.append({
-            "id": model_id,
-            "providerId": provider_id,
-            "provider": str(row.get("directoryProvider") or "").strip(),
-            "model": str(row.get("model") or "").strip(),
-            "score": _score(row.get("score")),
-            "context": str(row.get("context") or "").strip(),
-            "maxOutput": str(row.get("maxOutput") or "").strip(),
-            "modality": _modality(row.get("modality")) or ["unknown"],
-            "rateLimit": str(row.get("rateLimit") or "").strip(),
-            "released": str(row.get("released") or "").strip(),
-            "usageActivity": str(row.get("usageActivity") or "").strip(),
-            "status": _status(row.get("directoryStatus") or row.get("status")),
-            "sourceUrl": str(row.get("directoryUrl") or "").strip(),
-            "sourceKind": "third_party_directory",
-            "lastSeenAt": last_seen_at,
-            "directoryFree": bool(row.get("directoryFree")),
-            "directoryNoCard": bool(row.get("directoryNoCard")),
-            "directoryVerified": bool(row.get("directoryVerified")),
-            "tierType": str(row.get("tierType") or "").strip(),
-        })
+    models = to_catalog_rows(rows)
+    for model in models:
+        model["lastSeenAt"] = last_seen_at
     return models
 
 
@@ -106,20 +86,47 @@ def load_operation_guides(directory: str | Path) -> list[dict]:
     return [json.loads(path.read_text(encoding="utf-8")) for path in sorted(operation_dir.glob("*.json"))]
 
 
-def discover_rows(sources_path: str | Path, max_models: int = 1000, timeout: int = 20) -> list[dict]:
-    sources = json.loads(Path(sources_path).read_text(encoding="utf-8"))
-    return discover_freellm_net_sources(
+def load_curated(path: str | Path) -> list[dict]:
+    """Hand-verified rows that no discovery source publishes.
+
+    These are our own records, so they take precedence over anything a source
+    reports for the same ``id``.
+    """
+    target = Path(path)
+    if not target.is_file():
+        return []
+    data = json.loads(target.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError(f"{target} must contain a JSON list")
+    for index, row in enumerate(data):
+        if not isinstance(row, dict) or not str(row.get("id") or "").strip():
+            raise ValueError(f"{target}[{index}] must be an object with an id")
+    return data
+
+
+def discover_rows(sources_path: str | Path, max_models: int = 1000, timeout: int = 20, curated_path: str | Path | None = None) -> dict:
+    """Fetch every enabled source; return ``{"models": [...], "failures": [...]}``.
+
+    Hand-curated rows are prepended so that, if a source ever reports the same
+    ``id``, our own verified record wins.
+    """
+    sources = load_source_registry(sources_path)
+    result = discover_official_model_sources(
         sources,
-        fetcher=lambda url, domains: fetch_public_text_resource(
-            url, domains, timeout=timeout, max_bytes=5_000_000
+        fetcher=lambda url, domains, source_timeout, max_bytes: fetch_public_text_resource(
+            url, domains, timeout=timeout or source_timeout, max_bytes=max_bytes
         ),
         max_models=max_models,
     )
+    if curated_path:
+        result["models"] = load_curated(curated_path) + result["models"]
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sources", default="data/third-party-discovery-sources.json")
+    parser.add_argument("--sources", default="data/official-model-sources.json")
+    parser.add_argument("--curated", default="data/models-curated.json")
     parser.add_argument("--models-out", default="data/models.json")
     parser.add_argument("--providers-out", default="data/provider-catalog.json")
     parser.add_argument("--date", required=True, help="Snapshot date in YYYY-MM-DD format")
@@ -127,12 +134,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--timeout", type=int, default=20)
     args = parser.parse_args(argv)
 
-    records = discover_rows(args.sources, max_models=args.max_models, timeout=args.timeout)
-    models = build_model_catalog(records, args.date)
+    result = discover_rows(args.sources, max_models=args.max_models, timeout=args.timeout, curated_path=args.curated)
+    models = build_model_catalog(result["models"], args.date)
     providers = build_provider_catalog(models, args.date, load_operation_guides(Path(args.providers_out).parent / "operations"))
     _write_json(args.models_out, models)
     _write_json(args.providers_out, providers)
-    print(f"model catalog: {len(models)} models across {len(providers)} providers")
+    # A source that fails must be visible, not silently absent from the catalog.
+    for failure in result["failures"]:
+        print(f"source failed: {failure['providerId']} ({failure['url']}): {failure['reason']}")
+    # So must rows a source listed twice under different names: dropping them is
+    # right, but it has to show up in the build output.
+    collapsed = len(result["models"]) - len(models)
+    summary = f"model catalog: {len(models)} models across {len(providers)} providers, {len(result['failures'])} source failures"
+    if collapsed:
+        summary += f", {collapsed} duplicate ids collapsed"
+    print(summary)
     return 0
 
 

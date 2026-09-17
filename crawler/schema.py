@@ -41,7 +41,7 @@ WEB_REQUIRED_FIELDS = {
     "freePolicy", "limits", "billing", "usageGuide",
 }
 MODEL_REQUIRED_FIELDS = {
-    "id", "providerId", "provider", "model", "score", "context", "maxOutput",
+    "id", "providerId", "provider", "model", "context", "maxOutput",
     "modality", "rateLimit", "released", "usageActivity", "status", "sourceUrl",
     "sourceKind", "lastSeenAt",
 }
@@ -282,9 +282,6 @@ def validate_model(model: object) -> list[str]:
     for field in ("id", "providerId", "provider", "model", "sourceKind"):
         if field in model and (not isinstance(model[field], str) or not model[field].strip()):
             errors.append(f"{field} must be a non-empty string")
-    score = model.get("score")
-    if score is not None and (not isinstance(score, int) or isinstance(score, bool) or not 0 <= score <= 100):
-        errors.append("score must be an integer from 0 to 100 or null")
     for field in ("context", "maxOutput", "rateLimit", "released", "usageActivity", "status"):
         if field in model and not isinstance(model[field], str):
             errors.append(f"{field} must be a string")

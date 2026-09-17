@@ -172,9 +172,6 @@ pre code { padding:0; background:none; color:inherit; }
 .catalog-table small { display:block; margin-top:3px; color:var(--ink-secondary); font:400 11px/1.5 var(--font-mono); }
 .catalog-table .model-name, .catalog-table .model-id { display:block; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .catalog-table .model-id { margin-top:3px; color:var(--ink-tertiary); }
-.score { color:var(--accent); font-family:var(--font-mono); }
-.score-ring { display:inline-grid; width:34px; height:34px; place-items:center; border:1px solid var(--line); border-radius:50%; background:var(--surface-soft); }
-.score-ring strong { color:var(--accent); font:500 12px var(--font-mono); }
 .model-badges { display:flex; flex-wrap:wrap; gap:4px; min-width:80px; }
 .model-badge { border-radius:9999px; padding:2px 8px; color:var(--accent); background:var(--accent-soft); font:500 11px/1.6 var(--font-mono); white-space:nowrap; }
 .catalog-group-row th { padding:13px 11px 7px; color:var(--ink); background:var(--canvas-warm); font-size:13px; letter-spacing:0; text-transform:none; font-family:var(--font-sans); }
@@ -663,7 +660,11 @@ def _theme_records(slug: str, offers: list[dict], models: list[dict]) -> tuple[s
             or _tokens(offer).intersection({"search", "fetch", "browser", "agent", "crawl"})
         ]
     if slug == "open-weight-models":
-        return "model", [model for model in models if model.get("directoryVerified") and model.get("sourceUrl")]
+        # Previously this selected models on a third-party directory's
+        # "verified" flag, which asserted open-weight status we had no source
+        # for. Open weights is now stated only where we classified the offer
+        # ourselves, so the guide lists offers rather than catalog rows.
+        return "offer", [offer for offer in offers if offer.get("productType") == "open_weights"]
     if slug == "model-context-windows":
         return "model", [model for model in models if model.get("context") and model.get("sourceUrl")]
     if slug == "china-free-ai-api":
@@ -1881,8 +1882,6 @@ def _cn_status_for_model(model: dict, provider_cards: dict[str, dict], policies:
 
 
 def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) -> str:
-    score = model.get("score")
-    score_markup = f'<span class="score-ring" style="--score:{_esc(score)}" aria-label="Score {_esc(score)}"><strong>{_esc(score)}</strong></span>' if score is not None else '<span class="muted">—</span>'
     modalities = "".join(f'<span class="model-badge">{_esc(item)}</span>' for item in (model.get("modality") or []))
     status = str(model.get("status") or "unknown")
     status_label = _locale_pair(
@@ -1899,10 +1898,9 @@ def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) 
     provider_id = str(model.get("providerId") or "")
     model_id = str(model.get("id") or "")
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
-    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-score="{_esc(score if score is not None else -1)}" data-cn="{_esc(cn["code"])}">
+    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}">
       <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(model.get("provider"))}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
       <td class="model-cell"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model.get("model"))}"><strong>{_esc(model.get("model"))}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
-      <td>{score_markup}</td>
       <td>{_esc(model.get("context") or "—")}</td>
       <td>{_esc(model.get("maxOutput") or "—")}</td>
       <td><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
@@ -1975,15 +1973,14 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           <option value="unavailable" data-label-zh="大陆不可用" data-label-en="Unavailable">大陆不可用</option>
         </select>
         <div class="catalog-modes" aria-label="排序方式 / Group by">
-          <button type="button" class="group-mode is-active" data-group-mode="score">{_locale_pair("按评分", "Score")}</button>
-          <button type="button" class="group-mode" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
+          <button type="button" class="group-mode is-active" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
           <button type="button" class="group-mode" data-group-mode="model">{_locale_pair("按模型分组", "By model")}</button>
         </div>
         <span id="model-catalog-count" class="catalog-count">{_locale_pair(f"显示 {len(models)} 条 / 共 {total_models} 条", f"Showing {len(models)} / {total_models}")}</span>
       </div>
       <p class="catalog-hint">{hint_text}</p>
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
-        <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("评分", "Score")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("大陆可用性", "Mainland CN")}</th><th>{_locale_pair("来源", "Source")}</th>
+        <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("大陆可用性", "Mainland CN")}</th><th>{_locale_pair("来源", "Source")}</th>
       </tr></thead><tbody>{rows}</tbody></table></div>
       <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除厂商、地区筛选。", "No models match this filter. Try another keyword or clear the provider and region filters.")}</p>
       {pagination_markup}
@@ -1999,7 +1996,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const count = document.getElementById('model-catalog-count');
           const empty = document.getElementById('model-catalog-empty');
           const modes = Array.from(document.querySelectorAll('[data-group-mode]'));
-          let mode = 'score';
+          let mode = 'provider';
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {{
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
@@ -2021,33 +2018,24 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
               return matchesText && matchesProvider && matchesRegion;
             }});
             const value = row => {{
-              if (mode === 'provider') {{
-                const cell = row.querySelector('.provider-filter');
-                return cell ? cell.textContent.trim().toLowerCase() : '';
-              }}
-              if (mode === 'model') {{
-                const cell = row.querySelector('td:nth-child(2) strong');
-                return cell ? cell.textContent.trim().toLowerCase() : '';
-              }}
-              return String(999 - Number(row.dataset.score || -1)).padStart(3, '0');
+              const cell = mode === 'model' ? row.querySelector('td:nth-child(2) strong') : row.querySelector('.provider-filter');
+              return cell ? cell.textContent.trim().toLowerCase() : '';
             }};
             visible.sort((a, b) => value(a).localeCompare(value(b), undefined, {{numeric: true}}));
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
             visible.forEach(row => {{
-              if (mode !== 'score') {{
-                const group = mode === 'provider' ? row.querySelector('.provider-filter')?.textContent : row.querySelector('td:nth-child(2) strong')?.textContent;
-                if (group && group !== previousGroup) {{
+              const group = mode === 'provider' ? row.querySelector('.provider-filter')?.textContent : row.querySelector('td:nth-child(2) strong')?.textContent;
+              if (group && group !== previousGroup) {{
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'catalog-group-row';
                 const cell = document.createElement('th');
-                cell.colSpan = 12;
-                  cell.scope = 'rowgroup';
-                  cell.textContent = group;
-                  groupRow.appendChild(cell);
-                  body.appendChild(groupRow);
-                  previousGroup = group;
-                }}
+                cell.colSpan = 11;
+                cell.scope = 'rowgroup';
+                cell.textContent = group;
+                groupRow.appendChild(cell);
+                body.appendChild(groupRow);
+                previousGroup = group;
               }}
               body.appendChild(row);
             }});
@@ -2057,7 +2045,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           search?.addEventListener('input', apply);
           provider?.addEventListener('change', apply);
           modes.forEach(button => button.addEventListener('click', () => {{
-            mode = button.dataset.groupMode || 'score';
+            mode = button.dataset.groupMode || 'provider';
             modes.forEach(item => item.classList.toggle('is-active', item === button));
             apply();
           }}));
@@ -2116,10 +2104,18 @@ def _latest_date(items: list[dict], field: str) -> str:
 
 
 def _catalog_source_label(model: dict) -> str:
-    return _locale_pair(
-        "目录发现" if model.get("sourceKind") == "third_party_directory" else "本站核验",
-        "Directory discovered" if model.get("sourceKind") == "third_party_directory" else "FreeLLM verified",
-    )
+    """Label a row by the kind of source it was read from.
+
+    ``official`` means the provider's own catalogue. ``public_api`` means a
+    public model API used as a supplement, which is a weaker claim about the
+    upstream lab and has to be visible as such.
+    """
+    kind = str(model.get("sourceKind") or "")
+    if kind == "official":
+        return _locale_pair("厂商官方来源", "Provider official source")
+    if kind == "public_api":
+        return _locale_pair("公开 API", "Public API")
+    return _locale_pair("来源待核验", "Source unverified")
 
 
 def _catalog_record_table(models: list[dict]) -> str:
@@ -2135,7 +2131,6 @@ def _catalog_record_table(models: list[dict]) -> str:
         rows.append(f'''<tr>
           <td><a href="{_esc(provider_url(str(model.get("providerId") or "provider")))}">{_esc(model.get("provider"))}</a></td>
           <td class="model-cell"><strong class="model-name" title="{_esc(model.get("model"))}">{_esc(model.get("model"))}</strong><small class="model-id" title="{_esc(model.get("id"))}">{_esc(model.get("id"))}</small></td>
-          <td><strong class="score">{_esc(model.get("score") if model.get("score") is not None else "—")}</strong></td>
           <td>{_esc(model.get("context") or "—")}</td>
           <td>{_esc(model.get("rateLimit") or "—")}</td>
           <td><span class="status status-{_esc(status)}">{status_label}</span><small>{_catalog_source_label(model)}</small></td>
@@ -2143,7 +2138,7 @@ def _catalog_record_table(models: list[dict]) -> str:
           <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
         </tr>''')
     return '''<div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
-      <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>评分 <span lang="en">Score</span></th><th>上下文 <span lang="en">Context</span></th>
+      <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>上下文 <span lang="en">Context</span></th>
       <th>速率 <span lang="en">Rate limit</span></th><th>状态 <span lang="en">Status</span></th><th>同步 <span lang="en">Synced</span></th><th>来源 <span lang="en">Source</span></th>
     </tr></thead><tbody>''' + "".join(rows) + "</tbody></table></div>"
 
@@ -2214,7 +2209,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     path = model_aggregate_url(model_name)
     page_url = _absolute(site_url, path)
     title = f"{model_name} 多平台入口与限制 · {model_name} Model Providers | FreeLLM"
-    description = f"比较 {model_name} 在不同厂商的评分、上下文、速率、状态和目录来源，并查看 FreeLLM 已整理的详细接入资源。"
+    description = f"比较 {model_name} 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。"
     latest = _latest_date(records, "lastSeenAt")
     schema = {
         "@context": "https://schema.org",
@@ -2266,7 +2261,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
   <header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('全部模型', 'All models')}</a></p>
     {_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>{_esc(model_name)}</h1>
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>
-    <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('目录发现', 'Directory discovered')}</span></div>
+    <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('厂商官方目录', 'Provider catalogues')}</span></div>
   </header>
   <main>{routes_markup}<section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
      {registration_markup}<section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2><p class="lead">{_locale_pair('这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。', 'Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.')}</p>{_related_offer_links(offers, lambda offer: _model_offer_matches(model_name, offer))}</section>
@@ -2283,14 +2278,14 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
     for provider in providers:
         provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
         latest = _latest_date(provider_models, "lastSeenAt")
-        source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("目录发现", "Directory discovered")
+        source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
         cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p><a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <style>{EDITORIAL_BASE_CSS}</style>
 <style>body {{max-width:1180px;}}h1 {{font-size:clamp(30px,5vw,48px);}}.provider-card .button {{margin-top:auto;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自第三方模型目录，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from a third-party model directory; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自各厂商自己公开的模型目录；公开 API 来源已单独标注，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from the model catalogues each provider publishes, with public-API sources labelled separately; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
 
 
 def render_provider_page(provider: dict, models: list[dict], offers: list[dict], site_url: str, operations: list[dict] | None = None, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
@@ -2299,12 +2294,12 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     page_url = _absolute(site_url, path)
     name = str(provider.get("name") or provider.get("id") or "Provider")
     title = f"{name} 模型与免费入口 · {name} Models & Access | FreeLLM"
-    description = f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较评分、上下文、限流、状态和来源，并查看已整理的免费入口。"
+    description = f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。"
     related = _related_offer_links(offers, lambda offer: _provider_offer_matches(provider, offer))
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
     routes_markup = _access_routes_markup(provider_models)
     registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
-    source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("目录发现", "Directory discovered")
+    source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
@@ -2573,8 +2568,6 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
   .model-center-all-models-panel .catalog-table small { display: block; margin-top: 3px; color: var(--ink-secondary); font: 400 11px/1.5 var(--font-mono); }
   .model-center-all-models-panel .catalog-table .model-name, .model-center-all-models-panel .catalog-table .model-id { display: block; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .model-center-all-models-panel .catalog-table .model-id { margin-top: 3px; color: var(--ink-tertiary); }
-  .model-center-all-models-panel .score-ring { display: inline-grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-soft); }
-  .model-center-all-models-panel .score-ring strong { color: var(--accent); font: 500 12px var(--font-mono); }
   .model-center-all-models-panel .model-badges { display: flex; flex-wrap: wrap; gap: 4px; min-width: 80px; }
   .model-center-all-models-panel .model-badge { border-radius: 9999px; padding: 2px 8px; color: var(--accent); background: var(--accent-soft); font: 500 11px/1.6 var(--font-mono); white-space: nowrap; }
   .model-center-all-models-panel .status { display: inline-block; border-radius: 9999px; padding: 3px 8px; font: 500 11px/1.5 var(--font-mono); white-space: nowrap; }
@@ -2599,7 +2592,7 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = template[:body_start]
     body = template[body_start + len("<body>"):body_end]
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
-    description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、评分、上下文、活动和官方来源。"
+    description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
     head = re.sub(r"<title>.*?</title>", f"<title>{_esc(title)}</title>", head, count=1, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*>', f'<meta name="description" content="{_esc(description)}" />', head, count=1)

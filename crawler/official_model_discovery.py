@@ -308,6 +308,34 @@ def discover_official_model_sources(
     return {"models": models, "failures": failures}
 
 
+def to_catalog_rows(discovered: list[dict]) -> list[dict]:
+    """Turn parser rows into catalog records.
+
+    Parser rows carry ``modelSlug`` because the slug is derived, not published;
+    hand-curated rows already carry ``id``. The catalog keys records on ``id``,
+    so this assigns ``id`` and drops the intermediate field. Duplicate ``id``s
+    are dropped rather than merged: whoever listed the same model twice has
+    nothing extra to tell us.
+    """
+    rows: list[dict] = []
+    seen: set[str] = set()
+    for row in discovered:
+        if not isinstance(row, dict):
+            continue
+        provider_id = str(row.get("providerId") or "").strip()
+        model_slug = str(row.get("modelSlug") or "").strip()
+        model_id = str(row.get("id") or "").strip()
+        if not model_id and provider_id and model_slug:
+            model_id = f"{provider_id}/{model_slug}"
+        if not model_id or model_id in seen:
+            continue
+        seen.add(model_id)
+        record = {key: value for key, value in row.items() if key != "modelSlug"}
+        record["id"] = model_id
+        rows.append(record)
+    return rows
+
+
 def write_json(path, value: object) -> None:
     from pathlib import Path
 
