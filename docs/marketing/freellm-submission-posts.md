@@ -8,7 +8,7 @@
 - 官网：https://freellm.top/
 - GitHub：https://github.com/xdguo-design/freellm
 - 产品定位：面向中文用户的免费 AI 模型、免费额度、免费 IDE、API、开放权重和学生优惠索引。
-- 当前规模：44 个已核验资源条目、303+ 条模型目录记录、26 个厂家目录、9 篇主题指南，按免费额度、学生优惠、免费 IDE、API、开放权重等场景筛选。
+- 当前规模：44 个已核验资源条目（全部核验于 2026-09-17）、304 条模型目录记录、26 个厂家目录、9 篇主题指南，按免费额度、学生优惠、免费 IDE、API、开放权重等场景筛选。
 - 核心差异：记录官方入口、免费机制、限制条件、地区、注册要求和最后核验时间；不把未确认的额度宣传成免费。
 - 目标用户：中文开发者、学生、独立开发者、AI 工具尝鲜用户。
 - 已有素材：`freellm-01-hero.png`、`freellm-02-categories.png`、`freellm-03-student-offers.png`、`freellm-04-catalog-offers.png`、`freellm-05-downloads.png`、`freellm-06-faq.png`。
