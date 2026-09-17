@@ -6,6 +6,43 @@
     {
       "kind": "model",
       "eventType": "new",
+      "id": "atria-asi/atria-dawn-preview",
+      "title": "Atria Dawn Preview",
+      "asOf": "2026-09-17",
+      "details": {
+        "id": "atria-asi/atria-dawn-preview",
+        "providerId": "atria-asi",
+        "provider": "Shanghai AI Laboratory",
+        "model": "Atria Dawn Preview",
+        "score": 82,
+        "context": "256000",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "reasoning"
+        ],
+        "rateLimit": "60 RPM (per account)",
+        "released": "2026-09-14",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://api.atria-asi.ai/docs",
+        "sourceKind": "official",
+        "lastSeenAt": "2026-09-17",
+        "directoryFree": true,
+        "directoryNoCard": true,
+        "directoryVerified": true,
+        "tierType": "limited_time_free",
+        "canonicalModelId": "Atria-Dawn-Preview",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.atria-asi.ai",
+        "freshnessStatus": "stale",
+        "staleSince": "2026-09-17"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
       "id": "cline/cline-free-deepseek-v4-1-flash",
       "title": "Deepseek-v4.1-Flash",
       "asOf": "2026-09-17",
@@ -283,7 +320,8 @@
         "tierType": "limited_time_free",
         "canonicalModelId": "u2-flash",
         "accessRegion": "domestic",
-        "accessEndpoint": "https://maas-api.unisound.com"
+        "accessEndpoint": "https://maas-api.unisound.com",
+        "freshnessStatus": "current"
       },
       "reason": "not present in the previous successful snapshot"
     },
@@ -1003,6 +1041,14 @@
         "provider": "Aion Labs",
         "model": "aion-labs/aion-rp-llama-3.1-8b",
         "sourceUrl": "https://freellm.net/models/aion-labs/aion-labs-aion-rp-llama-3-1-8b",
+        "status": "online"
+      },
+      {
+        "id": "atria-asi/atria-dawn-preview",
+        "providerId": "atria-asi",
+        "provider": "Shanghai AI Laboratory",
+        "model": "Atria Dawn Preview",
+        "sourceUrl": "https://api.atria-asi.ai/docs",
         "status": "online"
       },
       {

@@ -1202,5 +1202,39 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "云知声 Token Hub 官方 MaaS 平台；注册促销 1 亿 Token 与 U2 Flash 上线绑定，额度用完后按量计费，需关注促销页面的最新条款。"
+  },
+  {
+    "providerId": "atria-asi",
+    "profileId": "atria-asi-api",
+    "registerUrl": "https://api.atria-asi.ai/console",
+    "accountRequired": "yes",
+    "emailRequired": "yes",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "atria-asi-route",
+    "registrationSteps": [
+      "访问 api.atria-asi.ai/console 注册（新用户赠 1 亿 Token，无需信用卡；国际控制台以 Google 账号登录）。",
+      "在 Keys 页创建 API Key（atr_ 前缀，仅创建时展示一次）。",
+      "以 https://api.atria-asi.ai 为 Base URL，用模型 ID Atria-Dawn-Preview 调用 /v1/chat/completions（兼容 /v1/messages 与 /v1/responses）；国内亦可走 discovery.intern-ai.org.cn 的 Token Plan。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://api.atria-asi.ai/docs",
+      "https://atria-asi.ai/",
+      "https://github.com/atria-asi/Atria-Dawn-Preview"
+    ],
+    "lastVerifiedAt": "2026-09-17",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "上海人工智能实验室 Atria 平台；1 亿 Token 注册额度经第三方控制台实测确认（2026-09-15），官方页面为动态渲染未公示细则；Preview 阶段定价未发布。"
   }
 ]
