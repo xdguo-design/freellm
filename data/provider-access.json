@@ -1169,5 +1169,38 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+  },
+  {
+    "providerId": "unisound",
+    "profileId": "unisound-api",
+    "registerUrl": "https://maas.unisound.com",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "unisound-route",
+    "registrationSteps": [
+      "访问 maas.unisound.com 注册账号，新用户按站内促销领取 1 亿 Token。",
+      "在控制台「API Key 管理」创建 API Key。",
+      "以 https://maas-api.unisound.com 为 Base URL，用模型 ID u2-flash 调用 OpenAI 兼容接口。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://maas.unisound.com/",
+      "https://maas.unisound.com/docs/api/text/openai-compatible"
+    ],
+    "lastVerifiedAt": "2026-09-17",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "云知声 Token Hub 官方 MaaS 平台；注册促销 1 亿 Token 与 U2 Flash 上线绑定，额度用完后按量计费，需关注促销页面的最新条款。"
   }
 ]

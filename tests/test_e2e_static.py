@@ -133,11 +133,19 @@ class StaticContractTests(unittest.TestCase):
             '.log-days::before { content:"";',
             '.log-registration { margin:12px 0;',
             ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
-            ">297 ",
-            ">25 ",
-            ">42</strong>",
         ):
             self.assertIn(needle, log)
+        # Snapshot counters must track the live data, not a frozen literal: the
+        # page renders today's directory totals and every historical day uses the
+        # totals captured in that day's log JSON.
+        models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
+        latest = json.loads((ROOT / "data" / "daily-log" / "2026-09-17.json").read_text(encoding="utf-8"))
+        observed_models = len(latest["observed"]["models"])
+        self.assertIn(f'<strong>{observed_models}</strong><small>', log)
+        self.assertRegex(log, rf"<strong>{models} <span")
+        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
+        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
+        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">资源</span>')
         self.assertNotIn("首次建立基线", log)
         self.assertIn('<details class="log-new-card">', log)
         self.assertIn('<summary class="log-card-summary">', log)
