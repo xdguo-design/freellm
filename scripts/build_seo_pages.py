@@ -570,11 +570,13 @@ def _hreflang_links(site_url: str, path: str) -> str:
     """Expose the stable Chinese URL and its English locale variant to crawlers."""
     canonical = _absolute(site_url, path)
     english = f"{canonical}?lang=en"
+    feed = _absolute(site_url, "/" + FEED_PATH)
     return "\n".join(
         (
             f'<link rel="alternate" hreflang="zh-CN" href="{_esc(canonical)}">',
             f'<link rel="alternate" hreflang="en" href="{_esc(english)}">',
             f'<link rel="alternate" hreflang="x-default" href="{_esc(canonical)}">',
+            f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">',
         )
     )
 
@@ -3352,6 +3354,57 @@ def render_sitemap(
 '''
 
 
+FEED_PATH = "feed.xml"
+FEED_ENTRY_LIMIT = 50
+
+
+def render_feed(offers: list[dict], site_url: str) -> str:
+    """Render an Atom feed of the newest catalog entries for feed readers and aggregators."""
+    feed_url = _absolute(site_url, "/" + FEED_PATH)
+    site_root = _absolute(site_url, "/")
+
+    def added_on(offer: dict) -> str:
+        return str(offer.get("date") or "")
+
+    ordered = sorted(
+        (offer for offer in offers if offer.get("id")),
+        key=added_on,
+        reverse=True,
+    )[:FEED_ENTRY_LIMIT]
+
+    feed_updated = added_on(ordered[0]) if ordered else "1970-01-01"
+    entries = []
+    for offer in ordered:
+        link = _absolute(site_url, offer_url(offer))
+        title = offer.get("titleZh") or offer.get("title") or offer.get("id")
+        summary = offer.get("freeSummary") or offer.get("why") or ""
+        entry_date = added_on(offer) or feed_updated
+        entries.append(
+            "  <entry>\n"
+            f"    <title>{_esc(title)}</title>\n"
+            f'    <link href="{_esc(link)}"/>\n'
+            f"    <id>{_esc(link)}</id>\n"
+            f"    <updated>{_esc(entry_date)}T00:00:00Z</updated>\n"
+            f"    <summary>{_esc(summary)}</summary>\n"
+            "  </entry>"
+        )
+
+    body = "\n".join(entries)
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">\n'
+        "  <title>FreeLLM · 免费 AI 资源新增</title>\n"
+        "  <subtitle>逐条记录免费额度、地区限制与官方入口的 AI 资源目录</subtitle>\n"
+        f'  <link href="{_esc(feed_url)}" rel="self"/>\n'
+        f'  <link href="{_esc(site_root)}"/>\n'
+        f"  <id>{_esc(site_root)}</id>\n"
+        f"  <updated>{_esc(feed_updated)}T00:00:00Z</updated>\n"
+        f"  <author><name>FreeLLM</name><uri>{_esc(site_root)}</uri></author>\n"
+        f"{body}\n"
+        "</feed>\n"
+    )
+
+
 def _skill_content_files(skills: list[dict], data_dir: Path | None) -> dict[Path, str]:
     """Serve every collected SKILL.md as a lazily fetched JSON document under /skills/content/."""
     base_dir = Path(data_dir) if data_dir else Path("data")
@@ -3389,6 +3442,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     provider_access, _, model_access = _load_access_context()
     files: dict[Path, str] = {
         Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers, skills),
+        Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path("models") / "index.html": render_models_page(offers, site_url),
