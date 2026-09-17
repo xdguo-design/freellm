@@ -9,6 +9,7 @@
       "https://freellm.net/models/",
       "https://freellm.net/llms.txt"
     ],
-    "enabled": true
+    "enabled": false,
+    "disabledReason": "freellm.net is a competing directory, not a neutral source. Its rows supplied 301 of 304 published model records, which meant the catalog both depended on a competitor and sent it outbound link equity. Disabled on 2026-09-17 in favour of collecting model data from each provider's own sources (see data/official-model-sources.json). Re-enabling this would put the catalog back on a competitor's data."
   }
 ]
