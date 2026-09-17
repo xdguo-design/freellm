@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>友链与相关资源 | Links · FreeLLM</title>
+  <meta name="description" content="FreeLLM（freellm.top）友链页：本站信息与引用方式、友链申请要求，以及免费 AI 资源、开源月刊、开发者社区等相关资源推荐。FreeLLM links page: our site info for citation, friend-link requirements, and related free-AI resources, open-source newsletters and developer communities.">
+  <link rel="canonical" href="https://freellm.top/links/">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/links/">
+  <link rel="alternate" hreflang="en" href="https://freellm.top/links/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://freellm.top/links/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="友链与相关资源 | Links · FreeLLM">
+  <meta property="og:description" content="FreeLLM 友链页：本站信息与引用方式、友链申请要求，以及相关免费 AI 资源推荐。">
+  <meta property="og:url" content="https://freellm.top/links/">
+  <meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://freellm.top/links/">
+  <meta name="twitter:title" content="友链与相关资源 | Links · FreeLLM">
+  <meta name="twitter:description" content="FreeLLM 友链页：本站信息与引用方式、友链申请要求，以及相关免费 AI 资源推荐。">
+  <meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <style id="static-locale-style">
+    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav a { text-decoration: none; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+          const url = new URL(link.href, window.location.href);
+          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
+          link.href = `${url.pathname}${url.search}${url.hash}`;
+        });
+      });
+    })();
+  </script>
+  <style>
+:root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
+:root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0 auto; max-width:1120px; padding:24px 20px 64px; background:var(--canvas); color:var(--ink); font:400 15px/1.65 var(--font-sans); -webkit-font-smoothing:antialiased; }
+::selection { background:var(--accent-soft); }
+a { color:var(--accent); }
+h1, h2, h3 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
+header, main, footer { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:clamp(22px,4vw,36px); margin-bottom:16px; position:relative; }
+header a { color:var(--accent); }
+h1 { margin:18px 0 10px; line-height:1.08; letter-spacing:-.02em; font-size:clamp(34px,6vw,58px); }
+h2 { margin:0 0 8px; line-height:1.2; letter-spacing:-.015em; font-size:clamp(22px,3.6vw,30px); }
+h3 { margin:22px 0 6px; font-size:19px; }
+p { max-width:880px; }
+ul { max-width:900px; padding-left:1.3em; }
+li { margin:6px 0; }
+.lead { max-width:840px; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
+.muted { color:var(--ink-secondary); }
+.crumb, .eyebrow { font:500 11px/1.5 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; }
+.crumb { color:var(--ink-secondary); }
+.crumb a { color:var(--ink-secondary); text-decoration:none; }
+.crumb a:hover { color:var(--ink); }
+.eyebrow { color:var(--accent); }
+header > p:first-child { margin:0; color:var(--ink-secondary); font:500 12px/1.7 var(--font-mono); }
+section + section { padding-top:28px; border-top:1px solid var(--line); }
+code { padding:2px 6px; border-radius:5px; background:var(--surface-soft); color:var(--ink); font:400 .88em var(--font-mono); overflow-wrap:anywhere; }
+.callout { margin:20px 0 0; padding:14px 18px; border-left:3px solid var(--ink); border-radius:0 6px 6px 0; background:var(--canvas-warm); font-size:14px; }
+.callout.green { border-left-color:var(--pale-green-text); background:var(--pale-green-bg); color:var(--pale-green-text); }
+.notice { padding:14px 18px; border-left:3px solid var(--pale-yellow-text); border-radius:0 6px 6px 0; background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
+.site-card { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:16px 0 0; }
+.site-card div { padding:13px 15px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.site-card strong { display:block; color:var(--ink-tertiary); font:500 10.5px/1.6 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
+.site-card span, .site-card a { display:block; margin-top:4px; font-size:13.5px; overflow-wrap:anywhere; }
+.link-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:16px 0 0; }
+.link-card { display:flex; flex-direction:column; padding:18px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface); transition:box-shadow .2s; }
+.link-card:hover { box-shadow:var(--card-shadow); }
+.link-card h3 { margin:0 0 6px; font-size:19px; }
+.link-card h3 a { color:var(--ink); text-decoration:none; }
+.link-card h3 a:hover { color:var(--accent); }
+.link-card p { margin:0; color:var(--ink-secondary); font-size:13.5px; }
+.link-card .tag { margin-top:12px; align-self:flex-start; display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); font:500 11px/1.7 var(--font-mono); }
+.empty { margin:16px 0 0; padding:16px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font-size:14px; }
+table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0 0; }
+th, td { padding:11px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); }
+th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 11px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+tr:last-child td { border-bottom:0; }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; margin:14px 0 0; }
+.table-wrap table { min-width:520px; margin:0; }
+.theme-toggle { position:absolute; top:16px; right:16px; z-index:5; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); cursor:pointer; font-size:14px; line-height:1; padding:0; }
+.theme-toggle:hover { background:var(--line-soft); border-color:var(--ink-tertiary); }
+.theme-toggle .icon-sun { display:none; }
+.theme-toggle .icon-moon { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display:inline; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display:none; }
+footer { color:var(--ink-secondary); font-size:13px; }
+@media (max-width:640px) { body { padding:14px 10px 40px; } header, main, footer { padding:18px; } }
+  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet"><script id="skills-theme-script">
+    (() => {
+      let theme = '';
+      try {
+        theme = localStorage.getItem('freellm-theme')
+          || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : '');
+      } catch (error) { /* storage can be unavailable */ }
+      if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.theme-toggle').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = document.documentElement.dataset.theme === 'dark' ? '' : 'dark';
+            if (next === 'dark') document.documentElement.dataset.theme = 'dark';
+            else delete document.documentElement.dataset.theme;
+            try { localStorage.setItem('freellm-theme', next); } catch (error) { /* ignore */ }
+          });
+        });
+      });
+    })();
+  </script>
+</head>
+<body data-static-locale="true">
+  <header>
+    <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / <span lang="zh-CN">友链</span><span lang="en">Links</span></div>
+    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    <h1><span lang="zh-CN">友链与相关资源</span><span lang="en">Links &amp; related resources</span></h1>
+    <p class="lead"><span lang="zh-CN">这里放两样东西：一是本站信息，方便你引用或添加友链；二是我们觉得对读者真正有用的相关资源。</span><span lang="en">Two things live here: our own site info so you can cite or link us accurately, and a short list of external resources we think are genuinely useful.</span></p>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / cite us</div>
+      <h2><span lang="zh-CN">本站信息</span><span lang="en">Site information</span></h2>
+      <p><span lang="zh-CN">如果你想在文章、导航站或仓库里引用 FreeLLM，可以直接用下面的信息，无需事先询问。</span><span lang="en">If you want to cite FreeLLM in an article, directory or repository, feel free to use the details below — no need to ask first.</span></p>
+      <div class="site-card">
+        <div><strong><span lang="zh-CN">名称</span><span lang="en">Name</span></strong><span>FreeLLM · Free AI Index</span></div>
+        <div><strong>URL</strong><a href="https://freellm.top/">https://freellm.top/</a></div>
+        <div><strong><span lang="zh-CN">推荐锚文本</span><span lang="en">Suggested anchor</span></strong><span lang="zh-CN">免费 AI 资源索引</span><span lang="en">Free AI Index</span></div>
+        <div><strong><span lang="zh-CN">一句话简介</span><span lang="en">One-liner</span></strong><span lang="zh-CN">逐条记录免费额度、地区限制与官方入口的 AI 资源目录</span><span lang="en">A verified index of free AI models, quotas, IDEs and APIs</span></div>
+        <div><strong>GitHub</strong><a href="https://github.com/xdguo-design/freellm" rel="noopener" target="_blank">xdguo-design/freellm</a></div>
+        <div><strong><span lang="zh-CN">联系方式</span><span lang="en">Contact</span></strong><a href="mailto:xdguo0527@gmail.com">xdguo0527@gmail.com</a></div>
+      </div>
+    </section>
+    <section>
+      <div class="eyebrow">02 / partners</div>
+      <h2><span lang="zh-CN">友链伙伴</span><span lang="en">Partner links</span></h2>
+      <div class="empty">
+        <span lang="zh-CN">目前还没有交换友链的伙伴。如果你在做同类站点，欢迎按下面的要求申请——我们会认真看，不做批量交换。</span>
+        <span lang="en">No partner links yet. If you run a site in a related niche, apply below — we review each one properly instead of trading links in bulk.</span>
+      </div>
+    </section>
+    <section>
+      <div class="eyebrow">03 / recommendations</div>
+      <h2><span lang="zh-CN">相关资源推荐</span><span lang="en">Related resources</span></h2>
+      <p class="muted"><span lang="zh-CN">以下是我们自己会用的外部资源，与本站无商业关系，也不构成互链承诺。</span><span lang="en">Resources we actually use ourselves. No commercial relationship, and listing here does not imply a reciprocal link.</span></p>
+      <div class="link-grid">
+        <article class="link-card">
+          <h3><a href="https://hellogithub.com/" rel="noopener" target="_blank">HelloGitHub</a></h3>
+          <p><span lang="zh-CN">中文开源项目月刊，每月精选好玩、易上手的开源项目。</span><span lang="en">A Chinese monthly digest of interesting, beginner-friendly open-source projects.</span></p>
+          <span class="tag">开源月刊</span>
+        </article>
+        <article class="link-card">
+          <h3><a href="https://www.ruanyifeng.com/blog/weekly/" rel="noopener" target="_blank">科技爱好者周刊</a></h3>
+          <p><span lang="zh-CN">阮一峰维护的技术周刊，长期介绍工具、资源和行业动态。</span><span lang="en">Ruan Yifeng's long-running weekly newsletter on tools, resources and the tech industry.</span></p>
+          <span class="tag">技术周刊</span>
+        </article>
+        <article class="link-card">
+          <h3><a href="https://github.com/cheahjs/free-llm-api-resources" rel="noopener" target="_blank">free-llm-api-resources</a></h3>
+          <p><span lang="zh-CN">GitHub 上维护较久的免费 LLM API 列表，偏英文与 API 视角。</span><span lang="en">A long-maintained list of free LLM API resources, English-focused and API-oriented.</span></p>
+          <span class="tag">API 列表</span>
+        </article>
+        <article class="link-card">
+          <h3><a href="https://huggingface.co/models" rel="noopener" target="_blank">Hugging Face Models</a></h3>
+          <p><span lang="zh-CN">开放权重模型的主要分发平台，查模型卡和许可证首选。</span><span lang="en">The main distribution platform for open-weight models — the first place to check model cards and licenses.</span></p>
+          <span class="tag">开放权重</span>
+        </article>
+        <article class="link-card">
+          <h3><a href="https://www.appinn.com/" rel="noopener" target="_blank">小众软件</a></h3>
+          <p><span lang="zh-CN">老牌中文工具发现站，适合找轻量、实用的软件与在线服务。</span><span lang="en">A veteran Chinese site for discovering small, practical software and web services.</span></p>
+          <span class="tag">工具发现</span>
+        </article>
+        <article class="link-card">
+          <h3><a href="https://linux.do/" rel="noopener" target="_blank">Linux.do</a></h3>
+          <p><span lang="zh-CN">中文开发者社区，AI 与开发工具讨论活跃，资源分享氛围好。</span><span lang="en">An active Chinese developer community with strong AI and dev-tool discussion.</span></p>
+          <span class="tag">开发者社区</span>
+        </article>
+      </div>
+    </section>
+    <section>
+      <div class="eyebrow">04 / apply</div>
+      <h2><span lang="zh-CN">申请友链</span><span lang="en">Apply for a link</span></h2>
+      <p><span lang="zh-CN">我们更愿意和"有真实内容、长期维护"的站点交换链接，而不是互相挂一堆导航。申请前请先确认你的站点符合下面几条。</span><span lang="en">We prefer trading links with sites that have real content and a maintenance history, rather than swapping long lists of navigation links. Please check the criteria before applying.</span></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><span lang="zh-CN">要求</span><span lang="en">Requirement</span></th><th><span lang="zh-CN">说明</span><span lang="en">Details</span></th></tr></thead>
+          <tbody>
+            <tr><td><span lang="zh-CN">内容相关</span><span lang="en">Relevant</span></td><td><span lang="zh-CN">AI、开发者工具、开源、效率工具或学生资源方向</span><span lang="en">AI, developer tools, open source, productivity or student resources</span></td></tr>
+            <tr><td><span lang="zh-CN">已上线且有内容</span><span lang="en">Live with real content</span></td><td><span lang="zh-CN">不是空壳导航站、不是纯采集站、不是刚建站的落地页</span><span lang="en">Not an empty directory, not a scraper site, not a fresh landing page</span></td></tr>
+            <tr><td><span lang="zh-CN">可正常访问</span><span lang="en">Accessible</span></td><td><span lang="zh-CN">HTTPS，无强制跳转、无弹窗劫持、无恶意脚本</span><span lang="en">HTTPS, no forced redirects, no popup hijacking, no malicious scripts</span></td></tr>
+            <tr><td><span lang="zh-CN">已先链本站</span><span lang="en">Link us first</span></td><td><span lang="zh-CN">请先在你的友链页加上 freellm.top，我们再回链</span><span lang="en">Add freellm.top to your links page first, then we add you back</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3><span lang="zh-CN">申请方式</span><span lang="en">How to apply</span></h3>
+      <p><span lang="zh-CN">发邮件到 <a href="mailto:xdguo0527@gmail.com?subject=%E5%8F%8B%E9%93%BE%E7%94%B3%E8%AF%B7">xdguo0527@gmail.com</a>，标题写「友链申请」，正文包含：</span><span lang="en">Email <a href="mailto:xdguo0527@gmail.com?subject=Link%20exchange">xdguo0527@gmail.com</a> with the subject "Link exchange" and include:</span></p>
+      <ul>
+        <li><span lang="zh-CN">站点名称与 URL</span><span lang="en">Site name and URL</span></li>
+        <li><span lang="zh-CN">一句话简介（30 字以内）</span><span lang="en">A one-line description (under 30 words)</span></li>
+        <li><span lang="zh-CN">你已添加本站链接的页面地址</span><span lang="en">The page where you already added our link</span></li>
+      </ul>
+      <div class="notice"><span lang="zh-CN">我们不接受付费收录、链接买卖和批量互链。审核周期通常一周以内，未通过也会回复原因。</span><span lang="en">We do not accept paid listings, link purchases or bulk link exchanges. Reviews usually finish within a week, and we reply with a reason if we decline.</span></div>
+    </section>
+  </main>
+  <footer>
+    <p><strong>FreeLLM</strong> · <span lang="zh-CN">免费 AI 资源索引</span><span lang="en">Free AI Index</span> · <a href="mailto:xdguo0527@gmail.com">xdguo0527@gmail.com</a></p>
+    <p><a href="/">freellm.top</a> · <a href="/about/">About</a> · <a href="/links/">Links</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+<script src="/js/freellm-sync.js"></script></body>
+</html>

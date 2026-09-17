@@ -22,3 +22,15 @@ logs/*.json
 
 # local manifest used to remove previously generated SEO pages
 .seo-pages-manifest.json
+
+# local agent workspace data (project memory, session state) — not for the public repo
+.workbuddy-ai/
+
+# throwaway reproduction/scratch directories
+.tmp-repro/
+.tmp-repro2/
+.tmp-*/
+
+# stray UI screenshots captured during local verification
+skills-dialog-*.png
+skills-grid.png

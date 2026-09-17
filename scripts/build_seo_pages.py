@@ -2965,11 +2965,23 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 
 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
-    return page.replace(
-        canonical,
-        canonical + f'<meta name="robots" content="index,follow,max-image-preview:large"><meta name="twitter:url" content="{_esc(page_url)}">',
-        1,
+    share_title = "每日更新 · FreeLLM"
+    share_description = "FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"
+    share_image = _absolute(site_url, "/freellm-01-hero.png")
+    social = (
+        '<meta name="robots" content="index,follow,max-image-preview:large">'
+        '<meta property="og:type" content="website">'
+        f'<meta property="og:title" content="{_esc(share_title)}">'
+        f'<meta property="og:description" content="{_esc(share_description)}">'
+        f'<meta property="og:url" content="{_esc(page_url)}">'
+        f'<meta property="og:image" content="{_esc(share_image)}">'
+        '<meta name="twitter:card" content="summary_large_image">'
+        f'<meta name="twitter:url" content="{_esc(page_url)}">'
+        f'<meta name="twitter:title" content="{_esc(share_title)}">'
+        f'<meta name="twitter:description" content="{_esc(share_description)}">'
+        f'<meta name="twitter:image" content="{_esc(share_image)}">'
     )
+    return page.replace(canonical, canonical + social, 1)
 
 
 def _load_daily_logs(data_path: Path) -> list[dict]:
@@ -3310,6 +3322,7 @@ def render_sitemap(
     paths = [
         "/",
         "/about/",
+        "/links/",
         "/terms/",
         "/privacy/",
         "/submit/",
@@ -3742,6 +3755,7 @@ def _clean_previous_pages(output_root: Path, keep: set[str] | None = None) -> in
 
 LEGAL_FOOTER_LINKS = (
     '<p><a href="/about/">{zh}关于本站{/zh}{en}About{/en}</a>'
+    ' · <a href="/links/">{zh}友链与相关资源{/zh}{en}Links{/en}</a>'
     ' · <a href="/terms/">{zh}使用条款与免责声明{/zh}{en}Terms &amp; Disclaimer{/en}</a>'
     ' · <a href="/privacy/">{zh}隐私政策（含广告 Cookie 说明）{/zh}{en}Privacy Policy (incl. ad cookies){/en}</a></p>'
 )
