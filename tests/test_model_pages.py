@@ -32,7 +32,17 @@ def test_build_site_creates_model_aggregation_pages(tmp_path):
     assert "Chutes.ai" in page
     assert "Cerebras" in page
     assert "目录发现" in page
-    assert "2026-09-09" in page
+    # The page must surface the freshness date that is actually in the catalog.
+    # Derive it from the data instead of hardcoding a literal: the crawler re-stamps
+    # lastSeenAt on every sync, which would otherwise break this test each time.
+    expected_freshness = {
+        model["lastSeenAt"]
+        for model in models
+        if model_slug(model["model"]) == "llama-3-1-70b" and model.get("lastSeenAt")
+    }
+    assert expected_freshness, "fixture expectation: catalog must contain a Llama 3.1 70B record"
+    for seen_at in expected_freshness:
+        assert seen_at in page
     assert '"@type": "ItemList"' in page
 
 

@@ -25,5 +25,11 @@ def test_build_site_creates_provider_directory_and_detail_pages(tmp_path):
     assert '<link rel="canonical" href="https://freellm.top/providers/ollama-cloud/"' in ollama
     assert "deepseek-v4-pro" in ollama
     assert "目录发现" in ollama
-    assert "2026-09-14" in ollama
+    # Surface the freshness date that is actually in the catalog, derived from the data.
+    # A hardcoded literal breaks on every crawler sync, because lastSeenAt is re-stamped.
+    ollama_models = [m for m in _load_models(OFFERS_PATH) if m.get("providerId") == "ollama-cloud"]
+    expected_freshness = {m["lastSeenAt"] for m in ollama_models if m.get("lastSeenAt")}
+    assert expected_freshness, "fixture expectation: ollama-cloud must have catalog records"
+    for seen_at in expected_freshness:
+        assert seen_at in ollama
     assert "https://freellm.top/models/" in ollama

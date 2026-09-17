@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 from scripts.build_seo_pages import (
@@ -282,10 +283,35 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
     assert "https://freellm.top/models/center/" in sitemap
-    # page_count includes sitemap.xml itself but excludes the three static legal
-    # pages (about/terms/privacy), which are hand-maintained and only referenced in the sitemap.
-    static_legal_pages = 3
-    assert sitemap.count("<loc>") == result.page_count - len(LEGACY_OFFER_REDIRECTS) + static_legal_pages
+    # Sitemap completeness, derived from disk rather than from hardcoded counts (the old
+    # arithmetic silently went stale every time a page or static file was added): the
+    # sitemap must advertise exactly the generated HTML pages, minus the deliberately
+    # de-indexed legacy offer redirects, plus the hand-maintained static pages.
+    generated_files = {
+        path.relative_to(tmp_path).as_posix()
+        for path in tmp_path.rglob("*")
+        if path.suffix in {".html", ".xml"}
+    }
+    assert result.page_count == len(generated_files)
+
+    generated_urls = {
+        f"https://freellm.top/{rel[:-len('index.html')]}"
+        for rel in generated_files
+        if rel.endswith("index.html")
+    }
+    redirect_urls = {f"https://freellm.top/offers/{slug}/" for slug in LEGACY_OFFER_REDIRECTS}
+    static_urls = {
+        "https://freellm.top/",
+        "https://freellm.top/about/",
+        "https://freellm.top/links/",
+        "https://freellm.top/privacy/",
+        "https://freellm.top/submit/",
+        "https://freellm.top/terms/",
+    }
+    locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
+    assert len(locs) == len(set(locs)), "sitemap must not advertise the same URL twice"
+    assert set(locs) == (generated_urls - redirect_urls) | static_urls
+
     for legal_path in ("/about/", "/terms/", "/privacy/"):
         assert f"https://freellm.top{legal_path}" in sitemap
 
