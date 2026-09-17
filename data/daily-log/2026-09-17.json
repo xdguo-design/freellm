@@ -855,6 +855,125 @@
     {
       "kind": "offer",
       "eventType": "new",
+      "id": "atria-dawn-preview",
+      "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
+      "asOf": "2026-09-17",
+      "details": {
+        "date": "2026-09-17",
+        "lastVerifiedAt": "2026-09-17",
+        "checkedBy": "manual",
+        "status": "verified",
+        "phoneRequired": "unknown",
+        "cardRequired": "no",
+        "commercialUse": "以 Atria 控制台官方条款为准",
+        "productType": "api",
+        "capabilities": [
+          "model_api",
+          "agent"
+        ],
+        "id": "atria-dawn-preview",
+        "order": 46,
+        "name": "Atria Dawn Preview 免费额度 API",
+        "providerMark": "AL",
+        "provider": "Shanghai AI Laboratory",
+        "providerMeta": "上海人工智能实验室 · Atria Token Plan",
+        "providerMetaEn": "Shanghai AI Lab · Atria",
+        "model": "Atria Dawn Preview",
+        "modelMeta": "744B MoE Agent 模型 · 256K 上下文 · MIT 开源权重",
+        "type": [
+          "api",
+          "free"
+        ],
+        "usageGuide": {
+          "summary": "注册领 1 亿 Token，调用 Atria-Dawn-Preview 的 OpenAI 兼容接口（深度检索 / 深度研究 / 自动化任务场景）",
+          "prerequisites": [
+            "Atria 控制台账号（国际控制台 api.atria-asi.ai，Google 账号登录；国内入口 discovery.intern-ai.org.cn）",
+            "在 Keys 页创建 API Key（注册即领 1 亿 Token，无需信用卡）"
+          ],
+          "steps": [
+            "注册并在控制台确认 1 亿 Token 免费额度已到账",
+            "创建 API Key，保存为 ATRIA_API_KEY 环境变量",
+            "以国内 Base URL https://discovery.intern-ai.org.cn/v1 或国际 Base URL https://api.atria-asi.ai 调用 /v1/chat/completions，模型 ID 固定为 Atria-Dawn-Preview"
+          ],
+          "endpoint": "https://discovery.intern-ai.org.cn/v1/chat/completions",
+          "method": "POST",
+          "authentication": "API key via Authorization: Bearer header",
+          "examples": {
+            "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+          },
+          "docsUrl": "https://api.atria-asi.ai/docs"
+        },
+        "kicker": "1 亿 TOKENS",
+        "badges": [
+          "100M TOKENS",
+          "NO CARD",
+          "CHINA"
+        ],
+        "freeSummary": "注册即领 1 亿 Token 免费额度；控制台当前档位 Atria-Dawn-Preview 输入/输出单价为 $0",
+        "validitySummary": "额度期限与扣减规则以控制台 Token Plan 页为准，官方未公示到期日",
+        "accessSummary": "国际控制台需 Google 账号；国内可走 discovery.intern-ai.org.cn Token Plan 入口",
+        "checkedSummary": "今日 / 官方 API 文档 + 官方 GitHub + 控制台第三方实测（2026-09-15）",
+        "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
+        "why": "上海人工智能实验室 2026-09 发布的新一代 Agent 模型：744B MoE（GLM-5.2 底座）、256K 上下文、MIT 开源权重；官方基准中 DeepSearchQA 96.0、BrowseComp 92.5、AutomationBench 53.8 领先 GPT-5.6 sol / Claude Opus 5 / Qwen 3.8 Max。当前控制台档位 $0 计价，新用户注册领 1 亿 Token，无需信用卡。",
+        "mechanism": "新用户注册赠送 100,000,000 Token；当前控制台档位 Atria-Dawn-Preview 按 $0/M tokens 计价（限时免费档位）",
+        "validity": "额度条款以控制台 Token Plan 页为准，官方未公示到期日；Preview 阶段定价未发布，额度用完后计费规则未定",
+        "access": "api.atria-asi.ai/console 注册（Google 账号）；国内入口 discovery.intern-ai.org.cn；无需信用卡",
+        "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+        "register": "https://api.atria-asi.ai/console",
+        "registerLabel": "Atria 控制台（国际）",
+        "links": [
+          [
+            "官方 API 文档",
+            "https://api.atria-asi.ai/docs"
+          ],
+          [
+            "官方 GitHub 仓库（基准与部署说明）",
+            "https://github.com/atria-asi/Atria-Dawn-Preview"
+          ],
+          [
+            "Hugging Face 权重（MIT）",
+            "https://huggingface.co/internlm/Atria-Dawn-Preview"
+          ],
+          [
+            "国内 Token Plan 入口",
+            "https://discovery.intern-ai.org.cn/token-plan/home"
+          ]
+        ],
+        "originCountry": "China",
+        "availability": "国内 Token Plan + 国际控制台双入口；API 公网可调用",
+        "freeMechanism": "limited_time_free",
+        "pricingModel": "limited_time_free",
+        "freePolicy": {
+          "type": "limited_time_free",
+          "amount": 100000000,
+          "unit": "tokens",
+          "period": null
+        },
+        "quota": "注册赠 1 亿 Token；控制台当前档位 Atria-Dawn-Preview 输入/输出/缓存命中均 $0/M tokens",
+        "renewal": "额度用完后按控制台计费规则扣费（Preview 阶段官方定价未发布，需关注控制台更新）",
+        "sourceUrls": [
+          "https://api.atria-asi.ai/docs",
+          "https://github.com/atria-asi/Atria-Dawn-Preview",
+          "https://discovery.intern-ai.org.cn/token-plan/home"
+        ],
+        "evidence": "官方 API 文档确认模型 ID Atria-Dawn-Preview、256K 上下文与 OpenAI/Anthropic 兼容端点及 60 RPM 示例；官方 GitHub README 确认上海人工智能实验室出品、744B MoE、MIT 许可与基准表；第三方控制台实测（2026-09-15）确认注册赠 1 亿 Token、无需信用卡。",
+        "confidence": "high",
+        "notes": "仅文本输入（图片/PDF 返回 400）；最大输出控制台模型卡显示 32,768 tokens；支持思考模式与工具调用，提示缓存关闭。",
+        "freeModels": [
+          {
+            "model": "Atria-Dawn-Preview",
+            "quota": "注册赠 100,000,000 Token（限时档位 $0/M tokens）",
+            "label": "744B MoE · 256K 上下文 · MIT 开源",
+            "note": "额度条款以控制台 Token Plan 页为准",
+            "sourceUrl": "https://discovery.intern-ai.org.cn/token-plan/home"
+          }
+        ]
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "offer",
+      "eventType": "new",
       "id": "workbuddy",
       "title": "Tencent WorkBuddy · office AI agent",
       "asOf": "2026-09-17",
@@ -972,78 +1091,6 @@
   "observed": {
     "models": [
       {
-        "id": "agnes-ai/agnes-1-5-flash",
-        "providerId": "agnes-ai",
-        "provider": "Agnes AI",
-        "model": "agnes-1.5-flash",
-        "sourceUrl": "https://freellm.net/models/agnes-ai/agnes-1-5-flash",
-        "status": "online"
-      },
-      {
-        "id": "agnes-ai/agnes-2-0-flash",
-        "providerId": "agnes-ai",
-        "provider": "Agnes AI",
-        "model": "agnes-2.0-flash",
-        "sourceUrl": "https://freellm.net/models/agnes-ai/agnes-2-0-flash",
-        "status": "online"
-      },
-      {
-        "id": "agnes-ai/agnes-image-2-0-flash",
-        "providerId": "agnes-ai",
-        "provider": "Agnes AI",
-        "model": "agnes-image-2.0-flash",
-        "sourceUrl": "https://freellm.net/models/agnes-ai/agnes-image-2-0-flash",
-        "status": "online"
-      },
-      {
-        "id": "agnes-ai/agnes-image-2-1-flash",
-        "providerId": "agnes-ai",
-        "provider": "Agnes AI",
-        "model": "agnes-image-2.1-flash",
-        "sourceUrl": "https://freellm.net/models/agnes-ai/agnes-image-2-1-flash",
-        "status": "online"
-      },
-      {
-        "id": "agnes-ai/agnes-video-v2-0",
-        "providerId": "agnes-ai",
-        "provider": "Agnes AI",
-        "model": "agnes-video-v2.0",
-        "sourceUrl": "https://freellm.net/models/agnes-ai/agnes-video-v2-0",
-        "status": "online"
-      },
-      {
-        "id": "aion-labs/aion-labs-aion-2-0",
-        "providerId": "aion-labs",
-        "provider": "Aion Labs",
-        "model": "aion-labs/aion-2.0",
-        "sourceUrl": "https://freellm.net/models/aion-labs/aion-labs-aion-2-0",
-        "status": "online"
-      },
-      {
-        "id": "aion-labs/aion-labs-aion-3-0",
-        "providerId": "aion-labs",
-        "provider": "Aion Labs",
-        "model": "aion-labs/aion-3.0",
-        "sourceUrl": "https://freellm.net/models/aion-labs/aion-labs-aion-3-0",
-        "status": "online"
-      },
-      {
-        "id": "aion-labs/aion-labs-aion-3-0-mini",
-        "providerId": "aion-labs",
-        "provider": "Aion Labs",
-        "model": "aion-labs/aion-3.0-mini",
-        "sourceUrl": "https://freellm.net/models/aion-labs/aion-labs-aion-3-0-mini",
-        "status": "online"
-      },
-      {
-        "id": "aion-labs/aion-labs-aion-rp-llama-3-1-8b",
-        "providerId": "aion-labs",
-        "provider": "Aion Labs",
-        "model": "aion-labs/aion-rp-llama-3.1-8b",
-        "sourceUrl": "https://freellm.net/models/aion-labs/aion-labs-aion-rp-llama-3-1-8b",
-        "status": "online"
-      },
-      {
         "id": "atria-asi/atria-dawn-preview",
         "providerId": "atria-asi",
         "provider": "Shanghai AI Laboratory",
@@ -1052,443 +1099,115 @@
         "status": "online"
       },
       {
-        "id": "cerebras/llama3-1-70b",
-        "providerId": "cerebras",
-        "provider": "Cerebras",
-        "model": "Llama 3.1 70B",
-        "sourceUrl": "https://freellm.net/models/cerebras/llama3-1-70b",
-        "status": "online"
-      },
-      {
-        "id": "chutes-ai/deepseek-ai-deepseek-r1",
+        "id": "chutes-ai/deepseek-v3-2-tee",
         "providerId": "chutes-ai",
-        "provider": "Chutes.ai",
-        "model": "DeepSeek-R1",
-        "sourceUrl": "https://freellm.net/models/chutes-ai/deepseek-ai-deepseek-r1",
+        "provider": "Chutes",
+        "model": "DeepSeek-V3.2-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "chutes-ai/meta-llama-meta-llama-3-1-70b-instruct",
+        "id": "chutes-ai/deepseek-v4-flash-0731-tee",
         "providerId": "chutes-ai",
-        "provider": "Chutes.ai",
-        "model": "Llama 3.1 70B",
-        "sourceUrl": "https://freellm.net/models/chutes-ai/meta-llama-meta-llama-3-1-70b-instruct",
+        "provider": "Chutes",
+        "model": "DeepSeek-V4-Flash-0731-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/cline-free-longcat-2-0",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "LongCat-2.0",
-        "sourceUrl": "https://freellm.net/models/cline/cline-free-longcat-2-0",
+        "id": "chutes-ai/gemma-4-31b-turbo-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "gemma-4-31B-turbo-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/cline-free-muse-spark-1-3-contributor",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "Muse Spark 1.3 Contributor",
-        "sourceUrl": "https://freellm.net/models/cline/cline-free-muse-spark-1-3-contributor",
+        "id": "chutes-ai/glm-5-1-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "GLM-5.1-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/cline-free-solar-pro4",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "Solar Pro 4",
-        "sourceUrl": "https://freellm.net/models/cline/cline-free-solar-pro4",
+        "id": "chutes-ai/glm-5-2-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "GLM-5.2-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/deepseek-deepseek-v4-flash",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "deepseek-v4-flash",
-        "sourceUrl": "https://freellm.net/models/cline/deepseek-deepseek-v4-flash",
+        "id": "chutes-ai/kimi-k2-6-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Kimi-K2.6-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/poolside-laguna-s-2-1",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "laguna-s-2.1:free",
-        "sourceUrl": "https://freellm.net/models/cline/poolside-laguna-s-2-1",
+        "id": "chutes-ai/kimi-k3-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Kimi-K3-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cline/z-ai-glm-5-3-flash",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "glm-5.3-flash",
-        "sourceUrl": "https://freellm.net/models/cline/z-ai-glm-5-3-flash",
+        "id": "chutes-ai/mistral-nemo-instruct-2407-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Mistral-Nemo-Instruct-2407-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/aisingapore/gemma-sea-lion-v4-27b-it",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it",
+        "id": "chutes-ai/nemotron-3-nano-omni-30b-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Nemotron-3-Nano-Omni-30B-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-baai-bge-base-en-v1-5",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/baai/bge-base-en-v1.5",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-base-en-v1-5",
+        "id": "chutes-ai/qwen3-235b-a22b-thinking-2507-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Qwen3-235B-A22B-Thinking-2507-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-baai-bge-large-en-v1-5",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/baai/bge-large-en-v1.5",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-large-en-v1-5",
+        "id": "chutes-ai/qwen3-32b-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Qwen3-32B-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-baai-bge-m3",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/baai/bge-m3",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-m3",
+        "id": "chutes-ai/qwen3-5-397b-a17b-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Qwen3.5-397B-A17B-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-baai-bge-small-en-v1-5",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/baai/bge-small-en-v1.5",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-baai-bge-small-en-v1-5",
+        "id": "chutes-ai/qwen3-6-27b-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Qwen3.6-27B-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
-        "id": "cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-google-embeddinggemma-300m",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/google/embeddinggemma-300m",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-google-embeddinggemma-300m",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-google-gemma-2b-it-lora",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/google/gemma-2b-it-lora",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-2b-it-lora",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/google/gemma-4-26b-a4b-it",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-google-gemma-7b-it-lora",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/google/gemma-7b-it-lora",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-google-gemma-7b-it-lora",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/ibm-granite/granite-4.0-h-micro",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-3.1-8b-instruct-fp8",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-3.2-1b-instruct",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-3.2-3b-instruct",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-4-scout-17b-16e-instruct",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-guard-3-8b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta/llama-guard-3-8b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-guard-3-8b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/meta-llama/llama-2-7b-chat-hf-lora",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/mistral/mistral-7b-instruct-v0.2-lora",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/mistralai/mistral-small-3.1-24b-instruct",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/moondream/moondream3.1-9B-A2B",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-moonshotai-kimi-k2-6",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/moonshotai/kimi-k2.6",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-6",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/moonshotai/kimi-k2.7-code",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/nvidia/nemotron-3-120b-a12b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-openai-gpt-oss-120b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/openai/gpt-oss-120b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-120b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-openai-gpt-oss-20b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/openai/gpt-oss-20b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-openai-gpt-oss-20b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/pfnet/plamo-embedding-1b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/qwen/qwen2.5-coder-32b-instruct",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/qwen/qwen3-30b-a3b-fp8",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-qwen-qwen3-8-27b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/qwen/qwen3.8-27b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-8-27b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/qwen/qwen3-embedding-0.6b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-qwen-qwq-32b",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/qwen/qwq-32b",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-qwen-qwq-32b",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-zai-org-glm-4-7-flash",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/zai-org/glm-4.7-flash",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-4-7-flash",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/cf-zai-org-glm-5-2",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "@cf/zai-org/glm-5.2",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/cf-zai-org-glm-5-2",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "Mistral 7B",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1",
-        "status": "online"
-      },
-      {
-        "id": "cloudflare-workers-ai/qwen-qwen1-5-7b-chat",
-        "providerId": "cloudflare-workers-ai",
-        "provider": "Cloudflare Workers AI",
-        "model": "Qwen 1.5 7B",
-        "sourceUrl": "https://freellm.net/models/cloudflare-workers-ai/qwen-qwen1-5-7b-chat",
-        "status": "online"
-      },
-      {
-        "id": "cohere/aya-expanse-32b",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Aya Expanse 32B",
-        "sourceUrl": "https://freellm.net/models/cohere/aya-expanse-32b",
-        "status": "online"
-      },
-      {
-        "id": "cohere/aya-vision-32b",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Aya Vision 32B",
-        "sourceUrl": "https://freellm.net/models/cohere/aya-vision-32b",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-a-111b",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command A (111B)",
-        "sourceUrl": "https://freellm.net/models/cohere/command-a-111b",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-a-218b",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command A+ (218B)",
-        "sourceUrl": "https://freellm.net/models/cohere/command-a-218b",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-a-reasoning",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command A Reasoning",
-        "sourceUrl": "https://freellm.net/models/cohere/command-a-reasoning",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-a-translate",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command A Translate",
-        "sourceUrl": "https://freellm.net/models/cohere/command-a-translate",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-a-vision",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command A Vision",
-        "sourceUrl": "https://freellm.net/models/cohere/command-a-vision",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-r",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command R+",
-        "sourceUrl": "https://freellm.net/models/cohere/command-r",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-r7b",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command R7B",
-        "sourceUrl": "https://freellm.net/models/cohere/command-r7b",
-        "status": "online"
-      },
-      {
-        "id": "cohere/command-r7b-arabic",
-        "providerId": "cohere",
-        "provider": "Cohere",
-        "model": "Command R7B Arabic",
-        "sourceUrl": "https://freellm.net/models/cohere/command-r7b-arabic",
+        "id": "chutes-ai/qwen3-8-27b-tee",
+        "providerId": "chutes-ai",
+        "provider": "Chutes",
+        "model": "Qwen3.8-27B-TEE",
+        "sourceUrl": "https://chutes.ai/app",
         "status": "online"
       },
       {
@@ -1500,1635 +1219,1203 @@
         "status": "online"
       },
       {
-        "id": "github-models/ai21-jamba-1-5-large",
-        "providerId": "github-models",
-        "provider": "GitHub Models",
-        "model": "AI21 Jamba 1.5 Large",
-        "sourceUrl": "https://freellm.net/models/github-models/ai21-jamba-1-5-large",
+        "id": "llm7-io/chroma-v-46-flash",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "chroma-v.46-flash",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "github-models/mistral-large-2411",
-        "providerId": "github-models",
-        "provider": "GitHub Models",
-        "model": "Mistral Large (24.11)",
-        "sourceUrl": "https://freellm.net/models/github-models/mistral-large-2411",
+        "id": "llm7-io/claude-fable-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-fable-5",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "github-models/phi-4",
-        "providerId": "github-models",
-        "provider": "GitHub Models",
-        "model": "Phi-4",
-        "sourceUrl": "https://freellm.net/models/github-models/phi-4",
+        "id": "llm7-io/claude-fable-5-1",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-fable-5-1",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "glhf-chat/meta-llama-meta-llama-3-1-70b-instruct-2",
-        "providerId": "glhf-chat",
-        "provider": "Glhf.chat",
-        "model": "Llama 3.1 70B",
-        "sourceUrl": "https://freellm.net/models/glhf-chat/meta-llama-meta-llama-3-1-70b-instruct-2",
+        "id": "llm7-io/claude-haiku-4-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-haiku-4-5",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1",
-        "providerId": "glhf-chat",
-        "provider": "Glhf.chat",
-        "model": "Mixtral 8x7B",
-        "sourceUrl": "https://freellm.net/models/glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1",
+        "id": "llm7-io/claude-opus-4-8",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-opus-4-8",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "google-gemini/gemini-2-5-flash",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 2.5 Flash",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-2-5-flash",
+        "id": "llm7-io/claude-opus-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-opus-5",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "google-gemini/gemini-2-5-flash-lite",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 2.5 Flash-Lite",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-2-5-flash-lite",
+        "id": "llm7-io/claude-sonnet-4-6",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-sonnet-4-6",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "google-gemini/gemini-2-5-pro",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 2.5 Pro",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-2-5-pro",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-1-flash-lite",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.1 Flash-Lite",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-1-flash-lite",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-5-flash",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.5 Flash",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-5-flash",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-5-flash-lite",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.5 Flash-Lite",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-5-flash-lite",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-6-flash",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.6 Flash",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-6-flash",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-7-flash",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.7 Flash",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-7-flash",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemini-3-8-flash",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemini 3.8 Flash",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemini-3-8-flash",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemma-4-26b-a4b",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemma 4 26B A4B",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemma-4-26b-a4b",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemma-4-26b-a4b-it",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemma 4 26B A4B IT",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemma-4-26b-a4b-it",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemma-4-31b",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemma 4 31B",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemma-4-31b",
-        "status": "online"
-      },
-      {
-        "id": "google-gemini/gemma-4-31b-it",
-        "providerId": "google-gemini",
-        "provider": "Google Gemini",
-        "model": "Gemma 4 31B IT",
-        "sourceUrl": "https://freellm.net/models/google-gemini/gemma-4-31b-it",
-        "status": "online"
-      },
-      {
-        "id": "grok-(xai)/grok-2",
-        "providerId": "grok-(xai)",
-        "provider": "Grok (xAI)",
-        "model": "Grok-2",
-        "sourceUrl": "https://freellm.net/models/grok-xai/grok-2",
-        "status": "online"
-      },
-      {
-        "id": "grok-(xai)/grok-2-mini",
-        "providerId": "grok-(xai)",
-        "provider": "Grok (xAI)",
-        "model": "Grok-2 Mini",
-        "sourceUrl": "https://freellm.net/models/grok-xai/grok-2-mini",
-        "status": "online"
-      },
-      {
-        "id": "groq/allam-2-7b",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "allam-2-7b",
-        "sourceUrl": "https://freellm.net/models/groq/allam-2-7b",
-        "status": "online"
-      },
-      {
-        "id": "groq/groq-compound",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "groq/compound",
-        "sourceUrl": "https://freellm.net/models/groq/groq-compound",
-        "status": "online"
-      },
-      {
-        "id": "groq/groq-compound-mini",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "groq/compound-mini",
-        "sourceUrl": "https://freellm.net/models/groq/groq-compound-mini",
-        "status": "online"
-      },
-      {
-        "id": "groq/moonshotai-kimi-k2-instruct",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "Moonshot Kimi K2",
-        "sourceUrl": "https://freellm.net/models/groq/moonshotai-kimi-k2-instruct",
-        "status": "online"
-      },
-      {
-        "id": "groq/moonshotai-kimi-k2-instruct-0905",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "Moonshot Kimi K2 0905",
-        "sourceUrl": "https://freellm.net/models/groq/moonshotai-kimi-k2-instruct-0905",
-        "status": "online"
-      },
-      {
-        "id": "groq/whisper-large-v3",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "whisper-large-v3",
-        "sourceUrl": "https://freellm.net/models/groq/whisper-large-v3",
-        "status": "online"
-      },
-      {
-        "id": "groq/whisper-large-v3-turbo",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "whisper-large-v3-turbo",
-        "sourceUrl": "https://freellm.net/models/groq/whisper-large-v3-turbo",
-        "status": "online"
-      },
-      {
-        "id": "hugging-face/gemma-3-4b-it",
-        "providerId": "hugging-face",
-        "provider": "Hugging Face",
-        "model": "gemma-3-4b-it",
-        "sourceUrl": "https://freellm.net/models/hugging-face/gemma-3-4b-it",
-        "status": "online"
-      },
-      {
-        "id": "hugging-face/meta-llama-3-1-8b-instruct",
-        "providerId": "hugging-face",
-        "provider": "Hugging Face",
-        "model": "Meta-Llama-3.1-8B-Instruct",
-        "sourceUrl": "https://freellm.net/models/hugging-face/meta-llama-3-1-8b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "hugging-face/qwen2-5-7b-instruct",
-        "providerId": "hugging-face",
-        "provider": "Hugging Face",
-        "model": "Qwen2.5-7B-Instruct",
-        "sourceUrl": "https://freellm.net/models/hugging-face/qwen2-5-7b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "hugging-face/qwen2-5-coder-7b-instruct",
-        "providerId": "hugging-face",
-        "provider": "Hugging Face",
-        "model": "Qwen2.5-Coder-7B-Instruct",
-        "sourceUrl": "https://freellm.net/models/hugging-face/qwen2-5-coder-7b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/cohere-north-mini-code-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "cohere/north-mini-code:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/cohere-north-mini-code-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/liquid-lfm-2-5-2-6b-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "liquid/lfm-2.5-2.6b:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/liquid-lfm-2-5-2-6b-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/nvidia-nemotron-3-5-lightning-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "nvidia/nemotron-3.5-lightning:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/nvidia-nemotron-3-5-lightning-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/nvidia-nemotron-3-super-120b-a12b-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "nvidia/nemotron-3-super-120b-a12b:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/nvidia-nemotron-3-super-120b-a12b-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/nvidia-nemotron-3-ultra-550b-a55b-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/nvidia-nemotron-3-ultra-550b-a55b-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/poolside-laguna-s-2-1-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "poolside/laguna-s-2.1:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/poolside-laguna-s-2-1-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/poolside-laguna-xs-2-1-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "poolside/laguna-xs-2.1:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/poolside-laguna-xs-2-1-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/stepfun-step-3-7-flash-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "stepfun/step-3.7-flash:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/stepfun-step-3-7-flash-free",
-        "status": "online"
-      },
-      {
-        "id": "kilo-code/tencent-hy3-free",
-        "providerId": "kilo-code",
-        "provider": "Kilo Code",
-        "model": "tencent/hy3:free",
-        "sourceUrl": "https://freellm.net/models/kilo-code/tencent-hy3-free",
+        "id": "llm7-io/claude-sonnet-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-sonnet-5",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/codestral-latest",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
-        "model": "Codestral (latest)",
-        "sourceUrl": "https://freellm.net/models/llm7-io/codestral-latest",
+        "provider": "LLM7",
+        "model": "codestral-latest",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/dark-beast-krea2",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "dark-beast-krea2",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/deepseek-v4-flash-0731",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
-        "model": "DeepSeek V4 Flash 0731",
-        "sourceUrl": "https://freellm.net/models/llm7-io/deepseek-v4-flash-0731",
+        "provider": "LLM7",
+        "model": "DeepSeek-V4-Flash-0731",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/deepseek-v4-pro",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "deepseek-v4-pro",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/gemini-3-1-flash-lite",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
-        "model": "Gemini 3.1 Flash Lite",
-        "sourceUrl": "https://freellm.net/models/llm7-io/gemini-3-1-flash-lite",
+        "provider": "LLM7",
+        "model": "gemini-3.1-flash-lite",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gemini-3-7-flash",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gemini-3.7-flash",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gemini-3-8-flash-high",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gemini-3.8-flash-high",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gemini-3-flash",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gemini-3-flash",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gemini-omni-flash",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gemini-omni-flash",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/gemma4-31b",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
-        "model": "Gemma 4 31B IT",
-        "sourceUrl": "https://freellm.net/models/llm7-io/gemma4-31b",
+        "provider": "LLM7",
+        "model": "gemma4:31b",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/glm-5-3",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "glm-5.3",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/glm-5-3-flash",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "GLM-5.3-Flash",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-5-6-luna",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-5.6-luna",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-5-6-sol",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-5.6-sol",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-5-6-terra",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-5.6-terra",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-6-astra",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-6-astra",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-image-2",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-image-2",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/gpt-image-2-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "gpt-image-2.5",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/grok-4-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "grok-4.5",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/grok-4-6",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "grok-4.6",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/inkling",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "Inkling",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/inkling-small",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "Inkling-Small",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/kimi-k3",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "kimi-k3",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/kling-v3-0-pro",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "kling-v3.0-pro",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/kling-v3-0-turbo",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "kling-v3.0-turbo",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/l3-8b-lunaris-v1-turbo",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "L3-8B-Lunaris-v1-Turbo",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/llama-4-maverick",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "llama-4-maverick",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/mimo-v2-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "MiMo-V2.5",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/mimo-v2-5-pro",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "MiMo-V2.5-Pro",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/minimax-m2-7",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
+        "provider": "LLM7",
         "model": "minimax-m2.7",
-        "sourceUrl": "https://freellm.net/models/llm7-io/minimax-m2-7",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
         "id": "llm7-io/mistral-nemo-instruct-2407",
         "providerId": "llm7-io",
-        "provider": "LLM7.io",
+        "provider": "LLM7",
         "model": "mistral-Nemo-Instruct-2407",
-        "sourceUrl": "https://freellm.net/models/llm7-io/mistral-nemo-instruct-2407",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/codestral",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Codestral",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/codestral",
+        "id": "llm7-io/mistral-small-24b-instruct-2501",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "mistral-Small-24B-Instruct-2501",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/ministral-3-14b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Ministral 3 14B",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/ministral-3-14b",
+        "id": "llm7-io/seed-2-0-mini",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "seed-2.0-mini",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/ministral-3-3b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Ministral 3 3B",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/ministral-3-3b",
+        "id": "llm7-io/seedance-2-0",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "seedance-2.0",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/ministral-3-8b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Ministral 3 8B",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/ministral-3-8b",
+        "id": "llm7-io/seedance-2-0-fast",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "seedance-2.0-fast",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/mistral-large-3",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Mistral Large 3",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/mistral-large-3",
+        "id": "llm7-io/seedance-2-0-mini",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "seedance-2.0-mini",
+        "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
       {
-        "id": "mistral-ai/mistral-medium-3-5-128b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Mistral Medium 3.5 (128B)",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/mistral-medium-3-5-128b",
-        "status": "online"
-      },
-      {
-        "id": "mistral-ai/mistral-small-4",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Mistral Small 4",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/mistral-small-4",
-        "status": "online"
-      },
-      {
-        "id": "mistral-ai/open-mistral-7b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Mistral 7B",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/open-mistral-7b",
-        "status": "online"
-      },
-      {
-        "id": "mistral-ai/open-mixtral-8x7b",
-        "providerId": "mistral-ai",
-        "provider": "Mistral AI",
-        "model": "Mixtral 8x7B",
-        "sourceUrl": "https://freellm.net/models/mistral-ai/open-mixtral-8x7b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/deepseek-ai-deepseek-v4-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "deepseek-ai/DeepSeek-V4-Flash",
-        "sourceUrl": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-flash",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/deepseek-ai-deepseek-v4-pro",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "deepseek-ai/DeepSeek-V4-Pro",
-        "sourceUrl": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/deepseek-ai-deepseek-v4-pro-0813",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
-        "sourceUrl": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-pro-0813",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/early-access-ea-29b-a4b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "early-access/EA-29B-A4B",
-        "sourceUrl": "https://freellm.net/models/modelscope/early-access-ea-29b-a4b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/medaibase-antangelmed",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "MedAIBase/AntAngelMed",
-        "sourceUrl": "https://freellm.net/models/modelscope/medaibase-antangelmed",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/meituan-longcat-longcat-flash-lite",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "meituan-longcat/LongCat-Flash-Lite",
-        "sourceUrl": "https://freellm.net/models/modelscope/meituan-longcat-longcat-flash-lite",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/minimax-minimax-m1-80k",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "MiniMax/MiniMax-M1-80k",
-        "sourceUrl": "https://freellm.net/models/modelscope/minimax-minimax-m1-80k",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/minimax-minimax-m3",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "MiniMax-M3",
-        "sourceUrl": "https://freellm.net/models/modelscope/minimax-minimax-m3",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/mistralai-mistral-large-instruct-2407",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "mistralai/Mistral-Large-Instruct-2407",
-        "sourceUrl": "https://freellm.net/models/modelscope/mistralai-mistral-large-instruct-2407",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/musepublic-qwen-image-edit",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "MusePublic/Qwen-Image-Edit",
-        "sourceUrl": "https://freellm.net/models/modelscope/musepublic-qwen-image-edit",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/nex-agi-nex-n2-5-mini",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-mini",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-mini",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/nex-agi-nex-n2-5-pro",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "nex-agi/Nex-N2.5-Pro",
-        "sourceUrl": "https://freellm.net/models/modelscope/nex-agi-nex-n2-5-pro",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/opencompass-compassjudger-1-32b-instruct",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "opencompass/CompassJudger-1-32B-Instruct",
-        "sourceUrl": "https://freellm.net/models/modelscope/opencompass-compassjudger-1-32b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/opengvlab-internvl3-5-241b-a28b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "OpenGVLab/InternVL3_5-241B-A28B",
-        "sourceUrl": "https://freellm.net/models/modelscope/opengvlab-internvl3-5-241b-a28b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/paddlepaddle-ernie-4-5-0-3b-pt",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "PaddlePaddle/ERNIE-4.5-0.3B-PT",
-        "sourceUrl": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-0-3b-pt",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "PaddlePaddle/ERNIE-4.5-21B-A3B-PT",
-        "sourceUrl": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "PaddlePaddle/ERNIE-4.5-300B-A47B-PT",
-        "sourceUrl": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "PaddlePaddle/ERNIE-4.5-VL-28B-A3B-PT",
-        "sourceUrl": "https://freellm.net/models/modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen-image-edit",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen-Image-Edit",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen-image-edit",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-14b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-14B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-14b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-235b-a22b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-235B-A22B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-235b-a22b-instruct-2507",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-235B-A22B-Instruct-2507",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-instruct-2507",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-235b-a22b-thinking-2507",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-235B-A22B-Thinking-2507",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-235b-a22b-thinking-2507",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-30b-a3b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-30B-A3B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-30b-a3b-thinking-2507",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-30B-A3B-Thinking-2507",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-30b-a3b-thinking-2507",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-4b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-4B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-4b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-5-122b-a10b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.5-122B-A10B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-5-122b-a10b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-5-397b-a17b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.5-397B-A17B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-5-397b-a17b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-8-27b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.8-27B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-8-27b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-8-flash-next",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.8-Flash-Next",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-8-flash-next",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-8b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-8B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-8b",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-coder-30b-a3b-instruct",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-coder-30b-a3b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-next-80b-a3b-instruct",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-Next-80B-A3B-Instruct",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-next-80b-a3b-thinking",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-next-80b-a3b-thinking",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-vl-235b-a22b-instruct",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-VL-235B-A22B-Instruct",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-vl-235b-a22b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-vl-8b-instruct",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-VL-8B-Instruct",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/qwen-qwen3-vl-8b-thinking",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3-VL-8B-Thinking",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-vl-8b-thinking",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/shanghai-ai-laboratory-intern-s1",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Shanghai_AI_Laboratory/Intern-S1",
-        "sourceUrl": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/shanghai-ai-laboratory-intern-s1-mini",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Shanghai_AI_Laboratory/Intern-S1-mini",
-        "sourceUrl": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s1-mini",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/shanghai-ai-laboratory-intern-s2-preview",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Shanghai_AI_Laboratory/Intern-S2-Preview",
-        "sourceUrl": "https://freellm.net/models/modelscope/shanghai-ai-laboratory-intern-s2-preview",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/stepfun-ai-step-3-5-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "stepfun-ai/Step-3.5-Flash",
-        "sourceUrl": "https://freellm.net/models/modelscope/stepfun-ai-step-3-5-flash",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/stepfun-ai-step-3-7-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "stepfun-ai/Step-3.7-Flash",
-        "sourceUrl": "https://freellm.net/models/modelscope/stepfun-ai-step-3-7-flash",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/tencent-hunyuan-hy3",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Tencent-Hunyuan/Hy3",
-        "sourceUrl": "https://freellm.net/models/modelscope/tencent-hunyuan-hy3",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "XGenerationLab/XiYanSQL-QwenCoder-32B-2412",
-        "sourceUrl": "https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "XGenerationLab/XiYanSQL-QwenCoder-32B-2504",
-        "sourceUrl": "https://freellm.net/models/modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/zhipuai-glm-4-7-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "GLM-4.7-FlashX",
-        "sourceUrl": "https://freellm.net/models/modelscope/zhipuai-glm-4-7-flash",
-        "status": "online"
-      },
-      {
-        "id": "modelscope/zhipuai-glm-5-2",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "GLM-5.1",
-        "sourceUrl": "https://freellm.net/models/modelscope/zhipuai-glm-5-2",
-        "status": "online"
-      },
-      {
-        "id": "nvidia-nim/01-ai-yi-large",
+        "id": "nvidia-nim/ai-synthetic-video-detector",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "01-ai/yi-large",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/01-ai-yi-large",
+        "model": "ai-synthetic-video-detector",
+        "sourceUrl": "https://build.nvidia.com/nvidia/ai-synthetic-video-detector",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/adept-fuyu-8b",
+        "id": "nvidia-nim/arctic-embed-l",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "adept/fuyu-8b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/adept-fuyu-8b",
+        "model": "arctic-embed-l",
+        "sourceUrl": "https://build.nvidia.com/snowflake/arctic-embed-l",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/ai21labs-jamba-1-5-large-instruct",
+        "id": "nvidia-nim/codegemma-1-1-7b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "ai21labs/jamba-1.5-large-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/ai21labs-jamba-1-5-large-instruct",
+        "model": "codegemma-1.1-7b",
+        "sourceUrl": "https://build.nvidia.com/google/codegemma-1.1-7b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/aisingapore-sea-lion-7b-instruct",
+        "id": "nvidia-nim/codegemma-7b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "aisingapore/sea-lion-7b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/aisingapore-sea-lion-7b-instruct",
+        "model": "codegemma-7b",
+        "sourceUrl": "https://build.nvidia.com/google/codegemma-7b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/bigcode-starcoder2-15b",
+        "id": "nvidia-nim/codellama-70b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "bigcode/starcoder2-15b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/bigcode-starcoder2-15b",
+        "model": "codellama-70b",
+        "sourceUrl": "https://build.nvidia.com/meta/codellama-70b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/databricks-dbrx-instruct",
+        "id": "nvidia-nim/codestral-22b-instruct-v0-1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "databricks/dbrx-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/databricks-dbrx-instruct",
+        "model": "codestral-22b-instruct-v0.1",
+        "sourceUrl": "https://build.nvidia.com/mistralai/codestral-22b-instruct-v0.1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct",
+        "id": "nvidia-nim/cosmos-reason2-8b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "deepseek-ai/deepseek-coder-6.7b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct",
+        "model": "cosmos-reason2-8b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/cosmos-reason2-8b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/deepseek-ai-deepseek-v4-flash",
+        "id": "nvidia-nim/dbrx-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "deepseek-ai/deepseek-v4-flash",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash",
+        "model": "dbrx-instruct",
+        "sourceUrl": "https://build.nvidia.com/databricks/dbrx-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/deepseek-ai-deepseek-v4-flash-0731",
+        "id": "nvidia-nim/deepseek-coder-6-7b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "deepseek-ai/deepseek-v4-flash-0731",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-flash-0731",
+        "model": "deepseek-coder-6.7b-instruct",
+        "sourceUrl": "https://build.nvidia.com/deepseek-ai/deepseek-coder-6.7b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro",
+        "id": "nvidia-nim/deepseek-v4-flash-0731",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "deepseek-ai/deepseek-v4-pro",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro",
+        "model": "deepseek-v4-flash-0731",
+        "sourceUrl": "https://build.nvidia.com/deepseek-ai/deepseek-v4-flash-0731",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro-0813",
+        "id": "nvidia-nim/deplot",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "deepseek-ai/deepseek-v4-pro-0813",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/deepseek-ai-deepseek-v4-pro-0813",
+        "model": "deplot",
+        "sourceUrl": "https://build.nvidia.com/google/deplot",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-codegemma-1-1-7b",
+        "id": "nvidia-nim/diffusiongemma-26b-a4b-it",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/codegemma-1.1-7b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-codegemma-1-1-7b",
+        "model": "diffusiongemma-26b-a4b-it",
+        "sourceUrl": "https://build.nvidia.com/google/diffusiongemma-26b-a4b-it",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-codegemma-7b",
+        "id": "nvidia-nim/embed-qa-4",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/codegemma-7b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-codegemma-7b",
+        "model": "embed-qa-4",
+        "sourceUrl": "https://build.nvidia.com/nvidia/embed-qa-4",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-deplot",
+        "id": "nvidia-nim/fuyu-8b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/deplot",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-deplot",
+        "model": "fuyu-8b",
+        "sourceUrl": "https://build.nvidia.com/adept/fuyu-8b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-diffusiongemma-26b-a4b-it",
+        "id": "nvidia-nim/gemma-2b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/diffusiongemma-26b-a4b-it",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-diffusiongemma-26b-a4b-it",
+        "model": "gemma-2b",
+        "sourceUrl": "https://build.nvidia.com/google/gemma-2b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-gemma-2b",
+        "id": "nvidia-nim/gemma-3-12b-it",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/gemma-2b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-gemma-2b",
+        "model": "gemma-3-12b-it",
+        "sourceUrl": "https://build.nvidia.com/google/gemma-3-12b-it",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-gemma-4-31b-it",
+        "id": "nvidia-nim/gemma-3-4b-it",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Gemma 4 31B IT",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-gemma-4-31b-it",
+        "model": "gemma-3-4b-it",
+        "sourceUrl": "https://build.nvidia.com/google/gemma-3-4b-it",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/google-recurrentgemma-2b",
+        "id": "nvidia-nim/gemma-4-31b-it",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "google/recurrentgemma-2b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/google-recurrentgemma-2b",
+        "model": "gemma-4-31b-it",
+        "sourceUrl": "https://build.nvidia.com/google/gemma-4-31b-it",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/ibm-granite-3-0-3b-a800m-instruct",
+        "id": "nvidia-nim/glm-5-3",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "ibm/granite-3.0-3b-a800m-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/ibm-granite-3-0-3b-a800m-instruct",
+        "model": "glm-5.3",
+        "sourceUrl": "https://build.nvidia.com/z-ai/glm-5.3",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/ibm-granite-3-0-8b-instruct",
+        "id": "nvidia-nim/glm-5-3-flash",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "ibm/granite-3.0-8b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/ibm-granite-3-0-8b-instruct",
+        "model": "glm-5.3-flash",
+        "sourceUrl": "https://build.nvidia.com/z-ai/glm-5.3-flash",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/ibm-granite-34b-code-instruct",
+        "id": "nvidia-nim/gpt-oss-20b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "ibm/granite-34b-code-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/ibm-granite-34b-code-instruct",
+        "model": "gpt-oss-20b",
+        "sourceUrl": "https://build.nvidia.com/openai/gpt-oss-20b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/ibm-granite-8b-code-instruct",
+        "id": "nvidia-nim/granite-3-0-3b-a800m-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "ibm/granite-8b-code-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/ibm-granite-8b-code-instruct",
+        "model": "granite-3.0-3b-a800m-instruct",
+        "sourceUrl": "https://build.nvidia.com/ibm/granite-3.0-3b-a800m-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-codellama-70b",
+        "id": "nvidia-nim/granite-3-0-8b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "meta/codellama-70b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-codellama-70b",
+        "model": "granite-3.0-8b-instruct",
+        "sourceUrl": "https://build.nvidia.com/ibm/granite-3.0-8b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-llama-3-2-11b-vision-instruct",
+        "id": "nvidia-nim/granite-34b-code-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "meta/llama-3.2-11b-vision-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-llama-3-2-11b-vision-instruct",
+        "model": "granite-34b-code-instruct",
+        "sourceUrl": "https://build.nvidia.com/ibm/granite-34b-code-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-llama-3-2-90b-vision-instruct",
+        "id": "nvidia-nim/granite-8b-code-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "meta/llama-3.2-90b-vision-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-llama-3-2-90b-vision-instruct",
+        "model": "granite-8b-code-instruct",
+        "sourceUrl": "https://build.nvidia.com/ibm/granite-8b-code-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-llama-guard-4-12b",
+        "id": "nvidia-nim/ising-calibration-1-5-31b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "meta/llama-guard-4-12b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-llama-guard-4-12b",
+        "model": "ising-calibration-1.5-31b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/ising-calibration-1.5-31b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-llama2-70b",
+        "id": "nvidia-nim/jamba-1-5-large-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "meta/llama2-70b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-llama2-70b",
+        "model": "jamba-1.5-large-instruct",
+        "sourceUrl": "https://build.nvidia.com/ai21labs/jamba-1.5-large-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/meta-muse-glimmer-30b",
+        "id": "nvidia-nim/kimi-k2-6",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Muse Glimmer 30B",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/meta-muse-glimmer-30b",
+        "model": "kimi-k2.6",
+        "sourceUrl": "https://build.nvidia.com/moonshotai/kimi-k2.6",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/microsoft-kosmos-2",
+        "id": "nvidia-nim/kimi-k3",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "microsoft/kosmos-2",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/microsoft-kosmos-2",
+        "model": "kimi-k3",
+        "sourceUrl": "https://build.nvidia.com/moonshotai/kimi-k3",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/microsoft-phi-3-5-moe-instruct",
+        "id": "nvidia-nim/kosmos-2",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "microsoft/phi-3.5-moe-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/microsoft-phi-3-5-moe-instruct",
+        "model": "kosmos-2",
+        "sourceUrl": "https://build.nvidia.com/microsoft/kosmos-2",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/microsoft-phi-3-vision-128k-instruct",
+        "id": "nvidia-nim/laguna-xs-2-1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "microsoft/phi-3-vision-128k-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/microsoft-phi-3-vision-128k-instruct",
+        "model": "laguna-xs-2.1",
+        "sourceUrl": "https://build.nvidia.com/poolside/laguna-xs-2.1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/minimaxai-minimax-m3",
+        "id": "nvidia-nim/llama-3-1-nemoguard-8b-content-safety",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "minimaxai/minimax-m3",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/minimaxai-minimax-m3",
+        "model": "llama-3.1-nemoguard-8b-content-safety",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemoguard-8b-content-safety",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-codestral-22b-instruct-v0-1",
+        "id": "nvidia-nim/llama-3-1-nemoguard-8b-topic-control",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/codestral-22b-instruct-v0.1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-codestral-22b-instruct-v0-1",
+        "model": "llama-3.1-nemoguard-8b-topic-control",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemoguard-8b-topic-control",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-mistral-7b-instruct-v0-3",
+        "id": "nvidia-nim/llama-3-1-nemotron-51b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/mistral-7b-instruct-v0.3",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-mistral-7b-instruct-v0-3",
+        "model": "llama-3.1-nemotron-51b-instruct",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemotron-51b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-mistral-large-2-instruct",
+        "id": "nvidia-nim/llama-3-1-nemotron-70b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/mistral-large-2-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-mistral-large-2-instruct",
+        "model": "llama-3.1-nemotron-70b-instruct",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemotron-70b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512",
+        "id": "nvidia-nim/llama-3-1-nemotron-safety-guard-8b-v3",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/mistral-large-3-675b-instruct-2512",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512",
+        "model": "llama-3.1-nemotron-safety-guard-8b-v3",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemotron-safety-guard-8b-v3",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-mistral-nemotron",
+        "id": "nvidia-nim/llama-3-1-nemotron-ultra-253b-v1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/mistral-nemotron",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-mistral-nemotron",
+        "model": "llama-3.1-nemotron-ultra-253b-v1",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.1-nemotron-ultra-253b-v1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/mistralai-mixtral-8x22b-v0-1",
+        "id": "nvidia-nim/llama-3-2-11b-vision-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "mistralai/mixtral-8x22b-v0.1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/mistralai-mixtral-8x22b-v0-1",
+        "model": "llama-3.2-11b-vision-instruct",
+        "sourceUrl": "https://build.nvidia.com/meta/llama-3.2-11b-vision-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/moonshotai-kimi-k2-6",
+        "id": "nvidia-nim/llama-3-2-90b-vision-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "moonshotai/kimi-k2.6",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/moonshotai-kimi-k2-6",
+        "model": "llama-3.2-90b-vision-instruct",
+        "sourceUrl": "https://build.nvidia.com/meta/llama-3.2-90b-vision-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/moonshotai-kimi-k3",
+        "id": "nvidia-nim/llama-3-2-nemoretriever-1b-vlm-embed-v1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Kimi K3",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/moonshotai-kimi-k3",
+        "model": "llama-3.2-nemoretriever-1b-vlm-embed-v1",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct",
+        "id": "nvidia-nim/llama-3-2-nv-embedqa-1b-v1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nv-mistralai/mistral-nemo-12b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct",
+        "model": "llama-3.2-nv-embedqa-1b-v1",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-3.2-nv-embedqa-1b-v1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-cosmos-reason2-8b",
+        "id": "nvidia-nim/llama-guard-4-12b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/cosmos-reason2-8b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-cosmos-reason2-8b",
+        "model": "llama-guard-4-12b",
+        "sourceUrl": "https://build.nvidia.com/meta/llama-guard-4-12b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-embed-qa-4",
+        "id": "nvidia-nim/llama-nemotron-embed-vl-1b-v2",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/embed-qa-4",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-embed-qa-4",
+        "model": "llama-nemotron-embed-vl-1b-v2",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama-nemotron-embed-vl-1b-v2",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-ising-calibration-1-5-31b",
+        "id": "nvidia-nim/llama2-70b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/ising-calibration-1.5-31b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-ising-calibration-1-5-31b",
+        "model": "llama2-70b",
+        "sourceUrl": "https://build.nvidia.com/meta/llama2-70b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety",
+        "id": "nvidia-nim/llama3-chatqa-1-5-70b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.1-nemoguard-8b-content-safety",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety",
+        "model": "llama3-chatqa-1.5-70b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/llama3-chatqa-1.5-70b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control",
+        "id": "nvidia-nim/mistral-7b-instruct-v0-3",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.1-nemoguard-8b-topic-control",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control",
+        "model": "mistral-7b-instruct-v0.3",
+        "sourceUrl": "https://build.nvidia.com/mistralai/mistral-7b-instruct-v0.3",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct",
+        "id": "nvidia-nim/mistral-large",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.1-nemotron-51b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct",
+        "model": "mistral-large",
+        "sourceUrl": "https://build.nvidia.com/mistralai/mistral-large",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct",
+        "id": "nvidia-nim/mistral-large-2-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.1-nemotron-70b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct",
+        "model": "mistral-large-2-instruct",
+        "sourceUrl": "https://build.nvidia.com/mistralai/mistral-large-2-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3",
+        "id": "nvidia-nim/mistral-nemo-12b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Llama 3.1 Nemotron Safety Guard 8B v3",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3",
+        "model": "mistral-nemo-12b-instruct",
+        "sourceUrl": "https://build.nvidia.com/nv-mistralai/mistral-nemo-12b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1",
+        "id": "nvidia-nim/mistral-nemo-minitron-8b-8k-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.1-nemotron-ultra-253b-v1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1",
+        "model": "mistral-nemo-minitron-8b-8k-instruct",
+        "sourceUrl": "https://build.nvidia.com/nvidia/mistral-nemo-minitron-8b-8k-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1",
+        "id": "nvidia-nim/mistral-nemotron",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1",
+        "model": "mistral-nemotron",
+        "sourceUrl": "https://build.nvidia.com/mistralai/mistral-nemotron",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1",
+        "id": "nvidia-nim/mixtral-8x22b-v0-1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-3.2-nv-embedqa-1b-v1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1",
+        "model": "mixtral-8x22b-v0.1",
+        "sourceUrl": "https://build.nvidia.com/mistralai/mixtral-8x22b-v0.1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2",
+        "id": "nvidia-nim/muse-glimmer-30b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2",
+        "model": "muse-glimmer-30b",
+        "sourceUrl": "https://build.nvidia.com/meta/muse-glimmer-30b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-llama3-chatqa-1-5-70b",
+        "id": "nvidia-nim/nemotron-3-5-content-safety",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/llama3-chatqa-1.5-70b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-llama3-chatqa-1-5-70b",
+        "model": "nemotron-3.5-content-safety",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3.5-content-safety",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct",
+        "id": "nvidia-nim/nemotron-3-5-lightning-30b-a3b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/mistral-nemo-minitron-8b-8k-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct",
+        "model": "nemotron-3.5-lightning-30b-a3b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-5-content-safety",
+        "id": "nvidia-nim/nemotron-3-embed-1b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-3.5-content-safety",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-content-safety",
+        "model": "nemotron-3-embed-1b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3-embed-1b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b",
+        "id": "nvidia-nim/nemotron-3-nano-omni-30b-a3b-reasoning",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b",
+        "model": "nemotron-3-nano-omni-30b-a3b-reasoning",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-embed-1b",
+        "id": "nvidia-nim/nemotron-3-super-120b-a12b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-3-embed-1b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-embed-1b",
+        "model": "nemotron-3-super-120b-a12b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning",
+        "id": "nvidia-nim/nemotron-3-ultra-550b-a55b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Nemotron 3 Nano Omni 30B A3B Reasoning",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning",
+        "model": "nemotron-3-ultra-550b-a55b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-super-120b-a12b",
+        "id": "nvidia-nim/nemotron-4-340b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Nemotron 3 Super 120B A12B",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-super-120b-a12b",
+        "model": "nemotron-4-340b-instruct",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-4-340b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b",
+        "id": "nvidia-nim/nemotron-4-340b-reward",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "Nemotron 3 Ultra 550B A55B",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b",
+        "model": "nemotron-4-340b-reward",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-4-340b-reward",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-4-340b-instruct",
+        "id": "nvidia-nim/nemotron-nano-3-30b-a3b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-4-340b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-instruct",
+        "model": "nemotron-nano-3-30b-a3b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-nano-3-30b-a3b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-4-340b-reward",
+        "id": "nvidia-nim/nemotron-parse",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-4-340b-reward",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-4-340b-reward",
+        "model": "nemotron-parse",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-parse",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-nano-3-30b-a3b",
+        "id": "nvidia-nim/nemotron-parse-2-0",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-nano-3-30b-a3b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-nano-3-30b-a3b",
+        "model": "nemotron-parse-2.0",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nemotron-parse-2.0",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-parse",
+        "id": "nvidia-nim/neva-22b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-parse",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse",
+        "model": "neva-22b",
+        "sourceUrl": "https://build.nvidia.com/nvidia/neva-22b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nemotron-parse-2-0",
+        "id": "nvidia-nim/nv-embedqa-mistral-7b-v2",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nemotron-parse-2.0",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nemotron-parse-2-0",
+        "model": "nv-embedqa-mistral-7b-v2",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nv-embedqa-mistral-7b-v2",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-neva-22b",
+        "id": "nvidia-nim/nvclip",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/neva-22b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-neva-22b",
+        "model": "nvclip",
+        "sourceUrl": "https://build.nvidia.com/nvidia/nvclip",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2",
+        "id": "nvidia-nim/palmyra-creative-122b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nv-embedqa-mistral-7b-v2",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2",
+        "model": "palmyra-creative-122b",
+        "sourceUrl": "https://build.nvidia.com/writer/palmyra-creative-122b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-nvclip",
+        "id": "nvidia-nim/palmyra-fin-70b-32k",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/nvclip",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-nvclip",
+        "model": "palmyra-fin-70b-32k",
+        "sourceUrl": "https://build.nvidia.com/writer/palmyra-fin-70b-32k",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct",
+        "id": "nvidia-nim/palmyra-med-70b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/riva-translate-4b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct",
+        "model": "palmyra-med-70b",
+        "sourceUrl": "https://build.nvidia.com/writer/palmyra-med-70b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1",
+        "id": "nvidia-nim/palmyra-med-70b-32k",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/riva-translate-4b-instruct-v1.1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1",
+        "model": "palmyra-med-70b-32k",
+        "sourceUrl": "https://build.nvidia.com/writer/palmyra-med-70b-32k",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct-v2",
+        "id": "nvidia-nim/phi-3-5-moe-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/riva-translate-4b-instruct-v2",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-riva-translate-4b-instruct-v2",
+        "model": "phi-3.5-moe-instruct",
+        "sourceUrl": "https://build.nvidia.com/microsoft/phi-3.5-moe-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/nvidia-vila",
+        "id": "nvidia-nim/phi-3-vision-128k-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "nvidia/vila",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/nvidia-vila",
+        "model": "phi-3-vision-128k-instruct",
+        "sourceUrl": "https://build.nvidia.com/microsoft/phi-3-vision-128k-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/openai-gpt-oss-20b",
+        "id": "nvidia-nim/recurrentgemma-2b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "GPT OSS 20B",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/openai-gpt-oss-20b",
+        "model": "recurrentgemma-2b",
+        "sourceUrl": "https://build.nvidia.com/google/recurrentgemma-2b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/poolside-laguna-xs-2-1",
+        "id": "nvidia-nim/riva-translate-4b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "poolside/laguna-xs-2.1",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/poolside-laguna-xs-2-1",
+        "model": "riva-translate-4b-instruct",
+        "sourceUrl": "https://build.nvidia.com/nvidia/riva-translate-4b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/snowflake-arctic-embed-l",
+        "id": "nvidia-nim/riva-translate-4b-instruct-v1-1",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "snowflake/arctic-embed-l",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/snowflake-arctic-embed-l",
+        "model": "riva-translate-4b-instruct-v1.1",
+        "sourceUrl": "https://build.nvidia.com/nvidia/riva-translate-4b-instruct-v1.1",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/writer-palmyra-creative-122b",
+        "id": "nvidia-nim/riva-translate-4b-instruct-v2",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "writer/palmyra-creative-122b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/writer-palmyra-creative-122b",
+        "model": "riva-translate-4b-instruct-v2",
+        "sourceUrl": "https://build.nvidia.com/nvidia/riva-translate-4b-instruct-v2",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/writer-palmyra-fin-70b-32k",
+        "id": "nvidia-nim/sea-lion-7b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "writer/palmyra-fin-70b-32k",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/writer-palmyra-fin-70b-32k",
+        "model": "sea-lion-7b-instruct",
+        "sourceUrl": "https://build.nvidia.com/aisingapore/sea-lion-7b-instruct",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/writer-palmyra-med-70b",
+        "id": "nvidia-nim/starcoder2-15b",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "writer/palmyra-med-70b",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b",
+        "model": "starcoder2-15b",
+        "sourceUrl": "https://build.nvidia.com/bigcode/starcoder2-15b",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/writer-palmyra-med-70b-32k",
+        "id": "nvidia-nim/vila",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "writer/palmyra-med-70b-32k",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/writer-palmyra-med-70b-32k",
+        "model": "vila",
+        "sourceUrl": "https://build.nvidia.com/nvidia/vila",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/z-ai-glm-5-3-flash",
+        "id": "nvidia-nim/yi-large",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "z-ai/glm-5.3-flash",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/z-ai-glm-5-3-flash",
+        "model": "yi-large",
+        "sourceUrl": "https://build.nvidia.com/01-ai/yi-large",
         "status": "online"
       },
       {
-        "id": "nvidia-nim/zyphra-zamba2-7b-instruct",
+        "id": "nvidia-nim/zamba2-7b-instruct",
         "providerId": "nvidia-nim",
         "provider": "NVIDIA NIM",
-        "model": "zyphra/zamba2-7b-instruct",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/zyphra-zamba2-7b-instruct",
+        "model": "zamba2-7b-instruct",
+        "sourceUrl": "https://build.nvidia.com/zyphra/zamba2-7b-instruct",
         "status": "online"
       },
       {
-        "id": "ollama-cloud/deepseek-v4-flash",
+        "id": "ollama-cloud/deepseek-v4-1-flash",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
-        "model": "deepseek-v4-flash",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/deepseek-v4-flash",
+        "provider": "Ollama",
+        "model": "deepseek-v4.1-flash",
+        "sourceUrl": "https://ollama.com/library/deepseek-v4.1-flash",
         "status": "online"
       },
       {
-        "id": "ollama-cloud/deepseek-v4-pro",
+        "id": "ollama-cloud/deepseek-v4-flash-0731",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
-        "model": "deepseek-v4-pro",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/deepseek-v4-pro",
+        "provider": "Ollama",
+        "model": "deepseek-v4-flash:0731",
+        "sourceUrl": "https://ollama.com/library/deepseek-v4-flash:0731",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/deepseek-v4-pro-0813",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "deepseek-v4-pro:0813",
+        "sourceUrl": "https://ollama.com/library/deepseek-v4-pro:0813",
         "status": "online"
       },
       {
         "id": "ollama-cloud/gemma4-31b",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
-        "model": "Gemma 4 31B IT",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/gemma4-31b",
+        "provider": "Ollama",
+        "model": "gemma4:31b",
+        "sourceUrl": "https://ollama.com/library/gemma4:31b",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/glm-5-1",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "glm-5.1",
+        "sourceUrl": "https://ollama.com/library/glm-5.1",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/glm-5-2",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "glm-5.2",
+        "sourceUrl": "https://ollama.com/library/glm-5.2",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/glm-5-3",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "glm-5.3",
+        "sourceUrl": "https://ollama.com/library/glm-5.3",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/glm-5-3-flash",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "glm-5.3-flash",
+        "sourceUrl": "https://ollama.com/library/glm-5.3-flash",
         "status": "online"
       },
       {
         "id": "ollama-cloud/gpt-oss-120b",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
+        "provider": "Ollama",
         "model": "gpt-oss:120b",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/gpt-oss-120b",
+        "sourceUrl": "https://ollama.com/library/gpt-oss:120b",
         "status": "online"
       },
       {
         "id": "ollama-cloud/gpt-oss-20b",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
+        "provider": "Ollama",
         "model": "gpt-oss:20b",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/gpt-oss-20b",
+        "sourceUrl": "https://ollama.com/library/gpt-oss:20b",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/kimi-k2-6",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "kimi-k2.6",
+        "sourceUrl": "https://ollama.com/library/kimi-k2.6",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/kimi-k2-7-code",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "kimi-k2.7-code",
+        "sourceUrl": "https://ollama.com/library/kimi-k2.7-code",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/kimi-k3",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "kimi-k3",
+        "sourceUrl": "https://ollama.com/library/kimi-k3",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/minimax-m2-7",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "minimax-m2.7",
+        "sourceUrl": "https://ollama.com/library/minimax-m2.7",
         "status": "online"
       },
       {
         "id": "ollama-cloud/minimax-m3",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
+        "provider": "Ollama",
         "model": "minimax-m3",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/minimax-m3",
+        "sourceUrl": "https://ollama.com/library/minimax-m3",
+        "status": "online"
+      },
+      {
+        "id": "ollama-cloud/mistral-large-3-675b",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "mistral-large-3:675b",
+        "sourceUrl": "https://ollama.com/library/mistral-large-3:675b",
         "status": "online"
       },
       {
         "id": "ollama-cloud/nemotron-3-nano-30b",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
-        "model": "Nemotron 3 Nano 30B A3B",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/nemotron-3-nano-30b",
+        "provider": "Ollama",
+        "model": "nemotron-3-nano:30b",
+        "sourceUrl": "https://ollama.com/library/nemotron-3-nano:30b",
         "status": "online"
       },
       {
         "id": "ollama-cloud/nemotron-3-super",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
-        "model": "Nemotron 3 Super 120B A12B",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/nemotron-3-super",
+        "provider": "Ollama",
+        "model": "nemotron-3-super",
+        "sourceUrl": "https://ollama.com/library/nemotron-3-super",
         "status": "online"
       },
       {
         "id": "ollama-cloud/nemotron-3-ultra",
         "providerId": "ollama-cloud",
-        "provider": "Ollama Cloud",
+        "provider": "Ollama",
         "model": "nemotron-3-ultra",
-        "sourceUrl": "https://freellm.net/models/ollama-cloud/nemotron-3-ultra",
+        "sourceUrl": "https://ollama.com/library/nemotron-3-ultra",
         "status": "online"
       },
       {
-        "id": "opencode/big-pickle",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "big-pickle",
-        "sourceUrl": "https://freellm.net/models/opencode/big-pickle",
+        "id": "ollama-cloud/qwen3-5-397b",
+        "providerId": "ollama-cloud",
+        "provider": "Ollama",
+        "model": "qwen3.5:397b",
+        "sourceUrl": "https://ollama.com/library/qwen3.5:397b",
         "status": "online"
       },
       {
-        "id": "opencode/deepseek-v4-flash-free",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "DeepSeek V4 Flash",
-        "sourceUrl": "https://freellm.net/models/opencode/deepseek-v4-flash-free",
-        "status": "online"
-      },
-      {
-        "id": "opencode/ling-3-0-flash-fin-free",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "Ling 3.0 Flash Fin",
-        "sourceUrl": "https://freellm.net/models/opencode/ling-3-0-flash-fin-free",
-        "status": "online"
-      },
-      {
-        "id": "opencode/mimo-v2-5-free",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "MiMo-V2.5",
-        "sourceUrl": "https://freellm.net/models/opencode/mimo-v2-5-free",
-        "status": "online"
-      },
-      {
-        "id": "opencode/nemotron-3-5-lightning-free",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "Nemotron 3.5 Lightning 30B A3B",
-        "sourceUrl": "https://freellm.net/models/opencode/nemotron-3-5-lightning-free",
-        "status": "online"
-      },
-      {
-        "id": "opencode/nemotron-3-ultra-free",
-        "providerId": "opencode",
-        "provider": "OpenCode Zen",
-        "model": "Nemotron 3 Ultra 550B A55B",
-        "sourceUrl": "https://freellm.net/models/opencode/nemotron-3-ultra-free",
-        "status": "online"
-      },
-      {
-        "id": "openrouter/cohere-north-mini-code",
+        "id": "openrouter/cohere-north-mini-code-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Cohere: North Mini Code (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/cohere-north-mini-code",
+        "sourceUrl": "https://openrouter.ai/cohere/north-mini-code:free",
         "status": "online"
       },
       {
-        "id": "openrouter/dots-studio-dots-3-note-preview",
+        "id": "openrouter/dots-studio-dots-3-note-preview-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Dots Studio: Dots3-Note Preview (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/dots-studio-dots-3-note-preview",
+        "sourceUrl": "https://openrouter.ai/dots-studio/dots-3-note-preview:free",
         "status": "online"
       },
       {
-        "id": "openrouter/google-gemma-4-26b-a4b-it",
+        "id": "openrouter/google-gemma-4-26b-a4b-it-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
-        "model": "Google: Gemma 4 26B A4B (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/google-gemma-4-26b-a4b-it",
+        "model": "Google: Gemma 4 26B A4B  (free)",
+        "sourceUrl": "https://openrouter.ai/google/gemma-4-26b-a4b-it:free",
         "status": "online"
       },
       {
-        "id": "openrouter/google-gemma-4-31b-it",
+        "id": "openrouter/google-gemma-4-31b-it-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Google: Gemma 4 31B (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/google-gemma-4-31b-it",
+        "sourceUrl": "https://openrouter.ai/google/gemma-4-31b-it:free",
         "status": "online"
       },
       {
@@ -3136,7 +2423,7 @@
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Google: Lyria 3 Clip Preview",
-        "sourceUrl": "https://freellm.net/models/openrouter/google-lyria-3-clip-preview",
+        "sourceUrl": "https://openrouter.ai/google/lyria-3-clip-preview",
         "status": "online"
       },
       {
@@ -3144,95 +2431,95 @@
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Google: Lyria 3 Pro Preview",
-        "sourceUrl": "https://freellm.net/models/openrouter/google-lyria-3-pro-preview",
+        "sourceUrl": "https://openrouter.ai/google/lyria-3-pro-preview",
         "status": "online"
       },
       {
-        "id": "openrouter/inclusionai-ling-3-0-flash-fin",
+        "id": "openrouter/inclusionai-ling-3-0-flash-fin-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "inclusionAI: Ling 3.0 Flash Fin (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-fin",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-fin:free",
         "status": "online"
       },
       {
-        "id": "openrouter/inclusionai-ling-3-0-flash-sante",
+        "id": "openrouter/inclusionai-ling-3-0-flash-sante-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "inclusionAI: Ling 3.0 Flash Sante (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-sante",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-sante:free",
         "status": "online"
       },
       {
-        "id": "openrouter/inclusionai-ling-3-0-flash-vl",
+        "id": "openrouter/inclusionai-ling-3-0-flash-vl-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "inclusionAI: Ling 3.0 Flash VL (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/inclusionai-ling-3-0-flash-vl",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-vl:free",
         "status": "online"
       },
       {
-        "id": "openrouter/liquid-lfm-2-5-2-6b",
+        "id": "openrouter/liquid-lfm-2-5-2-6b-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "LiquidAI: LFM2.5-2.6B (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/liquid-lfm-2-5-2-6b",
+        "sourceUrl": "https://openrouter.ai/liquid/lfm-2.5-2.6b:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nex-agi-nex-n2-5-mini",
+        "id": "openrouter/nex-agi-nex-n2-5-mini-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Nex AGI: Nex-N2.5-Mini (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nex-agi-nex-n2-5-mini",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-mini:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nex-agi-nex-n2-5-pro",
+        "id": "openrouter/nex-agi-nex-n2-5-pro-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Nex AGI: Nex-N2.5-Pro (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nex-agi-nex-n2-5-pro",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-pro:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nvidia-nemotron-3-5-content-safety",
+        "id": "openrouter/nvidia-nemotron-3-5-content-safety-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "NVIDIA: Nemotron 3.5 Content Safety (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nvidia-nemotron-3-5-content-safety",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-content-safety:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nvidia-nemotron-3-5-lightning",
+        "id": "openrouter/nvidia-nemotron-3-5-lightning-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "NVIDIA: Nemotron 3.5 Lightning (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nvidia-nemotron-3-5-lightning",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-lightning:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning",
+        "id": "openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "NVIDIA: Nemotron 3 Nano Omni (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nvidia-nemotron-3-super-120b-a12b",
+        "id": "openrouter/nvidia-nemotron-3-super-120b-a12b-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "NVIDIA: Nemotron 3 Super (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nvidia-nemotron-3-super-120b-a12b",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-super-120b-a12b:free",
         "status": "online"
       },
       {
-        "id": "openrouter/nvidia-nemotron-3-ultra-550b-a55b",
+        "id": "openrouter/nvidia-nemotron-3-ultra-550b-a55b-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "NVIDIA: Nemotron 3 Ultra (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/nvidia-nemotron-3-ultra-550b-a55b",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b:free",
         "status": "online"
       },
       {
@@ -3240,119 +2527,55 @@
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Free Models Router",
-        "sourceUrl": "https://freellm.net/models/openrouter/openrouter-free",
+        "sourceUrl": "https://openrouter.ai/openrouter/free",
         "status": "online"
       },
       {
-        "id": "openrouter/poolside-laguna-s-2-1",
+        "id": "openrouter/poolside-laguna-s-2-1-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Poolside: Laguna S 2.1 (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/poolside-laguna-s-2-1",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-s-2.1:free",
         "status": "online"
       },
       {
-        "id": "openrouter/poolside-laguna-xs-2-1",
+        "id": "openrouter/poolside-laguna-xs-2-1-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Poolside: Laguna XS 2.1 (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/poolside-laguna-xs-2-1",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-xs-2.1:free",
         "status": "online"
       },
       {
-        "id": "openrouter/thinkingmachines-inkling",
+        "id": "openrouter/stealth-union-alpha",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "Union Alpha",
+        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
+        "status": "online"
+      },
+      {
+        "id": "openrouter/thinkingmachines-inkling-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Thinking Machines: Inkling (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/thinkingmachines-inkling",
+        "sourceUrl": "https://openrouter.ai/thinkingmachines/inkling:free",
         "status": "online"
       },
       {
-        "id": "openrouter/thinkingmachines-inkling-small",
+        "id": "openrouter/thinkingmachines-inkling-small-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
         "model": "Thinking Machines: Inkling Small (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/thinkingmachines-inkling-small",
+        "sourceUrl": "https://openrouter.ai/thinkingmachines/inkling-small:free",
         "status": "online"
       },
       {
-        "id": "ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Meta-Llama-3_3-70B-Instruct",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/mistral-7b-instruct-v0-3",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Mistral-7B-Instruct-v0.3",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/mistral-7b-instruct-v0-3",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/mistral-small-3-2-24b-instruct",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Mistral-Small-3.2-24B-Instruct",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/mistral-small-3-2-24b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen2-5-vl-72b-instruct",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen2.5-VL-72B-Instruct",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen2-5-vl-72b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen3-32b",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen3-32B",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen3-32b",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen3-5-397b-a17b",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen3.5-397B-A17B",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen3-5-397b-a17b",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen3-5-9b",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen3.5-9B",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen3-5-9b",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen3-6-27b",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen3.6-27B",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen3-6-27b",
-        "status": "online"
-      },
-      {
-        "id": "ovhcloud-ai-endpoints/qwen3-coder-30b-a3b-instruct",
-        "providerId": "ovhcloud-ai-endpoints",
-        "provider": "OVHcloud AI Endpoints",
-        "model": "Qwen3-Coder-30B-A3B-Instruct",
-        "sourceUrl": "https://freellm.net/models/ovhcloud-ai-endpoints/qwen3-coder-30b-a3b-instruct",
-        "status": "online"
-      },
-      {
-        "id": "siliconflow/abbreviation",
-        "providerId": "siliconflow",
-        "provider": "SiliconFlow",
-        "model": "Abbreviation",
-        "sourceUrl": "https://freellm.net/models/siliconflow/abbreviation",
+        "id": "openrouter/z-ai-glm-5-2-free",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "Z.ai: GLM 5.2 (free)",
+        "sourceUrl": "https://openrouter.ai/z-ai/glm-5.2:free",
         "status": "online"
       },
       {
@@ -3361,46 +2584,6 @@
         "provider": "Unisound Token Hub",
         "model": "Unisound U2 Flash",
         "sourceUrl": "https://maas.unisound.com/models/u2-flash",
-        "status": "online"
-      },
-      {
-        "id": "z-ai-zhipu-ai/glm-4-5-air",
-        "providerId": "z-ai-zhipu-ai",
-        "provider": "Z AI (Zhipu AI)",
-        "model": "GLM-4.5-Air",
-        "sourceUrl": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-air",
-        "status": "online"
-      },
-      {
-        "id": "z-ai-zhipu-ai/glm-4-5-flash",
-        "providerId": "z-ai-zhipu-ai",
-        "provider": "Z AI (Zhipu AI)",
-        "model": "GLM-4.5-Flash",
-        "sourceUrl": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash",
-        "status": "online"
-      },
-      {
-        "id": "z-ai-zhipu-ai/glm-4-5-flash-retirement-announced",
-        "providerId": "z-ai-zhipu-ai",
-        "provider": "Z AI (Zhipu AI)",
-        "model": "GLM-4.5-Flash (retirement announced)",
-        "sourceUrl": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-5-flash-retirement-announced",
-        "status": "online"
-      },
-      {
-        "id": "z-ai-zhipu-ai/glm-4-6v-flash",
-        "providerId": "z-ai-zhipu-ai",
-        "provider": "Z AI (Zhipu AI)",
-        "model": "GLM-4.6V-Flash",
-        "sourceUrl": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-6v-flash",
-        "status": "online"
-      },
-      {
-        "id": "z-ai-zhipu-ai/glm-4-7-flash",
-        "providerId": "z-ai-zhipu-ai",
-        "provider": "Z AI (Zhipu AI)",
-        "model": "GLM-4.7-Flash",
-        "sourceUrl": "https://freellm.net/models/z-ai-zhipu-ai/glm-4-7-flash",
         "status": "online"
       }
     ],
@@ -3532,7 +2715,7 @@
           ],
           "steps": [
             "打开官方入门页并完成登录",
-            "安装 IDE/CLI 扩展后查看每月 Agent 和资源查询额度"
+            "安装 IDE/CLI 扩展后查看每月 Agent 请求额度"
           ],
           "examples": {
             "action": "打开 https://aws.amazon.com/q/developer/getting-started/ 并按官方步骤配置 Builder ID"
@@ -3540,7 +2723,7 @@
           "docsUrl": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-tiers.html"
         },
         "evidence": "AWS's official pricing page lists a zero-cost Free tier with 50 agentic requests per month; AWS documentation calls the Free tier perpetual and shows IDE/CLI access for personal Builder IDs.",
-        "freeSummary": "50 agentic requests + 25 AWS resource queries per month",
+        "freeSummary": "50 agentic requests per month",
         "validitySummary": "Perpetual free tier / monthly limits",
         "accessSummary": "Global where AWS Q is supported"
       },
@@ -3598,6 +2781,62 @@
         "freeSummary": "新用户登录客户端领 1,000 积分（3 个月有效）；体验版每日登录免费领 100 积分",
         "validitySummary": "积分规则与套餐以官方价格页为准；发布初期规则可能调整",
         "accessSummary": "Windows 10/11 64 位或 macOS M 系列芯片；需登录账号"
+      },
+      {
+        "id": "atria-dawn-preview",
+        "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
+        "name": "Atria Dawn Preview 免费额度 API",
+        "provider": "Shanghai AI Laboratory",
+        "productType": "api",
+        "status": "verified",
+        "register": "https://api.atria-asi.ai/console",
+        "registerLabel": "Atria 控制台（国际）",
+        "sourceUrls": [
+          "https://api.atria-asi.ai/docs",
+          "https://github.com/atria-asi/Atria-Dawn-Preview",
+          "https://discovery.intern-ai.org.cn/token-plan/home"
+        ],
+        "links": [
+          [
+            "官方 API 文档",
+            "https://api.atria-asi.ai/docs"
+          ],
+          [
+            "官方 GitHub 仓库（基准与部署说明）",
+            "https://github.com/atria-asi/Atria-Dawn-Preview"
+          ],
+          [
+            "Hugging Face 权重（MIT）",
+            "https://huggingface.co/internlm/Atria-Dawn-Preview"
+          ],
+          [
+            "国内 Token Plan 入口",
+            "https://discovery.intern-ai.org.cn/token-plan/home"
+          ]
+        ],
+        "usageGuide": {
+          "summary": "注册领 1 亿 Token，调用 Atria-Dawn-Preview 的 OpenAI 兼容接口（深度检索 / 深度研究 / 自动化任务场景）",
+          "prerequisites": [
+            "Atria 控制台账号（国际控制台 api.atria-asi.ai，Google 账号登录；国内入口 discovery.intern-ai.org.cn）",
+            "在 Keys 页创建 API Key（注册即领 1 亿 Token，无需信用卡）"
+          ],
+          "steps": [
+            "注册并在控制台确认 1 亿 Token 免费额度已到账",
+            "创建 API Key，保存为 ATRIA_API_KEY 环境变量",
+            "以国内 Base URL https://discovery.intern-ai.org.cn/v1 或国际 Base URL https://api.atria-asi.ai 调用 /v1/chat/completions，模型 ID 固定为 Atria-Dawn-Preview"
+          ],
+          "endpoint": "https://discovery.intern-ai.org.cn/v1/chat/completions",
+          "method": "POST",
+          "authentication": "API key via Authorization: Bearer header",
+          "examples": {
+            "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+          },
+          "docsUrl": "https://api.atria-asi.ai/docs"
+        },
+        "evidence": "官方 API 文档确认模型 ID Atria-Dawn-Preview、256K 上下文与 OpenAI/Anthropic 兼容端点及 60 RPM 示例；官方 GitHub README 确认上海人工智能实验室出品、744B MoE、MIT 许可与基准表；第三方控制台实测（2026-09-15）确认注册赠 1 亿 Token、无需信用卡。",
+        "freeSummary": "注册即领 1 亿 Token 免费额度；控制台当前档位 Atria-Dawn-Preview 输入/输出单价为 $0",
+        "validitySummary": "额度期限与扣减规则以控制台 Token Plan 页为准，官方未公示到期日",
+        "accessSummary": "国际控制台需 Google 账号；国内可走 discovery.intern-ai.org.cn Token Plan 入口"
       },
       {
         "id": "brave-search-free-credits",
@@ -3856,6 +3095,7 @@
         "registerLabel": "Cohere dashboard",
         "sourceUrls": [
           "https://cohere.com/pricing",
+          "https://docs.cohere.com/docs/rate-limits",
           "https://docs.cohere.com/reference/chat"
         ],
         "links": [
@@ -3885,7 +3125,7 @@
           },
           "docsUrl": "https://docs.cohere.com/reference/chat"
         },
-        "evidence": "Official pricing FAQ: 'API calls made from a Trial API key are free. However, trial keys are rate limited and are not permitted to be used for production or commercial purposes.'",
+        "evidence": "Cohere docs: “Trial keys (and prod keys on newer Chat model variants) are limited to 1,000 API calls a month.” Trial chat models are capped at 20 req/min and Rerank at 10 req/min. The pricing FAQ adds that trial API calls are free but are not permitted for production or commercial use.",
         "freeSummary": "Trial API key: free, rate-limited, not permitted for production or commercial use",
         "validitySummary": "Ongoing trial keys; rate limits apply",
         "accessSummary": "Cohere personal account"
@@ -4263,7 +3503,7 @@
           "docsUrl": "https://github.com/features/copilot/plans"
         },
         "evidence": "GitHub's official plans page lists the Free plan at $0 with 2,000 completions and 50 chat requests per month; it also documents Copilot CLI and supported editor access.",
-        "freeSummary": "2,000 completions + 50 chat/agent requests per month",
+        "freeSummary": "2,000 completions / month + limited chat and agent usage",
         "validitySummary": "Monthly / recurring free plan",
         "accessSummary": "Global GitHub personal account"
       },
@@ -4277,6 +3517,7 @@
         "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
         "registerLabel": "Register / open GLM Coding",
         "sourceUrls": [
+          "https://docs.bigmodel.cn/cn/coding-plan/overview",
           "https://docs.bigmodel.cn/cn/coding-plan/faq"
         ],
         "links": [
@@ -4304,7 +3545,7 @@
           },
           "docsUrl": "https://docs.bigmodel.cn/cn/coding-plan/faq"
         },
-        "evidence": "Official FAQ documents peak and non-peak quota consumption by provider time.",
+        "evidence": "Official overview: “套餐同时设有每 5 小时和每周额度上限” and “非高峰时段内，模型调用按基础积分消耗的 50% 抵扣。高峰时段：每周一至周五的 14:00～18:00 （UTC+8）”",
         "freeSummary": "Quota multiplier changes by provider time",
         "validitySummary": "5-hour windows / weekly limit",
         "accessSummary": "China account"
@@ -4810,7 +4051,7 @@
           },
           "docsUrl": "https://modelscope.cn/docs/model-service/API-Inference/intro"
         },
-        "evidence": "官方文档：「API-Inference面向ModelScope注册用户免费提供」「免费推理API由阿里云提供算力支持，要求您的ModelScope账号必须首先绑定阿里云账号…对应云账号需已通过实名认证」「魔粒扣减分为三档：轻量模型（0.5 魔粒/次），主流模型（1 魔粒/次），旗舰模型（2 魔粒/次）」。",
+        "evidence": "Re-confirmed 2026-09-17 from the server-rendered description of the official limits page: “魔搭通过API-Inference，将开源模型服务化并通过API接口进行标准化，免费提供给广大开发者体验” and “API-Inference 本身为非商业化，非盈利产品”. The detail quotes previously recorded (Aliyun binding + real-name verification, and the 魔粒 tiers 轻量模型 0.5 / 主流模型 1 / 旗舰模型 2 per call) come from the official docs body, which is rendered client-side and could not be re-fetched by our tooling on 2026-09-17 — they still need a manual browser check.",
         "freeSummary": "API-Inference is free for registered users; dynamic rate limits and 魔粒 (MoLi) deduction apply",
         "validitySummary": "Ongoing free service; model list iterates as new open models release",
         "accessSummary": "ModelScope account + Aliyun binding + real-name verification"
@@ -5139,7 +4380,7 @@
           "docsUrl": "https://platform.stepfun.com/docs/zh/quickstart/overview"
         },
         "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
-        "freeSummary": "StepFun 官方定价页当前将 step-audio-r1.1、step-1x-edit、step-2x-large 标注为限免中",
+        "freeSummary": "StepFun 官方定价页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标注为限免中",
         "validitySummary": "Limited-time offer; model availability and free status can change",
         "accessSummary": "StepFun Open Platform account and API key"
       },
@@ -5341,7 +4582,7 @@
           "docsUrl": "https://www.trae.cn/pricing"
         },
         "evidence": "Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.",
-        "freeSummary": "Personal version is free; quota varies by mode",
+        "freeSummary": "免费版每月 500 积分，所有功能均可免费使用",
         "validitySummary": "Ongoing / subject to limits",
         "accessSummary": "China account"
       },
@@ -5569,84 +4810,859 @@
   "known": {
     "models": [
       {
-        "id": "cline/cline-free-deepseek-v4-1-flash",
-        "providerId": "cline",
-        "provider": "Cline",
-        "model": "Deepseek-v4.1-Flash",
-        "sourceUrl": "https://freellm.net/models/cline/cline-free-deepseek-v4-1-flash",
-        "status": "online"
+        "id": "agnes-ai/agnes-1-5-flash"
       },
       {
-        "id": "groq/meta-llama-llama-prompt-guard-2-22m",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "meta-llama/llama-prompt-guard-2-22m",
-        "sourceUrl": "https://freellm.net/models/groq/meta-llama-llama-prompt-guard-2-22m",
-        "status": "online"
+        "id": "agnes-ai/agnes-2-0-flash"
       },
       {
-        "id": "groq/meta-llama-llama-prompt-guard-2-86m",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "meta-llama/llama-prompt-guard-2-86m",
-        "sourceUrl": "https://freellm.net/models/groq/meta-llama-llama-prompt-guard-2-86m",
-        "status": "online"
+        "id": "agnes-ai/agnes-image-2-0-flash"
       },
       {
-        "id": "groq/qwen-qwen3-8-27b",
-        "providerId": "groq",
-        "provider": "Groq",
-        "model": "qwen/qwen3.8-27b",
-        "sourceUrl": "https://freellm.net/models/groq/qwen-qwen3-8-27b",
-        "status": "online"
+        "id": "agnes-ai/agnes-image-2-1-flash"
       },
       {
-        "id": "modelscope/deepseek-ai-deepseek-v4-1-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "deepseek-ai/DeepSeek-V4.1-Flash",
-        "sourceUrl": "https://freellm.net/models/modelscope/deepseek-ai-deepseek-v4-1-flash",
-        "status": "online"
+        "id": "agnes-ai/agnes-video-v2-0"
       },
       {
-        "id": "modelscope/qwen-qwen3-5-27b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.5-27B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-5-27b",
-        "status": "online"
+        "id": "aion-labs/aion-labs-aion-2-0"
       },
       {
-        "id": "modelscope/qwen-qwen3-5-35b-a3b",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "Qwen/Qwen3.5-35B-A3B",
-        "sourceUrl": "https://freellm.net/models/modelscope/qwen-qwen3-5-35b-a3b",
-        "status": "online"
+        "id": "aion-labs/aion-labs-aion-3-0"
       },
       {
-        "id": "modelscope/zhipuai-glm-5-3-flash",
-        "providerId": "modelscope",
-        "provider": "ModelScope",
-        "model": "GLM-5.3-Flash",
-        "sourceUrl": "https://freellm.net/models/modelscope/zhipuai-glm-5-3-flash",
-        "status": "online"
+        "id": "aion-labs/aion-labs-aion-3-0-mini"
       },
       {
-        "id": "nvidia-nim/z-ai-glm-5-3",
-        "providerId": "nvidia-nim",
-        "provider": "NVIDIA NIM",
-        "model": "z-ai/glm-5.3",
-        "sourceUrl": "https://freellm.net/models/nvidia-nim/z-ai-glm-5-3",
-        "status": "online"
+        "id": "aion-labs/aion-labs-aion-rp-llama-3-1-8b"
       },
       {
-        "id": "openrouter/z-ai-glm-5-2",
-        "providerId": "openrouter",
-        "provider": "OpenRouter",
-        "model": "Z.ai: GLM 5.2 (free)",
-        "sourceUrl": "https://freellm.net/models/openrouter/z-ai-glm-5-2",
-        "status": "online"
+        "id": "cerebras/llama3-1-70b"
+      },
+      {
+        "id": "chutes-ai/deepseek-ai-deepseek-r1"
+      },
+      {
+        "id": "chutes-ai/meta-llama-meta-llama-3-1-70b-instruct"
+      },
+      {
+        "id": "cline/cline-free-longcat-2-0"
+      },
+      {
+        "id": "cline/cline-free-muse-spark-1-3-contributor"
+      },
+      {
+        "id": "cline/cline-free-solar-pro4"
+      },
+      {
+        "id": "cline/deepseek-deepseek-v4-flash"
+      },
+      {
+        "id": "cline/poolside-laguna-s-2-1"
+      },
+      {
+        "id": "cline/z-ai-glm-5-3-flash"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-aisingapore-gemma-sea-lion-v4-27b-it"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-baai-bge-base-en-v1-5"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-baai-bge-large-en-v1-5"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-baai-bge-m3"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-baai-bge-small-en-v1-5"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-deepseek-ai-deepseek-r1-distill-qwen-32b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-google-embeddinggemma-300m"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-google-gemma-2b-it-lora"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-google-gemma-4-26b-a4b-it"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-google-gemma-7b-it-lora"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-ibm-granite-granite-4-0-h-micro"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-3-1-8b-instruct-fp8"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-3-2-1b-instruct"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-3-2-3b-instruct"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-3-3-70b-instruct-fp8-fast"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-4-scout-17b-16e-instruct"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-guard-3-8b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-meta-llama-llama-2-7b-chat-hf-lora"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-mistral-mistral-7b-instruct-v0-2-lora"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-mistralai-mistral-small-3-1-24b-instruct"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-moondream-moondream3-1-9b-a2b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-moonshotai-kimi-k2-6"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-moonshotai-kimi-k2-7-code"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-nvidia-nemotron-3-120b-a12b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-openai-gpt-oss-120b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-openai-gpt-oss-20b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-pfnet-plamo-embedding-1b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-qwen-qwen2-5-coder-32b-instruct"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-qwen-qwen3-30b-a3b-fp8"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-qwen-qwen3-8-27b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-qwen-qwen3-embedding-0-6b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-qwen-qwq-32b"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-zai-org-glm-4-7-flash"
+      },
+      {
+        "id": "cloudflare-workers-ai/cf-zai-org-glm-5-2"
+      },
+      {
+        "id": "cloudflare-workers-ai/mistral-mistral-7b-instruct-v0-1"
+      },
+      {
+        "id": "cloudflare-workers-ai/qwen-qwen1-5-7b-chat"
+      },
+      {
+        "id": "cohere/aya-expanse-32b"
+      },
+      {
+        "id": "cohere/aya-vision-32b"
+      },
+      {
+        "id": "cohere/command-a-111b"
+      },
+      {
+        "id": "cohere/command-a-218b"
+      },
+      {
+        "id": "cohere/command-a-reasoning"
+      },
+      {
+        "id": "cohere/command-a-translate"
+      },
+      {
+        "id": "cohere/command-a-vision"
+      },
+      {
+        "id": "cohere/command-r"
+      },
+      {
+        "id": "cohere/command-r7b"
+      },
+      {
+        "id": "cohere/command-r7b-arabic"
+      },
+      {
+        "id": "github-models/ai21-jamba-1-5-large"
+      },
+      {
+        "id": "github-models/mistral-large-2411"
+      },
+      {
+        "id": "github-models/phi-4"
+      },
+      {
+        "id": "glhf-chat/meta-llama-meta-llama-3-1-70b-instruct-2"
+      },
+      {
+        "id": "glhf-chat/mistralai-mixtral-8x7b-instruct-v0-1"
+      },
+      {
+        "id": "google-gemini/gemini-2-5-flash"
+      },
+      {
+        "id": "google-gemini/gemini-2-5-flash-lite"
+      },
+      {
+        "id": "google-gemini/gemini-2-5-pro"
+      },
+      {
+        "id": "google-gemini/gemini-3-1-flash-lite"
+      },
+      {
+        "id": "google-gemini/gemini-3-5-flash"
+      },
+      {
+        "id": "google-gemini/gemini-3-5-flash-lite"
+      },
+      {
+        "id": "google-gemini/gemini-3-6-flash"
+      },
+      {
+        "id": "google-gemini/gemini-3-7-flash"
+      },
+      {
+        "id": "google-gemini/gemini-3-8-flash"
+      },
+      {
+        "id": "google-gemini/gemma-4-26b-a4b"
+      },
+      {
+        "id": "google-gemini/gemma-4-26b-a4b-it"
+      },
+      {
+        "id": "google-gemini/gemma-4-31b"
+      },
+      {
+        "id": "google-gemini/gemma-4-31b-it"
+      },
+      {
+        "id": "grok-(xai)/grok-2"
+      },
+      {
+        "id": "grok-(xai)/grok-2-mini"
+      },
+      {
+        "id": "groq/allam-2-7b"
+      },
+      {
+        "id": "groq/groq-compound"
+      },
+      {
+        "id": "groq/groq-compound-mini"
+      },
+      {
+        "id": "groq/moonshotai-kimi-k2-instruct"
+      },
+      {
+        "id": "groq/moonshotai-kimi-k2-instruct-0905"
+      },
+      {
+        "id": "groq/whisper-large-v3"
+      },
+      {
+        "id": "groq/whisper-large-v3-turbo"
+      },
+      {
+        "id": "hugging-face/gemma-3-4b-it"
+      },
+      {
+        "id": "hugging-face/meta-llama-3-1-8b-instruct"
+      },
+      {
+        "id": "hugging-face/qwen2-5-7b-instruct"
+      },
+      {
+        "id": "hugging-face/qwen2-5-coder-7b-instruct"
+      },
+      {
+        "id": "kilo-code/cohere-north-mini-code-free"
+      },
+      {
+        "id": "kilo-code/liquid-lfm-2-5-2-6b-free"
+      },
+      {
+        "id": "kilo-code/nvidia-nemotron-3-5-lightning-free"
+      },
+      {
+        "id": "kilo-code/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free"
+      },
+      {
+        "id": "kilo-code/nvidia-nemotron-3-super-120b-a12b-free"
+      },
+      {
+        "id": "kilo-code/nvidia-nemotron-3-ultra-550b-a55b-free"
+      },
+      {
+        "id": "kilo-code/poolside-laguna-s-2-1-free"
+      },
+      {
+        "id": "kilo-code/poolside-laguna-xs-2-1-free"
+      },
+      {
+        "id": "kilo-code/stepfun-step-3-7-flash-free"
+      },
+      {
+        "id": "kilo-code/tencent-hy3-free"
+      },
+      {
+        "id": "mistral-ai/codestral"
+      },
+      {
+        "id": "mistral-ai/ministral-3-14b"
+      },
+      {
+        "id": "mistral-ai/ministral-3-3b"
+      },
+      {
+        "id": "mistral-ai/ministral-3-8b"
+      },
+      {
+        "id": "mistral-ai/mistral-large-3"
+      },
+      {
+        "id": "mistral-ai/mistral-medium-3-5-128b"
+      },
+      {
+        "id": "mistral-ai/mistral-small-4"
+      },
+      {
+        "id": "mistral-ai/open-mistral-7b"
+      },
+      {
+        "id": "mistral-ai/open-mixtral-8x7b"
+      },
+      {
+        "id": "modelscope/deepseek-ai-deepseek-v4-flash"
+      },
+      {
+        "id": "modelscope/deepseek-ai-deepseek-v4-pro"
+      },
+      {
+        "id": "modelscope/deepseek-ai-deepseek-v4-pro-0813"
+      },
+      {
+        "id": "modelscope/early-access-ea-29b-a4b"
+      },
+      {
+        "id": "modelscope/medaibase-antangelmed"
+      },
+      {
+        "id": "modelscope/meituan-longcat-longcat-flash-lite"
+      },
+      {
+        "id": "modelscope/minimax-minimax-m1-80k"
+      },
+      {
+        "id": "modelscope/minimax-minimax-m3"
+      },
+      {
+        "id": "modelscope/mistralai-mistral-large-instruct-2407"
+      },
+      {
+        "id": "modelscope/musepublic-qwen-image-edit"
+      },
+      {
+        "id": "modelscope/nex-agi-nex-n2-5-mini"
+      },
+      {
+        "id": "modelscope/nex-agi-nex-n2-5-pro"
+      },
+      {
+        "id": "modelscope/opencompass-compassjudger-1-32b-instruct"
+      },
+      {
+        "id": "modelscope/opengvlab-internvl3-5-241b-a28b"
+      },
+      {
+        "id": "modelscope/paddlepaddle-ernie-4-5-0-3b-pt"
+      },
+      {
+        "id": "modelscope/paddlepaddle-ernie-4-5-21b-a3b-pt"
+      },
+      {
+        "id": "modelscope/paddlepaddle-ernie-4-5-300b-a47b-pt"
+      },
+      {
+        "id": "modelscope/paddlepaddle-ernie-4-5-vl-28b-a3b-pt"
+      },
+      {
+        "id": "modelscope/qwen-qwen-image-edit"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-14b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-235b-a22b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-235b-a22b-instruct-2507"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-235b-a22b-thinking-2507"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-30b-a3b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-30b-a3b-thinking-2507"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-4b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-5-122b-a10b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-5-397b-a17b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-8-27b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-8-flash-next"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-8b"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-coder-30b-a3b-instruct"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-next-80b-a3b-instruct"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-next-80b-a3b-thinking"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-vl-235b-a22b-instruct"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-vl-8b-instruct"
+      },
+      {
+        "id": "modelscope/qwen-qwen3-vl-8b-thinking"
+      },
+      {
+        "id": "modelscope/shanghai-ai-laboratory-intern-s1"
+      },
+      {
+        "id": "modelscope/shanghai-ai-laboratory-intern-s1-mini"
+      },
+      {
+        "id": "modelscope/shanghai-ai-laboratory-intern-s2-preview"
+      },
+      {
+        "id": "modelscope/stepfun-ai-step-3-5-flash"
+      },
+      {
+        "id": "modelscope/stepfun-ai-step-3-7-flash"
+      },
+      {
+        "id": "modelscope/tencent-hunyuan-hy3"
+      },
+      {
+        "id": "modelscope/xgenerationlab-xiyansql-qwencoder-32b-2412"
+      },
+      {
+        "id": "modelscope/xgenerationlab-xiyansql-qwencoder-32b-2504"
+      },
+      {
+        "id": "modelscope/zhipuai-glm-4-7-flash"
+      },
+      {
+        "id": "modelscope/zhipuai-glm-5-2"
+      },
+      {
+        "id": "nvidia-nim/01-ai-yi-large"
+      },
+      {
+        "id": "nvidia-nim/adept-fuyu-8b"
+      },
+      {
+        "id": "nvidia-nim/ai21labs-jamba-1-5-large-instruct"
+      },
+      {
+        "id": "nvidia-nim/aisingapore-sea-lion-7b-instruct"
+      },
+      {
+        "id": "nvidia-nim/bigcode-starcoder2-15b"
+      },
+      {
+        "id": "nvidia-nim/databricks-dbrx-instruct"
+      },
+      {
+        "id": "nvidia-nim/deepseek-ai-deepseek-coder-6-7b-instruct"
+      },
+      {
+        "id": "nvidia-nim/deepseek-ai-deepseek-v4-flash"
+      },
+      {
+        "id": "nvidia-nim/deepseek-ai-deepseek-v4-flash-0731"
+      },
+      {
+        "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro"
+      },
+      {
+        "id": "nvidia-nim/deepseek-ai-deepseek-v4-pro-0813"
+      },
+      {
+        "id": "nvidia-nim/google-codegemma-1-1-7b"
+      },
+      {
+        "id": "nvidia-nim/google-codegemma-7b"
+      },
+      {
+        "id": "nvidia-nim/google-deplot"
+      },
+      {
+        "id": "nvidia-nim/google-diffusiongemma-26b-a4b-it"
+      },
+      {
+        "id": "nvidia-nim/google-gemma-2b"
+      },
+      {
+        "id": "nvidia-nim/google-gemma-4-31b-it"
+      },
+      {
+        "id": "nvidia-nim/google-recurrentgemma-2b"
+      },
+      {
+        "id": "nvidia-nim/ibm-granite-3-0-3b-a800m-instruct"
+      },
+      {
+        "id": "nvidia-nim/ibm-granite-3-0-8b-instruct"
+      },
+      {
+        "id": "nvidia-nim/ibm-granite-34b-code-instruct"
+      },
+      {
+        "id": "nvidia-nim/ibm-granite-8b-code-instruct"
+      },
+      {
+        "id": "nvidia-nim/meta-codellama-70b"
+      },
+      {
+        "id": "nvidia-nim/meta-llama-3-2-11b-vision-instruct"
+      },
+      {
+        "id": "nvidia-nim/meta-llama-3-2-90b-vision-instruct"
+      },
+      {
+        "id": "nvidia-nim/meta-llama-guard-4-12b"
+      },
+      {
+        "id": "nvidia-nim/meta-llama2-70b"
+      },
+      {
+        "id": "nvidia-nim/meta-muse-glimmer-30b"
+      },
+      {
+        "id": "nvidia-nim/microsoft-kosmos-2"
+      },
+      {
+        "id": "nvidia-nim/microsoft-phi-3-5-moe-instruct"
+      },
+      {
+        "id": "nvidia-nim/microsoft-phi-3-vision-128k-instruct"
+      },
+      {
+        "id": "nvidia-nim/minimaxai-minimax-m3"
+      },
+      {
+        "id": "nvidia-nim/mistralai-codestral-22b-instruct-v0-1"
+      },
+      {
+        "id": "nvidia-nim/mistralai-mistral-7b-instruct-v0-3"
+      },
+      {
+        "id": "nvidia-nim/mistralai-mistral-large-2-instruct"
+      },
+      {
+        "id": "nvidia-nim/mistralai-mistral-large-3-675b-instruct-2512"
+      },
+      {
+        "id": "nvidia-nim/mistralai-mistral-nemotron"
+      },
+      {
+        "id": "nvidia-nim/mistralai-mixtral-8x22b-v0-1"
+      },
+      {
+        "id": "nvidia-nim/moonshotai-kimi-k2-6"
+      },
+      {
+        "id": "nvidia-nim/moonshotai-kimi-k3"
+      },
+      {
+        "id": "nvidia-nim/nv-mistralai-mistral-nemo-12b-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-cosmos-reason2-8b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-embed-qa-4"
+      },
+      {
+        "id": "nvidia-nim/nvidia-ising-calibration-1-5-31b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemoguard-8b-content-safety"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemoguard-8b-topic-control"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-51b-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-70b-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-safety-guard-8b-v3"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-1-nemotron-ultra-253b-v1"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-2-nemoretriever-1b-vlm-embed-v1"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-3-2-nv-embedqa-1b-v1"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama-nemotron-embed-vl-1b-v2"
+      },
+      {
+        "id": "nvidia-nim/nvidia-llama3-chatqa-1-5-70b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-mistral-nemo-minitron-8b-8k-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-5-content-safety"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-5-lightning-30b-a3b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-embed-1b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-super-120b-a12b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-3-ultra-550b-a55b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-4-340b-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-4-340b-reward"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-nano-3-30b-a3b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-parse"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nemotron-parse-2-0"
+      },
+      {
+        "id": "nvidia-nim/nvidia-neva-22b"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nv-embedqa-mistral-7b-v2"
+      },
+      {
+        "id": "nvidia-nim/nvidia-nvclip"
+      },
+      {
+        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct"
+      },
+      {
+        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct-v1-1"
+      },
+      {
+        "id": "nvidia-nim/nvidia-riva-translate-4b-instruct-v2"
+      },
+      {
+        "id": "nvidia-nim/nvidia-vila"
+      },
+      {
+        "id": "nvidia-nim/openai-gpt-oss-20b"
+      },
+      {
+        "id": "nvidia-nim/poolside-laguna-xs-2-1"
+      },
+      {
+        "id": "nvidia-nim/snowflake-arctic-embed-l"
+      },
+      {
+        "id": "nvidia-nim/writer-palmyra-creative-122b"
+      },
+      {
+        "id": "nvidia-nim/writer-palmyra-fin-70b-32k"
+      },
+      {
+        "id": "nvidia-nim/writer-palmyra-med-70b"
+      },
+      {
+        "id": "nvidia-nim/writer-palmyra-med-70b-32k"
+      },
+      {
+        "id": "nvidia-nim/z-ai-glm-5-3-flash"
+      },
+      {
+        "id": "nvidia-nim/zyphra-zamba2-7b-instruct"
+      },
+      {
+        "id": "ollama-cloud/deepseek-v4-flash"
+      },
+      {
+        "id": "ollama-cloud/deepseek-v4-pro"
+      },
+      {
+        "id": "opencode/big-pickle"
+      },
+      {
+        "id": "opencode/deepseek-v4-flash-free"
+      },
+      {
+        "id": "opencode/ling-3-0-flash-fin-free"
+      },
+      {
+        "id": "opencode/mimo-v2-5-free"
+      },
+      {
+        "id": "opencode/nemotron-3-5-lightning-free"
+      },
+      {
+        "id": "opencode/nemotron-3-ultra-free"
+      },
+      {
+        "id": "openrouter/cohere-north-mini-code"
+      },
+      {
+        "id": "openrouter/dots-studio-dots-3-note-preview"
+      },
+      {
+        "id": "openrouter/google-gemma-4-26b-a4b-it"
+      },
+      {
+        "id": "openrouter/google-gemma-4-31b-it"
+      },
+      {
+        "id": "openrouter/inclusionai-ling-3-0-flash-fin"
+      },
+      {
+        "id": "openrouter/inclusionai-ling-3-0-flash-sante"
+      },
+      {
+        "id": "openrouter/inclusionai-ling-3-0-flash-vl"
+      },
+      {
+        "id": "openrouter/liquid-lfm-2-5-2-6b"
+      },
+      {
+        "id": "openrouter/nex-agi-nex-n2-5-mini"
+      },
+      {
+        "id": "openrouter/nex-agi-nex-n2-5-pro"
+      },
+      {
+        "id": "openrouter/nvidia-nemotron-3-5-content-safety"
+      },
+      {
+        "id": "openrouter/nvidia-nemotron-3-5-lightning"
+      },
+      {
+        "id": "openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning"
+      },
+      {
+        "id": "openrouter/nvidia-nemotron-3-super-120b-a12b"
+      },
+      {
+        "id": "openrouter/nvidia-nemotron-3-ultra-550b-a55b"
+      },
+      {
+        "id": "openrouter/poolside-laguna-s-2-1"
+      },
+      {
+        "id": "openrouter/poolside-laguna-xs-2-1"
+      },
+      {
+        "id": "openrouter/thinkingmachines-inkling"
+      },
+      {
+        "id": "openrouter/thinkingmachines-inkling-small"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/meta-llama-3-3-70b-instruct"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/mistral-7b-instruct-v0-3"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/mistral-small-3-2-24b-instruct"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen2-5-vl-72b-instruct"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen3-32b"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen3-5-397b-a17b"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen3-5-9b"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen3-6-27b"
+      },
+      {
+        "id": "ovhcloud-ai-endpoints/qwen3-coder-30b-a3b-instruct"
+      },
+      {
+        "id": "siliconflow/abbreviation"
+      },
+      {
+        "id": "z-ai-zhipu-ai/glm-4-5-air"
+      },
+      {
+        "id": "z-ai-zhipu-ai/glm-4-5-flash"
+      },
+      {
+        "id": "z-ai-zhipu-ai/glm-4-5-flash-retirement-announced"
+      },
+      {
+        "id": "z-ai-zhipu-ai/glm-4-6v-flash"
+      },
+      {
+        "id": "z-ai-zhipu-ai/glm-4-7-flash"
       }
     ],
     "offers": []

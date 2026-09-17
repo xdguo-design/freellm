@@ -4557,5 +4557,116 @@
   "lastVerifiedAt": "2026-09-16",
   "checkedBy": "manual",
   "notes": "限免模型清单与倍率来自第三方实测对比，官方未逐条公开免费模型名单，可能随官方模型页随时调整；国际站与国内站账号、积分互不相通。"
+ },
+ {
+  "date": "2026-09-17",
+  "lastVerifiedAt": "2026-09-17",
+  "checkedBy": "manual",
+  "status": "verified",
+  "phoneRequired": "unknown",
+  "cardRequired": "no",
+  "commercialUse": "以 Atria 控制台官方条款为准",
+  "productType": "api",
+  "capabilities": [
+   "model_api",
+   "agent"
+  ],
+  "id": "atria-dawn-preview",
+  "order": 46,
+  "name": "Atria Dawn Preview 免费额度 API",
+  "providerMark": "AL",
+  "provider": "Shanghai AI Laboratory",
+  "providerMeta": "上海人工智能实验室 · Atria Token Plan",
+  "providerMetaEn": "Shanghai AI Lab · Atria",
+  "model": "Atria Dawn Preview",
+  "modelMeta": "744B MoE Agent 模型 · 256K 上下文 · MIT 开源权重",
+  "type": [
+   "api",
+   "free"
+  ],
+  "usageGuide": {
+   "summary": "注册领 1 亿 Token，调用 Atria-Dawn-Preview 的 OpenAI 兼容接口（深度检索 / 深度研究 / 自动化任务场景）",
+   "prerequisites": [
+    "Atria 控制台账号（国际控制台 api.atria-asi.ai，Google 账号登录；国内入口 discovery.intern-ai.org.cn）",
+    "在 Keys 页创建 API Key（注册即领 1 亿 Token，无需信用卡）"
+   ],
+   "steps": [
+    "注册并在控制台确认 1 亿 Token 免费额度已到账",
+    "创建 API Key，保存为 ATRIA_API_KEY 环境变量",
+    "以国内 Base URL https://discovery.intern-ai.org.cn/v1 或国际 Base URL https://api.atria-asi.ai 调用 /v1/chat/completions，模型 ID 固定为 Atria-Dawn-Preview"
+   ],
+   "endpoint": "https://discovery.intern-ai.org.cn/v1/chat/completions",
+   "method": "POST",
+   "authentication": "API key via Authorization: Bearer header",
+   "examples": {
+    "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+   },
+   "docsUrl": "https://api.atria-asi.ai/docs"
+  },
+  "kicker": "1 亿 TOKENS",
+  "badges": [
+   "100M TOKENS",
+   "NO CARD",
+   "CHINA"
+  ],
+  "freeSummary": "注册即领 1 亿 Token 免费额度；控制台当前档位 Atria-Dawn-Preview 输入/输出单价为 $0",
+  "validitySummary": "额度期限与扣减规则以控制台 Token Plan 页为准，官方未公示到期日",
+  "accessSummary": "国际控制台需 Google 账号；国内可走 discovery.intern-ai.org.cn Token Plan 入口",
+  "checkedSummary": "今日 / 官方 API 文档 + 官方 GitHub + 控制台第三方实测（2026-09-15）",
+  "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
+  "why": "上海人工智能实验室 2026-09 发布的新一代 Agent 模型：744B MoE（GLM-5.2 底座）、256K 上下文、MIT 开源权重；官方基准中 DeepSearchQA 96.0、BrowseComp 92.5、AutomationBench 53.8 领先 GPT-5.6 sol / Claude Opus 5 / Qwen 3.8 Max。当前控制台档位 $0 计价，新用户注册领 1 亿 Token，无需信用卡。",
+  "mechanism": "新用户注册赠送 100,000,000 Token；当前控制台档位 Atria-Dawn-Preview 按 $0/M tokens 计价（限时免费档位）",
+  "validity": "额度条款以控制台 Token Plan 页为准，官方未公示到期日；Preview 阶段定价未发布，额度用完后计费规则未定",
+  "access": "api.atria-asi.ai/console 注册（Google 账号）；国内入口 discovery.intern-ai.org.cn；无需信用卡",
+  "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+  "register": "https://api.atria-asi.ai/console",
+  "registerLabel": "Atria 控制台（国际）",
+  "links": [
+   [
+    "官方 API 文档",
+    "https://api.atria-asi.ai/docs"
+   ],
+   [
+    "官方 GitHub 仓库（基准与部署说明）",
+    "https://github.com/atria-asi/Atria-Dawn-Preview"
+   ],
+   [
+    "Hugging Face 权重（MIT）",
+    "https://huggingface.co/internlm/Atria-Dawn-Preview"
+   ],
+   [
+    "国内 Token Plan 入口",
+    "https://discovery.intern-ai.org.cn/token-plan/home"
+   ]
+  ],
+  "originCountry": "China",
+  "availability": "国内 Token Plan + 国际控制台双入口；API 公网可调用",
+  "freeMechanism": "limited_time_free",
+  "pricingModel": "limited_time_free",
+  "freePolicy": {
+   "type": "limited_time_free",
+   "amount": 100000000,
+   "unit": "tokens",
+   "period": null
+  },
+  "quota": "注册赠 1 亿 Token；控制台当前档位 Atria-Dawn-Preview 输入/输出/缓存命中均 $0/M tokens",
+  "renewal": "额度用完后按控制台计费规则扣费（Preview 阶段官方定价未发布，需关注控制台更新）",
+  "sourceUrls": [
+   "https://api.atria-asi.ai/docs",
+   "https://github.com/atria-asi/Atria-Dawn-Preview",
+   "https://discovery.intern-ai.org.cn/token-plan/home"
+  ],
+  "evidence": "官方 API 文档确认模型 ID Atria-Dawn-Preview、256K 上下文与 OpenAI/Anthropic 兼容端点及 60 RPM 示例；官方 GitHub README 确认上海人工智能实验室出品、744B MoE、MIT 许可与基准表；第三方控制台实测（2026-09-15）确认注册赠 1 亿 Token、无需信用卡。",
+  "confidence": "high",
+  "notes": "仅文本输入（图片/PDF 返回 400）；最大输出控制台模型卡显示 32,768 tokens；支持思考模式与工具调用，提示缓存关闭。",
+  "freeModels": [
+   {
+    "model": "Atria-Dawn-Preview",
+    "quota": "注册赠 100,000,000 Token（限时档位 $0/M tokens）",
+    "label": "744B MoE · 256K 上下文 · MIT 开源",
+    "note": "额度条款以控制台 Token Plan 页为准",
+    "sourceUrl": "https://discovery.intern-ai.org.cn/token-plan/home"
+   }
+  ]
  }
 ]
