@@ -29,7 +29,7 @@ class DiscoveryWorkflowTests(unittest.TestCase):
         self.assertNotIn("git add data/offers.json", workflow)
         self.assertNotIn("--out data/offers.json", workflow)
 
-    def test_daily_log_workflow_persists_detailed_logs_and_only_commits_log_outputs(self):
+    def test_daily_log_workflow_persists_detailed_logs_and_commits_regenerated_outputs(self):
         workflow = (ROOT / ".github" / "workflows" / "daily-log.yml").read_text(encoding="utf-8")
 
         for needle in (
@@ -41,7 +41,11 @@ class DiscoveryWorkflowTests(unittest.TestCase):
             "--merge",
             "data/daily-log",
             "scripts/build_seo_pages.py",
-            "logs/index.html",
+            "scripts/check_internal_links.py",
+            # 全量提交再生产物：只提交日志会让模型/分类页和分片 sitemap 与数据漂移。
+            "offers category guides models providers logs skills",
+            "sitemap-pages.xml",
+            "feed.xml",
             "git diff --cached --quiet",
         ):
             self.assertIn(needle, workflow)

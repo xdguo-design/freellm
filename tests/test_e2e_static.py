@@ -4,6 +4,7 @@ The Playwright tests run against a local browser when available and skip
 cleanly otherwise (CI uses the zero-install stdlib policy).
 """
 
+import base64
 import json
 import re
 import threading
@@ -66,7 +67,7 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
-            '<script src="/js/freellm-sync.js"></script>',
+            "document.write('<script src=\"/js/freellm-sync.js\"><\\/script>')",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-region-filter"',
@@ -284,10 +285,10 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
-    def test_homepage_exposes_language_alternates(self):
-        self.assertIn('<link rel="alternate" hreflang="zh-CN" href="https://freellm.top/" />', self.html)
-        self.assertIn('<link rel="alternate" hreflang="en" href="https://freellm.top/?lang=en" />', self.html)
-        self.assertIn('<link rel="alternate" hreflang="x-default" href="https://freellm.top/" />', self.html)
+    def test_homepage_omits_locale_hreflang_variants(self):
+        # Query-parameter hreflang variants caused duplicate Search Console
+        # URLs; they stay out until languages have distinct crawlable URLs.
+        self.assertNotIn('<link rel="alternate" hreflang=', self.html)
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
         self.assertIn(
@@ -300,7 +301,8 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
         self.assertIn('window.vaq = window.vaq || []', self.html)
-        self.assertIn('<script defer src="/_vercel/insights/script.js"></script>', self.html)
+        self.assertIn("if (window.location.protocol === 'https:')", self.html)
+        self.assertIn("vercelInsights.src = '/_vercel/insights/script.js'", self.html)
 
     def test_page_exposes_crawlable_internal_seo_links(self):
         self.assertIn("const offerHref = `/offers/${encodeURIComponent(item.id)}/`;", self.html)
@@ -531,13 +533,24 @@ class BrowserPageTests(unittest.TestCase):
         self.addCleanup(self.site.stop)
 
     def new_page(self):
-        context = self._browser.new_context()
+        # 固定中文 locale：页面的默认语言跟随 navigator.languages，
+        # 不固定的话中英文断言会随运行环境的浏览器语言漂移。
+        context = self._browser.new_context(locale="zh-CN")
         self.addCleanup(context.close)
         page = context.new_page()
         problems = []
         page.on("console", lambda message: problems.append(message.text) if message.type == "error" else None)
         page.on("pageerror", lambda error: problems.append(str(error)))
         page.problems = problems
+        bad_responses = []
+        page.on("response", lambda response: bad_responses.append((response.status, response.url)) if response.status >= 400 else None)
+        page.bad_responses = bad_responses
+        # 图标服务对个别域名会间歇性 404，落到本地 1x1 PNG，让控制台断言不受外部抖动影响。
+        favicon_png = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        for pattern in ("**/faviconV2*", "**/s2/favicons*"):
+            page.route(pattern, lambda route: route.fulfill(status=200, content_type="image/png", body=favicon_png))
         self.addCleanup(page.close)
         return page
 
@@ -567,8 +580,9 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.top-nav').is_visible())
-        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/", "/skills/", "/tools/"):
-            self.assertGreater(page.locator(f'.top-nav a[href="{href}"]').count(), 0)
+        # 离线预览时导航会把根路径改写成 ../x/index.html，用后缀匹配两种形式都覆盖。
+        for href in ("logs", "models", "models/center", "models/all", "providers", "skills", "tools"):
+            self.assertGreater(page.locator(f'.top-nav a[href$="/{href}/index.html"]').count(), 0)
         self.assertEqual(
             page.locator('.top-nav a').evaluate_all("links => links.map(link => link.dataset.navKey)"),
             ["daily-log", "resources", "model-center", "all-models", "providers", "skills", "tools"],
@@ -583,7 +597,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), 9)
 
         page.fill("#catalog-search", "Qwen3")
-        self.assertEqual(self.visible_offers(page), 1)
+        self.assertEqual(self.visible_offers(page), 2)
 
         page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
@@ -605,7 +619,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="ide"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 19)
+        self.assertEqual(self.visible_offers(page), 9)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
@@ -617,7 +631,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 9)
+        self.assertEqual(self.visible_offers(page), 19)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):
@@ -628,7 +642,7 @@ class BrowserPageTests(unittest.TestCase):
         page.click(".filter-strip [data-filter='web']")
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
-        self.assertIn("Search and Fetch", page.locator("#drawerTitle").inner_text())
+        self.assertIn("Search + Fetch", page.locator("#drawerTitle").inner_text())
         self.assertNotEqual(page.locator("#drawerUsageGuide").inner_text().strip(), "")
         self.assertIn("TinyFish", page.locator("#drawerPrerequisites").inner_text())
         self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
@@ -661,13 +675,15 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 
-    def test_locale_toggle_updates_query_and_preserves_hash(self):
+    def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         page.click("[data-locale-toggle]")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
-        self.assertTrue(page.url.endswith("?lang=en#catalog-offers"), page.url)
+        # Locale lives in local storage now; the URL stays canonical (no ?lang=) with its hash.
+        self.assertNotIn("?lang=", page.url)
+        self.assertTrue(page.url.endswith("#catalog-offers"), page.url)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_http_protocol_falls_back_to_embedded_when_json_missing(self):
@@ -675,13 +691,21 @@ class BrowserPageTests(unittest.TestCase):
             design = Path(directory) / "design"
             design.mkdir()
             (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            js = Path(directory) / "js"
+            js.mkdir()
+            (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
             self.assertEqual(self.visible_offers(page), len(read_offers()))
-            self.assertEqual(len(page.problems), 0, page.problems)
+            # 场景本身就是 data 两个 JSON 404；除此之外不允许任何失败请求或 JS 错误。
+            self.assertEqual(
+                sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
+                ["community-signals.json", "offers.json"],
+            )
+            self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
 
     def test_missing_data_shows_readable_error(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -700,7 +724,7 @@ class BrowserPageTests(unittest.TestCase):
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_selector(".offer-error")
             self.assertIn("Offer data unavailable", page.locator(".offer-error").inner_text())
-            self.assertEqual(page.locator("#catalog-result-count").inner_text(), "Showing 0 offers")
+            self.assertEqual(page.locator("#catalog-result-count").inner_text(), "0 条资源")
 
 
 if __name__ == "__main__":
