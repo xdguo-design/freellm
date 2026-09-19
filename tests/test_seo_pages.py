@@ -461,7 +461,7 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     assert "https://freellm.top/models/" in category
 
 
-def test_model_directory_intents_have_distinct_metadata_and_hreflang(tmp_path):
+def test_model_directory_intents_have_distinct_metadata(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     resource_directory = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
     all_models = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
@@ -470,13 +470,13 @@ def test_model_directory_intents_have_distinct_metadata_and_hreflang(tmp_path):
     description = lambda page: page.split('<meta name="description" content="', 1)[1].split('">', 1)[0]
     assert title(resource_directory) != title(all_models)
     assert description(resource_directory) != description(all_models)
+    # locale 变体 URL 造成过 Search Console 重复收录；语言有独立可爬 URL 前不再输出 hreflang。
     for page, canonical in (
         (resource_directory, "https://freellm.top/models/"),
         (all_models, "https://freellm.top/models/all/"),
     ):
-        assert f'<link rel="alternate" hreflang="zh-CN" href="{canonical}"' in page
-        assert f'<link rel="alternate" hreflang="en" href="{canonical}?lang=en"' in page
-        assert f'<link rel="alternate" hreflang="x-default" href="{canonical}"' in page
+        assert 'rel="alternate" hreflang=' not in page
+        assert f'<link rel="canonical" href="{canonical}"' in page
 
 
 def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
@@ -493,13 +493,11 @@ def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
 
     for page_path in pages:
         page = page_path.read_text(encoding="utf-8")
-        canonical = page.split('<link rel="canonical" href="', 1)[1].split('"', 1)[0]
-        assert page.count('rel="alternate" hreflang="zh-CN"') == 1
-        assert page.count('rel="alternate" hreflang="en"') == 1
-        assert page.count('rel="alternate" hreflang="x-default"') == 1
-        assert f'<link rel="alternate" hreflang="zh-CN" href="{canonical}"' in page
-        assert f'<link rel="alternate" hreflang="en" href="{canonical}?lang=en"' in page
-        assert f'<link rel="alternate" hreflang="x-default" href="{canonical}"' in page
+        # 语言切换存 localStorage、canonical 保持无参数，直到有独立的可爬语言 URL。
+        assert 'rel="alternate" hreflang=' not in page
+        assert "?lang=" not in page
+        assert '<link rel="canonical" href="' in page
+        assert 'type="application/atom+xml"' in page
 
 
 def test_explicit_adsense_slot_is_opt_in():
@@ -571,8 +569,8 @@ def test_static_seo_pages_can_follow_the_saved_locale_without_mixed_visible_copy
         assert 'data-static-locale="true"' in page
         assert 'html[data-locale="en"] [lang="zh-CN"]' in page
         assert 'html[data-locale="zh-CN"] [lang="en"]' in page
-        assert 'href="?lang=en"' in page
-        assert 'href="?lang=zh"' in page
+        assert 'data-locale-switch="zh-CN"' in page
+        assert 'data-locale-switch="en"' in page
 
     assert '<span lang="zh-CN">免费额度</span><span lang="en">Free AI quota</span>' in category
     assert '<span lang="zh-CN">示例中文标题</span><span lang="en">Example English title</span>' in models

@@ -23,10 +23,28 @@ DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": 410 * 1024,
     "models/center/index.html": 1200 * 1024,
     "models/all/index.html": 450 * 1024,
-    "models/all/page/2/index.html": 450 * 1024,
-    "models/all/page/3/index.html": 450 * 1024,
-    "models/all/page/4/index.html": 450 * 1024,
 }
+# 分页页数随目录涨缩（301 模型时 5 页、220 模型时 3 页），按 models.json 现值
+# 动态生成预算，避免目录瘦身后再为已删除的分页页保预算、或新分页漏保。
+def _models_page_budgets() -> dict[str, int]:
+    budgets: dict[str, int] = {}
+    models_path = ROOT / "data" / "models.json"
+    try:
+        models = json.loads(models_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return budgets
+    try:
+        from build_seo_pages import MODELS_PER_PAGE  # 直接运行时 scripts/ 在 sys.path
+    except ImportError:
+        from .build_seo_pages import MODELS_PER_PAGE  # 作为 scripts.site_health 导入时
+
+    total_pages = max(1, -(-len(models) // MODELS_PER_PAGE)) if models else 1
+    for page_num in range(2, total_pages + 1):
+        budgets[f"models/all/page/{page_num}/index.html"] = 450 * 1024
+    return budgets
+
+
+DEFAULT_SIZE_BUDGETS.update(_models_page_budgets())
 SHA_RE = re.compile(r"^[0-9a-f]{40}$", re.IGNORECASE)
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 

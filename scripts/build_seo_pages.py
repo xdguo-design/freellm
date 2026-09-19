@@ -4457,7 +4457,9 @@ def _clean_previous_pages(output_root: Path, keep: set[str] | None = None) -> in
             relative_path = path.relative_to(root)
         except ValueError:
             continue
-        if root not in path.parents or path.name != "index.html" or len(relative_path.parts) not in {2, 3} or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs", "skills"}:
+        if root not in path.parents or path.name != "index.html" or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs", "skills"}:
+            # 深度不限：models/all/page/N/index.html 这类分页页（5 段路径）也是受管页面，
+            # 目录瘦身、分页数变少时同样要随 manifest 清理，否则会留下带死链的陈旧分页。
             continue
         if path.is_file():
             path.unlink()

@@ -7,9 +7,6 @@
   <meta name="description" content="FreeLLM (freellm.top) 隐私政策：说明本站收集哪些信息、如何使用 Cookie 与 Google AdSense 广告 Cookie，以及如何管理或退出个性化广告。FreeLLM privacy policy covering data collection, cookies, Google AdSense advertising cookies, and how to control or opt out of personalized ads.">
   <link rel="canonical" href="https://freellm.top/privacy/">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/privacy/">
-  <link rel="alternate" hreflang="en" href="https://freellm.top/privacy/?lang=en">
-  <link rel="alternate" hreflang="x-default" href="https://freellm.top/privacy/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="隐私政策 | Privacy Policy · FreeLLM">
   <meta property="og:description" content="FreeLLM (freellm.top) 隐私政策：说明本站收集哪些信息、如何使用 Cookie 与 Google AdSense 广告 Cookie，以及如何管理或退出个性化广告。">
@@ -29,22 +26,34 @@
   <style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
   <script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -178,7 +187,7 @@ pre code { padding:0; background:none; color:inherit; }
 <body data-static-locale="true">
   <header>
     <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / <span lang="zh-CN">隐私政策</span><span lang="en">Privacy Policy</span></div>
-    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">隐私政策</span><span lang="en">Privacy Policy</span></h1>
     <p class="lead"><span lang="zh-CN">本政策说明 FreeLLM（freellm.top）收集哪些信息、如何使用 Cookie 与广告技术，以及您可以如何控制这些数据。最后更新：2026 年 9 月 11 日。</span><span lang="en">This policy explains what FreeLLM (freellm.top) collects, how cookies and advertising technologies are used, and how you can control your data. Last updated: 11 September 2026.</span></p>
   </header>

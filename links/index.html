@@ -7,9 +7,6 @@
   <meta name="description" content="FreeLLM（freellm.top）友链页：本站信息与引用方式、友链申请要求，以及免费 AI 资源、开源月刊、开发者社区等相关资源推荐。FreeLLM links page: our site info for citation, friend-link requirements, and related free-AI resources, open-source newsletters and developer communities.">
   <link rel="canonical" href="https://freellm.top/links/">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/links/">
-  <link rel="alternate" hreflang="en" href="https://freellm.top/links/?lang=en">
-  <link rel="alternate" hreflang="x-default" href="https://freellm.top/links/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="友链与相关资源 | Links · FreeLLM">
   <meta property="og:description" content="FreeLLM 友链页：本站信息与引用方式、友链申请要求，以及相关免费 AI 资源推荐。">
@@ -29,22 +26,34 @@
   <style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
   <script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -131,7 +140,7 @@ footer { color:var(--ink-secondary); font-size:13px; }
 <body data-static-locale="true">
   <header>
     <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / <span lang="zh-CN">友链</span><span lang="en">Links</span></div>
-    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">友链与相关资源</span><span lang="en">Links &amp; related resources</span></h1>
     <p class="lead"><span lang="zh-CN">这里放两样东西：一是本站信息，方便你引用或添加友链；二是我们觉得对读者真正有用的相关资源。</span><span lang="en">Two things live here: our own site info so you can cite or link us accurately, and a short list of external resources we think are genuinely useful.</span></p>
   </header>
