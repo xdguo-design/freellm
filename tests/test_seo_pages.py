@@ -5,12 +5,15 @@ from pathlib import Path
 from scripts.build_seo_pages import (
     CATEGORY_DEFINITIONS,
     LEGACY_OFFER_REDIRECTS,
+    MIN_OFFERS_FOR_INDEXABLE_CATEGORY,
     _exclude_retired_models,
     _load_model_access,
     build_site,
     categorize_offer,
+    category_offer_counts,
     category_url,
     guide_url,
+    indexable_category_slugs,
     models_url,
     offer_url,
     render_category_page,
@@ -1009,3 +1012,41 @@ def test_retired_pages_are_deleted_only_after_new_ones_are_written(tmp_path):
     survivors = sorted(json.loads(manifest_path.read_text(encoding="utf-8"))["files"])
     missing = [relative for relative in survivors if not (tmp_path / relative).is_file()]
     assert missing == [], f"retiring one page must not delete live pages: {missing[:5]}"
+
+
+def test_category_pages_gate_indexing_and_ads_on_offer_count():
+    """薄分类页既不该进索引，也不该挂广告 —— 两件事必须用同一个判定。"""
+    counts = category_offer_counts(read_offers())
+    for slug in CATEGORY_DEFINITIONS:
+        page = (ROOT / "category" / slug / "index.html").read_text(encoding="utf-8")
+        thin = counts.get(slug, 0) < MIN_OFFERS_FOR_INDEXABLE_CATEGORY
+        if thin:
+            assert '<meta name="robots" content="noindex,follow">' in page, slug
+            assert "adsbygoogle" not in page, f"{slug} 是薄页却仍挂着广告代码"
+        else:
+            assert 'content="index,follow,max-image-preview:large"' in page, slug
+            assert "adsbygoogle" in page, f"{slug} 可收录却没有广告代码"
+
+
+def test_thin_category_pages_are_kept_out_of_the_sitemap_but_stay_reachable():
+    counts = category_offer_counts(read_offers())
+    sitemap = (ROOT / "sitemap-pages.xml").read_text(encoding="utf-8")
+    for slug in CATEGORY_DEFINITIONS:
+        listed = f"https://freellm.top/category/{slug}/" in sitemap
+        expected = counts.get(slug, 0) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
+        assert listed == expected, slug
+        assert (ROOT / "category" / slug / "index.html").is_file(), slug
+
+
+def test_category_threshold_still_sits_in_a_real_gap():
+    """阈值必须真的挡住最薄的分类，又不能误伤任何一个健康分类。
+
+    数据一变（分类长胖或变瘦）这个断言会先失败，提醒重新评估阈值，
+    而不是让阈值悄悄变成一个拍脑袋的数字。
+    """
+    counts = category_offer_counts(read_offers())
+    thin = {slug for slug in CATEGORY_DEFINITIONS if counts.get(slug, 0) < MIN_OFFERS_FOR_INDEXABLE_CATEGORY}
+    healthy = set(CATEGORY_DEFINITIONS) - thin
+    assert indexable_category_slugs(read_offers()) == healthy
+    if thin and healthy:
+        assert max(counts[slug] for slug in thin) < min(counts[slug] for slug in healthy)

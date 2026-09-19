@@ -570,6 +570,33 @@ def categorize_offer(offer: dict) -> list[str]:
     return [category for category in categories if category in CATEGORY_DEFINITIONS]
 
 
+# 分类页是「列表落地页」，条目太少就撑不起独立的搜索意图 —— 页面上只剩一句导语、
+# 两三张卡片和页脚样板文字，Google 会当成薄内容，而薄内容页再挂广告就是 AdSense
+# 最忌讳的组合。2026-09-19 实测：7 个分类里健康的 5 个有 9–19 条（中文正文 1174–3021 字），
+# 最薄的两个只有 2–3 条（438/455 字），中间有明显断层，所以阈值取在断层里。
+# 低于阈值的分类页降级为 noindex,follow（仍可跟随链接、仍可访问），并同步移出 sitemap、
+# 不再挂广告代码 —— 与模型聚合页用的是同一条规则。
+MIN_OFFERS_FOR_INDEXABLE_CATEGORY = 5
+
+
+def category_offer_counts(offers: list[dict]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for offer in offers:
+        for category in categorize_offer(offer):
+            counts[category] = counts.get(category, 0) + 1
+    return counts
+
+
+def indexable_category_slugs(offers: list[dict]) -> set[str]:
+    """Category slugs with enough verified offers to earn an indexable landing page."""
+    counts = category_offer_counts(offers)
+    return {
+        slug
+        for slug in CATEGORY_DEFINITIONS
+        if counts.get(slug, 0) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
+    }
+
+
 def _esc(value: object) -> str:
     return html.escape(str(value or ""), quote=True)
 
@@ -1513,7 +1540,9 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     path = category_url(category)
     title = f"{definition['name_zh']} · FreeLLM 免费 AI 资源索引"
     description = f"{definition['description_zh']}当前有 {len(matching)} 个经过核验的资源，均提供官方入口与有效期说明。"
-    social_meta = _social_meta(site_url, path, title, description, "website")
+    # 条目不足的分类页是薄页：既然主动 noindex，就不再挂广告代码（同模型聚合页的规则）。
+    indexable = len(matching) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
+    social_meta = _social_meta(site_url, path, title, description, "website", indexable=indexable)
     items = "".join(
         f'''<article>
           <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a>{_featured_chip(offer)}</h2>
@@ -1547,7 +1576,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {social_meta}
   {_analytics_script()}
-  {ADSENSE_SCRIPT}
+  {ADSENSE_SCRIPT if indexable else ""}
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
@@ -3903,8 +3932,9 @@ def sitemap_section_paths(
 ) -> dict[str, list[str]]:
     """Split sitemap URLs per section so GSC reports indexing progress per group.
 
-    Single-record model aggregate pages are noindex, so they stay out of the
-    model section and do not dilute the crawl budget on pages worth indexing.
+    Single-record model aggregate pages and thin category landing pages are
+    noindex, so they stay out of their section and do not dilute the crawl
+    budget on pages worth indexing.
     """
     page_paths = [
         "/",
@@ -3923,7 +3953,11 @@ def sitemap_section_paths(
         CHANGE_LOG_PAGE_PATH,
         SKILLS_PAGE_PATH,
         SKILL_LAB_PAGE_PATH,
-    ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [category_url(category) for category in categories]
+    ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [
+        category_url(category)
+        for category in categories
+        if category in indexable_category_slugs(offers)
+    ]
     if models:
         total_pages = (len(models) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
         page_paths += [f"{ALL_MODELS_PAGE_PATH}page/{page_num}/" for page_num in range(2, total_pages + 1)]
