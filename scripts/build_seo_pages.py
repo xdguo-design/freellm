@@ -2928,7 +2928,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         <li>{_locale_pair("Mistral：免费 Experiment 层需短信验证，无需信用卡", "Mistral: free Experiment tier needs SMS verification, no credit card")}</li>
         <li>{_locale_pair("OpenRouter、Groq、Cohere、Cloudflare Workers AI、NVIDIA NIM：免费层均无需信用卡", "OpenRouter, Groq, Cohere, Cloudflare Workers AI and NVIDIA NIM: no credit card on free tiers")}</li>
         <li>{_locale_pair("Hugging Face：需邮箱验证后才能创建访问令牌", "Hugging Face: email verification is required before creating access tokens")}</li>
-        <li>{_locale_pair("Agnes AI：仅邮箱注册，并提供中国大陆 API 加速节点", "Agnes AI: email-only signup with a dedicated mainland-CN API endpoint")}</li>
+        <li>{_locale_pair("Agnes AI：仅邮箱注册；国内站 api.agnes-ai.cn 与国际站 apihub.agnes-ai.com 为两套官方入口，API Key 通用", "Agnes AI: email-only signup; the mainland-CN host api.agnes-ai.cn and the global host apihub.agnes-ai.com are separate official endpoints sharing one API key")}</li>
         <li>{_locale_pair("llm7.io：可匿名调用，也可免费领取 token 提升限额", "llm7.io: anonymous access works, or claim a free token for higher limits")}</li>
         <li>{_locale_pair("Chutes.ai：免费层已于 2026 年 2 月退役，需订阅或按量付费", "Chutes.ai: free tier retired in February 2026; subscription or pay-as-you-go required")}</li>
         <li>{_locale_pair("GitHub Models：已于 2026-07-30 完全退役，替代方案为 Azure AI Foundry 与 GitHub Copilot", "GitHub Models: fully retired on July 30, 2026; use Azure AI Foundry or GitHub Copilot instead")}</li>

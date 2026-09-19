@@ -2,7 +2,7 @@
   {
     "providerId": "agnes-ai",
     "profileId": "agnes-ai-api",
-    "registerUrl": "https://agnes-ai.com/",
+    "registerUrl": "https://platform.agnes-ai.cn",
     "accountRequired": "yes",
     "emailRequired": "yes",
     "phoneRequired": "no",
@@ -15,23 +15,26 @@
     "gpuRequired": "unknown",
     "overageBehavior": "unknown",
     "searchMethod": "official_model_catalog",
-    "regionPolicyId": "policy-unknown-default",
+    "regionPolicyId": "agnes-ai-dual-endpoint",
     "registrationSteps": [
-      "在 platform.agnes-ai.com 用邮箱注册（官方文档称仅需邮箱，无需手机号或信用卡）。",
-      "登录后在开发者面板创建 API Key。",
-      "调用 https://apihub.agnes-ai.com/v1（OpenAI 兼容）。"
+      "在 platform.agnes-ai.cn（国内站）或 platform.agnes-ai.com（国际站）用邮箱注册；官方文档称免费 API 无需手机号或信用卡。",
+      "登录后在控制台的 API Key 管理页创建密钥；官方称国内站与国际站的 Key 通用，原国际站用户无需重新注册。",
+      "中国大陆把 Base URL 设为 https://api.agnes-ai.cn/v1，其他地区设为 https://apihub.agnes-ai.com/v1（OpenAI 兼容）。"
     ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
+      "https://agnes-ai.cn/zh-Hans/docs/overview",
+      "https://agnes-ai.cn/zh-Hans/docs/tokenplan",
+      "https://agnes-ai.com/en/docs/overview",
+      "https://agnes-ai.cn/",
       "https://agnes-ai.com/",
-      "https://wiki.agnes-ai.com/",
       "https://hub.baai.ac.cn/view/56776"
     ],
-    "lastVerifiedAt": "2026-09-09",
+    "lastVerifiedAt": "2026-09-19",
     "verificationStatus": "partial",
     "confidence": "medium",
-    "notes": "注册入口为 agnes-ai.com（此前记录的 agnes.ai 域名有误，已修正）。官方宣称免费 API 无需信用卡；大陆加速节点（apihub 域名替换）来自智源 BAAI 社区报道，待官方文档核验。"
+    "notes": "注册入口为国内站 platform.agnes-ai.cn 与国际站 platform.agnes-ai.com（此前记录的 agnes.ai 域名有误，已修正）。官方宣称免费 API 无需信用卡。国内节点此前只有智源 BAAI 社区报道（2026-07-29 上线，地址 apihub.agnes-ai.cn），2026-09-19 已由官方中文文档坐实为 https://api.agnes-ai.cn/v1；两个域名当天无 Key 探测均返回 401 且报错格式一致，apihub.agnes-ai.cn 与 api.agnes-ai.cn 解析到同一大陆 IP。手机号与实名要求仍未在官方文档中明确，保持待核验。"
   },
   {
     "providerId": "aion-labs",

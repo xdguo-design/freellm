@@ -175,11 +175,29 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
         "agnes-video-v2.0",
     ):
         assert model_id in agnes["model"]
-    assert agnes["usageGuide"]["endpoint"] == "https://apihub.agnes-ai.com/v1/chat/completions"
-    assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.com/en/docs/overview"
+    assert agnes["usageGuide"]["endpoint"] == "https://api.agnes-ai.cn/v1/chat/completions"
+    assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.cn/zh-Hans/docs/overview"
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
     assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(agnes)
+    # 官方同时运营国内站与国际站两套入口，两套地址都必须留在数据里。
+    blob = json.dumps(agnes, ensure_ascii=False)
+    assert "https://api.agnes-ai.cn/v1" in blob
+    assert "https://apihub.agnes-ai.com/v1" in blob
+
+
+def test_agnes_page_renders_both_official_endpoints():
+    from scripts.build_seo_pages import render_offer_page
+
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+    page = render_offer_page(by_id["agnes-ai-free"], offers, "https://freellm.top")
+
+    assert "使用入口" in page
+    assert "国内站入口" in page
+    assert "国际站入口" in page
+    assert "api.agnes-ai.cn/v1" in page
+    assert "apihub.agnes-ai.com/v1" in page
 
 
 def test_longcat_page_renders_both_access_paths():
