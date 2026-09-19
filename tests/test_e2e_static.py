@@ -371,7 +371,7 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, self.html)
 
     def test_page_uses_free_method_categories(self):
-        for name in ("free_quota", "credits", "ide", "promo", "student", "web", "download_lowcost"):
+        for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
         self.assertTrue(ASSET_PATH.is_file())
         self.assertGreater(ASSET_PATH.stat().st_size, 1000)
@@ -556,6 +556,14 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "19")
         self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), "09")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
+        model_count = sum(1 for offer in read_offers() if offer.get("productType") == "api")
+        self.assertEqual(
+            page.locator(".filter-strip [data-filter='model'] em").inner_text(),
+            f"{model_count:02d}",
+        )
+        self.assertEqual(page.locator(".category-card[data-filter='model'] [data-category-count]").inner_text(), f"{model_count:02d}")
+        # 加精 chip 的标签按 data-filter 做 i18n，不能被位置映射串到别的分类名。
+        self.assertTrue(page.locator(".filter-strip [data-filter='featured']").inner_text().strip().startswith("◆"))
         self.assertEqual(page.locator("#studentList .student-item").count(), 2)
         self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
         self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
