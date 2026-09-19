@@ -2,9 +2,426 @@
   "schemaVersion": 1,
   "date": "2026-09-19",
   "baseline": false,
-  "events": [],
+  "events": [
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-2-5-flash",
+      "title": "Agnes 2.5 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Flash",
+        "context": "512000",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "reasoning"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-2.5-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-2-5-pro",
+      "title": "Agnes 2.5 Pro",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-2-5-pro",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Pro",
+        "context": "1000000",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "reasoning"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-2.5-pro",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-2-5-pro-beta",
+      "title": "Agnes 2.5 Pro Beta",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-2-5-pro-beta",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Pro Beta",
+        "context": "1000000",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "reasoning"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro-beta",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-2.5-pro-beta",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-3-0-flash",
+      "title": "Agnes 3.0 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-3-0-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 3.0 Flash",
+        "context": "512000",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-30-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-3.0-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-image-2-5-flash",
+      "title": "Agnes Image 2.5 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-image-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.5 Flash",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-25-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-image-2.5-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-video-2-5",
+      "title": "Agnes Video 2.5",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-video-2-5",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video 2.5",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image",
+          "video"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-25",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-video-2.5",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "agnes-ai/agnes-video-2-5-flash",
+      "title": "Agnes Video 2.5 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-video-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video 2.5 Flash",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image",
+          "video"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-video-2.5-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页列为限时免费（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "recovered",
+      "id": "agnes-ai/agnes-image-2-0-flash",
+      "title": "Agnes Image 2.0 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-image-2-0-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.0 Flash",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-20-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-image-2.0-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "previously absent or offline and observed again"
+    },
+    {
+      "kind": "model",
+      "eventType": "recovered",
+      "id": "agnes-ai/agnes-image-2-1-flash",
+      "title": "Agnes Image 2.1 Flash",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-image-2-1-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.1 Flash",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-21-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-image-2.1-flash",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "previously absent or offline and observed again"
+    },
+    {
+      "kind": "model",
+      "eventType": "recovered",
+      "id": "agnes-ai/agnes-video-v2-0",
+      "title": "Agnes Video V2.0",
+      "asOf": "2026-09-19",
+      "details": {
+        "id": "agnes-ai/agnes-video-v2-0",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video V2.0",
+        "context": "",
+        "maxOutput": "",
+        "modality": [
+          "text",
+          "image",
+          "video"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-v20",
+        "sourceKind": "official",
+        "canonicalModelId": "agnes-video-v2.0",
+        "accessRegion": "domestic",
+        "accessEndpoint": "https://api.agnes-ai.cn/v1",
+        "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
+        "lastSeenAt": "2026-09-19",
+        "lastVerifiedAt": "2026-09-19",
+        "freshnessStatus": "new"
+      },
+      "reason": "previously absent or offline and observed again"
+    }
+  ],
   "observed": {
     "models": [
+      {
+        "id": "agnes-ai/agnes-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-2-5-pro",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Pro",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-2-5-pro-beta",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 2.5 Pro Beta",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro-beta",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-3-0-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes 3.0 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-30-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-image-2-0-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.0 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-20-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-image-2-1-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.1 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-21-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-image-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Image 2.5 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-image-25-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-video-2-5",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video 2.5",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-25",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-video-2-5-flash",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video 2.5 Flash",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash",
+        "status": "online"
+      },
+      {
+        "id": "agnes-ai/agnes-video-v2-0",
+        "providerId": "agnes-ai",
+        "provider": "Agnes AI",
+        "model": "Agnes Video V2.0",
+        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/agnes-video-v20",
+        "status": "online"
+      },
       {
         "id": "atria-asi/atria-dawn-preview",
         "providerId": "atria-asi",
@@ -131,6 +548,158 @@
         "provider": "Dots API（国内）",
         "model": "Dots Studio: Dots3-Note Preview (free)",
         "sourceUrl": "https://dots.ai/platform/docs",
+        "status": "online"
+      },
+      {
+        "id": "kilo/cohere-north-mini-code-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Cohere: North Mini Code (free)",
+        "sourceUrl": "https://openrouter.ai/cohere/north-mini-code:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/deepseek-deepseek-v4-flash-0731-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/dots-studio-dots-3-note-preview-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Dots Studio: Dots3-Note Preview (free)",
+        "sourceUrl": "https://openrouter.ai/dots-studio/dots-3-note-preview:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-fin-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Fin (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-fin:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-sante-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Sante (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-sante:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-vl-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash VL (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-vl:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/liquid-lfm-2-5-2-6b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "LiquidAI: LFM2.5-2.6B (free)",
+        "sourceUrl": "https://openrouter.ai/liquid/lfm-2.5-2.6b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nex-agi-nex-n2-5-mini-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Mini (free)",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-mini:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nex-agi-nex-n2-5-pro-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Pro (free)",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-pro:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-5-content-safety-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-content-safety:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-5-lightning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Lightning (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-lightning:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Nano Omni (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-super-120b-a12b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Super (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-super-120b-a12b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-ultra-550b-a55b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Ultra (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/poolside-laguna-s-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna S 2.1 (free)",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-s-2.1:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/poolside-laguna-xs-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna XS 2.1 (free)",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-xs-2.1:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/qwen-qwen3-8-27b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Qwen: Qwen3.8 27B (free)",
+        "sourceUrl": "https://openrouter.ai/qwen/qwen3.8-27b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/thinkingmachines-inkling-small-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Thinking Machines: Inkling Small (free)",
+        "sourceUrl": "https://openrouter.ai/thinkingmachines/inkling-small:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/z-ai-glm-5-2-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Z.ai: GLM 5.2 (free)",
+        "sourceUrl": "https://openrouter.ai/z-ai/glm-5.2:free",
         "status": "online"
       },
       {
@@ -1494,6 +2063,14 @@
         "status": "online"
       },
       {
+        "id": "openrouter/stealth-union-alpha",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "Union Alpha",
+        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
+        "status": "online"
+      },
+      {
         "id": "openrouter/thinkingmachines-inkling-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
@@ -1534,46 +2111,61 @@
         "provider": "Agnes AI",
         "productType": "api",
         "status": "verified",
-        "register": "https://agnes-ai.com/",
-        "registerLabel": "Agnes AI 官方入口",
+        "register": "https://platform.agnes-ai.cn",
+        "registerLabel": "Agnes AI 国内控制台",
         "sourceUrls": [
+          "https://agnes-ai.cn/zh-Hans/docs/overview",
+          "https://agnes-ai.cn/zh-Hans/docs/pricing",
+          "https://agnes-ai.cn/zh-Hans/docs/tokenplan",
           "https://agnes-ai.com/en/docs/overview",
           "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
         ],
         "links": [
           [
-            "API 概览（官方文档）",
+            "国内站官方文档（中文）",
+            "https://agnes-ai.cn/zh-Hans/docs/overview"
+          ],
+          [
+            "国内站模型定价（免费 / 付费口径）",
+            "https://agnes-ai.cn/zh-Hans/docs/pricing"
+          ],
+          [
+            "国内站速率限制说明（Token Plan FAQ）",
+            "https://agnes-ai.cn/zh-Hans/docs/tokenplan"
+          ],
+          [
+            "国际站官方文档（英文）",
             "https://agnes-ai.com/en/docs/overview"
           ],
           [
-            "模型目录与速率限制（官方）",
+            "模型目录与速率限制（官方 GitHub）",
             "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
           ]
         ],
         "usageGuide": {
-          "summary": "通过 Agnes AI 的 OpenAI 兼容 API 调用文本、图片和视频模型；免费/default 层受速率限制",
-          "summaryEn": "Call Agnes AI text, image and video models through its OpenAI-compatible API; free/default access is rate limited",
+          "summary": "通过 Agnes AI 的 OpenAI 兼容 API 调用文本、图片和视频模型；中国大陆用国内站地址，其他地区用国际站地址；免费/default 层受速率限制",
+          "summaryEn": "Call Agnes AI text, image and video models through its OpenAI-compatible API; mainland China uses the CN host and other regions use the global host. Free/default access is rate limited",
           "prerequisites": [
             "Agnes AI account",
             "Agnes AI API key"
           ],
           "steps": [
-            "Create an Agnes AI account and API key in the official console",
-            "Send a request to the OpenAI-compatible endpoint with one of the listed model IDs",
-            "Check the official model catalog for current rate limits and image/video request formats"
+            "在 platform.agnes-ai.cn（国内站）或 platform.agnes-ai.com（国际站）注册并创建 API Key；官方称原国际站用户无需重新注册，Key 也无需更换",
+            "中国大陆环境把 Base URL 设为 https://api.agnes-ai.cn/v1，其他地区设为 https://apihub.agnes-ai.com/v1",
+            "用目录中的模型 ID 发送 OpenAI 兼容请求，并核对官方文档的最新速率限制与图片/视频请求格式"
           ],
-          "endpoint": "https://apihub.agnes-ai.com/v1/chat/completions",
+          "endpoint": "https://api.agnes-ai.cn/v1/chat/completions",
           "method": "POST",
           "authentication": "API key via Authorization: Bearer header",
           "examples": {
-            "curl": "curl https://apihub.agnes-ai.com/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.agnes-ai.cn/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
           },
-          "docsUrl": "https://agnes-ai.com/en/docs/overview"
+          "docsUrl": "https://agnes-ai.cn/zh-Hans/docs/overview"
         },
-        "evidence": "Agnes 官方文档说明其提供 OpenAI 兼容 API，API Hub Base URL 为 https://apihub.agnes-ai.com/v1；AgnesAI-Labs 官方模型目录列出 agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash 和 agnes-video-v2.0，并记录 Free/default 层的模型级速率限制。目录同时注明限额和可用性可能变化。",
+        "evidence": "Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。官方定价页（agnes-ai.cn/zh-Hans/docs/pricing）逐项给出中国站模型的人民币刊例价与现价，明确 agnes-2.5-flash 与 agnes-3.0-flash 的输入缓存命中、输入 Token、输出 Token 当前均免费，agnes-image-2.0/2.1/2.5-flash 所有输出分辨率档位与输入参考图片免费，agnes-video-v2.0 当前免费、agnes-video-2.5-flash 限时免费；agnes-2.5-pro、agnes-2.5-pro-beta 与 agnes-video-2.5 为付费。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。",
         "freeSummary": "Free/default API access for selected Agnes models with public rate limits",
         "validitySummary": "Ongoing while the official free/default program is available; limits can change",
-        "accessSummary": "Agnes AI account and API key"
+        "accessSummary": "Agnes AI 账号 + API Key；国内站与国际站任一注册即可，两站 Key 通用"
       },
       {
         "id": "aliyun-qwen-free-quota",
@@ -2230,7 +2822,7 @@
           ]
         ],
         "usageGuide": {
-          "summary": "通过小红书 Dots 国内平台注册并调用 Dots3-Note Preview",
+          "summary": "通过小红书 Dots 国内平台注册并调用 Dots3-Note Preview（模型 ID dots3-note-prev）",
           "prerequisites": [
             "小红书账号或手机号",
             "Dots API Key"
@@ -2238,17 +2830,17 @@
           "steps": [
             "打开 Dots 国内平台并使用小红书账号或手机号登录",
             "进入 API Keys 页面创建 API Key",
-            "使用模型 ID dots3-note-preview 和国内 Base URL 发起请求"
+            "使用模型 ID dots3-note-prev（官方 /v1/models 返回的 ID；文档展示名为 Dots3-Note Preview）和国内 Base URL 发起请求"
           ],
-          "endpoint": "https://note3-prev-api.askdiandian.com",
+          "endpoint": "https://note3-prev-api.askdiandian.com/v1/chat/completions",
           "method": "POST",
           "authentication": "API key according to the official Dots documentation",
           "examples": {
-            "curl": "curl https://note3-prev-api.askdiandian.com --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
+            "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
           },
           "docsUrl": "https://dots.ai/platform/docs"
         },
-        "evidence": "Dots provider access record verified on 2026-09-10; official docs identify the domestic platform, model ID and rate limits.",
+        "evidence": "2026-09-19 复验（官方来源）：Dots 官方文档写明当前免费体验、暂不收费，“恢复收费前将通过官网及 API 页面提前告知”；限速表为 RPM 60 次/分钟、TPM 1,500,000；端点 https://note3-prev-api.askdiandian.com（POST /v1/chat/completions）；官方 /v1/models 实测返回 {\"id\":\"dots3-note-prev\"}。",
         "freeSummary": "Dots3-Note Preview 当前免费试用，按官方限速使用",
         "validitySummary": "限时免费；额度和模型可用性以 Dots 官方页面为准",
         "accessSummary": "小红书账号或手机号登录 Dots 国内平台"
@@ -2509,6 +3101,10 @@
           [
             "Hugging Face",
             "https://huggingface.co/zai-org"
+          ],
+          [
+            "ModelScope 国内镜像",
+            "https://modelscope.cn/models/ZhipuAI/GLM-4.7-Flash"
           ]
         ],
         "usageGuide": {
@@ -2847,10 +3443,10 @@
         "registerLabel": "Manus 邀请注册入口",
         "sourceUrls": [
           "https://manus.im/login?type=signUp",
-          "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods",
           "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
           "https://help.manus.im/en/articles/11813668-are-there-any-discounts-or-special-offers",
-          "https://open.manus.ai/docs/v2/introduction"
+          "https://open.manus.ai/docs/v2/introduction",
+          "https://manus.im/login?type=signUp"
         ],
         "links": [
           [
@@ -2858,12 +3454,8 @@
             "https://manus.im/invitation/I0KFAXGLOOOWJ"
           ],
           [
-            "Manus 官方注册页（备用）",
+            "Manus 官方注册页",
             "https://manus.im/login?type=signUp"
-          ],
-          [
-            "登录方式说明",
-            "https://help.manus.im/en/articles/11712048-how-can-i-change-the-login-methods"
           ],
           [
             "免费计划与价格",
@@ -2879,7 +3471,7 @@
           ]
         ],
         "usageGuide": {
-          "summary": "注册 Manus 后使用 Chat Mode 和免费 Agent 额度",
+          "summary": "注册 Manus 后使用 Chat Mode 和免费额度；免费用户 Agent Mode 目前只开放 Manus 1.6 Lite",
           "prerequisites": [
             "Manus account",
             "Google, Microsoft, Apple or email sign-in"
@@ -2898,7 +3490,7 @@
           },
           "docsUrl": "https://manus.im/docs/introduction/welcome"
         },
-        "evidence": "Manus official help pages document the Free plan, 1,000 signup credits and 300 daily credits; the official login page lists Google, Microsoft, Apple and email sign-in; the API docs explain how to obtain an API key.",
+        "evidence": "Manus 官方帮助页面：免费计划（Free Plan $0/month）与“Daily Refresh Credits: 300 credits”见于定价文章；优惠文章写明“we provide 1,000 credits to every new user upon registration, and 300 daily credits will be refreshed for free every day”；官方注册页列出 Google / Microsoft / Apple / 邮箱登录；官方 API 文档写明所有请求发往 https://api.manus.ai 并在 Manus Developers 设置中生成 API key。免费用户在 Agent Mode 下的可用模型为 Manus 1.6 Lite（官方定价文章）。",
         "freeSummary": "新用户注册赠送 1,000 credits；免费计划每天刷新 300 credits",
         "validitySummary": "免费计划持续提供；额度、模型和计划内容可能调整",
         "accessSummary": "浏览器访问；支持 Google、Microsoft、Apple 或邮箱登录"
@@ -3151,6 +3743,10 @@
           [
             "Qwen GitHub",
             "https://github.com/QwenLM/Qwen3"
+          ],
+          [
+            "ModelScope 国内镜像",
+            "https://modelscope.cn/models/Qwen/Qwen3-4B"
           ]
         ],
         "usageGuide": {
@@ -3753,15 +4349,6 @@
       },
       {
         "id": "agnes-ai/agnes-2-0-flash"
-      },
-      {
-        "id": "agnes-ai/agnes-image-2-0-flash"
-      },
-      {
-        "id": "agnes-ai/agnes-image-2-1-flash"
-      },
-      {
-        "id": "agnes-ai/agnes-video-v2-0"
       },
       {
         "id": "aion-labs/aion-labs-aion-2-0"
@@ -4551,14 +5138,6 @@
       },
       {
         "id": "openrouter/poolside-laguna-xs-2-1"
-      },
-      {
-        "id": "openrouter/stealth-union-alpha",
-        "providerId": "openrouter",
-        "provider": "OpenRouter",
-        "model": "Union Alpha",
-        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
-        "status": "online"
       },
       {
         "id": "openrouter/thinkingmachines-inkling"

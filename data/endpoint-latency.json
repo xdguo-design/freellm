@@ -6,6 +6,22 @@
   "note": "只测量 API 网关的往返延迟，不代表模型生成速度、免费额度或注册门槛",
   "providers": [
     {
+      "providerId": "agnes-ai",
+      "provider": "Agnes AI",
+      "modelCount": 10,
+      "endpoint": "https://api.agnes-ai.cn/v1/models",
+      "status": 401,
+      "verdict": "needs_key",
+      "ms": 229,
+      "attempts": [
+        290,
+        229,
+        194
+      ],
+      "warmupMs": 224,
+      "checkedAt": "2026-09-19"
+    },
+    {
       "providerId": "atria-asi",
       "provider": "Shanghai AI Laboratory",
       "modelCount": 1,
