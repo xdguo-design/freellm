@@ -670,7 +670,6 @@
     .drawer h3 { margin: 0; font: 800 37px/.92 var(--display); letter-spacing: -.065em; }
     .close { border: 1px solid var(--ink); background: white; width: 35px; height: 35px; font-size: 20px; }
     .drawer-meta { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0; }
-    .drawer-meta .offer-card-flags { margin-top: 0; }
     .detail-block { border-top: 1px solid var(--line); padding: 15px 0; }
     .detail-label { margin-bottom: 8px; color: var(--muted); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .1em; }
     .detail-value { line-height: 1.5; }
@@ -1324,7 +1323,7 @@
       <div class="catalog-content">
         <section class="catalog-hero">
           <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 官方来源 · 条件透明</div><h1>FreeLLM：发现真正好用的<span>免费 AI</span></h1><p class="hero-copy">模型、API、IDE 与限时试用，一站比较</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 API</button><button type="button">AI IDE</button></div></div>
-          <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="23" data-change-count="23">新增 23 项</span></div><span>▣ &nbsp;2026 年 9 月 18 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">45</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
+          <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="0" data-change-count="0">今日无新增</span></div><span>▣ &nbsp;2026 年 9 月 19 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">45</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
         </section>
         <section class="catalog-filter-bar" aria-label="Catalog tools"><label><b>免费方式</b><select id="catalog-method-filter" aria-label="按免费方式筛选"><option value="all">全部</option><option value="permanent">永久免费</option><option value="monthly_quota">月度额度</option><option value="daily_quota">每日额度</option><option value="weekly_quota">每周额度</option><option value="trial">试用</option><option value="limited_time_free">限时免费</option><option value="first_month_promo">首月优惠</option><option value="open_weights">开源权重</option></select></label><label><b>能力</b><select id="catalog-capability-filter" aria-label="按能力筛选"><option value="all">全部</option><option value="model_api">模型 API</option><option value="free_ide">AI IDE</option><option value="coding_plan">编程方案</option><option value="search">搜索</option><option value="fetch">抓取</option><option value="agent">Agent</option><option value="browser">浏览器</option><option value="open_weights">开源权重</option><option value="desktop_app">桌面应用</option></select></label><label><b>地区</b><select id="catalog-region-filter" aria-label="按地区筛选"><option value="all">全部</option><option value="china">中国区 / 国内账号</option><option value="global">国际 / 全球</option><option value="unknown">未说明</option></select></label><label><b>更新时间</b><select id="catalog-freshness-filter" aria-label="按更新时间筛选"><option value="all">全部</option><option value="fresh">7 天内</option><option value="stale">超过 7 天</option></select></label><select class="sort" id="catalog-sort" aria-label="Sort offers"><option value="free">综合排序</option><option value="fresh">最近核验</option><option value="name">A–Z</option></select></section>
         <nav class="model-center-tabs" role="tablist" aria-label="模型中心页面切换">
@@ -5124,8 +5123,7 @@
       loadedOffers = items;
       offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
       const container = document.getElementById('catalog-offer-rows');
-      const orderedItems = [...items].sort((a, b) => ((b.key ? 1 : 0) - (a.key ? 1 : 0)) || ((a.order || 0) - (b.order || 0)));
-      container.innerHTML = orderedItems.map(rowArticleMarkup).join('');
+      container.innerHTML = items.map(rowArticleMarkup).join('');
       container.querySelectorAll('.offer').forEach(card => {
         const item = offerIndex[card.dataset.detail];
         const detailLink = card.querySelector('.offer-detail-link');
@@ -5257,7 +5255,7 @@
       };
       document.getElementById('drawerKicker').textContent = localizedOfferText(item, 'kicker', 'Offer details');
       document.getElementById('drawerTitle').textContent = localizedOfferText(item, 'title', localizedOfferText(item, 'provider', 'Select an offer'));
-      document.getElementById('drawerBadges').innerHTML = (item.badges || []).map((badge, index) => `<span class="badge ${index === 0 ? drawerBadgeClass(badge) : 'pending'}">${escapeHtml(badge)}</span>`).join('') + offerFlagsMarkup(item);
+      document.getElementById('drawerBadges').innerHTML = (item.badges || []).map((badge, index) => `<span class="badge ${index === 0 ? drawerBadgeClass(badge) : 'pending'}">${escapeHtml(badge)}</span>`).join('');
       document.getElementById('drawerWhy').textContent = localizedOfferText(item, 'why');
       document.getElementById('drawerMechanism').textContent = localizedOfferText(item, 'mechanism');
       document.getElementById('drawerValidity').textContent = localizedOfferText(item, 'validity');
@@ -5437,7 +5435,7 @@
     document.getElementById('catalog-freshness-filter').value = activeFreshness;
     document.getElementById('catalog-sort').addEventListener('change', e => {
       const byName = row => `${row.dataset.provider || row.dataset.name}\n${row.dataset.name}`;
-      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : ((Number(b.dataset.key) || 0) - (Number(a.dataset.key) || 0)) || (a.dataset.order - b.dataset.order));
+      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
       const wrap = document.getElementById('catalog-offer-rows'); sorted.forEach(row => wrap.appendChild(row));
     });
     const clock = document.getElementById('catalog-clock');
