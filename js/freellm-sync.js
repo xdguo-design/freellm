@@ -573,8 +573,35 @@
     });
   }
 
+  function normalizeLocaleUrls() {
+    var q;
+    try { q = new URLSearchParams(location.search); } catch (e) { q = null; }
+    if (q && q.has('lang')) {
+      q.delete('lang');
+      var search = q.toString();
+      history.replaceState(null, '', location.pathname + (search ? '?' + search : '') + location.hash);
+    }
+
+    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function (link) {
+      var href = link.getAttribute('href') || '';
+      if (/[?&]lang=/i.test(href)) link.remove();
+    });
+
+    document.querySelectorAll('a[href]').forEach(function (a) {
+      var raw = a.getAttribute('href') || '';
+      if (!raw || raw.charAt(0) === '#' || /^(?:mailto:|tel:|javascript:)/i.test(raw)) return;
+      var url;
+      try { url = new URL(raw, location.href); } catch (e) { return; }
+      if (url.origin !== location.origin || !url.searchParams.has('lang')) return;
+      url.searchParams.delete('lang');
+      var search = url.searchParams.toString();
+      a.setAttribute('href', url.pathname + (search ? '?' + search : '') + url.hash);
+    });
+  }
+
   function init() {
     handleOAuthRedirect();
+    normalizeLocaleUrls();
     applyTheme();
     bind(document);
     autoBind(document);
