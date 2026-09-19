@@ -7,9 +7,6 @@
   <meta name="description" content="FreeLLM 整理可核验的免费 AI 模型、API、编程 IDE、学生优惠和开源权重，标注免费方式、额度、地区、有效期与官方入口。" />
   <meta name="keywords" content="FreeLLM, 免费 AI, 免费大模型, Qwen, 通义千问, Doubao, 豆包, 免费 IDE, 学生优惠, 学生计划, 代码助手, AI API, 开源模型, 免费额度, free AI, coding IDE, open weights" />
   <link rel="canonical" href="https://freellm.top/" />
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/" />
-  <link rel="alternate" hreflang="en" href="https://freellm.top/?lang=en" />
-  <link rel="alternate" hreflang="x-default" href="https://freellm.top/" />
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="FreeLLM — 免费 AI 模型、API、IDE 与额度索引" />
@@ -1396,10 +1393,12 @@
       if (textNode) textNode.nodeValue = `${localeText(key)} `;
     });
     const setNodeAttribute = (selector, attribute, key) => document.querySelectorAll(selector).forEach(node => node.setAttribute(attribute, localeText(key)));
-    const updateLocaleUrl = locale => {
+    const cleanLocaleUrl = () => {
       const url = new URL(window.location.href);
-      url.searchParams.set('lang', locale === SUPPORTED_LOCALES.zh ? 'zh-CN' : 'en');
-      history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+      if (!url.searchParams.has('lang')) return;
+      url.searchParams.delete('lang');
+      const search = url.searchParams.toString();
+      history.replaceState(null, '', `${url.pathname}${search ? '?' + search : ''}${url.hash}`);
     };
     const renderClock = (clock, label, timeZone, time) => {
       clock.replaceChildren();
@@ -1515,12 +1514,14 @@
       toggle.addEventListener('click', () => {
         const next = currentLocale === SUPPORTED_LOCALES.en ? SUPPORTED_LOCALES.zh : SUPPORTED_LOCALES.en;
         try { localStorage.setItem(LOCALE_STORAGE_KEY, next); } catch (error) { /* local storage can be unavailable */ }
-        updateLocaleUrl(next); applyLocale(next);
+        applyLocale(next);
       });
       actions.insertBefore(toggle, actions.firstChild);
     };
     installLocaleToggle();
-    applyLocale(resolveLocale());
+    const resolvedLocale = resolveLocale();
+    cleanLocaleUrl();
+    applyLocale(resolvedLocale);
     const embeddedOfferData = JSON.parse(document.getElementById('offer-data').textContent || '[]');
     const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
     const safeExternalHref = value => /^https:\/\//i.test(String(value || '')) ? String(value) : '#';
