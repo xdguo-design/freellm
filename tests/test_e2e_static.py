@@ -284,10 +284,10 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
-    def test_homepage_exposes_language_alternates(self):
-        self.assertIn('<link rel="alternate" hreflang="zh-CN" href="https://freellm.top/" />', self.html)
-        self.assertIn('<link rel="alternate" hreflang="en" href="https://freellm.top/?lang=en" />', self.html)
-        self.assertIn('<link rel="alternate" hreflang="x-default" href="https://freellm.top/" />', self.html)
+    def test_homepage_omits_locale_hreflang_variants(self):
+        # Query-parameter hreflang variants caused duplicate Search Console
+        # URLs; they stay out until languages have distinct crawlable URLs.
+        self.assertNotIn('<link rel="alternate" hreflang=', self.html)
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
         self.assertIn(
