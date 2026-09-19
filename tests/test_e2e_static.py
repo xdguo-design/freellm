@@ -308,8 +308,17 @@ class StaticContractTests(unittest.TestCase):
     def test_page_exposes_crawlable_internal_seo_links(self):
         self.assertIn("const offerHref = `/offers/${encodeURIComponent(item.id)}/`;", self.html)
         self.assertIn('class="offer-detail-link"', self.html)
-        for slug in ("free-quota", "free-ide", "api", "promo", "student", "web", "open-weights"):
+
+        # Only indexable category landing pages should receive crawl-priority
+        # homepage links. Thin categories remain available through the catalog
+        # filters, but their noindex URLs must not be promoted as SEO links.
+        for slug in ("free-quota", "free-ide", "api", "promo", "web"):
             self.assertIn(f'href="/category/{slug}/"', self.html)
+        for slug in ("student", "open-weights"):
+            self.assertNotIn(f'href="/category/{slug}/"', self.html)
+
+        self.assertIn('data-filter="student"', self.html)
+        self.assertIn('data-filter="download_lowcost"', self.html)
 
     def test_free_llm_guide_page_remains_available(self):
         self.assertTrue(GUIDE_PATH.is_file())
