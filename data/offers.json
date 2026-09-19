@@ -4072,8 +4072,8 @@
   "provider": "Agnes AI",
   "providerMeta": "Agnes AI · 国内 / 国际双入口",
   "providerMetaEn": "Agnes AI · Mainland-CN and global endpoints",
-  "model": "agnes-2.5-flash · agnes-1.5-flash · agnes-2.0-flash · agnes-image-2.0-flash · agnes-image-2.1-flash · agnes-video-v2.0",
-  "modelMeta": "Text · image · video via OpenAI-compatible API",
+  "model": "agnes-3.0-flash · agnes-2.5-flash · agnes-image-2.5-flash · agnes-image-2.1-flash · agnes-image-2.0-flash · agnes-video-v2.0 · agnes-video-2.5-flash",
+  "modelMeta": "Free/default tier: text, image and video via OpenAI-compatible API",
   "type": [
    "api",
    "free"
@@ -4151,8 +4151,8 @@
   "checkedSummary": "2026-09-19 / 国内站与国际站官方文档、官方模型目录",
   "title": "Agnes AI · Free/default multimodal API",
   "titleZh": "Agnes AI · 免费/默认多模态 API",
-  "why": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方模型目录列出文本、图片和视频模型，并给出 free/default 层的公开速率限制。官方同时运营国内站（api.agnes-ai.cn）与国际站（apihub.agnes-ai.com）两套入口，国内站可在大陆直连。它适合作为一个可直接试用的多模态 API 入口，但不是无限免费承诺。",
-  "whyEn": "Agnes AI documents an OpenAI-compatible API, and its official model catalog lists text, image and video models with public free/default rate limits. It runs two official entry points - a mainland-CN host (api.agnes-ai.cn) and a global host (apihub.agnes-ai.com). It is a practical multimodal API entry point, not an unlimited-free promise.",
+  "why": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方定价页逐项列出中国站模型的刊例价与现价，其中 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0/2.1/2.5-flash、agnes-video-v2.0 与 agnes-video-2.5-flash 现价均为 ¥0；官方同时运营国内站（api.agnes-ai.cn）与国际站（apihub.agnes-ai.com）两套入口，国内站可在大陆直连。适合作为可直接试用的多模态 API 入口，但不是无限免费承诺：限速、优惠期与模型可用性都可能调整。",
+  "whyEn": "Agnes AI documents an OpenAI-compatible API, and its official pricing page lists every China-site model with list and current prices: agnes-3.0-flash, agnes-2.5-flash, the agnes-image-2.0/2.1/2.5-flash line, agnes-video-v2.0 and agnes-video-2.5-flash all currently price at zero. It runs two official entry points - a mainland-CN host (api.agnes-ai.cn) and a global host (apihub.agnes-ai.com). A practical multimodal API entry point, not an unlimited-free promise.",
   "mechanism": "Free/default access with endpoint- and model-specific rate limits",
   "mechanismEn": "Free/default access with endpoint- and model-specific rate limits",
   "validity": "Ongoing while the official program remains available; current limits and model availability may change",
@@ -4165,6 +4165,10 @@
    [
     "国内站官方文档（中文）",
     "https://agnes-ai.cn/zh-Hans/docs/overview"
+   ],
+   [
+    "国内站模型定价（免费 / 付费口径）",
+    "https://agnes-ai.cn/zh-Hans/docs/pricing"
    ],
    [
     "国内站速率限制说明（Token Plan FAQ）",
@@ -4193,14 +4197,15 @@
   "renewal": "No fixed quota window is stated; access is governed by current model-specific rate limits",
   "sourceUrls": [
    "https://agnes-ai.cn/zh-Hans/docs/overview",
+   "https://agnes-ai.cn/zh-Hans/docs/pricing",
    "https://agnes-ai.cn/zh-Hans/docs/tokenplan",
    "https://agnes-ai.com/en/docs/overview",
    "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
   ],
-  "evidence": "Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。AgnesAI-Labs 官方模型目录列出文本、图片、视频模型 ID。",
+  "evidence": "Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。官方定价页（agnes-ai.cn/zh-Hans/docs/pricing）逐项给出中国站模型的人民币刊例价与现价，明确 agnes-2.5-flash 与 agnes-3.0-flash 的输入缓存命中、输入 Token、输出 Token 当前均免费，agnes-image-2.0/2.1/2.5-flash 所有输出分辨率档位与输入参考图片免费，agnes-video-v2.0 当前免费、agnes-video-2.5-flash 限时免费；agnes-2.5-pro、agnes-2.5-pro-beta 与 agnes-video-2.5 为付费。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。",
   "confidence": "medium",
   "confidenceReason": "Both official docs and both live endpoints were re-verified on 2026-09-19, but rate limits and model availability are explicitly changeable.",
-  "notes": "国内站还有一个旧公告地址 https://apihub.agnes-ai.cn/v1（2026-07-29 国内节点上线时公布），与 api.agnes-ai.cn 解析到同一 IP 且同样返回 401，当前官方中文文档已改用 api.agnes-ai.cn。API Key 只放在环境变量 AGNES_API_KEY 中，绝不提交真实 Key。官方模型目录的模型 ID 与国内站文档列出的模型族（agnes-3.0-flash、agnes-image-2.5-flash、agnes-video-2.5 等）尚未逐一对齐，目录的 model 字段仍是待补齐状态。",
+  "notes": "免费 / 付费口径（2026-09-19 核对官方定价页）：现价 ¥0 的有 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0-flash、agnes-image-2.1-flash、agnes-image-2.5-flash、agnes-video-v2.0，agnes-video-2.5-flash 为限时免费；agnes-2.5-pro（¥3 / ¥6 每 M Token）、agnes-2.5-pro-beta（¥0.70 / ¥2.10 每 M Token）与 agnes-video-2.5（¥0.15–0.35 每秒）为付费模型，不在本条目宣称的免费范围内。agnes-1.5-flash 与 agnes-2.0-flash 只出现在国际站官方模型目录（GitHub）里，国内站定价页未列出，因此未列入免费模型表，待核实。另：官方 agnes-25-flash 文档的规格表把「模型名称」写成 agnes-2.0-flash，与页面标题和请求示例里的 agnes-2.5-flash 不一致，属官方文档笔误，不影响调用。国内站还有一个旧公告地址 https://apihub.agnes-ai.cn/v1（2026-07-29 国内节点上线时公布），与 api.agnes-ai.cn 解析到同一 IP 且同样返回 401，当前官方中文文档已改用 api.agnes-ai.cn。API Key 只放在环境变量 AGNES_API_KEY 中，绝不提交真实 Key。",
   "endpointCheck": {
    "checkedAt": "2026-09-19",
    "verdict": "NEEDS_KEY",
@@ -4221,7 +4226,60 @@
    "quotaTier": "high",
    "reason": "实测 283ms · 官方长期免费",
    "reasonEn": "283 ms measured · permanently free"
-  }
+  },
+  "freeModels": [
+   {
+    "model": "agnes-3.0-flash",
+    "label": "新一代文本模型（文本 + 图像 URL）",
+    "contextWindow": "512K tokens",
+    "quota": "文本 实际 20 RPM",
+    "note": "官方定价页标注现价 ¥0；文档标注最大输出 65,536 Token",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-2.5-flash",
+    "label": "文本模型（文本 + 图像 URL）",
+    "contextWindow": "512K tokens",
+    "quota": "文本 实际 20 RPM",
+    "note": "官方定价页标注现价 ¥0；文档标注最大输出 65.5K",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-image-2.5-flash",
+    "label": "最新一代图像模型（文生图 / 图生图 / 多图合成）",
+    "quota": "图片 1K 20 / 2K 10 / 3K 1 / 4K 1 RPM",
+    "note": "官方定价页标注所有输出分辨率档位与输入参考图片当前免费",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-image-2.1-flash",
+    "label": "图像模型（文生图 / 图生图 / 多图合成）",
+    "quota": "图片 1K 20 / 2K 10 / 3K 1 / 4K 1 RPM",
+    "note": "官方定价页标注所有输出分辨率档位与输入参考图片当前免费",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-image-2.0-flash",
+    "label": "图像模型（文生图 / 图生图 / 多图合成）",
+    "quota": "图片 1K 20 / 2K 10 / 3K 1 / 4K 1 RPM",
+    "note": "官方定价页标注所有输出分辨率档位与输入参考图片当前免费",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-video-v2.0",
+    "label": "视频模型（异步任务 API）",
+    "quota": "视频 1 RPM",
+    "note": "官方定价页标注当前免费；需先创建任务再用 video_id / task_id 取结果",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   },
+   {
+    "model": "agnes-video-2.5-flash",
+    "label": "视频模型（OpenAI Videos 兼容）",
+    "quota": "视频 1 RPM",
+    "note": "官方定价页标注限时免费，注明可能按模型或活动阶段调整",
+    "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
+   }
+  ]
  },
  {
   "date": "2026-09-08",

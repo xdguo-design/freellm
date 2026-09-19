@@ -55,15 +55,39 @@ Agnes AI 条目此前只登记了国际站入口 `https://apihub.agnes-ai.com/v1
 - 四道门禁全绿：`build_static.py --check`、`build_seo_pages.py --check`、
   `site_health.py`、`pytest`。
 
+## 免费模型清单对齐（同日第二遍）
+
+主入口换成国内站后，`model` 字段里仍是国际站模型目录的旧模型族，且完全没有国内站最新一代模型。
+按官方定价页（`agnes-ai.cn/zh-Hans/docs/pricing`，2026-09-19）重排：
+
+- **现价 ¥0（列入 `freeModels`）**：`agnes-3.0-flash`、`agnes-2.5-flash`、
+  `agnes-image-2.5-flash`、`agnes-image-2.1-flash`、`agnes-image-2.0-flash`、
+  `agnes-video-v2.0`、`agnes-video-2.5-flash`（限时免费）。
+- **付费（明确排除）**：`agnes-2.5-pro`（¥3 / ¥6 每 M Token）、
+  `agnes-2.5-pro-beta`（¥0.70 / ¥2.10 每 M Token）、`agnes-video-2.5`（¥0.15–0.35 每秒）。
+- **只在国际站模型目录里、国内站定价页未列出**：`agnes-1.5-flash`、`agnes-2.0-flash`，
+  未列入免费清单，标为待核实。
+
+文本模型上下文窗口 512K、`agnes-3.0-flash` 最大输出 65,536 Token 取自各模型官方文档页。
+另记录一处官方文档笔误：`agnes-25-flash` 页规格表把「模型名称」写成 `agnes-2.0-flash`。
+
 ## 已知未完成
 
-- `model` 字段仍是旧的模型族（agnes-2.5-flash 等），国内站文档已列出
-  `agnes-3.0-flash`、`agnes-image-2.5-flash`、`agnes-video-2.5`、`agnes-video-2.5-flash` 等，
-  需要走官方模型目录流水线逐个对齐，本次未处理。
+- Agnes 的模型仍**完全不在 `data/models.json`（210 条、9 家 provider）里**。
+  原因是 `data/official-model-sources.json` 根本没有登记 agnes-ai，而
+  `crawler/official_model_discovery.py` 只支持 `openai_models` / `openrouter_models` / `ollama_tags`
+  三种解析器：Agnes 的官方模型目录是 GitHub 上的 markdown（本机无法访问 github.com），
+  官方 `/v1/models` 需要 API Key（无 Key 返回 401）。
+  国内站文档站（Mintlify）已提供 `llms.txt` 索引 + 每页 `.md`，
+  **要纳入需要新增一个 markdown 索引类解析器**，属爬虫功能，本次未做。
+- `data/models.json` 里 `dots-api-cn` 的 `canonicalModelId`（`dots3-note-preview`）
+  与官方 `/v1/models`（`dots3-note-prev`）不一致；该字段是跨 provider 的关联键，
+  改动会影响 `tests/test_access_cards.py`，需走爬虫流水线评估，本次未改。
 
 ## 来源与时效
 
 - https://agnes-ai.cn/zh-Hans/docs/overview
+- https://agnes-ai.cn/zh-Hans/docs/pricing
 - https://agnes-ai.cn/zh-Hans/docs/tokenplan
 - https://agnes-ai.com/en/docs/overview
 - https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md

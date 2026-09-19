@@ -200,6 +200,30 @@ def test_agnes_page_renders_both_official_endpoints():
     assert "apihub.agnes-ai.com/v1" in page
 
 
+def test_agnes_free_models_match_the_official_cn_pricing_page():
+    """免费清单只放官方定价页现价 ¥0 的模型，付费模型不得混进来。"""
+    offers = {offer["id"]: offer for offer in read_offers()}
+    agnes = offers["agnes-ai-free"]
+
+    free_ids = {entry["model"] for entry in agnes["freeModels"]}
+    assert free_ids == {
+        "agnes-3.0-flash",
+        "agnes-2.5-flash",
+        "agnes-image-2.5-flash",
+        "agnes-image-2.1-flash",
+        "agnes-image-2.0-flash",
+        "agnes-video-v2.0",
+        "agnes-video-2.5-flash",
+    }
+    assert {part.strip() for part in agnes["model"].split("·")} == free_ids
+
+    for paid in ("agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5"):
+        assert paid not in free_ids
+    for entry in agnes["freeModels"]:
+        assert entry["sourceUrl"].startswith("https://agnes-ai.cn/")
+        assert entry["quota"]
+
+
 def test_longcat_page_renders_both_access_paths():
     from scripts.build_seo_pages import render_offer_page
 
