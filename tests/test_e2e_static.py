@@ -251,9 +251,9 @@ class StaticContractTests(unittest.TestCase):
             'www.google.com/s2/favicons',
             'provider-mark-fallback',
             'resource-logo img',
-            'hunyuan-mark img',
         ):
             self.assertIn(needle, self.html)
+        self.assertNotIn('editor-pick', self.html)
 
     def test_offer_card_header_and_detail_buttons_share_one_layout(self):
         self.assertIn('.offer-card-top { display: flex;', self.html)
@@ -334,7 +334,6 @@ class StaticContractTests(unittest.TestCase):
         for needle in (
             "guideNav",
             "doubaoSearch",
-            "qwenFeaturedTitle",
             "localizedOfferText",
             "hasChineseText",
             "englishSafeText",
