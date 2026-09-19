@@ -150,6 +150,10 @@ pre code { padding:0; background:none; color:inherit; }
 .source-cell { min-width:100px; white-space:nowrap; }
 .freshness { color:var(--ink-secondary); }
 .freshness-stale { color:var(--pale-red-text); }
+.catalog-table .latency-cell { white-space:nowrap; }
+.catalog-table .latency-value { font:500 12.5px/1.5 var(--font-mono); color:var(--ink); }
+.catalog-table .latency-unknown { color:var(--ink-tertiary); }
+.catalog-latency-note { margin:-4px 0 12px; color:var(--ink-tertiary); font:400 12px/1.7 var(--font-sans); }
 .access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
 .access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
 .access-route h3 { margin:0 0 8px; font-size:18px; }
@@ -200,6 +204,19 @@ pre code { padding:0; background:none; color:inherit; }
     .qs-code { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
     .qs-step pre { margin: 0; padding: 12px 14px; border-radius: 6px; background: var(--code-bg); color: var(--code-text); font: 400 12px/1.55 var(--font-mono); overflow-x: auto; max-width: 100%; }
     .header-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .offer-version-line { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .flag-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }
+    .flag-key { color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }
+    .flag-edition { color: var(--accent); background: var(--accent-soft); }
+    .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
+    .flag-sibling:hover { border-color: var(--accent); }
+    .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
+    .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
+    .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-net-speed { color: var(--ink-secondary); background: var(--surface); border: 1px solid var(--line); }
+    .flag-net-fail { color: var(--pale-red-text); background: var(--pale-red-bg); }
+    .flag-net-dead { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
     .header-cta .button { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; }
     .header-cta .button small { font-weight: 400; opacity: .75; font-size: 11px; }
     .header-cta .button--ghost { background: transparent; color: var(--ink); border-color: var(--line); }
@@ -216,6 +233,7 @@ pre code { padding:0; background:none; color:inherit; }
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">Xiaomi MiMo Desktop · 邀请制 Beta</span><span lang="en">Xiaomi MiMo Desktop · invitation-only beta</span></h1>
     <p><span lang="zh-CN">Xiaomi MiMo · China / Overseas</span><span lang="en">Xiaomi MiMo · China / Overseas</span></p>
+    <div class="offer-version-line"><span class="flag-chip flag-key"><span lang="zh-CN">★ 重点</span><span lang="en">★ Key pick</span></span><span class="flag-chip flag-net-ok" title="2026-09-19 · 本机大陆网络直连 + check-host.net 海外节点（US×2 / DE / SG / JP / UK） · mimo.xiaomimimo.com · 仅实测网络可达性与往返延迟，不代表注册门槛或模型生成速度"><span lang="zh-CN">✓ 实测通过</span><span lang="en">✓ Network verified</span></span><span class="flag-chip flag-net-region"><span lang="zh-CN">国内外均可用</span><span lang="en">China + global</span></span><span class="flag-chip flag-net-speed"><span lang="zh-CN">国内 142ms · 海外 744ms</span><span lang="en">China 142ms · Global 744ms</span></span><span class="flag-chip flag-endpoint" title="2026-09-19 · 官网访问正常 · 调用耗时 119ms（本机大陆实测，3 次中位数）"><span lang="zh-CN">✓ 官网已验证 · 119ms</span><span lang="en">✓ Site verified · 119ms</span></span></div>
     <nav aria-label="Categories"><a class="tag" href="/category/promo/"><span lang="zh-CN">AI 试用与优惠</span><span lang="en">AI trials and promotions</span></a></nav>
     <nav class="header-cta" aria-label="Official links"><a class="button" href="https://mimo.xiaomimimo.com/desktop/invite/" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">立即开始</span><span lang="en">Get started</span> ↗</span><small>MiMo Desktop 国内申请</small></a><a class="button button--ghost" href="https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">官方文档</span><span lang="en">Documentation</span> ↗</span></a></nav>
   </header>

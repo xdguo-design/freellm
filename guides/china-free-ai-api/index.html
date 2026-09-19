@@ -149,6 +149,10 @@ pre code { padding:0; background:none; color:inherit; }
 .source-cell { min-width:100px; white-space:nowrap; }
 .freshness { color:var(--ink-secondary); }
 .freshness-stale { color:var(--pale-red-text); }
+.catalog-table .latency-cell { white-space:nowrap; }
+.catalog-table .latency-value { font:500 12.5px/1.5 var(--font-mono); color:var(--ink); }
+.catalog-table .latency-unknown { color:var(--ink-tertiary); }
+.catalog-latency-note { margin:-4px 0 12px; color:var(--ink-tertiary); font:400 12px/1.7 var(--font-sans); }
 .access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
 .access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
 .access-route h3 { margin:0 0 8px; font-size:18px; }
@@ -227,7 +231,7 @@ pre code { padding:0; background:none; color:inherit; }
     <section>
       <div class="eyebrow">02 / mainland CN availability</div>
       <h2><span lang="zh-CN">模型目录的大陆可用性标注</span><span lang="en">Mainland-CN availability labels in the model directory</span></h2>
-      <p><span lang="zh-CN">完整模型目录（187 个模型）逐行标注中国大陆可用状态，并提供“大陆可用性”筛选工具；每家提供商的注册要求（手机号、实名、信用卡）都有独立核验卡片与官方来源。没有官方证据的状态一律显示“待核验”。</span><span lang="en">The full catalog of 187 models carries per-row mainland-China availability labels with a dedicated filter; each provider&#x27;s signup requirements (phone, identity, credit card) live on its own evidence-linked card. Anything without official evidence shows as unverified.</span>
+      <p><span lang="zh-CN">完整模型目录（210 个模型）逐行标注中国大陆可用状态，并提供“大陆可用性”筛选工具；每家提供商的注册要求（手机号、实名、信用卡）都有独立核验卡片与官方来源。没有官方证据的状态一律显示“待核验”。</span><span lang="en">The full catalog of 210 models carries per-row mainland-China availability labels with a dedicated filter; each provider&#x27;s signup requirements (phone, identity, credit card) live on its own evidence-linked card. Anything without official evidence shows as unverified.</span>
           <a href="https://freellm.top/models/all/"><span lang="zh-CN">打开模型大列表并按大陆可用性筛选 →</span><span lang="en">Open the model directory and filter by mainland-CN availability →</span></a></p>
     </section><section>
       <div class="eyebrow">03 / related pages</div>

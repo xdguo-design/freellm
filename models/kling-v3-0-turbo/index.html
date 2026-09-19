@@ -7,7 +7,7 @@
   <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/models/kling-v3-0-turbo/">
 <link rel="alternate" hreflang="en" href="https://freellm.top/models/kling-v3-0-turbo/?lang=en">
 <link rel="alternate" hreflang="x-default" href="https://freellm.top/models/kling-v3-0-turbo/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="noindex,follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kling-v3.0-turbo 多平台入口与限制 · kling-v3.0-turbo Model Providers | FreeLLM">
 <meta property="og:description" content="比较 kling-v3.0-turbo 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
@@ -45,7 +45,7 @@
       });
     })();
   </script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "kling-v3.0-turbo 多平台入口与限制 · kling-v3.0-turbo Model Providers | FreeLLM", "description": "比较 kling-v3.0-turbo 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。", "url": "https://freellm.top/models/kling-v3-0-turbo/", "inLanguage": ["zh-CN", "en"], "dateModified": "2026-09-17", "mainEntity": {"@type": "ItemList", "numberOfItems": 1, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "LLM7 · kling-v3.0-turbo", "url": "https://llm7.io/models"}]}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "kling-v3.0-turbo 多平台入口与限制 · kling-v3.0-turbo Model Providers | FreeLLM", "description": "比较 kling-v3.0-turbo 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。", "url": "https://freellm.top/models/kling-v3-0-turbo/", "inLanguage": ["zh-CN", "en"], "dateModified": "2026-09-18", "mainEntity": {"@type": "ItemList", "numberOfItems": 1, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "LLM7 · kling-v3.0-turbo", "url": "https://llm7.io/models"}]}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet"><script id="skills-theme-script">
     (() => {
       let theme = '';
@@ -143,6 +143,10 @@ pre code { padding:0; background:none; color:inherit; }
 .source-cell { min-width:100px; white-space:nowrap; }
 .freshness { color:var(--ink-secondary); }
 .freshness-stale { color:var(--pale-red-text); }
+.catalog-table .latency-cell { white-space:nowrap; }
+.catalog-table .latency-value { font:500 12.5px/1.5 var(--font-mono); color:var(--ink); }
+.catalog-table .latency-unknown { color:var(--ink-tertiary); }
+.catalog-latency-note { margin:-4px 0 12px; color:var(--ink-tertiary); font:400 12px/1.7 var(--font-sans); }
 .access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
 .access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
 .access-route h3 { margin:0 0 8px; font-size:18px; }
@@ -166,7 +170,7 @@ pre code { padding:0; background:none; color:inherit; }
   <header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/models/all/"><span lang="zh-CN">全部模型</span><span lang="en">All models</span></a></p>
     <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>kling-v3.0-turbo</h1>
     <p class="lead"><span lang="zh-CN">同一模型在 1 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。</span><span lang="en">1 provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.</span></p>
-    <div class="stats"><span>1 <span lang="zh-CN">个平台记录</span><span lang="en">platform records</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-17</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">厂商官方目录</span><span lang="en">Provider catalogues</span></span></div>
+    <div class="stats"><span>1 <span lang="zh-CN">个平台记录</span><span lang="en">platform records</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-18</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">厂商官方目录</span><span lang="en">Provider catalogues</span></span></div>
   </header>
   <main><section><h2><span lang="zh-CN">平台记录对比</span><span lang="en">Provider records</span></h2><div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
       <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>上下文 <span lang="en">Context</span></th>
@@ -177,7 +181,7 @@ pre code { padding:0; background:none; color:inherit; }
           <td>—</td>
           <td>—</td>
           <td><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small><span lang="zh-CN">厂商官方来源</span><span lang="en">Provider official source</span></small></td>
-          <td>2026-09-17</td>
+          <td>2026-09-18</td>
           <td><a href="https://llm7.io/models" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
         </tr></tbody></table></div></section>
      <section class="registration-requirements"><h2><span lang="zh-CN">注册要求与模型查找</span><span lang="en">Registration and model lookup</span></h2>

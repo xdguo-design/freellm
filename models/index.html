@@ -150,6 +150,10 @@ pre code { padding:0; background:none; color:inherit; }
 .source-cell { min-width:100px; white-space:nowrap; }
 .freshness { color:var(--ink-secondary); }
 .freshness-stale { color:var(--pale-red-text); }
+.catalog-table .latency-cell { white-space:nowrap; }
+.catalog-table .latency-value { font:500 12.5px/1.5 var(--font-mono); color:var(--ink); }
+.catalog-table .latency-unknown { color:var(--ink-tertiary); }
+.catalog-latency-note { margin:-4px 0 12px; color:var(--ink-tertiary); font:400 12px/1.7 var(--font-sans); }
 .access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
 .access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
 .access-route h3 { margin:0 0 8px; font-size:18px; }
@@ -168,6 +172,18 @@ pre code { padding:0; background:none; color:inherit; }
     h2 small { color: var(--ink-secondary); font-size: 15px; font-weight: 400; }
     h2 [lang="en"] { color: var(--ink-tertiary); font-weight: 500; font-size: .62em; margin-left: 6px; }
     main { display: grid; gap: 30px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); gap: 26px; align-items: start; }
+    .hero-eyebrow { margin: 26px 0 0; color: var(--accent); font: 600 11px/1.5 var(--font-mono); letter-spacing: .22em; }
+    .hero-grid h1 { max-width: none; margin: 10px 0 4px; }
+    .hero-sub { margin: 0 0 6px; color: var(--ink-secondary); font: 400 clamp(17px, 2.6vw, 24px)/1.4 var(--font-serif), Georgia, serif; }
+    .hero-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+    .hero-card { display: flex; gap: 12px; align-items: center; padding: 16px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 1px 2px rgba(15, 23, 42, .04); }
+    .hero-card-icon { flex: 0 0 auto; display: inline-flex; width: 38px; height: 38px; border-radius: 10px; color: var(--accent); background: var(--accent-soft, var(--soft)); align-items: center; justify-content: center; }
+    .hero-card-icon svg { width: 19px; height: 19px; }
+    .hero-card div { display: grid; gap: 1px; min-width: 0; }
+    .hero-card strong { font: 600 16px/1.3 var(--font-sans); color: var(--ink); letter-spacing: -.01em; }
+    .hero-card span { color: var(--ink-tertiary); font: 400 11px/1.5 var(--font-sans); }
+    @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } .hero-cards { margin-top: 0; } .hero-eyebrow { margin-top: 18px; } }
     section + section { padding-top: 26px; border-top: 1px solid var(--line); }
     .section-desc { margin: 0 0 14px; color: var(--ink-secondary); font-size: 14px; }
     .catalog-toolbar { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
@@ -184,8 +200,12 @@ pre code { padding:0; background:none; color:inherit; }
     .provider-filter:hover { text-decoration: underline; }
     .provider-page-link { display: block; margin-top: 3px; color: var(--ink-secondary); font-size: 11px; }
     .catalog-count { align-self: center; justify-self: end; color: var(--ink-tertiary); font: 500 11px var(--font-mono); letter-spacing: .05em; white-space: nowrap; }
-    .catalog-table { min-width: 1120px; }
+    .catalog-table { min-width: 1220px; }
+    .catalog-table .latency-cell { white-space: nowrap; }
+    .catalog-table .latency-value { font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }
+    .catalog-table .latency-unknown { color: var(--ink-tertiary); }
     .catalog-hint { margin: 0 0 12px; color: var(--ink-secondary); font-size: 12px; }
+    .catalog-latency-note { margin: -4px 0 12px; color: var(--ink-tertiary); font-size: 12px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
     .model-card { display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 18px; background: var(--surface); transition: box-shadow .2s; }
     .model-card:hover { box-shadow: var(--card-shadow); }
@@ -215,15 +235,37 @@ pre code { padding:0; background:none; color:inherit; }
     <div class="crumb"><a href="https://freellm.top/">Free AI Index</a> / <span lang="zh-CN">全部模型</span><span lang="en">All models</span></div>
     <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
-    <h1><span lang="zh-CN">全部免费 AI 模型与 API 一览</span><span lang="en">All Free AI Models &amp; APIs</span></h1>
-    <p class="lead"><span lang="zh-CN">FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。</span><span lang="en">Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.</span></p>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">FREE MODELS. MORE POSSIBILITIES.</p>
+        <h1><span lang="zh-CN">全部免费 AI 模型与 API 一览</span><span lang="en">All Free AI Models &amp; APIs</span></h1>
+        <p class="hero-sub"><span lang="zh-CN">含中国大陆可用性标注</span><span lang="en">with Mainland CN Availability</span></p>
+        <p class="lead"><span lang="zh-CN">FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。</span><span lang="en">Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.</span></p>
+      </div>
+      <div class="hero-cards" aria-label="目录统计 / Catalog stats">
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2 3 5.5v9L10 18l7-3.5v-9L10 2Zm0 2.2 4.6 2.3L10 8.8 5.4 6.5 10 4.2ZM5 8.3l4 2v5l-4-2v-5Zm6 7v-5l4-2v5l-4 2Z" fill="currentColor"/></svg></span>
+          <div><strong>45</strong><span><span lang="zh-CN">免费模型与 API</span><span lang="en">Total Models &amp; APIs</span></span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-7 8.5V16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5.5a7.97 7.97 0 0 1-7 0 7.97 7.97 0 0 1-7 0Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          <div><strong>0</strong><span><span lang="zh-CN">厂商 / 访问记录</span><span lang="en">Providers</span></span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 5.5V10l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          <div><strong><span lang="zh-CN">每周核验</span><span lang="en">Verified Weekly</span></strong><span><span lang="zh-CN">持续更新</span><span lang="en">Continuously updated</span></span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="4.5" width="14" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          <div><strong>2026-09-17</strong><span><span lang="zh-CN">最近更新</span><span lang="en">Last Updated</span></span></div>
+        </div>
+      </div>
+    </div>
     <div class="stats">
       <span><strong>45</strong> <span lang="zh-CN">个模型</span><span lang="en">models</span></span>
       <span><strong>45</strong> <span lang="zh-CN">个接入资源</span><span lang="en">access records</span></span>
-      <span><span lang="zh-CN">每周人工核验</span><span lang="en">Verified weekly</span></span>
       <span><span lang="zh-CN">模型同步</span><span lang="en">Models synced</span>: —</span>
       <span><span lang="zh-CN">资源核验</span><span lang="en">Offers checked</span>: 2026-09-17</span>
-      <span><span lang="zh-CN">最近更新</span><span lang="en">Latest update</span>: 2026-09-17</span>
       <span><span lang="zh-CN">接入资源注册链接指向官方</span><span lang="en">Access-record links point to official sites</span></span>
     </div>
     <div class="callout"><span lang="zh-CN">免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。</span><span lang="en">Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.</span></div>
