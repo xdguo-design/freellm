@@ -4,10 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>llama-3.1-nemoguard-8b-content-safety 多平台入口与限制 · llama-3.1-nemoguard-8b-content-safety Model Providers | FreeLLM</title><meta name="description" content="比较 llama-3.1-nemoguard-8b-content-safety 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
   <link rel="canonical" href="https://freellm.top/models/llama-3-1-nemoguard-8b-content-safety/">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/models/llama-3-1-nemoguard-8b-content-safety/">
-<link rel="alternate" hreflang="en" href="https://freellm.top/models/llama-3-1-nemoguard-8b-content-safety/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://freellm.top/models/llama-3-1-nemoguard-8b-content-safety/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="noindex,follow">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="noindex,follow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="llama-3.1-nemoguard-8b-content-safety 多平台入口与限制 · llama-3.1-nemoguard-8b-content-safety Model Providers | FreeLLM">
 <meta property="og:description" content="比较 llama-3.1-nemoguard-8b-content-safety 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
@@ -25,21 +22,33 @@
   <script defer src="/_vercel/insights/script.js"></script><style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style><script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -168,7 +177,7 @@ pre code { padding:0; background:none; color:inherit; }
 </head>
 <body data-static-locale="true">
   <header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/models/all/"><span lang="zh-CN">全部模型</span><span lang="en">All models</span></a></p>
-    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>llama-3.1-nemoguard-8b-content-safety</h1>
+    <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>llama-3.1-nemoguard-8b-content-safety</h1>
     <p class="lead"><span lang="zh-CN">同一模型在 1 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。</span><span lang="en">1 provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.</span></p>
     <div class="stats"><span>1 <span lang="zh-CN">个平台记录</span><span lang="en">platform records</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-19</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">厂商官方目录</span><span lang="en">Provider catalogues</span></span></div>
   </header>

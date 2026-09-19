@@ -7,11 +7,7 @@
   <meta name="description" content="FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。" />
   <meta name="keywords" content="FreeLLM, 免费 AI, 免费大模型, Qwen, 通义千问, Doubao, 豆包, 免费 IDE, 学生优惠, 学生计划, 代码助手, AI API, 开源模型, 免费额度, free AI, coding IDE, open weights" />
   <link rel="canonical" href="https://freellm.top/models/center/" />
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/models/center/">
-<link rel="alternate" hreflang="en" href="https://freellm.top/models/center/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://freellm.top/models/center/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
   <meta name="robots" content="index,follow,max-image-preview:large" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="FreeLLM — 免费 AI 模型、API、IDE 与额度索引" />
@@ -29,9 +25,18 @@
   <meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    // /_vercel/insights 只在 Vercel 线上（https）存在；离线预览与本地 http 下按协议跳过，避免控制台资源报错。
+    if (window.location.protocol === 'https:') {
+      var vercelInsights = document.createElement('script');
+      vercelInsights.defer = true;
+      vercelInsights.src = '/_vercel/insights/script.js';
+      document.head.appendChild(vercelInsights);
+    }
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-  <script src="/js/freellm-sync.js"></script>
+  <script>
+    // file:// 预览走内嵌数据，网络同步脚本只在 http(s) 下同步加载（document.write 保持原有阻塞顺序）。
+    if (window.location.protocol !== 'file:') document.write('<script src="/js/freellm-sync.js"><\/script>');
+  </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
   <script type="application/ld+json">
@@ -4794,10 +4799,12 @@
       if (textNode) textNode.nodeValue = `${localeText(key)} `;
     });
     const setNodeAttribute = (selector, attribute, key) => document.querySelectorAll(selector).forEach(node => node.setAttribute(attribute, localeText(key)));
-    const updateLocaleUrl = locale => {
+    const cleanLocaleUrl = () => {
       const url = new URL(window.location.href);
-      url.searchParams.set('lang', locale === SUPPORTED_LOCALES.zh ? 'zh-CN' : 'en');
-      history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+      if (!url.searchParams.has('lang')) return;
+      url.searchParams.delete('lang');
+      const search = url.searchParams.toString();
+      history.replaceState(null, '', `${url.pathname}${search ? '?' + search : ''}${url.hash}`);
     };
     const renderClock = (clock, label, timeZone, time) => {
       clock.replaceChildren();
@@ -4913,12 +4920,14 @@
       toggle.addEventListener('click', () => {
         const next = currentLocale === SUPPORTED_LOCALES.en ? SUPPORTED_LOCALES.zh : SUPPORTED_LOCALES.en;
         try { localStorage.setItem(LOCALE_STORAGE_KEY, next); } catch (error) { /* local storage can be unavailable */ }
-        updateLocaleUrl(next); applyLocale(next);
+        applyLocale(next);
       });
       actions.insertBefore(toggle, actions.firstChild);
     };
     installLocaleToggle();
-    applyLocale(resolveLocale());
+    const resolvedLocale = resolveLocale();
+    cleanLocaleUrl();
+    applyLocale(resolvedLocale);
     const embeddedOfferData = JSON.parse(document.getElementById('offer-data').textContent || '[]');
     const escapeHtml = value => String(value ?? '').replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
     const safeExternalHref = value => /^https:\/\//i.test(String(value || '')) ? String(value) : '#';

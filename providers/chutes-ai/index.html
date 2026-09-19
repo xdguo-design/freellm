@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Chutes 模型与免费入口 · Chutes Models &amp; Access | FreeLLM</title><meta name="description" content="浏览 Chutes 的 14 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。"><link rel="canonical" href="https://freellm.top/providers/chutes-ai/">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/providers/chutes-ai/">
-<link rel="alternate" hreflang="en" href="https://freellm.top/providers/chutes-ai/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://freellm.top/providers/chutes-ai/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chutes 模型与免费入口 · Chutes Models &amp; Access | FreeLLM">
 <meta property="og:description" content="浏览 Chutes 的 14 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。">
@@ -21,21 +18,33 @@
           crossorigin="anonymous"></script><style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style><script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -152,7 +161,7 @@ pre code { padding:0; background:none; color:inherit; }
 :root[data-theme="dark"] .theme-toggle .icon-moon { display:none; }
 @media (max-width:640px) { body { padding:14px 10px 40px; } header, main, footer { padding:18px; border-radius:8px; } }</style>
 <style>h1 {margin:10px 0;font-size:clamp(30px,5vw,48px);}main section h2 {font-size:clamp(22px,3.4vw,30px);}.related-list {padding-left:20px;}footer {color:var(--ink-secondary);font-size:13px;}</style></head>
-<body data-static-locale="true"><header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/providers/"><span lang="zh-CN">按厂家浏览</span><span lang="en">Browse by provider</span></a></p><nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>Chutes</h1><p class="lead"><span lang="zh-CN">浏览 Chutes 的 14 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。</span><span lang="en">Browse 14 model records for Chutes.</span></p><div class="stats"><span>14 <span lang="zh-CN">个模型</span><span lang="en">models</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-19</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">厂商来源</span><span lang="en">Provider source</span></span></div></header><main><section class="registration-requirements"><h2><span lang="zh-CN">注册要求与模型查找</span><span lang="en">Registration and model lookup</span></h2>
+<body data-static-locale="true"><header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/providers/"><span lang="zh-CN">按厂家浏览</span><span lang="en">Browse by provider</span></a></p><nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>Chutes</h1><p class="lead"><span lang="zh-CN">浏览 Chutes 的 14 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。</span><span lang="en">Browse 14 model records for Chutes.</span></p><div class="stats"><span>14 <span lang="zh-CN">个模型</span><span lang="en">models</span></span><span><span lang="zh-CN">最近同步</span><span lang="en">Last synced</span>: 2026-09-19</span><span><span lang="zh-CN">来源级别</span><span lang="en">Source level</span>: <span lang="zh-CN">厂商来源</span><span lang="en">Provider source</span></span></div></header><main><section class="registration-requirements"><h2><span lang="zh-CN">注册要求与模型查找</span><span lang="en">Registration and model lookup</span></h2>
       <dl class="facts"><div><dt><span lang="zh-CN">需要账号</span><span lang="en">Account</span></dt><dd>yes</dd></div><div><dt><span lang="zh-CN">需要邮箱</span><span lang="en">Email</span></dt><dd>unknown</dd></div><div><dt><span lang="zh-CN">需要手机号</span><span lang="en">Phone</span></dt><dd>unknown</dd></div><div><dt><span lang="zh-CN">需要实名</span><span lang="en">Identity</span></dt><dd>unknown</dd></div><div><dt><span lang="zh-CN">需要信用卡</span><span lang="en">Card</span></dt><dd>unknown</dd></div><div><dt><span lang="zh-CN">需要开通计费</span><span lang="en">Billing</span></dt><dd>yes</dd></div><div><dt><span lang="zh-CN">需要 API Key</span><span lang="en">API key</span></dt><dd>yes</dd></div><div><dt><span lang="zh-CN">许可证</span><span lang="en">License</span></dt><dd>unknown</dd></div></dl><ol><li>访问 chutes.ai 注册账号并生成 API Key。</li><li>注意：官方 2026-02 社区公告确认 Early Access 每日 200 次免费权益已退役。</li><li>当前最低门槛为 $3/月订阅或按量付费，调用前先确认价格页。</li></ol><a class="btn" href="https://chutes.ai/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">打开注册入口</span><span lang="en">Open signup</span></a></section><section><h2><span lang="zh-CN">全部模型记录</span><span lang="en">All model records</span></h2><div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
       <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>上下文 <span lang="en">Context</span></th>
       <th>速率 <span lang="en">Rate limit</span></th><th>状态 <span lang="en">Status</span></th><th>同步 <span lang="en">Synced</span></th><th>来源 <span lang="en">Source</span></th>

@@ -622,12 +622,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
+        # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
         page.fill("#catalog-search", "Qwen3")
-        page.click(".featured-resource-link[aria-label='查看免费 IDE']")
+        page.click(".featured-resource-link[aria-label='查看免费额度']")
         page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="ide"]')?.classList.contains('active')"""
+            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 9)
+        self.assertEqual(self.visible_offers(page), 19)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):

@@ -6,10 +6,7 @@
   <title>Free AI APIs in China | 国内免费 AI API · FreeLLM</title>
   <meta name="description" content="Compare free or trial AI APIs available to users in China, with region, signup requirements (phone, identity, credit card), quota, compatibility and official entry notes; the model directory carries per-row mainland-China availability labels. 整理面向中国用户的免费或试用 AI API，标注地区、注册要求（手机号、实名、信用卡）、额度、兼容性和官方入口，模型目录逐行标注中国大陆可用性。">
   <link rel="canonical" href="https://freellm.top/guides/china-free-ai-api/">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/guides/china-free-ai-api/">
-<link rel="alternate" hreflang="en" href="https://freellm.top/guides/china-free-ai-api/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://freellm.top/guides/china-free-ai-api/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
   <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Free AI APIs in China | 国内免费 AI API · FreeLLM">
@@ -31,22 +28,34 @@
   <style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
   <script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -176,7 +185,7 @@ pre code { padding:0; background:none; color:inherit; }
 <body data-static-locale="true">
   <header>
     <div class="crumb"><a href="https://freellm.top/">FreeLLM Free AI Index</a> / Guides</div>
-    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></h1>
     <p class="lead"><span lang="zh-CN">国内 API 的免费条件经常和地区、实名认证、账户类型或新用户资格相关；本页只收录有官方证据的结论，未核验的如实标记待核验。</span><span lang="en">Free access in China often depends on region, identity verification, account type or new-user eligibility; this page only states conclusions backed by official evidence, and marks everything else as unverified.</span></p>

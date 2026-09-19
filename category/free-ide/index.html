@@ -6,10 +6,7 @@
   <title>免费 AI IDE · FreeLLM 免费 AI 资源索引</title>
   <meta name="description" content="整理免费 AI 编程 IDE、编辑器计划和开发工具，并标注限制条件。当前有 9 个经过核验的资源，均提供官方入口与有效期说明。">
   <link rel="canonical" href="https://freellm.top/category/free-ide/">
-  <link rel="alternate" hreflang="zh-CN" href="https://freellm.top/category/free-ide/">
-<link rel="alternate" hreflang="en" href="https://freellm.top/category/free-ide/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://freellm.top/category/free-ide/">
-<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
   <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website">
 <meta property="og:title" content="免费 AI IDE · FreeLLM 免费 AI 资源索引">
@@ -31,22 +28,34 @@
   <style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
   <script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -183,7 +192,7 @@ pre code { padding:0; background:none; color:inherit; }
 <body data-static-locale="true">
   <header>
     <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">分类</span><span lang="en">Category</span></p>
-    <nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>
+    <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">免费 AI IDE</span><span lang="en">Free AI coding IDEs</span></h1>
     <p><span lang="zh-CN">整理免费 AI 编程 IDE、编辑器计划和开发工具，并标注限制条件。</span><span lang="en">Free coding IDEs, editor plans, and developer tools with provider-defined limits.</span></p>
