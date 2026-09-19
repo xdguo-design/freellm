@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公众号版预览 · WorkBuddy 积分不够用了怎么办</title>
+<style>
+  body {
+    margin: 0; padding: 28px 16px 48px; background: #eceef1;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #333;
+  }
+  .head { max-width: 900px; margin: 0 auto 22px; text-align: center; }
+  .head h1 { margin: 0 0 8px; font-size: 17px; font-weight: 600; color: #111; }
+  .head p { margin: 0; font-size: 13px; color: #777; line-height: 1.7; }
+  .head code {
+    font-family: Menlo, Consolas, monospace; font-size: 12px;
+    background: #fff; border: 1px solid #dfe3e8; border-radius: 4px; padding: 1px 5px;
+  }
+  .stage { display: flex; justify-content: center; align-items: flex-start; gap: 26px; flex-wrap: wrap; }
+  .phone {
+    width: 390px; flex: 0 0 auto; background: #fff; border-radius: 14px;
+    box-shadow: 0 6px 26px rgba(0, 0, 0, .13); overflow: hidden;
+  }
+  .bar {
+    height: 34px; background: #f6f7f9; border-bottom: 1px solid #e8eaed;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #999; letter-spacing: 1px;
+  }
+  .phone iframe { display: block; width: 390px; height: 780px; border: 0; }
+  .note {
+    max-width: 390px; flex: 0 1 390px; background: #fff; border-radius: 14px;
+    padding: 20px 22px; box-shadow: 0 6px 26px rgba(0, 0, 0, .07);
+    font-size: 13px; line-height: 1.85; color: #555;
+  }
+  .note h2 { margin: 0 0 12px; font-size: 14px; color: #111; }
+  .note ul { margin: 0; padding-left: 18px; }
+  .note li { margin-bottom: 9px; }
+  .note code {
+    font-family: Menlo, Consolas, monospace; font-size: 12px;
+    background: #f5f6f8; border-radius: 3px; padding: 1px 4px;
+  }
+  .warn { color: #b45309; font-weight: 600; }
+</style>
+</head>
+<body>
+
+  <div class="head">
+    <h1>公众号版排版预览</h1>
+    <p>左框是 390px 手机宽度下的实际渲染（内容来自 <code>workbuddy-token-free-models-wechat.html</code>，全内联样式）。<br>
+       复制时整段选中那个文件的 <code>&lt;section&gt;</code>，粘进公众号编辑器即可。</p>
+  </div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="bar">390 px · 公众号正文宽度</div>
+      <iframe src="workbuddy-token-free-models-wechat.html" title="公众号版预览"></iframe>
+    </div>
+
+    <div class="note">
+      <h2>粘贴前后要知道的</h2>
+      <ul>
+        <li><strong>图片需要补一次。</strong>公众号不接受 base64 和本地路径，正文里那张筛选条截图用的是站点外链
+            <code>freellm.top/docs/marketing/assets/featured-filter-45-08.png</code>。
+            编辑器一般会自动抓取上传；如果没抓到，手动插入本地文件
+            <code>docs/marketing/assets/featured-filter-45-08.png</code>。</li>
+        <li><span class="warn">该截图还没提交推送，外链现在仍是 404。</span>先 commit &amp; push，链接才生效。</li>
+        <li><strong>图表都是 CSS 画的</strong>（表格条形图 + 华夫图），不是图片，所以在公众号里是矢量级清晰，也不用上传。</li>
+        <li>已按 320 / 360 / 375 / 390 / 414 五档宽度体检：无数字折行、无内容裁剪、无横向溢出。</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
