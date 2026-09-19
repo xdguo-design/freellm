@@ -533,7 +533,9 @@ class BrowserPageTests(unittest.TestCase):
         self.addCleanup(self.site.stop)
 
     def new_page(self):
-        context = self._browser.new_context()
+        # 固定中文 locale：页面的默认语言跟随 navigator.languages，
+        # 不固定的话中英文断言会随运行环境的浏览器语言漂移。
+        context = self._browser.new_context(locale="zh-CN")
         self.addCleanup(context.close)
         page = context.new_page()
         problems = []
