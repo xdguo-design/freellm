@@ -58,6 +58,9 @@ jobs:
       - name: Site health gate (freshness, size budgets, release SHA)
         run: python scripts/site_health.py --report site-health-report.json
 
+      - name: AdSense gate (ads.txt match, loader coverage, thin-page ad risk)
+        run: python scripts/check_adsense.py --report adsense-report.json
+
       - name: Upload scan evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,4 +73,5 @@ jobs:
             data/coverage.json
             data/review-queue.json
             site-health-report.json
+            adsense-report.json
           if-no-files-found: error
