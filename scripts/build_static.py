@@ -29,9 +29,101 @@ def offer_href(offer: dict) -> str:
     return f"/offers/{quote(offer_id, safe='')}/"
 
 
+def key_first(offers: list[dict]) -> list[dict]:
+    """重点资源排在可用列表最前面，其余保持原有 order。"""
+    return sorted(offers, key=lambda offer: (not offer.get("key"), int(offer.get("order") or 0)))
+
+
+NETWORK_REGION_LABELS = {
+    "both": "国内外均可用",
+    "cn": "仅国内可用",
+    "intl": "仅国外可用",
+}
+NETWORK_METHOD = "本机大陆网络直连 + check-host.net 海外节点（US×2 / DE / SG / JP / UK）"
+NETWORK_NOTE = "仅实测网络可达性与往返延迟，不代表注册门槛或模型生成速度"
+
+
+def render_network_chips(offer: dict) -> list[str]:
+    """绿色实测标签：网络可达性 + 国内/国外分类 + 往返延迟。
+
+    数据来自 scripts/probe_offer_network.py 的双视角实测（大陆直连 +
+    check-host.net 海外节点），只描述网络层，不描述注册门槛或模型生成速度。
+    """
+    check = offer.get("networkCheck")
+    if not isinstance(check, dict):
+        return []
+    region = check.get("region")
+    if region not in NETWORK_REGION_LABELS and region != "none":
+        return []
+
+    latencies = []
+    if check.get("cnMs"):
+        latencies.append(f"国内 {check['cnMs']}ms")
+    if check.get("intlMs"):
+        latencies.append(f"海外 {check['intlMs']}ms")
+    speed = " · ".join(latencies)
+    title = f"实测于 {check.get('checkedAt')}｜{NETWORK_METHOD}"
+    if check.get("cnHost"):
+        title += f"｜国内经 {check['cnHost']}"
+    if speed:
+        title += f"｜{speed}"
+    title += f"｜{NETWORK_NOTE}"
+    title = html_lib.escape(title)
+
+    if region == "none":
+        chips = [f'<span class="flag-chip flag-net-fail" title="{title}">✗ 本次未连通</span>']
+    else:
+        chips = [
+            f'<span class="flag-chip flag-net-ok" title="{title}">✓ 实测通过</span>',
+            f'<span class="flag-chip flag-net-region">{NETWORK_REGION_LABELS[region]}</span>',
+        ]
+        if speed:
+            chips.append(f'<span class="flag-chip flag-net-speed">{html_lib.escape(speed)}</span>')
+
+    dead = [str(url) for url in (check.get("deadTargets") or [])]
+    if dead:
+        dead_title = html_lib.escape("域名无法解析：" + "；".join(dead))
+        chips.append(f'<span class="flag-chip flag-net-dead" title="{dead_title}">⚠ {len(dead)} 个链接解析失败</span>')
+    return chips
+
+
+def render_offer_flags(offer: dict) -> str:
+    chips = []
+    if offer.get("key"):
+        chips.append('<span class="flag-chip flag-key">★ 重点</span>')
+    chips.extend(render_network_chips(offer))
+    edition_of = offer.get("editionOf")
+    editions = offer.get("editions") or []
+    if edition_of == "cn":
+        chips.append('<span class="flag-chip flag-edition">国内版</span>')
+    elif edition_of == "intl":
+        chips.append('<span class="flag-chip flag-edition">国际版</span>')
+    elif "cn" in editions and "intl" in editions:
+        chips.append('<span class="flag-chip flag-edition">国内+国际双入口</span>')
+    elif "cn" in editions:
+        chips.append('<span class="flag-chip flag-edition">国内版</span>')
+    elif "intl" in editions:
+        chips.append('<span class="flag-chip flag-edition">国际版</span>')
+    sibling = offer.get("siblingEditionId")
+    if sibling:
+        label = "也有国内版" if edition_of == "intl" else "也有国际版"
+        chips.append(f'<a class="flag-chip flag-sibling" href="/offers/{quote(str(sibling), safe="")}/">{label} ↗</a>')
+    if offer.get("handsOn"):
+        chips.append('<span class="flag-chip flag-hands-on">✓ 实测好用</span>')
+    elif offer.get("endpointCheck") and offer["endpointCheck"].get("verdict") != "NETWORK_ERROR":
+        check = offer["endpointCheck"]
+        label = "接口已验证" if offer.get("usageGuide", {}).get("endpoint") else "官网已验证"
+        ms = check.get("ms")
+        suffix = f" · {int(ms)}ms" if isinstance(ms, int) else ""
+        chips.append(f'<span class="flag-chip flag-endpoint">✓ {label}{suffix}</span>')
+    if not chips:
+        return ""
+    return '<div class="offer-card-flags">' + "".join(chips) + "</div>"
+
+
 def render_static_catalog(data: list[dict], limit: int = 20) -> str:
     cards = []
-    for offer in data[:limit]:
+    for offer in key_first(data)[:limit]:
         href = offer_href(offer)
         title = html_lib.escape(str(offer.get("title") or offer.get("name") or "AI offer"))
         provider = html_lib.escape(str(offer.get("provider") or "Official provider"))
@@ -43,6 +135,7 @@ def render_static_catalog(data: list[dict], limit: int = 20) -> str:
             f'<article class="offer static-offer" data-detail="{html_lib.escape(str(offer["id"]))}">'
             f'<div class="offer-card-top"><div class="provider-name"><strong>{title}</strong>'
             f'<small>{provider}</small></div><a class="row-arrow" href="{href}" aria-label="查看 {title} 详情">→</a></div>'
+            f'{render_offer_flags(offer)}'
             f'<div class="offer-card-body"><div class="offer-card-metrics">'
             f'<div class="offer-card-metric"><label>免费方式</label><p>{summary}</p></div>'
             f'<div class="offer-card-metric"><label>有效期</label><p>{validity}</p></div>'

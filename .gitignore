@@ -8,6 +8,11 @@ venv/
 .vercel/
 data/snapshots/latest-scan.json
 data/snapshots/discovery-scan.json
+# working files the daily pipeline regenerates inside the CI run
+data/snapshots/daily-models.json
+data/snapshots/daily-providers.json
+# dot-prefixed snapshots are throwaway probe captures, same as .tmp-*
+data/snapshots/.*.json
 data/candidates.json
 data/coverage.json
 

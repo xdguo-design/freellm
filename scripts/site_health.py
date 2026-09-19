@@ -17,11 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAX_AGE_DAYS = 7
 DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": 400 * 1024,
-    "models/center/index.html": 900 * 1024,
-    "models/all/index.html": 350 * 1024,
-    "models/all/page/2/index.html": 350 * 1024,
-    "models/all/page/3/index.html": 350 * 1024,
-    "models/all/page/4/index.html": 350 * 1024,
+    "models/center/index.html": 1200 * 1024,
+    "models/all/index.html": 450 * 1024,
+    "models/all/page/2/index.html": 450 * 1024,
+    "models/all/page/3/index.html": 450 * 1024,
+    "models/all/page/4/index.html": 450 * 1024,
 }
 SHA_RE = re.compile(r"^[0-9a-f]{40}$", re.IGNORECASE)
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")

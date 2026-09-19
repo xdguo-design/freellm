@@ -74,7 +74,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "A free IDE plan is not an unrestricted API key."
+  "notes": "A free IDE plan is not an unrestricted API key.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 225
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "www.codebuddy.cn",
+   "cnMs": 309,
+   "intlMs": 413
+  }
  },
  {
   "id": "qoder",
@@ -151,7 +164,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Trial and renewal conditions can change."
+  "notes": "Trial and renewal conditions can change.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 429
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "qoder.com",
+   "cnMs": 475,
+   "intlMs": 472
+  }
  },
  {
   "id": "trae",
@@ -228,7 +254,21 @@
   "confidence": "medium",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "2026-09-17 复验：官方定价页显示免费 Free 计划为 ¥0，含「每月 500 积分 / 所有功能均可免费使用 / 支持 2 个云端任务同时执行」。此前的 'mode-dependent quota' 描述与官方页面不符，已更正。"
+  "notes": "2026-09-17 复验：官方定价页显示免费 Free 计划为 ¥0，含「每月 500 积分 / 所有功能均可免费使用 / 支持 2 个云端任务同时执行」。此前的 'mode-dependent quota' 描述与官方页面不符，已更正。",
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 222
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "cn",
+   "cnHost": "www.trae.cn",
+   "cnMs": 318,
+   "intlMs": 961
+  }
  },
  {
   "id": "comate",
@@ -305,7 +345,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Auto-Free is a product mode, not an unrestricted API quota."
+  "notes": "Auto-Free is a product mode, not an unrestricted API quota.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 147
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "comate.baidu.com",
+   "cnMs": 146,
+   "intlMs": 1027
+  }
  },
  {
   "id": "doubao",
@@ -384,7 +437,21 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "This is a paid promotion, not a free plan."
+  "notes": "This is a paid promotion, not a free plan.",
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 379
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "www.volcengine.com",
+   "cnMs": 327,
+   "intlMs": 953
+  }
  },
  {
   "id": "glm",
@@ -464,7 +531,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Never describe this as a universal local-midnight discount."
+  "notes": "Never describe this as a universal local-midnight discount.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 167
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "open.bigmodel.cn",
+   "cnMs": 156,
+   "intlMs": 331
+  }
  },
  {
   "id": "longcat-2-0",
@@ -604,7 +684,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free."
+  "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 227
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.longcat.chat",
+   "cnMs": 228,
+   "intlMs": 578
+  }
  },
  {
   "id": "qwen-download",
@@ -672,6 +765,10 @@
    [
     "Qwen GitHub",
     "https://github.com/QwenLM/Qwen3"
+   ],
+   [
+    "ModelScope 国内镜像",
+    "https://modelscope.cn/models/Qwen/Qwen3-4B"
    ]
   ],
   "originCountry": "China",
@@ -690,7 +787,19 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Local inference still needs compatible hardware or hosted compute."
+  "notes": "Local inference still needs compatible hardware or hosted compute.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "OK",
+   "note": "官网访问正常"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "github.com",
+   "cnMs": 1516,
+   "intlMs": 39
+  }
  },
  {
   "id": "glm-download",
@@ -755,6 +864,10 @@
    [
     "Hugging Face",
     "https://huggingface.co/zai-org"
+   ],
+   [
+    "ModelScope 国内镜像",
+    "https://modelscope.cn/models/ZhipuAI/GLM-4.7-Flash"
    ]
   ],
   "originCountry": "China",
@@ -773,7 +886,19 @@
   "confidence": "medium",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Verify the exact license on the current model card before commercial use."
+  "notes": "Verify the exact license on the current model card before commercial use.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "OK",
+   "note": "官网访问正常"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "github.com",
+   "cnMs": 1328,
+   "intlMs": 506
+  }
  },
  {
   "id": "sensecore",
@@ -884,7 +1009,20 @@
     "note": "信息图与图文生成；模型 ID 以控制台为准",
     "sourceUrl": "https://www.sensenova.cn/token-plan"
    }
-  ]
+  ],
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 225
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "token.sensenova.cn",
+   "cnMs": 239,
+   "intlMs": 838
+  }
  },
  {
   "id": "deepseek",
@@ -964,7 +1102,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Low cost is intentionally separate from free."
+  "notes": "Low cost is intentionally separate from free.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 185
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.deepseek.com",
+   "cnMs": 220,
+   "intlMs": 278
+  }
  },
  {
   "id": "opencode-zen-free",
@@ -1049,7 +1200,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked."
+  "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
+   "ms": 1198
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "opencode.ai",
+   "cnMs": 1272,
+   "intlMs": 380
+  }
  },
  {
   "id": "github-copilot-free",
@@ -1135,7 +1299,20 @@
   "studentSourceUrls": [
    "https://github.com/education/students",
    "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-students"
-  ]
+  ],
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 770
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "github.com",
+   "cnMs": 1864,
+   "intlMs": 394
+  }
  },
  {
   "id": "cursor-hobby",
@@ -1229,7 +1406,21 @@
   "notes": "The official page does not publish a stable numeric Hobby quota; users should check the in-app usage indicator. Student program terms should be checked on the official Students page.",
   "studentSourceUrls": [
    "https://cursor.com/en-US/students"
-  ]
+  ],
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 490
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "cursor.com",
+   "cnMs": 536,
+   "intlMs": 79
+  }
  },
  {
   "id": "amazon-q-free",
@@ -1312,7 +1503,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Free-tier content may be used for service improvement unless the applicable opt-out is configured; review AWS privacy settings."
+  "notes": "Free-tier content may be used for service improvement unless the applicable opt-out is configured; review AWS privacy settings.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 945
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "aws.amazon.com",
+   "cnMs": 1046,
+   "intlMs": 218
+  }
  },
  {
   "id": "google-antigravity-free",
@@ -1397,7 +1601,19 @@
   "confidence": "medium",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Google's consumer coding products changed in 2026; keep this entry under frequent recheck."
+  "notes": "Google's consumer coding products changed in 2026; keep this entry under frequent recheck.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "OK",
+   "note": "官网访问正常"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "intl",
+   "cnHost": null,
+   "cnMs": null,
+   "intlMs": 89
+  }
  },
  {
   "id": "aliyun-qwen-free-quota",
@@ -1480,7 +1696,21 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-17",
   "checkedBy": "manual",
-  "notes": "Use a regular API key for the new-user quota, not a Token Plan dedicated key. Turn on the stop switch when the free quota is exhausted to avoid accidental charges."
+  "notes": "Use a regular API key for the new-user quota, not a Token Plan dedicated key. Turn on the stop switch when the free quota is exhausted to avoid accidental charges.",
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 133
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "dashscope.aliyuncs.com",
+   "cnMs": 149,
+   "intlMs": 658
+  }
  },
  {
   "id": "keenable-search-free",
@@ -1611,6 +1841,19 @@
     }
    ],
    "docsUrl": "https://docs.keenable.ai/cli"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 1171
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.keenable.ai",
+   "cnMs": 1646,
+   "intlMs": 117
   }
  },
  {
@@ -1726,6 +1969,16 @@
     }
    ],
    "docsUrl": "https://future.tinyfish.io/pricing"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "future.tinyfish.io",
+   "cnMs": 512,
+   "intlMs": 261,
+   "deadTargets": [
+    "https://api.tinyfish.io/search"
+   ]
   }
  },
  {
@@ -1844,6 +2097,16 @@
     }
    ],
    "docsUrl": "https://future.tinyfish.io/pricing"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "future.tinyfish.io",
+   "cnMs": 494,
+   "intlMs": 53,
+   "deadTargets": [
+    "https://api.tinyfish.io/agent"
+   ]
   }
  },
  {
@@ -1972,6 +2235,19 @@
     }
    ],
    "docsUrl": "https://docs.tavily.com/documentation/api-reference/introduction"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 921
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.tavily.com",
+   "cnMs": 1858,
+   "intlMs": 419
   }
  },
  {
@@ -2097,6 +2373,19 @@
     }
    ],
    "docsUrl": "https://exa.ai/pricing"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 1288
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.exa.ai",
+   "cnMs": 1062,
+   "intlMs": 154
   }
  },
  {
@@ -2225,6 +2514,18 @@
     }
    ],
    "docsUrl": "https://you.com/docs/quickstart"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "intl",
+   "cnHost": null,
+   "cnMs": null,
+   "intlMs": 2491
   }
  },
  {
@@ -2353,6 +2654,19 @@
     }
    ],
    "docsUrl": "https://docs.firecrawl.dev"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "端点存活需 Key；匿名调用曾成功返回搜索结果，行为不稳定，按需 Key 使用",
+   "ms": 1022
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.firecrawl.dev",
+   "cnMs": 2517,
+   "intlMs": 271
   }
  },
  {
@@ -2469,6 +2783,18 @@
     }
    ],
    "docsUrl": "https://brave.com/search/api/"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "ALIVE",
+   "note": "接口存活，参数校验正常，需订阅令牌"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "brave.com",
+   "cnMs": 4311,
+   "intlMs": 27
   }
  },
  {
@@ -2589,6 +2915,19 @@
     }
    ],
    "docsUrl": "https://www.browserbase.com/pricing"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 784
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.browserbase.com",
+   "cnMs": 1211,
+   "intlMs": 449
   }
  },
  {
@@ -2678,7 +3017,19 @@
   ],
   "evidence": "Official pricing page: 'Gemini 3.8 Flash ... Free Tier ... Input price Free of charge ... Output price (including thinking tokens) Free of charge ... Context caching price Free of charge', and free tier 'Used to improve our products: Yes'.",
   "confidence": "high",
-  "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier."
+  "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "intl",
+   "cnHost": null,
+   "cnMs": null,
+   "intlMs": 53
+  }
  },
  {
   "date": "2026-09-07",
@@ -2882,7 +3233,20 @@
   ],
   "evidence": "Official docs: 'Free Plan Limits ... MODEL ID RPM RPD TPM TPD ... openai/gpt-oss-120b 30 1K 8K 200K ... groq/compound 30 250 70K'; 'Need higher rate limits? Upgrade to Developer plan'.",
   "confidence": "high",
-  "notes": "International option included in the China-first global directory."
+  "notes": "International option included in the China-first global directory.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 489
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.groq.com",
+   "cnMs": 759,
+   "intlMs": 93
+  }
  },
  {
   "date": "2026-09-07",
@@ -2970,7 +3334,20 @@
   ],
   "evidence": "Official pricing page: 'Free Trial Get started with $5 in free credits after making an account Access to all Cerebras powered models'; docs: 'Free accounts have lower per-minute limits than paid accounts'.",
   "confidence": "high",
-  "notes": "International option included in the China-first global directory. Credits are a one-time trial, not a permanent free tier."
+  "notes": "International option included in the China-first global directory. Credits are a one-time trial, not a permanent free tier.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 1165
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.cerebras.ai",
+   "cnMs": 1264,
+   "intlMs": 172
+  }
  },
  {
   "date": "2026-09-07",
@@ -3059,7 +3436,20 @@
   ],
   "evidence": "Official docs table: 'Credits purchased (all time) | Requests per minute | Requests per day; Less than 10 | 20 | 50; At least 10 | 20 | 1000', applied to 'a free model variant (with an ID ending in :free)'. The official GET /api/v1/models catalog currently lists 18 model IDs ending in :free (e.g. inclusionai/ling-3.0-flash-fin:free).",
   "confidence": "high",
-  "notes": "International option included in the China-first global directory. Example model ID should be verified against the live :free catalog before use."
+  "notes": "International option included in the China-first global directory. Example model ID should be verified against the live :free catalog before use.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
+   "ms": 1184
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "openrouter.ai",
+   "cnMs": 1828,
+   "intlMs": 26
+  }
  },
  {
   "date": "2026-09-07",
@@ -3149,7 +3539,19 @@
   "evidence": "Official help article: 'Free mode (the default) has the lowest limits, intended for evaluation and prototyping ... Rate limits depend on your plan and usage tier'.",
   "confidence": "medium",
   "confidenceReason": "Free mode is confirmed as the default tier, but the article does not publish numeric free-mode limits; treat exact quota as unconfirmed.",
-  "notes": "International option included in the China-first global directory."
+  "notes": "International option included in the China-first global directory.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "intl",
+   "cnHost": null,
+   "cnMs": null,
+   "intlMs": 185
+  }
  },
  {
   "date": "2026-09-07",
@@ -3238,7 +3640,20 @@
   ],
   "evidence": "Cohere docs: “Trial keys (and prod keys on newer Chat model variants) are limited to 1,000 API calls a month.” Trial chat models are capped at 20 req/min and Rerank at 10 req/min. The pricing FAQ adds that trial API calls are free but are not permitted for production or commercial use.",
   "confidence": "high",
-  "notes": "International option included in the China-first global directory."
+  "notes": "International option included in the China-first global directory.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 1373
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.cohere.com",
+   "cnMs": 1522,
+   "intlMs": 146
+  }
  },
  {
   "date": "2026-09-07",
@@ -3328,7 +3743,19 @@
   "evidence": "Official docs: 'Get Started for Free: Inference Providers includes a generous free tier, with additional credits for PRO users and Team & Enterprise organizations.'",
   "confidence": "medium",
   "confidenceReason": "Free tier confirmed officially, but the exact monthly credit amount was not captured on the fetched page; verify the number on the pricing page before relying on it.",
-  "notes": "International option included in the China-first global directory."
+  "notes": "International option included in the China-first global directory.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-18",
+   "verdict": "OK",
+   "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key"
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "intl",
+   "cnHost": null,
+   "cnMs": null,
+   "intlMs": 119
+  }
  },
  {
   "date": "2026-09-07",
@@ -3456,7 +3883,20 @@
     "note": "价目表可随时调整，用前重查",
     "sourceUrl": "https://siliconflow.cn/pricing"
    }
-  ]
+  ],
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 189
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.siliconflow.cn",
+   "cnMs": 214,
+   "intlMs": 750
+  }
  },
  {
   "date": "2026-09-07",
@@ -3550,7 +3990,20 @@
   ],
   "evidence": "Re-confirmed 2026-09-17 from the server-rendered description of the official limits page: “魔搭通过API-Inference，将开源模型服务化并通过API接口进行标准化，免费提供给广大开发者体验” and “API-Inference 本身为非商业化，非盈利产品”. The detail quotes previously recorded (Aliyun binding + real-name verification, and the 魔粒 tiers 轻量模型 0.5 / 主流模型 1 / 旗舰模型 2 per call) come from the official docs body, which is rendered client-side and could not be re-fetched by our tooling on 2026-09-17 — they still need a manual browser check.",
   "confidence": "medium",
-  "notes": "China-first entry. Free-for-registered-users status re-verified 2026-09-17; the 魔粒 deduction tiers and Aliyun real-name requirement were NOT re-verified on that date (docs body is JS-rendered) and need a manual browser pass. Matches the freellmapi peer lead that ModelScope free inference \"needs Aliyun cn binding\"."
+  "notes": "China-first entry. Free-for-registered-users status re-verified 2026-09-17; the 魔粒 deduction tiers and Aliyun real-name requirement were NOT re-verified on that date (docs body is JS-rendered) and need a manual browser pass. Matches the freellmapi peer lead that ModelScope free inference \"needs Aliyun cn binding\".",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
+   "ms": 170
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api-inference.modelscope.cn",
+   "cnMs": 163,
+   "intlMs": 1071
+  }
  },
  {
   "date": "2026-09-08",
@@ -3649,7 +4102,20 @@
   "evidence": "Agnes 官方文档说明其提供 OpenAI 兼容 API，API Hub Base URL 为 https://apihub.agnes-ai.com/v1；AgnesAI-Labs 官方模型目录列出 agnes-1.5-flash、agnes-2.5-flash、agnes-2.0-flash、agnes-image-2.0-flash、agnes-image-2.1-flash 和 agnes-video-v2.0，并记录 Free/default 层的模型级速率限制。目录同时注明限额和可用性可能变化。",
   "confidence": "medium",
   "confidenceReason": "The API and model IDs are documented by official Agnes sources, but rate limits and availability are explicitly changeable.",
-  "notes": "Keep the API key in an environment variable such as AGNES_API_KEY; never publish a real key. Use the official model catalog for current image and video payload formats."
+  "notes": "Keep the API key in an environment variable such as AGNES_API_KEY; never publish a real key. Use the official model catalog for current image and video payload formats.",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 1050
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "apihub.agnes-ai.com",
+   "cnMs": 1828,
+   "intlMs": 221
+  }
  },
  {
   "date": "2026-09-08",
@@ -3773,7 +4239,20 @@
     "note": "以官方定价页为准",
     "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
    }
-  ]
+  ],
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "接口存活，鉴权正常，需注册 API Key",
+   "ms": 218
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.stepfun.com",
+   "cnMs": 214,
+   "intlMs": 993
+  }
  },
  {
   "date": "2026-09-10",
@@ -3811,11 +4290,11 @@
     "进入 API Keys 页面创建 API Key",
     "使用模型 ID dots3-note-preview 和国内 Base URL 发起请求"
    ],
-   "endpoint": "https://note3-prev-api.askdiandian.com",
+   "endpoint": "https://note3-prev-api.askdiandian.com/v1/chat/completions",
    "method": "POST",
    "authentication": "API key according to the official Dots documentation",
    "examples": {
-    "curl": "curl https://note3-prev-api.askdiandian.com --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
+    "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
    },
    "docsUrl": "https://dots.ai/platform/docs"
   },
@@ -3835,7 +4314,7 @@
   "mechanism": "限时免费模型 API，按官方 RPM/TPM 限制使用",
   "validity": "限时免费；使用前重新核对官方平台状态",
   "access": "国内 Dots 平台；小红书账号或手机号登录后创建 API Key",
-  "command": "Open the Dots platform, create an API key, and call the documented domestic endpoint.",
+  "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'",
   "register": "https://dots.ai/platform",
   "registerLabel": "Dots 国内平台",
   "links": [
@@ -3866,7 +4345,20 @@
   ],
   "evidence": "Dots provider access record verified on 2026-09-10; official docs identify the domestic platform, model ID and rate limits.",
   "confidence": "high",
-  "notes": "小红书账号登录入口与手机号登录入口以 Dots 官方页面当前选项为准。"
+  "notes": "小红书账号登录入口与手机号登录入口以 Dots 官方页面当前选项为准。",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
+   "ms": 243
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "note3-prev-api.askdiandian.com",
+   "cnMs": 258,
+   "intlMs": 775
+  }
  },
  {
   "date": "2026-09-10",
@@ -3996,7 +4488,20 @@
   ],
   "evidence": "Manus official help pages document the Free plan, 1,000 signup credits and 300 daily credits; the official login page lists Google, Microsoft, Apple and email sign-in; the API docs explain how to obtain an API key.",
   "confidence": "high",
-  "notes": "登录方式与额度为 2026-09-10 核验值；2026-09-14 注册入口更换为邀请链接，官方注册页保留为备用链接；使用前重新检查官方价格页和帮助中心。"
+  "notes": "登录方式与额度为 2026-09-10 核验值；2026-09-14 注册入口更换为邀请链接，官方注册页保留为备用链接；使用前重新检查官方价格页和帮助中心。",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "PATH_CHECK",
+   "note": "服务存活（网页产品，API 根无公开路由）",
+   "ms": 894
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "api.manus.ai",
+   "cnMs": 956,
+   "intlMs": 430
+  }
  },
  {
   "date": "2026-09-11",
@@ -4103,7 +4608,21 @@
   "evidence": "Xiaomi MiMo's official September 8, 2026 announcement says MiMo Desktop is in invitation-based testing, lists domestic and overseas application links, and states that approved applicants can try MiMo-X-Pro-Preview and MiMo-X-Flash-Preview for free with limited time and limited quota. The official FAQ separately says there is no standalone MiMo app, so this entry is labeled as a desktop beta rather than a general app download.",
   "confidence": "high",
   "confidenceReason": "The beta status, application routes, Preview model names and limited free terms are stated on Xiaomi MiMo's official announcement; invitation approval remains account-dependent.",
-  "notes": "Use only the official application links. Do not present this as an unrestricted or permanently free standalone app; wait for invitation approval and recheck the official announcement for current quota and availability."
+  "notes": "Use only the official application links. Do not present this as an unrestricted or permanently free standalone app; wait for invitation approval and recheck the official announcement for current quota and availability.",
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 119
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "mimo.xiaomimimo.com",
+   "cnMs": 142,
+   "intlMs": 744
+  }
  },
  {
   "id": "cnb-ai",
@@ -4217,7 +4736,20 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-15",
   "checkedBy": "manual",
-  "notes": "这是 CNB 平台 AI 能力的独立收录，不等同于独立 CodeBuddy IDE；具体模型、额度和工作模式可能按账号、仓库及平台政策变化。"
+  "notes": "这是 CNB 平台 AI 能力的独立收录，不等同于独立 CodeBuddy IDE；具体模型、额度和工作模式可能按账号、仓库及平台政策变化。",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 291
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "cnb.cool",
+   "cnMs": 310,
+   "intlMs": 858
+  }
  },
  {
   "id": "astudio",
@@ -4332,7 +4864,21 @@
   "confidence": "high",
   "lastVerifiedAt": "2026-09-15",
   "checkedBy": "manual",
-  "notes": "发布当日收录。每积分对应的任务消耗与付费套餐价格暂未能核验（官网价格页为动态渲染），使用前请以客户端内价格页为准；每日 100 积分适用于体验版。"
+  "notes": "发布当日收录。每积分对应的任务消耗与付费套餐价格暂未能核验（官网价格页为动态渲染），使用前请以客户端内价格页为准；每日 100 积分适用于体验版。",
+  "key": true,
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 134
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "agent.xfyun.cn",
+   "cnMs": 135,
+   "intlMs": 573
+  }
  },
  {
   "id": "workbuddy",
@@ -4440,7 +4986,27 @@
   "confidence": "medium",
   "lastVerifiedAt": "2026-09-16",
   "checkedBy": "manual",
-  "notes": "WorkBuddy 专属的积分消耗率与企业版价格为动态渲染，未逐项核验；每月 500 积分来自官方定价页的个人免费体验计划（与 CodeBuddy 共享），实际可用额度以账号内积分为准。"
+  "notes": "WorkBuddy 专属的积分消耗率与企业版价格为动态渲染，未逐项核验；每月 500 积分来自官方定价页的个人免费体验计划（与 CodeBuddy 共享），实际可用额度以账号内积分为准。",
+  "key": true,
+  "editions": [
+   "cn",
+   "intl"
+  ],
+  "editionOf": "cn",
+  "siblingEditionId": "workbuddy-intl",
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 411
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "www.codebuddy.ai",
+   "cnMs": 430,
+   "intlMs": 728
+  }
  },
  {
   "id": "workbuddy-intl",
@@ -4556,7 +5122,30 @@
   "confidence": "medium",
   "lastVerifiedAt": "2026-09-16",
   "checkedBy": "manual",
-  "notes": "限免模型清单与倍率来自第三方实测对比，官方未逐条公开免费模型名单，可能随官方模型页随时调整；国际站与国内站账号、积分互不相通。"
+  "notes": "限免模型清单与倍率来自第三方实测对比，官方未逐条公开免费模型名单，可能随官方模型页随时调整；国际站与国内站账号、积分互不相通。",
+  "editions": [
+   "cn",
+   "intl"
+  ],
+  "editionOf": "intl",
+  "siblingEditionId": "workbuddy",
+  "handsOn": {
+   "testedAt": "2026-09-16",
+   "note": "国际版限免模型清单经逐项实测对比核验（官方文档 + 第三方实测）。"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "OK",
+   "note": "官网访问正常",
+   "ms": 511
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "www.workbuddy.ai",
+   "cnMs": 520,
+   "intlMs": 447
+  }
  },
  {
   "date": "2026-09-17",
@@ -4667,6 +5256,27 @@
     "note": "额度条款以控制台 Token Plan 页为准",
     "sourceUrl": "https://discovery.intern-ai.org.cn/token-plan/home"
    }
-  ]
+  ],
+  "editions": [
+   "cn",
+   "intl"
+  ],
+  "handsOn": {
+   "testedAt": "2026-09-15",
+   "note": "控制台实测（2026-09-15）确认注册赠 1 亿 Token、无需信用卡。"
+  },
+  "endpointCheck": {
+   "checkedAt": "2026-09-19",
+   "verdict": "NEEDS_KEY",
+   "note": "国内入口接口存活，鉴权正常，需注册 API Key",
+   "ms": 224
+  },
+  "networkCheck": {
+   "checkedAt": "2026-09-19",
+   "region": "both",
+   "cnHost": "discovery.intern-ai.org.cn",
+   "cnMs": 254,
+   "intlMs": 2240
+  }
  }
 ]

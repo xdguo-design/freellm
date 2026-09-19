@@ -196,6 +196,40 @@ def test_longcat_page_renders_both_access_paths():
     assert "权重免费，算力不免费" in page
 
 
+def test_offer_page_marks_editions_and_links_sibling_version():
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+
+    cn_page = render_offer_page(by_id["workbuddy"], offers, "https://freellm.top")
+    assert "国内版" in cn_page
+    assert "★ 重点" in cn_page
+    assert 'href="/offers/workbuddy-intl/"' in cn_page
+    assert "同产品另一版本" in cn_page
+
+    intl_page = render_offer_page(by_id["workbuddy-intl"], offers, "https://freellm.top")
+    assert "国际版" in intl_page
+    assert 'href="/offers/workbuddy/"' in intl_page
+
+
+def test_offer_page_marks_hands_on_verified_entries_with_test_evidence():
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+
+    atria_page = render_offer_page(by_id["atria-dawn-preview"], offers, "https://freellm.top")
+    assert "实测好用" in atria_page
+    assert "国内+国际双入口" in atria_page
+    assert "2026-09-15" in atria_page
+
+    plain_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    assert "实测好用" not in plain_page
+    assert "接口已验证" not in plain_page or "官网已验证" in plain_page
+    assert "官网已验证" in plain_page
+
+    untested_page = render_offer_page(by_id["tinyfish-search-fetch-free"], offers, "https://freellm.top")
+    assert "接口已验证" not in untested_page
+    assert "官网已验证" not in untested_page
+
+
 def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_path):
     result = build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     offers = read_offers()
@@ -273,7 +307,23 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://docs.bigmodel.cn/cn/coding-plan/faq" in claude_guide
     assert adsense_script in claude_guide
 
-    sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    sitemap_texts = {
+        path.name: path.read_text(encoding="utf-8")
+        for path in sorted(tmp_path.glob("sitemap*.xml"))
+    }
+    assert set(sitemap_texts) == {
+        "sitemap.xml",
+        "sitemap-pages.xml",
+        "sitemap-offers.xml",
+        "sitemap-providers.xml",
+        "sitemap-models.xml",
+    }
+    assert "<sitemapindex" in sitemap_texts["sitemap.xml"]
+    for section in ("pages", "offers", "providers", "models"):
+        assert f"https://freellm.top/sitemap-{section}.xml" in sitemap_texts["sitemap.xml"]
+    sitemap = "".join(
+        text for name, text in sitemap_texts.items() if name != "sitemap.xml"
+    )
     assert "https://freellm.top/" in sitemap
     assert "https://freellm.top/offers/codebuddy/" in sitemap
     assert "https://freellm.top/offers/agnes-ai-free/" in sitemap
@@ -285,8 +335,9 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/models/center/" in sitemap
     # Sitemap completeness, derived from disk rather than from hardcoded counts (the old
     # arithmetic silently went stale every time a page or static file was added): the
-    # sitemap must advertise exactly the generated HTML pages, minus the deliberately
-    # de-indexed legacy offer redirects, plus the hand-maintained static pages.
+    # sitemaps must advertise exactly the indexable HTML pages, minus the deliberately
+    # de-indexed legacy offer redirects and noindex model aggregates, plus the
+    # hand-maintained static pages.
     generated_files = {
         path.relative_to(tmp_path).as_posix()
         for path in tmp_path.rglob("*")
@@ -299,6 +350,11 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         for rel in generated_files
         if rel.endswith("index.html")
     }
+    noindex_urls = {
+        f"https://freellm.top/{rel[:-len('index.html')]}"
+        for rel in generated_files
+        if rel.endswith("index.html") and "noindex" in (tmp_path / rel).read_text(encoding="utf-8")
+    }
     redirect_urls = {f"https://freellm.top/offers/{slug}/" for slug in LEGACY_OFFER_REDIRECTS}
     static_urls = {
         "https://freellm.top/",
@@ -309,8 +365,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/terms/",
     }
     locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
-    assert len(locs) == len(set(locs)), "sitemap must not advertise the same URL twice"
-    assert set(locs) == (generated_urls - redirect_urls) | static_urls
+    assert len(locs) == len(set(locs)), "sitemaps must not advertise the same URL twice"
+    assert set(locs) == (generated_urls - redirect_urls - noindex_urls) | static_urls
 
     for legal_path in ("/about/", "/terms/", "/privacy/"):
         assert f"https://freellm.top{legal_path}" in sitemap
@@ -387,7 +443,7 @@ def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
         tmp_path / "category" / "free-ide" / "index.html",
         tmp_path / "guides" / "free-llm" / "index.html",
         tmp_path / "providers" / "index.html",
-        tmp_path / "providers" / "agnes-ai" / "index.html",
+        tmp_path / "providers" / "openrouter" / "index.html",
     ]
 
     for page_path in pages:
@@ -431,9 +487,9 @@ def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     assert f'{len(read_visible_models())} 个模型' in page
     # The catalog is paginated; ollama-cloud lives beyond page one, so scan all
     # pages — the queryable catalog contract must hold on every page.
-    assert 'data-model-id="ollama-cloud/deepseek-v4-pro"' in all_pages
-    assert 'Ollama Cloud' in all_pages
-    assert 'deepseek-v4-pro' in all_pages
+    assert 'data-model-id="ollama-cloud/deepseek-v4-pro-0813"' in all_pages
+    assert 'Ollama' in all_pages
+    assert 'deepseek-v4-pro-0813' in all_pages
     assert 'Score' in page
     assert '目录来源' in page
 
@@ -679,6 +735,102 @@ def test_daily_log_dashboard_distinguishes_no_change_from_baseline_and_lists_dat
     assert "2026-09-09" in page
 
 
+def test_daily_log_backfills_registration_docs_from_matching_offer():
+    offer = {
+        "id": "atria-dawn-preview",
+        "model": "Atria Dawn Preview",
+        "provider": "Shanghai AI Laboratory",
+        "register": "https://api.atria-asi.ai/console",
+        "sourceUrls": ["https://api.atria-asi.ai/docs"],
+        "usageGuide": {
+            "prerequisites": ["Atria 控制台账号"],
+            "steps": ["注册并确认免费额度已到账", "创建 API Key"],
+            "docsUrl": "https://api.atria-asi.ai/docs",
+        },
+    }
+    scanned_event = {
+        "kind": "model",
+        "eventType": "new",
+        "id": "atria-asi/atria-dawn-preview",
+        "title": "Atria Dawn Preview",
+        "details": {
+            "provider": "Shanghai AI Laboratory",
+            "model": "Atria-Dawn-Preview",
+            "canonicalModelId": "Atria-Dawn-Preview",
+            "context": "256000",
+        },
+        "reason": "not present in the previous successful snapshot",
+    }
+    log = {
+        "schemaVersion": 1,
+        "date": "2026-09-17",
+        "baseline": False,
+        "events": [scanned_event],
+        "observed": {"models": [], "offers": []},
+        "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    }
+
+    page = render_daily_log_page([log], "https://freellm.top", [offer])
+    assert "注册与文档" in page
+    assert "注册并确认免费额度已到账" in page
+    assert "Atria 控制台账号" in page
+    assert "https://api.atria-asi.ai/console" in page
+    assert "注册步骤待核验" not in page
+
+    page_without_offers = render_daily_log_page([log], "https://freellm.top")
+    assert "注册步骤待核验" in page_without_offers
+
+
+def test_daily_log_renders_scanned_model_and_offer_cards_with_docs():
+    offer = {
+        "id": "atria-dawn-preview",
+        "model": "Atria Dawn Preview",
+        "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
+        "provider": "Shanghai AI Laboratory",
+        "productType": "api",
+        "cardRequired": "no",
+        "register": "https://api.atria-asi.ai/console",
+        "usageGuide": {"steps": ["注册并确认免费额度已到账", "创建 API Key"], "docsUrl": "https://api.atria-asi.ai/docs"},
+    }
+    page = render_daily_log_page([{
+        "schemaVersion": 1,
+        "date": "2026-09-17",
+        "baseline": False,
+        "events": [
+            {
+                "kind": "model",
+                "eventType": "new",
+                "id": "atria-asi/atria-dawn-preview",
+                "title": "Atria Dawn Preview",
+                "details": {
+                    "provider": "Shanghai AI Laboratory",
+                    "model": "Atria-Dawn-Preview",
+                    "canonicalModelId": "Atria-Dawn-Preview",
+                    "context": "256000",
+                    "maxOutput": "65536",
+                },
+                "reason": "not present in the previous successful snapshot",
+            },
+            {
+                "kind": "offer",
+                "eventType": "new",
+                "id": "atria-dawn-preview",
+                "title": offer["title"],
+                "details": dict(offer),
+                "reason": "not present in the previous successful snapshot",
+            },
+        ],
+        "observed": {"models": [], "offers": []},
+        "sourceHealth": {"models": {"status": "ok"}, "offers": {"status": "ok"}},
+    }], "https://freellm.top", [offer])
+
+    assert page.count('<details class="log-new-card">') == 2
+    assert '<code>atria-asi/atria-dawn-preview</code>' in page
+    assert "256000" in page
+    assert "注册并确认免费额度已到账" in page
+    assert page.count("注册与文档") >= 2
+
+
 def test_daily_log_dashboard_renders_curated_additions_on_timeline():
     page = render_daily_log_page([{
         "schemaVersion": 1,
@@ -779,8 +931,8 @@ def test_expected_files_and_sitemap_include_daily_logs(tmp_path):
     assert Path("logs/index.html") in files
 
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
-    sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
-    assert "https://freellm.top/logs/" in sitemap
+    pages_sitemap = (tmp_path / "sitemap-pages.xml").read_text(encoding="utf-8")
+    assert "https://freellm.top/logs/" in pages_sitemap
 
 
 def test_rebuild_keeps_all_pages_when_nothing_is_retired(tmp_path):

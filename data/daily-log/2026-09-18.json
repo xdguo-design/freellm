@@ -6,6 +6,78 @@
     {
       "kind": "model",
       "eventType": "new",
+      "id": "kilo/deepseek-deepseek-v4-flash-0731-free",
+      "title": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/deepseek-deepseek-v4-flash-0731-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+        "context": "1048576",
+        "maxOutput": "393216",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "deepseek/deepseek-v4-flash-0731:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "kilo/qwen-qwen3-8-27b-free",
+      "title": "Qwen: Qwen3.8 27B (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/qwen-qwen3-8-27b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Qwen: Qwen3.8 27B (free)",
+        "context": "262144",
+        "maxOutput": "235929",
+        "modality": [
+          "image",
+          "reasoning",
+          "text",
+          "video"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/qwen/qwen3.8-27b:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "qwen/qwen3.8-27b:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
       "id": "llm7-io/gpt-5-5",
       "title": "gpt-5.5",
       "asOf": "2026-09-18",
@@ -26,7 +98,8 @@
         "sourceKind": "official",
         "sourceEndpoint": "https://api.llm7.io/v1/models",
         "id": "llm7-io/gpt-5-5",
-        "lastSeenAt": "2026-09-18"
+        "lastSeenAt": "2026-09-18",
+        "freshnessStatus": "new"
       },
       "reason": "not present in the previous successful snapshot"
     },
@@ -55,7 +128,8 @@
         "sourceEndpoint": "https://openrouter.ai/api/v1/models",
         "freePricingConfirmed": true,
         "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
-        "lastSeenAt": "2026-09-18"
+        "lastSeenAt": "2026-09-18",
+        "freshnessStatus": "current"
       },
       "reason": "not present in the previous successful snapshot"
     },
@@ -86,9 +160,616 @@
         "sourceEndpoint": "https://openrouter.ai/api/v1/models",
         "freePricingConfirmed": true,
         "id": "openrouter/qwen-qwen3-8-27b-free",
-        "lastSeenAt": "2026-09-18"
+        "lastSeenAt": "2026-09-18",
+        "freshnessStatus": "current"
       },
       "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/cohere-north-mini-code-free",
+      "title": "Cohere: North Mini Code (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/cohere-north-mini-code-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Cohere: North Mini Code (free)",
+        "context": "256000",
+        "maxOutput": "64000",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/cohere/north-mini-code:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "cohere/north-mini-code:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/dots-studio-dots-3-note-preview-free",
+      "title": "Dots Studio: Dots3-Note Preview (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/dots-studio-dots-3-note-preview-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Dots Studio: Dots3-Note Preview (free)",
+        "context": "512000",
+        "maxOutput": "460800",
+        "modality": [
+          "image",
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/dots-studio/dots-3-note-preview:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "dots-studio/dots-3-note-preview:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/inclusionai-ling-3-0-flash-fin-free",
+      "title": "inclusionAI: Ling 3.0 Flash Fin (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/inclusionai-ling-3-0-flash-fin-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Fin (free)",
+        "context": "262144",
+        "maxOutput": "32768",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-fin:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "inclusionai/ling-3.0-flash-fin:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/inclusionai-ling-3-0-flash-sante-free",
+      "title": "inclusionAI: Ling 3.0 Flash Sante (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/inclusionai-ling-3-0-flash-sante-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Sante (free)",
+        "context": "262144",
+        "maxOutput": "32768",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-sante:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "inclusionai/ling-3.0-flash-sante:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/inclusionai-ling-3-0-flash-vl-free",
+      "title": "inclusionAI: Ling 3.0 Flash VL (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/inclusionai-ling-3-0-flash-vl-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash VL (free)",
+        "context": "262144",
+        "maxOutput": "32768",
+        "modality": [
+          "image",
+          "reasoning",
+          "text",
+          "video"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-vl:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "inclusionai/ling-3.0-flash-vl:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/liquid-lfm-2-5-2-6b-free",
+      "title": "LiquidAI: LFM2.5-2.6B (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/liquid-lfm-2-5-2-6b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "LiquidAI: LFM2.5-2.6B (free)",
+        "context": "65536",
+        "maxOutput": "8192",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/liquid/lfm-2.5-2.6b:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "liquid/lfm-2.5-2.6b:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nex-agi-nex-n2-5-mini-free",
+      "title": "Nex AGI: Nex-N2.5-Mini (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nex-agi-nex-n2-5-mini-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Mini (free)",
+        "context": "262144",
+        "maxOutput": "235929",
+        "modality": [
+          "image",
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-mini:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nex-agi/nex-n2.5-mini:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nex-agi-nex-n2-5-pro-free",
+      "title": "Nex AGI: Nex-N2.5-Pro (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nex-agi-nex-n2-5-pro-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Pro (free)",
+        "context": "262144",
+        "maxOutput": "235929",
+        "modality": [
+          "image",
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-pro:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nex-agi/nex-n2.5-pro:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nvidia-nemotron-3-5-content-safety-free",
+      "title": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nvidia-nemotron-3-5-content-safety-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+        "context": "128000",
+        "maxOutput": "8192",
+        "modality": [
+          "image",
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-content-safety:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nvidia/nemotron-3.5-content-safety:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nvidia-nemotron-3-5-lightning-free",
+      "title": "NVIDIA: Nemotron 3.5 Lightning (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nvidia-nemotron-3-5-lightning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Lightning (free)",
+        "context": "1000000",
+        "maxOutput": "65536",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-lightning:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nvidia/nemotron-3.5-lightning:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
+      "title": "NVIDIA: Nemotron 3 Nano Omni (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Nano Omni (free)",
+        "context": "256000",
+        "maxOutput": "65536",
+        "modality": [
+          "audio",
+          "image",
+          "reasoning",
+          "text",
+          "video"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nvidia-nemotron-3-super-120b-a12b-free",
+      "title": "NVIDIA: Nemotron 3 Super (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nvidia-nemotron-3-super-120b-a12b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Super (free)",
+        "context": "262144",
+        "maxOutput": "235929",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-super-120b-a12b:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nvidia/nemotron-3-super-120b-a12b:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/nvidia-nemotron-3-ultra-550b-a55b-free",
+      "title": "NVIDIA: Nemotron 3 Ultra (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/nvidia-nemotron-3-ultra-550b-a55b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Ultra (free)",
+        "context": "1000000",
+        "maxOutput": "65536",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/poolside-laguna-s-2-1-free",
+      "title": "Poolside: Laguna S 2.1 (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/poolside-laguna-s-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna S 2.1 (free)",
+        "context": "262144",
+        "maxOutput": "32768",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-s-2.1:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "poolside/laguna-s-2.1:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/poolside-laguna-xs-2-1-free",
+      "title": "Poolside: Laguna XS 2.1 (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/poolside-laguna-xs-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna XS 2.1 (free)",
+        "context": "262144",
+        "maxOutput": "32768",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-xs-2.1:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "poolside/laguna-xs-2.1:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/thinkingmachines-inkling-small-free",
+      "title": "Thinking Machines: Inkling Small (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/thinkingmachines-inkling-small-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Thinking Machines: Inkling Small (free)",
+        "context": "1048576",
+        "maxOutput": "262144",
+        "modality": [
+          "audio",
+          "image",
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/thinkingmachines/inkling-small:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "thinkingmachines/inkling-small:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "kilo/z-ai-glm-5-2-free",
+      "title": "Z.ai: GLM 5.2 (free)",
+      "asOf": "2026-09-18",
+      "details": {
+        "id": "kilo/z-ai-glm-5-2-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Z.ai: GLM 5.2 (free)",
+        "context": "32768",
+        "maxOutput": "29491",
+        "modality": [
+          "reasoning",
+          "text"
+        ],
+        "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/z-ai/glm-5.2:free",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "canonicalModelId": "z-ai/glm-5.2:free",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
+        "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
+        "lastSeenAt": "2026-09-18",
+        "lastVerifiedAt": "2026-09-18",
+        "freshnessStatus": "new"
+      },
+      "reason": "same model observed through a new provider or route"
     },
     {
       "kind": "model",
@@ -113,7 +794,8 @@
         "sourceKind": "official",
         "sourceEndpoint": "https://api.llm7.io/v1/models",
         "id": "llm7-io/deepseek-v4-1-flash",
-        "lastSeenAt": "2026-09-18"
+        "lastSeenAt": "2026-09-18",
+        "freshnessStatus": "new"
       },
       "reason": "same model observed through a new provider or route"
     },
@@ -262,6 +944,158 @@
         "provider": "Dots API（国内）",
         "model": "Dots Studio: Dots3-Note Preview (free)",
         "sourceUrl": "https://dots.ai/platform/docs",
+        "status": "online"
+      },
+      {
+        "id": "kilo/cohere-north-mini-code-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Cohere: North Mini Code (free)",
+        "sourceUrl": "https://openrouter.ai/cohere/north-mini-code:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/deepseek-deepseek-v4-flash-0731-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/dots-studio-dots-3-note-preview-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Dots Studio: Dots3-Note Preview (free)",
+        "sourceUrl": "https://openrouter.ai/dots-studio/dots-3-note-preview:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-fin-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Fin (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-fin:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-sante-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash Sante (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-sante:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/inclusionai-ling-3-0-flash-vl-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "inclusionAI: Ling 3.0 Flash VL (free)",
+        "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.0-flash-vl:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/liquid-lfm-2-5-2-6b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "LiquidAI: LFM2.5-2.6B (free)",
+        "sourceUrl": "https://openrouter.ai/liquid/lfm-2.5-2.6b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nex-agi-nex-n2-5-mini-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Mini (free)",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-mini:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nex-agi-nex-n2-5-pro-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Nex AGI: Nex-N2.5-Pro (free)",
+        "sourceUrl": "https://openrouter.ai/nex-agi/nex-n2.5-pro:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-5-content-safety-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-content-safety:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-5-lightning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3.5 Lightning (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3.5-lightning:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Nano Omni (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-super-120b-a12b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Super (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-super-120b-a12b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/nvidia-nemotron-3-ultra-550b-a55b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "NVIDIA: Nemotron 3 Ultra (free)",
+        "sourceUrl": "https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/poolside-laguna-s-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna S 2.1 (free)",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-s-2.1:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/poolside-laguna-xs-2-1-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Poolside: Laguna XS 2.1 (free)",
+        "sourceUrl": "https://openrouter.ai/poolside/laguna-xs-2.1:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/qwen-qwen3-8-27b-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Qwen: Qwen3.8 27B (free)",
+        "sourceUrl": "https://openrouter.ai/qwen/qwen3.8-27b:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/thinkingmachines-inkling-small-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Thinking Machines: Inkling Small (free)",
+        "sourceUrl": "https://openrouter.ai/thinkingmachines/inkling-small:free",
+        "status": "online"
+      },
+      {
+        "id": "kilo/z-ai-glm-5-2-free",
+        "providerId": "kilo",
+        "provider": "Kilo Gateway",
+        "model": "Z.ai: GLM 5.2 (free)",
+        "sourceUrl": "https://openrouter.ai/z-ai/glm-5.2:free",
         "status": "online"
       },
       {
@@ -1622,6 +2456,14 @@
         "provider": "OpenRouter",
         "model": "Qwen: Qwen3.8 27B (free)",
         "sourceUrl": "https://openrouter.ai/qwen/qwen3.8-27b:free",
+        "status": "online"
+      },
+      {
+        "id": "openrouter/stealth-union-alpha",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "Union Alpha",
+        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
         "status": "online"
       },
       {
@@ -4682,14 +5524,6 @@
       },
       {
         "id": "openrouter/poolside-laguna-xs-2-1"
-      },
-      {
-        "id": "openrouter/stealth-union-alpha",
-        "providerId": "openrouter",
-        "provider": "OpenRouter",
-        "model": "Union Alpha",
-        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
-        "status": "online"
       },
       {
         "id": "openrouter/thinkingmachines-inkling"

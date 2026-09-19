@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-19",
+  "vantage": "本机大陆网络直连",
+  "method": "GET 服务商官方 API 端点（模型列表），预热 1 次后取 3 次成功请求往返延迟的中位数",
+  "note": "只测量 API 网关的往返延迟，不代表模型生成速度、免费额度或注册门槛",
+  "providers": [
+    {
+      "providerId": "atria-asi",
+      "provider": "Shanghai AI Laboratory",
+      "modelCount": 1,
+      "endpoint": "https://api.atria-asi.ai/v1/models",
+      "status": 401,
+      "verdict": "needs_key",
+      "ms": 926,
+      "attempts": [
+        1026,
+        912,
+        926
+      ],
+      "warmupMs": 901,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "chutes-ai",
+      "provider": "Chutes",
+      "modelCount": 14,
+      "endpoint": "https://llm.chutes.ai/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 1359,
+      "attempts": [
+        1153,
+        1363,
+        1359
+      ],
+      "warmupMs": 11392,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "dots-api-cn",
+      "provider": "Dots API（国内）",
+      "modelCount": 1,
+      "endpoint": "https://note3-prev-api.askdiandian.com/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 248,
+      "attempts": [
+        206,
+        248,
+        253
+      ],
+      "warmupMs": 237,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "kilo",
+      "provider": "Kilo Gateway",
+      "modelCount": 19,
+      "endpoint": "https://api.kilo.ai/api/gateway/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 926,
+      "attempts": [
+        926,
+        1067,
+        730
+      ],
+      "warmupMs": 893,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "llm7-io",
+      "provider": "LLM7",
+      "modelCount": 46,
+      "endpoint": "https://api.llm7.io/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 1093,
+      "attempts": [
+        1103,
+        1093,
+        1080
+      ],
+      "warmupMs": 1102,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "nvidia-nim",
+      "provider": "NVIDIA NIM",
+      "modelCount": 82,
+      "endpoint": "https://integrate.api.nvidia.com/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 565,
+      "attempts": [
+        563,
+        575,
+        565
+      ],
+      "warmupMs": 10591,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "ollama-cloud",
+      "provider": "Ollama",
+      "modelCount": 20,
+      "endpoint": "https://ollama.com/api/tags",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 1432,
+      "attempts": [
+        1592,
+        1432,
+        1083
+      ],
+      "warmupMs": 11398,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "openrouter",
+      "provider": "OpenRouter",
+      "modelCount": 26,
+      "endpoint": "https://openrouter.ai/api/v1/models",
+      "status": 200,
+      "verdict": "ok",
+      "ms": 1422,
+      "attempts": [
+        1094,
+        1697,
+        1422
+      ],
+      "warmupMs": 1242,
+      "checkedAt": "2026-09-19"
+    },
+    {
+      "providerId": "unisound",
+      "provider": "Unisound Token Hub",
+      "modelCount": 1,
+      "endpoint": "https://maas-api.unisound.com/v1/models",
+      "status": 401,
+      "verdict": "needs_key",
+      "ms": 201,
+      "attempts": [
+        212,
+        188,
+        201
+      ],
+      "warmupMs": 206,
+      "checkedAt": "2026-09-19"
+    }
+  ]
+}

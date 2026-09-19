@@ -62,6 +62,44 @@ class BuildStaticTests(unittest.TestCase):
             self.assertTrue(build(data_path, html_path))
             self.assertIn('"id":"x"', html_path.read_text(encoding="utf-8"))
 
+    def test_static_catalog_pins_key_offers_first_and_renders_marks(self):
+        from scripts.build_static import render_static_catalog
+
+        def offer(offer_id, order, **extra):
+            base = {
+                "id": offer_id, "order": order, "date": "2026-09-06", "name": offer_id,
+                "provider": "P", "model": "M", "type": ["free"], "productType": "api",
+                "freeMechanism": "permanent", "freeSummary": "free", "validitySummary": "ongoing",
+                "accessSummary": "global", "title": offer_id, "why": "x", "mechanism": "x",
+                "validity": "x", "access": "x", "command": "x", "register": "https://example.com",
+                "links": [["x", "https://example.com"]], "sourceUrls": ["https://example.com"],
+                "evidence": "x", "status": "verified", "confidence": "high",
+                "lastVerifiedAt": "2026-09-06",
+            }
+            base.update(extra)
+            return base
+
+        data = [
+            offer("plain", 1),
+            offer("keyed", 2, key=True),
+            offer("cn-twin", 3, key=True, editions=["cn", "intl"], editionOf="cn", siblingEditionId="intl-twin"),
+            offer("intl-twin", 4, editions=["cn", "intl"], editionOf="intl", siblingEditionId="cn-twin",
+                  handsOn={"testedAt": "2026-09-15", "note": "实测通过"}),
+            offer("dual-entry", 5, editions=["cn", "intl"], handsOn={"testedAt": "2026-09-15", "note": "x"}),
+        ]
+        rendered = render_static_catalog(data)
+
+        self.assertLess(rendered.index('data-detail="keyed"'), rendered.index('data-detail="plain"'))
+        self.assertLess(rendered.index('data-detail="cn-twin"'), rendered.index('data-detail="plain"'))
+        self.assertIn("★ 重点", rendered)
+        self.assertIn("国内版", rendered)
+        self.assertIn("国际版", rendered)
+        self.assertIn("国内+国际双入口", rendered)
+        self.assertIn('href="/offers/intl-twin/"', rendered)
+        self.assertIn("也有国际版", rendered)
+        self.assertIn("也有国内版", rendered)
+        self.assertIn("✓ 实测好用", rendered)
+
     def test_build_injects_latest_daily_log_date_and_link(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -139,7 +139,8 @@ class StaticContractTests(unittest.TestCase):
         # page renders today's directory totals and every historical day uses the
         # totals captured in that day's log JSON.
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
-        latest = json.loads((ROOT / "data" / "daily-log" / "2026-09-17.json").read_text(encoding="utf-8"))
+        latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
+        latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
         observed_models = len(latest["observed"]["models"])
         self.assertIn(f'<strong>{observed_models}</strong><small>', log)
         self.assertRegex(log, rf"<strong>{models} <span")
@@ -391,8 +392,12 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("User-agent: *", robots)
         self.assertIn("Allow: /", robots)
         self.assertIn("Sitemap: https://freellm.top/sitemap.xml", robots)
-        self.assertIn("<loc>https://freellm.top/</loc>", sitemap)
-        self.assertIn("<loc>https://freellm.top/submit/</loc>", sitemap)
+        # sitemap.xml is a sitemap index; page URLs live in the section sitemaps.
+        self.assertIn("<sitemapindex", sitemap)
+        self.assertIn("<loc>https://freellm.top/sitemap-pages.xml</loc>", sitemap)
+        pages_sitemap = SITEMAP_PATH.with_name("sitemap-pages.xml").read_text(encoding="utf-8")
+        self.assertIn("<loc>https://freellm.top/</loc>", pages_sitemap)
+        self.assertIn("<loc>https://freellm.top/submit/</loc>", pages_sitemap)
 
     def test_ads_txt_declares_current_adsense_publisher(self):
         self.assertTrue(ADS_PATH.is_file())

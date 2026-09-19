@@ -179,6 +179,10 @@ pre code { padding:0; background:none; color:inherit; }
 .source-cell { min-width:100px; white-space:nowrap; }
 .freshness { color:var(--ink-secondary); }
 .freshness-stale { color:var(--pale-red-text); }
+.catalog-table .latency-cell { white-space:nowrap; }
+.catalog-table .latency-value { font:500 12.5px/1.5 var(--font-mono); color:var(--ink); }
+.catalog-table .latency-unknown { color:var(--ink-tertiary); }
+.catalog-latency-note { margin:-4px 0 12px; color:var(--ink-tertiary); font:400 12px/1.7 var(--font-sans); }
 .access-route-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
 .access-route { padding:14px 16px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
 .access-route h3 { margin:0 0 8px; font-size:18px; }
@@ -320,6 +324,35 @@ def model_aggregate_url(model: dict | str) -> str:
     return f"/models/{_safe_slug(model_name, 'model')}/"
 
 
+# A single-record aggregate page adds nothing over the row already shown in
+# /models/all/, so it is kept for humans but kept out of Google's index.
+MIN_RECORDS_FOR_INDEXABLE_MODEL_PAGE = 2
+
+
+def model_record_groups(models: list[dict]) -> dict[str, list[dict]]:
+    """Group catalog rows by aggregate-page slug so one URL always equals one page.
+
+    Provider catalogues spell the same model differently ("GLM-5.3-Flash" vs
+    "glm-5.3-flash", "gpt-oss:20b" vs "gpt-oss-20b"); the slug decides the URL,
+    so it must decide the grouping too, or several groups fight over one file.
+    """
+    groups: dict[str, list[dict]] = {}
+    for model in models:
+        name = str(model.get("model") or "").strip()
+        if name:
+            groups.setdefault(_safe_slug(name, "model"), []).append(model)
+    return groups
+
+
+def indexable_model_slugs(models: list[dict]) -> set[str]:
+    """Aggregate-page slugs with enough provider records to earn an indexable page."""
+    return {
+        slug
+        for slug, records in model_record_groups(models).items()
+        if len(records) >= MIN_RECORDS_FOR_INDEXABLE_MODEL_PAGE
+    }
+
+
 MODELS_PAGE_PATH = "/models/"
 ALL_MODELS_PAGE_PATH = "/models/all/"
 MODEL_CENTER_PAGE_PATH = "/models/center/"
@@ -331,6 +364,8 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
 MODELS_PER_PAGE = 75
+
+_MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
 
 OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
@@ -612,13 +647,14 @@ def _description(offer: dict) -> str:
     return f"{offer.get('provider', offer.get('name', 'AI 资源'))}：{summary}。请以官方页面为准，核对地区、有效期和使用条件。"
 
 
-def _social_meta(site_url: str, page_url: str, title: str, description: str, og_type: str) -> str:
+def _social_meta(site_url: str, page_url: str, title: str, description: str, og_type: str, indexable: bool = True) -> str:
     """Render social metadata from the same absolute URLs used by canonical links."""
     absolute_url = _absolute(site_url, page_url)
     image_url = _absolute(site_url, SHARE_IMAGE_PATH)
+    robots = "index,follow,max-image-preview:large" if indexable else "noindex,follow"
     return "\n".join(
         (
-            '<meta name="robots" content="index,follow,max-image-preview:large">',
+            f'<meta name="robots" content="{robots}">',
             f'<meta property="og:type" content="{_esc(og_type)}">',
             f'<meta property="og:title" content="{_esc(title)}">',
             f'<meta property="og:description" content="{_esc(description)}">',
@@ -1061,6 +1097,136 @@ def _related_links(offer: dict, offers: list[dict]) -> str:
     )
 
 
+EDITION_LABELS = {"cn": ("国内版", "China edition"), "intl": ("国际版", "International edition")}
+
+
+def _edition_chip(offer: dict) -> str:
+    """Which edition this entry is; products serving both entries through one page say so."""
+    edition_of = offer.get("editionOf")
+    if edition_of in EDITION_LABELS:
+        zh, en = EDITION_LABELS[edition_of]
+        return zh, en, f'<span class="flag-chip flag-edition">{_locale_pair(zh, en)}</span>'
+    editions = offer.get("editions") or []
+    if "cn" in editions and "intl" in editions:
+        return "国内+国际双入口", "China + intl editions", '<span class="flag-chip flag-edition">{}</span>'.format(_locale_pair("国内+国际双入口", "China + intl editions"))
+    if "cn" in editions:
+        zh, en = EDITION_LABELS["cn"]
+        return zh, en, f'<span class="flag-chip flag-edition">{_locale_pair(zh, en)}</span>'
+    if "intl" in editions:
+        zh, en = EDITION_LABELS["intl"]
+        return zh, en, f'<span class="flag-chip flag-edition">{_locale_pair(zh, en)}</span>'
+    return "", "", ""
+
+
+NETWORK_REGION_LABELS = {
+    "both": ("国内外均可用", "China + global"),
+    "cn": ("仅国内可用", "China only"),
+    "intl": ("仅国外可用", "Global only"),
+}
+NETWORK_METHOD = "本机大陆网络直连 + check-host.net 海外节点（US×2 / DE / SG / JP / UK）"
+NETWORK_NOTE = "仅实测网络可达性与往返延迟，不代表注册门槛或模型生成速度"
+
+
+def _network_chips(offer: dict) -> str:
+    """绿色实测标签：网络可达性 + 国内/国外分类 + 往返延迟。
+
+    数据来自 scripts/probe_offer_network.py 的双视角实测（大陆直连 +
+    check-host.net 海外节点）。只描述网络层，不描述注册门槛或模型生成速度。
+    """
+    check = offer.get("networkCheck")
+    if not isinstance(check, dict):
+        return ""
+    region = check.get("region")
+    dead = [str(url) for url in (check.get("deadTargets") or [])]
+    dead_chip = (
+        f'<span class="flag-chip flag-net-dead" title="{_esc(" ; ".join(dead))}">'
+        f'{_locale_pair(f"⚠ {len(dead)} 个链接解析失败", f"⚠ {len(dead)} broken link(s)")}</span>'
+        if dead else ""
+    )
+    if region == "none":
+        return f'<span class="flag-chip flag-net-fail">{_locale_pair("✗ 本次未连通", "✗ Not reachable")}</span>' + dead_chip
+    if region not in NETWORK_REGION_LABELS:
+        return dead_chip
+    zh, en = NETWORK_REGION_LABELS[region]
+    speed = ""
+    if check.get("cnMs") or check.get("intlMs"):
+        cn_ms = f"{check['cnMs']}ms" if check.get("cnMs") else "—"
+        intl_ms = f"{check['intlMs']}ms" if check.get("intlMs") else "—"
+        speed = _locale_pair(f"国内 {cn_ms} · 海外 {intl_ms}", f"China {cn_ms} · Global {intl_ms}")
+    title = " · ".join(
+        part for part in (
+            str(check.get("checkedAt") or ""),
+            NETWORK_METHOD,
+            check.get("cnHost") or "",
+            NETWORK_NOTE,
+        ) if part
+    )
+    chips = [
+        f'<span class="flag-chip flag-net-ok" title="{_esc(title)}">{_locale_pair("✓ 实测通过", "✓ Network verified")}</span>',
+        f'<span class="flag-chip flag-net-region">{_locale_pair(zh, en)}</span>',
+    ]
+    if speed:
+        chips.append(f'<span class="flag-chip flag-net-speed">{speed}</span>')
+    if dead_chip:
+        chips.append(dead_chip)
+    return "".join(chips)
+
+
+def _offer_version_line(offer: dict, offers: list[dict]) -> str:
+    """版本标记行：重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
+    chips = []
+    if offer.get("key"):
+        chips.append(f'<span class="flag-chip flag-key">{_locale_pair("★ 重点", "★ Key pick")}</span>')
+    network_chip = _network_chips(offer)
+    if network_chip:
+        chips.append(network_chip)
+    _, _, edition_chip = _edition_chip(offer)
+    if edition_chip:
+        chips.append(edition_chip)
+    sibling_id = offer.get("siblingEditionId")
+    if sibling_id:
+        sibling = next((candidate for candidate in offers if candidate.get("id") == sibling_id), None)
+        if sibling is not None:
+            sibling_title = sibling.get("titleZh") or sibling.get("title") or sibling.get("name")
+            label = _locale_pair(
+                f"同产品另一版本：{sibling_title}",
+                f"Other edition: {sibling.get('title') or sibling.get('name')}",
+            )
+            chips.append(f'<a class="flag-chip flag-sibling" href="{_esc(offer_url(sibling))}">{label} ↗</a>')
+    hands_on = offer.get("handsOn")
+    if isinstance(hands_on, dict) and hands_on.get("testedAt"):
+        note = str(hands_on.get("note") or "").strip()
+        title_markup = f' title="{_esc(hands_on["testedAt"] + (" · " + note if note else ""))}"' if note else ""
+        chips.append(
+            f'<span class="flag-chip flag-hands-on"{title_markup}>{_locale_pair("✓ 实测好用", "✓ Hands-on verified")}</span>'
+        )
+    else:
+        endpoint_check = offer.get("endpointCheck")
+        if isinstance(endpoint_check, dict) and endpoint_check.get("checkedAt") and endpoint_check.get("verdict") != "NETWORK_ERROR":
+            note = str(endpoint_check.get("note") or "").strip()
+            ms = endpoint_check.get("ms")
+            latency = f"{int(ms)}ms" if isinstance(ms, int) else ""
+            endpoint = str((offer.get("usageGuide") or {}).get("endpoint") or "").strip()
+            method = str((offer.get("usageGuide") or {}).get("method") or "GET").strip().upper() or "GET"
+            title = " · ".join(
+                part for part in (
+                    str(endpoint_check["checkedAt"]),
+                    note,
+                    f"{method} {endpoint}" if endpoint else "",
+                    f"调用耗时 {latency}（本机大陆实测，3 次中位数）" if latency else "",
+                ) if part
+            )
+            label_zh, label_en = ("接口已验证", "Endpoint verified") if offer.get("usageGuide", {}).get("endpoint") else ("官网已验证", "Site verified")
+            suffix = f" · {latency}" if latency else ""
+            chips.append(
+                f'<span class="flag-chip flag-endpoint" title="{_esc(title)}">'
+                f'{_locale_pair(f"✓ {label_zh}{suffix}", f"✓ {label_en}{suffix}")}</span>'
+            )
+    if not chips:
+        return ""
+    return '<div class="offer-version-line">' + "".join(chips) + "</div>"
+
+
 def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations: list[dict] | None = None) -> str:
     path = offer_url(offer)
     title = offer.get("title") or offer.get("name")
@@ -1104,6 +1270,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
       <p>{_locale_pair(context_summary_zh, context_summary_en)}.{source_markup}</p>
     </section>'''
     access_paths_markup = _access_paths_markup(offer)
+    version_line = _offer_version_line(offer, offers)
     operation_guides_markup = _operation_guides_markup(
         _operation_guides_for_offer(offer, operations or []),
         reference_command=((guide.get("examples") or {}).get("curl") or offer.get("command") or ""),
@@ -1230,6 +1397,19 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .qs-code {{ display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }}
     .qs-step pre {{ margin: 0; padding: 12px 14px; border-radius: 6px; background: var(--code-bg); color: var(--code-text); font: 400 12px/1.55 var(--font-mono); overflow-x: auto; max-width: 100%; }}
     .header-cta {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }}
+    .offer-version-line {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }}
+    .flag-chip {{ display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }}
+    .flag-key {{ color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }}
+    .flag-edition {{ color: var(--accent); background: var(--accent-soft); }}
+    .flag-sibling {{ color: var(--accent); background: var(--surface); border: 1px solid var(--line); }}
+    .flag-sibling:hover {{ border-color: var(--accent); }}
+    .flag-hands-on {{ color: var(--pale-green-text); background: var(--pale-green-bg); }}
+    .flag-endpoint {{ color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }}
+    .flag-net-ok {{ color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }}
+    .flag-net-region {{ color: var(--pale-green-text); background: var(--pale-green-bg); }}
+    .flag-net-speed {{ color: var(--ink-secondary); background: var(--surface); border: 1px solid var(--line); }}
+    .flag-net-fail {{ color: var(--pale-red-text); background: var(--pale-red-bg); }}
+    .flag-net-dead {{ color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }}
     .header-cta .button {{ display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 16px; }}
     .header-cta .button small {{ font-weight: 400; opacity: .75; font-size: 11px; }}
     .header-cta .button--ghost {{ background: transparent; color: var(--ink); border-color: var(--line); }}
@@ -1246,6 +1426,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
+    {version_line}
     <nav aria-label="Categories">{category_links}</nav>
     {header_cta_markup}
   </header>
@@ -1881,8 +2062,86 @@ def _cn_status_for_model(model: dict, provider_cards: dict[str, dict], policies:
     return _cn_status_for_policy(policies.get(str(policy_id or "")))
 
 
-def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) -> str:
-    modalities = "".join(f'<span class="model-badge">{_esc(item)}</span>' for item in (model.get("modality") or []))
+ENDPOINT_LATENCY_FILE = "endpoint-latency.json"
+LATENCY_COLUMN_LABEL = ("接口速度 (API RTT)", "API latency")
+LATENCY_NOTE = (
+    "「接口速度」为本机大陆直连实测的服务商 API 网关往返延迟（3 次中位数），只反映接口调用快慢，不代表模型生成速度。",
+    "API latency is the mainland-China round trip to each provider's API gateway (median of 3 keyless probes). It measures the interface, not model generation speed.",
+)
+
+
+def _load_endpoint_latency() -> tuple[dict[str, dict], dict]:
+    """Per-provider API-gateway latency measured by scripts/probe_endpoint_latency.py.
+
+    The file is written by a real probe run, never by hand: every entry carries
+    its own check date, endpoint and samples so the column can be audited.
+    """
+    path = ACCESS_DATA_DIR / ENDPOINT_LATENCY_FILE
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise SystemExit(f"Invalid endpoint latency data ({path}): {error}") from error
+    if not isinstance(payload, dict) or not isinstance(payload.get("providers"), list):
+        raise SystemExit(f"Invalid endpoint latency data ({path}): expected an object with a providers array")
+    entries: dict[str, dict] = {}
+    for entry in payload["providers"]:
+        if not isinstance(entry, dict) or not entry.get("providerId"):
+            raise SystemExit(f"Invalid endpoint latency entry in {path}: {entry!r}")
+        entries[str(entry["providerId"])] = entry
+    meta = {
+        "checkedAt": str(payload.get("checkedAt") or ""),
+        "vantage": str(payload.get("vantage") or ""),
+        "method": str(payload.get("method") or ""),
+    }
+    return entries, meta
+
+
+def _latency_cell(model: dict, latencies: dict[str, dict], meta: dict) -> tuple[str, str]:
+    """Markup plus the sortable value for one model row's API-latency cell."""
+    entry = latencies.get(str(model.get("providerId") or "")) or {}
+    ms = entry.get("ms")
+    title_parts = [
+        f"实测于 {entry['checkedAt']}" if entry.get("checkedAt") else "",
+        f"GET {entry['endpoint']}" if entry.get("endpoint") else "",
+        "3 次成功请求的中位数" if ms is not None else "",
+        meta.get("vantage") or "",
+        str(entry.get("note") or ""),
+    ]
+    title = _esc(" · ".join(part for part in title_parts if part))
+    if ms is None:
+        return f'<td class="latency-cell latency-unknown" data-label="接口速度" title="{title}">—</td>', ""
+    return (
+        f'<td class="latency-cell" data-label="接口速度" title="{title}"><span class="latency-value">{int(ms)}ms</span></td>',
+        str(int(ms)),
+    )
+
+
+def _format_context_window(value: object) -> str:
+    """Render raw token counts like 256000 as 256K / 1M; pass through anything else."""
+    raw = str(value or "").strip()
+    if not raw.isdigit():
+        return raw or "—"
+    count = int(raw)
+    if count >= 1_000_000:
+        return f"{count / 1_000_000:g}M"
+    if count >= 1_000:
+        return f"{round(count / 1_000):g}K"
+    return raw
+
+
+def _model_catalog_row(
+    model: dict,
+    cn_statuses: dict[str, dict] | None = None,
+    row_number: int = 0,
+    latencies: dict[str, dict] | None = None,
+    latency_meta: dict | None = None,
+) -> str:
+    modalities = "".join(
+        f'<span class="model-badge">{_esc(item)}</span>'
+        for item in (model.get("modality") or [])
+        if str(item).lower() != "unknown"
+    )
+    modality_key = ",".join(sorted(str(item) for item in (model.get("modality") or [])))
     status = str(model.get("status") or "unknown")
     status_label = _locale_pair(
         {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
@@ -1896,21 +2155,36 @@ def _model_catalog_row(model: dict, cn_statuses: dict[str, dict] | None = None) 
     }.get(freshness)
     freshness_markup = f'<small class="freshness freshness-{_esc(freshness)}">{freshness_label}</small>' if freshness_label else ""
     provider_id = str(model.get("providerId") or "")
+    provider_name = str(model.get("provider") or "")
     model_id = str(model.get("id") or "")
+    model_name = str(model.get("model") or "")
+    context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
-    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}">
-      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(model.get("provider"))}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
-      <td class="model-cell"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model.get("model"))}"><strong>{_esc(model.get("model"))}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
-      <td>{_esc(model.get("context") or "—")}</td>
-      <td>{_esc(model.get("maxOutput") or "—")}</td>
-      <td><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
-      <td>{_esc(model.get("rateLimit") or "—")}</td>
-      <td>{_esc(model.get("released") or "—")}</td>
-      <td>{_esc(model.get("usageActivity") or "—")}</td>
-      <td><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
-      <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
-      <td class="source-cell"><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
-    </tr>'''
+    latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
+    card_facts = "".join(
+        f'<span class="model-card-fact"><small>{label}</small>{value}</span>'
+        for label, value in (
+            (_locale_pair("上下文", "Context"), _esc(context_text)),
+            (_locale_pair("速率", "Rate"), _esc(model.get("rateLimit") or "—")),
+            (_locale_pair("接口", "API"), f"{_esc(latency_ms)}ms" if latency_ms else "—"),
+            (_locale_pair("发布", "Released"), _esc(model.get("released") or "—")),
+        )
+    )
+    return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}" data-modality="{_esc(modality_key)}" data-context="{_esc(str(model.get("context") or ""))}" data-released="{_esc(str(model.get("released") or ""))}" data-ms="{_esc(latency_ms)}" data-score="{_esc(str(model.get("score") or ""))}">
+      <td class="row-index" data-label="#">{row_number or "—"}</td>
+      <td class="model-cell" data-label="模型"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
+      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
+      <td data-label="上下文长度" title="{_esc(str(model.get("context") or ""))}">{_esc(context_text)}</td>
+      <td data-label="最大输出">{_esc(_format_context_window(model.get("maxOutput")) if str(model.get("maxOutput") or "").isdigit() else (model.get("maxOutput") or "—"))}</td>
+      <td data-label="支持模态"><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
+      <td data-label="速率限制">{_esc(model.get("rateLimit") or "—")}</td>
+      {latency_cell}
+      <td data-label="发布时间">{_esc(model.get("released") or "—")}</td>
+      <td data-label="在线状态"><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
+      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
+      <td class="source-cell" data-label="操作"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
+    </tr>
+    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="{_esc(model_aggregate_url(model))}">{_esc(model_name)}</a></h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></div></div></td></tr>'''
 
 
 def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0) -> str:
@@ -1923,10 +2197,29 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
         cn_statuses[str(model.get("id") or "")] = {"code": code, "zh": _CN_STATUS_LABELS[code][0], "en": _CN_STATUS_LABELS[code][1]}
     providers = sorted({(str(model.get("providerId") or ""), str(model.get("provider") or "")) for model in models}, key=lambda item: item[1].lower())
     provider_options = "".join(f'<option value="{_esc(provider_id)}">{_esc(name)}</option>' for provider_id, name in providers if provider_id)
-    rows = "".join(_model_catalog_row(model, cn_statuses) for model in models)
-    heading_markup = f'''<div class="eyebrow">{_locale_pair("01 / 实时模型目录", "01 / Live model directory")}</div>
-      <h2>{_locale_pair("模型大列表", "Model directory")} <small>{len(models)}</small></h2>
-      <p class="section-desc">{_locale_pair("按模型查找可用入口，或按厂商查看完整模型家族。这里展示目录数据；具体免费额度和接入步骤进入对应资源详情。", "Search by model or browse a complete provider family. This directory shows catalog facts; open the linked access record for free-tier terms and step-by-step setup.")}</p>''' if include_heading else ""
+    latencies, latency_meta = _load_endpoint_latency()
+    start_index = (page_num - 1) * MODELS_PER_PAGE if total_pages > 1 else 0
+    rows = "".join(
+        _model_catalog_row(model, cn_statuses, row_number=start_index + offset, latencies=latencies, latency_meta=latency_meta)
+        for offset, model in enumerate(models, start=1)
+    )
+    modalities_present = sorted({str(item) for model in models for item in (model.get("modality") or [])} - {"unknown"})
+    modality_options = "".join(
+        f'<option value="{_esc(item)}" data-label-zh="{_esc(_MODALITY_LABELS.get(item, item))}" data-label-en="{_esc(item.capitalize())}">{_esc(_MODALITY_LABELS.get(item, item))}</option>'
+        for item in modalities_present
+    )
+    heading_markup = f'''<div class="mdir-heading">
+        <div>
+          <div class="mdir-heading-title"><span class="mdir-heading-num">01</span><span class="mdir-heading-slash">/</span><h2>{_locale_pair("实时模型目录", "Live model directory")}</h2></div>
+          <p class="section-desc">{_locale_pair(f"按模型或厂商筛选目录数据，共 {total_models or len(models)} 条记录，每周人工核验更新；免费额度与接入步骤见对应资源详情页。", f"Filter catalog facts by model or provider — {total_models or len(models)} records, re-verified weekly; open each access record for free-tier terms and setup steps.")}</p>
+        </div>
+        <a class="mdir-heading-link" href="#mainland-cn-availability">{_locale_pair("数据说明", "Data notes")}</a>
+      </div>''' if include_heading else f'''<div class="mdir-heading">
+        <div>
+          <div class="mdir-heading-title"><span class="mdir-heading-num">01</span><span class="mdir-heading-slash">/</span><h2>{_locale_pair("实时模型目录", "Live model directory")}</h2></div>
+          <p class="section-desc">{_locale_pair("按模型或厂商筛选目录数据；免费额度与接入步骤见对应资源详情页。", "Filter catalog facts by model or provider; open each access record for free-tier terms and setup steps.")}</p>
+        </div>
+      </div>'''
     # Build pagination navigation
     if total_pages > 1:
         def _page_link(p: int, label: str, aria_label: str) -> str:
@@ -1934,16 +2227,16 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
                 return f'<span class="catalog-page-current" aria-current="page">{label}</span>'
             href = "/models/all/" if p == 1 else f"/models/all/page/{p}/"
             return f'<a class="catalog-page-link" href="{href}" aria-label="{aria_label}">{label}</a>'
-        prev_link = _page_link(page_num - 1, "‹ " + _locale_pair("上一页", "Previous"), _locale_pair("上一页", "Previous page")) if page_num > 1 else ""
-        next_link = _page_link(page_num + 1, _locale_pair("下一页", "Next") + " ‹", _locale_pair("下一页", "Next page")) if page_num < total_pages else ""
+        prev_link = _page_link(page_num - 1, "‹ " + _locale_pair("上一页", "Previous"), "上一页 / Previous page") if page_num > 1 else ""
+        next_link = _page_link(page_num + 1, _locale_pair("下一页", "Next") + " ‹", "下一页 / Next page") if page_num < total_pages else ""
         page_links = ""
         for p in range(1, total_pages + 1):
             if p == page_num:
                 page_links += f'<span class="catalog-page-current" aria-current="page">{p}</span>'
             else:
                 href = "/models/all/" if p == 1 else f"/models/all/page/{p}/"
-                page_links += f'<a class="catalog-page-link" href="{href}" aria-label="{_locale_pair(f"第 {p} 页", f"Page {p}")}">{p}</a>'
-        pagination_markup = f'''<nav class="catalog-pagination" aria-label="{_locale_pair("分页导航", "Pagination")}>
+                page_links += f'<a class="catalog-page-link" href="{href}" aria-label="第 {p} 页 / Page {p}">{p}</a>'
+        pagination_markup = f'''<nav class="catalog-pagination" aria-label="分页导航 / Pagination">
         {prev_link}
         {page_links}
         {next_link}
@@ -1958,111 +2251,284 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             f"共 {len(models)} 条，可滚动查看全部记录。筛选后会显示当前匹配数量。",
             f"{len(models)} records, scroll to view all. Filters show the current match count.",
         )
-    return f'''<section id="model-directory" class="model-directory">
+    return f'''<section id="model-directory" class="model-directory" data-catalog-view="table">
       {heading_markup}
-      <div class="catalog-toolbar" role="search">
-        <label class="catalog-search-label" for="model-catalog-search">{_locale_pair("搜索模型或厂商", "Search models or providers")}</label>
-        <input id="model-catalog-search" type="search" placeholder="搜索模型或厂商" data-placeholder-zh="搜索模型或厂商" data-placeholder-en="Search models or providers" autocomplete="off">
-        <label class="catalog-provider-label" for="model-catalog-provider">{_locale_pair("厂商", "Provider")}</label>
-        <select id="model-catalog-provider"><option value="" data-label-zh="全部厂商" data-label-en="All providers">全部厂商</option>{provider_options}</select>
-        <label class="catalog-region-label" for="model-catalog-region">{_locale_pair("大陆可用性", "Mainland CN")}</label>
-        <select id="model-catalog-region">
-          <option value="" data-label-zh="全部状态" data-label-en="All statuses" selected>全部状态</option>
+      <div class="mdir-toolbar" role="search">
+        <label class="mdir-search" for="model-catalog-search">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="model-catalog-search" type="search" placeholder="搜索模型名称、服务商或关键词…" data-placeholder-zh="搜索模型名称、服务商或关键词…" data-placeholder-en="Search models, providers or keywords…" autocomplete="off">
+          <kbd>Ctrl K</kbd>
+        </label>
+        <label class="mdir-field" for="model-catalog-provider"><select id="model-catalog-provider"><option value="" data-label-zh="全部服务商" data-label-en="All providers">全部服务商</option>{provider_options}</select></label>
+        <label class="mdir-field" for="model-catalog-region"><select id="model-catalog-region">
+          <option value="" data-label-zh="中国大陆可用性" data-label-en="Mainland CN">中国大陆可用性</option>
           <option value="available" data-label-zh="大陆可用" data-label-en="Available">大陆可用</option>
           <option value="unknown" data-label-zh="大陆待核验" data-label-en="Unverified">大陆待核验</option>
           <option value="unavailable" data-label-zh="大陆不可用" data-label-en="Unavailable">大陆不可用</option>
-        </select>
-        <div class="catalog-modes" aria-label="排序方式 / Group by">
+        </select></label>
+        <label class="mdir-field" for="model-catalog-modality"><select id="model-catalog-modality"><option value="" data-label-zh="全部模态" data-label-en="All modalities">全部模态</option>{modality_options}</select></label>
+        <label class="mdir-field" for="model-catalog-sort"><select id="model-catalog-sort">
+          <option value="group" data-label-zh="综合排序" data-label-en="Smart sort">综合排序</option>
+          <option value="latency" data-label-zh="接口最快优先" data-label-en="Fastest API first">接口最快优先</option>
+          <option value="context" data-label-zh="上下文长度优先" data-label-en="Largest context">上下文长度优先</option>
+          <option value="released" data-label-zh="最新发布优先" data-label-en="Newest releases">最新发布优先</option>
+          <option value="score" data-label-zh="综合评分优先" data-label-en="Score">综合评分优先</option>
+        </select></label>
+        <div class="mdir-view" role="group" aria-label="视图切换 / View switch">
+          <button type="button" class="mdir-view-btn is-active" data-catalog-view="table" aria-pressed="true">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 3h13M1.5 8h13M1.5 13h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            {_locale_pair("表格", "Table")}</button>
+          <button type="button" class="mdir-view-btn" data-catalog-view="cards" aria-pressed="false">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+            {_locale_pair("卡片", "Cards")}</button>
+        </div>
+      </div>
+      <div class="mdir-chips" role="group" aria-label="热门筛选 / Quick filters">
+        <span class="mdir-chips-label">{_locale_pair("热门筛选", "Quick filters")}</span>
+        <button type="button" class="mdir-chip" data-chip-region="available">{_locale_pair("中国大陆可用", "Mainland CN available")}</button>
+        <button type="button" class="mdir-chip" data-chip-region="unknown">{_locale_pair("待核验", "Unverified")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="text">{_locale_pair("文本生成", "Text")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="reasoning">{_locale_pair("推理模型", "Reasoning")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="image">{_locale_pair("图像", "Image")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="audio">{_locale_pair("语音", "Audio")}</button>
+        <span class="mdir-chips-spacer"></span>
+        <span id="model-catalog-count" class="catalog-count"></span>
+        <span class="catalog-modes" aria-label="分组方式 / Group by">
           <button type="button" class="group-mode is-active" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
           <button type="button" class="group-mode" data-group-mode="model">{_locale_pair("按模型分组", "By model")}</button>
-        </div>
-        <span id="model-catalog-count" class="catalog-count">{_locale_pair(f"显示 {len(models)} 条 / 共 {total_models} 条", f"Showing {len(models)} / {total_models}")}</span>
+        </span>
+        <button type="button" id="model-catalog-clear" class="mdir-clear">✕ {_locale_pair("清除筛选", "Clear filters")}</button>
       </div>
       <p class="catalog-hint">{hint_text}</p>
+      <p class="catalog-latency-note">{_locale_pair(*LATENCY_NOTE)}</p>
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
-        <th>{_locale_pair("厂商", "Provider")}</th><th>{_locale_pair("模型", "Model")}</th><th>{_locale_pair("上下文", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("模态", "Modality")}</th><th>{_locale_pair("速率限制", "Rate limit")}</th><th>{_locale_pair("发布日期", "Released")}</th><th>{_locale_pair("使用量 / 活动", "Usage / Activity")}</th><th>{_locale_pair("状态", "Status")}</th><th>{_locale_pair("大陆可用性", "Mainland CN")}</th><th>{_locale_pair("来源", "Source")}</th>
+        <th class="row-index">#</th><th>{_locale_pair("模型名称 (Model)", "Model")}</th><th>{_locale_pair("服务商 (Provider)", "Provider")}</th><th>{_locale_pair("上下文长度", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("支持模态", "Modality")}</th><th>{_locale_pair("速率限制 (Rate Limit)", "Rate limit")}</th><th>{_locale_pair(*LATENCY_COLUMN_LABEL)}</th><th>{_locale_pair("发布时间", "Released")}</th><th>{_locale_pair("在线状态", "Status")}</th><th>{_locale_pair("中国大陆可用性", "Mainland CN")}</th><th>{_locale_pair("操作", "Actions")}</th>
       </tr></thead><tbody>{rows}</tbody></table></div>
-      <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除厂商、地区筛选。", "No models match this filter. Try another keyword or clear the provider and region filters.")}</p>
+      <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除筛选条件。", "No models match this filter. Try another keyword or clear the filters.")}</p>
       {pagination_markup}
-      {f'<style>.catalog-pagination {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin: 20px 0 0; padding: 16px; }}.catalog-page-link, .catalog-page-current {{ display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--blue); text-decoration: none; font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif; }}.catalog-page-link:hover {{ background: var(--soft); }}.catalog-page-current {{ color: var(--ink); background: var(--blue); border-color: var(--blue); }}</style>' if total_pages > 1 else ''}
       <script>
         (() => {{
+          const section = document.getElementById('model-directory');
           const table = document.getElementById('model-catalog');
           const body = table?.querySelector('tbody');
-          const rows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
+          const dataRows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
+          const cardRows = body ? Array.from(body.querySelectorAll('.catalog-card-row')) : [];
+          const pairs = dataRows.map((row, index) => ({{ row, card: cardRows[index] || null }}));
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
           const region = document.getElementById('model-catalog-region');
+          const modality = document.getElementById('model-catalog-modality');
+          const sortSelect = document.getElementById('model-catalog-sort');
           const count = document.getElementById('model-catalog-count');
           const empty = document.getElementById('model-catalog-empty');
+          const clear = document.getElementById('model-catalog-clear');
           const modes = Array.from(document.querySelectorAll('[data-group-mode]'));
+          const viewButtons = Array.from(document.querySelectorAll('[data-catalog-view].mdir-view-btn'));
+          const chips = Array.from(document.querySelectorAll('.mdir-chip'));
           let mode = 'provider';
+          let sortMode = 'group';
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {{
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
-            const allProviders = provider?.querySelector('option[value=""]');
-            if (allProviders) allProviders.textContent = isEnglish() ? allProviders.dataset.labelEn : allProviders.dataset.labelZh;
-            region?.querySelectorAll('option[data-label-zh]').forEach(option => {{
+            document.querySelectorAll('option[data-label-zh]').forEach(option => {{
               option.textContent = isEnglish() ? option.dataset.labelEn : option.dataset.labelZh;
             }});
           }};
-          const apply = () => {{
+          const textOf = row => (row.textContent || '').toLowerCase();
+          const matches = pair => {{
+            const row = pair.row;
             const query = (search?.value || '').trim().toLowerCase();
             const providerId = provider?.value || '';
             const regionFilter = region?.value || '';
-            const visible = rows.filter(row => {{
-              const matchesText = !query || row.textContent.toLowerCase().includes(query);
-              const matchesProvider = !providerId || row.dataset.providerId === providerId;
-              const matchesRegion = !regionFilter || row.dataset.cn === regionFilter;
-              row.hidden = !(matchesText && matchesProvider && matchesRegion);
-              return matchesText && matchesProvider && matchesRegion;
+            const modalityFilter = modality?.value || '';
+            const modalities = (row.dataset.modality || '').split(',').filter(Boolean);
+            return (!query || textOf(row).includes(query))
+              && (!providerId || row.dataset.providerId === providerId)
+              && (!regionFilter || row.dataset.cn === regionFilter)
+              && (!modalityFilter || modalities.includes(modalityFilter));
+          }};
+          const sortedPairs = () => {{
+            const list = pairs.filter(matches);
+            if (sortMode === 'latency') {{
+              const value = pair => {{
+                const ms = parseInt(pair.row.dataset.ms, 10);
+                return Number.isFinite(ms) ? ms : Number.POSITIVE_INFINITY;
+              }};
+              list.sort((a, b) => value(a) - value(b));
+            }} else if (sortMode === 'context') {{
+              list.sort((a, b) => (parseInt(b.row.dataset.context, 10) || 0) - (parseInt(a.row.dataset.context, 10) || 0));
+            }} else if (sortMode === 'released') {{
+              list.sort((a, b) => (b.row.dataset.released || '').localeCompare(a.row.dataset.released || ''));
+            }} else if (sortMode === 'score') {{
+              list.sort((a, b) => (parseFloat(b.row.dataset.score) || 0) - (parseFloat(a.row.dataset.score) || 0));
+            }} else {{
+              const value = pair => {{
+                const cell = mode === 'model' ? pair.row.querySelector('.model-cell strong') : pair.row.querySelector('.provider-filter');
+                return cell ? cell.textContent.trim().toLowerCase() : '';
+              }};
+              list.sort((a, b) => value(a).localeCompare(value(b), undefined, {{numeric: true}}));
+            }}
+            return list;
+          }};
+          const applyView = () => {{
+            const cards = section?.dataset.catalogView === 'cards';
+            viewButtons.forEach(button => {{
+              const active = (button.dataset.catalogView === 'cards') === cards;
+              button.classList.toggle('is-active', active);
+              button.setAttribute('aria-pressed', String(active));
             }});
-            const value = row => {{
-              const cell = mode === 'model' ? row.querySelector('td:nth-child(2) strong') : row.querySelector('.provider-filter');
-              return cell ? cell.textContent.trim().toLowerCase() : '';
-            }};
-            visible.sort((a, b) => value(a).localeCompare(value(b), undefined, {{numeric: true}}));
+          }};
+          const apply = () => {{
+            const cards = section?.dataset.catalogView === 'cards';
+            const visible = sortedPairs();
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
-            visible.forEach(row => {{
-              const group = mode === 'provider' ? row.querySelector('.provider-filter')?.textContent : row.querySelector('td:nth-child(2) strong')?.textContent;
-              if (group && group !== previousGroup) {{
-                const groupRow = document.createElement('tr');
-                groupRow.className = 'catalog-group-row';
-                const cell = document.createElement('th');
-                cell.colSpan = 11;
-                cell.scope = 'rowgroup';
-                cell.textContent = group;
-                groupRow.appendChild(cell);
-                body.appendChild(groupRow);
-                previousGroup = group;
+            visible.forEach((pair, index) => {{
+              const indexCell = pair.row.querySelector('.row-index');
+              if (indexCell) indexCell.textContent = String(index + 1);
+              pair.row.hidden = cards;
+              if (pair.card) pair.card.hidden = !cards;
+              if (!cards && sortMode === 'group') {{
+                const groupCell = mode === 'provider' ? pair.row.querySelector('.provider-filter') : pair.row.querySelector('.model-cell strong');
+                const group = groupCell ? groupCell.textContent.trim() : '';
+                if (group && group !== previousGroup) {{
+                  const groupRow = document.createElement('tr');
+                  groupRow.className = 'catalog-group-row';
+                  const cell = document.createElement('th');
+                  cell.colSpan = 12;
+                  cell.scope = 'rowgroup';
+                  cell.textContent = group;
+                  groupRow.appendChild(cell);
+                  body.appendChild(groupRow);
+                  previousGroup = group;
+                }}
               }}
-              body.appendChild(row);
+              body.appendChild(pair.row);
+              if (pair.card) body.appendChild(pair.card);
             }});
-            if (count) count.textContent = isEnglish() ? `Showing ${{visible.length}} / ${{rows.length}}` : `显示 ${{visible.length}} 条 / 共 ${{rows.length}} 条`;
+            if (count) count.textContent = isEnglish() ? `Showing ${{visible.length}} / ${{pairs.length}}` : `显示 ${{visible.length}} 条 / 共 ${{pairs.length}} 条`;
             if (empty) empty.hidden = visible.length !== 0;
+            chips.forEach(chip => {{
+              const chipRegion = chip.dataset.chipRegion;
+              const chipModality = chip.dataset.chipModality;
+              const active = (chipRegion && region?.value === chipRegion) || (chipModality && modality?.value === chipModality);
+              chip.classList.toggle('is-active', Boolean(active));
+            }});
           }};
           search?.addEventListener('input', apply);
           provider?.addEventListener('change', apply);
+          region?.addEventListener('change', apply);
+          modality?.addEventListener('change', apply);
+          sortSelect?.addEventListener('change', () => {{
+            sortMode = sortSelect.value || 'group';
+            apply();
+          }});
           modes.forEach(button => button.addEventListener('click', () => {{
             mode = button.dataset.groupMode || 'provider';
             modes.forEach(item => item.classList.toggle('is-active', item === button));
             apply();
           }}));
-          localizeControls();
+          viewButtons.forEach(button => button.addEventListener('click', () => {{
+            if (section) section.dataset.catalogView = button.dataset.catalogView || 'table';
+            applyView();
+            apply();
+          }}));
+          chips.forEach(chip => chip.addEventListener('click', () => {{
+            if (chip.dataset.chipRegion && region) region.value = region.value === chip.dataset.chipRegion ? '' : chip.dataset.chipRegion;
+            if (chip.dataset.chipModality && modality) modality.value = modality.value === chip.dataset.chipModality ? '' : chip.dataset.chipModality;
+            apply();
+          }}));
+          clear?.addEventListener('click', () => {{
+            if (search) search.value = '';
+            if (provider) provider.value = '';
+            if (region) region.value = '';
+            if (modality) modality.value = '';
+            if (sortSelect) sortSelect.value = 'group';
+            sortMode = 'group';
+            apply();
+          }});
+          document.addEventListener('keydown', event => {{
+            if ((event.ctrlKey || event.metaKey) && (event.key === 'k' || event.key === 'K')) {{
+              event.preventDefault();
+              search?.focus();
+              search?.select();
+            }}
+          }});
           document.querySelectorAll('.provider-filter').forEach(button => button.addEventListener('click', () => {{
             if (provider) provider.value = button.dataset.providerValue || '';
             apply();
             document.getElementById('model-directory')?.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
           }}));
+          localizeControls();
+          applyView();
           apply();
         }})();
       </script>
       <style>
+        .model-directory .mdir-heading {{ display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: flex-start; justify-content: space-between; margin: 0 0 14px; }}
+        .model-directory .mdir-heading-title {{ display: flex; gap: 12px; align-items: baseline; }}
+        .model-directory .mdir-heading-num {{ color: var(--accent); font: 700 30px/1 var(--font-serif), Georgia, serif; letter-spacing: .02em; }}
+        .model-directory .mdir-heading-slash {{ color: var(--ink-tertiary); font: 400 24px/1 var(--font-serif), Georgia, serif; }}
+        .model-directory .mdir-heading-title h2 {{ margin: 0; }}
+        .model-directory .mdir-heading-link {{ flex: 0 0 auto; align-self: center; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); border-radius: 9999px; padding: 7px 14px; color: var(--accent); background: var(--surface); font: 500 12.5px/1.2 var(--font-sans); text-decoration: none; transition: all .15s; }}
+        .model-directory .mdir-heading-link:hover {{ border-color: var(--accent); }}
+        .model-directory .mdir-toolbar {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 10px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }}
+        .model-directory .mdir-search {{ position: relative; flex: 1 1 260px; display: flex; align-items: center; }}
+        .model-directory .mdir-search svg {{ position: absolute; left: 11px; width: 15px; height: 15px; color: var(--ink-tertiary); pointer-events: none; }}
+        .model-directory .mdir-search input {{ width: 100%; min-height: 38px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 62px 8px 34px; color: var(--ink); background: var(--surface-soft); font: inherit; font-size: 13.5px; outline: none; transition: border-color .15s, box-shadow .15s; }}
+        .model-directory .mdir-search input:focus {{ border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft, var(--soft)); background: var(--surface); }}
+        .model-directory .mdir-search kbd {{ position: absolute; right: 10px; border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px; color: var(--ink-tertiary); background: var(--surface); font: 500 10.5px/1.4 var(--font-mono); pointer-events: none; }}
+        .model-directory .mdir-field select {{ min-height: 38px; max-width: 200px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 28px 8px 10px; color: var(--ink); background: var(--surface-soft); font: inherit; font-size: 13px; outline: none; cursor: pointer; transition: border-color .15s; }}
+        .model-directory .mdir-field select:focus {{ border-color: var(--accent); }}
+        .model-directory .mdir-view {{ display: inline-flex; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }}
+        .model-directory .mdir-view-btn {{ display: inline-flex; gap: 6px; align-items: center; border: 0; padding: 9px 14px; color: var(--ink-secondary); background: var(--surface); cursor: pointer; font: 500 12.5px/1 var(--font-sans); transition: all .15s; }}
+        .model-directory .mdir-view-btn + .mdir-view-btn {{ border-left: 1px solid var(--line); }}
+        .model-directory .mdir-view-btn svg {{ width: 13px; height: 13px; }}
+        .model-directory .mdir-view-btn.is-active {{ color: #fff; background: var(--accent); }}
+        .model-directory .mdir-chips {{ display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }}
+        .model-directory .mdir-chips-label {{ color: var(--ink-tertiary); font: 500 12px/1.6 var(--font-sans); }}
+        .model-directory .mdir-chip {{ border: 1px solid var(--line); border-radius: 7px; padding: 6px 12px; color: var(--ink-secondary); background: var(--surface); cursor: pointer; font: 400 12.5px/1.4 var(--font-sans); transition: all .15s; }}
+        .model-directory .mdir-chip:hover {{ border-color: var(--accent); color: var(--accent); }}
+        .model-directory .mdir-chip.is-active {{ color: var(--accent); border-color: var(--accent); background: var(--accent-soft, var(--soft)); }}
+        .model-directory .mdir-chips-spacer {{ flex: 1 1 auto; }}
+        .model-directory .mdir-clear {{ border: 0; padding: 6px 8px; color: var(--ink-tertiary); background: transparent; cursor: pointer; font: 400 12.5px/1.4 var(--font-sans); }}
+        .model-directory .mdir-clear:hover {{ color: var(--accent); }}
+        .model-directory .catalog-table {{ min-width: 1260px; }}
+        .model-directory .catalog-table td, .model-directory .catalog-table tbody th {{ padding: 11px 12px; vertical-align: middle; }}
+        .model-directory .catalog-table .row-index {{ color: var(--ink-tertiary); font: 500 12px/1.5 var(--font-mono); width: 34px; }}
+        .model-directory .catalog-table .model-cell strong {{ font: 600 13px/1.5 var(--font-mono); }}
+        .model-directory .catalog-table .source-link {{ display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 7px; padding: 6px 11px; color: var(--accent); background: var(--surface); font: 500 12px/1.3 var(--font-sans); text-decoration: none; white-space: nowrap; transition: all .15s; }}
+        .model-directory .catalog-table .source-link:hover {{ border-color: var(--accent); background: var(--accent-soft, var(--soft)); }}
+        .model-directory .status-dot {{ display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 9999px; background: var(--ink-tertiary); vertical-align: 1px; }}
+        .model-directory .status-dot-online {{ background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .14); }}
+        .model-directory .status-dot-offline {{ background: #dc2626; }}
+        .model-directory .status-dot-degraded {{ background: #d97706; }}
+        .model-directory .catalog-table .freshness {{ margin-left: 6px; }}
+        .model-directory .catalog-table .latency-cell {{ white-space: nowrap; }}
+        .model-directory .catalog-table .latency-value {{ font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }}
+        .model-directory .catalog-table .latency-unknown {{ color: var(--ink-tertiary); }}
+        .model-directory .catalog-latency-note {{ margin: -4px 0 12px; color: var(--ink-tertiary); font: 400 12px/1.7 var(--font-sans); }}
+        .model-directory .catalog-card-row > td {{ padding: 0; border-bottom: 0; background: transparent; }}
+        .model-directory .catalog-card {{ display: grid; gap: 10px; margin: 6px 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }}
+        .model-directory .catalog-card h3 {{ margin: 0; font: 600 15px/1.4 var(--font-mono); }}
+        .model-directory .catalog-card h3 a {{ color: var(--ink); text-decoration: none; }}
+        .model-directory .catalog-card h3 a:hover {{ color: var(--accent); }}
+        .model-directory .catalog-card-facts {{ display: flex; flex-wrap: wrap; gap: 8px 18px; }}
+        .model-directory .catalog-card-fact {{ display: grid; gap: 1px; font: 500 12.5px/1.5 var(--font-sans); color: var(--ink); }}
+        .model-directory .catalog-card-fact small {{ color: var(--ink-tertiary); font: 500 10.5px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }}
+        .model-directory .catalog-card-meta {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }}
+        .model-directory[data-catalog-view="cards"] .catalog-table thead {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-group-row {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-card-row {{ display: table-row; }}
+        @media (max-width: 720px) {{
+          .model-directory .mdir-heading-link {{ display: none; }}
+          .model-directory .mdir-field, .model-directory .mdir-field select {{ flex: 1 1 45%; max-width: none; }}
+        }}
         .catalog-pagination {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin: 20px 0 0; padding: 16px; }}
-        .catalog-page-link, .catalog-page-current {{ display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--blue); text-decoration: none; font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif; }}
-        .catalog-page-link:hover {{ background: var(--soft); }}
-        .catalog-page-current {{ color: var(--ink); background: var(--blue); border-color: var(--blue); }}
+        .catalog-page-link, .catalog-page-current {{ display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--accent); background: var(--surface); text-decoration: none; font: 600 13px/1 var(--font-sans), ui-sans-serif, system-ui, sans-serif; transition: all .15s; }}
+        .catalog-page-link:hover {{ border-color: var(--accent); color: var(--accent); }}
+        .catalog-page-current {{ color: #fff; background: var(--accent); border-color: var(--accent); }}
       </style>
     </section>'''
 
@@ -2243,7 +2709,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{_esc(title)}</title><meta name="description" content="{_esc(description)}">
-  <link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}
+  <link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article", indexable=len(records) >= MIN_RECORDS_FOR_INDEXABLE_MODEL_PAGE)}
   {_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   {SKILLS_THEME_ASSETS}
@@ -2319,6 +2785,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     total = len(offers)
     model_catalog = models or []
     model_total = len(model_catalog)
+    provider_total = len({str(model.get("providerId") or "") for model in model_catalog if model.get("providerId")})
     if models is not None and total_pages > 1:
         start = (page_num - 1) * MODELS_PER_PAGE
         end = start + MODELS_PER_PAGE
@@ -2454,6 +2921,18 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     h2 small {{ color: var(--ink-secondary); font-size: 15px; font-weight: 400; }}
     h2 [lang="en"] {{ color: var(--ink-tertiary); font-weight: 500; font-size: .62em; margin-left: 6px; }}
     main {{ display: grid; gap: 30px; }}
+    .hero-grid {{ display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); gap: 26px; align-items: start; }}
+    .hero-eyebrow {{ margin: 26px 0 0; color: var(--accent); font: 600 11px/1.5 var(--font-mono); letter-spacing: .22em; }}
+    .hero-grid h1 {{ max-width: none; margin: 10px 0 4px; }}
+    .hero-sub {{ margin: 0 0 6px; color: var(--ink-secondary); font: 400 clamp(17px, 2.6vw, 24px)/1.4 var(--font-serif), Georgia, serif; }}
+    .hero-cards {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }}
+    .hero-card {{ display: flex; gap: 12px; align-items: center; padding: 16px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 1px 2px rgba(15, 23, 42, .04); }}
+    .hero-card-icon {{ flex: 0 0 auto; display: inline-flex; width: 38px; height: 38px; border-radius: 10px; color: var(--accent); background: var(--accent-soft, var(--soft)); align-items: center; justify-content: center; }}
+    .hero-card-icon svg {{ width: 19px; height: 19px; }}
+    .hero-card div {{ display: grid; gap: 1px; min-width: 0; }}
+    .hero-card strong {{ font: 600 16px/1.3 var(--font-sans); color: var(--ink); letter-spacing: -.01em; }}
+    .hero-card span {{ color: var(--ink-tertiary); font: 400 11px/1.5 var(--font-sans); }}
+    @media (max-width: 900px) {{ .hero-grid {{ grid-template-columns: 1fr; }} .hero-cards {{ margin-top: 0; }} .hero-eyebrow {{ margin-top: 18px; }} }}
     section + section {{ padding-top: 26px; border-top: 1px solid var(--line); }}
     .section-desc {{ margin: 0 0 14px; color: var(--ink-secondary); font-size: 14px; }}
     .catalog-toolbar {{ display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(150px, .8fr) minmax(140px, .75fr) auto 1fr; gap: 10px; align-items: end; margin: 18px 0 14px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }}
@@ -2470,8 +2949,12 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     .provider-filter:hover {{ text-decoration: underline; }}
     .provider-page-link {{ display: block; margin-top: 3px; color: var(--ink-secondary); font-size: 11px; }}
     .catalog-count {{ align-self: center; justify-self: end; color: var(--ink-tertiary); font: 500 11px var(--font-mono); letter-spacing: .05em; white-space: nowrap; }}
-    .catalog-table {{ min-width: 1120px; }}
+    .catalog-table {{ min-width: 1220px; }}
+    .catalog-table .latency-cell {{ white-space: nowrap; }}
+    .catalog-table .latency-value {{ font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }}
+    .catalog-table .latency-unknown {{ color: var(--ink-tertiary); }}
     .catalog-hint {{ margin: 0 0 12px; color: var(--ink-secondary); font-size: 12px; }}
+    .catalog-latency-note {{ margin: -4px 0 12px; color: var(--ink-tertiary); font-size: 12px; }}
     .card-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }}
     .model-card {{ display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 18px; background: var(--surface); transition: box-shadow .2s; }}
     .model-card:hover {{ box-shadow: var(--card-shadow); }}
@@ -2501,15 +2984,37 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('全部模型', 'All models')}</div>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
-    <h1>{_locale_pair('全部免费 AI 模型与 API 一览', 'All Free AI Models & APIs')}</h1>
-    <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.')}</p>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">FREE MODELS. MORE POSSIBILITIES.</p>
+        <h1>{_locale_pair('全部免费 AI 模型与 API 一览', 'All Free AI Models & APIs')}</h1>
+        <p class="hero-sub">{_locale_pair('含中国大陆可用性标注', 'with Mainland CN Availability')}</p>
+        <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.')}</p>
+      </div>
+      <div class="hero-cards" aria-label="目录统计 / Catalog stats">
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2 3 5.5v9L10 18l7-3.5v-9L10 2Zm0 2.2 4.6 2.3L10 8.8 5.4 6.5 10 4.2ZM5 8.3l4 2v5l-4-2v-5Zm6 7v-5l4-2v5l-4 2Z" fill="currentColor"/></svg></span>
+          <div><strong>{model_total or total}</strong><span>{_locale_pair('免费模型与 API', 'Total Models & APIs')}</span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-7 8.5V16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5.5a7.97 7.97 0 0 1-7 0 7.97 7.97 0 0 1-7 0Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          <div><strong>{provider_total}</strong><span>{_locale_pair('厂商 / 访问记录', 'Providers')}</span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 5.5V10l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          <div><strong>{_locale_pair('每周核验', 'Verified Weekly')}</strong><span>{_locale_pair('持续更新', 'Continuously updated')}</span></div>
+        </div>
+        <div class="hero-card">
+          <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="4.5" width="14" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+          <div><strong>{last_checked}</strong><span>{_locale_pair('最近更新', 'Last Updated')}</span></div>
+        </div>
+      </div>
+    </div>
     <div class="stats">
       <span><strong>{model_total or total}</strong> {_locale_pair('个模型', 'models')}</span>
       <span><strong>{total}</strong> {_locale_pair('个接入资源', 'access records')}</span>
-      <span>{_locale_pair('每周人工核验', 'Verified weekly')}</span>
       <span>{_locale_pair('模型同步', 'Models synced')}: {model_last_seen}</span>
       <span>{_locale_pair('资源核验', 'Offers checked')}: {offer_last_checked}</span>
-      <span>{_locale_pair('最近更新', 'Latest update')}: {last_checked}</span>
       <span>{_locale_pair('接入资源注册链接指向官方', 'Access-record links point to official sites')}</span>
     </div>
     <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
@@ -2732,8 +3237,45 @@ def _log_registration_docs(details: dict) -> str:
     return f'''<section class="log-registration"><h4>{_locale_pair("注册与文档", "Signup & docs")}</h4>{steps_block}{links_block}</section>'''
 
 
-def _log_detail_card(event: dict) -> str:
+def _log_model_key(value: object) -> str:
+    """Normalize ids so scan keys like "Atria-Dawn-Preview" match offer keys like "Atria Dawn Preview"."""
+    return re.sub(r"[^a-z0-9]", "", str(value or "").lower())
+
+
+def _log_offer_lookup(offers: list[dict] | None) -> dict[str, dict]:
+    lookup: dict[str, dict] = {}
+    for offer in offers or []:
+        if not isinstance(offer, dict):
+            continue
+        for field in ("id", "model"):
+            key = _log_model_key(offer.get(field))
+            if key:
+                lookup.setdefault(key, offer)
+    return lookup
+
+
+def _log_event_model_keys(event: dict) -> list[str]:
     details = event.get("details") or {}
+    candidates = (
+        details.get("canonicalModelId"),
+        details.get("model"),
+        event.get("id"),
+        str(event.get("id") or "").rsplit("/", 1)[-1],
+    )
+    keys = [_log_model_key(item) for item in candidates]
+    return [key for key in dict.fromkeys(keys) if key]
+
+
+def _log_detail_card(event: dict, offer_lookup: dict[str, dict] | None = None) -> str:
+    details = dict(event.get("details") or {})
+    if offer_lookup and not details.get("usageGuide") and not details.get("registrationSteps"):
+        for key in _log_event_model_keys(event):
+            offer = offer_lookup.get(key)
+            if offer:
+                for field in ("usageGuide", "registrationSteps", "register", "registerLabel", "sourceUrls", "links"):
+                    if offer.get(field) not in (None, "", []) and field not in details:
+                        details[field] = offer[field]
+                break
     detail_keys = (
         "provider", "productType", "model", "freeMechanism", "quota", "validity",
         "access", "phoneRequired", "cardRequired", "context", "maxOutput",
@@ -2864,8 +3406,9 @@ def _log_empty_state(log: dict, groups: dict[str, list[dict]]) -> str:
     return ""
 
 
-def render_daily_log_page(logs: list[dict], site_url: str) -> str:
+def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | None = None) -> str:
     """Render the public daily change log as a dashboard with event details."""
+    offer_lookup = _log_offer_lookup(offers)
     page_url = _absolute(site_url, CHANGE_LOG_PAGE_PATH)
     sorted_logs = sorted(logs, key=lambda item: str(item.get("date") or ""), reverse=True)
     dates = [str(log.get("date") or "未知日期") for log in sorted_logs]
@@ -2889,7 +3432,7 @@ def render_daily_log_page(logs: list[dict], site_url: str) -> str:
         groups = _log_event_groups(events, list(log.get("curatedEvents") or []))
         snapshot = _log_snapshot(log)
         day_state = ("首次基线", "Baseline") if log.get("baseline") and not any(groups.values()) else (("有变更", "Changes") if any(groups.values()) else ("无变化", "No changes"))
-        new_markup = "".join(_log_detail_card(event) for event in groups["new"])
+        new_markup = "".join(_log_detail_card(event, offer_lookup) for event in groups["new"])
         event_panels = "".join((
             _log_event_panel("新增详情", "New entries", new_markup, groups["new"]),
             _log_event_panel("恢复", "Recovered", _log_event_table(groups["recovered"]), groups["recovered"]),
@@ -3306,15 +3849,21 @@ def render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str
     )
 
 
-def render_sitemap(
+SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models")
+
+
+def sitemap_section_paths(
     offers: list[dict],
     categories: list[str],
-    site_url: str,
     models: list[dict] | None = None,
     providers: list[dict] | None = None,
-    skills: list[dict] | None = None,
-) -> str:
-    paths = [
+) -> dict[str, list[str]]:
+    """Split sitemap URLs per section so GSC reports indexing progress per group.
+
+    Single-record model aggregate pages are noindex, so they stay out of the
+    model section and do not dilute the crawl budget on pages worth indexing.
+    """
+    page_paths = [
         "/",
         "/about/",
         "/links/",
@@ -3331,20 +3880,56 @@ def render_sitemap(
         CHANGE_LOG_PAGE_PATH,
         SKILLS_PAGE_PATH,
         SKILL_LAB_PAGE_PATH,
-    ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [offer_url(offer) for offer in offers] + [category_url(category) for category in categories]
-    paths += [model_aggregate_url(model) for model in (models or [])]
-    paths += [provider_url(provider) for provider in (providers or [])]
+    ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [category_url(category) for category in categories]
     if models:
         total_pages = (len(models) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
-        for page_num in range(2, total_pages + 1):
-            paths.append(f"{ALL_MODELS_PAGE_PATH}page/{page_num}/")
-    paths = list(dict.fromkeys(paths))
+        page_paths += [f"{ALL_MODELS_PAGE_PATH}page/{page_num}/" for page_num in range(2, total_pages + 1)]
+    indexable_slugs = indexable_model_slugs(models or [])
+    sections = {
+        "pages": page_paths,
+        "offers": [offer_url(offer) for offer in offers],
+        "providers": [provider_url(provider) for provider in (providers or [])],
+        "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
+    }
+    return {section: list(dict.fromkeys(paths)) for section, paths in sections.items()}
+
+
+def render_url_sitemap(paths: list[str], site_url: str) -> str:
     urls = "\n".join(f"  <url><loc>{_esc(_absolute(site_url, path))}</loc></url>" for path in paths)
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {urls}
 </urlset>
 '''
+
+
+def render_sitemap_index(site_url: str, sections: dict[str, list[str]]) -> str:
+    entries = "\n".join(
+        f"  <sitemap><loc>{_esc(_absolute(site_url, f'/sitemap-{section}.xml'))}</loc></sitemap>"
+        for section in SITEMAP_SECTIONS
+        if sections.get(section)
+    )
+    return f'''<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{entries}
+</sitemapindex>
+'''
+
+
+def render_sitemaps(
+    offers: list[dict],
+    categories: list[str],
+    site_url: str,
+    models: list[dict] | None = None,
+    providers: list[dict] | None = None,
+) -> dict[Path, str]:
+    sections = sitemap_section_paths(offers, categories, models, providers)
+    files = {
+        Path(f"sitemap-{section}.xml"): render_url_sitemap(paths, site_url)
+        for section, paths in sections.items()
+    }
+    files[Path("sitemap.xml")] = render_sitemap_index(site_url, sections)
+    return files
 
 
 FEED_PATH = "feed.xml"
@@ -3434,7 +4019,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     providers = _provider_catalog_from_models(model_catalog, operations)
     provider_access, _, model_access = _load_access_context()
     files: dict[Path, str] = {
-        Path("sitemap.xml"): render_sitemap(offers, categories, site_url, model_catalog, providers, skills),
+        **render_sitemaps(offers, categories, site_url, model_catalog, providers),
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
@@ -3442,7 +4027,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
-        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url),
+        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
@@ -3461,12 +4046,11 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         files[Path("offers") / legacy_id / "index.html"] = render_legacy_offer_redirect(legacy_id, target_id, site_url)
     for category in categories:
         files[Path("category") / category / "index.html"] = render_category_page(category, offers, site_url)
-    for model_name in sorted(
-        {str(model.get("model") or "").strip() for model in model_catalog if model.get("model")},
-        key=lambda value: (_safe_slug(value, "model"), value.lower(), value),
-    ):
-        records = [model for model in model_catalog if str(model.get("model") or "").strip().lower() == model_name.lower()]
-        files[Path("models") / _safe_slug(model_name, "model") / "index.html"] = render_model_aggregate_page(model_name, records, offers, site_url, provider_access, model_access)
+    aggregate_groups = model_record_groups(model_catalog)
+    for model_slug_key in sorted(aggregate_groups):
+        records = aggregate_groups[model_slug_key]
+        display_name = str(records[0].get("model") or "").strip() or model_slug_key
+        files[Path("models") / model_slug_key / "index.html"] = render_model_aggregate_page(display_name, records, offers, site_url, provider_access, model_access)
     for provider in providers:
         files[Path("providers") / _safe_slug(provider.get("id"), "provider") / "index.html"] = render_provider_page(provider, model_catalog, offers, site_url, operations, provider_access, model_access)
     for path, page in list(files.items()):

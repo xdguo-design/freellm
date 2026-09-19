@@ -124,7 +124,7 @@ class SkillsBuildTests(unittest.TestCase):
             self.assertTrue(lab.is_file())
             self.assertIn("Agent Skills", page.read_text(encoding="utf-8"))
             self.assertIn("Skill Lab", lab.read_text(encoding="utf-8"))
-            sitemap = (output_root / "sitemap.xml").read_text(encoding="utf-8")
+            sitemap = (output_root / "sitemap-pages.xml").read_text(encoding="utf-8")
             self.assertIn("https://example.test/skills/", sitemap)
             self.assertIn("https://example.test/skills/lab/", sitemap)
 

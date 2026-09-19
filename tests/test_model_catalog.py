@@ -42,31 +42,29 @@ def test_model_catalog_rejects_duplicate_ids_and_invalid_scores():
     assert "models[1]: score must be an integer from 0 to 100 or null" in errors
 
 
-def test_catalog_builder_normalizes_directory_rows_for_querying():
+def test_catalog_builder_normalizes_discovery_rows_for_querying():
+    # Parser rows arrive already normalized; the builder assigns ids from
+    # providerId+modelSlug, stamps lastSeenAt, and drops the derived slug.
     rows = [{
-        "directoryProvider": "Example Provider",
-        "directoryProviderSlug": "example-provider",
+        "providerId": "example-provider",
+        "provider": "Example Provider",
         "model": "Example Model",
-        "modelId": "example/model",
         "modelSlug": "example-model",
-        "directoryUrl": "https://freellm.net/models/example-provider/example-model",
-        "directoryFree": True,
-        "directoryNoCard": True,
-        "directoryVerified": True,
-        "score": "92",
+        "sourceUrl": "https://example.com/models/example-model",
+        "score": 92,
         "context": "128K",
         "maxOutput": "8K",
-        "modality": "text, reasoning",
+        "modality": ["text", "reasoning"],
         "rateLimit": "10 RPM",
         "released": "2026-09-01",
         "usageActivity": "—",
-        "status": "Online",
-        "tierType": "permanent",
+        "status": "online",
+        "sourceKind": "official",
     }]
     models = build_model_catalog(rows, "2026-09-09")
     assert models[0]["id"] == "example-provider/example-model"
-    assert models[0]["score"] == 92
-    assert models[0]["modality"] == ["text", "reasoning"]
+    assert models[0]["lastSeenAt"] == "2026-09-09"
+    assert "modelSlug" not in models[0]
     assert validate_models(models) == []
 
 

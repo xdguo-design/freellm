@@ -229,13 +229,18 @@ def test_model_catalog_page_exposes_mainland_cn_filter(tmp_path):
 
     for page in (all_models_page, center_page):
         assert 'id="model-catalog-region"' in page
-        assert 'data-label-zh="全部状态"' in page
+        assert 'data-label-zh="中国大陆可用性"' in page
         assert "大陆待核验" in page
         assert 'data-cn="unknown"' in page
         assert "colSpan = 12" in page
-    # The default option is "all statuses": with mostly unverified data the CN lens
-    # annotates every row instead of hiding them.
-    assert '<option value="" data-label-zh="全部状态" data-label-en="All statuses" selected>' in all_models_page
+        # The measured API-gateway latency is a first-class column, not a tooltip.
+        assert "接口速度 (API RTT)" in page
+        assert 'class="latency-cell"' in page
+        assert 'data-label-zh="接口最快优先"' in page
+        assert "「接口速度」" in page
+    # The default option is "Mainland CN" (no filtering): with mostly unverified data
+    # the CN lens annotates every row instead of hiding them.
+    assert '<option value="" data-label-zh="中国大陆可用性" data-label-en="Mainland CN">' in all_models_page
 
 
 def test_dots_aggregate_page_keeps_domestic_and_international_endpoints_separate(tmp_path):

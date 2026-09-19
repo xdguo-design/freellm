@@ -68,6 +68,40 @@
     "notes": "API Key 认证方式来自官方文档；免费层限额与无信用卡说法目前仅有第三方来源，商业使用条款不明确，待官方确认。"
   },
   {
+    "providerId": "atria-asi",
+    "profileId": "atria-asi-api",
+    "registerUrl": "https://api.atria-asi.ai/console",
+    "accountRequired": "yes",
+    "emailRequired": "yes",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "atria-asi-route",
+    "registrationSteps": [
+      "访问 api.atria-asi.ai/console 注册（新用户赠 1 亿 Token，无需信用卡；国际控制台以 Google 账号登录）。",
+      "在 Keys 页创建 API Key（atr_ 前缀，仅创建时展示一次）。",
+      "以 https://api.atria-asi.ai 为 Base URL，用模型 ID Atria-Dawn-Preview 调用 /v1/chat/completions（兼容 /v1/messages 与 /v1/responses）；国内亦可走 discovery.intern-ai.org.cn 的 Token Plan。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://api.atria-asi.ai/docs",
+      "https://atria-asi.ai/",
+      "https://github.com/atria-asi/Atria-Dawn-Preview"
+    ],
+    "lastVerifiedAt": "2026-09-17",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "上海人工智能实验室 Atria 平台；1 亿 Token 注册额度经第三方控制台实测确认（2026-09-15），官方页面为动态渲染未公示细则；Preview 阶段定价未发布。"
+  },
+  {
     "providerId": "cerebras",
     "profileId": "cerebras-api",
     "registerUrl": "https://cloud.cerebras.ai/",
@@ -232,6 +266,69 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "注册即自动生成 Trial Key，无需信用卡；trial 层约 1000 次调用/月并以官方速率限制页为准。手机号/实名要求待核验。"
+  },
+  {
+    "providerId": "dots-api-cn",
+    "profileId": "dots-api-cn-api",
+    "registerUrl": "https://dots.ai/platform",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "dots-api-cn-route",
+    "registrationSteps": [
+      "访问 dots.ai/platform，用小红书账号或手机号登录。",
+      "在 API Keys 页面创建 API Key。",
+      "使用官方文档中的 dots3-note-prev 模型 ID 和国内 Base URL 调用。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://dots.ai/platform",
+      "https://dots.ai/platform/docs"
+    ],
+    "lastVerifiedAt": "2026-09-10",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "小红书 Dots 官方国内 API 平台；官方文档给出 OpenAI/Anthropic 兼容接口、60 RPM 和 1,500,000 TPM。免费期限未公开，需以平台当前页面为准。"
+  },
+  {
+    "providerId": "freebuff",
+    "profileId": "freebuff-api",
+    "registerUrl": "https://freebuff.ai/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "unknown",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "unknown",
+    "overageBehavior": "unknown",
+    "searchMethod": "official_website_console",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://freebuff.ai/",
+      "https://freebuff.com/get-started",
+      "https://freebuff.com/terms-of-service"
+    ],
+    "lastVerifiedAt": "2026-09-09",
+    "verificationStatus": "partial",
+    "confidence": "medium",
+    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
   },
   {
     "providerId": "github-models",
@@ -420,6 +517,38 @@
     "notes": "免费账户有小额月度推理额度（PRO 为 $2/月），无需信用卡；模型许可证逐模型确认（licenseAcceptance=model_dependent）。手机号/实名要求待核验。"
   },
   {
+    "providerId": "kilo",
+    "profileId": "kilo-api",
+    "registerUrl": "https://kilo.ai/",
+    "accountRequired": "no",
+    "emailRequired": "no",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "no",
+    "licenseAcceptance": "model_dependent",
+    "modelApproval": "unknown",
+    "gpuRequired": "unknown",
+    "overageBehavior": "unknown",
+    "searchMethod": "official_model_api",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "无需注册：调用 https://api.kilo.ai/api/gateway/v1/chat/completions 时 Authorization 传任意占位 key（如 sk-anonymous-test）即可匿名使用（2026-09-18 实测）。",
+      "模型名需带 :free 后缀，与 OpenRouter 免费档同源、共享同一上游配额。",
+      "免费路由未来可能转为付费；免费档提示词可能被上游用于训练，不要发送敏感代码。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://kilo.ai/docs/gateway"
+    ],
+    "lastVerifiedAt": "2026-09-18",
+    "verificationStatus": "partial",
+    "confidence": "medium",
+    "notes": "免费档无需注册、无需密钥（匿名实测）；官方未公布匿名档速率；高峰时段共享池会 429。"
+  },
+  {
     "providerId": "kilo-code",
     "profileId": "kilo-code-api",
     "registerUrl": "https://kilo.ai/",
@@ -483,6 +612,38 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "官方快速上手文档确认匿名访问（api_key=\"unused\"）与免费 token（dash.llm7.io）两条路径；手机号/信用卡环节未出现于官方文档，如实标记 unknown。"
+  },
+  {
+    "providerId": "longcat",
+    "profileId": "longcat-api",
+    "registerUrl": "https://longcat.ai/platform/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "yes",
+    "overageBehavior": "unknown",
+    "searchMethod": "official_model_api",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://longcat.ai/platform/",
+      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.ai/platform/docs/zh/faq",
+      "https://github.com/meituan-longcat/LongCat-2.0",
+      "https://huggingface.co/meituan-longcat/LongCat-2.0"
+    ],
+    "lastVerifiedAt": "2026-09-09",
+    "verificationStatus": "partial",
+    "confidence": "medium",
+    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
   },
   {
     "providerId": "mistral-ai",
@@ -649,39 +810,6 @@
     "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
   },
   {
-    "providerId": "dots-api-cn",
-    "profileId": "dots-api-cn-api",
-    "registerUrl": "https://dots.ai/platform",
-    "accountRequired": "yes",
-    "emailRequired": "unknown",
-    "phoneRequired": "unknown",
-    "identityRequired": "unknown",
-    "cardRequired": "unknown",
-    "billingRequired": "unknown",
-    "apiKeyRequired": "yes",
-    "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "no",
-    "overageBehavior": "stop",
-    "searchMethod": "official_docs",
-    "regionPolicyId": "dots-api-cn-route",
-    "registrationSteps": [
-      "访问 dots.ai/platform，用小红书账号或手机号登录。",
-      "在 API Keys 页面创建 API Key。",
-      "使用官方文档中的 dots3-note-prev 模型 ID 和国内 Base URL 调用。"
-    ],
-    "registrationStatus": "available",
-    "replacement": null,
-    "sourceUrls": [
-      "https://dots.ai/platform",
-      "https://dots.ai/platform/docs"
-    ],
-    "lastVerifiedAt": "2026-09-10",
-    "verificationStatus": "partial",
-    "confidence": "high",
-    "notes": "小红书 Dots 官方国内 API 平台；官方文档给出 OpenAI/Anthropic 兼容接口、60 RPM 和 1,500,000 TPM。免费期限未公开，需以平台当前页面为准。"
-  },
-  {
     "providerId": "openrouter",
     "profileId": "openrouter-api",
     "registerUrl": "https://openrouter.ai/",
@@ -784,66 +912,37 @@
     "notes": "注册需手机号+短信验证码；实名认证仅用于提升额度，基础使用不强制。邮箱/信用卡/超额行为待核验；新户赠费与免费模型以控制台为准。"
   },
   {
-    "providerId": "freebuff",
-    "profileId": "freebuff-api",
-    "registerUrl": "https://freebuff.ai/",
+    "providerId": "unisound",
+    "profileId": "unisound-api",
+    "registerUrl": "https://maas.unisound.com",
     "accountRequired": "yes",
     "emailRequired": "unknown",
     "phoneRequired": "unknown",
     "identityRequired": "unknown",
-    "cardRequired": "unknown",
-    "billingRequired": "unknown",
-    "apiKeyRequired": "unknown",
-    "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "unknown",
-    "overageBehavior": "unknown",
-    "searchMethod": "official_website_console",
-    "regionPolicyId": "policy-unknown-default",
-    "registrationSteps": [],
-    "registrationStatus": "available",
-    "replacement": null,
-    "sourceUrls": [
-      "https://freebuff.ai/",
-      "https://freebuff.com/get-started",
-      "https://freebuff.com/terms-of-service"
-    ],
-    "lastVerifiedAt": "2026-09-09",
-    "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
-  },
-  {
-    "providerId": "longcat",
-    "profileId": "longcat-api",
-    "registerUrl": "https://longcat.ai/platform/",
-    "accountRequired": "yes",
-    "emailRequired": "unknown",
-    "phoneRequired": "unknown",
-    "identityRequired": "unknown",
-    "cardRequired": "unknown",
+    "cardRequired": "no",
     "billingRequired": "unknown",
     "apiKeyRequired": "yes",
     "licenseAcceptance": "unknown",
     "modelApproval": "unknown",
-    "gpuRequired": "yes",
-    "overageBehavior": "unknown",
-    "searchMethod": "official_model_api",
-    "regionPolicyId": "policy-unknown-default",
-    "registrationSteps": [],
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "unisound-route",
+    "registrationSteps": [
+      "访问 maas.unisound.com 注册账号，新用户按站内促销领取 1 亿 Token。",
+      "在控制台「API Key 管理」创建 API Key。",
+      "以 https://maas-api.unisound.com 为 Base URL，用模型 ID u2-flash 调用 OpenAI 兼容接口。"
+    ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://longcat.ai/platform/",
-      "https://longcat.ai/platform/docs/zh/",
-      "https://longcat.ai/platform/docs/zh/faq",
-      "https://github.com/meituan-longcat/LongCat-2.0",
-      "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      "https://maas.unisound.com/",
+      "https://maas.unisound.com/docs/api/text/openai-compatible"
     ],
-    "lastVerifiedAt": "2026-09-09",
+    "lastVerifiedAt": "2026-09-17",
     "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+    "confidence": "high",
+    "notes": "云知声 Token Hub 官方 MaaS 平台；注册促销 1 亿 Token 与 U2 Flash 上线绑定，额度用完后按量计费，需关注促销页面的最新条款。"
   },
   {
     "providerId": "z-ai-zhipu-ai",
@@ -1169,72 +1268,5 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
-  },
-  {
-    "providerId": "unisound",
-    "profileId": "unisound-api",
-    "registerUrl": "https://maas.unisound.com",
-    "accountRequired": "yes",
-    "emailRequired": "unknown",
-    "phoneRequired": "unknown",
-    "identityRequired": "unknown",
-    "cardRequired": "no",
-    "billingRequired": "unknown",
-    "apiKeyRequired": "yes",
-    "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "no",
-    "overageBehavior": "stop",
-    "searchMethod": "official_docs",
-    "regionPolicyId": "unisound-route",
-    "registrationSteps": [
-      "访问 maas.unisound.com 注册账号，新用户按站内促销领取 1 亿 Token。",
-      "在控制台「API Key 管理」创建 API Key。",
-      "以 https://maas-api.unisound.com 为 Base URL，用模型 ID u2-flash 调用 OpenAI 兼容接口。"
-    ],
-    "registrationStatus": "available",
-    "replacement": null,
-    "sourceUrls": [
-      "https://maas.unisound.com/",
-      "https://maas.unisound.com/docs/api/text/openai-compatible"
-    ],
-    "lastVerifiedAt": "2026-09-17",
-    "verificationStatus": "partial",
-    "confidence": "high",
-    "notes": "云知声 Token Hub 官方 MaaS 平台；注册促销 1 亿 Token 与 U2 Flash 上线绑定，额度用完后按量计费，需关注促销页面的最新条款。"
-  },
-  {
-    "providerId": "atria-asi",
-    "profileId": "atria-asi-api",
-    "registerUrl": "https://api.atria-asi.ai/console",
-    "accountRequired": "yes",
-    "emailRequired": "yes",
-    "phoneRequired": "unknown",
-    "identityRequired": "unknown",
-    "cardRequired": "no",
-    "billingRequired": "unknown",
-    "apiKeyRequired": "yes",
-    "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "no",
-    "overageBehavior": "stop",
-    "searchMethod": "official_docs",
-    "regionPolicyId": "atria-asi-route",
-    "registrationSteps": [
-      "访问 api.atria-asi.ai/console 注册（新用户赠 1 亿 Token，无需信用卡；国际控制台以 Google 账号登录）。",
-      "在 Keys 页创建 API Key（atr_ 前缀，仅创建时展示一次）。",
-      "以 https://api.atria-asi.ai 为 Base URL，用模型 ID Atria-Dawn-Preview 调用 /v1/chat/completions（兼容 /v1/messages 与 /v1/responses）；国内亦可走 discovery.intern-ai.org.cn 的 Token Plan。"
-    ],
-    "registrationStatus": "available",
-    "replacement": null,
-    "sourceUrls": [
-      "https://api.atria-asi.ai/docs",
-      "https://atria-asi.ai/",
-      "https://github.com/atria-asi/Atria-Dawn-Preview"
-    ],
-    "lastVerifiedAt": "2026-09-17",
-    "verificationStatus": "partial",
-    "confidence": "high",
-    "notes": "上海人工智能实验室 Atria 平台；1 亿 Token 注册额度经第三方控制台实测确认（2026-09-15），官方页面为动态渲染未公示细则；Preview 阶段定价未发布。"
   }
 ]

@@ -167,6 +167,95 @@ class SchemaTests(unittest.TestCase):
         offer["freeModels"] = []
         self.assertIn("freeModels must be a non-empty list", validate_offer(offer))
 
+    def test_edition_key_and_hands_on_marks_are_accepted(self):
+        offer = valid_offer()
+        offer["key"] = True
+        offer["editions"] = ["cn", "intl"]
+        offer["editionOf"] = "cn"
+        offer["siblingEditionId"] = "intl-twin"
+        offer["handsOn"] = {"testedAt": "2026-09-17", "note": "实测调用通过"}
+        self.assertEqual(validate_offer(offer), [])
+
+    def test_edition_marks_reject_unknown_values(self):
+        offer = valid_offer()
+        offer["editions"] = ["cn", "overseas"]
+        offer["key"] = "yes"
+        offer["handsOn"] = {"testedAt": "2026-09-17"}
+        errors = validate_offer(offer)
+        self.assertIn("editions must be a non-empty list drawn from: cn, intl", errors)
+        self.assertIn("key must be a boolean", errors)
+        self.assertIn("handsOn.note must be a non-empty string", errors)
+
+        mismatched = valid_offer()
+        mismatched["editions"] = ["cn"]
+        mismatched["editionOf"] = "intl"
+        self.assertIn("editionOf must be one of the product's editions", validate_offer(mismatched))
+
+    def test_sibling_edition_id_must_reference_a_known_offer(self):
+        offer = valid_offer()
+        offer["siblingEditionId"] = "missing-offer"
+        errors = validate_offers([offer])
+        self.assertIn("offers[0]: siblingEditionId does not match any offer id: missing-offer", errors)
+
+    def test_endpoint_check_mark_is_accepted(self):
+        offer = valid_offer()
+        offer["endpointCheck"] = {"checkedAt": "2026-09-18", "verdict": "NEEDS_KEY", "note": "接口存活，鉴权正常"}
+        self.assertEqual(validate_offer(offer), [])
+
+        site_only = valid_offer()
+        site_only["endpointCheck"] = {"checkedAt": "2026-09-18", "verdict": "OK"}
+        self.assertEqual(validate_offer(site_only), [])
+
+    def test_endpoint_check_mark_rejects_bad_verdict_and_date(self):
+        offer = valid_offer()
+        offer["endpointCheck"] = {"checkedAt": "2026-09-18", "verdict": "MAYBE", "note": ""}
+        errors = validate_offer(offer)
+        self.assertIn("endpointCheck.verdict must be one of: ALIVE, NEEDS_KEY, NETWORK_ERROR, OK, PATH_CHECK", errors)
+        self.assertIn("endpointCheck.note must be a non-empty string when present", errors)
+
+        bad_date = valid_offer()
+        bad_date["endpointCheck"] = {"checkedAt": "09/18/2026", "verdict": "OK"}
+        self.assertIn("endpointCheck.checkedAt must use YYYY-MM-DD", validate_offer(bad_date))
+
+    def test_network_check_mark_is_accepted(self):
+        offer = valid_offer()
+        offer["networkCheck"] = {
+            "checkedAt": "2026-09-18",
+            "method": "本机大陆网络直连 + check-host.net 海外节点",
+            "region": "both",
+            "cnMs": 266,
+            "intlMs": 516,
+            "speedGrade": "normal",
+        }
+        self.assertEqual(validate_offer(offer), [])
+
+        unreachable = valid_offer()
+        unreachable["networkCheck"] = {
+            "checkedAt": "2026-09-18",
+            "region": "none",
+            "cnMs": None,
+            "intlMs": None,
+            "speedGrade": None,
+        }
+        self.assertEqual(validate_offer(unreachable), [])
+
+    def test_network_check_mark_rejects_bad_region_speed_and_latency(self):
+        offer = valid_offer()
+        offer["networkCheck"] = {
+            "checkedAt": "09/18/2026",
+            "region": "mars",
+            "speedGrade": "blazing",
+            "cnMs": -5,
+        }
+        errors = validate_offer(offer)
+        self.assertIn("networkCheck.checkedAt must use YYYY-MM-DD", errors)
+        self.assertIn("networkCheck.region must be one of: both, cn, intl, none", errors)
+        self.assertIn("networkCheck.speedGrade must be one of: fast, normal, slow, very_slow", errors)
+        self.assertIn("networkCheck.cnMs must be a non-negative integer or null", errors)
+
+    def test_public_edition_marks_validate_against_the_contract(self):
+        self.assertEqual(validate_offers(Path(__file__).resolve().parents[1] / "data" / "offers.json"), [])
+
 
 if __name__ == "__main__":
     unittest.main()

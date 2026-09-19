@@ -18,6 +18,10 @@ MECHANISMS = {"permanent", "monthly_quota", "daily_quota", "weekly_quota", "tria
 STATUSES = {"verified", "changed", "expired", "unavailable", "needs_review"}
 CONFIDENCES = {"high", "medium", "low"}
 REQUIREMENT_VALUES = {"yes", "no", "unknown"}
+EDITION_VALUES = {"cn", "intl"}
+ENDPOINT_CHECK_VERDICTS = {"OK", "NEEDS_KEY", "ALIVE", "PATH_CHECK", "NETWORK_ERROR"}
+NETWORK_CHECK_REGIONS = {"both", "cn", "intl", "none"}
+NETWORK_CHECK_SPEED_GRADES = {"fast", "normal", "slow", "very_slow"}
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent",
@@ -207,6 +211,66 @@ def _validate_structured_offer_fields(offer: dict) -> list[str]:
     return errors
 
 
+def _validate_edition_fields(offer: dict) -> list[str]:
+    """Version marks: which edition an entry is, and whether the product ships both."""
+    errors: list[str] = []
+    editions = offer.get("editions")
+    if "editions" in offer and (
+        not isinstance(editions, list)
+        or not editions
+        or not all(value in EDITION_VALUES for value in editions)
+    ):
+        errors.append("editions must be a non-empty list drawn from: cn, intl")
+    if "editionOf" in offer and offer["editionOf"] not in EDITION_VALUES:
+        errors.append("editionOf must be cn or intl")
+    if "editionOf" in offer and isinstance(editions, list) and editions and offer["editionOf"] not in editions:
+        errors.append("editionOf must be one of the product's editions")
+    if "siblingEditionId" in offer and (not isinstance(offer["siblingEditionId"], str) or not offer["siblingEditionId"].strip()):
+        errors.append("siblingEditionId must be a non-empty string")
+    if "key" in offer and not isinstance(offer["key"], bool):
+        errors.append("key must be a boolean")
+    hands_on = offer.get("handsOn")
+    if "handsOn" in offer:
+        if not isinstance(hands_on, dict):
+            errors.append("handsOn must be an object with testedAt and note")
+        else:
+            if not isinstance(hands_on.get("testedAt"), str) or not DATE_RE.fullmatch(hands_on.get("testedAt") or ""):
+                errors.append("handsOn.testedAt must use YYYY-MM-DD")
+            if not isinstance(hands_on.get("note"), str) or not hands_on["note"].strip():
+                errors.append("handsOn.note must be a non-empty string")
+    endpoint_check = offer.get("endpointCheck")
+    if "endpointCheck" in offer:
+        if not isinstance(endpoint_check, dict):
+            errors.append("endpointCheck must be an object with checkedAt and verdict")
+        else:
+            if not isinstance(endpoint_check.get("checkedAt"), str) or not DATE_RE.fullmatch(endpoint_check.get("checkedAt") or ""):
+                errors.append("endpointCheck.checkedAt must use YYYY-MM-DD")
+            if endpoint_check.get("verdict") not in ENDPOINT_CHECK_VERDICTS:
+                errors.append(f"endpointCheck.verdict must be one of: {', '.join(sorted(ENDPOINT_CHECK_VERDICTS))}")
+            if "note" in endpoint_check and (not isinstance(endpoint_check["note"], str) or not endpoint_check["note"].strip()):
+                errors.append("endpointCheck.note must be a non-empty string when present")
+            ms = endpoint_check.get("ms")
+            if ms is not None and (isinstance(ms, bool) or not isinstance(ms, int) or ms < 0):
+                errors.append("endpointCheck.ms must be a non-negative integer or null")
+    network_check = offer.get("networkCheck")
+    if "networkCheck" in offer:
+        if not isinstance(network_check, dict):
+            errors.append("networkCheck must be an object with checkedAt and region")
+        else:
+            if not isinstance(network_check.get("checkedAt"), str) or not DATE_RE.fullmatch(network_check.get("checkedAt") or ""):
+                errors.append("networkCheck.checkedAt must use YYYY-MM-DD")
+            if network_check.get("region") not in NETWORK_CHECK_REGIONS:
+                errors.append(f"networkCheck.region must be one of: {', '.join(sorted(NETWORK_CHECK_REGIONS))}")
+            speed_grade = network_check.get("speedGrade")
+            if speed_grade is not None and speed_grade not in NETWORK_CHECK_SPEED_GRADES:
+                errors.append(f"networkCheck.speedGrade must be one of: {', '.join(sorted(NETWORK_CHECK_SPEED_GRADES))}")
+            for field in ("cnMs", "intlMs"):
+                value = network_check.get(field)
+                if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+                    errors.append(f"networkCheck.{field} must be a non-negative integer or null")
+    return errors
+
+
 def validate_offer(offer: object) -> list[str]:
     if not isinstance(offer, dict):
         return ["offer must be an object"]
@@ -253,6 +317,7 @@ def validate_offer(offer: object) -> list[str]:
         if field in offer and (not isinstance(offer[field], str) or not offer[field].strip()):
             errors.append(f"{field} must be a non-empty string")
     errors.extend(_validate_structured_offer_fields(offer))
+    errors.extend(_validate_edition_fields(offer))
     return errors
 
 
@@ -269,6 +334,12 @@ def validate_offers(source: str | Path | list[dict]) -> list[str]:
             if offer["id"] in ids:
                 errors.append(f"duplicate id: {offer['id']}")
             ids.add(offer["id"])
+    for index, offer in enumerate(data):
+        if not isinstance(offer, dict):
+            continue
+        sibling = offer.get("siblingEditionId")
+        if isinstance(sibling, str) and sibling and sibling not in ids:
+            errors.append(f"offers[{index}]: siblingEditionId does not match any offer id: {sibling}")
     return errors
 
 
@@ -297,6 +368,9 @@ def validate_model(model: object) -> list[str]:
             errors.append(f"{field} must use YYYY-MM-DD")
     if "sourceUrl" in model and not _https_url(model["sourceUrl"]):
         errors.append("sourceUrl must be an https URL without credentials")
+    score = model.get("score")
+    if score is not None and (isinstance(score, bool) or not isinstance(score, int) or not 0 <= score <= 100):
+        errors.append("score must be an integer from 0 to 100 or null")
     return errors
 
 
