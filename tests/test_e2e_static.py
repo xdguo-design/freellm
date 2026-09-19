@@ -69,8 +69,9 @@ class StaticContractTests(unittest.TestCase):
             '<script src="/js/freellm-sync.js"></script>',
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
-            'id="catalog-region-filter"',
             'id="catalog-freshness-filter"',
+            'data-region-chip="china"',
+            'data-region-chip="global"',
             'window.FreeLLM?.Sync?.bind(container)',
         ):
             self.assertIn(needle, self.html)
