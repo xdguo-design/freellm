@@ -45,23 +45,35 @@ ADSENSE_SLOT = os.environ.get("FREELLM_ADSENSE_SLOT", "").strip()
 STATIC_LOCALE_STYLE = '''<style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
-    .static-locale-nav a { text-decoration: none; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>'''
 
 STATIC_LOCALE_SCRIPT = '''<script id="static-locale-script">
     (() => {
       const key = 'free-ai-index-locale';
-      const queryLocale = new URLSearchParams(window.location.search).get('lang');
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
       const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
-      const locale = queryLocale ? normalize(queryLocale) : normalize(localStorage.getItem(key));
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
       document.documentElement.lang = locale;
       document.documentElement.dataset.locale = locale;
       try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-          const url = new URL(link.href, window.location.href);
-          url.searchParams.set('lang', locale === 'en' ? 'en' : 'zh');
-          link.href = `${url.pathname}${url.search}${url.hash}`;
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
         });
       });
     })();
@@ -623,28 +635,24 @@ def _offer_locale_pair(offer: dict, fields: tuple[str, ...], fallback_en: str = 
 
 
 def _static_locale_nav() -> str:
-    return '<nav class="static-locale-nav" aria-label="Language"><a data-locale-link href="?lang=zh">中文</a><span aria-hidden="true">·</span><a data-locale-link href="?lang=en">English</a></nav>'
+    return '<nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>'
 
 
 def _hreflang_links(site_url: str, path: str) -> str:
-    """Expose the stable Chinese URL and its English locale variant to crawlers."""
-    canonical = _absolute(site_url, path)
-    english = f"{canonical}?lang=en"
+    """Expose only non-locale alternates until languages have distinct crawlable URLs."""
     feed = _absolute(site_url, "/" + FEED_PATH)
-    return "\n".join(
-        (
-            f'<link rel="alternate" hreflang="zh-CN" href="{_esc(canonical)}">',
-            f'<link rel="alternate" hreflang="en" href="{_esc(english)}">',
-            f'<link rel="alternate" hreflang="x-default" href="{_esc(canonical)}">',
-            f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">',
-        )
-    )
+    return f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">'
 
 
 def _inject_hreflang_links(page: str, site_url: str, path: str) -> str:
     """Normalize hreflang metadata for every generated bilingual HTML page."""
     page = re.sub(
         r'\s*<link rel="alternate" hreflang="(?:zh-CN|en|x-default)"[^>]*>',
+        "",
+        page,
+    )
+    page = re.sub(
+        r'\s*<link rel="alternate" type="application/atom\+xml" title="FreeLLM 免费 AI 资源新增"[^>]*>',
         "",
         page,
     )
