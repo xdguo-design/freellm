@@ -109,5 +109,77 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         )
 
 
+    def test_sitemap_crawl_budget_requires_review_before_large_expansion(self) -> None:
+        """Keep a new-domain sitemap from silently ballooning back to hundreds of URLs.
+
+        These are review budgets, not Google limits. Crossing either number should
+        trigger an explicit SEO review before a catalog import publishes more
+        crawl targets.
+        """
+        all_urls: list[str] = []
+        for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
+            root = ET.parse(sitemap).getroot()
+            all_urls.extend(
+                (loc.text or "").strip()
+                for loc in root.findall("sm:url/sm:loc", SITEMAP_NS)
+                if (loc.text or "").strip()
+            )
+
+        model_root = ET.parse(ROOT / "sitemap-models.xml").getroot()
+        model_urls = [
+            (loc.text or "").strip()
+            for loc in model_root.findall("sm:url/sm:loc", SITEMAP_NS)
+            if (loc.text or "").strip()
+        ]
+
+        self.assertLessEqual(
+            len(all_urls),
+            200,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 200); review SEO scope before publishing",
+        )
+        self.assertLessEqual(
+            len(model_urls),
+            60,
+            f"model sitemap budget exceeded ({len(model_urls)} > 60); select higher-value model landing pages",
+        )
+
+    def test_homepage_prioritizes_indexable_hubs_and_not_thin_categories(self) -> None:
+        home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+
+        # Thin category pages remain usable for humans, but the homepage should
+        # not promote their noindex URLs as crawl-priority text links.
+        for page in sorted((ROOT / "category").glob("*/index.html")):
+            html = page.read_text(encoding="utf-8")
+            match = META_ROBOTS_RE.search(html)
+            if match and "noindex" in match.group(1).lower():
+                url = f"/category/{page.parent.name}/"
+                self.assertNotIn(
+                    f'href="{url}"',
+                    home,
+                    f"homepage should not promote noindex category {url}",
+                )
+
+        # These hubs represent the site's core intent: verified free access,
+        # practical guides, then the curated resource/provider directories.
+        priority_hubs = (
+            "/guides/china-free-ai-api/",
+            "/guides/free-openai-compatible-apis/",
+            "/guides/free-ai-coding-tools/",
+            "/guides/free-ai-search-apis/",
+            "/category/free-quota/",
+            "/category/api/",
+            "/models/",
+            "/providers/",
+        )
+        for url in priority_hubs:
+            self.assertIn(f'href="{url}"', home, f"priority hub missing from homepage: {url}")
+
+        self.assertGreaterEqual(
+            home.count('href="/offers/'),
+            10,
+            "homepage should expose a meaningful set of verified offer detail links",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
