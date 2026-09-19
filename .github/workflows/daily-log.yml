@@ -70,11 +70,14 @@ jobs:
             --models-reason "$model_reason" \
             --offers-status ok
 
-      - name: Build static log page
+      - name: Build static site
         run: python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
 
       - name: Update homepage daily summary
         run: python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+
+      - name: Validate generated internal links and sitemaps
+        run: python scripts/check_internal_links.py
 
       - name: Commit daily log output
         env:
@@ -82,7 +85,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "data/daily-log/$AS_OF.json" logs/index.html sitemap.xml design/free-china-ai-index.html
+          git add -A -- \
+            "data/daily-log/$AS_OF.json" \
+            design/free-china-ai-index.html \
+            offers category guides models providers logs skills \
+            sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \
+            feed.xml
           if git diff --cached --quiet; then
             echo "No daily log changes; nothing to commit."
             exit 0
