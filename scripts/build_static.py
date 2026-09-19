@@ -89,6 +89,10 @@ def render_network_chips(offer: dict) -> list[str]:
 
 def render_offer_flags(offer: dict) -> str:
     chips = []
+    featured = offer.get("featured")
+    if isinstance(featured, dict) and featured.get("reason"):
+        title = html_lib.escape(f"加精｜{featured['reason']}")
+        chips.append(f'<span class="flag-chip flag-featured" title="{title}">◆ 加精</span>')
     if offer.get("key"):
         chips.append('<span class="flag-chip flag-key">★ 重点</span>')
     chips.extend(render_network_chips(offer))

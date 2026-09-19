@@ -148,6 +148,7 @@ pre code { padding:0; background:none; color:inherit; }
 .stats { display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0 0; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:13px; }
 .stats strong { font-family:var(--font-serif); font-size:19px; font-weight:400; color:var(--ink); }
 .tag { display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); text-decoration:none; font:500 11px/1.7 var(--font-mono); letter-spacing:.04em; }
+.flag-featured { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:9999px; border:1px solid var(--pale-yellow-text); background:var(--pale-yellow-text); color:var(--pale-yellow-bg); font:700 11px/1.7 var(--font-mono); letter-spacing:.06em; text-decoration:none; white-space:nowrap; }
 .status { display:inline-block; border-radius:9999px; padding:3px 8px; font:500 11px/1.5 var(--font-mono); white-space:nowrap; }
 .status-online { color:var(--pale-green-text); background:var(--pale-green-bg); }
 .status-offline { color:var(--pale-red-text); background:var(--pale-red-bg); }
@@ -1172,9 +1173,37 @@ def _network_chips(offer: dict) -> str:
     return "".join(chips)
 
 
+FEATURED_CHIP_LABEL = ("◆ 加精", "◆ Featured")
+FEATURED_NOTE = (
+    "「加精」= 接口实测速度达标（大陆直连中位数 ≤ 400ms）且免费额度高（官方长期免费，或有大额免费额度）。"
+    "把鼠标停在标签上可以看到这一条的具体理由和实测数字。",
+    "“Featured” means the measured API round trip from mainland China is within 400 ms and the free quota is high "
+    "(permanently free, or a large stated allowance). Hover the tag to see the exact evidence.",
+)
+
+
+def _featured_chip(offer: dict) -> str:
+    """加精标签：速度与额度两条证据都由 scripts/mark_featured_offers.py 从实测数据算出。"""
+    featured = offer.get("featured")
+    if not isinstance(featured, dict):
+        return ""
+    reason = str(featured.get("reason") or "").strip()
+    reason_en = str(featured.get("reasonEn") or "").strip()
+    if not reason and not reason_en:
+        return ""
+    title = "｜".join(part for part in (f"加精于 {featured.get('since')}", reason, reason_en) if part)
+    return (
+        f'<span class="flag-chip flag-featured" title="{_esc(title)}">'
+        f'{_locale_pair(*FEATURED_CHIP_LABEL)}</span>'
+    )
+
+
 def _offer_version_line(offer: dict, offers: list[dict]) -> str:
-    """版本标记行：重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
+    """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
     chips = []
+    featured_chip = _featured_chip(offer)
+    if featured_chip:
+        chips.append(featured_chip)
     if offer.get("key"):
         chips.append(f'<span class="flag-chip flag-key">{_locale_pair("★ 重点", "★ Key pick")}</span>')
     network_chip = _network_chips(offer)
@@ -1271,6 +1300,13 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     </section>'''
     access_paths_markup = _access_paths_markup(offer)
     version_line = _offer_version_line(offer, offers)
+    featured = offer.get("featured")
+    if isinstance(featured, dict) and featured.get("reason"):
+        featured_reason_zh = f"◆ 加精理由：{featured['reason']}"
+        featured_reason_en = f"◆ Why featured: {featured.get('reasonEn') or featured['reason']}"
+        featured_note_markup = f'<p class="featured-note">{_locale_pair(featured_reason_zh, featured_reason_en)}</p>'
+    else:
+        featured_note_markup = ""
     operation_guides_markup = _operation_guides_markup(
         _operation_guides_for_offer(offer, operations or []),
         reference_command=((guide.get("examples") or {}).get("curl") or offer.get("command") or ""),
@@ -1400,6 +1436,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .offer-version-line {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }}
     .flag-chip {{ display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }}
     .flag-key {{ color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }}
+    .featured-note {{ margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--pale-yellow-text); border-radius: 0 6px 6px 0; background: var(--pale-yellow-bg); color: var(--pale-yellow-text); font-size: 13.5px; }}
     .flag-edition {{ color: var(--accent); background: var(--accent-soft); }}
     .flag-sibling {{ color: var(--accent); background: var(--surface); border: 1px solid var(--line); }}
     .flag-sibling:hover {{ border-color: var(--accent); }}
@@ -1427,6 +1464,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
+    {featured_note_markup}
     <nav aria-label="Categories">{category_links}</nav>
     {header_cta_markup}
   </header>
@@ -1478,7 +1516,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     social_meta = _social_meta(site_url, path, title, description, "website")
     items = "".join(
         f'''<article>
-          <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a></h2>
+          <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a>{_featured_chip(offer)}</h2>
           <p>{_offer_locale_pair(offer, ("freeSummary", "mechanism"), "Free access details unavailable")}</p>
           <p class="muted">{_offer_locale_pair(offer, ("validitySummary", "validity"), "Validity follows provider terms")} · {_offer_locale_pair(offer, ("accessSummary", "access"), "Official account required")}</p>
         </article>'''
@@ -1524,6 +1562,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     article {{ padding: 18px 0; border-bottom: 1px solid var(--line-soft); }}
     article:last-child {{ border-bottom: 0; padding-bottom: 6px; }}
     article h2 {{ margin: 0 0 6px; font-size: 21px; }}
+    article h2 .flag-featured {{ margin-left: 8px; vertical-align: middle; font-size: 11px; }}
     article h2 a {{ color: var(--ink); text-decoration: none; }}
     article h2 a:hover {{ color: var(--accent); }}
     article p {{ margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }}

@@ -22,6 +22,8 @@ EDITION_VALUES = {"cn", "intl"}
 ENDPOINT_CHECK_VERDICTS = {"OK", "NEEDS_KEY", "ALIVE", "PATH_CHECK", "NETWORK_ERROR"}
 NETWORK_CHECK_REGIONS = {"both", "cn", "intl", "none"}
 NETWORK_CHECK_SPEED_GRADES = {"fast", "normal", "slow", "very_slow"}
+FEATURED_SPEED_TIERS = {"very_fast", "fast"}
+FEATURED_QUOTA_TIERS = {"very_high", "high"}
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent",
@@ -268,6 +270,27 @@ def _validate_edition_fields(offer: dict) -> list[str]:
                 value = network_check.get(field)
                 if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
                     errors.append(f"networkCheck.{field} must be a non-negative integer or null")
+    featured = offer.get("featured")
+    if "featured" in offer:
+        if not isinstance(featured, dict):
+            errors.append("featured must be an object with since, speedMs, speedTier, quotaTier and reason")
+        else:
+            if not isinstance(featured.get("since"), str) or not DATE_RE.fullmatch(featured.get("since") or ""):
+                errors.append("featured.since must use YYYY-MM-DD")
+            speed_ms = featured.get("speedMs")
+            if isinstance(speed_ms, bool) or not isinstance(speed_ms, int) or speed_ms < 0:
+                errors.append("featured.speedMs must be a non-negative integer")
+            if featured.get("speedTier") not in FEATURED_SPEED_TIERS:
+                errors.append(f"featured.speedTier must be one of: {', '.join(sorted(FEATURED_SPEED_TIERS))}")
+            if featured.get("quotaTier") not in FEATURED_QUOTA_TIERS:
+                errors.append(f"featured.quotaTier must be one of: {', '.join(sorted(FEATURED_QUOTA_TIERS))}")
+            for field in ("reason", "reasonEn"):
+                if not isinstance(featured.get(field), str) or not featured[field].strip():
+                    errors.append(f"featured.{field} must be a non-empty string")
+            # 加精引用的速度必须是实测值本身，不能是另写一个更好看的数字。
+            measured = endpoint_check.get("ms") if isinstance(endpoint_check, dict) else None
+            if speed_ms != measured:
+                errors.append("featured.speedMs must equal the measured endpointCheck.ms")
     return errors
 
 

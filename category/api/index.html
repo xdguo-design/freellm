@@ -118,6 +118,7 @@ pre code { padding:0; background:none; color:inherit; }
 .stats { display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0 0; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:13px; }
 .stats strong { font-family:var(--font-serif); font-size:19px; font-weight:400; color:var(--ink); }
 .tag { display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); text-decoration:none; font:500 11px/1.7 var(--font-mono); letter-spacing:.04em; }
+.flag-featured { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:9999px; border:1px solid var(--pale-yellow-text); background:var(--pale-yellow-text); color:var(--pale-yellow-bg); font:700 11px/1.7 var(--font-mono); letter-spacing:.06em; text-decoration:none; white-space:nowrap; }
 .status { display:inline-block; border-radius:9999px; padding:3px 8px; font:500 11px/1.5 var(--font-mono); white-space:nowrap; }
 .status-online { color:var(--pale-green-text); background:var(--pale-green-bg); }
 .status-offline { color:var(--pale-red-text); background:var(--pale-red-bg); }
@@ -172,6 +173,7 @@ pre code { padding:0; background:none; color:inherit; }
     article { padding: 18px 0; border-bottom: 1px solid var(--line-soft); }
     article:last-child { border-bottom: 0; padding-bottom: 6px; }
     article h2 { margin: 0 0 6px; font-size: 21px; }
+    article h2 .flag-featured { margin-left: 8px; vertical-align: middle; font-size: 11px; }
     article h2 a { color: var(--ink); text-decoration: none; }
     article h2 a:hover { color: var(--accent); }
     article p { margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }
@@ -193,7 +195,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">API 免费额度未确认；权重免费，算力不免费</span><span lang="en">API access plus downloadable open weights</span></p>
           <p class="muted"><span lang="zh-CN">API 条款待确认；权重遵循 MIT / 模型卡</span><span lang="en">API quota unknown; model license applies to weights</span> · <span lang="zh-CN">API Email / phone；权重 Global</span><span lang="en">API email / phone; weights global download path</span></p>
         </article><article>
-          <h2><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></a></h2>
+          <h2><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 225ms · 免费额度 60,000 积分｜225 ms measured · free quota 60,000 credits"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡</span><span lang="en">Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required</span></p>
           <p class="muted"><span lang="zh-CN">限时免费公测；付费档位（Lite/Pro）标注即将上线</span><span lang="en">； （Lite/Pro）</span> · <span lang="zh-CN">China account</span><span lang="en">China account</span></p>
         </article><article>
@@ -205,7 +207,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">Selected Zen models · input, output and cache listed as Free</span><span lang="en">Selected Zen models · input, output and cache listed as Free</span></p>
           <p class="muted"><span lang="zh-CN">Limited time / model pool can change</span><span lang="en">Limited time / model pool can change</span> · <span lang="zh-CN">Global / OpenCode account</span><span lang="en">Global / OpenCode account</span></p>
         </article><article>
-          <h2><a href="/offers/aliyun-qwen-free-quota/"><span lang="zh-CN">通义千问 · 阿里云百炼新人免费额度</span><span lang="en">Offer details</span></a></h2>
+          <h2><a href="/offers/aliyun-qwen-free-quota/"><span lang="zh-CN">通义千问 · 阿里云百炼新人免费额度</span><span lang="en">Offer details</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 133ms · 免费额度 1,000,000 tokens｜133 ms measured · free quota 1,000,000 tokens"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">New-user free quota · usually 1,000,000 tokens per model</span><span lang="en">New-user free quota · usually 1,000,000 tokens per model</span></p>
           <p class="muted"><span lang="zh-CN">90 days from activation / model eligibility</span><span lang="en">90 days from activation / model eligibility</span> · <span lang="zh-CN">Beijing region models</span><span lang="en">Beijing region models</span></p>
         </article><article>
@@ -237,11 +239,11 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">Generous free tier included; additional credits for PRO users and organizations</span><span lang="en">Generous free tier included; additional credits for PRO users and organizations</span></p>
           <p class="muted"><span lang="zh-CN">Monthly included credits; unused quota does not roll over</span><span lang="en">Monthly included credits; unused quota does not roll over</span> · <span lang="zh-CN">Hugging Face account</span><span lang="en">Hugging Face account</span></p>
         </article><article>
-          <h2><a href="/offers/siliconflow-free-models/"><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></a></h2>
+          <h2><a href="/offers/siliconflow-free-models/"><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 189ms · 长期免费，价目表 ¥0｜189 ms measured · permanently free, ¥0 list price"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">Selected models listed at ¥0 (free) on the official price list, plus paid models</span><span lang="en">Selected models listed at ¥0 (free) on the official price list, plus paid models</span></p>
           <p class="muted"><span lang="zh-CN">Free listing can change; recheck the price page</span><span lang="en">Free listing can change; recheck the price page</span> · <span lang="zh-CN">SiliconFlow account; China registration</span><span lang="en">SiliconFlow account; China registration</span></p>
         </article><article>
-          <h2><a href="/offers/modelscope-api-inference-free/"><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></a></h2>
+          <h2><a href="/offers/modelscope-api-inference-free/"><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 170ms · 官方长期免费｜170 ms measured · permanently free"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">API-Inference is free for registered users; dynamic rate limits and 魔粒 (MoLi) deduction apply</span><span lang="en">API-Inference is free for registered users; dynamic rate limits and MoLi deduction apply</span></p>
           <p class="muted"><span lang="zh-CN">Ongoing free service; model list iterates as new open models release</span><span lang="en">Ongoing free service; model list iterates as new open models release</span> · <span lang="zh-CN">ModelScope account + Aliyun binding + real-name verification</span><span lang="en">ModelScope account + Aliyun binding + real-name verification</span></p>
         </article><article>
@@ -253,11 +255,11 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">StepFun 官方定价页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标注为限免中</span><span lang="en">StepFun&#x27;s official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free</span></p>
           <p class="muted"><span lang="zh-CN">Limited-time offer; model availability and free status can change</span><span lang="en">Limited-time offer; model availability and free status can change</span> · <span lang="zh-CN">StepFun Open Platform account and API key</span><span lang="en">StepFun Open Platform account and API key</span></p>
         </article><article>
-          <h2><a href="/offers/dots-api-free/"><span lang="zh-CN">小红书 Dots · Dots3-Note Preview API</span><span lang="en">Dots · Dots3-Note Preview API</span></a></h2>
+          <h2><a href="/offers/dots-api-free/"><span lang="zh-CN">小红书 Dots · Dots3-Note Preview API</span><span lang="en">Dots · Dots3-Note Preview API</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 243ms · 免费额度 1,500,000 tokens｜243 ms measured · free quota 1,500,000 tokens"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">Dots3-Note Preview 当前免费试用，按官方限速使用</span><span lang="en">Dots3-Note Preview ，</span></p>
           <p class="muted"><span lang="zh-CN">限时免费；额度和模型可用性以 Dots 官方页面为准</span><span lang="en">； Dots</span> · <span lang="zh-CN">小红书账号或手机号登录 Dots 国内平台</span><span lang="en">Dots</span></p>
         </article><article>
-          <h2><a href="/offers/atria-dawn-preview/"><span lang="zh-CN">上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）</span><span lang="en">Atria Dawn Preview（ 1 Token）</span></a></h2>
+          <h2><a href="/offers/atria-dawn-preview/"><span lang="zh-CN">上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）</span><span lang="en">Atria Dawn Preview（ 1 Token）</span></a><span class="flag-chip flag-featured" title="加精于 2026-09-19｜实测 224ms · 免费额度 100,000,000 tokens｜224 ms measured · free quota 100,000,000 tokens"><span lang="zh-CN">◆ 加精</span><span lang="en">◆ Featured</span></span></h2>
           <p><span lang="zh-CN">注册即领 1 亿 Token 免费额度；控制台当前档位 Atria-Dawn-Preview 输入/输出单价为 $0</span><span lang="en">1 Token ； Atria-Dawn-Preview / $0</span></p>
           <p class="muted"><span lang="zh-CN">额度期限与扣减规则以控制台 Token Plan 页为准，官方未公示到期日</span><span lang="en">Token Plan ，</span> · <span lang="zh-CN">国际控制台需 Google 账号；国内可走 discovery.intern-ai.org.cn Token Plan 入口</span><span lang="en">Google ； discovery.intern-ai.org.cn Token Plan</span></p>
         </article>

@@ -15,8 +15,12 @@ from typing import Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAX_AGE_DAYS = 7
+# 首页是一份自包含的应用壳：整份 offers JSON 内嵌在 HTML 里（约占 44%），
+# 再加静态兜底卡片、内联 CSS/JS。每加一个内容字段，这个文件就长一点，
+# 所以预算按「当前实测 + 约 2% 余量」维护，而不是钉死一个旧数字。
+# 2026-09-19 实测 411418 字节（加精标签落地后），故由 400 KiB 调到 410 KiB。
 DEFAULT_SIZE_BUDGETS = {
-    "design/free-china-ai-index.html": 400 * 1024,
+    "design/free-china-ai-index.html": 410 * 1024,
     "models/center/index.html": 1200 * 1024,
     "models/all/index.html": 450 * 1024,
     "models/all/page/2/index.html": 450 * 1024,

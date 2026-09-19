@@ -119,6 +119,7 @@ pre code { padding:0; background:none; color:inherit; }
 .stats { display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0 0; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:13px; }
 .stats strong { font-family:var(--font-serif); font-size:19px; font-weight:400; color:var(--ink); }
 .tag { display:inline-block; padding:3px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); text-decoration:none; font:500 11px/1.7 var(--font-mono); letter-spacing:.04em; }
+.flag-featured { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:9999px; border:1px solid var(--pale-yellow-text); background:var(--pale-yellow-text); color:var(--pale-yellow-bg); font:700 11px/1.7 var(--font-mono); letter-spacing:.06em; text-decoration:none; white-space:nowrap; }
 .status { display:inline-block; border-radius:9999px; padding:3px 8px; font:500 11px/1.5 var(--font-mono); white-space:nowrap; }
 .status-online { color:var(--pale-green-text); background:var(--pale-green-bg); }
 .status-offline { color:var(--pale-red-text); background:var(--pale-red-bg); }
@@ -207,6 +208,7 @@ pre code { padding:0; background:none; color:inherit; }
     .offer-version-line { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .flag-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }
     .flag-key { color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }
+    .featured-note { margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--pale-yellow-text); border-radius: 0 6px 6px 0; background: var(--pale-yellow-bg); color: var(--pale-yellow-text); font-size: 13.5px; }
     .flag-edition { color: var(--accent); background: var(--accent-soft); }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
@@ -234,6 +236,7 @@ pre code { padding:0; background:none; color:inherit; }
     <h1><span lang="zh-CN">GitHub Copilot · Free plan</span><span lang="en">GitHub Copilot · Free plan</span></h1>
     <p><span lang="zh-CN">GitHub · International</span><span lang="en">GitHub Copilot</span></p>
     <div class="offer-version-line"><span class="flag-chip flag-net-ok" title="2026-09-19 · 本机大陆网络直连 + check-host.net 海外节点（US×2 / DE / SG / JP / UK） · github.com · 仅实测网络可达性与往返延迟，不代表注册门槛或模型生成速度"><span lang="zh-CN">✓ 实测通过</span><span lang="en">✓ Network verified</span></span><span class="flag-chip flag-net-region"><span lang="zh-CN">国内外均可用</span><span lang="en">China + global</span></span><span class="flag-chip flag-net-speed"><span lang="zh-CN">国内 1864ms · 海外 394ms</span><span lang="en">China 1864ms · Global 394ms</span></span><span class="flag-chip flag-endpoint" title="2026-09-19 · 官网访问正常 · 调用耗时 770ms（本机大陆实测，3 次中位数）"><span lang="zh-CN">✓ 官网已验证 · 770ms</span><span lang="en">✓ Site verified · 770ms</span></span></div>
+    
     <nav aria-label="Categories"><a class="tag" href="/category/student/"><span lang="zh-CN">学生 AI 优惠</span><span lang="en">Student AI offers</span></a><a class="tag" href="/category/free-ide/"><span lang="zh-CN">免费 AI IDE</span><span lang="en">Free AI coding IDEs</span></a></nav>
     <nav class="header-cta" aria-label="Official links"><a class="button" href="https://github.com/features/copilot" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">立即开始</span><span lang="en">Get started</span> ↗</span><small>Open GitHub Copilot</small></a><a class="button button--ghost" href="https://github.com/features/copilot/plans" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">官方文档</span><span lang="en">Documentation</span> ↗</span></a></nav>
   </header>
