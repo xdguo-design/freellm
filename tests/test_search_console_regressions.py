@@ -181,5 +181,68 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         )
 
 
+    def test_all_canonical_urls_use_https_freellm(self) -> None:
+        """Every emitted canonical must stay on the production HTTPS origin."""
+        canonical_re = re.compile(
+            r'<link\s+rel=["\']canonical["\']\s+href=["\']([^"\']+)["\']',
+            re.IGNORECASE,
+        )
+        offenders: list[str] = []
+        missing: list[str] = []
+
+        for path in _published_html_files():
+            html = path.read_text(encoding="utf-8")
+            matches = canonical_re.findall(html)
+            if not matches:
+                missing.append(str(path.relative_to(ROOT)))
+                continue
+            for canonical in matches:
+                if not canonical.startswith(SITE_URL + "/"):
+                    offenders.append(
+                        f"{path.relative_to(ROOT)}: {canonical}"
+                    )
+
+        self.assertEqual(
+            offenders,
+            [],
+            "canonical URLs must use the production HTTPS origin: " + "; ".join(offenders),
+        )
+        self.assertEqual(
+            missing,
+            [],
+            "published HTML pages must emit a canonical URL: " + ", ".join(missing),
+        )
+
+    def test_published_pages_do_not_link_to_http_freellm(self) -> None:
+        """Prevent internal links from reintroducing the HTTP host.
+
+        Root-relative links such as /offers/... are intentionally allowed and
+        inherit HTTPS from the current page.
+        """
+        href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
+        offenders: list[str] = []
+
+        for path in _published_html_files():
+            html = path.read_text(encoding="utf-8")
+            for href in href_re.findall(html):
+                normalized = href.strip().lower()
+                if (
+                    normalized.startswith("http://freellm.top")
+                    or normalized.startswith("http://www.freellm.top")
+                    or normalized.startswith("//freellm.top")
+                    or normalized.startswith("//www.freellm.top")
+                ):
+                    offenders.append(
+                        f"{path.relative_to(ROOT)}: {href}"
+                    )
+
+        self.assertEqual(
+            offenders,
+            [],
+            "internal links must not use HTTP or protocol-relative FreeLLM URLs: "
+            + "; ".join(offenders),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
