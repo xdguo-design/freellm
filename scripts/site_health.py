@@ -22,7 +22,7 @@ DEFAULT_MAX_AGE_DAYS = 7
 # 模型中心仅保留 24 条快速预览，避免重复内嵌完整模型表。
 DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": 410 * 1024,
-    "models/center/index.html": 850 * 1024,
+    "models/center/index.html": 600 * 1024,
     "models/all/index.html": 340 * 1024,
 }
 # 分页页数随目录涨缩（301 模型时 5 页、220 模型时 3 页），按 models.json 现值
