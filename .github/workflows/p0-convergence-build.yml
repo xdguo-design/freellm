@@ -10,8 +10,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: p0-convergence-build
-  cancel-in-progress: true
+  group: p0-convergence-build-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   build-and-verify:
