@@ -277,7 +277,7 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, self.html)
 
     def test_homepage_exposes_chinese_static_seo_metadata(self):
-        self.assertIn('<html lang="zh-CN">', self.html)
+        self.assertRegex(self.html, r'<html[^>]*lang="zh-CN"')
         self.assertIn(
             '<meta name="description" content="FreeLLM 汇总并持续核验免费 AI 模型、API、编程 IDE、Agent Skills',
             self.html,
@@ -597,14 +597,10 @@ class BrowserPageTests(unittest.TestCase):
         page.set_viewport_size({"width": 390, "height": 844})
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertTrue(page.locator('.top-nav').is_visible())
-        # 离线预览时导航会把根路径改写成 ../x/index.html，用后缀匹配两种形式都覆盖。
-        for href in ("logs", "models", "models/center", "models/all", "providers", "skills", "tools"):
-            self.assertGreater(page.locator(f'.top-nav a[href$="/{href}/index.html"]').count(), 0)
-        self.assertEqual(
-            page.locator('.top-nav a').evaluate_all("links => links.map(link => link.dataset.navKey)"),
-            ["daily-log", "resources", "model-center", "all-models", "providers", "skills", "tools"],
-        )
+        self.assertTrue(page.locator('.fl-site-rail').is_visible())
+        # 新视觉系统在移动端把左栏折叠成顶部横向导航，核心入口不能丢。
+        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/", "/skills/", "/tools/"):
+            self.assertGreater(page.locator(f'.fl-site-nav a[href="{href}"]').count(), 0)
 
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
