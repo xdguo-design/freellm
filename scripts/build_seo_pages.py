@@ -28,7 +28,7 @@ from scripts.generate_access_cards import _operation_hints
 
 SITE_URL = "https://freellm.top"
 ACCESS_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
-SHARE_IMAGE_PATH = "/freellm-share.png"
+SHARE_IMAGE_PATH = "/freellm-06-faq.png"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MANIFEST_NAME = ".seo-pages-manifest.json"
 
