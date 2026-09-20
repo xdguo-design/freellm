@@ -3269,6 +3269,7 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = re.sub(r'(<meta name="twitter:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = head.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-default-locale="zh-CN">', 1)
+    head = head.replace('href="../css/freellm-pastel-ui.css"', 'href="/css/freellm-pastel-ui.css"')
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
     body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
     body = body.replace('href="/models/all/"', 'href="#all-models"')
