@@ -85,10 +85,13 @@ def main() -> int:
     }
     noindex: list[str] = []
     image_refs: set[str] = set()
+    image_referrers: dict[str, set[str]] = {}
+    page_cache: dict[str, str] = {}
 
     for path in pages:
         rel = _rel(path)
         page = path.read_text(encoding="utf-8", errors="replace")
+        page_cache[rel] = page
         title = _title(page)
         desc = _attr(page, "description")
         robots = _attr(page, "robots")
@@ -114,18 +117,27 @@ def main() -> int:
                 issues["low_word_count"].append((rel, len(visible)))
         if re.search(r'<meta\s+http-equiv=["\']refresh["\']', page, re.I):
             issues["meta_refresh"].append((rel, "refresh"))
-        image_refs |= _local_image_refs(page)
+        refs = _local_image_refs(page)
+        image_refs |= refs
+        for ref in refs:
+            image_referrers.setdefault(ref, set()).add(rel)
 
     large_images = []
     for ref in sorted(image_refs):
         target = ROOT / ref.lstrip("/")
         if target.is_file() and target.stat().st_size > LARGE_IMAGE_BYTES:
-            large_images.append((ref, target.stat().st_size))
+            large_images.append((ref, target.stat().st_size, sorted(image_referrers.get(ref, set()))))
 
-    print(f"pages={len(pages)} intentional_noindex={len(noindex)}")
+    groups: dict[str, int] = {}
+    for rel in noindex:
+        top = rel.split("/", 1)[0]
+        groups[top] = groups.get(top, 0) + 1
+    print(f"pages={len(pages)} intentional_noindex={len(noindex)} noindex_by_section={groups}")
     print(f"referenced_large_images={len(large_images)}")
-    for ref, size in large_images:
+    for ref, size, referrers in large_images:
         print(f"  IMAGE {size:>9} {ref}")
+        for page in referrers[:20]:
+            print(f"    referenced-by {page}")
     failure_count = 0
     for name, rows in issues.items():
         print(f"{name}={len(rows)}")
