@@ -1,0 +1,58 @@
+name: codearts-content-build
+
+on:
+  push:
+    branches:
+      - content/codearts-daily-token-20260920
+
+permissions:
+  contents: write
+
+concurrency:
+  group: codearts-content-build-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: content/codearts-daily-token-20260920
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile generators
+        run: python -m py_compile scripts/build_static.py scripts/build_seo_pages.py
+      - name: Regenerate site
+        run: |
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+      - name: Verify CodeArts content
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          offers=json.loads(Path("data/offers.json").read_text())
+          assert any(x["id"]=="huawei-codearts-daily-token" for x in offers)
+          log=json.loads(Path("data/daily-log/2026-09-20.json").read_text())
+          assert any(e.get("id")=="huawei-codearts-daily-token" and e.get("eventType")=="new" for e in log["events"])
+          for path in ["logs/index.html","design/free-china-ai-index.html","offers/huawei-codearts-daily-token/index.html"]:
+              text=Path(path).read_text()
+              assert "CodeArts" in text or "码道" in text, path
+          PY
+          python scripts/check_internal_links.py
+          python scripts/audit_seo_metadata.py
+      - name: Commit generated output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Generated output already current"
+          else
+            git commit -m "build: publish Huawei CodeArts daily token offer"
+            git push origin HEAD:content/codearts-daily-token-20260920
+          fi
