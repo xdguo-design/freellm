@@ -49,12 +49,15 @@
   }
   applyTheme();
 
-  document.getElementById('theme-toggle').addEventListener('click', function () {
-    var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    var next = cur === 'dark' ? 'light' : 'dark';
-    if (Sync) Sync.setSetting('theme', next);
-    applyTheme();
-  });
+  var themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = cur === 'dark' ? 'light' : 'dark';
+      if (Sync) Sync.setSetting('theme', next);
+      applyTheme();
+    });
+  }
 
   /* ---------- 卡片 ---------- */
   function catOf(id) {
