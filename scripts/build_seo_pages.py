@@ -4588,6 +4588,58 @@ def _append_legal_links(content: str) -> str:
     return content.replace("</footer>", _localized_legal_links() + "</footer>", 1)
 
 
+
+def _visual_section_for_path(path: Path) -> str:
+    parts = path.parts
+    first = parts[0] if parts else ""
+    if first == "skills":
+        return "workflow" if len(parts) > 1 and parts[1] == "lab" else "skills"
+    if first == "tools":
+        return "tools"
+    if first == "logs":
+        return "logs"
+    if first in {"models", "providers", "offers", "category", "guides"}:
+        return "models"
+    if first in {"about", "links", "privacy", "terms"}:
+        return "about"
+    return "home"
+
+
+def _ensure_visual_classes(content: str, path: Path) -> str:
+    """Make the design system work even if the shared JS is blocked or cached."""
+    if path.suffix != ".html":
+        return content
+    updated = content
+    html_match = re.search(r"<html([^>]*)>", updated, flags=re.I)
+    if html_match:
+        attrs = html_match.group(1)
+        class_match = re.search(r'class="([^"]*)"', attrs)
+        if class_match:
+            classes = class_match.group(1).split()
+            if "fl-pastel-ui" not in classes:
+                attrs = attrs[:class_match.start()] + f'class="{class_match.group(1)} fl-pastel-ui"' + attrs[class_match.end():]
+        else:
+            attrs += ' class="fl-pastel-ui"'
+        replacement = f"<html{attrs}>"
+        updated = updated[:html_match.start()] + replacement + updated[html_match.end():]
+
+    body_match = re.search(r"<body([^>]*)>", updated, flags=re.I)
+    if body_match:
+        attrs = body_match.group(1)
+        class_match = re.search(r'class="([^"]*)"', attrs)
+        if class_match:
+            classes = class_match.group(1).split()
+            if "fl-ui-v2" not in classes:
+                attrs = attrs[:class_match.start()] + f'class="{class_match.group(1)} fl-ui-v2"' + attrs[class_match.end():]
+        else:
+            attrs += ' class="fl-ui-v2"'
+        if "data-fl-section=" not in attrs:
+            attrs += f' data-fl-section="{_visual_section_for_path(path)}"'
+        replacement = f"<body{attrs}>"
+        updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
+    return updated
+
+
 def build_site(data_path: str | Path, output_root: str | Path, site_url: str = SITE_URL, check: bool = False) -> BuildResult | bool:
     data_path = Path(data_path)
     offers = _load_data(data_path)
@@ -4603,10 +4655,14 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
-    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css">'
+    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920b">'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-pastel-ui.css" in content or "</head>" not in content)
                    else content.replace("</head>", theme_tag + "</head>", 1))
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_visual_classes(content, relative)
         for relative, content in files.items()
     }
     sync_tag = '<script src="/js/freellm-sync.js"></script>'
