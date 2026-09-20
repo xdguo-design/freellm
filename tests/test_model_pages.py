@@ -101,21 +101,25 @@ def test_model_rows_link_only_to_indexable_aggregation_pages(tmp_path):
     assert last_provider_href in all_pages
 
 
-def test_new_model_directory_is_additive_and_preserves_previous_models_page(tmp_path):
+def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
-    previous_page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    overview = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
     all_models_page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
 
-    assert "card-grid" in previous_page
-    assert "模型大列表" not in previous_page
+    offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
+    models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+    vendors = json.loads((ROOT / "data" / "provider-catalog.json").read_text(encoding="utf-8"))
+    active_provider_ids = {str(item.get("providerId") or "").strip() for item in models if item.get("providerId")}
+
+    assert "数据口径已拆分" in overview
+    assert f"<strong>{len(models)}</strong><span>模型记录" in overview
+    assert f"<strong>{len(vendors)}</strong><span>厂家目录" in overview
+    assert f"<strong>{len(active_provider_ids)}</strong><span>当前数据 Provider ID" in overview
+    assert f"<strong>{len(offers)}</strong><span>免费资源" in overview
+    assert 'href="/models/all/"' in overview
+    assert 'href="/providers/"' in overview
+    assert 'href="/category/api/"' in overview
     assert "实时模型目录" in all_models_page
-    retired_ids = {
-        card["modelId"]
-        for card in json.loads((ROOT / "data" / "model-access.json").read_text(encoding="utf-8"))
-        if card["accessStatus"] == "retired"
-    }
-    visible_models = sum(model["id"] not in retired_ids for model in json.loads(MODELS_PATH.read_text(encoding="utf-8")))
-    assert str(visible_models) in all_models_page
 
 
 def test_model_center_combines_original_feature_page_and_model_directory_tabs(tmp_path):
