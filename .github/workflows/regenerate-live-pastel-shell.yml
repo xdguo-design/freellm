@@ -1,0 +1,41 @@
+name: regenerate-live-pastel-shell
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: "!contains(github.event.pull_request.head.sha, 'never')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/live-pastel-shell
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Regenerate static pages
+        run: |
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+
+      - name: Commit generated output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add design/free-china-ai-index.html sitemap*.xml feed.xml offers category guides models providers logs skills
+          git add -f .seo-pages-manifest.json
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+            exit 0
+          fi
+          git commit -m "chore: render visual shell into static pages"
+          git push origin HEAD:fix/live-pastel-shell
