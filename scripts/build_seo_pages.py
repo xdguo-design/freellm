@@ -3664,7 +3664,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
     share_title = "每日更新 · FreeLLM"
     share_description = "FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"
-    share_image = _absolute(site_url, "/freellm-01-hero.png")
+    share_image = _absolute(site_url, SHARE_IMAGE_PATH)
     social = (
         '<meta name="robots" content="index,follow,max-image-preview:large">'
         '<meta property="og:type" content="website">'
