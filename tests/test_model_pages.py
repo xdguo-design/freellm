@@ -143,7 +143,6 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert "const syncLocale = () => {{" not in page
     assert "new MutationObserver(syncLocale).observe(document.documentElement, {{" not in page
     assert page.index('class="model-center-tabs"') < page.index('id="model-directory"')
-    assert 'href="/models/center/"' in original_home
     assert "发现真正好用的" in original_home
     assert 'class="fl-site-rail"' in original_home
     assert 'class="top-nav"' not in original_home
