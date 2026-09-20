@@ -2933,7 +2933,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
-def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
+def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1, stats_models: list[dict] | None = None) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
     registration CTA, so one shareable URL serves both language communities."""
     if models is not None and total_pages > 1:
@@ -2943,8 +2943,9 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     page_url = _absolute(site_url, path)
     total = len(offers)
     model_catalog = models or []
-    model_total = len(model_catalog)
-    provider_total = len({str(model.get("providerId") or "") for model in model_catalog if model.get("providerId")})
+    stats_catalog = stats_models if stats_models is not None else model_catalog
+    model_total = len(stats_catalog)
+    provider_total = len({str(model.get("providerId") or "") for model in stats_catalog if model.get("providerId")})
     if models is not None and total_pages > 1:
         start = (page_num - 1) * MODELS_PER_PAGE
         end = start + MODELS_PER_PAGE
@@ -3153,15 +3154,15 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
       <div class="hero-cards" aria-label="目录统计 / Catalog stats">
         <div class="hero-card">
           <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2 3 5.5v9L10 18l7-3.5v-9L10 2Zm0 2.2 4.6 2.3L10 8.8 5.4 6.5 10 4.2ZM5 8.3l4 2v5l-4-2v-5Zm6 7v-5l4-2v5l-4 2Z" fill="currentColor"/></svg></span>
-          <div><strong>{model_total or total}</strong><span>{_locale_pair('免费模型与 API', 'Total Models & APIs')}</span></div>
+          <div><strong>{model_total}</strong><span>{_locale_pair('模型记录', 'Model records')}</span></div>
         </div>
         <div class="hero-card">
           <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-7 8.5V16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5.5a7.97 7.97 0 0 1-7 0 7.97 7.97 0 0 1-7 0Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
-          <div><strong>{provider_total}</strong><span>{_locale_pair('厂商 / 访问记录', 'Providers')}</span></div>
+          <div><strong>{total}</strong><span>{_locale_pair('接入资源', 'Access records')}</span></div>
         </div>
         <div class="hero-card">
           <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 5.5V10l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-          <div><strong>{_locale_pair('每周核验', 'Verified Weekly')}</strong><span>{_locale_pair('持续更新', 'Continuously updated')}</span></div>
+          <div><strong>{provider_total}</strong><span>{_locale_pair('模型数据 Provider', 'Model-data providers')}</span></div>
         </div>
         <div class="hero-card">
           <span class="hero-card-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><rect x="3" y="4.5" width="14" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 8.5h14M7 2.5v4M13 2.5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
@@ -3170,7 +3171,8 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
       </div>
     </div>
     <div class="stats">
-      <span><strong>{model_total or total}</strong> {_locale_pair('个模型', 'models')}</span>
+      <span><strong>{model_total}</strong> {_locale_pair('个模型记录', 'model records')}</span>
+      <span><strong>{provider_total}</strong> {_locale_pair('个模型数据 Provider', 'model-data providers')}</span>
       <span><strong>{total}</strong> {_locale_pair('个接入资源', 'access records')}</span>
       <span>{_locale_pair('模型同步', 'Models synced')}: {model_last_seen}</span>
       <span>{_locale_pair('资源核验', 'Offers checked')}: {offer_last_checked}</span>
@@ -3780,17 +3782,34 @@ def _skill_card(skill: dict) -> str:
     meta += _skill_link_chip(skill) + "</div>"
     description_zh = skill.get("description_zh") or skill.get("description") or ""
     description_en = skill.get("description") or ""
+    test = skill.get("freeLLMTest") or {}
+    test_score = test.get("score")
+    test_level = str(test.get("testLevel") or "")
+    test_status = str(test.get("status") or "待测试")
+    score_label = f"{test_score:g}/10" if isinstance(test_score, (int, float)) else ("BLOCKED" if test_level == "preflight" else "UNSCORED")
+    evidence = []
+    for item in test.get("evidence") or []:
+        url = item if isinstance(item, str) else item.get("url")
+        label = "查看实测产物" if isinstance(item, str) else item.get("label") or "查看实测产物"
+        if url:
+            evidence.append(f'<a class="freellm-test-evidence" href="{_esc(url)}" target="_blank" rel="noopener">{_esc(label)} ↗</a>')
+    test_block = (
+        f'<div class="freellm-test-strip {"blocked" if test_level == "preflight" else "tested"}">'
+        f'<strong>{_esc(score_label)}</strong><span>FreeLLM 实测 · {_esc(test_status)}</span><small>{_esc(test_level)}</small></div>'
+        f'<p class="freellm-test-evaluation">{_esc(test.get("evaluation") or "")}</p>'
+        + ("<div class=\"freellm-test-evidence-list\">" + "".join(evidence) + "</div>" if evidence else "")
+    )
     return f'''<article class="skill-card" data-skill-id="{_esc(skill.get('id'))}" data-category="{_esc(skill.get('category'))}" data-status="{_esc(skill.get('status'))}">
       <div class="skill-card-top"><span class="skill-category {category.get('accent', 'blue')}">{_esc(category.get('name_zh', 'Skill'))}</span><span class="skill-status {status_class}"><span lang="zh-CN">{_esc(status_zh)}</span><span lang="en">{_esc(status_en)}</span></span></div>
-      <h2>{_esc(skill.get('name'))}</h2><p><span class="skill-description-zh" lang="zh-CN">{_esc(description_zh)}</span><span class="skill-description-en" lang="en">{_esc(description_en)}</span></p>{_skill_style_line(skill)}<div class="skill-chips">{compatibility}</div>{meta}
-      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}"><span lang="zh-CN">查看内容与评价 →</span><span lang="en">Content &amp; reviews →</span></button>{source}</div>
+      <h2>{_esc(skill.get('name'))}</h2>{test_block}<p><span class="skill-description-zh" lang="zh-CN">{_esc(description_zh)}</span><span class="skill-description-en" lang="en">{_esc(description_en)}</span></p>{_skill_style_line(skill)}<div class="skill-chips">{compatibility}</div>{meta}
+      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}"><span lang="zh-CN">查看原文与社区信号 →</span><span lang="en">Source &amp; community →</span></button>{source}</div>
     </article>'''
 
 
 def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     path = SKILLS_PAGE_PATH
     title = "Agent Skills 市集 · FreeLLM"
-    description = "收录经核验的 Claude Code / OpenCode / Codex Agent Skill：在线查看 SKILL.md 原文、GitHub 社区数据与第三方评价，一键复制安装命令。"
+    description = "FreeLLM 对 Agent Skill 做固定任务实测：记录测试任务、环境、成功与失败、真实产物和独立评价；GitHub 与社区数据仅作为参考。"
     page_url = _absolute(site_url, path)
     schema = {
         "@context": "https://schema.org",
@@ -3850,6 +3869,10 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     .skill-preview-layout { display:grid; grid-template-columns:minmax(0,.85fr) minmax(250px,1.15fr); gap:16px; align-items:stretch; } .skill-preview-copy { display:flex; min-width:0; flex-direction:column; justify-content:center; } .skill-preview-label { color:var(--ink-tertiary); font:500 10px/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; } .skill-preview-format { margin:8px 0 0; color:var(--ink); font:500 15px/1.45 var(--font-mono); overflow-wrap:anywhere; } .skill-preview-summary { margin:8px 0 0; color:var(--ink-secondary); font-size:12.5px; line-height:1.6; } .skill-preview-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; } .skill-preview-tag { padding:3px 8px; border:1px solid var(--line); border-radius:999px; color:var(--accent); background:var(--accent-soft); font:500 10.5px/1.5 var(--font-mono); }
     .skill-preview-canvas { min-height:168px; padding:12px; border:1px solid var(--line); border-radius:8px; background:linear-gradient(135deg,var(--accent-soft),var(--surface-soft)); overflow:hidden; } .skill-preview-window { height:100%; min-height:144px; overflow:hidden; border:1px solid var(--line); border-radius:6px; background:var(--surface); box-shadow:0 8px 24px rgba(30,40,60,.08); } .skill-preview-window-bar { display:flex; gap:5px; align-items:center; height:25px; padding:0 9px; border-bottom:1px solid var(--line); background:var(--surface-soft); } .skill-preview-window-bar i { width:6px; height:6px; border-radius:50%; background:var(--line); } .skill-preview-window-bar i:first-child { background:var(--accent); } .skill-preview-window-bar span { margin-left:5px; overflow:hidden; color:var(--ink-tertiary); font:500 9px/1 var(--font-mono); text-overflow:ellipsis; white-space:nowrap; } .skill-preview-window-main { display:grid; gap:8px; padding:14px; } .skill-preview-kicker { width:32%; height:6px; border-radius:4px; background:var(--accent); opacity:.65; } .skill-preview-title-line { width:74%; height:13px; border-radius:4px; background:var(--ink); opacity:.82; } .skill-preview-copy-line { width:92%; height:6px; border-radius:4px; background:var(--line); } .skill-preview-copy-line.short { width:66%; } .skill-preview-blocks { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-top:5px; } .skill-preview-block { height:45px; border:1px solid var(--line); border-radius:5px; background:linear-gradient(160deg,var(--surface),var(--surface-soft)); } .skill-preview-block::before { display:block; width:42%; height:6px; margin:9px 8px 7px; border-radius:4px; background:var(--accent); content:""; opacity:.48; } .skill-preview-block::after { display:block; width:64%; height:5px; margin-left:8px; border-radius:4px; background:var(--line); content:""; box-shadow:0 9px 0 var(--line); } .skill-preview-canvas.code { background:linear-gradient(135deg,#17202b,#30465c); } .skill-preview-canvas.code .skill-preview-window { border-color:#53687b; background:#111820; } .skill-preview-canvas.code .skill-preview-window-bar { border-color:#293743; background:#1c2732; } .skill-preview-canvas.code .skill-preview-copy-line,.skill-preview-canvas.code .skill-preview-block { border-color:#293743; background:#1b2731; } .skill-preview-canvas.code .skill-preview-title-line { background:#e5f2ff; } .skill-preview-canvas.visual { background:linear-gradient(135deg,#e9e1ff,#ffe7d4); } .skill-preview-canvas.visual .skill-preview-kicker { background:#7c4dff; } .skill-preview-canvas.data { background:linear-gradient(135deg,#dff4e8,#e1ecff); } .skill-preview-canvas.data .skill-preview-blocks { grid-template-columns:1.3fr .8fr .8fr; } .skill-preview-canvas.document { background:linear-gradient(135deg,#f4efdf,#e7edf8); } .skill-preview-canvas.document .skill-preview-blocks { grid-template-columns:1fr 1fr; } .skill-preview-canvas.document .skill-preview-block:last-child { display:none; }
     #dialog-style-section .skill-style-format { margin:0; } #dialog-style-section .skill-style-format code { font:500 12px/1.5 var(--font-mono); color:var(--ink); background:var(--surface-soft); border:1px solid var(--line); border-radius:4px; padding:2px 8px; } #dialog-style-summary { margin:10px 0 0; color:var(--ink-secondary); font-size:13.5px; line-height:1.65; }
+    .freellm-test-strip { margin:10px 0 4px; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); font:600 11px/1.3 var(--font-sans); }
+    .freellm-test-strip strong { font:800 13px/1 var(--font-mono); color:var(--accent); } .freellm-test-strip small { color:var(--ink-tertiary); font:500 10px/1 var(--font-mono); }
+    .freellm-test-strip.blocked strong { color:#b76a00; } .freellm-test-evaluation { margin:7px 0 0!important; color:var(--ink-secondary)!important; font-size:12px!important; line-height:1.55!important; -webkit-line-clamp:3!important; }
+    .freellm-test-evidence-list { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; } .freellm-test-evidence { padding:5px 8px; border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--accent); text-decoration:none; font-size:11px; font-weight:700; }
     @media (max-width:800px) { .skills-page { padding:12px 18px 48px; } .skills-header { align-items:flex-start; flex-direction:column; } .header-right { width:100%; justify-content:space-between; } .skills-count { margin-left:0; } .skill-preview-layout { grid-template-columns:1fr; } } @media (max-width:560px) { .skills-hero h1 { font-size:36px; } .skill-grid { grid-template-columns:1fr; } .skill-card p { -webkit-line-clamp:5; } .skill-preview-canvas { min-height:150px; } }
     '''
     script = r'''
@@ -3887,7 +3910,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
         + ";"
         + script
     )
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>给模型装上真正好用的工作流</h1><p class="hero-copy">模型决定上限，Skill 决定你能不能把事情做完。按场景挑选可下载、可复用的 Agent Skill。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>我们真的跑过这些 Skill</h1><p class="hero-copy">不拿 README、Star 或第三方口碑当结论。每个 Skill 都记录固定测试任务、真实结果、阻塞点和 FreeLLM 自己的评价；有页面或视觉产物的直接给出实测结果。</p></div><aside class="hero-note"><span class="hero-note-label">FREE LLM TEST BENCH / 实测台</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个 Skill 有测试记录</span></div><p>通过 / 部分通过 / 环境阻塞分开标记；只有真实执行过 task / artifact / e2e 的条目才给分。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
 def render_skills_page(skills: list[dict], site_url: str) -> str:
@@ -4213,7 +4236,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
-        Path("models") / "index.html": render_models_page(offers, site_url),
+        Path("models") / "index.html": render_models_page(offers, site_url, stats_models=model_catalog),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
@@ -4472,6 +4495,31 @@ def _merge_skill_styles(skills: list[dict], styles: dict[str, dict]) -> list[dic
     return [{**skill, "styles": styles[skill["id"]]} if skill.get("id") in styles else skill for skill in skills]
 
 
+def _load_skill_tests(data_path: Path, skills: list[dict]) -> dict[str, dict]:
+    tests_path = data_path.parent / "skill-tests.json"
+    if not tests_path.is_file():
+        return {}
+    payload = json.loads(tests_path.read_text(encoding="utf-8"))
+    entries = payload.get("entries") or {}
+    known = {skill.get("id") for skill in skills}
+    unknown = sorted(set(entries) - known)
+    missing = sorted(known - set(entries))
+    if unknown or missing:
+        details = []
+        if unknown:
+            details.append("unknown: " + ", ".join(unknown))
+        if missing:
+            details.append("missing: " + ", ".join(missing))
+        raise SystemExit("Invalid skill test data: " + "; ".join(details))
+    return entries
+
+
+def _merge_skill_tests(skills: list[dict], tests: dict[str, dict]) -> list[dict]:
+    if not tests:
+        return skills
+    return [{**skill, "freeLLMTest": tests.get(skill.get("id"), {})} for skill in skills]
+
+
 def _load_skill_recipes(data_path: Path, skills: list[dict]) -> list[dict]:
     recipes_path = data_path.parent / "skill-recipes.json"
     if not recipes_path.is_file():
@@ -4598,6 +4646,23 @@ def _append_legal_links(content: str) -> str:
 
 
 
+def _site_chrome(section: str) -> str:
+    items = (
+        ("/", "⌂", "首页", "home"),
+        ("/models/", "▣", "模型", "models"),
+        ("/skills/", "✦", "Skills", "skills"),
+        ("/tools/", "⌘", "工具", "tools"),
+        ("/skills/lab/", "⌁", "工作流", "workflow"),
+        ("/logs/", "◷", "更新", "logs"),
+        ("/about/", "ⓘ", "关于", "about"),
+    )
+    links = "".join(
+        f'<a href="{href}"{" aria-current=\"page\"" if key == section else ""}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
+        for href, icon, label, key in items
+    )
+    return f'''<aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav">{links}</nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">Skills 实测 ↗</a></span></div>'''
+
+
 def _visual_section_for_path(path: Path) -> str:
     parts = path.parts
     first = parts[0] if parts else ""
@@ -4646,6 +4711,16 @@ def _ensure_visual_classes(content: str, path: Path) -> str:
             attrs += f' data-fl-section="{_visual_section_for_path(path)}"'
         replacement = f"<body{attrs}>"
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
+    if path.as_posix() == "skills/index.html":
+        updated = re.sub(r'\s*<header class="skills-header">.*?</header>', "", updated, count=1, flags=re.S)
+    if 'class="fl-site-rail"' not in updated:
+        updated = re.sub(
+            r'(<body[^>]*>)',
+            lambda match: match.group(1) + "\n" + _site_chrome(_visual_section_for_path(path)),
+            updated,
+            count=1,
+            flags=re.I,
+        )
     return updated
 
 
@@ -4657,6 +4732,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     operations = _load_operations(data_path)
     skills = _load_skills(data_path)
     skills = _merge_skill_styles(skills, _load_skill_styles(data_path, skills))
+    skills = _merge_skill_tests(skills, _load_skill_tests(data_path, skills))
     recipes = _load_skill_recipes(data_path, skills)
     daily_logs = _load_daily_logs(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent)
