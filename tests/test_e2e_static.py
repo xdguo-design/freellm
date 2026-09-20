@@ -263,6 +263,8 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('type="button" class="row-arrow"', self.html)
 
     def test_page_has_locale_routing_hooks(self):
+        # '?lang=' is deliberately absent: locale switching is localStorage-only
+        # since the locale-query purge (search-console regression test forbids it).
         for needle in (
             'SUPPORTED_LOCALES',
             'resolveLocale',
@@ -271,7 +273,6 @@ class StaticContractTests(unittest.TestCase):
             'data-locale-toggle',
             'free-ai-index-locale',
             'URLSearchParams',
-            '?lang=',
         ):
             self.assertIn(needle, self.html)
 
