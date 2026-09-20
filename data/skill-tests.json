@@ -1,742 +1,1261 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "methodology": {
+    "runKind": "real-sandbox",
+    "runDate": "2026-09-20",
+    "environment": {
+      "python": "Python 3.13.5",
+      "node": "v22.16.0",
+      "libreoffice": "LibreOffice 25.2.3.2",
+      "chromium": "Chromium 144.0.7559.96",
+      "network": "disabled in sandbox",
+      "platform": "OpenAI execution sandbox / Debian Linux"
+    },
+    "summary": {
+      "total": 68,
+      "passed": 38,
+      "partial": 14,
+      "blocked": 16,
+      "scored": 52
+    },
+    "principles": [
+      "不复用旧模拟评分；每条记录来自本轮沙箱实际运行。",
+      "能生成文件不等于高质量；视觉类产物实际打开复核后再校准评分。",
+      "缺外部登录、API Key、网络或专用 CLI 时标记环境阻塞且不打分。",
+      "部分通过表示有真实运行证据，但工具链或外部能力未完整覆盖 Skill 原要求。"
+    ],
     "levels": {
-      "e2e": "在当前环境执行核心任务并验证结果",
-      "artifact": "生成可视产物并验证结构/交互",
-      "task": "按 Skill 工作流完成固定测试任务",
-      "preflight": "执行依赖与运行路径预检，因外部条件阻塞",
-      "source-review": "只完成原文审查，不计作实测通过"
+      "e2e": "真实执行核心流程，并验证最终行为/结果",
+      "artifact": "真实生成文件或页面，并验证结构/渲染结果",
+      "artifact-partial": "真实生成产物，但与 Skill 指定工具链或外部能力不完全一致",
+      "task": "按 Skill 工作流完成固定真实任务并保存结果",
+      "preflight": "真实检查依赖、凭据、网络或入口，因客观条件阻塞；不评分"
     }
   },
   "entries": {
     "anthropics-docx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
-      "score": null,
-      "evaluation": "当前容器缺少其要求的 docx-js npm 依赖，未冒充为端到端通过。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 7.6,
+      "task": "真实生成门诊退费运行手册 DOCX，重新读取表格与标题，并用 LibreOffice 转 PDF 复验。",
+      "resultSummary": "DOCX 36983 bytes；重新读取成功；4 行表格保留；PDF 渲染成功。",
+      "evaluation": "生成→重读→渲染的闭环可靠；但 Skill 指定 docx-js，沙箱没有该包，本次用 python-docx 做同等文件级验证，因此只能记部分通过。",
+      "limitations": "缺少 docx-js；未覆盖批注、修订跟踪与 OOXML 级编辑。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-docx"
+        }
+      ]
     },
     "anthropics-pdf": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "合并两张发票 PDF、抽取文本并拆分首页；2 页、两家供应商文本均可验证。",
-      "evidence": [],
-      "score": 8.6,
-      "evaluation": "PDF 基础操作路径清晰，适合通用文件处理；真正复杂表单/OCR仍需额外专项测试。"
+      "testLevel": "e2e",
+      "score": 8.9,
+      "task": "真实创建两张发票 PDF，合并、抽取文本、拆分首页并重新解析。",
+      "resultSummary": "合并文件 2 页，供应商/金额文本可抽取，拆分首页为 1 页。",
+      "evaluation": "pypdf/reportlab 路径稳定可复现；Skill 对按任务选库的建议有效。",
+      "limitations": "未覆盖 OCR、AcroForm 与复杂扫描表格。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-pdf"
+        }
+      ]
     },
     "anthropics-doc-coauthoring": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "用门诊候诊屏需求整理成结构化规格，暴露出刷新频率、等待时间定义等未决项。",
-      "evidence": [],
-      "score": 8.4,
-      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。"
+      "testLevel": "task",
+      "score": 8.5,
+      "task": "用候诊屏需求走上下文→澄清→结构→Gap check，产出规格草案。",
+      "resultSummary": "实际生成 output.md，澄清问题、结构和 Gap check 均通过。",
+      "evaluation": "对需求不完整的文档协作很有效，能阻止直接堆漂亮文字而遗漏定义缺口。",
+      "limitations": "简单小文档会显得流程偏重。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-doc-coauthoring"
+        }
+      ]
     },
     "anthropics-xlsx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "通过",
       "testLevel": "artifact",
-      "status": "部分通过",
-      "task": "用同一组门诊月度数据生成带公式、百分比格式和趋势图的工作簿；公式结果经读取校验。当前平台按约束使用 artifact_tool，而非该 Skill 原文指定的 openpyxl。",
-      "evidence": [],
-      "score": 8.5,
-      "evaluation": "对公式校验、重算和输出质量的要求非常好；真正执行时工具链较重，且本平台不能按原 Skill 的 openpyxl 路径复现，所以不记作完全 E2E。"
+      "score": 8.7,
+      "task": "生成含公式、百分比格式和趋势图的月度 XLSX，再重新打开验证。",
+      "resultSummary": "公式、百分比格式、趋势图与工作簿重开均通过。",
+      "evaluation": "公式和生成后验证要求实用；结构层验证可靠。",
+      "limitations": "无 Microsoft Excel，未验证 Excel 专有计算差异。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-xlsx"
+        }
+      ]
     },
     "anthropics-pptx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "严格用 PptxGenJS 生成 3 页退款流程 deck，经 LibreOffice 渲染，再用 python-pptx 重新读取确认 3 页和关键标题存在。",
-      "evidence": [],
-      "score": 8.9,
-      "evaluation": "对版式、溢出检查和验证流程要求扎实，能把“生成 PPT”变成真正可交付的工程流程；代价是步骤多、依赖较重。"
+      "testLevel": "e2e",
+      "score": 7.8,
+      "task": "用 PptxGenJS 真实生成 3 页退款流程 Deck，LibreOffice 转 PDF，再用 python-pptx 重读。",
+      "resultSummary": "PPTX 生成、3 页结构、关键状态文本与 PDF 渲染均通过。",
+      "evaluation": "执行链路真实可靠；但实际打开成品后，版式非常基础，所以视觉质量只算中等。",
+      "limitations": "未覆盖复杂模板继承、讲者备注与动画。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-pptx"
+        }
+      ]
     },
     "anthropics-frontend-design": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "用候诊屏需求制作 16:9 响应式页面，强调远距可读与隐私，不采用通用 SaaS 卡片模板。",
+      "testLevel": "artifact",
+      "score": 8.9,
+      "task": "制作候诊大屏，在 Chromium 桌面和 390px 移动视口真实渲染并检查。",
+      "resultSummary": "桌面截图成功；390px 无横向溢出；匿名号码隐私文案存在。",
+      "evaluation": "真实截图的层级、信息密度和响应式完成度较高，成品感明显。",
+      "limitations": "未做真实患者可读性、远距与屏幕亮度测试。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-frontend-design/",
-          "label": "打开候诊屏实测 Demo",
-          "note": "真实 HTML/CSS 输出，可直接查看响应式效果"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-frontend-design"
         }
-      ],
-      "score": 9,
-      "evaluation": "能显著抑制模板味，设计原则有效；但最终质量仍高度依赖执行模型的审美。"
+      ]
     },
     "anthropics-canvas-design": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "制作 refund workflow 视觉海报 SVG，验证其“先视觉哲学后画面”的流程。",
+      "testLevel": "artifact",
+      "score": 7.2,
+      "task": "制作 16:9 退款状态海报 SVG，并真实栅格化为 PNG。",
+      "resultSummary": "SVG/PNG 均生成，1200×675，四个核心状态进入视觉结构。",
+      "evaluation": "构图逻辑清楚但视觉细节和层次偏基础，更像合格草案，不是高完成度海报。",
+      "limitations": "未调用外部图像生成模型。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-canvas-design/poster.svg",
-          "label": "打开退款流程海报",
-          "note": "SVG 实测产物"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-canvas-design"
         }
-      ],
-      "score": 8.1,
-      "evaluation": "适合海报/静态视觉概念，能逼出统一视觉语言；不适合复杂交互 UI。"
+      ]
     },
     "anthropics-brand-guidelines": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把品牌色、字体角色和对比约束应用到一个测试封面，并逐项检查是否偏离品牌规则。",
-      "evidence": [],
-      "score": 7.9,
-      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。"
+      "testLevel": "artifact",
+      "score": 8,
+      "task": "从 SKILL.md 提取品牌色约束并制作品牌测试封面。",
+      "resultSummary": "提取 6 个真实色值并应用，Chromium 渲染成功。",
+      "evaluation": "把品牌规范变成可检查约束很有效。",
+      "limitations": "字体资产未随 Skill 打包，使用系统字体回退。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-brand-guidelines"
+        }
+      ]
     },
     "anthropics-theme-factory": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把 Ocean Depths 主题应用到候诊屏测试页面。",
+      "testLevel": "artifact",
+      "score": 7.8,
+      "task": "把 Ocean Depths 主题应用到门诊运营看板并真实渲染。",
+      "resultSummary": "主题配色、排版与 KPI 卡片真实应用并成功渲染。",
+      "evaluation": "主题一致性好，但测试页面复杂度较低，不能证明大型 Deck/文档仍稳定。",
+      "limitations": "仅测试一个主题。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-theme-factory/",
-          "label": "打开 Ocean Depths 主题 Demo",
-          "note": "真实主题应用结果"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-theme-factory"
         }
-      ],
-      "score": 7.7,
-      "evaluation": "作为统一配色/字体的快速套件很好用，但主题本身容易压过产品语境，需要二次调整。"
+      ]
     },
     "anthropics-algorithmic-art": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact-partial",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "部分通过",
-      "task": "用固定随机种子生成可重复的 Canvas 场景；当前环境未使用其指定 p5.js 运行栈。",
+      "testLevel": "artifact-partial",
+      "score": 7.2,
+      "task": "用固定随机种子生成参数化 Canvas 粒子图，两次 Chromium 渲染比较 SHA-256。",
+      "resultSummary": "两次截图哈希一致，固定种子可复现。",
+      "evaluation": "先算法哲学、再参数、固定 seed 的方法有效；但未使用原 Skill 指定的 p5.js。",
+      "limitations": "沙箱无 p5.js，使用原生 Canvas 验证核心思想。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-algorithmic-art/",
-          "label": "打开参数化视觉 Demo",
-          "note": "固定随机种子；未使用原 Skill 指定 p5.js 栈"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-algorithmic-art"
         }
-      ],
-      "score": 7.5,
-      "evaluation": "创作方法论有启发，参数化思路清楚；对运行库依赖较强，跨环境复现要额外处理。"
+      ]
     },
     "anthropics-internal-comms": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把退款讨论整理成内部项目更新，包含决定、未决项、负责人和风险。",
-      "evidence": [],
-      "score": 7.8,
-      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。"
+      "testLevel": "task",
+      "score": 7.9,
+      "task": "根据固定项目事实生成内部状态更新并检查结构和风险表达。",
+      "resultSummary": "实际输出包含状态、风险、下一步与负责人，未虚构外部事实。",
+      "evaluation": "模板能快速形成可扫描的内部更新，但内容质量仍取决于输入事实。",
+      "limitations": "未接入真实企业通讯系统。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-internal-comms"
+        }
+      ]
     },
     "anthropics-mcp-builder": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "MCP SDK/目标运行时依赖未准备，当前只完成指令与架构审查。"
+      "task": "尝试按 Skill 启动最小 MCP Server 并做工具调用。",
+      "resultSummary": "`import mcp`/FastMCP 依赖不可用，网络关闭无法安装。",
+      "evaluation": "MCP 是运行时绑定能力；缺 SDK 时不能拿伪代码冒充 E2E。",
+      "limitations": "缺少 mcp/fastmcp Python 包且沙箱无网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-mcp-builder"
+        }
+      ]
     },
     "anthropics-skill-creator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
-      "status": "部分通过",
-      "task": "用退款状态审计场景设计一个新 Skill：定义触发条件、工作流、参考资料和验证方式；未运行其仓库自带 benchmark/package 脚本。",
-      "evidence": [],
-      "score": 8.8,
-      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "通过",
+      "testLevel": "artifact",
+      "score": 8.9,
+      "task": "真实创建 refund-state-auditor/SKILL.md，并检查 frontmatter、工作流与验证步骤。",
+      "resultSummary": "Skill 文件真实落盘，结构 lint 全部通过。",
+      "evaluation": "对创建 Skill 的触发条件、流程和验证要求很扎实，产物可直接继续迭代。",
+      "limitations": "未在外部 Agent 产品中安装运行。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-skill-creator"
+        }
+      ]
     },
     "anthropics-web-artifacts-builder": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
-      "score": null,
-      "evaluation": "缺少该 Skill 自带 init/bundle 脚本与依赖缓存，无法按指定 React+Vite+Parcel 路径完整复现。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 7.4,
+      "task": "构建可交互退款状态 Web Artifact，并在 Chromium 真点击验证状态与审计事件。",
+      "resultSummary": "READY→PROCESSING→SUCCEEDED 真实发生，审计事件为 refund.started/refund.succeeded。",
+      "evaluation": "交互目标真实跑通；但 React/Vite/Parcel 依赖缺失，只能验证交付思想和原生 Web 路径。",
+      "limitations": "未运行原 Skill 指定 React/Vite/Parcel 工具链。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-web-artifacts-builder"
+        }
+      ]
     },
     "anthropics-webapp-testing": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "用 Playwright 驱动一个最小退款页面，从 ready 点击到 processing，并用 DOM 断言验证状态变化。",
-      "evidence": [],
-      "score": 8.6,
-      "evaluation": "‘先侦察再动作’的浏览器测试思路非常实用；真实项目中浏览器安装、登录态和网络策略仍是主要阻塞点。"
+      "testLevel": "e2e",
+      "score": 9,
+      "task": "用 Python Playwright + Chromium 对本地状态应用执行真实点击、状态检查和截图。",
+      "resultSummary": "READY→PROCESSING 行为和页面断言均通过，截图成功。",
+      "evaluation": "这是可重复的真实浏览器测试，指令与实际工具匹配度高。",
+      "limitations": "仅测试本地页面，未覆盖跨域/外部服务。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#anthropics-webapp-testing"
+        }
+      ]
     },
     "obra-brainstorming": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "对候诊屏需求按 bounded/architectural 规则做范围判断、关键问题梳理和短设计，实施前明确要先获得设计认可。",
-      "evidence": [],
+      "testLevel": "task",
       "score": 8.6,
-      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。"
+      "task": "对一个模糊功能需求先澄清目标、约束和验收，再产出方案。",
+      "resultSummary": "问题、约束、方案取舍与验收标准都实际形成。",
+      "evaluation": "能显著减少直接开工造成的返工，尤其适合需求模糊场景。",
+      "limitations": "极小改动会显得流程偏重。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-brainstorming"
+        }
+      ]
     },
     "obra-writing-plans": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把候诊屏需求拆成文件级实施计划，逐步写出测试、命令、预期结果和提交边界，不使用 TODO/TBD 占位。",
-      "evidence": [],
+      "testLevel": "task",
       "score": 8.9,
-      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。"
+      "task": "把已确认需求拆成文件级实施计划、命令、测试和预期结果。",
+      "resultSummary": "计划包含修改点、验证命令和完成标准。",
+      "evaluation": "计划可执行性强，能把抽象需求变成工程动作。",
+      "limitations": "依赖已有清晰规格。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-writing-plans"
+        }
+      ]
     },
     "obra-executing-plans": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "按既定调试/TDD计划逐项执行：先读计划、跑 RED、做最小修改、跑 GREEN、在检查点核对结果。",
-      "evidence": [],
-      "score": 8.4,
-      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。"
+      "testLevel": "e2e",
+      "score": 8.6,
+      "task": "在故意带 bug 的小项目上按既定计划执行修复并做回归。",
+      "resultSummary": "按计划完成修改，失败测试转为通过。",
+      "evaluation": "执行节奏和阶段校验有效；真实团队中仍需结合代码审查。",
+      "limitations": "单项目夹具规模较小。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-executing-plans"
+        }
+      ]
     },
     "obra-systematic-debugging": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "复现 ZeroDivisionError，沿数据流定位到 0 被 truthy 过滤，先确认根因再修复。",
-      "evidence": [],
-      "score": 9.3,
-      "evaluation": "约束非常有效，能明显减少拍脑袋修 bug；简单问题上略显教条但成本很低。"
+      "testLevel": "e2e",
+      "score": 9.4,
+      "task": "在 `average([0,10])` 被错误过滤 0 的真实 bug 上复现、定位、修复并回归。",
+      "resultSummary": "先稳定复现失败，再定位 `if v` 根因，修复为 `if v is not None`，测试全绿。",
+      "evaluation": "这套流程对真实 bug 非常有效，能强制先证据后修复。",
+      "limitations": "未覆盖分布式/并发故障。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-systematic-debugging"
+        }
+      ]
     },
     "obra-test-driven-development": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "先写 zero-value 回归测试并看到失败，再做最小修复，最终 2/2 通过。",
-      "evidence": [],
-      "score": 9,
-      "evaluation": "规则严、可执行、能形成证据链；“已有代码必须删掉重来”的绝对化表述在遗留系统里需谨慎。"
+      "testLevel": "e2e",
+      "score": 9.2,
+      "task": "先写 `[0,10] == 5` 失败测试，再最小修复并重跑测试。",
+      "resultSummary": "RED→GREEN 真实发生，最终 2 个测试通过。",
+      "evaluation": "TDD 节奏在该缺陷上非常清晰，可复现且能防回归。",
+      "limitations": "夹具规模较小。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-test-driven-development"
+        }
+      ]
     },
     "obra-requesting-code-review": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "针对 zero-value 修复整理代码审查请求：说明基线、变更、验证命令、风险和需要审查的具体问题。",
-      "evidence": [],
-      "score": 8.2,
-      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。"
+      "testLevel": "task",
+      "score": 8.3,
+      "task": "基于真实 bug 修复整理审查范围、风险和验证证据。",
+      "resultSummary": "实际生成可审查摘要，包含变更范围和测试结果。",
+      "evaluation": "能让 review 请求更聚焦，不只是“帮我看看代码”。",
+      "limitations": "没有真实第二位审查者。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-requesting-code-review"
+        }
+      ]
     },
     "obra-receiving-code-review": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "给定一条‘把 is not None 改回 truthy 更简洁’的错误 review 意见，先用失败用例验证技术影响，再拒绝该建议并给证据。",
-      "evidence": [],
-      "score": 8.7,
-      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。"
+      "testLevel": "task",
+      "score": 8.9,
+      "task": "对一条有争议的 review 意见逐项核对技术依据后决定是否修改。",
+      "resultSummary": "区分了事实、偏好和需要实验验证的意见。",
+      "evaluation": "能有效避免机械接受审查意见，技术判断框架清楚。",
+      "limitations": "没有真实多人讨论。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-receiving-code-review"
+        }
+      ]
     },
     "obra-verification-before-completion": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "修复后重新运行完整测试并复验原始命令输出，不用‘应该好了’代替证据。",
-      "evidence": [],
-      "score": 9.4,
-      "evaluation": "很适合 agent 工作流，是低成本高收益的质量闸门；单独使用不解决测试覆盖不足。"
+      "testLevel": "e2e",
+      "score": 9.5,
+      "task": "在宣布修复前实际运行测试并保存 RED/GREEN 日志。",
+      "resultSummary": "失败日志和通过日志都存在，最终 2/2 tests passed。",
+      "evaluation": "这是最值得保留的约束之一：没有运行证据就不宣称完成。",
+      "limitations": "仅覆盖自动化测试证据。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-verification-before-completion"
+        }
+      ]
     },
     "obra-subagent-driven-development": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "检查任务拆分、fresh subagent、规格审查与代码质量审查链路。",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前测试 harness 没有可复现的独立 subagent 调度接口，因此不能把‘读过流程’冒充真实多 Agent 实测。"
+      "task": "尝试按 Skill 把计划分给独立子代理并做双层审查。",
+      "resultSummary": "当前沙箱进程没有独立 subagent dispatch API。",
+      "evaluation": "没有真正的独立代理就不能用顺序脚本冒充 subagent-driven。",
+      "limitations": "缺少子代理调度运行时。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-subagent-driven-development"
+        }
+      ]
     },
     "obra-writing-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "用退款状态审计场景编写一个 Skill 草案，并按其 TDD 映射检查触发条件、约束、反例和验证路径。",
-      "evidence": [],
-      "score": 8.7,
-      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。"
+      "testLevel": "artifact",
+      "score": 8.8,
+      "task": "用测试驱动方式创建并检查 refund-state-auditor Skill。",
+      "resultSummary": "SKILL.md 真实生成并通过结构检查。",
+      "evaluation": "写 Skill 的触发器、反例和验证逻辑很实用。",
+      "limitations": "未在多个 Agent Runtime 中安装验证。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#obra-writing-skills"
+        }
+      ]
     },
     "vercel-labs-composition-patterns": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "审查一个 props 爆炸的 React 卡片组件，改为复合组件/slot 结构，减少布尔 prop 组合状态。",
-      "evidence": [],
+      "testLevel": "task",
       "score": 8.7,
-      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。"
+      "task": "对 React 组件 API 做组合模式重构设计，消除布尔参数爆炸。",
+      "resultSummary": "输出真实重构方案和组件 API。",
+      "evaluation": "组合模式建议具体且工程价值高。",
+      "limitations": "沙箱无 React Runtime，未做真实渲染性能比较。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#vercel-labs-composition-patterns"
+        }
+      ]
     },
     "vercel-labs-react-best-practices": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "审查包含串行数据请求的 React 测试组件，识别 waterfall 并改为可并行请求，同时检查 bundle/渲染风险。",
-      "evidence": [],
-      "score": 9.1,
-      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。"
+      "testLevel": "task",
+      "score": 9,
+      "task": "审查一个串行数据请求组件并重构为并行/分层获取方案。",
+      "resultSummary": "识别 waterfall 并给出可执行重构代码。",
+      "evaluation": "性能建议针对性强，不只是泛泛规范。",
+      "limitations": "无 Next.js Runtime/Profiler，未量化真实延迟收益。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#vercel-labs-react-best-practices"
+        }
+      ]
     },
     "vercel-labs-react-native-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
       "testLevel": "task",
-      "status": "通过",
-      "task": "审查用 ScrollView + map 渲染长列表且使用 index key 的 React Native 示例，改为虚拟化列表与稳定 key。",
-      "evidence": [],
-      "score": 8.5,
-      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。"
+      "score": 8.3,
+      "task": "对 React Native 列表/图片/导航代码做性能与架构审查。",
+      "resultSummary": "给出具体的列表、重渲染和资源处理改进。",
+      "evaluation": "静态审查有效，但缺真实 RN/Expo Runtime 和设备就不能声称性能已改善。",
+      "limitations": "无 React Native/Expo 环境和真机。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#vercel-labs-react-native-skills"
+        }
+      ]
     },
     "vercel-labs-web-design-guidelines": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "对候诊屏实测页面做可访问性/交互审查：层级、可读性、响应式、控件语义和键盘路径逐项检查。",
+      "testLevel": "task",
+      "score": 8.5,
+      "task": "用真实候诊页面在 390px Chromium 检查语义、响应式和可访问性问题。",
+      "resultSummary": "无横向溢出，结构/隐私/主要可访问性检查通过。",
+      "evaluation": "作为界面审查清单可直接落地，和真实页面结合时价值高。",
+      "limitations": "未做屏幕阅读器与真实用户测试。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-frontend-design/",
-          "label": "被审查的候诊屏 Demo",
-          "note": "同一固定夹具，便于复核"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#vercel-labs-web-design-guidelines"
         }
-      ],
-      "score": 8.4,
-      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。"
+      ]
     },
     "blader-humanizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把典型 AI 腔文章改写为更具体、少口号、带真实工作细节的版本。",
-      "evidence": [],
-      "score": 8.7,
-      "evaluation": "对去套话有效，规则具体；如果机械套用会把正式文体过度口语化。"
+      "testLevel": "task",
+      "score": 8.8,
+      "task": "把一段明显 AI 腔项目说明改写为具体、克制、有数据的人工风格。",
+      "resultSummary": "6 个套话/夸张表达被移除，并补入具体状态与指标。",
+      "evaluation": "对去套路化写作有效；不能把“更像人”误当成事实真实性。",
+      "limitations": "评价依赖语言风格，存在主观性。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#blader-humanizer"
+        }
+      ]
     },
     "jimliu-baoyu-infographic": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "读取布局选择、内容压缩和 imagegen 生成链，准备同一退款流程信息图基准任务。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "当前仓库证据流水线无法把指定 imagegen 调用的产物持续化并回传到本分支，因此本轮不记作实测通过。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 6,
+      "task": "把退款流程真实生成 1080×1440 SVG/PNG 信息图并检查渲染。",
+      "resultSummary": "文件真实生成且尺寸正确。",
+      "evaluation": "视觉复核后主要是文字清单和单一线条，信息图表达与层次明显不足，不应给高视觉分。",
+      "limitations": "未使用原 Skill 的图像生成链。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-infographic"
+        }
+      ]
     },
     "jimliu-baoyu-markdown-to-html": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact-partial",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "部分通过",
-      "task": "用测试文章生成可阅读的自包含 HTML 版式；未运行原仓库脚本。",
+      "testLevel": "artifact-partial",
+      "score": 7.8,
+      "task": "用 Pandoc 把含引用、列表和代码块的 Markdown 真实转为 HTML，并用 Chromium 截图。",
+      "resultSummary": "HTML 转换和浏览器渲染成功。",
+      "evaluation": "内容转换链可靠，但没有跑原仓库的主题/微信样式脚本。",
+      "limitations": "未使用 Skill 原始主题工具链。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/jimliu-baoyu-markdown-to-html/",
-          "label": "打开排版结果",
-          "note": "替代执行产物，未运行仓库原转换脚本"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-markdown-to-html"
         }
-      ],
-      "score": 7.8,
-      "evaluation": "目标明确、工作流实用；真正价值在主题和微信兼容细节，需在其脚本环境继续 E2E。"
+      ]
     },
     "jimliu-baoyu-url-to-markdown": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "部分通过",
-      "task": "对本地测试文章执行 HTML → Markdown，保留标题、段落和有序列表；未走真实远程 URL 的浏览器登录/抓取链。",
-      "evidence": [],
-      "score": 7.9,
-      "evaluation": "转换目标清楚，对内容采集很实用；远程 URL 的 cookie、反爬和动态页面才是实际难点，本地夹具只能覆盖转换核心。"
+      "testLevel": "e2e",
+      "score": 7.7,
+      "task": "对本地真实 HTML 文章抽取正文并转换 Markdown，去掉 nav/footer。",
+      "resultSummary": "标题、正文和列表保留，导航/页脚噪音被排除。",
+      "evaluation": "本地正文抽取可复现；不能据此宣称动态网页/登录页兼容。",
+      "limitations": "沙箱无外网，未测远程和动态页面。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-url-to-markdown"
+        }
+      ]
     },
     "jimliu-baoyu-article-illustrator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按文章配图流程完成插图点位、批量生成策略和视觉维度预检。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "核心价值在‘先选插图点再批量生成’，但本轮没有跑它要求的 imagegen 产物链，因此不打分。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 6.3,
+      "task": "分析退款文章插图点并生成本地 SVG/PNG 流程插图。",
+      "resultSummary": "插图点和图片文件真实生成。",
+      "evaluation": "流程规划有效，但未调用图像生成模型，视觉表现力有限，只能证明框架。",
+      "limitations": "缺外部 image generation 能力。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-article-illustrator"
+        }
+      ]
     },
     "jimliu-baoyu-slide-deck": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按 slide-deck 的语言、批量图像生成、PDF/PPTX 输出链做执行预检。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "它高度依赖图像生成链；在未生成真实逐页视觉并回写证据前，不应仅凭说明给结论。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 6.6,
+      "task": "真实生成 3 页退款 PPTX 并由 LibreOffice 渲染 PDF。",
+      "resultSummary": "PPTX/PDF 文件链成功。",
+      "evaluation": "视觉复核后页面过于稀疏，缺少 Skill 宣称的专业 Deck 完成度。",
+      "limitations": "未使用图像生成模型；版式样例较简单。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-slide-deck"
+        }
+      ]
     },
     "jimliu-baoyu-post-to-wechat": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "缺少公众号账号/API 凭据与 IP 白名单，禁止用假发布替代真实 E2E。"
+      "task": "尝试按 Skill 发布微信公众号文章。",
+      "resultSummary": "没有授权公众号、API 凭据/IP 白名单且沙箱无网络。",
+      "evaluation": "发布型 Skill 必须真有账号和发布回执，不能用本地 HTML 冒充。",
+      "limitations": "缺公众号授权、凭据和网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-post-to-wechat"
+        }
+      ]
     },
     "jimliu-baoyu-post-to-x": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "缺少已登录 X 会话/浏览器配置，未执行真实发布。"
+      "task": "尝试按 Skill 发布 X/Twitter 帖子。",
+      "resultSummary": "没有已登录 X 会话/账号且沙箱无网络。",
+      "evaluation": "没有真实发布回执不能计通过。",
+      "limitations": "缺登录会话和网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-post-to-x"
+        }
+      ]
     },
     "jimliu-baoyu-xhs-images": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按小红书图卡系列的布局、批量生成和确认策略做执行预检。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "流程设计针对社媒图卡很明确，但本轮未跑指定 imagegen 链，不把模拟卡片当真实结果。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 6.1,
+      "task": "真实生成 3 张 1080×1440 小红书竖版图卡。",
+      "resultSummary": "3 张图卡文件真实生成并可渲染。",
+      "evaluation": "视觉复核显示模板重复、信息层级简单，没有达到成熟传播型图卡水准。",
+      "limitations": "未使用原图像生成链。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-xhs-images"
+        }
+      ]
     },
     "jimliu-baoyu-cover-image": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "按五维封面设计流程完成输入和生成条件预检。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "维度拆分有助于减少随机出图；但没有真实 imagegen 结果就无法评价成图质量，因此本轮不打分。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "artifact-partial",
+      "score": 6.4,
+      "task": "真实生成文章封面 SVG/PNG。",
+      "resultSummary": "封面文件真实生成，标题清晰可读。",
+      "evaluation": "风格统一但构图元素单一，没有图像生成环节，只能算基础可用。",
+      "limitations": "未调用图像模型。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jimliu-baoyu-cover-image"
+        }
+      ]
     },
     "iofficeai-officecli": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 真实创建/分析 Office 文件。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "工具绑定型 Skill 缺 CLI 时不能用 python-docx 等替代后声称通过。",
+      "limitations": "缺 officecli 且无网络安装。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli"
+        }
+      ]
     },
     "iofficeai-officecli-docx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 真实处理 DOCX。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "未用其他库冒充 OfficeCLI。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-docx"
+        }
+      ]
     },
     "iofficeai-officecli-academic-paper": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 生成带引用结构的学术 Word 文档。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "没有指定 CLI 就不能评价其学术文档能力。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-academic-paper"
+        }
+      ]
     },
     "iofficeai-officecli-word-form": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 创建可填写 Word 表单。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "内容控件/旧版表单属于工具特定能力，未替代测试。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-word-form"
+        }
+      ]
     },
     "iofficeai-morph-ppt": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli/PPT 路径生成 Morph 转场。",
+      "resultSummary": "`officecli` 命令不存在，且 LibreOffice 不能等价验证 PowerPoint Morph。",
+      "evaluation": "不具备真实 PowerPoint/Morph 环境时不评分。",
+      "limitations": "缺 officecli/PowerPoint。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-morph-ppt"
+        }
+      ]
     },
     "iofficeai-officecli-pptx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 真实处理 PPTX。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "未用 python-pptx 冒充 OfficeCLI。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-pptx"
+        }
+      ]
     },
     "iofficeai-officecli-pitch-deck": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 生成融资 Deck。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "没有真实工具链不能评价成品。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-pitch-deck"
+        }
+      ]
     },
     "iofficeai-officecli-xlsx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 真实处理 XLSX。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "未用 openpyxl 替代后声称通过。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-xlsx"
+        }
+      ]
     },
     "iofficeai-officecli-data-dashboard": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "task": "尝试用 officecli 创建 Excel KPI Dashboard。",
+      "resultSummary": "`officecli` 命令不存在。",
+      "evaluation": "没有指定工具链就不能评价仪表盘能力。",
+      "limitations": "缺 officecli。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#iofficeai-officecli-data-dashboard"
+        }
+      ]
     },
     "composiohq-file-organizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "对 6 个混乱文件按文档/图片/发票/笔记归类并清理文件名。",
-      "evidence": [],
-      "score": 8,
-      "evaluation": "对真实桌面整理很直接；最大风险是自动重命名/移动的可逆性，必须先预览计划。"
+      "testLevel": "e2e",
+      "score": 8.3,
+      "task": "创建 6 个杂乱文件，按内容规划并真实移动到 invoices/images/documents。",
+      "resultSummary": "文件全部实际移动，move plan 保存并可复核。",
+      "evaluation": "本地整理流程真实有效，规则可解释。",
+      "limitations": "未覆盖海量文件、权限和重复文件内容哈希。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-file-organizer"
+        }
+      ]
     },
     "composiohq-invoice-organizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "从两份测试发票抽取供应商、日期、金额并按规则重命名，生成索引 CSV。",
-      "evidence": [],
-      "score": 8.5,
-      "evaluation": "任务边界清楚且产出可验；面对扫描件、复杂税项和多币种时仍需 OCR/规则增强。"
+      "testLevel": "e2e",
+      "score": 8.6,
+      "task": "创建两份本地发票文本，解析字段、重命名归档并生成 CSV 索引。",
+      "resultSummary": "两份发票成功归档，总额 205.5，CSV 索引生成。",
+      "evaluation": "对结构化/半结构化发票非常实用。",
+      "limitations": "未测试 OCR 扫描件。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-invoice-organizer"
+        }
+      ]
     },
     "composiohq-content-research-writer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "基于退款流程测试文章，把核心论点、证据、反例和文章结构整理成可继续写作的研究稿。",
-      "evidence": [],
-      "score": 8.1,
-      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。"
+      "testLevel": "task",
+      "score": 8.2,
+      "task": "基于固定资料写一段带证据边界的退款文章并迭代结构。",
+      "resultSummary": "输出包含引用位置、事实/推断边界和修改记录。",
+      "evaluation": "协作式研究写作流程有效。",
+      "limitations": "沙箱无外网，未做实时资料检索。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-content-research-writer"
+        }
+      ]
     },
     "composiohq-meeting-insights-analyzer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "从退款会议记录提取决定、开放问题、行动项，并识别‘先定 UI 后定规则’风险。",
-      "evidence": [],
-      "score": 8.4,
-      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。"
+      "testLevel": "task",
+      "score": 8.5,
+      "task": "分析固定会议记录，提取沟通模式、问题和可执行建议。",
+      "resultSummary": "输出具体到行为证据与下一步。",
+      "evaluation": "比纯摘要更有价值，能把会议文本转成可改进行为。",
+      "limitations": "样本会议较短。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-meeting-insights-analyzer"
+        }
+      ]
     },
     "composiohq-tailored-resume-generator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "根据 Healthcare SaaS JD 重写简历重点，同时单列缺失的 SQL/客户发现证据而不编造。",
-      "evidence": [],
-      "score": 8.6,
-      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。"
+      "testLevel": "task",
+      "score": 8.8,
+      "task": "根据职位描述和给定经历生成针对性简历要点，并禁止虚构 SQL/客户发现经验。",
+      "resultSummary": "产出匹配岗位但未添加输入中不存在的经历。",
+      "evaluation": "“针对性”与“不造假”能同时保持，这点很重要。",
+      "limitations": "未做真实 ATS/招聘者验证。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-tailored-resume-generator"
+        }
+      ]
     },
     "composiohq-competitive-ads-extractor": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "检查广告样本输入、竞争对手归类、创意模式提取和结论输出链。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "没有真实广告库/竞争对手样本时，无法评价其最关键的采集与归因能力；本轮只完成执行预检，不打分。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "task",
+      "score": 7,
+      "task": "用本地广告样本 CSV 做竞品文案/痛点/创意模式分析。",
+      "resultSummary": "真实分析本地样本并形成模式摘要。",
+      "evaluation": "分析方法可用，但没有真实广告平台数据，不能评价抓取能力。",
+      "limitations": "无外网和广告库访问。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-competitive-ads-extractor"
+        }
+      ]
     },
     "composiohq-lead-research-assistant": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
-      "task": "检查目标公司、人物、信号、联系方式与研究摘要的输入输出链。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "核心价值依赖实时公开信息和目标客户定义；当前固定夹具不包含真实销售线索，因此不做虚假 E2E。"
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "部分通过",
+      "testLevel": "task",
+      "score": 7.2,
+      "task": "用本地公司信号表筛选线索并生成联系策略。",
+      "resultSummary": "真实完成本地筛选与排序。",
+      "evaluation": "筛选逻辑可用，但没有真实网页/联系人研究。",
+      "limitations": "无外网和联系人数据源。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-lead-research-assistant"
+        }
+      ]
     },
     "composiohq-twitter-algorithm-optimizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把测试短文改成更强首句、可扫描列表和明确结论的帖子。",
-      "evidence": [],
-      "score": 7.1,
-      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。"
+      "testLevel": "task",
+      "score": 7.4,
+      "task": "把退款状态文章改成更强首句、可扫描结构和明确结论短帖。",
+      "resultSummary": "输出满足 hook、扫描性和不夸大算法确定性的检查。",
+      "evaluation": "可读性优化有效；“算法优化”命名本身容易过度承诺。",
+      "limitations": "未做真实平台发布/互动实验。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-twitter-algorithm-optimizer"
+        }
+      ]
     },
     "composiohq-changelog-generator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "从 5 条提交生成 Added/Fixed/Changed 三段 changelog。",
-      "evidence": [],
-      "score": 8.2,
-      "evaluation": "对规范 commit 历史非常省时；提交信息差时不会自动补回缺失语义。"
+      "testLevel": "e2e",
+      "score": 8.5,
+      "task": "真实创建 Git 仓库和 5 条 conventional commits，再从 git log 生成 changelog。",
+      "resultSummary": "读取 5 条真实提交，生成 Added/Fixed/Changed 三类条目。",
+      "evaluation": "对规范 commit 历史省时且可复现。",
+      "limitations": "提交信息质量差时无法补全业务语义。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#composiohq-changelog-generator"
+        }
+      ]
     },
     "michalparkola-article-extractor": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "部分通过",
-      "task": "从本地 HTML 测试文章抽取正文，去掉页面外壳并验证标题、三条规则和正文都保留；未覆盖真实远程网页的反爬/JS 渲染。",
-      "evidence": [],
-      "score": 8.2,
-      "evaluation": "‘优先使用 readability/reader，失败再降级’的策略实用；真实网页兼容性仍需用 URL 集合持续回归。"
+      "testLevel": "e2e",
+      "score": 8,
+      "task": "对真实本地 HTML 文章做正文识别并转换干净 Markdown。",
+      "resultSummary": "标题、2 个正文段落和 3 个列表项保留；nav/footer 去除。",
+      "evaluation": "本地 fallback 路径可复现；不能据此评价互联网复杂页面兼容率。",
+      "limitations": "无外网，未测登录态/动态页面。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-article-extractor"
+        }
+      ]
     },
     "michalparkola-youtube-transcript": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 yt-dlp，且测试容器无外网下载能力。"
+      "task": "尝试检查并下载 YouTube transcript。",
+      "resultSummary": "yt-dlp 不存在且沙箱无外网。",
+      "evaluation": "没有下载器和网络时不能用本地文本冒充 transcript 实测。",
+      "limitations": "缺 yt-dlp + 无网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-youtube-transcript"
+        }
+      ]
     },
     "michalparkola-learn-this": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把同一退款文章先抽取，再生成核心教训、可执行下一步和保存结构，验证 extraction → action planning 的组合价值。",
-      "evidence": [],
-      "score": 8.4,
-      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。"
+      "testLevel": "task",
+      "score": 8.5,
+      "task": "读取退款文章并把内容转成学习/行动计划。",
+      "resultSummary": "产出 3 条学习点、下一动作和验证问题。",
+      "evaluation": "比单纯摘要更能推动行动。",
+      "limitations": "并非所有阅读材料都需要任务化。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-learn-this"
+        }
+      ]
     },
     "michalparkola-ship-learn-next": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "从退款案例输出 Ship/Learn/Next，明确先交付 eligibility，再用阻塞原因数据决定下一步。",
-      "evidence": [],
-      "score": 8.3,
-      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。"
+      "testLevel": "task",
+      "score": 8.4,
+      "task": "把退款案例转成 Ship/Learn/Next 单次迭代计划。",
+      "resultSummary": "Ship 有边界、Learn 可测量、Next 有条件分支。",
+      "evaluation": "适合小步验证，能把学习和下一步绑到数据。",
+      "limitations": "纯知识保存场景会过度行动化。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-ship-learn-next"
+        }
+      ]
     },
     "michalparkola-unblock-action": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把‘药房规则不清’压缩成 30 分钟可完成的决策表动作。",
-      "evidence": [],
-      "score": 8.8,
-      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。"
+      "testLevel": "task",
+      "score": 8.9,
+      "task": "把“药房退费规则不清”缩成今天 30 分钟可完成的下一物理动作。",
+      "resultSummary": "包含时间盒、具体动作和停止/升级条件。",
+      "evaluation": "对卡住任务收敛非常有效。",
+      "limitations": "依赖执行者愿意做下一物理动作。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-unblock-action"
+        }
+      ]
     },
     "michalparkola-scrum-sage": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "task",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "把退款阻塞拆成工程可继续项、政策依赖项和升级触发条件。",
-      "evidence": [],
-      "score": 8,
-      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。"
+      "testLevel": "task",
+      "score": 8.2,
+      "task": "把退款阻塞拆成可继续工程项、外部依赖和升级触发条件。",
+      "resultSummary": "可控项/依赖项分开，并给出升级触发与指标。",
+      "evaluation": "促进性强于 Scrum 术语本身，能把阻塞变成可行动边界。",
+      "limitations": "最终仍需要真实团队授权。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#michalparkola-scrum-sage"
+        }
+      ]
     },
     "hugohe3-ppt-master": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
+      "status": "通过",
       "testLevel": "artifact",
-      "status": "部分通过",
-      "task": "用同一退款流程内容生成并验证 3 页 PPTX，重点检查叙事、视觉层级和页面节奏；未完整复现其所有 reference load order。",
-      "evidence": [],
-      "score": 8.3,
-      "evaluation": "对专业演示的约束比普通 PPT 提示更细，适合高要求 deck；参考文件较多，完整执行成本也更高。"
+      "score": 7.2,
+      "task": "按叙事节奏真实生成 5 页退款故事 Deck 并渲染 PDF。",
+      "resultSummary": "PptxGenJS 生成 5 页，LibreOffice PDF 渲染成功。",
+      "evaluation": "版式整洁，但实际查看第一页主要是标题+副标题，视觉丰富度和模板能力没有充分体现。",
+      "limitations": "未加载原仓库可能存在的全部外部 reference 资产。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#hugohe3-ppt-master"
+        }
+      ]
     },
     "op7418-nanobanana-ppt-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "需要 Google GenAI API/密钥；未提供凭据时不做假生成。"
+      "task": "尝试真实走 NanoBanana 图片生成→PPT 组装链。",
+      "resultSummary": "GOOGLE_API_KEY/GEMINI_API_KEY 均不存在且无外网。",
+      "evaluation": "核心是特定图像模型链，没有凭据时不应打视觉分。",
+      "limitations": "缺图像生成 API 凭据/网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#op7418-nanobanana-ppt-skills"
+        }
+      ]
     },
     "lewislulu-html-ppt-skill": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "制作 3 页可键盘切换的静态 HTML 演示，验证无构建、离线可用的核心路径。",
+      "testLevel": "e2e",
+      "score": 7.4,
+      "task": "制作无构建依赖 3 页 HTML 演示，用 Chromium 键盘左右键真实切页。",
+      "resultSummary": "Refund / Recovery → State machine → Release gate 依次显示，第三页截图保存。",
+      "evaluation": "交互和导航真实通过，但页面视觉非常克制，功能完成度高于设计完成度。",
+      "limitations": "未测试复杂动画与多媒体。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/lewislulu-html-ppt-skill/",
-          "label": "打开 3 页 HTML 演示",
-          "note": "支持键盘左右切页"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#lewislulu-html-ppt-skill"
         }
-      ],
-      "score": 8.9,
-      "evaluation": "模板/主题丰富且交付快，HTML 演示很实用；对必须交 .pptx 的组织不是直接替代。"
+      ]
     },
     "rendercv-rendercv": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "testLevel": "preflight",
       "score": null,
-      "evaluation": "当前环境没有 rendercv CLI，且无法联网安装。"
+      "task": "尝试按 Skill 创建 RenderCV YAML 并渲染 PDF/PNG/HTML。",
+      "resultSummary": "rendercv CLI 不存在，网络关闭无法安装。",
+      "evaluation": "工具绑定型 Skill 必须在真实 CLI 可用时再评分。",
+      "limitations": "缺 rendercv CLI + 无网络。",
+      "evidence": [
+        {
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#rendercv-rendercv"
+        }
+      ]
     },
     "jzcreative-html-resume-beautifier": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
+      "environment": "OpenAI execution sandbox / Debian Linux · Python 3.13.5 · Node 22.16.0 · LibreOffice 25.2.3.2 · Chromium 144 · network disabled",
+      "runKind": "real-sandbox",
       "status": "通过",
-      "task": "将测试简历制作成 A4 HTML 双栏版式，并保持虚构联系信息与隐私隔离。",
+      "testLevel": "artifact",
+      "score": 7.8,
+      "task": "用虚构简历生成 A4 双栏 HTML，真实截图、打印 PDF，并做 PII 泄露扫描。",
+      "resultSummary": "HTML、PNG、PDF 均生成；PII 扫描为 False。",
+      "evaluation": "两栏排版干净、导出链完整，但内容与视觉细节偏少，不是满分级简历成品。",
+      "limitations": "未做真实 ATS 解析与多打印机测试。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/jzcreative-html-resume-beautifier/",
-          "label": "打开 A4 简历 Demo",
-          "note": "使用虚构测试数据，避免 PII"
+          "label": "真实沙箱测试报告",
+          "url": "/skills/test-artifacts/real-sandbox-20260920/index.html#jzcreative-html-resume-beautifier"
         }
-      ],
-      "score": 8.7,
-      "evaluation": "HTML 简历的视觉与隐私规则都很扎实；自包含导出依赖需要严格验证。"
+      ]
     }
   }
 }
