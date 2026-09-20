@@ -65,7 +65,7 @@
     var cat = catOf(t.cat);
     var card = document.createElement('a');
     card.className = 'tool-card' + (Sync && Sync.isFav('tool', t.id) ? ' favorited' : '');
-    card.href = '#';
+    card.href = Tools.getToolUrl(t.id);
     card.setAttribute('aria-label', t.name);
     card.setAttribute('data-sync', '');
     card.setAttribute('data-sync-type', 'tool');
