@@ -28,7 +28,7 @@ from scripts.generate_access_cards import _operation_hints
 
 SITE_URL = "https://freellm.top"
 ACCESS_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
-SHARE_IMAGE_PATH = "/freellm-01-hero.png"
+SHARE_IMAGE_PATH = "/freellm-06-faq.png"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MANIFEST_NAME = ".seo-pages-manifest.json"
 
@@ -387,7 +387,7 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
-MODELS_PER_PAGE = 75
+MODELS_PER_PAGE = 45
 
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
@@ -687,6 +687,62 @@ def _adsense_slot_markup(slot: str | None = None) -> str:
 
 def _absolute(site_url: str, path: str) -> str:
     return urljoin(site_url.rstrip("/") + "/", path.lstrip("/"))
+
+
+SEO_TITLE_MIN = 24
+SEO_TITLE_MAX = 60
+SEO_DESCRIPTION_MIN = 100
+SEO_DESCRIPTION_MAX = 160
+
+
+def _compact_seo_title(title: str) -> str:
+    """Keep titles descriptive while avoiding crawler truncation warnings."""
+    value = re.sub(r"\s+", " ", str(title or "")).strip()
+    if len(value) > SEO_TITLE_MAX:
+        primary = re.split(r"\s+[·|]\s+", value, maxsplit=1)[0].strip()
+        suffix = " · FreeLLM"
+        room = SEO_TITLE_MAX - len(suffix)
+        if len(primary) > room:
+            primary = primary[: max(1, room - 1)].rstrip(" ·|—-:：()（）") + "…"
+        value = primary + suffix
+    if len(value) < SEO_TITLE_MIN:
+        suffix = " · 免费 AI 资源 · FreeLLM"
+        if suffix not in value:
+            value = value.rstrip(" ·|") + suffix
+    return value[:SEO_TITLE_MAX].rstrip()
+
+
+def _compact_seo_description(description: str) -> str:
+    """Normalize descriptions to a useful crawl/snippet length without keyword stuffing."""
+    value = re.sub(r"\s+", " ", str(description or "")).strip()
+    if len(value) < SEO_DESCRIPTION_MIN:
+        if re.search(r"[\u3400-\u9fff]", value):
+            extra = " FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。"
+        else:
+            extra = " FreeLLM also records official sources, access limits, region notes and verification dates so you can confirm the current terms before relying on it."
+        value = (value + extra).strip()
+    if len(value) > SEO_DESCRIPTION_MAX:
+        value = value[: SEO_DESCRIPTION_MAX - 1].rstrip(" ,，.;；:：|·—-") + "…"
+    return value
+
+
+def _normalize_seo_metadata(page: str) -> str:
+    """Apply the same title/description guardrails to every generated HTML page."""
+    title_match = re.search(r"<title>(.*?)</title>", page, flags=re.S | re.I)
+    desc_match = re.search(r'<meta\s+name="description"\s+content="([^"]*)"', page, flags=re.I)
+    if title_match:
+        original = html.unescape(re.sub(r"\s+", " ", title_match.group(1)).strip())
+        title = _compact_seo_title(original)
+        page = re.sub(r"<title>.*?</title>", f"<title>{_esc(title)}</title>", page, count=1, flags=re.S | re.I)
+        page = re.sub(r'(<meta\s+property="og:title"\s+content=")[^"]*(")', lambda m: m.group(1) + _esc(title) + m.group(2), page, flags=re.I)
+        page = re.sub(r'(<meta\s+name="twitter:title"\s+content=")[^"]*(")', lambda m: m.group(1) + _esc(title) + m.group(2), page, flags=re.I)
+    if desc_match:
+        original = html.unescape(desc_match.group(1))
+        description = _compact_seo_description(original)
+        page = re.sub(r'(<meta\s+name="description"\s+content=")[^"]*(")', lambda m: m.group(1) + _esc(description) + m.group(2), page, count=1, flags=re.I)
+        page = re.sub(r'(<meta\s+property="og:description"\s+content=")[^"]*(")', lambda m: m.group(1) + _esc(description) + m.group(2), page, flags=re.I)
+        page = re.sub(r'(<meta\s+name="twitter:description"\s+content=")[^"]*(")', lambda m: m.group(1) + _esc(description) + m.group(2), page, flags=re.I)
+    return page
 
 
 def _description(offer: dict) -> str:
@@ -2222,6 +2278,7 @@ def _model_catalog_row(
     row_number: int = 0,
     latencies: dict[str, dict] | None = None,
     latency_meta: dict | None = None,
+    linkable_model_slugs: set[str] | None = None,
 ) -> str:
     modalities = "".join(
         f'<span class="model-badge">{_esc(item)}</span>'
@@ -2248,6 +2305,17 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
+    linkable = linkable_model_slugs is None or _safe_slug(model_name, "model") in linkable_model_slugs
+    model_name_markup = (
+        f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
+        if linkable else
+        f'<span class="model-name model-name-static" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></span>'
+    )
+    card_model_markup = (
+        f'<a href="{_esc(model_aggregate_url(model))}">{_esc(model_name)}</a>'
+        if linkable else
+        f'<span>{_esc(model_name)}</span>'
+    )
     card_facts = "".join(
         f'<span class="model-card-fact"><small>{label}</small>{value}</span>'
         for label, value in (
@@ -2259,7 +2327,7 @@ def _model_catalog_row(
     )
     return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}" data-modality="{_esc(modality_key)}" data-context="{_esc(str(model.get("context") or ""))}" data-released="{_esc(str(model.get("released") or ""))}" data-ms="{_esc(latency_ms)}" data-score="{_esc(str(model.get("score") or ""))}">
       <td class="row-index" data-label="#">{row_number or "—"}</td>
-      <td class="model-cell" data-label="模型"><a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a><small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
+      <td class="model-cell" data-label="模型">{model_name_markup}<small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
       <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
       <td data-label="上下文长度" title="{_esc(str(model.get("context") or ""))}">{_esc(context_text)}</td>
       <td data-label="最大输出">{_esc(_format_context_window(model.get("maxOutput")) if str(model.get("maxOutput") or "").isdigit() else (model.get("maxOutput") or "—"))}</td>
@@ -2271,10 +2339,10 @@ def _model_catalog_row(
       <td data-label="中国大陆可用性"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
       <td class="source-cell" data-label="操作"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
     </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="{_esc(model_aggregate_url(model))}">{_esc(model_name)}</a></h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></div></div></td></tr>'''
+    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3>{card_model_markup}</h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></div></div></td></tr>'''
 
 
-def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0) -> str:
+def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0, linkable_model_slugs: set[str] | None = None) -> str:
     if not models:
         return ""
     provider_cards, policies, model_access = _load_access_context()
@@ -2287,7 +2355,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
     latencies, latency_meta = _load_endpoint_latency()
     start_index = (page_num - 1) * MODELS_PER_PAGE if total_pages > 1 else 0
     rows = "".join(
-        _model_catalog_row(model, cn_statuses, row_number=start_index + offset, latencies=latencies, latency_meta=latency_meta)
+        _model_catalog_row(model, cn_statuses, row_number=start_index + offset, latencies=latencies, latency_meta=latency_meta, linkable_model_slugs=linkable_model_slugs)
         for offset, model in enumerate(models, start=1)
     )
     modalities_present = sorted({str(item) for model in models for item in (model.get("modality") or [])} - {"unknown"})
@@ -2857,7 +2925,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     routes_markup = _access_routes_markup(provider_models)
     registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
     source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
-    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": _absolute(site_url, model_aggregate_url(model))} for index, model in enumerate(provider_models, start=1)]}}
+    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": (_absolute(site_url, model_aggregate_url(model)) if _safe_slug(model.get("model"), "model") in indexable_model_slugs(models) else (model.get("sourceUrl") or page_url))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <style>{EDITORIAL_BASE_CSS}</style>
@@ -3110,7 +3178,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     </div>
     <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
   </header>
-  <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total)}{cn_section}{sections_markup}
+  <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog))}{cn_section}{sections_markup}
     <section>
       <h2>{_locale_pair('按分类浏览', 'Browse by category')}</h2>
       <p class="section-desc">{_locale_pair('每个分类有独立页面，收录同一资源的深度信息。', 'Each category has its own page with the full verified records.')}</p>
@@ -3172,6 +3240,9 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
   .model-center-all-models-panel .status-degraded, .model-center-all-models-panel .status-unknown { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
   .model-center-all-models-panel .catalog-group-row th { padding: 13px 11px 7px; color: var(--ink); background: var(--canvas-warm); font-family: var(--font-sans); font-size: 13px; letter-spacing: 0; text-transform: none; }
   .model-center-all-models-panel .catalog-empty { margin: 16px 0 0; padding: 13px 16px; border-radius: 6px; color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
+  .model-center-full-directory { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:16px; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:var(--surface-soft); }
+  .model-center-full-directory p { margin:0; color:var(--ink-secondary); font-size:13px; }
+  .model-center-full-directory .button { flex:0 0 auto; }
   .model-center-all-models-panel .source-cell { min-width: 100px; white-space: nowrap; }
   .model-center-all-models-panel .freshness { color: var(--ink-secondary); }
   .model-center-all-models-panel .freshness-stale { color: var(--pale-red-text); }
@@ -3198,10 +3269,24 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = re.sub(r'(<meta name="twitter:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = head.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-default-locale="zh-CN">', 1)
+    head = head.replace('href="../css/freellm-pastel-ui.css"', 'href="/css/freellm-pastel-ui.css"')
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
     body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
     body = body.replace('href="/models/all/"', 'href="#all-models"')
-    catalog_markup = _model_catalog_markup(models, include_heading=False)
+    preview_models = models[:24]
+    catalog_markup = _model_catalog_markup(
+        preview_models,
+        include_heading=False,
+        total_models=len(models),
+        linkable_model_slugs=indexable_model_slugs(models),
+    )
+    catalog_markup += f'''<div class="model-center-full-directory">
+      <p>{_locale_pair(
+          f"这里先展示 24 条模型作为快速预览；完整 {len(models)} 条目录使用独立分页，避免模型中心重复下载整份大表。",
+          f"This tab previews 24 models. Open the paginated directory for all {len(models)} records without downloading the full table twice."
+      )}</p>
+      <a class="button" href="{ALL_MODELS_PAGE_PATH}">{_locale_pair("打开完整模型目录", "Open full model directory")} →</a>
+    </div>'''
     tab_markup = f'''<nav class="model-center-tabs" role="tablist" aria-label="模型中心页面切换">
   <button id="model-center-tab-featured" class="model-center-tab" type="button" role="tab" aria-controls="categories" aria-selected="true" data-center-tab="featured">{_locale_pair('精选资源', 'Featured resources')} <small>01</small></button>
   <button id="model-center-tab-all-models" class="model-center-tab" type="button" role="tab" aria-controls="model-center-all-models-panel" aria-selected="false" data-center-tab="all-models">{_locale_pair('全部模型', 'All models')} <small>{len(models)}</small></button>
@@ -3596,7 +3681,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
     share_title = "每日更新 · FreeLLM"
     share_description = "FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"
-    share_image = _absolute(site_url, "/freellm-01-hero.png")
+    share_image = _absolute(site_url, SHARE_IMAGE_PATH)
     social = (
         '<meta name="robots" content="index,follow,max-image-preview:large">'
         '<meta property="og:type" content="website">'
@@ -4157,7 +4242,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         page_path = "/" + path.as_posix()
         if page_path.endswith("index.html"):
             page_path = page_path[:-len("index.html")]
-        files[path] = _inject_hreflang_links(page, site_url, page_path)
+        files[path] = _normalize_seo_metadata(_inject_hreflang_links(page, site_url, page_path))
     return files, categories
 
 

@@ -53,7 +53,7 @@ class StaticContractTests(unittest.TestCase):
             'id="catalog-sort"', 'id="catalog-result-count"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
             'id="studentList"', 'id="catalog-download-list"', 'id="catalog-last-checked"',
-            'assets/free-method-night-window.png', "offerCategories", "timeWindow",
+            "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.html)
         self.assertIn('"id":"doubao"', self.html)
@@ -279,12 +279,12 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_chinese_static_seo_metadata(self):
         self.assertIn('<html lang="zh-CN">', self.html)
         self.assertIn(
-            '<meta name="description" content="FreeLLM 整理可核验的免费 AI 模型、API、编程 IDE、学生优惠和开源权重',
+            '<meta name="description" content="FreeLLM 汇总并持续核验免费 AI 模型、API、编程 IDE、Agent Skills',
             self.html,
         )
         self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.html)
-        self.assertIn('<meta property="og:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
-        self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png" />', self.html)
+        self.assertIn('<meta property="og:image" content="https://freellm.top/freellm-06-faq.png" />', self.html)
+        self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png" />', self.html)
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
     def test_homepage_omits_locale_hreflang_variants(self):

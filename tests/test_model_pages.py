@@ -81,20 +81,22 @@ def _all_catalog_pages(tmp_path) -> str:
     return "".join(page.read_text(encoding="utf-8") for page in pages if page.is_file())
 
 
-def test_model_rows_link_to_local_aggregation_pages(tmp_path):
+def test_model_rows_link_only_to_indexable_aggregation_pages(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     models = _exclude_retired_models(
         json.loads(MODELS_PATH.read_text(encoding="utf-8")),
         _load_model_access(OFFERS_PATH),
     )
-    page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+    groups = model_record_groups(models)
+    rich = next(slug for slug, records in groups.items() if len(records) > 1)
+    thin = next(slug for slug, records in groups.items() if len(records) == 1)
     all_pages = _all_catalog_pages(tmp_path)
 
-    assert re.findall(r'href="/models/[a-z0-9-]+/"', page)
-    # The catalog is paginated, so the first row and a provider that lives beyond
-    # page one must both resolve somewhere in the paginated catalog pages.
-    first_model_href = f'href="/models/{model_slug(models[0]["model"])}/"'
-    assert first_model_href in all_pages
+    # Rich aggregate pages are crawlable destinations; thin single-record pages
+    # stay reachable by direct URL but are noindex and therefore not promoted
+    # by the model directory.
+    assert f'href="/models/{rich}/"' in all_pages
+    assert f'href="/models/{thin}/"' not in all_pages
     last_provider_href = f'href="/providers/{model_slug(models[-1].get("providerId"))}/"'
     assert last_provider_href in all_pages
 
@@ -142,6 +144,9 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')
     assert page.index('class="model-center-tabs"') < page.index('id="model-center-all-models-panel"')
     assert page.index('id="model-center-all-models-panel"') < page.index('id="categories"')
+    assert 'class="model-center-full-directory"' in page
+    assert 'href="/models/all/"' in page
+    assert page.count('class="catalog-row"') == 24
 
 
 def test_model_rows_carry_score_data_for_catalog_ranking():

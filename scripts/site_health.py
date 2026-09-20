@@ -18,11 +18,12 @@ DEFAULT_MAX_AGE_DAYS = 7
 # 首页是一份自包含的应用壳：整份 offers JSON 内嵌在 HTML 里（约占 44%），
 # 再加静态兜底卡片、内联 CSS/JS。每加一个内容字段，这个文件就长一点，
 # 所以预算按「当前实测 + 约 2% 余量」维护，而不是钉死一个旧数字。
-# 2026-09-19 实测 411418 字节（加精标签落地后），故由 400 KiB 调到 410 KiB。
+# 首页仍保留内嵌兜底数据；模型目录已在 2026-09-20 降为 50 条/页，
+# 模型中心仅保留 24 条快速预览，避免重复内嵌完整模型表。
 DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": 410 * 1024,
-    "models/center/index.html": 1200 * 1024,
-    "models/all/index.html": 450 * 1024,
+    "models/center/index.html": 600 * 1024,
+    "models/all/index.html": 340 * 1024,
 }
 # 分页页数随目录涨缩（301 模型时 5 页、220 模型时 3 页），按 models.json 现值
 # 动态生成预算，避免目录瘦身后再为已删除的分页页保预算、或新分页漏保。
@@ -40,7 +41,7 @@ def _models_page_budgets() -> dict[str, int]:
 
     total_pages = max(1, -(-len(models) // MODELS_PER_PAGE)) if models else 1
     for page_num in range(2, total_pages + 1):
-        budgets[f"models/all/page/{page_num}/index.html"] = 450 * 1024
+        budgets[f"models/all/page/{page_num}/index.html"] = 340 * 1024
     return budgets
 
 
