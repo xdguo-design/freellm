@@ -21,6 +21,16 @@ jobs:
       - name: Install browser test dependencies
         run: python -m pip install playwright pytest && python -m playwright install --with-deps chromium
 
+      - name: Compile and verify generated output
+        run: |
+          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py
+          python scripts/build_tools_index.py --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+
+      - name: Run P0 convergence contracts
+        run: python -m unittest tests.test_skills_page tests.test_p0_convergence -v
+
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
