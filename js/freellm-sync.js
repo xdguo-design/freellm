@@ -40,7 +40,7 @@
     var themeLink = document.createElement('link');
     themeLink.id = 'freellm-site-theme';
     themeLink.rel = 'stylesheet';
-    themeLink.href = '/css/freellm-pastel-ui.css?v=20260920';
+    themeLink.href = '/css/freellm-pastel-ui.css?v=20260920c';
     document.head.appendChild(themeLink);
 
     function sectionFor(path) {
@@ -51,13 +51,14 @@
       if (path.indexOf('/logs') === 0) return 'logs';
       if (path.indexOf('/models') === 0 || path.indexOf('/providers') === 0) return 'models';
       if (path.indexOf('/about') === 0 || path.indexOf('/links') === 0 || path.indexOf('/privacy') === 0 || path.indexOf('/terms') === 0) return 'about';
+      if (path.indexOf('/favorites') === 0 || path.indexOf('/submit') === 0) return '';
       if (path.indexOf('/offers') === 0 || path.indexOf('/category') === 0 || path.indexOf('/guides') === 0) return 'models';
       return 'home';
     }
 
     function railLink(href, icon, label, section, current) {
       var state = section === current ? ' aria-current="page"' : '';
-      return '<a href="' + href + '"' + state + '><span class="fl-site-nav-icon" aria-hidden="true">' + icon + '</span><span>' + label + '</span></a>';
+      return '<a href="' + href + '" data-site-nav="' + section + '"' + state + '><span class="fl-site-nav-icon" aria-hidden="true">' + icon + '</span><span>' + label + '</span></a>';
     }
 
     function addSiteChrome() {
@@ -83,15 +84,12 @@
           '</a>' +
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
-            railLink('/models/', '▣', '模型目录', 'models', current) +
-            railLink('/models/center/', '◫', '模型中心', 'models', current) +
-            railLink('/models/all/', '≡', '全部模型', 'models', current) +
-            railLink('/providers/', '◇', '按厂家', 'models', current) +
+            railLink('/models/', '▣', '模型', 'models', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
-            railLink('/tools/', '⌘', '工具集', 'tools', current) +
+            railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
-            railLink('/logs/', '◷', '每日更新', 'logs', current) +
-            railLink('/about/', 'ⓘ', '关于我们', 'about', current) +
+            railLink('/logs/', '◷', '更新', 'logs', current) +
+            railLink('/about/', 'ⓘ', '关于', 'about', current) +
           '</nav>' +
           '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>';
         document.body.insertBefore(rail, document.body.firstChild);
@@ -124,6 +122,33 @@
     } else {
       addSiteChrome();
     }
+  })();
+
+  /* Keep the server-rendered seven-item rail localized as the document locale changes.
+     This lives outside installSiteVisualSystem because static pages already carry
+     fl-pastel-ui and intentionally skip runtime shell creation. */
+  (function installSiteChromeLocale() {
+    var labels = {
+      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '更新', about: '关于' },
+      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Updates', about: 'About' }
+    };
+    function applySiteChromeLocale() {
+      var locale = String(document.documentElement.lang || '').toLowerCase().indexOf('en') === 0 ? 'en' : 'zh-CN';
+      document.querySelectorAll('[data-site-nav]').forEach(function (link) {
+        var label = labels[locale][link.getAttribute('data-site-nav')];
+        var textNode = link.querySelector('span:last-child');
+        if (label && textNode) textNode.textContent = label;
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', applySiteChromeLocale);
+    } else {
+      applySiteChromeLocale();
+    }
+    new MutationObserver(applySiteChromeLocale).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['lang']
+    });
   })();
 
   var LS = {

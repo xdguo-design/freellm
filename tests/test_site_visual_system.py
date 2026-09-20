@@ -48,14 +48,17 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn("freellm-pastel-ui.css?v=20260920b", page)
+        self.assertIn("freellm-pastel-ui.css?v=20260920c", page)
 
-    def test_generated_pages_render_visual_classes_server_side(self):
-        for relative in ("skills/index.html", "models/index.html", "logs/index.html"):
+    def test_generated_pages_render_visual_classes_and_chrome_server_side(self):
+        for relative in ("skills/index.html", "models/index.html", "logs/index.html", "tools/index.html", "about/index.html", "submit/index.html"):
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("fl-pastel-ui", page, relative)
             self.assertIn("fl-ui-v2", page, relative)
-            self.assertIn("freellm-pastel-ui.css?v=20260920b", page, relative)
+            self.assertIn("freellm-pastel-ui.css?v=20260920c", page, relative)
+            self.assertIn('class="fl-site-rail"', page, relative)
+            self.assertIn('class="fl-site-ribbon"', page, relative)
+            self.assertNotIn('class="top-nav"', page, relative)
 
     def test_theme_braces_are_balanced(self):
         css = THEME.read_text(encoding="utf-8")
