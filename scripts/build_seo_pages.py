@@ -2952,7 +2952,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         page_models = model_catalog[start:end]
     else:
         page_models = model_catalog
-    provider_access_count = len(_load_access_context()[0]) if models is not None else 0
+    provider_access_count = len(_load_access_context()[0])
     if models is None:
         title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
         description = (
@@ -2985,7 +2985,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     )
     last_checked = max(checked_dates) if checked_dates else "2026-09-08"
     model_dates = {
-        model.get("lastSeenAt") for model in model_catalog if model.get("lastSeenAt")
+        model.get("lastSeenAt") for model in stats_catalog if model.get("lastSeenAt")
     }
     model_last_seen = max(model_dates) if model_dates else "—"
     offer_dates = {
@@ -3041,7 +3041,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     cn_section = f'''<section id="mainland-cn-availability">
       <h2>{_locale_pair("中国大陆可用性与注册要求", "Mainland China availability and signup requirements")}</h2>
       <p class="section-desc">{_locale_pair(
-        f"目录逐行标注每个模型在中国大陆的可用状态（可用 / 不可用 / 待核验），背后是 {provider_access_count} 家提供商的注册要求核验卡：是否需要手机号、实名认证或信用卡，全部以官方来源为准。没有官方证据的一律标为“待核验”，不会因为证据缺失而被判为不可用。以下要点已完成人工核验：",
+        f"目录逐行标注每个模型在中国大陆的可用状态（可用 / 不可用 / 待核验），并关联 {provider_access_count} 张接入提供商注册核验卡：是否需要手机号、实名认证或信用卡，全部以官方来源为准。这里的注册卡数量与模型数据 providerId 数量是两个口径。没有官方证据的一律标为“待核验”，不会因为证据缺失而被判为不可用。以下要点已完成人工核验:",
         "Every catalog row carries a mainland-China availability label (available / unavailable / unverified), backed by per-provider registration cards covering phone, identity and credit-card requirements — all evidence-linked. Anything without official evidence stays “unverified” and is never marked unavailable for lack of evidence. Key verified facts:")}</p>
       <ul>
         <li>{_locale_pair("SiliconFlow：手机号 + 短信验证码注册，实名认证仅用于提升额度", "SiliconFlow: phone + SMS signup; identity verification only raises quotas")}</li>
