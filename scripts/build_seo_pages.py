@@ -4518,6 +4518,12 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
+    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css">'
+    files = {
+        relative: (content if (relative.suffix != ".html" or "freellm-pastel-ui.css" in content or "</head>" not in content)
+                   else content.replace("</head>", theme_tag + "</head>", 1))
+        for relative, content in files.items()
+    }
     sync_tag = '<script src="/js/freellm-sync.js"></script>'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-sync.js" in content or "</body>" not in content)

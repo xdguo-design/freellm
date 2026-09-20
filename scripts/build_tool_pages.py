@@ -42,6 +42,7 @@ TEMPLATE = '''<!doctype html>
   gtag('config', 'G-JMK4R9519M');
 </script>
 <link rel="stylesheet" href="/tools/css/tool.css">
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css">
 @HEAD@
 </head>
 <body>

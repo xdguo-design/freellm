@@ -713,6 +713,9 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            css = Path(directory) / "css"
+            css.mkdir()
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()

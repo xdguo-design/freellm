@@ -32,6 +32,97 @@
 (function (global) {
   'use strict';
 
+  /* ---------- FreeLLM 2026 site-wide visual system ---------- */
+  (function installSiteVisualSystem() {
+    if (document.documentElement.classList.contains('fl-pastel-ui')) return;
+    document.documentElement.classList.add('fl-pastel-ui');
+
+    var themeLink = document.createElement('link');
+    themeLink.id = 'freellm-site-theme';
+    themeLink.rel = 'stylesheet';
+    themeLink.href = '/css/freellm-pastel-ui.css?v=20260920';
+    document.head.appendChild(themeLink);
+
+    function sectionFor(path) {
+      if (path === '/' || path.indexOf('/design/free-china-ai-index') === 0) return 'home';
+      if (path.indexOf('/skills/lab') === 0) return 'workflow';
+      if (path.indexOf('/skills') === 0) return 'skills';
+      if (path.indexOf('/tools') === 0) return 'tools';
+      if (path.indexOf('/logs') === 0) return 'logs';
+      if (path.indexOf('/models') === 0 || path.indexOf('/providers') === 0) return 'models';
+      if (path.indexOf('/about') === 0 || path.indexOf('/links') === 0 || path.indexOf('/privacy') === 0 || path.indexOf('/terms') === 0) return 'about';
+      if (path.indexOf('/offers') === 0 || path.indexOf('/category') === 0 || path.indexOf('/guides') === 0) return 'models';
+      return 'home';
+    }
+
+    function railLink(href, icon, label, section, current) {
+      var state = section === current ? ' aria-current="page"' : '';
+      return '<a href="' + href + '"' + state + '><span class="fl-site-nav-icon" aria-hidden="true">' + icon + '</span><span>' + label + '</span></a>';
+    }
+
+    function addSiteChrome() {
+      if (!document.body) return;
+      /* Move the theme link to the end of <head>. On the homepage this shared
+         script is loaded early, before the legacy inline CSS; moving it here
+         guarantees the new design system wins the cascade everywhere. */
+      if (themeLink.parentNode) document.head.appendChild(themeLink);
+
+      document.body.classList.add('fl-ui-v2');
+      var path = window.location.pathname || '/';
+      var current = sectionFor(path);
+      document.body.setAttribute('data-fl-section', current);
+
+      if (!document.querySelector('.fl-site-rail')) {
+        var rail = document.createElement('aside');
+        rail.className = 'fl-site-rail';
+        rail.setAttribute('aria-label', 'FreeLLM 主导航');
+        rail.innerHTML =
+          '<a class="fl-site-brand" href="/">' +
+            '<span class="fl-site-brand-mark" aria-hidden="true">AI</span>' +
+            '<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span>' +
+          '</a>' +
+          '<nav class="fl-site-nav">' +
+            railLink('/', '⌂', '首页', 'home', current) +
+            railLink('/models/', '▣', '模型目录', 'models', current) +
+            railLink('/skills/', '✦', 'Skills', 'skills', current) +
+            railLink('/tools/', '⌘', '工具集', 'tools', current) +
+            railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
+            railLink('/logs/', '◷', '每日更新', 'logs', current) +
+            railLink('/about/', 'ⓘ', '关于我们', 'about', current) +
+          '</nav>' +
+          '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>';
+        document.body.insertBefore(rail, document.body.firstChild);
+      }
+
+      if (!document.querySelector('.fl-site-ribbon')) {
+        var ribbon = document.createElement('div');
+        ribbon.className = 'fl-site-ribbon';
+        var pageTitle = (document.title || 'FreeLLM').split('·')[0].split('|')[0].trim();
+        ribbon.innerHTML =
+          '<span class="fl-site-ribbon-title">FREE AI INDEX / ' + escapeText(pageTitle) + '</span>' +
+          '<span class="fl-site-ribbon-actions">' +
+            '<a href="/favorites/">我的收藏</a>' +
+            '<a href="/">资源首页 ↗</a>' +
+          '</span>';
+        var anchor = document.querySelector('.catalog-app, .skills-page, .skill-lab-page, .tools-page, .page, body > header, body > main');
+        if (anchor && anchor.parentNode === document.body) document.body.insertBefore(ribbon, anchor);
+        else document.body.insertBefore(ribbon, document.body.children[1] || null);
+      }
+    }
+
+    function escapeText(value) {
+      return String(value || '').replace(/[&<>"']/g, function (ch) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', addSiteChrome, { once: true });
+    } else {
+      addSiteChrome();
+    }
+  })();
+
   var LS = {
     fav: 'freellm-favorites',
     hist: 'freellm-history',
