@@ -22,6 +22,89 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
+SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+  <a class="fl-site-brand" href="/">
+    <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
+    <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span>
+  </a>
+  <nav class="fl-site-nav">
+    <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
+    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型目录</span></a>
+    <a href="/models/center/"><span class="fl-site-nav-icon" aria-hidden="true">◫</span><span>模型中心</span></a>
+    <a href="/models/all/"><span class="fl-site-nav-icon" aria-hidden="true">≡</span><span>全部模型</span></a>
+    <a href="/providers/"><span class="fl-site-nav-icon" aria-hidden="true">◇</span><span>按厂家</span></a>
+    <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
+    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具集</span></a>
+    <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>每日更新</span></a>
+    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于我们</span></a>
+  </nav>
+  <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
+</aside>
+<div class="fl-site-ribbon">
+  <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
+  <span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">Skills 实测 ↗</a></span>
+</div>'''
+
+
+def ensure_pastel_shell(html: str) -> str:
+    """Render the visual shell in HTML itself instead of depending on JS to add it."""
+    updated = html
+    updated = re.sub(
+        r'<html(?![^>]*\bclass=)([^>]*)>',
+        r'<html class="fl-pastel-ui"\1>',
+        updated,
+        count=1,
+        flags=re.I,
+    )
+    updated = re.sub(
+        r'<html([^>]*\bclass=")([^"]*)(")',
+        lambda m: f'<html{m.group(1)}{m.group(2)}{" " if m.group(2) else ""}fl-pastel-ui{m.group(3)}'
+        if "fl-pastel-ui" not in m.group(2).split()
+        else m.group(0),
+        updated,
+        count=1,
+        flags=re.I,
+    )
+    body_match = re.search(r'<body([^>]*)>', updated, flags=re.I)
+    if body_match:
+        attrs = body_match.group(1)
+        if 'class="' in attrs:
+            attrs = re.sub(
+                r'class="([^"]*)"',
+                lambda m: f'class="{m.group(1)}{" " if m.group(1) else ""}fl-ui-v2"' if "fl-ui-v2" not in m.group(1).split() else m.group(0),
+                attrs,
+                count=1,
+            )
+        else:
+            attrs += ' class="fl-ui-v2"'
+        if 'data-fl-section=' not in attrs:
+            attrs += ' data-fl-section="home"'
+        replacement = f'<body{attrs}>'
+        updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
+
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920b">'
+    updated = re.sub(
+        r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
+        theme_tag,
+        updated,
+        count=1,
+    )
+    if "freellm-pastel-ui.css" not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", theme_tag + "</head>", 1)
+
+    if 'class="fl-site-rail"' not in updated:
+        updated = re.sub(
+            r'(<body[^>]*>)',
+            lambda m: m.group(1) + "\n" + SITE_CHROME,
+            updated,
+            count=1,
+            flags=re.I,
+        )
+    return updated
+
+
+
 def offer_href(offer: dict) -> str:
     offer_id = str(offer.get("id") or "").strip()
     if not offer_id:
@@ -277,9 +360,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css">'
-    if "freellm-pastel-ui.css" not in updated and "</head>" in updated:
-        updated = updated.replace("</head>", theme_tag + "</head>", 1)
+    updated = ensure_pastel_shell(updated)
     if check:
         if updated != html:
             print(f"stale: {html_path} does not contain the current offers JSON")

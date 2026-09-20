@@ -123,7 +123,9 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     page = (tmp_path / "models" / "center" / "index.html").read_text(encoding="utf-8")
     original_home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
 
-    assert '<html lang="zh-CN" data-default-locale="zh-CN">' in page
+    assert 'lang="zh-CN"' in page
+    assert 'data-default-locale="zh-CN"' in page
+    assert 'fl-pastel-ui' in page
     assert 'id="model-center-tab-featured"' in page
     assert 'id="model-center-tab-all-models"' in page
     assert 'aria-controls="categories"' in page

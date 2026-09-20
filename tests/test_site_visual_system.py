@@ -42,6 +42,21 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn("freellm-pastel-ui.css", STATIC_BUILD.read_text(encoding="utf-8"))
         self.assertIn("freellm-pastel-ui.css", TOOL_BUILD.read_text(encoding="utf-8"))
 
+    def test_homepage_renders_visual_shell_without_runtime_javascript(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        self.assertIn('class="fl-pastel-ui"', page)
+        self.assertIn('class="fl-ui-v2"', page)
+        self.assertIn('class="fl-site-rail"', page)
+        self.assertIn('class="fl-site-ribbon"', page)
+        self.assertIn("freellm-pastel-ui.css?v=20260920b", page)
+
+    def test_generated_pages_render_visual_classes_server_side(self):
+        for relative in ("skills/index.html", "models/index.html", "logs/index.html"):
+            page = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn("fl-pastel-ui", page, relative)
+            self.assertIn("fl-ui-v2", page, relative)
+            self.assertIn("freellm-pastel-ui.css?v=20260920b", page, relative)
+
     def test_theme_braces_are_balanced(self):
         css = THEME.read_text(encoding="utf-8")
         depth = 0
