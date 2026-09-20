@@ -28,7 +28,7 @@ from scripts.generate_access_cards import _operation_hints
 
 SITE_URL = "https://freellm.top"
 ACCESS_DATA_DIR = Path(__file__).resolve().parents[1] / "data"
-SHARE_IMAGE_PATH = "/freellm-01-hero.png"
+SHARE_IMAGE_PATH = "/freellm-og.jpg"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MANIFEST_NAME = ".seo-pages-manifest.json"
 
@@ -691,7 +691,8 @@ def _absolute(site_url: str, path: str) -> str:
 
 def _description(offer: dict) -> str:
     summary = offer.get("freeSummary") or offer.get("mechanism") or offer.get("why") or "Verified AI offer"
-    return f"{offer.get('provider', offer.get('name', 'AI 资源'))}：{summary}。请以官方页面为准，核对地区、有效期和使用条件。"
+    return (f"{offer.get('provider', offer.get('name', 'AI 资源'))}：{summary}。"
+        "FreeLLM 同时整理免费方式、额度与速率限制、地区和账号要求、有效期、官方入口与最近核验信息，使用前请再次确认提供商当前条款。")
 
 
 def _social_meta(site_url: str, page_url: str, title: str, description: str, og_type: str, indexable: bool = True) -> str:
@@ -798,8 +799,9 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     record_kind, records = _theme_records(slug, offers, models)
     path = f'/guides/{slug}/'
     page_url = _absolute(site_url, path)
-    title = f'{definition["title_en"]} | {definition["title_zh"]} · FreeLLM'
-    description = f'{definition["description_en"]} {definition["description_zh"]}'
+    title = f'{definition["title_zh"]} | FreeLLM'
+    description = (f'{definition["description_zh"]}'
+                   ' 页面同时提供官方入口、免费条件、限制说明、相关目录数据与最近核验信息，方便按真实使用条件进行比较。')
     if record_kind == "offer":
         rows = "".join(_theme_offer_row(offer, site_url) for offer in records)
         table = f'''<div class="table-wrap"><table><thead><tr><th>Provider / model</th><th>Free terms</th><th>Access</th><th>Official links</th></tr></thead><tbody>{rows}</tbody></table></div>'''
@@ -1306,7 +1308,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     path = offer_url(offer)
     title = offer.get("title") or offer.get("name")
     description = _description(offer)
-    page_title = f"{title} · FreeLLM 免费 AI 资源索引"
+    page_title = f"{title} 免费方式、额度与限制 | FreeLLM"
     social_meta = _social_meta(site_url, path, page_title, description, "article")
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
@@ -2761,8 +2763,9 @@ def _access_routes_markup(records: list[dict]) -> str:
 def render_model_aggregate_page(model_name: str, records: list[dict], offers: list[dict], site_url: str, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
     path = model_aggregate_url(model_name)
     page_url = _absolute(site_url, path)
-    title = f"{model_name} 多平台入口与限制 · {model_name} Model Providers | FreeLLM"
-    description = f"比较 {model_name} 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。"
+    title = f"{model_name} 免费入口、上下文与限制 | FreeLLM"
+    description = (f"比较 {model_name} 在不同厂商和平台的免费入口、上下文窗口、速率与状态，"
+                   "同时查看注册要求、官方来源、接入地址和 FreeLLM 已核验的详细使用说明，便于选择更合适的访问方式。")
     # 记录数不足阈值的聚合页本身就是薄页，已经主动 noindex；既然不让搜索引擎收录，
     # 就不该同时挂广告代码 —— 薄页广告属于低价值库存，是 AdSense 审核和账号风险的高发面。
     # 广告与收录用同一个判定，避免两套标准各走各的。
@@ -2850,8 +2853,9 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     path = provider_url(provider)
     page_url = _absolute(site_url, path)
     name = str(provider.get("name") or provider.get("id") or "Provider")
-    title = f"{name} 模型与免费入口 · {name} Models & Access | FreeLLM"
-    description = f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较上下文、限流、状态和来源，并查看已整理的免费入口。"
+    title = f"{name} 免费模型、API 与接入限制 | FreeLLM"
+    description = (f"浏览 {name} 的 {len(provider_models)} 个模型记录，比较上下文窗口、速率限制、在线状态和官方来源，"
+                   "并查看 FreeLLM 整理的免费入口、注册要求、接入地址与最近核验信息。")
     related = _related_offer_links(offers, lambda offer: _provider_offer_matches(provider, offer))
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
     routes_markup = _access_routes_markup(provider_models)
@@ -2885,27 +2889,25 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         page_models = model_catalog
     provider_access_count = len(_load_access_context()[0]) if models is not None else 0
     if models is None:
-        title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
+        title = "免费 AI 模型、API 与 IDE 目录 | FreeLLM"
         description = (
             f"按免费额度、API、IDE、试用和开源权重浏览 FreeLLM 的 {total} 条可核验资源，"
             "进入每条资源页查看官方入口、限制和操作步骤。 Browse verified free AI models, APIs, IDEs and open-weight resources."
         )
     else:
         if page_num > 1:
-            title = f"全部免费 AI 模型与 API 一览（第 {page_num} 页）· All Free AI Models with Mainland CN Availability | FreeLLM"
+            title = f"免费 AI 模型与 API 大全（第 {page_num} 页） | FreeLLM"
             description = (
                 f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
                 f"第 {page_num}/{total_pages} 页。附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
-                f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
-                f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
+
             )
         else:
-            title = "全部免费 AI 模型与 API 一览（含中国大陆可用性标注）· All Free AI Models with Mainland CN Availability | FreeLLM"
+            title = "免费 AI 模型与 API 大全：中国大陆可用性 | FreeLLM"
             description = (
                 f"FreeLLM 收录的 {model_total or total} 个模型与 {total} 个免费访问资源，逐行标注中国大陆可用性，"
                 f"附 {provider_access_count} 家提供商注册要求（手机号、实名、信用卡）与官方来源。"
-                f" Browse {model_total or total} catalog models and {total} verified free access records with per-row "
-                f"mainland-China availability labels and per-provider signup requirements (phone, identity, credit card)."
+
             )
     social_meta = _social_meta(site_url, path, title, description, "website")
     checked_dates = {
@@ -3811,8 +3813,8 @@ def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: st
         recipes = []
     recipes = recipes if isinstance(recipes, list) else []
     path = SKILL_LAB_PAGE_PATH
-    title = "Skill Lab · FreeLLM"
-    description = "用 FreeLLM 的 Workflow Recipes 把 Agent Skill 组合成可执行的产品、办公、电商、SEO 和求职工作流。"
+    title = "Agent Skill 工作流实验室（Skill Lab） | FreeLLM"
+    description = "在 FreeLLM Skill Lab 中把经过核验的 Agent Skill 组合成可执行工作流，覆盖产品、办公、电商、SEO 和求职场景，并查看步骤、输入输出、组件来源与复用方式。"
     page_url = _absolute(site_url, path)
     schema = {
         "@context": "https://schema.org",
