@@ -29,15 +29,12 @@ SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   </a>
   <nav class="fl-site-nav">
     <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
-    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型目录</span></a>
-    <a href="/models/center/"><span class="fl-site-nav-icon" aria-hidden="true">◫</span><span>模型中心</span></a>
-    <a href="/models/all/"><span class="fl-site-nav-icon" aria-hidden="true">≡</span><span>全部模型</span></a>
-    <a href="/providers/"><span class="fl-site-nav-icon" aria-hidden="true">◇</span><span>按厂家</span></a>
+    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
     <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
-    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具集</span></a>
+    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>每日更新</span></a>
-    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于我们</span></a>
+    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
 </aside>
@@ -286,6 +283,17 @@ def remove_legacy_app(html: str) -> str:
     )
 
 
+def remove_legacy_navigation(html: str) -> str:
+    """The product shell owns primary navigation; remove the old homepage nav instead of hiding it with CSS."""
+    return re.sub(
+        r'\s*<header class="catalog-header">.*?</header>',
+        "\n",
+        html,
+        count=1,
+        flags=re.S,
+    )
+
+
 def update_daily_log_summary(html: str, data_path: Path) -> str:
     log_dir = data_path.parent / "daily-log"
     log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
@@ -357,6 +365,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = html[:content_start] + replacement + html[end:]
     updated = update_trust_copy(updated)
     updated = remove_legacy_app(updated)
+    updated = remove_legacy_navigation(updated)
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
