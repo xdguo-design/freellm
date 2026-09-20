@@ -3254,10 +3254,13 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
 def render_model_center_page(offers: list[dict], site_url: str, models: list[dict]) -> str:
     template_path = Path(__file__).resolve().parents[1] / "design" / "free-china-ai-index.html"
     template = template_path.read_text(encoding="utf-8")
-    body_start = template.index("<body>")
+    body_match = re.search(r"<body[^>]*>", template, flags=re.I)
+    if not body_match:
+        raise ValueError("feature template is missing the body element")
+    body_start = body_match.start()
     body_end = template.rindex("</body>")
     head = template[:body_start]
-    body = template[body_start + len("<body>"):body_end]
+    body = template[body_match.end():body_end]
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
@@ -3268,7 +3271,13 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = re.sub(r'(?:\s*<link rel="alternate"[^>]+>){3}', f'\n  {_hreflang_links(site_url, MODEL_CENTER_PAGE_PATH)}', head, count=1, flags=re.S)
     head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
     head = re.sub(r'(<meta name="twitter:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
-    head = head.replace('<html lang="zh-CN">', '<html lang="zh-CN" data-default-locale="zh-CN">', 1)
+    head = re.sub(
+        r'<html([^>]*)>',
+        lambda m: '<html' + (m.group(1) if 'data-default-locale=' in m.group(1) else m.group(1) + ' data-default-locale="zh-CN"') + '>',
+        head,
+        count=1,
+        flags=re.I,
+    )
     head = head.replace('href="../css/freellm-pastel-ui.css"', 'href="/css/freellm-pastel-ui.css"')
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
     body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
