@@ -294,6 +294,53 @@ def _validate_edition_fields(offer: dict) -> list[str]:
     return errors
 
 
+OFFER_FREELLM_TEST_POLICY_DATE = "2026-09-20"
+OFFER_TEST_LEVELS = {"preflight", "account", "network", "e2e"}
+OFFER_TEST_STATUSES = {"passed", "partial", "blocked", "failed"}
+
+
+def _validate_freellm_offer_test(offer: dict) -> list[str]:
+    """Manual FreeLLM additions must state exactly what we tested and what remains unverified."""
+    errors: list[str] = []
+    date = str(offer.get("date") or "")
+    requires_test = offer.get("checkedBy") == "manual" and date >= OFFER_FREELLM_TEST_POLICY_DATE
+    test = offer.get("freeLLMTest")
+    if test is None:
+        return ["freeLLMTest is required for manual offers added on or after 2026-09-20"] if requires_test else []
+    if not isinstance(test, dict):
+        return ["freeLLMTest must be an object"]
+
+    if test.get("testLevel") not in OFFER_TEST_LEVELS:
+        errors.append(f"freeLLMTest.testLevel must be one of {sorted(OFFER_TEST_LEVELS)}")
+    if test.get("status") not in OFFER_TEST_STATUSES:
+        errors.append(f"freeLLMTest.status must be one of {sorted(OFFER_TEST_STATUSES)}")
+    if not isinstance(test.get("testedAt"), str) or not DATE_RE.fullmatch(test["testedAt"]):
+        errors.append("freeLLMTest.testedAt must use YYYY-MM-DD")
+    if not isinstance(test.get("actualUsageVerified"), bool):
+        errors.append("freeLLMTest.actualUsageVerified must be a boolean")
+    for field in ("task", "result", "limitations"):
+        if not isinstance(test.get(field), str) or not test[field].strip():
+            errors.append(f"freeLLMTest.{field} must be a non-empty string")
+    method = test.get("method")
+    if not isinstance(method, list) or not method or not all(isinstance(item, str) and item.strip() for item in method):
+        errors.append("freeLLMTest.method must be a non-empty list of strings")
+    evidence = test.get("evidence")
+    if not isinstance(evidence, list) or not evidence:
+        errors.append("freeLLMTest.evidence must be a non-empty list")
+    else:
+        for index, item in enumerate(evidence):
+            if not isinstance(item, dict):
+                errors.append(f"freeLLMTest.evidence[{index}] must be an object")
+                continue
+            if not isinstance(item.get("label"), str) or not item["label"].strip():
+                errors.append(f"freeLLMTest.evidence[{index}].label must be a non-empty string")
+            if not _https_url(item.get("url")):
+                errors.append(f"freeLLMTest.evidence[{index}].url must be an HTTPS URL")
+    if test.get("testLevel") == "preflight" and test.get("actualUsageVerified") is not False:
+        errors.append("preflight tests must set actualUsageVerified to false")
+    return errors
+
+
 def validate_offer(offer: object) -> list[str]:
     if not isinstance(offer, dict):
         return ["offer must be an object"]
@@ -341,6 +388,7 @@ def validate_offer(offer: object) -> list[str]:
             errors.append(f"{field} must be a non-empty string")
     errors.extend(_validate_structured_offer_fields(offer))
     errors.extend(_validate_edition_fields(offer))
+    errors.extend(_validate_freellm_offer_test(offer))
     return errors
 
 
