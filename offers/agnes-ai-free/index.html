@@ -228,6 +228,14 @@ pre code { padding:0; background:none; color:inherit; }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
     .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-test-preflight { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }
+    .freellm-offer-test { border-top: 3px solid var(--accent) !important; }
+    .freellm-offer-test-head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .freellm-offer-test-head h2 { margin-top:4px; }
+    .freellm-test-state { display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -294,6 +302,7 @@ pre code { padding:0; background:none; color:inherit; }
       <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
       <ul><li><span lang="zh-CN">在 platform.agnes-ai.cn（国内站）或 platform.agnes-ai.com（国际站）注册并创建 API Key；官方称原国际站用户无需重新注册，Key 也无需更换</span><span lang="en">platform.agnes-ai.cn（ ） platform.agnes-ai.com（ ） API Key； ，Key</span></li><li><span lang="zh-CN">中国大陆环境把 Base URL 设为 https://api.agnes-ai.cn/v1，其他地区设为 https://apihub.agnes-ai.com/v1</span><span lang="en">Base URL https://api.agnes-ai.cn/v1， https://apihub.agnes-ai.com/v1</span></li><li><span lang="zh-CN">用目录中的模型 ID 发送 OpenAI 兼容请求，并核对官方文档的最新速率限制与图片/视频请求格式</span><span lang="en">ID OpenAI ，</span></li></ul>
     </section>
+
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
       <p class="muted"><span lang="zh-CN">Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。官方定价页（agnes-ai.cn/zh-Hans/docs/pricing）逐项给出中国站模型的人民币刊例价与现价，明确 agnes-2.5-flash 与 agnes-3.0-flash 的输入缓存命中、输入 Token、输出 Token 当前均免费，agnes-image-2.0/2.1/2.5-flash 所有输出分辨率档位与输入参考图片免费，agnes-video-v2.0 当前免费、agnes-video-2.5-flash 限时免费；agnes-2.5-pro、agnes-2.5-pro-beta 与 agnes-video-2.5 为付费。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。</span><span lang="en">Agnes （agnes-ai.cn/zh-Hans/docs/overview） Base URL https://api.agnes-ai.cn/v1； （agnes-ai.com/en/docs/overview） https://apihub.agnes-ai.com/v1。 2026-09-19 Key 401「 / Token not provided」， ； IP， Cloudflare。 （agnes-ai.cn/zh-Hans/docs/pricing） ， agnes-2.5-flash agnes-3.0-flash 、 Token、 Token ，agnes-image-2.0/2.1/2.5-flash ，agnes-video-v2.0 、agnes-video-2.5-flash ；agnes-2.5-pro、agnes-2.5-pro-beta agnes-video-2.5 。 Token Plan FAQ / 、 、 RPM ， 。</span></p>
