@@ -1,34 +1,32 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-JMK4R9519M');
-</script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>kling-v3.0-pro 多平台入口与限制 · kling-v3.0-pro Model Providers | FreeLLM</title><meta name="description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kling-v3.0-pro 多平台入口与限制 · FreeLLM</title><meta name="description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。 FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。">
   <link rel="canonical" href="https://freellm.top/models/kling-v3-0-pro/">
   <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="noindex,follow">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kling-v3.0-pro 多平台入口与限制 · kling-v3.0-pro Model Providers | FreeLLM">
-<meta property="og:description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
+<meta property="og:title" content="kling-v3.0-pro 多平台入口与限制 · FreeLLM">
+<meta property="og:description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。 FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。">
 <meta property="og:url" content="https://freellm.top/models/kling-v3-0-pro/">
-<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">
+<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">
 <meta property="og:image:alt" content="kling-v3.0-pro 多平台入口与限制 · kling-v3.0-pro Model Providers | FreeLLM">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="kling-v3.0-pro 多平台入口与限制 · kling-v3.0-pro Model Providers | FreeLLM">
-<meta name="twitter:description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。">
+<meta name="twitter:title" content="kling-v3.0-pro 多平台入口与限制 · FreeLLM">
+<meta name="twitter:description" content="比较 kling-v3.0-pro 在不同厂商的上下文、速率、状态和来源，并查看 FreeLLM 已整理的详细接入资源。 FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。">
 <meta name="twitter:url" content="https://freellm.top/models/kling-v3-0-pro/">
-<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">
+<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
-  <script defer src="/_vercel/insights/script.js"></script><style id="static-locale-style">
+  <script defer src="/_vercel/insights/script.js"></script><!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JMK4R9519M');
+  </script><style id="static-locale-style">
     html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
@@ -183,7 +181,7 @@ pre code { padding:0; background:none; color:inherit; }
     .related-list { padding-left: 20px; }
     footer { color: var(--ink-secondary); font-size: 13px; }
   </style>
-</head>
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css"></head>
 <body data-static-locale="true">
   <header><p><a href="https://freellm.top/">Free AI Index</a> / <a href="https://freellm.top/models/all/"><span lang="zh-CN">全部模型</span><span lang="en">All models</span></a></p>
     <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>kling-v3.0-pro</h1>
