@@ -125,13 +125,13 @@ def build(limit: int = 24, check: bool = False) -> bool:
     )
     tabs = render_tabs(cats, len(tools))
     if TAB_START in updated:
-        updated = re.sub(re.escape(TAB_START) + r".*?" + re.escape(TAB_END), tabs, updated, count=1, flags=re.S)
+        updated = re.sub(re.escape(TAB_START) + r".*?" + re.escape(TAB_END), lambda _: tabs, updated, count=1, flags=re.S)
     else:
         updated = updated.replace('<div class="tool-category-tabs" id="tool-category-tabs"></div>',
                                   f'<div class="tool-category-tabs" id="tool-category-tabs">{tabs}</div>', 1)
     cards = render_cards(cats, tools, limit)
     if START in updated:
-        updated = re.sub(re.escape(START) + r".*?" + re.escape(END), cards, updated, count=1, flags=re.S)
+        updated = re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: cards, updated, count=1, flags=re.S)
     else:
         updated = updated.replace('<section id="tool-grid" class="tool-grid" aria-live="polite"></section>',
                                   f'<section id="tool-grid" class="tool-grid" aria-live="polite">{cards}</section>', 1)
