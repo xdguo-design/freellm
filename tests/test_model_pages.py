@@ -145,8 +145,8 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert page.index('class="model-center-tabs"') < page.index('id="model-directory"')
     assert 'href="/models/center/"' in original_home
     assert "发现真正好用的" in original_home
-    assert 'data-nav-key="model-center"' in original_home
-    assert 'data-i18n="resourceDirectory"' in original_home
+    assert 'class="fl-site-rail"' in original_home
+    assert 'class="top-nav"' not in original_home
     assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')
     assert page.index('class="model-center-tabs"') < page.index('id="model-center-all-models-panel"')
     assert page.index('id="model-center-all-models-panel"') < page.index('id="categories"')
