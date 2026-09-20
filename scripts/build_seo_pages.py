@@ -4757,6 +4757,8 @@ def _visual_section_for_path(path: Path) -> str:
         return "models"
     if first in {"about", "links", "privacy", "terms"}:
         return "about"
+    if first in {"favorites", "submit"}:
+        return ""
     return "home"
 
 
@@ -4812,10 +4814,11 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/logs/", "◷", "更新", "logs"),
         ("/about/", "ⓘ", "关于", "about"),
     ]
-    links = "".join(
-        f'<a href="{href}"{" aria-current=\"page\"" if key == section else ""}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
-        for href, icon, label, key in items
-    )
+    def render_link(item: tuple[str, str, str, str]) -> str:
+        href, icon, label, key = item
+        current = ' aria-current="page"' if key == section else ""
+        return f'<a href="{href}"{current}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
+    links = "".join(render_link(item) for item in items)
     chrome = (
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         '<a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span>'
