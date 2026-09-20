@@ -44,6 +44,11 @@ SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
 </div>'''
 
 
+def remove_legacy_global_nav(html: str) -> str:
+    """The universal rail owns site navigation; page headers keep only local actions."""
+    return re.sub(r'<nav class="top-nav"[^>]*>.*?</nav>', "", html, flags=re.I | re.S)
+
+
 def ensure_pastel_shell(html: str) -> str:
     """Render the visual shell in HTML itself instead of depending on JS to add it."""
     updated = html
@@ -357,7 +362,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
-    updated = ensure_pastel_shell(updated)
+    updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     if check:
         if updated != html:
             print(f"stale: {html_path} does not contain the current offers JSON")
