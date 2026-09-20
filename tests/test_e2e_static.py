@@ -598,8 +598,8 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
         self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
-        for href in ("/", "/models/", "/skills/", "/tools/", "/skills/lab/", "/logs/", "/about/"):
-            self.assertGreater(page.locator(f'.fl-site-nav a[href="{href}"]').count(), 0)
+        for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
+            self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
 
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
