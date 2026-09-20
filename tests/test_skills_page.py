@@ -99,6 +99,26 @@ class SkillBenchmarkDataTests(unittest.TestCase):
                 self.assertTrue(target.is_file(), f"{skill_id}: missing evidence {url}")
 
 
+
+class SkillReviewTranslationTests(unittest.TestCase):
+    def test_every_curated_review_has_chinese_translation(self):
+        payload = json.loads((ROOT / "data" / "skill-reviews.json").read_text(encoding="utf-8"))
+        reviews = [review for items in (payload.get("repos") or {}).values() for review in items]
+        self.assertGreater(len(reviews), 0)
+        for review in reviews:
+            self.assertTrue(str(review.get("quote") or "").strip())
+            self.assertTrue(str(review.get("quote_zh") or "").strip(), review.get("quote"))
+
+    def test_skills_dialog_uses_chinese_explanation_and_preserves_source(self):
+        page = (ROOT / "skills" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("SKILL 中文说明", page)
+        self.assertIn("查看完整 SKILL.md 原文", page)
+        self.assertIn('id="dialog-content-translation"', page)
+        self.assertIn('id="dialog-source-original"', page)
+        self.assertIn("review.quote_zh", page)
+        self.assertIn("查看英文原文", page)
+
+
 class SkillStylesDataTests(unittest.TestCase):
     def setUp(self):
         self.skills = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
