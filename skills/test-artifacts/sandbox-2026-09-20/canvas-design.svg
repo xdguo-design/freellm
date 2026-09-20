@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<rect width="1200" height="1600" fill="#F2EDE1"/>
+<text x="84" y="110" font-family="Noto Sans CJK SC, sans-serif" font-size="26" font-weight="700" fill="#8B6427" letter-spacing="3">REFUND / STATE / RECOVERY</text>
+<text x="84" y="270" font-family="Noto Sans CJK SC, sans-serif" font-size="112" font-weight="900" fill="#181B19">退费不是</text>
+<text x="84" y="380" font-family="Noto Sans CJK SC, sans-serif" font-size="112" font-weight="900" fill="#181B19">一个按钮。</text>
+<line x1="84" y1="460" x2="1116" y2="460" stroke="#181B19" stroke-width="3"/>
+<g font-family="Noto Sans CJK SC, sans-serif">
+  <g transform="translate(84 560)"><rect width="180" height="220" rx="4" fill="#D7D0C3"/><text x="24" y="58" font-size="28" font-weight="800" fill="#181B19">INIT</text><text x="24" y="166" font-size="24" fill="#5B554D">待发起</text></g>
+  <text x="286" y="680" font-size="42" fill="#837B70">→</text>
+  <g transform="translate(340 560)"><rect width="180" height="220" rx="4" fill="#E9A034"/><text x="18" y="58" font-size="23" font-weight="800" fill="#FFFFFF">PROCESSING</text><text x="24" y="166" font-size="24" fill="#FFFFFF">处理中</text></g>
+  <text x="542" y="680" font-size="42" fill="#837B70">→</text>
+  <g transform="translate(596 560)"><rect width="180" height="220" rx="4" fill="#3E8D6C"/><text x="24" y="58" font-size="25" font-weight="800" fill="#FFFFFF">SUCCESS</text><text x="24" y="166" font-size="24" fill="#FFFFFF">成功</text></g>
+  <text x="798" y="680" font-size="42" fill="#837B70">↘</text>
+  <g transform="translate(860 520)"><rect width="256" height="126" rx="4" fill="#B9574F"/><text x="24" y="52" font-size="28" font-weight="800" fill="#FFFFFF">FAILED</text><text x="24" y="96" font-size="22" fill="#FFFFFF">明确失败，可重试</text></g>
+  <g transform="translate(860 700)"><rect width="256" height="126" rx="4" fill="#6F7480"/><text x="24" y="52" font-size="28" font-weight="800" fill="#FFFFFF">UNKNOWN</text><text x="24" y="96" font-size="22" fill="#FFFFFF">结果未知，先查单</text></g>
+</g>
+<line x1="84" y1="900" x2="1116" y2="900" stroke="#C9C1B4" stroke-width="2"/>
+<text x="84" y="1010" font-family="Noto Sans CJK SC, sans-serif" font-size="52" font-weight="800" fill="#181B19">把“异常”改成动作。</text>
+<text x="84" y="1080" font-family="Noto Sans CJK SC, sans-serif" font-size="28" fill="#5F584F">FAILED → 修正原因 / 重试</text>
+<text x="84" y="1130" font-family="Noto Sans CJK SC, sans-serif" font-size="28" fill="#5F584F">UNKNOWN → 主动查单 / 对账</text>
+<text x="84" y="1180" font-family="Noto Sans CJK SC, sans-serif" font-size="28" fill="#5F584F">PROCESSING → 轮询 / 超时转 UNKNOWN</text>
+<rect x="84" y="1290" width="1032" height="170" fill="#181B19"/>
+<text x="120" y="1360" font-family="Noto Sans CJK SC, sans-serif" font-size="24" fill="#E9A034">验收条件</text>
+<text x="120" y="1410" font-family="Noto Sans CJK SC, sans-serif" font-size="30" font-weight="700" fill="#FFFFFF">不重复退费 · UNKNOWN 可恢复 · 日志可追溯</text>
+<text x="84" y="1530" font-family="monospace" font-size="18" fill="#827A70">FreeLLM sandbox artifact · 2026-09-20</text>
+</svg>

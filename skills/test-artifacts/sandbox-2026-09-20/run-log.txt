@@ -1,0 +1,166 @@
+# FreeLLM Skills sandbox run log — 2026-09-20
+
+Runtime:
+- Python 3.13.5
+- Node v22.16.0
+- npm 10.9.2
+- LibreOffice 25.2.3.2
+- Chromium 144.0.7559.96
+- git 2.47.3
+- Sandbox public network: unavailable
+
+## anthropics-pdf
+Flow actually run: create 2-page PDF -> split -> rotate -> merge -> text extract -> render PNG.
+
+First render exposed missing CJK glyphs because ReportLab default Helvetica was used.
+After switching to STSong-Light, the Chinese title and body rendered correctly.
+
+Fixed PDF sha256:
+bfde682045d810c72aa018c7d03d18fbf4aced01ef5d2b3bb60873b0d02582c6
+
+Fixed render page-1 sha256:
+d458fbeb680a5b123c3b2f921c91ad83fb1af7ba6f0ab7f96fb599f3acfcaa98
+
+Fixed PDF fonts:
+- Helvetica
+- STSong-Light (CID Type 0, UniGB-UCS2-H)
+- Helvetica-Bold
+- Symbol
+
+## anthropics-pptx
+Flow actually run: pptxgenjs -> PPTX -> LibreOffice PDF -> render each page to PNG -> unzip integrity check.
+
+PPTX sha256:
+e91f65d8f23e32ab99a9bd55a93c32b341775d15532ca6a4b226f0d0621f8147
+
+Rendered slide-1 sha256:
+922fd38d0638fdc9d7b215a008d782d7c14a285d16728286fc77934460156de8
+
+PPTX ZIP result:
+No errors detected in compressed data.
+
+Converted PDF pages:
+3
+
+## anthropics-xlsx
+A real workbook was created with refund-state data, formulas, data validation, a table, and summary values.
+Formula error scan: 0.
+This test used artifact_tool because the current platform requires that tool for spreadsheet artifact creation, so it is not labelled as the original Skill's openpyxl/recalc.py E2E path.
+
+XLSX sha256:
+d5db02f51d273bd00294361239857e923cadfa56d55713d5e2f88279bae5d9fd
+
+Screenshot sha256:
+0412c59c6fa92d8a8c0c454dba82bb84274d0115e050204f6f42b04ebf0bc5de
+
+XLSX ZIP result:
+No errors detected in compressed data.
+
+## anthropics-docx
+Documented dependency check:
+require('docx') -> missing
+require_exit=2
+
+Documented fallback:
+npm install docx -> timed out because the sandbox has no public network
+npm_exit=124
+
+Result: BLOCKED, not passed.
+
+## anthropics-webapp-testing
+Python Playwright could launch Chromium.
+Navigation to both:
+- file://...
+- http://127.0.0.1:8765
+returned:
+net::ERR_BLOCKED_BY_ADMINISTRATOR
+
+Result: BLOCKED by sandbox browser policy. The previous E2E pass claim was withdrawn.
+
+## jimliu-baoyu-markdown-to-html
+bun -> missing
+npx -> present
+documented fallback npx -y bun --version -> timed out because there is no public network
+npx_bun_exit=124
+
+Result: BLOCKED. The old hand-made HTML demo is not counted as an original-skill pass.
+
+## rendercv-rendercv
+uv -> present
+rendercv -> missing
+typst -> missing
+No public network is available for installing rendercv[full].
+
+Result: BLOCKED.
+
+## officecli family
+officecli/morph executable -> missing
+
+Result: BLOCKED for original runtime E2E.
+
+## Network-dependent article / URL / YouTube skills
+curl exists, but public DNS resolution fails.
+
+example.com:
+curl: (6) Could not resolve host: example.com
+
+youtube.com:
+curl: (6) Could not resolve host: www.youtube.com
+
+Result: network-dependent E2E cannot be claimed in this sandbox.
+
+## obra systematic-debugging / TDD / verification
+Before fix:
+1 failed, 1 passed
+
+Failing assertion:
+can_retry('PROCESSING') returned True but must be False.
+
+Implementation was changed from a broad retry rule to:
+state in {"FAILED", "UNKNOWN"}
+
+After fix:
+2 passed
+
+Additional verification:
+python -m py_compile passed.
+
+## composiohq-file-organizer
+Real filesystem fixture:
+duplicates=[['notes-copy.txt', 'notes-final.txt']]
+originals_preserved=True
+
+## composiohq-invoice-organizer
+Two generated invoice PDFs were parsed and normalized:
+
+2026-08-15, Acme Cloud, INV-401, USD 89.00, Cloud hosting
+-> 2026-08-15 Acme Cloud - Invoice - Cloud hosting.pdf
+
+2026-09-02, Northwind Office, R-883, USD 42.50, Printer paper
+-> 2026-09-02 Northwind Office - Invoice - Printer paper.pdf
+
+originals_preserved=True
+
+## blader-humanizer
+Fixed input:
+before_chars=599
+after_chars=249
+targeted_AI_patterns_before=12
+targeted_AI_patterns_after=0
+
+## composiohq-changelog-generator
+A local Git repository was created with four commits:
+
+3ee57f9 feat: add refund request entry
+e7819d7 fix: prevent retry while refund is processing
+2fe701c refactor: rename refund state helper
+0340655 feat: export refund audit CSV
+
+The generated user-facing changelog included the two features and the bug fix, while filtering the refactor commit as internal noise.
+
+## Interpretation
+- E2E means the original or materially equivalent runtime chain actually executed in the sandbox and outputs were checked.
+- Artifact means a real deliverable was created and inspected, but the exact upstream Skill runtime chain was not fully reproduced.
+- Task means an instruction/workflow Skill was actually applied to a fixed fixture; it is not a program-level E2E claim.
+- Partial means only a substitute chain or incomplete portion was verified.
+- Blocked means execution reached a concrete missing dependency, network, account, or sandbox-policy boundary.
