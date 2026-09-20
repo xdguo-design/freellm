@@ -83,15 +83,12 @@
           '</a>' +
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
-            railLink('/models/', '▣', '模型目录', 'models', current) +
-            railLink('/models/center/', '◫', '模型中心', 'models', current) +
-            railLink('/models/all/', '≡', '全部模型', 'models', current) +
-            railLink('/providers/', '◇', '按厂家', 'models', current) +
+            railLink('/models/', '▣', '模型', 'models', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
-            railLink('/tools/', '⌘', '工具集', 'tools', current) +
+            railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
-            railLink('/logs/', '◷', '每日更新', 'logs', current) +
-            railLink('/about/', 'ⓘ', '关于我们', 'about', current) +
+            railLink('/logs/', '◷', '更新', 'logs', current) +
+            railLink('/about/', 'ⓘ', '关于', 'about', current) +
           '</nav>' +
           '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>';
         document.body.insertBefore(rail, document.body.firstChild);
