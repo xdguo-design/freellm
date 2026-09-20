@@ -4831,6 +4831,38 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
     return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + chrome, content, count=1, flags=re.I)
 
 
+def _ensure_model_section_tabs(content: str, path: Path) -> str:
+    if path.suffix != ".html" or 'class="model-section-tabs"' in content:
+        return content
+    parts = path.parts
+    if not parts or parts[0] not in {"models", "providers"}:
+        return content
+    route = "/" + "/".join(parts[:-1]) + "/" if parts[-1] == "index.html" else "/" + "/".join(parts) + "/"
+    current = "overview"
+    if route.startswith("/models/all/"):
+        current = "all"
+    elif route.startswith("/providers/"):
+        current = "providers"
+    elif route.startswith("/models/center/"):
+        current = "center"
+    items = [
+        ("overview", MODELS_PAGE_PATH, "概览"),
+        ("all", ALL_MODELS_PAGE_PATH, "全部模型"),
+        ("providers", PROVIDERS_PAGE_PATH, "按厂家"),
+        ("offers", "/category/api/", "免费 API / Offer"),
+    ]
+    links = []
+    for key, href, label in items:
+        current_attr = ' aria-current="page"' if key == current else ""
+        links.append(f'<a href="{href}"{current_attr}>{label}</a>')
+    tabs = '<nav class="model-section-tabs" aria-label="模型页面">' + "".join(links) + "</nav>"
+    ribbon_end = content.find("</div>", content.find('class="fl-site-ribbon"'))
+    if ribbon_end >= 0:
+        ribbon_end += len("</div>")
+        return content[:ribbon_end] + tabs + content[ribbon_end:]
+    return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + tabs, content, count=1, flags=re.I)
+
+
 def build_site(data_path: str | Path, output_root: str | Path, site_url: str = SITE_URL, check: bool = False) -> BuildResult | bool:
     data_path = Path(data_path)
     offers = _load_data(data_path)
@@ -4860,6 +4892,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     files = {
         relative: _ensure_static_site_chrome(_remove_legacy_global_nav(content), relative)
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_model_section_tabs(content, relative)
         for relative, content in files.items()
     }
     sync_tag = '<script src="/js/freellm-sync.js"></script>'
