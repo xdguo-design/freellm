@@ -277,6 +277,9 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
+    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css">'
+    if "freellm-pastel-ui.css" not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", theme_tag + "</head>", 1)
     if check:
         if updated != html:
             print(f"stale: {html_path} does not contain the current offers JSON")
