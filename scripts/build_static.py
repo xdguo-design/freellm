@@ -29,15 +29,12 @@ SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   </a>
   <nav class="fl-site-nav">
     <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
-    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型目录</span></a>
-    <a href="/models/center/"><span class="fl-site-nav-icon" aria-hidden="true">◫</span><span>模型中心</span></a>
-    <a href="/models/all/"><span class="fl-site-nav-icon" aria-hidden="true">≡</span><span>全部模型</span></a>
-    <a href="/providers/"><span class="fl-site-nav-icon" aria-hidden="true">◇</span><span>按厂家</span></a>
+    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
     <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
-    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具集</span></a>
+    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>每日更新</span></a>
-    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于我们</span></a>
+    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
 </aside>
@@ -83,7 +80,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920b">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920c">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,
