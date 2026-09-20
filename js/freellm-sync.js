@@ -84,6 +84,9 @@
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
             railLink('/models/', '▣', '模型目录', 'models', current) +
+            railLink('/models/center/', '◫', '模型中心', 'models', current) +
+            railLink('/models/all/', '≡', '全部模型', 'models', current) +
+            railLink('/providers/', '◇', '按厂家', 'models', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
             railLink('/tools/', '⌘', '工具集', 'tools', current) +
             railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
