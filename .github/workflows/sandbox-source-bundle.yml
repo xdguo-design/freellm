@@ -1,0 +1,29 @@
+name: sandbox-source-bundle
+
+on:
+  push:
+    branches:
+      - test/skills-real-sandbox
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/skills-real-sandbox
+      - name: Pack repository snapshot
+        run: |
+          mkdir -p /tmp/freellm-sandbox
+          rsync -a --exclude '.git' ./ /tmp/freellm-sandbox/
+          cd /tmp
+          zip -qr freellm-sandbox.zip freellm-sandbox
+      - uses: actions/upload-artifact@v4
+        with:
+          name: freellm-sandbox-source
+          path: /tmp/freellm-sandbox.zip
+          retention-days: 1
