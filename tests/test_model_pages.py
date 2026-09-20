@@ -142,6 +142,9 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')
     assert page.index('class="model-center-tabs"') < page.index('id="model-center-all-models-panel"')
     assert page.index('id="model-center-all-models-panel"') < page.index('id="categories"')
+    assert 'class="model-center-full-directory"' in page
+    assert 'href="/models/all/"' in page
+    assert page.count('class="catalog-row"') == 24
 
 
 def test_model_rows_carry_score_data_for_catalog_ranking():
