@@ -277,6 +277,10 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
+    # Keep crawl-visible image payloads small: social cards use the optimized
+    # 1200x630 JPEG and the methodology link points to a compressed WebP.
+    updated = updated.replace("/freellm-01-hero.png", "/freellm-og.jpg")
+    updated = updated.replace("/design/assets/free-method-night-window.png", "/design/assets/free-method-night-window.webp")
     theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css">'
     if "freellm-pastel-ui.css" not in updated and "</head>" in updated:
         updated = updated.replace("</head>", theme_tag + "</head>", 1)
