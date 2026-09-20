@@ -387,7 +387,7 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
-MODELS_PER_PAGE = 75
+MODELS_PER_PAGE = 50
 
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
@@ -3240,6 +3240,9 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
   .model-center-all-models-panel .status-degraded, .model-center-all-models-panel .status-unknown { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
   .model-center-all-models-panel .catalog-group-row th { padding: 13px 11px 7px; color: var(--ink); background: var(--canvas-warm); font-family: var(--font-sans); font-size: 13px; letter-spacing: 0; text-transform: none; }
   .model-center-all-models-panel .catalog-empty { margin: 16px 0 0; padding: 13px 16px; border-radius: 6px; color: var(--pale-yellow-text); background: var(--pale-yellow-bg); }
+  .model-center-full-directory { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:16px; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:var(--surface-soft); }
+  .model-center-full-directory p { margin:0; color:var(--ink-secondary); font-size:13px; }
+  .model-center-full-directory .button { flex:0 0 auto; }
   .model-center-all-models-panel .source-cell { min-width: 100px; white-space: nowrap; }
   .model-center-all-models-panel .freshness { color: var(--ink-secondary); }
   .model-center-all-models-panel .freshness-stale { color: var(--pale-red-text); }
@@ -3269,7 +3272,20 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
     body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
     body = body.replace('href="/models/all/"', 'href="#all-models"')
-    catalog_markup = _model_catalog_markup(models, include_heading=False, linkable_model_slugs=indexable_model_slugs(models))
+    preview_models = models[:24]
+    catalog_markup = _model_catalog_markup(
+        preview_models,
+        include_heading=False,
+        total_models=len(models),
+        linkable_model_slugs=indexable_model_slugs(models),
+    )
+    catalog_markup += f'''<div class="model-center-full-directory">
+      <p>{_locale_pair(
+          f"这里先展示 24 条模型作为快速预览；完整 {len(models)} 条目录使用独立分页，避免模型中心重复下载整份大表。",
+          f"This tab previews 24 models. Open the paginated directory for all {len(models)} records without downloading the full table twice."
+      )}</p>
+      <a class="button" href="{ALL_MODELS_PAGE_PATH}">{_locale_pair("打开完整模型目录", "Open full model directory")} →</a>
+    </div>'''
     tab_markup = f'''<nav class="model-center-tabs" role="tablist" aria-label="模型中心页面切换">
   <button id="model-center-tab-featured" class="model-center-tab" type="button" role="tab" aria-controls="categories" aria-selected="true" data-center-tab="featured">{_locale_pair('精选资源', 'Featured resources')} <small>01</small></button>
   <button id="model-center-tab-all-models" class="model-center-tab" type="button" role="tab" aria-controls="model-center-all-models-panel" aria-selected="false" data-center-tab="all-models">{_locale_pair('全部模型', 'All models')} <small>{len(models)}</small></button>
