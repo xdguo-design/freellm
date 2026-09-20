@@ -228,6 +228,14 @@ pre code { padding:0; background:none; color:inherit; }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
     .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-test-preflight { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }
+    .freellm-offer-test { border-top: 3px solid var(--accent) !important; }
+    .freellm-offer-test-head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .freellm-offer-test-head h2 { margin-top:4px; }
+    .freellm-test-state { display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -287,6 +295,7 @@ pre code { padding:0; background:none; color:inherit; }
       <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
       <ul><li><span lang="zh-CN">打开 Manus 邀请注册入口</span><span lang="en">Manus</span></li><li><span lang="zh-CN">选择 Google、Microsoft、Apple 或邮箱注册；注册方式会绑定到该账号</span><span lang="en">Google、Microsoft、Apple ；</span></li><li><span lang="zh-CN">进入免费计划，使用注册赠送的 1,000 credits 与每天刷新的 300 credits</span><span lang="en">， 1,000 credits 300 credits</span></li><li><span lang="zh-CN">如需 API，进入 Manus API 文档的 Authentication 页面创建 API Key</span><span lang="en">API， Manus API Authentication API Key</span></li></ul>
     </section>
+
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
       <p class="muted"><span lang="zh-CN">Manus 官方帮助页面：免费计划（Free Plan $0/month）与“Daily Refresh Credits: 300 credits”见于定价文章；优惠文章写明“we provide 1,000 credits to every new user upon registration, and 300 daily credits will be refreshed for free every day”；官方注册页列出 Google / Microsoft / Apple / 邮箱登录；官方 API 文档写明所有请求发往 https://api.manus.ai 并在 Manus Developers 设置中生成 API key。免费用户在 Agent Mode 下的可用模型为 Manus 1.6 Lite（官方定价文章）。</span><span lang="en">Manus ： （Free Plan $0/month） “Daily Refresh Credits: 300 credits” ； “we provide 1,000 credits to every new user upon registration, and 300 daily credits will be refreshed for free every day”； Google / Microsoft / Apple / ； API https://api.manus.ai Manus Developers API key。 Agent Mode Manus 1.6 Lite（ ）。</span></p>

@@ -228,6 +228,14 @@ pre code { padding:0; background:none; color:inherit; }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
     .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-test-preflight { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }
+    .freellm-offer-test { border-top: 3px solid var(--accent) !important; }
+    .freellm-offer-test-head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .freellm-offer-test-head h2 { margin-top:4px; }
+    .freellm-test-state { display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -250,7 +258,7 @@ pre code { padding:0; background:none; color:inherit; }
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1><span lang="zh-CN">华为云码道 CodeArts · 每日 1000 万免费 Token</span><span lang="en">CodeArts · 1000 Token</span></h1>
     <p><span lang="zh-CN">华为云 · 中国</span><span lang="en">Huawei Cloud · China</span></p>
-    
+    <div class="offer-version-line"><span class="flag-chip flag-test-preflight" title="2026-09-20"><span lang="zh-CN">△ FreeLLM 预检</span><span lang="en">△ FreeLLM preflight</span></span></div>
     
     <nav aria-label="Categories"><a class="tag" href="/category/free-ide/"><span lang="zh-CN">免费 AI IDE</span><span lang="en">Free AI coding IDEs</span></a><a class="tag" href="/category/promo/"><span lang="zh-CN">AI 试用与优惠</span><span lang="en">AI trials and promotions</span></a></nav>
     <nav class="header-cta" aria-label="Official links"><a class="button" href="https://activity.huaweicloud.com/codearts_agent.html" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">立即开始</span><span lang="en">Get started</span> ↗</span><small>打开华为云码道免费 Token 活动页</small></a><a class="button button--ghost" href="https://activity.huaweicloud.com/codearts_agent.html" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">官方文档</span><span lang="en">Documentation</span> ↗</span></a></nav>
@@ -290,6 +298,21 @@ pre code { padding:0; background:none; color:inherit; }
       <ul><li><span lang="zh-CN">华为云账号</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">开通华为云码道 CodeArts 代码智能体体验版</span><span lang="en">CodeArts</span></li></ul>
       <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
       <ul><li><span lang="zh-CN">打开官方活动页并登录/开通华为云码道 CodeArts 代码智能体体验版</span><span lang="en">CodeArts</span></li><li><span lang="zh-CN">安装码道代码智能体 IDE，或安装 VS Code / JetBrains 系列插件</span><span lang="en">IDE， VS Code / JetBrains</span></li><li><span lang="zh-CN">登录后确认当日 1,000 万 Token 自动到账，并在码道内选择当前福利模型使用</span><span lang="en">1,000 Token ，</span></li><li><span lang="zh-CN">当日未用完额度会在 0 点清零；福利模型与活动期限以客户端和官方活动页实时显示为准</span><span lang="en">0 ；</span></li></ul>
+    </section>
+<section class="freellm-offer-test">
+      <div class="freellm-offer-test-head"><div><span class="eyebrow">FreeLLM TEST</span><h2><span lang="zh-CN">FreeLLM 自测</span><span lang="en">FreeLLM test</span></h2></div><span class="freellm-test-state partial"><span lang="zh-CN">预检通过 · 登录态实测待补</span><span lang="en">Preflight passed · signed-in test pending</span></span></div>
+      <div class="facts">
+        <div class="fact"><strong><span lang="zh-CN">测试时间</span><span lang="en">Tested at</span></strong><span>2026-09-20</span></div>
+        <div class="fact"><strong><span lang="zh-CN">测试级别</span><span lang="en">Test level</span></strong><span>preflight</span></div>
+        <div class="fact"><strong><span lang="zh-CN">真实登录使用</span><span lang="en">Signed-in usage</span></strong><span><span lang="zh-CN">未验证</span><span lang="en">Not verified</span></span></div>
+      </div>
+      <h3><span lang="zh-CN">我们测了什么</span><span lang="en">What we tested</span></h3>
+      <p>验证华为云码道每日 1,000 万 Token 活动的公开领取链路、安装路径、使用文档与限制条款；在没有登录态账号的前提下，不把 Token 到账和真实模型调用写成已实测。</p>
+      <ol class="steps"><li>打开华为云官方活动页，核对每日 1,000 万 Token、0 点清零、不累计、仅限码道内使用、先到先得和福利模型动态调整等规则。</li><li>跟随活动页的一键开通入口，确认开通链路指向华为云官方 CodeArts / 开发者页面。</li><li>打开 CodeArts Agent 官方下载页，核对独立 IDE、VS Code 插件和 JetBrains 插件的安装路径与登录要求。</li><li>打开官方使用教程入口，确认 CodeArts Agent 使用帮助可以访问。</li><li>本次没有使用登录后的华为云码道账号，因此没有验证 Token 实际到账、福利模型下拉列表和一次真实代码生成。</li></ol>
+      <h3><span lang="zh-CN">测试结果</span><span lang="en">Result</span></h3>
+      <p>公开链路预检通过：活动规则、开通入口、下载/插件安装说明和使用教程均可由华为云官方页面交叉确认；活动口径与 FreeLLM 当前记录一致。Token 实际到账未验证，福利模型切换未验证，真实模型调用与代码生成未验证，仍待登录态补测。</p>
+      <div class="callout"><strong><span lang="zh-CN">未验证 / 限制：</span><span lang="en">Not verified / limits</span></strong> 当前测试环境没有可用的华为云码道登录态，无法诚实验证账号内是否实际显示 10,000,000 Token、能否切换到活动模型并完成一次编码请求。因此本条只标记为“预检通过”，不标记“实测好用”。</div>
+      <h3><span lang="zh-CN">测试证据</span><span lang="en">Test evidence</span></h3><ul class="link-list"><li><a href="https://activity.huaweicloud.com/codearts_agent.html" target="_blank" rel="nofollow noopener">华为云码道免费 Token 活动页 ↗</a><small>核对活动规则、每日额度、清零规则、CodeArts-only 限制与福利模型说明</small></li><li><a href="https://codearts.huaweicloud.com/download.html" target="_blank" rel="nofollow noopener">CodeArts Agent 官方下载页 ↗</a><small>核对独立 IDE、VS Code 与 JetBrains 安装路径</small></li><li><a href="https://support.huaweicloud.com/codeartsagent_video/index.html" target="_blank" rel="nofollow noopener">CodeArts Agent 官方使用教程 ↗</a><small>确认官方使用帮助入口可访问</small></li></ul>
     </section>
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>

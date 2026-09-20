@@ -119,7 +119,40 @@
             "note": "福利模型会持续更新变换，以码道 IDE / 插件内可选项为准",
             "sourceUrl": "https://activity.huaweicloud.com/codearts_agent.html"
           }
-        ]
+        ],
+        "freeLLMTest": {
+          "status": "partial",
+          "testLevel": "preflight",
+          "testedAt": "2026-09-20",
+          "actualUsageVerified": false,
+          "task": "验证华为云码道每日 1,000 万 Token 活动的公开领取链路、安装路径、使用文档与限制条款；在没有登录态账号的前提下，不把 Token 到账和真实模型调用写成已实测。",
+          "method": [
+            "打开华为云官方活动页，核对每日 1,000 万 Token、0 点清零、不累计、仅限码道内使用、先到先得和福利模型动态调整等规则。",
+            "跟随活动页的一键开通入口，确认开通链路指向华为云官方 CodeArts / 开发者页面。",
+            "打开 CodeArts Agent 官方下载页，核对独立 IDE、VS Code 插件和 JetBrains 插件的安装路径与登录要求。",
+            "打开官方使用教程入口，确认 CodeArts Agent 使用帮助可以访问。",
+            "本次没有使用登录后的华为云码道账号，因此没有验证 Token 实际到账、福利模型下拉列表和一次真实代码生成。"
+          ],
+          "result": "公开链路预检通过：活动规则、开通入口、下载/插件安装说明和使用教程均可由华为云官方页面交叉确认；活动口径与 FreeLLM 当前记录一致。Token 实际到账未验证，福利模型切换未验证，真实模型调用与代码生成未验证，仍待登录态补测。",
+          "limitations": "当前测试环境没有可用的华为云码道登录态，无法诚实验证账号内是否实际显示 10,000,000 Token、能否切换到活动模型并完成一次编码请求。因此本条只标记为“预检通过”，不标记“实测好用”。",
+          "evidence": [
+            {
+              "label": "华为云码道免费 Token 活动页",
+              "url": "https://activity.huaweicloud.com/codearts_agent.html",
+              "note": "核对活动规则、每日额度、清零规则、CodeArts-only 限制与福利模型说明"
+            },
+            {
+              "label": "CodeArts Agent 官方下载页",
+              "url": "https://codearts.huaweicloud.com/download.html",
+              "note": "核对独立 IDE、VS Code 与 JetBrains 安装路径"
+            },
+            {
+              "label": "CodeArts Agent 官方使用教程",
+              "url": "https://support.huaweicloud.com/codeartsagent_video/index.html",
+              "note": "确认官方使用帮助入口可访问"
+            }
+          ]
+        }
       },
       "reason": "manual addition from the Huawei Cloud official activity page"
     },
@@ -3152,7 +3185,40 @@
         "evidence": "华为云官方活动页写明“每日1,000万免费 Token”，登录华为云码道即可使用；额度当日有效、0点清零不累计，且仅限华为云码道内使用、先到先得。页面同时列出码道 IDE、JetBrains 系列与 VS Code 系列插件，并说明当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，模型会持续更新变换。",
         "freeSummary": "每日 1,000 万免费 Token；当日有效，0 点清零，不累计",
         "validitySummary": "限时福利；每日额度仅当日有效；官方注明先到先得并可调整或终止活动",
-        "accessSummary": "仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度"
+        "accessSummary": "仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度",
+        "freeLLMTest": {
+          "status": "partial",
+          "testLevel": "preflight",
+          "testedAt": "2026-09-20",
+          "actualUsageVerified": false,
+          "task": "验证华为云码道每日 1,000 万 Token 活动的公开领取链路、安装路径、使用文档与限制条款；在没有登录态账号的前提下，不把 Token 到账和真实模型调用写成已实测。",
+          "method": [
+            "打开华为云官方活动页，核对每日 1,000 万 Token、0 点清零、不累计、仅限码道内使用、先到先得和福利模型动态调整等规则。",
+            "跟随活动页的一键开通入口，确认开通链路指向华为云官方 CodeArts / 开发者页面。",
+            "打开 CodeArts Agent 官方下载页，核对独立 IDE、VS Code 插件和 JetBrains 插件的安装路径与登录要求。",
+            "打开官方使用教程入口，确认 CodeArts Agent 使用帮助可以访问。",
+            "本次没有使用登录后的华为云码道账号，因此没有验证 Token 实际到账、福利模型下拉列表和一次真实代码生成。"
+          ],
+          "result": "公开链路预检通过：活动规则、开通入口、下载/插件安装说明和使用教程均可由华为云官方页面交叉确认；活动口径与 FreeLLM 当前记录一致。Token 实际到账未验证，福利模型切换未验证，真实模型调用与代码生成未验证，仍待登录态补测。",
+          "limitations": "当前测试环境没有可用的华为云码道登录态，无法诚实验证账号内是否实际显示 10,000,000 Token、能否切换到活动模型并完成一次编码请求。因此本条只标记为“预检通过”，不标记“实测好用”。",
+          "evidence": [
+            {
+              "label": "华为云码道免费 Token 活动页",
+              "url": "https://activity.huaweicloud.com/codearts_agent.html",
+              "note": "核对活动规则、每日额度、清零规则、CodeArts-only 限制与福利模型说明"
+            },
+            {
+              "label": "CodeArts Agent 官方下载页",
+              "url": "https://codearts.huaweicloud.com/download.html",
+              "note": "核对独立 IDE、VS Code 与 JetBrains 安装路径"
+            },
+            {
+              "label": "CodeArts Agent 官方使用教程",
+              "url": "https://support.huaweicloud.com/codeartsagent_video/index.html",
+              "note": "确认官方使用帮助入口可访问"
+            }
+          ]
+        }
       },
       {
         "id": "keenable-search-free",

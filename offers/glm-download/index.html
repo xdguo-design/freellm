@@ -228,6 +228,14 @@ pre code { padding:0; background:none; color:inherit; }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
     .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-test-preflight { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }
+    .freellm-offer-test { border-top: 3px solid var(--accent) !important; }
+    .freellm-offer-test-head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .freellm-offer-test-head h2 { margin-top:4px; }
+    .freellm-test-state { display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -291,6 +299,7 @@ huggingface-cli download zai-org/GLM-4.7-Flash --local-dir ./GLM-4.7-Flash</code
       <h3><span lang="zh-CN">步骤</span><span lang="en">Steps</span></h3>
       <ul><li><span lang="zh-CN">打开官方模型卡并下载权重</span><span lang="en">See official terms</span></li><li><span lang="zh-CN">执行模型卡提供的本地启动命令</span><span lang="en">See official terms</span></li></ul>
     </section>
+
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
       <p class="muted"><span lang="zh-CN">Official Zhipu repository and model card provide Hugging Face and ModelScope download paths.</span><span lang="en">Official Zhipu repository and model card provide Hugging Face and ModelScope download paths.</span></p>

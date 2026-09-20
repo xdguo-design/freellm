@@ -228,6 +228,14 @@ pre code { padding:0; background:none; color:inherit; }
     .flag-sibling { color: var(--accent); background: var(--surface); border: 1px solid var(--line); }
     .flag-sibling:hover { border-color: var(--accent); }
     .flag-hands-on { color: var(--pale-green-text); background: var(--pale-green-bg); }
+    .flag-test-preflight { color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }
+    .freellm-offer-test { border-top: 3px solid var(--accent) !important; }
+    .freellm-offer-test-head { display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .freellm-offer-test-head h2 { margin-top:4px; }
+    .freellm-test-state { display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -278,6 +286,7 @@ pre code { padding:0; background:none; color:inherit; }
 
 
 <section id="operation-guides"><h2><span lang="zh-CN">详细操作步骤</span><span lang="en">Detailed operation paths</span></h2><p class="muted"><span lang="zh-CN">每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。</span><span lang="en">Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider&#x27;s live official policy.</span></p><article class="operation-path"><h3>ModelScope API-Inference</h3><p class="operation-type">api</p><dl class="operation-facts"><div><dt><span lang="zh-CN">Endpoint</span><span lang="en">Endpoint</span></dt><dd><code>https://api-inference.modelscope.cn/v1</code></dd></div><div><dt><span lang="zh-CN">认证</span><span lang="en">Authentication</span></dt><dd>Authorization: Bearer access token</dd></div></dl><h4><span lang="zh-CN">前置条件</span><span lang="en">Prerequisites</span></h4><ul><li><span lang="zh-CN">已注册 ModelScope</span><span lang="en">ModelScope</span></li><li><span lang="zh-CN">已创建访问 Token</span><span lang="en">Token</span></li><li><span lang="zh-CN">已确认目标模型支持 API-Inference</span><span lang="en">API-Inference</span></li></ul><h4><span lang="zh-CN">操作步骤</span><span lang="en">Steps</span></h4><ol class="operation-steps"><li><strong>创建 Token</strong><p>打开 ModelScope 账户设置创建访问 Token，并保存到 MODELSCOPE_API_TOKEN 环境变量。</p></li><li><strong>确认模型 ID</strong><p>从模型详情页复制模型 ID，确认该模型的 API-Inference 状态和计费说明。</p><p class="operation-action"><strong><span lang="zh-CN">操作</span><span lang="en">Action</span>：</strong>打开 https://modelscope.cn/models</p></li><li><strong>发送请求</strong><p>使用官方 OpenAI 兼容入口和模型 ID 发送请求。</p><p class="muted"><span lang="zh-CN">命令已在上方「快速上手」给出。</span><span lang="en">The copyable command already appears in Quick start above.</span></p><p class="operation-expected"><strong><span lang="zh-CN">预期结果</span><span lang="en">Expected</span>：</strong>响应返回 choices 或官方 API 的错误详情。</p></li></ol><div class="operation-validation"><strong><span lang="zh-CN">验证动作</span><span lang="en">Validation</span></strong><p>GET /v1/models 返回 HTTP 200，且目标模型 ID 与模型详情页一致。</p></div><h4><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h4><ul class="link-list"><li><a href="https://modelscope.cn/docs" target="_blank" rel="nofollow noopener">https://modelscope.cn/docs ↗</a></li><li><a href="https://modelscope.cn/models" target="_blank" rel="nofollow noopener">https://modelscope.cn/models ↗</a></li></ul></article><script>(() => { document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script></section>
+
 
 
     <section>

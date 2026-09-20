@@ -1300,6 +1300,61 @@ def _featured_chip(offer: dict) -> str:
     )
 
 
+def _offer_freellm_test_markup(offer: dict) -> str:
+    test = offer.get("freeLLMTest")
+    if not isinstance(test, dict):
+        return ""
+    level = str(test.get("testLevel") or "")
+    status = str(test.get("status") or "")
+    actual = test.get("actualUsageVerified") is True
+    if actual and status == "passed":
+        state_zh, state_en, state_class = "登录态实测通过", "Hands-on test passed", "verified"
+    elif level == "preflight" and status in {"passed", "partial"}:
+        state_zh, state_en, state_class = "预检通过 · 登录态实测待补", "Preflight passed · signed-in test pending", "partial"
+    elif status == "blocked":
+        state_zh, state_en, state_class = "测试受阻", "Test blocked", "blocked"
+    else:
+        state_zh, state_en, state_class = "部分验证", "Partially verified", "partial"
+
+    methods = "".join(f"<li>{_esc(item)}</li>" for item in (test.get("method") or []))
+    evidence = "".join(
+        f'<li><a href="{_esc(item.get("url"))}" target="_blank" rel="nofollow noopener">{_esc(item.get("label"))} ↗</a>'
+        + (f'<small>{_esc(item.get("note"))}</small>' if item.get("note") else "") + "</li>"
+        for item in (test.get("evidence") or []) if isinstance(item, dict) and item.get("url")
+    )
+    return f'''<section class="freellm-offer-test">
+      <div class="freellm-offer-test-head"><div><span class="eyebrow">FreeLLM TEST</span><h2>{_locale_pair("FreeLLM 自测", "FreeLLM test")}</h2></div><span class="freellm-test-state {state_class}">{_locale_pair(state_zh, state_en)}</span></div>
+      <div class="facts">
+        <div class="fact"><strong>{_locale_pair("测试时间", "Tested at")}</strong><span>{_esc(test.get("testedAt"))}</span></div>
+        <div class="fact"><strong>{_locale_pair("测试级别", "Test level")}</strong><span>{_esc(level)}</span></div>
+        <div class="fact"><strong>{_locale_pair("真实登录使用", "Signed-in usage")}</strong><span>{_locale_pair("已验证" if actual else "未验证", "Verified" if actual else "Not verified")}</span></div>
+      </div>
+      <h3>{_locale_pair("我们测了什么", "What we tested")}</h3>
+      <p>{_esc(test.get("task"))}</p>
+      <ol class="steps">{methods}</ol>
+      <h3>{_locale_pair("测试结果", "Result")}</h3>
+      <p>{_esc(test.get("result"))}</p>
+      <div class="callout"><strong>{_locale_pair("未验证 / 限制：", "Not verified / limits:")}</strong> {_esc(test.get("limitations"))}</div>
+      {f'<h3>{_locale_pair("测试证据", "Test evidence")}</h3><ul class="link-list">{evidence}</ul>' if evidence else ""}
+    </section>'''
+
+
+def _offer_freellm_test_chip(offer: dict) -> str:
+    test = offer.get("freeLLMTest")
+    if not isinstance(test, dict) or not test.get("testedAt"):
+        return ""
+    if test.get("actualUsageVerified") is True and test.get("status") == "passed":
+        label = _locale_pair("✓ FreeLLM 实测", "✓ FreeLLM hands-on")
+        cls = "flag-hands-on"
+    elif test.get("testLevel") == "preflight":
+        label = _locale_pair("△ FreeLLM 预检", "△ FreeLLM preflight")
+        cls = "flag-test-preflight"
+    else:
+        label = _locale_pair("△ FreeLLM 部分验证", "△ FreeLLM partial")
+        cls = "flag-test-preflight"
+    return f'<span class="flag-chip {cls}" title="{_esc(str(test.get("testedAt")))}">{label}</span>'
+
+
 def _offer_version_line(offer: dict, offers: list[dict]) -> str:
     """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
     chips = []
@@ -1308,6 +1363,9 @@ def _offer_version_line(offer: dict, offers: list[dict]) -> str:
         chips.append(featured_chip)
     if offer.get("key"):
         chips.append(f'<span class="flag-chip flag-key">{_locale_pair("★ 重点", "★ Key pick")}</span>')
+    freellm_test_chip = _offer_freellm_test_chip(offer)
+    if freellm_test_chip:
+        chips.append(freellm_test_chip)
     network_chip = _network_chips(offer)
     if network_chip:
         chips.append(network_chip)
@@ -1402,6 +1460,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     </section>'''
     access_paths_markup = _access_paths_markup(offer)
     version_line = _offer_version_line(offer, offers)
+    freellm_test_markup = _offer_freellm_test_markup(offer)
     featured = offer.get("featured")
     if isinstance(featured, dict) and featured.get("reason"):
         featured_reason_zh = f"◆ 加精理由：{featured['reason']}"
@@ -1543,6 +1602,14 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .flag-sibling {{ color: var(--accent); background: var(--surface); border: 1px solid var(--line); }}
     .flag-sibling:hover {{ border-color: var(--accent); }}
     .flag-hands-on {{ color: var(--pale-green-text); background: var(--pale-green-bg); }}
+    .flag-test-preflight {{ color: var(--pale-yellow-text); background: var(--pale-yellow-bg); border: 1px solid var(--pale-yellow-text); }}
+    .freellm-offer-test {{ border-top: 3px solid var(--accent) !important; }}
+    .freellm-offer-test-head {{ display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }}
+    .freellm-offer-test-head h2 {{ margin-top:4px; }}
+    .freellm-test-state {{ display:inline-flex; padding:5px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }}
+    .freellm-test-state.verified {{ color:var(--pale-green-text); background:var(--pale-green-bg); }}
+    .freellm-test-state.partial {{ color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }}
+    .freellm-test-state.blocked {{ color:var(--pale-red-text); background:var(--pale-red-bg); }}
     .flag-endpoint {{ color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }}
     .flag-net-ok {{ color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }}
     .flag-net-region {{ color: var(--pale-green-text); background: var(--pale-green-bg); }}
@@ -1590,6 +1657,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
 {operation_guides_markup}
 {free_models_markup}
 {how_to_section}
+{freellm_test_markup}
     <section>
       <h2>{_locale_pair("官方来源", "Official sources")}</h2>
       <p class="muted">{_locale_pair(offer.get('evidence'), _english_text(offer.get('evidence'), "See the official source links below"))}</p>
@@ -3505,7 +3573,7 @@ def _log_detail_card(event: dict, offer_lookup: dict[str, dict] | None = None) -
         for key in _log_event_model_keys(event):
             offer = offer_lookup.get(key)
             if offer:
-                for field in ("usageGuide", "registrationSteps", "register", "registerLabel", "sourceUrls", "links"):
+                for field in ("usageGuide", "registrationSteps", "register", "registerLabel", "sourceUrls", "links", "freeLLMTest"):
                     if offer.get(field) not in (None, "", []) and field not in details:
                         details[field] = offer[field]
                 break
@@ -3528,7 +3596,8 @@ def _log_detail_card(event: dict, offer_lookup: dict[str, dict] | None = None) -
         "source_unavailable": ("来源异常", "Source issue"),
     }
     badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(*badge_labels.get(event.get("eventType"), (event.get("eventType"), event.get("eventType"))))
-    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
+    test_markup = _offer_freellm_test_markup(details)
+    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}{test_markup}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
 
 
 def _log_event_table(events: list[dict]) -> str:
