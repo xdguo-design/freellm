@@ -33,6 +33,14 @@ TEMPLATE = '''<!doctype html>
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:,">
 <title>@TITLE@ · FreeLLM</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JMK4R9519M');
+</script>
 <link rel="stylesheet" href="/tools/css/tool.css">
 @HEAD@
 </head>

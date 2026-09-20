@@ -37,6 +37,17 @@ VERCEL_ANALYTICS_SCRIPT = '''<script>
   </script>
   <script defer src="/_vercel/insights/script.js"></script>'''
 
+GA4_MEASUREMENT_ID = "G-JMK4R9519M"
+
+GA4_SCRIPT = f'''<!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{GA4_MEASUREMENT_ID}');
+  </script>'''
+
 ADSENSE_SCRIPT = '''<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>'''
 
@@ -707,7 +718,7 @@ def _social_meta(site_url: str, page_url: str, title: str, description: str, og_
 
 
 def _analytics_script() -> str:
-    return VERCEL_ANALYTICS_SCRIPT
+    return VERCEL_ANALYTICS_SCRIPT + GA4_SCRIPT
 
 
 def _theme_definition(slug: str) -> dict:
@@ -3579,7 +3590,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     page = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{VERCEL_ANALYTICS_SCRIPT}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1>{_locale_pair('今天的 AI 资源有什么变化？', 'What changed in AI today?')}</h1><p class="lead">{_locale_pair('我们每天检查官方来源，记录新增、恢复、下线和异常。', 'We check official sources daily and record new, recovered, offline and source issues.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1>{_locale_pair('今天的 AI 资源有什么变化？', 'What changed in AI today?')}</h1><p class="lead">{_locale_pair('我们每天检查官方来源，记录新增、恢复、下线和异常。', 'We check official sources daily and record new, recovered, offline and source issues.')}</p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{date_nav}<section class="log-overview-grid"><section class="log-panel"><h2>{_locale_pair('今日变化', "Today's changes")}</h2><div class="log-stat-grid">{_log_stat_cards(latest_groups)}</div></section><section class="log-snapshot-panel"><h2>{_locale_pair('当前目录快照', 'Current snapshot')}</h2><div class="log-snapshot-grid">{_log_snapshot_cards(latest_snapshot)}</div><div class="log-health-grid">{_log_health_cards(latest)}</div></section></section><section class="log-days"><div class="log-section-heading"><span class="log-eyebrow">CHANGE STREAM / 变更流</span><p>{_locale_pair('按日期查看变更与来源健康状态。', 'Review changes and source health by date.')}</p></div>{body}</section><footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
