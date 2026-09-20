@@ -4,6 +4,126 @@
   "baseline": false,
   "events": [
     {
+      "kind": "offer",
+      "eventType": "new",
+      "id": "huawei-codearts-daily-token",
+      "title": "华为云码道 CodeArts · 每日 1000 万免费 Token",
+      "asOf": "2026-09-20",
+      "details": {
+        "id": "huawei-codearts-daily-token",
+        "order": 47,
+        "date": "2026-09-20",
+        "name": "Huawei Cloud CodeArts Agent daily free tokens",
+        "providerMark": "HW",
+        "provider": "Huawei Cloud CodeArts",
+        "providerMeta": "华为云 · 中国",
+        "providerMetaEn": "Huawei Cloud · China",
+        "model": "Daily welfare model pool",
+        "modelMeta": "CodeArts Agent IDE / VS Code / JetBrains plugins",
+        "type": [
+          "ide",
+          "free",
+          "coding",
+          "promo"
+        ],
+        "productType": "free_ide",
+        "capabilities": [
+          "free_ide",
+          "coding_plan"
+        ],
+        "usageGuide": {
+          "summary": "开通并登录华为云码道 CodeArts 代码智能体，在官方 IDE、VS Code 或 JetBrains 插件内使用每日自动到账的 1,000 万 Token。",
+          "prerequisites": [
+            "华为云账号",
+            "开通华为云码道 CodeArts 代码智能体体验版"
+          ],
+          "steps": [
+            "打开官方活动页并登录/开通华为云码道 CodeArts 代码智能体体验版",
+            "安装码道代码智能体 IDE，或安装 VS Code / JetBrains 系列插件",
+            "登录后确认当日 1,000 万 Token 自动到账，并在码道内选择当前福利模型使用",
+            "当日未用完额度会在 0 点清零；福利模型与活动期限以客户端和官方活动页实时显示为准"
+          ],
+          "examples": {
+            "action": "打开 https://activity.huaweicloud.com/codearts_agent.html，按官方三步指引开通并安装码道 IDE / 插件"
+          },
+          "docsUrl": "https://activity.huaweicloud.com/codearts_agent.html"
+        },
+        "kicker": "10M TOKENS / DAY",
+        "badges": [
+          "10M TOKENS / DAY",
+          "DAILY RESET",
+          "CODEARTS ONLY"
+        ],
+        "freeSummary": "每日 1,000 万免费 Token；当日有效，0 点清零，不累计",
+        "validitySummary": "限时福利；每日额度仅当日有效；官方注明先到先得并可调整或终止活动",
+        "accessSummary": "仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度",
+        "checkedSummary": "2026-09-20 / 华为云官方活动页",
+        "title": "华为云码道 CodeArts · 每日 1000 万免费 Token",
+        "titleZh": "华为云码道 CodeArts · 每日 1000 万免费 Token",
+        "why": "华为云官方活动页明确提供每日 1,000 万免费 Token：登录码道即可使用，当日有效、0 点清零不累计，仅限华为云码道内使用。当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，具体可选模型会持续调整，以码道 IDE / 插件内显示为准。",
+        "mechanism": "登录华为云码道后每日自动获得 10,000,000 Token，用于码道代码智能体当前福利模型池",
+        "validity": "限时福利活动；每日额度当日有效、0 点清零不累计；先到先得，华为云保留调整或终止活动的权利",
+        "access": "华为云码道 CodeArts 代码智能体 IDE、VS Code 系列插件、JetBrains 系列插件；权益不可转让，不能兑换现金，也不能拿到外部工具或自有 Agent/API 中使用",
+        "command": "Open https://activity.huaweicloud.com/codearts_agent.html, activate CodeArts Agent, install the IDE or plugin, then sign in to receive the daily quota.",
+        "register": "https://activity.huaweicloud.com/codearts_agent.html",
+        "registerLabel": "打开华为云码道免费 Token 活动页",
+        "links": [
+          [
+            "官方活动页",
+            "https://activity.huaweicloud.com/codearts_agent.html"
+          ]
+        ],
+        "originCountry": "China",
+        "availability": "华为云中国站账号；在华为云码道 CodeArts 代码智能体内使用",
+        "freeMechanism": "daily_quota",
+        "pricingModel": "limited_time_free",
+        "freePolicy": {
+          "type": "daily_quota",
+          "amount": 10000000,
+          "unit": "tokens",
+          "period": "day"
+        },
+        "quota": "10,000,000 Token / day；0 点清零，不累计；仅码道内使用",
+        "renewal": "每日重新获得当日额度；活动期限未在公开页给出固定结束日，官方可调整或终止",
+        "phoneRequired": "unknown",
+        "cardRequired": "unknown",
+        "commercialUse": "以华为云码道 CodeArts 服务条款为准",
+        "sourceUrls": [
+          "https://activity.huaweicloud.com/codearts_agent.html"
+        ],
+        "evidence": "华为云官方活动页写明“每日1,000万免费 Token”，登录华为云码道即可使用；额度当日有效、0点清零不累计，且仅限华为云码道内使用、先到先得。页面同时列出码道 IDE、JetBrains 系列与 VS Code 系列插件，并说明当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，模型会持续更新变换。",
+        "status": "verified",
+        "confidence": "high",
+        "lastVerifiedAt": "2026-09-20",
+        "checkedBy": "manual",
+        "notes": "这是码道内部的限时每日福利，不是可导出的 API Key 或外部 API 免费额度；活动模型和活动期限可能动态变化。",
+        "freeModels": [
+          {
+            "model": "GLM-5.3-flash",
+            "quota": "共享每日 10,000,000 Token 福利额度",
+            "label": "码道当前福利模型",
+            "note": "福利模型会持续更新变换，以码道 IDE / 插件内可选项为准",
+            "sourceUrl": "https://activity.huaweicloud.com/codearts_agent.html"
+          },
+          {
+            "model": "DeepSeek V4 Pro",
+            "quota": "共享每日 10,000,000 Token 福利额度",
+            "label": "码道当前福利模型",
+            "note": "福利模型会持续更新变换，以码道 IDE / 插件内可选项为准",
+            "sourceUrl": "https://activity.huaweicloud.com/codearts_agent.html"
+          },
+          {
+            "model": "DeepSeek V4 Flash",
+            "quota": "共享每日 10,000,000 Token 福利额度",
+            "label": "码道当前福利模型",
+            "note": "福利模型会持续更新变换，以码道 IDE / 插件内可选项为准",
+            "sourceUrl": "https://activity.huaweicloud.com/codearts_agent.html"
+          }
+        ]
+      },
+      "reason": "manual addition from the Huawei Cloud official activity page"
+    },
+    {
       "kind": "model",
       "eventType": "offline",
       "id": "openrouter/stealth-union-alpha",
@@ -2993,6 +3113,46 @@
         "freeSummary": "Generous free tier included; additional credits for PRO users and organizations",
         "validitySummary": "Monthly included credits; unused quota does not roll over",
         "accessSummary": "Hugging Face account"
+      },
+      {
+        "id": "huawei-codearts-daily-token",
+        "title": "华为云码道 CodeArts · 每日 1000 万免费 Token",
+        "name": "Huawei Cloud CodeArts Agent daily free tokens",
+        "provider": "Huawei Cloud CodeArts",
+        "productType": "free_ide",
+        "status": "verified",
+        "register": "https://activity.huaweicloud.com/codearts_agent.html",
+        "registerLabel": "打开华为云码道免费 Token 活动页",
+        "sourceUrls": [
+          "https://activity.huaweicloud.com/codearts_agent.html"
+        ],
+        "links": [
+          [
+            "官方活动页",
+            "https://activity.huaweicloud.com/codearts_agent.html"
+          ]
+        ],
+        "usageGuide": {
+          "summary": "开通并登录华为云码道 CodeArts 代码智能体，在官方 IDE、VS Code 或 JetBrains 插件内使用每日自动到账的 1,000 万 Token。",
+          "prerequisites": [
+            "华为云账号",
+            "开通华为云码道 CodeArts 代码智能体体验版"
+          ],
+          "steps": [
+            "打开官方活动页并登录/开通华为云码道 CodeArts 代码智能体体验版",
+            "安装码道代码智能体 IDE，或安装 VS Code / JetBrains 系列插件",
+            "登录后确认当日 1,000 万 Token 自动到账，并在码道内选择当前福利模型使用",
+            "当日未用完额度会在 0 点清零；福利模型与活动期限以客户端和官方活动页实时显示为准"
+          ],
+          "examples": {
+            "action": "打开 https://activity.huaweicloud.com/codearts_agent.html，按官方三步指引开通并安装码道 IDE / 插件"
+          },
+          "docsUrl": "https://activity.huaweicloud.com/codearts_agent.html"
+        },
+        "evidence": "华为云官方活动页写明“每日1,000万免费 Token”，登录华为云码道即可使用；额度当日有效、0点清零不累计，且仅限华为云码道内使用、先到先得。页面同时列出码道 IDE、JetBrains 系列与 VS Code 系列插件，并说明当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，模型会持续更新变换。",
+        "freeSummary": "每日 1,000 万免费 Token；当日有效，0 点清零，不累计",
+        "validitySummary": "限时福利；每日额度仅当日有效；官方注明先到先得并可调整或终止活动",
+        "accessSummary": "仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度"
       },
       {
         "id": "keenable-search-free",
