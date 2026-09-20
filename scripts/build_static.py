@@ -30,6 +30,9 @@ SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <nav class="fl-site-nav">
     <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
     <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型目录</span></a>
+    <a href="/models/center/"><span class="fl-site-nav-icon" aria-hidden="true">◫</span><span>模型中心</span></a>
+    <a href="/models/all/"><span class="fl-site-nav-icon" aria-hidden="true">≡</span><span>全部模型</span></a>
+    <a href="/providers/"><span class="fl-site-nav-icon" aria-hidden="true">◇</span><span>按厂家</span></a>
     <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
     <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具集</span></a>
     <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
