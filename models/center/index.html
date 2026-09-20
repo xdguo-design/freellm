@@ -1240,7 +1240,7 @@
   .top-nav a { font-weight: 500; }
   .top-nav .nav-daily-update { font-weight: 600; }
 </style>
-<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920b"><style id="model-center-style">
+<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920c"><style id="model-center-style">
 :root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --ink-solid-contrast:#FFFFFF; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-red-bg:#FDEBEC; --pale-red-text:#9F2F2D; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; --muted:#787774; --soft:#F7F6F3; --blue:#1744E8; }
 :root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --ink-solid-contrast:#111111; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-red-bg:#2A1416; --pale-red-text:#E98A86; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --pale-stone-bg:#232220; --pale-stone-text:#B4B1AB; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); --muted:#A7A5A0; --soft:#1E2127; --blue:#7BC0E5; }
   .model-center-page { margin: 0; min-height: 100vh; background: var(--canvas); }
@@ -1307,6 +1307,9 @@
   <nav class="fl-site-nav">
     <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
     <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型目录</span></a>
+    <a href="/models/center/"><span class="fl-site-nav-icon" aria-hidden="true">◫</span><span>模型中心</span></a>
+    <a href="#all-models"><span class="fl-site-nav-icon" aria-hidden="true">≡</span><span>全部模型</span></a>
+    <a href="/providers/"><span class="fl-site-nav-icon" aria-hidden="true">◇</span><span>按厂家</span></a>
     <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
     <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具集</span></a>
     <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
@@ -1318,7 +1321,7 @@
 <div class="fl-site-ribbon">
   <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
   <span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">Skills 实测 ↗</a></span>
-</div>
+</div><nav class="model-section-tabs" aria-label="模型页面"><a href="/models/">概览</a><a href="/models/all/">全部模型</a><a href="/providers/">按厂家</a><a href="/category/api/">免费 API / Offer</a></nav>
   <!--
     Direction 3 prototype assumptions:
     - English-first because the primary audience is outside China; Chinese appears in the source/status details.
@@ -1330,7 +1333,7 @@
     <main id="catalog-top">
       <header class="catalog-header">
         <a class="brand" href="/"><div class="brand-mark"><span>✦</span></div><div><div class="brand-name">FreeLLM</div><div class="brand-sub">免费 AI 资源导航</div></div></a>
-        <nav class="top-nav" aria-label="Page sections"><a data-nav-key="daily-log" class="nav-daily-update" href="/logs/">每日更新</a><a data-nav-key="resources" href="/models/">资源目录</a><a data-nav-key="model-center" href="/models/center/">模型中心</a><a data-nav-key="all-models" href="#all-models">全部模型</a><a data-nav-key="providers" href="/providers/">按厂家</a><a data-nav-key="skills" href="/skills/">Skills</a><a data-nav-key="tools" href="/tools/">在线工具</a></nav>
+        
         <div class="header-actions"><a class="header-submit" href="/submit/">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
