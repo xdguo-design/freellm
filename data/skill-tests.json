@@ -1,0 +1,694 @@
+{
+  "schemaVersion": 1,
+  "methodology": {
+    "levels": {
+      "e2e": "在当前环境执行核心任务并验证结果",
+      "artifact": "生成可视产物并验证结构/交互",
+      "task": "按 Skill 工作流完成固定测试任务",
+      "preflight": "执行依赖与运行路径预检，因外部条件阻塞",
+      "source-review": "只完成原文审查，不计作实测通过"
+    }
+  },
+  "entries": {
+    "anthropics-docx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前容器缺少其要求的 docx-js npm 依赖，未冒充为端到端通过。"
+    },
+    "anthropics-pdf": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "合并两张发票 PDF、抽取文本并拆分首页；2 页、两家供应商文本均可验证。",
+      "evidence": [],
+      "score": 8.6,
+      "evaluation": "PDF 基础操作路径清晰，适合通用文件处理；真正复杂表单/OCR仍需额外专项测试。"
+    },
+    "anthropics-doc-coauthoring": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "用门诊候诊屏需求整理成结构化规格，暴露出刷新频率、等待时间定义等未决项。",
+      "evidence": [],
+      "score": 8.4,
+      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。"
+    },
+    "anthropics-xlsx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "anthropics-pptx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "anthropics-frontend-design": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact",
+      "status": "通过",
+      "task": "用候诊屏需求制作 16:9 响应式页面，强调远距可读与隐私，不采用通用 SaaS 卡片模板。",
+      "evidence": [],
+      "score": 9,
+      "evaluation": "能显著抑制模板味，设计原则有效；但最终质量仍高度依赖执行模型的审美。"
+    },
+    "anthropics-canvas-design": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact",
+      "status": "通过",
+      "task": "制作 refund workflow 视觉海报 SVG，验证其“先视觉哲学后画面”的流程。",
+      "evidence": [],
+      "score": 8.1,
+      "evaluation": "适合海报/静态视觉概念，能逼出统一视觉语言；不适合复杂交互 UI。"
+    },
+    "anthropics-brand-guidelines": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "anthropics-theme-factory": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact",
+      "status": "通过",
+      "task": "把 Ocean Depths 主题应用到候诊屏测试页面。",
+      "evidence": [],
+      "score": 7.7,
+      "evaluation": "作为统一配色/字体的快速套件很好用，但主题本身容易压过产品语境，需要二次调整。"
+    },
+    "anthropics-algorithmic-art": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact-partial",
+      "status": "部分通过",
+      "task": "用固定随机种子生成可重复的 Canvas 场景；当前环境未使用其指定 p5.js 运行栈。",
+      "evidence": [],
+      "score": 7.5,
+      "evaluation": "创作方法论有启发，参数化思路清楚；对运行库依赖较强，跨环境复现要额外处理。"
+    },
+    "anthropics-internal-comms": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把退款讨论整理成内部项目更新，包含决定、未决项、负责人和风险。",
+      "evidence": [],
+      "score": 7.8,
+      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。"
+    },
+    "anthropics-mcp-builder": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "MCP SDK/目标运行时依赖未准备，当前只完成指令与架构审查。"
+    },
+    "anthropics-skill-creator": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "anthropics-web-artifacts-builder": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "缺少该 Skill 自带 init/bundle 脚本与依赖缓存，无法按指定 React+Vite+Parcel 路径完整复现。"
+    },
+    "anthropics-webapp-testing": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-brainstorming": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-writing-plans": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-executing-plans": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-systematic-debugging": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "复现 ZeroDivisionError，沿数据流定位到 0 被 truthy 过滤，先确认根因再修复。",
+      "evidence": [],
+      "score": 9.3,
+      "evaluation": "约束非常有效，能明显减少拍脑袋修 bug；简单问题上略显教条但成本很低。"
+    },
+    "obra-test-driven-development": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "先写 zero-value 回归测试并看到失败，再做最小修复，最终 2/2 通过。",
+      "evidence": [],
+      "score": 9,
+      "evaluation": "规则严、可执行、能形成证据链；“已有代码必须删掉重来”的绝对化表述在遗留系统里需谨慎。"
+    },
+    "obra-requesting-code-review": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-receiving-code-review": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-verification-before-completion": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "修复后重新运行完整测试并复验原始命令输出，不用‘应该好了’代替证据。",
+      "evidence": [],
+      "score": 9.4,
+      "evaluation": "很适合 agent 工作流，是低成本高收益的质量闸门；单独使用不解决测试覆盖不足。"
+    },
+    "obra-subagent-driven-development": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "obra-writing-skills": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "vercel-labs-composition-patterns": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "vercel-labs-react-best-practices": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "vercel-labs-react-native-skills": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "vercel-labs-web-design-guidelines": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "blader-humanizer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把典型 AI 腔文章改写为更具体、少口号、带真实工作细节的版本。",
+      "evidence": [],
+      "score": 8.7,
+      "evaluation": "对去套话有效，规则具体；如果机械套用会把正式文体过度口语化。"
+    },
+    "jimliu-baoyu-infographic": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "jimliu-baoyu-markdown-to-html": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact-partial",
+      "status": "部分通过",
+      "task": "用测试文章生成可阅读的自包含 HTML 版式；未运行原仓库脚本。",
+      "evidence": [],
+      "score": 7.8,
+      "evaluation": "目标明确、工作流实用；真正价值在主题和微信兼容细节，需在其脚本环境继续 E2E。"
+    },
+    "jimliu-baoyu-url-to-markdown": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "jimliu-baoyu-article-illustrator": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "jimliu-baoyu-slide-deck": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "jimliu-baoyu-post-to-wechat": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "缺少公众号账号/API 凭据与 IP 白名单，禁止用假发布替代真实 E2E。"
+    },
+    "jimliu-baoyu-post-to-x": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "缺少已登录 X 会话/浏览器配置，未执行真实发布。"
+    },
+    "jimliu-baoyu-xhs-images": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "jimliu-baoyu-cover-image": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "iofficeai-officecli": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-docx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-academic-paper": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-word-form": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-morph-ppt": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-pptx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-pitch-deck": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-xlsx": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "iofficeai-officecli-data-dashboard": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 officecli 可执行文件。"
+    },
+    "composiohq-file-organizer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "对 6 个混乱文件按文档/图片/发票/笔记归类并清理文件名。",
+      "evidence": [],
+      "score": 8,
+      "evaluation": "对真实桌面整理很直接；最大风险是自动重命名/移动的可逆性，必须先预览计划。"
+    },
+    "composiohq-invoice-organizer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "从两份测试发票抽取供应商、日期、金额并按规则重命名，生成索引 CSV。",
+      "evidence": [],
+      "score": 8.5,
+      "evaluation": "任务边界清楚且产出可验；面对扫描件、复杂税项和多币种时仍需 OCR/规则增强。"
+    },
+    "composiohq-content-research-writer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "composiohq-meeting-insights-analyzer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "从退款会议记录提取决定、开放问题、行动项，并识别‘先定 UI 后定规则’风险。",
+      "evidence": [],
+      "score": 8.4,
+      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。"
+    },
+    "composiohq-tailored-resume-generator": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "根据 Healthcare SaaS JD 重写简历重点，同时单列缺失的 SQL/客户发现证据而不编造。",
+      "evidence": [],
+      "score": 8.6,
+      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。"
+    },
+    "composiohq-competitive-ads-extractor": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "composiohq-lead-research-assistant": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "composiohq-twitter-algorithm-optimizer": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把测试短文改成更强首句、可扫描列表和明确结论的帖子。",
+      "evidence": [],
+      "score": 7.1,
+      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。"
+    },
+    "composiohq-changelog-generator": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "从 5 条提交生成 Added/Fixed/Changed 三段 changelog。",
+      "evidence": [],
+      "score": 8.2,
+      "evaluation": "对规范 commit 历史非常省时；提交信息差时不会自动补回缺失语义。"
+    },
+    "michalparkola-article-extractor": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "michalparkola-youtube-transcript": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 yt-dlp，且测试容器无外网下载能力。"
+    },
+    "michalparkola-learn-this": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "michalparkola-ship-learn-next": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "从退款案例输出 Ship/Learn/Next，明确先交付 eligibility，再用阻塞原因数据决定下一步。",
+      "evidence": [],
+      "score": 8.3,
+      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。"
+    },
+    "michalparkola-unblock-action": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把‘药房规则不清’压缩成 30 分钟可完成的决策表动作。",
+      "evidence": [],
+      "score": 8.8,
+      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。"
+    },
+    "michalparkola-scrum-sage": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把退款阻塞拆成工程可继续项、政策依赖项和升级触发条件。",
+      "evidence": [],
+      "score": 8,
+      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。"
+    },
+    "hugohe3-ppt-master": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "source-review",
+      "status": "待端到端",
+      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "evidence": [],
+      "score": null,
+      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+    },
+    "op7418-nanobanana-ppt-skills": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "需要 Google GenAI API/密钥；未提供凭据时不做假生成。"
+    },
+    "lewislulu-html-ppt-skill": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact",
+      "status": "通过",
+      "task": "制作 3 页可键盘切换的静态 HTML 演示，验证无构建、离线可用的核心路径。",
+      "evidence": [],
+      "score": 8.9,
+      "evaluation": "模板/主题丰富且交付快，HTML 演示很实用；对必须交 .pptx 的组织不是直接替代。"
+    },
+    "rendercv-rendercv": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 SKILL.md 做依赖与执行路径预检",
+      "evidence": [],
+      "score": null,
+      "evaluation": "当前环境没有 rendercv CLI，且无法联网安装。"
+    },
+    "jzcreative-html-resume-beautifier": {
+      "testedAt": "2026-09-20",
+      "environment": "GPT-5.6 Sol test harness",
+      "testLevel": "artifact",
+      "status": "通过",
+      "task": "将测试简历制作成 A4 HTML 双栏版式，并保持虚构联系信息与隐私隔离。",
+      "evidence": [],
+      "score": 8.7,
+      "evaluation": "HTML 简历的视觉与隐私规则都很扎实；自包含导出依赖需要严格验证。"
+    }
+  }
+}
