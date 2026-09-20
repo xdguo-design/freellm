@@ -28,13 +28,13 @@ SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
     <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span>
   </a>
   <nav class="fl-site-nav">
-    <a href="/" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
-    <a href="/models/"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
-    <a href="/skills/"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
-    <a href="/tools/"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
-    <a href="/skills/lab/"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
-    <a href="/about/"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
+    <a href="/" data-site-nav="home" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
+    <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
+    <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
+    <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
+    <a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+    <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
 </aside>
@@ -95,7 +95,12 @@ def ensure_pastel_shell(html: str) -> str:
     if "freellm-pastel-ui.css" not in updated and "</head>" in updated:
         updated = updated.replace("</head>", theme_tag + "</head>", 1)
 
-    if 'class="fl-site-rail"' not in updated:
+    # Always normalize the shell. Older generated HTML may already contain
+    # a ten-item rail, so "only inject if missing" would preserve stale navigation.
+    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    if re.search(shell_pattern, updated, flags=re.I | re.S):
+        updated = re.sub(shell_pattern, SITE_CHROME, updated, count=1, flags=re.I | re.S)
+    else:
         updated = re.sub(
             r'(<body[^>]*>)',
             lambda m: m.group(1) + "\n" + SITE_CHROME,

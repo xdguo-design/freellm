@@ -2227,7 +2227,7 @@
         if (window.location.protocol !== 'file:') return;
         const siteRoot = document.body.classList.contains('model-center-page') ? '../../' : '../';
         const query = window.location.search;
-        document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => {
+        document.querySelectorAll('.fl-site-nav a[href^="/"]').forEach(link => {
           const path = link.getAttribute('href').split(/[?#]/, 1)[0];
           if (!path.endsWith('/')) return;
           link.setAttribute('href', `${siteRoot}${path.slice(1)}index.html${query}`);

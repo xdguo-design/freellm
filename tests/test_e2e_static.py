@@ -99,23 +99,22 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, page)
 
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
-        """Narrow screens must keep the directory navigation discoverable."""
-        self.assertIn('href="/logs/"', self.html)
-        for href in (
-            'href="/models/"',
-            'href="/models/center/"',
-            'href="/models/all/"',
-            'href="/providers/"',
+        """The static first paint exposes exactly one seven-item global rail."""
+        rail = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', self.html, re.S)
+        self.assertIsNotNone(rail)
+        self.assertEqual(rail.group(1).count("<a "), 7)
+        for key, href in (
+            ("home", "/"),
+            ("models", "/models/"),
+            ("skills", "/skills/"),
+            ("tools", "/tools/"),
+            ("workflow", "/skills/lab/"),
+            ("logs", "/logs/"),
+            ("about", "/about/"),
         ):
-            self.assertIn(href, self.html)
-        mobile_block = re.search(
-            r'@media \(max-width: 700px\) \{(?P<body>.*?)\n    \}',
-            self.html,
-            re.S,
-        )
-        self.assertIsNotNone(mobile_block)
-        self.assertNotRegex(mobile_block.group("body"), r'\.top-nav\s*\{\s*display:\s*none')
-        self.assertRegex(mobile_block.group("body"), r'\.top-nav\s*\{[^}]*overflow-x:\s*auto')
+            self.assertIn(f'data-site-nav="{key}"', rail.group(1))
+            self.assertIn(f'href="{href}"', rail.group(1))
+        self.assertNotIn('class="top-nav"', self.html)
 
     def test_file_preview_navigation_maps_site_routes_to_local_pages(self):
         """The file:// preview must resolve root navigation to workspace index pages."""
@@ -156,7 +155,7 @@ class StaticContractTests(unittest.TestCase):
     def test_daily_updates_story_is_visible_in_homepage_and_log(self):
         log = LOG_PATH.read_text(encoding="utf-8")
         for needle in (
-            'data-nav-key="daily-log"',
+            'data-site-nav="logs"',
             '今天的 AI 资源有什么变化？',
             '我们每天检查官方来源，记录新增、恢复、下线和异常。',
             '查看今日变化',
@@ -598,8 +597,8 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
-        # 新视觉系统在移动端把左栏折叠成顶部横向导航，核心入口不能丢。
-        for href in ("/logs/", "/models/", "/models/center/", "/models/all/", "/providers/", "/skills/", "/tools/"):
+        self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
+        for href in ("/", "/models/", "/skills/", "/tools/", "/skills/lab/", "/logs/", "/about/"):
             self.assertGreater(page.locator(f'.fl-site-nav a[href="{href}"]').count(), 0)
 
     def test_file_protocol_search_filter_and_drawer(self):
@@ -680,13 +679,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=en#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
-        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "Daily updates")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
-        self.assertEqual(page.locator(".top-nav").inner_text().splitlines()[0], "每日更新")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
         self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 

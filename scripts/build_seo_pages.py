@@ -4802,7 +4802,7 @@ def _remove_legacy_global_nav(content: str) -> str:
 
 
 def _ensure_static_site_chrome(content: str, path: Path) -> str:
-    if path.suffix != ".html" or 'class="fl-site-rail"' in content:
+    if path.suffix != ".html":
         return content
     section = _visual_section_for_path(path)
     items = [
@@ -4817,7 +4817,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
     def render_link(item: tuple[str, str, str, str]) -> str:
         href, icon, label, key = item
         current = ' aria-current="page"' if key == section else ""
-        return f'<a href="{href}"{current}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
+        return f'<a href="{href}" data-site-nav="{key}"{current}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
     links = "".join(render_link(item) for item in items)
     chrome = (
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
@@ -4828,7 +4828,9 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         '<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span>'
         '<span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>'
     )
-    return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + chrome, content, count=1, flags=re.I)
+    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    normalized = re.sub(shell_pattern, "", content, count=1, flags=re.I | re.S)
+    return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + chrome, normalized, count=1, flags=re.I)
 
 
 def _ensure_model_section_tabs(content: str, path: Path) -> str:
