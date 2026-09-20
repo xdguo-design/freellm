@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS_PATH = ROOT / "data" / "skills.json"
 RECIPES_PATH = ROOT / "data" / "skill-recipes.json"
 STYLES_PATH = ROOT / "data" / "skill-styles.json"
+TESTS_PATH = ROOT / "data" / "skill-tests.json"
 CONTENT_DIR = ROOT / "data" / "skill-content"
 
 
@@ -57,6 +58,44 @@ class SkillsDataTests(unittest.TestCase):
         categories = {item["category"] for item in self.skills}
         self.assertTrue(categories, "catalog must use at least one category")
         self.assertLessEqual(categories, set(SKILL_CATEGORY_DEFINITIONS))
+
+
+class SkillBenchmarkDataTests(unittest.TestCase):
+    def setUp(self):
+        self.skills = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
+        self.payload = json.loads(TESTS_PATH.read_text(encoding="utf-8"))
+        self.entries = self.payload["entries"]
+
+    def test_every_skill_has_a_freellm_test_record(self):
+        self.assertEqual({item["id"] for item in self.skills}, set(self.entries))
+        self.assertEqual(len(self.entries), 68)
+
+    def test_test_records_never_fake_unexecuted_scores(self):
+        scored = 0
+        for skill_id, entry in self.entries.items():
+            self.assertIn(entry.get("testLevel"), {"e2e", "task", "artifact", "artifact-partial", "preflight"}, skill_id)
+            self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
+            self.assertTrue(str(entry.get("task") or "").strip(), skill_id)
+            self.assertTrue(str(entry.get("evaluation") or "").strip(), skill_id)
+            if entry.get("testLevel") == "preflight":
+                self.assertIsNone(entry.get("score"), skill_id)
+            elif isinstance(entry.get("score"), (int, float)):
+                scored += 1
+                self.assertGreaterEqual(entry["score"], 0, skill_id)
+                self.assertLessEqual(entry["score"], 10, skill_id)
+        self.assertGreaterEqual(scored, 40)
+
+    def test_internal_evidence_targets_exist(self):
+        for skill_id, entry in self.entries.items():
+            for evidence in entry.get("evidence") or []:
+                url = evidence if isinstance(evidence, str) else evidence.get("url")
+                if not url or not url.startswith("/skills/test-artifacts/"):
+                    continue
+                relative = url.lstrip("/")
+                target = ROOT / relative
+                if url.endswith("/"):
+                    target = target / "index.html"
+                self.assertTrue(target.is_file(), f"{skill_id}: missing evidence {url}")
 
 
 class SkillStylesDataTests(unittest.TestCase):
@@ -195,6 +234,10 @@ class SkillsBuildTests(unittest.TestCase):
             'id="copy-command"',
             'id="dialog-skill-content"',
             'id="dialog-skill-reviews"',
+            'id="dialog-freellm-test"',
+            'FreeLLM 实测',
+            'freellm-test-strip',
+            'renderFreeLLMTest',
             'class="skills-page"',
             'class="skill-source-link"',
         ):
