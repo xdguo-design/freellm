@@ -43,22 +43,22 @@
     "anthropics-xlsx": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "artifact",
+      "status": "部分通过",
+      "task": "用同一组门诊月度数据生成带公式、百分比格式和趋势图的工作簿；公式结果经读取校验。当前平台按约束使用 artifact_tool，而非该 Skill 原文指定的 openpyxl。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.5,
+      "evaluation": "对公式校验、重算和输出质量的要求非常好；真正执行时工具链较重，且本平台不能按原 Skill 的 openpyxl 路径复现，所以不记作完全 E2E。"
     },
     "anthropics-pptx": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "严格用 PptxGenJS 生成 3 页退款流程 deck，经 LibreOffice 渲染，再用 python-pptx 重新读取确认 3 页和关键标题存在。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.9,
+      "evaluation": "对版式、溢出检查和验证流程要求扎实，能把“生成 PPT”变成真正可交付的工程流程；代价是步骤多、依赖较重。"
     },
     "anthropics-frontend-design": {
       "testedAt": "2026-09-20",
@@ -66,7 +66,13 @@
       "testLevel": "artifact",
       "status": "通过",
       "task": "用候诊屏需求制作 16:9 响应式页面，强调远距可读与隐私，不采用通用 SaaS 卡片模板。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/anthropics-frontend-design/",
+          "label": "打开候诊屏实测 Demo",
+          "note": "真实 HTML/CSS 输出，可直接查看响应式效果"
+        }
+      ],
       "score": 9,
       "evaluation": "能显著抑制模板味，设计原则有效；但最终质量仍高度依赖执行模型的审美。"
     },
@@ -76,19 +82,25 @@
       "testLevel": "artifact",
       "status": "通过",
       "task": "制作 refund workflow 视觉海报 SVG，验证其“先视觉哲学后画面”的流程。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/anthropics-canvas-design/poster.svg",
+          "label": "打开退款流程海报",
+          "note": "SVG 实测产物"
+        }
+      ],
       "score": 8.1,
       "evaluation": "适合海报/静态视觉概念，能逼出统一视觉语言；不适合复杂交互 UI。"
     },
     "anthropics-brand-guidelines": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把品牌色、字体角色和对比约束应用到一个测试封面，并逐项检查是否偏离品牌规则。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 7.9,
+      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。"
     },
     "anthropics-theme-factory": {
       "testedAt": "2026-09-20",
@@ -96,7 +108,13 @@
       "testLevel": "artifact",
       "status": "通过",
       "task": "把 Ocean Depths 主题应用到候诊屏测试页面。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/anthropics-theme-factory/",
+          "label": "打开 Ocean Depths 主题 Demo",
+          "note": "真实主题应用结果"
+        }
+      ],
       "score": 7.7,
       "evaluation": "作为统一配色/字体的快速套件很好用，但主题本身容易压过产品语境，需要二次调整。"
     },
@@ -106,7 +124,13 @@
       "testLevel": "artifact-partial",
       "status": "部分通过",
       "task": "用固定随机种子生成可重复的 Canvas 场景；当前环境未使用其指定 p5.js 运行栈。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/anthropics-algorithmic-art/",
+          "label": "打开参数化视觉 Demo",
+          "note": "固定随机种子；未使用原 Skill 指定 p5.js 栈"
+        }
+      ],
       "score": 7.5,
       "evaluation": "创作方法论有启发，参数化思路清楚；对运行库依赖较强，跨环境复现要额外处理。"
     },
@@ -133,12 +157,12 @@
     "anthropics-skill-creator": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "部分通过",
+      "task": "用退款状态审计场景设计一个新 Skill：定义触发条件、工作流、参考资料和验证方式；未运行其仓库自带 benchmark/package 脚本。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.8,
+      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。"
     },
     "anthropics-web-artifacts-builder": {
       "testedAt": "2026-09-20",
@@ -153,42 +177,42 @@
     "anthropics-webapp-testing": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "e2e",
+      "status": "通过",
+      "task": "用 Playwright 驱动一个最小退款页面，从 ready 点击到 processing，并用 DOM 断言验证状态变化。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.6,
+      "evaluation": "‘先侦察再动作’的浏览器测试思路非常实用；真实项目中浏览器安装、登录态和网络策略仍是主要阻塞点。"
     },
     "obra-brainstorming": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "对候诊屏需求按 bounded/architectural 规则做范围判断、关键问题梳理和短设计，实施前明确要先获得设计认可。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.6,
+      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。"
     },
     "obra-writing-plans": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把候诊屏需求拆成文件级实施计划，逐步写出测试、命令、预期结果和提交边界，不使用 TODO/TBD 占位。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.9,
+      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。"
     },
     "obra-executing-plans": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "按既定调试/TDD计划逐项执行：先读计划、跑 RED、做最小修改、跑 GREEN、在检查点核对结果。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.4,
+      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。"
     },
     "obra-systematic-debugging": {
       "testedAt": "2026-09-20",
@@ -213,22 +237,22 @@
     "obra-requesting-code-review": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "针对 zero-value 修复整理代码审查请求：说明基线、变更、验证命令、风险和需要审查的具体问题。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.2,
+      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。"
     },
     "obra-receiving-code-review": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "给定一条‘把 is not None 改回 truthy 更简洁’的错误 review 意见，先用失败用例验证技术影响，再拒绝该建议并给证据。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.7,
+      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。"
     },
     "obra-verification-before-completion": {
       "testedAt": "2026-09-20",
@@ -243,62 +267,68 @@
     "obra-subagent-driven-development": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "检查任务拆分、fresh subagent、规格审查与代码质量审查链路。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "当前测试 harness 没有可复现的独立 subagent 调度接口，因此不能把‘读过流程’冒充真实多 Agent 实测。"
     },
     "obra-writing-skills": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "用退款状态审计场景编写一个 Skill 草案，并按其 TDD 映射检查触发条件、约束、反例和验证路径。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.7,
+      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。"
     },
     "vercel-labs-composition-patterns": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "审查一个 props 爆炸的 React 卡片组件，改为复合组件/slot 结构，减少布尔 prop 组合状态。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.7,
+      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。"
     },
     "vercel-labs-react-best-practices": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "审查包含串行数据请求的 React 测试组件，识别 waterfall 并改为可并行请求，同时检查 bundle/渲染风险。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 9.1,
+      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。"
     },
     "vercel-labs-react-native-skills": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "审查用 ScrollView + map 渲染长列表且使用 index key 的 React Native 示例，改为虚拟化列表与稳定 key。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.5,
+      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。"
     },
     "vercel-labs-web-design-guidelines": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
-      "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "testLevel": "task",
+      "status": "通过",
+      "task": "对候诊屏实测页面做可访问性/交互审查：层级、可读性、响应式、控件语义和键盘路径逐项检查。",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/anthropics-frontend-design/",
+          "label": "被审查的候诊屏 Demo",
+          "note": "同一固定夹具，便于复核"
+        }
+      ],
+      "score": 8.4,
+      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。"
     },
     "blader-humanizer": {
       "testedAt": "2026-09-20",
@@ -313,12 +343,12 @@
     "jimliu-baoyu-infographic": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "读取布局选择、内容压缩和 imagegen 生成链，准备同一退款流程信息图基准任务。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "当前仓库证据流水线无法把指定 imagegen 调用的产物持续化并回传到本分支，因此本轮不记作实测通过。"
     },
     "jimliu-baoyu-markdown-to-html": {
       "testedAt": "2026-09-20",
@@ -326,39 +356,45 @@
       "testLevel": "artifact-partial",
       "status": "部分通过",
       "task": "用测试文章生成可阅读的自包含 HTML 版式；未运行原仓库脚本。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/jimliu-baoyu-markdown-to-html/",
+          "label": "打开排版结果",
+          "note": "替代执行产物，未运行仓库原转换脚本"
+        }
+      ],
       "score": 7.8,
       "evaluation": "目标明确、工作流实用；真正价值在主题和微信兼容细节，需在其脚本环境继续 E2E。"
     },
     "jimliu-baoyu-url-to-markdown": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "e2e",
+      "status": "部分通过",
+      "task": "对本地测试文章执行 HTML → Markdown，保留标题、段落和有序列表；未走真实远程 URL 的浏览器登录/抓取链。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 7.9,
+      "evaluation": "转换目标清楚，对内容采集很实用；远程 URL 的 cookie、反爬和动态页面才是实际难点，本地夹具只能覆盖转换核心。"
     },
     "jimliu-baoyu-article-illustrator": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按文章配图流程完成插图点位、批量生成策略和视觉维度预检。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "核心价值在‘先选插图点再批量生成’，但本轮没有跑它要求的 imagegen 产物链，因此不打分。"
     },
     "jimliu-baoyu-slide-deck": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按 slide-deck 的语言、批量图像生成、PDF/PPTX 输出链做执行预检。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "它高度依赖图像生成链；在未生成真实逐页视觉并回写证据前，不应仅凭说明给结论。"
     },
     "jimliu-baoyu-post-to-wechat": {
       "testedAt": "2026-09-20",
@@ -383,22 +419,22 @@
     "jimliu-baoyu-xhs-images": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按小红书图卡系列的布局、批量生成和确认策略做执行预检。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "流程设计针对社媒图卡很明确，但本轮未跑指定 imagegen 链，不把模拟卡片当真实结果。"
     },
     "jimliu-baoyu-cover-image": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "按五维封面设计流程完成输入和生成条件预检。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "维度拆分有助于减少随机出图；但没有真实 imagegen 结果就无法评价成图质量，因此本轮不打分。"
     },
     "iofficeai-officecli": {
       "testedAt": "2026-09-20",
@@ -513,12 +549,12 @@
     "composiohq-content-research-writer": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "基于退款流程测试文章，把核心论点、证据、反例和文章结构整理成可继续写作的研究稿。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.1,
+      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。"
     },
     "composiohq-meeting-insights-analyzer": {
       "testedAt": "2026-09-20",
@@ -543,22 +579,22 @@
     "composiohq-competitive-ads-extractor": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "检查广告样本输入、竞争对手归类、创意模式提取和结论输出链。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "没有真实广告库/竞争对手样本时，无法评价其最关键的采集与归因能力；本轮只完成执行预检，不打分。"
     },
     "composiohq-lead-research-assistant": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "preflight",
+      "status": "环境阻塞",
+      "task": "检查目标公司、人物、信号、联系方式与研究摘要的输入输出链。",
       "evidence": [],
       "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "evaluation": "核心价值依赖实时公开信息和目标客户定义；当前固定夹具不包含真实销售线索，因此不做虚假 E2E。"
     },
     "composiohq-twitter-algorithm-optimizer": {
       "testedAt": "2026-09-20",
@@ -583,12 +619,12 @@
     "michalparkola-article-extractor": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "e2e",
+      "status": "部分通过",
+      "task": "从本地 HTML 测试文章抽取正文，去掉页面外壳并验证标题、三条规则和正文都保留；未覆盖真实远程网页的反爬/JS 渲染。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.2,
+      "evaluation": "‘优先使用 readability/reader，失败再降级’的策略实用；真实网页兼容性仍需用 URL 集合持续回归。"
     },
     "michalparkola-youtube-transcript": {
       "testedAt": "2026-09-20",
@@ -603,12 +639,12 @@
     "michalparkola-learn-this": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "task",
+      "status": "通过",
+      "task": "把同一退款文章先抽取，再生成核心教训、可执行下一步和保存结构，验证 extraction → action planning 的组合价值。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.4,
+      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。"
     },
     "michalparkola-ship-learn-next": {
       "testedAt": "2026-09-20",
@@ -643,12 +679,12 @@
     "hugohe3-ppt-master": {
       "testedAt": "2026-09-20",
       "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "source-review",
-      "status": "待端到端",
-      "task": "已读取 SKILL.md 并建立基准测试用例，但本轮尚未计为真实端到端通过",
+      "testLevel": "artifact",
+      "status": "部分通过",
+      "task": "用同一退款流程内容生成并验证 3 页 PPTX，重点检查叙事、视觉层级和页面节奏；未完整复现其所有 reference load order。",
       "evidence": [],
-      "score": null,
-      "evaluation": "不以 GitHub Stars 或第三方评价代替 FreeLLM 实测；完成基准任务后再给最终分数。"
+      "score": 8.3,
+      "evaluation": "对专业演示的约束比普通 PPT 提示更细，适合高要求 deck；参考文件较多，完整执行成本也更高。"
     },
     "op7418-nanobanana-ppt-skills": {
       "testedAt": "2026-09-20",
@@ -666,7 +702,13 @@
       "testLevel": "artifact",
       "status": "通过",
       "task": "制作 3 页可键盘切换的静态 HTML 演示，验证无构建、离线可用的核心路径。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/lewislulu-html-ppt-skill/",
+          "label": "打开 3 页 HTML 演示",
+          "note": "支持键盘左右切页"
+        }
+      ],
       "score": 8.9,
       "evaluation": "模板/主题丰富且交付快，HTML 演示很实用；对必须交 .pptx 的组织不是直接替代。"
     },
@@ -686,7 +728,13 @@
       "testLevel": "artifact",
       "status": "通过",
       "task": "将测试简历制作成 A4 HTML 双栏版式，并保持虚构联系信息与隐私隔离。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/jzcreative-html-resume-beautifier/",
+          "label": "打开 A4 简历 Demo",
+          "note": "使用虚构测试数据，避免 PII"
+        }
+      ],
       "score": 8.7,
       "evaluation": "HTML 简历的视觉与隐私规则都很扎实；自包含导出依赖需要严格验证。"
     }
