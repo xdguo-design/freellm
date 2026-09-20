@@ -17,6 +17,7 @@ SKIP_PREFIXES = (
     "docs/marketing/",
     "design/prototypes/",
     "design/visual-directions/",
+    "seo/",
 )
 TITLE_MIN = 20
 TITLE_MAX = 65
