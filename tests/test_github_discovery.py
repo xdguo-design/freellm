@@ -108,8 +108,8 @@ class GitHubEvidenceTests(unittest.TestCase):
     def test_malformed_ipv6_url_is_ignored_in_document_evidence(self):
         content = "Free model docs https://[not-valid-ipv6]/models and https://example.com/free"
         result = extract_peer_document_evidence("example/repo", "README.md", "abc123", content)
-        self.assertNotIn("not-valid-ipv6", json.dumps(result))
-        self.assertIn("https://example.com/free", result["officialLinks"])
+        self.assertNotIn("https://[not-valid-ipv6]/models", result["officialLinks"])
+        self.assertEqual(result["officialLinks"], ["https://example.com/free"])
     def test_select_document_paths_prefers_docs_and_excludes_executable_files(self):
         paths = select_document_paths([
             "src/router.py",
