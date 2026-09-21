@@ -278,7 +278,7 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_chinese_static_seo_metadata(self):
         self.assertRegex(self.html, r'<html[^>]*lang="zh-CN"')
         self.assertIn(
-            '<meta name="description" content="FreeLLM 汇总并持续核验免费 AI 模型、API、编程 IDE、Agent Skills',
+            '<meta name="description" content="FreeLLM 每日核验免费 AI 模型、LLM API、OpenAI 兼容接口、AI 编程工具',
             self.html,
         )
         self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.html)
@@ -293,11 +293,13 @@ class StaticContractTests(unittest.TestCase):
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
         self.assertIn(
-            '<title>FreeLLM — 免费 AI 模型、API、IDE 与额度索引</title>',
+            '<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>',
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>FreeLLM：发现真正好用的<span>免费 AI</span></h1>', self.html)
+        self.assertIn('<h1>免费 AI 模型与 API，<span>每天核验</span></h1>', self.html)
+        self.assertIn("免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口", self.html)
+        self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
