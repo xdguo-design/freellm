@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
+from crawler.lifecycle import parse_offer_datetime
+
 REQUIRED_FIELDS = {
     "id", "order", "date", "name", "provider", "model", "type", "productType",
     "freeMechanism", "freeSummary", "validitySummary", "accessSummary", "title",
@@ -356,6 +358,17 @@ def validate_offer(offer: object) -> list[str]:
     for field in ("date", "lastVerifiedAt"):
         if field in offer and (not isinstance(offer[field], str) or not DATE_RE.fullmatch(offer[field])):
             errors.append(f"{field} must use YYYY-MM-DD")
+    lifecycle_values = {}
+    for field in ("startsAt", "endsAt"):
+        if field in offer:
+            try:
+                lifecycle_values[field] = parse_offer_datetime(offer[field])
+            except (TypeError, ValueError):
+                errors.append(f"{field} must be an ISO-8601 datetime with an explicit timezone")
+    if lifecycle_values.get("startsAt") and lifecycle_values.get("endsAt") and lifecycle_values["endsAt"] <= lifecycle_values["startsAt"]:
+        errors.append("endsAt must be later than startsAt")
+    if "claimRequired" in offer and not isinstance(offer["claimRequired"], bool):
+        errors.append("claimRequired must be a boolean")
     if "type" in offer and (not isinstance(offer["type"], list) or not all(isinstance(item, str) for item in offer["type"])):
         errors.append("type must be a list of strings")
     if "productType" in offer and offer["productType"] not in PRODUCT_TYPES:
