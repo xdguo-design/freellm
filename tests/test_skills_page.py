@@ -96,8 +96,9 @@ class SkillBenchmarkDataTests(unittest.TestCase):
                 url = evidence if isinstance(evidence, str) else evidence.get("url")
                 if not url or not url.startswith("/skills/test-artifacts/"):
                     continue
-                target = ROOT / url.lstrip("/")
-                if url.endswith("/"):
+                path_part = url.split("#", 1)[0].split("?", 1)[0]
+                target = ROOT / path_part.lstrip("/")
+                if path_part.endswith("/"):
                     target = target / "index.html"
                 self.assertTrue(target.is_file(), f"{skill_id}: missing evidence {url}")
 
