@@ -4992,8 +4992,17 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         stale = []
         for relative, content in files.items():
             path = output_root / relative
-            if not path.is_file() or path.read_text(encoding="utf-8") != content:
+            current = path.read_text(encoding="utf-8") if path.is_file() else None
+            if current != content:
                 stale.append(str(relative))
+                if current is not None and len(stale) <= 3:
+                    limit = min(len(current), len(content))
+                    offset = next((i for i in range(limit) if current[i] != content[i]), limit)
+                    left = max(0, offset - 180)
+                    right = offset + 260
+                    print(f"stale detail {relative} @ char {offset}")
+                    print("  current :", repr(current[left:right]))
+                    print("  expected:", repr(content[left:right]))
         if stale:
             print("stale SEO output: " + ", ".join(stale))
             return False
