@@ -73,12 +73,15 @@ def registry_ids():
     start = src.index('const TOOLS = [')
     end = src.index('];', start)
     ids = re.findall(r"id:\s*'([^']+)'", src[start:end])
-    seen, uniq = set(), []
+    seen, duplicates = set(), []
     for i in ids:
-        if i not in seen:
-            seen.add(i)
-            uniq.append(i)
-    return uniq
+        if i in seen and i not in duplicates:
+            duplicates.append(i)
+        seen.add(i)
+    if duplicates:
+        print('工具注册表存在重复 id (%d): %s' % (len(duplicates), ', '.join(duplicates)))
+        sys.exit(1)
+    return ids
 
 
 def render(defn):
