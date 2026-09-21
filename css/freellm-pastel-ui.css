@@ -1413,6 +1413,152 @@ html.fl-pastel-ui .skill-content {
   overflow:auto !important;
 }
 
+
+/* Skills detail modal: keep the top-layer dialog fully inside the viewport.
+   The legacy Skills stylesheet uses a fixed 760px dialog and two-column preview;
+   this shared layer owns centering, scrolling and narrow-screen reflow. */
+html.fl-pastel-ui #skill-dialog {
+  position:fixed !important;
+  top:50% !important;
+  left:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+  inset-block-start:50% !important;
+  inset-inline-start:50% !important;
+  width:min(860px,calc(100vw - 32px)) !important;
+  max-width:none !important;
+  max-height:min(88dvh,860px) !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:translate(-50%,-50%) !important;
+  overflow:hidden !important;
+  border:1px solid var(--fl-line) !important;
+  border-radius:20px !important;
+  background:var(--fl-surface-solid) !important;
+  box-shadow:0 30px 90px rgba(28,60,96,.22) !important;
+}
+html.fl-pastel-ui #skill-dialog::backdrop {
+  background:rgba(18,35,54,.38) !important;
+  backdrop-filter:blur(6px);
+}
+html.fl-pastel-ui #skill-dialog .skill-dialog-body {
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+  max-height:min(88dvh,860px) !important;
+  padding:30px clamp(22px,4vw,38px) 36px !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  scrollbar-gutter:stable;
+  overscroll-behavior:contain;
+}
+html.fl-pastel-ui #skill-dialog .skill-dialog-close {
+  position:sticky !important;
+  z-index:5;
+  top:0;
+  float:right;
+  margin:-8px -8px 4px 14px;
+  background:color-mix(in srgb,var(--fl-surface-solid) 90%,transparent) !important;
+  border:1px solid var(--fl-line) !important;
+  box-shadow:0 5px 16px rgba(42,82,126,.08);
+}
+html.fl-pastel-ui #skill-dialog .eyebrow,
+html.fl-pastel-ui #skill-dialog h2,
+html.fl-pastel-ui #skill-dialog #dialog-skill-description,
+html.fl-pastel-ui #skill-dialog .skill-dialog-stats,
+html.fl-pastel-ui #skill-dialog .skill-dialog-section {
+  min-width:0;
+}
+html.fl-pastel-ui #skill-dialog #dialog-skill-description {
+  max-width:760px;
+  margin-bottom:12px;
+}
+html.fl-pastel-ui #skill-dialog .skill-preview-layout {
+  display:grid !important;
+  grid-template-columns:minmax(210px,.72fr) minmax(0,1.28fr) !important;
+  gap:24px !important;
+  align-items:center !important;
+  min-width:0;
+}
+html.fl-pastel-ui #skill-dialog .skill-preview-copy,
+html.fl-pastel-ui #skill-dialog .skill-preview-canvas,
+html.fl-pastel-ui #skill-dialog .skill-preview-window {
+  min-width:0;
+}
+html.fl-pastel-ui #skill-dialog .skill-preview-copy {
+  padding:4px 0;
+}
+html.fl-pastel-ui #skill-dialog .skill-preview-summary {
+  max-width:34em;
+}
+html.fl-pastel-ui #skill-dialog .skill-preview-canvas {
+  min-height:190px;
+}
+html.fl-pastel-ui #skill-dialog .command-box {
+  min-width:0;
+}
+html.fl-pastel-ui #skill-dialog .command-box code {
+  min-width:0;
+}
+html.fl-pastel-ui:has(#skill-dialog[open]) {
+  overflow:hidden;
+}
+
+@media (max-width:980px) {
+  html.fl-pastel-ui #skill-dialog {
+    width:calc(100vw - 24px) !important;
+    max-height:calc(100dvh - 24px) !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-dialog-body {
+    max-height:calc(100dvh - 24px) !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-preview-layout {
+    grid-template-columns:1fr !important;
+    gap:16px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-preview-copy {
+    padding:0 !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-preview-canvas {
+    min-height:176px;
+  }
+}
+
+@media (max-width:640px) {
+  html.fl-pastel-ui #skill-dialog {
+    width:calc(100vw - 12px) !important;
+    max-height:calc(100dvh - 12px) !important;
+    border-radius:16px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-dialog-body {
+    max-height:calc(100dvh - 12px) !important;
+    padding:20px 16px 26px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-dialog-close {
+    margin:-4px -2px 4px 12px;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-dialog-body h2 {
+    margin-right:42px !important;
+    font-size:20px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-dialog-section {
+    margin-top:18px !important;
+    padding-top:14px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .skill-preview-canvas {
+    min-height:154px;
+    padding:9px !important;
+  }
+  html.fl-pastel-ui #skill-dialog .dialog-actions,
+  html.fl-pastel-ui #skill-dialog .command-box {
+    align-items:stretch;
+    flex-direction:column;
+  }
+  html.fl-pastel-ui #skill-dialog .copy-command {
+    width:100%;
+  }
+}
+
 /* Editorial/static pages: preserve reading rhythm instead of carding every paragraph. */
 body.fl-ui-v2[data-fl-section="about"] > main,
 body.fl-ui-v2[data-fl-section="logs"] > main,
