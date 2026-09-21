@@ -108,12 +108,12 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
 
     offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
-    vendors = json.loads((ROOT / "data" / "provider-catalog.json").read_text(encoding="utf-8"))
+    provider_pages = list((tmp_path / "providers").glob("*/index.html"))
     active_provider_ids = {str(item.get("providerId") or "").strip() for item in models if item.get("providerId")}
 
     assert "数据口径已拆分" in overview
     assert f"<strong>{len(models)}</strong><span>模型记录" in overview
-    assert f"<strong>{len(vendors)}</strong><span>厂家目录" in overview
+    assert f"<strong>{len(provider_pages)}</strong><span>厂家目录" in overview
     assert f"<strong>{len(active_provider_ids)}</strong><span>当前数据 Provider ID" in overview
     assert f"<strong>{len(offers)}</strong><span>免费资源" in overview
     assert 'href="/models/all/"' in overview

@@ -65,6 +65,15 @@ def load_registry() -> tuple[list[dict], list[dict]]:
         )
     if not tools:
         raise SystemExit("No tools parsed from tools/js/tools.js")
+    seen: set[str] = set()
+    duplicates: list[str] = []
+    for tool in tools:
+        tool_id = tool["id"]
+        if tool_id in seen and tool_id not in duplicates:
+            duplicates.append(tool_id)
+        seen.add(tool_id)
+    if duplicates:
+        raise SystemExit("Duplicate tool ids in tools/js/tools.js: " + ", ".join(duplicates))
     counts: dict[str, int] = {}
     for tool in tools:
         counts[tool["cat"]] = counts.get(tool["cat"], 0) + 1

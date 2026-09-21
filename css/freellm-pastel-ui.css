@@ -1109,3 +1109,439 @@ html.fl-pastel-ui .ghost { color:#6381a2 !important; }
 .fl-static-page{max-width:1180px;margin:0 auto}
 @media(max-width:900px){.fl-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.freellm-test-strip{grid-template-columns:auto 1fr}.freellm-test-strip small{grid-column:2}.fl-stat-grid{grid-template-columns:1fr}}
+
+
+/* ============================================================
+   2026-09-21 site-wide polish
+   Goal: one calmer layout system across generated/static pages,
+   with better hierarchy, overflow behavior and responsive sizing.
+   ============================================================ */
+:root {
+  --fl-content-max:1220px;
+  --fl-reading-max:780px;
+  --fl-radius-xl:22px;
+  --fl-radius-lg:17px;
+  --fl-shadow:0 12px 34px rgba(42,82,126,.07);
+  --fl-shadow-hover:0 18px 44px rgba(42,82,126,.13);
+}
+
+html.fl-pastel-ui body.fl-ui-v2 {
+  padding:24px 28px 68px 214px !important;
+}
+
+.fl-site-rail {
+  width:184px;
+  padding:20px 13px 16px;
+}
+.fl-site-nav a { min-height:44px; }
+.fl-site-ribbon,
+body.fl-ui-v2 > header,
+body.fl-ui-v2 > main:not(.catalog-app):not(.skills-page):not(.skill-lab-page):not(.tools-page),
+body.fl-ui-v2 > footer,
+body.fl-ui-v2 > .page,
+body.fl-ui-v2 > .catalog-app,
+body.fl-ui-v2 > .skills-page,
+body.fl-ui-v2 > .skill-lab-page,
+body.fl-ui-v2 > .tools-page {
+  width:min(100%,var(--fl-content-max)) !important;
+}
+.fl-site-ribbon {
+  min-height:46px;
+  margin-bottom:16px;
+  padding:7px 12px 7px 16px;
+}
+
+/* Skills carries no unique utility action after the universal rail is injected.
+   Homepage and Tools headers stay visible because they still own submit/clock/GitHub actions. */
+html.fl-pastel-ui .skills-header {
+  display:none !important;
+}
+html.fl-pastel-ui .catalog-header,
+html.fl-pastel-ui .tools-header {
+  min-height:54px !important;
+  margin-bottom:14px !important;
+}
+
+/* One durable theme control lives in the universal rail. */
+html.fl-pastel-ui .theme-toggle { display:none !important; }
+.fl-site-theme-toggle {
+  order:8;
+  width:100%;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:2px;
+  border:1px solid var(--fl-line);
+  border-radius:12px;
+  color:var(--fl-ink-2);
+  background:rgba(247,251,255,.86);
+  cursor:pointer;
+  font:700 12px/1 var(--fl-font);
+  transition:background .18s,border-color .18s,color .18s,transform .18s;
+}
+.fl-site-theme-toggle:hover {
+  color:var(--fl-blue-deep);
+  border-color:#bddaf3;
+  background:#edf6ff;
+  transform:translateY(-1px);
+}
+.fl-site-theme-toggle .fl-theme-sun { display:none; }
+html.fl-pastel-ui[data-theme="dark"] .fl-site-theme-toggle .fl-theme-moon { display:none; }
+html.fl-pastel-ui[data-theme="dark"] .fl-site-theme-toggle .fl-theme-sun { display:inline; }
+
+/* Keyboard users get a visible, predictable first stop. */
+.fl-skip-link {
+  position:fixed;
+  z-index:5000;
+  left:16px;
+  top:12px;
+  transform:translateY(-140%);
+  padding:10px 14px;
+  border:1px solid #a9cfee;
+  border-radius:10px;
+  background:#fff;
+  color:#155fc9;
+  box-shadow:0 10px 30px rgba(37,82,130,.16);
+  text-decoration:none;
+  font:700 13px/1.2 var(--fl-font);
+  transition:transform .16s;
+}
+.fl-skip-link:focus { transform:translateY(0); }
+
+/* Type scale: keep long Chinese headings strong without forcing ugly wraps. */
+body.fl-ui-v2 > header {
+  padding:clamp(26px,3.5vw,44px) !important;
+}
+body.fl-ui-v2 > header h1,
+html.fl-pastel-ui .skills-hero h1,
+html.fl-pastel-ui .tools-hero h1,
+html.fl-pastel-ui .lab-hero h1,
+html.fl-pastel-ui .hero-copy h1 {
+  margin-top:10px !important;
+  color:#102f5d !important;
+  font-size:clamp(36px,4.25vw,58px) !important;
+  line-height:1.06 !important;
+  letter-spacing:-.045em !important;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+body.fl-ui-v2 > header h1 { max-width:920px; }
+html.fl-pastel-ui .lead,
+html.fl-pastel-ui .hero-copy,
+html.fl-pastel-ui .sub {
+  max-width:var(--fl-reading-max);
+  line-height:1.75 !important;
+}
+
+/* Hero pages: a deliberate editorial split instead of one oversized headline. */
+html.fl-pastel-ui .skills-hero,
+html.fl-pastel-ui .tools-hero,
+html.fl-pastel-ui .lab-hero {
+  display:grid !important;
+  grid-template-columns:minmax(0,1.55fr) minmax(270px,.72fr) !important;
+  gap:clamp(26px,4vw,48px) !important;
+  align-items:end !important;
+  min-height:286px;
+  padding:clamp(30px,4vw,48px) !important;
+}
+html.fl-pastel-ui .skills-hero > div,
+html.fl-pastel-ui .tools-hero > div,
+html.fl-pastel-ui .lab-hero > div { min-width:0; }
+html.fl-pastel-ui .skills-hero .hero-note,
+html.fl-pastel-ui .tools-hero .hero-note,
+html.fl-pastel-ui .lab-hero-aside {
+  align-self:stretch;
+  min-width:0;
+  padding:24px !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+html.fl-pastel-ui .hero-note-value strong,
+html.fl-pastel-ui .lab-hero-aside > strong {
+  font-size:clamp(48px,5vw,66px) !important;
+  line-height:.95 !important;
+  letter-spacing:-.045em;
+}
+
+/* The Skills acceptance notice should read as evidence, not another hero. */
+html.fl-pastel-ui .real-test-banner {
+  margin:16px 0 2px !important;
+  padding:16px 18px !important;
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  border:1px solid #cfe6df !important;
+  border-radius:15px !important;
+  background:linear-gradient(100deg,#f1fbf7,#fbfffd) !important;
+  box-shadow:none !important;
+}
+html.fl-pastel-ui .real-test-banner p {
+  margin:4px 0 0 !important;
+  color:var(--fl-ink-2) !important;
+  font-size:13px !important;
+}
+html.fl-pastel-ui .real-test-banner a {
+  flex:0 0 auto;
+  font-weight:700;
+  text-decoration:none;
+}
+
+/* Filters/tabs: no clipped last item, no layout jump. */
+html.fl-pastel-ui .skills-toolbar,
+html.fl-pastel-ui .tools-toolbar,
+html.fl-pastel-ui .catalog-filter-bar,
+html.fl-pastel-ui .filter-strip {
+  min-width:0;
+  box-shadow:none !important;
+}
+html.fl-pastel-ui .skills-toolbar {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 150px auto !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+html.fl-pastel-ui .tools-toolbar {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+html.fl-pastel-ui .skills-search,
+html.fl-pastel-ui .tools-search { min-width:0 !important; width:100% !important; }
+html.fl-pastel-ui .skill-category-tabs,
+html.fl-pastel-ui .tool-category-tabs,
+html.fl-pastel-ui .model-section-tabs,
+html.fl-pastel-ui .model-center-tabs {
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  overflow-x:auto !important;
+  overscroll-behavior-inline:contain;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;
+  padding:10px 12px 14px 0 !important;
+  -webkit-overflow-scrolling:touch;
+}
+html.fl-pastel-ui .skill-category-tabs::-webkit-scrollbar,
+html.fl-pastel-ui .tool-category-tabs::-webkit-scrollbar,
+html.fl-pastel-ui .model-section-tabs::-webkit-scrollbar,
+html.fl-pastel-ui .model-center-tabs::-webkit-scrollbar { display:none; }
+html.fl-pastel-ui .skill-category-tab,
+html.fl-pastel-ui .tool-category-tab,
+html.fl-pastel-ui .model-section-tabs a,
+html.fl-pastel-ui .model-center-tabs a {
+  flex:0 0 auto !important;
+  scroll-snap-align:start;
+  min-height:38px;
+  white-space:nowrap;
+}
+
+/* Cards: stronger information hierarchy, less decorative noise. */
+html.fl-pastel-ui .skill-grid {
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:16px !important;
+}
+html.fl-pastel-ui .skill-card,
+html.fl-pastel-ui .tool-card,
+html.fl-pastel-ui [data-tool-id],
+html.fl-pastel-ui .provider-card,
+html.fl-pastel-ui .model-card,
+html.fl-pastel-ui .catalog-card,
+html.fl-pastel-ui .workflow-card {
+  min-width:0;
+}
+html.fl-pastel-ui .skill-card {
+  padding:18px !important;
+}
+html.fl-pastel-ui .skill-card h2 {
+  margin-bottom:8px !important;
+  font-size:clamp(20px,1.6vw,24px) !important;
+  line-height:1.16 !important;
+}
+html.fl-pastel-ui .skill-card p,
+html.fl-pastel-ui .tool-card p,
+html.fl-pastel-ui .provider-card p,
+html.fl-pastel-ui .model-card p {
+  line-height:1.65 !important;
+}
+html.fl-pastel-ui .skill-card:nth-child(6n+2),
+html.fl-pastel-ui .skill-card:nth-child(6n+5),
+html.fl-pastel-ui .skill-card:nth-child(6n+3),
+html.fl-pastel-ui .category-card:nth-child(4n+2),
+html.fl-pastel-ui .category-card:nth-child(4n+3),
+html.fl-pastel-ui .category-card:nth-child(4n+4),
+html.fl-pastel-ui .featured-card:nth-child(4n+2),
+html.fl-pastel-ui .featured-card:nth-child(4n+3),
+html.fl-pastel-ui .featured-card:nth-child(4n+4) {
+  background:rgba(255,255,255,.92) !important;
+}
+html.fl-pastel-ui .skill-card::before,
+html.fl-pastel-ui .provider-card::before,
+html.fl-pastel-ui .model-card::before {
+  content:"";
+  display:block;
+  width:42px;
+  height:3px;
+  margin:0 0 14px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#76b9f0,#b9ddf9);
+}
+
+/* Tables must scroll rather than silently clipping columns. */
+html.fl-pastel-ui .table-wrap,
+html.fl-pastel-ui .catalog-table-wrap {
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  overscroll-behavior-inline:contain;
+  -webkit-overflow-scrolling:touch;
+}
+html.fl-pastel-ui .table-wrap table,
+html.fl-pastel-ui .catalog-table-wrap table { min-width:720px; }
+
+/* Dialogs and long code/content stay usable on small screens. */
+html.fl-pastel-ui dialog {
+  max-width:min(920px,calc(100vw - 28px)) !important;
+  max-height:min(88dvh,920px) !important;
+  overflow:auto !important;
+}
+html.fl-pastel-ui pre,
+html.fl-pastel-ui .skill-content {
+  max-width:100%;
+  overflow:auto !important;
+}
+
+/* Editorial/static pages: preserve reading rhythm instead of carding every paragraph. */
+body.fl-ui-v2[data-fl-section="about"] > main,
+body.fl-ui-v2[data-fl-section="logs"] > main,
+body.fl-ui-v2[data-fl-section="models"] > main:not(.catalog-app) {
+  padding:18px !important;
+}
+body.fl-ui-v2[data-fl-section="about"] > main > section,
+body.fl-ui-v2[data-fl-section="logs"] > main > section,
+body.fl-ui-v2[data-fl-section="models"] > main > section {
+  box-shadow:none !important;
+}
+body.fl-ui-v2 main section > p,
+body.fl-ui-v2 main article > p {
+  max-width:900px;
+}
+
+/* Dark mode keeps the same hierarchy rather than reverting to flat blocks. */
+html.fl-pastel-ui[data-theme="dark"] .fl-site-theme-toggle {
+  color:var(--fl-ink-2);
+  background:#17304a;
+  border-color:var(--fl-line);
+}
+html.fl-pastel-ui[data-theme="dark"] .real-test-banner {
+  background:linear-gradient(100deg,#173a32,#14273e) !important;
+  border-color:#285346 !important;
+}
+html.fl-pastel-ui[data-theme="dark"] .skill-card::before,
+html.fl-pastel-ui[data-theme="dark"] .provider-card::before,
+html.fl-pastel-ui[data-theme="dark"] .model-card::before {
+  background:linear-gradient(90deg,#5b9bd2,#77b7ed);
+}
+
+/* Tablet */
+@media (max-width:1100px) {
+  html.fl-pastel-ui body.fl-ui-v2 { padding:82px 18px 56px !important; }
+  .fl-site-theme-toggle {
+    order:9;
+    width:40px;
+    min-width:40px;
+    height:40px;
+    min-height:40px;
+    margin:0 0 0 auto;
+    padding:0;
+    flex:0 0 40px;
+  }
+  .fl-site-theme-toggle .fl-theme-label { display:none; }
+  html.fl-pastel-ui .skills-hero,
+  html.fl-pastel-ui .tools-hero,
+  html.fl-pastel-ui .lab-hero {
+    grid-template-columns:minmax(0,1.4fr) minmax(240px,.75fr) !important;
+    min-height:250px;
+  }
+  html.fl-pastel-ui .skill-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+
+/* Phone */
+@media (max-width:700px) {
+  html.fl-pastel-ui body.fl-ui-v2 { padding:70px 10px 42px !important; }
+  .fl-site-rail {
+    left:8px;
+    right:8px;
+    top:7px;
+    height:54px;
+    padding:6px 8px;
+  }
+  .fl-site-brand { display:none; }
+  .fl-site-nav { gap:2px; }
+  .fl-site-nav a {
+    min-height:38px;
+    padding:6px 9px;
+    border-radius:10px;
+    font-size:11px;
+  }
+  .fl-site-theme-toggle {
+    width:38px;
+    min-width:38px;
+    height:38px;
+    min-height:38px;
+    flex-basis:38px;
+  }
+  body.fl-ui-v2 > header { padding:22px 18px !important; }
+  body.fl-ui-v2 > header h1,
+  html.fl-pastel-ui .skills-hero h1,
+  html.fl-pastel-ui .tools-hero h1,
+  html.fl-pastel-ui .lab-hero h1,
+  html.fl-pastel-ui .hero-copy h1 {
+    font-size:clamp(32px,10.5vw,44px) !important;
+    letter-spacing:-.035em !important;
+  }
+  html.fl-pastel-ui .skills-hero,
+  html.fl-pastel-ui .tools-hero,
+  html.fl-pastel-ui .lab-hero {
+    display:block !important;
+    min-height:0;
+    padding:24px 20px !important;
+  }
+  html.fl-pastel-ui .skills-hero .hero-note,
+  html.fl-pastel-ui .tools-hero .hero-note,
+  html.fl-pastel-ui .lab-hero-aside {
+    margin-top:20px !important;
+    padding:18px !important;
+  }
+  html.fl-pastel-ui .real-test-banner {
+    display:block !important;
+    padding:15px 16px !important;
+  }
+  html.fl-pastel-ui .real-test-banner a {
+    display:inline-block;
+    margin-top:10px;
+  }
+  html.fl-pastel-ui .skills-toolbar {
+    grid-template-columns:minmax(0,1fr) 128px !important;
+  }
+  html.fl-pastel-ui .skills-count { grid-column:1 / -1; }
+  html.fl-pastel-ui .tools-toolbar { grid-template-columns:1fr !important; }
+  html.fl-pastel-ui .tools-header { display:flex !important; min-height:48px !important; }
+  html.fl-pastel-ui .skill-grid { grid-template-columns:1fr !important; }
+  html.fl-pastel-ui .table-wrap table,
+  html.fl-pastel-ui .catalog-table-wrap table { min-width:640px; }
+}
+
+/* Narrow phones */
+@media (max-width:480px) {
+  .fl-site-nav a { padding-inline:8px; }
+  .fl-site-nav a span:last-child { display:none; }
+  .fl-site-nav-icon { display:inline-block !important; width:24px; font-size:17px; }
+  html.fl-pastel-ui .skills-toolbar { grid-template-columns:1fr !important; }
+  html.fl-pastel-ui .skills-count { grid-column:auto; }
+  html.fl-pastel-ui .skills-status-filter { width:100% !important; }
+  html.fl-pastel-ui .hero-note-value strong,
+  html.fl-pastel-ui .lab-hero-aside > strong { font-size:48px !important; }
+}
