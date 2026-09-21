@@ -2,741 +2,1113 @@
   "schemaVersion": 1,
   "methodology": {
     "levels": {
-      "e2e": "在当前环境执行核心任务并验证结果",
-      "artifact": "生成可视产物并验证结构/交互",
-      "task": "按 Skill 工作流完成固定测试任务",
-      "preflight": "执行依赖与运行路径预检，因外部条件阻塞",
-      "source-review": "只完成原文审查，不计作实测通过"
-    }
+      "e2e": "按原 Skill 核心链路在当前沙箱真实执行并验证结果",
+      "artifact": "真实生成可复核产物；若未复现原 Skill 全链路，不等同 E2E",
+      "task": "把 Skill 指令/工作流应用到固定任务并核对结果，不等同原仓库程序 E2E",
+      "partial": "完成部分原链路或部分验证，存在明确未覆盖环节",
+      "blocked": "因网络、账号、CLI、浏览器策略或缺失依赖无法执行原链路，不计通过"
+    },
+    "environment": "OpenAI sandbox · local runtime validation · no public network",
+    "acceptanceReport": "/skills/test-artifacts/sandbox-2026-09-20/"
   },
   "entries": {
     "anthropics-docx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "按原 SKILL.md 检查 docx-js 依赖并尝试文档注明的 npm 安装回退",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-docx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "require_exit=2；npm_install_exit=124"
+        }
+      ],
       "score": null,
-      "evaluation": "当前容器缺少其要求的 docx-js npm 依赖，未冒充为端到端通过。"
+      "evaluation": "require('docx') 失败；继续执行 npm install docx 后因沙箱无公网超时。没有生成替代 Word 文件冒充端到端通过。"
     },
     "anthropics-pdf": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "合并两张发票 PDF、抽取文本并拆分首页；2 页、两家供应商文本均可验证。",
-      "evidence": [],
-      "score": 8.6,
-      "evaluation": "PDF 基础操作路径清晰，适合通用文件处理；真正复杂表单/OCR仍需额外专项测试。"
+      "status": "端到端通过",
+      "task": "真实生成 2 页退款 PDF，并执行拆页、旋转、合并、文本抽取和逐页渲染",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-pdf",
+          "label": "查看本轮沙箱验收记录",
+          "note": "生成→拆分→旋转→合并→抽取→渲染全部执行"
+        }
+      ],
+      "score": 8.7,
+      "evaluation": "首轮默认 Helvetica 让中文变成方块；视觉渲染 QA 抓到问题后改用 STSong-Light，复测通过。PDF Skill 的工具链可用，但中文字体是实际踩坑点。"
     },
     "anthropics-doc-coauthoring": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "用门诊候诊屏需求整理成结构化规格，暴露出刷新频率、等待时间定义等未决项。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-doc-coauthoring",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.4,
-      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。"
+      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "anthropics-xlsx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "artifact",
-      "status": "部分通过",
-      "task": "用同一组门诊月度数据生成带公式、百分比格式和趋势图的工作簿；公式结果经读取校验。当前平台按约束使用 artifact_tool，而非该 Skill 原文指定的 openpyxl。",
-      "evidence": [],
-      "score": 8.5,
-      "evaluation": "对公式校验、重算和输出质量的要求非常好；真正执行时工具链较重，且本平台不能按原 Skill 的 openpyxl 路径复现，所以不记作完全 E2E。"
+      "status": "产物级部分通过",
+      "task": "用退款状态夹具真实创建 xlsx，加入公式、数据验证、表格与汇总并检查公式错误",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-xlsx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实 xlsx 产物；公式错误扫描 0"
+        }
+      ],
+      "score": 8.2,
+      "evaluation": "工作簿本身通过公式与结构检查；但本轮受当前平台规则约束使用 artifact_tool，未按外部 Skill 的 openpyxl + recalc.py 原链路执行，所以不标 E2E。"
     },
     "anthropics-pptx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "严格用 PptxGenJS 生成 3 页退款流程 deck，经 LibreOffice 渲染，再用 python-pptx 重新读取确认 3 页和关键标题存在。",
-      "evidence": [],
+      "status": "端到端通过",
+      "task": "用 pptxgenjs 真实生成 3 页 16:9 退款状态机 PPTX，再用 LibreOffice 转 PDF 并逐页渲染",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-pptx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "PPTX→PDF→3 张 PNG；ZIP 结构校验通过"
+        }
+      ],
       "score": 8.9,
-      "evaluation": "对版式、溢出检查和验证流程要求扎实，能把“生成 PPT”变成真正可交付的工程流程；代价是步骤多、依赖较重。"
+      "evaluation": "PPTX 结构、转换和视觉渲染均通过；中文字体与布局正常。比只生成文件多做了一层可视化验收。"
     },
     "anthropics-frontend-design": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "artifact",
-      "status": "通过",
-      "task": "用候诊屏需求制作 16:9 响应式页面，强调远距可读与隐私，不采用通用 SaaS 卡片模板。",
+      "status": "产物级通过",
+      "task": "真实制作门诊退费状态工作台，避免通用 SaaS 卡片模板并加入响应式与恢复路径",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-frontend-design/",
-          "label": "打开候诊屏实测 Demo",
-          "note": "真实 HTML/CSS 输出，可直接查看响应式效果"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/frontend-design.html",
+          "label": "打开本轮真实产物",
+          "note": "2026-09-20 sandbox artifact"
+        },
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-frontend-design",
+          "label": "查看本轮沙箱验收记录",
+          "note": ""
         }
       ],
-      "score": 9,
-      "evaluation": "能显著抑制模板味，设计原则有效；但最终质量仍高度依赖执行模型的审美。"
+      "score": 8.7,
+      "evaluation": "设计规则确实能降低模板味，产物可复核；但沙箱浏览器导航被管理员策略拦截，所以交互 E2E 不能宣称通过。"
     },
     "anthropics-canvas-design": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "artifact",
-      "status": "通过",
-      "task": "制作 refund workflow 视觉海报 SVG，验证其“先视觉哲学后画面”的流程。",
+      "status": "产物级通过",
+      "task": "真实制作退款状态机视觉海报，并在沙箱把 SVG 转成 PNG/PDF 检查",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-canvas-design/poster.svg",
-          "label": "打开退款流程海报",
-          "note": "SVG 实测产物"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/canvas-design.svg",
+          "label": "打开本轮真实产物",
+          "note": "2026-09-20 sandbox artifact"
+        },
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-canvas-design",
+          "label": "查看本轮沙箱验收记录",
+          "note": ""
         }
       ],
-      "score": 8.1,
-      "evaluation": "适合海报/静态视觉概念，能逼出统一视觉语言；不适合复杂交互 UI。"
+      "score": 8.2,
+      "evaluation": "构图和视觉语言完整，中文渲染正常；适合静态视觉，不应拿它代替复杂交互 UI。"
     },
     "anthropics-brand-guidelines": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把品牌色、字体角色和对比约束应用到一个测试封面，并逐项检查是否偏离品牌规则。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-brand-guidelines",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 7.9,
-      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。"
+      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "anthropics-theme-factory": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
-      "status": "通过",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "partial",
+      "status": "部分验证",
       "task": "把 Ocean Depths 主题应用到候诊屏测试页面。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-theme-factory/",
-          "label": "打开 Ocean Depths 主题 Demo",
-          "note": "真实主题应用结果"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-theme-factory",
+          "label": "查看本轮沙箱验收记录",
+          "note": "替代链路"
         }
       ],
-      "score": 7.7,
-      "evaluation": "作为统一配色/字体的快速套件很好用，但主题本身容易压过产品语境，需要二次调整。"
+      "score": null,
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
     },
     "anthropics-algorithmic-art": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact-partial",
-      "status": "部分通过",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "partial",
+      "status": "部分验证",
       "task": "用固定随机种子生成可重复的 Canvas 场景；当前环境未使用其指定 p5.js 运行栈。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-algorithmic-art/",
-          "label": "打开参数化视觉 Demo",
-          "note": "固定随机种子；未使用原 Skill 指定 p5.js 栈"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-algorithmic-art",
+          "label": "查看本轮沙箱验收记录",
+          "note": "替代链路"
         }
       ],
-      "score": 7.5,
-      "evaluation": "创作方法论有启发，参数化思路清楚；对运行库依赖较强，跨环境复现要额外处理。"
+      "score": null,
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
     },
     "anthropics-internal-comms": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把退款讨论整理成内部项目更新，包含决定、未决项、负责人和风险。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-internal-comms",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 7.8,
-      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。"
+      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "anthropics-mcp-builder": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "运行时阻塞",
       "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-mcp-builder",
+          "label": "查看本轮沙箱验收记录",
+          "note": "运行时预检"
+        }
+      ],
       "score": null,
-      "evaluation": "MCP SDK/目标运行时依赖未准备，当前只完成指令与架构审查。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
     },
     "anthropics-skill-creator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "部分通过",
+      "status": "任务级执行",
       "task": "用退款状态审计场景设计一个新 Skill：定义触发条件、工作流、参考资料和验证方式；未运行其仓库自带 benchmark/package 脚本。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-skill-creator",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.8,
-      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。"
+      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "anthropics-web-artifacts-builder": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "运行时阻塞",
       "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-web-artifacts-builder",
+          "label": "查看本轮沙箱验收记录",
+          "note": "运行时预检"
+        }
+      ],
       "score": null,
-      "evaluation": "缺少该 Skill 自带 init/bundle 脚本与依赖缓存，无法按指定 React+Vite+Parcel 路径完整复现。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
     },
     "anthropics-webapp-testing": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
-      "status": "通过",
-      "task": "用 Playwright 驱动一个最小退款页面，从 ready 点击到 processing，并用 DOM 断言验证状态变化。",
-      "evidence": [],
-      "score": 8.6,
-      "evaluation": "‘先侦察再动作’的浏览器测试思路非常实用；真实项目中浏览器安装、登录态和网络策略仍是主要阻塞点。"
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境阻塞",
+      "task": "按 Skill 使用 Python Playwright + Chromium 访问本地测试页面",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#anthropics-webapp-testing",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实执行到 browser navigation 后被策略拦截"
+        }
+      ],
+      "score": null,
+      "evaluation": "Playwright 能启动 Chromium，但 file:// 和 127.0.0.1 都返回 ERR_BLOCKED_BY_ADMINISTRATOR。旧页面的 E2E“通过”撤回。"
     },
     "obra-brainstorming": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "对候诊屏需求按 bounded/architectural 规则做范围判断、关键问题梳理和短设计，实施前明确要先获得设计认可。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-brainstorming",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.6,
-      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。"
+      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "obra-writing-plans": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把候诊屏需求拆成文件级实施计划，逐步写出测试、命令、预期结果和提交边界，不使用 TODO/TBD 占位。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-writing-plans",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.9,
-      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。"
+      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "obra-executing-plans": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "按既定调试/TDD计划逐项执行：先读计划、跑 RED、做最小修改、跑 GREEN、在检查点核对结果。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-executing-plans",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.4,
-      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。"
+      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "obra-systematic-debugging": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "复现 ZeroDivisionError，沿数据流定位到 0 被 truthy 过滤，先确认根因再修复。",
-      "evidence": [],
+      "status": "端到端通过",
+      "task": "对退款重试策略缺陷做复现、定位、修复、复测",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-systematic-debugging",
+          "label": "查看本轮沙箱验收记录",
+          "note": "pytest 红→定位→修复→绿"
+        }
+      ],
       "score": 9.3,
-      "evaluation": "约束非常有效，能明显减少拍脑袋修 bug；简单问题上略显教条但成本很低。"
+      "evaluation": "pytest 首轮 1 failed / 1 passed；定位 PROCESSING 被错误允许重试后修复，复测 2 passed。工作流强在先证伪再修改。"
     },
     "obra-test-driven-development": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "先写 zero-value 回归测试并看到失败，再做最小修复，最终 2/2 通过。",
-      "evidence": [],
-      "score": 9,
-      "evaluation": "规则严、可执行、能形成证据链；“已有代码必须删掉重来”的绝对化表述在遗留系统里需谨慎。"
+      "status": "端到端通过",
+      "task": "用退款重试夹具执行红→绿测试循环",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-test-driven-development",
+          "label": "查看本轮沙箱验收记录",
+          "note": "实际 pytest 日志"
+        }
+      ],
+      "score": 8.8,
+      "evaluation": "测试先明确 FAILED/UNKNOWN 可重试、PROCESSING 不可重试，再改实现到 2 tests passed；本轮覆盖了核心红绿循环。"
     },
     "obra-requesting-code-review": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "针对 zero-value 修复整理代码审查请求：说明基线、变更、验证命令、风险和需要审查的具体问题。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-requesting-code-review",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.2,
-      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。"
+      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "obra-receiving-code-review": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "给定一条‘把 is not None 改回 truthy 更简洁’的错误 review 意见，先用失败用例验证技术影响，再拒绝该建议并给证据。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-receiving-code-review",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.7,
-      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。"
+      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "obra-verification-before-completion": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "修复后重新运行完整测试并复验原始命令输出，不用‘应该好了’代替证据。",
-      "evidence": [],
+      "status": "端到端通过",
+      "task": "修复后重新执行测试与 Python 编译检查，再决定是否完成",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-verification-before-completion",
+          "label": "查看本轮沙箱验收记录",
+          "note": "pytest 2 passed + py_compile"
+        }
+      ],
       "score": 9.4,
-      "evaluation": "很适合 agent 工作流，是低成本高收益的质量闸门；单独使用不解决测试覆盖不足。"
+      "evaluation": "只有 pytest 2 passed 和 py_compile 都成功后才判完成；对抑制“没验证就说好了”非常有效。"
     },
     "obra-subagent-driven-development": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "运行时阻塞",
       "task": "检查任务拆分、fresh subagent、规格审查与代码质量审查链路。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-subagent-driven-development",
+          "label": "查看本轮沙箱验收记录",
+          "note": "运行时预检"
+        }
+      ],
       "score": null,
-      "evaluation": "当前测试 harness 没有可复现的独立 subagent 调度接口，因此不能把‘读过流程’冒充真实多 Agent 实测。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
     },
     "obra-writing-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "用退款状态审计场景编写一个 Skill 草案，并按其 TDD 映射检查触发条件、约束、反例和验证路径。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#obra-writing-skills",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.7,
-      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。"
+      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "vercel-labs-composition-patterns": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "审查一个 props 爆炸的 React 卡片组件，改为复合组件/slot 结构，减少布尔 prop 组合状态。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#vercel-labs-composition-patterns",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.7,
-      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。"
+      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "vercel-labs-react-best-practices": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "审查包含串行数据请求的 React 测试组件，识别 waterfall 并改为可并行请求，同时检查 bundle/渲染风险。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#vercel-labs-react-best-practices",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 9.1,
-      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。"
+      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "vercel-labs-react-native-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "审查用 ScrollView + map 渲染长列表且使用 index key 的 React Native 示例，改为虚拟化列表与稳定 key。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#vercel-labs-react-native-skills",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.5,
-      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。"
+      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "vercel-labs-web-design-guidelines": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "对候诊屏实测页面做可访问性/交互审查：层级、可读性、响应式、控件语义和键盘路径逐项检查。",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/anthropics-frontend-design/",
-          "label": "被审查的候诊屏 Demo",
-          "note": "同一固定夹具，便于复核"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#vercel-labs-web-design-guidelines",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
         }
       ],
       "score": 8.4,
-      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。"
+      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "blader-humanizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
-      "task": "把典型 AI 腔文章改写为更具体、少口号、带真实工作细节的版本。",
-      "evidence": [],
+      "status": "任务级通过",
+      "task": "对固定 AI 腔样本文本真实执行 Humanizer 规则并做前后模式计数",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#blader-humanizer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "固定样本前后对比已执行"
+        }
+      ],
       "score": 8.7,
-      "evaluation": "对去套话有效，规则具体；如果机械套用会把正式文体过度口语化。"
+      "evaluation": "12 个目标 AI 痕迹从 12 降为 0，字符数 599→249，核心事实保留。对明显模板腔有效，但属于编辑规则，不是客观 AI 检测器。"
     },
     "jimliu-baoyu-infographic": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "读取布局选择、内容压缩和 imagegen 生成链，准备同一退款流程信息图基准任务。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-infographic",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "当前仓库证据流水线无法把指定 imagegen 调用的产物持续化并回传到本分支，因此本轮不记作实测通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-markdown-to-html": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact-partial",
-      "status": "部分通过",
-      "task": "用测试文章生成可阅读的自包含 HTML 版式；未运行原仓库脚本。",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境阻塞",
+      "task": "按文档先查 bun，再执行 npx -y bun 回退路径",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/jimliu-baoyu-markdown-to-html/",
-          "label": "打开排版结果",
-          "note": "替代执行产物，未运行仓库原转换脚本"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-markdown-to-html",
+          "label": "查看本轮沙箱验收记录",
+          "note": "npx_bun_exit=124"
         }
       ],
-      "score": 7.8,
-      "evaluation": "目标明确、工作流实用；真正价值在主题和微信兼容细节，需在其脚本环境继续 E2E。"
+      "score": null,
+      "evaluation": "bun 不存在；npx fallback 因无公网超时。旧的自制 HTML 只算替代 Demo，不能作为原 Skill 通过证据。"
     },
     "jimliu-baoyu-url-to-markdown": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
-      "status": "部分通过",
-      "task": "对本地测试文章执行 HTML → Markdown，保留标题、段落和有序列表；未走真实远程 URL 的浏览器登录/抓取链。",
-      "evidence": [],
-      "score": 7.9,
-      "evaluation": "转换目标清楚，对内容采集很实用；远程 URL 的 cookie、反爬和动态页面才是实际难点，本地夹具只能覆盖转换核心。"
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境阻塞",
+      "task": "执行真实 URL 抓取所需的网络预检",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-url-to-markdown",
+          "label": "查看本轮沙箱验收记录",
+          "note": "curl DNS 失败"
+        }
+      ],
+      "score": null,
+      "evaluation": "沙箱公网 DNS 不可用，无法完成 URL→Markdown E2E。"
     },
     "jimliu-baoyu-article-illustrator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按文章配图流程完成插图点位、批量生成策略和视觉维度预检。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-article-illustrator",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "核心价值在‘先选插图点再批量生成’，但本轮没有跑它要求的 imagegen 产物链，因此不打分。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-slide-deck": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按 slide-deck 的语言、批量图像生成、PDF/PPTX 输出链做执行预检。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-slide-deck",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "它高度依赖图像生成链；在未生成真实逐页视觉并回写证据前，不应仅凭说明给结论。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-post-to-wechat": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-post-to-wechat",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "缺少公众号账号/API 凭据与 IP 白名单，禁止用假发布替代真实 E2E。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-post-to-x": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-post-to-x",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "缺少已登录 X 会话/浏览器配置，未执行真实发布。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-xhs-images": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按小红书图卡系列的布局、批量生成和确认策略做执行预检。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-xhs-images",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "流程设计针对社媒图卡很明确，但本轮未跑指定 imagegen 链，不把模拟卡片当真实结果。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "jimliu-baoyu-cover-image": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按五维封面设计流程完成输入和生成条件预检。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jimliu-baoyu-cover-image",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "维度拆分有助于减少随机出图；但没有真实 imagegen 结果就无法评价成图质量，因此本轮不打分。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "iofficeai-officecli": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-docx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-docx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-academic-paper": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-academic-paper",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-word-form": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-word-form",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-morph-ppt": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-morph-ppt",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-pptx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-pptx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-pitch-deck": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-pitch-deck",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-xlsx": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-xlsx",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "iofficeai-officecli-data-dashboard": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查该 OfficeCLI Skill 的原命令运行时",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#iofficeai-officecli-data-dashboard",
+          "label": "查看本轮沙箱验收记录",
+          "note": "command preflight"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 officecli 可执行文件。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
     },
     "composiohq-file-organizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "对 6 个混乱文件按文档/图片/发票/笔记归类并清理文件名。",
-      "evidence": [],
-      "score": 8,
-      "evaluation": "对真实桌面整理很直接；最大风险是自动重命名/移动的可逆性，必须先预览计划。"
+      "status": "端到端通过",
+      "task": "真实建立混乱文件夹，识别重复文件并分类整理，同时检查原件保留",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-file-organizer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实本地文件系统夹具"
+        }
+      ],
+      "score": 8.1,
+      "evaluation": "重复识别与整理路径清楚；自动移动/重命名仍应先预览。测试找到 notes-copy.txt 与 notes-final.txt 为重复组，originals_preserved=True。"
     },
     "composiohq-invoice-organizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "e2e",
-      "status": "通过",
-      "task": "从两份测试发票抽取供应商、日期、金额并按规则重命名，生成索引 CSV。",
-      "evidence": [],
-      "score": 8.5,
-      "evaluation": "任务边界清楚且产出可验；面对扫描件、复杂税项和多币种时仍需 OCR/规则增强。"
+      "status": "端到端通过",
+      "task": "真实生成两份测试发票 PDF，抽取字段、规范重命名并生成 CSV 索引",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-invoice-organizer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "2 PDF→pdftotext→重命名→CSV"
+        }
+      ],
+      "score": 8.6,
+      "evaluation": "对文本型 PDF 的流程很实用，供应商/日期/金额/描述均抽取成功；扫描件、多币种和复杂税项仍需 OCR 与规则增强。"
     },
     "composiohq-content-research-writer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "基于退款流程测试文章，把核心论点、证据、反例和文章结构整理成可继续写作的研究稿。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-content-research-writer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.1,
-      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。"
+      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "composiohq-meeting-insights-analyzer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "从退款会议记录提取决定、开放问题、行动项，并识别‘先定 UI 后定规则’风险。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-meeting-insights-analyzer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.4,
-      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。"
+      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "composiohq-tailored-resume-generator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "根据 Healthcare SaaS JD 重写简历重点，同时单列缺失的 SQL/客户发现证据而不编造。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-tailored-resume-generator",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.6,
-      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。"
+      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "composiohq-competitive-ads-extractor": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "检查广告样本输入、竞争对手归类、创意模式提取和结论输出链。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-competitive-ads-extractor",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "没有真实广告库/竞争对手样本时，无法评价其最关键的采集与归因能力；本轮只完成执行预检，不打分。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "composiohq-lead-research-assistant": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "检查目标公司、人物、信号、联系方式与研究摘要的输入输出链。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-lead-research-assistant",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "核心价值依赖实时公开信息和目标客户定义；当前固定夹具不包含真实销售线索，因此不做虚假 E2E。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "composiohq-twitter-algorithm-optimizer": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把测试短文改成更强首句、可扫描列表和明确结论的帖子。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-twitter-algorithm-optimizer",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 7.1,
-      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。"
+      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "composiohq-changelog-generator": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
-      "task": "从 5 条提交生成 Added/Fixed/Changed 三段 changelog。",
-      "evidence": [],
-      "score": 8.2,
-      "evaluation": "对规范 commit 历史非常省时；提交信息差时不会自动补回缺失语义。"
+      "status": "任务级通过",
+      "task": "真实初始化本地 Git 仓库，提交 feat/fix/refactor/feat 4 条记录，再生成用户可读 changelog",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#composiohq-changelog-generator",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实 git log 4 commits"
+        }
+      ],
+      "score": 8.4,
+      "evaluation": "能把技术提交翻译为用户语言并过滤 refactor 噪音；分类规则需要结合项目发布规范。"
     },
     "michalparkola-article-extractor": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "e2e",
-      "status": "部分通过",
-      "task": "从本地 HTML 测试文章抽取正文，去掉页面外壳并验证标题、三条规则和正文都保留；未覆盖真实远程网页的反爬/JS 渲染。",
-      "evidence": [],
-      "score": 8.2,
-      "evaluation": "‘优先使用 readability/reader，失败再降级’的策略实用；真实网页兼容性仍需用 URL 集合持续回归。"
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境阻塞",
+      "task": "按 Skill 检查 reader / trafilatura / curl，并尝试真实 URL",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-article-extractor",
+          "label": "查看本轮沙箱验收记录",
+          "note": "curl exit=6 Could not resolve host"
+        }
+      ],
+      "score": null,
+      "evaluation": "reader 与 trafilatura 均缺失；curl 存在但公网 DNS 失败，因此不能标文章抓取通过。"
     },
     "michalparkola-youtube-transcript": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "检查真实 YouTube 抓取网络路径",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-youtube-transcript",
+          "label": "查看本轮沙箱验收记录",
+          "note": "curl exit=6 Could not resolve host"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 yt-dlp，且测试容器无外网下载能力。"
+      "evaluation": "访问 youtube.com 时 DNS 失败，无法完成字幕抓取 E2E。"
     },
     "michalparkola-learn-this": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把同一退款文章先抽取，再生成核心教训、可执行下一步和保存结构，验证 extraction → action planning 的组合价值。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-learn-this",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.4,
-      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。"
+      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "michalparkola-ship-learn-next": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "从退款案例输出 Ship/Learn/Next，明确先交付 eligibility，再用阻塞原因数据决定下一步。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-ship-learn-next",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.3,
-      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。"
+      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "michalparkola-unblock-action": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把‘药房规则不清’压缩成 30 分钟可完成的决策表动作。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-unblock-action",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8.8,
-      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。"
+      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "michalparkola-scrum-sage": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
       "testLevel": "task",
-      "status": "通过",
+      "status": "任务级执行",
       "task": "把退款阻塞拆成工程可继续项、政策依赖项和升级触发条件。",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#michalparkola-scrum-sage",
+          "label": "查看本轮沙箱验收记录",
+          "note": "任务级执行"
+        }
+      ],
       "score": 8,
-      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。"
+      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
     },
     "hugohe3-ppt-master": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
-      "status": "部分通过",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "partial",
+      "status": "部分验证",
       "task": "用同一退款流程内容生成并验证 3 页 PPTX，重点检查叙事、视觉层级和页面节奏；未完整复现其所有 reference load order。",
-      "evidence": [],
-      "score": 8.3,
-      "evaluation": "对专业演示的约束比普通 PPT 提示更细，适合高要求 deck；参考文件较多，完整执行成本也更高。"
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#hugohe3-ppt-master",
+          "label": "查看本轮沙箱验收记录",
+          "note": "替代链路"
+        }
+      ],
+      "score": null,
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
     },
     "op7418-nanobanana-ppt-skills": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
-      "status": "环境阻塞",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境/账号阻塞",
       "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#op7418-nanobanana-ppt-skills",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实预检"
+        }
+      ],
       "score": null,
-      "evaluation": "需要 Google GenAI API/密钥；未提供凭据时不做假生成。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
     },
     "lewislulu-html-ppt-skill": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
-      "status": "通过",
-      "task": "制作 3 页可键盘切换的静态 HTML 演示，验证无构建、离线可用的核心路径。",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
+      "status": "环境阻塞",
+      "task": "核对原 Skill 的 themes/runtime/render.sh 与 Headless Chrome 渲染路径",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/lewislulu-html-ppt-skill/",
-          "label": "打开 3 页 HTML 演示",
-          "note": "支持键盘左右切页"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#lewislulu-html-ppt-skill",
+          "label": "查看本轮沙箱验收记录",
+          "note": "替代 Demo 不再算 E2E"
         }
       ],
-      "score": 8.9,
-      "evaluation": "模板/主题丰富且交付快，HTML 演示很实用；对必须交 .pptx 的组织不是直接替代。"
+      "score": null,
+      "evaluation": "当前仓库只有自制 3 页 Demo，并未运行原包；同时沙箱 Chromium 本地导航受管理员策略限制。旧“8.9 通过”撤回。"
     },
     "rendercv-rendercv": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "preflight",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "blocked",
       "status": "环境阻塞",
-      "task": "按 SKILL.md 做依赖与执行路径预检",
-      "evidence": [],
+      "task": "按文档检查 uv / rendercv / typst 运行链",
+      "evidence": [
+        {
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#rendercv-rendercv",
+          "label": "查看本轮沙箱验收记录",
+          "note": "真实依赖预检"
+        }
+      ],
       "score": null,
-      "evaluation": "当前环境没有 rendercv CLI，且无法联网安装。"
+      "evaluation": "uv 存在，但 rendercv CLI 与 typst 缺失；沙箱无公网，无法安装 rendercv[full]。"
     },
     "jzcreative-html-resume-beautifier": {
       "testedAt": "2026-09-20",
-      "environment": "GPT-5.6 Sol test harness",
-      "testLevel": "artifact",
-      "status": "通过",
-      "task": "将测试简历制作成 A4 HTML 双栏版式，并保持虚构联系信息与隐私隔离。",
+      "environment": "OpenAI sandbox · local runtime validation · no public network",
+      "testLevel": "partial",
+      "status": "部分验证",
+      "task": "复核原 Skill 要求的 build_resume_html.py、audit_pii.py 与自包含导出链",
       "evidence": [
         {
-          "url": "/skills/test-artifacts/jzcreative-html-resume-beautifier/",
-          "label": "打开 A4 简历 Demo",
-          "note": "使用虚构测试数据，避免 PII"
+          "url": "/skills/test-artifacts/sandbox-2026-09-20/#jzcreative-html-resume-beautifier",
+          "label": "查看本轮沙箱验收记录",
+          "note": "保留 Demo，但不算原 Skill 通过"
         }
       ],
-      "score": 8.7,
-      "evaluation": "HTML 简历的视觉与隐私规则都很扎实；自包含导出依赖需要严格验证。"
+      "score": null,
+      "evaluation": "旧页面只有自制 A4 HTML，没有运行原仓库脚本和 PII audit，也未验证自包含 html2canvas 导出，因此撤回“8.7 通过”。"
     }
   }
 }
