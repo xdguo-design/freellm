@@ -227,8 +227,16 @@ def select_document_paths(paths: list[str], max_files: int = 80) -> list[str]:
 def _safe_external_url(value: str) -> bool:
     if any(character.isspace() or ord(character) < 32 for character in value):
         return False
-    parsed = urlparse(value)
-    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+    try:
+        parsed = urlparse(value)
+        hostname = parsed.hostname
+        username = parsed.username
+        password = parsed.password
+    except ValueError:
+        # Malformed bracketed IPv6 and similar broken URLs are untrusted input.
+        # Skip the candidate instead of aborting the entire discovery run.
+        return False
+    if parsed.scheme != "https" or not hostname or username or password:
         return False
     return not re.search(r"(?:api[_-]?key|password|secret|token)=", parsed.query, re.I)
 
