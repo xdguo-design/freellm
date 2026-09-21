@@ -75,7 +75,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         source = (ROOT / "tools" / "js" / "tools.js").read_text(encoding="utf-8")
         start = source.index("const TOOLS = [")
         end = source.index("];", start)
-        ids = re.findall(r"id:\\s*'([^']+)'", source[start:end])
+        ids = re.findall(r"id:\s*'([^']+)'", source[start:end])
         self.assertEqual(len(ids), len(set(ids)), "tools/js/tools.js contains duplicate tool ids")
 
         pages = {path.stem for path in (ROOT / "tools" / "tools").glob("*.html")}
