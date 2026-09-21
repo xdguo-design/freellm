@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -23,6 +24,11 @@ class SiteVisualSystemTests(unittest.TestCase):
             ".model-directory",
             "@media (max-width:700px)",
             "prefers-reduced-motion",
+            ".fl-site-theme-toggle",
+            ".fl-skip-link",
+            "overflow-x:auto !important",
+            "@media (max-width:480px)",
+            "--fl-content-max:1220px",
         ):
             self.assertIn(needle, css)
 
@@ -34,6 +40,10 @@ class SiteVisualSystemTests(unittest.TestCase):
             "fl-ui-v2",
             "fl-site-rail",
             "sectionFor(path)",
+            "installSiteUiPolish",
+            "fl-site-theme-toggle",
+            "fl-skip-link",
+            "rel.add('noopener')",
         ):
             self.assertIn(needle, js)
 
@@ -59,6 +69,21 @@ class SiteVisualSystemTests(unittest.TestCase):
             self.assertIn('class="fl-site-rail"', page, relative)
             self.assertIn('class="fl-site-ribbon"', page, relative)
             self.assertNotIn('class="top-nav"', page, relative)
+
+
+    def test_tool_registry_ids_are_unique_and_every_tool_has_a_page(self):
+        source = (ROOT / "tools" / "js" / "tools.js").read_text(encoding="utf-8")
+        start = source.index("const TOOLS = [")
+        end = source.index("];", start)
+        ids = re.findall(r"id:\\s*'([^']+)'", source[start:end])
+        self.assertEqual(len(ids), len(set(ids)), "tools/js/tools.js contains duplicate tool ids")
+
+        pages = {path.stem for path in (ROOT / "tools" / "tools").glob("*.html")}
+        self.assertEqual(set(ids), pages, "tool registry and generated tool pages drifted")
+
+        index = (ROOT / "tools" / "index.html").read_text(encoding="utf-8")
+        self.assertIn(f'<strong id="tool-total">{len(ids)}</strong>', index)
+        self.assertIn(f'显示 24 / {len(ids)}', index)
 
     def test_theme_braces_are_balanced(self):
         css = THEME.read_text(encoding="utf-8")
