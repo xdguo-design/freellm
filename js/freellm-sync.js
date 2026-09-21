@@ -40,7 +40,7 @@
     var themeLink = document.createElement('link');
     themeLink.id = 'freellm-site-theme';
     themeLink.rel = 'stylesheet';
-    themeLink.href = '/css/freellm-pastel-ui.css?v=20260920c';
+    themeLink.href = '/css/freellm-pastel-ui.css?v=20260921a';
     document.head.appendChild(themeLink);
 
     function sectionFor(path) {
@@ -122,6 +122,77 @@
     } else {
       addSiteChrome();
     }
+  })();
+
+
+  /* ---------- Site-wide usability polish ---------- */
+  (function installSiteUiPolish() {
+    function onReady(fn) {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, { once: true });
+      else fn();
+    }
+
+    function readTheme() {
+      if (document.documentElement.dataset.theme === 'dark') return 'dark';
+      try {
+        return localStorage.getItem('freellm-theme') === 'dark' ? 'dark' : 'light';
+      } catch (error) {
+        return 'light';
+      }
+    }
+
+    function writeTheme(theme) {
+      if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+      else delete document.documentElement.dataset.theme;
+      try {
+        if (theme === 'dark') localStorage.setItem('freellm-theme', 'dark');
+        else localStorage.removeItem('freellm-theme');
+      } catch (error) { /* storage can be unavailable */ }
+    }
+
+    function updateThemeButton(button) {
+      var dark = readTheme() === 'dark';
+      button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      button.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到深色模式');
+      var label = button.querySelector('.fl-theme-label');
+      if (label) label.textContent = dark ? '浅色' : '深色';
+    }
+
+    onReady(function () {
+      var main = document.querySelector('main, .catalog-content, .page');
+      if (main && !main.id) main.id = 'fl-main-content';
+
+      if (main && !document.querySelector('.fl-skip-link')) {
+        var skip = document.createElement('a');
+        skip.className = 'fl-skip-link';
+        skip.href = '#fl-main-content';
+        skip.textContent = '跳到主要内容';
+        document.body.insertBefore(skip, document.body.firstChild);
+      }
+
+      var rail = document.querySelector('.fl-site-rail');
+      if (rail && !rail.querySelector('.fl-site-theme-toggle')) {
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'fl-site-theme-toggle';
+        button.innerHTML =
+          '<span class="fl-theme-moon" aria-hidden="true">☾</span>' +
+          '<span class="fl-theme-sun" aria-hidden="true">☀</span>' +
+          '<span class="fl-theme-label">深色</span>';
+        updateThemeButton(button);
+        button.addEventListener('click', function () {
+          writeTheme(readTheme() === 'dark' ? 'light' : 'dark');
+          updateThemeButton(button);
+        });
+        rail.appendChild(button);
+      }
+
+      document.querySelectorAll('a[target="_blank"]').forEach(function (link) {
+        var rel = new Set(String(link.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+        rel.add('noopener');
+        link.setAttribute('rel', Array.from(rel).join(' '));
+      });
+    });
   })();
 
   /* Keep the server-rendered seven-item rail localized as the document locale changes.
