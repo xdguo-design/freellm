@@ -3708,7 +3708,7 @@ def _log_empty_state(log: dict, groups: dict[str, list[dict]]) -> str:
     return ""
 
 
-def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | None = None) -> str:
+def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | None = None, models: list[dict] | None = None) -> str:
     """Render the public daily change log as a dashboard with event details."""
     offer_lookup = _log_offer_lookup(offers)
     page_url = _absolute(site_url, CHANGE_LOG_PAGE_PATH)
@@ -3717,6 +3717,21 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
+    # The hero snapshot describes the currently published directories, not a
+    # transient crawler observation. Keep it sourced from the same data that
+    # renders /models/ so the public model/provider counts cannot drift.
+    if models is not None:
+        published_models = [item for item in models if isinstance(item, dict)]
+        published_providers = {
+            str(item.get("providerId") or "").strip()
+            for item in published_models
+            if str(item.get("providerId") or "").strip()
+        }
+        latest_snapshot = {
+            "models": len(published_models),
+            "providers": len(published_providers),
+            "offers": len(offers or []),
+        }
     latest_has_changes = any(latest_groups.values())
     latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
     latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
@@ -4393,7 +4408,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
-        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers),
+        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers, model_catalog),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),

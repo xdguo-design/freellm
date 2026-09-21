@@ -35,6 +35,31 @@ class P0ConvergenceTests(unittest.TestCase):
             self.assertIn(f"<strong>{count}</strong><span>{label}", page)
         self.assertNotIn("0 个厂商", page)
 
+    def test_home_models_and_logs_share_latest_snapshot(self):
+        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
+        models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
+        log_paths = sorted((ROOT / "data" / "daily-log").glob("*.json"))
+        self.assertTrue(log_paths, "daily log data is required for public freshness metadata")
+        latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
+        latest_date = latest["date"]
+        year, month, day = latest_date.split("-")
+
+        home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
+        logs_page = (ROOT / "logs" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn(f"▣ &nbsp;{year} 年 {int(month)} 月 {int(day)} 日", home)
+        self.assertIn(f"<strong>{len(models)}</strong><span>模型记录", models_page)
+        self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
+        self.assertIn(
+            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{len(models)}</strong>',
+            logs_page,
+        )
+        self.assertIn(
+            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{len(offers)}</strong>',
+            logs_page,
+        )
+
     def test_skill_page_prioritizes_freellm_testing(self):
         tests = json.loads((ROOT / "data" / "skill-tests.json").read_text(encoding="utf-8"))["entries"]
         page = (ROOT / "skills" / "index.html").read_text(encoding="utf-8")
