@@ -602,6 +602,33 @@ class BrowserPageTests(unittest.TestCase):
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
 
+    def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 720, "height": 700})
+        page.goto(f"{self.site.url}/skills/")
+        page.click('.skill-details[data-skill-id="anthropics-docx"]')
+        page.wait_for_selector("#skill-dialog[open]")
+
+        for width, height in ((720, 700), (390, 844)):
+            page.set_viewport_size({"width": width, "height": height})
+            page.wait_for_timeout(50)
+            dialog_box = page.locator("#skill-dialog").bounding_box()
+            heading_box = page.locator("#dialog-skill-name").bounding_box()
+            self.assertIsNotNone(dialog_box)
+            self.assertIsNotNone(heading_box)
+            self.assertGreaterEqual(dialog_box["x"], -0.5)
+            self.assertGreaterEqual(dialog_box["y"], -0.5)
+            self.assertLessEqual(dialog_box["x"] + dialog_box["width"], width + 0.5)
+            self.assertLessEqual(dialog_box["y"] + dialog_box["height"], height + 0.5)
+            self.assertGreaterEqual(heading_box["x"], dialog_box["x"] + 8)
+
+            preview_columns = page.locator("#dialog-skill-preview .skill-preview-layout").evaluate(
+                "element => getComputedStyle(element).gridTemplateColumns"
+            )
+            self.assertNotIn(" ", preview_columns.strip(), preview_columns)
+
+        self.assertEqual(len(page.problems), 0, page.problems)
+
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
