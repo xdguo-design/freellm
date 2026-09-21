@@ -398,12 +398,12 @@ CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
 THEME_GUIDE_DEFINITIONS = (
     {
         "slug": "free-openai-compatible-apis",
-        "title_zh": "免费 OpenAI 兼容 API",
-        "title_en": "Free OpenAI-Compatible APIs",
-        "description_zh": "整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。",
-        "description_en": "Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links.",
-        "lead_zh": "如果你的工具支持 OpenAI SDK，通常只需要替换 base URL、API key 和模型 ID。",
-        "lead_en": "If your tool supports the OpenAI SDK shape, you usually only need to replace the base URL, API key and model ID.",
+        "title_zh": "免费 LLM API 与 OpenAI 兼容接口",
+        "title_en": "Free LLM APIs",
+        "description_zh": "比较免费或试用 LLM API，标注 OpenAI 兼容性、额度、地区限制和官方接入入口。",
+        "description_en": "Compare free or trial LLM APIs, including OpenAI-compatible endpoints, with quota, region and setup links.",
+        "lead_zh": "想找免费 LLM API，先比较免费机制、限流、地区和兼容性，再决定接入哪一家。",
+        "lead_en": "Compare free mechanisms, rate limits, region and API compatibility before choosing a free LLM endpoint.",
     },
     {
         "slug": "free-ai-coding-tools",

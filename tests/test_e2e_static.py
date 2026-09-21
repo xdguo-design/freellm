@@ -178,6 +178,11 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(f'href="/guides/{slug}/"', self.html)
 
+        self.assertIn("免费 LLM API / OpenAI 兼容", self.html)
+        llm_api_guide = (ROOT / "guides" / "free-openai-compatible-apis" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("免费 LLM API 与 OpenAI 兼容接口", llm_api_guide)
+        self.assertIn("Compare free or trial LLM APIs", llm_api_guide)
+
     def test_external_signals_are_available_for_current_offer_set(self):
         offer_ids = {offer["id"] for offer in read_offers()}
         signals = read_signals()
