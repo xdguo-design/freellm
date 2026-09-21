@@ -135,7 +135,7 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert 'aria-controls="categories"' in page
     assert 'id="model-center-all-models-panel"' in page
     assert "url.hash = 'all-models'" in page
-    assert "发现真正好用的" in page
+    assert "免费 AI 模型与 API" in page
     assert "模型大列表" not in page
     assert "model-center-all-heading" not in page
     assert "02 / 全部模型" not in page
@@ -143,7 +143,7 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert "const syncLocale = () => {{" not in page
     assert "new MutationObserver(syncLocale).observe(document.documentElement, {{" not in page
     assert page.index('class="model-center-tabs"') < page.index('id="model-directory"')
-    assert "发现真正好用的" in original_home
+    assert "免费 AI 模型与 API" in original_home
     assert 'class="fl-site-rail"' in original_home
     assert 'class="top-nav"' not in original_home
     assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')
