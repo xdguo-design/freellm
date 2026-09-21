@@ -32,9 +32,67 @@ jobs:
         id: scan
         run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
 
-      - name: Discover new official offer candidates
+      - name: Discover new official offer and model candidates
         if: always()
-        run: python -m crawler.cli discover --providers data/providers.json --github-peers data/github-peers.json --out data/candidates.json --scan-out data/snapshots/discovery-scan.json --max-links 5 --max-pages 100 --github-max-repositories 20 --github-max-files 80 --timeout 8
+        run: >-
+          python -m crawler.cli discover
+          --providers data/providers.json
+          --github-peers data/github-peers.json
+          --global-queries data/discovery-queries.json
+          --global-max-repositories 20
+          --out data/candidates.json
+          --scan-out data/snapshots/discovery-scan.json
+          --max-links 5
+          --max-pages 100
+          --github-max-repositories 20
+          --github-max-files 60
+          --timeout 8
+
+      - name: Refresh model source snapshot
+        if: always()
+        run: |
+          mkdir -p .tmp/model-audit
+          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-audit/fresh-models.json             --providers-out .tmp/model-audit/fresh-providers.json             --date "$(date -u +%F)"             --timeout 20
+
+      - name: Compare published models with today's sources
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          current = json.loads(Path("data/models.json").read_text(encoding="utf-8"))
+          fresh = json.loads(Path(".tmp/model-audit/fresh-models.json").read_text(encoding="utf-8"))
+          def key(row):
+              return (str(row.get("providerId") or ""), str(row.get("modelId") or row.get("id") or row.get("model") or ""))
+          old = {key(row): row for row in current}
+          new = {key(row): row for row in fresh}
+          report = {
+              "currentCount": len(current),
+              "freshCount": len(fresh),
+              "stillListedCount": len(old.keys() & new.keys()),
+              "new": [new[k] for k in sorted(new.keys() - old.keys())],
+              "missing": [old[k] for k in sorted(old.keys() - new.keys())],
+          }
+          Path(".tmp/model-audit/catalog-diff.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps({
+              "current": report["currentCount"],
+              "fresh": report["freshCount"],
+              "new": len(report["new"]),
+              "missing": len(report["missing"]),
+          }, ensure_ascii=False))
+          PY
+
+      - name: Probe published model provider endpoints
+        if: always()
+        run: >-
+          python scripts/probe_endpoint_latency.py
+          --models data/models.json
+          --output .tmp/model-audit/endpoint-latency.json
+          --timeout 12
+          --date "$(date -u +%F)"
 
       - name: Validate external community signals
         if: always()
@@ -72,6 +130,7 @@ jobs:
             data/community-signals.json
             data/coverage.json
             data/review-queue.json
+            .tmp/model-audit/
             site-health-report.json
             adsense-report.json
           if-no-files-found: error
