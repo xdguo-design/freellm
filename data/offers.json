@@ -130,7 +130,7 @@
     "freeSummary": "Qwen3.8-Flash free through Sep 30 + claim 100 Credits daily",
     "validitySummary": "Qwen3.8-Flash through 2026-09-30 23:59:59 UTC+8; claimed daily Credits expire after 30 days",
     "accessSummary": "International",
-    "checkedSummary": "2026-09-21 / official announcement",
+    "checkedSummary": "2026-09-21 / official + pending user lead",
     "title": "Qoder · Qwen3.8-Flash 限时免费",
     "why": "Qwen3.8-Flash consumes 0 Credits through Sep 30, 2026. Individual users can also manually claim 100 Credits each day.",
     "mechanism": "Qwen3.8-Flash at 0.0× Credits + daily 100-Credit claim; existing free experience plan remains available",
@@ -166,7 +166,7 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-09-21",
     "checkedBy": "manual",
-    "notes": "Limited-time promotion verified from Qoder's official forum. Teams and Enterprise are excluded from the two Sep 18 promotions.",
+    "notes": "Limited-time Qwen3.8-Flash and daily 100-Credit promotions verified from Qoder's official forum. Sonus 4,000 Credits/day × 5 days is recorded as pending verification from a user-provided lead; no official public source has been confirmed yet.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -203,8 +203,24 @@
         "verified": true,
         "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615",
         "lastVerifiedAt": "2026-09-21"
+      },
+      {
+        "id": "sonus-4000x5-sep-2026",
+        "offerType": "credits_bonus",
+        "title": "Sonus 连续 5 天每天 4,000 Credits",
+        "dailyCredits": 4000,
+        "durationDays": 5,
+        "totalCredits": 20000,
+        "claimRequired": true,
+        "verified": false,
+        "status": "pending_verification",
+        "source": "用户提供线索（尚未取得 Qoder 官方公告或活动页链接）",
+        "sourceUrl": null,
+        "lastVerifiedAt": "2026-09-21",
+        "verificationNote": "已记录活动信息，但截至最后核验时间尚未找到可公开核对的官方来源；不作为已验证福利展示。"
       }
-    ]
+    ],
+    "pendingVerification": true
   },
   {
     "id": "trae",
