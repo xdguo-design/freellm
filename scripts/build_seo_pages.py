@@ -14,6 +14,7 @@ from urllib.parse import urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from crawler.lifecycle import public_offers
 from crawler.schema import (
     validate_access_references,
     validate_model_access_file,
@@ -4936,7 +4937,7 @@ def _ensure_model_section_tabs(content: str, path: Path) -> str:
 
 def build_site(data_path: str | Path, output_root: str | Path, site_url: str = SITE_URL, check: bool = False) -> BuildResult | bool:
     data_path = Path(data_path)
-    offers = _load_data(data_path)
+    offers = public_offers(_load_data(data_path))
     models = _load_models(data_path)
     models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
