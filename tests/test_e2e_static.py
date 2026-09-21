@@ -608,6 +608,10 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/skills/")
         page.click('.skill-details[data-skill-id="anthropics-docx"]')
         page.wait_for_selector("#skill-dialog[open]")
+        self.assertTrue(page.locator("#dialog-skill-test").is_visible())
+        self.assertIn("BLOCKED", page.locator("#dialog-skill-test").inner_text())
+        self.assertTrue(page.locator("#dialog-skill-preview").is_hidden())
+        self.assertTrue(page.locator("#dialog-style-section").is_hidden())
 
         for width, height in ((720, 700), (390, 844)):
             page.set_viewport_size({"width": width, "height": height})
@@ -622,10 +626,14 @@ class BrowserPageTests(unittest.TestCase):
             self.assertLessEqual(dialog_box["y"] + dialog_box["height"], height + 0.5)
             self.assertGreaterEqual(heading_box["x"], dialog_box["x"] + 8)
 
-            preview_columns = page.locator("#dialog-skill-preview .skill-preview-layout").evaluate(
-                "element => getComputedStyle(element).gridTemplateColumns"
-            )
-            self.assertNotIn(" ", preview_columns.strip(), preview_columns)
+        page.click(".skill-dialog-close")
+        page.set_viewport_size({"width": 720, "height": 700})
+        page.click('.skill-details[data-skill-id="anthropics-pdf"]')
+        page.wait_for_selector("#skill-dialog[open]")
+        self.assertIn("8.7/10", page.locator("#dialog-skill-test").inner_text())
+        self.assertIn("端到端通过", page.locator("#dialog-skill-test").inner_text())
+        self.assertIn("真实生成 2 页退款 PDF", page.locator("#dialog-skill-test").inner_text())
+        self.assertTrue(page.locator("#dialog-skill-preview").is_hidden())
 
         self.assertEqual(
             [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
