@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from crawler.lifecycle import public_offers
 from crawler.schema import validate_offers
 
 START = '<script type="application/json" id="offer-data">'
@@ -351,7 +352,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
         raise SystemExit("Invalid offers data:\n" + "\n".join(errors))
-    data = json.loads(data_path.read_text(encoding="utf-8"))
+    data = public_offers(json.loads(data_path.read_text(encoding="utf-8")))
     html = html_path.read_text(encoding="utf-8")
     start = html.find(START)
     if start < 0:
