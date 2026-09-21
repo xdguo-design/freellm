@@ -1,0 +1,96 @@
+name: Daily Model Audit 2026-09-21
+
+on:
+  push:
+    branches:
+      - daily-model-audit-20260921
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh official model sources
+        run: |
+          mkdir -p .tmp/model-audit
+          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-audit/fresh-models.json             --providers-out .tmp/model-audit/fresh-providers.json             --date 2026-09-21             --timeout 20
+
+      - name: Compare current catalog with today's official snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          current = json.loads(Path("data/models.json").read_text())
+          fresh = json.loads(Path(".tmp/model-audit/fresh-models.json").read_text())
+
+          def key(row):
+              return (str(row.get("providerId") or ""), str(row.get("modelId") or row.get("id") or row.get("model") or ""))
+
+          old = {key(x): x for x in current}
+          new = {key(x): x for x in fresh}
+
+          added = [new[k] for k in sorted(new.keys() - old.keys())]
+          missing = [old[k] for k in sorted(old.keys() - new.keys())]
+          common = [new[k] for k in sorted(new.keys() & old.keys())]
+
+          report = {
+              "date": "2026-09-21",
+              "currentCount": len(current),
+              "freshCount": len(fresh),
+              "stillListedCount": len(common),
+              "newCount": len(added),
+              "missingCount": len(missing),
+              "new": added,
+              "missing": missing,
+          }
+          Path(".tmp/model-audit/catalog-diff.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+          print("CURRENT", len(current))
+          print("FRESH", len(fresh))
+          print("STILL_LISTED", len(common))
+          print("NEW", len(added))
+          for row in added:
+              print("NEW_MODEL", row.get("providerId"), "|", row.get("model") or row.get("id"), "|", row.get("sourceUrl") or row.get("directoryUrl"))
+          print("MISSING", len(missing))
+          for row in missing:
+              print("MISSING_MODEL", row.get("providerId"), "|", row.get("model") or row.get("id"), "|", row.get("sourceUrl") or row.get("directoryUrl"))
+          PY
+
+      - name: Probe current provider endpoints
+        run: |
+          python scripts/probe_endpoint_latency.py             --models data/models.json             --output .tmp/model-audit/endpoint-latency.json             --timeout 12             --date 2026-09-21
+
+      - name: Run global free-model discovery
+        run: >-
+          python -m crawler.cli discover
+          --providers data/providers.json
+          --github-peers data/github-peers.json
+          --global-queries data/discovery-queries.json
+          --global-max-repositories 40
+          --github-max-files 40
+          --third-party-sources data/third-party-discovery-sources.json
+          --third-party-max-models 305
+          --out .tmp/model-audit/candidates.json
+          --scan-out .tmp/model-audit/discovery-scan.json
+          --max-links 5
+          --max-pages 100
+          --timeout 8
+
+      - name: Build discovery report
+        if: always()
+        run: |
+          python scripts/build_discovery_report.py             --candidates .tmp/model-audit/candidates.json             --out .tmp/model-audit/discovery-report.md
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-audit-2026-09-21
+          path: .tmp/model-audit/
+          if-no-files-found: error
