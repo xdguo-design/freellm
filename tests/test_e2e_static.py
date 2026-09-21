@@ -50,10 +50,21 @@ def bundled_offer_data() -> list:
 
 class StaticContractTests(unittest.TestCase):
     def setUp(self):
-        self.html = HTML_PATH.read_text(encoding="utf-8")
+        self.document_html = HTML_PATH.read_text(encoding="utf-8")
+        self.homepage_css = HOMEPAGE_CSS_PATH.read_text(encoding="utf-8")
+        self.homepage_editorial_css = HOMEPAGE_EDITORIAL_CSS_PATH.read_text(encoding="utf-8")
         self.homepage_js = HOMEPAGE_JS_PATH.read_text(encoding="utf-8")
         self.homepage_i18n_js = HOMEPAGE_I18N_JS_PATH.read_text(encoding="utf-8")
-        self.runtime_source = self.html + "\n" + self.homepage_js + "\n" + self.homepage_i18n_js
+        self.offer_bundle = OFFERS_BUNDLE_PATH.read_text(encoding="utf-8")
+        self.html = "\n".join((
+            self.document_html,
+            self.homepage_css,
+            self.homepage_editorial_css,
+            self.homepage_js,
+            self.homepage_i18n_js,
+            self.offer_bundle,
+        ))
+        self.runtime_source = self.html
 
     def test_external_offer_bundle_matches_offers_json(self):
         self.assertEqual(bundled_offer_data(), read_offers())
