@@ -353,29 +353,39 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
         raise SystemExit("Invalid offers data:\n" + "\n".join(errors))
     data = json.loads(data_path.read_text(encoding="utf-8"))
     html = html_path.read_text(encoding="utf-8")
-    start = html.find(START)
-    if start < 0:
-        raise SystemExit(f"Missing {START} in {html_path}")
-    content_start = start + len(START)
-    end = html.find(END, content_start)
-    if end < 0:
-        raise SystemExit(f"Missing JSON script closing tag in {html_path}")
-    replacement = "\n  " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n  "
-    updated = html[:content_start] + replacement + html[end:]
+    updated = re.sub(
+        r'\s*<script type="application/json" id="offer-data">.*?</script>\s*',
+        "\n",
+        html,
+        count=1,
+        flags=re.S,
+    )
     updated = update_trust_copy(updated)
     updated = remove_legacy_app(updated)
     updated = replace_static_catalog(updated, data)
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
+
+    bundle_path = data_path.with_suffix(".js")
+    bundle = "window.FREELLM_OFFERS = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n"
+
     if check:
+        ok = True
         if updated != html:
-            print(f"stale: {html_path} does not contain the current offers JSON")
-            return False
-        print(f"current: {html_path}")
-        return True
+            print(f"stale: {html_path} does not contain the current generated homepage markup")
+            ok = False
+        if not bundle_path.exists() or bundle_path.read_text(encoding="utf-8") != bundle:
+            print(f"stale: {bundle_path} does not contain the current offers bundle")
+            ok = False
+        if ok:
+            print(f"current: {html_path}")
+            print(f"current: {bundle_path}")
+        return ok
+
     html_path.write_text(updated, encoding="utf-8")
-    print(f"built: {html_path} from {data_path} ({len(data)} offers)")
+    bundle_path.write_text(bundle, encoding="utf-8")
+    print(f"built: {html_path} and {bundle_path} from {data_path} ({len(data)} offers)")
     return True
 
 

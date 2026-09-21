@@ -50,7 +50,7 @@ class BuildStaticTests(unittest.TestCase):
             self.assertIn('href="/offers/x/"', rendered)
             self.assertIn('"url": "https://freellm.top/offers/x/"', rendered)
 
-    def test_build_replaces_offer_data_block(self):
+    def test_build_writes_external_offer_bundle_and_removes_legacy_inline_data(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             data_path = root / "offers.json"
@@ -60,7 +60,11 @@ class BuildStaticTests(unittest.TestCase):
             }]), encoding="utf-8")
             html_path.write_text('<script type="application/json" id="offer-data">\n[]\n</script>', encoding="utf-8")
             self.assertTrue(build(data_path, html_path))
-            self.assertIn('"id":"x"', html_path.read_text(encoding="utf-8"))
+            rendered = html_path.read_text(encoding="utf-8")
+            bundle = data_path.with_suffix(".js").read_text(encoding="utf-8")
+            self.assertNotIn('id="offer-data"', rendered)
+            self.assertIn('"id":"x"', bundle)
+            self.assertTrue(bundle.startswith("window.FREELLM_OFFERS = "))
 
     def test_static_catalog_pins_key_offers_first_and_renders_marks(self):
         from scripts.build_static import render_static_catalog

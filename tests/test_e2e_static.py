@@ -16,8 +16,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
+HOMEPAGE_CSS_PATH = ROOT / "css" / "homepage.css"
+HOMEPAGE_EDITORIAL_CSS_PATH = ROOT / "css" / "homepage-editorial.css"
+HOMEPAGE_JS_PATH = ROOT / "js" / "homepage.js"
+HOMEPAGE_I18N_JS_PATH = ROOT / "js" / "homepage-i18n.js"
 ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+OFFERS_BUNDLE_PATH = ROOT / "data" / "offers.js"
 SIGNALS_PATH = ROOT / "data" / "community-signals.json"
 ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
@@ -35,34 +40,41 @@ def read_signals() -> list:
     return json.loads(SIGNALS_PATH.read_text(encoding="utf-8"))
 
 
-def embedded_offer_data(html: str):
-    match = re.search(r'<script type="application/json" id="offer-data">(.*?)</script>', html, re.S)
-    return json.loads(match.group(1)) if match else None
+def bundled_offer_data() -> list:
+    source = OFFERS_BUNDLE_PATH.read_text(encoding="utf-8").strip()
+    prefix = "window.FREELLM_OFFERS = "
+    if not source.startswith(prefix) or not source.endswith(";"):
+        raise AssertionError("data/offers.js has an unexpected wrapper")
+    return json.loads(source[len(prefix):-1])
 
 
 class StaticContractTests(unittest.TestCase):
     def setUp(self):
         self.html = HTML_PATH.read_text(encoding="utf-8")
+        self.homepage_js = HOMEPAGE_JS_PATH.read_text(encoding="utf-8")
+        self.homepage_i18n_js = HOMEPAGE_I18N_JS_PATH.read_text(encoding="utf-8")
+        self.runtime_source = self.html + "\n" + self.homepage_js + "\n" + self.homepage_i18n_js
 
-    def test_embedded_data_matches_offers_json(self):
-        self.assertEqual(embedded_offer_data(self.html), read_offers())
+    def test_external_offer_bundle_matches_offers_json(self):
+        self.assertEqual(bundled_offer_data(), read_offers())
 
     def test_page_has_required_data_hooks(self):
         for needle in (
-            'id="offer-data"', 'id="catalog-offer-rows"', 'id="catalog-search"',
+            'id="catalog-offer-rows"', 'id="catalog-search"',
             'id="catalog-sort"', 'id="catalog-result-count"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
             'id="studentList"', 'id="catalog-download-list"', 'id="catalog-last-checked"',
             "offerCategories", "timeWindow",
         ):
-            self.assertIn(needle, self.html)
-        self.assertIn('"id":"doubao"', self.html)
-        self.assertIn('"id":"aliyun-qwen-free-quota"', self.html)
-        self.assertIn('"id":"agnes-ai-free"', self.html)
-        self.assertIn('"id":"stepfun-limited-time-free"', self.html)
-        self.assertIn('"id":"longcat-2-0"', self.html)
-        self.assertNotIn('"id":"longcat-api"', self.html)
-        self.assertNotIn('"id":"longcat-download"', self.html)
+            self.assertIn(needle, self.runtime_source)
+        self.assertIn('../css/homepage.css', self.html)
+        self.assertIn('../css/homepage-editorial.css', self.html)
+        self.assertIn('../js/homepage.js', self.html)
+        self.assertIn('../js/homepage-i18n.js', self.html)
+        offer_ids = {item["id"] for item in bundled_offer_data()}
+        self.assertTrue({"doubao", "aliyun-qwen-free-quota", "agnes-ai-free", "stepfun-limited-time-free", "longcat-2-0"} <= offer_ids)
+        self.assertNotIn("longcat-api", offer_ids)
+        self.assertNotIn("longcat-download", offer_ids)
 
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
@@ -75,7 +87,7 @@ class StaticContractTests(unittest.TestCase):
             'data-region-chip="global"',
             'window.FreeLLM?.Sync?.bind(container)',
         ):
-            self.assertIn(needle, self.html)
+            self.assertIn(needle, self.runtime_source)
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
@@ -755,10 +767,15 @@ class BrowserPageTests(unittest.TestCase):
             (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             js = Path(directory) / "js"
             js.mkdir()
-            (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for name in ("freellm-sync.js", "homepage.js", "homepage-i18n.js"):
+                (js / name).write_text((ROOT / "js" / name).read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
-            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            for name in ("freellm-pastel-ui.css", "homepage.css", "homepage-editorial.css"):
+                (css / name).write_text((ROOT / "css" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            data = Path(directory) / "data"
+            data.mkdir()
+            (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
@@ -776,13 +793,15 @@ class BrowserPageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             design = Path(directory) / "design"
             design.mkdir()
-            stripped = re.sub(
-                r'(<script type="application/json" id="offer-data">).*?(</script>)',
-                r"\1[]\2",
-                HTML_PATH.read_text(encoding="utf-8"),
-                flags=re.S,
-            )
-            (design / HTML_PATH.name).write_text(stripped, encoding="utf-8")
+            (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            js = Path(directory) / "js"
+            js.mkdir()
+            for name in ("freellm-sync.js", "homepage.js", "homepage-i18n.js"):
+                (js / name).write_text((ROOT / "js" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            css = Path(directory) / "css"
+            css.mkdir()
+            for name in ("freellm-pastel-ui.css", "homepage.css", "homepage-editorial.css"):
+                (css / name).write_text((ROOT / "css" / name).read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
