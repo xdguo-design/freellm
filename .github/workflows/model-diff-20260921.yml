@@ -1,0 +1,44 @@
+name: Model Diff 2026-09-21
+
+on:
+  push:
+    branches:
+      - model-diff-20260921
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build fresh official snapshot and diff
+        run: |
+          mkdir -p .tmp/model-diff
+          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-diff/fresh-models.json             --providers-out .tmp/model-diff/fresh-providers.json             --date 2026-09-21             --timeout 20
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          current=json.loads(Path("data/models.json").read_text())
+          fresh=json.loads(Path(".tmp/model-diff/fresh-models.json").read_text())
+          def key(r): return (str(r.get("providerId") or ""),str(r.get("modelId") or r.get("id") or r.get("model") or ""))
+          old={key(x):x for x in current}; new={key(x):x for x in fresh}
+          added=[new[k] for k in sorted(new.keys()-old.keys())]
+          missing=[old[k] for k in sorted(old.keys()-new.keys())]
+          common=[new[k] for k in sorted(new.keys()&old.keys())]
+          report={"date":"2026-09-21","currentCount":len(current),"freshCount":len(fresh),"stillListedCount":len(common),"newCount":len(added),"missingCount":len(missing),"new":added,"missing":missing}
+          Path(".tmp/model-diff/catalog-diff.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n")
+          print("CURRENT",len(current))
+          print("FRESH",len(fresh))
+          print("STILL_LISTED",len(common))
+          print("NEW",len(added))
+          for x in added: print("NEW_MODEL",x.get("providerId"),"|",x.get("model") or x.get("id"),"|",x.get("canonicalModelId") or "")
+          print("MISSING",len(missing))
+          for x in missing: print("MISSING_MODEL",x.get("providerId"),"|",x.get("model") or x.get("id"),"|",x.get("canonicalModelId") or "")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: model-diff-2026-09-21
+          path: .tmp/model-diff/
