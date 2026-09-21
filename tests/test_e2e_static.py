@@ -578,7 +578,16 @@ class BrowserPageTests(unittest.TestCase):
         self.addCleanup(context.close)
         page = context.new_page()
         problems = []
-        page.on("console", lambda message: problems.append(message.text) if message.type == "error" else None)
+
+        def record_console_problem(message):
+            if message.type != "error":
+                return
+            text = message.text
+            if "Framing 'https://www.google.com/'" in text and "report-only Content Security Policy directive" in text:
+                return
+            problems.append(text)
+
+        page.on("console", record_console_problem)
         page.on("pageerror", lambda error: problems.append(str(error)))
         page.problems = problems
         bad_responses = []
