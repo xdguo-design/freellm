@@ -88,12 +88,16 @@ jobs:
               kilo.append({"id":m["id"],"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:240],"error":out.get("error")})
 
           # 4) Read Kilo's live gateway catalogue; marketing pages can lag the API.
-          kilo_catalog=req(
-              "https://api.kilo.ai/api/gateway/models",
-              "GET",
-              headers={"Authorization":"Bearer sk-anonymous-freellm-audit"},
-              timeout=25,
-          )
+          # Read the full catalogue (the generic req helper intentionally truncates bodies).
+          try:
+              kr=urllib.request.Request(
+                  "https://api.kilo.ai/api/gateway/models",
+                  headers={"User-Agent":UA,"Accept":"application/json"},
+              )
+              with urllib.request.urlopen(kr,timeout=25,context=CTX) as kresp:
+                  kilo_catalog={"status":kresp.status,"body":kresp.read(4_000_000).decode("utf-8","replace")}
+          except Exception as exc:
+              kilo_catalog={"status":None,"body":"","error":type(exc).__name__+":"+str(exc)[:160]}
           kilo_catalog_ids=[]
           kilo_free_ids=[]
           if kilo_catalog.get("status")==200:
@@ -107,7 +111,10 @@ jobs:
                       pricing=entry.get("pricing") or {}
                       prompt=str(pricing.get("prompt") or pricing.get("input") or "")
                       completion=str(pricing.get("completion") or pricing.get("output") or "")
-                      if mid and prompt in {"0","0.0","0.00","0.000000"} and completion in {"0","0.0","0.00","0.000000"}:
+                      if mid and (entry.get("isFree") is True or (
+                          prompt in {"0","0.0","0.00","0.000000"}
+                          and completion in {"0","0.0","0.00","0.000000"}
+                      )):
                           kilo_free_ids.append(mid)
               except Exception as exc:
                   print("KILO_CATALOG_PARSE_ERROR",type(exc).__name__,str(exc)[:200])
