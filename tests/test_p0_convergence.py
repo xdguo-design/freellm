@@ -23,12 +23,12 @@ class P0ConvergenceTests(unittest.TestCase):
     def test_models_landing_uses_four_explicit_data_counts(self):
         offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
         models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
-        vendors = json.loads((ROOT / "data" / "provider-catalog.json").read_text(encoding="utf-8"))
+        provider_pages = list((ROOT / "providers").glob("*/index.html"))
         active_ids = {str(row.get("providerId") or "").strip() for row in models if row.get("providerId")}
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         for count, label in (
             (len(models), "模型记录"),
-            (len(vendors), "厂家目录"),
+            (len(provider_pages), "厂家目录"),
             (len(active_ids), "当前数据 Provider ID"),
             (len(offers), "免费资源"),
         ):
@@ -39,10 +39,15 @@ class P0ConvergenceTests(unittest.TestCase):
         tests = json.loads((ROOT / "data" / "skill-tests.json").read_text(encoding="utf-8"))["entries"]
         page = (ROOT / "skills" / "index.html").read_text(encoding="utf-8")
         self.assertEqual(len(tests), 68)
-        self.assertIn("我们真的跑过这些 Skill", page)
+        self.assertIn("这些 Skill，能跑的真跑；跑不了的明确写阻塞", page)
+        self.assertIn("沙箱真实验收已重跑", page)
         self.assertGreaterEqual(page.count('class="freellm-test-strip'), 68)
         self.assertIn("测试任务", page)
-        self.assertIn("FreeLLM 评价", page)
+        self.assertIn("查看真实测试任务、限制与评价", page)
+        levels = {entry.get("testLevel") for entry in tests.values()}
+        self.assertEqual(levels, {"e2e", "artifact", "task", "partial", "blocked"})
+        self.assertIn("BLOCKED", page)
+        self.assertIn("PARTIAL", page)
 
     def test_primary_navigation_has_exactly_seven_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
