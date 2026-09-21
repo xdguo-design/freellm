@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-09-19",
-  "vantage": "本机大陆网络直连",
+  "checkedAt": "2026-09-21",
+  "vantage": "GitHub Actions hosted runner",
   "method": "GET 服务商官方 API 端点（模型列表），预热 1 次后取 3 次成功请求往返延迟的中位数",
   "note": "只测量 API 网关的往返延迟，不代表模型生成速度、免费额度或注册门槛",
   "providers": [
@@ -12,14 +12,14 @@
       "endpoint": "https://api.agnes-ai.cn/v1/models",
       "status": 401,
       "verdict": "needs_key",
-      "ms": 229,
+      "ms": 276,
       "attempts": [
-        290,
-        229,
-        194
+        273,
+        302,
+        276
       ],
-      "warmupMs": 224,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 301,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "atria-asi",
@@ -28,14 +28,14 @@
       "endpoint": "https://api.atria-asi.ai/v1/models",
       "status": 401,
       "verdict": "needs_key",
-      "ms": 926,
+      "ms": 731,
       "attempts": [
-        1026,
-        912,
-        926
+        683,
+        731,
+        784
       ],
-      "warmupMs": 901,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 677,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "chutes-ai",
@@ -44,14 +44,14 @@
       "endpoint": "https://llm.chutes.ai/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 1359,
+      "ms": 132,
       "attempts": [
-        1153,
-        1363,
-        1359
+        481,
+        109,
+        132
       ],
-      "warmupMs": 11392,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 353,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "dots-api-cn",
@@ -60,30 +60,30 @@
       "endpoint": "https://note3-prev-api.askdiandian.com/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 248,
+      "ms": 594,
       "attempts": [
-        206,
-        248,
-        253
+        587,
+        634,
+        594
       ],
-      "warmupMs": 237,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 629,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "kilo",
       "provider": "Kilo Gateway",
       "modelCount": 19,
-      "endpoint": "https://api.kilo.ai/api/gateway/v1/models",
+      "endpoint": "https://openrouter.ai/api/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 926,
+      "ms": 40,
       "attempts": [
-        926,
-        1067,
-        730
+        40,
+        29,
+        46
       ],
-      "warmupMs": 893,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 41,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "llm7-io",
@@ -92,14 +92,14 @@
       "endpoint": "https://api.llm7.io/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 1093,
+      "ms": 226,
       "attempts": [
-        1103,
-        1093,
-        1080
+        226,
+        178,
+        257
       ],
-      "warmupMs": 1102,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 254,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "nvidia-nim",
@@ -108,14 +108,14 @@
       "endpoint": "https://integrate.api.nvidia.com/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 565,
+      "ms": 72,
       "attempts": [
-        563,
-        575,
-        565
+        77,
+        72,
+        40
       ],
-      "warmupMs": 10591,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 70,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "ollama-cloud",
@@ -124,14 +124,14 @@
       "endpoint": "https://ollama.com/api/tags",
       "status": 200,
       "verdict": "ok",
-      "ms": 1432,
+      "ms": 129,
       "attempts": [
-        1592,
-        1432,
-        1083
+        113,
+        141,
+        129
       ],
-      "warmupMs": 11398,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 156,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "openrouter",
@@ -140,14 +140,14 @@
       "endpoint": "https://openrouter.ai/api/v1/models",
       "status": 200,
       "verdict": "ok",
-      "ms": 1422,
+      "ms": 35,
       "attempts": [
-        1094,
-        1697,
-        1422
+        33,
+        35,
+        41
       ],
-      "warmupMs": 1242,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 32,
+      "checkedAt": "2026-09-21"
     },
     {
       "providerId": "unisound",
@@ -156,14 +156,14 @@
       "endpoint": "https://maas-api.unisound.com/v1/models",
       "status": 401,
       "verdict": "needs_key",
-      "ms": 201,
+      "ms": 738,
       "attempts": [
-        212,
-        188,
-        201
+        880,
+        718,
+        738
       ],
-      "warmupMs": 206,
-      "checkedAt": "2026-09-19"
+      "warmupMs": 743,
+      "checkedAt": "2026-09-21"
     }
   ]
 }
