@@ -1,0 +1,137 @@
+name: model-live-audit-20260921
+
+on:
+  push:
+    branches:
+      - model-live-audit-20260921
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run live model audit
+        run: |
+          python - <<'PY'
+          import concurrent.futures, json, ssl, time, urllib.error, urllib.request
+          from collections import Counter, defaultdict
+          from pathlib import Path
+
+          MODELS=json.loads(Path("data/models.json").read_text())
+          UA="Mozilla/5.0 (compatible; FreeLLM-live-model-audit/2026-09-21)"
+          CTX=ssl.create_default_context()
+
+          def req(url, method="GET", body=None, headers=None, timeout=15):
+              data=json.dumps(body).encode() if body is not None else None
+              h={"User-Agent":UA,"Accept":"application/json,text/html;q=0.9,*/*;q=0.8"}
+              if body is not None: h["Content-Type"]="application/json"
+              if headers: h.update(headers)
+              r=urllib.request.Request(url,data=data,method=method,headers=h)
+              t=time.monotonic()
+              try:
+                  with urllib.request.urlopen(r,timeout=timeout,context=CTX) as x:
+                      raw=x.read(1200).decode("utf-8","replace")
+                      return {"status":x.status,"ms":int((time.monotonic()-t)*1000),"body":raw}
+              except urllib.error.HTTPError as e:
+                  raw=e.read(1200).decode("utf-8","replace")
+                  return {"status":e.code,"ms":int((time.monotonic()-t)*1000),"body":raw}
+              except Exception as e:
+                  return {"status":None,"ms":int((time.monotonic()-t)*1000),"error":type(e).__name__+":"+str(e)[:160]}
+
+          # 1) Every published row: source page reachability. Cache shared URLs.
+          urls=sorted({str(m.get("sourceUrl") or "").strip() for m in MODELS if str(m.get("sourceUrl") or "").startswith("http")})
+          source_results={}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=18) as ex:
+              fut={ex.submit(req,u):u for u in urls}
+              for f in concurrent.futures.as_completed(fut):
+                  source_results[fut[f]]=f.result()
+
+          rows=[]
+          for m in MODELS:
+              u=str(m.get("sourceUrl") or "")
+              r=source_results.get(u,{"status":None,"error":"NO_SOURCE_URL"})
+              rows.append({"id":m["id"],"providerId":m.get("providerId"),"sourceUrl":u,"sourceStatus":r.get("status"),"sourceMs":r.get("ms"),"sourceError":r.get("error")})
+
+          # 2) Live official/public catalog scan using repo scanner.
+          import subprocess
+          subprocess.run([
+              "python","scripts/build_model_catalog.py","--date","2026-09-21",
+              "--models-out","/tmp/live-models.json","--providers-out","/tmp/live-providers.json",
+              "--max-models","1000","--timeout","20"
+          ],check=True)
+          LIVE=json.loads(Path("/tmp/live-models.json").read_text())
+          live_ids={m["id"] for m in LIVE}
+          published_ids={m["id"] for m in MODELS}
+          missing=sorted(published_ids-live_ids)
+          discovered_only=sorted(live_ids-published_ids)
+
+          # 3) Real tiny inference on Kilo anonymous free routes.
+          kilo=[]
+          for m in MODELS:
+              if m.get("providerId")!="kilo": continue
+              model=m.get("canonicalModelId")
+              if not model: continue
+              out=req(
+                  "https://api.kilo.ai/api/gateway/v1/chat/completions",
+                  "POST",
+                  {"model":model,"messages":[{"role":"user","content":"Reply OK"}],"max_tokens":4},
+                  {"Authorization":"Bearer sk-anonymous-freellm-audit"},
+                  timeout=25,
+              )
+              kilo.append({"id":m["id"],"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:240],"error":out.get("error")})
+
+          # 4) Real tiny inference on LLM7 anonymous route.
+          llm7=[]
+          for m in MODELS:
+              if m.get("providerId")!="llm7-io": continue
+              model=m.get("model")
+              out=req(
+                  "https://api.llm7.io/v1/chat/completions",
+                  "POST",
+                  {"model":model,"messages":[{"role":"user","content":"Reply OK"}],"max_tokens":4},
+                  {"Authorization":"Bearer unused"},
+                  timeout=25,
+              )
+              llm7.append({"id":m["id"],"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:240],"error":out.get("error")})
+
+          def summarize_http(items):
+              c=Counter(str(x.get("status")) for x in items)
+              return dict(sorted(c.items()))
+
+          report={
+              "generatedAt":"2026-09-21",
+              "publishedCount":len(MODELS),
+              "liveCatalogCount":len(LIVE),
+              "sourceUrlUniqueCount":len(urls),
+              "sourceReachability":summarize_http(list(source_results.values())),
+              "missingFromLiveCatalog":missing,
+              "discoveredOnly":discovered_only,
+              "kiloInference":{"count":len(kilo),"statuses":summarize_http(kilo),"results":kilo},
+              "llm7Inference":{"count":len(llm7),"statuses":summarize_http(llm7),"results":llm7},
+              "rows":rows,
+          }
+          Path("model-live-audit-20260921.json").write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print("PUBLISHED",len(MODELS))
+          print("LIVE_CATALOG",len(LIVE))
+          print("SOURCE_REACHABILITY",report["sourceReachability"])
+          print("MISSING_FROM_LIVE",len(missing),missing)
+          print("DISCOVERED_ONLY",len(discovered_only),discovered_only)
+          print("KILO",report["kiloInference"]["statuses"])
+          for x in kilo:
+              print("KILO_MODEL",x["id"],x["status"],x["ms"],repr(x["body"][:120]),x.get("error"))
+          print("LLM7",report["llm7Inference"]["statuses"])
+          for x in llm7:
+              print("LLM7_MODEL",x["id"],x["status"],x["ms"],repr(x["body"][:120]),x.get("error"))
+          PY
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-live-audit-20260921
+          path: model-live-audit-20260921.json
