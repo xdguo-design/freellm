@@ -112,6 +112,7 @@ jobs:
               except Exception as exc:
                   print("KILO_CATALOG_PARSE_ERROR",type(exc).__name__,str(exc)[:200])
           print("KILO_CATALOG_STATUS",kilo_catalog.get("status"),"IDS",len(kilo_catalog_ids),"FREE",len(kilo_free_ids))
+          print("KILO_CATALOG_SNIPPET",repr((kilo_catalog.get("body") or "")[:1100]))
           print("KILO_CATALOG_FREE_IDS",kilo_free_ids)
 
           # 5) Probe today's candidate Kilo free routes before adding them.
