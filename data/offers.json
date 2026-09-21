@@ -3081,7 +3081,7 @@
     "providerMark": "GQ",
     "provider": "Groq",
     "providerMeta": "Groq · International",
-    "model": "gpt-oss-120b / gpt-oss-20b · qwen3.x-27b · groq/compound · llama-prompt-guard · whisper-large-v3",
+    "model": "gpt-oss-120b / gpt-oss-20b · qwen3.8-27b · llama-prompt-guard · whisper-large-v3",
     "modelMeta": "Hosted OpenAI-compatible models",
     "freeModels": [
       {
@@ -3098,22 +3098,6 @@
         "contextWindow": "4,000 tokens",
         "quota": "10 RPM · 100 RPD · 1.2K TPM · 3.6K TPD",
         "note": "Audio model; free-plan limits are measured in text tokens here.",
-        "sourceUrl": "https://console.groq.com/docs/rate-limits"
-      },
-      {
-        "model": "groq/compound",
-        "label": "Production system · web search and code execution",
-        "contextWindow": "131,072 tokens",
-        "quota": "30 RPM · 250 RPD · 70K TPM",
-        "note": "Compound system with built-in tools.",
-        "sourceUrl": "https://console.groq.com/docs/rate-limits"
-      },
-      {
-        "model": "groq/compound-mini",
-        "label": "Production system · web search and code execution",
-        "contextWindow": "131,072 tokens",
-        "quota": "30 RPM · 250 RPD · 70K TPM",
-        "note": "Compound Mini system with built-in tools.",
         "sourceUrl": "https://console.groq.com/docs/rate-limits"
       },
       {
@@ -3154,14 +3138,6 @@
         "contextWindow": "131,072 tokens",
         "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
         "note": "Safety-tuned GPT-OSS 20B.",
-        "sourceUrl": "https://console.groq.com/docs/rate-limits"
-      },
-      {
-        "model": "qwen/qwen3.6-27b",
-        "label": "Preview · text and reasoning",
-        "contextWindow": "131,072 tokens",
-        "quota": "30 RPM · 1K RPD · 8K TPM · 200K TPD",
-        "note": "Qwen 3.6 27B.",
         "sourceUrl": "https://console.groq.com/docs/rate-limits"
       },
       {
@@ -3219,7 +3195,7 @@
     "freeSummary": "Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)",
     "validitySummary": "Ongoing free plan; exact limits per model can change",
     "accessSummary": "Groq account; rate limits apply at organization level",
-    "checkedSummary": "Today / official Groq rate limits docs",
+    "checkedSummary": "2026-09-21 / official Groq rate limits + deprecations",
     "title": "Groq · free plan rate limits",
     "why": "Groq's official rate limits documentation publishes a 'Free Plan Limits' table with per-model RPM, RPD and TPM caps (for example openai/gpt-oss-120b: 30 RPM, 1K RPD, 8K TPM), alongside a paid Developer plan for higher limits.",
     "mechanism": "Free plan with per-model rate limits on the OpenAI-compatible API",
@@ -3256,16 +3232,17 @@
       "unit": null,
       "period": null
     },
-    "quota": "Per-model free plan limits, e.g. 30 RPM / 1K RPD / 8K TPM for gpt-oss models; 250 RPD / 70K TPM for groq/compound",
+    "quota": "Per-model free plan limits; qwen/qwen3.8-27b and gpt-oss models: 30 RPM · 1K RPD · 8K TPM · 200K TPD",
     "renewal": "Daily and per-minute limits reset automatically",
     "sourceUrls": [
       "https://console.groq.com/docs/models",
       "https://console.groq.com/docs/rate-limits",
-      "https://console.groq.com/docs/openai"
+      "https://console.groq.com/docs/openai",
+      "https://console.groq.com/docs/deprecations"
     ],
-    "evidence": "Official docs: 'Free Plan Limits ... MODEL ID RPM RPD TPM TPD ... openai/gpt-oss-120b 30 1K 8K 200K ... groq/compound 30 250 70K'; 'Need higher rate limits? Upgrade to Developer plan'.",
+    "evidence": "Official Free Plan Limits currently lists qwen/qwen3.8-27b, openai/gpt-oss-120b, openai/gpt-oss-20b and other active models. Groq decommissioned groq/compound and groq/compound-mini on 2026-09-21; qwen/qwen3.6-27b was retired on 2026-09-14 and replaced by qwen/qwen3.8-27b.",
     "confidence": "high",
-    "notes": "International option included in the China-first global directory.",
+    "notes": "International option included in the China-first global directory. Retired model IDs are removed from the active free-model list during daily verification.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
