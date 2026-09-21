@@ -1,0 +1,94 @@
+name: Generate Daily Model Refresh 2026-09-21
+
+on:
+  push:
+    branches:
+      - daily-model-refresh-20260921
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: daily-model-refresh-20260921
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify discovery regression
+        run: python -m unittest tests.test_github_discovery -v
+
+      - name: Refresh and reconcile model catalog
+        run: |
+          mkdir -p .tmp/model-refresh
+          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-refresh/fresh-models.json             --providers-out .tmp/model-refresh/fresh-providers.json             --date 2026-09-21             --timeout 20
+          python scripts/sync_model_catalog.py             --input .tmp/model-refresh/fresh-models.json             --previous data/models.json             --output data/models.json             --as-of 2026-09-21
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.build_model_catalog import build_provider_catalog, load_operation_guides
+
+          models = json.loads(Path("data/models.json").read_text(encoding="utf-8"))
+          providers = build_provider_catalog(
+              models,
+              "2026-09-21",
+              load_operation_guides("data/operations"),
+          )
+          Path("data/provider-catalog.json").write_text(
+              json.dumps(providers, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print("provider catalog:", len(providers))
+          PY
+
+      - name: Regenerate published static pages
+        run: |
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+          python scripts/build_tools_index.py
+          python scripts/build_tool_pages.py
+
+      - name: Run global discovery after malformed URL fix
+        run: >-
+          python -m crawler.cli discover
+          --providers data/providers.json
+          --github-peers data/github-peers.json
+          --global-queries data/discovery-queries.json
+          --global-max-repositories 20
+          --github-max-files 40
+          --third-party-sources data/third-party-discovery-sources.json
+          --third-party-max-models 305
+          --out .tmp/model-refresh/candidates.json
+          --scan-out .tmp/model-refresh/discovery-scan.json
+          --max-links 5
+          --max-pages 100
+          --timeout 8
+
+      - name: Build discovery report
+        run: python scripts/build_discovery_report.py --candidates .tmp/model-refresh/candidates.json --out .tmp/model-refresh/discovery-report.md
+
+      - name: Commit generated refresh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/models.json data/provider-catalog.json design models providers offers category guides logs skills sitemap*.xml .generated-pages.json
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+          else
+            git commit -m "build(models): publish 2026-09-21 model refresh"
+            git push origin HEAD:daily-model-refresh-20260921
+          fi
+
+      - name: Upload discovery evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-refresh-discovery-2026-09-21
+          path: .tmp/model-refresh/
+          if-no-files-found: warn
