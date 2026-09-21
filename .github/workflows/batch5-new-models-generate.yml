@@ -1,0 +1,97 @@
+name: Batch5 Generate New Models
+
+on:
+  push:
+    branches:
+      - batch5-new-models-20260921
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: batch5-new-models-20260921
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Add only today's four verified model rows
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          models_path = Path("data/models.json")
+          curated_path = Path("data/models-curated.json")
+          providers_path = Path("data/provider-catalog.json")
+
+          models = json.loads(models_path.read_text(encoding="utf-8"))
+          curated = json.loads(curated_path.read_text(encoding="utf-8"))
+          existing = {str(row.get("id") or "") for row in models}
+          wanted = [
+              row for row in curated
+              if row.get("lastVerifiedAt") == "2026-09-21"
+              and row.get("id") not in existing
+          ]
+          expected = {
+              "google-gemini/gemini-3-8-flash",
+              "google-gemini/gemini-3-8-live",
+              "google-gemini/gemini-3-8-live-extended-thinking",
+              "groq/qwen-qwen3-8-27b",
+          }
+          actual = {row["id"] for row in wanted}
+          if actual != expected:
+              raise SystemExit(f"unexpected new-model set: {sorted(actual)}")
+
+          for row in wanted:
+              item = dict(row)
+              item["freshnessStatus"] = "new"
+              item["lastSeenAt"] = "2026-09-21"
+              models.append(item)
+          models.sort(key=lambda row: (str(row.get("providerId") or ""), str(row.get("id") or "")))
+          models_path.write_text(json.dumps(models, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          providers = json.loads(providers_path.read_text(encoding="utf-8"))
+          by_id = {str(row.get("id") or ""): row for row in providers}
+          for provider_id in ("google-gemini", "groq"):
+              rows = [row for row in models if row.get("providerId") == provider_id]
+              current = by_id.get(provider_id) or {
+                  "id": provider_id,
+                  "name": rows[0].get("provider") if rows else provider_id,
+                  "sourceKind": "catalog",
+              }
+              current["name"] = rows[0].get("provider") if rows else current.get("name", provider_id)
+              current["modelCount"] = len(rows)
+              current["modelIds"] = [row["id"] for row in rows]
+              current["sourceKind"] = "catalog"
+              current["lastSeenAt"] = "2026-09-21"
+              by_id[provider_id] = current
+          updated = [by_id[key] for key in sorted(by_id)]
+          providers_path.write_text(json.dumps(updated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          print("ADDED", len(wanted))
+          for row in wanted:
+              print("NEW_MODEL", row["id"])
+          print("TOTAL_MODELS", len(models))
+          PY
+
+      - name: Regenerate model and provider pages
+        run: python scripts/build_seo_pages.py
+
+      - name: Commit generated model catalog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/models.json data/provider-catalog.json models providers guides sitemap*.xml .seo-pages-manifest.json
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+          else
+            git commit -m "build(models): publish four verified models"
+            git push origin HEAD:batch5-new-models-20260921
+          fi
