@@ -1151,11 +1151,15 @@ body.fl-ui-v2 > .tools-page {
   padding:7px 12px 7px 16px;
 }
 
-/* Remove duplicate legacy top bars once the universal rail exists. */
-html.fl-pastel-ui .catalog-header,
-html.fl-pastel-ui .skills-header,
-html.fl-pastel-ui .tools-header {
+/* Skills carries no unique utility action after the universal rail is injected.
+   Homepage and Tools headers stay visible because they still own submit/clock/GitHub actions. */
+html.fl-pastel-ui .skills-header {
   display:none !important;
+}
+html.fl-pastel-ui .catalog-header,
+html.fl-pastel-ui .tools-header {
+  min-height:54px !important;
+  margin-bottom:14px !important;
 }
 
 /* One durable theme control lives in the universal rail. */
@@ -1524,6 +1528,7 @@ html.fl-pastel-ui[data-theme="dark"] .model-card::before {
   }
   html.fl-pastel-ui .skills-count { grid-column:1 / -1; }
   html.fl-pastel-ui .tools-toolbar { grid-template-columns:1fr !important; }
+  html.fl-pastel-ui .tools-header { display:flex !important; min-height:48px !important; }
   html.fl-pastel-ui .skill-grid { grid-template-columns:1fr !important; }
   html.fl-pastel-ui .table-wrap table,
   html.fl-pastel-ui .catalog-table-wrap table { min-width:640px; }
