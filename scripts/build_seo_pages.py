@@ -4951,7 +4951,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
-    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260921a">'
+    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-pastel-ui.css" in content or "</head>" not in content)
                    else content.replace("</head>", theme_tag + "</head>", 1))
