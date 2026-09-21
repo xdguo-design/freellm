@@ -232,8 +232,7 @@
     { id: 'font-stack', name: '字体栈推荐', cat: 'ref', desc: '常用字体栈组合参考' },
 
     // ===== 开发工具 =====
-    { id: 'jwt', name: 'JWT 解析', cat: 'dev', desc: 'JWT Header/Payload 在线解码', hot: true },
-    { id: 'mermaid', name: 'Mermaid 编辑器', cat: 'dev', desc: '流程图/时序图在线编辑', hot: true },
+        { id: 'mermaid', name: 'Mermaid 编辑器', cat: 'dev', desc: '流程图/时序图在线编辑', hot: true },
     { id: 'curl-converter', name: 'Curl 转代码', cat: 'dev', desc: 'Curl 命令转 Python/JS/Go/Java' },
     { id: 'xpath', name: 'XPath 测试', cat: 'dev', desc: 'XPath 表达式在线测试' },
     { id: 'code2img', name: '代码转图片', cat: 'dev', desc: '代码截图美化分享' },
@@ -308,13 +307,10 @@
     { id: 'noise', name: '噪声纹理', cat: 'fun', desc: 'Canvas 噪声生成' },
     { id: 'spectrum', name: '频谱可视化', cat: 'fun', desc: '麦克风音频频谱' },
     { id: 'typing-test', name: '打字速度测试', cat: 'fun', desc: '测打字速度与准确率' },
-    { id: 'pomodoro', name: '番茄钟', cat: 'fun', desc: '番茄工作法计时器', hot: true },
-
+    
     // ===== 其他实用 =====
     { id: 'pomodoro', name: '番茄钟', cat: 'util', desc: '番茄工作法计时器', hot: true },
-    { id: 'bmi', name: 'BMI 计算器', cat: 'util', desc: '身体质量指数', hot: true },
-    { id: 'screen-record', name: '在线录屏', cat: 'util', desc: '浏览器录屏+下载 WebM', hot: true },
-    { id: 'tts', name: '文字转语音', cat: 'util', desc: 'Web Speech API 朗读', hot: true },
+            { id: 'tts', name: '文字转语音', cat: 'util', desc: 'Web Speech API 朗读', hot: true },
     { id: 'whitenoise', name: '在线白噪音', cat: 'util', desc: '放松背景音生成' },
     { id: 'metronome', name: '节拍器', cat: 'util', desc: '可调 BPM 电子节拍' },
     { id: 'clipboard-view', name: '剪贴板查看', cat: 'util', desc: '读取剪贴板内容' },
