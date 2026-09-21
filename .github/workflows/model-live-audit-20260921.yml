@@ -87,7 +87,29 @@ jobs:
               )
               kilo.append({"id":m["id"],"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:240],"error":out.get("error")})
 
-          # 4) Real tiny inference on LLM7 anonymous route.
+          # 4) Probe today's candidate Kilo free routes before adding them.
+          candidates=[
+              "minimax/minimax-m2.7:free",
+              "minimax/minimax-m3:free",
+              "tencent/hy3:free",
+              "tencent/hy3-preview:free",
+              "inclusionai/ling-2.6-1t:free",
+              "inclusionai/ling-2.6-flash:free",
+              "inclusionai/ring-2.6-1t:free",
+              "inclusionai/ling-3.0-flash:free",
+          ]
+          candidate_results=[]
+          for model in candidates:
+              out=req(
+                  "https://api.kilo.ai/api/gateway/v1/chat/completions",
+                  "POST",
+                  {"model":model,"messages":[{"role":"user","content":"Reply OK"}],"max_tokens":4},
+                  {"Authorization":"Bearer sk-anonymous-freellm-audit"},
+                  timeout=25,
+              )
+              candidate_results.append({"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:300],"error":out.get("error")})
+
+          # 5) Real tiny inference on LLM7 anonymous route.
           llm7=[]
           for m in MODELS:
               if m.get("providerId")!="llm7-io": continue
@@ -114,6 +136,7 @@ jobs:
               "missingFromLiveCatalog":missing,
               "discoveredOnly":discovered_only,
               "kiloInference":{"count":len(kilo),"statuses":summarize_http(kilo),"results":kilo},
+              "candidateKiloInference":{"count":len(candidate_results),"statuses":summarize_http(candidate_results),"results":candidate_results},
               "llm7Inference":{"count":len(llm7),"statuses":summarize_http(llm7),"results":llm7},
               "rows":rows,
           }
@@ -126,6 +149,9 @@ jobs:
           print("KILO",report["kiloInference"]["statuses"])
           for x in kilo:
               print("KILO_MODEL",x["id"],x["status"],x["ms"],repr(x["body"][:120]),x.get("error"))
+          print("KILO_CANDIDATES",report["candidateKiloInference"]["statuses"])
+          for x in candidate_results:
+              print("KILO_CANDIDATE",x["model"],x["status"],x["ms"],repr(x["body"][:160]),x.get("error"))
           print("LLM7",report["llm7Inference"]["statuses"])
           for x in llm7:
               print("LLM7_MODEL",x["id"],x["status"],x["ms"],repr(x["body"][:120]),x.get("error"))
