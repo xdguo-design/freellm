@@ -1,0 +1,103 @@
+name: Live Skills Dialog Check
+
+on:
+  push:
+    branches:
+      - live-check-skills-dialog-20260921
+
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+      - name: Check live Skills dialogs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          URL = "https://freellm.top/skills/"
+          out = Path("live-check")
+          out.mkdir(exist_ok=True)
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              page = browser.new_page(viewport={"width": 1280, "height": 900}, locale="zh-CN")
+              console_errors = []
+              page.on("pageerror", lambda e: console_errors.append(f"pageerror: {e}"))
+
+              page.goto(URL, wait_until="networkidle", timeout=60000)
+              print("LIVE_URL", page.url)
+              print("PAGE_TITLE", page.title())
+
+              results = {}
+              for skill_id in ("anthropics-pdf", "anthropics-docx"):
+                  trigger = page.locator(f'.skill-details[data-skill-id="{skill_id}"]')
+                  print("TRIGGER", skill_id, "count=", trigger.count())
+                  trigger.first.click()
+                  page.wait_for_selector("#skill-dialog[open]", state="visible", timeout=15000)
+
+                  dialog = page.locator("#skill-dialog")
+                  dialog_text = dialog.inner_text()
+                  test_panel = page.locator("#dialog-skill-test")
+                  preview = page.locator("#dialog-skill-preview")
+                  style_section = page.locator("#dialog-style-section")
+
+                  result = {
+                      "dialog_visible": dialog.is_visible(),
+                      "test_panel_count": test_panel.count(),
+                      "test_panel_visible": test_panel.is_visible() if test_panel.count() else False,
+                      "test_panel_text": test_panel.inner_text() if test_panel.count() else "",
+                      "preview_count": preview.count(),
+                      "preview_visible": preview.is_visible() if preview.count() else False,
+                      "style_visible": style_section.is_visible() if style_section.count() else False,
+                      "dialog_has_visual_preview_text": "视觉预览" in dialog_text,
+                      "dialog_text_excerpt": dialog_text[:1800],
+                  }
+                  results[skill_id] = result
+
+                  print(f"=== {skill_id} ===")
+                  for k, v in result.items():
+                      if k.endswith("_text") or k.endswith("_excerpt"):
+                          print(k, repr(v))
+                      else:
+                          print(k, v)
+
+                  page.screenshot(path=str(out / f"{skill_id}.png"), full_page=False)
+                  page.locator(".skill-dialog-close").click()
+                  page.wait_for_selector("#skill-dialog", state="hidden", timeout=10000)
+
+              print("ASSERT pdf test card", "8.7/10" in results["anthropics-pdf"]["test_panel_text"])
+              print("ASSERT pdf e2e", "端到端通过" in results["anthropics-pdf"]["test_panel_text"])
+              print("ASSERT pdf preview hidden", not results["anthropics-pdf"]["preview_visible"])
+              print("ASSERT docx blocked", "BLOCKED" in results["anthropics-docx"]["test_panel_text"])
+              print("ASSERT docx preview hidden", not results["anthropics-docx"]["preview_visible"])
+              print("CONSOLE_ERRORS", console_errors)
+
+              ok = (
+                  "8.7/10" in results["anthropics-pdf"]["test_panel_text"]
+                  and "端到端通过" in results["anthropics-pdf"]["test_panel_text"]
+                  and not results["anthropics-pdf"]["preview_visible"]
+                  and "BLOCKED" in results["anthropics-docx"]["test_panel_text"]
+                  and not results["anthropics-docx"]["preview_visible"]
+              )
+              browser.close()
+              if not ok:
+                  raise SystemExit("Live Skills dialog assertions failed")
+          PY
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-skills-dialog-screenshots
+          path: live-check/*.png
+          if-no-files-found: warn
