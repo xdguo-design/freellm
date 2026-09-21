@@ -60,6 +60,18 @@ class P0ConvergenceTests(unittest.TestCase):
             logs_page,
         )
 
+    def test_home_surfaces_high_intent_seo_guides_above_catalog(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        hero_end = page.index("</section>", page.index('class="catalog-hero"'))
+        hero = page[page.index('class="catalog-hero"'):hero_end]
+        for href in (
+            "/guides/free-openai-compatible-apis/",
+            "/guides/china-free-ai-api/",
+            "/guides/free-openai-api-alternatives/",
+            "/guides/free-ai-coding-tools/",
+        ):
+            self.assertIn(f'href="{href}"', hero)
+
     def test_skill_page_prioritizes_freellm_testing(self):
         tests = json.loads((ROOT / "data" / "skill-tests.json").read_text(encoding="utf-8"))["entries"]
         page = (ROOT / "skills" / "index.html").read_text(encoding="utf-8")
