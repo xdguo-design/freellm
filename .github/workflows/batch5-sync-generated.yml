@@ -1,0 +1,41 @@
+name: Batch5 Sync Generated Pages
+
+on:
+  push:
+    branches:
+      - batch5-new-models-20260921
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: batch5-new-models-20260921
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regenerate static outputs
+        run: |
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+      - name: Commit generated outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- \
+            design/free-china-ai-index.html \
+            about offers category guides models providers logs skills \
+            sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \
+            feed.xml .seo-pages-manifest.json
+          if git diff --cached --quiet; then
+            echo "Generated outputs already current."
+          else
+            git commit -m "chore(site): sync generated pages for batch5 models"
+            git push origin HEAD:batch5-new-models-20260921
+          fi
