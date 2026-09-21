@@ -1,0 +1,35 @@
+name: Batch4 Generate Probe Pages
+
+on:
+  push:
+    branches:
+      - batch4-provider-probe-20260921
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: batch4-provider-probe-20260921
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regenerate model pages using today's endpoint probe
+        run: python scripts/build_seo_pages.py
+      - name: Commit generated model pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add models .seo-pages-manifest.json
+          if git diff --cached --quiet; then
+            echo "No generated changes."
+          else
+            git commit -m "build(models): refresh endpoint probe views"
+            git push origin HEAD:batch4-provider-probe-20260921
+          fi
