@@ -87,7 +87,34 @@ jobs:
               )
               kilo.append({"id":m["id"],"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:240],"error":out.get("error")})
 
-          # 4) Probe today's candidate Kilo free routes before adding them.
+          # 4) Read Kilo's live gateway catalogue; marketing pages can lag the API.
+          kilo_catalog=req(
+              "https://api.kilo.ai/api/gateway/models",
+              "GET",
+              headers={"Authorization":"Bearer sk-anonymous-freellm-audit"},
+              timeout=25,
+          )
+          kilo_catalog_ids=[]
+          kilo_free_ids=[]
+          if kilo_catalog.get("status")==200:
+              try:
+                  parsed=json.loads(kilo_catalog.get("body") or "{}")
+                  entries=parsed.get("data") if isinstance(parsed,dict) else parsed
+                  for entry in entries or []:
+                      if not isinstance(entry,dict): continue
+                      mid=str(entry.get("id") or "")
+                      if mid: kilo_catalog_ids.append(mid)
+                      pricing=entry.get("pricing") or {}
+                      prompt=str(pricing.get("prompt") or pricing.get("input") or "")
+                      completion=str(pricing.get("completion") or pricing.get("output") or "")
+                      if mid and prompt in {"0","0.0","0.00","0.000000"} and completion in {"0","0.0","0.00","0.000000"}:
+                          kilo_free_ids.append(mid)
+              except Exception as exc:
+                  print("KILO_CATALOG_PARSE_ERROR",type(exc).__name__,str(exc)[:200])
+          print("KILO_CATALOG_STATUS",kilo_catalog.get("status"),"IDS",len(kilo_catalog_ids),"FREE",len(kilo_free_ids))
+          print("KILO_CATALOG_FREE_IDS",kilo_free_ids)
+
+          # 5) Probe today's candidate Kilo free routes before adding them.
           candidates=[
               "minimax/minimax-m2.7:free",
               "minimax/minimax-m3:free",
@@ -109,7 +136,7 @@ jobs:
               )
               candidate_results.append({"model":model,"status":out.get("status"),"ms":out.get("ms"),"body":(out.get("body") or "")[:300],"error":out.get("error")})
 
-          # 5) Real tiny inference on LLM7 anonymous route.
+          # 6) Real tiny inference on LLM7 anonymous route.
           llm7=[]
           for m in MODELS:
               if m.get("providerId")!="llm7-io": continue
@@ -136,6 +163,7 @@ jobs:
               "missingFromLiveCatalog":missing,
               "discoveredOnly":discovered_only,
               "kiloInference":{"count":len(kilo),"statuses":summarize_http(kilo),"results":kilo},
+              "kiloCatalog":{"status":kilo_catalog.get("status"),"ids":kilo_catalog_ids,"freeIds":kilo_free_ids},
               "candidateKiloInference":{"count":len(candidate_results),"statuses":summarize_http(candidate_results),"results":candidate_results},
               "llm7Inference":{"count":len(llm7),"statuses":summarize_http(llm7),"results":llm7},
               "rows":rows,
