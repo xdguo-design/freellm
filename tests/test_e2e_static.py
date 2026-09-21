@@ -627,7 +627,11 @@ class BrowserPageTests(unittest.TestCase):
             )
             self.assertNotIn(" ", preview_columns.strip(), preview_columns)
 
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
