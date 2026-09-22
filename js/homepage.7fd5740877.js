@@ -608,7 +608,7 @@ let offerIndex = {};
         }
       }
       try {
-        const response = await fetch(document.body.dataset.offersUrl || '../data/offers.json', { cache: 'no-store' });
+        const response = await fetch(document.body.dataset.offersUrl || '../data/offers.json');
         if (!response.ok) throw new Error(`offers.json returned ${response.status}`);
         const data = await response.json();
         if (Array.isArray(data) && data.length) {
