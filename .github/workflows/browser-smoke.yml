@@ -30,6 +30,9 @@ jobs:
           python scripts/build_static.py --check
           python scripts/build_seo_pages.py --check
 
+      - name: Run SEO quality gate unit tests
+        run: python -m unittest tests.test_audit_seo_metadata -v
+
       - name: Run P0 convergence contracts
         run: python -m unittest tests.test_skills_page tests.test_p0_convergence -v
 
