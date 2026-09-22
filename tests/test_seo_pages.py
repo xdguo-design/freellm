@@ -68,6 +68,74 @@ def test_theme_guides_render_unique_metadata_and_verified_rows(tmp_path):
         assert "adsbygoogle.js?client=ca-pub-2461062743308239" in page
 
 
+def test_offer_quick_start_matches_product_type():
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+
+    cursor_page = render_offer_page(by_id["cursor-hobby"], offers, "https://freellm.top")
+    cursor_quick = cursor_page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
+    assert "下载安装" in cursor_quick
+    assert "登录并确认免费方案" in cursor_quick
+    assert "Get API key" not in cursor_quick
+    assert "获取 API Key" not in cursor_quick
+    assert "调用模型" not in cursor_quick
+    assert "不是通用 API Key" in cursor_quick
+
+    groq_page = render_offer_page(by_id["groq-free"], offers, "https://freellm.top")
+    groq_quick = groq_page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
+    assert "获取 API Key" in groq_quick
+    assert "发送第一条请求" in groq_quick
+    assert "Copyable command" in groq_quick
+    assert "\${GROQ_API_KEY}" in groq_quick
+
+
+def test_core_theme_guides_have_decision_layer_and_clean_related_links(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    core_slugs = (
+        "free-openai-compatible-apis",
+        "free-ai-coding-tools",
+        "china-free-ai-api",
+    )
+    for slug in core_slugs:
+        page = (tmp_path / "guides" / slug / "index.html").read_text(encoding="utf-8")
+        assert 'class="decision-grid"' in page
+        assert "30 秒怎么选" in page
+        assert '<html lang="zh-CN" data-locale="zh-CN">' in page
+
+        related = page.split("related pages", 1)[1].split("</section>", 1)[0]
+        assert f'href="/guides/{slug}/"' not in related
+        hrefs = re.findall(r'href="([^"]+)"', related)
+        assert len(hrefs) == len(set(hrefs)), f"{slug} related links must be unique"
+
+    coding = (tmp_path / "guides" / "free-ai-coding-tools" / "index.html").read_text(encoding="utf-8")
+    coding_related = coding.split("related pages", 1)[1].split("</section>", 1)[0]
+    assert "模型目录" in coding_related
+    assert "国内免费 AI API" in coding_related
+    assert coding_related.count("免费 AI 编程工具") == 0
+
+
+def test_free_api_guides_exclude_known_non_free_or_unconfirmed_entries(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    general = (tmp_path / "guides" / "free-openai-compatible-apis" / "index.html").read_text(encoding="utf-8")
+    china = (tmp_path / "guides" / "china-free-ai-api" / "index.html").read_text(encoding="utf-8")
+
+    assert "DeepSeek API · low cost, not free" not in general
+    assert "LongCat-2.0 · API + open weights" not in general
+    assert "DeepSeek API · low cost, not free" not in china
+    assert "LongCat-2.0 · API + open weights" not in china
+
+
+def test_static_locale_defaults_to_one_language_before_javascript():
+    offers = read_offers()
+    cursor = next(offer for offer in offers if offer["id"] == "cursor-hobby")
+    page = render_offer_page(cursor, offers, "https://freellm.top")
+
+    assert '<html lang="zh-CN" data-locale="zh-CN">' in page
+    assert 'html:not([data-locale]) [lang="en"]' in page
+
+
 def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     pages = [
@@ -295,7 +363,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").is_file()
 
     detail = (tmp_path / "offers" / "codebuddy" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="zh-CN">' in detail
+    assert '<html lang="zh-CN" data-locale="zh-CN">' in detail
     assert "<title>CodeBuddy" in detail
     assert '<meta name="description"' in detail
     assert "请以官方页面为准" in detail
