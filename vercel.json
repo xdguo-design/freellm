@@ -76,6 +76,14 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=300, must-revalidate"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "public, max-age=60"
+        },
+        {
+          "key": "Vercel-CDN-Cache-Control",
+          "value": "public, max-age=60"
         }
       ]
     }
