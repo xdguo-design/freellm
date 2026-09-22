@@ -1,0 +1,24 @@
+# Build and CI sources; generated output is committed separately.
+.github/
+crawler/
+scripts/
+tests/
+*.py
+*.pyc
+**/__pycache__/
+.pytest_cache/
+.mypy_cache/
+.playwright-mcp/
+.workbuddy-ai/
+
+# Research captures and local verification artifacts.
+data/snapshots/
+design/prototypes/
+design/verification/
+design/visual-directions/
+gui-test-screenshots/
+logs/*.png
+logs/*.json
+
+# Markdown source and project-only documentation.
+*.md
