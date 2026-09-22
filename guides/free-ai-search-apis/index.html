@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -186,6 +186,13 @@ pre code { padding:0; background:none; color:inherit; }
     body { max-width: 1120px; }
     h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }
     section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }
+    .decision-card { padding:18px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+    .decision-card h3 { margin:0 0 8px; font-size:18px; }
+    .decision-card p { margin:0 0 10px; color:var(--ink-secondary); }
+    .decision-links { margin:0; padding-left:1.1rem; }
+    .decision-links li { margin:6px 0; }
+    @media (max-width:720px) { .decision-grid { grid-template-columns:1fr; } }
     footer { color: var(--ink-secondary); font-size: 13px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c"></head>
@@ -199,6 +206,7 @@ pre code { padding:0; background:none; color:inherit; }
     <div class="callout"><span lang="zh-CN">数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。</span><span lang="en">Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.</span></div>
   </header>
   <main>
+    
     <section>
       <div class="eyebrow">01 / verified directory</div>
       <h2><span lang="zh-CN">可用入口和关键参数</span><span lang="en">Available entries and key parameters</span></h2>
@@ -288,7 +296,7 @@ pre code { padding:0; background:none; color:inherit; }
     <section>
       <div class="eyebrow">02 / related pages</div>
       <h2><span lang="zh-CN">继续浏览</span><span lang="en">Continue exploring</span></h2>
-      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li></ul>
+      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">模型目录</span><span lang="en">Model directory</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 LLM / API 接入指南</span><span lang="en">Free LLM / API quick-start guide</span></a></li><li><a href="/guides/free-openai-compatible-apis/"><span lang="zh-CN">免费 LLM API 与 OpenAI 兼容接口</span><span lang="en">Free LLM APIs</span></a></li><li><a href="/guides/free-ai-coding-tools/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li><li><a href="/guides/china-free-ai-api/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">OpenAI API 免费替代方案</span><span lang="en">Free OpenAI API alternatives</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">Claude Code 免费替代方案</span><span lang="en">Free Claude Code alternatives</span></a></li></ul>
     </section>
   </main>
   <footer>

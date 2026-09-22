@@ -68,6 +68,74 @@ def test_theme_guides_render_unique_metadata_and_verified_rows(tmp_path):
         assert "adsbygoogle.js?client=ca-pub-2461062743308239" in page
 
 
+def test_offer_quick_start_matches_product_type():
+    offers = read_offers()
+    by_id = {offer["id"]: offer for offer in offers}
+
+    cursor_page = render_offer_page(by_id["cursor-hobby"], offers, "https://freellm.top")
+    cursor_quick = cursor_page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
+    assert "下载安装" in cursor_quick
+    assert "登录并确认免费方案" in cursor_quick
+    assert "Get API key" not in cursor_quick
+    assert "获取 API Key" not in cursor_quick
+    assert "调用模型" not in cursor_quick
+    assert "不是通用 API Key" in cursor_quick
+
+    groq_page = render_offer_page(by_id["groq-free"], offers, "https://freellm.top")
+    groq_quick = groq_page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
+    assert "获取 API Key" in groq_quick
+    assert "发送第一条请求" in groq_quick
+    assert "Copyable command" in groq_quick
+    assert "GROQ_API_KEY" in groq_quick
+
+
+def test_core_theme_guides_have_decision_layer_and_clean_related_links(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    core_slugs = (
+        "free-openai-compatible-apis",
+        "free-ai-coding-tools",
+        "china-free-ai-api",
+    )
+    for slug in core_slugs:
+        page = (tmp_path / "guides" / slug / "index.html").read_text(encoding="utf-8")
+        assert 'class="decision-grid"' in page
+        assert "30 秒怎么选" in page
+        assert '<html lang="zh-CN" data-locale="zh-CN"' in page
+
+        related = page.split("related pages", 1)[1].split("</section>", 1)[0]
+        assert f'href="/guides/{slug}/"' not in related
+        hrefs = re.findall(r'href="([^"]+)"', related)
+        assert len(hrefs) == len(set(hrefs)), f"{slug} related links must be unique"
+
+    coding = (tmp_path / "guides" / "free-ai-coding-tools" / "index.html").read_text(encoding="utf-8")
+    coding_related = coding.split("related pages", 1)[1].split("</section>", 1)[0]
+    assert "模型目录" in coding_related
+    assert "国内免费 AI API" in coding_related
+    assert coding_related.count("免费 AI 编程工具") == 0
+
+
+def test_free_api_guides_exclude_known_non_free_or_unconfirmed_entries(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    general = (tmp_path / "guides" / "free-openai-compatible-apis" / "index.html").read_text(encoding="utf-8")
+    china = (tmp_path / "guides" / "china-free-ai-api" / "index.html").read_text(encoding="utf-8")
+
+    assert "DeepSeek API · low cost, not free" not in general
+    assert "LongCat-2.0 · API + open weights" not in general
+    assert "DeepSeek API · low cost, not free" not in china
+    assert "LongCat-2.0 · API + open weights" not in china
+
+
+def test_static_locale_defaults_to_one_language_before_javascript():
+    offers = read_offers()
+    cursor = next(offer for offer in offers if offer["id"] == "cursor-hobby")
+    page = render_offer_page(cursor, offers, "https://freellm.top")
+
+    assert '<html lang="zh-CN" data-locale="zh-CN"' in page
+    assert 'html:not([data-locale]) [lang="en"]' in page
+
+
 def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     pages = [
@@ -295,13 +363,13 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").is_file()
 
     detail = (tmp_path / "offers" / "codebuddy" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="zh-CN">' in detail
+    assert '<html lang="zh-CN" data-locale="zh-CN"' in detail
     assert "<title>CodeBuddy" in detail
     assert '<meta name="description"' in detail
     assert "请以官方页面为准" in detail
     assert '<link rel="canonical" href="https://freellm.top/offers/codebuddy/"' in detail
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in detail
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in detail
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in detail
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in detail
     assert 'window.va = window.va || function ()' in detail
     assert '<script defer src="/_vercel/insights/script.js"></script>' in detail
     assert 'data-offer-id="codebuddy"' in detail
@@ -314,11 +382,11 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "YaRN 131K" in qwen_detail
 
     category = (tmp_path / "category" / "free-ide" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="zh-CN">' in category
+    assert '<html lang="zh-CN"' in category
     assert "免费 AI IDE" in category
     assert '<link rel="canonical" href="https://freellm.top/category/free-ide/"' in category
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in category
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in category
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in category
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in category
     assert '<script defer src="/_vercel/insights/script.js"></script>' in category
     assert "/offers/codebuddy/" in category
     assert 'href="https://freellm.top/"' in category
@@ -330,8 +398,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md" in guide
     assert "MIT License" in guide
     assert '<link rel="canonical" href="https://freellm.top/guides/free-llm/"' in guide
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in guide
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in guide
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in guide
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in guide
     assert '<script defer src="/_vercel/insights/script.js"></script>' in guide
 
     adsense_script = 'adsbygoogle.js?client=ca-pub-2461062743308239'
@@ -423,11 +491,11 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
     page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
 
-    assert '<html lang="zh-CN">' in page
+    assert '<html lang="zh-CN"' in page
     assert "全部免费 AI 模型与 API 一览" in page
     assert "All Free AI Models" in page
     assert '<link rel="canonical" href="https://freellm.top/models/all/"' in page
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in page
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in page
     assert 'window.va = window.va || function ()' in page
     assert '<span lang="zh-CN">注册领取</span><span lang="en">Register</span>' in page
     assert '<span lang="zh-CN">模型同步</span><span lang="en">Models synced</span>' in page
@@ -618,14 +686,11 @@ def test_groq_models_are_structured_with_individual_context_windows():
     expected_models = {
         "canopylabs/orpheus-arabic-saudi",
         "canopylabs/orpheus-v1-english",
-        "groq/compound",
-        "groq/compound-mini",
         "meta-llama/llama-prompt-guard-2-22m",
         "meta-llama/llama-prompt-guard-2-86m",
         "openai/gpt-oss-120b",
         "openai/gpt-oss-20b",
         "openai/gpt-oss-safeguard-20b",
-        "qwen/qwen3.6-27b",
         "qwen/qwen3.8-27b",
         "whisper-large-v3",
         "whisper-large-v3-turbo",
@@ -655,7 +720,7 @@ def test_offer_page_renders_per_model_free_quota_table():
     assert '<a href="https://console.groq.com/docs/models"' in groq_html
     assert "131,072 tokens" in groq_html
     assert "512 tokens" in groq_html
-    assert groq_html.count("<tr>") >= 14
+    assert groq_html.count("<tr>") >= len(by_id["groq-free"]["freeModels"]) + 1
     assert '<code><span lang="zh-CN">openai/gpt-oss-120b</span><span lang="en">openai/gpt-oss-120b</span></code>' in groq_html
     assert '<code><span lang="zh-CN">qwen/qwen3.8-27b</span><span lang="en">qwen/qwen3.8-27b</span></code>' in groq_html
 

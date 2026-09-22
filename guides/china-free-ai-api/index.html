@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -67,7 +67,7 @@
       });
     })();
   </script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Free AI APIs in China | 国内免费 AI API · FreeLLM", "description": "Compare free or trial AI APIs available to users in China, with region, signup requirements (phone, identity, credit card), quota, compatibility and official entry notes; the model directory carries per-row mainland-China availability labels. 整理面向中国用户的免费或试用 AI API，标注地区、注册要求（手机号、实名、信用卡）、额度、兼容性和官方入口，模型目录逐行标注中国大陆可用性。", "url": "https://freellm.top/guides/china-free-ai-api/", "inLanguage": ["zh-CN", "en"], "isPartOf": {"@type": "WebSite", "name": "FreeLLM", "url": "https://freellm.top/"}, "mainEntity": {"@type": "ItemList", "numberOfItems": 8, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "SenseNova · Token Plan 公测免费", "url": "https://freellm.top/offers/sensecore/"}, {"@type": "ListItem", "position": 2, "name": "DeepSeek API · low cost, not free", "url": "https://freellm.top/offers/deepseek/"}, {"@type": "ListItem", "position": 3, "name": "通义千问 · 阿里云百炼新人免费额度", "url": "https://freellm.top/offers/aliyun-qwen-free-quota/"}, {"@type": "ListItem", "position": 4, "name": "SiliconFlow · ¥0 listed models", "url": "https://freellm.top/offers/siliconflow-free-models/"}, {"@type": "ListItem", "position": 5, "name": "ModelScope · API-Inference free calls", "url": "https://freellm.top/offers/modelscope-api-inference-free/"}, {"@type": "ListItem", "position": 6, "name": "StepFun · Limited-time free API models", "url": "https://freellm.top/offers/stepfun-limited-time-free/"}, {"@type": "ListItem", "position": 7, "name": "小红书 Dots · Dots3-Note Preview API", "url": "https://freellm.top/offers/dots-api-free/"}, {"@type": "ListItem", "position": 8, "name": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）", "url": "https://freellm.top/offers/atria-dawn-preview/"}]}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Free AI APIs in China | 国内免费 AI API · FreeLLM", "description": "Compare free or trial AI APIs available to users in China, with region, signup requirements (phone, identity, credit card), quota, compatibility and official entry notes; the model directory carries per-row mainland-China availability labels. 整理面向中国用户的免费或试用 AI API，标注地区、注册要求（手机号、实名、信用卡）、额度、兼容性和官方入口，模型目录逐行标注中国大陆可用性。", "url": "https://freellm.top/guides/china-free-ai-api/", "inLanguage": ["zh-CN", "en"], "isPartOf": {"@type": "WebSite", "name": "FreeLLM", "url": "https://freellm.top/"}, "mainEntity": {"@type": "ItemList", "numberOfItems": 7, "itemListElement": [{"@type": "ListItem", "position": 1, "name": "SenseNova · Token Plan 公测免费", "url": "https://freellm.top/offers/sensecore/"}, {"@type": "ListItem", "position": 2, "name": "通义千问 · 阿里云百炼新人免费额度", "url": "https://freellm.top/offers/aliyun-qwen-free-quota/"}, {"@type": "ListItem", "position": 3, "name": "SiliconFlow · ¥0 listed models", "url": "https://freellm.top/offers/siliconflow-free-models/"}, {"@type": "ListItem", "position": 4, "name": "ModelScope · API-Inference free calls", "url": "https://freellm.top/offers/modelscope-api-inference-free/"}, {"@type": "ListItem", "position": 5, "name": "StepFun · Limited-time free API models", "url": "https://freellm.top/offers/stepfun-limited-time-free/"}, {"@type": "ListItem", "position": 6, "name": "小红书 Dots · Dots3-Note Preview API", "url": "https://freellm.top/offers/dots-api-free/"}, {"@type": "ListItem", "position": 7, "name": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）", "url": "https://freellm.top/offers/atria-dawn-preview/"}]}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet"><script id="skills-theme-script">
     (() => {
       let theme = '';
@@ -186,6 +186,13 @@ pre code { padding:0; background:none; color:inherit; }
     body { max-width: 1120px; }
     h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }
     section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }
+    .decision-card { padding:18px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+    .decision-card h3 { margin:0 0 8px; font-size:18px; }
+    .decision-card p { margin:0 0 10px; color:var(--ink-secondary); }
+    .decision-links { margin:0; padding-left:1.1rem; }
+    .decision-links li { margin:6px 0; }
+    @media (max-width:720px) { .decision-grid { grid-template-columns:1fr; } }
     footer { color: var(--ink-secondary); font-size: 13px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c"></head>
@@ -199,20 +206,21 @@ pre code { padding:0; background:none; color:inherit; }
     <div class="callout"><span lang="zh-CN">数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。</span><span lang="en">Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.</span></div>
   </header>
   <main>
+    <section class="decision-section">
+      <div class="eyebrow">01 / 30-second decision</div>
+      <h2><span lang="zh-CN">30 秒怎么选</span><span lang="en">Choose in 30 seconds</span></h2>
+      <p><span lang="zh-CN">国内免费 API 先看额度是否持续，再看实名、账号绑定和兼容性。</span><span lang="en">For China-based free APIs, check whether the allowance recurs, then review identity, account-binding and compatibility requirements.</span></p>
+      <div class="decision-grid"><article class="decision-card"><h3><span lang="zh-CN">持续或周期免费</span><span lang="en">Recurring free access</span></h3><p><span lang="zh-CN">想长期测试时，先看永久或周期恢复额度。</span><span lang="en">For longer evaluation, start with permanent or recurring allowances.</span></p><ul class="decision-links"><li><a href="/offers/siliconflow-free-models/"><span lang="zh-CN">SiliconFlow · ¥0 listed models</span><span lang="en">SiliconFlow · ¥0 listed models</span></a></li><li><a href="/offers/modelscope-api-inference-free/"><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></a></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">新人 / 公测 / 限免</span><span lang="en">Trial, preview or limited-time</span></h3><p><span lang="zh-CN">这类额度可能一次性或随活动结束，接入前先看有效期。</span><span lang="en">These allowances may be one-time or end with a promotion, so check validity before integrating.</span></p><ul class="decision-links"><li><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></a></li><li><a href="/offers/aliyun-qwen-free-quota/"><span lang="zh-CN">通义千问 · 阿里云百炼新人免费额度</span><span lang="en">Offer details</span></a></li><li><a href="/offers/stepfun-limited-time-free/"><span lang="zh-CN">StepFun · 限时免费 API 模型</span><span lang="en">StepFun · Limited-time free API models</span></a></li><li><a href="/offers/dots-api-free/"><span lang="zh-CN">小红书 Dots · Dots3-Note Preview API</span><span lang="en">Dots · Dots3-Note Preview API</span></a></li><li><a href="/offers/atria-dawn-preview/"><span lang="zh-CN">上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）</span><span lang="en">Atria Dawn Preview（ 1 Token）</span></a></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">明确 OpenAI 兼容</span><span lang="en">Explicit OpenAI compatibility</span></h3><p><span lang="zh-CN">需要现有 OpenAI SDK / 客户端迁移时，优先核对这些记录的官方兼容说明。</span><span lang="en">When migrating an OpenAI SDK or client, check these records with explicit compatibility evidence.</span></p><ul class="decision-links"><li><a href="/offers/sensecore/"><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></a></li><li><a href="/offers/stepfun-limited-time-free/"><span lang="zh-CN">StepFun · 限时免费 API 模型</span><span lang="en">StepFun · Limited-time free API models</span></a></li><li><a href="/offers/atria-dawn-preview/"><span lang="zh-CN">上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）</span><span lang="en">Atria Dawn Preview（ 1 Token）</span></a></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">需要实名 / 账号绑定</span><span lang="en">Identity or account binding required</span></h3><p><span lang="zh-CN">注册门槛较高的入口单独列出，避免做到一半才发现缺少实名或绑定。</span><span lang="en">These entries have extra identity or account-binding requirements worth checking before setup.</span></p><ul class="decision-links"><li><a href="/offers/modelscope-api-inference-free/"><span lang="zh-CN">ModelScope · API-Inference free calls</span><span lang="en">ModelScope · API-Inference free calls</span></a></li></ul></article></div>
+    </section>
     <section>
-      <div class="eyebrow">01 / verified directory</div>
+      <div class="eyebrow">02 / verified directory</div>
       <h2><span lang="zh-CN">可用入口和关键参数</span><span lang="en">Available entries and key parameters</span></h2>
-      <p><span lang="zh-CN">当前页面收录 8 条记录。每条记录都能回到 FreeLLM 详情或目录来源。</span><span lang="en">This page contains 8 records. Each row links back to a FreeLLM detail page or directory source.</span></p>
+      <p><span lang="zh-CN">当前页面收录 7 条记录。每条记录都能回到 FreeLLM 详情或目录来源。</span><span lang="en">This page contains 7 records. Each row links back to a FreeLLM detail page or directory source.</span></p>
       <div class="table-wrap"><table><thead><tr><th>Provider / model</th><th>Free terms</th><th>Access</th><th>Official links</th></tr></thead><tbody><tr>
       <td><a href="/offers/sensecore/"><strong><span lang="zh-CN">SenseNova · Token Plan 公测免费</span><span lang="en">SenseNova · Token Plan</span></strong></a><small><span lang="zh-CN">SenseNova 6.8 Flash Lite · SenseNova U1 Fast</span><span lang="en">SenseNova 6.8 Flash Lite · SenseNova U1 Fast</span></small></td>
       <td><span lang="zh-CN">公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡</span><span lang="en">Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required</span></td>
       <td><span lang="zh-CN">China account</span><span lang="en">China account</span></td>
       <td><a href="https://platform.sensenova.cn/token-plan" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/sensecore/">FreeLLM record ↗</a></td>
-    </tr><tr>
-      <td><a href="/offers/deepseek/"><strong><span lang="zh-CN">DeepSeek API · low cost, not free</span><span lang="en">DeepSeek API · low cost, not free</span></strong></a><small><span lang="zh-CN">DeepSeek V4 Flash</span><span lang="en">DeepSeek V4 Flash</span></small></td>
-      <td><span lang="zh-CN">Very low unit price; not a free quota</span><span lang="en">Very low unit price; not a free quota</span></td>
-      <td><span lang="zh-CN">International API</span><span lang="en">International API</span></td>
-      <td><a href="https://platform.deepseek.com/" target="_blank" rel="nofollow noopener">Official source ↗</a><br><a href="https://freellm.top/offers/deepseek/">FreeLLM record ↗</a></td>
     </tr><tr>
       <td><a href="/offers/aliyun-qwen-free-quota/"><strong><span lang="zh-CN">通义千问 · 阿里云百炼新人免费额度</span><span lang="en">Offer details</span></strong></a><small><span lang="zh-CN">Qwen models · qwen-max and more</span><span lang="en">Qwen models · qwen-max and more</span></small></td>
       <td><span lang="zh-CN">New-user free quota · usually 1,000,000 tokens per model</span><span lang="en">New-user free quota · usually 1,000,000 tokens per model</span></td>
@@ -246,14 +254,14 @@ pre code { padding:0; background:none; color:inherit; }
     </tr></tbody></table></div>
     </section>
     <section>
-      <div class="eyebrow">02 / mainland CN availability</div>
+      <div class="eyebrow">03 / mainland CN availability</div>
       <h2><span lang="zh-CN">模型目录的大陆可用性标注</span><span lang="en">Mainland-CN availability labels in the model directory</span></h2>
       <p><span lang="zh-CN">完整模型目录（224 个模型）逐行标注中国大陆可用状态，并提供“大陆可用性”筛选工具；每家提供商的注册要求（手机号、实名、信用卡）都有独立核验卡片与官方来源。没有官方证据的状态一律显示“待核验”。</span><span lang="en">The full catalog of 224 models carries per-row mainland-China availability labels with a dedicated filter; each provider&#x27;s signup requirements (phone, identity, credit card) live on its own evidence-linked card. Anything without official evidence shows as unverified.</span>
           <a href="https://freellm.top/models/all/"><span lang="zh-CN">打开模型大列表并按大陆可用性筛选 →</span><span lang="en">Open the model directory and filter by mainland-CN availability →</span></a></p>
     </section><section>
-      <div class="eyebrow">03 / related pages</div>
+      <div class="eyebrow">04 / related pages</div>
       <h2><span lang="zh-CN">继续浏览</span><span lang="en">Continue exploring</span></h2>
-      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li></ul>
+      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">模型目录</span><span lang="en">Model directory</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 LLM / API 接入指南</span><span lang="en">Free LLM / API quick-start guide</span></a></li><li><a href="/guides/free-openai-compatible-apis/"><span lang="zh-CN">免费 LLM API 与 OpenAI 兼容接口</span><span lang="en">Free LLM APIs</span></a></li><li><a href="/guides/free-ai-coding-tools/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li><li><a href="/guides/free-ai-search-apis/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">OpenAI API 免费替代方案</span><span lang="en">Free OpenAI API alternatives</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">Claude Code 免费替代方案</span><span lang="en">Free Claude Code alternatives</span></a></li></ul>
     </section>
   </main>
   <footer>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -279,9 +279,9 @@ pre code { padding:0; background:none; color:inherit; }
     </section>
 <section class="quick-start">
       <h2><span lang="zh-CN">快速上手</span><span lang="en">Quick start</span></h2>
-      <p class="muted"><span lang="zh-CN">注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。</span><span lang="en">Register, get your API key, then call the model; free terms still follow the provider&#x27;s live official policy.</span></p>
-      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">注册账号</span><span lang="en">Sign up</span></h3><p class="qs-desc"><span lang="zh-CN">打开官方平台完成注册；部分平台需要手机号或邮箱验证。</span><span lang="en">Create an account on the official platform; phone or email verification may apply.</span></p><a class="qs-link" href="https://keenable.ai/console" target="_blank" rel="noopener noreferrer">Open Keenable console ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">获取 API Key</span><span lang="en">Get API key</span></h3><p class="qs-desc"><span lang="zh-CN">在控制台的 API Keys 页面创建密钥并妥善保存。</span><span lang="en">Create a key on the console&#x27;s API keys page and store it safely.</span></p><a class="qs-link" href="https://docs.keenable.ai/cli" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看文档 / 控制台</span><span lang="en">Docs / console</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">调用模型</span><span lang="en">Call model</span></h3><p class="qs-desc"><span lang="zh-CN">把命令中的环境变量换成你的 Key，即可发送第一条请求。</span><span lang="en">Swap in your key via the environment variable and send the first request.</span></p><div class="qs-code"><div class="operation-command-head"><span><span lang="zh-CN">可复制命令</span><span lang="en">Copyable command</span></span><button type="button" class="copy-command" data-copy-target="qs-command-1"><span lang="zh-CN">复制命令</span><span lang="en">Copy command</span></button></div><pre id="qs-command-1"><code>Install the official CLI or call the MCP endpoint with the optional API key.</code></pre></div></div></div>
-      <script>(() => { document.querySelectorAll('.quick-start .copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script>
+      <p class="muted"><span lang="zh-CN">先确认产品类型和免费条件，再按官方流程完成首次使用。</span><span lang="en">Confirm the product type and free terms first, then follow the official flow for first use.</span></p>
+      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">打开官方入口</span><span lang="en">Open official entry</span></h3><p class="qs-desc"><span lang="zh-CN">先从官方页面确认当前产品和免费条件。</span><span lang="en">Start from the official page and confirm the current product and free terms.</span></p><a class="qs-link" href="https://keenable.ai/console" target="_blank" rel="noopener noreferrer">Open Keenable console ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">核对使用条件</span><span lang="en">Check access conditions</span></h3><p class="qs-desc"><span lang="zh-CN">确认账户、地区、额度和有效期。</span><span lang="en">Check account, region, quota and validity requirements.</span></p><a class="qs-link" href="https://docs.keenable.ai/cli" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看官方说明</span><span lang="en">Read official docs</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">按产品流程开始</span><span lang="en">Start with the product flow</span></h3><p class="qs-desc"><span lang="zh-CN">使用该产品自己的操作步骤，而不是套用其他资源的流程。</span><span lang="en">Use this product&#x27;s own setup flow instead of reusing instructions from a different product type.</span></p><ul class="qs-notes"><li>打开官方 CLI 文档并安装 keenable-cli</li><li>设置可选 API Key 或使用 keyless 入口</li><li>执行 Search 或 Fetch 并设置消费上限</li></ul></div></div>
+      
     </section>
 
 

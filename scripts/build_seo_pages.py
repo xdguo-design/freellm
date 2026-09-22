@@ -54,7 +54,7 @@ ADSENSE_SCRIPT = '''<script async src="https://pagead2.googlesyndication.com/pag
 ADSENSE_SLOT = os.environ.get("FREELLM_ADSENSE_SLOT", "").strip()
 
 STATIC_LOCALE_STYLE = '''<style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>'''
@@ -784,9 +784,14 @@ def _theme_definition(slug: str) -> dict:
     raise ValueError(f"Unknown theme guide: {slug}")
 
 
+
 def _theme_records(slug: str, offers: list[dict], models: list[dict]) -> tuple[str, list[dict]]:
     if slug == "free-openai-compatible-apis":
-        return "offer", [offer for offer in offers if offer.get("productType") in {"api", "payg"}]
+        return "offer", [
+            offer for offer in offers
+            if offer.get("productType") == "api"
+            and offer.get("freeMechanism") not in {None, "", "not_confirmed"}
+        ]
     if slug == "free-ai-coding-tools":
         return "offer", [
             offer for offer in offers
@@ -799,10 +804,8 @@ def _theme_records(slug: str, offers: list[dict], models: list[dict]) -> tuple[s
             or _tokens(offer).intersection({"search", "fetch", "browser", "agent", "crawl"})
         ]
     if slug == "open-weight-models":
-        # Previously this selected models on a third-party directory's
-        # "verified" flag, which asserted open-weight status we had no source
-        # for. Open weights is now stated only where we classified the offer
-        # ourselves, so the guide lists offers rather than catalog rows.
+        # Open-weight status is only asserted where FreeLLM classified the
+        # offer itself, rather than inheriting an unverified directory flag.
         return "offer", [offer for offer in offers if offer.get("productType") == "open_weights"]
     if slug == "model-context-windows":
         return "model", [model for model in models if model.get("context") and model.get("sourceUrl")]
@@ -810,8 +813,9 @@ def _theme_records(slug: str, offers: list[dict], models: list[dict]) -> tuple[s
         return "offer", [
             offer for offer in offers
             if offer.get("originCountry") == "China"
-            and offer.get("productType") in {"api", "payg"}
+            and offer.get("productType") == "api"
             and "free" in _tokens(offer)
+            and offer.get("freeMechanism") not in {None, "", "not_confirmed"}
         ]
     raise ValueError(f"Unknown theme guide: {slug}")
 
@@ -849,6 +853,117 @@ def _theme_model_row(model: dict) -> str:
     </tr>'''
 
 
+def _theme_decision_markup(slug: str, records: list[dict]) -> str:
+    """Turn directory rows into a short intent-oriented decision layer."""
+    if slug not in {
+        "free-openai-compatible-apis",
+        "free-ai-coding-tools",
+        "china-free-ai-api",
+    }:
+        return ""
+
+    ongoing_mechanisms = {"permanent", "daily_quota", "weekly_quota", "monthly_quota"}
+    temporary_mechanisms = {"trial", "limited_time_free", "first_month_promo"}
+
+    def links(items: list[dict]) -> str:
+        unique: list[dict] = []
+        seen: set[str] = set()
+        for item in items:
+            item_id = str(item.get("id") or "")
+            if not item_id or item_id in seen:
+                continue
+            seen.add(item_id)
+            unique.append(item)
+        shown = unique[:5]
+        if not shown:
+            return f'<p class="muted">{_locale_pair("当前没有符合这一筛选的已核验记录。", "No verified record currently matches this filter.")}</p>'
+        markup = "".join(
+            f'<li><a href="{_esc(offer_url(item))}">{_locale_pair(item.get("titleZh") or item.get("title") or item.get("provider"), item.get("title") or item.get("provider"), "Offer details")}</a></li>'
+            for item in shown
+        )
+        remainder = len(unique) - len(shown)
+        if remainder > 0:
+            markup += f'<li class="muted">{_locale_pair(f"另有 {remainder} 条记录见下方完整表格。", f"{remainder} more records are listed in the full table below.")}</li>'
+        return f'<ul class="decision-links">{markup}</ul>'
+
+    def card(title_zh: str, title_en: str, desc_zh: str, desc_en: str, items: list[dict]) -> str:
+        return (
+            '<article class="decision-card">'
+            f'<h3>{_locale_pair(title_zh, title_en)}</h3>'
+            f'<p>{_locale_pair(desc_zh, desc_en)}</p>'
+            f'{links(items)}'
+            '</article>'
+        )
+
+    ongoing = [item for item in records if item.get("freeMechanism") in ongoing_mechanisms]
+    temporary = [item for item in records if item.get("freeMechanism") in temporary_mechanisms]
+    china = [item for item in records if item.get("originCountry") == "China"]
+    international = [item for item in records if item.get("originCountry") != "China"]
+
+    if slug == "free-openai-compatible-apis":
+        cards = "".join(
+            (
+                card("持续或周期免费", "Recurring free access", "优先看长期免费、每日 / 每周 / 每月恢复的额度。", "Start with permanent or recurring daily, weekly or monthly allowances.", ongoing),
+                card("一次性 / 限时额度", "Trial or limited-time access", "适合验证接口，但不要把试用或限免当成长期生产额度。", "Useful for evaluation, but do not treat trials or limited-time access as permanent production capacity.", temporary),
+                card("中国提供商", "China-based providers", "需要国内账号、手机号或区域入口时，先从这些已核验记录里筛。", "Use these verified records when a China account, phone number or regional entry point matters.", china),
+                card("国际提供商", "International providers", "适合需要国际控制台或全球账号体系的场景。", "Use these when an international console or global account flow fits your setup.", international),
+            )
+        )
+        intro_zh = "先按免费机制和账户地区缩小范围，再看下方完整参数与官方来源。"
+        intro_en = "Narrow the list by free mechanism and account region first, then compare the full parameters and official sources below."
+    elif slug == "free-ai-coding-tools":
+        recurring_ide = [
+            item for item in records
+            if item.get("productType") == "free_ide"
+            and item.get("freeMechanism") in ongoing_mechanisms
+        ]
+        cards = "".join(
+            (
+                card("长期 / 周期免费 IDE", "Recurring free IDE plans", "适合日常编码；额度可能按日、周或月恢复。", "Good for day-to-day coding when the allowance renews daily, weekly or monthly.", recurring_ide),
+                card("试用与首月优惠", "Trials and first-month promotions", "先看有效期和续费价格，避免把促销当成永久免费。", "Check expiry and renewal pricing so a promotion is not mistaken for permanent free access.", temporary),
+                card("国内账号工具", "China-account tools", "优先查看国内注册、定价和可用模式。", "Focus on the China signup flow, pricing and available modes.", china),
+                card("国际账号工具", "International-account tools", "适合 GitHub、Google、AWS 或其他国际账号体系。", "Useful when your workflow already uses GitHub, Google, AWS or another international account system.", international),
+            )
+        )
+        intro_zh = "先分清 IDE 免费计划和 Coding Plan 促销，再按账号地区选择。"
+        intro_en = "Separate recurring IDE plans from promotional coding plans first, then choose by account region."
+    else:
+        verification_required = []
+        openai_compatible = []
+        for item in records:
+            access_text = str(item.get("accessSummary") or item.get("access") or "").lower()
+            if any(token in access_text for token in ("real-name", "实名", "aliyun binding", "阿里云绑定")):
+                verification_required.append(item)
+            evidence_text = " ".join(
+                str(value or "")
+                for value in (
+                    item.get("why"),
+                    (item.get("usageGuide") or {}).get("summary"),
+                    item.get("evidence"),
+                )
+            ).lower()
+            if "openai" in evidence_text:
+                openai_compatible.append(item)
+        cards = "".join(
+            (
+                card("持续或周期免费", "Recurring free access", "想长期测试时，先看永久或周期恢复额度。", "For longer evaluation, start with permanent or recurring allowances.", ongoing),
+                card("新人 / 公测 / 限免", "Trial, preview or limited-time", "这类额度可能一次性或随活动结束，接入前先看有效期。", "These allowances may be one-time or end with a promotion, so check validity before integrating.", temporary),
+                card("明确 OpenAI 兼容", "Explicit OpenAI compatibility", "需要现有 OpenAI SDK / 客户端迁移时，优先核对这些记录的官方兼容说明。", "When migrating an OpenAI SDK or client, check these records with explicit compatibility evidence.", openai_compatible),
+                card("需要实名 / 账号绑定", "Identity or account binding required", "注册门槛较高的入口单独列出，避免做到一半才发现缺少实名或绑定。", "These entries have extra identity or account-binding requirements worth checking before setup.", verification_required),
+            )
+        )
+        intro_zh = "国内免费 API 先看额度是否持续，再看实名、账号绑定和兼容性。"
+        intro_en = "For China-based free APIs, check whether the allowance recurs, then review identity, account-binding and compatibility requirements."
+
+    return f'''<section class="decision-section">
+      <div class="eyebrow">01 / 30-second decision</div>
+      <h2>{_locale_pair("30 秒怎么选", "Choose in 30 seconds")}</h2>
+      <p>{_locale_pair(intro_zh, intro_en)}</p>
+      <div class="decision-grid">{cards}</div>
+    </section>'''
+
+
+
 def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], site_url: str, slug: str) -> str:
     definition = _theme_definition(slug)
     record_kind, records = _theme_records(slug, offers, models)
@@ -862,22 +977,44 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     else:
         rows = "".join(_theme_model_row(model) for model in records)
         table = f'''<div class="table-wrap"><table><thead><tr><th>Provider</th><th>Model</th><th>Context window</th><th>Max output</th><th>Modality</th><th>Source</th></tr></thead><tbody>{rows}</tbody></table></div>'''
+
+    decision_markup = _theme_decision_markup(slug, records) if record_kind == "offer" else ""
+    directory_number = "02" if decision_markup else "01"
+
     china_callout = ""
     if slug == "china-free-ai-api":
+        china_number = "03" if decision_markup else "02"
         china_callout = f'''<section>
-      <div class="eyebrow">02 / mainland CN availability</div>
+      <div class="eyebrow">{china_number} / mainland CN availability</div>
       <h2>{_locale_pair("模型目录的大陆可用性标注", "Mainland-CN availability labels in the model directory")}</h2>
       <p>{_locale_pair(
           f"完整模型目录（{len(models)} 个模型）逐行标注中国大陆可用状态，并提供“大陆可用性”筛选工具；每家提供商的注册要求（手机号、实名、信用卡）都有独立核验卡片与官方来源。没有官方证据的状态一律显示“待核验”。",
           f"The full catalog of {len(models)} models carries per-row mainland-China availability labels with a dedicated filter; each provider's signup requirements (phone, identity, credit card) live on its own evidence-linked card. Anything without official evidence shows as unverified.")}
           <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair("打开模型大列表并按大陆可用性筛选 →", "Open the model directory and filter by mainland-CN availability →")}</a></p>
     </section>'''
-    related_eyebrow = "03 / related pages" if china_callout else "02 / related pages"
-    related = ''.join(
-        f'<li><a href="{_esc(path)}">{_locale_pair(definition["title_zh"], definition["title_en"])}</a></li>'
-        for path in (models_url(), guide_url(), OPENAI_ALTERNATIVES_GUIDE_PATH, CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH)
-        if path != f'/guides/{slug}/'
-    )
+
+    related_number = "04" if slug == "china-free-ai-api" and decision_markup else ("03" if decision_markup or china_callout else "02")
+    related_targets = [
+        (models_url(), ("模型目录", "Model directory")),
+        (guide_url(), ("免费 LLM / API 接入指南", "Free LLM / API quick-start guide")),
+        ("/guides/free-openai-compatible-apis/", ("免费 LLM API 与 OpenAI 兼容接口", "Free LLM APIs")),
+        ("/guides/free-ai-coding-tools/", ("免费 AI 编程工具", "Free AI Coding Tools")),
+        ("/guides/china-free-ai-api/", ("国内免费 AI API", "Free AI APIs in China")),
+        ("/guides/free-ai-search-apis/", ("免费 AI 搜索 API", "Free AI Search APIs")),
+        (OPENAI_ALTERNATIVES_GUIDE_PATH, ("OpenAI API 免费替代方案", "Free OpenAI API alternatives")),
+        (CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH, ("Claude Code 免费替代方案", "Free Claude Code alternatives")),
+    ]
+    related_parts = []
+    seen_paths: set[str] = set()
+    for target_path, labels in related_targets:
+        if target_path == path or target_path in seen_paths:
+            continue
+        seen_paths.add(target_path)
+        related_parts.append(
+            f'<li><a href="{_esc(target_path)}">{_locale_pair(labels[0], labels[1])}</a></li>'
+        )
+    related = "".join(related_parts)
+
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -896,7 +1033,7 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
         },
     }
     return f'''<!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-locale="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -917,6 +1054,13 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     body {{ max-width: 1120px; }}
     h1 {{ max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }}
     section + section {{ padding-top: 28px; border-top: 1px solid var(--line); }}
+    .decision-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }}
+    .decision-card {{ padding:18px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }}
+    .decision-card h3 {{ margin:0 0 8px; font-size:18px; }}
+    .decision-card p {{ margin:0 0 10px; color:var(--ink-secondary); }}
+    .decision-links {{ margin:0; padding-left:1.1rem; }}
+    .decision-links li {{ margin:6px 0; }}
+    @media (max-width:720px) {{ .decision-grid {{ grid-template-columns:1fr; }} }}
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
@@ -930,14 +1074,15 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     <div class="callout">{_locale_pair("数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。", "Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.")}</div>
   </header>
   <main>
+    {decision_markup}
     <section>
-      <div class="eyebrow">01 / verified directory</div>
+      <div class="eyebrow">{directory_number} / verified directory</div>
       <h2>{_locale_pair("可用入口和关键参数", "Available entries and key parameters")}</h2>
       <p>{_locale_pair(f"当前页面收录 {len(records)} 条记录。每条记录都能回到 FreeLLM 详情或目录来源。", f"This page contains {len(records)} records. Each row links back to a FreeLLM detail page or directory source.")}</p>
       {table}
     </section>
     {china_callout}<section>
-      <div class="eyebrow">{related_eyebrow}</div>
+      <div class="eyebrow">{related_number} / related pages</div>
       <h2>{_locale_pair("继续浏览", "Continue exploring")}</h2>
       <ul class="link-list">{related}</ul>
     </section>
@@ -957,21 +1102,33 @@ def _list(items: list[object], empty: str = "Not specified") -> str:
     return "<ul>" + "".join(f"<li>{_locale_pair(item, item)}</li>" for item in items) + "</ul>"
 
 
-def _quick_start_markup(offer: dict) -> str:
-    """Render the one-stop quick-start block: register → get API key → call model.
 
-    Each offer already carries ``register`` (signup/console URL), ``usageGuide.docsUrl``
-    (docs / API-key page) and ``usageGuide.examples.curl`` (invocation example) in
-    ``data/offers.json``; this surfaces them as the first thing a visitor sees instead
-    of burying them inside the official-sources list.
+def _quick_start_markup(offer: dict) -> str:
+    """Render a product-aware quick-start block.
+
+    API offers keep the register → key → request flow. IDEs, coding plans,
+    downloadable weights and desktop apps get setup steps that match the
+    product instead of inheriting API-key instructions.
     """
     guide = offer.get("usageGuide") or {}
+    examples = guide.get("examples") or {}
+    product_type = str(offer.get("productType") or "")
     register_url = offer.get("register")
-    register_label = offer.get("registerLabel") or _locale_pair("注册账号", "Sign up")
     docs_url = guide.get("docsUrl")
-    curl = ((guide.get("examples") or {}).get("curl") or offer.get("command"))
+    curl = examples.get("curl")
+    action = examples.get("action")
+    command = offer.get("command")
+    guide_steps = [str(item) for item in (guide.get("steps") or []) if item]
 
-    def step(number: int, title_zh: str, title_en: str, desc_zh: str, desc_en: str, body: str, wide: bool = False) -> str:
+    def step(
+        number: int,
+        title_zh: str,
+        title_en: str,
+        desc_zh: str,
+        desc_en: str,
+        body: str,
+        wide: bool = False,
+    ) -> str:
         wide_class = " qs-step-wide" if wide else ""
         return (
             f'<div class="qs-step{wide_class}">'
@@ -982,63 +1139,134 @@ def _quick_start_markup(offer: dict) -> str:
             f'</div>'
         )
 
-    # ① 注册账号
-    if register_url:
-        body1 = (
-            f'<a class="qs-link" href="{_esc(register_url)}" target="_blank" '
-            f'rel="noopener noreferrer">{_esc(register_label)} ↗</a>'
+    def link_body(url: str | None, label_zh: str, label_en: str, custom_label: str | None = None) -> str:
+        if not url:
+            return f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
+        label = _esc(custom_label) if custom_label else _locale_pair(label_zh, label_en)
+        return (
+            f'<a class="qs-link" href="{_esc(url)}" target="_blank" '
+            f'rel="noopener noreferrer">{label} ↗</a>'
         )
-    else:
-        body1 = f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
 
-    # ② 获取 API Key
-    key_url = docs_url or register_url
-    if key_url:
-        key_label = (
-            _locale_pair("查看文档 / 控制台", "Docs / console")
-            if docs_url
-            else _locale_pair("在同一控制台创建", "Create in the same console")
-        )
-        body2 = (
-            f'<a class="qs-link" href="{_esc(key_url)}" target="_blank" '
-            f'rel="noopener noreferrer">{key_label} ↗</a>'
-        )
-    else:
-        body2 = f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
+    def guidance_body(fallback_zh: str, fallback_en: str) -> str:
+        if action:
+            return f'<p class="muted">{_esc(action)}</p>'
+        if guide_steps:
+            items = "".join(f"<li>{_esc(item)}</li>" for item in guide_steps[:4])
+            return f'<ul class="qs-notes">{items}</ul>'
+        return f'<p class="muted">{_locale_pair(fallback_zh, fallback_en)}</p>'
 
-    # ③ 调用模型：全宽代码块 + 复制按钮
-    if curl:
-        body3 = (
+    def command_body(value: str | None) -> tuple[str, bool]:
+        if not value:
+            return guidance_body("见下方操作步骤", "See the operation steps below"), False
+        return (
             '<div class="qs-code">'
             f'<div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span>'
             f'<button type="button" class="copy-command" data-copy-target="qs-command-1">{_locale_pair("复制命令", "Copy command")}</button>'
             '</div>'
-            f'<pre id="qs-command-1"><code>{_esc(curl)}</code></pre>'
-            '</div>'
+            f'<pre id="qs-command-1"><code>{_esc(value)}</code></pre>'
+            '</div>',
+            True,
         )
+
+    register_label = offer.get("registerLabel")
+    copy_enabled = False
+
+    is_api_flow = product_type in {"api", "payg"} or (
+        product_type == "web_infrastructure" and bool(curl)
+    )
+    if is_api_flow:
+        body1 = link_body(register_url, "注册账号", "Sign up", register_label)
+        body2 = link_body(docs_url or register_url, "查看 API 文档 / 控制台", "API docs / console")
+        body3, copy_enabled = command_body(curl or command)
+        steps = "".join(
+            (
+                step(1, "注册账号", "Sign up", "打开官方平台完成注册；部分平台需要手机号或邮箱验证。", "Create an account on the official platform; phone or email verification may apply.", body1),
+                step(2, "获取 API Key", "Get API key", "在官方控制台或文档入口创建密钥，并按提供商要求保存。", "Create a key from the official console or docs flow and store it safely.", body2),
+                step(3, "发送第一条请求", "Send first request", "使用该提供商自己的 Endpoint、模型 ID 和额度规则完成首次调用。", "Use this provider's endpoint, model ID and quota rules for the first request.", body3, wide=True),
+            )
+        )
+        qs_desc_zh = "注册 → 获取 Key → 发出第一条请求；Endpoint、模型 ID 与免费条件都以该提供商官方页面为准。"
+        qs_desc_en = "Sign up → get a key → send the first request; use this provider's official endpoint, model IDs and live free-tier terms."
+    elif product_type == "free_ide":
+        body1 = link_body(register_url, "打开产品 / 下载页", "Open product / download page", register_label)
+        body2 = link_body(docs_url or register_url, "查看免费方案与额度", "Check free plan and limits")
+        body3 = guidance_body("安装后登录，在产品内确认当前免费额度或使用限制。", "Install and sign in, then confirm the current free allowance or usage limits in the product.")
+        steps = "".join(
+            (
+                step(1, "下载安装", "Install", "从官方入口下载安装或打开 IDE。", "Install or open the IDE from the official product page.", body1),
+                step(2, "登录并确认免费方案", "Sign in and confirm the free plan", "核对当前免费计划、额度和地区要求，不把 IDE 订阅误当成 API Key。", "Confirm the live free plan, quota and region rules; an IDE plan is not an API key.", body2),
+                step(3, "开始编码", "Start coding", "按官方步骤启用编辑器功能，并在账户页查看实际额度。", "Enable the editor features using the official flow and check the real allowance in your account.", body3, wide=True),
+            )
+        )
+        qs_desc_zh = "下载 / 打开 IDE → 登录免费方案 → 在编辑器内开始使用；这类资源不是通用 API Key。"
+        qs_desc_en = "Open or install the IDE → sign in to the free plan → start inside the editor; this is not a generic API-key offer."
+    elif product_type == "coding_plan":
+        body1 = link_body(register_url, "打开 Coding Plan", "Open coding plan", register_label)
+        body2 = link_body(docs_url or register_url, "核对价格、额度与支持工具", "Check price, quota and supported tools")
+        body3 = guidance_body("按官方文档把计划接入支持的编码工具。", "Follow the official documentation to enable the plan in a supported coding tool.")
+        steps = "".join(
+            (
+                step(1, "打开计划页", "Open the plan", "先确认这是长期免费、试用还是首月优惠。", "First confirm whether this is recurring free access, a trial or a first-month promotion.", body1),
+                step(2, "登录并核对额度", "Sign in and check quota", "查看实时价格、续费条件、额度窗口和支持的工具。", "Check live pricing, renewal terms, quota windows and supported tools.", body2),
+                step(3, "在支持工具中启用", "Enable in a supported tool", "按提供商自己的接入说明完成配置。", "Use the provider's own setup instructions to finish configuration.", body3, wide=True),
+            )
+        )
+        qs_desc_zh = "先确认优惠性质和续费条件，再按官方文档把 Coding Plan 接入支持工具。"
+        qs_desc_en = "Confirm whether the offer is recurring, trial or promotional, then enable the coding plan in a supported tool using the official setup."
+    elif product_type == "open_weights":
+        body1 = link_body(register_url, "打开模型 / 仓库页", "Open model / repository page", register_label)
+        body2 = link_body(docs_url or register_url, "核对许可证与运行要求", "Check license and runtime requirements")
+        body3, copy_enabled = command_body(command or examples.get("command"))
+        steps = "".join(
+            (
+                step(1, "打开权重页", "Open weights page", "从官方仓库或模型页确认权重来源。", "Confirm the weights from the official repository or model page.", body1),
+                step(2, "核对许可与硬件", "Check license and hardware", "免费权重不等于免费 GPU；先确认许可证、显存、存储和运行方式。", "Free weights do not make GPU time free; check the license, VRAM, storage and runtime first.", body2),
+                step(3, "下载并运行", "Download and run", "使用官方给出的下载或启动方式，不套用 API Key 流程。", "Use the official download or launch flow rather than an API-key workflow.", body3, wide=True),
+            )
+        )
+        qs_desc_zh = "确认官方权重 → 核对许可证与硬件 → 下载运行；本地权重与托管 API 是两种不同路径。"
+        qs_desc_en = "Confirm the official weights → check license and hardware → download and run; local weights and hosted APIs are separate access paths."
+    elif product_type == "desktop_ai_app":
+        body1 = link_body(register_url, "打开官方下载页", "Open official download page", register_label)
+        body2 = link_body(docs_url or register_url, "查看安装 / 账户说明", "Read install / account docs")
+        body3 = guidance_body("完成安装后按应用内引导开始使用。", "Finish installation, then follow the in-app onboarding.")
+        steps = "".join(
+            (
+                step(1, "下载应用", "Download app", "只从官方入口下载桌面应用。", "Download the desktop app from the official source.", body1),
+                step(2, "安装并核对要求", "Install and check requirements", "确认系统、账户、地区和本地模型要求。", "Check OS, account, region and local-model requirements.", body2),
+                step(3, "开始使用", "Start using", "按应用内引导完成首次配置。", "Complete the first-run setup using the app's own onboarding.", body3, wide=True),
+            )
+        )
+        qs_desc_zh = "下载官方应用 → 安装并核对账户 / 系统要求 → 完成首次配置。"
+        qs_desc_en = "Download the official app → check account and system requirements → complete first-run setup."
     else:
-        body3 = f'<p class="muted">{_locale_pair("见下方操作步骤", "See the operation steps below")}</p>'
-
-    steps = "".join(
-        (
-            step(1, "注册账号", "Sign up", "打开官方平台完成注册；部分平台需要手机号或邮箱验证。", "Create an account on the official platform; phone or email verification may apply.", body1),
-            step(2, "获取 API Key", "Get API key", "在控制台的 API Keys 页面创建密钥并妥善保存。", "Create a key on the console's API keys page and store it safely.", body2),
-            step(3, "调用模型", "Call model", "把命令中的环境变量换成你的 Key，即可发送第一条请求。", "Swap in your key via the environment variable and send the first request.", body3, wide=True),
+        body1 = link_body(register_url, "打开官方入口", "Open official entry", register_label)
+        body2 = link_body(docs_url or register_url, "查看官方说明", "Read official docs")
+        body3 = guidance_body("按官方说明完成首次使用。", "Follow the official instructions for first use.")
+        steps = "".join(
+            (
+                step(1, "打开官方入口", "Open official entry", "先从官方页面确认当前产品和免费条件。", "Start from the official page and confirm the current product and free terms.", body1),
+                step(2, "核对使用条件", "Check access conditions", "确认账户、地区、额度和有效期。", "Check account, region, quota and validity requirements.", body2),
+                step(3, "按产品流程开始", "Start with the product flow", "使用该产品自己的操作步骤，而不是套用其他资源的流程。", "Use this product's own setup flow instead of reusing instructions from a different product type.", body3, wide=True),
+            )
         )
-    )
+        qs_desc_zh = "先确认产品类型和免费条件，再按官方流程完成首次使用。"
+        qs_desc_en = "Confirm the product type and free terms first, then follow the official flow for first use."
 
-    qs_desc_zh = "注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。"
-    qs_desc_en = "Register, get your API key, then call the model; free terms still follow the provider's live official policy."
-    copy_script = (
-        "<script>(() => { document.querySelectorAll('.quick-start .copy-command')"
-        ".forEach(button => button.addEventListener('click', async () => {"
-        " const target = document.getElementById(button.dataset.copyTarget);"
-        " if (!target) return;"
-        " await navigator.clipboard.writeText(target.innerText);"
-        f" button.textContent = {json.dumps('已复制', ensure_ascii=False)};"
-        f" setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400);"
-        " })); })();</script>"
-    )
+    copy_script = ""
+    if copy_enabled:
+        copy_script = (
+            "<script>(() => { document.querySelectorAll('.quick-start .copy-command')"
+            ".forEach(button => button.addEventListener('click', async () => {"
+            " const target = document.getElementById(button.dataset.copyTarget);"
+            " if (!target) return;"
+            " await navigator.clipboard.writeText(target.innerText);"
+            f" button.textContent = {json.dumps('已复制', ensure_ascii=False)};"
+            f" setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400);"
+            " })); })();</script>"
+        )
+
     return (
         '<section class="quick-start">\n'
         '      <h2>' + _locale_pair("快速上手", "Quick start") + '</h2>\n'
@@ -1538,7 +1766,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
         ],
     }
     return f'''<!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-locale="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -4257,6 +4485,7 @@ def sitemap_section_paths(
         "/terms/",
         "/privacy/",
         "/submit/",
+        "/tools/",
         guide_url(),
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,

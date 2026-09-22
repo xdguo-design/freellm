@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -279,9 +279,9 @@ pre code { padding:0; background:none; color:inherit; }
     </section>
 <section class="quick-start">
       <h2><span lang="zh-CN">快速上手</span><span lang="en">Quick start</span></h2>
-      <p class="muted"><span lang="zh-CN">注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。</span><span lang="en">Register, get your API key, then call the model; free terms still follow the provider&#x27;s live official policy.</span></p>
-      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">注册账号</span><span lang="en">Sign up</span></h3><p class="qs-desc"><span lang="zh-CN">打开官方平台完成注册；部分平台需要手机号或邮箱验证。</span><span lang="en">Create an account on the official platform; phone or email verification may apply.</span></p><a class="qs-link" href="https://antigravity.google/" target="_blank" rel="noopener noreferrer">Open / download Antigravity ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">获取 API Key</span><span lang="en">Get API key</span></h3><p class="qs-desc"><span lang="zh-CN">在控制台的 API Keys 页面创建密钥并妥善保存。</span><span lang="en">Create a key on the console&#x27;s API keys page and store it safely.</span></p><a class="qs-link" href="https://antigravity.google/pricing" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看文档 / 控制台</span><span lang="en">Docs / console</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">调用模型</span><span lang="en">Call model</span></h3><p class="qs-desc"><span lang="zh-CN">把命令中的环境变量换成你的 Key，即可发送第一条请求。</span><span lang="en">Swap in your key via the environment variable and send the first request.</span></p><div class="qs-code"><div class="operation-command-head"><span><span lang="zh-CN">可复制命令</span><span lang="en">Copyable command</span></span><button type="button" class="copy-command" data-copy-target="qs-command-1"><span lang="zh-CN">复制命令</span><span lang="en">Copy command</span></button></div><pre id="qs-command-1"><code>Download Google Antigravity from the official product page and sign in with a personal Google account.</code></pre></div></div></div>
-      <script>(() => { document.querySelectorAll('.quick-start .copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script>
+      <p class="muted"><span lang="zh-CN">下载 / 打开 IDE → 登录免费方案 → 在编辑器内开始使用；这类资源不是通用 API Key。</span><span lang="en">Open or install the IDE → sign in to the free plan → start inside the editor; this is not a generic API-key offer.</span></p>
+      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">下载安装</span><span lang="en">Install</span></h3><p class="qs-desc"><span lang="zh-CN">从官方入口下载安装或打开 IDE。</span><span lang="en">Install or open the IDE from the official product page.</span></p><a class="qs-link" href="https://antigravity.google/" target="_blank" rel="noopener noreferrer">Open / download Antigravity ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">登录并确认免费方案</span><span lang="en">Sign in and confirm the free plan</span></h3><p class="qs-desc"><span lang="zh-CN">核对当前免费计划、额度和地区要求，不把 IDE 订阅误当成 API Key。</span><span lang="en">Confirm the live free plan, quota and region rules; an IDE plan is not an API key.</span></p><a class="qs-link" href="https://antigravity.google/pricing" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看免费方案与额度</span><span lang="en">Check free plan and limits</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">开始编码</span><span lang="en">Start coding</span></h3><p class="qs-desc"><span lang="zh-CN">按官方步骤启用编辑器功能，并在账户页查看实际额度。</span><span lang="en">Enable the editor features using the official flow and check the real allowance in your account.</span></p><p class="muted">打开 https://antigravity.google/docs/ide/extensions/ 并按官方安装说明配置</p></div></div>
+      
     </section>
 
 
