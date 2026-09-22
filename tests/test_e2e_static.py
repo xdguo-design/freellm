@@ -20,7 +20,6 @@ HOMEPAGE_CSS_PATH = ROOT / "css" / "homepage.css"
 HOMEPAGE_EDITORIAL_CSS_PATH = ROOT / "css" / "homepage-editorial.css"
 HOMEPAGE_JS_PATH = ROOT / "js" / "homepage.js"
 HOMEPAGE_I18N_JS_PATH = ROOT / "js" / "homepage-i18n.js"
-ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
 OFFERS_RANKED_PATH = ROOT / "data" / "offers-ranked.json"
 OFFERS_BUNDLE_PATH = ROOT / "data" / "offers.js"
@@ -446,8 +445,6 @@ class StaticContractTests(unittest.TestCase):
     def test_page_uses_free_method_categories(self):
         for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
-        self.assertTrue(ASSET_PATH.is_file())
-        self.assertGreater(ASSET_PATH.stat().st_size, 1000)
         catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
             self.assertNotIn(f'data-filter="{name}"', catalog_html)

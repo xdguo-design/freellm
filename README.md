@@ -23,7 +23,7 @@ FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额�
 - Vercel 预览：[freellm-omega.vercel.app](https://freellm-omega.vercel.app/)
 - GitHub 仓库：[xdguo-design/freellm](https://github.com/xdguo-design/freellm)
 
-![FreeLLM 首页预览](freellm-01-hero.png)
+![FreeLLM 首页预览](docs/freellm-01-hero.png)
 
 ### 当前内容
 
