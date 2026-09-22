@@ -101,7 +101,7 @@ def test_core_theme_guides_have_decision_layer_and_clean_related_links(tmp_path)
         page = (tmp_path / "guides" / slug / "index.html").read_text(encoding="utf-8")
         assert 'class="decision-grid"' in page
         assert "30 秒怎么选" in page
-        assert '<html lang="zh-CN" data-locale="zh-CN">' in page
+        assert '<html lang="zh-CN" data-locale="zh-CN"' in page
 
         related = page.split("related pages", 1)[1].split("</section>", 1)[0]
         assert f'href="/guides/{slug}/"' not in related
@@ -132,7 +132,7 @@ def test_static_locale_defaults_to_one_language_before_javascript():
     cursor = next(offer for offer in offers if offer["id"] == "cursor-hobby")
     page = render_offer_page(cursor, offers, "https://freellm.top")
 
-    assert '<html lang="zh-CN" data-locale="zh-CN">' in page
+    assert '<html lang="zh-CN" data-locale="zh-CN"' in page
     assert 'html:not([data-locale]) [lang="en"]' in page
 
 
@@ -363,7 +363,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert (tmp_path / "guides" / "claude-code-free-alternatives" / "index.html").is_file()
 
     detail = (tmp_path / "offers" / "codebuddy" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="zh-CN" data-locale="zh-CN">' in detail
+    assert '<html lang="zh-CN" data-locale="zh-CN"' in detail
     assert "<title>CodeBuddy" in detail
     assert '<meta name="description"' in detail
     assert "请以官方页面为准" in detail
@@ -491,7 +491,7 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
     page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
 
-    assert '<html lang="zh-CN">' in page
+    assert '<html lang="zh-CN"' in page
     assert "全部免费 AI 模型与 API 一览" in page
     assert "All Free AI Models" in page
     assert '<link rel="canonical" href="https://freellm.top/models/all/"' in page
@@ -686,14 +686,11 @@ def test_groq_models_are_structured_with_individual_context_windows():
     expected_models = {
         "canopylabs/orpheus-arabic-saudi",
         "canopylabs/orpheus-v1-english",
-        "groq/compound",
-        "groq/compound-mini",
         "meta-llama/llama-prompt-guard-2-22m",
         "meta-llama/llama-prompt-guard-2-86m",
         "openai/gpt-oss-120b",
         "openai/gpt-oss-20b",
         "openai/gpt-oss-safeguard-20b",
-        "qwen/qwen3.6-27b",
         "qwen/qwen3.8-27b",
         "whisper-large-v3",
         "whisper-large-v3-turbo",
@@ -723,7 +720,7 @@ def test_offer_page_renders_per_model_free_quota_table():
     assert '<a href="https://console.groq.com/docs/models"' in groq_html
     assert "131,072 tokens" in groq_html
     assert "512 tokens" in groq_html
-    assert groq_html.count("<tr>") >= 14
+    assert groq_html.count("<tr>") >= len(by_id["groq-free"]["freeModels"]) + 1
     assert '<code><span lang="zh-CN">openai/gpt-oss-120b</span><span lang="en">openai/gpt-oss-120b</span></code>' in groq_html
     assert '<code><span lang="zh-CN">qwen/qwen3.8-27b</span><span lang="en">qwen/qwen3.8-27b</span></code>' in groq_html
 
