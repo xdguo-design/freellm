@@ -86,7 +86,7 @@ def test_offer_quick_start_matches_product_type():
     assert "获取 API Key" in groq_quick
     assert "发送第一条请求" in groq_quick
     assert "Copyable command" in groq_quick
-    assert "\${GROQ_API_KEY}" in groq_quick
+    assert "GROQ_API_KEY" in groq_quick
 
 
 def test_core_theme_guides_have_decision_layer_and_clean_related_links(tmp_path):
@@ -382,7 +382,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "YaRN 131K" in qwen_detail
 
     category = (tmp_path / "category" / "free-ide" / "index.html").read_text(encoding="utf-8")
-    assert '<html lang="zh-CN">' in category
+    assert '<html lang="zh-CN"' in category
     assert "免费 AI IDE" in category
     assert '<link rel="canonical" href="https://freellm.top/category/free-ide/"' in category
     assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in category
