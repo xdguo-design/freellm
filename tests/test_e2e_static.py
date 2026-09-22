@@ -737,7 +737,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 19)
+        self.assertEqual(self.visible_offers(page), 20)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
@@ -749,7 +749,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 19)
+        self.assertEqual(self.visible_offers(page), 20)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):
