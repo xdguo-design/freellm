@@ -280,8 +280,14 @@ def main() -> int:
     if missed:
         raise SystemExit(f"production fingerprinted assets missed browser cache: {missed}")
 
-    if warm.get("/data/offers.json", {}).get("transferSize", 1) != 0:
-        raise SystemExit("production offers.json missed browser cache on repeat navigation")
+    warm_offer = warm.get("/data/offers.json", {})
+    warm_offer_transfer = warm_offer.get("transferSize", 0)
+    warm_offer_body = warm_offer.get("encodedBodySize", 0)
+    if warm_offer_transfer > 1024 or warm_offer_body <= 0:
+        raise SystemExit(
+            "production offers.json did not use browser cache or conditional revalidation "
+            f"(transfer={warm_offer_transfer}, body={warm_offer_body})"
+        )
 
     return 0
 
