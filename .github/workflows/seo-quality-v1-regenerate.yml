@@ -1,0 +1,50 @@
+name: seo-quality-v1-regenerate
+
+on:
+  push:
+    branches:
+      - seo/quality-v1-20260922
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: seo/quality-v1-20260922
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install pytest
+
+      - name: Validate SEO generator
+        run: |
+          python -m py_compile scripts/build_seo_pages.py
+          python -m pytest tests/test_seo_pages.py -q
+
+      - name: Regenerate SEO pages
+        run: python scripts/build_seo_pages.py
+
+      - name: Verify generated output is stable
+        run: python scripts/build_seo_pages.py --check
+
+      - name: Commit generated pages
+        run: |
+          if git diff --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build(seo): regenerate SEO quality v1 pages"
+          git push origin HEAD:seo/quality-v1-20260922
