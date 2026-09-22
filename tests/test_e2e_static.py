@@ -190,7 +190,7 @@ class StaticContractTests(unittest.TestCase):
         latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
         observed_models = len(latest["observed"]["models"])
         self.assertRegex(log, rf'<strong>{observed_models} <span lang="zh-CN">模型</span>')
-        self.assertRegex(log, rf"<strong>{models} <span")
+        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">资源</span>')
@@ -637,8 +637,8 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertEqual(self.visible_offers(page), len(read_offers()))
         self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
-        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "19")
-        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "19")
+        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "20")
+        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "20")
         ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), f"{ide_count:02d}")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
@@ -714,7 +714,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), ide_count)
 
         page.fill("#catalog-search", "Qwen3")
-        self.assertEqual(self.visible_offers(page), 2)
+        self.assertEqual(self.visible_offers(page), 3)
 
         page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
