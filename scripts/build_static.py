@@ -490,10 +490,10 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_daily_log_summary(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
-        r'(<body\\b)([^>]*)(>)',
+        r'(<body\b)([^>]*)(>)',
         lambda match: (
             match.group(1)
-            + re.sub(r'\\s+data-offers-url="[^"]*"', "", match.group(2))
+            + re.sub(r'\s+data-offers-url="[^"]*"', "", match.group(2))
             + ' data-offers-url="../data/offers-ranked.json"'
             + match.group(3)
         ),
