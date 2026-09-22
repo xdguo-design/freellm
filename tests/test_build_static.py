@@ -141,5 +141,87 @@ class BuildStaticTests(unittest.TestCase):
             self.assertIn('id="daily-log-badge" data-new-count="2" data-change-count="3">新增 2 项</span>', rendered)
 
 
+    def test_build_emits_ranked_runtime_data_when_ranking_artifact_exists(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "offers.json"
+            html_path = root / "index.html"
+
+            def offer(offer_id, order):
+                return {
+                    "id": offer_id, "order": order, "date": "2026-09-01", "name": offer_id,
+                    "provider": "Example", "model": offer_id, "type": ["free"], "productType": "api",
+                    "freeMechanism": "permanent", "freeSummary": "free", "validitySummary": "ongoing",
+                    "accessSummary": "global", "title": offer_id, "why": "x", "mechanism": "x",
+                    "validity": "x", "access": "x", "command": "x", "register": "https://example.com",
+                    "links": [["x", "https://example.com"]], "sourceUrls": ["https://example.com"],
+                    "evidence": "x", "status": "verified", "confidence": "high",
+                    "lastVerifiedAt": "2026-09-01",
+                }
+
+            data_path.write_text(json.dumps([offer("old-first", 1), offer("ranked-first", 2)]), encoding="utf-8")
+            (root / "ranked-offers.json").write_text(json.dumps({
+                "version": 1,
+                "asOf": "2026-09-22",
+                "items": [
+                    {
+                        "rank": 1, "id": "ranked-first", "rankingScore": 88.5,
+                        "components": {"freshnessScore": 100}, "penaltyScore": 0,
+                        "penalties": [], "manualBoost": 0, "pinned": False,
+                    },
+                    {
+                        "rank": 2, "id": "old-first", "rankingScore": 55.0,
+                        "components": {"freshnessScore": 20}, "penaltyScore": 0,
+                        "penalties": [], "manualBoost": 0, "pinned": False,
+                    },
+                ],
+            }), encoding="utf-8")
+            html_path.write_text(
+                '<body><div id="catalog-offer-rows"></div>'
+                '<script type="application/ld+json" id="ld-dynamic">'
+                '{"@graph":[{"itemListElement":[]}]}</script></body>',
+                encoding="utf-8",
+            )
+
+            self.assertTrue(build(data_path, html_path))
+
+            ranked = json.loads((root / "offers-ranked.json").read_text(encoding="utf-8"))
+            self.assertEqual([item["id"] for item in ranked], ["ranked-first", "old-first"])
+            self.assertEqual([item["order"] for item in ranked], [1, 2])
+            self.assertEqual(ranked[0]["sourceOrder"], 2)
+            self.assertEqual(ranked[0]["rankingScore"], 88.5)
+            self.assertEqual(ranked[0]["ranking"]["asOf"], "2026-09-22")
+
+            bundle = (root / "offers.js").read_text(encoding="utf-8")
+            self.assertLess(bundle.index('"id":"ranked-first"'), bundle.index('"id":"old-first"'))
+            rendered = html_path.read_text(encoding="utf-8")
+            self.assertIn('data-offers-url="../data/offers-ranked.json"', rendered)
+
+    def test_build_rejects_stale_ranking_artifact(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "offers.json"
+            html_path = root / "index.html"
+            offer = {
+                "id": "current", "order": 1, "date": "2026-09-01", "name": "current",
+                "provider": "Example", "model": "current", "type": ["free"], "productType": "api",
+                "freeMechanism": "permanent", "freeSummary": "free", "validitySummary": "ongoing",
+                "accessSummary": "global", "title": "current", "why": "x", "mechanism": "x",
+                "validity": "x", "access": "x", "command": "x", "register": "https://example.com",
+                "links": [["x", "https://example.com"]], "sourceUrls": ["https://example.com"],
+                "evidence": "x", "status": "verified", "confidence": "high",
+                "lastVerifiedAt": "2026-09-01",
+            }
+            data_path.write_text(json.dumps([offer]), encoding="utf-8")
+            (root / "ranked-offers.json").write_text(json.dumps({
+                "version": 1, "asOf": "2026-09-22",
+                "items": [{"rank": 1, "id": "stale", "rankingScore": 50}],
+            }), encoding="utf-8")
+            html_path.write_text("<body></body>", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "does not match offers data"):
+                build(data_path, html_path)
+
+
 if __name__ == "__main__":
     unittest.main()
