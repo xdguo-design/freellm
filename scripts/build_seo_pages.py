@@ -4485,6 +4485,7 @@ def sitemap_section_paths(
         "/terms/",
         "/privacy/",
         "/submit/",
+        "/tools/",
         guide_url(),
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
