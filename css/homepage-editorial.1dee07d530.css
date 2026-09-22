@@ -1,0 +1,95 @@
+/* Editorial re-theme (data-platform-editorial): remap the legacy Swiss-index tokens to the
+     warm-paper editorial system, then neutralize legacy gradients/weights via overrides. */
+  :root {
+    --paper: #FBFBFA;
+    --panel: #FFFFFF;
+    --ink: #2F3437;
+    --muted: #787774;
+    --line: #EAEAEA;
+    --blue: #1744E8;
+    --blue-soft: #E9EEFF;
+    --sky: #F7F6F3;
+    --navy: #2F3437;
+    --blue-bright: #1744E8;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: "Manrope", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+    --display: "Instrument Serif", "Noto Serif SC", Georgia, "Songti SC", "SimSun", serif;
+  }
+  body { background: var(--paper); font-weight: 400; }
+  /* Display type goes serif at editorial weight, with tracking suited to serif */
+  h1, h2, .brand-mark, .brand-name, .hero-count .big, .notice strong, .ide-highlight-card strong,
+  .summary-value, .provider-mark, .drawer h3, .signal-platform, .seo-grid h3, .catalog-hero h1,
+  .hero-visual-caption strong, .category-card strong, .featured-card h3, .student-item strong,
+  .offer-card-model strong, .catalog-header .brand-name, .hero-intel-head strong,
+  .hero-intel-main > div:first-child > b, .section-heading h2, .cheap-card-price,
+  .hero-count .big, .stat strong, .intel-stat strong, .log-stat-card strong {
+    font-family: var(--display);
+    font-weight: 400;
+    letter-spacing: -.015em;
+  }
+  h1 { letter-spacing: -.02em; }
+  /* Legacy gradient chrome -> flat editorial surfaces */
+  .brand-mark, .catalog-header .brand-mark { background: var(--blue); }
+  .top-nav .nav-daily-update { background: var(--ink); color: #fff; }
+  .hero-search button { background: var(--ink); color: #fff; }
+  .hero-search button:hover { background: #333; }
+  .hero-cta, .highlight-button { background: var(--ink); font-weight: 600; letter-spacing: 0; }
+  .hero-cta:hover, .highlight-button:hover { background: #333; }
+  .catalog-hero h1 span { background: none; -webkit-text-fill-color: currentColor; color: var(--blue); }
+  /* Offer cards: clamp long model lists behind an expand toggle */
+  .offer-grid .offer-card-model-list.is-clamped { max-height: 132px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%); mask-image: linear-gradient(180deg, #000 62%, transparent 100%); }
+  .offer-grid .offer.model-expanded .offer-card-model-list.is-clamped { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .offer-grid .offer-card-model { flex-wrap: wrap; }
+  .offer-models-toggle { width: 100%; justify-content: flex-start; margin-top: 8px; display: inline-flex; align-items: center; padding: 0; border: 0; background: none; color: var(--blue); font: 600 12px var(--sans); cursor: pointer; }
+  .offer-grid .offer-model-row strong { max-width: none; font: 600 13px/1.4 var(--mono); letter-spacing: 0; }
+  .offer-grid .offer-model-row small { font: 400 10.5px/1.5 var(--mono); }
+  .offer-models-toggle:hover { text-decoration: underline; }
+  .offer-models-toggle .less-label { display: none; }
+  .offer.model-expanded .offer-models-toggle .more-label { display: none; }
+  .offer.model-expanded .offer-models-toggle .less-label { display: inline; }
+  /* Cards size to their content; a body taller than the standard cap (236px, keep in
+     sync with OFFER_BODY_CLAMP in the offer script) clamps behind a More toggle. */
+  .offer-grid .offer-card-body { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 13px; }
+  .offer-grid .offer-card-body.is-clamped { max-height: 236px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%); mask-image: linear-gradient(180deg, #000 78%, transparent 100%); }
+  .offer-grid .offer.model-expanded .offer-card-body.is-clamped { max-height: none; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .offer-models-toggle[hidden] { display: none; }
+  /* When the body toggle governs, hide an inner model-list toggle that would sit below the clamp cut. */
+  .offer-grid .offer:has(.offer-card-body.is-clamped) .offer-card-model > .offer-models-toggle { display: none; }
+  @media (max-width: 700px) {
+    .offer-grid .offer { min-height: 0; }
+  }
+  /* Fullscreen density: offer cards flow into 3+ columns on wide viewports */
+  @media (min-width: 1100px) {
+    .offer-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+  }
+  @media (min-width: 1700px) {
+    .catalog-content { padding-left: 34px; padding-right: 34px; }
+  }
+  /* The catalog app scope re-declares the legacy blue-sky tokens and paints radial glows; flatten both. */
+  .app.catalog-app {
+    --navy: #2F3437;
+    --blue-bright: #1744E8;
+    --sky: #F7F6F3;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  /* Uniform 36px header row: brand / nav pills / locale / submit / avatar */
+  .top-nav a { display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 9999px; }
+  .top-nav .nav-daily-update { padding: 0 14px; }
+  .locale-toggle { height: 36px; padding: 0 11px; }
+  .header-submit { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; }
+  .header-submit { border: 1px solid #111111; border-radius: 6px; color: #FFFFFF; background: #111111; font-weight: 600; }
+  .header-submit:hover { color: #FFFFFF; background: #333333; }
+  .category-card:hover, .category-card.category-card-active, .category-card.category-cta { background: var(--blue); }
+  .ide-highlight { background: var(--blue-soft); }
+  .mini-chart i { background: var(--blue); }
+  .mini-chart i:nth-child(-n+3) { background: #B9D2F5; }
+  .cheap-card { background: var(--panel); border: 1px solid var(--line); }
+  .cheap-card.is-best { background: var(--blue-soft); }
+  .hero-intel::before, .hero-intel::after { background: var(--panel); }
+  .profile-dot { background: var(--line); }
+  .hero-search input { border: 1px solid var(--line); background: var(--panel); }
+  .hero-search input:focus { border-color: var(--ink); }
+  button { letter-spacing: 0; }
+  .top-nav a { font-weight: 500; }
+  .top-nav .nav-daily-update { font-weight: 600; }

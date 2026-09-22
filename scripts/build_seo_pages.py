@@ -3377,10 +3377,16 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
-    head = head.replace('href="../css/homepage.css"', 'href="../../css/homepage.css"')
-    head = head.replace('href="../css/homepage-editorial.css"', 'href="../../css/homepage-editorial.css"')
-    body = body.replace('src="../js/homepage.js"', 'src="../../js/homepage.js"')
-    body = body.replace('src="../js/homepage-i18n.js"', 'src="../../js/homepage-i18n.js"')
+    head = re.sub(
+        r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
+        r'href="../../css/\1"',
+        head,
+    )
+    body = re.sub(
+        r'src="../js/(homepage(?:-i18n)?(?:\.[0-9a-f]{10})?\.js)"',
+        r'src="../../js/\1"',
+        body,
+    )
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)

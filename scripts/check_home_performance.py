@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import statistics
 import subprocess
 import tarfile
@@ -55,7 +56,13 @@ class PerfHandler(SimpleHTTPRequestHandler):
         return
 
     def end_headers(self):
-        self.send_header("Cache-Control", "public, max-age=0, must-revalidate")
+        path = self.path.split("?", 1)[0]
+        if re.search(r"/(?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js)$", path):
+            self.send_header("Cache-Control", "public, max-age=31536000, immutable")
+        elif path.endswith("/data/offers.json"):
+            self.send_header("Cache-Control", "public, max-age=300, must-revalidate")
+        else:
+            self.send_header("Cache-Control", "public, max-age=0, must-revalidate")
         super().end_headers()
 
 
@@ -238,16 +245,16 @@ def remote_cache_probe() -> dict:
         local_home = (ROOT / "design" / "free-china-ai-index.html").read_bytes()
         result["homepageMatchesDev"] = hashlib.sha256(home["body"]).hexdigest() == hashlib.sha256(local_home).hexdigest()
         decoded = home["body"].decode("utf-8", errors="replace")
-        result["homepageSplitRefs"] = all(
-            needle in decoded for needle in ("homepage.css", "homepage.js")
-        )
-        for path in (
-            "css/homepage.css",
-            "css/homepage-editorial.css",
-            "js/homepage.js",
-            "js/homepage-i18n.js",
-            "data/offers.json",
-        ):
+        asset_paths = sorted(set(
+            match.group(1)
+            for match in re.finditer(
+                r'(?:href|src)="(?:\.\./|/)?((?:css|js)/homepage(?:-editorial|-i18n)?(?:\.[0-9a-f]{10})?\.(?:css|js))"',
+                decoded,
+            )
+        ))
+        result["homepageSplitRefs"] = bool(asset_paths)
+        result["fingerprintedAssetRefs"] = [path for path in asset_paths if re.search(r"\.[0-9a-f]{10}\.", path)]
+        for path in (*asset_paths, "data/offers.json"):
             url = PUBLIC_URL.rstrip("/") + "/" + path
             first = fetch_remote(url)
             headers = first["headers"]
@@ -274,9 +281,31 @@ def main() -> int:
     current_html = current_path.read_text(encoding="utf-8")
     if current_size > 100_000:
         raise SystemExit(f"homepage HTML budget exceeded: {current_size} bytes")
-    for ref in ("../css/homepage.css", "../js/homepage.js"):
-        if ref not in current_html:
-            raise SystemExit(f"split homepage reference missing: {ref}")
+    fingerprint_refs = re.findall(
+        r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
+        current_html,
+    )
+    if len(fingerprint_refs) != 4:
+        raise SystemExit(f"expected four fingerprinted homepage assets, found {fingerprint_refs}")
+
+    vercel_config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+    cache_headers = {
+        item["source"]: next(
+            (header["value"] for header in item.get("headers", []) if header.get("key", "").lower() == "cache-control"),
+            None,
+        )
+        for item in vercel_config.get("headers", [])
+    }
+    for source in (
+        "/css/homepage.:hash.css",
+        "/css/homepage-editorial.:hash.css",
+        "/js/homepage.:hash.js",
+        "/js/homepage-i18n.:hash.js",
+    ):
+        if cache_headers.get(source) != "public, max-age=31536000, immutable":
+            raise SystemExit(f"immutable cache rule missing for {source}")
+    if cache_headers.get("/data/offers.json") != "public, max-age=300, must-revalidate":
+        raise SystemExit("offers.json short cache rule missing")
 
     with tempfile.TemporaryDirectory() as directory:
         temp = Path(directory)
@@ -342,6 +371,11 @@ def main() -> int:
             "homepageJsBytes": (ROOT / "js" / "homepage.js").stat().st_size,
             "homepageI18nJsBytes": (ROOT / "js" / "homepage-i18n.js").stat().st_size,
             "offersJsonBytes": (ROOT / "data" / "offers.json").stat().st_size,
+            "fingerprintedAssets": fingerprint_refs,
+        },
+        "cachePolicy": {
+            "immutableSeconds": 31536000,
+            "offersMaxAgeSeconds": 300,
         },
         "baseline": baseline,
         "current": current,

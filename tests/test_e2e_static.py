@@ -78,10 +78,13 @@ class StaticContractTests(unittest.TestCase):
             "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.runtime_source)
-        self.assertIn('../css/homepage.css', self.html)
-        self.assertIn('../css/homepage-editorial.css', self.html)
-        self.assertIn('../js/homepage.js', self.html)
-        self.assertIn('../js/homepage-i18n.js', self.html)
+        for pattern in (
+            r'\.\./css/homepage\.[0-9a-f]{10}\.css',
+            r'\.\./css/homepage-editorial\.[0-9a-f]{10}\.css',
+            r'\.\./js/homepage\.[0-9a-f]{10}\.js',
+            r'\.\./js/homepage-i18n\.[0-9a-f]{10}\.js',
+        ):
+            self.assertRegex(self.document_html, pattern)
         offer_ids = {item["id"] for item in bundled_offer_data()}
         self.assertTrue({"doubao", "aliyun-qwen-free-quota", "agnes-ai-free", "stepfun-limited-time-free", "longcat-2-0"} <= offer_ids)
         self.assertNotIn("longcat-api", offer_ids)
@@ -787,12 +790,14 @@ class BrowserPageTests(unittest.TestCase):
             (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             js = Path(directory) / "js"
             js.mkdir()
-            for name in ("freellm-sync.js", "homepage.js", "homepage-i18n.js"):
-                (js / name).write_text((ROOT / "js" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "js").glob("homepage*.js"):
+                (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
-            for name in ("freellm-pastel-ui.css", "homepage.css", "homepage-editorial.css"):
-                (css / name).write_text((ROOT / "css" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("homepage*.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
@@ -816,12 +821,14 @@ class BrowserPageTests(unittest.TestCase):
             (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             js = Path(directory) / "js"
             js.mkdir()
-            for name in ("freellm-sync.js", "homepage.js", "homepage-i18n.js"):
-                (js / name).write_text((ROOT / "js" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "js").glob("homepage*.js"):
+                (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
-            for name in ("freellm-pastel-ui.css", "homepage.css", "homepage-editorial.css"):
-                (css / name).write_text((ROOT / "css" / name).read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("homepage*.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()

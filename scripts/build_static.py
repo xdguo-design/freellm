@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import html as html_lib
+import hashlib
 import json
 import re
 import sys
@@ -347,6 +348,67 @@ def update_static_item_list(html: str, data: list[dict]) -> str:
     return html[:content_start] + replacement + html[end:]
 
 
+HOME_ASSET_SOURCES = (
+    "css/homepage.css",
+    "css/homepage-editorial.css",
+    "js/homepage.js",
+    "js/homepage-i18n.js",
+)
+
+
+def _git_blob_fingerprint(data: bytes) -> str:
+    header = f"blob {len(data)}\0".encode("ascii")
+    return hashlib.sha1(header + data).hexdigest()[:10]
+
+
+def _home_asset_manifest(html_path: Path) -> dict[str, tuple[Path, Path, str]]:
+    if html_path.parent.name != "design":
+        return {}
+    root = html_path.resolve().parents[1]
+    manifest: dict[str, tuple[Path, Path, str]] = {}
+    for relative in HOME_ASSET_SOURCES:
+        source = root / relative
+        if not source.is_file():
+            return {}
+        data = source.read_bytes()
+        fingerprint = _git_blob_fingerprint(data)
+        target = source.with_name(f"{source.stem}.{fingerprint}{source.suffix}")
+        web_ref = "../" + target.relative_to(root).as_posix()
+        manifest[relative] = (source, target, web_ref)
+    return manifest
+
+
+def update_home_asset_references(html: str, html_path: Path) -> tuple[str, dict[str, tuple[Path, Path, str]]]:
+    manifest = _home_asset_manifest(html_path)
+    updated = html
+    for relative, (_source, _target, web_ref) in manifest.items():
+        path = Path(relative)
+        prefix = "../" + path.parent.as_posix() + "/"
+        pattern = re.escape(prefix + path.stem) + r"(?:\.[0-9a-f]{10})?" + re.escape(path.suffix)
+        updated = re.sub(pattern, web_ref, updated)
+    return updated, manifest
+
+
+def sync_home_asset_fingerprints(manifest: dict[str, tuple[Path, Path, str]], check: bool) -> bool:
+    ok = True
+    for _relative, (source, target, _web_ref) in manifest.items():
+        expected = source.read_bytes()
+        if check:
+            if not target.is_file() or target.read_bytes() != expected:
+                print(f"stale: {target} is missing or does not match {source}")
+                ok = False
+            continue
+
+        target.write_bytes(expected)
+        fingerprinted = re.compile(
+            rf"^{re.escape(source.stem)}\.[0-9a-f]{{10}}{re.escape(source.suffix)}$"
+        )
+        for candidate in source.parent.iterdir():
+            if candidate != target and candidate.is_file() and fingerprinted.fullmatch(candidate.name):
+                candidate.unlink()
+    return ok
+
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -366,6 +428,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_static_item_list(updated, data)
     updated = update_daily_log_summary(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
+    updated, asset_manifest = update_home_asset_references(updated, html_path)
 
     bundle_path = data_path.with_suffix(".js")
     bundle = "window.FREELLM_OFFERS = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n"
@@ -378,11 +441,14 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
         if not bundle_path.exists() or bundle_path.read_text(encoding="utf-8") != bundle:
             print(f"stale: {bundle_path} does not contain the current offers bundle")
             ok = False
+        if not sync_home_asset_fingerprints(asset_manifest, check=True):
+            ok = False
         if ok:
             print(f"current: {html_path}")
             print(f"current: {bundle_path}")
         return ok
 
+    sync_home_asset_fingerprints(asset_manifest, check=False)
     html_path.write_text(updated, encoding="utf-8")
     bundle_path.write_text(bundle, encoding="utf-8")
     print(f"built: {html_path} and {bundle_path} from {data_path} ({len(data)} offers)")
