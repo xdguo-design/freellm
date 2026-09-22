@@ -6,7 +6,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://integrate.api.nvidia.com/v1/models",
-    "allowedDomains": ["integrate.api.nvidia.com"],
+    "allowedDomains": [
+      "integrate.api.nvidia.com"
+    ],
     "modelPageTemplate": "https://build.nvidia.com/{id}",
     "maxBytes": 200000,
     "enabled": true,
@@ -19,7 +21,9 @@
     "kind": "public_api",
     "type": "openrouter_models",
     "url": "https://openrouter.ai/api/v1/models",
-    "allowedDomains": ["openrouter.ai"],
+    "allowedDomains": [
+      "openrouter.ai"
+    ],
     "modelPageTemplate": "https://openrouter.ai/{id}",
     "freeOnly": true,
     "maxBytes": 2000000,
@@ -33,7 +37,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.llm7.io/v1/models",
-    "allowedDomains": ["api.llm7.io"],
+    "allowedDomains": [
+      "api.llm7.io"
+    ],
     "modelPageTemplate": "https://llm7.io/models",
     "maxBytes": 300000,
     "enabled": true,
@@ -46,7 +52,9 @@
     "kind": "official",
     "type": "ollama_tags",
     "url": "https://ollama.com/api/tags",
-    "allowedDomains": ["ollama.com"],
+    "allowedDomains": [
+      "ollama.com"
+    ],
     "modelPageTemplate": "https://ollama.com/library/{name}",
     "maxBytes": 200000,
     "enabled": true,
@@ -59,7 +67,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://llm.chutes.ai/v1/models",
-    "allowedDomains": ["llm.chutes.ai"],
+    "allowedDomains": [
+      "llm.chutes.ai"
+    ],
     "modelPageTemplate": "https://chutes.ai/app",
     "maxBytes": 200000,
     "enabled": true,
@@ -72,7 +82,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://modelscope.cn/api/v1/models?PageSize=100&PageNumber=1",
-    "allowedDomains": ["modelscope.cn"],
+    "allowedDomains": [
+      "modelscope.cn"
+    ],
     "modelPageTemplate": "https://modelscope.cn/models/{id}",
     "maxBytes": 500000,
     "enabled": false,
@@ -85,7 +97,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/models/search",
-    "allowedDomains": ["api.cloudflare.com"],
+    "allowedDomains": [
+      "api.cloudflare.com"
+    ],
     "modelPageTemplate": "https://developers.cloudflare.com/workers-ai/models/",
     "maxBytes": 500000,
     "enabled": false,
@@ -98,7 +112,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://generativelanguage.googleapis.com/v1beta/models",
-    "allowedDomains": ["generativelanguage.googleapis.com"],
+    "allowedDomains": [
+      "generativelanguage.googleapis.com"
+    ],
     "modelPageTemplate": "https://ai.google.dev/gemini-api/docs/models",
     "maxBytes": 500000,
     "enabled": false,
@@ -111,7 +127,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.cohere.com/v1/models",
-    "allowedDomains": ["api.cohere.com"],
+    "allowedDomains": [
+      "api.cohere.com"
+    ],
     "modelPageTemplate": "https://docs.cohere.com/docs/models",
     "maxBytes": 200000,
     "enabled": false,
@@ -124,7 +142,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.groq.com/openai/v1/models",
-    "allowedDomains": ["api.groq.com"],
+    "allowedDomains": [
+      "api.groq.com"
+    ],
     "modelPageTemplate": "https://console.groq.com/docs/models",
     "maxBytes": 200000,
     "enabled": false,
@@ -137,7 +157,9 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.deepinfra.com/v1/openai/models",
-    "allowedDomains": ["api.deepinfra.com"],
+    "allowedDomains": [
+      "api.deepinfra.com"
+    ],
     "modelPageTemplate": "https://deepinfra.com/models",
     "maxBytes": 500000,
     "enabled": false,
@@ -150,10 +172,27 @@
     "kind": "official",
     "type": "openai_models",
     "url": "https://api.featherless.ai/v1/models",
-    "allowedDomains": ["api.featherless.ai"],
+    "allowedDomains": [
+      "api.featherless.ai"
+    ],
     "modelPageTemplate": "https://featherless.ai/models",
     "maxBytes": 8000000,
     "enabled": false,
     "disabledReason": "Reachable (HTTP 200 on 2026-09-17) but excluded for the same reason as DeepInfra: a paid catalogue with no free tier and no pricing field to filter on. It also returns 21,961 rows and 7 MB, which would swamp a directory of free offers."
+  },
+  {
+    "id": "amd-radeon-cloud-models",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "kind": "official",
+    "type": "openai_models",
+    "url": "https://developer.amd.com.cn/radeon/api/v1/models",
+    "allowedDomains": [
+      "developer.amd.com.cn"
+    ],
+    "modelPageTemplate": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "maxBytes": 200000,
+    "enabled": false,
+    "disabledReason": "AMD's official GET /v1/models endpoint requires a Radeon Cloud API key. The current six public-free chat models are retained in data/models-curated.json from AMD's official model overview; enable this source when CI has authorized credentials."
   }
 ]
