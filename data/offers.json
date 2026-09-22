@@ -5576,5 +5576,211 @@
         }
       ]
     }
+  },
+  {
+    "id": "amd-radeon-cloud-free",
+    "order": 48,
+    "date": "2026-09-22",
+    "lastVerifiedAt": "2026-09-22",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check each served model license and AMD Radeon Cloud terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "AMD Radeon Cloud Token Factory",
+    "providerMark": "AMD",
+    "provider": "AMD Radeon Cloud",
+    "providerMeta": "AMD Radeon Cloud · Token Factory · China",
+    "providerMetaEn": "AMD Radeon Cloud · Token Factory · China",
+    "model": "DeepSeek V4 / V4.1 · Qwen3.8 · MiniCPM5",
+    "modelMeta": "Public Free Model APIs · OpenAI + Anthropic compatible",
+    "freeModels": [
+      {
+        "model": "DeepSeek-V4-Flash",
+        "label": "Text · reasoning",
+        "contextWindow": "1,048,576 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "API model ID is DeepSeek-V4-Flash; AMD documents the served weights as DeepSeek-V4-Flash-0731.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-Vision-Exp",
+        "label": "Vision · experimental",
+        "contextWindow": "1,048,576 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "Multimodal shared endpoint for text and image input.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      },
+      {
+        "model": "DeepSeek-V4.1-Flash",
+        "label": "Vision · reasoning",
+        "contextWindow": "1,048,576 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "Current AMD shared public model listed in the official model overview.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      },
+      {
+        "model": "Qwen3.8-Flash-Next",
+        "label": "Vision · reasoning · experimental",
+        "contextWindow": "262,144 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "Experimental multimodal Qwen endpoint in the current public-free catalog.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      },
+      {
+        "model": "Qwen3.8-27B",
+        "label": "Vision · reasoning",
+        "contextWindow": "131,072 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "Current Qwen 3.8 27B public-free endpoint.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      },
+      {
+        "model": "MiniCPM5-2B",
+        "label": "Text · lightweight",
+        "contextWindow": "131,072 tokens",
+        "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+        "note": "MiniCPM5-1B is no longer published; AMD directs this size class to MiniCPM5-2B.",
+        "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      }
+    ],
+    "type": [
+      "api",
+      "free"
+    ],
+    "usageGuide": {
+      "summary": "登录 Radeon Cloud Token Factory 获取 rc- API Key，调用 AMD 的共享免费模型 API",
+      "prerequisites": [
+        "AMD Radeon Cloud account",
+        "Account verification completed",
+        "rc- API key from Token Factory"
+      ],
+      "steps": [
+        "打开 Token Factory 并登录 Radeon Cloud 账号，完成平台账户验证。",
+        "在 Token Factory 获取 rc- 前缀 API Key；同一个 Key 可访问当前共享免费模型。",
+        "先请求 GET https://developer.amd.com.cn/radeon/api/v1/models，确认当前 free=true 的模型与实际 model ID。",
+        "按 OpenAI 兼容的 /chat/completions 或 Anthropic 兼容的 /messages 发送请求，并遵守共享限流和滚动 spend cap。"
+      ],
+      "endpoint": "https://developer.amd.com.cn/radeon/api/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Radeon Cloud API key via Authorization: Bearer; Anthropic Messages also accepts x-api-key",
+      "examples": {
+        "curl": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
+    },
+    "kicker": "PUBLIC FREE MODEL APIS",
+    "badges": [
+      "FREE SHARED API",
+      "UP TO 1M CONTEXT",
+      "OPENAI + ANTHROPIC"
+    ],
+    "freeSummary": "6 个当前共享聊天模型 · 无需创建实例 · 不消耗 credits · 最高 1,048,576 tokens 上下文",
+    "freeSummaryEn": "6 current shared chat models · no instance · no credits · up to 1,048,576-token context",
+    "validitySummary": "Always-on shared tier; AMD may add or retire models at any time",
+    "accessSummary": "Radeon Cloud account verification + rc- API key; shared rate limits apply",
+    "checkedSummary": "2026-09-22 / AMD Radeon Cloud official docs",
+    "title": "AMD Radeon Cloud · Token Factory 免费模型 API",
+    "titleEn": "AMD Radeon Cloud · Token Factory free model APIs",
+    "why": "AMD Radeon Cloud 官方文档将 Public Free Model APIs 定义为常驻共享端点：无需创建 Dedicated 实例、不消耗 credits；一个 Token Factory API Key 可访问当前共享模型目录。官方模型概览当前列出 6 个聊天模型，最高 1,048,576 tokens 上下文。",
+    "mechanism": "Always-on shared public model endpoints at zero cost; AMD controls the live catalog and applies rate-limit plus rolling spend-cap gates",
+    "validity": "Ongoing shared free tier; model availability and limits can change, so GET /v1/models remains the runtime source of truth",
+    "access": "China-facing Radeon Cloud developer console; platform account verification and rc- API key required; no dedicated instance required",
+    "command": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://developer.amd.com.cn/radeon/tokenfactory",
+    "registerLabel": "AMD Radeon Cloud Token Factory",
+    "registerLabelEn": "Open AMD Radeon Cloud Token Factory",
+    "links": [
+      [
+        "Token Factory",
+        "https://developer.amd.com.cn/radeon/tokenfactory"
+      ],
+      [
+        "Public Free Model APIs",
+        "https://amd-aim.github.io/radeon-cloud-docs/api/overview/"
+      ],
+      [
+        "Current model overview",
+        "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+      ],
+      [
+        "Authentication",
+        "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/"
+      ],
+      [
+        "Rate limits",
+        "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+      ],
+      [
+        "Model API quickstart",
+        "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
+      ]
+    ],
+    "originCountry": "United States",
+    "availability": "China-facing Radeon Cloud developer platform; account verification and network availability may vary by user",
+    "freeMechanism": "permanent",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "free_models",
+      "amount": 6,
+      "unit": "models",
+      "period": "ongoing"
+    },
+    "quota": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "renewal": "Per-minute windows reset automatically; the account spend-cap period is rolling from the first billed request rather than a fixed midnight reset",
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://developer.amd.com.cn/radeon/tokenfactory",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/",
+      "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
+    ],
+    "evidence": "AMD Radeon Cloud 官方文档确认 Public Free Model APIs 为 always-on 共享端点，免费使用且不消耗 credits。官方模型概览（2026-09-15 更新）当前列出 6 个聊天模型，并明确 MiniCPM5-1B 已停止发布。官方限流文档给出典型值：每 Key 30 RPM、每 IP 120 RPM、每 Key 并发 8，并另有账户级网关限流和滚动 spend cap。",
+    "confidence": "high",
+    "notes": "目录为动态列表，应以 GET /v1/models 的 free 字段为准。早期第三方文章中的 MiniCPM5-1B 已被 AMD 官方模型概览明确标记为不再发布；当前同尺寸入口为 MiniCPM5-2B。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-22",
+      "actualUsageVerified": false,
+      "task": "核对 AMD Token Factory 免费共享端点、当前模型目录、鉴权方式、双协议兼容与限流规则。",
+      "method": [
+        "读取 AMD Radeon Cloud 官方 API 概览、模型目录、模型参考、鉴权和限流文档。",
+        "交叉核对 Token Factory 官方入口与官方请求示例，确认 Base URL 和模型 ID。"
+      ],
+      "result": "官方资料确认 Public Free Model APIs 常驻、零 credits，并列出 6 个当前聊天模型；本次未使用真实 Radeon Cloud API Key 发起模型生成请求。",
+      "limitations": "当前会话没有可用的 Radeon Cloud 登录态或 rc- API Key，因此未验证账户内 Key 展示、实际生成响应和该账户实时 spend-cap 数值。",
+      "evidence": [
+        {
+          "label": "AMD Radeon Cloud API overview",
+          "url": "https://amd-aim.github.io/radeon-cloud-docs/api/overview/"
+        },
+        {
+          "label": "AMD Radeon Cloud model overview",
+          "url": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/"
+        },
+        {
+          "label": "AMD Radeon Cloud rate limits",
+          "url": "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+        },
+        {
+          "label": "AMD Radeon Cloud authentication",
+          "url": "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/"
+        }
+      ]
+    }
   }
 ]
