@@ -1,0 +1,53 @@
+name: stepfun-branch-build
+
+on:
+  push:
+    branches:
+      - feat/stepfun-step-plan-promo
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ !contains(github.event.head_commit.message, '[skip-build]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/stepfun-step-plan-promo
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate ranking and static pages
+        run: |
+          node scripts/generate_ranking.ts
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+
+      - name: Validate generated output
+        run: |
+          node --test tests/ranking.test.ts
+          node scripts/generate_ranking.ts --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+          python -m unittest tests.test_build_static tests.test_site_health -v
+
+      - name: Commit generated artifacts
+        run: |
+          if git diff --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build(data): generate StepFun promotion pages [skip-build]"
+          git push origin HEAD:feat/stepfun-step-plan-promo
