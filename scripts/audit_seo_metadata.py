@@ -10,6 +10,7 @@ import html
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urljoin, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP_PREFIXES = (
@@ -25,10 +26,21 @@ DESC_MIN = 70
 DESC_MAX = 170
 LOW_TEXT_MIN = 300
 LARGE_IMAGE_BYTES = 200_000
+SITE_HOST = "freellm.top"
+LINK_LIST_RE = re.compile(
+    r'<ul\b[^>]*class=["\'][^"\']*\blink-list\b[^"\']*["\'][^>]*>([\s\S]*?)</ul>',
+    re.IGNORECASE,
+)
+ANCHOR_RE = re.compile(
+    r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>([\s\S]*?)</a>',
+    re.IGNORECASE,
+)
+H2_RE = re.compile(r"<h2\b[^>]*>([\s\S]*?)</h2>", re.IGNORECASE)
 
 
-def _rel(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
+
+def _rel(path: Path, root: Path = ROOT) -> str:
+    return path.relative_to(root).as_posix()
 
 
 def _attr(page: str, name: str) -> str:
@@ -50,6 +62,60 @@ def _visible_text(page: str) -> str:
     page = re.sub(r"<style\b[\s\S]*?</style>", " ", page, flags=re.I)
     page = re.sub(r"<[^>]+>", " ", page)
     return re.sub(r"\s+", " ", html.unescape(page)).strip()
+
+
+def _public_path(relative: str) -> str:
+    if relative == "design/free-china-ai-index.html":
+        return "/"
+    if relative.endswith("/index.html"):
+        return "/" + relative[: -len("index.html")]
+    return "/" + relative.lstrip("/")
+
+
+def _normalize_internal_href(current_path: str, href: str) -> str | None:
+    value = html.unescape(href).strip()
+    if not value or value.startswith(("mailto:", "tel:", "javascript:")):
+        return None
+    absolute = urljoin(f"https://{SITE_HOST}{current_path}", value)
+    parsed = urlparse(absolute)
+    if parsed.netloc and parsed.netloc != SITE_HOST:
+        return None
+    path = parsed.path or "/"
+    if path.endswith("/index.html"):
+        path = path[: -len("index.html")]
+    return path
+
+
+def _related_link_issues(page: str, relative: str) -> dict[str, list[tuple[str, str]]]:
+    issues: dict[str, list[tuple[str, str]]] = {
+        "related_self_link": [],
+        "related_duplicate_link": [],
+        "related_duplicate_anchor": [],
+    }
+    current_path = _public_path(relative)
+    for list_index, block in enumerate(LINK_LIST_RE.findall(page), start=1):
+        seen_hrefs: set[str] = set()
+        seen_labels: set[str] = set()
+        for href, label_html in ANCHOR_RE.findall(block):
+            normalized = _normalize_internal_href(current_path, href)
+            label = _visible_text(label_html).casefold()
+            if normalized == current_path:
+                issues["related_self_link"].append(
+                    (relative, f"link-list {list_index}: {href}")
+                )
+            if normalized:
+                if normalized in seen_hrefs:
+                    issues["related_duplicate_link"].append(
+                        (relative, f"link-list {list_index}: {href}")
+                    )
+                seen_hrefs.add(normalized)
+            if label:
+                if label in seen_labels:
+                    issues["related_duplicate_anchor"].append(
+                        (relative, f"link-list {list_index}: {_visible_text(label_html)}")
+                    )
+                seen_labels.add(label)
+    return issues
 
 
 def _local_image_refs(page: str) -> set[str]:
@@ -81,12 +147,20 @@ def main() -> int:
         "description_short": [],
         "description_long": [],
         "low_word_count": [],
+        "empty_h2": [],
+        "duplicate_title": [],
+        "duplicate_description": [],
+        "related_self_link": [],
+        "related_duplicate_link": [],
+        "related_duplicate_anchor": [],
         "meta_refresh": [],
     }
     noindex: list[str] = []
     image_refs: set[str] = set()
     image_referrers: dict[str, set[str]] = {}
     page_cache: dict[str, str] = {}
+    title_pages: dict[str, list[str]] = {}
+    description_pages: dict[str, list[str]] = {}
 
     for path in pages:
         rel = _rel(path)
@@ -115,12 +189,29 @@ def main() -> int:
             visible = _visible_text(page)
             if len(visible) < LOW_TEXT_MIN:
                 issues["low_word_count"].append((rel, len(visible)))
+            if title:
+                title_pages.setdefault(title, []).append(rel)
+            if desc:
+                description_pages.setdefault(desc, []).append(rel)
+            for heading in H2_RE.findall(page):
+                if not _visible_text(heading):
+                    issues["empty_h2"].append((rel, "empty <h2>"))
+            related_issues = _related_link_issues(page, rel)
+            for name, rows in related_issues.items():
+                issues[name].extend(rows)
         if re.search(r'<meta\s+http-equiv=["\']refresh["\']', page, re.I):
             issues["meta_refresh"].append((rel, "refresh"))
         refs = _local_image_refs(page)
         image_refs |= refs
         for ref in refs:
             image_referrers.setdefault(ref, set()).add(rel)
+
+    for title, rels in title_pages.items():
+        if len(rels) > 1:
+            issues["duplicate_title"].append((" | ".join(sorted(rels)), title))
+    for description, rels in description_pages.items():
+        if len(rels) > 1:
+            issues["duplicate_description"].append((" | ".join(sorted(rels)), description))
 
     large_images = []
     for ref in sorted(image_refs):
