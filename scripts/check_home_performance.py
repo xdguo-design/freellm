@@ -180,7 +180,8 @@ def measure_once(browser, site: LocalSite) -> dict:
     page.wait_for_timeout(800)
     cold = read_metrics(page)
 
-    page.reload(wait_until="domcontentloaded", timeout=45_000)
+    page.goto("about:blank")
+    page.goto(site.url, wait_until="domcontentloaded", timeout=45_000)
     page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=20_000)
     page.wait_for_timeout(800)
     warm = read_metrics(page)
@@ -391,6 +392,16 @@ def main() -> int:
         raise SystemExit("cold mobile FCP regressed by more than 35%")
     if current["cold"]["lcp"] > baseline["cold"]["lcp"] * 1.35:
         raise SystemExit("cold mobile LCP regressed by more than 35%")
+
+    warm_assets = {item["name"]: item for item in current["warm"]["important"]}
+    uncached_fingerprints = [
+        name
+        for name, item in warm_assets.items()
+        if re.search(r"/(?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js)$", name)
+        and item["transferSize"] != 0
+    ]
+    if uncached_fingerprints:
+        raise SystemExit(f"fingerprinted assets missed browser cache on repeat navigation: {uncached_fingerprints}")
     return 0
 
 
