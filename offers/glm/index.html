@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -279,9 +279,9 @@ pre code { padding:0; background:none; color:inherit; }
     </section>
 <section class="quick-start">
       <h2><span lang="zh-CN">快速上手</span><span lang="en">Quick start</span></h2>
-      <p class="muted"><span lang="zh-CN">注册 → 拿 Key → 调用模型，三步放在最前面；免费条件仍以官方页面实时状态为准。</span><span lang="en">Register, get your API key, then call the model; free terms still follow the provider&#x27;s live official policy.</span></p>
-      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">注册账号</span><span lang="en">Sign up</span></h3><p class="qs-desc"><span lang="zh-CN">打开官方平台完成注册；部分平台需要手机号或邮箱验证。</span><span lang="en">Create an account on the official platform; phone or email verification may apply.</span></p><a class="qs-link" href="https://open.bigmodel.cn/glm-coding?plantype=team" target="_blank" rel="noopener noreferrer">Register / open GLM Coding ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">获取 API Key</span><span lang="en">Get API key</span></h3><p class="qs-desc"><span lang="zh-CN">在控制台的 API Keys 页面创建密钥并妥善保存。</span><span lang="en">Create a key on the console&#x27;s API keys page and store it safely.</span></p><a class="qs-link" href="https://docs.bigmodel.cn/cn/coding-plan/faq" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">查看文档 / 控制台</span><span lang="en">Docs / console</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">调用模型</span><span lang="en">Call model</span></h3><p class="qs-desc"><span lang="zh-CN">把命令中的环境变量换成你的 Key，即可发送第一条请求。</span><span lang="en">Swap in your key via the environment variable and send the first request.</span></p><div class="qs-code"><div class="operation-command-head"><span><span lang="zh-CN">可复制命令</span><span lang="en">Copyable command</span></span><button type="button" class="copy-command" data-copy-target="qs-command-1"><span lang="zh-CN">复制命令</span><span lang="en">Copy command</span></button></div><pre id="qs-command-1"><code>Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.</code></pre></div></div></div>
-      <script>(() => { document.querySelectorAll('.quick-start .copy-command').forEach(button => button.addEventListener('click', async () => { const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = "已复制"; setTimeout(() => button.textContent = "复制命令", 1400); })); })();</script>
+      <p class="muted"><span lang="zh-CN">先确认优惠性质和续费条件，再按官方文档把 Coding Plan 接入支持工具。</span><span lang="en">Confirm whether the offer is recurring, trial or promotional, then enable the coding plan in a supported tool using the official setup.</span></p>
+      <div class="qs-grid"><div class="qs-step"><span class="qs-num">1</span><h3><span lang="zh-CN">打开计划页</span><span lang="en">Open the plan</span></h3><p class="qs-desc"><span lang="zh-CN">先确认这是长期免费、试用还是首月优惠。</span><span lang="en">First confirm whether this is recurring free access, a trial or a first-month promotion.</span></p><a class="qs-link" href="https://open.bigmodel.cn/glm-coding?plantype=team" target="_blank" rel="noopener noreferrer">Register / open GLM Coding ↗</a></div><div class="qs-step"><span class="qs-num">2</span><h3><span lang="zh-CN">登录并核对额度</span><span lang="en">Sign in and check quota</span></h3><p class="qs-desc"><span lang="zh-CN">查看实时价格、续费条件、额度窗口和支持的工具。</span><span lang="en">Check live pricing, renewal terms, quota windows and supported tools.</span></p><a class="qs-link" href="https://docs.bigmodel.cn/cn/coding-plan/faq" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">核对价格、额度与支持工具</span><span lang="en">Check price, quota and supported tools</span> ↗</a></div><div class="qs-step qs-step-wide"><span class="qs-num">3</span><h3><span lang="zh-CN">在支持工具中启用</span><span lang="en">Enable in a supported tool</span></h3><p class="qs-desc"><span lang="zh-CN">按提供商自己的接入说明完成配置。</span><span lang="en">Use the provider&#x27;s own setup instructions to finish configuration.</span></p><p class="muted">打开 https://docs.bigmodel.cn/cn/coding-plan/quick-start 并按官方步骤配置</p></div></div>
+      
     </section>
 
 

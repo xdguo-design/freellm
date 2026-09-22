@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="fl-pastel-ui">
+<html lang="zh-CN" data-locale="zh-CN" class="fl-pastel-ui">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
           crossorigin="anonymous"></script>
   <style id="static-locale-style">
-    html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
     .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
     .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
   </style>
@@ -186,6 +186,13 @@ pre code { padding:0; background:none; color:inherit; }
     body { max-width: 1120px; }
     h1 { max-width: 900px; margin: 22px 0 10px; font-size: clamp(34px, 6vw, 58px); }
     section + section { padding-top: 28px; border-top: 1px solid var(--line); }
+    .decision-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px; }
+    .decision-card { padding:18px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+    .decision-card h3 { margin:0 0 8px; font-size:18px; }
+    .decision-card p { margin:0 0 10px; color:var(--ink-secondary); }
+    .decision-links { margin:0; padding-left:1.1rem; }
+    .decision-links li { margin:6px 0; }
+    @media (max-width:720px) { .decision-grid { grid-template-columns:1fr; } }
     footer { color: var(--ink-secondary); font-size: 13px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c"></head>
@@ -199,8 +206,14 @@ pre code { padding:0; background:none; color:inherit; }
     <div class="callout"><span lang="zh-CN">数据来自本站已核验记录和模型目录；免费额度、地区、上下文上限和官方政策可能变化。</span><span lang="en">Rows come from verified FreeLLM records and the model directory; free terms, regions, context limits and provider policies can change.</span></div>
   </header>
   <main>
+    <section class="decision-section">
+      <div class="eyebrow">01 / 30-second decision</div>
+      <h2><span lang="zh-CN">30 秒怎么选</span><span lang="en">Choose in 30 seconds</span></h2>
+      <p><span lang="zh-CN">先分清 IDE 免费计划和 Coding Plan 促销，再按账号地区选择。</span><span lang="en">Separate recurring IDE plans from promotional coding plans first, then choose by account region.</span></p>
+      <div class="decision-grid"><article class="decision-card"><h3><span lang="zh-CN">长期 / 周期免费 IDE</span><span lang="en">Recurring free IDE plans</span></h3><p><span lang="zh-CN">适合日常编码；额度可能按日、周或月恢复。</span><span lang="en">Good for day-to-day coding when the allowance renews daily, weekly or monthly.</span></p><ul class="decision-links"><li><a href="/offers/codebuddy/"><span lang="zh-CN">CodeBuddy · Personal trial</span><span lang="en">CodeBuddy · Personal trial</span></a></li><li><a href="/offers/trae/"><span lang="zh-CN">TraeCode CN · Personal plan</span><span lang="en">TraeCode CN · Personal plan</span></a></li><li><a href="/offers/comate/"><span lang="zh-CN">Baidu Comate · Auto-Free mode</span><span lang="en">Baidu Comate · Auto-Free mode</span></a></li><li><a href="/offers/github-copilot-free/"><span lang="zh-CN">GitHub Copilot · Free plan</span><span lang="en">GitHub Copilot · Free plan</span></a></li><li><a href="/offers/cursor-hobby/"><span lang="zh-CN">Cursor · Hobby free plan</span><span lang="en">Cursor · Hobby free plan</span></a></li><li class="muted"><span lang="zh-CN">另有 4 条记录见下方完整表格。</span><span lang="en">4 more records are listed in the full table below.</span></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">试用与首月优惠</span><span lang="en">Trials and first-month promotions</span></h3><p><span lang="zh-CN">先看有效期和续费价格，避免把促销当成永久免费。</span><span lang="en">Check expiry and renewal pricing so a promotion is not mistaken for permanent free access.</span></p><ul class="decision-links"><li><a href="/offers/qoder/"><span lang="zh-CN">Qoder · Experience plan</span><span lang="en">Qoder · Experience plan</span></a></li><li><a href="/offers/doubao/"><span lang="zh-CN">Doubao Seed Code · Coding Plan Lite</span><span lang="en">Doubao Seed Code · Coding Plan Lite</span></a></li><li><a href="/offers/glm/"><span lang="zh-CN">GLM Coding Plan</span><span lang="en">GLM Coding Plan</span></a></li><li><a href="/offers/opencode-zen-free/"><span lang="zh-CN">OpenCode Zen · free model pool</span><span lang="en">OpenCode Zen · free model pool</span></a></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">国内账号工具</span><span lang="en">China-account tools</span></h3><p><span lang="zh-CN">优先查看国内注册、定价和可用模式。</span><span lang="en">Focus on the China signup flow, pricing and available modes.</span></p><ul class="decision-links"><li><a href="/offers/codebuddy/"><span lang="zh-CN">CodeBuddy · Personal trial</span><span lang="en">CodeBuddy · Personal trial</span></a></li><li><a href="/offers/qoder/"><span lang="zh-CN">Qoder · Experience plan</span><span lang="en">Qoder · Experience plan</span></a></li><li><a href="/offers/trae/"><span lang="zh-CN">TraeCode CN · Personal plan</span><span lang="en">TraeCode CN · Personal plan</span></a></li><li><a href="/offers/comate/"><span lang="zh-CN">Baidu Comate · Auto-Free mode</span><span lang="en">Baidu Comate · Auto-Free mode</span></a></li><li><a href="/offers/doubao/"><span lang="zh-CN">Doubao Seed Code · Coding Plan Lite</span><span lang="en">Doubao Seed Code · Coding Plan Lite</span></a></li><li class="muted"><span lang="zh-CN">另有 4 条记录见下方完整表格。</span><span lang="en">4 more records are listed in the full table below.</span></li></ul></article><article class="decision-card"><h3><span lang="zh-CN">国际账号工具</span><span lang="en">International-account tools</span></h3><p><span lang="zh-CN">适合 GitHub、Google、AWS 或其他国际账号体系。</span><span lang="en">Useful when your workflow already uses GitHub, Google, AWS or another international account system.</span></p><ul class="decision-links"><li><a href="/offers/opencode-zen-free/"><span lang="zh-CN">OpenCode Zen · free model pool</span><span lang="en">OpenCode Zen · free model pool</span></a></li><li><a href="/offers/github-copilot-free/"><span lang="zh-CN">GitHub Copilot · Free plan</span><span lang="en">GitHub Copilot · Free plan</span></a></li><li><a href="/offers/cursor-hobby/"><span lang="zh-CN">Cursor · Hobby free plan</span><span lang="en">Cursor · Hobby free plan</span></a></li><li><a href="/offers/amazon-q-free/"><span lang="zh-CN">Amazon Q Developer · Free tier</span><span lang="en">Amazon Q Developer · Free tier</span></a></li><li><a href="/offers/google-antigravity-free/"><span lang="zh-CN">Google Antigravity · Individual free plan</span><span lang="en">Google Antigravity · Individual free plan</span></a></li></ul></article></div>
+    </section>
     <section>
-      <div class="eyebrow">01 / verified directory</div>
+      <div class="eyebrow">02 / verified directory</div>
       <h2><span lang="zh-CN">可用入口和关键参数</span><span lang="en">Available entries and key parameters</span></h2>
       <p><span lang="zh-CN">当前页面收录 14 条记录。每条记录都能回到 FreeLLM 详情或目录来源。</span><span lang="en">This page contains 14 records. Each row links back to a FreeLLM detail page or directory source.</span></p>
       <div class="table-wrap"><table><thead><tr><th>Provider / model</th><th>Free terms</th><th>Access</th><th>Official links</th></tr></thead><tbody><tr>
@@ -276,9 +289,9 @@ pre code { padding:0; background:none; color:inherit; }
     </tr></tbody></table></div>
     </section>
     <section>
-      <div class="eyebrow">02 / related pages</div>
+      <div class="eyebrow">03 / related pages</div>
       <h2><span lang="zh-CN">继续浏览</span><span lang="en">Continue exploring</span></h2>
-      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">免费 AI 编程工具</span><span lang="en">Free AI Coding Tools</span></a></li></ul>
+      <ul class="link-list"><li><a href="/models/"><span lang="zh-CN">模型目录</span><span lang="en">Model directory</span></a></li><li><a href="/guides/free-llm/"><span lang="zh-CN">免费 LLM / API 接入指南</span><span lang="en">Free LLM / API quick-start guide</span></a></li><li><a href="/guides/free-openai-compatible-apis/"><span lang="zh-CN">免费 LLM API 与 OpenAI 兼容接口</span><span lang="en">Free LLM APIs</span></a></li><li><a href="/guides/china-free-ai-api/"><span lang="zh-CN">国内免费 AI API</span><span lang="en">Free AI APIs in China</span></a></li><li><a href="/guides/free-ai-search-apis/"><span lang="zh-CN">免费 AI 搜索 API</span><span lang="en">Free AI Search APIs</span></a></li><li><a href="/guides/free-openai-api-alternatives/"><span lang="zh-CN">OpenAI API 免费替代方案</span><span lang="en">Free OpenAI API alternatives</span></a></li><li><a href="/guides/claude-code-free-alternatives/"><span lang="zh-CN">Claude Code 免费替代方案</span><span lang="en">Free Claude Code alternatives</span></a></li></ul>
     </section>
   </main>
   <footer>
