@@ -169,7 +169,7 @@ class StaticContractTests(unittest.TestCase):
         latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
         latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
         observed_models = len(latest["observed"]["models"])
-        self.assertIn(f'<strong>{observed_models}</strong><small>', log)
+        self.assertRegex(log, rf'<strong>{observed_models} <span lang="zh-CN">模型</span>')
         self.assertRegex(log, rf"<strong>{models} <span")
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
