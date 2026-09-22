@@ -97,7 +97,7 @@
     "providerMark": "Q",
     "provider": "Qoder",
     "providerMeta": "Alibaba ecosystem · global",
-    "model": "Experience plan",
+    "model": "Qwen3.8-Flash limited-time free + Experience plan",
     "modelMeta": "IDE / CLI / JetBrains",
     "type": [
       "ide",
@@ -121,19 +121,20 @@
       },
       "docsUrl": "https://docs.qoder.com/zh/account/pricing"
     },
-    "kicker": "FREE IDE",
+    "kicker": "LIMITED FREE",
     "badges": [
-      "TRIAL",
-      "14 days + 300 credits"
+      "LIMITED FREE",
+      "Qwen3.8-Flash · 0 Credits",
+      "100 Credits/day"
     ],
-    "freeSummary": "Basic model messages + 14-day Pro trial",
-    "validitySummary": "14 days / 300 trial credits",
+    "freeSummary": "Qwen3.8-Flash free through Sep 30 + claim 100 Credits daily",
+    "validitySummary": "Qwen3.8-Flash through 2026-09-30 23:59:59 UTC+8; claimed daily Credits expire after 30 days",
     "accessSummary": "International",
-    "checkedSummary": "Today / official docs",
-    "title": "Qoder · Experience plan",
-    "why": "New users can receive a one-time 14-day Pro trial with 300 credits. The free experience plan continues with basic-model messages after the trial.",
-    "mechanism": "Basic-model messages; one-time Pro trial",
-    "validity": "14-day Pro trial; 300 credits",
+    "checkedSummary": "2026-09-21 / official + pending user lead",
+    "title": "Qoder · Qwen3.8-Flash 限时免费",
+    "why": "Qwen3.8-Flash consumes 0 Credits through Sep 30, 2026. Individual users can also manually claim 100 Credits each day.",
+    "mechanism": "Qwen3.8-Flash at 0.0× Credits + daily 100-Credit claim; existing free experience plan remains available",
+    "validity": "Qwen3.8-Flash: Sep 18 10:00–Sep 30 23:59:59 (UTC+8); daily claim window resets at 10:00 (UTC+8); each claimed reward is valid 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -151,20 +152,21 @@
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "300 trial credits; basic-model messages",
-    "renewal": "Trial terms may change; check the official account page",
+    "quota": "Qwen3.8-Flash uses 0 Credits during promo; 100 bonus Credits claimable per daily window",
+    "renewal": "Daily 100-Credit reward requires manual claim; missed windows cannot be reclaimed",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://docs.qoder.com/zh/account/pricing"
+      "https://docs.qoder.com/zh/account/pricing",
+      "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
     ],
-    "evidence": "Official pricing documentation describes a free experience plan and one-time 14-day Pro trial with 300 credits.",
+    "evidence": "Official Qoder announcement confirms Qwen3.8-Flash at 0.0× Credits through Sep 30 and a daily manual 100-Credit reward for individual users.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-21",
     "checkedBy": "manual",
-    "notes": "Trial and renewal conditions can change.",
+    "notes": "Limited-time Qwen3.8-Flash and daily 100-Credit promotions verified from Qoder's official forum. Sonus 4,000 Credits/day × 5 days is recorded as pending verification from a user-provided lead; no official public source has been confirmed yet.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -177,7 +179,48 @@
       "cnHost": "qoder.com",
       "cnMs": 475,
       "intlMs": 472
-    }
+    },
+    "promotions": [
+      {
+        "id": "qwen38-flash-sep-2026",
+        "offerType": "limited_free",
+        "title": "Qwen3.8-Flash free through Sep 30",
+        "startAt": "2026-09-18T10:00:00+08:00",
+        "endAt": "2026-09-30T23:59:59+08:00",
+        "claimRequired": false,
+        "verified": true,
+        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615",
+        "lastVerifiedAt": "2026-09-21"
+      },
+      {
+        "id": "daily-100-credits-sep-2026",
+        "offerType": "credits_bonus",
+        "title": "Claim 100 Credits every day",
+        "dailyCredits": 100,
+        "claimRequired": true,
+        "claimResetAt": "10:00 UTC+8",
+        "rewardExpiresAfterDays": 30,
+        "verified": true,
+        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615",
+        "lastVerifiedAt": "2026-09-21"
+      },
+      {
+        "id": "sonus-4000x5-sep-2026",
+        "offerType": "credits_bonus",
+        "title": "Sonus 连续 5 天每天 4,000 Credits",
+        "dailyCredits": 4000,
+        "durationDays": 5,
+        "totalCredits": 20000,
+        "claimRequired": true,
+        "verified": false,
+        "status": "pending_verification",
+        "source": "用户提供线索（尚未取得 Qoder 官方公告或活动页链接）",
+        "sourceUrl": null,
+        "lastVerifiedAt": "2026-09-21",
+        "verificationNote": "已记录活动信息，但截至最后核验时间尚未找到可公开核对的官方来源；不作为已验证福利展示。"
+      }
+    ],
+    "pendingVerification": true
   },
   {
     "id": "trae",
