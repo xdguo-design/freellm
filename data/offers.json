@@ -5909,6 +5909,39 @@
         "note": "Voice-model family listed on the official Step Plan site",
         "sourceUrl": "https://platform.stepfun.com/step-plan"
       }
-    ]
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-22",
+      "actualUsageVerified": false,
+      "task": "核对 Step Plan 当前官方接入链路、Step 5 Preview 模型规格、双协议 Base URL 与限时免费体验活动口径；在没有登录态 Step Plan 权益和 API Key 的前提下，不把真实额度到账和模型生成写成已实测。",
+      "method": [
+        "打开 StepFun 官方 Step Plan 页面，确认 Step Plan 为订阅制服务并覆盖旗舰模型。",
+        "打开官方 Step Plan 快速开始，核对 OpenAI 兼容 Base URL、Anthropic 兼容 Base URL、API Key 前置条件和推荐验证模型 step-5-preview。",
+        "打开官方 Step 5 Preview 模型页，核对 1M tokens 上下文、1M 最大输入和 64k 最大输出。",
+        "交叉核对 2026-09-20 至 2026-09-22 的当前活动信息，确认登录 15 天、首次 API 调用再 15 天、邀请奖励可将总体验期叠加至最高 75 天的活动口径。",
+        "当前测试环境没有登录后的 StepFun Step Plan 权益和可用 API Key，因此没有实际验证免费体验天数到账、具体体验档位、Credit 余额或一次真实模型响应。"
+      ],
+      "result": "官方产品与接入预检通过：Step Plan、旗舰模型覆盖、step-5-preview、1M 上下文以及两套兼容接口均可由官方页面确认。最高 75 天活动口径有多处当周信息一致，但公开抓取无法展开官方登录态邀请规则，因此保留 medium confidence，并要求用户以账户活动页的实际权益和到期时间为准。",
+      "limitations": "未使用登录态 StepFun 账号和真实 Step API Key，未验证 15/30/75 天权益在账户中的实际到账、邀请计数、免费体验具体套餐档位、Credit 月池数值、并发限制和真实生成响应。公开来源对免费体验档位存在 Flash Mini / Flash Plus 冲突，因此 FreeLLM 不写死 ¥99 或 1600M Credits。",
+      "evidence": [
+        {
+          "label": "Step Plan 官方页面",
+          "url": "https://platform.stepfun.com/step-plan",
+          "note": "确认 Step Plan 为订阅制服务，并支持旗舰模型"
+        },
+        {
+          "label": "Step Plan 快速开始",
+          "url": "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
+          "note": "确认 OpenAI / Anthropic 兼容 Base URL、API Key 与 step-5-preview"
+        },
+        {
+          "label": "Step 5 Preview 官方模型页",
+          "url": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview",
+          "note": "确认 1M tokens 上下文窗口、最大输入和模型规格"
+        }
+      ]
+    }
   }
 ]
