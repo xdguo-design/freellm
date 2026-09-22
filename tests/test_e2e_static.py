@@ -22,6 +22,7 @@ HOMEPAGE_JS_PATH = ROOT / "js" / "homepage.js"
 HOMEPAGE_I18N_JS_PATH = ROOT / "js" / "homepage-i18n.js"
 ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+OFFERS_RANKED_PATH = ROOT / "data" / "offers-ranked.json"
 OFFERS_BUNDLE_PATH = ROOT / "data" / "offers.js"
 SIGNALS_PATH = ROOT / "data" / "community-signals.json"
 ROBOTS_PATH = ROOT / "robots.txt"
@@ -34,6 +35,10 @@ SUBMIT_PATH = ROOT / "submit" / "index.html"
 
 def read_offers() -> list:
     return json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
+
+
+def read_ranked_offers() -> list:
+    return json.loads(OFFERS_RANKED_PATH.read_text(encoding="utf-8"))
 
 
 def read_signals() -> list:
@@ -66,8 +71,12 @@ class StaticContractTests(unittest.TestCase):
         ))
         self.runtime_source = self.html
 
-    def test_external_offer_bundle_matches_offers_json(self):
-        self.assertEqual(bundled_offer_data(), read_offers())
+    def test_external_offer_bundle_matches_ranked_runtime_json(self):
+        self.assertEqual(bundled_offer_data(), read_ranked_offers())
+        self.assertEqual(
+            {item["id"] for item in read_ranked_offers()},
+            {item["id"] for item in read_offers()},
+        )
 
     def test_page_has_required_data_hooks(self):
         for needle in (
@@ -772,10 +781,14 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        self.assertEqual(self.visible_offers(page), len(read_offers()))
+        ranked = read_ranked_offers()
+        self.assertEqual(self.visible_offers(page), len(ranked))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
-        self.assertEqual(len(item_list), len(read_offers()))
-        self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
+        self.assertEqual(len(item_list), len(ranked))
+        self.assertEqual(
+            [entry["name"] for entry in item_list[:5]],
+            [item["title"] for item in ranked[:5]],
+        )
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_locale_query_switches_shell_language(self):
@@ -827,11 +840,11 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), len(read_offers()))
-            # 场景本身就是 data 两个 JSON 404；除此之外不允许任何失败请求或 JS 错误。
+            self.assertEqual(self.visible_offers(page), len(read_ranked_offers()))
+            # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
                 sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
-                ["community-signals.json", "offers.json"],
+                ["community-signals.json", "offers-ranked.json"],
             )
             self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
 
