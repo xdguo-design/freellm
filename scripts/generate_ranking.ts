@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -52,28 +51,16 @@ function maxCatalogDate(items: RankableItem[]): string {
   return dates.sort().at(-1)!;
 }
 
-function digestSources(rawSources: Buffer[], asOf: string): string {
-  const hash = createHash("sha256");
-  for (const raw of rawSources) {
-    hash.update(raw);
-    hash.update("\0");
-  }
-  hash.update(`asOf=${asOf}`);
-  return hash.digest("hex");
-}
-
 function renderOutput(
   items: RankableItem[],
   config: RankingConfig,
   behavior: RankingBehaviorData,
-  asOf: string,
-  sourceDigest: string,
+  asOf: string
 ): string {
   const ranked = rankItems(items, asOf, config, behavior);
   const payload = {
     version: config.version,
     asOf,
-    sourceDigest,
     weights: config.weights,
     items: ranked.map((result, index) => ({ rank: index + 1, ...result })),
   };
@@ -89,8 +76,7 @@ function main(): void {
 
   const asOf = options.asOf || maxCatalogDate(input.value);
   if (!parseIsoDate(asOf)) throw new Error(`Invalid --as-of date: ${asOf}`);
-  const sourceDigest = digestSources([input.raw, config.raw, behavior.raw], asOf);
-  const rendered = renderOutput(input.value, config.value, behavior.value, asOf, sourceDigest);
+  const rendered = renderOutput(input.value, config.value, behavior.value, asOf);
   const outputPath = resolve(options.output);
 
   if (options.check) {
