@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Update data-driven browser assertions
+      - name: Update AMD browser baselines
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -36,26 +36,31 @@ jobs:
                   "daily log live snapshot assertion",
               ),
               (
-                  '        self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), "19")',
-                  '        free_quota_count = page.locator(".offer[data-category~=\'free_quota\']").count()\\n        self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), str(free_quota_count))',
-                  "free quota filter assertion",
+                  'self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), "19")',
+                  'self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), "20")',
+                  "free quota filter count",
               ),
               (
-                  '        self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), "19")',
-                  '        self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), str(free_quota_count))',
-                  "free quota category assertion",
-              ),
-              (
-                  '        page.fill("#catalog-search", "Qwen3")\\n        self.assertEqual(self.visible_offers(page), 2)',
-                  '        page.fill("#catalog-search", "Qwen3")\\n        self.assertEqual(self.visible_offers(page), 3)\\n        self.assertEqual(page.locator(".offer:not(.hidden)[data-detail=\'amd-radeon-cloud-free\']").count(), 1)',
-                  "Qwen3 search assertion",
+                  'self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), "19")',
+                  'self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), "20")',
+                  "free quota category count",
               ),
           ]
-
           for old, new, label in replacements:
               if old not in text:
                   raise SystemExit(f"{label} not found")
               text = text.replace(old, new, 1)
+
+          marker = '        page.fill("#catalog-search", "Qwen3")'
+          start = text.find(marker)
+          if start < 0:
+              raise SystemExit("Qwen3 search marker not found")
+          old = '        self.assertEqual(self.visible_offers(page), 2)'
+          pos = text.find(old, start, start + 500)
+          if pos < 0:
+              raise SystemExit("Qwen3 result assertion not found")
+          new = '        self.assertEqual(self.visible_offers(page), 3)'
+          text = text[:pos] + new + text[pos + len(old):]
 
           path.write_text(text, encoding="utf-8")
           PY
@@ -68,5 +73,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add tests/test_e2e_static.py
-          git commit -m "test: make AMD catalog browser baselines data-aware"
+          git commit -m "test: update catalog baselines for AMD Radeon Cloud"
           git push origin HEAD:main
