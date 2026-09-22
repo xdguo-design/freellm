@@ -133,11 +133,15 @@ def read_metrics(page) -> dict:
             .map(r => ({
               name: new URL(r.name).pathname,
               host: new URL(r.name).hostname,
+              startTime: Math.round(r.startTime || 0),
+              responseStart: Math.round(r.responseStart || 0),
               duration: Math.round(r.duration),
               transferSize: r.transferSize || 0,
               encodedBodySize: r.encodedBodySize || 0,
               responseEnd: Math.round(r.responseEnd || 0),
             }));
+          const gtagScript = resources.find(r => r.name.includes('www.googletagmanager.com/gtag/js'));
+          const adsenseScripts = resources.filter(r => r.name.includes('pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'));
           const p = window.__prodPerf || { lcp: 0, cls: 0, longTasks: [] };
           return {
             fcp: Math.round(paint['first-contentful-paint'] || 0),
@@ -151,6 +155,8 @@ def read_metrics(page) -> dict:
             thirdPartyRequests: thirdParty.length,
             firstPartyTransferSize: firstParty.reduce((n, r) => n + (r.transferSize || 0), 0),
             thirdPartyTransferSize: thirdParty.reduce((n, r) => n + (r.transferSize || 0), 0),
+            gtagScriptStart: Math.round(gtagScript?.startTime || 0),
+            adsenseScriptRequests: adsenseScripts.length,
             longTaskCount: p.longTasks.length,
             longTaskTotal: Math.round(p.longTasks.reduce((n, value) => n + value, 0)),
             dataSource: document.body?.dataset?.dataSource || null,
@@ -218,6 +224,8 @@ def median_profile(samples: list[dict]) -> dict:
         "thirdPartyRequests",
         "firstPartyTransferSize",
         "thirdPartyTransferSize",
+        "gtagScriptStart",
+        "adsenseScriptRequests",
         "longTaskCount",
         "longTaskTotal",
     )
@@ -282,6 +290,20 @@ def main() -> int:
 
     if warm.get("/data/offers.json", {}).get("transferSize", 1) != 0:
         raise SystemExit("production offers.json missed browser cache on repeat navigation")
+
+    cold = {item["name"]: item for item in profile["cold"]["tracked"]}
+    offers_start = cold.get("/data/offers.json", {}).get("startTime", 0)
+    if offers_start and offers_start < profile["cold"]["fcp"]:
+        raise SystemExit(
+            f"production offers.json started before first paint: start={offers_start}ms fcp={profile['cold']['fcp']}ms"
+        )
+    if profile["cold"]["adsenseScriptRequests"] != 0:
+        raise SystemExit("production loaded AdSense despite an empty ad slot")
+    gtag_start = profile["cold"]["gtagScriptStart"]
+    if gtag_start and gtag_start < profile["cold"]["fcp"]:
+        raise SystemExit(
+            f"production gtag script started before first paint: start={gtag_start}ms fcp={profile['cold']['fcp']}ms"
+        )
 
     return 0
 

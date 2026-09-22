@@ -879,13 +879,69 @@ let offerIndex = {};
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
     renderClock(clock, 'Local time', tz, new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date()));
     let offerDataSource = 'embedded';
-    loadOffers().then(async items => {
-      signalIndex = indexCommunitySignals(await loadCommunitySignals());
-      if (Array.isArray(items) && items.length) {
-        renderOffers(items);
-        document.body.dataset.dataSource = offerDataSource;
-        setFilter(activeFilter);
-      } else {
-        showDataError();
+    let offerHydrationPromise = null;
+    document.body.dataset.hydrationState = 'static';
+
+    const hydrateOfferData = () => {
+      if (offerHydrationPromise) return offerHydrationPromise;
+      document.body.dataset.hydrationState = 'loading';
+      offerHydrationPromise = loadOffers().then(async items => {
+        signalIndex = indexCommunitySignals(await loadCommunitySignals());
+        if (Array.isArray(items) && items.length) {
+          renderOffers(items);
+          document.body.dataset.dataSource = offerDataSource;
+          document.body.dataset.hydrationState = 'ready';
+          setFilter(activeFilter);
+        } else {
+          document.body.dataset.hydrationState = 'error';
+          showDataError();
+        }
+        return items;
+      });
+      return offerHydrationPromise;
+    };
+
+    const hasCatalogIntent = Boolean(
+      initialQuery
+      || activeFilter !== 'all'
+      || activeMethod !== 'all'
+      || activeCapability !== 'all'
+      || activeRegions.size
+      || activeFreshness !== 'all'
+      || location.hash === '#catalog-offers'
+    );
+    const localPreview = location.protocol === 'file:'
+      || location.hostname === 'localhost'
+      || location.hostname === '127.0.0.1';
+
+    const scheduleOfferHydration = () => {
+      const start = () => { void hydrateOfferData(); };
+      if (localPreview || hasCatalogIntent) {
+        start();
+        return;
       }
-    });
+
+      let observer = null;
+      let fallbackTimer = 0;
+      const kick = () => {
+        observer?.disconnect();
+        if (fallbackTimer) window.clearTimeout(fallbackTimer);
+        start();
+      };
+
+      const target = document.getElementById('catalog-offers');
+      if ('IntersectionObserver' in window && target) {
+        observer = new IntersectionObserver(entries => {
+          if (entries.some(entry => entry.isIntersecting)) kick();
+        }, { rootMargin: '800px 0px' });
+        observer.observe(target);
+      }
+
+      const app = document.querySelector('.catalog-app');
+      app?.addEventListener('pointerdown', kick, { once: true, passive: true });
+      app?.addEventListener('focusin', kick, { once: true });
+      app?.addEventListener('keydown', kick, { once: true });
+      fallbackTimer = window.setTimeout(kick, 2500);
+    };
+
+    scheduleOfferHydration();

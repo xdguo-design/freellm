@@ -110,6 +110,16 @@ class StaticContractTests(unittest.TestCase):
         )
         self.assertIn("if (!slot) return;", self.document_html)
 
+    def test_offer_json_hydration_is_deferred_off_first_paint(self):
+        self.assertIn("document.body.dataset.hydrationState = 'static'", self.homepage_js)
+        self.assertIn("new IntersectionObserver", self.homepage_js)
+        self.assertIn("rootMargin: '800px 0px'", self.homepage_js)
+        self.assertIn("fallbackTimer = window.setTimeout(kick, 2500)", self.homepage_js)
+        self.assertIn("location.hostname === 'localhost'", self.homepage_js)
+        self.assertIn("location.hostname === '127.0.0.1'", self.homepage_js)
+        self.assertIn("location.hash === '#catalog-offers'", self.homepage_js)
+        self.assertIn("scheduleOfferHydration();", self.homepage_js)
+
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
