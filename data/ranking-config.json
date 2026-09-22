@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "weights": {
+    "freshness": 0.35,
+    "freeValue": 0.30,
+    "popularity": 0.20,
+    "behavior": 0.10,
+    "specialOffer": 0.05
+  },
+  "timeDecay": [
+    { "maxDays": 3, "multiplier": 1.0 },
+    { "maxDays": 7, "multiplier": 0.9 },
+    { "maxDays": 14, "multiplier": 0.75 },
+    { "maxDays": 30, "multiplier": 0.55 },
+    { "maxDays": 60, "multiplier": 0.3 },
+    { "maxDays": 90, "multiplier": 0.15 },
+    { "maxDays": null, "multiplier": 0.05 }
+  ],
+  "eventImportance": {
+    "model_release": 1.0,
+    "availability_change": 0.95,
+    "catalog_added": 0.85,
+    "pricing_change": 0.5,
+    "default": 0.6
+  },
+  "freeMechanismBase": {
+    "permanent": 100,
+    "daily_quota": 90,
+    "weekly_quota": 85,
+    "monthly_quota": 80,
+    "open_weights": 70,
+    "limited_time_free": 65,
+    "trial": 50,
+    "first_month_promo": 30,
+    "not_confirmed": 0
+  },
+  "freeQuotaScore": {
+    "permanent": 95,
+    "daily_quota": 90,
+    "weekly_quota": 85,
+    "monthly_quota": 80,
+    "open_weights": 70,
+    "limited_time_free": 60,
+    "trial": 50,
+    "first_month_promo": 25,
+    "not_confirmed": 0
+  },
+  "popularityDefault": 50,
+  "providerPopularity": {
+    "Google AI Studio": 90,
+    "DeepSeek API": 90,
+    "GitHub Copilot": 88,
+    "Cursor": 85,
+    "Alibaba Cloud Model Studio / 阿里云百炼": 85,
+    "Doubao Seed Code": 80,
+    "OpenRouter": 80,
+    "Hugging Face": 80,
+    "TraeCode CN": 78,
+    "Groq": 75,
+    "Mistral AI": 75,
+    "SiliconFlow": 75,
+    "AMD Radeon Cloud": 70
+  },
+  "offerPopularity": {},
+  "specialOfferScores": {
+    "student": 10,
+    "developerCredits": 60,
+    "startup": 40
+  },
+  "manualBoost": {},
+  "pinnedIds": [],
+  "penalties": {
+    "needsReview": 15,
+    "brokenLink": 30,
+    "notConfirmed": 20,
+    "studentOnly": 20,
+    "stale90": 10,
+    "stale180": 20,
+    "lowInterest30": 5,
+    "lowInterest60": 10,
+    "lowInterest90": 15
+  },
+  "behavior": {
+    "neutralScore": 50,
+    "confidenceImpressions": 500,
+    "recentWeight": 0.7,
+    "baselineMultiplierForFullScore": 2.0
+  },
+  "diversity": {
+    "topWindow": 10,
+    "maxPerProvider": 2,
+    "studentOnlyTopWindow": 20,
+    "maxStudentOnly": 1
+  }
+}
