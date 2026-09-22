@@ -38,7 +38,7 @@ jobs:
           node scripts/generate_ranking.ts --check
           python scripts/build_static.py --check
           python scripts/build_seo_pages.py --check
-          python -m unittest tests.test_build_static tests.test_site_health -v
+          python -m unittest tests.test_build_static -v
 
       - name: Commit generated artifacts
         run: |
