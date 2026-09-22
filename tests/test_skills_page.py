@@ -73,19 +73,22 @@ class SkillBenchmarkDataTests(unittest.TestCase):
 
     def test_test_records_never_fake_unexecuted_scores(self):
         scored = 0
-        allowed = {"e2e", "task", "artifact", "artifact-partial", "preflight"}
+        allowed = {"e2e", "task", "artifact", "partial", "blocked"}
         for skill_id, entry in self.entries.items():
-            self.assertIn(entry.get("testLevel"), allowed, skill_id)
+            level = entry.get("testLevel")
+            self.assertIn(level, allowed, skill_id)
             self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
+            self.assertTrue(str(entry.get("environment") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("task") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("evaluation") or "").strip(), skill_id)
-            if entry.get("testLevel") == "preflight":
+            if level in {"blocked", "partial"}:
                 self.assertIsNone(entry.get("score"), skill_id)
-            elif isinstance(entry.get("score"), (int, float)):
+            else:
+                self.assertIsInstance(entry.get("score"), (int, float), skill_id)
                 scored += 1
                 self.assertGreaterEqual(entry["score"], 0, skill_id)
                 self.assertLessEqual(entry["score"], 10, skill_id)
-        self.assertGreaterEqual(scored, 40)
+        self.assertEqual(scored, 34)
 
     def test_internal_evidence_targets_exist(self):
         for skill_id, entry in self.entries.items():
@@ -93,8 +96,9 @@ class SkillBenchmarkDataTests(unittest.TestCase):
                 url = evidence if isinstance(evidence, str) else evidence.get("url")
                 if not url or not url.startswith("/skills/test-artifacts/"):
                     continue
-                target = ROOT / url.lstrip("/")
-                if url.endswith("/"):
+                path_part = url.split("#", 1)[0].split("?", 1)[0]
+                target = ROOT / path_part.lstrip("/")
+                if path_part.endswith("/"):
                     target = target / "index.html"
                 self.assertTrue(target.is_file(), f"{skill_id}: missing evidence {url}")
 
@@ -164,10 +168,12 @@ class SkillsBuildTests(unittest.TestCase):
             self.assertTrue(lab.is_file())
             page_html = page.read_text(encoding="utf-8")
             self.assertIn("Agent Skills", page_html)
-            self.assertIn("FreeLLM 实测", page_html)
+            self.assertIn("FreeLLM 真测", page_html)
             self.assertIn('class="freellm-test-strip', page_html)
             self.assertIn("测试任务", page_html)
-            self.assertIn("FreeLLM 评价", page_html)
+            self.assertIn("查看真实测试任务、限制与评价", page_html)
+            self.assertIn("环境：", page_html)
+            self.assertIn("沙箱真实验收已重跑", page_html)
             self.assertIn("Skill Lab", lab.read_text(encoding="utf-8"))
             sitemap = (output_root / "sitemap-pages.xml").read_text(encoding="utf-8")
             self.assertIn("https://example.test/skills/", sitemap)

@@ -108,12 +108,12 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
 
     offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
-    vendors = json.loads((ROOT / "data" / "provider-catalog.json").read_text(encoding="utf-8"))
+    provider_pages = list((tmp_path / "providers").glob("*/index.html"))
     active_provider_ids = {str(item.get("providerId") or "").strip() for item in models if item.get("providerId")}
 
     assert "数据口径已拆分" in overview
     assert f"<strong>{len(models)}</strong><span>模型记录" in overview
-    assert f"<strong>{len(vendors)}</strong><span>厂家目录" in overview
+    assert f"<strong>{len(provider_pages)}</strong><span>厂家目录" in overview
     assert f"<strong>{len(active_provider_ids)}</strong><span>当前数据 Provider ID" in overview
     assert f"<strong>{len(offers)}</strong><span>免费资源" in overview
     assert 'href="/models/all/"' in overview
@@ -135,7 +135,7 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert 'aria-controls="categories"' in page
     assert 'id="model-center-all-models-panel"' in page
     assert "url.hash = 'all-models'" in page
-    assert "发现真正好用的" in page
+    assert "免费 AI 模型与 API" in page
     assert "模型大列表" not in page
     assert "model-center-all-heading" not in page
     assert "02 / 全部模型" not in page
@@ -143,7 +143,7 @@ def test_model_center_combines_original_feature_page_and_model_directory_tabs(tm
     assert "const syncLocale = () => {{" not in page
     assert "new MutationObserver(syncLocale).observe(document.documentElement, {{" not in page
     assert page.index('class="model-center-tabs"') < page.index('id="model-directory"')
-    assert "发现真正好用的" in original_home
+    assert "免费 AI 模型与 API" in original_home
     assert 'class="fl-site-rail"' in original_home
     assert 'class="top-nav"' not in original_home
     assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')

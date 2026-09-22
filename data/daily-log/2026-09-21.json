@@ -5,35 +5,177 @@
   "events": [
     {
       "kind": "model",
-      "eventType": "offline",
-      "id": "llm7-io/claude-haiku-4-5",
-      "title": "claude-haiku-4-5",
+      "eventType": "new",
+      "id": "google-gemini/gemini-3-8-live",
+      "title": "Gemini 3.8 Live",
       "asOf": "2026-09-21",
       "details": {
-        "id": "llm7-io/claude-haiku-4-5",
-        "providerId": "llm7-io",
-        "provider": "LLM7",
-        "model": "claude-haiku-4-5",
-        "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "id": "google-gemini/gemini-3-8-live",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Live",
+        "context": "131072",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "reasoning"
+        ],
+        "rateLimit": "Free Tier; rate limits vary by project/account",
+        "released": "2026-09-15",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live",
+        "sourceKind": "official",
+        "canonicalModelId": "gemini-3.8-live",
+        "accessRegion": "international",
+        "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
+        "manualNote": "Google Gemini API official pricing lists Gemini 3.8 Live input/output as Free of charge on the Free Tier. Live API model; output supports text and audio. Verified 2026-09-21.",
+        "lastSeenAt": "2026-09-21",
+        "lastVerifiedAt": "2026-09-21",
+        "freshnessStatus": "new"
       },
-      "reason": "missing from the successful snapshot"
+      "reason": "not present in the previous successful snapshot"
     },
     {
       "kind": "model",
-      "eventType": "offline",
-      "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
-      "title": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+      "eventType": "new",
+      "id": "google-gemini/gemini-3-8-live-extended-thinking",
+      "title": "Gemini 3.8 Live Extended Thinking",
       "asOf": "2026-09-21",
       "details": {
-        "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
+        "id": "google-gemini/gemini-3-8-live-extended-thinking",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Live Extended Thinking",
+        "context": "131072",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "audio",
+          "video",
+          "reasoning"
+        ],
+        "rateLimit": "Free Tier; rate limits vary by project/account",
+        "released": "2026-09-15",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking",
+        "sourceKind": "official",
+        "canonicalModelId": "gemini-3.8-live-extended-thinking",
+        "accessRegion": "international",
+        "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
+        "manualNote": "Google Gemini API official pricing lists Gemini 3.8 Live Extended Thinking input/output as Free of charge on the Free Tier. Live API background-reasoning model. Verified 2026-09-21.",
+        "lastSeenAt": "2026-09-21",
+        "lastVerifiedAt": "2026-09-21",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "groq/qwen-qwen3-8-27b",
+      "title": "Qwen 3.8 27B",
+      "asOf": "2026-09-21",
+      "details": {
+        "id": "groq/qwen-qwen3-8-27b",
+        "providerId": "groq",
+        "provider": "Groq",
+        "model": "Qwen 3.8 27B",
+        "context": "131042",
+        "maxOutput": "16384",
+        "modality": [
+          "text",
+          "image",
+          "reasoning"
+        ],
+        "rateLimit": "Free plan: 30 RPM · 1K RPD · 8K TPM · 200K TPD",
+        "released": "2026-09",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://console.groq.com/docs/model/qwen/qwen3.8-27b",
+        "sourceKind": "official",
+        "canonicalModelId": "qwen/qwen3.8-27b",
+        "accessRegion": "international",
+        "accessEndpoint": "https://api.groq.com/openai/v1",
+        "manualNote": "Groq official Free Plan Limits lists qwen/qwen3.8-27b at 30 RPM, 1K RPD, 8K TPM, 200K TPD. It replaces qwen/qwen3.6-27b, retired 2026-09-14. Verified 2026-09-21.",
+        "lastSeenAt": "2026-09-21",
+        "lastVerifiedAt": "2026-09-21",
+        "freshnessStatus": "new"
+      },
+      "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "model",
+      "eventType": "recovered",
+      "id": "google-gemini/gemini-3-8-flash",
+      "title": "Gemini 3.8 Flash",
+      "asOf": "2026-09-21",
+      "details": {
+        "id": "google-gemini/gemini-3-8-flash",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Flash",
+        "context": "1048576",
+        "maxOutput": "65536",
+        "modality": [
+          "text",
+          "image",
+          "video",
+          "audio",
+          "pdf",
+          "reasoning"
+        ],
+        "rateLimit": "Free Tier; rate limits vary by project/account",
+        "released": "2026-09-02",
+        "usageActivity": "—",
+        "status": "online",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+        "sourceKind": "official",
+        "canonicalModelId": "gemini-3.8-flash",
+        "accessRegion": "international",
+        "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
+        "manualNote": "Google Gemini API official pricing lists input/output/context caching as Free of charge on the Free Tier. Free-tier data may be used to improve Google products. Verified 2026-09-21.",
+        "lastSeenAt": "2026-09-21",
+        "lastVerifiedAt": "2026-09-21",
+        "freshnessStatus": "new"
+      },
+      "reason": "previously absent or offline and observed again"
+    },
+    {
+      "kind": "model",
+      "eventType": "recovered",
+      "id": "openrouter/stealth-union-alpha",
+      "title": "Union Alpha",
+      "asOf": "2026-09-21",
+      "details": {
         "providerId": "openrouter",
         "provider": "OpenRouter",
-        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
-        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
-        "status": "online"
+        "model": "Union Alpha",
+        "context": "262144",
+        "maxOutput": "131072",
+        "modality": [
+          "image",
+          "text"
+        ],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
+        "sourceKind": "public_api",
+        "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+        "freePricingConfirmed": true,
+        "id": "openrouter/stealth-union-alpha",
+        "lastSeenAt": "2026-09-17",
+        "freshnessStatus": "stale",
+        "staleSince": "2026-09-18"
       },
-      "reason": "missing from the successful snapshot"
+      "reason": "previously absent or offline and observed again"
     }
   ],
   "observed": {
@@ -247,6 +389,38 @@
         "status": "online"
       },
       {
+        "id": "google-gemini/gemini-3-8-flash",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Flash",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+        "status": "online"
+      },
+      {
+        "id": "google-gemini/gemini-3-8-live",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Live",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live",
+        "status": "online"
+      },
+      {
+        "id": "google-gemini/gemini-3-8-live-extended-thinking",
+        "providerId": "google-gemini",
+        "provider": "Google Gemini",
+        "model": "Gemini 3.8 Live Extended Thinking",
+        "sourceUrl": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking",
+        "status": "online"
+      },
+      {
+        "id": "groq/qwen-qwen3-8-27b",
+        "providerId": "groq",
+        "provider": "Groq",
+        "model": "Qwen 3.8 27B",
+        "sourceUrl": "https://console.groq.com/docs/model/qwen/qwen3.8-27b",
+        "status": "online"
+      },
+      {
         "id": "kilo/cohere-north-mini-code-free",
         "providerId": "kilo",
         "provider": "Kilo Gateway",
@@ -419,6 +593,14 @@
         "providerId": "llm7-io",
         "provider": "LLM7",
         "model": "claude-fable-5-1",
+        "sourceUrl": "https://llm7.io/models",
+        "status": "online"
+      },
+      {
+        "id": "llm7-io/claude-haiku-4-5",
+        "providerId": "llm7-io",
+        "provider": "LLM7",
+        "model": "claude-haiku-4-5",
         "sourceUrl": "https://llm7.io/models",
         "status": "online"
       },
@@ -1583,6 +1765,14 @@
         "status": "online"
       },
       {
+        "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
+        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
+        "status": "online"
+      },
+      {
         "id": "openrouter/dots-studio-dots-3-note-preview-free",
         "providerId": "openrouter",
         "provider": "OpenRouter",
@@ -1740,6 +1930,14 @@
         "provider": "OpenRouter",
         "model": "Qwen: Qwen3.8 27B (free)",
         "sourceUrl": "https://openrouter.ai/qwen/qwen3.8-27b:free",
+        "status": "online"
+      },
+      {
+        "id": "openrouter/stealth-union-alpha",
+        "providerId": "openrouter",
+        "provider": "OpenRouter",
+        "model": "Union Alpha",
+        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
         "status": "online"
       },
       {
@@ -2905,7 +3103,8 @@
         "sourceUrls": [
           "https://console.groq.com/docs/models",
           "https://console.groq.com/docs/rate-limits",
-          "https://console.groq.com/docs/openai"
+          "https://console.groq.com/docs/openai",
+          "https://console.groq.com/docs/deprecations"
         ],
         "links": [
           [
@@ -2943,7 +3142,7 @@
           },
           "docsUrl": "https://console.groq.com/docs/rate-limits"
         },
-        "evidence": "Official docs: 'Free Plan Limits ... MODEL ID RPM RPD TPM TPD ... openai/gpt-oss-120b 30 1K 8K 200K ... groq/compound 30 250 70K'; 'Need higher rate limits? Upgrade to Developer plan'.",
+        "evidence": "Official Free Plan Limits currently lists qwen/qwen3.8-27b, openai/gpt-oss-120b, openai/gpt-oss-20b and other active models. Groq decommissioned groq/compound and groq/compound-mini on 2026-09-21; qwen/qwen3.6-27b was retired on 2026-09-14 and replaced by qwen/qwen3.8-27b.",
         "freeSummary": "Free plan with per-model RPM / RPD / TPM limits (e.g. gpt-oss-120b: 30 RPM · 1K RPD · 8K TPM)",
         "validitySummary": "Ongoing free plan; exact limits per model can change",
         "accessSummary": "Groq account; rate limits apply at organization level"
@@ -4279,9 +4478,6 @@
         "id": "google-gemini/gemini-3-7-flash"
       },
       {
-        "id": "google-gemini/gemini-3-8-flash"
-      },
-      {
         "id": "google-gemini/gemma-4-26b-a4b"
       },
       {
@@ -4361,14 +4557,6 @@
       },
       {
         "id": "kilo-code/tencent-hy3-free"
-      },
-      {
-        "id": "llm7-io/claude-haiku-4-5",
-        "providerId": "llm7-io",
-        "provider": "LLM7",
-        "model": "claude-haiku-4-5",
-        "sourceUrl": "https://llm7.io/models",
-        "status": "online"
       },
       {
         "id": "mistral-ai/codestral"
@@ -4812,14 +5000,6 @@
         "id": "openrouter/cohere-north-mini-code"
       },
       {
-        "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
-        "providerId": "openrouter",
-        "provider": "OpenRouter",
-        "model": "DeepSeek: DeepSeek V4 Flash 0731 (free)",
-        "sourceUrl": "https://openrouter.ai/deepseek/deepseek-v4-flash-0731:free",
-        "status": "online"
-      },
-      {
         "id": "openrouter/dots-studio-dots-3-note-preview"
       },
       {
@@ -4866,14 +5046,6 @@
       },
       {
         "id": "openrouter/poolside-laguna-xs-2-1"
-      },
-      {
-        "id": "openrouter/stealth-union-alpha",
-        "providerId": "openrouter",
-        "provider": "OpenRouter",
-        "model": "Union Alpha",
-        "sourceUrl": "https://openrouter.ai/stealth/union-alpha",
-        "status": "online"
       },
       {
         "id": "openrouter/thinkingmachines-inkling"

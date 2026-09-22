@@ -16,8 +16,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
+HOMEPAGE_CSS_PATH = ROOT / "css" / "homepage.css"
+HOMEPAGE_EDITORIAL_CSS_PATH = ROOT / "css" / "homepage-editorial.css"
+HOMEPAGE_JS_PATH = ROOT / "js" / "homepage.js"
+HOMEPAGE_I18N_JS_PATH = ROOT / "js" / "homepage-i18n.js"
 ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+OFFERS_BUNDLE_PATH = ROOT / "data" / "offers.js"
 SIGNALS_PATH = ROOT / "data" / "community-signals.json"
 ROBOTS_PATH = ROOT / "robots.txt"
 SITEMAP_PATH = ROOT / "sitemap.xml"
@@ -35,34 +40,55 @@ def read_signals() -> list:
     return json.loads(SIGNALS_PATH.read_text(encoding="utf-8"))
 
 
-def embedded_offer_data(html: str):
-    match = re.search(r'<script type="application/json" id="offer-data">(.*?)</script>', html, re.S)
-    return json.loads(match.group(1)) if match else None
+def bundled_offer_data() -> list:
+    source = OFFERS_BUNDLE_PATH.read_text(encoding="utf-8").strip()
+    prefix = "window.FREELLM_OFFERS = "
+    if not source.startswith(prefix) or not source.endswith(";"):
+        raise AssertionError("data/offers.js has an unexpected wrapper")
+    return json.loads(source[len(prefix):-1])
 
 
 class StaticContractTests(unittest.TestCase):
     def setUp(self):
-        self.html = HTML_PATH.read_text(encoding="utf-8")
+        self.document_html = HTML_PATH.read_text(encoding="utf-8")
+        self.homepage_css = HOMEPAGE_CSS_PATH.read_text(encoding="utf-8")
+        self.homepage_editorial_css = HOMEPAGE_EDITORIAL_CSS_PATH.read_text(encoding="utf-8")
+        self.homepage_js = HOMEPAGE_JS_PATH.read_text(encoding="utf-8")
+        self.homepage_i18n_js = HOMEPAGE_I18N_JS_PATH.read_text(encoding="utf-8")
+        self.offer_bundle = OFFERS_BUNDLE_PATH.read_text(encoding="utf-8")
+        self.html = "\n".join((
+            self.document_html,
+            self.homepage_css,
+            self.homepage_editorial_css,
+            self.homepage_js,
+            self.homepage_i18n_js,
+            self.offer_bundle,
+        ))
+        self.runtime_source = self.html
 
-    def test_embedded_data_matches_offers_json(self):
-        self.assertEqual(embedded_offer_data(self.html), read_offers())
+    def test_external_offer_bundle_matches_offers_json(self):
+        self.assertEqual(bundled_offer_data(), read_offers())
 
     def test_page_has_required_data_hooks(self):
         for needle in (
-            'id="offer-data"', 'id="catalog-offer-rows"', 'id="catalog-search"',
+            'id="catalog-offer-rows"', 'id="catalog-search"',
             'id="catalog-sort"', 'id="catalog-result-count"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
             'id="studentList"', 'id="catalog-download-list"', 'id="catalog-last-checked"',
             "offerCategories", "timeWindow",
         ):
-            self.assertIn(needle, self.html)
-        self.assertIn('"id":"doubao"', self.html)
-        self.assertIn('"id":"aliyun-qwen-free-quota"', self.html)
-        self.assertIn('"id":"agnes-ai-free"', self.html)
-        self.assertIn('"id":"stepfun-limited-time-free"', self.html)
-        self.assertIn('"id":"longcat-2-0"', self.html)
-        self.assertNotIn('"id":"longcat-api"', self.html)
-        self.assertNotIn('"id":"longcat-download"', self.html)
+            self.assertIn(needle, self.runtime_source)
+        for pattern in (
+            r'\.\./css/homepage\.[0-9a-f]{10}\.css',
+            r'\.\./css/homepage-editorial\.[0-9a-f]{10}\.css',
+            r'\.\./js/homepage\.[0-9a-f]{10}\.js',
+            r'\.\./js/homepage-i18n\.[0-9a-f]{10}\.js',
+        ):
+            self.assertRegex(self.document_html, pattern)
+        offer_ids = {item["id"] for item in bundled_offer_data()}
+        self.assertTrue({"doubao", "aliyun-qwen-free-quota", "agnes-ai-free", "stepfun-limited-time-free", "longcat-2-0"} <= offer_ids)
+        self.assertNotIn("longcat-api", offer_ids)
+        self.assertNotIn("longcat-download", offer_ids)
 
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
@@ -75,7 +101,7 @@ class StaticContractTests(unittest.TestCase):
             'data-region-chip="global"',
             'window.FreeLLM?.Sync?.bind(container)',
         ):
-            self.assertIn(needle, self.html)
+            self.assertIn(needle, self.runtime_source)
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
@@ -178,6 +204,11 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(f'href="/guides/{slug}/"', self.html)
 
+        self.assertIn("免费 LLM API / OpenAI 兼容", self.html)
+        llm_api_guide = (ROOT / "guides" / "free-openai-compatible-apis" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("免费 LLM API 与 OpenAI 兼容接口", llm_api_guide)
+        self.assertIn("Compare free or trial LLM APIs", llm_api_guide)
+
     def test_external_signals_are_available_for_current_offer_set(self):
         offer_ids = {offer["id"] for offer in read_offers()}
         signals = read_signals()
@@ -278,7 +309,7 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_chinese_static_seo_metadata(self):
         self.assertRegex(self.html, r'<html[^>]*lang="zh-CN"')
         self.assertIn(
-            '<meta name="description" content="FreeLLM 汇总并持续核验免费 AI 模型、API、编程 IDE、Agent Skills',
+            '<meta name="description" content="FreeLLM 每日核验免费 AI 模型、LLM API、OpenAI 兼容接口、AI 编程工具',
             self.html,
         )
         self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.html)
@@ -293,11 +324,13 @@ class StaticContractTests(unittest.TestCase):
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
         self.assertIn(
-            '<title>FreeLLM — 免费 AI 模型、API、IDE 与额度索引</title>',
+            '<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>',
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>FreeLLM：发现真正好用的<span>免费 AI</span></h1>', self.html)
+        self.assertIn('<h1>免费 AI 模型与 API，<span>每天核验</span></h1>', self.html)
+        self.assertIn("免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口", self.html)
+        self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
@@ -548,7 +581,16 @@ class BrowserPageTests(unittest.TestCase):
         self.addCleanup(context.close)
         page = context.new_page()
         problems = []
-        page.on("console", lambda message: problems.append(message.text) if message.type == "error" else None)
+
+        def record_console_problem(message):
+            if message.type != "error":
+                return
+            text = message.text
+            if "Framing 'https://www.google.com/'" in text and "report-only Content Security Policy directive" in text:
+                return
+            problems.append(text)
+
+        page.on("console", record_console_problem)
         page.on("pageerror", lambda error: problems.append(str(error)))
         page.problems = problems
         bad_responses = []
@@ -601,6 +643,45 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
+
+    def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 720, "height": 700})
+        page.goto(f"{self.site.url}/skills/")
+        page.click('.skill-details[data-skill-id="anthropics-docx"]')
+        page.wait_for_selector("#skill-dialog[open]")
+        self.assertTrue(page.locator("#dialog-skill-test").is_visible())
+        self.assertIn("BLOCKED", page.locator("#dialog-skill-test").inner_text())
+        self.assertTrue(page.locator("#dialog-skill-preview").is_hidden())
+        self.assertTrue(page.locator("#dialog-style-section").is_hidden())
+
+        for width, height in ((720, 700), (390, 844)):
+            page.set_viewport_size({"width": width, "height": height})
+            page.wait_for_timeout(50)
+            dialog_box = page.locator("#skill-dialog").bounding_box()
+            heading_box = page.locator("#dialog-skill-name").bounding_box()
+            self.assertIsNotNone(dialog_box)
+            self.assertIsNotNone(heading_box)
+            self.assertGreaterEqual(dialog_box["x"], -0.5)
+            self.assertGreaterEqual(dialog_box["y"], -0.5)
+            self.assertLessEqual(dialog_box["x"] + dialog_box["width"], width + 0.5)
+            self.assertLessEqual(dialog_box["y"] + dialog_box["height"], height + 0.5)
+            self.assertGreaterEqual(heading_box["x"], dialog_box["x"] + 8)
+
+        page.click(".skill-dialog-close")
+        page.set_viewport_size({"width": 720, "height": 700})
+        page.click('.skill-details[data-skill-id="anthropics-pdf"]')
+        page.wait_for_selector("#skill-dialog[open]")
+        self.assertIn("8.7/10", page.locator("#dialog-skill-test").inner_text())
+        self.assertIn("端到端通过", page.locator("#dialog-skill-test").inner_text())
+        self.assertIn("真实生成 2 页退款 PDF", page.locator("#dialog-skill-test").inner_text())
+        self.assertTrue(page.locator("#dialog-skill-preview").is_hidden())
+
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_file_protocol_search_filter_and_drawer(self):
         page = self.new_page()
@@ -710,9 +791,16 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "js").glob("homepage*.js"):
+                (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("homepage*.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            data = Path(directory) / "data"
+            data.mkdir()
+            (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
@@ -730,13 +818,17 @@ class BrowserPageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             design = Path(directory) / "design"
             design.mkdir()
-            stripped = re.sub(
-                r'(<script type="application/json" id="offer-data">).*?(</script>)',
-                r"\1[]\2",
-                HTML_PATH.read_text(encoding="utf-8"),
-                flags=re.S,
-            )
-            (design / HTML_PATH.name).write_text(stripped, encoding="utf-8")
+            (design / HTML_PATH.name).write_text(HTML_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            js = Path(directory) / "js"
+            js.mkdir()
+            (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "js").glob("homepage*.js"):
+                (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            css = Path(directory) / "css"
+            css.mkdir()
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("homepage*.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()

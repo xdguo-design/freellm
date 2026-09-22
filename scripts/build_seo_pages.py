@@ -398,12 +398,12 @@ CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
 THEME_GUIDE_DEFINITIONS = (
     {
         "slug": "free-openai-compatible-apis",
-        "title_zh": "免费 OpenAI 兼容 API",
-        "title_en": "Free OpenAI-Compatible APIs",
-        "description_zh": "整理可用于原型和开发工具的免费或试用 OpenAI 兼容 API，并标注额度、限制和官方接入入口。",
-        "description_en": "Compare free or trial OpenAI-compatible APIs for prototypes and developer tools, with quota notes and official setup links.",
-        "lead_zh": "如果你的工具支持 OpenAI SDK，通常只需要替换 base URL、API key 和模型 ID。",
-        "lead_en": "If your tool supports the OpenAI SDK shape, you usually only need to replace the base URL, API key and model ID.",
+        "title_zh": "免费 LLM API 与 OpenAI 兼容接口",
+        "title_en": "Free LLM APIs",
+        "description_zh": "比较免费或试用 LLM API，标注 OpenAI 兼容性、额度、地区限制和官方接入入口。",
+        "description_en": "Compare free or trial LLM APIs, including OpenAI-compatible endpoints, with quota, region and setup links.",
+        "lead_zh": "想找免费 LLM API，先比较免费机制、限流、地区和兼容性，再决定接入哪一家。",
+        "lead_en": "Compare free mechanisms, rate limits, region and API compatibility before choosing a free LLM endpoint.",
     },
     {
         "slug": "free-ai-coding-tools",
@@ -3377,6 +3377,16 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
+    head = re.sub(
+        r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
+        r'href="../../css/\1"',
+        head,
+    )
+    body = re.sub(
+        r'src="../js/(homepage(?:-i18n)?(?:\.[0-9a-f]{10})?\.js)"',
+        r'src="../../js/\1"',
+        body,
+    )
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
@@ -3708,7 +3718,7 @@ def _log_empty_state(log: dict, groups: dict[str, list[dict]]) -> str:
     return ""
 
 
-def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | None = None) -> str:
+def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | None = None, models: list[dict] | None = None) -> str:
     """Render the public daily change log as a dashboard with event details."""
     offer_lookup = _log_offer_lookup(offers)
     page_url = _absolute(site_url, CHANGE_LOG_PAGE_PATH)
@@ -3717,6 +3727,21 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
+    # The hero snapshot describes the currently published directories, not a
+    # transient crawler observation. Keep it sourced from the same data that
+    # renders /models/ so the public model/provider counts cannot drift.
+    if models is not None:
+        published_models = [item for item in models if isinstance(item, dict)]
+        published_providers = {
+            str(item.get("providerId") or "").strip()
+            for item in published_models
+            if str(item.get("providerId") or "").strip()
+        }
+        latest_snapshot = {
+            "models": len(published_models),
+            "providers": len(published_providers),
+            "offers": len(offers or []),
+        }
     latest_has_changes = any(latest_groups.values())
     latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
     latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
@@ -3885,18 +3910,29 @@ def _skill_test_markup(skill: dict) -> str:
     status = str(test.get("status") or "待测试")
     level = str(test.get("testLevel") or "")
     tested_at = str(test.get("testedAt") or "")
+    environment = str(test.get("environment") or "")
     task = str(test.get("task") or "")
     evaluation = str(test.get("evaluation") or "")
     score = test.get("score")
-    blocked = level == "preflight"
-    if isinstance(score, (int, float)):
-        lead = f"{score:g}/10"
+
+    if level == "blocked":
+        lead, state_class = "BLOCKED", "blocked"
+    elif level == "partial":
+        lead, state_class = "PARTIAL", "partial"
+    elif level == "task":
+        lead = f"{score:g}/10" if isinstance(score, (int, float)) else "TASK"
+        state_class = "task"
+    elif level == "artifact":
+        lead = f"{score:g}/10" if isinstance(score, (int, float)) else "ARTIFACT"
+        state_class = "partial" if "部分" in status else "tested"
+    elif level == "e2e":
+        lead = f"{score:g}/10" if isinstance(score, (int, float)) else "E2E"
         state_class = "tested"
-        label = f"FreeLLM 实测 · {status}"
     else:
-        lead = "BLOCKED" if blocked else "TEST"
-        state_class = "blocked" if blocked else "pending"
-        label = status
+        lead = f"{score:g}/10" if isinstance(score, (int, float)) else "TEST"
+        state_class = "pending"
+
+    label = f"FreeLLM 真测 · {status}"
     evidence_links = []
     for index, evidence in enumerate(test.get("evidence") or [], start=1):
         if isinstance(evidence, str):
@@ -3909,11 +3945,13 @@ def _skill_test_markup(skill: dict) -> str:
         if url:
             evidence_links.append(f'<a href="{_esc(url)}" target="_blank" rel="noopener">{_esc(name)} ↗</a>')
     evidence_markup = '<div class="freellm-test-evidence">' + "".join(evidence_links) + "</div>" if evidence_links else ""
+    environment_markup = f'<p><strong>环境：</strong>{_esc(environment)}</p>' if environment else ""
     detail = (
-        '<details class="freellm-test-inline"><summary>查看测试任务与 FreeLLM 评价</summary>'
+        '<details class="freellm-test-inline"><summary>查看真实测试任务、限制与评价</summary>'
         '<div class="freellm-test-inline-body">'
         f'<p><strong>测试任务：</strong>{_esc(task)}</p>'
         f'<p><strong>评价：</strong>{_esc(evaluation)}</p>'
+        f'{environment_markup}'
         f'<p><strong>测试时间：</strong>{_esc(tested_at)} · {_esc(level)}</p>'
         f'{evidence_markup}</div></details>'
     )
@@ -3921,7 +3959,6 @@ def _skill_test_markup(skill: dict) -> str:
         f'<div class="freellm-test-strip {state_class}"><strong>{_esc(lead)}</strong>'
         f'<span>{_esc(label)}</span><small>{_esc(level)}</small></div>' + detail
     )
-
 
 def _skill_card(skill: dict) -> str:
     category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {})
@@ -4029,14 +4066,17 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
       document.getElementById('skill-clear').addEventListener('click', () => { search.value = ''; status.value = 'all'; category = 'all'; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item.dataset.category === 'all')); render(); });
       const sentimentLabel = value => ({ positive: ['正面', 'positive'], mixed: ['有褒有贬', 'mixed'], negative: ['负面', 'negative'], neutral: ['中性', 'neutral'] }[value] || null);
       const renderStats = skill => { const stats = skill.repoStats || {}; const chips = []; const stars = formatCount(stats.stars); if (stars) chips.push(`★ ${stars}`); const forks = formatCount(stats.forks); if (forks) chips.push(`${isEn() ? 'forks ' : 'fork '}${forks}`); if (stats.pushedAt) chips.push(`${isEn() ? 'pushed ' : '最近推送 '}${String(stats.pushedAt).slice(0, 10)}`); document.getElementById('dialog-skill-stats').innerHTML = chips.map(chip => `<span class="stat-chip">${escapeHtml(chip)}</span>`).join(''); };
+      const testLevelLabel = value => ({ e2e: '原链路 E2E', artifact: '真实产物', task: '任务级执行', partial: '部分验证', blocked: '环境阻塞' }[value] || '测试记录');
+      const ensureTestPanel = () => { let section = document.getElementById('dialog-skill-test'); if (section) return section; section = document.createElement('section'); section.id = 'dialog-skill-test'; section.className = 'skill-test-panel'; document.getElementById('dialog-skill-stats').after(section); return section; };
+      const renderTestPanel = skill => { const section = ensureTestPanel(); const test = skill.freeLLMTest || {}; if (!test.testLevel) { section.hidden = true; return; } section.hidden = false; const score = typeof test.score === 'number' ? `${Number(test.score).toFixed(1).replace('.0','')}/10` : (test.testLevel === 'blocked' ? 'BLOCKED' : test.testLevel.toUpperCase()); const evidence = (test.evidence || []).map(item => typeof item === 'string' ? { url:item, label:'查看证据' } : item).filter(item => item && item.url).map(item => `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.label || '查看证据')} ↗</a>`).join(''); section.className = `skill-test-panel ${escapeHtml(test.testLevel)}`; section.innerHTML = `<div class="skill-test-score"><span>FREELLM TEST</span><strong>${escapeHtml(score)}</strong><em>${escapeHtml(testLevelLabel(test.testLevel))}</em></div><div class="skill-test-copy"><div class="skill-test-heading"><strong>${escapeHtml(test.status || testLevelLabel(test.testLevel))}</strong><span>${escapeHtml(test.testedAt || '')}</span></div><p class="skill-test-task"><b>测试任务</b>${escapeHtml(test.task || '')}</p><p class="skill-test-evaluation"><b>真实评价</b>${escapeHtml(test.evaluation || '')}</p>${test.environment ? `<p class="skill-test-env"><b>环境</b>${escapeHtml(test.environment)}</p>` : ''}${evidence ? `<div class="skill-test-links">${evidence}</div>` : ''}</div>`; };
       const renderReviews = skill => { const items = reviewsOf(skill); const list = document.getElementById('dialog-skill-reviews'); if (!items.length) { list.innerHTML = `<li class="skill-review-item is-empty"><span lang="zh-CN">暂未收录针对该 Skill 的第三方评价；上方 star / fork 数据可作为社区热度参考。</span><span lang="en">No third-party review collected yet; the star / fork counts above serve as a popularity signal.</span></li>`; return; } list.innerHTML = items.map(review => { const sentiment = sentimentLabel(review.sentiment); return `<li class="skill-review-item"><blockquote>“${escapeHtml(review.quote)}”</blockquote><div class="review-meta">${sentiment ? `<span class="skill-sentiment ${sentiment[1]}"><span lang="zh-CN">${sentiment[0]}</span><span lang="en">${sentiment[1]}</span></span>` : ''}${review.date ? `<span>${escapeHtml(review.date)}</span>` : ''}<a href="${escapeHtml(review.url)}" target="_blank" rel="nofollow noopener">${escapeHtml(review.source)} ↗</a></div></li>`; }).join(''); };
       const contentCache = {};
       const renderContent = skill => { const pre = document.getElementById('dialog-skill-content'); const meta = document.getElementById('dialog-content-meta'); pre.classList.remove('is-error'); if (!skill.contentPath) { pre.classList.add('is-error'); meta.innerHTML = ''; pre.textContent = isEn() ? 'No SKILL.md could be verified for this entry. Open the GitHub link to inspect the source yourself.' : '该条目未能核验到 SKILL.md 原文（来源链接缺失或不可达），请打开 GitHub 自行核对。'; return; } const show = doc => { pre.textContent = doc.content; meta.innerHTML = `${escapeHtml(String(doc.bytes || ''))} bytes · ${isEn() ? 'fetched ' : '抓取于 '}${escapeHtml(String(doc.fetchedAt || '').slice(0, 10))} · <a href="${escapeHtml(doc.contentUrl || skill.githubUrl || '#')}" target="_blank" rel="nofollow noopener">raw ↗</a>`; }; if (contentCache[skill.id]) { show(contentCache[skill.id]); return; } pre.textContent = isEn() ? 'Loading SKILL.md…' : '正在加载 SKILL.md 原文…'; meta.innerHTML = ''; fetch(`content/${encodeURIComponent(skill.id)}.json`).then(response => { if (!response.ok) throw new Error('http ' + response.status); return response.json(); }).then(doc => { contentCache[skill.id] = doc; if (current && current.id === skill.id) show(doc); }).catch(() => { if (current && current.id === skill.id) { pre.classList.add('is-error'); pre.textContent = isEn() ? 'Failed to load the content. Open GitHub to read the source.' : '原文加载失败，请打开 GitHub 查看源文件。'; } }); };
-      const ensurePreview = () => { let section = document.getElementById('dialog-skill-preview'); if (section) return section; section = document.createElement('section'); section.id = 'dialog-skill-preview'; section.className = 'skill-dialog-section skill-preview'; section.innerHTML = '<h3><span lang="zh-CN">视觉预览</span><span lang="en">Visual preview</span></h3><div class="skill-preview-layout"><div class="skill-preview-copy"><span class="skill-preview-label">OUTPUT FORMAT / 输出形式</span><strong id="dialog-preview-format" class="skill-preview-format"></strong><p id="dialog-preview-summary" class="skill-preview-summary"></p><div id="dialog-preview-tags" class="skill-preview-tags"></div></div><div id="dialog-preview-canvas" class="skill-preview-canvas" role="img" aria-label="Skill output structure preview"></div></div>'; document.getElementById('dialog-skill-stats').after(section); return section; };
+      const ensurePreview = () => { let section = document.getElementById('dialog-skill-preview'); if (section) return section; section = document.createElement('section'); section.id = 'dialog-skill-preview'; section.className = 'skill-dialog-section skill-preview'; section.innerHTML = '<h3><span lang="zh-CN">视觉预览</span><span lang="en">Visual preview</span></h3><div class="skill-preview-layout"><div class="skill-preview-copy"><span class="skill-preview-label">OUTPUT FORMAT / 输出形式</span><strong id="dialog-preview-format" class="skill-preview-format"></strong><p id="dialog-preview-summary" class="skill-preview-summary"></p><div id="dialog-preview-tags" class="skill-preview-tags"></div></div><div id="dialog-preview-canvas" class="skill-preview-canvas" role="img" aria-label="Skill output structure preview"></div></div>'; const anchor = document.getElementById('dialog-skill-test') || document.getElementById('dialog-skill-stats'); anchor.after(section); return section; };
       const previewKind = skill => { const text = `${skill.name || ''} ${(skill.styles && skill.styles.format) || ''} ${skill.description || ''}`.toLowerCase(); if (/ppt|slide|幻灯片|png|image|infographic|插画|视觉|canvas/.test(text)) return 'visual'; if (/xlsx|excel|table|表格|data|dashboard|报表/.test(text)) return 'data'; if (/docx|word|文档|markdown|resume|简历|writing|文案|pdf/.test(text)) return 'document'; return 'code'; };
-      const renderPreview = skill => { ensurePreview(); const entry = styleEntry(skill) || {}; const kind = previewKind(skill); const format = entry.format || 'Agent workflow output'; const summary = entry.hasStyles ? '根据该 Skill 的样式元数据生成结构预览；具体内容由 Skill 执行时产生。' : '该 Skill 没有预设视觉主题，这里展示它的输出结构示意。'; const items = styleItems(entry).slice(0, 6); document.getElementById('dialog-preview-format').textContent = format; document.getElementById('dialog-preview-summary').textContent = summary; document.getElementById('dialog-preview-tags').innerHTML = (items.length ? items : ['结构示意']).map(item => `<span class="skill-preview-tag">${escapeHtml(item)}</span>`).join(''); const canvas = document.getElementById('dialog-preview-canvas'); canvas.className = `skill-preview-canvas ${kind}`; canvas.innerHTML = `<div class="skill-preview-window"><div class="skill-preview-window-bar"><i></i><i></i><i></i><span>${escapeHtml(format)}</span></div><div class="skill-preview-window-main"><span class="skill-preview-kicker"></span><span class="skill-preview-title-line"></span><span class="skill-preview-copy-line"></span><span class="skill-preview-copy-line short"></span><div class="skill-preview-blocks"><i class="skill-preview-block"></i><i class="skill-preview-block"></i><i class="skill-preview-block"></i></div></div></div>`; };
-      const renderStyles = skill => { const section = document.getElementById('dialog-style-section'); const entry = styleEntry(skill); if (!entry) { section.hidden = true; return; } section.hidden = false; document.getElementById('dialog-style-format').textContent = entry.format || ''; document.getElementById('dialog-style-summary').textContent = entry.summary || ''; const items = styleItems(entry); const total = typeof entry.total === 'number' && entry.total >= items.length ? entry.total : items.length; document.getElementById('dialog-style-chips').innerHTML = items.map(item => `<code class="style-chip">${escapeHtml(item)}</code>`).join('') + (total > items.length ? `<span class="style-more">+${total - items.length}</span>` : ''); };
-      grid.addEventListener('click', event => { const trigger = event.target.closest('.skill-details'); if (!trigger) return; const skill = skills.find(item => item.id === trigger.dataset.skillId); if (!skill) return; current = skill; document.getElementById('dialog-skill-name').textContent = skill.name; document.getElementById('dialog-skill-description-zh').textContent = skill.description_zh; document.getElementById('dialog-skill-description-en').textContent = skill.description; document.getElementById('dialog-command').textContent = skill.cloneCommand; const link = document.getElementById('dialog-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; renderStats(skill); renderReviews(skill); renderPreview(skill); renderStyles(skill); renderContent(skill); dialog.showModal(); });
+      const renderPreview = skill => { const section = ensurePreview(); const entry = styleEntry(skill) || {}; if (!entry.hasStyles) { section.hidden = true; return; } section.hidden = false; const kind = previewKind(skill); const format = entry.format || 'Agent workflow output'; const summary = '根据该 Skill 的真实样式元数据生成结构预览；具体内容由 Skill 执行时产生。'; const items = styleItems(entry).slice(0, 6); document.getElementById('dialog-preview-format').textContent = format; document.getElementById('dialog-preview-summary').textContent = summary; document.getElementById('dialog-preview-tags').innerHTML = items.map(item => `<span class="skill-preview-tag">${escapeHtml(item)}</span>`).join(''); const canvas = document.getElementById('dialog-preview-canvas'); canvas.className = `skill-preview-canvas ${kind}`; canvas.innerHTML = `<div class="skill-preview-window"><div class="skill-preview-window-bar"><i></i><i></i><i></i><span>${escapeHtml(format)}</span></div><div class="skill-preview-window-main"><span class="skill-preview-kicker"></span><span class="skill-preview-title-line"></span><span class="skill-preview-copy-line"></span><span class="skill-preview-copy-line short"></span><div class="skill-preview-blocks"><i class="skill-preview-block"></i><i class="skill-preview-block"></i><i class="skill-preview-block"></i></div></div></div>`; };
+      const renderStyles = skill => { const section = document.getElementById('dialog-style-section'); const entry = styleEntry(skill); if (!entry || !entry.hasStyles) { section.hidden = true; return; } section.hidden = false; document.getElementById('dialog-style-format').textContent = entry.format || ''; document.getElementById('dialog-style-summary').textContent = entry.summary || ''; const items = styleItems(entry); const total = typeof entry.total === 'number' && entry.total >= items.length ? entry.total : items.length; document.getElementById('dialog-style-chips').innerHTML = items.map(item => `<code class="style-chip">${escapeHtml(item)}</code>`).join('') + (total > items.length ? `<span class="style-more">+${total - items.length}</span>` : ''); };
+      grid.addEventListener('click', event => { const trigger = event.target.closest('.skill-details'); if (!trigger) return; const skill = skills.find(item => item.id === trigger.dataset.skillId); if (!skill) return; current = skill; document.getElementById('dialog-skill-name').textContent = skill.name; document.getElementById('dialog-skill-description-zh').textContent = skill.description_zh; document.getElementById('dialog-skill-description-en').textContent = skill.description; document.getElementById('dialog-command').textContent = skill.cloneCommand; const link = document.getElementById('dialog-github'); link.href = skill.githubUrl || '#'; link.hidden = !skill.githubUrl; renderStats(skill); renderTestPanel(skill); renderReviews(skill); renderPreview(skill); renderStyles(skill); renderContent(skill); dialog.showModal(); });
       document.querySelector('.skill-dialog-close').addEventListener('click', () => dialog.close()); document.getElementById('copy-command').addEventListener('click', async event => { const button = event.currentTarget; const command = document.getElementById('dialog-command').textContent; try { await navigator.clipboard.writeText(command); button.textContent = '已复制'; } catch { const range = document.createRange(); range.selectNodeContents(document.getElementById('dialog-command')); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); button.textContent = '请手动复制'; } setTimeout(() => { button.textContent = '复制命令'; }, 1600); });
       const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (!path.endsWith('/')) return; link.setAttribute('href', `../${path.slice(1)}index.html${window.location.search}`); }); };
       adaptFileNavigation(); render();
@@ -4048,7 +4088,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
         + ";"
         + script
     )
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>我们真的跑过这些 Skill</h1><p class="hero-copy">不拿 README、Star 或第三方口碑当结论。优先展示 FreeLLM 的固定任务实测、阻塞点、评价与真实产物；GitHub 和社区信息只作为参考。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 全部重新分级：原链路能跑就跑；任务型明确标“任务级”；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
 def render_skills_page(skills: list[dict], site_url: str) -> str:
@@ -4374,11 +4414,11 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
-        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, vendor_directory or providers, site_url),
+        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
-        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers),
+        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers, model_catalog),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
@@ -4419,7 +4459,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             '<div class="stat-row">'
             f'<div class="stat"><strong>{len(offers)}</strong><span><span lang="zh-CN">已核验资源条目</span><span lang="en">verified offers</span></span></div>'
             f'<div class="stat"><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型目录记录</span><span lang="en">model records</span></span></div>'
-            f'<div class="stat"><strong>{len(vendor_directory or providers)}</strong><span><span lang="zh-CN">厂家目录</span><span lang="en">vendor directory</span></span></div>'
+            f'<div class="stat"><strong>{len(providers)}</strong><span><span lang="zh-CN">厂家目录</span><span lang="en">vendor directory</span></span></div>'
             f'<div class="stat"><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">当前数据 Provider ID</span><span lang="en">active provider IDs</span></span></div>'
             '</div>'
         )
@@ -4980,8 +5020,17 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         stale = []
         for relative, content in files.items():
             path = output_root / relative
-            if not path.is_file() or path.read_text(encoding="utf-8") != content:
+            current = path.read_text(encoding="utf-8") if path.is_file() else None
+            if current != content:
                 stale.append(str(relative))
+                if current is not None and len(stale) <= 3:
+                    limit = min(len(current), len(content))
+                    offset = next((i for i in range(limit) if current[i] != content[i]), limit)
+                    left = max(0, offset - 180)
+                    right = offset + 260
+                    print(f"stale detail {relative} @ char {offset}")
+                    print("  current :", repr(current[left:right]))
+                    print("  expected:", repr(content[left:right]))
         if stale:
             print("stale SEO output: " + ", ".join(stale))
             return False

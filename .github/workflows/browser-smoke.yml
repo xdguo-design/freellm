@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
 
       - uses: actions/setup-python@v5
         with:
@@ -23,7 +25,7 @@ jobs:
 
       - name: Compile and verify generated output
         run: |
-          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py
+          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py
           python scripts/build_tools_index.py --check
           python scripts/build_static.py --check
           python scripts/build_seo_pages.py --check
@@ -33,6 +35,9 @@ jobs:
 
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
+
+      - name: Compare homepage performance
+        run: python scripts/check_home_performance.py
 
       - name: Run model page regression tests
         run: python -m pytest tests/test_model_pages.py -q

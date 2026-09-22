@@ -76,6 +76,9 @@ jobs:
       - name: Update homepage daily summary
         run: python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
 
+      - name: Validate homepage, models and logs snapshot consistency
+        run: python -m unittest tests.test_p0_convergence.P0ConvergenceTests.test_home_models_and_logs_share_latest_snapshot -v
+
       - name: Validate generated internal links and sitemaps
         run: python scripts/check_internal_links.py
 
