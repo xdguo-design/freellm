@@ -1271,5 +1271,41 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+  },
+  {
+    "providerId": "amd-radeon-cloud",
+    "profileId": "amd-radeon-cloud-api",
+    "registerUrl": "https://developer.amd.com.cn/radeon/tokenfactory",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "model_dependent",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_model_api",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "打开 AMD Radeon Cloud Token Factory 并登录 Radeon Cloud 账号。",
+      "完成平台账户验证；验证通过后在 Token Factory 获取 rc- 前缀 API Key。",
+      "先调用 GET /radeon/api/v1/models 确认当前 free=true 的共享模型目录，再按 OpenAI 或 Anthropic 兼容协议调用。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/api/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/",
+      "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方文档确认 Public Free Model APIs 为常驻共享端点、无需创建实例且不消耗 credits。账号需先通过平台验证；本次未使用真实 rc- Key 做账户内端到端生成测试。"
   }
 ]
