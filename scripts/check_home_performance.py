@@ -155,14 +155,21 @@ def measure_once(browser, site: LocalSite) -> dict:
     )
     context.add_init_script(INIT_SCRIPT)
     page = context.new_page()
-    page.route(
-        "**/*",
-        lambda route: route.continue_()
-        if route.request.url.startswith(site.origin)
-        else route.fulfill(status=204, body=""),
-    )
     cdp = context.new_cdp_session(page)
     cdp.send("Network.enable")
+    cdp.send(
+        "Network.setBlockedURLs",
+        {
+            "urls": [
+                "https://www.googletagmanager.com/*",
+                "https://pagead2.googlesyndication.com/*",
+                "https://fonts.googleapis.com/*",
+                "https://fonts.gstatic.com/*",
+                "https://www.google.com/*",
+                "https://icons.duckduckgo.com/*",
+            ]
+        },
+    )
     cdp.send(
         "Network.emulateNetworkConditions",
         {
