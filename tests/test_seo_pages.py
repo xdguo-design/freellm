@@ -368,8 +368,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<meta name="description"' in detail
     assert "请以官方页面为准" in detail
     assert '<link rel="canonical" href="https://freellm.top/offers/codebuddy/"' in detail
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in detail
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in detail
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in detail
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in detail
     assert 'window.va = window.va || function ()' in detail
     assert '<script defer src="/_vercel/insights/script.js"></script>' in detail
     assert 'data-offer-id="codebuddy"' in detail
@@ -385,8 +385,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert '<html lang="zh-CN">' in category
     assert "免费 AI IDE" in category
     assert '<link rel="canonical" href="https://freellm.top/category/free-ide/"' in category
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in category
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in category
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in category
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in category
     assert '<script defer src="/_vercel/insights/script.js"></script>' in category
     assert "/offers/codebuddy/" in category
     assert 'href="https://freellm.top/"' in category
@@ -398,8 +398,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://github.com/nejib1/Free-LLM/blob/main/README.zh-CN.md" in guide
     assert "MIT License" in guide
     assert '<link rel="canonical" href="https://freellm.top/guides/free-llm/"' in guide
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in guide
-    assert '<meta name="twitter:image" content="https://freellm.top/freellm-01-hero.png">' in guide
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in guide
+    assert '<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png">' in guide
     assert '<script defer src="/_vercel/insights/script.js"></script>' in guide
 
     adsense_script = 'adsbygoogle.js?client=ca-pub-2461062743308239'
@@ -495,7 +495,7 @@ def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
     assert "全部免费 AI 模型与 API 一览" in page
     assert "All Free AI Models" in page
     assert '<link rel="canonical" href="https://freellm.top/models/all/"' in page
-    assert '<meta property="og:image" content="https://freellm.top/freellm-01-hero.png">' in page
+    assert '<meta property="og:image" content="https://freellm.top/freellm-06-faq.png">' in page
     assert 'window.va = window.va || function ()' in page
     assert '<span lang="zh-CN">注册领取</span><span lang="en">Register</span>' in page
     assert '<span lang="zh-CN">模型同步</span><span lang="en">Models synced</span>' in page
