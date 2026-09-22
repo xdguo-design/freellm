@@ -171,13 +171,13 @@ def apply_precomputed_ranking(data: list[dict], data_path: Path) -> list[dict]:
         enriched = dict(offer)
         enriched["sourceOrder"] = int(offer.get("order") or 0)
         enriched["order"] = rank
-        enriched["rankingScore"] = float(entry.get("rankingScore") or 0)
+        enriched["rankingScore"] = entry.get("rankingScore") or 0
         enriched["ranking"] = {
             "asOf": payload.get("asOf"),
             "components": entry.get("components") or {},
-            "penaltyScore": float(entry.get("penaltyScore") or 0),
+            "penaltyScore": entry.get("penaltyScore") or 0,
             "penalties": entry.get("penalties") or [],
-            "manualBoost": float(entry.get("manualBoost") or 0),
+            "manualBoost": entry.get("manualBoost") or 0,
             "pinned": bool(entry.get("pinned")),
         }
         ranked.append(enriched)
