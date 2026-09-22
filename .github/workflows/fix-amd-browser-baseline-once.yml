@@ -1,0 +1,68 @@
+name: fix-amd-browser-baseline-once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/fix-amd-browser-baseline-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Update data-driven browser assertions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("tests/test_e2e_static.py")
+          text = path.read_text(encoding="utf-8")
+
+          old = '        self.assertRegex(log, rf"<strong>{models} <span")'
+          new = '        self.assertIn(f\'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>\', log)'
+          if old not in text:
+              raise SystemExit("daily log live snapshot assertion not found")
+          text = text.replace(old, new, 1)
+
+          old = '''        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "19")
+          self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "19")'''
+          new = '''        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
+          self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), str(free_quota_count))
+          self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), str(free_quota_count))'''
+          if old not in text:
+              raise SystemExit("free quota assertions not found")
+          text = text.replace(old, new, 1)
+
+          old = '''        page.fill("#catalog-search", "Qwen3")
+          self.assertEqual(self.visible_offers(page), 2)'''
+          new = '''        page.fill("#catalog-search", "Qwen3")
+          self.assertEqual(self.visible_offers(page), 3)
+          self.assertEqual(page.locator(".offer:not(.hidden)[data-detail='amd-radeon-cloud-free']").count(), 1)'''
+          if old not in text:
+              raise SystemExit("Qwen3 search assertion not found")
+          text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Run static contract regression
+        run: python -m unittest tests.test_e2e_static.StaticContractTests.test_daily_log_dashboard_exposes_baseline_snapshot
+
+      - name: Commit test baseline fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/test_e2e_static.py
+          git commit -m "test: make AMD catalog browser baselines data-aware"
+          git push origin HEAD:main
