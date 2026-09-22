@@ -121,8 +121,68 @@ def offer_href(offer: dict) -> str:
 
 
 def key_first(offers: list[dict]) -> list[dict]:
-    """重点资源排在可用列表最前面，其余保持原有 order。"""
+    """Use ranking order when present; otherwise preserve the legacy key/order fallback."""
+    if any("rankingScore" in offer for offer in offers):
+        return sorted(offers, key=lambda offer: int(offer.get("order") or 0))
     return sorted(offers, key=lambda offer: (not offer.get("key"), int(offer.get("order") or 0)))
+
+
+def apply_precomputed_ranking(data: list[dict], data_path: Path) -> list[dict]:
+    """Merge the deterministic TypeScript ranking artifact into public offer rows.
+
+    Ranking metadata is deliberately separate from data/offers.json so curation data stays
+    human-readable. A missing ranking artifact is tolerated for isolated/unit-test builds,
+    while an existing-but-stale artifact fails loudly instead of silently serving bad order.
+    """
+    ranking_path = data_path.with_name("ranked-offers.json")
+    if not ranking_path.is_file():
+        return data
+
+    try:
+        payload = json.loads(ranking_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"Invalid ranking artifact {ranking_path}: {error}") from error
+
+    entries = payload.get("items") if isinstance(payload, dict) else None
+    if not isinstance(entries, list):
+        raise ValueError(f"Invalid ranking artifact {ranking_path}: items must be a list")
+
+    source_ids = [str(item.get("id") or "") for item in data]
+    ranking_ids = [str(item.get("id") or "") for item in entries]
+    if not all(source_ids) or len(set(source_ids)) != len(source_ids):
+        raise ValueError("Offer source contains missing or duplicate ids")
+    if not all(ranking_ids) or len(set(ranking_ids)) != len(ranking_ids):
+        raise ValueError("Ranking artifact contains missing or duplicate ids")
+    if set(source_ids) != set(ranking_ids):
+        missing = sorted(set(source_ids) - set(ranking_ids))
+        extra = sorted(set(ranking_ids) - set(source_ids))
+        raise ValueError(
+            f"Ranking artifact does not match offers data; missing={missing}, extra={extra}"
+        )
+
+    by_id = {str(entry["id"]): entry for entry in entries}
+    ranked: list[dict] = []
+    for offer in data:
+        offer_id = str(offer["id"])
+        entry = by_id[offer_id]
+        rank = int(entry.get("rank") or 0)
+        if rank <= 0:
+            raise ValueError(f"Ranking artifact has invalid rank for {offer_id}: {rank}")
+        enriched = dict(offer)
+        enriched["sourceOrder"] = int(offer.get("order") or 0)
+        enriched["order"] = rank
+        enriched["rankingScore"] = entry.get("rankingScore") or 0
+        enriched["ranking"] = {
+            "asOf": payload.get("asOf"),
+            "components": entry.get("components") or {},
+            "penaltyScore": entry.get("penaltyScore") or 0,
+            "penalties": entry.get("penalties") or [],
+            "manualBoost": entry.get("manualBoost") or 0,
+            "pinned": bool(entry.get("pinned")),
+        }
+        ranked.append(enriched)
+
+    return sorted(ranked, key=lambda offer: int(offer["order"]))
 
 
 NETWORK_REGION_LABELS = {
@@ -413,7 +473,8 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
         raise SystemExit("Invalid offers data:\n" + "\n".join(errors))
-    data = json.loads(data_path.read_text(encoding="utf-8"))
+    source_data = json.loads(data_path.read_text(encoding="utf-8"))
+    ranked_data = apply_precomputed_ranking(source_data, data_path)
     html = html_path.read_text(encoding="utf-8")
     updated = re.sub(
         r'\s*<script type="application/json" id="offer-data">.*?</script>\s*',
@@ -424,14 +485,28 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     )
     updated = update_trust_copy(updated)
     updated = remove_legacy_app(updated)
-    updated = replace_static_catalog(updated, data)
-    updated = update_static_item_list(updated, data)
+    updated = replace_static_catalog(updated, source_data)
+    updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
+    updated = re.sub(
+        r'(<body\b)([^>]*)(>)',
+        lambda match: (
+            match.group(1)
+            + re.sub(r'\s+data-offers-url="[^"]*"', "", match.group(2))
+            + ' data-offers-url="../data/offers-ranked.json"'
+            + match.group(3)
+        ),
+        updated,
+        count=1,
+        flags=re.I,
+    )
     updated, asset_manifest = update_home_asset_references(updated, html_path)
 
     bundle_path = data_path.with_suffix(".js")
-    bundle = "window.FREELLM_OFFERS = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n"
+    ranked_path = data_path.with_name("offers-ranked.json")
+    bundle = "window.FREELLM_OFFERS = " + json.dumps(ranked_data, ensure_ascii=False, separators=(",", ":")) + ";\n"
+    ranked_json = json.dumps(ranked_data, ensure_ascii=False, separators=(",", ":")) + "\n"
 
     if check:
         ok = True
@@ -441,17 +516,25 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
         if not bundle_path.exists() or bundle_path.read_text(encoding="utf-8") != bundle:
             print(f"stale: {bundle_path} does not contain the current offers bundle")
             ok = False
+        if not ranked_path.exists() or ranked_path.read_text(encoding="utf-8") != ranked_json:
+            print(f"stale: {ranked_path} does not contain the current ranked offers")
+            ok = False
         if not sync_home_asset_fingerprints(asset_manifest, check=True):
             ok = False
         if ok:
             print(f"current: {html_path}")
             print(f"current: {bundle_path}")
+            print(f"current: {ranked_path}")
         return ok
 
     sync_home_asset_fingerprints(asset_manifest, check=False)
     html_path.write_text(updated, encoding="utf-8")
     bundle_path.write_text(bundle, encoding="utf-8")
-    print(f"built: {html_path} and {bundle_path} from {data_path} ({len(data)} offers)")
+    ranked_path.write_text(ranked_json, encoding="utf-8")
+    print(
+        f"built: {html_path}, {bundle_path}, and {ranked_path} "
+        f"from {data_path} ({len(source_data)} offers)"
+    )
     return True
 
 
