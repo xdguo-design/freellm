@@ -49,7 +49,7 @@ def fetch(url: str) -> dict:
         url,
         headers={
             "User-Agent": "FreeLLM-production-performance-probe/1.0",
-            "Accept-Encoding": "gzip, br",
+            "Accept-Encoding": "identity",
         },
     )
     try:
