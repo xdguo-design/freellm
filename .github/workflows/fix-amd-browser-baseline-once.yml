@@ -29,29 +29,33 @@ jobs:
           path = Path("tests/test_e2e_static.py")
           text = path.read_text(encoding="utf-8")
 
-          old = '        self.assertRegex(log, rf"<strong>{models} <span")'
-          new = '        self.assertIn(f\'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>\', log)'
-          if old not in text:
-              raise SystemExit("daily log live snapshot assertion not found")
-          text = text.replace(old, new, 1)
+          replacements = [
+              (
+                  '        self.assertRegex(log, rf"<strong>{models} <span")',
+                  '        self.assertIn(f\'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>\', log)',
+                  "daily log live snapshot assertion",
+              ),
+              (
+                  '        self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), "19")',
+                  '        free_quota_count = page.locator(".offer[data-category~=\'free_quota\']").count()\\n        self.assertEqual(page.locator(".filter-strip [data-filter=\'free_quota\'] em").inner_text(), str(free_quota_count))',
+                  "free quota filter assertion",
+              ),
+              (
+                  '        self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), "19")',
+                  '        self.assertEqual(page.locator(".category-card[data-filter=\'free_quota\'] [data-category-count]").inner_text(), str(free_quota_count))',
+                  "free quota category assertion",
+              ),
+              (
+                  '        page.fill("#catalog-search", "Qwen3")\\n        self.assertEqual(self.visible_offers(page), 2)',
+                  '        page.fill("#catalog-search", "Qwen3")\\n        self.assertEqual(self.visible_offers(page), 3)\\n        self.assertEqual(page.locator(".offer:not(.hidden)[data-detail=\'amd-radeon-cloud-free\']").count(), 1)',
+                  "Qwen3 search assertion",
+              ),
+          ]
 
-          old = '''        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "19")
-          self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "19")'''
-          new = '''        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-          self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), str(free_quota_count))
-          self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), str(free_quota_count))'''
-          if old not in text:
-              raise SystemExit("free quota assertions not found")
-          text = text.replace(old, new, 1)
-
-          old = '''        page.fill("#catalog-search", "Qwen3")
-          self.assertEqual(self.visible_offers(page), 2)'''
-          new = '''        page.fill("#catalog-search", "Qwen3")
-          self.assertEqual(self.visible_offers(page), 3)
-          self.assertEqual(page.locator(".offer:not(.hidden)[data-detail='amd-radeon-cloud-free']").count(), 1)'''
-          if old not in text:
-              raise SystemExit("Qwen3 search assertion not found")
-          text = text.replace(old, new, 1)
+          for old, new, label in replacements:
+              if old not in text:
+                  raise SystemExit(f"{label} not found")
+              text = text.replace(old, new, 1)
 
           path.write_text(text, encoding="utf-8")
           PY
