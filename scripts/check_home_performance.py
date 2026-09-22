@@ -298,10 +298,10 @@ def main() -> int:
 
     vercel_config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
     cache_headers = {
-        item["source"]: next(
-            (header["value"] for header in item.get("headers", []) if header.get("key", "").lower() == "cache-control"),
-            None,
-        )
+        item["source"]: {
+            header.get("key", "").lower(): header.get("value")
+            for header in item.get("headers", [])
+        }
         for item in vercel_config.get("headers", [])
     }
     for source in (
@@ -310,10 +310,15 @@ def main() -> int:
         "/js/homepage.:hash.js",
         "/js/homepage-i18n.:hash.js",
     ):
-        if cache_headers.get(source) != "public, max-age=31536000, immutable":
+        if cache_headers.get(source, {}).get("cache-control") != "public, max-age=31536000, immutable":
             raise SystemExit(f"immutable cache rule missing for {source}")
-    if cache_headers.get("/data/offers.json") != "public, max-age=300, must-revalidate":
-        raise SystemExit("offers.json short cache rule missing")
+    offers_headers = cache_headers.get("/data/offers.json", {})
+    if offers_headers.get("cache-control") != "public, max-age=300, must-revalidate":
+        raise SystemExit("offers.json browser cache rule missing")
+    if offers_headers.get("cdn-cache-control") != "public, max-age=60":
+        raise SystemExit("offers.json downstream CDN cache rule missing")
+    if offers_headers.get("vercel-cdn-cache-control") != "public, max-age=60":
+        raise SystemExit("offers.json Vercel CDN cache rule missing")
 
     with tempfile.TemporaryDirectory() as directory:
         temp = Path(directory)
