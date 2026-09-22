@@ -90,6 +90,26 @@ class StaticContractTests(unittest.TestCase):
         self.assertNotIn("longcat-api", offer_ids)
         self.assertNotIn("longcat-download", offer_ids)
 
+    def test_third_party_network_scripts_are_deferred(self):
+        self.assertNotIn(
+            '<script async src="https://www.googletagmanager.com/gtag/js',
+            self.document_html,
+        )
+        self.assertNotIn(
+            '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+            self.document_html,
+        )
+        self.assertIn("requestIdleCallback", self.document_html)
+        self.assertIn(
+            "https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M",
+            self.document_html,
+        )
+        self.assertIn(
+            "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239",
+            self.document_html,
+        )
+        self.assertIn("if (!slot) return;", self.document_html)
+
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
@@ -428,7 +448,8 @@ class StaticContractTests(unittest.TestCase):
             'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239',
             self.html,
         )
-        self.assertIn('crossorigin="anonymous"', self.html)
+        self.assertIn("script.crossOrigin = 'anonymous'", self.html)
+        self.assertIn("if (!slot) return;", self.html)
 
     def test_seo_files_point_search_engines_to_canonical_site(self):
         robots = ROBOTS_PATH.read_text(encoding="utf-8")
