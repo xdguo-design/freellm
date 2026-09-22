@@ -1,0 +1,51 @@
+name: rebuild-amd-static-once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/rebuild-amd-static-once.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-amd-static-once
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate AMD offer data
+        run: python -m crawler.cli validate data/offers.json
+
+      - name: Rebuild homepage and generated SEO pages
+        run: |
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+
+      - name: Verify generated output is current
+        run: |
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+
+      - name: Commit generated output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Generated output already current."
+            exit 0
+          fi
+          git commit -m "chore: rebuild generated pages for AMD Radeon Cloud"
+          git push origin HEAD:main
