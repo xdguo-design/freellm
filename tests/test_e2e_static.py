@@ -448,7 +448,8 @@ class StaticContractTests(unittest.TestCase):
             'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239',
             self.html,
         )
-        self.assertIn('crossorigin="anonymous"', self.html)
+        self.assertIn("script.crossOrigin = 'anonymous'", self.html)
+        self.assertIn("if (!slot) return;", self.html)
 
     def test_seo_files_point_search_engines_to_canonical_site(self):
         robots = ROBOTS_PATH.read_text(encoding="utf-8")
