@@ -802,15 +802,13 @@
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://opencode.ai/docs",
-      "https://dev.opencode.ai/docs/zen/",
-      "https://opencode.ai/docs/providers",
-      "https://research.meta.ai/blog/introducing-muse-spark-1-3"
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/docs/en/providers/"
     ],
-    "lastVerifiedAt": "2026-09-09",
+    "lastVerifiedAt": "2026-09-23",
     "verificationStatus": "partial",
     "confidence": "medium",
-    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+    "notes": "官方 Zen 目录与定价页已核验；MiMo-V2.6-Flash Free 当前列为限时免费。账号/API Key 具体要求仍按 OpenCode 登录流程核验。"
   },
   {
     "providerId": "openrouter",
@@ -1307,5 +1305,38 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "官方文档确认 Public Free Model APIs 为常驻共享端点、无需创建实例且不消耗 credits。账号需先通过平台验证；本次未使用真实 rc- Key 做账户内端到端生成测试。"
+  },
+  {
+    "providerId": "xiaomi-mimo",
+    "profileId": "xiaomi-mimo-api",
+    "registerUrl": "https://platform.xiaomimimo.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "yes",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "model_dependent",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "wallet",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "访问 Xiaomi MiMo Open Platform 并登录账号。",
+      "在控制台创建 API Key。",
+      "充值余额后使用官方 API；如只需免费体验，改用 OpenCode Zen 的 MiMo-V2.6-Flash Free 限时入口。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+      "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方 Xiaomi API 为付费 Pay-As-You-Go；免费托管入口属于 OpenCode Zen，不应混写成 Xiaomi 官方 API 免费。"
   }
 ]
