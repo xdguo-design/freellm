@@ -1347,31 +1347,30 @@
     "emailRequired": "unknown",
     "phoneRequired": "unknown",
     "identityRequired": "unknown",
-    "cardRequired": "unknown",
+    "cardRequired": "no",
     "billingRequired": "no",
     "apiKeyRequired": "no",
     "licenseAcceptance": "model_dependent",
     "modelApproval": "no",
     "gpuRequired": "no",
     "overageBehavior": "wallet",
-    "searchMethod": "official_docs",
+    "searchMethod": "official_model_catalog",
     "regionPolicyId": "policy-unknown-default",
     "registrationSteps": [
-      "打开 Puter 的 MiMo-V2.6-Flash Playground 或任意接入 Puter.js 的页面。",
-      "使用 Puter 账号登录；浏览器端 Puter.js 会处理用户鉴权，不需要 Xiaomi API Key。",
-      "如需在 CLI / 服务端使用 OpenAI-compatible API，在 Puter Dashboard 创建 Puter auth token。",
-      "先使用账号自带的免费 AI allowance；额度耗尽后是否继续付费由用户自己的 Puter 账户决定。"
+      "打开 Puter Developer 的 MiMo-V2.6-Flash 页面或 Puter Playground。",
+      "用 Puter 账号登录；免费账户包含 AI allowance，初次体验不要求自备 Xiaomi/OpenCode API Key。",
+      "前端可通过 Puter.js 调用 xiaomi/mimo-v2.6-flash；额度耗尽后的继续使用由用户自己的 Puter 账户承担。"
     ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
       "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
-      "https://developer.puter.com/pricing/",
-      "https://developer.puter.com/tutorials/use-openai-sdk-with-puter/"
+      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/",
+      "https://developer.puter.com/tutorials/free-unlimited-ai-api/"
     ],
     "lastVerifiedAt": "2026-09-23",
-    "verificationStatus": "verified",
+    "verificationStatus": "partial",
     "confidence": "high",
-    "notes": "Puter.js 的“开发者免费”来自 User-Pays：开发者账单为 $0，AI 使用记到每个用户自己的 Puter 账号。每个账号有免费 AI allowance，但官方模型页未公开固定额度；超额后用户可自行充值。"
+    "notes": "Puter 官方明确提供浏览器免费试用和免费账户 AI allowance；“开发者免费”来自 User-Pays 模式，不代表终端用户无限免费。当前未用登录态账户完成真实生成，因此保持 partial。"
   }
 ]
