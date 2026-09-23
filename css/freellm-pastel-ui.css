@@ -2548,3 +2548,68 @@ html.fl-pastel-ui[data-theme="dark"] .notice{
     min-height:0;
   }
 }
+
+/* 2026-09-23 visual regression pass */
+html.fl-pastel-ui .skills-header,
+html.fl-pastel-ui .tools-header{display:none !important;}
+
+html.fl-pastel-ui .today-latest{margin-top:14px !important;border-radius:20px !important;}
+html.fl-pastel-ui .catalog-filter-bar{margin-top:0 !important;}
+html.fl-pastel-ui #student-offers.student-panel{margin-top:18px !important;padding:16px 18px !important;border-style:dashed !important;box-shadow:none !important;}
+html.fl-pastel-ui #student-offers .student-panel-copy h2{font-size:clamp(18px,1.8vw,24px) !important;}
+
+html.fl-pastel-ui #catalog-offer-rows.offer-grid,
+html.fl-pastel-ui .skill-grid,
+html.fl-pastel-ui .tool-grid,
+html.fl-pastel-ui .workflow-grid,
+body.fl-ui-v2[data-fl-section="models"] .models-overview-grid,
+body.fl-ui-v2[data-fl-section="logs"] .log-stat-grid,
+body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-grid{align-items:stretch !important;}
+
+html.fl-pastel-ui #catalog-offer-rows .offer,
+html.fl-pastel-ui .skill-card,
+html.fl-pastel-ui .tool-card,
+html.fl-pastel-ui .workflow-card,
+body.fl-ui-v2[data-fl-section="models"] .models-overview-grid > article,
+body.fl-ui-v2[data-fl-section="logs"] .log-stat-card,
+body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-card{height:100% !important;}
+html.fl-pastel-ui .tool-card{display:flex !important;flex-direction:column !important;}
+html.fl-pastel-ui .tool-card > :last-child{margin-top:auto !important;}
+
+html.fl-pastel-ui:not([data-theme="dark"]) .today-latest-card,
+html.fl-pastel-ui:not([data-theme="dark"]) .skill-card,
+html.fl-pastel-ui:not([data-theme="dark"]) .tool-card,
+html.fl-pastel-ui:not([data-theme="dark"]) .workflow-card{color:var(--fl-ink) !important;}
+
+html.fl-pastel-ui[data-theme="dark"] .skills-toolbar,
+html.fl-pastel-ui[data-theme="dark"] .tools-toolbar,
+html.fl-pastel-ui[data-theme="dark"] .lab-topline,
+html.fl-pastel-ui[data-theme="dark"] .component-library,
+html.fl-pastel-ui[data-theme="dark"] .model-directory,
+html.fl-pastel-ui[data-theme="dark"] .static-locale-nav{color:var(--fl-ink) !important;border-color:var(--fl-line) !important;background:rgba(10,27,49,.9) !important;}
+
+html.fl-pastel-ui[data-theme="dark"] .skill-category-tab,
+html.fl-pastel-ui[data-theme="dark"] .tool-category-tab,
+html.fl-pastel-ui[data-theme="dark"] .model-section-tabs a,
+html.fl-pastel-ui[data-theme="dark"] .model-center-tabs a{color:#b9cde4 !important;border-color:#294b69 !important;background:#0b1d34 !important;}
+
+html.fl-pastel-ui[data-theme="dark"] .skill-category-tab.is-active,
+html.fl-pastel-ui[data-theme="dark"] .tool-category-tab.is-active,
+html.fl-pastel-ui[data-theme="dark"] .model-section-tabs a[aria-current="page"],
+html.fl-pastel-ui[data-theme="dark"] .model-center-tabs a[aria-current="page"]{color:#fff !important;border-color:#4d86bd !important;background:linear-gradient(135deg,#174d86,#19365e) !important;}
+
+html.fl-pastel-ui[data-theme="dark"] .skills-count,
+html.fl-pastel-ui[data-theme="dark"] .tools-count,
+html.fl-pastel-ui[data-theme="dark"] .skill-stat,
+html.fl-pastel-ui[data-theme="dark"] .skill-source-link,
+html.fl-pastel-ui[data-theme="dark"] .muted,
+html.fl-pastel-ui[data-theme="dark"] small{color:var(--fl-ink-2) !important;}
+
+@media(max-width:700px){
+  html.fl-pastel-ui .skills-header,
+  html.fl-pastel-ui .tools-header{display:none !important;min-height:0 !important;margin:0 !important;padding:0 !important;}
+  html.fl-pastel-ui .today-latest-grid{grid-template-columns:1fr 1fr !important;}
+  html.fl-pastel-ui .today-latest-card{min-height:84px;}
+  html.fl-pastel-ui #student-offers.student-panel{padding:14px !important;}
+}
+@media(max-width:430px){html.fl-pastel-ui .today-latest-grid{grid-template-columns:1fr !important;}}
