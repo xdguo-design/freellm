@@ -49,5 +49,7 @@ def test_wechat_article_states_test_boundary_and_free_route():
     page = (ROOT / "docs/wechat/mimo-v2-6-flash.html").read_text(encoding="utf-8")
     assert "OpenCode Zen" in page
     assert "mimo-v2.6-flash-free" in page
+    assert "Puter.js" in page
+    assert "developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" in page
     assert "小米官方 API 不是免费 API" in page
     assert "端到端推理请求仍需凭据" in page
