@@ -1,0 +1,27 @@
+body[data-visual-style="aurora"][data-fl-section="workflow"] .skill-lab-sidebar{display:none!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .skill-lab-page{display:block!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-content{width:100%!important;max-width:none!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-topline{display:none!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-hero{
+  position:relative;overflow:hidden;min-height:310px;padding:clamp(34px,4.4vw,58px)!important;
+  border:1px solid var(--aurora-line)!important;border-radius:28px!important;
+  background:radial-gradient(circle at 84% 12%,rgba(83,205,168,.16),transparent 18rem),radial-gradient(circle at 100% 100%,rgba(138,109,240,.12),transparent 22rem),linear-gradient(135deg,#eef7ff,#fff 58%,#effcf8)!important;
+  box-shadow:var(--aurora-shadow)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-hero h1{font-size:clamp(42px,5vw,70px)!important;line-height:1.05!important;letter-spacing:-.045em!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-hero-aside{
+  border:1px solid var(--aurora-line)!important;border-radius:20px!important;background:rgba(255,255,255,.88)!important;box-shadow:none!important;
+}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;align-items:stretch!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-card{
+  height:100%;min-height:286px;display:flex!important;flex-direction:column!important;padding:22px!important;
+  border:1px solid var(--aurora-line)!important;border-radius:20px!important;background:linear-gradient(145deg,#fff,#f8fbff)!important;
+  box-shadow:0 10px 28px rgba(49,89,135,.055)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-card:hover{transform:translateY(-2px);border-color:var(--aurora-line-strong)!important;box-shadow:var(--aurora-shadow-hover)!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-card .workflow-flow{margin-top:auto!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .flow-node{border-color:#c8dff2!important;background:#f2f8ff!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .component-library{border:1px solid var(--aurora-line)!important;border-radius:22px!important;background:rgba(255,255,255,.82)!important;}
+body[data-visual-style="aurora"][data-fl-section="workflow"] .component-card{height:100%;border:1px solid var(--aurora-line)!important;border-radius:18px!important;background:#fff!important;}
+@media(max-width:900px){body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-grid{grid-template-columns:1fr!important;}}
+@media(max-width:700px){body[data-visual-style="aurora"][data-fl-section="workflow"] .lab-hero{min-height:0;padding:24px 18px!important;border-radius:22px!important;}body[data-visual-style="aurora"][data-fl-section="workflow"] .workflow-card{min-height:0;}}
