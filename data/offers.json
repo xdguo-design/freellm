@@ -1144,13 +1144,13 @@
   {
     "id": "opencode-zen-free",
     "order": 13,
-    "date": "2026-09-07",
+    "date": "2026-09-23",
     "name": "OpenCode Zen free models",
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
-    "modelMeta": "Hosted coding models",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
       "free"
@@ -1160,34 +1160,36 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "在 OpenCode Zen 中选择官方列出的模型",
+      "summary": "在 OpenCode Zen 中选择 mimo-v2.6-flash-free 限时免费模型",
       "prerequisites": [
-        "OpenCode 账号或支持的客户端"
+        "OpenCode 账号 / Zen API Key（实际生成请求）"
       ],
       "steps": [
-        "打开官方 Zen 文档并确认当前模型列表",
-        "按 Provider 文档配置凭据后选择模型发送请求"
+        "打开 OpenCode Zen 官方文档确认 MiMo-V2.6-Flash Free 仍在免费列表",
+        "在 OpenCode/Zen 中创建或配置凭据",
+        "使用模型 ID mimo-v2.6-flash-free 调用 OpenAI-compatible chat completions；不要提交敏感或机密数据"
       ],
       "endpoint": "https://opencode.ai/zen/v1/chat/completions",
       "method": "POST",
-      "authentication": "Provider-specific API key",
+      "authentication": "OpenCode Zen API key",
       "examples": {
-        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://dev.opencode.ai/docs/zen/"
+      "docsUrl": "https://opencode.ai/docs/en/zen/"
     },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
+      "MIMO V2.6 FREE",
       "LIMITED-TIME FREE",
       "OPEN SOURCE CLI"
     ],
-    "freeSummary": "Selected Zen models · input, output and cache listed as Free",
-    "validitySummary": "Limited time / model pool can change",
+    "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
+    "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "Today / official OpenCode docs",
+    "checkedSummary": "2026-09-23 / official OpenCode Zen docs + live model catalog",
     "title": "OpenCode Zen · free model pool",
-    "why": "OpenCode's official Zen documentation lists selected hosted coding models at Free input, output and cache pricing for a limited time. This is a provider-hosted free model pool, not a claim that every upstream model is free everywhere.",
-    "mechanism": "Selected Zen models free for a limited time",
+    "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
+    "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
     "validity": "Limited time; verify the official Zen page before use",
     "access": "Global OpenCode account; regional availability may vary",
     "command": "curl -fsSL https://opencode.ai/install | bash\nopencode",
@@ -1195,41 +1197,40 @@
     "registerLabel": "OpenCode / sign in",
     "links": [
       [
-        "Official Zen pricing",
-        "https://dev.opencode.ai/docs/zen/"
+        "OpenCode Zen 官方模型与定价",
+        "https://opencode.ai/docs/en/zen/"
       ],
       [
-        "Providers",
-        "https://opencode.ai/docs/providers"
+        "OpenCode Zen 实时模型目录",
+        "https://opencode.ai/zen/v1/models"
       ],
       [
-        "Install",
-        "https://opencode.ai/docs"
+        "OpenCode Providers",
+        "https://opencode.ai/docs/en/providers/"
       ]
     ],
     "originCountry": "International",
     "availability": "Global; provider and model availability may vary by region",
     "freeMechanism": "limited_time_free",
-    "quota": "Selected models at Free input, output and cache pricing",
+    "quota": "MiMo-V2.6-Flash Free: input, output and cached read are currently listed as Free; OpenCode does not publish a fixed end date",
     "renewal": "No subscription required for the listed free Zen models; availability can change",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check OpenCode and each model's terms",
     "sourceUrls": [
-      "https://dev.opencode.ai/docs/zen/",
-      "https://opencode.ai/docs/providers"
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/zen/v1/models"
     ],
-    "evidence": "Official OpenCode Zen documentation lists Big Pickle, MiMo-V2.5 Free, Ling 3.0 Flash Fin Free, Nemotron and Muse Spark models at Free pricing.",
+    "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-23",
     "checkedBy": "manual",
-    "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked.",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 还说明免费期交互数据可能用于改进模型；不应提交个人、机密或敏感数据。实际生成请求需要 OpenCode Zen 凭据，本轮无用户凭据，因此只完成官方文档、实时模型目录与访问路径核验。",
     "endpointCheck": {
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-23",
       "verdict": "OK",
-      "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
-      "ms": 1023
+      "note": "公开 /zen/v1/models 可匿名访问，已确认 mimo-v2.6-flash-free 在实时目录；chat completions 需 Zen API Key"
     },
     "networkCheck": {
       "checkedAt": "2026-09-19",
@@ -1237,7 +1238,8 @@
       "cnHost": "opencode.ai",
       "cnMs": 1272,
       "intlMs": 380
-    }
+    },
+    "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API."
   },
   {
     "id": "github-copilot-free",
