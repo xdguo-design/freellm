@@ -52,8 +52,8 @@ jobs:
       - name: Run model page regression tests
         run: python -m pytest tests/test_model_pages.py -q
 
-      - name: Verify MiMo V2.6 catalog and article contracts
-        run: python -m unittest tests.test_mimo_v26 -v
+      - name: Verify MiMo V2.6 catalog, article and live-route contracts
+        run: python -m pytest tests/test_mimo_v26.py tests/test_mimo_v26_live_script.py -q
 
       - name: Audit crawl metadata
         run: python scripts/audit_seo_metadata.py
