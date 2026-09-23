@@ -1239,7 +1239,40 @@
       "cnMs": 1272,
       "intlMs": 380
     },
-    "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API."
+    "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-23",
+      "actualUsageVerified": false,
+      "task": "核验 OpenCode Zen 是否真实公开 MiMo-V2.6-Flash Free、当前模型 ID、免费定价和调用路径；在没有 Zen API Key 的情况下，不把模型生成结果写成已实测。",
+      "method": [
+        "打开 OpenCode Zen 官方文档，核对模型表中的 MiMo-V2.6-Flash Free、模型 ID 与 chat completions endpoint。",
+        "核对 OpenCode Zen 官方定价表，确认该 Free 变体的 Input、Output 与 Cached Read 当前均标为 Free。",
+        "访问 OpenCode Zen 公共 /zen/v1/models 目录，确认实时返回 mimo-v2.6-flash-free。",
+        "核对官方隐私说明，记录免费期交互数据可能用于模型改进的限制。",
+        "当前环境没有可用的 OpenCode Zen API Key，因此未发送实际 chat completion，也未声称生成质量或延迟已验证。"
+      ],
+      "result": "公开路径预检通过：官方文档、官方定价和实时模型目录三处相互印证，mimo-v2.6-flash-free 当前存在且为限时免费。实际生成请求仍待凭据补测。",
+      "limitations": "未使用登录态 OpenCode 账号与 Zen API Key，尚未验证一次真实模型生成、输出质量、工具调用成功率、实际限流和生成延迟。免费状态为限时活动，结束日期未公开。",
+      "evidence": [
+        {
+          "label": "OpenCode Zen 官方模型与定价",
+          "url": "https://opencode.ai/docs/en/zen/",
+          "note": "核验模型 ID、endpoint、Free 定价与 limited-time free 说明"
+        },
+        {
+          "label": "OpenCode Zen 实时模型目录",
+          "url": "https://opencode.ai/zen/v1/models",
+          "note": "公开目录返回 mimo-v2.6-flash-free"
+        },
+        {
+          "label": "Xiaomi MiMo-V2.6-Flash 官方模型页",
+          "url": "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+          "note": "核验 1M context、128K max output、100 RPM / 10M TPM 与 Xiaomi 官方付费 API 价格"
+        }
+      ]
+    }
   },
   {
     "id": "github-copilot-free",
