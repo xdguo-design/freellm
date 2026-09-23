@@ -889,7 +889,8 @@ class BrowserPageTests(unittest.TestCase):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
-            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")\n            (css / "freellm-aurora.css").write_text((ROOT / "css" / "freellm-aurora.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-aurora.css").write_text((ROOT / "css" / "freellm-aurora.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
@@ -920,7 +921,8 @@ class BrowserPageTests(unittest.TestCase):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
-            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")\n            (css / "freellm-aurora.css").write_text((ROOT / "css" / "freellm-aurora.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "freellm-aurora.css").write_text((ROOT / "css" / "freellm-aurora.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
