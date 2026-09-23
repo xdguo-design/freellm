@@ -128,7 +128,7 @@ def main() -> int:
                     page.wait_for_timeout(250)
                     name = f"{page_name}-{viewport_name}-{theme}"
                     report[name] = measure(page, page_name)
-                    page.screenshot(path=str(OUT / f"{name}.png"), full_page=True)
+                    page.screenshot(path=str(OUT / f"{name}.png"), full_page=False)
                     page.close()
         browser.close()
     (OUT / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
