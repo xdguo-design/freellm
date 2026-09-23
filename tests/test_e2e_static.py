@@ -701,6 +701,122 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertNotIn("rgb(16, 43, 89)", body_color, f"{route} kept light-theme ink in dark mode")
                     page.close()
 
+    def test_visual_regression_equal_height_cards_and_home_hierarchy(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(f"{self.site.url}/design/free-china-ai-index.html")
+        page.wait_for_selector("#catalog-offer-rows .offer")
+
+        order = page.evaluate("""() => {
+            const ids = ['today-latest', 'catalog-offers', 'student-offers', 'catalog-compare'];
+            const nodes = {
+                'today-latest': document.querySelector('.today-latest'),
+                'catalog-offers': document.getElementById('catalog-offers'),
+                'student-offers': document.getElementById('student-offers'),
+                'catalog-compare': document.getElementById('catalog-compare'),
+            };
+            return ids.map(id => [id, Array.from(document.body.querySelectorAll('*')).indexOf(nodes[id])]);
+        }""")
+        positions = dict(order)
+        self.assertLess(positions["today-latest"], positions["catalog-offers"])
+        self.assertLess(positions["catalog-offers"], positions["student-offers"])
+        self.assertLess(positions["student-offers"], positions["catalog-compare"])
+        page.close()
+
+        checks = (
+            ("design/free-china-ai-index.html", "#catalog-offer-rows .offer:not(.hidden)"),
+            ("models/", ".models-overview-grid > article"),
+            ("skills/", "#skill-grid .skill-card:not([hidden])"),
+            ("tools/", "#tool-grid .tool-card:not([hidden])"),
+            ("skills/lab/", ".workflow-grid .workflow-card"),
+            ("logs/", ".log-stat-grid .log-stat-card"),
+            ("about/", ".stat-row .stat"),
+        )
+        for route, selector in checks:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 1440, "height": 1000})
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(selector)
+                heights = page.eval_on_selector_all(
+                    selector,
+                    """els => {
+                        const visible = els
+                          .filter(el => {
+                            const s = getComputedStyle(el);
+                            const r = el.getBoundingClientRect();
+                            return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 10 && r.height > 10;
+                          })
+                          .map(el => {
+                            const r = el.getBoundingClientRect();
+                            return { top: r.top, height: r.height };
+                          });
+                        if (!visible.length) return [];
+                        const firstTop = Math.min(...visible.map(item => item.top));
+                        return visible.filter(item => Math.abs(item.top - firstTop) <= 3).map(item => item.height);
+                    }""",
+                )
+                self.assertGreaterEqual(len(heights), 2, f"{route}: expected at least two cards in first desktop row")
+                self.assertLessEqual(
+                    max(heights) - min(heights),
+                    2.0,
+                    f"{route}: first-row card heights drifted: {heights}",
+                )
+                page.close()
+
+    def test_visual_regression_mobile_chrome_has_no_duplicate_headers_or_overlap(self):
+        routes = (
+            ("skills/", ".skills-page", ".skills-header"),
+            ("tools/", ".tools-page", ".tools-header"),
+        )
+        for route, root_selector, legacy_header in routes:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 390, "height": 844})
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(root_selector)
+                self.assertEqual(page.locator(legacy_header).evaluate("el => getComputedStyle(el).display"), "none")
+                rail = page.locator(".fl-site-rail").bounding_box()
+                hero = page.locator(".skills-hero, .tools-hero").first.bounding_box()
+                self.assertIsNotNone(rail)
+                self.assertIsNotNone(hero)
+                self.assertGreaterEqual(hero["y"], rail["y"] + rail["height"] + 6)
+                self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+                page.close()
+
+    def test_visual_regression_dark_theme_uses_neo_tokens_on_primary_pages(self):
+        routes = (
+            ("design/free-china-ai-index.html", ".today-latest"),
+            ("models/", ".models-overview"),
+            ("skills/", ".skills-hero"),
+            ("tools/", ".tools-hero"),
+            ("skills/lab/", ".lab-hero"),
+            ("logs/", ".log-hero"),
+            ("about/", 'body[data-fl-section="about"] > header'),
+        )
+        for route, surface in routes:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 1280, "height": 900})
+                page.add_init_script("localStorage.setItem('freellm-theme', 'dark')")
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(surface)
+                page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
+                tokens = page.evaluate("""() => {
+                    const s = getComputedStyle(document.documentElement);
+                    return {
+                      canvas: s.getPropertyValue('--fl-canvas').trim(),
+                      ink: s.getPropertyValue('--fl-ink').trim(),
+                      mint: s.getPropertyValue('--fl-mint').trim()
+                    };
+                }""")
+                self.assertEqual(tokens["canvas"].lower(), "#050b18")
+                self.assertEqual(tokens["ink"].lower(), "#f5f9ff")
+                self.assertEqual(tokens["mint"].lower(), "#6ef0c4")
+                text_color = page.locator(surface).evaluate("el => getComputedStyle(el).color")
+                self.assertNotEqual(text_color, "rgb(16, 43, 89)")
+                page.close()
+
     def test_theme_toggle_persists_between_primary_pages(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/skills/")
