@@ -46,7 +46,7 @@ def test_mimo_access_records_keep_paid_official_and_free_hosted_routes_separate(
     assert puter["registrationProfileId"] == "puter-ai"
     assert official["verificationStatus"] == "verified"
     assert free["verificationStatus"] == "verified"
-    assert puter["verificationStatus"] == "verified"
+    assert puter["verificationStatus"] == "partial"
 
 
 def test_wechat_article_states_test_boundary_and_free_route():
