@@ -56,7 +56,7 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_homepage_renders_visual_shell_without_runtime_javascript(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         self.assertIn('class="fl-pastel-ui"', page)
-        self.assertIn('class="fl-ui-v2"', page)
+        self.assertRegex(page, r'<body[^>]*class="[^"]*\bfl-ui-v2\b[^"]*"')
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
         self.assertIn("freellm-pastel-ui.css?v=20260920c", page)
