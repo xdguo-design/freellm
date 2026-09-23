@@ -4,6 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "css" / "freellm-pastel-ui.css"
+AURORA = ROOT / "css" / "freellm-aurora.css"
 SYNC = ROOT / "js" / "freellm-sync.js"
 SEO_BUILD = ROOT / "scripts" / "build_seo_pages.py"
 STATIC_BUILD = ROOT / "scripts" / "build_static.py"
@@ -55,10 +56,38 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_homepage_renders_visual_shell_without_runtime_javascript(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         self.assertIn('class="fl-pastel-ui"', page)
-        self.assertIn('class="fl-ui-v2"', page)
+        self.assertRegex(page, r'<body[^>]*class="[^"]*\bfl-ui-v2\b[^"]*"')
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
         self.assertIn("freellm-pastel-ui.css?v=20260920c", page)
+
+    def test_aurora_phase_one_is_homepage_only(self):
+        css = AURORA.read_text(encoding="utf-8")
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        self.assertIn("FreeLLM Aurora v1", css)
+        self.assertIn("--au-page:#f4f9ff", css)
+        self.assertIn("body.theme-aurora[data-fl-section=\"home\"] .catalog-hero", css)
+        self.assertIn("#catalog-offer-rows.offer-grid", css)
+        self.assertIn("@media(max-width:700px)", css)
+        self.assertIn('class="fl-ui-v2 theme-aurora"', page)
+        self.assertIn("freellm-aurora.css?v=20260923a", page)
+
+        for relative in ("models/index.html", "skills/index.html", "tools/index.html", "skills/lab/index.html", "logs/index.html", "about/index.html"):
+            other = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertNotIn("freellm-aurora.css", other, relative)
+            self.assertNotIn("theme-aurora", other, relative)
+
+    def test_homepage_information_hierarchy_is_freshness_then_catalog_then_student(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        positions = {
+            "today": page.index('class="today-latest"'),
+            "offers": page.index('id="catalog-offers"'),
+            "student": page.index('id="student-offers"'),
+            "compare": page.index('id="catalog-compare"'),
+        }
+        self.assertLess(positions["today"], positions["offers"])
+        self.assertLess(positions["offers"], positions["student"])
+        self.assertLess(positions["student"], positions["compare"])
 
     def test_generated_pages_render_visual_classes_and_chrome_server_side(self):
         for relative in ("skills/index.html", "models/index.html", "logs/index.html", "tools/index.html", "about/index.html", "submit/index.html"):

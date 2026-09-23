@@ -3605,6 +3605,38 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
+
+    # The model-center featured tab must not inherit homepage-only Phase 1 sections.
+    # Aurora rollout is intentionally page-by-page: keep TODAY/LATEST and the
+    # homepage's catalog-first student ordering out of models/center until Phase 2.
+    body = re.sub(
+        r'\s*<section[^>]*class="[^"]*\btoday-latest\b[^"]*"[^>]*>.*?</section>\s*',
+        "\n",
+        body,
+        count=1,
+        flags=re.I | re.S,
+    )
+    student_match = re.search(
+        r'<section\b[^>]*\bid="student-offers"[^>]*>.*?</section>\s*',
+        body,
+        flags=re.I | re.S,
+    )
+    offers_match = re.search(r'<section\b[^>]*\bid="catalog-offers"[^>]*>', body, flags=re.I)
+    if student_match and offers_match and student_match.start() > offers_match.start():
+        student = student_match.group(0).strip()
+        body = body[:student_match.start()] + body[student_match.end():]
+        offers_match = re.search(r'<section\b[^>]*\bid="catalog-offers"[^>]*>', body, flags=re.I)
+        body = body[:offers_match.start()] + student + "\n        " + body[offers_match.start():]
+
+    # Aurora is rolled out page by page. The model center reuses the homepage
+    # template structure, but must not inherit the homepage-only Aurora stylesheet
+    # until Phase 2 explicitly opts in.
+    head = re.sub(
+        r'\s*<link rel="stylesheet" href="../css/freellm-aurora\.css(?:\?[^"]*)?">',
+        "",
+        head,
+        count=1,
+    )
     head = re.sub(
         r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
         r'href="../../css/\1"',
