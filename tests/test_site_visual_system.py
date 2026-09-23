@@ -81,6 +81,12 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertNotIn(".tools-page", css)
         self.assertNotIn(".workflow-card", css)
 
+    def test_phase_one_aurora_does_not_leak_into_model_center(self):
+        model_center = (ROOT / "models" / "center" / "index.html").read_text(encoding="utf-8")
+        builder = SEO_BUILD.read_text(encoding="utf-8")
+        self.assertNotIn("aurora-home.css", model_center)
+        self.assertIn("Phase 1 Aurora is intentionally homepage-only", builder)
+
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
