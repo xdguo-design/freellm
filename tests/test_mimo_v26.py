@@ -12,6 +12,7 @@ def test_mimo_v26_flash_is_in_curated_and_published_model_catalogs():
     expected = {
         "xiaomi-mimo/mimo-v2-6-flash": ("mimo-v2.6-flash", "1000000", "131072"),
         "opencode/mimo-v2-6-flash-free": ("mimo-v2.6-flash-free", "1000000", "131072"),
+        "puter/mimo-v2-6-flash": ("mimo-v2.6-flash", "1000000", "131072"),
     }
     for path in ("data/models-curated.json", "data/models.json"):
         rows = {row["id"]: row for row in _load(path)}
@@ -39,10 +40,13 @@ def test_mimo_access_records_keep_paid_official_and_free_hosted_routes_separate(
     rows = {row["modelId"]: row for row in _load("data/model-access.json")}
     official = rows["xiaomi-mimo/mimo-v2-6-flash"]
     free = rows["opencode/mimo-v2-6-flash-free"]
+    puter = rows["puter/mimo-v2-6-flash"]
     assert official["registrationProfileId"] == "xiaomi-mimo-api"
     assert free["registrationProfileId"] == "opencode-api"
+    assert puter["registrationProfileId"] == "puter-ai"
     assert official["verificationStatus"] == "verified"
     assert free["verificationStatus"] == "verified"
+    assert puter["verificationStatus"] == "verified"
 
 
 def test_wechat_article_states_test_boundary_and_free_route():
@@ -53,3 +57,12 @@ def test_wechat_article_states_test_boundary_and_free_route():
     assert "developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" in page
     assert "小米官方 API 不是免费 API" in page
     assert "端到端推理请求仍需凭据" in page
+
+
+def test_puter_offer_keeps_user_pays_boundary_explicit():
+    offer = next(row for row in _load("data/offers.json") if row["id"] == "puter-mimo-v2-6-flash-free")
+    assert offer["pricingModel"] == "free_credits"
+    assert offer["freeLLMTest"]["actualUsageVerified"] is False
+    assert "User-Pays" in offer["why"]
+    assert "free AI allowance" in offer["quota"]
+    assert "xiaomi/mimo-v2.6-flash" in offer["usageGuide"]["examples"]["curl"]
