@@ -42,6 +42,19 @@ jobs:
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
+      - name: Capture full-site visual regression
+        if: github.event_name == 'pull_request'
+        run: python scripts/capture_visual_regression.py
+
+      - name: Upload visual regression artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-${{ github.sha }}
+          path: artifacts/visual-regression/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Compare homepage performance
         run: python scripts/check_home_performance.py
 
