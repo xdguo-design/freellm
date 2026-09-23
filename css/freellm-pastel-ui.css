@@ -2191,3 +2191,360 @@ html.fl-pastel-ui[data-theme="dark"] textarea::placeholder{
 @media(max-width:430px){
   .today-latest-grid{grid-template-columns:1fr}
 }
+
+
+/* 2026-09-23 cross-page governance */
+/* Cross-page page shells -------------------------------------------------- */
+body.fl-ui-v2[data-fl-section="models"] > header,
+body.fl-ui-v2[data-fl-section="about"] > header,
+body.fl-ui-v2[data-fl-section="logs"] .log-hero,
+html.fl-pastel-ui .skills-hero,
+html.fl-pastel-ui .tools-hero,
+html.fl-pastel-ui .lab-hero{
+  overflow:hidden;
+  position:relative;
+  isolation:isolate;
+  border:1px solid var(--fl-line) !important;
+  background:
+    radial-gradient(circle at 88% 16%,rgba(118,184,255,.26),transparent 18rem),
+    radial-gradient(circle at 72% 108%,rgba(205,148,255,.14),transparent 22rem),
+    linear-gradient(120deg,var(--fl-surface-blue),var(--fl-surface-solid) 58%,#fff5f8) !important;
+}
+body.fl-ui-v2[data-fl-section="models"] > header::before,
+body.fl-ui-v2[data-fl-section="about"] > header::before,
+body.fl-ui-v2[data-fl-section="logs"] .log-hero::before,
+html.fl-pastel-ui .skills-hero::before,
+html.fl-pastel-ui .tools-hero::before,
+html.fl-pastel-ui .lab-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:280px;
+  height:280px;
+  right:-96px;
+  top:-110px;
+  border-radius:50%;
+  border:1px solid rgba(88,153,224,.28);
+  box-shadow:
+    0 0 0 34px rgba(88,153,224,.06),
+    0 0 0 70px rgba(187,121,255,.035);
+  pointer-events:none;
+}
+body.fl-ui-v2[data-fl-section="models"] > header::after,
+body.fl-ui-v2[data-fl-section="about"] > header::after{
+  content:"AI for Everyone";
+  position:absolute;
+  right:34px;
+  bottom:24px;
+  color:var(--fl-blue);
+  font:700 14px/1.2 "KaiTi","STKaiti","Kaiti SC",cursive;
+  transform:rotate(-4deg);
+  opacity:.72;
+  pointer-events:none;
+}
+
+/* Models ---------------------------------------------------------------- */
+body.fl-ui-v2[data-fl-section="models"] > header.models-overview{
+  min-height:300px;
+  padding:clamp(32px,4vw,54px) !important;
+}
+body.fl-ui-v2[data-fl-section="models"] > header.models-overview .lead{
+  max-width:760px;
+}
+body.fl-ui-v2[data-fl-section="models"] .fl-stat-grid{
+  gap:14px;
+}
+body.fl-ui-v2[data-fl-section="models"] .fl-stat-card{
+  min-height:116px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  border-color:var(--fl-line) !important;
+  background:linear-gradient(145deg,var(--fl-surface-solid),var(--fl-surface-blue)) !important;
+  box-shadow:none !important;
+}
+body.fl-ui-v2[data-fl-section="models"] .models-overview-grid{
+  align-items:stretch;
+}
+body.fl-ui-v2[data-fl-section="models"] .models-overview-grid > article{
+  height:100%;
+  border-color:var(--fl-line) !important;
+  border-radius:18px !important;
+  background:var(--fl-surface-solid) !important;
+  box-shadow:none !important;
+}
+body.fl-ui-v2[data-fl-section="models"] .provider-grid,
+body.fl-ui-v2[data-fl-section="models"] .hero-cards{
+  align-items:stretch;
+}
+body.fl-ui-v2[data-fl-section="models"] .provider-card,
+body.fl-ui-v2[data-fl-section="models"] .model-card,
+body.fl-ui-v2[data-fl-section="models"] .catalog-card{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+body.fl-ui-v2[data-fl-section="models"] .provider-card > :last-child,
+body.fl-ui-v2[data-fl-section="models"] .model-card > :last-child,
+body.fl-ui-v2[data-fl-section="models"] .catalog-card > :last-child{
+  margin-top:auto;
+}
+
+/* Skills ---------------------------------------------------------------- */
+html.fl-pastel-ui .skills-hero{
+  min-height:320px;
+}
+html.fl-pastel-ui .skills-hero .hero-note{
+  border-color:var(--fl-line) !important;
+  background:linear-gradient(145deg,var(--fl-surface-solid),var(--fl-surface-blue)) !important;
+}
+html.fl-pastel-ui .skill-grid{
+  align-items:stretch !important;
+}
+html.fl-pastel-ui .skill-card{
+  height:100%;
+  min-height:440px;
+  display:flex !important;
+  flex-direction:column !important;
+}
+html.fl-pastel-ui .skill-card .freellm-test-inline,
+html.fl-pastel-ui .skill-card > p{
+  flex:0 0 auto;
+}
+html.fl-pastel-ui .skill-card .skill-card-meta{
+  margin-top:auto !important;
+}
+html.fl-pastel-ui .skill-card .skill-card-bottom{
+  margin-top:14px !important;
+  padding-top:14px;
+  border-top:1px solid var(--fl-line);
+}
+html.fl-pastel-ui .skill-card .skill-details{
+  min-height:36px;
+}
+
+/* Tools ----------------------------------------------------------------- */
+html.fl-pastel-ui .tools-hero{
+  min-height:310px;
+}
+html.fl-pastel-ui .tool-grid{
+  align-items:stretch !important;
+}
+html.fl-pastel-ui .tool-card,
+html.fl-pastel-ui [data-tool-id]{
+  height:100%;
+}
+html.fl-pastel-ui .tool-card{
+  display:flex !important;
+  flex-direction:column !important;
+  min-height:250px;
+}
+html.fl-pastel-ui .tool-card > :last-child{
+  margin-top:auto;
+}
+
+/* Workflow --------------------------------------------------------------- */
+html.fl-pastel-ui .lab-hero{
+  min-height:330px;
+}
+html.fl-pastel-ui .workflow-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  align-items:stretch !important;
+}
+html.fl-pastel-ui .workflow-card{
+  height:100%;
+  min-height:286px;
+  display:flex !important;
+  flex-direction:column !important;
+}
+html.fl-pastel-ui .workflow-card .workflow-flow{
+  margin-top:auto !important;
+}
+html.fl-pastel-ui .workflow-card .workflow-card-foot{
+  margin-top:18px !important;
+  padding-top:14px !important;
+  border-top:1px solid var(--fl-line) !important;
+}
+html.fl-pastel-ui .flow-node{
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--fl-blue-soft) 38%,transparent);
+}
+html.fl-pastel-ui .component-grid{
+  align-items:stretch !important;
+}
+html.fl-pastel-ui .component-card{
+  height:100%;
+  display:flex !important;
+  flex-direction:column !important;
+}
+html.fl-pastel-ui .component-card .component-install{
+  margin-top:auto !important;
+}
+
+/* Updates --------------------------------------------------------------- */
+body.fl-ui-v2[data-fl-section="logs"] .daily-log-dashboard{
+  background:transparent !important;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-hero{
+  min-height:290px;
+  padding:clamp(28px,4vw,48px) !important;
+  border-radius:24px !important;
+  box-shadow:var(--fl-shadow) !important;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-overview-grid{
+  align-items:stretch;
+  gap:14px !important;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-panel,
+body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-panel,
+body.fl-ui-v2[data-fl-section="logs"] .log-day,
+body.fl-ui-v2[data-fl-section="logs"] .log-event-panel,
+body.fl-ui-v2[data-fl-section="logs"] .log-new-card,
+body.fl-ui-v2[data-fl-section="logs"] .log-offline-card{
+  border-color:var(--fl-line) !important;
+  background:var(--fl-surface-solid) !important;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-stat-grid,
+body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-grid{
+  align-items:stretch;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-stat-card,
+body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-card{
+  height:100%;
+  border-color:var(--fl-line) !important;
+  background:linear-gradient(145deg,var(--fl-surface-solid),var(--fl-surface-blue)) !important;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-date-nav{
+  overflow-x:auto;
+  flex-wrap:nowrap !important;
+  scrollbar-width:none;
+}
+body.fl-ui-v2[data-fl-section="logs"] .log-date-nav::-webkit-scrollbar{display:none}
+body.fl-ui-v2[data-fl-section="logs"] .log-date-link{flex:0 0 auto}
+
+/* About ----------------------------------------------------------------- */
+body.fl-ui-v2[data-fl-section="about"] > header{
+  min-height:300px;
+  padding:clamp(30px,4vw,52px) !important;
+}
+body.fl-ui-v2[data-fl-section="about"] > main{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+body.fl-ui-v2[data-fl-section="about"] > main > section{
+  height:100%;
+  margin:0 !important;
+  padding:24px !important;
+  border-color:var(--fl-line) !important;
+  background:var(--fl-surface-solid) !important;
+}
+body.fl-ui-v2[data-fl-section="about"] > main > section:first-child{
+  grid-column:1/-1;
+}
+body.fl-ui-v2[data-fl-section="about"] .stat-row{
+  align-items:stretch;
+}
+body.fl-ui-v2[data-fl-section="about"] .stat{
+  min-height:102px;
+  border-color:var(--fl-line) !important;
+  background:linear-gradient(145deg,var(--fl-surface-solid),var(--fl-surface-blue)) !important;
+}
+
+/* Dark / Neo full-page coverage ---------------------------------------- */
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="models"] > header,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="about"] > header,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-hero,
+html.fl-pastel-ui[data-theme="dark"] .skills-hero,
+html.fl-pastel-ui[data-theme="dark"] .tools-hero,
+html.fl-pastel-ui[data-theme="dark"] .lab-hero{
+  background:
+    radial-gradient(circle at 86% 12%,rgba(73,146,255,.28),transparent 20rem),
+    radial-gradient(circle at 72% 108%,rgba(173,79,255,.18),transparent 22rem),
+    linear-gradient(120deg,#0d203a,#08172c 58%,#171127) !important;
+  border-color:#294b6a !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="models"] > main > section,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="about"] > main > section,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] > main > section,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="models"] main > article,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="models"] main section > article,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-panel,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-panel,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-day,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-event-panel,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-new-card,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-offline-card,
+html.fl-pastel-ui[data-theme="dark"] .skill-card,
+html.fl-pastel-ui[data-theme="dark"] .tool-card,
+html.fl-pastel-ui[data-theme="dark"] [data-tool-id],
+html.fl-pastel-ui[data-theme="dark"] .workflow-card,
+html.fl-pastel-ui[data-theme="dark"] .component-library,
+html.fl-pastel-ui[data-theme="dark"] .component-card{
+  color:var(--fl-ink) !important;
+  border-color:var(--fl-line) !important;
+  background:linear-gradient(145deg,#0f233e,#0b1a30) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="models"] .fl-stat-card,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="about"] .stat,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-stat-card,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] .log-snapshot-card{
+  color:var(--fl-ink) !important;
+  border-color:#2c4c68 !important;
+  background:linear-gradient(145deg,#102844,#0b1c33) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] .skill-card p,
+html.fl-pastel-ui[data-theme="dark"] .tool-card p,
+html.fl-pastel-ui[data-theme="dark"] .workflow-card p,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="about"] p,
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2[data-fl-section="logs"] p{
+  color:var(--fl-ink-2) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body.fl-ui-v2 main section h3,
+html.fl-pastel-ui[data-theme="dark"] .skill-card h2,
+html.fl-pastel-ui[data-theme="dark"] .workflow-card h2{
+  color:var(--fl-ink) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] .freellm-test-inline,
+html.fl-pastel-ui[data-theme="dark"] .skill-dialog-section,
+html.fl-pastel-ui[data-theme="dark"] .command-box,
+html.fl-pastel-ui[data-theme="dark"] .lab-rule{
+  border-color:var(--fl-line) !important;
+  background:#0b1e36 !important;
+}
+html.fl-pastel-ui[data-theme="dark"] .callout,
+html.fl-pastel-ui[data-theme="dark"] .notice{
+  color:var(--fl-ink-2) !important;
+  border-color:#3a6486 !important;
+  background:#0d2541 !important;
+}
+
+/* Responsive cross-page checks ----------------------------------------- */
+@media(max-width:980px){
+  body.fl-ui-v2[data-fl-section="about"] > main{
+    grid-template-columns:1fr;
+  }
+  body.fl-ui-v2[data-fl-section="about"] > main > section:first-child{
+    grid-column:auto;
+  }
+  html.fl-pastel-ui .workflow-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+@media(max-width:700px){
+  body.fl-ui-v2[data-fl-section="models"] > header.models-overview,
+  body.fl-ui-v2[data-fl-section="about"] > header,
+  body.fl-ui-v2[data-fl-section="logs"] .log-hero{
+    min-height:0;
+    padding:24px 18px !important;
+  }
+  html.fl-pastel-ui .skill-card,
+  html.fl-pastel-ui .tool-card,
+  html.fl-pastel-ui .workflow-card{
+    min-height:0;
+  }
+}
