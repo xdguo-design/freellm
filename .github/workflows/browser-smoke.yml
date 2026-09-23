@@ -42,6 +42,19 @@ jobs:
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
+      - name: Capture Aurora homepage visual review
+        if: github.event_name == 'pull_request'
+        run: python scripts/capture_aurora_home.py
+
+      - name: Upload Aurora homepage visual review
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-home-${{ github.sha }}
+          path: artifacts/aurora-home/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Compare homepage performance
         run: python scripts/check_home_performance.py
 
