@@ -6138,5 +6138,158 @@
         }
       ]
     }
+  },
+  {
+    "id": "puter-mimo-v26-free",
+    "order": 49,
+    "date": "2026-09-23",
+    "lastVerifiedAt": "2026-09-23",
+    "checkedBy": "manual",
+    "status": "verified",
+    "confidence": "high",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Puter terms and Xiaomi MiMo model terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "Puter.js MiMo-V2.6-Flash free playground",
+    "providerMark": "PT",
+    "provider": "Puter.js",
+    "providerMeta": "Puter Developer · Global",
+    "providerMetaEn": "Puter Developer · Global",
+    "model": "Xiaomi MiMo-V2.6-Flash",
+    "modelMeta": "Browser playground · Puter.js · no developer API key",
+    "type": [
+      "api",
+      "free",
+      "web"
+    ],
+    "usageGuide": {
+      "summary": "用 Puter 账号在浏览器 Playground 免费试用 MiMo-V2.6-Flash，或用 Puter.js 在前端接入；开发者无需持有 Xiaomi/OpenCode API Key。",
+      "prerequisites": [
+        "Puter account for the free AI allowance"
+      ],
+      "steps": [
+        "打开 Puter Developer 的 MiMo-V2.6-Flash 页面，确认模型 ID 为 xiaomi/mimo-v2.6-flash。",
+        "登录 Puter 账号后在页面 Playground 发起测试；免费账户包含 AI allowance。",
+        "开发接入时加载 Puter.js，并调用 puter.ai.chat(..., { model: 'xiaomi/mimo-v2.6-flash' })。",
+        "不要把 User-Pays 模式理解成终端用户无限免费：额度耗尽后的费用由用户自己的 Puter 账户承担。"
+      ],
+      "endpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Puter account/session or Puter OpenAI-compatible authentication; no Xiaomi model API key required for Puter.js flow",
+      "examples": {
+        "javascript": "<script src=\"https://js.puter.com/v2/\"></script><script>puter.ai.chat('Say hello in Chinese',{model:'xiaomi/mimo-v2.6-flash'}).then(console.log)</script>"
+      },
+      "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+    },
+    "kicker": "FREE BROWSER PLAYGROUND",
+    "badges": [
+      "MIMO V2.6",
+      "FREE ALLOWANCE",
+      "NO MODEL API KEY"
+    ],
+    "freeSummary": "浏览器可免费试用；免费 Puter 账户包含 AI allowance；Puter.js 对开发者采用 User-Pays 模式",
+    "freeSummaryEn": "Free browser trial; free Puter accounts include an AI allowance; Puter.js uses a user-pays model for developers",
+    "validitySummary": "Ongoing account allowance; exact allowance and pricing can change",
+    "accessSummary": "Puter account · browser playground or Puter.js · no Xiaomi/OpenCode API key required",
+    "checkedSummary": "2026-09-23 / Puter Developer official model page and tutorial",
+    "title": "Puter.js · MiMo-V2.6-Flash 免费浏览器体验",
+    "titleEn": "Puter.js · MiMo-V2.6-Flash free browser trial",
+    "why": "Puter Developer 的官方 MiMo-V2.6-Flash 页面提供可直接聊天的浏览器 Playground，并明确写明 free to try、no API keys or setup required；免费账户包含 AI allowance。开发者通过 Puter.js 接入时使用 User-Pays 模式，因此开发者本身无需承担模型调用账单。",
+    "whyEn": "Puter Developer provides a browser playground for MiMo-V2.6-Flash and explicitly says it is free to try with no model API key setup. Free Puter accounts include an AI allowance, while app integrations use Puter's user-pays model.",
+    "mechanism": "Free Puter account AI allowance plus developer-side User-Pays integration",
+    "validity": "No fixed end date published; free allowance and account pricing may change",
+    "access": "Global web account; actual regional/account availability can vary",
+    "command": "Open https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/ and use the browser playground after signing in.",
+    "register": "https://puter.com/",
+    "registerLabel": "打开 Puter / 注册登录",
+    "registerLabelEn": "Open Puter / sign in",
+    "links": [
+      [
+        "MiMo-V2.6-Flash Puter 模型页",
+        "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      ],
+      [
+        "Puter Xiaomi MiMo 教程",
+        "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
+      ],
+      [
+        "Puter User-Pays AI 教程",
+        "https://developer.puter.com/tutorials/free-unlimited-ai-api/"
+      ]
+    ],
+    "originCountry": "United States",
+    "availability": "Web / Puter account; model access and allowance are account-dependent",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "account_allowance",
+      "amount": null,
+      "unit": "AI allowance",
+      "period": "account-dependent"
+    },
+    "quota": "Free account includes an AI allowance; Puter does not publish one fixed MiMo quota on the model page",
+    "renewal": "Account-dependent; upgrade is available for a larger allowance",
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/",
+      "https://developer.puter.com/tutorials/free-unlimited-ai-api/"
+    ],
+    "evidence": "2026-09-23 核验：Puter Developer 官方模型页列出 xiaomi/mimo-v2.6-flash，提供浏览器 Playground，并写明 no API keys or setup required；FAQ 说明免费 Puter 账户包含 AI allowance。官方教程进一步说明开发者使用 User-Pays 模式时无需支付用户的 AI 调用费用。",
+    "notes": "“Free, Unlimited”是 Puter 对开发者成本模型的表述：开发者可零成本接入并扩展到任意用户数，但终端用户使用自己的 Puter 账户承担 AI 消耗。FreeLLM 因此将其标记为免费账户 allowance / trial，而不是无限永久免费模型 API。",
+    "endpointCheck": {
+      "checkedAt": "2026-09-23",
+      "verdict": "ALIVE",
+      "note": "官方模型页与 Playground 路径公开可达；真实生成需要 Puter 登录态，本轮未伪造端到端结果。"
+    },
+    "freeModels": [
+      {
+        "model": "xiaomi/mimo-v2.6-flash",
+        "quota": "Free Puter account AI allowance; exact amount not publicly fixed",
+        "label": "Browser playground / Puter.js",
+        "contextWindow": "1,000,000 tokens",
+        "note": "Developer integration uses Puter User-Pays; end-user allowance and overage are account-dependent",
+        "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-23",
+      "actualUsageVerified": false,
+      "task": "核验 Puter 是否真实提供 MiMo-V2.6-Flash 浏览器免费入口、模型 ID、免开发者模型 API Key 的调用方式与免费账户 allowance 口径。",
+      "method": [
+        "读取 Puter Developer 的 MiMo-V2.6-Flash 官方模型页，核对模型 ID、Playground、上下文和价格信息。",
+        "核对页面 FAQ 中 free Puter account includes a free AI allowance 与 no API keys or setup required 的说明。",
+        "核对 Puter 官方 Xiaomi MiMo / Free AI API 教程，确认 User-Pays 模式的开发者成本边界。",
+        "本轮没有登录 Puter 账户，因此没有把一次真实聊天生成写成已实测。"
+      ],
+      "result": "公开路径预检通过：Puter 官方页面与教程可确认 MiMo-V2.6-Flash Playground、模型 ID、免费账户 allowance 和 User-Pays 接入方式。真实登录态生成仍待补测。",
+      "limitations": "缺少 Puter 登录态，尚未验证实际免费账户剩余额度、一次完整模型输出、工具调用、延迟和具体限流；免费 allowance 的固定数值未公开。",
+      "evidence": [
+        {
+          "label": "Puter MiMo-V2.6-Flash model page",
+          "url": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+        },
+        {
+          "label": "Puter Xiaomi MiMo tutorial",
+          "url": "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
+        },
+        {
+          "label": "Puter free AI API tutorial",
+          "url": "https://developer.puter.com/tutorials/free-unlimited-ai-api/"
+        }
+      ]
+    }
   }
 ]
