@@ -116,13 +116,10 @@ def main() -> int:
             for theme in ("light", "dark"):
                 for page_name, route, ready in ROUTES:
                     page = browser.new_page(viewport=viewport)
-                    page.add_init_script(
-                        """theme => {
-                          if (theme === 'dark') localStorage.setItem('freellm-theme','dark');
-                          else localStorage.removeItem('freellm-theme');
-                        }""",
-                        theme,
-                    )
+                    if theme == "dark":
+                        page.add_init_script("localStorage.setItem('freellm-theme','dark')")
+                    else:
+                        page.add_init_script("localStorage.removeItem('freellm-theme')")
                     page.goto(base + route, wait_until="domcontentloaded")
                     page.wait_for_selector(ready, timeout=15000)
                     if theme == "dark":
