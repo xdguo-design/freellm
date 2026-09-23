@@ -669,7 +669,9 @@ class BrowserPageTests(unittest.TestCase):
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
         self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
-            self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
+            link = page.locator(f'.fl-site-nav a[data-site-nav="{key}"]')
+            self.assertEqual(link.count(), 1)
+            self.assertTrue(link.is_visible(), f"mobile nav item {key} must be visible without opening another menu")
 
     def test_primary_pages_support_dark_theme_and_mobile_without_page_overflow(self):
         routes = (
