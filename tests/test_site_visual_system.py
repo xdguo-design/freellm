@@ -4,6 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "css" / "freellm-pastel-ui.css"
+AURORA_HOME = ROOT / "css" / "aurora-home.css"
 SYNC = ROOT / "js" / "freellm-sync.js"
 SEO_BUILD = ROOT / "scripts" / "build_seo_pages.py"
 STATIC_BUILD = ROOT / "scripts" / "build_static.py"
@@ -63,6 +64,27 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
         self.assertIn("freellm-pastel-ui.css?v=20260923b", page)
+
+    def test_phase_one_homepage_isolated_aurora_style(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        css = AURORA_HOME.read_text(encoding="utf-8")
+
+        self.assertIn('data-visual-style="aurora"', page)
+        self.assertIn("aurora-home.css?v=20260923a", page)
+        self.assertIn('body[data-visual-style="aurora"]', css)
+        self.assertIn("--aurora-page:#f5f9ff", css)
+        self.assertIn("--aurora-blue:#2f7de1", css)
+        self.assertIn(".fl-site-theme-toggle{display:none !important;}", css)
+        self.assertIn("#catalog-offer-rows.offer-grid", css)
+        self.assertIn("@media(max-width:700px)", css)
+        self.assertNotIn(".skills-page", css)
+        self.assertNotIn(".tools-page", css)
+        self.assertNotIn(".workflow-card", css)
+
+    def test_phase_one_homepage_resource_total_matches_catalog(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
+        self.assertIn(f'<span>资源总览</span><strong>{len(offers)}</strong>', page)
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
