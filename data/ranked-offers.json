@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "asOf": "2026-09-22",
+  "asOf": "2026-09-23",
   "weights": {
     "freshness": 0.35,
     "freeValue": 0.3,
@@ -51,46 +51,6 @@
     },
     {
       "rank": 3,
-      "id": "cnb-ai",
-      "provider": "CNB",
-      "sourceOrder": 42,
-      "effectiveEventAt": "2026-09-15",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 76.5,
-        "freeValueScore": 91.5,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 69.22
-    },
-    {
-      "rank": 4,
-      "id": "astudio",
-      "provider": "iFlytek AStudio",
-      "sourceOrder": 43,
-      "effectiveEventAt": "2026-09-15",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 76.5,
-        "freeValueScore": 86,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 67.58
-    },
-    {
-      "rank": 5,
       "id": "google-ai-studio-free",
       "provider": "Google AI Studio",
       "sourceOrder": 28,
@@ -110,7 +70,7 @@
       "rankingScore": 66.21
     },
     {
-      "rank": 6,
+      "rank": 4,
       "id": "workbuddy",
       "provider": "WorkBuddy",
       "sourceOrder": 44,
@@ -130,11 +90,31 @@
       "rankingScore": 65.47
     },
     {
-      "rank": 7,
-      "id": "agnes-ai-free",
-      "provider": "Agnes AI",
-      "sourceOrder": 37,
-      "effectiveEventAt": "2026-09-08",
+      "rank": 5,
+      "id": "opencode-zen-free",
+      "provider": "OpenCode Zen",
+      "sourceOrder": 13,
+      "effectiveEventAt": "2026-09-23",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 85,
+        "freeValueScore": 67,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 64.85
+    },
+    {
+      "rank": 6,
+      "id": "cnb-ai",
+      "provider": "CNB",
+      "sourceOrder": 42,
+      "effectiveEventAt": "2026-09-15",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -150,7 +130,7 @@
       "rankingScore": 64.46
     },
     {
-      "rank": 8,
+      "rank": 7,
       "id": "github-copilot-free",
       "provider": "GitHub Copilot",
       "sourceOrder": 14,
@@ -170,7 +150,7 @@
       "rankingScore": 64.36
     },
     {
-      "rank": 9,
+      "rank": 8,
       "id": "trae",
       "provider": "TraeCode CN",
       "sourceOrder": 3,
@@ -190,7 +170,7 @@
       "rankingScore": 64.11
     },
     {
-      "rank": 10,
+      "rank": 9,
       "id": "stepfun-step-plan-promo",
       "provider": "StepFun",
       "sourceOrder": 49,
@@ -210,7 +190,7 @@
       "rankingScore": 63.95
     },
     {
-      "rank": 11,
+      "rank": 10,
       "id": "cursor-hobby",
       "provider": "Cursor",
       "sourceOrder": 15,
@@ -230,7 +210,7 @@
       "rankingScore": 63.76
     },
     {
-      "rank": 12,
+      "rank": 11,
       "id": "groq-free",
       "provider": "Groq",
       "sourceOrder": 29,
@@ -250,7 +230,7 @@
       "rankingScore": 63.51
     },
     {
-      "rank": 13,
+      "rank": 12,
       "id": "siliconflow-free-models",
       "provider": "SiliconFlow",
       "sourceOrder": 35,
@@ -270,7 +250,7 @@
       "rankingScore": 63.51
     },
     {
-      "rank": 14,
+      "rank": 13,
       "id": "mistral-free-mode",
       "provider": "Mistral AI",
       "sourceOrder": 32,
@@ -290,7 +270,7 @@
       "rankingScore": 63.21
     },
     {
-      "rank": 15,
+      "rank": 14,
       "id": "openrouter-free",
       "provider": "OpenRouter",
       "sourceOrder": 31,
@@ -308,6 +288,26 @@
         "specialOfferScore": 0
       },
       "rankingScore": 63.16
+    },
+    {
+      "rank": 15,
+      "id": "astudio",
+      "provider": "iFlytek AStudio",
+      "sourceOrder": 43,
+      "effectiveEventAt": "2026-09-15",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 63.75,
+        "freeValueScore": 85,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 62.81
     },
     {
       "rank": 16,
@@ -411,6 +411,26 @@
     },
     {
       "rank": 21,
+      "id": "agnes-ai-free",
+      "provider": "Agnes AI",
+      "sourceOrder": 37,
+      "effectiveEventAt": "2026-09-08",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 90.5,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 58.51
+    },
+    {
+      "rank": 22,
       "id": "modelscope-api-inference-free",
       "provider": "ModelScope",
       "sourceOrder": 36,
@@ -430,7 +450,7 @@
       "rankingScore": 58.21
     },
     {
-      "rank": 22,
+      "rank": 23,
       "id": "xiaomi-mimo-desktop",
       "provider": "Xiaomi MiMo",
       "sourceOrder": 41,
@@ -450,7 +470,7 @@
       "rankingScore": 57.41
     },
     {
-      "rank": 23,
+      "rank": 24,
       "id": "dots-api-free",
       "provider": "Dots API（国内）",
       "sourceOrder": 39,
@@ -468,26 +488,6 @@
         "specialOfferScore": 0
       },
       "rankingScore": 57.41
-    },
-    {
-      "rank": 24,
-      "id": "stepfun-limited-time-free",
-      "provider": "StepFun",
-      "sourceOrder": 38,
-      "effectiveEventAt": "2026-09-08",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 63.75,
-        "freeValueScore": 66,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 57.11
     },
     {
       "rank": 25,
@@ -773,10 +773,10 @@
     },
     {
       "rank": 39,
-      "id": "opencode-zen-free",
-      "provider": "OpenCode Zen",
-      "sourceOrder": 13,
-      "effectiveEventAt": "2026-09-07",
+      "id": "stepfun-limited-time-free",
+      "provider": "StepFun",
+      "sourceOrder": 38,
+      "effectiveEventAt": "2026-09-08",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -784,12 +784,12 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 67,
+        "freeValueScore": 66,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 51.46
+      "rankingScore": 51.16
     },
     {
       "rank": 40,
