@@ -3605,6 +3605,16 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
+    # Phase 1 Aurora is intentionally homepage-only. The model-center page reuses
+    # the homepage markup as a content template, so strip page-scoped assets here
+    # until the model page enters its own visual phase.
+    head = re.sub(
+        r'\s*<link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+">',
+        "",
+        head,
+        count=1,
+        flags=re.I,
+    )
     head = re.sub(
         r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
         r'href="../../css/\1"',
