@@ -671,6 +671,47 @@ class BrowserPageTests(unittest.TestCase):
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
 
+    def test_primary_pages_support_dark_theme_and_mobile_without_page_overflow(self):
+        routes = (
+            ("design/free-china-ai-index.html", ".catalog-app"),
+            ("models/", 'body[data-fl-section="models"]'),
+            ("skills/", ".skills-page"),
+            ("tools/", ".tools-page"),
+            ("skills/lab/", ".skill-lab-page"),
+            ("logs/", ".daily-log-dashboard"),
+            ("about/", 'body[data-fl-section="about"]'),
+        )
+        for width, height in ((1280, 900), (390, 844)):
+            for route, selector in routes:
+                with self.subTest(route=route, width=width):
+                    page = self.new_page()
+                    page.set_viewport_size({"width": width, "height": height})
+                    page.add_init_script("localStorage.setItem('freellm-theme', 'dark')")
+                    page.goto(f"{self.site.url}/{route}")
+                    page.wait_for_selector(selector)
+                    page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
+                    self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
+                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
+                    self.assertLessEqual(
+                        page.evaluate("document.documentElement.scrollWidth"),
+                        width + 4,
+                        f"{route} creates page-level horizontal overflow at {width}px",
+                    )
+                    body_color = page.evaluate("getComputedStyle(document.body).color")
+                    self.assertNotIn("rgb(16, 43, 89)", body_color, f"{route} kept light-theme ink in dark mode")
+                    page.close()
+
+    def test_theme_toggle_persists_between_primary_pages(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/skills/")
+        page.wait_for_selector(".fl-site-theme-toggle")
+        page.click(".fl-site-theme-toggle")
+        page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
+        self.assertEqual(page.evaluate("localStorage.getItem('freellm-theme')"), "dark")
+        page.goto(f"{self.site.url}/tools/")
+        page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
+        self.assertEqual(page.evaluate("localStorage.getItem('freellm-theme')"), "dark")
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
