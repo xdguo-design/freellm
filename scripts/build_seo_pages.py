@@ -3605,6 +3605,15 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
+    # Aurora is rolled out page by page. The model center reuses the homepage
+    # template structure, but must not inherit the homepage-only Aurora stylesheet
+    # until Phase 2 explicitly opts in.
+    head = re.sub(
+        r'\s*<link rel="stylesheet" href="../css/freellm-aurora\.css(?:\?[^"]*)?">',
+        "",
+        head,
+        count=1,
+    )
     head = re.sub(
         r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
         r'href="../../css/\1"',
