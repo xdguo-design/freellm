@@ -116,6 +116,7 @@ def main() -> int:
             for theme in ("light", "dark"):
                 for page_name, route, ready in ROUTES:
                     page = browser.new_page(viewport=viewport)
+                    page.add_init_script("localStorage.setItem('free-ai-index-locale','zh-CN')")
                     if theme == "dark":
                         page.add_init_script("localStorage.setItem('freellm-theme','dark')")
                     else:
