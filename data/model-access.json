@@ -4,22 +4,18 @@
     "providerId": "puter",
     "registrationProfileId": "puter-ai",
     "modelSearchName": "xiaomi/mimo-v2.6-flash",
-    "extraRequirements": [
-      "Browser Playground / Puter.js: Puter account login",
-      "CLI / server OpenAI-compatible API: Puter auth token"
-    ],
+    "extraRequirements": [],
     "regionOverridePolicyId": null,
-    "quotaOverride": "Every Puter account includes a free AI allowance; amount/reset is not published on the model page. Usage beyond the allowance is user-paid.",
+    "quotaOverride": "Free Puter account includes an AI allowance; exact allowance is account-dependent and not hard-coded.",
     "accessStatus": "current",
     "replacement": null,
     "sourceUrls": [
       "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
-      "https://developer.puter.com/pricing/",
-      "https://developer.puter.com/tutorials/use-openai-sdk-with-puter/"
+      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
     ],
     "lastVerifiedAt": "2026-09-23",
-    "verificationStatus": "verified",
-    "notes": "Official Puter model page exposes a free browser playground and the xiaomi/mimo-v2.6-flash model ID. Puter OpenAI-compatible base URL is https://api.puter.com/puterai/openai/v1/; non-browser use requires a Puter auth token."
+    "verificationStatus": "partial",
+    "notes": "官方页面确认可在浏览器 Playground 免费试用，且 Puter.js 无需开发者自备 API Key；真实登录态生成仍待补测。"
   },
   {
     "modelId": "opencode/mimo-v2-6-flash-free",
