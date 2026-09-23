@@ -87,6 +87,37 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertNotIn("aurora-home.css", model_center)
         self.assertIn("Phase 1 Aurora is intentionally homepage-only", builder)
 
+    def test_all_primary_pages_have_isolated_aurora_assets(self):
+        pages = {
+            "models/index.html": "aurora-models.css",
+            "skills/index.html": "aurora-skills.css",
+            "tools/index.html": "aurora-tools.css",
+            "skills/lab/index.html": "aurora-workflow.css",
+            "logs/index.html": "aurora-logs.css",
+            "about/index.html": "aurora-about.css",
+        }
+        for relative, stylesheet in pages.items():
+            page = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertIn('data-visual-style="aurora"', page, relative)
+            self.assertIn("/css/aurora-core.css?v=20260923a", page, relative)
+            self.assertIn(f"/css/{stylesheet}?v=20260923a", page, relative)
+            css = (ROOT / "css" / stylesheet).read_text(encoding="utf-8")
+            self.assertIn('body[data-visual-style="aurora"]', css, stylesheet)
+
+    def test_aurora_page_styles_stay_page_scoped(self):
+        forbidden = {
+            "aurora-models.css": (".skills-page", ".tools-page", ".workflow-card"),
+            "aurora-skills.css": (".tools-page", ".models-overview", ".workflow-card"),
+            "aurora-tools.css": (".skills-page", ".models-overview", ".workflow-card"),
+            "aurora-workflow.css": (".tools-page", ".models-overview", ".skill-card"),
+            "aurora-logs.css": (".tools-page", ".skills-page", ".workflow-card"),
+            "aurora-about.css": (".tools-page", ".skills-page", ".workflow-card"),
+        }
+        for stylesheet, needles in forbidden.items():
+            css = (ROOT / "css" / stylesheet).read_text(encoding="utf-8")
+            for needle in needles:
+                self.assertNotIn(needle, css, f"{stylesheet} leaked selector {needle}")
+
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
