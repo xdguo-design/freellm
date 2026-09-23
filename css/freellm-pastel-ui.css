@@ -2613,3 +2613,294 @@ html.fl-pastel-ui[data-theme="dark"] small{color:var(--fl-ink-2) !important;}
   html.fl-pastel-ui #student-offers.student-panel{padding:14px !important;}
 }
 @media(max-width:430px){html.fl-pastel-ui .today-latest-grid{grid-template-columns:1fr !important;}}
+
+
+/* 2026-09-23 visual regression pass 2 */
+/* Brand identity: the approved Light/Aurora theme keeps the dark editorial rail. */
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-rail{
+  color:#eaf4ff !important;
+  border-color:#173653 !important;
+  background:
+    radial-gradient(circle at 35% 82%,rgba(51,134,230,.18),transparent 12rem),
+    linear-gradient(180deg,#07172d 0%,#061326 58%,#081a31 100%) !important;
+  box-shadow:14px 0 42px rgba(22,60,104,.12) !important;
+}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-brand-copy strong{color:#f6fbff !important;}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-brand-copy small,
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-rail-note{color:#9eb9d4 !important;}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-brand-mark{
+  color:#bfe2ff !important;
+  border-color:#2e557a !important;
+  background:linear-gradient(145deg,#123354,#0a213d) !important;
+}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-nav a{color:#a9c0d8 !important;}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-nav a:hover{
+  color:#fff !important;
+  background:rgba(46,114,181,.18) !important;
+}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-nav a[aria-current="page"]{
+  color:#fff !important;
+  background:linear-gradient(90deg,rgba(44,116,211,.62),rgba(76,224,190,.13)) !important;
+  box-shadow:inset 0 0 0 1px rgba(111,184,255,.26),0 10px 28px rgba(0,0,0,.12) !important;
+}
+html.fl-pastel-ui:not([data-theme="dark"]) .fl-site-theme-toggle{
+  color:#c6d9ed !important;
+  border-color:#294c6b !important;
+  background:#102b46 !important;
+}
+
+/* Homepage: one global chrome row. Keep only useful local controls, without a second card-bar. */
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header{
+  min-height:34px !important;
+  margin:0 0 10px !important;
+  padding:0 !important;
+  justify-content:flex-end !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .brand{display:none !important;}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .header-actions{
+  gap:8px !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .local-clock,
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .profile-chevron{display:none !important;}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .header-submit,
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .locale-toggle{
+  min-height:34px !important;
+  height:34px !important;
+  border-radius:999px !important;
+  box-shadow:none !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .profile-dot{
+  width:34px !important;
+  height:34px !important;
+}
+
+/* Homepage hero: keep the same information but make the hierarchy more editorial/neo-human. */
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero{
+  overflow:hidden !important;
+  position:relative;
+  isolation:isolate;
+  padding:clamp(30px,4vw,58px) !important;
+  border:1px solid var(--fl-line) !important;
+  border-radius:28px !important;
+  background:
+    radial-gradient(circle at 82% 6%,rgba(94,160,255,.20),transparent 20rem),
+    radial-gradient(circle at 92% 100%,rgba(190,92,255,.14),transparent 26rem),
+    linear-gradient(135deg,var(--fl-surface-blue),var(--fl-surface-solid) 58%,#fff4f8) !important;
+  box-shadow:var(--fl-shadow) !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  right:-120px;
+  top:-170px;
+  width:410px;
+  height:410px;
+  border-radius:50%;
+  border:1px solid rgba(76,147,219,.25);
+  box-shadow:0 0 0 44px rgba(73,144,219,.055),0 0 0 94px rgba(158,75,232,.032);
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero-copy{min-width:0 !important;}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero h1{
+  max-width:760px !important;
+  color:var(--fl-ink) !important;
+  font-family:var(--fl-font) !important;
+  font-weight:850 !important;
+  letter-spacing:-.055em !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero .hero-copy{
+  max-width:760px !important;
+  color:var(--fl-ink-2) !important;
+  font-family:var(--fl-font) !important;
+  font-weight:650 !important;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .hero-intel{
+  overflow:hidden !important;
+  min-width:0 !important;
+  border-color:var(--fl-line) !important;
+  border-radius:22px !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(243,248,255,.70)) !important;
+  backdrop-filter:blur(16px);
+}
+html.fl-pastel-ui body[data-fl-section="home"] .hero-intel::after{
+  right:-24px !important;
+  top:18px !important;
+  width:128px !important;
+  min-height:185px !important;
+  padding:18px 14px !important;
+  opacity:.82;
+}
+html.fl-pastel-ui body[data-fl-section="home"] .hero-intel-main{padding-right:68px !important;}
+
+/* Dark/Neo: remove the pale-paper island from the hero. */
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .catalog-hero{
+  background:
+    radial-gradient(circle at 78% 0%,rgba(50,128,255,.25),transparent 20rem),
+    radial-gradient(circle at 92% 96%,rgba(183,72,255,.18),transparent 25rem),
+    linear-gradient(135deg,#0b213b,#0a172c 56%,#1c1430) !important;
+  border-color:#315675 !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .catalog-hero .hero-badge{
+  color:#bfe2ff !important;
+  border-color:#315f87 !important;
+  background:rgba(17,47,76,.78) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel{
+  color:var(--fl-ink) !important;
+  border-color:#365b78 !important;
+  background:linear-gradient(145deg,rgba(13,37,64,.94),rgba(27,22,48,.93)) !important;
+  box-shadow:0 24px 60px rgba(0,0,0,.28) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel::before{
+  background:linear-gradient(120deg,rgba(26,77,126,.50),rgba(80,44,121,.48)) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel::after{
+  color:#d7ebff !important;
+  border:1px solid rgba(97,151,199,.25);
+  background:linear-gradient(155deg,rgba(17,48,78,.92),rgba(42,28,63,.91)) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.24) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel-head strong,
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel-main > div:first-child > b,
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel-main > div:first-child > strong{color:#f5f9ff !important;}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel-head > span,
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .intel-story-copy,
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .hero-intel-main p,
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .mini-chart small{color:#a9bfd8 !important;}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .intel-pills > div{
+  border-color:#294d6d !important;
+  background:rgba(10,31,55,.86) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="home"] .intel-pills b{color:#eaf4ff !important;}
+
+/* The cross-page hero summary cards must belong to the dark theme too. */
+html.fl-pastel-ui[data-theme="dark"] .skills-hero .hero-note,
+html.fl-pastel-ui[data-theme="dark"] .tools-hero .hero-note,
+html.fl-pastel-ui[data-theme="dark"] .lab-hero-aside{
+  color:var(--fl-ink) !important;
+  border-color:#315675 !important;
+  background:linear-gradient(145deg,#102943,#16243d) !important;
+}
+html.fl-pastel-ui[data-theme="dark"] .skills-hero .hero-note *,
+html.fl-pastel-ui[data-theme="dark"] .tools-hero .hero-note *,
+html.fl-pastel-ui[data-theme="dark"] .lab-hero-aside *{
+  color:inherit !important;
+}
+html.fl-pastel-ui .lab-topline{display:none !important;}
+
+/* Home phone: explicitly reflow rather than relying on the old desktop hero. */
+@media(max-width:700px){
+  html.fl-pastel-ui body[data-fl-section="home"] .catalog-header{
+    margin-bottom:6px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .catalog-header .profile-dot{display:none !important;}
+  html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero{
+    display:block !important;
+    min-height:0 !important;
+    padding:24px 18px 20px !important;
+    border-radius:22px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero h1{
+    margin:20px 0 12px !important;
+    font-size:clamp(42px,14.2vw,58px) !important;
+    line-height:.98 !important;
+    letter-spacing:-.05em !important;
+    overflow-wrap:normal !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .catalog-hero .hero-copy{
+    width:auto !important;
+    max-width:100% !important;
+    margin:0 0 18px !important;
+    padding:0 !important;
+    border:0 !important;
+    font-size:17px !important;
+    line-height:1.5 !important;
+    letter-spacing:-.015em !important;
+    white-space:normal !important;
+    overflow:visible !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-search{
+    box-sizing:border-box !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    min-height:54px !important;
+    display:grid !important;
+    grid-template-columns:24px minmax(0,1fr) 76px !important;
+    gap:4px !important;
+    padding:4px 4px 4px 10px !important;
+    border-radius:15px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-search > span{font-size:22px !important;}
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-search input{
+    width:100% !important;
+    min-width:0 !important;
+    padding:0 6px !important;
+    font-size:13px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-search button{
+    min-width:0 !important;
+    width:76px !important;
+    min-height:44px !important;
+    padding:0 8px !important;
+    border-radius:11px !important;
+    font-size:13px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hot-searches{
+    gap:7px !important;
+    margin-top:14px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-intent-links{
+    gap:7px 11px !important;
+    margin-top:11px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-intel{
+    width:100% !important;
+    min-height:0 !important;
+    margin-top:22px !important;
+    padding:18px !important;
+    border-radius:18px !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-intel::before,
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-intel::after{display:none !important;}
+  html.fl-pastel-ui body[data-fl-section="home"] .hero-intel-main{
+    margin-top:18px !important;
+    padding-right:0 !important;
+  }
+  html.fl-pastel-ui body[data-fl-section="home"] .intel-pills{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+}
+@media(max-width:480px){
+  html.fl-pastel-ui .fl-site-nav{
+    min-width:0 !important;
+    flex:1 1 auto !important;
+    display:grid !important;
+    grid-template-columns:repeat(7,minmax(28px,1fr)) !important;
+    gap:1px !important;
+    overflow:visible !important;
+  }
+  html.fl-pastel-ui .fl-site-nav a{
+    width:auto !important;
+    min-width:0 !important;
+    padding:5px 2px !important;
+    justify-content:center !important;
+  }
+  html.fl-pastel-ui .fl-site-nav-icon{
+    width:auto !important;
+    font-size:15px !important;
+  }
+  html.fl-pastel-ui .fl-site-theme-toggle{
+    width:34px !important;
+    min-width:34px !important;
+    height:34px !important;
+    min-height:34px !important;
+    flex-basis:34px !important;
+  }
+}
