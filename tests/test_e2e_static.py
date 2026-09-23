@@ -891,6 +891,60 @@ class BrowserPageTests(unittest.TestCase):
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
         self.assertEqual(len(page.problems), 0, page.problems)
 
+    def test_homepage_aurora_phase_one_visual_contracts(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
+        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        today = page.locator(".today-latest").bounding_box()
+        offers = page.locator("#catalog-offers").bounding_box()
+        student = page.locator("#student-offers").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(today)
+        self.assertIsNotNone(offers)
+        self.assertIsNotNone(student)
+        self.assertLess(hero["y"], today["y"])
+        self.assertLess(today["y"], offers["y"])
+        self.assertLess(offers["y"], student["y"])
+
+        heights = page.eval_on_selector_all(
+            "#catalog-offer-rows .offer:not(.hidden)",
+            """els => {
+              const items = els.slice(0, 6).map(el => {
+                const r = el.getBoundingClientRect();
+                return {top:r.top,height:r.height};
+              });
+              if (!items.length) return [];
+              const firstTop = items[0].top;
+              return items.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
+            }"""
+        )
+        self.assertGreaterEqual(len(heights), 2)
+        self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
+
+    def test_homepage_aurora_phase_one_mobile_layout(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+        for index in range(7):
+            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        search = page.locator(".hero-search").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(search)
+        self.assertLessEqual(search["x"] + search["width"], 390)
+        self.assertGreaterEqual(search["x"], 0)
+
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
@@ -986,6 +1040,7 @@ class BrowserPageTests(unittest.TestCase):
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
@@ -1017,6 +1072,7 @@ class BrowserPageTests(unittest.TestCase):
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
