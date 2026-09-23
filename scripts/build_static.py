@@ -473,18 +473,18 @@ def sync_home_asset_fingerprints(manifest: dict[str, tuple[Path, Path, str]], ch
 def normalize_home_section_priority(html: str) -> str:
     """Keep fresh/verified discovery first and place student benefits right after offers."""
     student_match = re.search(
-        r'<section id="student-offers"\b.*?</section>\s*',
+        r'<section\b[^>]*\bid=["\']student-offers["\'][^>]*>.*?</section>\s*',
         html,
         flags=re.I | re.S,
     )
-    compare_match = re.search(r'<section\b[^>]*\bid="catalog-compare"\b', html, flags=re.I)
-    offers_match = re.search(r'<section\b[^>]*\bid="catalog-offers"\b', html, flags=re.I)
+    compare_match = re.search(r'<section\b[^>]*\bid=["\']catalog-compare["\']', html, flags=re.I)
+    offers_match = re.search(r'<section\b[^>]*\bid=["\']catalog-offers["\']', html, flags=re.I)
     if not student_match or not compare_match or not offers_match:
         return html
 
     student = student_match.group(0)
     without_student = html[:student_match.start()] + html[student_match.end():]
-    compare_match = re.search(r'<section\b[^>]*\bid="catalog-compare"\b', without_student, flags=re.I)
+    compare_match = re.search(r'<section\b[^>]*\bid=["\']catalog-compare["\']', without_student, flags=re.I)
     if not compare_match:
         return html
 
