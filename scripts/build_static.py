@@ -477,14 +477,14 @@ def normalize_home_section_priority(html: str) -> str:
         html,
         flags=re.I | re.S,
     )
-    compare_match = re.search(r'<section id="catalog-compare"\b', html, flags=re.I)
-    offers_match = re.search(r'<section id="catalog-offers"\b', html, flags=re.I)
+    compare_match = re.search(r'<section\b[^>]*\bid="catalog-compare"\b', html, flags=re.I)
+    offers_match = re.search(r'<section\b[^>]*\bid="catalog-offers"\b', html, flags=re.I)
     if not student_match or not compare_match or not offers_match:
         return html
 
     student = student_match.group(0)
     without_student = html[:student_match.start()] + html[student_match.end():]
-    compare_match = re.search(r'<section id="catalog-compare"\b', without_student, flags=re.I)
+    compare_match = re.search(r'<section\b[^>]*\bid="catalog-compare"\b', without_student, flags=re.I)
     if not compare_match:
         return html
 
