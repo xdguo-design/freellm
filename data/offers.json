@@ -5978,5 +5978,165 @@
         }
       ]
     }
+  },
+  {
+    "id": "puter-mimo-v2-6-flash-free",
+    "order": 50,
+    "date": "2026-09-23",
+    "name": "Puter.js MiMo-V2.6-Flash free allowance",
+    "providerMark": "P",
+    "provider": "Puter.js",
+    "providerMeta": "Puter · Global · User-Pays AI",
+    "providerMetaEn": "Puter · Global · User-Pays AI",
+    "model": "Xiaomi MiMo-V2.6-Flash",
+    "modelMeta": "Browser Playground · Puter.js · OpenAI-compatible API",
+    "type": [
+      "api",
+      "free",
+      "web"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "先在 Puter 官方 Playground 免费试用 MiMo-V2.6-Flash；需要 CLI / 服务端接入时再创建 Puter auth token。",
+      "prerequisites": [
+        "Puter 账号",
+        "浏览器 Playground 无需 Xiaomi API Key；非浏览器 OpenAI-compatible API 需要 Puter auth token"
+      ],
+      "steps": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 页面，点击 Try it free 并登录 Puter 账号。",
+        "在 Playground 选择/确认模型 xiaomi/mimo-v2.6-flash，发送一个最小提示词核对账号 allowance。",
+        "如需在 CLI、Python 或服务端使用，在 Puter Dashboard 创建 auth token。",
+        "使用 Puter 的 OpenAI-compatible endpoint；额度耗尽后先确认自己的 Puter 账户是否需要充值。"
+      ],
+      "endpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Browser Puter.js handles user auth automatically; server/CLI uses Authorization: Bearer ${PUTER_AUTH_TOKEN}",
+      "examples": {
+        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'"
+      },
+      "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+    },
+    "kicker": "FREE ACCOUNT ALLOWANCE",
+    "badges": [
+      "FREE PLAYGROUND",
+      "1M CONTEXT",
+      "USER-PAYS"
+    ],
+    "freeSummary": "Puter 账号自带免费 AI allowance；MiMo-V2.6-Flash 可在官方浏览器 Playground 免费试用",
+    "freeSummaryEn": "Every Puter account includes a free AI allowance; MiMo-V2.6-Flash is available in the official browser playground",
+    "validitySummary": "Account allowance; fixed amount/reset not published on the model page",
+    "accessSummary": "Global · Puter account · browser no Xiaomi key",
+    "checkedSummary": "2026-09-23 / official Puter model page + pricing + OpenAI-compatible docs",
+    "title": "Puter.js · MiMo-V2.6-Flash 免费 Playground",
+    "titleEn": "Puter.js · MiMo-V2.6-Flash free playground",
+    "why": "Puter 官方 MiMo-V2.6-Flash 页面明确提供“Try it free”浏览器 Playground，并说明每个 Puter 账号包含免费 AI allowance。对开发者而言，Puter.js 采用 User-Pays：开发者无需承担用户的模型费用；对终端用户而言，免费 allowance 用完后是否继续付费由其自己的 Puter 账户决定。",
+    "whyEn": "Puter's official MiMo-V2.6-Flash page offers a free browser playground and states that every Puter account includes a free AI allowance. Puter.js uses a User-Pays model, so developers are not billed for users' AI usage; users decide whether to pay after their allowance is exhausted.",
+    "mechanism": "Free AI allowance on each Puter account plus a browser playground; developers integrate at $0 under User-Pays",
+    "validity": "Ongoing account allowance; exact free amount/reset is not published on the MiMo model page and can change",
+    "access": "Use the official Puter browser playground or Puter.js; CLI/server access uses Puter's OpenAI-compatible API with a Puter auth token",
+    "command": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'",
+    "register": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+    "registerLabel": "打开 Puter MiMo-V2.6-Flash 免费 Playground",
+    "registerLabelEn": "Open the Puter MiMo-V2.6-Flash playground",
+    "links": [
+      [
+        "MiMo-V2.6-Flash Playground",
+        "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      ],
+      [
+        "Puter.js User-Pays pricing",
+        "https://developer.puter.com/pricing/"
+      ],
+      [
+        "OpenAI-compatible API guide",
+        "https://developer.puter.com/tutorials/use-openai-sdk-with-puter/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global Puter account access; regional availability may still vary by network/account",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "account_allowance",
+      "amount": null,
+      "unit": "AI allowance",
+      "period": "account-managed"
+    },
+    "quota": "Every Puter account includes a free AI allowance; the public MiMo page does not publish a fixed token/credit amount or reset period",
+    "renewal": "Allowance and overage policy are controlled by the user's Puter account; heavy users top up directly with Puter",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Puter terms and Xiaomi MiMo model terms",
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": [
+        {
+          "capability": "model_api",
+          "unit": "1M input tokens",
+          "price": "$0.14"
+        },
+        {
+          "capability": "model_api",
+          "unit": "1M output tokens",
+          "price": "$0.28"
+        }
+      ]
+    },
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/pricing/",
+      "https://developer.puter.com/tutorials/use-openai-sdk-with-puter/"
+    ],
+    "evidence": "2026-09-23 核验：Puter 官方 MiMo-V2.6-Flash 页面提供免费浏览器 Playground，模型 ID 为 xiaomi/mimo-v2.6-flash，并明确每个 Puter 账号带免费 AI allowance。Puter 官方 pricing 页面说明 User-Pays：AI 使用记到用户自己的 Puter 账号，开发者账单为 $0；OpenAI-compatible API 文档给出 https://api.puter.com/puterai/openai/v1/ 和 Puter auth token 用法。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-23",
+    "checkedBy": "manual",
+    "notes": "不要把“开发者 $0”误写成“终端用户无限免费”。终端用户先消耗账号免费 AI allowance；超过 allowance 后由用户自行向 Puter 付费。当前环境没有 Puter 登录态/PUTER_AUTH_TOKEN，因此真实模型生成尚未标记为通过。",
+    "freeModels": [
+      {
+        "model": "xiaomi/mimo-v2.6-flash",
+        "label": "Xiaomi MiMo-V2.6-Flash",
+        "contextWindow": "1,000,000 tokens",
+        "quota": "Puter account free AI allowance; fixed public amount not stated",
+        "note": "Browser Playground can be tried with a Puter account; overage is user-paid",
+        "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-23",
+      "actualUsageVerified": false,
+      "task": "核验 Puter 是否真实提供 MiMo-V2.6-Flash 免费浏览器入口、模型 ID、账号免费 allowance、User-Pays 费用边界和 OpenAI-compatible 调用方式；在没有 Puter 登录态或 auth token 时不伪造生成结果。",
+      "method": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 模型页，核对 Try it free Playground、模型 ID、上下文窗口和页面说明。",
+        "打开 Puter 官方 pricing 页面，核对每个账号包含免费 AI allowance，以及开发者 $0 / 用户自付超额的 User-Pays 模式。",
+        "打开 Puter 官方 OpenAI SDK 教程，核对 OpenAI-compatible base URL、auth token 和 chat completions 调用方式。",
+        "当前会话没有 Puter 登录态和 PUTER_AUTH_TOKEN，因此没有发送实际生成请求。"
+      ],
+      "result": "公开路径预检通过：Puter 官方模型页、pricing 与 OpenAI-compatible 文档相互印证，MiMo-V2.6-Flash 可通过 Puter 账号免费 allowance 试用，且存在浏览器 Playground 和 API 接入路径。",
+      "limitations": "尚未验证 Puter 账号内实际剩余 allowance、一次真实 MiMo 生成响应、首 token 延迟、工具调用、多模态输入和超额后的实际收费提示。",
+      "evidence": [
+        {
+          "label": "Puter MiMo-V2.6-Flash model page",
+          "url": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+        },
+        {
+          "label": "Puter.js User-Pays pricing",
+          "url": "https://developer.puter.com/pricing/"
+        },
+        {
+          "label": "Puter OpenAI-compatible API guide",
+          "url": "https://developer.puter.com/tutorials/use-openai-sdk-with-puter/"
+        }
+      ]
+    }
   }
 ]
