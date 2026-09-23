@@ -671,6 +671,69 @@ class BrowserPageTests(unittest.TestCase):
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
 
+    def test_aurora_homepage_visual_contracts_across_breakpoints(self):
+        for width, height in ((1440, 1000), (1024, 900), (390, 844)):
+            with self.subTest(width=width):
+                page = self.new_page()
+                page.set_viewport_size({"width": width, "height": height})
+                page.goto(HTML_PATH.as_uri())
+                page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+                self.assertTrue(page.locator("body.theme-aurora").count() == 1)
+                self.assertTrue(page.locator(".catalog-hero").is_visible())
+                self.assertTrue(page.locator(".today-latest").is_visible())
+                self.assertLessEqual(
+                    page.evaluate("document.documentElement.scrollWidth"),
+                    width + 4,
+                    f"Aurora homepage overflows horizontally at {width}px",
+                )
+
+                hero = page.locator(".catalog-hero").bounding_box()
+                self.assertIsNotNone(hero)
+                self.assertGreater(hero["width"], 0)
+                self.assertLessEqual(hero["x"] + hero["width"], width + 1)
+
+                if width >= 700:
+                    heights = page.eval_on_selector_all(
+                        "#catalog-offer-rows .offer:not(.hidden)",
+                        """els => {
+                            const visible = els
+                              .filter(el => {
+                                const r = el.getBoundingClientRect();
+                                const s = getComputedStyle(el);
+                                return s.display !== 'none' && r.width > 10 && r.height > 10;
+                              })
+                              .map(el => {
+                                const r = el.getBoundingClientRect();
+                                return {top:r.top,height:r.height};
+                              });
+                            const firstTop = Math.min(...visible.map(x => x.top));
+                            return visible.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
+                        }""",
+                    )
+                    self.assertGreaterEqual(len(heights), 2)
+                    self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
+                page.close()
+
+    def test_aurora_homepage_dom_hierarchy_matches_phase_one_plan(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        order = page.evaluate("""() => {
+            const all = Array.from(document.querySelectorAll('section'));
+            const idx = el => all.indexOf(el);
+            return {
+              today: idx(document.querySelector('.today-latest')),
+              offers: idx(document.getElementById('catalog-offers')),
+              student: idx(document.getElementById('student-offers')),
+              compare: idx(document.getElementById('catalog-compare'))
+            };
+        }""")
+        self.assertGreaterEqual(order["today"], 0)
+        self.assertLess(order["today"], order["offers"])
+        self.assertLess(order["offers"], order["student"])
+        self.assertLess(order["student"], order["compare"])
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
