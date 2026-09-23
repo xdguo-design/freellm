@@ -3610,7 +3610,7 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     # Aurora rollout is intentionally page-by-page: keep TODAY/LATEST and the
     # homepage's catalog-first student ordering out of models/center until Phase 2.
     body = re.sub(
-        r'\s*<section class="today-latest"\b.*?</section>\s*',
+        r'\s*<section[^>]*class="[^"]*\btoday-latest\b[^"]*"[^>]*>.*?</section>\s*',
         "\n",
         body,
         count=1,
