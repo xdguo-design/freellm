@@ -28,6 +28,7 @@ ROUTES = [
 
 VIEWPORTS = {
     "desktop": {"width": 1440, "height": 1000},
+    "tablet": {"width": 1024, "height": 900},
     "mobile": {"width": 390, "height": 844},
 }
 
@@ -113,27 +114,22 @@ def main() -> int:
     with serve_root() as base, sync_playwright() as p:
         browser = p.chromium.launch()
         for viewport_name, viewport in VIEWPORTS.items():
-            for theme in ("light", "dark"):
-                for page_name, route, ready in ROUTES:
-                    page = browser.new_page(viewport=viewport)
-                    page.add_init_script("localStorage.setItem('free-ai-index-locale','zh-CN')")
-                    if theme == "dark":
-                        page.add_init_script("localStorage.setItem('freellm-theme','dark')")
-                    else:
-                        page.add_init_script("localStorage.removeItem('freellm-theme')")
-                    page.goto(base + route, wait_until="domcontentloaded")
-                    page.wait_for_selector(ready, timeout=15000)
-                    if theme == "dark":
-                        page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
-                    page.add_style_tag(content="*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}")
-                    page.wait_for_timeout(250)
-                    name = f"{page_name}-{viewport_name}-{theme}"
-                    report[name] = measure(page, page_name)
-                    page.screenshot(path=str(OUT / f"{name}.png"), full_page=False)
-                    page.close()
+            for page_name, route, ready in ROUTES:
+                page = browser.new_page(viewport=viewport)
+                page.add_init_script("localStorage.setItem('free-ai-index-locale','zh-CN')")
+                page.add_init_script("localStorage.removeItem('freellm-theme')")
+                page.goto(base + route, wait_until="domcontentloaded")
+                page.wait_for_selector(ready, timeout=15000)
+                page.wait_for_selector("body[data-visual-style='aurora']", timeout=15000)
+                page.add_style_tag(content="*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}")
+                page.wait_for_timeout(250)
+                name = f"{page_name}-{viewport_name}-aurora"
+                report[name] = measure(page, page_name)
+                page.screenshot(path=str(OUT / f"{name}.png"), full_page=False)
+                page.close()
         browser.close()
     (OUT / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"captured {len(report)} visual states to {OUT}")
+    print(f"captured {len(report)} Aurora visual states to {OUT}")
     return 0
 
 

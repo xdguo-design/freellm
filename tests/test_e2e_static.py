@@ -673,7 +673,7 @@ class BrowserPageTests(unittest.TestCase):
             self.assertEqual(link.count(), 1)
             self.assertTrue(link.is_visible(), f"mobile nav item {key} must be visible without opening another menu")
 
-    def test_primary_pages_support_dark_theme_and_mobile_without_page_overflow(self):
+    def test_primary_pages_use_aurora_and_mobile_without_page_overflow(self):
         routes = (
             ("design/free-china-ai-index.html", ".catalog-app"),
             ("models/", 'body[data-fl-section="models"]'),
@@ -688,21 +688,18 @@ class BrowserPageTests(unittest.TestCase):
                 with self.subTest(route=route, width=width):
                     page = self.new_page()
                     page.set_viewport_size({"width": width, "height": height})
-                    page.add_init_script("localStorage.setItem('freellm-theme', 'dark')")
                     page.goto(f"{self.site.url}/{route}")
                     page.wait_for_selector(selector)
-                    page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
+                    self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
+                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
                     self.assertLessEqual(
                         page.evaluate("document.documentElement.scrollWidth"),
                         width + 4,
                         f"{route} creates page-level horizontal overflow at {width}px",
                     )
-                    body_color = page.evaluate("getComputedStyle(document.body).color")
-                    self.assertNotIn("rgb(16, 43, 89)", body_color, f"{route} kept light-theme ink in dark mode")
                     page.close()
-
     def test_visual_regression_equal_height_cards_and_home_hierarchy(self):
         page = self.new_page()
         page.set_viewport_size({"width": 1440, "height": 1000})
@@ -786,7 +783,7 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
                 page.close()
 
-    def test_visual_regression_dark_theme_uses_neo_tokens_on_primary_pages(self):
+    def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
             ("design/free-china-ai-index.html", ".today-latest"),
             ("models/", ".models-overview"),
@@ -800,36 +797,31 @@ class BrowserPageTests(unittest.TestCase):
             with self.subTest(route=route):
                 page = self.new_page()
                 page.set_viewport_size({"width": 1280, "height": 900})
-                page.add_init_script("localStorage.setItem('freellm-theme', 'dark')")
                 page.goto(f"{self.site.url}/{route}")
                 page.wait_for_selector(surface)
-                page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
                 tokens = page.evaluate("""() => {
-                    const s = getComputedStyle(document.documentElement);
+                    const s = getComputedStyle(document.body);
                     return {
-                      canvas: s.getPropertyValue('--fl-canvas').trim(),
-                      ink: s.getPropertyValue('--fl-ink').trim(),
-                      mint: s.getPropertyValue('--fl-mint').trim()
+                      page: s.getPropertyValue('--aurora-page').trim(),
+                      ink: s.getPropertyValue('--aurora-ink').trim(),
+                      blue: s.getPropertyValue('--aurora-blue').trim()
                     };
                 }""")
-                self.assertEqual(tokens["canvas"].lower(), "#050b18")
-                self.assertEqual(tokens["ink"].lower(), "#f5f9ff")
-                self.assertEqual(tokens["mint"].lower(), "#6ef0c4")
-                text_color = page.locator(surface).evaluate("el => getComputedStyle(el).color")
-                self.assertNotEqual(text_color, "rgb(16, 43, 89)")
+                self.assertEqual(tokens["page"].lower(), "#f5f9ff")
+                self.assertEqual(tokens["ink"].lower(), "#102745")
+                self.assertEqual(tokens["blue"].lower(), "#2f7de1")
                 page.close()
-
-    def test_theme_toggle_persists_between_primary_pages(self):
-        page = self.new_page()
-        page.goto(f"{self.site.url}/skills/")
-        page.wait_for_selector(".fl-site-theme-toggle")
-        page.click(".fl-site-theme-toggle")
-        page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
-        self.assertEqual(page.evaluate("localStorage.getItem('freellm-theme')"), "dark")
-        page.goto(f"{self.site.url}/tools/")
-        page.wait_for_function("document.documentElement.dataset.theme === 'dark'")
-        self.assertEqual(page.evaluate("localStorage.getItem('freellm-theme')"), "dark")
-
+    def test_theme_toggle_is_frozen_while_aurora_is_the_single_style(self):
+        for route in ("skills/", "tools/", "about/"):
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector("body[data-visual-style='aurora']")
+                self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                local_toggle = page.locator(".theme-toggle")
+                if local_toggle.count():
+                    self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                page.close()
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
@@ -890,6 +882,60 @@ class BrowserPageTests(unittest.TestCase):
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
         self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_homepage_aurora_phase_one_visual_contracts(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
+        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        today = page.locator(".today-latest").bounding_box()
+        offers = page.locator("#catalog-offers").bounding_box()
+        student = page.locator("#student-offers").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(today)
+        self.assertIsNotNone(offers)
+        self.assertIsNotNone(student)
+        self.assertLess(hero["y"], today["y"])
+        self.assertLess(today["y"], offers["y"])
+        self.assertLess(offers["y"], student["y"])
+
+        heights = page.eval_on_selector_all(
+            "#catalog-offer-rows .offer:not(.hidden)",
+            """els => {
+              const items = els.slice(0, 6).map(el => {
+                const r = el.getBoundingClientRect();
+                return {top:r.top,height:r.height};
+              });
+              if (!items.length) return [];
+              const firstTop = items[0].top;
+              return items.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
+            }"""
+        )
+        self.assertGreaterEqual(len(heights), 2)
+        self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
+
+    def test_homepage_aurora_phase_one_mobile_layout(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+        for index in range(7):
+            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        search = page.locator(".hero-search").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(search)
+        self.assertLessEqual(search["x"] + search["width"], 390)
+        self.assertGreaterEqual(search["x"], 0)
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
@@ -986,6 +1032,7 @@ class BrowserPageTests(unittest.TestCase):
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
@@ -1017,6 +1064,7 @@ class BrowserPageTests(unittest.TestCase):
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))

@@ -1,0 +1,30 @@
+body[data-visual-style="aurora"][data-fl-section="skills"] .skills-header{display:none!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skills-hero{
+  position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:30px;
+  padding:clamp(32px,4vw,54px)!important;border:1px solid var(--aurora-line)!important;border-radius:28px!important;
+  background:radial-gradient(circle at 88% 12%,rgba(83,205,168,.18),transparent 18rem),linear-gradient(135deg,#eef7ff,#fff 58%,#effcf8)!important;
+  box-shadow:var(--aurora-shadow)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skills-hero h1{font-size:clamp(42px,5vw,68px)!important;line-height:1.06!important;letter-spacing:-.045em!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .hero-note{
+  border:1px solid var(--aurora-line)!important;border-radius:20px!important;background:rgba(255,255,255,.88)!important;box-shadow:none!important;
+}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skills-toolbar{
+  margin-top:18px!important;padding:12px!important;border:1px solid var(--aurora-line)!important;border-radius:18px!important;background:rgba(255,255,255,.84)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-category-tabs{gap:8px!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-category-tab{
+  border:1px solid var(--aurora-line)!important;border-radius:999px!important;color:var(--aurora-ink-2)!important;background:#f8fbff!important;
+}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-category-tab.is-active{color:#fff!important;border-color:var(--aurora-blue)!important;background:linear-gradient(135deg,#2f7de1,#5a78e6)!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-grid{align-items:stretch!important;gap:14px!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-card{
+  height:100%;min-height:430px;display:flex!important;flex-direction:column!important;padding:20px!important;
+  border:1px solid var(--aurora-line)!important;border-radius:20px!important;background:linear-gradient(145deg,#fff,#f8fbff)!important;
+  box-shadow:0 10px 28px rgba(49,89,135,.055)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-card:hover{transform:translateY(-2px);border-color:var(--aurora-line-strong)!important;box-shadow:var(--aurora-shadow-hover)!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-card .skill-card-meta{margin-top:auto!important;}
+body[data-visual-style="aurora"][data-fl-section="skills"] .skill-dialog{border-radius:22px!important;border:1px solid var(--aurora-line)!important;background:#fff!important;}
+@media(max-width:900px){body[data-visual-style="aurora"][data-fl-section="skills"] .skills-hero{grid-template-columns:1fr;}}
+@media(max-width:700px){body[data-visual-style="aurora"][data-fl-section="skills"] .skills-hero{padding:24px 18px!important;border-radius:22px!important;}body[data-visual-style="aurora"][data-fl-section="skills"] .skill-card{min-height:0;}}
