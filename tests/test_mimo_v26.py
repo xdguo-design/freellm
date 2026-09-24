@@ -34,6 +34,10 @@ def test_opencode_offer_names_the_v26_free_variant_and_does_not_call_xiaomi_api_
     assert offer["endpointCheck"]["verdict"] == "OK"
     assert "Xiaomi" in offer["why"]
     assert "paid official API" in offer["why"]
+    assert offer["freeLLMTest"]["status"] == "passed"
+    assert offer["freeLLMTest"]["testLevel"] == "e2e"
+    assert offer["freeLLMTest"]["actualUsageVerified"] is True
+    assert "MiMo OK" in offer["freeLLMTest"]["result"]
 
 
 def test_mimo_access_records_keep_paid_official_and_free_hosted_routes_separate():
@@ -56,7 +60,9 @@ def test_wechat_article_states_test_boundary_and_free_route():
     assert "Puter.js" in page
     assert "developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" in page
     assert "小米官方 API 不是免费 API" in page
-    assert "端到端推理请求仍需凭据" in page
+    assert "模型实际返回 <code>MiMo OK</code>" in page
+    assert "真实测试结果：" in page
+    assert "直连 HTTP" in page
 
 
 def test_puter_offer_keeps_user_pays_boundary_explicit():

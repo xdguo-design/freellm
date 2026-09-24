@@ -1186,7 +1186,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-09-23 / official OpenCode Zen docs + live model catalog",
+    "checkedSummary": "2026-09-24 / official OpenCode Zen docs + live model catalog + real OpenCode CLI generation",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -1224,9 +1224,9 @@
     "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-23",
+    "lastVerifiedAt": "2026-09-24",
     "checkedBy": "manual",
-    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 还说明免费期交互数据可能用于改进模型；不应提交个人、机密或敏感数据。实际生成请求需要 OpenCode Zen 凭据，本轮无用户凭据，因此只完成官方文档、实时模型目录与访问路径核验。",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
     "endpointCheck": {
       "checkedAt": "2026-09-23",
       "verdict": "OK",
@@ -1241,20 +1241,20 @@
     },
     "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API.",
     "freeLLMTest": {
-      "testLevel": "preflight",
-      "status": "partial",
-      "testedAt": "2026-09-23",
-      "actualUsageVerified": false,
-      "task": "核验 OpenCode Zen 是否真实公开 MiMo-V2.6-Flash Free、当前模型 ID、免费定价和调用路径；在没有 Zen API Key 的情况下，不把模型生成结果写成已实测。",
+      "testLevel": "e2e",
+      "status": "passed",
+      "testedAt": "2026-09-24",
+      "actualUsageVerified": true,
+      "task": "核验 OpenCode Zen 是否真实公开 MiMo-V2.6-Flash Free、当前模型 ID、免费定价和调用路径，并通过官方 OpenCode CLI 对免费模型路径完成一次真实端到端生成。",
       "method": [
-        "打开 OpenCode Zen 官方文档，核对模型表中的 MiMo-V2.6-Flash Free、模型 ID 与 chat completions endpoint。",
-        "核对 OpenCode Zen 官方定价表，确认该 Free 变体的 Input、Output 与 Cached Read 当前均标为 Free。",
-        "访问 OpenCode Zen 公共 /zen/v1/models 目录，确认实时返回 mimo-v2.6-flash-free。",
-        "核对官方隐私说明，记录免费期交互数据可能用于模型改进的限制。",
-        "当前环境没有可用的 OpenCode Zen API Key，因此未发送实际 chat completion，也未声称生成质量或延迟已验证。"
+        "打开 OpenCode Zen 官方文档，核对 MiMo-V2.6-Flash Free、模型 ID、chat completions endpoint 与限时免费定价。",
+        "访问 OpenCode Zen 公共 /zen/v1/models，确认 mimo-v2.6-flash-free 仍在实时模型目录。",
+        "在 GitHub Actions 安装官方 OpenCode CLI 1.18.32，并刷新 OpenCode 模型列表。",
+        "使用 opencode run --model opencode/mimo-v2.6-flash-free --format json 发送最小真实生成请求。",
+        "要求真实助手输出包含 MiMo OK；无 mock、无 skip、无仓库 API Key。"
       ],
-      "result": "公开路径预检通过：官方文档、官方定价和实时模型目录三处相互印证，mimo-v2.6-flash-free 当前存在且为限时免费。实际生成请求仍待凭据补测。",
-      "limitations": "未使用登录态 OpenCode 账号与 Zen API Key，尚未验证一次真实模型生成、输出质量、工具调用成功率、实际限流和生成延迟。免费状态为限时活动，结束日期未公开。",
+      "result": "真实生成通过：2026-09-24 GitHub Actions 使用 OpenCode CLI 调用 opencode/mimo-v2.6-flash-free，模型返回 MiMo OK，记录延迟 6372 ms，actualUsageVerified=true。",
+      "limitations": "本次证明 OpenCode 官方 CLI 免费模型路径至少一次真实生成可用；不代表永久免费，也不代表已经验证持续限流、工具调用、多模态输入、长上下文稳定性或整体生成质量。Zen 直连 HTTP chat completions 仍需要 Zen API Key。",
       "evidence": [
         {
           "label": "OpenCode Zen 官方模型与定价",
@@ -1265,6 +1265,11 @@
           "label": "OpenCode Zen 实时模型目录",
           "url": "https://opencode.ai/zen/v1/models",
           "note": "公开目录返回 mimo-v2.6-flash-free"
+        },
+        {
+          "label": "FreeLLM GitHub Actions 真实生成记录",
+          "url": "https://github.com/xdguo-design/freellm/actions/runs/35943191315",
+          "note": "OpenCode CLI 实际返回 MiMo OK；latencyMs=6372；actualUsageVerified=true"
         },
         {
           "label": "Xiaomi MiMo-V2.6-Flash 官方模型页",
