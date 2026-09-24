@@ -108,7 +108,39 @@ jobs:
             conflicts="$(git diff --name-only --diff-filter=U)"
             echo "Merge conflicts:"
             printf '%s\n' "$conflicts"
-            unexpected="$(printf '%s\n' "$conflicts" | grep -vE '^(design/free-china-ai-index\\.html|logs/index\\.html)$' || true)"
+            unexpected="$(printf '%s\n' "$conflicts" | grep -vE '^(design/free-china-ai-index\\.html|logs/index\\.html|models/center/index\\.html) || true)"
+            if [ -n "$unexpected" ]; then
+              echo "Unexpected merge conflicts:"
+              printf '%s\n' "$unexpected"
+              exit 1
+            fi
+            git checkout --ours -- design/free-china-ai-index.html logs/index.html models/center/index.html
+            git add design/free-china-ai-index.html logs/index.html models/center/index.html
+          fi
+
+          python scripts/finalize_mimo_v26_verification.py
+          node scripts/generate_ranking.ts
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+
+          python -m pytest tests/test_mimo_v26.py tests/test_mimo_v26_live_script.py -q
+          python -m unittest tests.test_p0_convergence.P0ConvergenceTests.test_home_models_and_logs_share_latest_snapshot -v
+          python scripts/check_internal_links.py
+          node scripts/generate_ranking.ts --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+
+          git add -A
+          if git diff --cached --quiet && ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            echo "No finalization changes to commit."
+          else
+            git commit -m "chore: finalize MiMo verification and sync daily log"
+            git push origin HEAD:feat/site-visual-governance
+          fi
+
+      - name: Audit crawl metadata
+        run: python scripts/audit_seo_metadata.py
+ || true)"
             if [ -n "$unexpected" ]; then
               echo "Unexpected merge conflicts:"
               printf '%s\n' "$unexpected"
