@@ -59,14 +59,14 @@ HTML = r"""<!doctype html>
       try {
         if (!window.puter) throw new Error("Puter.js did not load");
 
-        if (!puter.auth.isSignedIn()) {
-          await puter.auth.signIn({ attempt_temp_user_creation: true });
-        }
-
-        const user = await puter.auth.getUser();
-        const response = await puter.ai.chat("Reply with exactly: MiMo OK", {
-          model: "xiaomi/mimo-v2.6-flash"
-        });
+        const response = await Promise.race([
+          puter.ai.chat("Reply with exactly: MiMo OK", {
+            model: "xiaomi/mimo-v2.6-flash"
+          }),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Puter.js MiMo call exceeded 90 seconds")), 90000)
+          )
+        ]);
         const text = extractText(response);
         if (!text) throw new Error("MiMo returned no assistant text");
 
@@ -74,7 +74,7 @@ HTML = r"""<!doctype html>
           status: "passed",
           model: "xiaomi/mimo-v2.6-flash",
           latencyMs: Math.round(performance.now() - started),
-          userType: user?.is_temp ? "temporary" : "authenticated",
+          userType: puter.auth.isSignedIn() ? "authenticated-or-auto-session" : "anonymous-browser-session",
           output: text.slice(0, 240)
         };
         status.textContent = JSON.stringify(window.__mimoResult);
