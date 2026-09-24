@@ -303,7 +303,13 @@ def render_static_catalog(data: list[dict], limit: int = 20) -> str:
 
 def replace_static_catalog(html: str, data: list[dict]) -> str:
     count = len(data)
-    updated = re.sub(r'(<b id="heroCount">)[^<]*(</b>)', rf"\g<1>{count}\g<2>", html, count=1)
+    updated = re.sub(
+        r'(<span>资源总览</span><strong>)\d+(</strong><small>按免费方式、地区和能力筛选</small>)',
+        rf"\g<1>{count}\g<2>",
+        html,
+        count=1,
+    )
+    updated = re.sub(r'(<b id="heroCount">)[^<]*(</b>)', rf"\g<1>{count}\g<2>", updated, count=1)
     updated = re.sub(
         r'(<b data-category-count="all">)[^<]*(</b>)',
         rf"\g<1>{count}\g<2>",
