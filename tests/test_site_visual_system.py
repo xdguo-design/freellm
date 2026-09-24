@@ -29,6 +29,10 @@ class SiteVisualSystemTests(unittest.TestCase):
             "overflow-x:auto !important",
             "@media (max-width:480px)",
             "--fl-content-max:1220px",
+            "2026-09-23 dual-theme visual governance",
+            "2026-09-23 cross-page governance",
+            "#catalog-offer-rows.offer-grid",
+            'html.fl-pastel-ui[data-theme="dark"]',
         ):
             self.assertIn(needle, css)
 
@@ -58,14 +62,36 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn("freellm-pastel-ui.css?v=20260920c", page)
+        self.assertIn("freellm-pastel-ui.css?v=20260923b", page)
+
+    def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        today = page.index('class="today-latest"')
+        offers = page.index('id="catalog-offers"')
+        student = page.index('id="student-offers"')
+        self.assertLess(today, offers, "TODAY / LATEST must appear before the full resource catalog")
+        self.assertLess(offers, student, "student benefits must remain secondary to the resource catalog")
+
+        css = THEME.read_text(encoding="utf-8")
+        self.assertIn("grid-template-columns:repeat(3,minmax(0,1fr)) !important", css)
+        self.assertIn("margin-top:auto !important", css)
+        self.assertIn("--fl-card-min:286px", css)
+
+    def test_light_and_dark_themes_share_layout_but_have_distinct_tokens(self):
+        css = THEME.read_text(encoding="utf-8")
+        self.assertIn("--fl-canvas:#f4f9ff", css)
+        self.assertIn('--fl-canvas:#050b18', css)
+        self.assertIn('--fl-mint:#6ef0c4', css)
+        self.assertIn('html.fl-pastel-ui[data-theme="dark"] .filter-chip', css)
+        self.assertIn('html.fl-pastel-ui[data-theme="dark"] .skill-card', css)
+        self.assertIn('html.fl-pastel-ui[data-theme="dark"] .workflow-card', css)
 
     def test_generated_pages_render_visual_classes_and_chrome_server_side(self):
         for relative in ("skills/index.html", "models/index.html", "logs/index.html", "tools/index.html", "about/index.html", "submit/index.html"):
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("fl-pastel-ui", page, relative)
             self.assertIn("fl-ui-v2", page, relative)
-            self.assertIn("freellm-pastel-ui.css?v=20260920c", page, relative)
+            self.assertIn("freellm-pastel-ui.css?v=20260923b", page, relative)
             self.assertIn('class="fl-site-rail"', page, relative)
             self.assertIn('class="fl-site-ribbon"', page, relative)
             self.assertNotIn('class="top-nav"', page, relative)

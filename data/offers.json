@@ -1144,13 +1144,13 @@
   {
     "id": "opencode-zen-free",
     "order": 13,
-    "date": "2026-09-07",
+    "date": "2026-09-23",
     "name": "OpenCode Zen free models",
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
-    "modelMeta": "Hosted coding models",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
       "free"
@@ -1160,34 +1160,36 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "在 OpenCode Zen 中选择官方列出的模型",
+      "summary": "在 OpenCode Zen 中选择 mimo-v2.6-flash-free 限时免费模型",
       "prerequisites": [
-        "OpenCode 账号或支持的客户端"
+        "OpenCode 账号 / Zen API Key（实际生成请求）"
       ],
       "steps": [
-        "打开官方 Zen 文档并确认当前模型列表",
-        "按 Provider 文档配置凭据后选择模型发送请求"
+        "打开 OpenCode Zen 官方文档确认 MiMo-V2.6-Flash Free 仍在免费列表",
+        "在 OpenCode/Zen 中创建或配置凭据",
+        "使用模型 ID mimo-v2.6-flash-free 调用 OpenAI-compatible chat completions；不要提交敏感或机密数据"
       ],
       "endpoint": "https://opencode.ai/zen/v1/chat/completions",
       "method": "POST",
-      "authentication": "Provider-specific API key",
+      "authentication": "OpenCode Zen API key",
       "examples": {
-        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://dev.opencode.ai/docs/zen/"
+      "docsUrl": "https://opencode.ai/docs/en/zen/"
     },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
+      "MIMO V2.6 FREE",
       "LIMITED-TIME FREE",
       "OPEN SOURCE CLI"
     ],
-    "freeSummary": "Selected Zen models · input, output and cache listed as Free",
-    "validitySummary": "Limited time / model pool can change",
+    "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
+    "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "Today / official OpenCode docs",
+    "checkedSummary": "2026-09-24 / official OpenCode Zen docs + live model catalog + real OpenCode CLI generation",
     "title": "OpenCode Zen · free model pool",
-    "why": "OpenCode's official Zen documentation lists selected hosted coding models at Free input, output and cache pricing for a limited time. This is a provider-hosted free model pool, not a claim that every upstream model is free everywhere.",
-    "mechanism": "Selected Zen models free for a limited time",
+    "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
+    "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
     "validity": "Limited time; verify the official Zen page before use",
     "access": "Global OpenCode account; regional availability may vary",
     "command": "curl -fsSL https://opencode.ai/install | bash\nopencode",
@@ -1195,41 +1197,40 @@
     "registerLabel": "OpenCode / sign in",
     "links": [
       [
-        "Official Zen pricing",
-        "https://dev.opencode.ai/docs/zen/"
+        "OpenCode Zen 官方模型与定价",
+        "https://opencode.ai/docs/en/zen/"
       ],
       [
-        "Providers",
-        "https://opencode.ai/docs/providers"
+        "OpenCode Zen 实时模型目录",
+        "https://opencode.ai/zen/v1/models"
       ],
       [
-        "Install",
-        "https://opencode.ai/docs"
+        "OpenCode Providers",
+        "https://opencode.ai/docs/en/providers/"
       ]
     ],
     "originCountry": "International",
     "availability": "Global; provider and model availability may vary by region",
     "freeMechanism": "limited_time_free",
-    "quota": "Selected models at Free input, output and cache pricing",
+    "quota": "MiMo-V2.6-Flash Free: input, output and cached read are currently listed as Free; OpenCode does not publish a fixed end date",
     "renewal": "No subscription required for the listed free Zen models; availability can change",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check OpenCode and each model's terms",
     "sourceUrls": [
-      "https://dev.opencode.ai/docs/zen/",
-      "https://opencode.ai/docs/providers"
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/zen/v1/models"
     ],
-    "evidence": "Official OpenCode Zen documentation lists Big Pickle, MiMo-V2.5 Free, Ling 3.0 Flash Fin Free, Nemotron and Muse Spark models at Free pricing.",
+    "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-24",
     "checkedBy": "manual",
-    "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked.",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
     "endpointCheck": {
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-23",
       "verdict": "OK",
-      "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
-      "ms": 1023
+      "note": "公开 /zen/v1/models 可匿名访问，已确认 mimo-v2.6-flash-free 在实时目录；chat completions 需 Zen API Key"
     },
     "networkCheck": {
       "checkedAt": "2026-09-19",
@@ -1237,6 +1238,45 @@
       "cnHost": "opencode.ai",
       "cnMs": 1272,
       "intlMs": 380
+    },
+    "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API.",
+    "freeLLMTest": {
+      "testLevel": "e2e",
+      "status": "passed",
+      "testedAt": "2026-09-24",
+      "actualUsageVerified": true,
+      "task": "核验 OpenCode Zen 是否真实公开 MiMo-V2.6-Flash Free、当前模型 ID、免费定价和调用路径，并通过官方 OpenCode CLI 对免费模型路径完成一次真实端到端生成。",
+      "method": [
+        "打开 OpenCode Zen 官方文档，核对 MiMo-V2.6-Flash Free、模型 ID、chat completions endpoint 与限时免费定价。",
+        "访问 OpenCode Zen 公共 /zen/v1/models，确认 mimo-v2.6-flash-free 仍在实时模型目录。",
+        "在 GitHub Actions 安装官方 OpenCode CLI 1.18.32，并刷新 OpenCode 模型列表。",
+        "使用 opencode run --model opencode/mimo-v2.6-flash-free --format json 发送最小真实生成请求。",
+        "要求真实助手输出包含 MiMo OK；无 mock、无 skip、无仓库 API Key。"
+      ],
+      "result": "真实生成通过：2026-09-24 GitHub Actions 使用 OpenCode CLI 调用 opencode/mimo-v2.6-flash-free，模型返回 MiMo OK，记录延迟 6372 ms，actualUsageVerified=true。",
+      "limitations": "本次证明 OpenCode 官方 CLI 免费模型路径至少一次真实生成可用；不代表永久免费，也不代表已经验证持续限流、工具调用、多模态输入、长上下文稳定性或整体生成质量。Zen 直连 HTTP chat completions 仍需要 Zen API Key。",
+      "evidence": [
+        {
+          "label": "OpenCode Zen 官方模型与定价",
+          "url": "https://opencode.ai/docs/en/zen/",
+          "note": "核验模型 ID、endpoint、Free 定价与 limited-time free 说明"
+        },
+        {
+          "label": "OpenCode Zen 实时模型目录",
+          "url": "https://opencode.ai/zen/v1/models",
+          "note": "公开目录返回 mimo-v2.6-flash-free"
+        },
+        {
+          "label": "FreeLLM GitHub Actions 真实生成记录",
+          "url": "https://github.com/xdguo-design/freellm/actions/runs/35943191315",
+          "note": "OpenCode CLI 实际返回 MiMo OK；latencyMs=6372；actualUsageVerified=true"
+        },
+        {
+          "label": "Xiaomi MiMo-V2.6-Flash 官方模型页",
+          "url": "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+          "note": "核验 1M context、128K max output、100 RPM / 10M TPM 与 Xiaomi 官方付费 API 价格"
+        }
+      ]
     }
   },
   {
@@ -5940,6 +5980,167 @@
           "label": "Step 5 Preview 官方模型页",
           "url": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview",
           "note": "确认 1M tokens 上下文窗口、最大输入和模型规格"
+        }
+      ]
+    }
+  },
+  {
+    "id": "puter-mimo-v2-6-flash-free",
+    "order": 50,
+    "date": "2026-09-23",
+    "name": "Puter.js MiMo-V2.6-Flash free allowance",
+    "providerMark": "P",
+    "provider": "Puter.js",
+    "providerMeta": "Puter · Global · User-Pays AI",
+    "providerMetaEn": "Puter · Global · User-Pays AI",
+    "model": "Xiaomi MiMo-V2.6-Flash",
+    "modelMeta": "Browser Playground · Puter.js User-Pays",
+    "type": [
+      "api",
+      "free",
+      "web"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "先在 Puter 官方 Playground 或浏览器 Puter.js 免费额度中试用 MiMo-V2.6-Flash；服务端 OpenAI-compatible 接口不属于免费账户路径。",
+      "prerequisites": [
+        "Puter 账号或浏览器临时用户",
+        "浏览器 Puter.js 无需 Xiaomi API Key；OpenAI-compatible 服务端接口需要 Puter auth token，且官方当前要求付费 Puter 计划"
+      ],
+      "steps": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 页面，点击 Try it free，或在浏览器页面直接加载 Puter.js。",
+        "使用 puter.ai.chat 调用模型 xiaomi/mimo-v2.6-flash，发送最小提示词并确认真实返回文本。",
+        "免费账户路径以浏览器 Puter.js / Playground 为准；账号 allowance 用尽后的继续使用和付费由用户自己的 Puter 账户决定。",
+        "如需 CLI、Python 或服务端 OpenAI-compatible 接入，先确认 Puter 付费计划与 auth token 要求，不把该接口描述成免费账户能力。"
+      ],
+      "endpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Browser Puter.js handles user auth automatically; OpenAI-compatible server/CLI uses Authorization: Bearer ${PUTER_AUTH_TOKEN} and currently requires a paid Puter plan",
+      "examples": {
+        "javascript": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
+        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
+      },
+      "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+    },
+    "kicker": "FREE ACCOUNT ALLOWANCE",
+    "badges": [
+      "FREE PLAYGROUND",
+      "1M CONTEXT",
+      "USER-PAYS"
+    ],
+    "freeSummary": "Puter 账号自带免费 AI allowance；MiMo-V2.6-Flash 可在官方浏览器 Playground 免费试用",
+    "freeSummaryEn": "Every Puter account includes a free AI allowance; MiMo-V2.6-Flash is available in the official browser playground",
+    "validitySummary": "Account allowance; fixed amount/reset not published on the model page",
+    "accessSummary": "Global · Puter account · browser no Xiaomi key",
+    "checkedSummary": "2026-09-24 / official Puter model page + pricing + rate-limit docs",
+    "title": "Puter.js · MiMo-V2.6-Flash 免费 Playground",
+    "titleEn": "Puter.js · MiMo-V2.6-Flash free playground",
+    "why": "Puter 官方 MiMo-V2.6-Flash 页面明确提供“Try it free”浏览器 Playground，并说明每个 Puter 账号包含免费 AI allowance。对开发者而言，Puter.js 采用 User-Pays：开发者无需承担用户的模型费用；对终端用户而言，免费 allowance 用完后是否继续付费由其自己的 Puter 账户决定。",
+    "whyEn": "Puter's official MiMo-V2.6-Flash page offers a free browser playground and states that every Puter account includes a free AI allowance. Puter.js uses a User-Pays model, so developers are not billed for users' AI usage; users decide whether to pay after their allowance is exhausted.",
+    "mechanism": "Free AI allowance on each Puter account plus a browser playground; developers integrate at $0 under User-Pays",
+    "validity": "Ongoing account allowance; exact free amount/reset is not published on the MiMo model page and can change",
+    "access": "Use the official Puter browser playground or Puter.js for the free-account allowance; the OpenAI-compatible server endpoint requires a Puter auth token and currently a paid Puter plan",
+    "command": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
+    "register": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+    "registerLabel": "打开 Puter MiMo-V2.6-Flash 免费 Playground",
+    "registerLabelEn": "Open the Puter MiMo-V2.6-Flash playground",
+    "links": [
+      [
+        "MiMo-V2.6-Flash Playground",
+        "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      ],
+      [
+        "Puter.js User-Pays pricing",
+        "https://developer.puter.com/pricing/"
+      ],
+      [
+        "Puter rate limits and quotas",
+        "https://docs.puter.com/rate-limits-and-quotas/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global Puter account access; regional availability may still vary by network/account",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "account_allowance",
+      "amount": null,
+      "unit": "AI allowance",
+      "period": "account-managed"
+    },
+    "quota": "Every Puter account includes a free AI allowance; the public MiMo page does not publish a fixed token/credit amount or reset period",
+    "renewal": "Allowance and overage policy are controlled by the user's Puter account; heavy users top up directly with Puter",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Puter terms and Xiaomi MiMo model terms",
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": [
+        {
+          "capability": "model_api",
+          "unit": "1M input tokens",
+          "price": "$0.14"
+        },
+        {
+          "capability": "model_api",
+          "unit": "1M output tokens",
+          "price": "$0.28"
+        }
+      ]
+    },
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/pricing/",
+      "https://docs.puter.com/rate-limits-and-quotas/"
+    ],
+    "evidence": "2026-09-24 复核：Puter 官方 MiMo-V2.6-Flash 页面提供免费浏览器 Playground，模型 ID 为 xiaomi/mimo-v2.6-flash，并说明每个账号带免费 AI allowance。Puter rate limits 文档同时明确：免费/匿名账户可使用 puter.ai.*；OpenAI-compatible endpoint 额外要求付费计划，因此两条路径不能混写。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-24",
+    "checkedBy": "manual",
+    "notes": "不要把“开发者 $0”误写成“终端用户无限免费”。免费账户验证应以浏览器 Puter.js / Playground 为准；OpenAI-compatible 服务端接口当前要求付费 Puter 计划。真实模型生成尚未标记为通过，直到 CI 的浏览器实测返回真实文本。",
+    "freeModels": [
+      {
+        "model": "xiaomi/mimo-v2.6-flash",
+        "label": "Xiaomi MiMo-V2.6-Flash",
+        "contextWindow": "1,000,000 tokens",
+        "quota": "Puter account free AI allowance; fixed public amount not stated",
+        "note": "Browser Playground can be tried with a Puter account; overage is user-paid",
+        "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-23",
+      "actualUsageVerified": false,
+      "task": "核验 Puter 是否真实提供 MiMo-V2.6-Flash 免费浏览器入口、模型 ID、账号免费 allowance 与 User-Pays 费用边界，并用 CI 浏览器真实生成门禁验证最小文本响应。",
+      "method": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 模型页，核对 Try it free Playground、模型 ID、上下文窗口和页面说明。",
+        "打开 Puter 官方 pricing 页面，核对每个账号包含免费 AI allowance，以及开发者 $0 / 用户自付超额的 User-Pays 模式。",
+        "核对 Puter 官方 rate limits / quotas：免费账户可用 puter.ai.*，但 OpenAI-compatible endpoint 当前要求付费 Puter 计划。",
+        "CI 使用 Playwright + Puter.js 临时浏览器用户调用 xiaomi/mimo-v2.6-flash；只有真实返回助手文本才算通过。"
+      ],
+      "result": "公开路径预检通过：Puter 官方模型页与 pricing 证明 MiMo-V2.6-Flash 可通过账号免费 allowance 和浏览器 Puter.js 试用；服务端 OpenAI-compatible 接口单独受付费计划限制。CI 浏览器真实生成结果待当前流水线确认。",
+      "limitations": "尚未完成 CI 浏览器真实生成门禁时，不声明实际生成、延迟或质量已验证；该门禁只验证最小文本生成，不覆盖工具调用、多模态和额度耗尽后的收费提示。",
+      "evidence": [
+        {
+          "label": "Puter MiMo-V2.6-Flash model page",
+          "url": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+        },
+        {
+          "label": "Puter.js User-Pays pricing",
+          "url": "https://developer.puter.com/pricing/"
+        },
+        {
+          "label": "Puter rate limits and quotas",
+          "url": "https://docs.puter.com/rate-limits-and-quotas/"
         }
       ]
     }

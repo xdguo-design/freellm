@@ -86,7 +86,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260920c">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,
@@ -469,6 +469,29 @@ def sync_home_asset_fingerprints(manifest: dict[str, tuple[Path, Path, str]], ch
     return ok
 
 
+
+def normalize_home_section_priority(html: str) -> str:
+    """Keep fresh/verified discovery first and place student benefits right after offers."""
+    student_match = re.search(
+        r'<section\b[^>]*\bid=["\']student-offers["\'][^>]*>.*?</section>\s*',
+        html,
+        flags=re.I | re.S,
+    )
+    compare_match = re.search(r'<section\b[^>]*\bid=["\']catalog-compare["\']', html, flags=re.I)
+    offers_match = re.search(r'<section\b[^>]*\bid=["\']catalog-offers["\']', html, flags=re.I)
+    if not student_match or not compare_match or not offers_match:
+        return html
+
+    student = student_match.group(0)
+    without_student = html[:student_match.start()] + html[student_match.end():]
+    compare_match = re.search(r'<section\b[^>]*\bid=["\']catalog-compare["\']', without_student, flags=re.I)
+    if not compare_match:
+        return html
+
+    # Student benefits are useful, but must never interrupt the discovery/catalog flow.
+    # Keep them immediately after the main resource catalog and before comparison/download/FAQ.
+    return without_student[:compare_match.start()] + student + without_student[compare_match.start():]
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -486,6 +509,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_trust_copy(updated)
     updated = remove_legacy_app(updated)
     updated = replace_static_catalog(updated, source_data)
+    updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))

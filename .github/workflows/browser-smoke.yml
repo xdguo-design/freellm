@@ -20,6 +20,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Check deployment payload size budget
         run: python scripts/check_deploy_size.py
 
@@ -42,6 +46,19 @@ jobs:
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
+      - name: Capture full-site visual regression
+        if: github.event_name == 'pull_request'
+        run: python scripts/capture_visual_regression.py
+
+      - name: Upload visual regression artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-${{ github.sha }}
+          path: artifacts/visual-regression/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Compare homepage performance
         run: python scripts/check_home_performance.py
 
@@ -51,6 +68,28 @@ jobs:
 
       - name: Run model page regression tests
         run: python -m pytest tests/test_model_pages.py -q
+
+      - name: Verify MiMo V2.6 catalog, article and live-route contracts
+        run: python -m pytest tests/test_mimo_v26.py tests/test_mimo_v26_live_script.py -q
+
+      - name: Install OpenCode CLI for required MiMo live gate
+        run: npm install -g opencode-ai@1.18.32
+
+      - name: Run MiMo V2.6 real inference via OpenCode free tier
+        run: python scripts/test_mimo_v26_opencode_cli.py
+
+      - name: Run additional credentialed MiMo V2.6 route when available
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          PUTER_AUTH_TOKEN: ${{ secrets.PUTER_AUTH_TOKEN }}
+        run: |
+          if [ -n "$OPENCODE_API_KEY" ]; then
+            python scripts/test_mimo_v26_live.py --provider opencode
+          elif [ -n "$PUTER_AUTH_TOKEN" ]; then
+            python scripts/test_mimo_v26_live.py --provider puter
+          else
+            echo "INFO: no additional server-side credential configured; OpenCode CLI live inference above is the required release gate."
+          fi
 
       - name: Audit crawl metadata
         run: python scripts/audit_seo_metadata.py
