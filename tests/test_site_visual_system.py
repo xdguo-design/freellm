@@ -70,7 +70,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         css = AURORA_HOME.read_text(encoding="utf-8")
 
         self.assertIn('data-visual-style="aurora"', page)
-        self.assertIn("aurora-home.css?v=20260923a", page)
+        self.assertIn("aurora-home.css?v=20260924a", page)
         self.assertIn('body[data-visual-style="aurora"]', css)
         self.assertIn("--aurora-page:#f5f9ff", css)
         self.assertIn("--aurora-blue:#2f7de1", css)
@@ -99,8 +99,8 @@ class SiteVisualSystemTests(unittest.TestCase):
         for relative, stylesheet in pages.items():
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn('data-visual-style="aurora"', page, relative)
-            self.assertIn("/css/aurora-core.css?v=20260923a", page, relative)
-            self.assertIn(f"/css/{stylesheet}?v=20260923a", page, relative)
+            self.assertIn("/css/aurora-core.css?v=20260924a", page, relative)
+            self.assertIn(f"/css/{stylesheet}?v=20260924a", page, relative)
             css = (ROOT / "css" / stylesheet).read_text(encoding="utf-8")
             self.assertIn('body[data-visual-style="aurora"]', css, stylesheet)
 
