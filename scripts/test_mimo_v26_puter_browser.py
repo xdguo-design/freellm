@@ -4,7 +4,7 @@
 This test intentionally uses Puter.js in a browser, matching the public
 User-Pays integration path. It does not require or expose a repository API key.
 A temporary Puter user is requested only when the browser is not already
-authenticated. Success requires real assistant text from xiaomi/mimo-v2.6-flash.
+authenticated. This is a required release gate: success requires real assistant text\nfrom xiaomi/mimo-v2.6-flash and never degrades to a skip.
 """
 
 from __future__ import annotations
