@@ -120,7 +120,7 @@ class SiteVisualSystemTests(unittest.TestCase):
 
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        offers = __import__("json").loads((ROOT / "data" / "offers-ranked.json").read_text(encoding="utf-8"))
+        offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
         self.assertIn(f'<span>资源总览</span><strong>{len(offers)}</strong>', page)
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
