@@ -108,10 +108,7 @@ jobs:
             conflicts="$(git diff --name-only --diff-filter=U)"
             echo "Merge conflicts:"
             printf '%s\n' "$conflicts"
-            unexpected="$(printf '%s\n' "$conflicts" | grep -vE '^(design/free-china-ai-index\.html|logs/index\.html)
-      - name: Audit crawl metadata
-        run: python scripts/audit_seo_metadata.py
- || true)"
+            unexpected="$(printf '%s\n' "$conflicts" | grep -vE '^(design/free-china-ai-index\\.html|logs/index\\.html)$' || true)"
             if [ -n "$unexpected" ]; then
               echo "Unexpected merge conflicts:"
               printf '%s\n' "$unexpected"
