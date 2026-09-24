@@ -5170,8 +5170,8 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
             attrs += ' data-visual-style="aurora"'
             updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
 
-    core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260923a">'
-    page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260923a">'
+    core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">'
+    page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260924a">'
     if core_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", core_tag + "\n" + page_tag + "</head>", 1)
     elif page_tag not in updated and "</head>" in updated:
