@@ -28,4 +28,28 @@ body[data-visual-style="aurora"][data-fl-section="models"] .models-overview-grid
 @media(max-width:700px){
   body[data-visual-style="aurora"][data-fl-section="models"] > header.models-overview{min-height:0;padding:24px 18px!important;border-radius:22px!important;}
   body[data-visual-style="aurora"][data-fl-section="models"] .models-overview h1{font-size:42px!important;}
+  body[data-visual-style="aurora"][data-fl-section="models"] .model-section-tabs{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  body[data-visual-style="aurora"][data-fl-section="models"] .model-section-tabs a{
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+    white-space:normal!important;
+  }
+  body[data-visual-style="aurora"][data-fl-section="models"] .fl-stat-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  body[data-visual-style="aurora"][data-fl-section="models"] .fl-stat-card{
+    min-height:106px!important;
+    padding:15px!important;
+  }
+  body[data-visual-style="aurora"][data-fl-section="models"] .fl-stat-card strong{
+    font-size:28px!important;
+  }
 }
