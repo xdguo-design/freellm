@@ -108,7 +108,7 @@ jobs:
             conflicts="$(git diff --name-only --diff-filter=U)"
             echo "Merge conflicts:"
             printf '%s\n' "$conflicts"
-            unexpected="$(printf '%s\n' "$conflicts" | grep -vE '^(design/free-china-ai-index\\.html|logs/index\\.html|models/center/index\\.html)$' || true)"
+            unexpected="$(printf '%s\n' "$conflicts" | grep -vFx -e 'design/free-china-ai-index.html' -e 'logs/index.html' -e 'models/center/index.html' || true)"
             if [ -n "$unexpected" ]; then
               echo "Unexpected merge conflicts:"
               printf '%s\n' "$unexpected"
