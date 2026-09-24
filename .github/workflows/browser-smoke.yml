@@ -68,7 +68,10 @@ jobs:
       - name: Verify MiMo V2.6 catalog, article and live-route contracts
         run: python -m pytest tests/test_mimo_v26.py tests/test_mimo_v26_live_script.py -q
 
-      - name: Run MiMo V2.6 live inference when credential is available
+      - name: Run MiMo V2.6 real browser inference via Puter.js
+        run: python scripts/test_mimo_v26_puter_browser.py
+
+      - name: Run credentialed MiMo V2.6 live inference when available
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           PUTER_AUTH_TOKEN: ${{ secrets.PUTER_AUTH_TOKEN }}
@@ -78,7 +81,7 @@ jobs:
           elif [ -n "$PUTER_AUTH_TOKEN" ]; then
             python scripts/test_mimo_v26_live.py --provider puter
           else
-            echo "SKIPPED: no MiMo live-test credential secret is configured."
+            echo "INFO: no server-side MiMo credential configured; browser Puter.js inference above is the required live gate."
           fi
 
       - name: Audit crawl metadata
