@@ -1,0 +1,43 @@
+name: regenerate-seo-once
+
+on:
+  push:
+    branches:
+      - "feat/site-visual-governance"
+    paths:
+      - ".github/seo-regenerate"
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/site-visual-governance
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Rebuild generated SEO and homepage artifacts
+        run: |
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+
+      - name: Verify generated artifacts
+        run: |
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top --check
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html --check
+
+      - name: Commit generated output and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/seo-regenerate .github/workflows/regenerate-seo-once.yml
+          git add -A
+          git commit -m "chore: regenerate current site artifacts"
+          git push origin HEAD:feat/site-visual-governance
