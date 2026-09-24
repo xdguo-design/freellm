@@ -1,0 +1,38 @@
+name: one-shot-aurora-online-qa-refresh
+
+on:
+  push:
+    branches:
+      - feat/aurora-page-by-page
+    paths:
+      - ".github/workflows/one-shot-aurora-online-qa-refresh.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/aurora-page-by-page
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Refresh generated SEO outputs
+        run: python scripts/build_seo_pages.py
+      - name: Verify generated outputs
+        run: python scripts/build_seo_pages.py --check
+      - name: Commit generated output
+        run: |
+          if git diff --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git config user.name "freellm-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "build: refresh generated outputs for online QA"
+          git push origin HEAD:feat/aurora-page-by-page
