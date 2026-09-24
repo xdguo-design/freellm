@@ -34,7 +34,7 @@ def update_offer() -> None:
         "仍需 Zen API Key。"
     )
     offer["freeLLMTest"] = {
-        "testLevel": "live",
+        "testLevel": "e2e",
         "status": "passed",
         "testedAt": TESTED_AT,
         "actualUsageVerified": True,
@@ -135,7 +135,7 @@ def update_wechat() -> None:
 def update_tests() -> None:
     text = TESTS.read_text(encoding="utf-8")
     old_offer_tail = '''    assert "Xiaomi" in offer["why"]\n    assert "paid official API" in offer["why"]\n'''
-    new_offer_tail = '''    assert "Xiaomi" in offer["why"]\n    assert "paid official API" in offer["why"]\n    assert offer["freeLLMTest"]["status"] == "passed"\n    assert offer["freeLLMTest"]["testLevel"] == "live"\n    assert offer["freeLLMTest"]["actualUsageVerified"] is True\n    assert "MiMo OK" in offer["freeLLMTest"]["result"]\n'''
+    new_offer_tail = '''    assert "Xiaomi" in offer["why"]\n    assert "paid official API" in offer["why"]\n    assert offer["freeLLMTest"]["status"] == "passed"\n    assert offer["freeLLMTest"]["testLevel"] == "e2e"\n    assert offer["freeLLMTest"]["actualUsageVerified"] is True\n    assert "MiMo OK" in offer["freeLLMTest"]["result"]\n'''
     if 'assert offer["freeLLMTest"]["actualUsageVerified"] is True' not in text:
         if old_offer_tail not in text:
             raise RuntimeError("Unable to update OpenCode live-test assertions")
