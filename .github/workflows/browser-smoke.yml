@@ -20,6 +20,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Check deployment payload size budget
         run: python scripts/check_deploy_size.py
 
@@ -68,10 +72,13 @@ jobs:
       - name: Verify MiMo V2.6 catalog, article and live-route contracts
         run: python -m pytest tests/test_mimo_v26.py tests/test_mimo_v26_live_script.py -q
 
-      - name: Run MiMo V2.6 real browser inference via Puter.js
-        run: python scripts/test_mimo_v26_puter_browser.py
+      - name: Install OpenCode CLI for required MiMo live gate
+        run: npm install -g opencode-ai@1.18.32
 
-      - name: Run credentialed MiMo V2.6 live inference when available
+      - name: Run MiMo V2.6 real inference via OpenCode free tier
+        run: python scripts/test_mimo_v26_opencode_cli.py
+
+      - name: Run additional credentialed MiMo V2.6 route when available
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           PUTER_AUTH_TOKEN: ${{ secrets.PUTER_AUTH_TOKEN }}
@@ -81,7 +88,7 @@ jobs:
           elif [ -n "$PUTER_AUTH_TOKEN" ]; then
             python scripts/test_mimo_v26_live.py --provider puter
           else
-            echo "INFO: no server-side MiMo credential configured; browser Puter.js inference above is the required live gate."
+            echo "INFO: no additional server-side credential configured; OpenCode CLI live inference above is the required release gate."
           fi
 
       - name: Audit crawl metadata
