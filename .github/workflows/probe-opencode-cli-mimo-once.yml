@@ -1,0 +1,63 @@
+name: probe-opencode-cli-mimo-once
+on:
+  push:
+    branches: ["feat/site-visual-governance"]
+    paths: [".github/opencode-cli-probe"]
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/site-visual-governance
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install official OpenCode CLI
+        run: |
+          npm install -g opencode-ai
+          opencode --version
+      - name: Verify MiMo model is listed
+        run: |
+          opencode models opencode --refresh | tee /tmp/models.txt
+          grep -F 'opencode/mimo-v2.6-flash-free' /tmp/models.txt
+      - name: Run real MiMo generation from official OpenCode client
+        run: |
+          set -o pipefail
+          timeout 150s opencode run --model opencode/mimo-v2.6-flash-free --format json "Reply with exactly: MiMo OK" | tee /tmp/mimo-cli.jsonl
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          lines=Path('/tmp/mimo-cli.jsonl').read_text(encoding='utf-8', errors='replace').splitlines()
+          texts=[]
+          for line in lines:
+              try:
+                  obj=json.loads(line)
+              except Exception:
+                  continue
+              text=json.dumps(obj, ensure_ascii=False)
+              if 'mimo-v2.6-flash-free' in text:
+                  pass
+              for key in ('text','content','output'):
+                  value=obj.get(key)
+                  if isinstance(value,str) and value.strip():
+                      texts.append(value.strip())
+              part=obj.get('part')
+              if isinstance(part,dict) and isinstance(part.get('text'),str) and part['text'].strip():
+                  texts.append(part['text'].strip())
+          joined=' '.join(texts)
+          print('OPENCODE_MIMO_OUTPUT=' + joined[:500])
+          if not joined:
+              raise SystemExit('OpenCode exited successfully but no generated text was captured')
+          PY
+      - name: Remove one-shot probe
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/opencode-cli-probe .github/workflows/probe-opencode-cli-mimo-once.yml
+          git commit -m "chore: remove one-shot OpenCode MiMo CLI probe"
+          git push origin HEAD:feat/site-visual-governance
