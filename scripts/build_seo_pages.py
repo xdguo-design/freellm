@@ -3605,6 +3605,16 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     body_end = template.rindex("</body>")
     head = template[:body_start]
     body = template[body_match.end():body_end]
+    # Phase 1 Aurora is intentionally homepage-only. The model-center page reuses
+    # the homepage markup as a content template, so strip page-scoped assets here
+    # until the model page enters its own visual phase.
+    head = re.sub(
+        r'\s*<link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+">',
+        "",
+        head,
+        count=1,
+        flags=re.I,
+    )
     head = re.sub(
         r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
         r'href="../../css/\1"',
@@ -5135,6 +5145,40 @@ def _ensure_visual_classes(content: str, path: Path) -> str:
     return updated
 
 
+
+AURORA_PAGE_STYLES = {
+    Path("models/index.html"): "aurora-models.css",
+    Path("skills/index.html"): "aurora-skills.css",
+    Path("tools/index.html"): "aurora-tools.css",
+    Path("skills/lab/index.html"): "aurora-workflow.css",
+    Path("logs/index.html"): "aurora-logs.css",
+    Path("about/index.html"): "aurora-about.css",
+}
+
+
+def _ensure_aurora_page_style(content: str, path: Path) -> str:
+    """Attach the single approved Aurora style only to pages already in their visual phase."""
+    page_css = AURORA_PAGE_STYLES.get(path)
+    if not page_css or path.suffix != ".html":
+        return content
+
+    updated = content
+    body_match = re.search(r"<body([^>]*)>", updated, flags=re.I)
+    if body_match:
+        attrs = body_match.group(1)
+        if "data-visual-style=" not in attrs:
+            attrs += ' data-visual-style="aurora"'
+            updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
+
+    core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">'
+    page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260924a">'
+    if core_tag not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", core_tag + "\n" + page_tag + "</head>", 1)
+    elif page_tag not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", page_tag + "</head>", 1)
+    return updated
+
+
 def _remove_legacy_global_nav(content: str) -> str:
     return re.sub(r'<nav class="top-nav"[^>]*>.*?</nav>', "", content, flags=re.I | re.S)
 
@@ -5228,6 +5272,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     files = {
         relative: _ensure_visual_classes(content, relative)
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_aurora_page_style(content, relative)
         for relative, content in files.items()
     }
     files = {
