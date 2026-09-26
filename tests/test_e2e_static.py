@@ -356,8 +356,8 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>免费 AI 模型与 API，<span>每天核验</span></h1>', self.html)
-        self.assertIn("免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口", self.html)
+        self.assertIn('<h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1>', self.html)
+        self.assertIn("精选优质的免费 AI 模型、实用技能、工具与工作流", self.html)
         self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
@@ -1027,12 +1027,14 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
@@ -1059,12 +1061,14 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
