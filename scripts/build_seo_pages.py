@@ -5163,6 +5163,10 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
         return content
 
     updated = content
+    if path == Path("models/center/index.html"):
+        updated = updated.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
+        updated = updated.replace('src="../js/reference-shell.js?v=20260924a"', 'src="/js/reference-shell.js?v=20260924a"')
+
     body_match = re.search(r"<body([^>]*)>", updated, flags=re.I)
     if body_match:
         attrs = body_match.group(1)
