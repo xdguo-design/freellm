@@ -21,14 +21,14 @@
     topbar.className = 'ref-topbar';
     topbar.setAttribute('role', 'search');
     const localeLabel = document.documentElement.lang === 'en' ? '中文' : 'EN';
-    topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a></div>';
+    topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a></div>';
     const rail = body.querySelector(':scope > .fl-site-rail');
     if (rail) rail.insertAdjacentElement('afterend', topbar);
     else body.prepend(topbar);
 
     const localeButton = topbar.querySelector('.ref-locale');
     localeButton?.addEventListener('click', () => {
-      const legacyToggle = Array.from(document.querySelectorAll('[data-locale-toggle]')).find(el => el !== localeButton);
+      const legacyToggle = document.querySelector('[data-locale-toggle]');
       if (legacyToggle) legacyToggle.click();
     });
 
