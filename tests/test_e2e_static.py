@@ -999,20 +999,20 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-        page.click("[data-locale-toggle]")
+        page.click("[data-reference-locale-toggle]")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         # Locale lives in local storage now; the URL stays canonical (no ?lang=) with its hash.
         self.assertNotIn("?lang=", page.url)
@@ -1037,6 +1037,9 @@ class BrowserPageTests(unittest.TestCase):
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            assets = Path(directory) / "assets" / "reference"
+            assets.mkdir(parents=True)
+            (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
