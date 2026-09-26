@@ -77,9 +77,11 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn(".fl-site-theme-toggle{display:none !important;}", css)
         self.assertIn("#catalog-offer-rows.offer-grid", css)
         self.assertIn("@media(max-width:700px)", css)
-        self.assertNotIn(".skills-page", css)
-        self.assertNotIn(".tools-page", css)
-        self.assertNotIn(".workflow-card", css)
+        # Final reference UI is shared site-wide. The homepage bundles that shared
+        # layer into aurora-home.css to remove a render-blocking stylesheet request;
+        # section-qualified selectors remain inert outside their matching section.
+        self.assertIn("Bundled reference UI for homepage first paint", css)
+        self.assertIn('body[data-reference-style="v1"][data-fl-section="home"]', css)
 
     def test_phase_one_aurora_does_not_leak_into_model_center(self):
         model_center = (ROOT / "models" / "center" / "index.html").read_text(encoding="utf-8")

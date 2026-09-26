@@ -3625,6 +3625,11 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
         r'src="../../js/\1"',
         body,
     )
+    head = head.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
+    reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    if reference_ui_tag not in head:
+        head = head.replace("</head>", reference_ui_tag + "\n</head>", 1)
+    body = body.replace('src="../js/reference-shell.js?v=20260924a"', 'src="/js/reference-shell.js?v=20260924a"')
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
@@ -5179,6 +5184,50 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
     return updated
 
 
+REFERENCE_UI_PATHS = set(AURORA_PAGE_STYLES)
+
+
+def _ensure_reference_ui(content: str, path: Path) -> str:
+    """Keep generated primary pages aligned with the approved FreeLLM reference UI."""
+    if path not in REFERENCE_UI_PATHS or path.suffix != ".html":
+        return content
+
+    updated = content
+    body_match = re.search(r"<body([^>]*)>", updated, flags=re.I)
+    if body_match:
+        attrs = body_match.group(1)
+        if "data-reference-style=" not in attrs:
+            attrs += ' data-reference-style="v1"'
+            updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
+
+    css_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    if css_tag not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", css_tag + "\n</head>", 1)
+
+    script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
+    if script_tag not in updated and "</body>" in updated:
+        updated = updated.replace("</body>", script_tag + "\n</body>", 1)
+
+    if path == Path("models/index.html"):
+        updated = updated.replace(
+            '<h1>模型、厂家、Provider 和免费资源，不再混成一个数字</h1>',
+            '<h1>全部免费 AI 模型与 API 一览<br><span>含中国大陆可用性标注</span></h1>',
+            1,
+        )
+    elif path == Path("skills/lab/index.html"):
+        updated = updated.replace(
+            '<h1>让模型<br><span class="accent-text">把事情做完。</span></h1>',
+            '<h1>把 AI 变成<br><span class="accent-text">可重复执行的生产力</span></h1>',
+            1,
+        )
+        updated = updated.replace(
+            '模型决定上限，Skill 决定执行路径。我们把零散能力编排成 6 套可直接复用的工作流配方，先选你要交付的结果。',
+            '用工作流串联模型、工具与 Skills，把复杂任务变成可复制的流程，让好的方法被更多人直接使用。',
+            1,
+        )
+    return updated
+
+
 def _remove_legacy_global_nav(content: str) -> str:
     return re.sub(r'<nav class="top-nav"[^>]*>.*?</nav>', "", content, flags=re.I | re.S)
 
@@ -5290,6 +5339,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-sync.js" in content or "</body>" not in content)
                    else content.replace("</body>", sync_tag + "</body>", 1))
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_reference_ui(content, relative)
         for relative, content in files.items()
     }
     output_root = Path(output_root)

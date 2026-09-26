@@ -433,7 +433,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/homepage-editorial.1dee07d530.css">
-<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b"><style id="model-center-style">
+<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">
+<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">
+<style id="model-center-style">
 :root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --ink-solid-contrast:#FFFFFF; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-red-bg:#FDEBEC; --pale-red-text:#9F2F2D; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; --muted:#787774; --soft:#F7F6F3; --blue:#1744E8; }
 :root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --ink-solid-contrast:#111111; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-red-bg:#2A1416; --pale-red-text:#E98A86; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --pale-stone-bg:#232220; --pale-stone-text:#B4B1AB; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); --muted:#A7A5A0; --soft:#1E2127; --blue:#7BC0E5; }
   .model-center-page { margin: 0; min-height: 100vh; background: var(--canvas); }
@@ -509,8 +511,8 @@
       </header>
       <div class="catalog-content">
         <section class="catalog-hero">
-          <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 官方来源</div><h1>免费 AI 模型与 API，<span>每天核验</span></h1><p class="hero-copy">免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口，一站比较额度、地区、状态与官方来源</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 LLM API</button><button type="button">AI IDE</button></div><nav class="hero-intent-links" aria-label="热门免费 AI 指南"><a href="/guides/free-openai-compatible-apis/">免费 LLM API</a><a href="/guides/china-free-ai-api/">国内免费 AI API</a><a href="/guides/free-openai-api-alternatives/">OpenAI API 替代</a><a href="/guides/free-ai-coding-tools/">免费 AI 编程工具</a></nav></div>
-          <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="9" data-change-count="13">新增 9 项</span></div><span>▣ &nbsp;2026 年 9 月 25 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">49</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
+          <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 官方来源</div><h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1><p class="hero-copy">精选优质的免费 AI 模型、实用技能、工具与工作流，让每个人都能轻松用上真正好用的 AI 能力。</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 LLM API</button><button type="button">AI IDE</button></div><nav class="hero-intent-links" aria-label="热门免费 AI 指南"><a href="/guides/free-openai-compatible-apis/">免费 LLM API</a><a href="/guides/china-free-ai-api/">国内免费 AI API</a><a href="/guides/free-openai-api-alternatives/">OpenAI API 替代</a><a href="/guides/free-ai-coding-tools/">免费 AI 编程工具</a></nav></div>
+          <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="3" data-change-count="9">新增 3 项</span></div><span>▣ &nbsp;2026 年 9 月 26 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">49</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
         </section>
         <section class="today-latest" aria-labelledby="today-latest-title">
   <div class="today-latest-head">
@@ -1203,8 +1205,8 @@
     <div class="detail-block"><div class="detail-label">External platform signals</div><div class="signal-list" id="drawerSignals"><div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div></div></div>
     <div class="detail-block"><div class="detail-label">Important</div><div class="detail-value">A free web or IDE plan is not the same as a free API. Open weights are free to download, but storage, GPU memory, inference time and network egress may cost money.</div></div>
   </aside>
-<script src="../../js/homepage.7fd5740877.js"></script>
-  <script src="../../js/homepage-i18n.9aacee97e4.js"></script>
+<script defer src="../../js/homepage.7fd5740877.js"></script>
+  <script defer src="../../js/homepage-i18n.9aacee97e4.js"></script>
   <script>
     (() => {
       const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
@@ -1255,6 +1257,7 @@
     });
   })();
 </script>
+<script defer src="/js/reference-shell.js?v=20260924a"></script>
 
 <script id="model-center-tabs-script">
   (() => {

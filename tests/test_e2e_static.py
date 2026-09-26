@@ -356,8 +356,8 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>免费 AI 模型与 API，<span>每天核验</span></h1>', self.html)
-        self.assertIn("免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口", self.html)
+        self.assertIn('<h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1>', self.html)
+        self.assertIn("精选优质的免费 AI 模型、实用技能、工具与工作流", self.html)
         self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
@@ -999,20 +999,20 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-        page.click("[data-locale-toggle]")
+        page.click("[data-reference-locale-toggle]")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         # Locale lives in local storage now; the URL stays canonical (no ?lang=) with its hash.
         self.assertNotIn("?lang=", page.url)
@@ -1027,14 +1027,19 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            assets = Path(directory) / "assets" / "reference"
+            assets.mkdir(parents=True)
+            (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
@@ -1059,12 +1064,14 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))

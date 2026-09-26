@@ -433,8 +433,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css">
 <link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">
-<link rel="stylesheet" href="../css/aurora-home.css?v=20260924a"></head>
-<body class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-offers-url="../data/offers-ranked.json">
+<link rel="stylesheet" href="../css/aurora-home.css?v=20260924a">
+</head>
+<body class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json">
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -471,7 +472,7 @@
       </header>
       <div class="catalog-content">
         <section class="catalog-hero">
-          <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 官方来源</div><h1>免费 AI 模型与 API，<span>每天核验</span></h1><p class="hero-copy">免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口，一站比较额度、地区、状态与官方来源</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 LLM API</button><button type="button">AI IDE</button></div><nav class="hero-intent-links" aria-label="热门免费 AI 指南"><a href="/guides/free-openai-compatible-apis/">免费 LLM API</a><a href="/guides/china-free-ai-api/">国内免费 AI API</a><a href="/guides/free-openai-api-alternatives/">OpenAI API 替代</a><a href="/guides/free-ai-coding-tools/">免费 AI 编程工具</a></nav></div>
+          <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 每日核验 · 官方来源</div><h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1><p class="hero-copy">精选优质的免费 AI 模型、实用技能、工具与工作流，让每个人都能轻松用上真正好用的 AI 能力。</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 LLM API</button><button type="button">AI IDE</button></div><nav class="hero-intent-links" aria-label="热门免费 AI 指南"><a href="/guides/free-openai-compatible-apis/">免费 LLM API</a><a href="/guides/china-free-ai-api/">国内免费 AI API</a><a href="/guides/free-openai-api-alternatives/">OpenAI API 替代</a><a href="/guides/free-ai-coding-tools/">免费 AI 编程工具</a></nav></div>
           <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="3" data-change-count="9">新增 3 项</span></div><span>▣ &nbsp;2026 年 9 月 26 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">49</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
         </section>
         <section class="today-latest" aria-labelledby="today-latest-title">
@@ -535,8 +536,8 @@
     <div class="detail-block"><div class="detail-label">External platform signals</div><div class="signal-list" id="drawerSignals"><div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div></div></div>
     <div class="detail-block"><div class="detail-label">Important</div><div class="detail-value">A free web or IDE plan is not the same as a free API. Open weights are free to download, but storage, GPU memory, inference time and network egress may cost money.</div></div>
   </aside>
-<script src="../js/homepage.7fd5740877.js"></script>
-  <script src="../js/homepage-i18n.9aacee97e4.js"></script>
+<script defer src="../js/homepage.7fd5740877.js"></script>
+  <script defer src="../js/homepage-i18n.9aacee97e4.js"></script>
   <script>
     (() => {
       const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
@@ -587,5 +588,6 @@
     });
   })();
 </script>
+<script defer src="../js/reference-shell.js?v=20260924a"></script>
 </body>
 </html>
