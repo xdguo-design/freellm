@@ -3626,6 +3626,9 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
         body,
     )
     head = head.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
+    reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    if reference_ui_tag not in head:
+        head = head.replace("</head>", reference_ui_tag + "\n</head>", 1)
     body = body.replace('src="../js/reference-shell.js?v=20260924a"', 'src="/js/reference-shell.js?v=20260924a"')
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
