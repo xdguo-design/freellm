@@ -3804,11 +3804,11 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
         r'src="../../js/\1"',
         body,
     )
-    head = head.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
-    reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    head = head.replace('href="../css/reference-ui.css?v=20260927c"', 'href="/css/reference-ui.css?v=20260927c"')
+    reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260927c">'
     if reference_ui_tag not in head:
         head = head.replace("</head>", reference_ui_tag + "\n</head>", 1)
-    body = body.replace('src="../js/reference-shell.js?v=20260924a"', 'src="/js/reference-shell.js?v=20260924a"')
+    body = body.replace('src="../js/reference-shell.js?v=20260927c"', 'src="/js/reference-shell.js?v=20260927c"')
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
     description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
     page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
@@ -5379,11 +5379,11 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
             attrs += ' data-reference-style="v1"'
             updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
 
-    css_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    css_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260927c">'
     if css_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", css_tag + "\n</head>", 1)
 
-    script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
+    script_tag = '<script src="/js/reference-shell.js?v=20260927c"></script>'
     if script_tag not in updated and "</body>" in updated:
         updated = updated.replace("</body>", script_tag + "\n</body>", 1)
 
