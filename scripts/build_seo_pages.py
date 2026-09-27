@@ -3413,8 +3413,9 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
   <div class="ml-hero-copy"><div class="eyebrow">模型 · MODEL LIBRARY <span class="ml-proof-note">数据口径已拆分</span></div>
     <h1>模型库</h1><p class="ml-hero-subtitle">发现、比较和使用全球优质的 AI 模型</p>
     <p class="lead">汇聚全球优质的开源与商业模型，支持多维度筛选与对比，帮助你找到更适合当前任务的 AI 能力。</p>{stats}</div>
-  <div class="ml-hero-art" aria-hidden="true"><span class="ml-float-card one">✦ <b>更多能力</b><small>More Capabilities</small></span>
-    <span class="ml-float-card two">◇ <b>更开放的生态</b><small>More Open</small></span><span class="ml-ai-cube">AI</span>
+  <div class="ml-hero-art" aria-hidden="true"><span class="ml-float-card one">✦ <b>更强大的模型</b><small>More Capabilities</small></span>
+    <span class="ml-float-card two">◇ <b>更美好的未来</b><small>A Brighter Tomorrow</small></span>
+    <span class="ml-float-card three">▣ <b>更开放的生态</b><small>More Open</small></span><span class="ml-ai-cube">AI</span>
     <span class="ml-cube cube-a"></span><span class="ml-cube cube-b"></span><span class="ml-cube cube-c"></span>
     <span class="ml-hero-script">Better AI<br>A Brighter Tomorrow</span></div>
 </header>
