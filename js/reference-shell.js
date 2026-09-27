@@ -231,6 +231,22 @@
       }
     }
 
+    
+      const aboutMain = $('body[data-fl-section="about"] > main');
+      if (aboutMain && !$('.ref-about-bottom')) {
+        const bottom = document.createElement('section');
+        bottom.className = 'ref-about-bottom';
+        bottom.setAttribute('aria-label','FreeLLM 社区与成长');
+        bottom.innerHTML =
+          '<article class="ref-about-bottom-card community"><h3>社区贡献</h3><p>FreeLLM 因社区而更强大。欢迎推荐优质资源、分享使用经验或参与内容共建。</p><a href="/submit/">我要贡献 →</a></article>' +
+          '<article class="ref-about-bottom-card contact"><h3>联系我们</h3><p>有建议、合作意向或发现数据问题？我们很乐意与你交流。</p><a href="mailto:xdguo0527@gmail.com">发送消息 →</a></article>' +
+          '<article class="ref-about-bottom-card values"><h3>我们的价值观</h3><p>开放、包容、真实、长期主义。让优质 AI 资源更容易被看见、核验和使用。</p><a href="#about-values">了解更多 →</a></article>' +
+          '<article class="ref-about-bottom-card"><h3>成长历程</h3><div class="ref-about-milestones"><span class="ref-about-milestone">持续维护免费 AI 资源目录</span><span class="ref-about-milestone">模型目录与厂家目录独立整理</span><span class="ref-about-milestone">Skills 进入真实任务验收</span><span class="ref-about-milestone">工作流与工具专区持续完善</span><span class="ref-about-milestone">持续成长中 …</span></div></article>';
+        aboutMain.insertAdjacentElement('afterend', bottom);
+        const valueSection = aboutMain.querySelector('section:last-child');
+        if (valueSection && !valueSection.id) valueSection.id = 'about-values';
+      }
+
     if (section === 'models') {
       const art = $('.ml-hero-art');
       if (art && !$('.ml-hero-rings', art)) {

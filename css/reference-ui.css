@@ -609,3 +609,41 @@ body[data-reference-style="v1"][data-fl-section="models"] .ml-glass-block.g5{lef
   body[data-reference-style="v1"][data-fl-section="about"] .ref-about-process{margin:0 14px 14px!important}
   body[data-reference-style="v1"][data-fl-section="about"]>main{grid-template-columns:1fr!important}
 }
+
+
+/* About lower board: community / contact / values / milestones. */
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{
+  margin:0 42px 22px 222px;display:grid;grid-template-columns:1.05fr 1.05fr 1.05fr 1.35fr;gap:10px
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card{
+  min-height:142px;padding:16px;border:1px solid #dce9f7;border-radius:12px;background:#fff;overflow:hidden;position:relative
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card h3{margin:0 0 8px!important;font-size:14px!important}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card p{margin:0;color:#6c809f;font-size:10px;line-height:1.55}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card>a{
+  display:inline-flex;align-items:center;justify-content:center;min-height:32px;margin-top:12px;padding:0 13px;
+  border:1px solid #bcd8f5;border-radius:8px;color:#176bd8;background:#f8fbff;font-size:9px;font-weight:850
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card.community{background:linear-gradient(145deg,#f8fcff,#edf7ff)}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card.contact::after{
+  content:"✈";position:absolute;right:18px;bottom:10px;font-size:44px;color:#7bb8fa;transform:rotate(-12deg);opacity:.75
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card.values::after{
+  content:"❦";position:absolute;right:16px;bottom:-12px;font-size:64px;color:#8ac79b;opacity:.42
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-milestones{display:grid;gap:6px;margin-top:8px}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-milestone{
+  display:grid;grid-template-columns:12px 1fr;gap:7px;align-items:center;color:#61789b;font-size:9px
+}
+body[data-reference-style="v1"][data-fl-section="about"] .ref-about-milestone::before{
+  content:"";width:7px;height:7px;border-radius:50%;background:#4a98f5;box-shadow:0 0 0 3px #eaf4ff
+}
+@media(max-width:1100px){
+  body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{grid-template-columns:1fr 1fr;margin:0 28px 20px 208px}
+}
+@media(max-width:800px){
+  body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{margin:0 14px 18px;grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{grid-template-columns:1fr}
+}
