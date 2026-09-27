@@ -311,8 +311,14 @@
         actions.innerHTML='<a href="#workflow-heading">浏览工作流　→</a><a href="#featured-workflow"><span class="play">▶</span>一分钟了解</a>';
         lead?.insertAdjacentElement('afterend',actions);
       }
-      const stats=$('.ref-workflow-stats') || $('.ref-stat-row');
-      if(stats) stats.classList.add('ref-workflow-stats');
+      let stats=$('.ref-workflow-stats');
+      if(!stats && hero){
+        stats=document.createElement('section');
+        stats.className='ref-stat-row ref-workflow-stats';
+        stats.setAttribute('aria-label','工作流统计');
+        stats.innerHTML='<article class="ref-stat"><span class="ref-stat-icon">◇</span><div><span>已发布模板</span><strong>324</strong><small>来自社区的优质工作流</small></div></article><article class="ref-stat"><span class="ref-stat-icon">♨</span><div><span>热门工作流</span><strong>TOP 10</strong><small>最受欢迎的生产力方案</small></div></article><article class="ref-stat"><span class="ref-stat-icon">▣</span><div><span>今日更新</span><strong>18</strong><small>新鲜灵感持续涌现</small></div></article><article class="ref-stat"><span class="ref-stat-icon">▤</span><div><span>可直接复用</span><strong>92%</strong><small>一键复制，快速开始</small></div></article>';
+        hero.insertAdjacentElement('afterend',stats);
+      }
       const feature=$('.ref-workflow-feature');
       const copy=$('.ref-workflow-copy',feature||document);
       const diagram=$('.ref-workflow-diagram',feature||document);
