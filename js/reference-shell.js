@@ -288,3 +288,77 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once:true });
   else boot();
 })();
+
+
+/* Reference fidelity pass 3: exact content hierarchy for supplied workflow/about boards. */
+(() => {
+  const run = () => {
+    const body=document.body;
+    if(!body || body.dataset.referenceFidelityV3==='1') return;
+    body.dataset.referenceFidelityV3='1';
+    const $=(s,r=document)=>r.querySelector(s);
+    const section=body.dataset.flSection||'';
+
+    if(section==='workflow'){
+      const hero=$('.lab-hero');
+      const title=$('.lab-hero h1');
+      if(title) title.innerHTML='把 AI 变成<span class="accent-text">可重复执行</span>的生产力';
+      const lead=$('.lab-hero .lead');
+      if(lead) lead.textContent='用工作流串联模型、工具与 Skills，将复杂任务变成可复制的流程，让好的方法被更多人使用。';
+      if(hero && !$('.ref-workflow-hero-actions',hero)){
+        const actions=document.createElement('div');
+        actions.className='ref-workflow-hero-actions';
+        actions.innerHTML='<a href="#workflow-heading">浏览工作流　→</a><a href="#featured-workflow"><span class="play">▶</span>一分钟了解</a>';
+        lead?.insertAdjacentElement('afterend',actions);
+      }
+      const stats=$('.ref-workflow-stats') || $('.ref-stat-row');
+      if(stats) stats.classList.add('ref-workflow-stats');
+      const feature=$('.ref-workflow-feature');
+      const copy=$('.ref-workflow-copy',feature||document);
+      const diagram=$('.ref-workflow-diagram',feature||document);
+      const side=$('.ref-workflow-side',feature||document);
+      if(feature) feature.id='featured-workflow';
+      if(copy){
+        copy.innerHTML='<span class="badge">★ 精选工作流</span><h2>从文章到小红书多平台分发</h2><p>输入一篇文章，自动完成内容改写、生成配图，并发布到小红书、公众号、知乎等多个平台，让好内容被更多人看见。</p><div class="ref-workflow-tags"><span>内容生产</span><span>多平台分发</span><span>自媒体</span><span>营销增长</span></div><div class="meta"><span>⌘ 6 个步骤</span><span>▣ 4 个工具/模型</span><span>▥ 中等</span></div><button type="button" data-open-featured-workflow>立即使用　→</button>';
+      }
+      if(diagram){
+        diagram.innerHTML='<span class="ref-flow-node n1"><b>触发器</b>输入文章/链接</span><span class="ref-flow-node n2"><b>内容分析</b>提取要点</span><span class="ref-flow-node n3"><b>内容改写</b>多风格生成</span><span class="ref-flow-node n4"><b>格式输出</b>适配多平台格式</span><span class="ref-flow-node n5"><b>生成配图</b>AI 生成封面图</span><span class="ref-flow-node n6"><b>发布建议</b>标题/标签/时间</span><i class="ref-flow-line l1"></i><i class="ref-flow-line l2"></i><i class="ref-flow-line l3"></i><i class="ref-flow-line l4"></i><i class="ref-flow-line l5"></i>';
+      }
+      if(side){
+        side.innerHTML='<div class="ref-workflow-side-card"><h3>推荐搭配模型　›</h3><span>Claude 3.5 Sonnet</span><span>GPT-4o</span><span>Gemini 1.5 Pro</span><span>Qwen2.5</span></div><div class="ref-workflow-side-card"><h3>推荐 Skills　›</h3><span>联网搜索</span><span>图像生成</span><span>数据分析</span><span>内容审核</span></div>';
+      }
+      $('[data-open-featured-workflow]',feature||document)?.addEventListener('click',()=>$('.workflow-details')?.click());
+      const heading=$('.workflow-section-head h2');
+      if(heading) heading.textContent='探索工作流模板';
+      const sub=$('.workflow-section-head p');
+      if(sub) sub.textContent='从高频结果出发，直接复用成熟流程';
+    }
+
+    if(section==='about'){
+      const main=$('body[data-fl-section="about"] > main');
+      const sections=main ? Array.from(main.children).filter(el=>el.tagName==='SECTION') : [];
+      if(sections[0]) sections[0].classList.add('ref-about-legacy-why');
+      const cards=[
+        ['收录标准',['具有实际使用价值和应用场景','来源可靠，优先官方或知名团队','无恶意代码，符合社区使用规范','涵盖多样化领域，兼顾创新与实用']],
+        ['验证方法',['团队人工测试核心功能','验证官网、文档与使用体验','参考社区真实用户反馈','持续监控资源的可用性与稳定性']],
+        ['更新机制',['定期跟踪行业动态与热门资源','社区用户提交与推荐','建立版本追踪与可用性监测','不定期清理失效或过时资源']]
+      ];
+      cards.forEach((cfg,index)=>{
+        const el=sections[index+1];
+        if(!el) return;
+        el.classList.add('ref-method-card');
+        const eyebrow=$('.eyebrow',el);
+        if(eyebrow) eyebrow.remove();
+        const h=$('h2',el);
+        if(h) h.innerHTML='<span lang="zh-CN">'+cfg[0]+'</span><span lang="en">'+cfg[0]+'</span>';
+        Array.from(el.children).forEach(child=>{if(child!==h && child.tagName!=='H2') child.remove();});
+        const ul=document.createElement('ul');
+        ul.className='ref-method-list';
+        ul.innerHTML=cfg[1].map(item=>'<li>'+item+'</li>').join('');
+        el.appendChild(ul);
+      });
+    }
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(run,0),{once:true});
+  else setTimeout(run,0);
+})();
