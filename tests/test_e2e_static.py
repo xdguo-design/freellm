@@ -119,9 +119,12 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("if (!slot) return;", self.document_html)
 
     def test_homepage_exposes_real_action_and_filter_hooks(self):
+        self.assertNotIn("document.write('<script src=\"/js/freellm-sync.js", self.document_html)
+        self.assertIn("syncScript.defer = true", self.document_html)
+        self.assertIn("syncScript.fetchPriority = 'low'", self.document_html)
         for needle in (
             'href="/submit/"',
-            "document.write('<script src=\"/js/freellm-sync.js\"><\\/script>')",
+            "syncScript.src = '/js/freellm-sync.js'",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-freshness-filter"',
