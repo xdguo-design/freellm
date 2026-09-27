@@ -33,7 +33,7 @@
     });
 
     const topInput = topbar.querySelector('input');
-    const targets = ['#catalog-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
+    const targets = ['#catalog-search','#model-library-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
     const target = targets[0];
     const sync = () => {
       const value = topInput.value.trim();
@@ -41,8 +41,10 @@
         target.value = value;
         target.dispatchEvent(new Event('input', { bubbles: true }));
         target.dispatchEvent(new Event('change', { bubbles: true }));
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        target.focus({ preventScroll: true });
+        if (target.offsetParent !== null) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.focus({ preventScroll: true });
+        }
       } else if (value) {
         location.href = '/?q=' + encodeURIComponent(value);
       }

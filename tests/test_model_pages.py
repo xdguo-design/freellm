@@ -122,6 +122,28 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     assert "实时模型目录" in all_models_page
 
 
+def test_models_landing_matches_reference_library_structure(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+
+    for needle in (
+        'class="models-overview model-library-hero"',
+        'class="ml-filter-bar"',
+        'class="ml-featured-model"',
+        'id="model-library-grid"',
+        'class="ml-model-card"',
+        'class="ml-compare-panel"',
+        'id="ml-compare-dialog"',
+        'class="ml-recent-panel"',
+        '/js/reference-models-v2.js?v=20260927a',
+    ):
+        assert needle in page
+    assert page.count('class="ml-model-card"') >= 6
+    assert 'href="/models/all/"' in page
+    assert 'href="/providers/"' in page
+    assert 'href="/category/api/"' in page
+
+
 def test_model_center_combines_original_feature_page_and_model_directory_tabs(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "center" / "index.html").read_text(encoding="utf-8")

@@ -3236,45 +3236,223 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
     model_record_count = len(models)
     vendor_directory_count = len(vendor_directory)
     active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in models if item.get("providerId")})
-    title = "AI 模型概览：模型记录、厂家目录与免费资源 · FreeLLM"
+    title = "AI 模型库：发现、筛选与比较模型 · FreeLLM"
     description = (
         f"FreeLLM 当前整理 {model_record_count} 条模型记录、{vendor_directory_count} 个厂家目录、"
-        f"{active_provider_id_count} 个当前模型数据 Provider ID 与 {offer_count} 条免费资源。四种口径分开统计，避免把 Offer 当成模型。"
+        f"{active_provider_id_count} 个当前模型数据 Provider ID 与 {offer_count} 条免费资源。"
+        "支持按厂商、模态、上下文长度、地区与免费状态筛选，并可加入模型对比。"
     )
     schema = {
         "@context": "https://schema.org", "@type": "CollectionPage", "name": title,
         "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"],
     }
-    tabs = f'''<nav class="model-section-tabs" aria-label="模型页面">
-      <a href="{MODELS_PAGE_PATH}" aria-current="page">概览</a>
-      <a href="{ALL_MODELS_PAGE_PATH}">全部模型</a>
-      <a href="{PROVIDERS_PAGE_PATH}">按厂家</a>
-      <a href="/category/api/">免费 API / Offer</a>
-    </nav>'''
-    stats = f'''<div class="fl-stat-grid" aria-label="模型目录统计">
+
+    preferred_ids = [
+        "opencode/mimo-v2-6-flash-free",
+        "google-gemini/gemini-3-8-flash",
+        "groq/qwen-qwen3-8-27b",
+        "kilo/deepseek-deepseek-v4-flash-0731-free",
+        "kilo/z-ai-glm-5-2-free",
+        "agnes-ai/agnes-2-5-flash",
+        "xiaomi-mimo/mimo-v2-6-flash",
+        "cloudflare-workers-ai/cf-openai-gpt-oss-120b",
+        "nvidia-nim/kimi-k3",
+    ]
+    model_by_id = {str(item.get("id") or ""): item for item in models}
+    featured_models = [model_by_id[item_id] for item_id in preferred_ids if item_id in model_by_id]
+    if len(featured_models) < 12:
+        seen = {str(item.get("id") or "") for item in featured_models}
+        for item in models:
+            item_id = str(item.get("id") or "")
+            if item_id in seen or item.get("status") != "online":
+                continue
+            if not str(item.get("context") or "").strip() or item.get("modality") == ["unknown"]:
+                continue
+            featured_models.append(item)
+            seen.add(item_id)
+            if len(featured_models) >= 12:
+                break
+    featured_models = featured_models[:12]
+
+    def context_label(item: dict) -> str:
+        raw = str(item.get("context") or "").strip()
+        try:
+            value = int(raw)
+        except ValueError:
+            return "—"
+        if value >= 1_000_000:
+            return f"{value / 1_000_000:g}M"
+        if value >= 1_000:
+            return f"{value / 1_000:g}K"
+        return str(value)
+
+    def context_bucket(item: dict) -> str:
+        raw = str(item.get("context") or "").strip()
+        try:
+            value = int(raw)
+        except ValueError:
+            return "unknown"
+        if value >= 500_000:
+            return "mega"
+        if value >= 128_000:
+            return "long"
+        return "standard"
+
+    def is_free_model(item: dict) -> bool:
+        item_id = str(item.get("id") or "").lower()
+        note = str(item.get("manualNote") or "")
+        lowered = note.lower()
+        if "免费层已" in note or "free tier retired" in lowered:
+            return False
+        return (
+            ":free" in item_id
+            or item_id.endswith("-free")
+            or "/free" in item_id
+            or "免费" in note
+            or "¥0" in note
+            or " free" in lowered
+        )
+
+    def modality_group(item: dict) -> str:
+        modalities = [str(value).lower() for value in item.get("modality") or []]
+        if any(value in {"image", "video", "audio", "pdf"} for value in modalities):
+            return "multimodal"
+        if "text" in modalities:
+            return "text"
+        return "other"
+
+    def provider_mark(item: dict) -> str:
+        provider_id = str(item.get("providerId") or "").lower()
+        fixed = {
+            "opencode": "M", "google-gemini": "G", "groq": "GQ", "kilo": "K",
+            "agnes-ai": "A", "xiaomi-mimo": "M", "cloudflare-workers-ai": "CF",
+            "nvidia-nim": "N", "llm7-io": "L7",
+        }
+        if provider_id in fixed:
+            return fixed[provider_id]
+        provider = str(item.get("provider") or "AI")
+        parts = [part for part in provider.replace(".", " ").replace("-", " ").split() if part]
+        return "".join(part[:1].upper() for part in parts[:2]) or "AI"
+
+    def model_summary(item: dict) -> str:
+        readable = {"text": "文本", "image": "图像", "video": "视频", "audio": "音频", "reasoning": "推理", "pdf": "PDF"}
+        modalities = [str(value) for value in item.get("modality") or [] if str(value).lower() != "unknown"]
+        names = [readable.get(value.lower(), value) for value in modalities[:4]]
+        capability = "、".join(names) if names else "通用 AI"
+        region = str(item.get("accessRegion") or "")
+        region_text = {"global": "全球接入", "international": "国际入口", "domestic": "国内可用"}.get(region, "官方入口")
+        return f"支持{capability}能力，{region_text}；FreeLLM 持续核验官方来源与可用状态。"
+
+    def model_card(item: dict, index: int) -> str:
+        item_id = str(item.get("id") or "")
+        provider = str(item.get("provider") or "Unknown")
+        name = str(item.get("model") or item_id)
+        modalities = [str(value).lower() for value in item.get("modality") or []]
+        modality_text = " ".join(modalities)
+        region = str(item.get("accessRegion") or "unknown")
+        free_value = "yes" if is_free_model(item) else "no"
+        context = str(item.get("context") or "0")
+        released = str(item.get("released") or "")
+        verified = str(item.get("lastVerifiedAt") or item.get("lastSeenAt") or "—")
+        source_url = str(item.get("sourceUrl") or "/models/all/")
+        detail_url = model_aggregate_url(item)
+        tags = []
+        labels = {"text": "文本", "image": "图像", "video": "视频", "audio": "音频", "reasoning": "推理", "pdf": "PDF"}
+        for value in modalities:
+            label = labels.get(value)
+            if label and label not in tags:
+                tags.append(label)
+        if context_label(item) != "—":
+            tags.append(context_label(item))
+        tag_markup = "".join(f'<span>{_esc(tag)}</span>' for tag in tags[:3])
+        free_badge = '<span class="ml-card-badge free">免费</span>' if is_free_model(item) else '<span class="ml-card-badge">已核验</span>'
+        search_blob = " ".join([provider, name, item_id, modality_text, region]).lower()
+        region_label = {"global": "全球", "international": "国际", "domestic": "国内"}.get(region, "来源可查")
+        return f'''<article class="ml-model-card" data-model-id="{_esc(item_id)}" data-provider="{_esc(provider)}"
+          data-modalities="{_esc(modality_text)}" data-modality-group="{_esc(modality_group(item))}"
+          data-context="{_esc(context)}" data-context-bucket="{_esc(context_bucket(item))}"
+          data-region="{_esc(region)}" data-free="{free_value}" data-released="{_esc(released)}"
+          data-verified="{_esc(verified)}" data-search="{_esc(search_blob)}" data-order="{index}">
+          <div class="ml-card-head"><span class="ml-provider-mark" aria-hidden="true">{_esc(provider_mark(item))}</span>
+            <div class="ml-card-title"><small>{_esc(provider)}</small><h3>{_esc(name)}</h3></div>{free_badge}</div>
+          <p>{_esc(model_summary(item))}</p><div class="ml-card-tags">{tag_markup}</div>
+          <div class="ml-card-meta"><span>核验 {_esc(verified)}</span><span>{_esc(region_label)}</span></div>
+          <div class="ml-card-actions"><button class="ml-compare-toggle" type="button" data-model-id="{_esc(item_id)}">＋ 对比</button>
+            <a class="ml-detail-link" href="{_esc(detail_url)}" data-model-id="{_esc(item_id)}">查看详情</a>
+            <a class="ml-use-link" href="{_esc(source_url)}" target="_blank" rel="nofollow noopener" data-model-id="{_esc(item_id)}">立即使用 →</a></div>
+        </article>'''
+
+    cards = "".join(model_card(item, index) for index, item in enumerate(featured_models))
+    provider_options = "".join(
+        f'<option value="{_esc(name)}">{_esc(name)}</option>'
+        for name in sorted({str(item.get("provider") or "") for item in featured_models if item.get("provider")})
+    )
+    recommend = model_by_id.get("opencode/mimo-v2-6-flash-free") or (featured_models[0] if featured_models else {})
+    recommend_id = str(recommend.get("id") or "")
+    recommend_name = str(recommend.get("model") or "精选模型")
+    recommend_source = str(recommend.get("sourceUrl") or "/models/all/")
+    recommend_detail = model_aggregate_url(recommend) if recommend else "/models/all/"
+    recommend_context = context_label(recommend) if recommend else "—"
+    labels = {"text": "文本", "image": "图像", "video": "视频", "audio": "音频", "reasoning": "推理", "pdf": "PDF"}
+    recommend_modalities = [labels.get(str(value).lower(), str(value)) for value in (recommend.get("modality") or []) if str(value).lower() != "unknown"]
+    recommend_tags = "".join(f"<span>{_esc(value)}</span>" for value in ([recommend_context] + recommend_modalities[:2]) if value and value != "—")
+    recommend_badge = '<span class="ml-feature-pill hot">限时免费</span>' if (recommend and is_free_model(recommend)) else '<span class="ml-feature-pill hot">重点推荐</span>'
+
+    stats = f'''<div class="fl-stat-grid ml-hero-stats" aria-label="模型目录统计">
       <div class="fl-stat-card"><strong>{model_record_count}</strong><span>模型记录 / model records</span></div>
       <div class="fl-stat-card"><strong>{vendor_directory_count}</strong><span>厂家目录 / vendor directory</span></div>
-      <div class="fl-stat-card"><strong>{active_provider_id_count}</strong><span>当前数据 Provider ID</span></div>
       <div class="fl-stat-card"><strong>{offer_count}</strong><span>免费资源 / verified offers</span></div>
-    </div>'''
+    </div><div class="ml-hidden-metric" hidden><strong>{active_provider_id_count}</strong><span>当前数据 Provider ID</span></div>'''
+
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">
 {_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
-<style>{EDITORIAL_BASE_CSS}</style><style>
-.models-overview h1{{font-size:clamp(34px,6vw,58px);max-width:900px}}.models-overview .lead{{max-width:860px}}
-.models-overview-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
-.models-overview-grid article{{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}}
-.models-overview-grid h2{{margin:0 0 8px;font-size:22px}}@media(max-width:700px){{.models-overview-grid{{grid-template-columns:1fr}}}}
-</style></head><body data-static-locale="true"><header class="models-overview">
-<div class="eyebrow">MODEL DIRECTORY / 数据口径已拆分</div><h1>模型、厂家、Provider 和免费资源，不再混成一个数字</h1>
-<p class="lead">“模型记录”“厂家目录”“当前模型数据 Provider ID”“免费资源 / Offer”是四种不同实体。这里分别统计，再进入对应目录继续浏览。</p>
-{tabs}{stats}</header><main><section class="models-overview-grid">
-<article><h2>全部模型</h2><p>查看模型名称、厂家、上下文、状态和来源。</p><a class="button" href="{ALL_MODELS_PAGE_PATH}">打开完整模型目录 →</a></article>
-<article><h2>按厂家</h2><p>浏览厂家目录；厂家目录总数不等于当前模型快照里的 providerId 数。</p><a class="button" href="{PROVIDERS_PAGE_PATH}">查看厂家目录 →</a></article>
-<article><h2>免费 API / Offer</h2><p>这是可注册、可试用或可下载的资源入口，不拿它冒充模型数量。</p><a class="button" href="/category/api/">查看免费 API / Offer →</a></article>
-<article><h2>模型中心</h2><p>先看精选资源，再进入模型目录与接入信息。</p><a class="button" href="{MODEL_CENTER_PAGE_PATH}">进入模型中心 →</a></article>
-</section></main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p></footer></body></html>'''
+<style>{EDITORIAL_BASE_CSS}</style></head><body data-static-locale="true">
+<header class="models-overview model-library-hero">
+  <div class="ml-hero-copy"><div class="eyebrow">模型 · MODEL LIBRARY <span class="ml-proof-note">数据口径已拆分</span></div>
+    <h1>模型库</h1><p class="ml-hero-subtitle">发现、比较和使用全球优质的 AI 模型</p>
+    <p class="lead">汇聚全球优质的开源与商业模型，支持多维度筛选与对比，帮助你找到更适合当前任务的 AI 能力。</p>{stats}</div>
+  <div class="ml-hero-art" aria-hidden="true"><span class="ml-float-card one">✦ <b>更多能力</b><small>More Capabilities</small></span>
+    <span class="ml-float-card two">◇ <b>更开放的生态</b><small>More Open</small></span><span class="ml-ai-cube">AI</span>
+    <span class="ml-cube cube-a"></span><span class="ml-cube cube-b"></span><span class="ml-cube cube-c"></span>
+    <span class="ml-hero-script">Better AI<br>A Brighter Tomorrow</span></div>
+</header>
+<main class="model-library-page">
+  <section class="ml-filter-bar" aria-label="模型筛选"><span class="ml-filter-icon" aria-hidden="true">⌁</span>
+    <input id="model-library-search" class="ml-search-proxy" type="search" aria-label="搜索当前模型">
+    <label>厂商<select id="ml-filter-provider"><option value="all">全部</option>{provider_options}</select></label>
+    <label>模态<select id="ml-filter-modality"><option value="all">全部</option><option value="text">文本</option><option value="multimodal">多模态</option></select></label>
+    <label>上下文长度<select id="ml-filter-context"><option value="all">全部</option><option value="mega">500K+</option><option value="long">128K+</option><option value="standard">&lt;128K</option></select></label>
+    <label>是否免费<select id="ml-filter-free"><option value="all">全部</option><option value="yes">免费 / 免费入口</option><option value="no">其他</option></select></label>
+    <label>地区<select id="ml-filter-region"><option value="all">全部</option><option value="domestic">国内</option><option value="global">全球</option><option value="international">国际</option></select></label>
+    <button id="ml-filter-reset" type="button">↻ 重置筛选</button>
+  </section>
+  <div class="ml-library-layout"><div class="ml-library-main">
+    <section class="ml-featured-model" data-model-id="{_esc(recommend_id)}"><div class="ml-feature-copy"><div class="ml-feature-label">♛ 重点推荐</div>
+      <div class="ml-feature-title-row"><h2>{_esc(recommend_name)}</h2>{recommend_badge}</div><div class="ml-feature-tags">{recommend_tags}<span class="ml-feature-pill green">官方来源</span></div>
+      <p>{_esc(model_summary(recommend)) if recommend else "优先展示近期核验、信息完整且具有代表性的模型。"}</p>
+      <div class="ml-feature-actions"><a class="primary" href="{_esc(recommend_source)}" target="_blank" rel="nofollow noopener" data-model-id="{_esc(recommend_id)}">立即使用 →</a>
+        <a href="{_esc(recommend_detail)}" data-model-id="{_esc(recommend_id)}">查看详情</a><button class="ml-compare-toggle" type="button" data-model-id="{_esc(recommend_id)}">＋ 加入对比</button></div></div>
+      <div class="ml-feature-visual" aria-hidden="true"><span class="ml-feature-logo">{_esc(provider_mark(recommend) if recommend else "AI")}</span><span class="ml-feature-screen screen-a"></span>
+        <span class="ml-feature-screen screen-b"></span><span class="ml-feature-note">1,000,000<br>上下文长度</span><span class="ml-feature-note right">更大的世界<br>更小的距离</span></div></section>
+    <div class="ml-category-row"><div class="ml-category-tabs" role="tablist" aria-label="模型类型"><button type="button" class="is-active" data-category="all">全部模型 <span>({model_record_count})</span></button>
+      <button type="button" data-category="text">语言模型</button><button type="button" data-category="multimodal">多模态模型</button><button type="button" data-category="image">图像</button>
+      <button type="button" data-category="audio">音频</button><button type="button" data-category="video">视频</button><button type="button" data-category="reasoning">推理</button><a href="/models/all/">更多⌄</a></div>
+      <div class="ml-result-tools"><span id="ml-result-count">{len(featured_models)} 个精选模型</span><label>综合排序<select id="ml-sort"><option value="featured">综合排序</option><option value="newest">最近发布</option><option value="context">上下文长度</option><option value="provider">厂商名称</option></select></label></div></div>
+    <section class="models-overview-grid ml-model-grid" id="model-library-grid" aria-label="精选模型">{cards}</section>
+    <p id="ml-empty-state" class="ml-empty-state" hidden>没有符合当前条件的精选模型。可以重置筛选，或进入完整模型目录继续查找。</p>
+    <div class="ml-directory-cta"><a href="/models/all/">打开完整模型目录 →</a><a href="/providers/">按厂家浏览 →</a><a href="/category/api/">查看免费 API / Offer →</a></div>
+  </div>
+  <aside class="ml-library-side" aria-label="模型辅助工具"><section class="ml-side-card ml-compare-panel"><div class="ml-side-head"><h2>模型对比</h2><button id="ml-compare-clear" type="button">清空</button></div>
+    <div id="ml-compare-list" class="ml-compare-list"><div class="ml-side-empty"><span>＋</span><p>点击模型卡片的对比按钮，开始对比</p></div></div><button id="ml-compare-start" class="ml-compare-start" type="button" disabled>开始对比 (0/4)</button></section>
+    <section class="ml-side-card ml-recent-panel"><div class="ml-side-head"><h2>最近浏览</h2></div><div id="ml-recent-list" class="ml-recent-list"><div class="ml-side-empty compact"><p>查看模型详情后，这里会记录最近浏览。</p></div></div></section>
+  </aside></div>
+  <dialog id="ml-compare-dialog" class="ml-compare-dialog"><div class="ml-dialog-head"><div><small>MODEL COMPARE</small><h2>模型对比</h2></div><button id="ml-dialog-close" type="button" aria-label="关闭">×</button></div><div id="ml-compare-table" class="ml-compare-table"></div></dialog>
+</main>
+<footer class="ml-model-footer"><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成；展示数据以官方来源与最近核验结果为准。</p></footer>
+<script src="/js/reference-models-v2.js?v=20260927a"></script>
+</body></html>'''
 
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
