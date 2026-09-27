@@ -781,3 +781,71 @@ body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card{
     min-width:0!important
   }
 }
+
+
+/* Reference fidelity pass 4 — strict 1448px board geometry and overflow cleanup. */
+html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"]{
+  width:100%!important;max-width:none!important;margin:0!important;
+}
+@media(min-width:1181px){
+  body[data-reference-style="v1"]>.fl-site-rail{width:180px!important}
+  body[data-reference-style="v1"] .ref-topbar{left:224px!important;right:30px!important}
+
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="home"]>.catalog-app{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important;padding:62px 28px 48px!important;box-sizing:border-box!important
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero{
+    height:292px!important;min-height:292px!important;box-sizing:border-box!important;overflow:hidden!important
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero::after{height:292px!important}
+
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>header.models-overview.model-library-hero{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important;height:320px!important;min-height:320px!important
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>main.model-library-page{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important;padding:0 54px 48px 22px!important;
+    box-sizing:border-box!important;grid-template-columns:minmax(0,1fr) 202px!important;column-gap:14px!important
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-library-main{
+    min-width:0!important;width:100%!important;max-width:none!important;margin:0!important;transform:none!important
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-featured-model,
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-category-row,
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-model-grid{
+    width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin-left:0!important
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-feature-copy{min-width:0!important}
+  body[data-reference-style="v1"][data-fl-section="models"] .ml-library-side{width:202px!important;min-width:0!important}
+
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"]>.skill-lab-page{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important;padding:62px 52px 48px 28px!important;
+    box-sizing:border-box!important;overflow-x:clip!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-content{
+    width:100%!important;max-width:none!important;min-width:0!important;grid-template-columns:minmax(0,1fr) 202px!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .ref-stat-row.ref-workflow-stats,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .ref-workflow-feature-main,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .ref-workflow-diagram,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-content>section[aria-labelledby="workflow-heading"],
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-grid,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-card{
+    min-width:0!important;max-width:100%!important;box-sizing:border-box!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-grid{width:100%!important;overflow:hidden!important}
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-card{overflow:hidden!important}
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-card h2,
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-card p{overflow-wrap:anywhere}
+
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"]>header{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important;padding:72px 42px 14px!important
+  }
+  body[data-reference-style="v1"][data-fl-section="about"] .ref-about-eyebrow{
+    position:relative;z-index:3;display:block;margin:0 0 5px;color:#0a68ea;font-size:12px;font-weight:850;letter-spacing:.01em
+  }
+  body[data-reference-style="v1"][data-fl-section="about"]>header h1{font-size:43px!important;margin:0 0 9px!important}
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"]>main{
+    margin-left:180px!important;width:calc(100% - 180px)!important;max-width:none!important
+  }
+}

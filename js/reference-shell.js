@@ -341,6 +341,14 @@
     }
 
     if(section==='about'){
+      const header=$('body[data-fl-section="about"] > header');
+      const aboutTitle=$('h1',header||document);
+      if(header && aboutTitle && !$('.ref-about-eyebrow',header)){
+        const eyebrow=document.createElement('span');
+        eyebrow.className='ref-about-eyebrow';
+        eyebrow.textContent='关于 FreeLLM';
+        aboutTitle.insertAdjacentElement('beforebegin',eyebrow);
+      }
       const main=$('body[data-fl-section="about"] > main');
       const sections=main ? Array.from(main.children).filter(el=>el.tagName==='SECTION') : [];
       if(sections[0]) sections[0].classList.add('ref-about-legacy-why');

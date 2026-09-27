@@ -58,6 +58,7 @@ def measure(page, page_name: str) -> dict:
     return page.evaluate(
         """pageName => {
           const rect = sel => {
+            if (!sel) return null;
             const el = document.querySelector(sel);
             if (!el) return null;
             const r = el.getBoundingClientRect();
@@ -96,6 +97,10 @@ def measure(page, page_name: str) -> dict:
             topbar: rect('.ref-topbar'),
             pageFrame: rect('.catalog-app, .models-overview, .skills-page, .tools-page, .skill-lab-page, .daily-log-dashboard, body[data-fl-section="about"] > header'),
             hero: rect('.catalog-hero, .models-overview, .skills-hero, .tools-hero, .lab-hero, .log-hero, body[data-fl-section="about"] > header'),
+            primaryContent: rect(pageName === 'models' ? '.ml-filter-bar' : pageName === 'workflow' ? '.ref-workflow-stats' : pageName === 'about' ? '.ref-value-row' : '.catalog-hero, .skills-hero, .tools-hero, .log-hero'),
+            featured: rect(pageName === 'models' ? '.ml-featured-model' : pageName === 'workflow' ? '.ref-workflow-feature-main' : pageName === 'skills' ? '.ref-skill-feature' : pageName === 'tools' ? '.ref-tool-feature' : pageName === 'updates' ? '.log-overview-grid' : pageName === 'about' ? '.ref-about-process' : '.featured-section'),
+            sideRail: rect(pageName === 'models' ? '.ml-library-side' : pageName === 'workflow' ? '.ref-workflow-side' : null),
+            heading: rect(pageName === 'about' ? 'body[data-fl-section="about"] > header h1' : '.catalog-hero h1, .model-library-hero h1, .skills-hero h1, .tools-hero h1, .lab-hero h1, .log-hero h1'),
             legacySkillsHeader: document.querySelector('.skills-header') ? getComputedStyle(document.querySelector('.skills-header')).display : null,
             legacyToolsHeader: document.querySelector('.tools-header') ? getComputedStyle(document.querySelector('.tools-header')).display : null,
             firstRowCardHeights: rowHeights(selectorByPage[pageName]),
