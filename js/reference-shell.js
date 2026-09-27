@@ -32,16 +32,33 @@
       if (legacyToggle) legacyToggle.click();
     });
 
-    const topInput = topbar.querySelector('input');
+    let topInput = topbar.querySelector('input');
     const targets = ['#catalog-search','#model-library-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
     const target = targets[0];
+
+    // The approved homepage board has one search field in the global top bar.
+    // Reuse the real catalog input there instead of hiding it and creating a
+    // disconnected visual duplicate. Moving the node preserves all existing
+    // homepage search/filter listeners and keeps browser/file:// tests honest.
+    if (section === 'home' && target?.id === 'catalog-search' && topInput) {
+      const searchLabel = topbar.querySelector('.ref-search');
+      target.classList.add('ref-topbar-search-input');
+      target.setAttribute('aria-label', '全站搜索');
+      target.setAttribute('placeholder', copy[0]);
+      topInput.replaceWith(target);
+      topInput = target;
+      if (searchLabel) searchLabel.dataset.searchSource = 'catalog';
+    }
+
     const sync = () => {
       const value = topInput.value.trim();
       if (target) {
-        target.value = value;
-        target.dispatchEvent(new Event('input', { bubbles: true }));
-        target.dispatchEvent(new Event('change', { bubbles: true }));
-        if (target.offsetParent !== null) {
+        if (target !== topInput) {
+          target.value = value;
+          target.dispatchEvent(new Event('input', { bubbles: true }));
+          target.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (target.offsetParent !== null && target !== topInput) {
           target.scrollIntoView({ behavior: 'smooth', block: 'center' });
           target.focus({ preventScroll: true });
         }
