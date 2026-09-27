@@ -50,6 +50,10 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python scripts/capture_visual_regression.py
 
+      - name: Enforce reference prototype geometry
+        if: github.event_name == 'pull_request'
+        run: python scripts/check_reference_geometry.py
+
       - name: Upload visual regression artifact
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
