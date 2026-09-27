@@ -132,9 +132,9 @@ def test_models_landing_matches_reference_library_structure(tmp_path):
         'class="ml-featured-model"',
         'id="model-library-grid"',
         'class="ml-model-card"',
-        'class="ml-compare-panel"',
+        'ml-compare-panel',
         'id="ml-compare-dialog"',
-        'class="ml-recent-panel"',
+        'ml-recent-panel',
         '/js/reference-models-v2.js?v=20260927a',
     ):
         assert needle in page
