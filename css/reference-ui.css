@@ -647,3 +647,39 @@ body[data-reference-style="v1"][data-fl-section="about"] .ref-about-milestone::b
 @media(max-width:560px){
   body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{grid-template-columns:1fr}
 }
+
+
+/* Reference geometry gate 3 — remove legacy shell offsets before measuring prototypes. */
+html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"]{
+  padding:0!important;
+}
+body[data-reference-style="v1"]>.fl-site-ribbon{
+  display:none!important;
+}
+body[data-reference-style="v1"][data-fl-section="models"]>.model-section-tabs{
+  display:none!important;
+}
+@media(min-width:1101px){
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"]>.catalog-app,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="tools"]>.tools-page,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"]>.skills-page,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"]>.skill-lab-page,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="logs"]>main.daily-log-dashboard{
+    margin-left:180px!important;
+    margin-right:0!important;
+    width:calc(100% - 180px)!important;
+    max-width:none!important;
+    padding:62px 28px 48px!important;
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>header,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>main,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>footer,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"]>header,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"]>main,
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"]>footer{
+    margin-left:180px!important;
+    margin-right:0!important;
+    width:calc(100% - 180px)!important;
+    max-width:none!important;
+  }
+}

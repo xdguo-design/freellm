@@ -27,7 +27,7 @@ ROUTES = [
 ]
 
 VIEWPORTS = {
-    "desktop": {"width": 1440, "height": 1000},
+    "desktop": {"width": 1448, "height": 1024},
     "tablet": {"width": 1024, "height": 900},
     "mobile": {"width": 390, "height": 844},
 }
@@ -93,6 +93,8 @@ def measure(page, page_name: str) -> dict:
             scrollWidth: document.documentElement.scrollWidth,
             scrollHeight: document.documentElement.scrollHeight,
             rail: rect('.fl-site-rail'),
+            topbar: rect('.ref-topbar'),
+            pageFrame: rect('.catalog-app, .models-overview, .skills-page, .tools-page, .skill-lab-page, .daily-log-dashboard, body[data-fl-section="about"] > header'),
             hero: rect('.catalog-hero, .models-overview, .skills-hero, .tools-hero, .lab-hero, .log-hero, body[data-fl-section="about"] > header'),
             legacySkillsHeader: document.querySelector('.skills-header') ? getComputedStyle(document.querySelector('.skills-header')).display : null,
             legacyToolsHeader: document.querySelector('.tools-header') ? getComputedStyle(document.querySelector('.tools-header')).display : null,
