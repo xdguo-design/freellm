@@ -3788,7 +3788,7 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     # the homepage markup as a content template, so strip page-scoped assets here
     # until the model page enters its own visual phase.
     head = re.sub(
-        r'\s*<link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+">',
+        r'\s*<link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+"[^>]*>(?:<noscript><link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+"></noscript>)?',
         "",
         head,
         count=1,
@@ -3806,7 +3806,7 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
     )
     head = head.replace('href="../css/reference-ui.css?v=20260927c"', 'href="/css/reference-ui.css?v=20260927c"')
     reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260927c">'
-    if reference_ui_tag not in head:
+    if 'href="/css/reference-ui.css?v=20260927c"' not in head:
         head = head.replace("</head>", reference_ui_tag + "\n</head>", 1)
     body = body.replace('src="../js/reference-shell.js?v=20260927c"', 'src="/js/reference-shell.js?v=20260927c"')
     title = "模型中心 · 精选资源与全部模型 | FreeLLM"
