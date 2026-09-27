@@ -763,3 +763,21 @@ body[data-reference-style="v1"][data-fl-section="about"] .ref-method-list li::be
 body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom{margin:0 52px 22px 210px!important;grid-template-columns:1.05fr 1.05fr 1.05fr 1.35fr!important;gap:10px!important}
 body[data-reference-style="v1"][data-fl-section="about"] .ref-about-bottom-card{min-height:145px!important;padding:14px!important}
 }
+
+
+/* Reference fidelity pass 3 responsive guard — preserve the 1448 board while preventing 1280 overflow. */
+@media(min-width:1181px) and (max-width:1360px){
+  body[data-reference-style="v1"][data-fl-section="workflow"] .skill-lab-page{
+    box-sizing:border-box!important;max-width:calc(100vw - 184px)!important;overflow-x:clip!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-content{min-width:0!important}
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1{
+    white-space:normal!important;font-size:38px!important;max-width:600px!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important
+  }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-card{
+    min-width:0!important
+  }
+}

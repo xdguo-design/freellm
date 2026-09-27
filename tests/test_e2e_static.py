@@ -732,7 +732,7 @@ class BrowserPageTests(unittest.TestCase):
             ("tools/", "#tool-grid .tool-card:not([hidden])"),
             ("skills/lab/", ".workflow-grid .workflow-card"),
             ("logs/", ".log-stat-grid .log-stat-card"),
-            ("about/", ".stat-row .stat"),
+            ("about/", ".ref-about-process-grid .ref-about-step"),
         )
         for route, selector in checks:
             with self.subTest(route=route):
