@@ -1,13 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280">
-<defs><linearGradient id="bg" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".08"/><stop offset=".5" stop-color="#dceeff" stop-opacity=".76"/><stop offset="1" stop-color="#f2f9ff" stop-opacity=".35"/></linearGradient><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5fa8ff"/><stop offset="1" stop-color="#0d61db"/></linearGradient><linearGradient id="s" x1="0" x2="1"><stop stop-color="#246fda"/><stop offset="1" stop-color="#0c48a9"/></linearGradient><filter id="sh"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#4f9de9" flood-opacity=".18"/></filter></defs>
-<rect width="720" height="280" fill="url(#bg)"/>
-<g opacity=".46" fill="#fff" stroke="#b9daf7"><rect x="55" y="40" width="75" height="72" rx="10"/><rect x="160" y="20" width="116" height="83" rx="11"/><rect x="520" y="22" width="98" height="76" rx="12"/><rect x="626" y="90" width="72" height="86" rx="11"/></g>
-<g filter="url(#sh)"><ellipse cx="390" cy="207" rx="205" ry="47" fill="#dceeff" stroke="#9bc9f7"/><ellipse cx="390" cy="194" rx="165" ry="37" fill="#f8fcff" stroke="#8fc3f8"/><path d="M225 194v25c15 24 83 39 165 39s150-15 165-39v-25c-20 21-81 34-165 34s-145-13-165-34z" fill="#6faaf2" opacity=".32"/></g>
-<g filter="url(#sh)"><polygon points="350,86 404,65 458,88 405,111" fill="#8fc9ff"/><rect x="350" y="86" width="55" height="82" rx="10" fill="url(#f)"/><polygon points="405,111 458,88 458,163 405,187" fill="url(#s)"/><path d="M370 125c9-16 27-17 35-1 7-10 20-9 25 1-2 18-22 28-29 33-8-4-28-15-31-33z" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 280">
+<defs>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#9fcfff" stop-opacity=".2"/></linearGradient>
+  <linearGradient id="cube" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#78baff"/><stop offset=".5" stop-color="#297ff0"/><stop offset="1" stop-color="#0e55bd"/></linearGradient>
+  <linearGradient id="side" x1="0" x2="1"><stop stop-color="#2d77df"/><stop offset="1" stop-color="#0c459f"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#c5e5ff" stop-opacity=".8"/><stop offset="1" stop-color="#e8f5ff" stop-opacity="0"/></radialGradient>
+  <filter id="sh" x="-35%" y="-35%" width="170%" height="190%"><feDropShadow dx="0" dy="11" stdDeviation="10" flood-color="#4f96df" flood-opacity=".17"/></filter>
+</defs>
+<ellipse cx="430" cy="135" rx="245" ry="145" fill="url(#glow)"/>
+<g opacity=".6" fill="url(#glass)" stroke="#b9daf7">
+  <rect x="42" y="46" width="70" height="64" rx="10"/><rect x="132" y="20" width="112" height="82" rx="11"/>
+  <rect x="230" y="55" width="70" height="54" rx="9"/><rect x="560" y="24" width="90" height="72" rx="10"/>
+  <rect x="656" y="74" width="72" height="84" rx="11"/><rect x="620" y="186" width="96" height="62" rx="10"/>
+</g>
+<g filter="url(#sh)">
+  <path d="M220 194v24c19 25 93 42 184 42s165-17 184-42v-24c-23 22-92 36-184 36s-161-14-184-36z" fill="#69a8ed" opacity=".31"/>
+  <ellipse cx="404" cy="194" rx="184" ry="45" fill="#dceeff" stroke="#96c8f7"/>
+  <ellipse cx="404" cy="184" rx="150" ry="35" fill="#fbfdff" stroke="#87bff6"/>
+  <ellipse cx="404" cy="178" rx="108" ry="25" fill="#d9edff" stroke="#add4fa"/>
+</g>
+<g filter="url(#sh)">
+  <polygon points="365,76 417,56 477,78 424,101" fill="#a7d6ff"/>
+  <rect x="365" y="76" width="59" height="88" rx="11" fill="url(#cube)"/>
+  <polygon points="424,101 477,78 477,158 424,183" fill="url(#side)"/>
+  <path d="M381 119c8-14 24-15 31-1 6-9 18-8 23 1-2 16-20 25-27 30-7-4-25-13-27-30z" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="M244 190c31 0 55-8 91-25M477 164c38 2 65-11 89-30" fill="none" stroke="#69a8ef" stroke-width="2.5" stroke-linecap="round"/>
 <g font-family="Arial,'Microsoft YaHei',sans-serif" filter="url(#sh)">
-<g transform="translate(88 58) rotate(5)"><rect width="145" height="52" rx="11" fill="#fff" fill-opacity=".9" stroke="#bedcf7"/><circle cx="23" cy="26" r="12" fill="#eaf6ff"/><text x="23" y="31" text-anchor="middle" fill="#0870ea" font-size="13">⌘</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">更高效率</text></g>
-<g transform="translate(91 184) rotate(-3)"><rect width="145" height="52" rx="11" fill="#fff" fill-opacity=".9" stroke="#bedcf7"/><circle cx="23" cy="26" r="12" fill="#e8fbf2"/><text x="23" y="31" text-anchor="middle" fill="#10a66f" font-size="13">✓</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">连接一切</text></g>
-<g transform="translate(526 83) rotate(-4)"><rect width="148" height="52" rx="11" fill="#fff" fill-opacity=".9" stroke="#bedcf7"/><circle cx="23" cy="26" r="12" fill="#edf2ff"/><text x="23" y="31" text-anchor="middle" fill="#306fe5" font-size="13">▣</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">可复用</text></g></g>
-<path d="M233 206C265 206 282 195 318 178M458 176c28-1 48-10 67-32" fill="none" stroke="#6baaf4" stroke-width="2.5" stroke-linecap="round"/>
-<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="488" y="37" font-size="17" transform="rotate(-6 488 37)">Workflows</text><text x="474" y="58" font-size="14" transform="rotate(-6 474 58)">Make Ideas Happen</text><text x="563" y="239" font-size="15" transform="rotate(-8 563 239)">AI for Everyone</text></g>
+  <g transform="translate(71 63) rotate(4)"><rect width="150" height="54" rx="11" fill="#fff" fill-opacity=".91" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#eaf6ff"/><text x="24" y="32" text-anchor="middle" fill="#0870ea" font-size="13">⌘</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">更高效率</text><text x="47" y="41" fill="#8aa0bd" font-size="9">More Efficient</text></g>
+  <g transform="translate(93 193) rotate(-3)"><rect width="153" height="54" rx="11" fill="#fff" fill-opacity=".91" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#e8fbf2"/><text x="24" y="32" text-anchor="middle" fill="#10a66f" font-size="13">✓</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">连接一切</text><text x="47" y="41" fill="#8aa0bd" font-size="9">Connect Everything</text></g>
+  <g transform="translate(566 91) rotate(-4)"><rect width="153" height="54" rx="11" fill="#fff" fill-opacity=".91" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#edf2ff"/><text x="24" y="32" text-anchor="middle" fill="#306fe5" font-size="13">▣</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">可复用</text><text x="47" y="41" fill="#8aa0bd" font-size="9">Reusable</text></g>
+</g>
+<g opacity=".9" fill="#fff" stroke="#bedcf7" filter="url(#sh)"><rect x="255" y="151" width="75" height="46" rx="9"/><rect x="498" y="174" width="78" height="47" rx="9"/></g>
+<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="500" y="38" font-size="18" transform="rotate(-6 500 38)">Workflows</text><text x="481" y="60" font-size="14" transform="rotate(-6 481 60)">Make Ideas Happen</text><text x="610" y="252" font-size="15" transform="rotate(-8 610 252)">AI for Everyone</text></g>
 </svg>

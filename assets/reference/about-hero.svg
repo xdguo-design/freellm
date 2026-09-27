@@ -1,14 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300">
-<defs><linearGradient id="bg" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".05"/><stop offset=".55" stop-color="#deefff" stop-opacity=".72"/><stop offset="1" stop-color="#f4faff" stop-opacity=".2"/></linearGradient><radialGradient id="globe"><stop stop-color="#f8fdff"/><stop offset=".55" stop-color="#9bceff"/><stop offset="1" stop-color="#4f9bea"/></radialGradient><linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dceeff"/><stop offset="1" stop-color="#79b3ee"/></linearGradient><filter id="sh"><feDropShadow dx="0" dy="10" stdDeviation="11" flood-color="#4d98e8" flood-opacity=".17"/></filter></defs>
-<rect width="760" height="300" fill="url(#bg)"/>
-<circle cx="462" cy="84" r="120" fill="url(#globe)" opacity=".76"/><circle cx="462" cy="84" r="105" fill="none" stroke="#fff" stroke-width="2" opacity=".65"/>
-<g stroke="#fff" opacity=".55" fill="none"><path d="M462-20c-28 31-43 68-43 108s15 77 43 109M468-20c28 31 43 68 43 108s-15 77-43 109"/><path d="M350 84h224M366 42h193M366 126h193"/></g>
-<path d="M70 285l124-98 50 43 78-86 77 69 70-91 86 116 69-63 136 110H70z" fill="url(#m)" opacity=".86"/>
-<path d="M105 285l110-70 52 40 72-58 61 55 73-53 76 56 78-45 97 75H105z" fill="#b9dcf9" opacity=".9"/>
-<g transform="translate(328 160)"><circle cx="21" cy="12" r="8" fill="#0b2948"/><rect x="13" y="22" width="17" height="41" rx="6" fill="#194773"/><path d="M14 32L3 49M29 32l14 15M17 61L7 92M26 61l13 31" stroke="#194773" stroke-width="7" stroke-linecap="round"/><rect x="4" y="22" width="11" height="29" rx="4" fill="#214f83"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 300">
+<defs>
+  <linearGradient id="sky" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".05"/><stop offset=".58" stop-color="#dcefff" stop-opacity=".7"/><stop offset="1" stop-color="#f5fbff" stop-opacity=".16"/></linearGradient>
+  <radialGradient id="globe"><stop stop-color="#fafdff"/><stop offset=".42" stop-color="#c3e4ff"/><stop offset=".78" stop-color="#83bdf4"/><stop offset="1" stop-color="#4f96e5"/></radialGradient>
+  <linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#edf7ff"/><stop offset=".45" stop-color="#b5dafa"/><stop offset="1" stop-color="#6fa9e8"/></linearGradient>
+  <linearGradient id="mount2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#eef8ff"/><stop offset="1" stop-color="#9bc9f2"/></linearGradient>
+  <filter id="sh" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="11" flood-color="#4d98e8" flood-opacity=".16"/></filter>
+</defs>
+<rect width="780" height="300" fill="url(#sky)"/>
+<circle cx="485" cy="88" r="128" fill="url(#globe)" opacity=".76"/>
+<circle cx="485" cy="88" r="111" fill="none" stroke="#fff" stroke-width="2" opacity=".7"/>
+<g stroke="#fff" opacity=".55" fill="none"><ellipse cx="485" cy="88" rx="48" ry="110"/><ellipse cx="485" cy="88" rx="83" ry="110"/><path d="M374 88h222M390 45h190M390 131h190"/></g>
+<g opacity=".23" fill="#fff"><ellipse cx="420" cy="42" rx="36" ry="12"/><ellipse cx="558" cy="118" rx="42" ry="13"/></g>
+<path d="M36 292l132-100 54 43 78-91 78 70 72-94 88 119 70-66 144 119H36z" fill="url(#mount)" opacity=".92"/>
+<path d="M80 292l117-72 55 40 73-60 63 57 75-55 78 58 82-47 102 79H80z" fill="url(#mount2)" opacity=".94"/>
+<path d="M188 191l34 44 78-91 28 25-28 8-23-16-33 40-22-15z" fill="#fff" opacity=".72"/>
+<g transform="translate(337 160)" filter="url(#sh)"><ellipse cx="23" cy="92" rx="20" ry="6" fill="#2e6fae" opacity=".16"/><circle cx="23" cy="11" r="8" fill="#0b2948"/><path d="M15 23h16l4 39-12 4-11-4z" fill="#194773"/><rect x="4" y="23" width="11" height="30" rx="4" fill="#235787"/><path d="M14 33L2 50M31 33l14 15M18 62L8 93M28 62l13 31" stroke="#194773" stroke-width="7" stroke-linecap="round" fill="none"/></g>
 <g font-family="Arial,'Microsoft YaHei',sans-serif" filter="url(#sh)">
-<g transform="translate(55 65) rotate(6)"><rect width="172" height="52" rx="11" fill="#fff" fill-opacity=".88" stroke="#bddcf7"/><circle cx="23" cy="26" r="12" fill="#eaf6ff"/><text x="23" y="31" text-anchor="middle" fill="#1879e8" font-size="13">▥</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">连接全球优质资源</text></g>
-<g transform="translate(578 55) rotate(-5)"><rect width="160" height="52" rx="11" fill="#fff" fill-opacity=".88" stroke="#bddcf7"/><circle cx="23" cy="26" r="12" fill="#f1eaff"/><text x="23" y="31" text-anchor="middle" fill="#8957e8" font-size="13">▥</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">更开放的 AI 世界</text></g>
-<g transform="translate(565 167) rotate(5)"><rect width="155" height="52" rx="11" fill="#fff" fill-opacity=".88" stroke="#bddcf7"/><circle cx="23" cy="26" r="12" fill="#e8fbf6"/><text x="23" y="31" text-anchor="middle" fill="#0aa8a0" font-size="13">✓</text><text x="44" y="30" fill="#3976bd" font-size="12" font-weight="700">让更多人受益</text></g></g>
-<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="394" y="65" font-size="17" transform="rotate(-8 394 65)">AI for Everyone</text><text x="415" y="86" font-size="14" transform="rotate(-8 415 86)">A Brighter Tomorrow</text><text x="612" y="250" font-size="14" transform="rotate(-8 612 250)">More AI</text><text x="596" y="269" font-size="13" transform="rotate(-8 596 269)">A Brighter You.</text></g>
+  <g transform="translate(44 72) rotate(5)"><rect width="180" height="54" rx="11" fill="#fff" fill-opacity=".9" stroke="#bddcf7"/><circle cx="24" cy="27" r="13" fill="#eaf6ff"/><text x="24" y="32" text-anchor="middle" fill="#1879e8" font-size="13">▥</text><text x="48" y="31" fill="#3976bd" font-size="12" font-weight="700">连接全球优质资源</text></g>
+  <g transform="translate(594 55) rotate(-5)"><rect width="165" height="54" rx="11" fill="#fff" fill-opacity=".9" stroke="#bddcf7"/><circle cx="24" cy="27" r="13" fill="#f1eaff"/><text x="24" y="32" text-anchor="middle" fill="#8957e8" font-size="13">▥</text><text x="48" y="31" fill="#3976bd" font-size="12" font-weight="700">更开放的 AI 世界</text></g>
+  <g transform="translate(582 171) rotate(4)"><rect width="160" height="54" rx="11" fill="#fff" fill-opacity=".9" stroke="#bddcf7"/><circle cx="24" cy="27" r="13" fill="#e8fbf6"/><text x="24" y="32" text-anchor="middle" fill="#0aa8a0" font-size="13">✓</text><text x="48" y="31" fill="#3976bd" font-size="12" font-weight="700">让更多人受益</text></g>
+</g>
+<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="405" y="57" font-size="18" transform="rotate(-8 405 57)">AI for Everyone</text><text x="424" y="79" font-size="14" transform="rotate(-8 424 79)">A Brighter Tomorrow</text><text x="629" y="252" font-size="14" transform="rotate(-8 629 252)">More AI</text><text x="610" y="271" font-size="13" transform="rotate(-8 610 271)">A Brighter You.</text></g>
 </svg>

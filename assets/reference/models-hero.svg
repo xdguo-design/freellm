@@ -1,20 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300">
 <defs>
-<linearGradient id="sky" x1="0" x2="1"><stop stop-color="#f9fdff" stop-opacity=".25"/><stop offset=".58" stop-color="#ddecff" stop-opacity=".72"/><stop offset="1" stop-color="#eef8ff" stop-opacity=".25"/></linearGradient>
-<linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8bc8ff"/><stop offset=".48" stop-color="#3d8ff9"/><stop offset="1" stop-color="#1764d9"/></linearGradient>
-<linearGradient id="side" x1="0" x2="1"><stop stop-color="#3988f3"/><stop offset="1" stop-color="#1352bd"/></linearGradient>
-<linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".82"/><stop offset="1" stop-color="#94c8ff" stop-opacity=".24"/></linearGradient>
-<radialGradient id="glow"><stop stop-color="#cde9ff" stop-opacity=".75"/><stop offset="1" stop-color="#dceeff" stop-opacity="0"/></radialGradient>
-<filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#3988db" flood-opacity=".18"/></filter>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".92"/><stop offset=".58" stop-color="#d9edff" stop-opacity=".5"/><stop offset="1" stop-color="#8cc4ff" stop-opacity=".16"/></linearGradient>
+  <linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#88c5ff"/><stop offset=".48" stop-color="#3989f7"/><stop offset="1" stop-color="#1459c9"/></linearGradient>
+  <linearGradient id="top" x1="0" x2="1"><stop stop-color="#c9e8ff"/><stop offset="1" stop-color="#78b5f6"/></linearGradient>
+  <linearGradient id="side" x1="0" x2="1"><stop stop-color="#2f7ae3"/><stop offset="1" stop-color="#0d48a9"/></linearGradient>
+  <linearGradient id="platform" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff" stop-opacity=".98"/><stop offset=".62" stop-color="#d9edff" stop-opacity=".86"/><stop offset="1" stop-color="#82baf2" stop-opacity=".5"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#bfe1ff" stop-opacity=".74"/><stop offset=".62" stop-color="#d9eeff" stop-opacity=".22"/><stop offset="1" stop-color="#eff8ff" stop-opacity="0"/></radialGradient>
+  <filter id="shadow" x="-35%" y="-35%" width="170%" height="190%"><feDropShadow dx="0" dy="13" stdDeviation="12" flood-color="#3a87d8" flood-opacity=".19"/></filter>
+  <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
 </defs>
-<rect width="720" height="300" fill="url(#sky)"/><circle cx="445" cy="90" r="150" fill="url(#glow)"/>
-<g opacity=".72" fill="url(#glass)" stroke="#a8d1fa"><rect x="34" y="118" width="76" height="62" rx="9"/><rect x="118" y="76" width="112" height="94" rx="12"/><rect x="156" y="190" width="96" height="65" rx="10"/><rect x="520" y="168" width="126" height="78" rx="12"/><rect x="620" y="92" width="70" height="92" rx="10"/><rect x="262" y="35" width="78" height="52" rx="9"/></g>
-<g filter="url(#shadow)"><ellipse cx="407" cy="222" rx="224" ry="54" fill="#d7ecff" stroke="#99c9fa"/><ellipse cx="407" cy="209" rx="191" ry="46" fill="#f9fdff" stroke="#83bff9"/><ellipse cx="407" cy="200" rx="145" ry="35" fill="#d9eeff" stroke="#a8d2fa"/><path d="M216 209v27c0 25 87 47 191 47s191-22 191-47v-27c-16 27-91 46-191 46s-175-19-191-46z" fill="#76aff3" opacity=".42"/></g>
-<g filter="url(#shadow)"><polygon points="390,54 456,29 528,60 458,89" fill="#a9d8ff" stroke="#dff1ff"/><rect x="390" y="54" width="68" height="104" rx="13" fill="url(#front)" stroke="#dff1ff"/><polygon points="458,89 528,60 528,153 458,185" fill="url(#side)" stroke="#a8d4ff"/><text x="424" y="123" text-anchor="middle" font-family="Arial,sans-serif" font-size="50" font-weight="800" fill="#fff">AI</text></g>
-<g transform="translate(310 125)"><circle cx="19" cy="12" r="8" fill="#092746"/><rect x="12" y="22" width="16" height="40" rx="6" fill="#163f70"/><path d="M12 31L2 47M28 31l13 13M16 60l-8 31M25 60l12 30" stroke="#183f70" stroke-width="7" stroke-linecap="round"/><rect x="4" y="24" width="10" height="24" rx="4" fill="#214f83"/></g>
+<ellipse cx="470" cy="126" rx="250" ry="154" fill="url(#glow)"/>
+<g opacity=".76" fill="url(#glass)" stroke="#b8dafa" stroke-width="1">
+  <rect x="20" y="150" width="57" height="58" rx="9"/><rect x="86" y="105" width="85" height="78" rx="11"/>
+  <rect x="132" y="188" width="104" height="68" rx="11"/><rect x="236" y="56" width="65" height="49" rx="9"/>
+  <rect x="284" y="168" width="70" height="54" rx="10"/><rect x="566" y="164" width="112" height="74" rx="12"/>
+  <rect x="650" y="104" width="72" height="88" rx="11"/><rect x="544" y="42" width="60" height="49" rx="9"/>
+  <rect x="694" y="206" width="48" height="46" rx="9"/><rect x="326" y="18" width="58" height="42" rx="8"/>
+</g>
+<g opacity=".25" fill="#71b4f7">
+  <rect x="52" y="220" width="18" height="18" rx="4"/><rect x="184" y="76" width="14" height="14" rx="3"/>
+  <rect x="622" y="54" width="18" height="18" rx="4"/><rect x="706" y="80" width="12" height="12" rx="3"/>
+</g>
+
+<g filter="url(#shadow)">
+  <ellipse cx="438" cy="244" rx="238" ry="44" fill="#8abcf0" opacity=".28"/>
+  <path d="M205 216v27c0 27 104 49 233 49s233-22 233-49v-27c-23 28-116 48-233 48s-210-20-233-48z" fill="#69a7ec" opacity=".34"/>
+  <ellipse cx="438" cy="216" rx="233" ry="55" fill="url(#platform)" stroke="#90c5f7"/>
+  <ellipse cx="438" cy="207" rx="198" ry="46" fill="#f8fcff" fill-opacity=".92" stroke="#8fc2f4"/>
+  <ellipse cx="438" cy="198" rx="158" ry="37" fill="#ddecff" fill-opacity=".86" stroke="#a3d0fa"/>
+  <ellipse cx="438" cy="191" rx="119" ry="28" fill="#fafdff" stroke="#b6daf9"/>
+  <path d="M240 207c29 20 105 34 198 34s169-14 198-34" fill="none" stroke="#66a9ef" stroke-width="2" opacity=".72"/>
+</g>
+
+<g filter="url(#shadow)">
+  <polygon points="405,48 476,22 574,50 510,80" fill="url(#top)" stroke="#e8f6ff"/>
+  <rect x="405" y="48" width="105" height="112" rx="17" fill="url(#front)" stroke="#def1ff"/>
+  <polygon points="510,80 574,50 574,151 510,183" fill="url(#side)" stroke="#9ecdf8"/>
+  <path d="M425 64h66" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>
+  <text x="458" y="121" text-anchor="middle" font-family="Arial,'Microsoft YaHei',sans-serif" font-size="54" font-weight="800" fill="#fff">AI</text>
+</g>
+
+<g transform="translate(326 126)" filter="url(#shadow)">
+  <ellipse cx="22" cy="78" rx="19" ry="6" fill="#2f74b9" opacity=".18"/>
+  <circle cx="22" cy="10" r="8" fill="#092847"/>
+  <path d="M14 22h15l4 36-10 4-12-4z" fill="#194b7d"/>
+  <rect x="4" y="24" width="10" height="27" rx="4" fill="#245c91"/>
+  <path d="M14 31L3 46M29 31l15 13M17 58L9 82M27 58l13 24" fill="none" stroke="#173f70" stroke-width="6" stroke-linecap="round"/>
+</g>
+
 <g font-family="Arial,'Microsoft YaHei',sans-serif" filter="url(#shadow)">
-<g transform="translate(58 40) rotate(4)"><rect width="154" height="54" rx="11" fill="#fff" fill-opacity=".86" stroke="#bedcf7"/><circle cx="23" cy="27" r="13" fill="#eceaff"/><text x="23" y="32" text-anchor="middle" fill="#6359ef" font-size="14">✦</text><text x="45" y="24" fill="#3976bd" font-size="12" font-weight="700">更强大的模型</text><text x="45" y="40" fill="#8aa0bd" font-size="9">More Capabilities</text></g>
-<g transform="translate(135 232) rotate(-2)"><rect width="172" height="55" rx="11" fill="#fff" fill-opacity=".88" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#eaf8ff"/><text x="24" y="32" text-anchor="middle" fill="#0879e8" font-size="13">◇</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">更开放的生态</text><text x="47" y="40" fill="#8aa0bd" font-size="9">More Open</text></g>
-<g transform="translate(554 76) rotate(-5)"><rect width="151" height="54" rx="11" fill="#fff" fill-opacity=".86" stroke="#bedcf7"/><circle cx="23" cy="27" r="13" fill="#eaf8ff"/><text x="23" y="32" text-anchor="middle" fill="#0879e8" font-size="13">▣</text><text x="45" y="24" fill="#3976bd" font-size="12" font-weight="700">更美好的未来</text><text x="45" y="40" fill="#8aa0bd" font-size="9">A Brighter Tomorrow</text></g></g>
-<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="570" y="236" font-size="17" transform="rotate(-7 570 236)">Better AI</text><text x="552" y="258" font-size="14" transform="rotate(-7 552 258)">A Brighter Tomorrow</text></g>
+  <g transform="translate(44 41) rotate(4)"><rect width="158" height="55" rx="11" fill="#fff" fill-opacity=".9" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#efebff"/><text x="24" y="32" text-anchor="middle" fill="#6559ef" font-size="14">✦</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">更强大的模型</text><text x="47" y="41" fill="#8aa0bd" font-size="9">More Capabilities</text></g>
+  <g transform="translate(125 231) rotate(-2)"><rect width="176" height="55" rx="11" fill="#fff" fill-opacity=".91" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#eaf8ff"/><text x="24" y="32" text-anchor="middle" fill="#0879e8" font-size="13">◇</text><text x="48" y="24" fill="#3976bd" font-size="12" font-weight="700">更开放的生态</text><text x="48" y="41" fill="#8aa0bd" font-size="9">More Open</text></g>
+  <g transform="translate(585 78) rotate(-5)"><rect width="160" height="55" rx="11" fill="#fff" fill-opacity=".91" stroke="#bedcf7"/><circle cx="24" cy="27" r="13" fill="#eaf8ff"/><text x="24" y="32" text-anchor="middle" fill="#0879e8" font-size="13">▣</text><text x="47" y="24" fill="#3976bd" font-size="12" font-weight="700">更美好的未来</text><text x="47" y="41" fill="#8aa0bd" font-size="9">A Brighter Tomorrow</text></g>
+</g>
+<g font-family="'Segoe Print','Comic Sans MS',cursive" fill="#176fe6" font-style="italic"><text x="604" y="243" font-size="17" transform="rotate(-7 604 243)">Better AI</text><text x="579" y="265" font-size="14" transform="rotate(-7 579 265)">A Brighter Tomorrow</text></g>
 </svg>
