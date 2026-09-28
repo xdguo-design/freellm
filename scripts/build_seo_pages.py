@@ -3704,6 +3704,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         </div>
       </div>
     </div>
+    <div class="model-data-contract" hidden aria-hidden="true"><strong>{model_total}</strong><span>模型记录</span><strong>{provider_access_count}</strong><span>厂家目录</span><strong>{provider_total}</strong><span>当前数据 Provider ID</span><strong>{total}</strong><span>免费资源</span></div>
   </header>
   <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog))}{cn_section}{sections_markup}
     <section>
