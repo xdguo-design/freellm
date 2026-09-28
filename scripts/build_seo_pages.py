@@ -3488,6 +3488,10 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     else:
         page_models = model_catalog
     provider_access_count = len(_load_access_context()[0]) if models is not None else 0
+    provider_directory_count = (
+        len(_provider_catalog_from_models(model_catalog, _load_operations(ACCESS_DATA_DIR / "offers.json")))
+        if models is not None else 0
+    )
     if models is None:
         title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
         description = (
@@ -3704,7 +3708,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         </div>
       </div>
     </div>
-    <div class="model-data-contract" hidden aria-hidden="true"><strong>{model_total}</strong><span>模型记录</span><strong>{provider_access_count}</strong><span>厂家目录</span><strong>{provider_total}</strong><span>当前数据 Provider ID</span><strong>{total}</strong><span>免费资源</span></div>
+    <div class="model-data-contract" hidden aria-hidden="true"><strong>{model_total}</strong><span>模型记录</span><strong>{provider_directory_count}</strong><span>厂家目录</span><strong>{provider_total}</strong><span>当前数据 Provider ID</span><strong>{total}</strong><span>免费资源</span></div>
   </header>
   <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog))}{cn_section}{sections_markup}
     <section>
