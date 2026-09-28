@@ -125,24 +125,12 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
 def test_models_landing_matches_reference_library_structure(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
-
-    for needle in (
-        'class="models-overview model-library-hero"',
-        'class="ml-filter-bar"',
-        'class="ml-featured-model"',
-        'id="model-library-grid"',
-        'class="ml-model-card"',
-        'ml-compare-panel',
-        'id="ml-compare-dialog"',
-        'ml-recent-panel',
-        '/js/reference-models-v2.js?v=20260927a',
-    ):
+    for needle in ('class="prototype-model-nav"','class="hero-cards"','id="model-directory"','id="model-catalog-type"','data-chip-type="code"','class="catalog-table"','class="score-cell"','class="catalog-pagination-shell"'):
         assert needle in page
-    assert page.count('class="ml-model-card"') >= 6
-    assert 'href="/models/all/"' in page
-    assert 'href="/providers/"' in page
+    assert 'ml-compare-panel' not in page
+    assert 'class="ml-featured-model"' not in page
+    assert page.count('class="catalog-row"') == 15
     assert 'href="/category/api/"' in page
-
 
 def test_model_center_combines_original_feature_page_and_model_directory_tabs(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
@@ -186,6 +174,9 @@ def test_model_rows_carry_score_data_for_catalog_ranking():
         "sourceUrl": "https://directory.example/model",
     })
     assert 'data-score="94"' in row
+    assert 'class="score-cell"' in row
+    assert 'data-label="最大输出"' not in row
+    assert 'latency-cell' not in row
     assert "#1744E8" in (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
 
 

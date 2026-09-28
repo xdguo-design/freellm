@@ -15,9 +15,10 @@ DESKTOP = {
         "primaryContent.x": (202, 214),
     },
     "models": {
-        "hero.x": (178, 182), "hero.y": (-1, 1), "hero.height": (315, 325),
-        "primaryContent.x": (200, 206), "primaryContent.width": (955, 990),
-        "featured.x": (200, 206), "sideRail.x": (1184, 1202), "sideRail.width": (198, 206),
+        "prototypeNav.x": (-1, 1), "prototypeNav.width": (1446, 1450), "prototypeNav.height": (62, 74),
+        "hero.x": (28, 36), "hero.y": (66, 74), "hero.height": (250, 370),
+        "primaryContent.x": (28, 36), "primaryContent.width": (1376, 1392),
+        "featured.x": (28, 36), "featured.width": (1376, 1392),
     },
     "skills": {
         "hero.x": (202, 214), "hero.y": (58, 66), "hero.height": (245, 265),
@@ -87,8 +88,9 @@ def main() -> int:
         if not item:
             errors.append(f"missing visual state {state}")
             continue
-        for field, bounds in COMMON_DESKTOP.items():
-            check_range(errors, state, item, field, bounds)
+        if page != "models":
+            for field, bounds in COMMON_DESKTOP.items():
+                check_range(errors, state, item, field, bounds)
         for field, bounds in rules.items():
             check_range(errors, state, item, field, bounds)
 

@@ -387,7 +387,7 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
-MODELS_PER_PAGE = 45
+MODELS_PER_PAGE = 15
 
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
@@ -2624,18 +2624,17 @@ def _model_catalog_row(
     return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}" data-modality="{_esc(modality_key)}" data-context="{_esc(str(model.get("context") or ""))}" data-released="{_esc(str(model.get("released") or ""))}" data-ms="{_esc(latency_ms)}" data-score="{_esc(str(model.get("score") or ""))}">
       <td class="row-index" data-label="#">{row_number or "—"}</td>
       <td class="model-cell" data-label="模型">{model_name_markup}<small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
+      <td class="provider-cell" data-label="服务商"><span class="provider-table-mark" aria-hidden="true">{_esc((provider_name[:1] or "A").upper())}</span><span class="provider-table-copy"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></span></td>
+      <td class="score-cell" data-label="评分"><span class="score-pill">{_esc(str(model.get("score") or "—"))}</span></td>
       <td data-label="上下文长度" title="{_esc(str(model.get("context") or ""))}">{_esc(context_text)}</td>
-      <td data-label="最大输出">{_esc(_format_context_window(model.get("maxOutput")) if str(model.get("maxOutput") or "").isdigit() else (model.get("maxOutput") or "—"))}</td>
       <td data-label="支持模态"><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
       <td data-label="速率限制">{_esc(model.get("rateLimit") or "—")}</td>
-      {latency_cell}
       <td data-label="发布时间">{_esc(model.get("released") or "—")}</td>
       <td data-label="在线状态"><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
       <td data-label="中国大陆可用性"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
+      <td class="source-cell" data-label="操作"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("官网", "Official")} ↗</a></td>
     </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3>{card_model_markup}</h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></div></div></td></tr>'''
+    <tr class="catalog-card-row" hidden><td colspan="11"><div class="catalog-card"><h3>{card_model_markup}</h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("官网", "Official")} ↗</a></div></div></td></tr>'''
 
 
 def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0, linkable_model_slugs: set[str] | None = None) -> str:
@@ -2687,11 +2686,9 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             else:
                 href = "/models/all/" if p == 1 else f"/models/all/page/{p}/"
                 page_links += f'<a class="catalog-page-link" href="{href}" aria-label="第 {p} 页 / Page {p}">{p}</a>'
-        pagination_markup = f'''<nav class="catalog-pagination" aria-label="分页导航 / Pagination">
-        {prev_link}
-        {page_links}
-        {next_link}
-      </nav>'''
+        start_result = (page_num - 1) * MODELS_PER_PAGE + 1
+        end_result = min(page_num * MODELS_PER_PAGE, total_models)
+        pagination_markup = f'''<div class="catalog-pagination-shell"><span class="catalog-pagination-summary">{_locale_pair(f"显示第 {start_result} - {end_result} 条，共 {total_models} 条结果", f"Showing {start_result} - {end_result} of {total_models} results")}</span><nav class="catalog-pagination" aria-label="分页导航 / Pagination">{prev_link}{page_links}{next_link}</nav><span class="catalog-page-size">{_locale_pair(f"每页显示 {MODELS_PER_PAGE} 条", f"{MODELS_PER_PAGE} per page")}</span></div>'''
         hint_text = _locale_pair(
             f"第 {page_num} / {total_pages} 页，共 {total_models} 条。可滚动查看当前页；筛选仅作用于当前页。",
             f"Page {page_num} of {total_pages}, {total_models} total records. Filters apply to the current page only.",
@@ -2717,9 +2714,10 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           <option value="unknown" data-label-zh="大陆待核验" data-label-en="Unverified">大陆待核验</option>
           <option value="unavailable" data-label-zh="大陆不可用" data-label-en="Unavailable">大陆不可用</option>
         </select></label>
+        <label class="mdir-field" for="model-catalog-type"><select id="model-catalog-type"><option value="" data-label-zh="全部模型类型" data-label-en="All model types">全部模型类型</option><option value="general" data-label-zh="通用模型" data-label-en="General">通用模型</option><option value="reasoning" data-label-zh="推理模型" data-label-en="Reasoning">推理模型</option><option value="code" data-label-zh="代码模型" data-label-en="Code">代码模型</option><option value="embedding" data-label-zh="嵌入模型" data-label-en="Embedding">嵌入模型</option><option value="multimodal" data-label-zh="多模态" data-label-en="Multimodal">多模态</option></select></label>
         <label class="mdir-field" for="model-catalog-modality"><select id="model-catalog-modality"><option value="" data-label-zh="全部模态" data-label-en="All modalities">全部模态</option>{modality_options}</select></label>
         <label class="mdir-field" for="model-catalog-sort"><select id="model-catalog-sort">
-          <option value="group" data-label-zh="综合排序" data-label-en="Smart sort">综合排序</option>
+          <option value="default" data-label-zh="综合排序" data-label-en="Smart sort">综合排序</option>
           <option value="latency" data-label-zh="接口最快优先" data-label-en="Fastest API first">接口最快优先</option>
           <option value="context" data-label-zh="上下文长度优先" data-label-en="Largest context">上下文长度优先</option>
           <option value="released" data-label-zh="最新发布优先" data-label-en="Newest releases">最新发布优先</option>
@@ -2737,23 +2735,21 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
       <div class="mdir-chips" role="group" aria-label="热门筛选 / Quick filters">
         <span class="mdir-chips-label">{_locale_pair("热门筛选", "Quick filters")}</span>
         <button type="button" class="mdir-chip" data-chip-region="available">{_locale_pair("中国大陆可用", "Mainland CN available")}</button>
-        <button type="button" class="mdir-chip" data-chip-region="unknown">{_locale_pair("待核验", "Unverified")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="text">{_locale_pair("文本生成", "Text")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="reasoning">{_locale_pair("推理模型", "Reasoning")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="image">{_locale_pair("图像", "Image")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="audio">{_locale_pair("语音", "Audio")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="text">{_locale_pair("文本生成", "Text generation")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="image">{_locale_pair("图像生成", "Image generation")}</button>
+        <button type="button" class="mdir-chip" data-chip-type="multimodal">{_locale_pair("多模态", "Multimodal")}</button>
+        <button type="button" class="mdir-chip" data-chip-type="reasoning">{_locale_pair("推理模型", "Reasoning")}</button>
+        <button type="button" class="mdir-chip" data-chip-type="code">{_locale_pair("代码模型", "Code")}</button>
+        <button type="button" class="mdir-chip" data-chip-type="embedding">{_locale_pair("嵌入模型", "Embedding")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="audio">{_locale_pair("语音模型", "Audio")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="video">{_locale_pair("视频生成", "Video generation")}</button>
         <span class="mdir-chips-spacer"></span>
         <span id="model-catalog-count" class="catalog-count"></span>
-        <span class="catalog-modes" aria-label="分组方式 / Group by">
-          <button type="button" class="group-mode is-active" data-group-mode="provider">{_locale_pair("按厂商分组", "By provider")}</button>
-          <button type="button" class="group-mode" data-group-mode="model">{_locale_pair("按模型分组", "By model")}</button>
-        </span>
         <button type="button" id="model-catalog-clear" class="mdir-clear">✕ {_locale_pair("清除筛选", "Clear filters")}</button>
       </div>
       <p class="catalog-hint">{hint_text}</p>
-      <p class="catalog-latency-note">{_locale_pair(*LATENCY_NOTE)}</p>
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
-        <th class="row-index">#</th><th>{_locale_pair("模型名称 (Model)", "Model")}</th><th>{_locale_pair("服务商 (Provider)", "Provider")}</th><th>{_locale_pair("上下文长度", "Context")}</th><th>{_locale_pair("最大输出", "Max output")}</th><th>{_locale_pair("支持模态", "Modality")}</th><th>{_locale_pair("速率限制 (Rate Limit)", "Rate limit")}</th><th>{_locale_pair(*LATENCY_COLUMN_LABEL)}</th><th>{_locale_pair("发布时间", "Released")}</th><th>{_locale_pair("在线状态", "Status")}</th><th>{_locale_pair("中国大陆可用性", "Mainland CN")}</th><th>{_locale_pair("操作", "Actions")}</th>
+        <th class="row-index">#</th><th>{_locale_pair("模型名称 (Model)", "Model")}</th><th>{_locale_pair("服务商 (Provider)", "Provider")}</th><th>{_locale_pair("评分", "Score")}</th><th>{_locale_pair("上下文长度", "Context")}</th><th>{_locale_pair("支持模态", "Modality")}</th><th>{_locale_pair("速率限制 (Rate Limit)", "Rate limit")}</th><th>{_locale_pair("发布时间", "Released")}</th><th>{_locale_pair("在线状态", "Status")}</th><th>{_locale_pair("中国大陆可用性", "Mainland CN")}</th><th>{_locale_pair("操作", "Actions")}</th>
       </tr></thead><tbody>{rows}</tbody></table></div>
       <p id="model-catalog-empty" class="catalog-empty" hidden>{_locale_pair("没有匹配的模型。换个关键词或清除筛选条件。", "No models match this filter. Try another keyword or clear the filters.")}</p>
       {pagination_markup}
@@ -2768,6 +2764,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
           const region = document.getElementById('model-catalog-region');
+          const modelType = document.getElementById('model-catalog-type');
           const modality = document.getElementById('model-catalog-modality');
           const sortSelect = document.getElementById('model-catalog-sort');
           const count = document.getElementById('model-catalog-count');
@@ -2776,8 +2773,8 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const modes = Array.from(document.querySelectorAll('[data-group-mode]'));
           const viewButtons = Array.from(document.querySelectorAll('[data-catalog-view].mdir-view-btn'));
           const chips = Array.from(document.querySelectorAll('.mdir-chip'));
-          let mode = 'provider';
-          let sortMode = 'group';
+          let mode = 'model';
+          let sortMode = 'default';
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {{
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
@@ -2786,16 +2783,26 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             }});
           }};
           const textOf = row => (row.textContent || '').toLowerCase();
+          const typeOf = row => {{
+            const modalities=(row.dataset.modality||'').split(',').filter(Boolean), text=textOf(row);
+            if(modalities.includes('reasoning')||/reason|thinking|推理/.test(text)) return 'reasoning';
+            if(/embed|embedding|向量|嵌入/.test(text)) return 'embedding';
+            if(/coder|code|代码/.test(text)) return 'code';
+            if(modalities.filter(item=>['text','image','audio','video'].includes(item)).length>=2) return 'multimodal';
+            return 'general';
+          }};
           const matches = pair => {{
             const row = pair.row;
             const query = (search?.value || '').trim().toLowerCase();
             const providerId = provider?.value || '';
             const regionFilter = region?.value || '';
+            const typeFilter = modelType?.value || '';
             const modalityFilter = modality?.value || '';
             const modalities = (row.dataset.modality || '').split(',').filter(Boolean);
             return (!query || textOf(row).includes(query))
               && (!providerId || row.dataset.providerId === providerId)
               && (!regionFilter || row.dataset.cn === regionFilter)
+              && (!typeFilter || typeOf(row) === typeFilter)
               && (!modalityFilter || modalities.includes(modalityFilter));
           }};
           const sortedPairs = () => {{
@@ -2812,7 +2819,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
               list.sort((a, b) => (b.row.dataset.released || '').localeCompare(a.row.dataset.released || ''));
             }} else if (sortMode === 'score') {{
               list.sort((a, b) => (parseFloat(b.row.dataset.score) || 0) - (parseFloat(a.row.dataset.score) || 0));
-            }} else {{
+            }} else if (sortMode !== 'default') {{
               const value = pair => {{
                 const cell = mode === 'model' ? pair.row.querySelector('.model-cell strong') : pair.row.querySelector('.provider-filter');
                 return cell ? cell.textContent.trim().toLowerCase() : '';
@@ -2839,14 +2846,14 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
               if (indexCell) indexCell.textContent = String(index + 1);
               pair.row.hidden = cards;
               if (pair.card) pair.card.hidden = !cards;
-              if (!cards && sortMode === 'group') {{
+              if (!cards && sortMode === 'group' && modes.length) {{
                 const groupCell = mode === 'provider' ? pair.row.querySelector('.provider-filter') : pair.row.querySelector('.model-cell strong');
                 const group = groupCell ? groupCell.textContent.trim() : '';
                 if (group && group !== previousGroup) {{
                   const groupRow = document.createElement('tr');
                   groupRow.className = 'catalog-group-row';
                   const cell = document.createElement('th');
-                  cell.colSpan = 12;
+                  cell.colSpan = 11;
                   cell.scope = 'rowgroup';
                   cell.textContent = group;
                   groupRow.appendChild(cell);
@@ -2861,17 +2868,19 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             if (empty) empty.hidden = visible.length !== 0;
             chips.forEach(chip => {{
               const chipRegion = chip.dataset.chipRegion;
+              const chipType = chip.dataset.chipType;
               const chipModality = chip.dataset.chipModality;
-              const active = (chipRegion && region?.value === chipRegion) || (chipModality && modality?.value === chipModality);
+              const active = (chipRegion && region?.value === chipRegion) || (chipType && modelType?.value === chipType) || (chipModality && modality?.value === chipModality);
               chip.classList.toggle('is-active', Boolean(active));
             }});
           }};
           search?.addEventListener('input', apply);
           provider?.addEventListener('change', apply);
           region?.addEventListener('change', apply);
+          modelType?.addEventListener('change', apply);
           modality?.addEventListener('change', apply);
           sortSelect?.addEventListener('change', () => {{
-            sortMode = sortSelect.value || 'group';
+            sortMode = sortSelect.value || 'default';
             apply();
           }});
           modes.forEach(button => button.addEventListener('click', () => {{
@@ -2886,6 +2895,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           }}));
           chips.forEach(chip => chip.addEventListener('click', () => {{
             if (chip.dataset.chipRegion && region) region.value = region.value === chip.dataset.chipRegion ? '' : chip.dataset.chipRegion;
+            if (chip.dataset.chipType && modelType) modelType.value = modelType.value === chip.dataset.chipType ? '' : chip.dataset.chipType;
             if (chip.dataset.chipModality && modality) modality.value = modality.value === chip.dataset.chipModality ? '' : chip.dataset.chipModality;
             apply();
           }}));
@@ -2893,9 +2903,10 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             if (search) search.value = '';
             if (provider) provider.value = '';
             if (region) region.value = '';
+            if (modelType) modelType.value = '';
             if (modality) modality.value = '';
-            if (sortSelect) sortSelect.value = 'group';
-            sortMode = 'group';
+            if (sortSelect) sortSelect.value = 'default';
+            sortMode = 'default';
             apply();
           }});
           document.addEventListener('keydown', event => {{
@@ -3052,7 +3063,7 @@ def _catalog_record_table(models: list[dict]) -> str:
           <td>{_esc(model.get("rateLimit") or "—")}</td>
           <td><span class="status status-{_esc(status)}">{status_label}</span><small>{_catalog_source_label(model)}</small></td>
           <td>{_esc(model.get("lastSeenAt") or "—")}</td>
-          <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
+          <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("官网", "Official")} ↗</a></td>
         </tr>''')
     return '''<div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
       <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>上下文 <span lang="en">Context</span></th>
@@ -3456,10 +3467,12 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 </body></html>'''
 
 
-def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
+def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1, path_override: str | None = None) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
     registration CTA, so one shareable URL serves both language communities."""
-    if models is not None and total_pages > 1:
+    if path_override:
+        path = path_override
+    elif models is not None and total_pages > 1:
         path = f"{ALL_MODELS_PAGE_PATH}page/{page_num}/" if page_num > 1 else ALL_MODELS_PAGE_PATH
     else:
         path = ALL_MODELS_PAGE_PATH if models is not None else MODELS_PAGE_PATH
@@ -3661,7 +3674,8 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     @media (max-width: 620px) {{ .facts div {{ grid-template-columns: 96px 1fr; }} .catalog-toolbar {{ grid-template-columns: 1fr; }} .catalog-modes {{ grid-column: auto; }} }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-static-locale="true" class="model-directory-prototype">
+  <nav class="prototype-model-nav" aria-label="FreeLLM 主导航"><a class="prototype-brand" href="/"><strong>FreeLLM<span>.</span></strong><small>All Free AI for Everyone</small></a><div class="prototype-nav-links"><a href="/">首页</a><a href="/models/" aria-current="page">模型一览</a><a href="/category/api/">API 资源</a><a href="/guides/free-llm/">使用教程</a><a href="/models/center/">精选推荐</a><a href="/guides/free-llm/">文章指南</a><a href="/about/">关于</a></div><div class="prototype-nav-actions"><a class="prototype-nav-search" href="#model-directory">⌕</a><span class="prototype-language"><button type="button" data-locale-switch="zh-CN">中</button><i>/</i><button type="button" data-locale-switch="en">EN</button></span><button class="prototype-theme theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><a class="prototype-github" href="https://github.com/xdguo-design/freellm" target="_blank" rel="noopener noreferrer">GH</a></div></nav>
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('全部模型', 'All models')}</div>
     {_static_locale_nav()}
@@ -3669,9 +3683,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     <div class="hero-grid">
       <div class="hero-copy">
         <p class="hero-eyebrow">FREE MODELS. MORE POSSIBILITIES.</p>
-        <h1>{_locale_pair('全部免费 AI 模型与 API 一览', 'All Free AI Models & APIs')}</h1>
-        <p class="hero-sub">{_locale_pair('含中国大陆可用性标注', 'with Mainland CN Availability')}</p>
-        <p class="lead">{_locale_pair(f'FreeLLM 收录的每一个免费 AI 模型、API、IDE 和工具都在这一页：模型目录逐行标注中国大陆可用性，接入资源直达官方，注册要求（手机号、实名、信用卡）与免费条件逐条标注。', 'Every catalog model, API and tool on FreeLLM — model rows carry mainland-China availability labels, access records link to official sites, and signup requirements (phone, identity, credit card) plus free-tier terms are listed row by row.')}</p>
+        <h1>{_locale_pair('全部免费 AI 模型与 API 一览（含中国大陆可用性标注）', 'All Free AI Models & APIs')}</h1><p class="hero-prototype-en">All Free AI Models with Mainland CN Availability</p><p class="lead">{_locale_pair('收录全球可免费使用的 AI 模型与 API，持续更新，包含中国大陆可用性标注、使用方式与限制信息，帮助开发者快速找到可用的免费资源。', 'A curated list of free AI models and APIs from around the world, with Mainland China availability, usage details and limits, updated weekly.')}</p><p class="hero-prototype-lead-en">A curated list of free AI models and APIs from around the world, with Mainland China availability, usage details and limits, updated weekly.</p>
       </div>
       <div class="hero-cards" aria-label="目录统计 / Catalog stats">
         <div class="hero-card">
@@ -3692,14 +3704,6 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         </div>
       </div>
     </div>
-    <div class="stats">
-      <span><strong>{model_total or total}</strong> {_locale_pair('个模型', 'models')}</span>
-      <span><strong>{total}</strong> {_locale_pair('个接入资源', 'access records')}</span>
-      <span>{_locale_pair('模型同步', 'Models synced')}: {model_last_seen}</span>
-      <span>{_locale_pair('资源核验', 'Offers checked')}: {offer_last_checked}</span>
-      <span>{_locale_pair('接入资源注册链接指向官方', 'Access-record links point to official sites')}</span>
-    </div>
-    <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
   </header>
   <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog))}{cn_section}{sections_markup}
     <section>
@@ -4837,7 +4841,11 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
-        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url),
+        Path("models") / "index.html": render_models_page(
+            offers, site_url, model_catalog, page_num=1,
+            total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE),
+            path_override=MODELS_PAGE_PATH,
+        ),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
