@@ -123,48 +123,133 @@
 
     if (section === 'home' && $('#catalog-offer-rows')) {
       body.classList.add('prototype-resource-v4');
-      const cards = $$('#catalog-offer-rows .offer');
-      const total = cards.length || 49;
-      const verified = cards.filter(c => $('.flag-endpoint,.flag-net-ok', c)).length;
+      let offers = [];
+      try {
+        const response = await fetch('/data/offers-ranked.json', { cache: 'no-store' });
+        if (response.ok) {
+          const payload = await response.json();
+          offers = Array.isArray(payload) ? payload : [];
+        }
+      } catch (error) {
+        console.debug('FreeLLM offer metadata refresh skipped', error);
+      }
+      const offerMeta = new Map(offers.map(item => [clean(item.id), item]));
+      const getCards = () => $$('#catalog-offer-rows .offer');
+      const initialCards = getCards();
+      const heroCount = Number(clean($('#heroCount')?.textContent));
+      const total = offers.length || heroCount || initialCards.length || 49;
+      const isVerifiedOffer = item => Boolean(item && (
+        item.status === 'verified' ||
+        item.handsOn ||
+        (item.endpointCheck && item.endpointCheck.verdict !== 'NETWORK_ERROR') ||
+        (item.networkCheck && item.networkCheck.region && item.networkCheck.region !== 'none')
+      ));
+      const verified = offers.length
+        ? offers.filter(isVerifiedOffer).length
+        : initialCards.filter(card => $('.flag-endpoint,.flag-net-ok,.flag-hands-on', card)).length;
       const pending = Math.max(0, total - verified);
+      const regions = new Set(offers.map(item => clean(item.originCountry || item.accessRegion || item.availability)).filter(Boolean));
+      const regionCount = Math.max(regions.size, 4);
+
       const overview = document.createElement('section');
       overview.className = 'pf-resource-overview';
       overview.innerHTML =
-        '<section class="pf-resource-hero"><span class="eyebrow">VERIFIED AI RESOURCES</span><h1>全部资源</h1><p>产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。</p><div class="pf-resource-stats"><article class="pf-resource-stat"><i>◇</i><div><small>全部资源</small><strong>' + total + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>✓</i><div><small>已验证可用</small><strong>' + verified + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>◷</i><div><small>待验证</small><strong>' + pending + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>◎</i><div><small>覆盖地区/国家</small><strong>4+</strong><small>类地区</small></div></article></div><div class="pf-resource-hero-art"></div></section>' +
-        '<section class="pf-resource-filters"><div class="pf-filter-row"><b>资源类型</b><button class="active" data-pf-kind="all">全部 (' + total + ')</button><button data-pf-kind="model">模型</button><button data-pf-kind="tool">工具</button><button data-pf-kind="platform">平台</button><button data-pf-kind="cloud">云服务</button><button data-pf-kind="development">开发框架</button><button data-pf-kind="student">学生优惠</button><button data-pf-kind="other">其他</button></div><div class="pf-filter-row"><b>特色筛选</b><button data-pf-kind="free">免费使用</button><button data-pf-kind="cn">国内可用</button><button data-pf-kind="intl">国外可用</button><button data-pf-kind="verified">已验证</button><button data-pf-kind="new">新上线</button><span class="pf-filter-spacer"></span><b>排序方式</b><button class="active">默认排序</button><button data-pf-sort-resource="new">最新上线</button><button data-pf-sort-resource="verified">可用性优先</button><span class="pf-view-toggle"><button class="active">▦</button><button>☷</button></span></div><div class="pf-filter-row"><b>地区筛选</b><button class="active" data-pf-region-resource="all">全部地区</button><button data-pf-region-resource="cn">中国</button><button data-pf-region-resource="na">北美</button><button data-pf-region-resource="eu">欧洲</button><button data-pf-region-resource="asia">亚太</button><button data-pf-region-resource="other">其他</button></div></section>';
+        '<section class="pf-resource-hero"><span class="eyebrow">VERIFIED AI RESOURCES</span><h1>全部资源</h1><p>产品、免费方式、额度、有效期、地区和核验状态放在同一张卡片里。</p><div class="pf-resource-stats"><article class="pf-resource-stat"><i>◇</i><div><small>全部资源</small><strong>' + total + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>✓</i><div><small>已验证可用</small><strong>' + verified + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>◷</i><div><small>待验证</small><strong>' + pending + '</strong><small>个资源</small></div></article><article class="pf-resource-stat"><i>◎</i><div><small>覆盖地区/国家</small><strong>' + regionCount + '</strong><small>类地区</small></div></article></div><div class="pf-resource-hero-art"></div></section>' +
+        '<section class="pf-resource-filters"><div class="pf-filter-row"><b>资源类型</b><button class="active" data-pf-kind="all">全部 (' + total + ')</button><button data-pf-kind="model">模型</button><button data-pf-kind="tool">工具</button><button data-pf-kind="platform">平台</button><button data-pf-kind="cloud">云服务</button><button data-pf-kind="development">开发框架</button><button data-pf-kind="student">学生优惠</button><button data-pf-kind="other">其他</button></div><div class="pf-filter-row"><b>特色筛选</b><button data-pf-kind="free">免费使用</button><button data-pf-kind="cn">国内可用</button><button data-pf-kind="intl">国外可用</button><button data-pf-kind="verified">已验证</button><button data-pf-kind="new">新上线</button><span class="pf-filter-spacer"></span><b>排序方式</b><button class="active" data-pf-sort-resource="default">默认排序</button><button data-pf-sort-resource="new">最新上线</button><button data-pf-sort-resource="verified">可用性优先</button><span class="pf-view-toggle"><button class="active" data-pf-view="grid">▦</button><button data-pf-view="list">☷</button></span></div><div class="pf-filter-row"><b>地区筛选</b><button class="active" data-pf-region-resource="all">全部地区</button><button data-pf-region-resource="cn">中国</button><button data-pf-region-resource="na">北美</button><button data-pf-region-resource="eu">欧洲</button><button data-pf-region-resource="asia">亚太</button><button data-pf-region-resource="other">其他</button></div></section>';
       $('.catalog-content')?.prepend(overview);
+
+      const metadataFor = card => offerMeta.get(clean(card.dataset.detail)) || null;
+      const cardText = (card, meta) => clean([
+        card.textContent,
+        meta?.title, meta?.titleEn, meta?.provider, meta?.productType,
+        ...(meta?.type || []), ...(meta?.capabilities || []), ...(meta?.badges || []),
+        meta?.freeMechanism, meta?.access, meta?.accessSummary, meta?.availability,
+        meta?.originCountry, meta?.studentEligibility, meta?.studentSummary
+      ].filter(Boolean).join(' ')).toLowerCase();
+      const isStudent = meta => Boolean(meta && (
+        meta.studentEligibility || meta.studentSummary ||
+        (Array.isArray(meta.studentSourceUrls) && meta.studentSourceUrls.length)
+      ));
+      const matchKind = (kind, card, meta, t) => {
+        if (kind === 'all') return true;
+        if (kind === 'student') return isStudent(meta) || /student|学生|education/.test(t);
+        if (kind === 'free') return /免费|free|¥0|quota|permanent|credits|trial/.test(t);
+        if (kind === 'cn') return /中国|国内|china|beijing|cn\b/.test(t);
+        if (kind === 'intl') return /global|国际|海外|国外|worldwide|international/.test(t);
+        if (kind === 'verified') return isVerifiedOffer(meta) || !!$('.flag-endpoint,.flag-net-ok,.flag-hands-on', card);
+        if (kind === 'new') return /新|new|2026-09-2[4-8]/.test(t) || /^2026-09-2[4-8]$/.test(clean(meta?.date));
+        if (kind === 'model') return /model|模型|llm|gemini|deepseek|qwen|glm|mimo/.test(t);
+        if (kind === 'tool') return /tool|ide|coding|agent|workbuddy|cursor|copilot|desktop|browser/.test(t);
+        if (kind === 'development') return /api|sdk|github|code|developer|coding|编程|开发/.test(t);
+        if (kind === 'cloud') return /cloud|云|aws|aliyun|阿里云|火山|huawei|nvidia/.test(t);
+        if (kind === 'platform') return /studio|platform|平台|web|workspace|console/.test(t);
+        if (kind === 'other') return !/(model|模型|llm|tool|ide|api|sdk|cloud|云|studio|platform|学生|student)/.test(t);
+        return true;
+      };
+      const matchRegion = (region, t) => {
+        if (region === 'all') return true;
+        if (region === 'cn') return /中国|国内|china|beijing|cn\b/.test(t);
+        if (region === 'na') return /north america|united states|美国|\bus\b|canada/.test(t);
+        if (region === 'eu') return /europe|欧洲|\beu\b|germany|france|uk|united kingdom/.test(t);
+        if (region === 'asia') return /中国|日本|新加坡|asia|国内|japan|singapore|korea/.test(t);
+        if (region === 'other') return !/(中国|国内|china|beijing|north america|united states|美国|\bus\b|canada|europe|欧洲|\beu\b|germany|france|uk|united kingdom|日本|新加坡|asia|japan|singapore|korea)/.test(t);
+        return true;
+      };
+
       let kind = 'all', region = 'all';
       const apply = () => {
-        cards.forEach(card => {
-          const t = clean(card.textContent).toLowerCase();
-          let ok = true;
-          if (kind === 'student') ok = /student|学生|education/.test(t);
-          else if (kind === 'free') ok = /免费|free|¥0|quota/.test(t);
-          else if (kind === 'cn') ok = /中国|国内|china/.test(t);
-          else if (kind === 'intl') ok = /global|国际|海外|国外/.test(t);
-          else if (kind === 'verified') ok = !!$('.flag-endpoint,.flag-net-ok', card);
-          else if (kind === 'new') ok = /新|new|2026-09-2[4-8]/.test(t);
-          else if (kind === 'model') ok = /model|模型|llm|gemini|deepseek|qwen|glm|mimo/.test(t);
-          else if (kind === 'tool') ok = /tool|ide|coding|agent|workbuddy|cursor|copilot/.test(t);
-          else if (kind === 'development') ok = /api|sdk|github|code|developer/.test(t);
-          else if (kind === 'cloud') ok = /cloud|云|aws|aliyun|火山|huawei/.test(t);
-          else if (kind === 'platform') ok = /studio|platform|平台|web/.test(t);
-          if (region === 'cn') ok = ok && /中国|国内|china/.test(t);
-          else if (region === 'na') ok = ok && /us|美国|north america/.test(t);
-          else if (region === 'eu') ok = ok && /europe|欧洲|eu/.test(t);
-          else if (region === 'asia') ok = ok && /中国|日本|新加坡|asia|国内/.test(t);
-          card.hidden = !ok;
+        getCards().forEach(card => {
+          const meta = metadataFor(card);
+          const t = cardText(card, meta);
+          card.hidden = !(matchKind(kind, card, meta, t) && matchRegion(region, t));
         });
       };
+      const sortCards = mode => {
+        const grid = $('#catalog-offer-rows');
+        if (!grid) return;
+        const cards = getCards();
+        const value = card => {
+          const meta = metadataFor(card);
+          if (mode === 'new') return clean(meta?.date || meta?.lastVerifiedAt || '').replace(/-/g,'');
+          if (mode === 'verified') return isVerifiedOffer(meta) || !!$('.flag-endpoint,.flag-net-ok,.flag-hands-on', card) ? '1' : '0';
+          return String(999999 - Number(meta?.order || 999999)).padStart(6,'0');
+        };
+        cards.sort((a,b) => value(b).localeCompare(value(a))).forEach(card => grid.appendChild(card));
+        apply();
+      };
+
       $$('[data-pf-kind]', overview).forEach(btn => btn.addEventListener('click', () => {
-        $$('[data-pf-kind]', overview).forEach(x => x.classList.remove('active')); btn.classList.add('active'); kind = btn.dataset.pfKind; apply();
+        $$('[data-pf-kind]', overview).forEach(x => x.classList.remove('active'));
+        btn.classList.add('active'); kind = btn.dataset.pfKind; apply();
       }));
       $$('[data-pf-region-resource]', overview).forEach(btn => btn.addEventListener('click', () => {
-        $$('[data-pf-region-resource]', overview).forEach(x => x.classList.remove('active')); btn.classList.add('active'); region = btn.dataset.pfRegionResource; apply();
+        $$('[data-pf-region-resource]', overview).forEach(x => x.classList.remove('active'));
+        btn.classList.add('active'); region = btn.dataset.pfRegionResource; apply();
       }));
-      const last = $('#catalog-last-checked'); if (last) last.textContent = 'Last checked: 28 Sep 2026 · Data is subject to change';
-      const student = $('#student-offers');
-      if (student) { const h = $('.student-panel-copy h2', student); if (h) h.textContent = '学生优惠'; const p = $('.student-panel-copy p', student); if (p) p.textContent = '学生方案已纳入上方统一资源列表，可使用“学生优惠”筛选查看。'; }
+      $$('[data-pf-sort-resource]', overview).forEach(btn => btn.addEventListener('click', () => {
+        $$('[data-pf-sort-resource]', overview).forEach(x => x.classList.remove('active'));
+        btn.classList.add('active'); sortCards(btn.dataset.pfSortResource);
+      }));
+      $$('[data-pf-view]', overview).forEach(btn => btn.addEventListener('click', () => {
+        $$('[data-pf-view]', overview).forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        $('#catalog-offer-rows')?.classList.toggle('pf-resource-list-view', btn.dataset.pfView === 'list');
+      }));
+
+      const grid = $('#catalog-offer-rows');
+      if (grid && 'MutationObserver' in window) {
+        let scheduled = false;
+        new MutationObserver(() => {
+          if (scheduled) return;
+          scheduled = true;
+          requestAnimationFrame(() => { scheduled = false; apply(); });
+        }).observe(grid, { childList: true });
+      }
+      const last = $('#catalog-last-checked');
+      if (last) last.textContent = 'Last checked: 28 Sep 2026 · Data is subject to change';
+      $('#student-offers')?.remove();
+      $('.ref-student-banner')?.remove();
+      apply();
     }
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 0), { once:true });
