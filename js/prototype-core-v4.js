@@ -79,8 +79,10 @@
     }
 
     if(section==='workflow'){
-      const cards=$$('.workflow-card');
+      const cards=$('.workflow-card');
       const hero=$('.lab-hero');
+      const statRows=$('.ref-stat-row');
+      statRows.filter(x=>!x.classList.contains('ref-workflow-stats')).forEach(x=>x.remove());
       let stats=$('.ref-workflow-stats');
       if(!stats) stats=$('.ref-stat-row');
       if(stats){
