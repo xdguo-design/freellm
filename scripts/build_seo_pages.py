@@ -5415,6 +5415,34 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
     return updated
 
 
+PROTOTYPE_FIDELITY_PATHS = {
+    Path("models/index.html"): "prototype-fidelity-v4.js",
+    Path("skills/index.html"): "prototype-core-v4.js",
+    Path("skills/lab/index.html"): "prototype-core-v4.js",
+    Path("logs/index.html"): "prototype-core-v4.js",
+}
+
+
+def _ensure_prototype_fidelity(content: str, path: Path) -> str:
+    """Attach the approved high-fidelity board layer to generated core pages.
+
+    Keep this in the generator so routine SEO rebuilds cannot silently remove
+    the reviewed prototype CSS/JS from the core generated surfaces.
+    """
+    script_name = PROTOTYPE_FIDELITY_PATHS.get(path)
+    if not script_name or path.suffix != ".html":
+        return content
+
+    updated = content
+    css_tag = '<link rel="stylesheet" href="/css/prototype-fidelity-v4.css?v=20260928c">'
+    if "prototype-fidelity-v4.css" not in updated and "</head>" in updated:
+        updated = updated.replace("</head>", css_tag + "\n</head>", 1)
+
+    script_tag = f'<script defer src="/js/{script_name}?v=20260928c"></script>'
+    if script_name not in updated and "</body>" in updated:
+        updated = updated.replace("</body>", script_tag + "\n</body>", 1)
+    return updated
+
 def _remove_legacy_global_nav(content: str) -> str:
     return re.sub(r'<nav class="top-nav"[^>]*>.*?</nav>', "", content, flags=re.I | re.S)
 
@@ -5530,6 +5558,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     files = {
         relative: _ensure_reference_ui(content, relative)
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_prototype_fidelity(content, relative)
         for relative, content in files.items()
     }
     output_root = Path(output_root)
