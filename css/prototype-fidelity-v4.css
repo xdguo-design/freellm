@@ -318,3 +318,16 @@ body[data-fl-section="logs"] .pf-current-log-day .log-health-card strong{display
  body[data-fl-section="skills"] .pf-skill-collections{grid-template-columns:1fr 1fr!important}
  body[data-fl-section="tools"] .ref-tool-feature-grid{grid-template-columns:1fr 1fr!important}
 }
+
+
+/* Resource-list cleanup and final board corrections */
+body[data-fl-section="tools"] .tools-hero h1::before{content:none!important}
+body.prototype-resource-v4 #student-offers{display:none!important}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view{grid-template-columns:1fr!important}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer{
+  min-height:0!important;display:grid!important;grid-template-columns:minmax(220px,.9fr) minmax(0,1.45fr) 180px!important;align-items:center!important
+}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-top{padding:12px 14px!important}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-flags{padding:0 10px!important}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-body{padding:8px 10px!important}
+body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-footer{padding:10px 14px!important}
