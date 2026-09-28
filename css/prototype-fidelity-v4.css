@@ -130,3 +130,148 @@ body.prototype-resource-v4 .footer{max-width:1290px;margin-left:auto!important;m
   body.prototype-resource-v4 #catalog-offer-rows{grid-template-columns:1fr!important}
   body.prototype-resource-v4 .student-panel{grid-template-columns:1fr!important}.pf-filter-row{overflow:auto}
 }
+
+
+/* Strict fidelity for Skills / Tools / Workflow / Updates / About boards */
+body[data-reference-style="v1"][data-fl-section="skills"],
+body[data-reference-style="v1"][data-fl-section="tools"],
+body[data-reference-style="v1"][data-fl-section="workflow"],
+body[data-reference-style="v1"][data-fl-section="logs"],
+body[data-reference-style="v1"][data-fl-section="about"]{
+  max-width:none!important;margin:0!important;padding:0 18px 46px 200px!important;background:#f7fbff!important;color:var(--pf-ink)!important
+}
+body[data-reference-style="v1"][data-fl-section="skills"]>.fl-site-ribbon,
+body[data-reference-style="v1"][data-fl-section="tools"]>.fl-site-ribbon,
+body[data-reference-style="v1"][data-fl-section="workflow"]>.fl-site-ribbon,
+body[data-reference-style="v1"][data-fl-section="logs"]>.fl-site-ribbon,
+body[data-reference-style="v1"][data-fl-section="about"]>.fl-site-ribbon{display:none!important}
+body[data-reference-style="v1"][data-fl-section="skills"]>.ref-topbar,
+body[data-reference-style="v1"][data-fl-section="tools"]>.ref-topbar,
+body[data-reference-style="v1"][data-fl-section="workflow"]>.ref-topbar,
+body[data-reference-style="v1"][data-fl-section="logs"]>.ref-topbar,
+body[data-reference-style="v1"][data-fl-section="about"]>.ref-topbar{
+  left:182px!important;right:0!important;height:58px!important;padding:10px 26px 8px 34px!important;background:rgba(249,252,255,.95)!important;border:0!important
+}
+body[data-reference-style="v1"][data-fl-section="skills"]>.fl-site-rail,
+body[data-reference-style="v1"][data-fl-section="tools"]>.fl-site-rail,
+body[data-reference-style="v1"][data-fl-section="workflow"]>.fl-site-rail,
+body[data-reference-style="v1"][data-fl-section="logs"]>.fl-site-rail,
+body[data-reference-style="v1"][data-fl-section="about"]>.fl-site-rail{
+  width:182px!important;background:linear-gradient(180deg,#061a34,#082747)!important;border-right:1px solid rgba(89,160,242,.18)!important
+}
+body[data-reference-style="v1"]>.fl-site-rail .fl-site-nav a{height:48px!important;margin:3px 12px!important;border-radius:11px!important;color:#d8e7fb!important}
+body[data-reference-style="v1"]>.fl-site-rail .fl-site-nav a[aria-current="page"]{background:#f7fbff!important;color:#0870ed!important;border:1px solid #d5e7fb!important}
+body[data-reference-style="v1"]>.fl-site-rail .fl-site-rail-note{color:#c1daf5!important;background:transparent!important;border:0!important;font:italic 13px/1.7 "Segoe Print","Comic Sans MS",cursive!important}
+body[data-reference-style="v1"]>.ref-topbar .ref-search{height:38px!important;width:min(900px,72vw)!important;border:1px solid #d8e6f6!important;border-radius:12px!important;background:#fff!important}
+
+/* Skills */
+body[data-fl-section="skills"] .skills-page{padding-top:72px!important}
+body[data-fl-section="skills"] .skills-hero{
+  min-height:174px!important;margin:0!important;padding:20px 300px 16px 6px!important;border:0!important;border-radius:0!important;background:
+  radial-gradient(circle at 58% 48%,rgba(98,170,255,.22),transparent 18rem),
+  linear-gradient(100deg,#f9fcff,#eef7ff)!important;box-shadow:none!important
+}
+body[data-fl-section="skills"] .skills-hero h1{margin:0!important;font-size:48px!important;line-height:1!important;font-weight:950!important;color:#061b46!important;letter-spacing:-.045em!important}
+body[data-fl-section="skills"] .skills-hero h1::after{content:"\A发现和使用可复用的 AI 技能";white-space:pre;display:block;margin-top:8px;font-size:26px;line-height:1.1;color:#0b2b65;letter-spacing:-.025em}
+body[data-fl-section="skills"] .skills-hero .lead{font-size:11px!important;color:#6781a5!important;max-width:620px!important}
+body[data-fl-section="skills"] .hero-note{position:absolute!important;right:16px!important;top:18px!important;width:250px!important;min-height:130px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+body[data-fl-section="skills"] .ref-stat-row{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:0 0 14px!important}
+body[data-fl-section="skills"] .ref-stat{min-height:78px!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important}
+body[data-fl-section="skills"] .ref-skill-collections{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:12px 0!important}
+body[data-fl-section="skills"] .ref-skill-collection{min-height:83px!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important;box-shadow:0 6px 18px rgba(50,101,166,.04)!important}
+body[data-fl-section="skills"] .skills-toolbar,body[data-fl-section="skills"] .ref-skill-controls{margin:8px 0!important;padding:7px 0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-fl-section="skills"] .skill-category-tab{height:32px!important;padding:0 14px!important;font-size:10px!important}
+body[data-fl-section="skills"] .skill-layout{display:grid!important;grid-template-columns:minmax(0,1fr) 310px!important;gap:12px!important}
+body[data-fl-section="skills"] .skill-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+body[data-fl-section="skills"] .skill-card{min-height:248px!important;padding:13px!important;border-radius:11px!important}
+body[data-fl-section="skills"] .skill-card h2,body[data-fl-section="skills"] .skill-card h3{font-size:14px!important;font-weight:900!important}
+body[data-fl-section="skills"] .skill-card p{font-size:9px!important;line-height:1.55!important}
+body[data-fl-section="skills"] .ref-skill-detail,body[data-fl-section="skills"] .skill-detail-panel{position:sticky!important;top:68px!important;border:1px solid #d9e7f6!important;border-radius:12px!important;background:#fff!important;box-shadow:0 8px 22px rgba(43,99,166,.05)!important}
+
+/* Tools */
+body[data-fl-section="tools"] .tools-page{padding-top:72px!important}
+body[data-fl-section="tools"] .tools-hero{
+  min-height:160px!important;padding:25px 360px 18px 8px!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 63% 50%,rgba(95,169,255,.22),transparent 18rem),linear-gradient(100deg,#fbfdff,#edf6ff)!important;box-shadow:none!important
+}
+body[data-fl-section="tools"] .tools-hero h1{font-size:43px!important;line-height:1.04!important;font-weight:950!important;color:#071c48!important}
+body[data-fl-section="tools"] .tools-hero h1::before{content:"发现";}body[data-fl-section="tools"] .tools-hero h1{color:#0868f7!important}
+body[data-fl-section="tools"] .tools-hero .lead{font-size:12px!important;color:#46678f!important}
+body[data-fl-section="tools"] .ref-stat-row{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:10px!important;margin:0 0 14px!important}
+body[data-fl-section="tools"] .ref-stat{min-height:74px!important;padding:11px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important}
+body[data-fl-section="tools"] .tools-toolbar{margin:0!important;padding:7px 0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+body[data-fl-section="tools"] .tool-category-tab{height:31px!important;padding:0 13px!important;font-size:9px!important}
+body[data-fl-section="tools"] .ref-tool-featured{margin:8px 0 12px!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:12px!important;background:#fff!important}
+body[data-fl-section="tools"] .ref-tool-featured-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important}
+body[data-fl-section="tools"] .ref-tool-featured-card{min-height:116px!important;border:1px solid #dce8f6!important;border-radius:10px!important;background:#fff!important}
+body[data-fl-section="tools"] .tool-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+body[data-fl-section="tools"] .tool-card{min-height:172px!important;padding:13px!important;border-radius:11px!important}
+body[data-fl-section="tools"] .tool-card h2,body[data-fl-section="tools"] .tool-card h3{font-size:14px!important;font-weight:900!important}
+body[data-fl-section="tools"] .tool-card p{font-size:9px!important;line-height:1.5!important}
+
+/* Workflow */
+body[data-fl-section="workflow"] .skill-lab-page{padding-top:70px!important}
+body[data-fl-section="workflow"] .lab-hero{
+  min-height:170px!important;margin:0!important;padding:22px 360px 18px 8px!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 65% 45%,rgba(95,169,255,.22),transparent 18rem),linear-gradient(100deg,#fbfdff,#edf6ff)!important;box-shadow:none!important
+}
+body[data-fl-section="workflow"] .lab-hero h1{font-size:44px!important;line-height:1.02!important;font-weight:950!important;color:#071c48!important}
+body[data-fl-section="workflow"] .lab-hero .lead{font-size:12px!important;color:#5f7da3!important}
+body[data-fl-section="workflow"] .ref-workflow-stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:0 0 12px!important}
+body[data-fl-section="workflow"] .ref-workflow-stats .ref-stat{min-height:75px!important;padding:11px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important}
+body[data-fl-section="workflow"] .ref-workflow-feature{display:grid!important;grid-template-columns:minmax(0,1fr) 1.05fr 235px!important;gap:10px!important;margin:10px 0!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:12px!important;background:#fff!important}
+body[data-fl-section="workflow"] .ref-workflow-copy{padding:10px!important}
+body[data-fl-section="workflow"] .ref-workflow-copy h2{font-size:21px!important;font-weight:900!important}
+body[data-fl-section="workflow"] .ref-workflow-copy p{font-size:10px!important}
+body[data-fl-section="workflow"] .ref-workflow-diagram{min-height:210px!important;border:1px dashed #d6e4f5!important;border-radius:10px!important;background-image:radial-gradient(#d7e6f8 1px,transparent 1px)!important;background-size:12px 12px!important}
+body[data-fl-section="workflow"] .ref-workflow-side{display:grid!important;gap:8px!important}
+body[data-fl-section="workflow"] .ref-workflow-side-card{padding:10px!important;border:1px solid #dce8f6!important;border-radius:10px!important;background:#fff!important;font-size:9px!important}
+body[data-fl-section="workflow"] .workflow-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+body[data-fl-section="workflow"] .workflow-card{min-height:190px!important;padding:13px!important;border-radius:11px!important}
+
+/* Updates */
+body[data-fl-section="logs"] .daily-log-dashboard{padding-top:70px!important}
+body[data-fl-section="logs"] .log-hero{
+  min-height:160px!important;padding:22px 360px 18px 8px!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 64% 45%,rgba(95,169,255,.22),transparent 18rem),linear-gradient(100deg,#fbfdff,#edf6ff)!important;box-shadow:none!important
+}
+body[data-fl-section="logs"] .log-hero h1{font-size:43px!important;line-height:1.04!important;font-weight:950!important;color:#071c48!important}
+body[data-fl-section="logs"] .ref-log-stats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:10px!important;margin:0 0 12px!important}
+body[data-fl-section="logs"] .ref-log-stats .ref-stat{min-height:75px!important;padding:11px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important}
+body[data-fl-section="logs"] .log-date-nav{margin:8px 0!important;padding:0!important;border:0!important;background:transparent!important}
+body[data-fl-section="logs"] .log-main-layout,body[data-fl-section="logs"] .log-content-layout{display:grid!important;grid-template-columns:minmax(0,1fr) 300px!important;gap:12px!important}
+body[data-fl-section="logs"] .log-panel,body[data-fl-section="logs"] .log-day,body[data-fl-section="logs"] .log-event-panel{border-radius:11px!important}
+body[data-fl-section="logs"] .log-day{padding:12px!important}
+body[data-fl-section="logs"] .log-new-card,body[data-fl-section="logs"] .log-offline-card{border-radius:10px!important}
+
+/* About */
+body[data-fl-section="about"]>header{
+  min-height:275px!important;margin:70px 0 10px!important;padding:24px 46% 20px 8px!important;border:0!important;border-radius:0!important;background:
+  radial-gradient(circle at 66% 46%,rgba(91,166,255,.25),transparent 20rem),
+  linear-gradient(100deg,#fbfdff,#eef7ff)!important;box-shadow:none!important
+}
+body[data-fl-section="about"]>header h1{font-size:45px!important;line-height:1.06!important;font-weight:950!important;color:#071c48!important}
+body[data-fl-section="about"]>header .lead{font-size:11px!important;color:#58769c!important}
+body[data-fl-section="about"] .ref-value-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:0 0 10px!important;padding:0!important}
+body[data-fl-section="about"] .ref-value{min-height:55px!important;padding:8px!important;background:transparent!important;border:0!important}
+body[data-fl-section="about"] .ref-about-statement{margin:8px 0!important;padding:12px 18px!important;border:1px solid #dce8f6!important;border-radius:10px!important;background:#fff!important;text-align:center!important;color:#647fa4!important}
+body[data-fl-section="about"] .ref-about-process{margin:10px 0!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:12px!important;background:#fff!important}
+body[data-fl-section="about"] .ref-about-process-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+body[data-fl-section="about"] .ref-about-step{min-height:105px!important;padding:12px!important;border:1px solid #dce8f6!important;border-radius:10px!important;background:#fff!important}
+body[data-fl-section="about"]>main{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
+body[data-fl-section="about"]>main>section{padding:15px!important;border-radius:11px!important}
+body[data-fl-section="about"] .ref-about-bottom{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin:10px 0!important}
+body[data-fl-section="about"] .ref-about-bottom-card{min-height:120px!important;padding:14px!important;border:1px solid #dce8f6!important;border-radius:11px!important;background:#fff!important}
+body[data-fl-section="about"] .ref-about-bottom-card:last-child{grid-column:1/-1!important}
+
+@media(max-width:1050px){
+ body[data-reference-style="v1"][data-fl-section="skills"],body[data-reference-style="v1"][data-fl-section="tools"],body[data-reference-style="v1"][data-fl-section="workflow"],body[data-reference-style="v1"][data-fl-section="logs"],body[data-reference-style="v1"][data-fl-section="about"]{padding-left:18px!important}
+ body[data-reference-style="v1"]>.ref-topbar{left:0!important}
+ body[data-fl-section="skills"] .skill-layout,body[data-fl-section="logs"] .log-main-layout,body[data-fl-section="logs"] .log-content-layout{grid-template-columns:1fr!important}
+ body[data-fl-section="skills"] .ref-skill-detail,body[data-fl-section="skills"] .skill-detail-panel{position:static!important}
+}
+@media(max-width:760px){
+ body[data-fl-section="skills"] .skill-grid,body[data-fl-section="workflow"] .workflow-grid{grid-template-columns:1fr!important}
+ body[data-fl-section="tools"] .tool-grid{grid-template-columns:1fr 1fr!important}
+ body[data-fl-section="skills"] .ref-skill-collections,body[data-fl-section="skills"] .ref-stat-row,body[data-fl-section="tools"] .ref-stat-row,body[data-fl-section="workflow"] .ref-workflow-stats,body[data-fl-section="logs"] .ref-log-stats,body[data-fl-section="about"] .ref-about-process-grid{grid-template-columns:1fr 1fr!important}
+ body[data-fl-section="workflow"] .ref-workflow-feature{grid-template-columns:1fr!important}
+ body[data-fl-section="about"]>main,body[data-fl-section="about"] .ref-about-bottom{grid-template-columns:1fr!important}
+ body[data-fl-section="about"] .ref-about-bottom-card:last-child{grid-column:auto!important}
+}
