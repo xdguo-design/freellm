@@ -129,9 +129,10 @@ class SiteVisualSystemTests(unittest.TestCase):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         today = page.index('class="today-latest"')
         offers = page.index('id="catalog-offers"')
-        student = page.index('id="student-offers"')
+        compare = page.index('id="catalog-compare"')
         self.assertLess(today, offers, "TODAY / LATEST must appear before the full resource catalog")
-        self.assertLess(offers, student, "student benefits must remain secondary to the resource catalog")
+        self.assertLess(offers, compare, "comparison utilities must remain secondary to the resource catalog")
+        self.assertNotIn('id="student-offers"', page, "student offers belong in the unified resource catalog")
 
         css = THEME.read_text(encoding="utf-8")
         self.assertIn("grid-template-columns:repeat(3,minmax(0,1fr)) !important", css)

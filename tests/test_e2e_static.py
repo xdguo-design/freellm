@@ -82,7 +82,7 @@ class StaticContractTests(unittest.TestCase):
             'id="catalog-offer-rows"', 'id="catalog-search"',
             'id="catalog-sort"', 'id="catalog-result-count"', 'id="ld-dynamic"',
             "renderOffers", "loadOffers", "showDataError",
-            'id="studentList"', 'id="catalog-download-list"', 'id="catalog-last-checked"',
+            'id="catalog-download-list"', 'id="catalog-last-checked"',
             "offerCategories", "timeWindow",
         ):
             self.assertIn(needle, self.runtime_source)
@@ -659,7 +659,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator(".category-card[data-filter='model'] [data-category-count]").inner_text(), f"{model_count:02d}")
         # 加精 chip 的标签按 data-filter 做 i18n，不能被位置映射串到别的分类名。
         self.assertTrue(page.locator(".filter-strip [data-filter='featured']").inner_text().strip().startswith("◆"))
-        self.assertEqual(page.locator("#studentList .student-item").count(), 2)
+        self.assertEqual(page.locator("#student-offers").count(), 0)
+        page.click(".filter-strip [data-filter='student']")
+        self.assertEqual(self.visible_offers(page), 2)
+        page.click(".filter-strip [data-filter='all']")
+        self.assertEqual(self.visible_offers(page), len(read_offers()))
         self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
         self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
         self.assertEqual(len(page.problems), 0, page.problems)
@@ -710,19 +714,18 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_selector("#catalog-offer-rows .offer")
 
         order = page.evaluate("""() => {
-            const ids = ['today-latest', 'catalog-offers', 'student-offers', 'catalog-compare'];
+            const ids = ['today-latest', 'catalog-offers', 'catalog-compare'];
             const nodes = {
                 'today-latest': document.querySelector('.today-latest'),
                 'catalog-offers': document.getElementById('catalog-offers'),
-                'student-offers': document.getElementById('student-offers'),
                 'catalog-compare': document.getElementById('catalog-compare'),
             };
             return ids.map(id => [id, Array.from(document.body.querySelectorAll('*')).indexOf(nodes[id])]);
         }""")
         positions = dict(order)
         self.assertLess(positions["today-latest"], positions["catalog-offers"])
-        self.assertLess(positions["catalog-offers"], positions["student-offers"])
-        self.assertLess(positions["student-offers"], positions["catalog-compare"])
+        self.assertLess(positions["catalog-offers"], positions["catalog-compare"])
+        self.assertEqual(page.locator("#student-offers").count(), 0)
         page.close()
 
         checks = (
@@ -898,14 +901,15 @@ class BrowserPageTests(unittest.TestCase):
         hero = page.locator(".catalog-hero").bounding_box()
         today = page.locator(".today-latest").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
-        student = page.locator("#student-offers").bounding_box()
+        compare = page.locator("#catalog-compare").bounding_box()
         self.assertIsNotNone(hero)
         self.assertIsNotNone(today)
         self.assertIsNotNone(offers)
-        self.assertIsNotNone(student)
+        self.assertIsNotNone(compare)
+        self.assertEqual(page.locator("#student-offers").count(), 0)
         self.assertLess(hero["y"], today["y"])
         self.assertLess(today["y"], offers["y"])
-        self.assertLess(offers["y"], student["y"])
+        self.assertLess(offers["y"], compare["y"])
 
         heights = page.eval_on_selector_all(
             "#catalog-offer-rows .offer:not(.hidden)",
