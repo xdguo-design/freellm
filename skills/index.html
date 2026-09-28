@@ -412,5 +412,5 @@
       const adaptFileNavigation = () => { if (window.location.protocol !== 'file:') return; document.querySelectorAll('.top-nav a[href^="/"]').forEach(link => { const path = link.getAttribute('href').split(/[?#]/, 1)[0]; if (!path.endsWith('/')) return; link.setAttribute('href', `../${path.slice(1)}index.html${window.location.search}`); }); };
       adaptFileNavigation(); render();
     })();
-    </script><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260927c"></script>
+    </script><script src="/js/freellm-sync.js?v=20260928a"></script><script src="/js/reference-shell.js?v=20260927c"></script>
 </body></html>

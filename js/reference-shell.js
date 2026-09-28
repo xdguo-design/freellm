@@ -21,7 +21,10 @@
     topbar.className = 'ref-topbar';
     topbar.setAttribute('role', 'search');
     const localeLabel = document.documentElement.lang === 'en' ? '中文' : 'EN';
-    topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a></div>';
+    const topActions = section === 'home'
+      ? '<div class="ref-top-actions"><button class="ref-bell" type="button" aria-label="更新提醒"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><button class="ref-login" type="button">登录</button><a class="primary ref-register" href="https://github.com/signup" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 注册">注册</a></div>'
+      : '<div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a></div>';
+    topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label>' + topActions;
     const rail = body.querySelector(':scope > .fl-site-rail');
     if (rail) rail.insertAdjacentElement('afterend', topbar);
     else body.prepend(topbar);
@@ -31,6 +34,11 @@
       const legacyToggle = document.querySelector('[data-locale-toggle]');
       if (legacyToggle) legacyToggle.click();
     });
+    if (section === 'home') {
+      topbar.querySelector('.ref-login')?.addEventListener('click', () => {
+        window.FreeLLM?.Sync?.authModal?.();
+      });
+    }
 
     let topInput = topbar.querySelector('input');
     const targets = ['#catalog-search','#model-library-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
@@ -137,6 +145,14 @@
 
     if (section === 'home') {
       const hero = $('.catalog-hero'), copy = $('.catalog-hero-copy', hero || document);
+      if (hero && !$('.ref-home-hero-art', hero)) {
+        const art = document.createElement('img');
+        art.className = 'ref-home-hero-art';
+        art.src = '../design/assets/home-hero-art.png';
+        art.alt = '';
+        art.setAttribute('aria-hidden', 'true');
+        hero.prepend(art);
+      }
       if (hero && copy) {
         const badge = $('.hero-badge', copy), title = $('h1', copy), lead = $('.hero-copy', copy);
         if (badge) badge.innerHTML = 'FreeLLM';
@@ -149,27 +165,129 @@
           lead?.insertAdjacentElement('afterend', actions);
         }
       }
+      // The homepage reference has a clean hero-to-stats transition; the two
+      // inserted feature tiles belong to the Skills/workflow destinations.
+      $('.ref-feature-row')?.remove();
+      $('.hero-intel', hero || document)?.setAttribute('data-home-hero-aside', 'hidden');
       const latest = $('.today-latest');
-      if (latest) latest.classList.add('ref-home-stats');
+      if (latest) {
+        latest.classList.add('ref-home-stats');
+        const statIcons = [
+          '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#1788ff" d="M16 2.8 29 10v12L16 29.2 3 22V10z"/><path fill="#62c7ff" d="m16 2.8 13 7.3-13 7.2L3 10z"/><path fill="#0756d9" d="M16 17.3 29 10v12l-13 7.2z"/><path fill="#2f9eff" d="M16 17.3 3 10v12l13 7.2z"/></svg>',
+          '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#985eff" d="m16 2 3.1 8.1L27 13l-7.9 3.1L16 24l-3.1-7.9L5 13l7.9-2.9z"/><path fill="#c69aff" d="m25.7 20 .9 2.5 2.4.9-2.4.9-.9 2.5-.9-2.5-2.5-.9 2.5-.9z"/><path fill="#7a4be8" d="m7 22 .7 2 2 .7-2 .8-.7 2-.8-2-2-.8 2-.7z"/></svg>',
+          '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#14b989" d="M5 13h22v15H5z"/><path fill="#0c9c73" d="M5 13h22v4H5z"/><path fill="#58d6aa" d="M14 13h4v15h-4z"/><path fill="#19bd91" d="M16 13H8.5a3.5 3.5 0 1 1 3.3-4.7L16 13Zm0 0h7.5a3.5 3.5 0 1 0-3.3-4.7L16 13ZM10.8 8.2c-.8-1.1-2.2-.4-1.5.6.5.8 2.6 1.7 4.2 2.2-.6-1.1-1.7-2.1-2.7-2.8Zm10.4 0c.8-1.1 2.2-.4 1.5.6-.5.8-2.6 1.7-4.2 2.2.6-1.1 1.7-2.1 2.7-2.8Z"/></svg>',
+          '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#ff9b20" d="M16 2 28 7v8c0 7.6-4.8 12.7-12 15-7.2-2.3-12-7.4-12-15V7z"/><path fill="#ffd35a" d="M16 2 28 7v8L16 11z"/><path fill="none" stroke="#fff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" d="m10.5 16 3.7 3.7 7.6-8"/></svg>',
+          '<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#f44851" d="M17.4 2.3c1.7 6.1-2.5 7.1-.8 11.6 1.6-.8 2.8-2.1 3.4-4.1 5.2 4.3 8.1 9.1 6.2 14.1-1.5 4.1-5.5 6.3-10.2 6.1C8.9 29.7 4 25.3 4.7 18.8c.5-4.3 3.3-7.2 6.6-10.1-.2 4.1.6 6.1 2.7 7.1 2.7-3 2.8-8.1 3.4-13.5Z"/><path fill="#ff8560" d="M16 17c3.5 2.6 5.1 5 4.4 7.6-.5 1.9-2.1 3-4.5 3-2.7 0-4.4-1.7-4.1-4.2.2-2.1 1.7-4 4.2-6.4Z"/></svg>'
+        ];
+        $$('.today-latest-card', latest).forEach((card, index) => {
+          if (!$('.ref-stat-icon', card)) {
+            const icon = document.createElement('span');
+            icon.className = 'ref-stat-icon';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.innerHTML = statIcons[index] || statIcons[1];
+            card.prepend(icon);
+          }
+        });
+      }
       const featured = $('.featured-section');
+      const categorySection = $('#categories');
+      if (categorySection) {
+        const categoryTitle = $('#categories-title', categorySection);
+        const categoryDescription = $('.section-heading > p', categorySection);
+        const categoryEyebrow = $('.section-heading .eyebrow', categorySection);
+        const categoryGrid = $('.category-grid', categorySection);
+        if (categoryTitle) categoryTitle.textContent = '全新资源';
+        if (categoryDescription) categoryDescription.hidden = true;
+        if (categoryEyebrow) categoryEyebrow.hidden = true;
+        if (categoryGrid) {
+          const categoryItems = [
+            ['all','全部'], ['purpose:model','AI 模型'], ['purpose:tool','AI 工具'],
+            ['purpose:development','开发编程'], ['purpose:image','图像生成'], ['purpose:productivity','生产力'],
+            ['purpose:data','数据分析'], ['purpose:research','学术研究'], ['purpose:design','设计创作'],
+            ['purpose:media','语音视频'], ['purpose:other','更多']
+          ];
+          categoryGrid.innerHTML = categoryItems.map(([filter, label], index) => '<button class="category-card' + (index === 0 ? ' category-card-active' : '') + '" type="button" data-filter="' + filter + '" aria-pressed="' + (index === 0) + '"><strong>' + label + '</strong></button>').join('');
+          categoryGrid.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
+            document.dispatchEvent(new CustomEvent('freellm:filter', { detail: { filter: button.dataset.filter } }));
+          }));
+        }
+        if (categoryTitle && !$('.ref-category-all-link', categorySection)) {
+          const allLink = document.createElement('a');
+          allLink.className = 'ref-category-all-link';
+          allLink.href = '#catalog-offers';
+          allLink.textContent = '全部资源';
+          categoryTitle.insertAdjacentElement('afterend', allLink);
+        }
+      }
+      let homepageNewsSources = [];
       if (featured) {
+        homepageNewsSources = $$('.featured-card', featured).slice(0,4);
         const heading = $('#featured-title', featured), eyebrow = $('.eyebrow', featured);
         if (heading) heading.textContent = '全新资源';
         if (eyebrow) eyebrow.textContent = 'NEW RESOURCES';
+
+        // Reuse the verified directory records for the three cards shown in
+        // the design. This keeps their summaries and destinations in sync
+        // with the resource list instead of duplicating offer data.
+        const renderSpotlight = () => {
+          const offers = $$('#catalog-offer-rows .offer');
+          const spotlightSources = [
+            offers.find(card => /Agnes AI/i.test(clean(card.textContent))),
+            offers.find(card => /GitHub Copilot/i.test(clean(card.textContent))),
+            offers.find(card => /TraeCode CN/i.test(clean(card.textContent)))
+          ].filter(Boolean);
+          if (spotlightSources.length !== 3) return false;
+          const grid = $('.featured-grid', featured);
+          grid.innerHTML = spotlightSources.map(card => {
+            const sourceTitle = clean(card.dataset.name || $('.provider-name', card)?.childNodes[0]?.textContent || 'AI resource');
+            const title = /Agnes AI/i.test(sourceTitle) ? 'Agnes AI' : /GitHub Copilot/i.test(sourceTitle) ? 'GitHub Copilot' : /TraeCode/i.test(sourceTitle) ? 'TraeCode CN' : sourceTitle;
+            const provider = clean(card.dataset.provider || $('.provider-name small', card)?.textContent || title.split('·')[0]);
+            const summary = clean($('.offer-card-model-list', card)?.textContent || $('.offer-card-context', card)?.textContent || $('.offer-card-metric p', card)?.textContent || '查看官方资源说明与当前使用条件。').slice(0, 96);
+            const method = clean($('.offer-card-metric p', card)?.textContent || $('.flag-chip', card)?.textContent || '查看官方使用条件').slice(0, 42);
+            const badge = clean($('.flag-chip.flag-net-region', card)?.textContent || $('.flag-chip.flag-featured', card)?.textContent || '官方资源');
+            const href = $('a.offer-detail-link', card)?.getAttribute('href') || '#catalog-offers';
+            const mark = provider.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+            const logo = $('.provider-icon-img', card)?.getAttribute('src') || '';
+            const markContent = logo ? '<img src="' + safe(logo) + '" alt="">' : safe(mark);
+            return '<article class="ref-spotlight-card"><div class="ref-spotlight-head"><span class="ref-spotlight-mark">' + markContent + '</span><div><strong>' + safe(title) + '</strong><small>' + safe(provider) + '</small></div><span class="ref-spotlight-badge">' + safe(badge) + '</span></div><p>' + safe(summary) + '</p><div class="ref-spotlight-tags"><span>' + safe(method) + '</span><span>官方来源可查</span></div><footer><span>已收录资源</span><a href="' + safe(href) + '">立即使用 <b aria-hidden="true">→</b></a></footer></article>';
+          }).join('');
+          featured.classList.add('ref-spotlight');
+          return true;
+        };
+        if (!renderSpotlight()) {
+          const offerList = $('#catalog-offer-rows');
+          if (offerList) {
+            const observer = new MutationObserver(() => {
+              if (renderSpotlight()) observer.disconnect();
+            });
+            observer.observe(offerList, { childList: true, subtree: true });
+            window.setTimeout(() => observer.disconnect(), 5000);
+          }
+        }
       }
       if (featured && !$('.ref-home-news')) {
-        const cards = $$('.featured-card').slice(0,4), offer = $('.offer-card,.resource-card');
-        const pool = offer && !cards.includes(offer) ? [...cards, offer] : cards;
+        const offer = $$('#catalog-offer-rows .offer')[0];
+        const pool = offer ? [...homepageNewsSources, offer] : homepageNewsSources;
         const news = document.createElement('section');
         news.className = 'ref-home-news';
         news.innerHTML = '<div class="ref-home-news-head"><h2>最新动态</h2><a href="/logs/">查看全部 →</a></div><div class="ref-home-news-grid">' +
-          pool.slice(0,5).map(card => '<article class="ref-home-news-card"><strong>' + safe($('h2,h3', card)?.textContent || 'AI 资源') + '</strong><p>' + safe($('p', card)?.textContent || $('small', card)?.textContent || '最近核验的 AI 资源').slice(0,58) + '</p></article>').join('') + '</div>';
-        featured.insertAdjacentElement('beforebegin', news);
+          pool.slice(0,5).map(card => {
+            const title = clean($('h2,h3,.provider-name strong', card)?.textContent || 'AI 资源');
+            const summary = clean($('p', card)?.textContent || $('.offer-card-metric p', card)?.textContent || $('small', card)?.textContent || '官方资源与使用入口').slice(0, 58);
+            const initials = title.split(/\s+/).map(part => part[0]).join('').slice(0,2).toUpperCase();
+            const logo = $('.resource-logo', card);
+            const icon = logo ? logo.outerHTML : '<span>' + safe(initials) + '</span>';
+            return '<article class="ref-home-news-card"><div class="ref-home-news-card-head"><span class="ref-home-news-mark">' + icon + '</span><strong>' + safe(title) + '</strong><small>资源动态</small></div><p>' + safe(summary.slice(0, 46)) + '</p></article>';
+          }).join('') + '</div>';
+        const categories = $('#categories');
+        if (latest) latest.insertAdjacentElement('afterend', news);
+        else if (categories) categories.insertAdjacentElement('beforebegin', news);
+        else featured.insertAdjacentElement('beforebegin', news);
       }
       if (featured && !$('.ref-student-banner')) {
         const banner = document.createElement('section');
         banner.className = 'ref-student-banner';
-        banner.innerHTML = '<div><strong>学生专属福利</strong><p>通过学生身份与教育优惠入口，集中查看适合学习、研究与开发的 AI 资源。</p></div><a href="#categories" data-filter="student">查看学生优惠 →</a>';
+        banner.innerHTML = '<div class="ref-student-visual" aria-hidden="true"><img src="../design/assets/student-illustration.png" alt=""></div><div class="ref-student-copy"><strong>学生专属福利</strong><p>完成学生认证，解锁更多优质 AI 资源与专属权益</p></div><div class="ref-student-perks" aria-label="学生福利分类"><span><i>♧</i>教育优惠</span><span><i>▣</i>专属资源</span><span><i>♟</i>学习社区</span><span><i>✦</i>开发工具</span></div><a href="#student-offers" data-filter="student">查看认证入口 <b aria-hidden="true">→</b></a><span class="ref-student-tagline" aria-hidden="true">更好的 AI，<br>从校园开始！</span>';
         featured.insertAdjacentElement('afterend', banner);
       }
     }

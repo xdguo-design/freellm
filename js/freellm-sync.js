@@ -109,6 +109,7 @@
         if (anchor && anchor.parentNode === document.body) document.body.insertBefore(ribbon, anchor);
         else document.body.insertBefore(ribbon, document.body.children[1] || null);
       }
+
     }
 
     function escapeText(value) {
@@ -121,6 +122,21 @@
       document.addEventListener('DOMContentLoaded', addSiteChrome, { once: true });
     } else {
       addSiteChrome();
+    }
+  })();
+
+  /* The lightweight local preview server does not apply vercel.json rewrites. */
+  (function normalizeLocalHomeLinks() {
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') return;
+    function normalize() {
+      document.querySelectorAll('a[href="/"]').forEach(function (link) {
+        link.setAttribute('href', '/design/free-china-ai-index.html');
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', normalize, { once: true });
+    } else {
+      normalize();
     }
   })();
 
@@ -176,9 +192,8 @@
         button.type = 'button';
         button.className = 'fl-site-theme-toggle';
         button.innerHTML =
-          '<span class="fl-theme-moon" aria-hidden="true">☾</span>' +
-          '<span class="fl-theme-sun" aria-hidden="true">☀</span>' +
-          '<span class="fl-theme-label">深色</span>';
+          '<span class="fl-theme-segment fl-theme-sun" aria-hidden="true">☀</span>' +
+          '<span class="fl-theme-segment fl-theme-moon" aria-hidden="true">☾</span>';
         updateThemeButton(button);
         button.addEventListener('click', function () {
           writeTheme(readTheme() === 'dark' ? 'light' : 'dark');
