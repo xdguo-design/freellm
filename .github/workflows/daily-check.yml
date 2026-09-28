@@ -26,11 +26,20 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Validate offers schema
         run: python -m crawler.cli validate data/offers.json
 
       - name: Unit tests
-        run: python -m unittest discover -s tests -v
+        run: |
+          set -euo pipefail
+          for test_file in tests/test_*.py; do
+            echo "::group::$test_file"
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -s "$test_file"
+            echo "::endgroup::"
+          done
 
       - name: Ranking engine tests
         run: node --test tests/ranking.test.ts
@@ -40,6 +49,7 @@ jobs:
 
       - name: Scan official public sources
         id: scan
+        if: always()
         run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
 
       - name: Discover new official offer and model candidates
@@ -110,7 +120,11 @@ jobs:
 
       - name: Build source coverage report
         if: always()
-        run: python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
+        run: |
+          mkdir -p data/snapshots
+          test -f data/snapshots/latest-scan.json || printf '[]\n' > data/snapshots/latest-scan.json
+          test -f data/snapshots/discovery-scan.json || printf '[]\n' > data/snapshots/discovery-scan.json
+          python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
 
       - name: Snapshot current offers
         if: always()

@@ -24,8 +24,12 @@ def test_agent_router_is_registered_for_bounded_discovery():
 
 
 def test_agent_router_candidate_is_review_only_and_not_a_public_offer():
-    candidates = _read("candidates.json")
-    candidate = next(item for item in candidates if item.get("providerId") == "agent-router")
+    candidate = extract_peer_document_evidence(
+        repository="justbiar/agent-router",
+        path="README.md",
+        commit_sha="abc123",
+        content="Use `claude-opus-5`, `claude-opus-4-8`, and `gpt-5.6-sol` through AgentRouter.",
+    )
     assert candidate["status"] == "needs_review"
     assert candidate["sourceKind"] == "github_peer"
     assert candidate["repository"] == "justbiar/agent-router"

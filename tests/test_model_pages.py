@@ -6,6 +6,7 @@ from scripts.build_seo_pages import (
     _exclude_retired_models,
     _load_model_access,
     _model_catalog_row,
+    MODELS_PER_PAGE,
     build_site,
     model_record_groups,
 )
@@ -99,6 +100,36 @@ def test_model_rows_link_only_to_indexable_aggregation_pages(tmp_path):
     assert f'href="/models/{thin}/"' not in all_pages
     last_provider_href = f'href="/providers/{model_slug(models[-1].get("providerId"))}/"'
     assert last_provider_href in all_pages
+
+
+def test_paginated_model_jsonld_only_lists_the_current_page(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    models = _exclude_retired_models(
+        json.loads(MODELS_PATH.read_text(encoding="utf-8")),
+        _load_model_access(OFFERS_PATH),
+    )
+    total_pages = (len(models) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
+
+    for page_num in range(1, total_pages + 1):
+        page_path = (
+            tmp_path / "models" / "all" / "index.html"
+            if page_num == 1
+            else tmp_path / "models" / "all" / "page" / str(page_num) / "index.html"
+        )
+        page = page_path.read_text(encoding="utf-8")
+        match = re.search(r'<script type="application/ld\\+json">(.*?)</script>', page, re.S)
+        assert match, page_path
+        schema = json.loads(match.group(1))
+        item_list = schema["mainEntity"]
+        elements = item_list["itemListElement"]
+        start = (page_num - 1) * MODELS_PER_PAGE
+        expected_count = len(models[start : start + MODELS_PER_PAGE])
+
+        assert item_list["numberOfItems"] == expected_count
+        assert len(elements) == expected_count
+        assert [item["position"] for item in elements] == list(
+            range(start + 1, start + expected_count + 1)
+        )
 
 
 def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_path):

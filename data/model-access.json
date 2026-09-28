@@ -3993,5 +3993,80 @@
     "lastVerifiedAt": "2026-09-22",
     "verificationStatus": "verified",
     "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-flash",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "gemini-3.8-flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free Tier available; rate limits vary by project/account.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+      "https://ai.google.dev/gemini-api/docs/pricing",
+      "https://ai.google.dev/gemini-api/docs/rate-limits"
+    ],
+    "lastVerifiedAt": "2026-09-21",
+    "verificationStatus": "verified",
+    "notes": "官方模型页与定价页确认 Gemini 3.8 Flash 可走 Gemini API Free Tier；免费层速率限制按项目/账号变化。"
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "gemini-3.8-live",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free Tier available; rate limits vary by project/account.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live",
+      "https://ai.google.dev/gemini-api/docs/pricing",
+      "https://ai.google.dev/gemini-api/docs/rate-limits"
+    ],
+    "lastVerifiedAt": "2026-09-21",
+    "verificationStatus": "verified",
+    "notes": "官方模型页与定价页确认 Gemini 3.8 Live 可走 Gemini API Free Tier；Live API 输出支持文本与音频。"
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live-extended-thinking",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "gemini-3.8-live-extended-thinking",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free Tier available; rate limits vary by project/account.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking",
+      "https://ai.google.dev/gemini-api/docs/pricing",
+      "https://ai.google.dev/gemini-api/docs/rate-limits"
+    ],
+    "lastVerifiedAt": "2026-09-21",
+    "verificationStatus": "verified",
+    "notes": "官方模型页与定价页确认 Gemini 3.8 Live Extended Thinking 可走 Gemini API Free Tier。"
+  },
+  {
+    "modelId": "groq/qwen-qwen3-8-27b",
+    "providerId": "groq",
+    "registrationProfileId": "groq-api",
+    "modelSearchName": "qwen/qwen3.8-27b",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free plan: 30 RPM · 1K RPD · 8K TPM · 200K TPD.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://console.groq.com/docs/model/qwen/qwen3.8-27b",
+      "https://console.groq.com/docs/rate-limits"
+    ],
+    "lastVerifiedAt": "2026-09-21",
+    "verificationStatus": "verified",
+    "notes": "Groq 官方模型页与 Free Plan Limits 确认 qwen/qwen3.8-27b 可用，免费层限制为 30 RPM、1K RPD、8K TPM、200K TPD。"
   }
 ]

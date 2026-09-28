@@ -1,0 +1,59 @@
+name: quality-gate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Validate offers schema
+        run: python -m crawler.cli validate data/offers.json
+
+      - name: Run full Python regression suite
+        run: |
+          set -uo pipefail
+          status=0
+          for test_file in tests/test_*.py; do
+            echo "::group::$test_file"
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -s "$test_file" || status=1
+            echo "::endgroup::"
+          done
+          exit "$status"
+
+      - name: Run ranking engine tests
+        run: node --test tests/ranking.test.ts
+
+      - name: Verify generated artifacts
+        run: |
+          node scripts/generate_ranking.ts --check
+          python scripts/build_tools_index.py --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+
+      - name: Check deployment payload
+        run: python scripts/check_deploy_size.py
+
+      - name: Check site health
+        run: python scripts/site_health.py --report site-health-report.json
+
+      - name: Check AdSense coverage
+        run: python scripts/check_adsense.py --report adsense-report.json

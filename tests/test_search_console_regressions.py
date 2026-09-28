@@ -16,8 +16,18 @@ META_ROBOTS_RE = re.compile(
 )
 
 
+NON_PUBLIC_HTML_PREFIXES = (
+    ("skills", "test-artifacts"),
+)
+
+
 def _published_html_files() -> list[Path]:
-    pages = list(ROOT.rglob("index.html"))
+    pages = []
+    for path in ROOT.rglob("index.html"):
+        parts = path.relative_to(ROOT).parts
+        if any(parts[: len(prefix)] == prefix for prefix in NON_PUBLIC_HTML_PREFIXES):
+            continue
+        pages.append(path)
     design_home = ROOT / "design" / "free-china-ai-index.html"
     if design_home.exists():
         pages.append(design_home)
@@ -45,6 +55,10 @@ class SearchConsoleRegressionTests(unittest.TestCase):
     in the normal unittest gate so generated artifacts cannot silently
     reintroduce those crawlable duplicates.
     """
+
+    def test_internal_skill_artifacts_are_not_in_vercel_payload(self) -> None:
+        ignored = (ROOT / ".vercelignore").read_text(encoding="utf-8").splitlines()
+        self.assertIn("skills/test-artifacts/", {line.strip() for line in ignored})
 
     def test_published_pages_do_not_emit_locale_query_links(self) -> None:
         offenders: list[str] = []

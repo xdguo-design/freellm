@@ -3344,7 +3344,8 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
       <p class="section-desc">{_locale_pair(description_zh, description_en)}</p>
       <div class="card-grid">{cards}</div>
     </section>'''
-    schema_items = model_catalog if model_catalog else offers
+    schema_items = page_models if model_catalog else offers
+    schema_position_offset = (page_num - 1) * MODELS_PER_PAGE if model_catalog and total_pages > 1 else 0
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -3361,7 +3362,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
             "itemListElement": [
                 {
                     "@type": "ListItem",
-                    "position": index,
+                    "position": schema_position_offset + index,
                     "name": (
                         f'{item.get("provider")} · {item.get("model")}'
                         if model_catalog
@@ -4702,7 +4703,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         replacement = (
             '<div class="stat-row">'
             f'<div class="stat"><strong>{len(offers)}</strong><span><span lang="zh-CN">已核验资源条目</span><span lang="en">verified offers</span></span></div>'
-            f'<div class="stat"><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型目录记录</span><span lang="en">model records</span></span></div>'
+            f'<div class="stat"><strong>{len(model_catalog)}+</strong><span><span lang="zh-CN">模型目录记录</span><span lang="en">model records</span></span></div>'
             f'<div class="stat"><strong>{len(providers)}</strong><span><span lang="zh-CN">厂家目录</span><span lang="en">vendor directory</span></span></div>'
             f'<div class="stat"><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">当前数据 Provider ID</span><span lang="en">active provider IDs</span></span></div>'
             '</div>'
