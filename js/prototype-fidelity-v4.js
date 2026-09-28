@@ -1,6 +1,6 @@
 
 (() => {
-  const boot = () => {
+  const boot = async () => {
     const body = document.body;
     if (!body || body.dataset.prototypeFidelityV4 === '1') return;
     body.dataset.prototypeFidelityV4 = '1';
@@ -12,14 +12,14 @@
 
     if (section === 'models' && $('#model-catalog')) {
       body.classList.add('prototype-model-v4');
-      const rows = $$('#model-catalog .catalog-row');
-      const heroNums = $$('.hero-card strong').map(x => clean(x.textContent));
-      const total = heroNums[0] || String(rows.length);
-      const providers = heroNums[1] || String(new Set(rows.map(r => r.dataset.providerId).filter(Boolean)).size);
-      const items = rows.map((row, i) => ({
+      const rows = $('#model-catalog .catalog-row');
+      const heroNums = $('.hero-card strong').map(x => clean(x.textContent));
+      let items = rows.map((row, i) => ({
         i,
+        id: clean(row.dataset.modelId || $('.model-id', row)?.textContent),
         name: clean($('.model-name strong', row)?.textContent || $('.model-name', row)?.textContent || 'Model'),
         provider: clean($('.provider-filter', row)?.textContent || 'Provider'),
+        providerId: clean(row.dataset.providerId),
         context: clean(row.querySelector('[data-label="上下文长度"]')?.textContent || '—'),
         rate: clean(row.querySelector('[data-label="速率限制"]')?.textContent || '—'),
         cn: clean(row.querySelector('[data-label="中国大陆可用性"]')?.textContent || '待核验'),
@@ -27,6 +27,42 @@
         href: $('.model-name[href]', row)?.getAttribute('href') || '/models/all/',
         official: $('.source-link', row)?.getAttribute('href') || '/models/all/'
       }));
+      try {
+        const response = await fetch('/data/daily-log/2026-09-28.json', { cache: 'no-store' });
+        if (response.ok) {
+          const daily = await response.json();
+          const observed = Array.isArray(daily?.observed?.models) ? daily.observed.models : [];
+          if (observed.length) {
+            const observedIds = new Set(observed.map(x => clean(x.id)).filter(Boolean));
+            items = items.filter(x => observedIds.has(x.id));
+            const known = new Set(items.map(x => x.id));
+            observed.forEach(model => {
+              const id = clean(model.id);
+              if (!id || known.has(id)) return;
+              const sourceUrl = clean(model.sourceUrl) || '/models/all/';
+              items.push({
+                i: items.length,
+                id,
+                name: clean(model.model || id.split('/').pop() || 'Model'),
+                provider: clean(model.provider || model.providerId || 'Provider'),
+                providerId: clean(model.providerId),
+                context: '待补录',
+                rate: '—',
+                cn: '待核验',
+                modalities: [],
+                href: sourceUrl,
+                official: sourceUrl
+              });
+              known.add(id);
+            });
+            items.forEach((item, index) => { item.i = index; });
+          }
+        }
+      } catch (error) {
+        console.debug('FreeLLM daily model refresh skipped', error);
+      }
+      const total = String(items.length || Number(heroNums[0]) || rows.length);
+      const providers = String(new Set(items.map(x => x.providerId || x.provider).filter(Boolean)).size || Number(heroNums[1]) || 0);
       const featured = items.find(x => /MiMo-V2\.6/i.test(x.name)) || items[0];
       const providerOptions = [...new Set(items.map(x => x.provider))].map(x => '<option>' + esc(x) + '</option>').join('');
       const recent = items.slice(0, 5).map(x => '<a class="pf-recent-item" href="' + esc(x.href) + '"><span class="pf-recent-mark">' + esc(x.provider.slice(0,2).toUpperCase()) + '</span><span><strong>' + esc(x.name) + '</strong><small>' + esc(x.provider) + '</small></span></a>').join('');
