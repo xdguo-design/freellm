@@ -61,6 +61,12 @@ class ApiHealthPageTests(unittest.TestCase):
         self.assertIn("https://freellm.top/health/", sitemap)
 
 
+    def test_limited_semantics_are_shared_by_filter_and_action_queue(self):
+        page = PAGE.read_text(encoding="utf-8")
+        self.assertIn("function hasExpiringPolicy(r){return isLimited(r)}", page)
+        self.assertIn("'rate_limited','daily_quota','monthly_credits','permanent_free','free_models','catalog_access'", page)
+
+
 class _LocalSite:
     def __init__(self, directory: Path):
         handler = partial(SimpleHTTPRequestHandler, directory=str(directory))
