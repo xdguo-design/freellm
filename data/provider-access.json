@@ -1891,5 +1891,74 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "计划内永久免费仅对获批机构有效；普通开放平台 Baichuan-M3 Plus 仍按量收费。"
+  },
+  {
+    "providerId": "ppio",
+    "profileId": "ppio-api",
+    "registerUrl": "https://ppio.com/user/register",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "yes",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "wallet",
+    "searchMethod": "official_website_console",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "通过 PPIO 官方邀请注册入口或邀请码完成新用户注册。",
+      "登录后确认 ¥5 新用户免费额度/代金券已经到账。",
+      "创建 API Key，使用 https://api.ppio.com/openai 调用模型；先用最小请求确认优先扣赠送额度。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ppio.com/user/register",
+      "https://ppio.com/user/login",
+      "https://ppio.com/ai-computing/llm-api",
+      "https://ppio.com/legal/model-terms-of-service"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "¥5 是邀请注册型新用户权益，不是普通注册必得；到账、有效期与实名要求需登录后确认。"
+  },
+  {
+    "providerId": "infini-ai",
+    "profileId": "infini-genstudio-api",
+    "registerUrl": "https://cloud.infini-ai.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "登录无问芯穹智算云并创建 GenStudio API Key。",
+      "Embedding 使用 bge-m3 和 /maas/v1/embeddings；Rerank 使用 bge-reranker-v2-m3 和 /maas/v1/rerank。",
+      "调用前确认 FAQ 仍标注 Embedding/Rerank 暂不收费；LLM API 自 2026-03-30 起已按 Token 计费。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://docs.infini-ai.com/support/faq.html",
+      "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html",
+      "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "仅 Embedding/Rerank 当前暂不收费；不要外推到 LLM API。"
   }
 ]

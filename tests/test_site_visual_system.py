@@ -123,7 +123,10 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        self.assertIn(f'<span>资源总览</span><strong>{len(offers)}</strong>', page)
+        total = len(offers)
+        self.assertIn(f'<b id="heroCount">{total}</b>', page)
+        self.assertIn(f'<b data-category-count="all">{total}</b>', page)
+        self.assertIn(f'<p id="catalog-result-count">Showing {total} offers</p>', page)
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")

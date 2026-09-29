@@ -1,0 +1,50 @@
+{
+  "providerId": "infini-ai",
+  "provider": "Infini-AI GenStudio",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "infini-genstudio-embedding-rerank-free"
+  ],
+  "paths": [
+    {
+      "id": "retrieval-free-api",
+      "label": "GenStudio Embedding / Rerank 免费 API",
+      "productType": "api",
+      "prerequisites": [
+        "Infini-AI GenStudio account",
+        "GenStudio API Key"
+      ],
+      "steps": [
+        {
+          "title": "创建 API Key",
+          "detail": "在智算云控制台创建 GenStudio API Key。"
+        },
+        {
+          "title": "Embedding",
+          "detail": "调用 bge-m3 embeddings API。",
+          "command": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'",
+          "expected": "返回 embedding vector。"
+        },
+        {
+          "title": "Rerank",
+          "detail": "调用 bge-reranker-v2-m3 rerank API。",
+          "command": "curl https://cloud.infini-ai.com/maas/v1/rerank -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-reranker-v2-m3\",\"query\":\"apple\",\"documents\":[\"apple\",\"banana\"]}'",
+          "expected": "返回文档相关性排序。"
+        },
+        {
+          "title": "复核价格",
+          "detail": "查看官方 FAQ，确认 Embedding/Rerank 仍暂不收费；不要把 LLM API 标为免费。"
+        }
+      ],
+      "endpoint": "https://cloud.infini-ai.com/maas/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "Use /maas/v1/embeddings for bge-m3 or /maas/v1/rerank for bge-reranker-v2-m3.",
+      "validation": "API 请求成功，且官方 FAQ 仍明确 Embedding/Rerank 暂不收费。",
+      "sourceUrls": [
+        "https://docs.infini-ai.com/support/faq.html",
+        "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html",
+        "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html"
+      ]
+    }
+  ]
+}

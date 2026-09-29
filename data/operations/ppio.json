@@ -1,0 +1,45 @@
+{
+  "providerId": "ppio",
+  "provider": "PPIO",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "ppio-invite-new-user-5cny"
+  ],
+  "paths": [
+    {
+      "id": "invite-credit-api",
+      "label": "PPIO 受邀新用户 ¥5 API 额度",
+      "productType": "api",
+      "prerequisites": [
+        "PPIO invited-new-user account",
+        "¥5 credit visible in account",
+        "PPIO API Key"
+      ],
+      "steps": [
+        {
+          "title": "通过邀请注册",
+          "detail": "使用官方邀请注册链接/邀请码注册，并确认页面显示新用户受邀注册 ¥5 免费额度。"
+        },
+        {
+          "title": "确认到账",
+          "detail": "登录后在账户余额/代金券页确认 ¥5 权益已到账及有效期。"
+        },
+        {
+          "title": "调用 API",
+          "detail": "创建 API Key 后，通过 OpenAI-compatible Base URL 发起最小请求。",
+          "command": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "返回 chat completion；账户赠送额度发生扣减。"
+        }
+      ],
+      "endpoint": "https://api.ppio.com/openai/v1/chat/completions",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "validation": "请求成功并确认扣减来自邀请新用户赠送额度；券失效或余额耗尽后停止按免费入口宣传。",
+      "sourceUrls": [
+        "https://ppio.com/user/register",
+        "https://ppio.com/ai-computing/llm-api",
+        "https://ppio.com/model/ppio-4b"
+      ]
+    }
+  ]
+}
