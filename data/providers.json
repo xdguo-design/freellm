@@ -987,5 +987,29 @@
       "https://platform.baichuan-ai.com/docs-v2/api",
       "https://platform.baichuan-ai.com/prices"
     ]
+  },
+  {
+    "id": "wusrouter",
+    "name": "WusRouter",
+    "aliases": [
+      "WusRouter",
+      "WUSRouter"
+    ],
+    "region": "global",
+    "allowedDomains": [
+      "api.wusrouter.com"
+    ],
+    "discoveryUrls": [
+      "https://api.wusrouter.com/",
+      "https://api.wusrouter.com/api/pricing",
+      "https://api.wusrouter.com/api/status"
+    ],
+    "freeOfferStatus": "needs_review",
+    "freeOfferCheckedAt": "2026-09-29",
+    "freeOfferNote": "Public evidence reported zero-cost WusRouter routes in September 2026, but availability is promotional or daily-limited and FreeLLM has not completed an authenticated end-to-end API call. Keep unpublished until an API-key-backed model-list and chat-completions test passes. Some OpenAI-compatible clients have also reported Cloudflare challenges on /v1/models.",
+    "freeOfferEvidence": [
+      "https://api.wusrouter.com/api/pricing",
+      "https://api.wusrouter.com/api/status"
+    ]
   }
 ]
