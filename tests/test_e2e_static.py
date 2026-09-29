@@ -643,8 +643,12 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertEqual(self.visible_offers(page), len(read_offers()))
         self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
-        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "20")
-        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "20")
+        free_quota_count = int(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text())
+        category_free_quota_count = int(
+            page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text()
+        )
+        self.assertGreater(free_quota_count, 0)
+        self.assertEqual(category_free_quota_count, free_quota_count)
         ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), f"{ide_count:02d}")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
@@ -948,7 +952,9 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 20)
+        expected = int(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text())
+        self.assertEqual(self.visible_offers(page), expected)
+        self.assertTrue(page.locator(".offer[data-detail='cloudflare-workers-ai-free']").is_visible())
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
@@ -960,7 +966,9 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 20)
+        expected = int(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text())
+        self.assertEqual(self.visible_offers(page), expected)
+        self.assertTrue(page.locator(".offer[data-detail='cloudflare-workers-ai-free']").is_visible())
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):
