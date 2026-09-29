@@ -645,8 +645,15 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertEqual(self.visible_offers(page), len(read_offers()))
         self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
-        self.assertEqual(page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(), "20")
-        self.assertEqual(page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(), "20")
+        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
+        self.assertEqual(
+            page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(),
+            f"{free_quota_count:02d}",
+        )
+        self.assertEqual(
+            page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(),
+            f"{free_quota_count:02d}",
+        )
         ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), f"{ide_count:02d}")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
@@ -868,8 +875,16 @@ class BrowserPageTests(unittest.TestCase):
         ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
 
+        qwen_count = page.locator(".offer").evaluate_all(
+            """rows => rows.filter(row => {
+                const query = 'qwen3';
+                return row.dataset.name.toLowerCase().includes(query)
+                    || row.dataset.search.toLowerCase().includes(query)
+                    || row.textContent.toLowerCase().includes(query);
+            }).length"""
+        )
         page.fill("#catalog-search", "Qwen3")
-        self.assertEqual(self.visible_offers(page), 3)
+        self.assertEqual(self.visible_offers(page), qwen_count)
 
         page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
@@ -940,12 +955,13 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
         # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
+        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
         page.fill("#catalog-search", "Qwen3")
         page.click(".filter-strip [data-filter='free_quota']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 20)
+        self.assertEqual(self.visible_offers(page), free_quota_count)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
@@ -953,11 +969,12 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
+        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
         page.click(".filter-strip [data-filter='free_quota']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
-        self.assertEqual(self.visible_offers(page), 20)
+        self.assertEqual(self.visible_offers(page), free_quota_count)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):
