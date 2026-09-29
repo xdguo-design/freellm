@@ -71,5 +71,38 @@ class FetchTests(unittest.TestCase):
         opener.assert_called_once()
 
 
+    def test_public_page_accepts_json_pricing_evidence(self):
+        class Headers:
+            def get_content_type(self):
+                return "application/json"
+
+            def get_content_charset(self):
+                return "utf-8"
+
+        class Response:
+            headers = Headers()
+
+            def __init__(self):
+                self.chunks = [b'{"models":[{"name":"glm","price":"free"}]}', b""]
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, size):
+                return self.chunks.pop(0) if self.chunks else b""
+
+        with patch("crawler.fetch.DIRECT_OPENER.open", return_value=Response()):
+            result = fetch_public_page(
+                "https://api.example.com/api/pricing",
+                ["api.example.com"],
+            )
+
+        self.assertEqual(result["status"], "ok")
+        self.assertIn("free", result["evidence"].lower())
+
+
 if __name__ == "__main__":
     unittest.main()
