@@ -8077,5 +8077,173 @@
         }
       ]
     }
+  },
+  {
+    "id": "cloudflare-workers-ai-free",
+    "order": 64,
+    "date": "2026-09-29",
+    "name": "Cloudflare Workers AI free daily allocation",
+    "providerMark": "CF",
+    "provider": "Cloudflare Workers AI",
+    "providerMeta": "Cloudflare Developer Platform · Global",
+    "model": "Workers Free eligible models",
+    "modelMeta": "10,000 Neurons/day · OpenAI-compatible API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用 Cloudflare Workers Free 的每日 10,000 Neurons 免费额度，通过 OpenAI-compatible endpoint 调用当前 Free-plan 可用模型",
+      "prerequisites": [
+        "Cloudflare account",
+        "Workers AI API Token",
+        "Cloudflare Account ID"
+      ],
+      "steps": [
+        "注册 Cloudflare 账号并进入 Workers AI，创建 Workers AI API Token 并复制 Account ID。",
+        "在官方模型目录/价格页确认目标模型支持 Workers Free；部分前沿模型要求 Workers Paid 或预付 AI Gateway credits。",
+        "使用账户专属 /ai/v1 OpenAI-compatible base URL 调用 Chat Completions。",
+        "免费额度每日 UTC 00:00 重置；达到 10,000 Neurons 后 Workers Free 的后续请求会失败，不会自动产生超额费用。"
+      ],
+      "endpoint": "https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}",
+      "examples": {
+        "curl": "curl https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1/chat/completions -H 'Authorization: Bearer ${CLOUDFLARE_API_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"@cf/zai-org/glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/"
+    },
+    "kicker": "10K NEURONS / DAY",
+    "badges": [
+      "DAILY FREE",
+      "OPENAI COMPATIBLE",
+      "NO OVERAGE ON FREE"
+    ],
+    "freeSummary": "Workers Free 每天提供 10,000 Neurons 免费额度，UTC 00:00 重置；超过额度后请求失败，需升级 Workers Paid 才能继续。",
+    "validitySummary": "Ongoing daily allocation · model eligibility can change",
+    "accessSummary": "Cloudflare account + API Token + Account ID",
+    "checkedSummary": "2026-09-29 / official Workers AI pricing + OpenAI compatibility docs",
+    "title": "Cloudflare Workers AI · 每天 10,000 Neurons 免费 API",
+    "why": "Cloudflare Workers AI 官方定价页明确 Free 与 Paid Workers 计划每天都包含 10,000 Neurons 免费额度，UTC 00:00 重置；Workers Free 超额后请求直接失败。官方 OpenAI compatibility 文档提供 /v1/chat/completions 和 /v1/embeddings。需要注意：部分高资源模型已要求 Workers Paid 或预付 AI Gateway credits，因此 FreeLLM 只把“每日免费额度 + 当前 Free-plan 可用模型”作为免费入口，不宣称全部模型都能在 Free 计划调用。",
+    "mechanism": "Daily shared Workers AI allocation of 10,000 Neurons on Workers Free, reset at 00:00 UTC",
+    "validity": "Ongoing platform free allocation; individual model eligibility can change",
+    "access": "Create a Workers AI API token and use the account-specific OpenAI-compatible base URL",
+    "command": "curl https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1/chat/completions -H \"Authorization: Bearer $CLOUDFLARE_API_TOKEN\" -H \"Content-Type: application/json\" -d '{\"model\":\"@cf/zai-org/glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://dash.cloudflare.com/sign-up",
+    "registerLabel": "Open Cloudflare Workers AI",
+    "links": [
+      [
+        "Workers AI pricing",
+        "https://developers.cloudflare.com/workers-ai/platform/pricing/"
+      ],
+      [
+        "OpenAI-compatible endpoints",
+        "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/"
+      ],
+      [
+        "REST API quickstart",
+        "https://developers.cloudflare.com/workers-ai/get-started/rest-api/"
+      ],
+      [
+        "Paid-plan model restrictions",
+        "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+      ]
+    ],
+    "originCountry": "United States",
+    "availability": "Global Cloudflare Developer Platform subject to account/region/service restrictions",
+    "freeMechanism": "daily_quota",
+    "pricingModel": "daily_quota",
+    "freePolicy": {
+      "type": "daily_quota",
+      "amount": 10000,
+      "unit": "neurons",
+      "period": "day",
+      "reset": "00:00 UTC"
+    },
+    "quota": "10,000 Neurons/day shared across Workers AI usage; model-specific neuron cost determines effective requests/tokens",
+    "renewal": "Resets daily at 00:00 UTC",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Cloudflare Workers AI and selected model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/",
+      "https://developers.cloudflare.com/workers-ai/get-started/rest-api/",
+      "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+    ],
+    "evidence": "Cloudflare Workers AI official pricing (checked 2026-09-29) states 10,000 Neurons/day free allocation, reset at 00:00 UTC, with Workers Free requests failing after exhaustion. Official OpenAI compatibility docs support /v1/chat/completions and /v1/embeddings. The July 28 changelog confirms selected resource-intensive models require Workers Paid while models such as GLM-4.7-Flash, Gemma 4 26B and Nemotron 3 120B remain on Workers Free.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Current paid-plan-restricted examples include Kimi K2.6/K2.7 Code, GLM-5.2 and newer resource-intensive models; the paid-only list can expand. Always check the current model catalog/pricing before advertising a specific model as Free-plan eligible.",
+    "freeModels": [
+      {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "quota": "Uses shared 10,000 Neurons/day",
+        "note": "Cloudflare July 2026 changelog explicitly lists it as remaining available on Workers Free.",
+        "sourceUrl": "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+      },
+      {
+        "model": "@cf/google/gemma-4-26b-a4b-it",
+        "quota": "Uses shared 10,000 Neurons/day",
+        "note": "Explicit Workers Free example in official changelog.",
+        "sourceUrl": "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+      },
+      {
+        "model": "@cf/nvidia/nemotron-3-120b-a12b",
+        "quota": "Uses shared 10,000 Neurons/day",
+        "note": "Explicit Workers Free example in official changelog.",
+        "sourceUrl": "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Cloudflare Workers AI 10,000 Neurons/天免费额度、重置规则、超额行为和 OpenAI-compatible API。",
+      "method": [
+        "读取 Workers AI 官方定价页，确认 Workers Free 每天 10,000 Neurons、UTC 00:00 重置和超额后请求失败。",
+        "读取 OpenAI-compatible endpoint 文档，确认 /v1/chat/completions 与 /v1/embeddings。",
+        "读取 REST API quickstart，确认 API Token + Account ID 获取流程。",
+        "读取官方 changelog，确认部分模型已要求 Workers Paid，同时抽查仍可用于 Workers Free 的模型示例。",
+        "当前没有 Cloudflare API Token/Account ID，因此未执行真实推理。"
+      ],
+      "result": "官方公开预检通过：每日免费额度、重置/停止规则、OpenAI-compatible API 与模型付费限制均有官方资料。",
+      "limitations": "未使用真实 Cloudflare 账号，未验证当天剩余 Neurons、目标模型实时可用性、具体模型当前速率限制和真实响应。",
+      "evidence": [
+        {
+          "label": "Workers AI pricing",
+          "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/"
+        },
+        {
+          "label": "OpenAI compatibility",
+          "url": "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/"
+        },
+        {
+          "label": "Workers Paid model restrictions",
+          "url": "https://developers.cloudflare.com/changelog/post/2026-07-28-models-require-workers-paid/"
+        }
+      ]
+    }
   }
 ]

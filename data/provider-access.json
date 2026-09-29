@@ -210,31 +210,33 @@
     "accountRequired": "yes",
     "emailRequired": "unknown",
     "phoneRequired": "unknown",
-    "identityRequired": "unknown",
+    "identityRequired": "no",
     "cardRequired": "no",
     "billingRequired": "no",
     "apiKeyRequired": "yes",
     "licenseAcceptance": "model_dependent",
     "modelApproval": "unknown",
-    "gpuRequired": "unknown",
-    "overageBehavior": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
     "searchMethod": "official_model_catalog",
     "regionPolicyId": "policy-unknown-default",
     "registrationSteps": [
-      "注册 Cloudflare 账号并记录 Account ID。",
-      "在 My Profile → API Tokens 创建带 Workers AI 权限的 API Token。",
-      "调用 Workers AI，免费每日 10,000 Neurons 全模型共享。"
+      "注册 Cloudflare 免费账号并进入 Workers AI。",
+      "选择 Use REST API，创建 Workers AI API Token 并记录 Account ID。",
+      "使用账户专属 /ai/v1 OpenAI-compatible endpoint 调用当前 Workers Free 可用模型。",
+      "每天共享 10,000 Neurons 免费额度，UTC 00:00 重置；Workers Free 用尽后请求失败。"
     ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
       "https://developers.cloudflare.com/workers-ai/platform/pricing/",
-      "https://developers.cloudflare.com/workers-ai/"
+      "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/",
+      "https://developers.cloudflare.com/workers-ai/get-started/rest-api/"
     ],
-    "lastVerifiedAt": "2026-09-09",
-    "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "免费层每日 10,000 Neurons、无需信用卡；超出需 Workers Paid 计划。逐模型可用性会变化，以官方模型目录为准。"
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "confidence": "high",
+    "notes": "部分资源密集型模型需要 Workers Paid 或预付 AI Gateway credits；不要把每天 10,000 Neurons 免费额度解释成所有模型均可在 Free 计划调用。"
   },
   {
     "providerId": "cohere",

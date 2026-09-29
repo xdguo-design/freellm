@@ -1,0 +1,56 @@
+{
+  "providerId": "cloudflare-workers-ai",
+  "provider": "Cloudflare Workers AI",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "cloudflare-workers-ai-free"
+  ],
+  "paths": [
+    {
+      "id": "workers-free-openai",
+      "label": "Workers Free 10K Neurons/day OpenAI API",
+      "productType": "api",
+      "prerequisites": [
+        "Cloudflare account",
+        "Workers AI API Token",
+        "Cloudflare Account ID",
+        "Free-plan eligible model"
+      ],
+      "steps": [
+        {
+          "title": "确认模型资格",
+          "detail": "先看当前 Workers AI 模型目录/价格页，确认目标模型不要求 Workers Paid。"
+        },
+        {
+          "title": "创建 API Token",
+          "detail": "Dashboard → Workers AI → Use REST API → Create a Workers AI API Token，并复制 Account ID。"
+        },
+        {
+          "title": "调用 OpenAI-compatible API",
+          "detail": "把 Account ID 放入账户专属 base URL，使用 Bearer API Token。",
+          "command": "curl https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1/chat/completions -H 'Authorization: Bearer ${CLOUDFLARE_API_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"@cf/zai-org/glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "expected": "HTTP 200；Workers AI dashboard 的 Neurons 使用量增加。"
+        },
+        {
+          "title": "检查日额度",
+          "detail": "免费额度每日 UTC 00:00 重置；达到 10,000 Neurons 后 Free 计划后续请求应失败而非自动产生超额账单。"
+        }
+      ],
+      "endpoint": "https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1/chat/completions",
+      "auth": "Authorization: Bearer API token",
+      "example": "Use the account-specific OpenAI-compatible URL shown in Workers AI REST API setup and a model currently eligible for Workers Free.",
+      "validation": "请求成功、dashboard Neurons 增加；超过每日 10,000 Neurons 时 Free 计划请求失败。若模型返回 paid-plan-required 403，应从免费模型列表移除。",
+      "limits": "10,000 Neurons/day free allocation, reset 00:00 UTC; model eligibility and model-specific rate/capacity limits can change.",
+      "commonIssues": [
+        "部分 Kimi/GLM/DeepSeek 前沿模型需要 Workers Paid。",
+        "Neuron 消耗按模型不同，10,000 Neurons 不等于固定 Token 数。",
+        "429 也可能是容量不足，不一定只是免费额度耗尽。"
+      ],
+      "sourceUrls": [
+        "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+        "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/",
+        "https://developers.cloudflare.com/workers-ai/get-started/rest-api/"
+      ]
+    }
+  ]
+}
