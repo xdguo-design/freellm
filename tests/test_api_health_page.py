@@ -25,6 +25,8 @@ class ApiHealthPageTests(unittest.TestCase):
             "dataset.p0Order",
             "dataset.p1Order",
             "dataset.p2Order",
+            'id="m-public"',
+            'id="m-keyed"',
             'id="m-p0"',
             'id="m-p1"',
             'id="m-p2"',
@@ -143,6 +145,19 @@ class ApiHealthBrowserTests(unittest.TestCase):
             ["z-ai-zhipu-ai", "cloudflare-workers-ai", "amd-radeon-cloud"],
         )
         self.assertIn("缺公开端点检测", rows.first.inner_text())
+
+    def test_endpoint_summary_and_row_badges_distinguish_public_from_key_required(self):
+        page = self.load_health()
+        self.assertEqual(page.locator("#m-alive").inner_text(), "18")
+        self.assertEqual(page.locator("#m-public").inner_text(), "6")
+        self.assertEqual(page.locator("#m-keyed").inner_text(), "12")
+
+        openrouter = page.locator('.health-row[data-id="openrouter-free"]')
+        groq = page.locator('.health-row[data-id="groq-free"]')
+        amd = page.locator('.health-row[data-id="amd-radeon-cloud-free"]')
+        self.assertIn("公开可读", openrouter.locator(".badge").first.inner_text())
+        self.assertIn("需 KEY", groq.locator(".badge").first.inner_text())
+        self.assertIn("未检测", amd.locator(".badge").first.inner_text())
 
     def test_priority_metrics_and_filters_partition_actionable_providers(self):
         page = self.load_health()
