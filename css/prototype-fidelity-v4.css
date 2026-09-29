@@ -444,3 +444,24 @@ html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"]
     width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;
   }
 }
+
+
+/* Compact the Skills hero on phones; the validation summary is repeated below. */
+@media(max-width:800px){
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"] .skills-hero{
+    display:block!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;
+    min-height:0!important;padding:20px 16px!important;
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"] .skills-hero>div{
+    width:100%!important;max-width:100%!important;min-width:0!important;
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"] .skills-hero h1{
+    width:auto!important;max-width:100%!important;font-size:38px!important;line-height:1.02!important;
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"] .skills-hero h1::after{
+    font-size:20px!important;line-height:1.2!important;
+  }
+  html.fl-pastel-ui body.fl-ui-v2[data-reference-style="v1"][data-fl-section="skills"] .skills-hero .hero-note{
+    display:none!important;
+  }
+}
