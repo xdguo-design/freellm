@@ -12,8 +12,8 @@
 
     if (section === 'models' && $('#model-catalog')) {
       body.classList.add('prototype-model-v4');
-      const rows = $('#model-catalog .catalog-row');
-      const heroNums = $('.hero-card strong').map(x => clean(x.textContent));
+      const rows = $$('#model-catalog .catalog-row');
+      const heroNums = $$('.hero-card strong').map(x => clean(x.textContent));
       let items = rows.map((row, i) => ({
         i,
         id: clean(row.dataset.modelId || $('.model-id', row)?.textContent),
