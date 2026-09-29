@@ -19,6 +19,12 @@ class ApiHealthPageTests(unittest.TestCase):
             "providerActionItems",
             "actionPriorityRank",
             "priorityCounts",
+            "actionKeysForLevel",
+            "priorityOrderedRecords",
+            "rowsForCurrentFilter",
+            "dataset.p0Order",
+            "dataset.p1Order",
+            "dataset.p2Order",
             'id="m-p0"',
             'id="m-p1"',
             'id="m-p2"',
@@ -147,41 +153,47 @@ class ApiHealthBrowserTests(unittest.TestCase):
         self.assertEqual(page.locator("#f-p1").inner_text(), "7")
         self.assertEqual(page.locator("#f-p2").inner_text(), "11")
 
-        expected = {
+        expected_provider_order = {
             "p0": [
-                "amd-radeon-cloud-free",
-                "catalog-cloudflare-workers-ai",
-                "catalog-z-ai",
+                "z-ai-zhipu-ai",
+                "cloudflare-workers-ai",
+                "amd-radeon-cloud",
             ],
             "p1": [
+                "aliyun-qwen",
+                "cerebras",
+                "opencode",
                 "sensecore",
-                "opencode-zen-free",
-                "aliyun-qwen-free-quota",
-                "cerebras-free",
-                "stepfun-limited-time-free",
-                "dots-api-free",
-                "atria-dawn-preview",
+                "atria-asi",
+                "stepfun",
+                "dots-api-cn",
             ],
             "p2": [
-                "longcat-2-0",
-                "google-ai-studio-free",
-                "groq-free",
-                "openrouter-free",
-                "mistral-free-mode",
-                "cohere-trial-key",
-                "hf-inference-free",
-                "siliconflow-free-models",
-                "modelscope-api-inference-free",
-                "agnes-ai-free",
-                "catalog-nvidia-nim",
+                "cohere",
+                "google-gemini",
+                "groq",
+                "huggingface",
+                "meituan-longcat",
+                "mistral-ai",
+                "modelscope",
+                "openrouter",
+                "siliconflow",
+                "agnes-ai",
+                "nvidia-nim",
             ],
         }
-        for priority, expected_ids in expected.items():
+        for priority, expected_provider_ids in expected_provider_order.items():
+            action_order = page.locator("#action-list").get_attribute(
+                f"data-{priority}-order"
+            ).split(",")
+            self.assertEqual(action_order, expected_provider_ids)
+
             page.locator(f'[data-filter="{priority}"]').click()
-            visible_ids = page.locator("#channel-list .health-row").evaluate_all(
-                "els => els.map(el => el.dataset.id)"
-            )
-            self.assertEqual(visible_ids, expected_ids)
+            visible_provider_ids = page.locator(
+                "#channel-list .health-row"
+            ).evaluate_all("els => els.map(el => el.dataset.providerId)")
+            self.assertEqual(visible_provider_ids, action_order)
+            self.assertEqual(visible_provider_ids, expected_provider_ids)
 
     def test_cors_failure_is_aggregated_and_promoted_to_p0(self):
         page = self.load_health()
