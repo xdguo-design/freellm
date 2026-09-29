@@ -1,0 +1,31 @@
+name: tmp-regenerate-dev-convergence
+on:
+  push:
+    branches:
+      - release/dev-convergence-20260929
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regenerate managed static output
+        run: |
+          python scripts/build_tools_index.py
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+      - name: Commit generated output and remove temporary workflow
+        run: |
+          rm -f .github/workflows/tmp-regenerate-dev-convergence.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build: regenerate release candidate output"
+          git push
