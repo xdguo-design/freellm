@@ -429,3 +429,16 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero{
     position:relative;left:-204px;width:calc(100% + 204px)!important;
   }
 }
+
+/* Match the approved compact, single-line workflow headline. */
+body[data-reference-style="v1"][data-fl-section="workflow"] .skill-lab-page{padding-top:0!important;}
+body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero{
+  padding-top:14px!important;padding-bottom:14px!important;
+}
+body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1{
+  font-size:clamp(40px,3.5vw,50px)!important;line-height:1.05!important;margin:7px 0 12px!important;white-space:nowrap!important;
+}
+body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero-actions{margin-top:14px!important;}
+@media(max-width:700px){
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1{white-space:normal!important;}
+}
