@@ -18,6 +18,13 @@ class ApiHealthPageTests(unittest.TestCase):
             "actionReasons",
             "providerActionItems",
             "actionPriorityRank",
+            "priorityCounts",
+            'id="m-p0"',
+            'id="m-p1"',
+            'id="m-p2"',
+            'data-filter="p0"',
+            'data-filter="p1"',
+            'data-filter="p2"',
             "data-priority",
             "缺公开端点检测",
             "CORS 快检失败",
@@ -124,8 +131,57 @@ class ApiHealthBrowserTests(unittest.TestCase):
         self.assertEqual(len(provider_ids), len(set(provider_ids)))
         rank = {"P0": 0, "P1": 1, "P2": 2}
         self.assertEqual([rank[p] for p in priorities], sorted(rank[p] for p in priorities))
-        self.assertEqual(priorities[0], "P0")
+        self.assertEqual(priorities[:4], ["P0", "P0", "P0", "P1"])
+        self.assertEqual(
+            provider_ids[:3],
+            ["z-ai-zhipu-ai", "cloudflare-workers-ai", "amd-radeon-cloud"],
+        )
         self.assertIn("缺公开端点检测", rows.first.inner_text())
+
+    def test_priority_metrics_and_filters_partition_actionable_providers(self):
+        page = self.load_health()
+        self.assertEqual(page.locator("#m-p0").inner_text(), "3")
+        self.assertEqual(page.locator("#m-p1").inner_text(), "7")
+        self.assertEqual(page.locator("#m-p2").inner_text(), "11")
+        self.assertEqual(page.locator("#f-p0").inner_text(), "3")
+        self.assertEqual(page.locator("#f-p1").inner_text(), "7")
+        self.assertEqual(page.locator("#f-p2").inner_text(), "11")
+
+        expected = {
+            "p0": [
+                "amd-radeon-cloud-free",
+                "catalog-cloudflare-workers-ai",
+                "catalog-z-ai",
+            ],
+            "p1": [
+                "sensecore",
+                "opencode-zen-free",
+                "aliyun-qwen-free-quota",
+                "cerebras-free",
+                "stepfun-limited-time-free",
+                "dots-api-free",
+                "atria-dawn-preview",
+            ],
+            "p2": [
+                "longcat-2-0",
+                "google-ai-studio-free",
+                "groq-free",
+                "openrouter-free",
+                "mistral-free-mode",
+                "cohere-trial-key",
+                "hf-inference-free",
+                "siliconflow-free-models",
+                "modelscope-api-inference-free",
+                "agnes-ai-free",
+                "catalog-nvidia-nim",
+            ],
+        }
+        for priority, expected_ids in expected.items():
+            page.locator(f'[data-filter="{priority}"]').click()
+            visible_ids = page.locator("#channel-list .health-row").evaluate_all(
+                "els => els.map(el => el.dataset.id)"
+            )
+            self.assertEqual(visible_ids, expected_ids)
 
     def test_cors_failure_is_aggregated_and_promoted_to_p0(self):
         page = self.load_health()
