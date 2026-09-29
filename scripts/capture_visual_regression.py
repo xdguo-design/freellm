@@ -81,7 +81,7 @@ def measure(page, page_name: str) -> dict:
           };
           const selectorByPage = {
             home: '#catalog-offer-rows .offer:not(.hidden)',
-            models: '#model-catalog .catalog-row',
+            models: '.pf-model-card',
             skills: '#skill-grid .skill-card:not([hidden])',
             tools: '#tool-grid .tool-card:not([hidden])',
             workflow: '.workflow-grid .workflow-card',
@@ -95,13 +95,13 @@ def measure(page, page_name: str) -> dict:
             scrollHeight: document.documentElement.scrollHeight,
             rail: rect('.fl-site-rail'),
             topbar: rect('.ref-topbar'),
-            pageFrame: rect(pageName === 'models' ? 'body.model-directory-prototype > header' : '.catalog-app, .models-overview, .skills-page, .tools-page, .skill-lab-page, .daily-log-dashboard, body[data-fl-section="about"] > header'),
-            hero: rect(pageName === 'models' ? 'body.model-directory-prototype > header' : '.catalog-hero, .models-overview, .skills-hero, .tools-hero, .lab-hero, .log-hero, body[data-fl-section="about"] > header'),
-            primaryContent: rect(pageName === 'models' ? '.mdir-toolbar' : pageName === 'workflow' ? '.ref-workflow-stats' : pageName === 'about' ? '.ref-value-row' : '.catalog-hero, .skills-hero, .tools-hero, .log-hero'),
-            featured: rect(pageName === 'models' ? '.catalog-table-wrap' : pageName === 'workflow' ? '.ref-workflow-feature-main' : pageName === 'skills' ? '.ref-skill-feature' : pageName === 'tools' ? '.ref-tool-feature' : pageName === 'updates' ? '.log-overview-grid' : pageName === 'about' ? '.ref-about-process' : '.featured-section'),
-            sideRail: rect(pageName === 'workflow' ? '.ref-workflow-side' : null),
-            prototypeNav: rect(pageName === 'models' ? '.prototype-model-nav' : null),
-            heading: rect(pageName === 'about' ? 'body[data-fl-section="about"] > header h1' : '.catalog-hero h1, .model-directory-prototype .hero-grid h1, .skills-hero h1, .tools-hero h1, .lab-hero h1, .log-hero h1'),
+            pageFrame: rect(pageName === 'models' ? '.pf-model-shell' : '.catalog-app, .skills-page, .tools-page, .skill-lab-page, .daily-log-dashboard, body[data-fl-section="about"] > header'),
+            hero: rect(pageName === 'models' ? '.pf-model-hero' : '.catalog-hero, .skills-hero, .tools-hero, .lab-hero, .log-hero, body[data-fl-section="about"] > header'),
+            primaryContent: rect(pageName === 'models' ? '.pf-model-filter' : pageName === 'workflow' ? '.ref-workflow-stats' : pageName === 'about' ? '.ref-value-row' : '.catalog-hero, .skills-hero, .tools-hero, .log-hero'),
+            featured: rect(pageName === 'models' ? '.pf-feature-model' : pageName === 'workflow' ? '.ref-workflow-feature-main' : pageName === 'skills' ? '.pf-skill-collections' : pageName === 'tools' ? '.ref-tool-feature' : pageName === 'updates' ? '.log-overview-grid' : pageName === 'about' ? '.ref-about-process' : '.featured-section'),
+            sideRail: rect(pageName === 'models' ? '.pf-model-side' : pageName === 'workflow' ? '.ref-workflow-side' : null),
+            prototypeNav: null,
+            heading: rect(pageName === 'models' ? '.pf-model-hero h1' : pageName === 'about' ? 'body[data-fl-section="about"] > header h1' : '.catalog-hero h1, .skills-hero h1, .tools-hero h1, .lab-hero h1, .log-hero h1'),
             legacySkillsHeader: document.querySelector('.skills-header') ? getComputedStyle(document.querySelector('.skills-header')).display : null,
             legacyToolsHeader: document.querySelector('.tools-header') ? getComputedStyle(document.querySelector('.tools-header')).display : null,
             firstRowCardHeights: rowHeights(selectorByPage[pageName]),
@@ -129,8 +129,19 @@ def main() -> int:
                 page.goto(base + route, wait_until="domcontentloaded")
                 page.wait_for_selector(ready, timeout=15000)
                 page.wait_for_selector("body[data-visual-style='aurora']", timeout=15000)
+                v4_ready = {
+                    "home": ".pf-resource-overview",
+                    "models": ".pf-model-shell",
+                    "skills": ".pf-skill-layout",
+                    "tools": ".ref-tool-feature",
+                    "workflow": ".ref-workflow-feature",
+                    "updates": ".ref-log-stats",
+                    "about": ".ref-about-process",
+                }.get(page_name)
+                if v4_ready:
+                    page.wait_for_selector(v4_ready, timeout=15000)
                 page.add_style_tag(content="*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}")
-                page.wait_for_timeout(250)
+                page.wait_for_timeout(120)
                 name = f"{page_name}-{viewport_name}-aurora"
                 report[name] = measure(page, page_name)
                 page.screenshot(path=str(OUT / f"{name}.png"), full_page=False)
