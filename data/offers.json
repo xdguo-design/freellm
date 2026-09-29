@@ -123,17 +123,17 @@
     },
     "kicker": "FREE IDE",
     "badges": [
-      "TRIAL",
-      "14 days + 300 credits"
+      "QWEN3.8 0× UNTIL SEP 30",
+      "100 CREDITS / DAY"
     ],
-    "freeSummary": "Basic model messages + 14-day Pro trial",
-    "validitySummary": "14 days / 300 trial credits",
+    "freeSummary": "Qwen3.8-Flash consumes 0 Credits through 2026-09-30 23:59:59 (UTC+8), plus a manually claimable 100 Credits each day; baseline free/trial access remains.",
+    "validitySummary": "Qwen3.8 promo ends Sep 30 · daily reward valid 30 days",
     "accessSummary": "International",
-    "checkedSummary": "Today / official docs",
+    "checkedSummary": "2026-09-29 / official pricing + announcement",
     "title": "Qoder · Experience plan",
-    "why": "New users can receive a one-time 14-day Pro trial with 300 credits. The free experience plan continues with basic-model messages after the trial.",
-    "mechanism": "Basic-model messages; one-time Pro trial",
-    "validity": "14-day Pro trial; 300 credits",
+    "why": "Qoder's official announcements state that Qwen3.8-Flash runs at 0.0× Credits from Sep 18 through Sep 30, 2026 (UTC+8), and individual users can manually claim 100 Credits per day. The daily reward expires 30 days after each claim.",
+    "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
+    "validity": "Qwen3.8-Flash 0× Credits through 2026-09-30 23:59:59 UTC+8; each claimed daily 100-Credit reward expires after 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -151,20 +151,21 @@
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "300 trial credits; basic-model messages",
+    "quota": "Qwen3.8-Flash at 0× Credits during the promotion; 100 Credits/day claim window for eligible individual users; baseline trial rules still apply",
     "renewal": "Trial terms may change; check the official account page",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://docs.qoder.com/zh/account/pricing"
+      "https://docs.qoder.com/zh/account/pricing",
+      "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
     ],
-    "evidence": "Official pricing documentation describes a free experience plan and one-time 14-day Pro trial with 300 credits.",
+    "evidence": "Official Qoder announcement: Qwen3.8-Flash consumes no Credits from 2026-09-18 10:00 through 2026-09-30 23:59:59 (UTC+8); a new 100-Credit claim window opens daily at 10:00, and each reward is valid for 30 days.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Trial and renewal conditions can change.",
+    "notes": "The Qwen3.8-Flash 0× promotion is time-limited. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -177,7 +178,15 @@
       "cnHost": "qoder.com",
       "cnMs": 475,
       "intlMs": 472
-    }
+    },
+    "freeModels": [
+      {
+        "model": "Qwen3.8-Flash",
+        "quota": "0× Credits through 2026-09-30 23:59:59 UTC+8",
+        "note": "Temporary Qoder promotion; no claim required for model usage.",
+        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+      }
+    ]
   },
   {
     "id": "trae",
@@ -477,8 +486,8 @@
     "providerMark": "GLM",
     "provider": "GLM Coding Plan",
     "providerMeta": "Zhipu AI · China",
-    "model": "GLM-5.2 / GLM-4.7",
-    "modelMeta": "Coding tools only",
+    "model": "GLM-5.3 / GLM-5.3-Flash",
+    "modelMeta": "Coding tools only · 5-hour + weekly limits",
     "type": [
       "coding",
       "promo"
@@ -504,22 +513,22 @@
     },
     "kicker": "CHEAP CODING",
     "badges": [
-      "OFF-PEAK",
-      "5-HOUR RESET"
+      "NIGHT FREE",
+      "DOUBLE-FESTIVAL PROMO"
     ],
-    "freeSummary": "Quota multiplier changes by provider time",
-    "validitySummary": "5-hour windows / weekly limit",
+    "freeSummary": "Sep 3–Oct 7: GLM-5.3-Flash is unlimited in ZCode/AutoClaw from 23:00–09:00 (UTC+8); other Agents get doubled quota. Sep 25–Oct 7 all day uses off-peak 50% point consumption.",
+    "validitySummary": "Night promo through Oct 7 · 5-hour + weekly limits",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official docs",
+    "checkedSummary": "2026-09-29 / official Coding Plan docs",
     "title": "GLM Coding Plan",
-    "why": "The official FAQ documents time-dependent quota consumption. The product converts the provider’s UTC+8 window into the visitor’s local time rather than claiming that every midnight is cheaper.",
-    "mechanism": "Off-peak model calls consume 50% of base credits; peak hours are Mon-Fri 14:00-18:00 (UTC+8)",
-    "validity": "5-hour windows + weekly limit",
+    "why": "Current official GLM Coding Plan docs list GLM-5.3 and GLM-5.3-Flash. The Sep 3–Oct 7 night campaign gives unlimited GLM-5.3-Flash usage in ZCode and AutoClaw from 23:00–09:00 UTC+8, while other Agents receive doubled quota; Sep 25–Oct 7 uses off-peak point consumption all day.",
+    "mechanism": "Base plan has 5-hour and weekly point caps; off-peak model calls consume 50% of base points. During the Sep 25–Oct 7 double-festival campaign, the off-peak rule applies all day; the Sep 3–Oct 7 night campaign adds GLM-5.3-Flash unlimited use in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
+    "validity": "Campaigns end 2026-10-07; base plan keeps rolling 5-hour and weekly limits",
     "access": "China account; supported tools only",
     "command": "Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.",
     "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
     "registerLabel": "Register / open GLM Coding",
-    "timeWindow": "Provider peak: 14:00–18:00 UTC+8. Use the remaining window for the lower multiplier; the exact promotion can change.",
+    "timeWindow": "Base peak: Mon–Fri 14:00–18:00 UTC+8. Sep 25–Oct 7: all-day off-peak point rate. Sep 3–Oct 7: 23:00–09:00 UTC+8 GLM-5.3-Flash unlimited in ZCode/AutoClaw; other supported Agents receive doubled quota.",
     "links": [
       [
         "Official FAQ",
@@ -533,7 +542,7 @@
     "originCountry": "China",
     "availability": "China account; supported tools only",
     "freeMechanism": "first_month_promo",
-    "quota": "Every-5-hour + weekly credit caps (Lite 2,000/10,000 - Pro 12,000/60,000 - Max 28,000/140,000); off-peak calls cost 50%",
+    "quota": "Lite 2,000/10,000, Pro 12,000/60,000, Max 28,000/140,000 points (5-hour/weekly); promotions temporarily improve effective quota through 2026-10-07",
     "renewal": "Plan and time windows are provider-controlled",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
@@ -542,12 +551,12 @@
       "https://docs.bigmodel.cn/cn/coding-plan/overview",
       "https://docs.bigmodel.cn/cn/coding-plan/faq"
     ],
-    "evidence": "Official overview: “套餐同时设有每 5 小时和每周额度上限” and “非高峰时段内，模型调用按基础积分消耗的 50% 抵扣。高峰时段：每周一至周五的 14:00～18:00 （UTC+8）”",
+    "evidence": "Official Coding Plan overview (checked 2026-09-29) lists GLM-5.3 and GLM-5.3-Flash, 5-hour + weekly caps, 50% off-peak point consumption, all-day off-peak consumption Sep 25–Oct 7, and a Sep 3–Oct 7 night campaign with unlimited GLM-5.3-Flash in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Never describe this as a universal local-midnight discount.",
+    "notes": "Campaign benefits are temporary and tool-specific; do not describe them as a general-purpose free GLM API.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -566,17 +575,17 @@
     "id": "longcat-2-0",
     "order": 7,
     "date": "2026-09-06",
-    "name": "LongCat-2.0",
+    "name": "LongCat-2.5 Preview / LongCat-2.0",
     "providerMark": "LC",
     "provider": "LongCat",
     "providerMeta": "Meituan · API + open weights",
-    "model": "LongCat-2.0",
-    "modelMeta": "API · Open weights",
+    "model": "LongCat-2.5-Preview · LongCat-2.0",
+    "modelMeta": "Official API · LongCat-2.0 open weights",
     "contextWindow": {
-      "tokens": 262144,
-      "en": "256K tokens",
-      "zh": "256K tokens",
-      "sourceUrl": "https://huggingface.co/meituan-longcat/LongCat-2.0/blob/main/config.json"
+      "tokens": 1048576,
+      "en": "1M tokens",
+      "zh": "1M tokens",
+      "sourceUrl": "https://longcat.chat/platform/docs/zh/"
     },
     "type": [
       "coding",
@@ -589,42 +598,46 @@
       "open_weights"
     ],
     "usageGuide": {
-      "summary": "通过 LongCat 官方平台调用模型 API；也可下载权重本地部署",
+      "summary": "通过 LongCat 官方 OpenAI/Anthropic 兼容 API 调用 LongCat-2.5-Preview 或 LongCat-2.0；LongCat-2.0 也可下载权重本地部署",
       "prerequisites": [
-        "LongCat 账号（API 路径）",
-        "确认 API 资格和计费规则，或满足本地部署硬件要求"
+        "LongCat 账号与 API Key",
+        "API 账户有足够余额或 Token 资源包；本地部署需自备硬件"
       ],
       "steps": [
-        "选择 API 调用或下载权重入口",
-        "API 路径创建凭据发送请求；权重路径打开模型仓库并启动本地推理"
+        "在 LongCat 平台创建 API Key，并确认 Usage 页余额/资源包",
+        "使用 OpenAI 或 Anthropic 兼容端点调用 LongCat-2.5-Preview；如需免费权重，下载 LongCat-2.0 本地部署"
       ],
       "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
         "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
-      "docsUrl": "https://longcat.ai/platform/docs/zh/"
+      "docsUrl": "https://longcat.chat/platform/docs/zh/"
     },
     "accessPaths": [
       {
         "id": "api",
         "label": "API 调用",
         "productType": "api",
-        "summary": "在线调用 LongCat API",
-        "freeSummary": "免费额度未确认",
+        "summary": "在线调用 LongCat-2.5-Preview / LongCat-2.0",
+        "freeSummary": "官方文档未确认长期免费 API；需有余额或 Token 资源包",
         "access": "Email / phone",
         "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
-        "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+        "command": "curl https://api.longcat.chat/openai/v1/chat/completions -H \"Authorization: Bearer $LONGCAT_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
         "links": [
           [
             "API docs",
-            "https://longcat.ai/platform/docs/zh/"
+            "https://longcat.chat/platform/docs/zh/"
           ],
           [
             "FAQ",
-            "https://longcat.ai/platform/docs/zh/faq"
+            "https://longcat.chat/platform/docs/zh/FAQ.html"
+          ],
+          [
+            "Change log",
+            "https://longcat.chat/platform/docs/zh/ChangeLog.html"
           ]
         ]
       },
@@ -651,32 +664,36 @@
     ],
     "kicker": "API + OPEN WEIGHTS",
     "badges": [
-      "VERIFY API",
-      "OPEN WEIGHTS"
+      "LONGCAT 2.5",
+      "PAID API + OPEN WEIGHTS"
     ],
-    "freeSummary": "API 免费额度未确认；权重免费，算力不免费",
-    "validitySummary": "API 条款待确认；权重遵循 MIT / 模型卡",
+    "freeSummary": "官方 API 需余额或 Token 资源包，未确认长期免费额度；LongCat-2.0 权重可免费下载，自备算力",
+    "validitySummary": "API paid / quota-based · LongCat-2.0 weights open",
     "accessSummary": "API Email / phone；权重 Global",
-    "checkedSummary": "Today / official API docs + GitHub",
-    "title": "LongCat-2.0 · API + open weights",
-    "why": "LongCat-2.0 is one model with two access paths: an official API whose free quota is not confirmed, and downloadable weights whose license permits access but still requires storage and GPU infrastructure.",
-    "mechanism": "API access plus downloadable open weights",
-    "validity": "API quota unknown; model license applies to weights",
+    "checkedSummary": "2026-09-29 / official API docs + changelog",
+    "title": "LongCat-2.5 Preview / 2.0 · API + open weights",
+    "why": "Official docs now list LongCat-2.5-Preview and LongCat-2.0 with OpenAI/Anthropic-compatible endpoints and 1M context. The FAQ requires sufficient account balance or a Token Resource Pack, so the API must not be advertised as durably free. LongCat-2.0 downloadable weights remain a separate free-access path.",
+    "mechanism": "Paid/quota-backed official API plus downloadable LongCat-2.0 open weights",
+    "validity": "API requires balance or Token Resource Pack; LongCat-2.0 model license applies to weights",
     "access": "API email / phone; weights global download path",
-    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
-    "register": "https://longcat.ai/platform/",
+    "command": "curl https://api.longcat.chat/openai/v1/chat/completions -H \"Authorization: Bearer $LONGCAT_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://longcat.chat/platform/",
     "registerLabel": "Open LongCat",
     "links": [
       [
         "API docs",
-        "https://longcat.ai/platform/docs/zh/"
+        "https://longcat.chat/platform/docs/zh/"
       ],
       [
-        "Official GitHub",
+        "Change log",
+        "https://longcat.chat/platform/docs/zh/ChangeLog.html"
+      ],
+      [
+        "Official GitHub (2.0 weights)",
         "https://github.com/meituan-longcat/LongCat-2.0"
       ],
       [
-        "Hugging Face",
+        "Hugging Face (2.0 weights)",
         "https://huggingface.co/meituan-longcat/LongCat-2.0"
       ]
     ],
@@ -684,23 +701,24 @@
     "availability": "API email / phone; weights global",
     "freeMechanism": "not_confirmed",
     "pricingModel": "not_confirmed",
-    "quota": "API free quota not confirmed; downloadable weights",
-    "renewal": "API unknown; model license applies to weights",
+    "quota": "Official API free quota not confirmed; Token Resource Pack and pay-as-you-go billing support LongCat-2.5-Preview and LongCat-2.0",
+    "renewal": "Token Resource Packs are time-limited; pay-as-you-go consumes account balance; model license applies to LongCat-2.0 weights",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check API terms and MIT/model-card terms",
     "sourceUrls": [
-      "https://longcat.ai/platform/docs/zh/",
-      "https://longcat.ai/platform/docs/zh/faq",
+      "https://longcat.chat/platform/docs/zh/",
+      "https://longcat.chat/platform/docs/zh/FAQ.html",
+      "https://longcat.chat/platform/docs/zh/ChangeLog.html",
       "https://github.com/meituan-longcat/LongCat-2.0",
       "https://huggingface.co/meituan-longcat/LongCat-2.0"
     ],
-    "evidence": "Official API docs confirm API access but do not confirm a durable free quota; the official repository documents LongCat-2.0 downloadable weights and the model license.",
+    "evidence": "Official LongCat docs list LongCat-2.5-Preview and LongCat-2.0, 1M context and OpenAI/Anthropic-compatible APIs. The official FAQ tells users to ensure the account has sufficient balance and states Token Resource Packs support both models; no durable free API quota is documented.",
     "status": "needs_review",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free.",
+    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -1056,8 +1074,8 @@
     "providerMark": "DS",
     "provider": "DeepSeek API",
     "providerMeta": "DeepSeek · official API",
-    "model": "DeepSeek V4 Flash",
-    "modelMeta": "OpenAI-compatible endpoint",
+    "model": "DeepSeek V4.1 Flash",
+    "modelMeta": "OpenAI/Anthropic-compatible · native multimodal",
     "type": [
       "free"
     ],
@@ -1066,67 +1084,73 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "使用 DeepSeek PAYG API 并控制余额消耗",
+      "summary": "使用 DeepSeek V4.1 Flash PAYG API，并控制余额消耗",
       "prerequisites": [
         "DeepSeek 平台账号",
         "充值前确认当前价格"
       ],
       "steps": [
         "打开官方平台创建 API Key",
-        "设置消费上限后发送一条最小请求"
+        "使用 model=deepseek-flash 发送最小请求，并按当前峰谷价格控制消耗"
       ],
       "endpoint": "https://api.deepseek.com/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${DEEPSEEK_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      "docsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
     },
     "kicker": "LOW COST",
     "badges": [
       "PAYG",
-      "INTERNATIONAL API"
+      "V4.1 FLASH"
     ],
-    "freeSummary": "Very low unit price; not a free quota",
+    "freeSummary": "Pay-as-you-go; not a free quota. V4.1 Flash replaced the retired V4 Flash model.",
     "validitySummary": "Pay-as-you-go / no expiry",
     "accessSummary": "International API",
-    "checkedSummary": "Today / official pricing",
-    "title": "DeepSeek API · low cost, not free",
-    "why": "DeepSeek is useful as a cost benchmark, but it is not a free quota entry. The directory keeps low-cost pay-as-you-go offers visible without calling them free.",
-    "mechanism": "Pay-as-you-go API pricing",
+    "checkedSummary": "2026-09-29 / official release + pricing",
+    "title": "DeepSeek V4.1 Flash API · low cost, not free",
+    "why": "DeepSeek V4.1 Flash is the current Flash API model. The official changelog says to call it with model=deepseek-flash; previous V4 Flash aliases are retired and temporarily route to V4.1 Flash. This remains a pay-as-you-go entry, not a free quota.",
+    "mechanism": "Pay-as-you-go API with peak/off-peak pricing",
     "validity": "Balance-based",
     "access": "Official international API",
-    "command": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\"",
+    "command": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.deepseek.com/",
     "registerLabel": "Register / open DeepSeek",
     "links": [
       [
         "Official pricing",
-        "https://api-docs.deepseek.com/quick_start/pricing"
+        "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
       ],
       [
-        "API docs",
-        "https://api-docs.deepseek.com/"
+        "V4.1 Flash release",
+        "https://api-docs.deepseek.com/zh-cn/news/news260910/"
+      ],
+      [
+        "Change log",
+        "https://api-docs.deepseek.com/zh-cn/updates/"
       ]
     ],
     "originCountry": "China",
     "availability": "Official international API",
     "freeMechanism": "not_confirmed",
-    "quota": "Pay-as-you-go API pricing",
+    "quota": "Pay-as-you-go API; official pricing currently lists a 2500 concurrency limit for V4.1 Flash",
     "renewal": "Balance-based",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://api-docs.deepseek.com/quick_start/pricing"
+      "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+      "https://api-docs.deepseek.com/zh-cn/news/news260910/",
+      "https://api-docs.deepseek.com/zh-cn/updates/"
     ],
-    "evidence": "Official pricing documents a pay-as-you-go API; no free quota is represented here.",
+    "evidence": "Official DeepSeek docs released V4.1 Flash on 2026-09-10, specify model=deepseek-flash, retire V4 Flash/V4 Flash Vision Exp while temporarily routing their aliases to V4.1 Flash, and list pay-as-you-go peak/off-peak pricing plus a 2500 concurrency limit.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Low cost is intentionally separate from free.",
+    "notes": "Low cost is intentionally separate from free. Legacy V4 Flash aliases are compatibility routes, not separate live models.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -1139,6 +1163,14 @@
       "cnHost": "api.deepseek.com",
       "cnMs": 220,
       "intlMs": 278
+    },
+    "pricingModel": "payg",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": 2500
     }
   },
   {
@@ -3808,7 +3840,7 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -3825,7 +3857,7 @@
     "provider": "SiliconFlow",
     "providerMeta": "SiliconFlow 硅基流动 · China",
     "providerMetaEn": "SiliconFlow · China",
-    "model": "PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI bge-m3 / bge-reranker-v2-m3 / bge-large · Kwai-Kolors (¥0 listed)",
+    "model": "Xing4.0-29B · PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI embeddings/reranker · Kwai-Kolors (¥0 listed)",
     "modelMeta": "¥0-priced models on the official price list",
     "type": [
       "api",
@@ -3854,12 +3886,12 @@
       "¥0 MODELS",
       "CHINA"
     ],
-    "freeSummary": "Selected models listed at ¥0 (free) on the official price list, plus paid models",
+    "freeSummary": "Selected official ¥0 models now include China Telecom Xing4.0-29B alongside OCR, embedding, reranker and image models.",
     "validitySummary": "Free listing can change; recheck the price page",
     "accessSummary": "SiliconFlow account; China registration",
-    "checkedSummary": "Today / official SiliconFlow price page",
+    "checkedSummary": "2026-09-29 / official price + model pages",
     "title": "SiliconFlow · ¥0 listed models",
-    "why": "The official SiliconFlow price page lists multiple models at 免费/¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.",
+    "why": "SiliconFlow's current official price/model pages list XingChenAGI/Xing4.0-29B at ¥0 input and ¥0 output, alongside other ¥0 models. Xing4.0 is a China Telecom model released on 2026-09-17 with 29B total / 4B active parameters and native 256K context.",
     "mechanism": "Selected models permanently listed at ¥0 on the official price list",
     "validity": "Ongoing while listed; the ¥0 list can change at any time",
     "access": "SiliconFlow account; registration via the China platform",
@@ -3890,12 +3922,22 @@
     "renewal": "No quota period; the ¥0 price applies per request for listed models",
     "sourceUrls": [
       "https://siliconflow.cn/pricing",
-      "https://docs.siliconflow.cn/cn/userguide/quickstart"
+      "https://docs.siliconflow.cn/cn/userguide/quickstart",
+      "https://cloud.siliconflow.cn/models",
+      "https://github.com/XingChen-AGI/Xing4.0-29B-A4B"
     ],
-    "evidence": "官方价格页列出 PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 价格为「免费」；官方快速开始文档给出 Base URL https://api.siliconflow.cn/v1。",
+    "evidence": "Official SiliconFlow pages list XingChenAGI/Xing4.0-29B at ¥0 for both input and output. The official XingChen-AGI repository confirms China Telecom developed Xing4.0-29B-A4B, released it on 2026-09-17, and documents 29B total parameters, 4B active per token and native 256K context extensible to 512K.",
     "confidence": "high",
     "notes": "China-first entry. Embedding/reranker and OCR models at ¥0 complement paid chat models on the same platform.",
     "freeModels": [
+      {
+        "model": "XingChenAGI/Xing4.0-29B",
+        "label": "Xing4.0-29B",
+        "quota": "¥0 input / ¥0 output on SiliconFlow",
+        "contextWindow": "256K native; extensible to 512K",
+        "note": "China Telecom XingChen model; official SiliconFlow price/model pages list the hosted API at ¥0. Recheck before production use because the ¥0 list can change.",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
       {
         "model": "PaddleOCR-VL-1.5",
         "quota": "¥0（官方价目表标注免费）",
@@ -6144,5 +6186,114 @@
         }
       ]
     }
+  },
+  {
+    "id": "tencent-tokenhub-free-trial",
+    "order": 51,
+    "date": "2026-09-29",
+    "name": "Tencent Cloud TokenHub new-user free trial",
+    "providerMark": "TH",
+    "provider": "Tencent Cloud TokenHub",
+    "providerMeta": "Tencent Cloud · China / Singapore",
+    "model": "All language and multimodal-understanding models",
+    "modelMeta": "OpenAI / Anthropic-compatible API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "领取 TokenHub 新人免费体验包并通过 OpenAI 兼容 API 调用模型",
+      "prerequisites": [
+        "腾讯云账号",
+        "完成实名认证",
+        "在 TokenHub 创建 API Key"
+      ],
+      "steps": [
+        "登录 TokenHub 控制台并领取新人免费体验包；支持免费体验的模型首次调用也可自动领取",
+        "创建 API Key 后，按服务地域选择广州或新加坡端点并调用 /v1/chat/completions"
+      ],
+      "endpoint": "https://tokenhub.tencentmaas.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${TOKENHUB_API_KEY}",
+      "examples": {
+        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://cloud.tencent.com/document/product/1823/130058"
+    },
+    "kicker": "1M TOKENS / MODEL",
+    "badges": [
+      "NEW USER",
+      "1 YEAR"
+    ],
+    "freeSummary": "Each language and multimodal-understanding model offers 1,000,000 free Tokens for new users; each model's package is claimable once.",
+    "validitySummary": "1 year after claim · campaign currently through Dec 31, 2026",
+    "accessSummary": "Tencent Cloud account + identity verification",
+    "checkedSummary": "2026-09-29 / official Tencent Cloud docs",
+    "title": "Tencent Cloud TokenHub · 1M free Tokens per model",
+    "why": "Tencent Cloud's official TokenHub documentation states that every language model and every multimodal-understanding model provides a 1,000,000-Token new-user trial valid for one year. Each account can claim the free package once per model, and free usage stops when exhausted unless the user explicitly enables post-pay.",
+    "mechanism": "One-time new-user free package per model; first use can auto-claim supported packages",
+    "validity": "1 year from claim; current campaign period published through 2026-12-31",
+    "access": "Tencent Cloud account; identity verification required; API Key required",
+    "command": "curl https://tokenhub.tencentmaas.com/v1/models -H \"Authorization: Bearer $TOKENHUB_API_KEY\"",
+    "register": "https://console.cloud.tencent.com/maas",
+    "registerLabel": "Open Tencent Cloud TokenHub",
+    "links": [
+      [
+        "Official free-trial rules",
+        "https://cloud.tencent.com/document/product/1823/130053"
+      ],
+      [
+        "Quick start",
+        "https://cloud.tencent.com/document/product/1823/130058"
+      ],
+      [
+        "API usage",
+        "https://cloud.tencent.com/document/product/1823/130078"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Guangzhou endpoint for mainland China; Singapore endpoint for global routing; no cross-region calls",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": "1 year"
+    },
+    "quota": "1,000,000 Tokens for each language model and each multimodal-understanding model; each account can claim once per model",
+    "renewal": "One-time per-model new-user package; unused quota expires one year after claim",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://cloud.tencent.com/document/product/1823/130053",
+      "https://cloud.tencent.com/document/product/1823/130058",
+      "https://cloud.tencent.com/document/product/1823/130078"
+    ],
+    "evidence": "Official Tencent Cloud docs (updated Sep 2026) state that all language and multimodal-understanding models provide 1M Tokens of free trial quota valid for one year; each model can be claimed once per main account. Free quota is consumed first, and service stops after exhaustion unless post-pay is enabled.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Guangzhou base URL: https://tokenhub.tencentmaas.com. Singapore base URL: https://tokenhub-intl.tencentmaas.com. The current campaign page says the campaign runs through 2026-12-31 and may later be extended or adjusted."
   }
 ]
