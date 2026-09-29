@@ -1851,8 +1851,9 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     @media (max-width: 680px) {{ .qs-grid {{ grid-template-columns: 1fr; }} }}
         footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
+  <link rel="stylesheet" href="/css/offer-detail-prototype-v2.css?v=20260929a">
 </head>
-<body data-offer-id="{_esc(offer.get('id'))}" data-static-locale="true">
+<body data-offer-id="{_esc(offer.get('id'))}" data-offer-status="{_esc(offer.get('status') or 'unknown')}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
 {_adsense_slot_markup()}
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
@@ -1861,6 +1862,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
+    {'<p class="offer-review-alert">' + _locale_pair('⚠ 此资源仍需复核：不要把开放权重、试用或促销条件自动等同于永久免费 API / 推理额度。', '⚠ This offer still needs review: do not treat open weights, trials or promotions as permanently free API / inference quota.') + '</p>' if offer.get("status") == "needs_review" else ""}
     {featured_note_markup}
     <nav aria-label="Categories">{category_links}</nav>
     {header_cta_markup}

@@ -789,10 +789,73 @@
     });
   }
 
+  function enhanceOfferDetail() {
+    var body = document.body;
+    if (!body || !body.dataset.offerId) return;
+    body.setAttribute('data-reference-style', 'v1');
+    body.setAttribute('data-visual-style', 'aurora');
+    body.classList.add('fl-ui-v2');
+    if (!body.dataset.flSection) body.dataset.flSection = 'models';
+
+    var offerId = body.dataset.offerId;
+    var titleEl = body.querySelector('header h1');
+    var item = {
+      type: 'offer',
+      id: offerId,
+      name: titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 80) : offerId,
+      url: location.pathname
+    };
+
+    var cta = body.querySelector('header .header-cta');
+    if (cta && !cta.querySelector('.offer-favorite-action')) {
+      var fav = document.createElement('button');
+      fav.type = 'button';
+      fav.className = 'offer-favorite-action';
+      function paintOfferFav() {
+        var active = isFav('offer', offerId);
+        fav.classList.toggle('is-fav', active);
+        fav.textContent = active ? '★ 已收藏' : '☆ 收藏资源';
+        fav.setAttribute('aria-pressed', String(active));
+      }
+      fav.addEventListener('click', function () {
+        var added = toggleFav(item);
+        toast(added ? '已收藏「' + item.name + '」' : '已取消收藏');
+      });
+      on('fav', paintOfferFav);
+      paintOfferFav();
+      cta.appendChild(fav);
+    }
+
+    var main = body.querySelector('main');
+    var header = body.querySelector('body > header');
+    if (main && header && !body.querySelector('.offer-section-nav')) {
+      var targets = [];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'), function (section, index) {
+        var h2 = section.querySelector('h2');
+        if (!h2) return;
+        var id = section.id || ('offer-section-' + (index + 1));
+        section.id = id;
+        var label = (h2.querySelector('[lang="zh-CN"]') || h2).textContent.trim();
+        if (label && targets.length < 8) targets.push({ id: id, label: label });
+      });
+      if (targets.length) {
+        var nav = document.createElement('nav');
+        nav.className = 'offer-section-nav';
+        nav.setAttribute('aria-label', '资源详情目录');
+        nav.innerHTML = targets.map(function (target) {
+          return '<a href="#' + target.id + '">' + target.label + '</a>';
+        }).join('');
+        header.insertAdjacentElement('afterend', nav);
+      }
+    }
+    track(item);
+  }
+
   function init() {
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceOfferDetail();
     bind(document);
     autoBind(document);
     bindAuthButton(document.getElementById('fl-sync-auth') || document.getElementById('gh-login'));
