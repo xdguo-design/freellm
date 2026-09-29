@@ -1912,12 +1912,13 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     matching = [offer for offer in offers if category in categorize_offer(offer)]
     path = category_url(category)
     title = f"{definition['name_zh']} · FreeLLM 免费 AI 资源索引"
-    description = f"{definition['description_zh']}当前有 {len(matching)} 个经过核验的资源，均提供官方入口与有效期说明。"
+    description = f"{definition['description_zh']}当前收录 {len(matching)} 条资源，页面逐条标注来源核验状态、官方入口与有效期说明。"
     # 条目不足的分类页是薄页：既然主动 noindex，就不再挂广告代码（同模型聚合页的规则）。
     indexable = len(matching) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
     social_meta = _social_meta(site_url, path, title, description, "website", indexable=indexable)
     items = "".join(
-        f'''<article>
+        f'''<article data-offer-id="{_esc(offer.get("id"))}" data-offer-status="{_esc(offer.get("status") or "unknown")}">
+          <span class="category-status{" needs-review" if offer.get("status") == "needs_review" else ""}">{_locale_pair("待复核", "Needs review") if offer.get("status") == "needs_review" else _locale_pair("来源已核验", "Source verified")}</span>
           <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a>{_featured_chip(offer)}</h2>
           <p>{_offer_locale_pair(offer, ("freeSummary", "mechanism"), "Free access details unavailable")}</p>
           <p class="muted">{_offer_locale_pair(offer, ("validitySummary", "validity"), "Validity follows provider terms")} · {_offer_locale_pair(offer, ("accessSummary", "access"), "Official account required")}</p>
@@ -1971,14 +1972,14 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-category-detail="true" data-category-slug="{_esc(category)}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('FreeLLM 免费 AI 资源索引', 'FreeLLM Free AI Index')}</a> / {_locale_pair('分类', 'Category')}</p>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(definition['name_zh'], definition['name'])}</h1>
     <p>{_locale_pair(definition['description_zh'], definition['description'])}</p>
-    <p>{_locale_pair(f'{len(matching)} 个经过核验的资源', f'{len(matching)} verified resources')}</p>
+    <p class="category-summary">{_locale_pair(f'收录 {len(matching)} 条资源；核验状态见每张卡片。', f'{len(matching)} resources; verification status is shown per card.')}</p>
   </header>
   <main>
     {items}

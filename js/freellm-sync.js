@@ -789,6 +789,69 @@
     });
   }
 
+  function enhanceCategoryPage() {
+    var body=document.body;
+    if(!body || body.dataset.offerId || body.dataset.providerDetail==='true' || body.dataset.modelDetail==='true') return;
+    var match=/^\/category\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match) return;
+    var slug=match[1];
+    body.dataset.categoryDetail='true';
+    body.dataset.categorySlug=slug;
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var labels={
+      'free-quota':'免费额度','free-ide':'免费 AI IDE','api':'AI API',
+      'promo':'试用与优惠','student':'学生优惠','web':'网页工具','open-weights':'开放权重'
+    };
+    var header=body.querySelector('body > header');
+    var main=body.querySelector('main');
+    if(!header || !main) return;
+
+    var summary=header.querySelector('h1~p:last-of-type');
+    if(summary && /经过核验的资源|verified resources/i.test(summary.textContent||'')){
+      var count=main.querySelectorAll(':scope > article').length;
+      summary.classList.add('category-summary');
+      summary.innerHTML='<span lang="zh-CN">收录 '+count+' 条资源；核验状态见每张卡片。</span><span lang="en">'+count+' resources; verification status is shown per card.</span>';
+    }
+
+    Array.prototype.forEach.call(main.querySelectorAll(':scope > article'),function(card){
+      if(card.querySelector('.category-status')) return;
+      var h2=card.querySelector('h2');
+      var isReview=/longcat-2-0/i.test((h2&&h2.textContent)||'') || /longcat-2-0/.test(card.innerHTML);
+      var badge=document.createElement('span');
+      badge.className='category-status'+(isReview?' needs-review':'');
+      badge.textContent=isReview?'待复核':'来源已核验';
+      card.insertBefore(badge,card.firstChild);
+    });
+
+    if(!body.querySelector('.category-tabs')){
+      var tabs=document.createElement('nav');tabs.className='category-tabs';tabs.setAttribute('aria-label','资源分类');
+      tabs.innerHTML=Object.keys(labels).map(function(key){
+        return '<a href="/category/'+key+'/"'+(key===slug?' aria-current="page"':'')+'>'+labels[key]+'</a>';
+      }).join('');
+      header.insertAdjacentElement('afterend',tabs);
+    }
+
+    var cards=Array.prototype.slice.call(main.querySelectorAll(':scope > article'));
+    if(cards.length && !body.querySelector('.category-toolbar')){
+      var toolbar=document.createElement('div');toolbar.className='category-toolbar';
+      toolbar.innerHTML='<label class="category-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索资源、厂商、免费方式或访问条件…" aria-label="搜索当前分类资源"></label><span class="category-count"></span>';
+      main.insertAdjacentElement('beforebegin',toolbar);
+      var input=toolbar.querySelector('input'),countEl=toolbar.querySelector('.category-count');
+      var empty=document.createElement('div');empty.className='category-empty';empty.hidden=true;empty.textContent='没有找到匹配的资源。';main.appendChild(empty);
+      function apply(){
+        var q=input.value.trim().toLowerCase(),visible=0;
+        cards.forEach(function(card){var show=!q||(card.textContent||'').toLowerCase().indexOf(q)>=0;card.hidden=!show;if(show)visible++;});
+        countEl.textContent='显示 '+visible+' / '+cards.length+' 条资源';
+        empty.hidden=visible!==0;
+      }
+      input.addEventListener('input',apply);apply();
+    }
+  }
+
   function enhanceModelDetail() {
     var body=document.body;
     if(!body || body.dataset.offerId || body.dataset.providerDetail==='true') return;
@@ -1007,6 +1070,7 @@
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceCategoryPage();
     enhanceModelDetail();
     enhanceProviderDetail();
     enhanceOfferDetail();
