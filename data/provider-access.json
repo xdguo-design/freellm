@@ -1752,5 +1752,75 @@
     "verificationStatus": "partial",
     "confidence": "medium",
     "notes": "免费服务模型/额度/失效时间动态变化，需登录西南-贵阳一控制台实时确认。公开文档确认可直接 API 调用，但未提供固定免费模型清单。"
+  },
+  {
+    "providerId": "teleai",
+    "profileId": "teleai-api",
+    "registerUrl": "https://www.teleai.com.cn/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册/登录天翼AI开放平台并打开 TeleChat3-438B-A24B 产品页。",
+      "领取 0 元 / 1 亿 Token 免费试用包，领取后 3 个月有效。",
+      "在 API Key 管理创建长效 API Key，通过 TeleChat3-438B-A24B Responses endpoint 调用。",
+      "免费包耗尽或到期后若继续使用，将按官方后付费价格计费。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.teleai.com.cn/doc/Db1uOUi4PRXb2ZXtHaNv/cbJTcY905Q1b3lIA8FZV",
+      "https://www.teleai.com.cn/doc/Z0NYbElFeHijOtnPenj6/jBs54Z3VaFXvQ5jr2oXh"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方公开页确认 100M Tokens / 3 months / QPS 1；未用真实账号验证领取前置条件、实名要求和实际余额到账。"
+  },
+  {
+    "providerId": "scnet",
+    "profileId": "scnet-document-api",
+    "registerUrl": "https://www.scnet.cn/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册/登录 SCNet，并在 API Key 管理创建通用 API Key。",
+      "调用 /api/llm/v1/ocrdoc/submit 提交文档解析任务。",
+      "使用 /api/llm/v1/ocrdoc/result 查询任务结果。",
+      "调用前复核当前活动/服务页仍显示文档解析免费；限免结束后按平台当前计费规则执行。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www1.scnet.cn/home/news/133595.html",
+      "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/ocrdoc.html",
+      "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/apikeymgt.html",
+      "https://www.scnet.cn/ui/mall/service/ocr"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "当前官方活动与服务页共同支持“文档解析免费”结论，但活动结束日期未公开；需要每日/定期重新核验。"
   }
 ]

@@ -1,0 +1,44 @@
+{
+  "providerId": "teleai",
+  "provider": "China Telecom TeleAI",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "teleai-telechat3-438b-free-trial"
+  ],
+  "paths": [
+    {
+      "id": "telechat3-438b-free-trial",
+      "label": "TeleChat3-438B 1 亿 Token 免费 API",
+      "productType": "api",
+      "prerequisites": [
+        "天翼AI账号",
+        "已领取 1 亿 Token 免费试用包",
+        "长效 API Key"
+      ],
+      "steps": [
+        {
+          "title": "领取免费包",
+          "detail": "在 TeleChat3-438B-A24B 产品页领取 0 元 / 1 亿 Token 免费试用包，领取后 3 个月有效。"
+        },
+        {
+          "title": "创建 API Key",
+          "detail": "在 API Key 管理创建长效 API Key。"
+        },
+        {
+          "title": "调用 Responses API",
+          "detail": "使用官方 OpenAI Responses 兼容 endpoint 发起最小请求。",
+          "command": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H 'Authorization: Bearer ${TELEAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好\",\"stream\":false}'",
+          "expected": "返回 response 对象；控制台免费包额度减少。"
+        }
+      ],
+      "endpoint": "https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H 'Authorization: Bearer ${TELEAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好\",\"stream\":false}'",
+      "validation": "请求成功，并在控制台确认扣减来自 100M Token 免费试用包；QPS 1 限制下不并发压测。",
+      "sourceUrls": [
+        "https://www.teleai.com.cn/doc/Db1uOUi4PRXb2ZXtHaNv/cbJTcY905Q1b3lIA8FZV",
+        "https://www.teleai.com.cn/doc/Z0NYbElFeHijOtnPenj6/jBs54Z3VaFXvQ5jr2oXh"
+      ]
+    }
+  ]
+}

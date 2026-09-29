@@ -1,0 +1,53 @@
+name: regen-free-api-batch6
+on:
+  push:
+    branches: [update/free-api-news-20260929-batch6]
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: update/free-api-news-20260929-batch6
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "24"}
+      - run: python -m pip install pytest
+      - name: Validate source
+        run: |
+          python -m crawler.cli validate data/offers.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from crawler.schema import validate_operation_guides, validate_provider_access
+          errors=[]
+          for i in ["teleai","scnet"]:
+              errors += validate_operation_guides(json.loads(Path(f"data/operations/{i}.json").read_text()), i)
+          cards=json.loads(Path("data/provider-access.json").read_text())
+          for i in ["teleai","scnet"]:
+              errors += validate_provider_access(next(c for c in cards if c["providerId"]==i))
+          if errors: raise SystemExit("\n".join(errors))
+          print("batch6 source records valid")
+          PY
+      - name: Regenerate
+        run: |
+          node scripts/generate_ranking.ts
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+      - name: Regression
+        run: |
+          node --test tests/ranking.test.ts
+          python -m unittest tests.test_schema tests.test_build_static tests.test_e2e_static -v
+          node scripts/generate_ranking.ts --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+      - name: Commit generated artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "No generated changes"; else git commit -m "build: regenerate batch 6 free AI artifacts"; git push origin HEAD:update/free-api-news-20260929-batch6; fi
