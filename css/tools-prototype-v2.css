@@ -84,3 +84,21 @@ body[data-reference-style="v1"][data-fl-section="tools"] .tool-modal-header{bord
  body[data-reference-style="v1"][data-fl-section="tools"] .tool-grid,body[data-reference-style="v1"][data-fl-section="tools"] .tools-toolbar{grid-template-columns:1fr!important}
  body[data-reference-style="v1"][data-fl-section="tools"] .tools-hero h1{font-size:38px!important}
 }
+/* Regression guard: page-specific desktop rail geometry must not beat reference-ui mobile shell. */
+@media(max-width:800px){
+  body[data-reference-style="v1"]>.fl-site-rail{
+    position:relative!important;
+    left:auto!important;right:auto!important;top:auto!important;
+    width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;
+    padding:10px 10px 12px!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+  body[data-reference-style="v1"] .ref-topbar{
+    position:relative!important;
+    left:auto!important;right:auto!important;top:auto!important;
+    width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;
+    height:48px!important;margin:8px 10px 10px!important;
+    box-sizing:border-box!important;
+  }
+}
