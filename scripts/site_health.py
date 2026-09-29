@@ -150,8 +150,17 @@ def build_report(
         errors.append(f"offers data cannot be checked: {error}")
     try:
         models = _read_json(models_path)
+        active_model_dates: list[object] = []
+        for index, item in enumerate(models):
+            if not isinstance(item, dict):
+                continue
+            if item.get("freshnessStatus") == "stale":
+                if not item.get("staleSince"):
+                    errors.append(f"models freshness item {index}: stale record missing staleSince")
+                continue
+            active_model_dates.append(item.get("lastSeenAt"))
         errors.extend(check_freshness(
-            [item.get("lastSeenAt") for item in models if isinstance(item, dict)],
+            active_model_dates,
             checked_on,
             max_age_days,
             "models freshness",
