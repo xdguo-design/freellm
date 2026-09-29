@@ -1017,31 +1017,35 @@
   {
     "providerId": "iflytek-spark",
     "profileId": "iflytek-spark-api",
-    "registerUrl": null,
+    "registerUrl": "https://console.xfyun.cn/services/sparkapiCenter",
     "accountRequired": "yes",
     "emailRequired": "unknown",
     "phoneRequired": "unknown",
     "identityRequired": "unknown",
     "cardRequired": "unknown",
-    "billingRequired": "unknown",
-    "apiKeyRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
     "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "unknown",
-    "overageBehavior": "unknown",
-    "searchMethod": "official_model_catalog",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
     "regionPolicyId": "policy-unknown-default",
-    "registrationSteps": [],
+    "registrationSteps": [
+      "注册/登录讯飞开放平台，在星火 API 控制台确认 Spark Lite 授权。",
+      "获取 HTTP 服务 APIPassword；该值通过 Authorization: Bearer 发送。",
+      "使用 https://spark-api-open.xf-yun.com/v1 和 model=lite 调用；Lite 当前官方文档标记为支持免费使用。"
+    ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://agent.xfyun.cn/studio-guide/quickstart",
-      "https://agent.xfyun.cn/studio-guide/intro"
+      "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
+      "https://www.xfyun.cn/doc/spark/Web.html"
     ],
-    "lastVerifiedAt": "2026-09-15",
+    "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+    "confidence": "high",
+    "notes": "Lite 当前官方文档明确免费使用，但未公开统一 Token 配额和固定结束日期；实际日/秒/并发流控以账户授权为准。"
   },
   {
     "providerId": "cnb",
@@ -1681,5 +1685,72 @@
     "verificationStatus": "verified",
     "confidence": "high",
     "notes": "旧平台已于 2026-06-30 停止售卖，并将在 2026-09-30 00:00 全面停服；官方要求迁移至 TokenHub。完成迁移的用户可按公告申领 3 个月有效的迁移免费体验额度。"
+  },
+  {
+    "providerId": "baidu-ai-studio",
+    "profileId": "baidu-ai-studio-llm-api",
+    "registerUrl": "https://aistudio.baidu.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册/登录百度 AI Studio，并在 Token 管理确认 1,000,000 免费 Tokens。",
+      "在个人中心获取 Access Token。",
+      "使用 https://aistudio.baidu.com/llm/lmapi/v3 作为 OpenAI SDK base_url，调用当前支持模型并检查 Token 使用明细。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns",
+      "https://ai.baidu.com/ai-doc/index/AISTUDIO"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "1,000,000 Tokens 是 AI Studio 每开发者共享池，不是每模型单独额度；耗尽后需购买 Tokens。"
+  },
+  {
+    "providerId": "huawei-modelarts-maas",
+    "profileId": "huawei-modelarts-maas-free-api",
+    "registerUrl": "https://console.huaweicloud.com/modelarts/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "登录华为云并完成 ModelArts Studio（MaaS）访问授权。",
+      "切换到西南-贵阳一，在 在线推理 > 预置服务 > 免费服务 查看当前免费模型、额度和失效时间。",
+      "获取该 Region 的 MaaS API Key，并从目标服务“调用说明”复制 model 参数。",
+      "先小流量调用；HTTP 429 表示触发免费服务严格流控。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf",
+      "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "medium",
+    "notes": "免费服务模型/额度/失效时间动态变化，需登录西南-贵阳一控制台实时确认。公开文档确认可直接 API 调用，但未提供固定免费模型清单。"
   }
 ]

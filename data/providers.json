@@ -315,16 +315,18 @@
     "aliases": [
       "科大讯飞",
       "讯飞星火",
-      "Spark"
+      "Spark",
+      "Spark Lite"
     ],
     "allowedDomains": [
       "xfyun.cn",
       "www.xfyun.cn",
+      "console.xfyun.cn",
       "agent.xfyun.cn"
     ],
     "discoveryUrls": [
-      "https://www.xfyun.cn/doc/spark/Web.html",
-      "https://www.xfyun.cn/"
+      "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
+      "https://www.xfyun.cn/doc/spark/Web.html"
     ]
   },
   {
@@ -869,6 +871,40 @@
     ],
     "discoveryUrls": [
       "https://cloud.tencent.com/announce/detail/2287"
+    ]
+  },
+  {
+    "id": "baidu-ai-studio",
+    "name": "Baidu AI Studio / Xinghe",
+    "aliases": [
+      "百度 AI Studio",
+      "星河社区",
+      "星河大模型 API"
+    ],
+    "allowedDomains": [
+      "ai.baidu.com",
+      "aistudio.baidu.com"
+    ],
+    "discoveryUrls": [
+      "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns",
+      "https://ai.baidu.com/ai-doc/index/AISTUDIO"
+    ]
+  },
+  {
+    "id": "huawei-modelarts-maas",
+    "name": "Huawei Cloud ModelArts Studio (MaaS)",
+    "aliases": [
+      "华为云 MaaS",
+      "ModelArts Studio",
+      "华为云大模型即服务"
+    ],
+    "allowedDomains": [
+      "support.huaweicloud.com",
+      "console.huaweicloud.com"
+    ],
+    "discoveryUrls": [
+      "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf",
+      "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
     ]
   }
 ]
