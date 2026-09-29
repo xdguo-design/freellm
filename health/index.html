@@ -215,7 +215,13 @@
   function fetchJson(url){return fetch(url,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json()})}
   function daysOld(date){if(!date)return 999;var d=new Date(date+'T00:00:00Z');return Math.floor((Date.now()-d.getTime())/86400000)}
   function providerIdFor(o){return o.providerId||aliases[o.id]||String(o.provider||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-  function isLimited(o){var t=((o.freePolicy&&o.freePolicy.type)||'')+' '+(o.validity||'')+' '+(o.validitySummary||'');return /limited|trial|限时|公测|90 days|one_time/i.test(t)}
+  function isLimited(o){
+    var type=String((o.freePolicy&&o.freePolicy.type)||'').toLowerCase();
+    if(['trial','limited_time_free','one_time_credits'].indexOf(type)>=0)return true;
+    if(['rate_limited','daily_quota','monthly_credits','permanent_free','free_models','catalog_access'].indexOf(type)>=0)return false;
+    var validity=String(o.validity||'')+' '+String(o.validitySummary||'');
+    return /\blimited[- ]?time\b|限时|公测|\bvalid for \d+ days\b|\b\d+ days from\b/i.test(validity);
+  }
   function publicAlive(r){var v=String((r.latency&&r.latency.verdict)||(r.endpointCheck&&r.endpointCheck.verdict)||'').toLowerCase();return ['ok','needs_key','alive','rate_limited'].some(function(x){return v.indexOf(x)>=0})}
   function networkLabel(r){var n=r.networkCheck&&r.networkCheck.region;if(n==='both')return '中 / 海外';if(n==='cn')return '国内';if(n==='intl')return '海外';return '待测'}
   function networkClass(r){var n=r.networkCheck&&r.networkCheck.region;return n?'ok':'neutral'}
