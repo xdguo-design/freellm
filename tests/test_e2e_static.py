@@ -356,9 +356,12 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1>', self.html)
-        self.assertIn("精选优质的免费 AI 模型、实用技能、工具与工作流", self.html)
-        self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
+        self.assertIn('<h1>发现真正好<br>用的<span>免费 AI</span></h1>', self.html)
+        self.assertIn("模型、API、IDE 与限时试用，一站比较", self.html)
+        self.assertIn("<span>✓</span> 官方来源 · 条件透明", self.html)
+        self.assertIn('class="ref-feature-row"', self.html)
+        self.assertIn("Agent Skills", self.html)
+        self.assertIn("Workflow Recipes", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)

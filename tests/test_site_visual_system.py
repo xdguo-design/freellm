@@ -70,7 +70,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         css = AURORA_HOME.read_text(encoding="utf-8")
 
         self.assertIn('data-visual-style="aurora"', page)
-        self.assertIn("aurora-home.css?v=20260924a", page)
+        self.assertIn("aurora-home.css?v=20260929b", page)
         self.assertIn('body[data-visual-style="aurora"]', css)
         self.assertIn("--aurora-page:#f5f9ff", css)
         self.assertIn("--aurora-blue:#2f7de1", css)
