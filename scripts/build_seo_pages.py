@@ -389,6 +389,19 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
 MODELS_PER_PAGE = 45
 
+# These primary product pages are intentionally hand-maintained after the
+# site-prototype-v2 redesign. The SEO generator still owns their surrounding
+# sitemap entries and all template families, but must not overwrite these files.
+MANUAL_PRODUCT_PAGES = {
+    Path("skills/index.html"),
+    Path("skills/lab/index.html"),
+    Path("models/index.html"),
+    Path("models/all/index.html"),
+    Path("models/center/index.html"),
+    Path("providers/index.html"),
+    Path("logs/index.html"),
+}
+
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
 
@@ -5312,6 +5325,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     daily_logs = _load_daily_logs(data_path)
     vendor_directory = _load_vendor_directory(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent, vendor_directory=vendor_directory)
+    # generated/manual page ownership boundary: keep bespoke product pages out
+    # of exact-output checks and writes so regeneration cannot erase reviewed UI.
+    manual_product_pages = set(MANUAL_PRODUCT_PAGES)
+    files = {relative: content for relative, content in files.items() if relative not in manual_product_pages}
     files = {
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
@@ -5371,6 +5388,9 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         return True
 
     managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}}
+    # Preserve hand-maintained product pages during cleanup even though they are
+    # intentionally excluded from generated writes.
+    managed.update(path.as_posix() for path in manual_product_pages if (output_root / path).is_file())
     # Write the new pages before deleting retired ones: a crash or an external
     # delete guard must never leave the output tree emptied.
     for relative, content in files.items():
