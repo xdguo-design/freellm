@@ -7688,5 +7688,394 @@
         }
       ]
     }
+  },
+  {
+    "id": "iflytek-spark-lite-free",
+    "order": 61,
+    "date": "2026-09-29",
+    "name": "iFlytek Spark Lite free API",
+    "providerMark": "讯",
+    "provider": "iFlytek Spark",
+    "providerMeta": "讯飞星火 · Spark Lite · China",
+    "model": "Spark Lite (model=lite)",
+    "modelMeta": "OpenAI-compatible · 8K input · 4K max output",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "领取讯飞星火 Lite 免费使用权限，使用 APIPassword 调用 OpenAI 兼容 Chat Completions API",
+      "prerequisites": [
+        "讯飞开放平台账号",
+        "Spark Lite 已授权",
+        "控制台 APIPassword"
+      ],
+      "steps": [
+        "进入讯飞星火产品/控制台，确认 Lite 版本授权仍可免费使用，并获取 HTTP 服务 APIPassword。",
+        "使用 https://spark-api-open.xf-yun.com/v1 作为 OpenAI-compatible base_url。",
+        "发送 model=lite 的最小 Chat Completions 请求；如遇 11201/11202/11203，按日流控、秒级流控或并发限制处理。"
+      ],
+      "endpoint": "https://spark-api-open.xf-yun.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${SPARK_API_PASSWORD}",
+      "examples": {
+        "curl": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+      },
+      "docsUrl": "https://www.xfyun.cn/doc/spark/HTTP调用文档.html"
+    },
+    "kicker": "SPARK LITE FREE",
+    "badges": [
+      "CURRENTLY FREE",
+      "OPENAI COMPATIBLE",
+      "8K INPUT"
+    ],
+    "freeSummary": "讯飞星火官方 HTTP 文档当前明确：Spark Lite 为轻量级大语言模型，支持免费使用。",
+    "validitySummary": "当前官方文档有效 · 未公布统一结束日期",
+    "accessSummary": "讯飞开放平台 + Spark Lite 授权 + APIPassword",
+    "checkedSummary": "2026-09-29 / official Spark HTTP docs",
+    "title": "讯飞星火 Spark Lite · 当前免费 API",
+    "why": "讯飞星火官方 HTTP API 文档当前明确写明 Spark Lite “支持免费使用”，并提供统一的 OpenAI-compatible /v1/chat/completions 接口。Lite 使用 model=lite，最大输入 8K、最大输出 4K。官方没有公布一个统一固定的免费 Token 包或结束日期，因此 FreeLLM 只记录“当前免费使用”，不虚构月额度或永久承诺。",
+    "mechanism": "Current free use of the Spark Lite model on iFlytek's official Spark API",
+    "validity": "Current official docs say Lite supports free use; no public universal end date",
+    "access": "Enable Spark Lite in iFlytek Open Platform and authenticate with the HTTP APIPassword",
+    "command": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H \"Authorization: Bearer $SPARK_API_PASSWORD\" -H \"Content-Type: application/json\" -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://console.xfyun.cn/services/sparkapiCenter",
+    "registerLabel": "打开讯飞星火控制台",
+    "links": [
+      [
+        "Spark HTTP API",
+        "https://www.xfyun.cn/doc/spark/HTTP调用文档.html"
+      ],
+      [
+        "Spark WebSocket API",
+        "https://www.xfyun.cn/doc/spark/Web.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆讯飞开放平台；实际授权与流控以控制台为准",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "current_free_model",
+      "amount": null,
+      "unit": "model",
+      "period": "while official docs mark Lite free"
+    },
+    "quota": "No universal public token quota; current Lite access is free but subject to account authorization and daily/second/concurrency flow controls",
+    "renewal": "No periodic refill rule published; free status is model-level and can be adjusted by iFlytek",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check iFlytek Spark service terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
+      "https://www.xfyun.cn/doc/spark/Web.html"
+    ],
+    "evidence": "讯飞星火官方 HTTP 文档当前列出 Lite/Pro/Max/Ultra，并明确 Lite “具有更高的响应速度，支持免费使用”；同页确认 endpoint https://spark-api-open.xf-yun.com/v1/chat/completions、OpenAI SDK base_url、Bearer APIPassword、model=lite 以及 8K 输入/4K 输出限制。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "不要把“免费使用”推断成无限量或永久免费。账号授权、日流控、秒级流控与并发流控均可能限制实际调用。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Spark Lite 当前免费状态、OpenAI 兼容 endpoint、model=lite 与输入/输出限制。",
+      "method": [
+        "读取讯飞星火官方 HTTP 文档，确认 Lite 当前支持免费使用。",
+        "核对 /v1/chat/completions、OpenAI SDK base_url、Bearer APIPassword 与 model=lite。",
+        "核对 Lite 8K 最大输入与 4K 最大输出，以及 11201/11202/11203 流控错误。",
+        "当前没有讯飞 APIPassword，因此未进行真实模型调用。"
+      ],
+      "result": "官方公开预检通过：Lite 当前免费、接口与模型参数均有官方文档支持。",
+      "limitations": "未使用真实账号，未验证账号授权领取流程、当前日限额/并发值、真实响应和免费状态在控制台的实时展示。",
+      "evidence": [
+        {
+          "label": "Spark HTTP API",
+          "url": "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
+          "note": "核对 Lite 免费状态与 OpenAI 兼容 API"
+        }
+      ]
+    }
+  },
+  {
+    "id": "baidu-ai-studio-llm-free-1m",
+    "order": 62,
+    "date": "2026-09-29",
+    "name": "Baidu AI Studio Xinghe LLM API free tokens",
+    "providerMark": "AI",
+    "provider": "Baidu AI Studio / 星河社区",
+    "providerMeta": "Baidu AI Studio · China",
+    "model": "ERNIE 5.1 / ERNIE 5.0 / ERNIE 4.5 / DeepSeek / Kimi / Qwen models",
+    "modelMeta": "Shared developer token pool · OpenAI-compatible",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用 AI Studio 访问令牌调用星河大模型 API，共享每个开发者 1,000,000 免费 Tokens",
+      "prerequisites": [
+        "Baidu AI Studio account",
+        "AI Studio Access Token"
+      ],
+      "steps": [
+        "登录 AI Studio，确认 Token 管理页面仍显示开发者免费 1,000,000 Tokens 余额。",
+        "在个人中心创建/复制访问令牌；该令牌作为 OpenAI SDK api_key 使用。",
+        "使用 https://aistudio.baidu.com/llm/lmapi/v3 作为 base_url 调用当前模型列表中的模型，并在 Token 使用明细核对消耗。"
+      ],
+      "endpoint": "https://aistudio.baidu.com/llm/lmapi/v3/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}",
+      "examples": {
+        "curl": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H 'Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns"
+    },
+    "kicker": "1M SHARED TOKENS",
+    "badges": [
+      "1M FREE",
+      "PER DEVELOPER",
+      "OPENAI SDK"
+    ],
+    "freeSummary": "百度 AI Studio 星河大模型 API 官方文档：每个开发者提供 1,000,000 免费 Tokens，共享用于不同模型调用。",
+    "validitySummary": "一次性开发者免费 Tokens · 公开文档未给统一到期日",
+    "accessSummary": "AI Studio account + Access Token",
+    "checkedSummary": "2026-09-29 / official AI Studio LLM API docs (updated 2026-05-19)",
+    "title": "百度 AI Studio 星河 · 每位开发者 100 万免费 Tokens",
+    "why": "百度 AI Studio 官方“大模型 API”文档（2026-05-19 更新）明确：星河为每个开发者提供 100 万免费 Tokens，调用不同模型按不同倍率扣除；服务兼容 openai-python，base_url 为 https://aistudio.baidu.com/llm/lmapi/v3。这个额度是开发者共享 Token 池，与百度千帆按模型发放的新客额度是不同产品路径。",
+    "mechanism": "One shared 1,000,000-token developer allowance across AI Studio LLM API models",
+    "validity": "Public docs do not publish one universal expiry date; check Token Management for account balance",
+    "access": "Create an AI Studio access token and use it as the OpenAI SDK api_key",
+    "command": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H \"Authorization: Bearer $AISTUDIO_ACCESS_TOKEN\" -H \"Content-Type: application/json\" -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://aistudio.baidu.com/",
+    "registerLabel": "打开百度 AI Studio",
+    "links": [
+      [
+        "AI Studio 大模型 API",
+        "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns"
+      ],
+      [
+        "AI Studio 文档中心",
+        "https://ai.baidu.com/ai-doc/index/AISTUDIO"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Baidu AI Studio / 星河社区",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "developer_shared_pool",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": null
+    },
+    "quota": "1,000,000 free Tokens per developer, shared across models with model-dependent token deduction",
+    "renewal": "No periodic refill documented; after depletion, additional Tokens can be purchased",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Baidu AI Studio and selected model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns",
+      "https://ai.baidu.com/ai-doc/index/AISTUDIO"
+    ],
+    "evidence": "百度 AI Studio 官方大模型 API 文档（更新时间 2026-05-19）明确每个开发者有 100 万免费 Tokens；服务域名为 https://aistudio.baidu.com/llm/lmapi/v3，兼容 openai-python，并列出 ERNIE 5.1、DeepSeek、Kimi、Qwen 等当前模型。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "这是 AI Studio 星河社区共享 Token 池，不等同于百度千帆每模型 100 万新客额度。不同模型会按不同数量消耗 Tokens。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验百度 AI Studio 星河每开发者 100 万免费 Tokens、OpenAI-compatible base_url 和当前模型列表。",
+      "method": [
+        "读取 AI Studio 官方大模型 API 文档，确认每开发者 1,000,000 免费 Tokens。",
+        "核对 Access Token、base_url https://aistudio.baidu.com/llm/lmapi/v3 和 OpenAI SDK 兼容。",
+        "抽查当前模型列表包含 ERNIE 5.1、DeepSeek、Kimi、Qwen。",
+        "当前无 AI Studio Access Token，因此未进行真实调用与 Token 余额扣减验证。"
+      ],
+      "result": "官方公开预检通过：100 万共享 Tokens、OpenAI-compatible API 和模型列表均有官方文档。",
+      "limitations": "未登录实际 AI Studio 账号，未验证当前账户首次额度到账、有效期、实际扣减倍率和真实响应。",
+      "evidence": [
+        {
+          "label": "AI Studio 大模型 API",
+          "url": "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns",
+          "note": "100 万免费 Tokens + API base_url"
+        }
+      ]
+    }
+  },
+  {
+    "id": "huawei-modelarts-maas-free-service",
+    "order": 63,
+    "date": "2026-09-29",
+    "name": "Huawei ModelArts Studio MaaS free preset services",
+    "providerMark": "HW",
+    "provider": "Huawei Cloud ModelArts Studio (MaaS)",
+    "providerMeta": "Huawei Cloud · Southwest-Guiyang-1",
+    "model": "Dynamic preset models under Free Service tab",
+    "modelMeta": "Direct API access · strict rate limits · dynamic expiry/quota",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 ModelArts Studio（MaaS）西南-贵阳一的“免费服务”页选择当前免费预置模型，并通过模型调用说明进行 API 推理",
+      "prerequisites": [
+        "Huawei Cloud account",
+        "ModelArts/MaaS authorization",
+        "Region API Key for Southwest-Guiyang-1"
+      ],
+      "steps": [
+        "进入 ModelArts Studio（MaaS）西南-贵阳一，在 在线推理 > 预置服务 > 免费服务 查看当前免费模型、额度和失效时间。",
+        "若目标免费服务需要领取额度，先在控制台领取；部分免费服务则无需领取、在失效时间前可直接使用。",
+        "打开目标服务“调用说明”获取当前 model 参数；使用 Region API Key 调用 MaaS API。",
+        "遇到 HTTP 429 说明超过免费服务严格流控，应降低频率，不要切到商用服务继续调用。"
+      ],
+      "endpoint": "https://api.modelarts-maas.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${MAAS_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.modelarts-maas.com/v1/chat/completions -H 'Authorization: Bearer ${MAAS_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
+    },
+    "kicker": "DYNAMIC FREE SERVICES",
+    "badges": [
+      "GUIYANG-1",
+      "DIRECT API",
+      "STRICT RATE LIMITS"
+    ],
+    "freeSummary": "华为云 ModelArts Studio（MaaS）提供动态“免费服务”预置模型，可直接通过 API 推理；免费模型、额度和失效时间会调整。",
+    "validitySummary": "动态免费服务 · 以控制台失效时间/剩余额度为准",
+    "accessSummary": "Huawei Cloud + MaaS authorization + region API Key",
+    "checkedSummary": "2026-09-29 / official MaaS user guide + API docs",
+    "title": "华为云 ModelArts Studio MaaS · 动态免费模型 API",
+    "why": "华为云 ModelArts Studio（MaaS）官方用户指南明确提供“免费服务”页签，并允许在业务环境中直接通过 API 调用免费预置服务。免费服务分两种：一种在失效时间前不限额度，另一种需领取有限额度；平台会动态调整免费模型、额度和有效期。2026-09-11 的 MaaS API 文档确认西南-贵阳一可通过 https://api.modelarts-maas.com/v1/chat/completions 使用 Region API Key 调用。",
+    "mechanism": "Dynamic preset-model free services with either time-limited unlimited usage or claimed limited quota",
+    "validity": "Per-service expiry/quota shown in the MaaS Free Service tab; platform may adjust models, quotas and validity",
+    "access": "Use Southwest-Guiyang-1 ModelArts Studio MaaS, select a current Free Service, obtain its model parameter and call with Region API Key",
+    "command": "curl https://api.modelarts-maas.com/v1/chat/completions -H \"Authorization: Bearer $MAAS_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"<current-free-model>\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://console.huaweicloud.com/modelarts/",
+    "registerLabel": "打开 Huawei Cloud ModelArts",
+    "links": [
+      [
+        "MaaS free-service user guide",
+        "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf"
+      ],
+      [
+        "MaaS Standard API V1",
+        "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Free-service feature documented for Southwest-Guiyang-1; actual free models are dynamic",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "dynamic_free_services",
+      "amount": null,
+      "unit": "service-specific quota",
+      "period": "service-specific expiry"
+    },
+    "quota": "Dynamic: some services are unlimited until an expiry time; others require claiming a limited quota. Strict rate limits apply.",
+    "renewal": "Service-specific; check the Free Service tab for expiry and quota",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Free service is for basic experience; review Huawei Cloud terms before production use",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf",
+      "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
+    ],
+    "evidence": "华为云 ModelArts Studio（MaaS）官方用户指南说明：西南-贵阳一的“免费服务”可在业务环境直接调用 API；免费服务可能是不限额度但有失效时间，也可能是领取有限额度，并存在严格流控。2026-09-11 官方 MaaS Standard API V1 文档确认 https://api.modelarts-maas.com/v1/chat/completions 与 Bearer Region API Key。",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "免费模型清单、额度和失效时间必须登录控制台实时查看；不要把示例 qwen3-30b-a3b 当成当前一定免费的模型。公开免费服务说明来自现行用户指南，但具体免费目录动态变化。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Huawei ModelArts Studio MaaS 免费服务的 API 可调用性、地域限制、动态额度/失效规则和标准 Chat API。",
+      "method": [
+        "读取 MaaS 用户指南中的免费服务章节，确认免费服务可在业务环境直接通过 API 调用。",
+        "确认两种免费模式：失效时间前不限额度；或领取有限额度。",
+        "读取 2026-09-11 MaaS Standard API V1，核对西南-贵阳一 endpoint 与 Bearer Region API Key。",
+        "当前未登录华为云控制台，因此未验证 2026-09-29 当天具体免费模型列表、失效时间和真实调用。"
+      ],
+      "result": "官方公开预检通过：免费服务确实支持直接 API 调用，且 API endpoint/鉴权路径明确。",
+      "limitations": "免费服务模型列表、额度与失效时间动态变化；未使用真实 Huawei Cloud 账号/API Key 进行当天目录和请求验证，因此 confidence 为 medium。",
+      "evidence": [
+        {
+          "label": "MaaS free-service user guide",
+          "url": "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf",
+          "note": "免费服务规则与 API 调用"
+        },
+        {
+          "label": "MaaS Standard API V1",
+          "url": "https://support.huaweicloud.com/model-call-maas/model-call-020.html",
+          "note": "endpoint 与鉴权"
+        }
+      ]
+    }
   }
 ]

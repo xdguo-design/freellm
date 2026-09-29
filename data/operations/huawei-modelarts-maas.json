@@ -1,0 +1,45 @@
+{
+  "providerId": "huawei-modelarts-maas",
+  "provider": "Huawei Cloud ModelArts Studio (MaaS)",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "huawei-modelarts-maas-free-service"
+  ],
+  "paths": [
+    {
+      "id": "dynamic-free-service-api",
+      "label": "MaaS 动态免费预置服务 API",
+      "productType": "api",
+      "prerequisites": [
+        "Huawei Cloud account",
+        "MaaS authorization",
+        "Southwest-Guiyang-1 Region API Key",
+        "当前 Free Service"
+      ],
+      "steps": [
+        {
+          "title": "选择免费服务",
+          "detail": "在西南-贵阳一的 在线推理 > 预置服务 > 免费服务 查看当前模型、额度和失效时间。"
+        },
+        {
+          "title": "获取调用参数",
+          "detail": "打开目标免费服务的“调用说明”，复制当前 model 参数和 API 示例。"
+        },
+        {
+          "title": "调用 MaaS API",
+          "detail": "使用 Region API Key 调用标准 Chat API；模型参数以控制台为准。",
+          "command": "curl https://api.modelarts-maas.com/v1/chat/completions -H 'Authorization: Bearer ${MAAS_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "HTTP 200；若 429 则说明触发严格流控。"
+        }
+      ],
+      "endpoint": "https://api.modelarts-maas.com/v1/chat/completions",
+      "auth": "Authorization: Bearer Region API Key",
+      "example": "Open the current Free Service entry in ModelArts Studio and copy its model parameter into the official MaaS chat request example.",
+      "validation": "控制台目标服务仍位于 Free Service 页签，未过失效时间/未耗尽额度，请求成功且未切换到商用服务。",
+      "sourceUrls": [
+        "https://support.huaweicloud.com/usermanual-maas-modelarts/MaaS用户指南-pdf.pdf",
+        "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
+      ]
+    }
+  ]
+}
