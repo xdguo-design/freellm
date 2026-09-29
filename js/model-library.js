@@ -225,6 +225,14 @@
     if (!rows.length) throw new Error('model directory contains no rows');
     return rows;
   };
+  const EMBEDDED_MODEL_FALLBACK = [
+ {"id":"puter/mimo-v2-6-flash","providerId":"puter","provider":"Puter.js","model":"MiMo-V2.6-Flash","context":"1000000","modality":["text","image","video","audio","reasoning"],"status":"online","sourceKind":"official","canonicalModelId":"mimo-v2.6-flash","accessRegion":"global","released":"2026-09-22"},
+ {"id":"opencode/mimo-v2-6-flash-free","providerId":"opencode","provider":"OpenCode Zen","model":"MiMo-V2.6-Flash Free","context":"1000000","modality":["text","image","video","audio","reasoning"],"status":"online","sourceKind":"official","canonicalModelId":"mimo-v2.6-flash","accessRegion":"international","released":"2026-09-22"},
+ {"id":"siliconflow/xing4-0-29b","providerId":"siliconflow","provider":"SiliconFlow","model":"Xing4.0-29B","context":"262144","modality":["text","reasoning"],"status":"online","sourceKind":"official","canonicalModelId":"xing4-0-29b","accessRegion":"domestic","released":"2026-09-20"},
+ {"id":"llm7/glm-5-3-flash","providerId":"llm7-io","provider":"LLM7","model":"GLM-5.3-Flash","context":"","modality":["unknown"],"status":"online","sourceKind":"official","canonicalModelId":"glm-5-3-flash","released":"2026-09-21"},
+ {"id":"amd/deepseek-v4-flash","providerId":"amd-radeon-cloud","provider":"AMD Radeon Cloud","model":"DeepSeek-V4-Flash","context":"1048576","modality":["text","reasoning"],"status":"online","sourceKind":"official","canonicalModelId":"deepseek-v4-flash","accessRegion":"domestic","released":"2026-09-18"},
+ {"id":"xiaomi/kimi-k3","providerId":"xiaomi-mimo","provider":"Xiaomi MiMo","model":"Kimi-K3","context":"262144","modality":["text","image","reasoning"],"status":"online","sourceKind":"official","canonicalModelId":"kimi-k3","accessRegion":"global","released":"2026-09-17"}
+];
   const loadData = async () => {
     try {
       const modelTask = fetch('/data/models.json').then((response) => {
@@ -239,7 +247,8 @@
       try {
         rawModels = await modelTask;
       } catch (_) {
-        rawModels = await loadDirectorySnapshot();
+        try { rawModels = await loadDirectorySnapshot(); }
+        catch (_) { rawModels = EMBEDDED_MODEL_FALLBACK; }
         state.dataFallback = true;
       }
       state.offers = await offerTask;
