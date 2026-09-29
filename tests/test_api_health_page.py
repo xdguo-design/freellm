@@ -169,6 +169,53 @@ class ApiHealthBrowserTests(unittest.TestCase):
             self.assertNotIn(excluded, visible_ids)
 
 
+    def test_first_screen_geometry_matches_current_homepage_prototype(self):
+        page = self.load_health()
+        page.set_viewport_size({"width": 1536, "height": 1024})
+        page.wait_for_timeout(50)
+
+        rail = page.locator(".fl-site-rail").bounding_box()
+        ribbon = page.locator(".fl-site-ribbon").bounding_box()
+        content = page.locator(".api-health-page").bounding_box()
+        hero = page.locator(".health-hero").bounding_box()
+        metrics = page.locator(".summary-grid .metric").all()
+
+        self.assertIsNotNone(rail)
+        self.assertIsNotNone(ribbon)
+        self.assertIsNotNone(content)
+        self.assertIsNotNone(hero)
+        self.assertAlmostEqual(rail["width"], 230, delta=1)
+        self.assertAlmostEqual(ribbon["height"], 78, delta=2)
+        self.assertLessEqual(content["width"], 1540)
+        self.assertAlmostEqual(content["x"], 230, delta=2)
+        self.assertGreaterEqual(hero["height"], 250)
+        self.assertEqual(len(metrics), 5)
+        metric_boxes = [metric.bounding_box() for metric in metrics]
+        self.assertTrue(all(box and 116 <= box["height"] <= 125 for box in metric_boxes))
+        gaps = [
+            metric_boxes[index + 1]["x"] - (metric_boxes[index]["x"] + metric_boxes[index]["width"])
+            for index in range(4)
+        ]
+        self.assertTrue(all(8 <= gap <= 12 for gap in gaps))
+
+    def test_health_page_mobile_shell_and_cards_remain_aligned(self):
+        page = self.load_health()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.wait_for_timeout(50)
+        self.assertTrue(page.locator(".fl-site-rail").is_visible())
+        self.assertEqual(page.locator(".summary-grid .metric").count(), 5)
+        columns = page.locator(".summary-grid").evaluate(
+            "el => getComputedStyle(el).gridTemplateColumns.split(' ').length"
+        )
+        self.assertEqual(columns, 2)
+        self.assertEqual(
+            page.locator(".health-hero").evaluate(
+                "el => getComputedStyle(el).gridTemplateColumns.split(' ').length"
+            ),
+            1,
+        )
+
+
     def test_health_first_screen_matches_reference_layout_system(self):
         page = self.load_health()
         page.set_viewport_size({"width": 1536, "height": 1024})
