@@ -1,12 +1,46 @@
 {
   "providerId": "iflytek-spark",
-  "provider": "iFlytek Spark / Open Platform",
+  "provider": "iFlytek Spark",
   "lastVerifiedAt": "2026-09-29",
   "offerIds": [
     "iflytek-spark-lite-free",
     "iflytek-embedding-free-trial"
   ],
   "paths": [
+    {
+      "id": "spark-lite-free-api",
+      "label": "Spark Lite 当前免费 OpenAI-compatible API",
+      "productType": "api",
+      "prerequisites": [
+        "讯飞开放平台账号",
+        "Spark Lite 授权",
+        "HTTP APIPassword"
+      ],
+      "steps": [
+        {
+          "title": "确认 Lite 免费状态",
+          "detail": "打开官方 HTTP 文档/控制台，确认 Lite 仍为支持免费使用。"
+        },
+        {
+          "title": "获取 APIPassword",
+          "detail": "在星火 API 控制台获取 HTTP 服务认证信息中的 APIPassword。"
+        },
+        {
+          "title": "调用 model=lite",
+          "detail": "向 /v1/chat/completions 发送 OpenAI-compatible 请求。",
+          "command": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "返回 chat completion；若出现 11201/11202/11203 按流控处理。"
+        }
+      ],
+      "endpoint": "https://spark-api-open.xf-yun.com/v1/chat/completions",
+      "auth": "Authorization: Bearer APIPassword",
+      "example": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "validation": "请求成功且 model=lite；官方文档仍标 Lite 支持免费使用。",
+      "sourceUrls": [
+        "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
+        "https://www.xfyun.cn/doc/spark/Web.html"
+      ]
+    },
     {
       "id": "embedding-free-trial",
       "label": "讯飞 Embedding 免费试用 API",
