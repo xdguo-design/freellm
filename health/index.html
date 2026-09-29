@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html class="fl-pastel-ui" lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -79,7 +79,22 @@
     @media(max-width:640px){.api-health-page{padding-top:0}.health-hero{padding:20px;border-radius:18px}.summary-grid{grid-template-columns:1fr 1fr}.metric{min-height:100px}.metric strong{font-size:28px}.panel{padding:14px}.filters{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.filter{white-space:nowrap}.hero-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions button,.hero-actions a{width:100%}}
   </style>
 </head>
-<body>
+<body class="fl-ui-v2">
+  <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+    <a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a>
+    <nav class="fl-site-nav">
+      <a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
+      <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
+      <a href="/health/" data-site-nav="health" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>API 健康</span></a>
+      <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
+      <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
+      <a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+      <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+      <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
+    </nav>
+    <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
+  </aside>
+  <div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / API 健康台</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/">资源首页 ↗</a></span></div>
   <main class="api-health-page" id="fl-main-content">
     <section class="health-hero">
       <div>
