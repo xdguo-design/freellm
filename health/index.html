@@ -126,6 +126,16 @@
     .metric strong{display:block;margin:10px 0 6px;color:inherit;font-size:34px;line-height:.9;letter-spacing:-.06em}
     .metric small{color:var(--health-muted);font-size:12px;line-height:1.35}
     .metric:nth-child(2) small{color:#d8deff}.metric:nth-child(4) small{color:#5a4b00}
+    .metric-priority{gap:7px}
+    .priority-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:3px 0}
+    .priority-counts b{min-width:0;display:grid;grid-template-columns:auto 1fr;align-items:end;gap:4px;font-weight:800}
+    .priority-counts em{font:800 9px var(--health-mono);font-style:normal;letter-spacing:.04em}
+    .priority-counts strong{margin:0!important;font-size:24px!important;line-height:.9!important;letter-spacing:-.06em}
+    .priority-counts b:nth-child(1){color:var(--health-red-ink)}
+    .priority-counts b:nth-child(2){color:#5a4b00}
+    .priority-counts b:nth-child(3){color:#59626a}
+    .filter em{margin-left:5px;font:800 9px var(--health-mono);font-style:normal;opacity:.72}
+    .filter.active em{color:inherit;opacity:.8}
 
     .grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin:0 0 22px}
     .panel{padding:18px;border:1px solid var(--health-ink);border-radius:0;background:#fff;box-shadow:none}
@@ -250,7 +260,7 @@
       <article class="metric"><span>API 渠道</span><strong id="m-total">—</strong><small>正式 API Offer + 高优先级待完善渠道</small></article>
       <article class="metric"><span>公开端点可达</span><strong id="m-alive">—</strong><small>HTTP 有响应 / 模型列表公开</small></article>
       <article class="metric"><span>国内可达</span><strong id="m-cn">—</strong><small>来自现有 networkCheck 证据</small></article>
-      <article class="metric"><span>需要处理</span><strong id="m-action">—</strong><small>检测缺失、核验过期或限时待确认</small></article>
+      <article class="metric metric-priority"><span>需要处理</span><div class="priority-counts"><b><em>P0</em><strong id="m-p0">—</strong></b><b><em>P1</em><strong id="m-p1">—</strong></b><b><em>P2</em><strong id="m-p2">—</strong></b></div><small>紧急故障 / 即将影响 / 维护治理</small></article>
       <article class="metric"><span>模型快照</span><strong id="m-models">—</strong><small>当前模型目录记录</small></article>
     </section>
 
@@ -277,7 +287,9 @@
         <input id="search" type="search" placeholder="搜索 OpenRouter / 智谱 / 硅基流动 / NVIDIA…">
         <div class="filters" id="filters">
           <button class="filter active" data-filter="all" type="button">全部</button>
-          <button class="filter" data-filter="action" type="button">需处理</button>
+          <button class="filter" data-filter="p0" type="button">P0 紧急 <em id="f-p0">—</em></button>
+          <button class="filter" data-filter="p1" type="button">P1 关注 <em id="f-p1">—</em></button>
+          <button class="filter" data-filter="p2" type="button">P2 维护 <em id="f-p2">—</em></button>
           <button class="filter" data-filter="cn" type="button">国内可达</button>
           <button class="filter" data-filter="intl" type="button">海外可达</button>
           <button class="filter" data-filter="limited" type="button">限时/试用</button>
@@ -416,6 +428,20 @@
     if(daysOld(r.lastVerifiedAt)>7)reasons.push({level:'P2',code:'stale_verification',label:'官方信息超过 '+daysOld(r.lastVerifiedAt)+' 天未复核'});
     return reasons;
   }
+  function recordPriority(r){
+    var reasons=actionReasons(r);
+    if(!reasons.length)return '';
+    reasons.sort(function(a,b){return actionPriorityRank(a.level)-actionPriorityRank(b.level)});
+    return reasons[0].level;
+  }
+  function priorityCounts(){
+    var counts={P0:0,P1:0,P2:0};
+    state.records.forEach(function(r){
+      var level=recordPriority(r);
+      if(level)counts[level]+=1;
+    });
+    return counts;
+  }
   function providerActionItems(){
     var grouped={};
     state.records.forEach(function(r){
@@ -462,7 +488,9 @@
   function rowMatches(r){
     var q=state.query.trim().toLowerCase();
     if(q&&JSON.stringify([r.provider,r.title,r.quota,r.id]).toLowerCase().indexOf(q)<0)return false;
-    if(state.filter==='action')return issueFor(r).length>0;
+    if(state.filter==='p0')return recordPriority(r)==='P0';
+    if(state.filter==='p1')return recordPriority(r)==='P1';
+    if(state.filter==='p2')return recordPriority(r)==='P2';
     if(state.filter==='cn')return r.networkCheck&&['cn','both'].indexOf(r.networkCheck.region)>=0;
     if(state.filter==='intl')return r.networkCheck&&['intl','both'].indexOf(r.networkCheck.region)>=0;
     if(state.filter==='limited')return isLimited(r);
@@ -491,10 +519,16 @@
     }).join(''):'<div class="empty">没有符合当前筛选条件的渠道。</div>';
   }
   function renderSummary(){
+    var counts=priorityCounts();
     $('m-total').textContent=state.records.length;
     $('m-alive').textContent=state.records.filter(publicAlive).length;
     $('m-cn').textContent=state.records.filter(function(r){return r.networkCheck&&['cn','both'].indexOf(r.networkCheck.region)>=0}).length;
-    $('m-action').textContent=state.records.filter(function(r){return issueFor(r).length>0}).length;
+    $('m-p0').textContent=counts.P0;
+    $('m-p1').textContent=counts.P1;
+    $('m-p2').textContent=counts.P2;
+    $('f-p0').textContent=counts.P0;
+    $('f-p1').textContent=counts.P1;
+    $('f-p2').textContent=counts.P2;
     $('m-models').textContent=state.models.length;
   }
   function renderActions(){
