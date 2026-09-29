@@ -28,6 +28,7 @@
         official: $('.source-link', row)?.getAttribute('href') || '/models/all/'
       }));
       try {
+        if (location.protocol === 'file:') throw new Error('file preview uses embedded model catalog');
         const response = await fetch('/data/daily-log/2026-09-28.json', { cache: 'no-store' });
         if (response.ok) {
           const daily = await response.json();
@@ -125,13 +126,21 @@
       body.classList.add('prototype-resource-v4');
       let offers = [];
       try {
-        const response = await fetch('/data/offers-ranked.json', { cache: 'no-store' });
-        if (response.ok) {
-          const payload = await response.json();
-          offers = Array.isArray(payload) ? payload : [];
-        }
+        const embedded = JSON.parse($('#offer-data')?.textContent || '[]');
+        offers = Array.isArray(embedded) ? embedded : [];
       } catch (error) {
-        console.debug('FreeLLM offer metadata refresh skipped', error);
+        console.debug('FreeLLM embedded offer metadata unavailable', error);
+      }
+      if (location.protocol !== 'file:') {
+        try {
+          const response = await fetch('/data/offers-ranked.json', { cache: 'no-store' });
+          if (response.ok) {
+            const payload = await response.json();
+            if (Array.isArray(payload) && payload.length) offers = payload;
+          }
+        } catch (error) {
+          console.debug('FreeLLM offer metadata refresh skipped', error);
+        }
       }
       const offerMeta = new Map(offers.map(item => [clean(item.id), item]));
       const getCards = () => $$('#catalog-offer-rows .offer');
