@@ -1,0 +1,35 @@
+name: regen-seo-student-unification-once
+
+on:
+  push:
+    branches:
+      - feat/model-library-reference-v2
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/model-library-reference-v2
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python scripts/build_seo_pages.py
+      - run: python scripts/build_seo_pages.py --check
+      - name: Commit generated artifacts and remove one-time workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/regen-seo-student-unification-once.yml
+          git add -A
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: regenerate unified resource catalog artifacts'
+          git push origin HEAD:feat/model-library-reference-v2
