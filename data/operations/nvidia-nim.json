@@ -30,9 +30,9 @@
           "detail": "先发最小请求并观察 429 / rate-limit 响应；开发者免费层的限流会动态变化。"
         }
       ],
-      "endpoint": "Use the exact endpoint from the selected model's Integrate tab",
+      "endpoint": "https://integrate.api.nvidia.com/v1",
       "auth": "Authorization: Bearer NVIDIA API key",
-      "example": "Open https://build.nvidia.com/models and copy the selected Free Endpoint integration snippet.",
+      "example": "Select a Free Endpoint at https://build.nvidia.com/models and copy the model-specific Integrate code before calling the NVIDIA-hosted API.",
       "validation": "目标模型页面仍标 Free Endpoint，API 请求成功；若标签消失或 endpoint 变化，则停止按免费入口宣传。",
       "limits": "Dynamic by model, use-case and service load; official public docs do not publish one universal free-tier RPM/credits value.",
       "commonIssues": [
