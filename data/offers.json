@@ -943,7 +943,7 @@
     "provider": "SenseNova",
     "providerMeta": "SenseTime · China",
     "model": "SenseNova 6.8 Flash Lite · SenseNova U1 Fast",
-    "modelMeta": "Token Plan 公测免费模型 · OpenAI 兼容接口",
+    "modelMeta": "Token Plan Free public beta · OpenAI-compatible API",
     "type": [
       "free"
     ],
@@ -976,13 +976,13 @@
       "API CONFIRMED",
       "NO CARD"
     ],
-    "freeSummary": "公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡",
-    "validitySummary": "限时免费公测；付费档位（Lite/Pro）标注即将上线",
-    "accessSummary": "China account",
-    "checkedSummary": "2026-09-08 / official Token Plan page",
+    "freeSummary": "公测期完全免费：Free 档 ¥0/月，60,000 积分 / 5 小时；特殊模型除外；最多 20 个 API Key。",
+    "validitySummary": "Public beta · paid Lite / Pro tiers are not yet live",
+    "accessSummary": "SenseNova account + API Key · public-beta quota",
+    "checkedSummary": "2026-09-29 / official SenseNova Token Plan",
     "title": "SenseNova · Token Plan 公测免费",
-    "why": "商汤官方 Token Plan 页面显示：公测期 Free 档免费，配额为 60,000 积分 / 5 小时，最多 20 个 API Key，提供 OpenAI 兼容接口。官方页面当前列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast 两个模型；2026 年 5 月发布时的公开报道覆盖 6.7 Flash-Lite、U1 Fast、DeepSeek V4 Flash 且描述各模型配额独立计数。积分规则与特殊模型排除项以控制台实际显示为准。",
-    "mechanism": "Token Plan 公测免费配额（积分制，每 5 小时刷新）",
+    "why": "SenseNova 官方 Token Plan 页面当前仍明确显示“公测期完全免费开放”：Free 档 ¥0/月、60,000 积分 / 5 小时，特殊模型除外，支持 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast，并允许最多 20 个 API Key。当前页面没有说明两个模型各自独立获得 60,000 积分，因此 FreeLLM 将它记录为 Free 档的 5 小时积分池，而不再写成每模型独立 60,000。",
+    "mechanism": "Token Plan public-beta Free tier with a 60,000-credit / 5-hour plan quota",
     "validity": "限时免费公测；付费档位标注即将上线",
     "access": "China account",
     "command": "在 platform.sensenova.cn/token-plan 领取 Free 公测档，创建 API Key 后用 OpenAI 兼容接口调用免费模型。",
@@ -1005,25 +1005,26 @@
     "originCountry": "China",
     "availability": "China account",
     "freeMechanism": "trial",
-    "quota": "60,000 积分 / 5 小时（Free 档，公测期免费；特殊模型除外）",
-    "renewal": "每 5 小时刷新（公测期）",
+    "quota": "60,000 credits / 5 hours on the Free public-beta tier; special models excluded",
+    "renewal": "5-hour public-beta quota window; paid Lite/Pro tiers are marked coming soon",
     "phoneRequired": "yes",
     "cardRequired": "no",
     "commercialUse": "check provider terms",
     "sourceUrls": [
       "https://www.sensenova.cn/token-plan",
+      "https://www.sensenova.cn/models",
       "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
     ],
-    "evidence": "Official Token Plan page (checked 2026-09-08) shows a free public-beta tier with 60,000 credits per 5 hours and an OpenAI-compatible endpoint; May 2026 launch coverage reports phone-number sign-up and per-model independent quotas.",
+    "evidence": "SenseNova 官方 Token Plan 页面（2026-09-29 复核）显示 Free 公测档 ¥0/月、60,000 积分 / 5 小时、最多 20 个 API Key，并列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast；付费 Lite / Pro 仍标记“即将上线”。",
     "status": "verified",
-    "confidence": "medium",
-    "lastVerifiedAt": "2026-09-17",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "公测期限时免费；积分到账、模型 ID 与特殊模型排除规则以控制台为准。",
+    "notes": "积分是 Free 档窗口额度；官方公开页面未说明每个模型分别拥有独立 60,000 积分。特殊模型可能被排除，实际模型 ID 与剩余额度以控制台为准。",
     "freeSummaryEn": "Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required",
     "pricingModel": "trial",
     "freePolicy": {
-      "type": "trial",
+      "type": "public_beta_credit_window",
       "amount": 60000,
       "unit": "credits",
       "period": "5h"
@@ -1032,15 +1033,15 @@
       {
         "model": "sensenova-6.8-flash-lite",
         "label": "SenseNova 6.8 Flash Lite",
-        "quota": "60,000 积分 / 5 小时",
-        "note": "轻量多模态；模型 ID 以控制台为准",
+        "quota": "Uses the Free plan 60,000 credits / 5h pool",
+        "note": "Official Token Plan lists this model on the Free public-beta tier; special-model exclusions still apply.",
         "sourceUrl": "https://www.sensenova.cn/token-plan"
       },
       {
         "model": "sensenova-u1-fast",
         "label": "SenseNova U1 Fast",
-        "quota": "60,000 积分 / 5 小时",
-        "note": "信息图与图文生成；模型 ID 以控制台为准",
+        "quota": "Uses the Free plan 60,000 credits / 5h pool",
+        "note": "Official Token Plan lists this model on the Free public-beta tier; model availability may change.",
         "sourceUrl": "https://www.sensenova.cn/token-plan"
       }
     ],
@@ -1721,8 +1722,8 @@
     "providerEn": "Alibaba Cloud Model Studio / Qwen",
     "providerMeta": "通义千问 · Alibaba Cloud · China",
     "providerMetaEn": "Qwen · Alibaba Cloud · China",
-    "model": "Qwen models · qwen-max and more",
-    "modelMeta": "API / real-time inference",
+    "model": "Qwen and other eligible Model Studio real-time inference models",
+    "modelMeta": "Beijing region · typically 1M tokens per eligible model · 90 days",
     "type": [
       "free",
       "api"
@@ -1752,47 +1753,58 @@
     "kicker": "NEW USER FREE QUOTA",
     "badges": [
       "90 DAYS",
-      "USUALLY 1M TOKENS / MODEL"
+      "TYPICALLY 1M / MODEL",
+      "FREE-QUOTA-ONLY SWITCH"
     ],
-    "freeSummary": "New-user free quota · usually 1,000,000 tokens per model",
-    "validitySummary": "90 days from activation / model eligibility",
-    "accessSummary": "Beijing region models",
-    "checkedSummary": "Today / official Alibaba docs",
+    "freeSummary": "北京地域新人模型免费额度：符合条件的模型通常各 1,000,000 Tokens，额度彼此独立；另有 OAuth 独立免费额度 2,000 次/日。",
+    "validitySummary": "API Key 新人额度 90 天 · OAuth 独立额度每日刷新",
+    "accessSummary": "北京地域 · 通用 API Key；未实名用户免费额度用完后强制停止",
+    "checkedSummary": "2026-09-29 / official Model Studio free-quota docs",
     "title": "通义千问 · 阿里云百炼新人免费额度",
-    "why": "Alibaba Cloud Model Studio automatically grants eligible new users free quota for supported models. This makes Qwen a clear free API route, but the quota is regional, one-time and time-limited rather than a permanent unlimited plan.",
-    "mechanism": "Automatic new-user free quota for supported Qwen models",
-    "validity": "Valid for 90 days from opening, model publication or application, whichever is later",
-    "access": "Use Alibaba Cloud Model Studio models in the North China 2 (Beijing) region; check regional access before creating a key",
+    "why": "阿里云百炼官方新人免费额度文档（2026-09 当前版本）确认：仅华北2（北京）地域提供新人免费额度；不同模型额度彼此独立，通常每模型 100 万 Tokens；有效期为 90 天。未实名认证用户免费额度耗尽后默认停止，已实名用户若未开启“免费额度用完即停”会自动转按量付费。官方同页还说明 OAuth 认证有独立的每日 2,000 次免费调用额度，不计入 API Key Token 免费额度。",
+    "mechanism": "北京地域新用户按模型独立发放 Token 免费额度；OAuth 认证另有每日 2,000 次独立免费额度",
+    "validity": "API Key 新人额度自开通百炼、模型发布或申请通过之日起 90 天（取较晚者）；OAuth 独立额度按日刷新",
+    "access": "使用百炼北京地域通用 API Key 调用实时推理；Token Plan/Coding Plan 专属 Key 不消耗新人免费额度",
     "command": "Create a regular Model Studio API key in the Beijing region, then use the official Qwen API quick-start example. Enable the free-quota-exhausted stop setting before testing.",
     "register": "https://bailian.console.aliyun.com/",
     "registerLabel": "Open Alibaba Qwen console",
     "links": [
       [
-        "Official free quota rules",
-        "https://help.aliyun.com/zh/model-studio/new-free-quota"
+        "新人免费额度与用完即停",
+        "https://help.aliyun.com/zh/model-studio/new-free-quota/"
       ],
       [
-        "Model Studio console",
+        "免费额度有效期调整公告",
+        "https://help.aliyun.com/zh/model-studio/new-free-quota-validity-adjustment"
+      ],
+      [
+        "模型价格与免费额度",
+        "https://help.aliyun.com/zh/model-studio/model-pricing"
+      ],
+      [
+        "Model Studio 控制台",
         "https://bailian.console.aliyun.com/"
       ]
     ],
     "originCountry": "China",
     "availability": "Only supported models in North China 2 (Beijing) have this new-user quota; other regions do not",
     "freeMechanism": "trial",
-    "quota": "Usually 1,000,000 input + output tokens per model; exact quota varies by model",
-    "renewal": "One-time new-user quota; expires automatically and does not reset or extend",
+    "quota": "Eligible models usually receive 1,000,000 shared input+output tokens each; exact quota varies by model. OAuth authentication has a separate 2,000 calls/day free allowance.",
+    "renewal": "API Key new-user quota is one-time and expires after 90 days; OAuth allowance refreshes daily",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check Alibaba Cloud Model Studio and model terms",
     "sourceUrls": [
-      "https://help.aliyun.com/zh/model-studio/new-free-quota"
+      "https://help.aliyun.com/zh/model-studio/new-free-quota/",
+      "https://help.aliyun.com/zh/model-studio/new-free-quota-validity-adjustment",
+      "https://help.aliyun.com/zh/model-studio/model-pricing"
     ],
-    "evidence": "Alibaba Cloud's official documentation states that eligible new users receive automatic model free quota, that Beijing-region models are covered, and that the quota is valid for 90 days; it also warns that pay-as-you-go may continue after exhaustion.",
+    "evidence": "阿里云官方文档确认：仅北京地域享新人模型免费额度；免费额度 90 天有效；不同模型额度独立且通常各 100 万 Tokens；未实名用户耗尽后强制停止，已实名用户可开启“免费额度用完即停”；通用 API Key 才会优先消耗免费额度；OAuth 认证另有每日 2,000 次独立免费调用额度。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Use a regular API key for the new-user quota, not a Token Plan dedicated key. Turn on the stop switch when the free quota is exhausted to avoid accidental charges.",
+    "notes": "不要把“通常 100 万 Tokens/模型”写成所有模型固定 100 万；部分模型没有免费额度。已实名用户若未开启“免费额度用完即停”，超额会自动转 PAYG。OAuth 2,000 次/日是独立认证额度，与 API Key Token 免费额度不互通。",
     "key": true,
     "endpointCheck": {
       "checkedAt": "2026-09-19",
@@ -1814,6 +1826,28 @@
       "quotaTier": "high",
       "reason": "实测 116ms · 免费额度 1,000,000 tokens",
       "reasonEn": "116 ms measured · free quota 1,000,000 tokens"
+    },
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": "90 days",
+      "note": "usually 1M per eligible Beijing-region model; OAuth has separate 2,000 calls/day"
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
     }
   },
   {
@@ -6896,6 +6930,172 @@
         {
           "label": "智谱新用户活动页",
           "url": "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
+        }
+      ]
+    }
+  },
+  {
+    "id": "xiaomi-mimo-v2-5-tts-free",
+    "order": 56,
+    "date": "2026-09-29",
+    "name": "Xiaomi MiMo V2.5 TTS limited-free API",
+    "providerMark": "米",
+    "provider": "Xiaomi MiMo",
+    "providerMeta": "Xiaomi MiMo Open Platform · China / Global",
+    "model": "mimo-v2.5-tts · mimo-v2.5-tts-voicedesign · mimo-v2.5-tts-voiceclone",
+    "modelMeta": "TTS · OpenAI-compatible Chat Completions · RPM 100 · TPM 10M",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 Xiaomi MiMo 开放平台创建 API Key，调用当前限时免费的 MiMo-V2.5-TTS 三款语音合成 API",
+      "prerequisites": [
+        "Xiaomi MiMo Open Platform account",
+        "MiMo API Key"
+      ],
+      "steps": [
+        "打开 MiMo 官方定价或 TTS 模型页，确认三款 V2.5-TTS 仍标记“限时免费”。",
+        "在 MiMo 控制台创建普通 API Key，并保存为 MIMO_API_KEY。",
+        "使用 OpenAI 兼容 https://api.xiaomimimo.com/v1 接口调用 TTS 模型；返回音频为 base64 数据，测试后再次核对费用/用量页面。"
+      ],
+      "endpoint": "https://api.xiaomimimo.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${MIMO_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header 'Authorization: Bearer ${MIMO_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
+      },
+      "docsUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+    },
+    "kicker": "3 TTS APIS FREE NOW",
+    "badges": [
+      "LIMITED FREE",
+      "OPENAI COMPATIBLE",
+      "RPM 100"
+    ],
+    "freeSummary": "MiMo 官方定价与模型页当前将 V2.5-TTS、VoiceDesign、VoiceClone 三款 API 标为限时免费。",
+    "validitySummary": "限时免费 · 官方未公布统一结束日期",
+    "accessSummary": "MiMo account + API Key · China / overseas pricing pages both mark TTS free",
+    "checkedSummary": "2026-09-29 / official Xiaomi MiMo release + pricing + model pages",
+    "title": "Xiaomi MiMo · V2.5 TTS 三款 API 当前限时免费",
+    "why": "Xiaomi MiMo 官方 V2.5-TTS 发布公告、按量定价页和模型详情页都明确写明三款 TTS API 当前“限时免费”。官方模型页同时给出 OpenAI 兼容接入、Base URL、RPM 100 与 TPM 10M。免费没有公布固定结束时间，因此必须按限时活动处理，不能标为永久免费。",
+    "mechanism": "Three MiMo V2.5 TTS APIs are temporarily priced at zero on the official Open Platform",
+    "validity": "Limited-time free; no public end date, recheck the official pricing/model page before use",
+    "access": "Create a Xiaomi MiMo Open Platform API Key and call the OpenAI-compatible API",
+    "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer $MIMO_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+    "register": "https://platform.xiaomimimo.com/",
+    "registerLabel": "Open Xiaomi MiMo Platform",
+    "links": [
+      [
+        "V2.5-TTS release",
+        "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+      ],
+      [
+        "PAYG pricing",
+        "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go"
+      ],
+      [
+        "MiMo-V2.5-TTS model page",
+        "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+      ],
+      [
+        "VoiceDesign model page",
+        "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Official Xiaomi MiMo API; domestic and overseas pricing both list the TTS series as limited-time free",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_zero_price_models",
+      "amount": 3,
+      "unit": "models",
+      "period": "until Xiaomi changes pricing"
+    },
+    "quota": "No public free-token/seconds cap published; model page currently lists RPM 100 and TPM 10,000,000",
+    "renewal": "Not a recurring grant; free price persists only while Xiaomi marks the models as limited-time free",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Xiaomi MiMo terms and voice-cloning restrictions",
+    "limits": {
+      "requestsPerMinute": 100,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null,
+      "tokensPerMinute": 10000000
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release",
+      "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go",
+      "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts",
+      "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+    ],
+    "evidence": "Xiaomi MiMo 官方 V2.5-TTS 发布页明确三款 TTS 模型均在开放平台限时免费；官方按量定价页在国内与海外价格表中均将三款 TTS 标为“限时免费”；官方模型页给出 API Key、OpenAI 兼容 Base URL、RPM 100 和 TPM 10M。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "VoiceClone 涉及声音权利与授权风险，使用前需确认自己拥有相应声音素材的合法授权。免费结束时间未公开，必须在调用前重新核官方价格页。",
+    "freeModels": [
+      {
+        "model": "mimo-v2.5-tts",
+        "quota": "Current official price: limited-time free",
+        "note": "Built-in premium voices; RPM 100, TPM 10M.",
+        "sourceUrl": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+      },
+      {
+        "model": "mimo-v2.5-tts-voicedesign",
+        "quota": "Current official price: limited-time free",
+        "note": "Voice design from natural-language descriptions.",
+        "sourceUrl": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+      },
+      {
+        "model": "mimo-v2.5-tts-voiceclone",
+        "quota": "Current official price: limited-time free",
+        "note": "Voice cloning; ensure voice/sample rights and consent.",
+        "sourceUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Xiaomi MiMo V2.5-TTS 三款开放 API 的当前限时免费状态、Base URL 和限流信息。",
+      "method": [
+        "读取 Xiaomi MiMo 官方 V2.5-TTS 发布公告，确认三款模型均在开放平台限时免费。",
+        "读取官方 PAYG 定价页，确认国内和海外 TTS 系列当前均标记限时免费。",
+        "读取官方 MiMo-V2.5-TTS / VoiceDesign 模型页，核对 OpenAI 兼容 Base URL、API Key、RPM 100 与 TPM 10M。",
+        "当前没有可用 MiMo API Key，因此没有实际生成音频或验证账单为 0。"
+      ],
+      "result": "官方公开预检通过：三款 V2.5-TTS API 当前均为限时免费，OpenAI 兼容接入和 RPM/TPM 规格可由官方页面确认。",
+      "limitations": "未使用真实 MiMo API Key，未验证账号是否需要充值/实名、真实音频响应、实际账单、VoiceClone 素材上传流程和活动结束时间。",
+      "evidence": [
+        {
+          "label": "MiMo V2.5-TTS 发布公告",
+          "url": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+        },
+        {
+          "label": "MiMo API 定价",
+          "url": "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go"
+        },
+        {
+          "label": "MiMo-V2.5-TTS 模型页",
+          "url": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
         }
       ]
     }

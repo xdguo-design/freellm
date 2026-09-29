@@ -1,0 +1,45 @@
+{
+  "providerId": "sensecore",
+  "provider": "SenseNova",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "sensecore"
+  ],
+  "paths": [
+    {
+      "id": "token-plan-free-beta",
+      "label": "SenseNova Token Plan Free 公测 API",
+      "productType": "api",
+      "prerequisites": [
+        "SenseNova 账号",
+        "已领取 Free 公测档",
+        "已创建 API Key"
+      ],
+      "steps": [
+        {
+          "title": "确认 Free 公测",
+          "detail": "打开 Token Plan 官方页，确认 Free 档仍为 ¥0/月、60,000 积分 / 5 小时。"
+        },
+        {
+          "title": "创建 API Key",
+          "detail": "在 SenseNova 控制台创建 API Key；官方 Free 档当前最多允许 20 个 Key。"
+        },
+        {
+          "title": "调用免费模型",
+          "detail": "使用 OpenAI 兼容 endpoint 调用当前 Free 档支持模型，并观察 5 小时积分窗口。",
+          "command": "curl https://token.sensenova.cn/v1/chat/completions -H 'Authorization: Bearer ${SENSENOVA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "expected": "返回 chat completion；Token Plan 用量页显示积分扣减。"
+        }
+      ],
+      "endpoint": "https://token.sensenova.cn/v1/chat/completions",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://token.sensenova.cn/v1/chat/completions -H 'Authorization: Bearer ${SENSENOVA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "validation": "请求成功，并在 Token Plan 用量页确认请求消耗 Free 公测积分；特殊模型若不在 Free 档应停止标记为免费。",
+      "sourceUrls": [
+        "https://www.sensenova.cn/token-plan",
+        "https://www.sensenova.cn/models",
+        "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+      ]
+    }
+  ]
+}

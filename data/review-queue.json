@@ -102,5 +102,27 @@
     "freeSummary": "截图标注上下文/额度：1M",
     "catalogStatus": "draft",
     "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "360-api-new-user-50rmb",
+    "providerId": "360-ai",
+    "provider": "360智脑开放平台",
+    "model": "360 API platform services (chat-model applicability pending account verification)",
+    "name": "360 API 新用户 50 元体验金",
+    "capabilities": [
+      "chat"
+    ],
+    "register": "https://ai.360.com/open",
+    "docsUrl": "https://ai.360.com/docs/quick-start",
+    "apiEndpoint": "https://api.360.cn/v1/chat/completions",
+    "freeSummary": "官方文档确认 API 平台新注册用户有 50 元体验金；翻译与知识库/embedding 文档明确可使用。是否覆盖全部聊天模型尚需账号级验证。",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-29",
+    "sourceUrls": [
+      "https://ai.360.com/docs/quick-start",
+      "https://ai.360.com/docs/8256390m0",
+      "https://ai.360.com/docs/413291998e0"
+    ],
+    "reviewNote": "Do not publish as a general free LLM offer until a real account confirms the ¥50 trial credit can be spent on chat/completions model usage."
   }
 ]

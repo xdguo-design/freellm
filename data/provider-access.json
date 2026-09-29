@@ -981,31 +981,37 @@
   {
     "providerId": "aliyun-qwen",
     "profileId": "aliyun-qwen-api",
-    "registerUrl": null,
+    "registerUrl": "https://bailian.console.aliyun.com/",
     "accountRequired": "yes",
     "emailRequired": "unknown",
     "phoneRequired": "unknown",
-    "identityRequired": "unknown",
+    "identityRequired": "no",
     "cardRequired": "unknown",
-    "billingRequired": "unknown",
+    "billingRequired": "no",
     "apiKeyRequired": "yes",
     "licenseAcceptance": "unknown",
-    "modelApproval": "unknown",
-    "gpuRequired": "unknown",
-    "overageBehavior": "unknown",
-    "searchMethod": "official_model_catalog",
+    "modelApproval": "model_dependent",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
     "regionPolicyId": "policy-unknown-default",
-    "registrationSteps": [],
+    "registrationSteps": [
+      "使用阿里云账号首次开通百炼北京地域；系统自动发放符合条件模型的新人免费额度，无需实名即可先使用免费额度。",
+      "创建百炼通用 API Key（不是 Token Plan / Coding Plan 专属 Key），并在免费额度页面查看每个模型的剩余额度和到期时间。",
+      "如已完成实名认证，建议为所有支持模型开启“免费额度用完即停”；未实名用户系统默认强制停止。",
+      "使用 https://dashscope.aliyuncs.com/compatible-mode/v1 调用支持免费额度的实时推理模型。"
+    ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://bailian.console.aliyun.com/",
-      "https://help.aliyun.com/zh/model-studio/new-free-quota"
+      "https://help.aliyun.com/zh/model-studio/new-free-quota/",
+      "https://help.aliyun.com/zh/model-studio/model-pricing",
+      "https://bailian.console.aliyun.com/"
     ],
-    "lastVerifiedAt": "2026-09-10",
-    "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "邮箱/手机号/实名/信用卡/地区要求尚未核验，页面必须显示“待核验”。"
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "confidence": "high",
+    "notes": "仅北京地域新人模型免费额度；通常每模型 100 万 Tokens、90 天，但具体以模型页为准。未实名用户额度用尽后停止；已实名用户若未开启用完即停则会转 PAYG。OAuth 认证另有每日 2000 次独立免费额度。"
   },
   {
     "providerId": "iflytek-spark",
@@ -1315,7 +1321,7 @@
     "phoneRequired": "unknown",
     "identityRequired": "unknown",
     "cardRequired": "unknown",
-    "billingRequired": "yes",
+    "billingRequired": "no",
     "apiKeyRequired": "yes",
     "licenseAcceptance": "model_dependent",
     "modelApproval": "no",
@@ -1324,20 +1330,21 @@
     "searchMethod": "official_docs",
     "regionPolicyId": "policy-unknown-default",
     "registrationSteps": [
-      "访问 Xiaomi MiMo Open Platform 并登录账号。",
-      "在控制台创建 API Key。",
-      "充值余额后使用官方 API；如只需免费体验，改用 OpenCode Zen 的 MiMo-V2.6-Flash Free 限时入口。"
+      "访问 Xiaomi MiMo Open Platform 并登录账号，在控制台创建普通 API Key。",
+      "如果调用 MiMo-V2.5-TTS 系列，先在官方定价页确认三款 TTS 仍标记“限时免费”。",
+      "使用 https://api.xiaomimimo.com/v1 OpenAI 兼容 API；其他 MiMo 文本/ASR 模型仍可能按量计费。"
     ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
-      "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
+      "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release",
+      "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go",
+      "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
     ],
-    "lastVerifiedAt": "2026-09-23",
+    "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "partial",
     "confidence": "high",
-    "notes": "官方 Xiaomi API 为付费 Pay-As-You-Go；免费托管入口属于 OpenCode Zen，不应混写成 Xiaomi 官方 API 免费。"
+    "notes": "MiMo 官方 API 不是整体免费：V2.5-TTS / VoiceDesign / VoiceClone 当前限时免费；V2.5/V2.6 文本模型、ASR、联网搜索等按官方价格计费。免费结束时间未公开。"
   },
   {
     "providerId": "puter",
@@ -1543,5 +1550,39 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "官方注册页和活动页确认新用户 2000 万 Tokens；公开页面未完整显示资源包模型拆分、到期时间和实名要求。"
+  },
+  {
+    "providerId": "sensecore",
+    "profileId": "sensecore-token-plan",
+    "registerUrl": "https://platform.sensenova.cn/token-plan",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "yes",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_website_console",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "使用手机号注册/登录 SenseNova，并进入 Token Plan 页面领取 Free 公测档。",
+      "在控制台创建 API Key；官方 Free 档当前允许最多 20 个 API Key。",
+      "使用 https://token.sensenova.cn/v1 OpenAI 兼容端点调用 Free 档当前支持模型，并在控制台观察 5 小时积分窗口。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.sensenova.cn/token-plan",
+      "https://www.sensenova.cn/models",
+      "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方页面确认 Free 公测档 ¥0/月、60,000 积分 / 5 小时、最多 20 个 API Key；特殊模型可能排除。当前无付费档位可自动超额，具体停止行为仍需账户实测。"
   }
 ]
