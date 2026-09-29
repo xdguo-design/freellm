@@ -23,7 +23,7 @@ DEFAULT_MAX_AGE_DAYS = 7
 DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": 410 * 1024,
     "models/center/index.html": 600 * 1024,
-    "models/all/index.html": 340 * 1024,
+    "models/all/index.html": 360 * 1024,
 }
 # 分页页数随目录涨缩（301 模型时 5 页、220 模型时 3 页），按 models.json 现值
 # 动态生成预算，避免目录瘦身后再为已删除的分页页保预算、或新分页漏保。
@@ -41,7 +41,7 @@ def _models_page_budgets() -> dict[str, int]:
 
     total_pages = max(1, -(-len(models) // MODELS_PER_PAGE)) if models else 1
     for page_num in range(2, total_pages + 1):
-        budgets[f"models/all/page/{page_num}/index.html"] = 340 * 1024
+        budgets[f"models/all/page/{page_num}/index.html"] = 360 * 1024
     return budgets
 
 

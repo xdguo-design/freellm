@@ -83,7 +83,7 @@ class ReadmeFactsTests(unittest.TestCase):
         offers = len(json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")))
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         self.assertIn(f">{offers}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn(f">{models}+<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
+        self.assertIn(f">{models}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
         provider_cards = len(json.loads((ROOT / "data" / "provider-access.json").read_text(encoding="utf-8")))
         models_page = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f"{provider_cards} 家提供商", models_page)

@@ -17,7 +17,12 @@ META_ROBOTS_RE = re.compile(
 
 
 def _published_html_files() -> list[Path]:
-    pages = list(ROOT.rglob("index.html"))
+    pages = []
+    for page in ROOT.rglob("index.html"):
+        relative = page.relative_to(ROOT)
+        if relative.parts[:2] == ("skills", "test-artifacts"):
+            continue
+        pages.append(page)
     design_home = ROOT / "design" / "free-china-ai-index.html"
     if design_home.exists():
         pages.append(design_home)
@@ -48,15 +53,23 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
     def test_published_pages_do_not_emit_locale_query_links(self) -> None:
         offenders: list[str] = []
+        href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
         for path in _published_html_files():
             text = path.read_text(encoding="utf-8")
-            if "?lang=" in text or "&lang=" in text:
-                offenders.append(str(path.relative_to(ROOT)))
+            for href in href_re.findall(text):
+                parsed = urlparse(href)
+                internal = not parsed.netloc or parsed.netloc in {"freellm.top", "www.freellm.top"}
+                if internal and re.search(r"(?:^|&)lang=", parsed.query, re.IGNORECASE):
+                    offenders.append(f"{path.relative_to(ROOT)}: {href}")
         self.assertEqual(
             offenders,
             [],
             "crawlable locale query URLs reintroduced in: " + ", ".join(offenders),
         )
+
+    def test_skill_test_artifacts_are_excluded_from_vercel(self) -> None:
+        ignore = (ROOT / ".vercelignore").read_text(encoding="utf-8")
+        self.assertIn("skills/test-artifacts/", ignore)
 
     def test_sitemaps_only_publish_clean_canonical_urls(self) -> None:
         offenders: list[str] = []
