@@ -1,0 +1,55 @@
+{
+  "providerId": "china-unicom-yuanjing",
+  "provider": "China Unicom Yuanjing MaaS",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "yuanjing-maas-trial-account"
+  ],
+  "paths": [
+    {
+      "id": "trial-openai-compatible",
+      "label": "元景 MaaS 试用账号 OpenAI 兼容 API",
+      "productType": "api",
+      "prerequisites": [
+        "元景 MaaS 试用账号",
+        "ACCESS_TOKEN",
+        "目标模型对试用账号开放"
+      ],
+      "steps": [
+        {
+          "title": "确认模型可试用",
+          "detail": "打开目标模型官方文档，确认当前仍支持试用账号模型体验。"
+        },
+        {
+          "title": "获取 Access Token",
+          "detail": "登录元景 MaaS 后获取 ACCESS_TOKEN，并只保存在服务端。"
+        },
+        {
+          "title": "调用 Chat Completions",
+          "detail": "使用平台统一 OpenAI 兼容 endpoint 调用目标模型。",
+          "command": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+          "expected": "返回 chat completion；保持在每分钟 5 次以内。"
+        },
+        {
+          "title": "尊重试用限流",
+          "detail": "试用账号每分钟最多 5 次。更高频率需切换付费账号，不要通过并发绕过限流。"
+        }
+      ],
+      "endpoint": "https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions",
+      "auth": "Authorization: Bearer access token",
+      "example": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+      "validation": "HTTP 请求成功；试用账号调用频率保持 <= 5/min；目标模型仍显示为试用可体验。",
+      "limits": "Trial account: 5 calls/min. Paid accounts may remove/raise the rate limit.",
+      "commonIssues": [
+        "不是固定 Token 免费包。",
+        "并非所有平台模型都保证持续对试用账号开放。",
+        "达到 5 次/分钟后应等待而不是并发绕过。"
+      ],
+      "sourceUrls": [
+        "https://maas.ai-yuanjing.com/doc/pages/216556925/",
+        "https://maas.ai-yuanjing.com/doc/pages/216543069/",
+        "https://maas.ai-yuanjing.com/doc/pages/216556886/"
+      ]
+    }
+  ]
+}

@@ -1822,5 +1822,39 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "当前官方活动与服务页共同支持“文档解析免费”结论，但活动结束日期未公开；需要每日/定期重新核验。"
+  },
+  {
+    "providerId": "china-unicom-yuanjing",
+    "profileId": "china-unicom-yuanjing-api",
+    "registerUrl": "https://maas.ai-yuanjing.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "model_dependent",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_model_catalog",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册/登录元景 MaaS 并确认账号处于试用状态。",
+      "获取 ACCESS_TOKEN，并在目标模型官方文档中确认该模型当前支持试用账号。",
+      "使用 OpenAI 兼容 https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions 调用。",
+      "试用账号官方限流为每分钟 5 次；如需更高频率需升级付费账号。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://maas.ai-yuanjing.com/doc/pages/216556925/",
+      "https://maas.ai-yuanjing.com/doc/pages/216543069/"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "多个官方模型页明确试用账号 5 次/分钟，但没有公开统一试用期限或 token 额度。实际模型可用性以当前试用账号目录为准。"
   }
 ]

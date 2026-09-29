@@ -8358,5 +8358,179 @@
         }
       ]
     }
+  },
+  {
+    "id": "yuanjing-maas-trial-account",
+    "order": 66,
+    "date": "2026-09-29",
+    "name": "China Unicom Yuanjing MaaS trial account",
+    "providerMark": "联",
+    "provider": "China Unicom Yuanjing MaaS",
+    "providerMeta": "中国联通元景 · Trial account",
+    "model": "Yuanjing + third-party models available to trial accounts",
+    "modelMeta": "OpenAI-compatible · trial account rate limit 5 calls/min",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用元景 MaaS 试用账号，以每分钟 5 次的试用限流调用当前开放模型；接口兼容 OpenAI Chat Completions",
+      "prerequisites": [
+        "元景 MaaS 账号",
+        "试用账号资格",
+        "ACCESS_TOKEN"
+      ],
+      "steps": [
+        "在元景 MaaS 模型文档中确认目标模型支持试用账号；官方多个模型页均写明试用账号每分钟可调用 5 次。",
+        "获取元景 ACCESS_TOKEN。",
+        "使用 OpenAI 兼容 endpoint https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions 调用目标模型。",
+        "如果需要更高限流或正式商用，升级为付费账号；不要把试用账号写成无限免费。"
+      ],
+      "endpoint": "https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ACCESS_TOKEN}",
+      "examples": {
+        "curl": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+      },
+      "docsUrl": "https://maas.ai-yuanjing.com/doc/pages/216556925/"
+    },
+    "kicker": "5 CALLS / MIN TRIAL",
+    "badges": [
+      "TRIAL ACCOUNT",
+      "OPENAI COMPATIBLE",
+      "5 RPM"
+    ],
+    "freeSummary": "元景 MaaS 官方多个模型页明确：试用账号每分钟可调用 5 次进行模型体验；付费账号可放开限流。",
+    "validitySummary": "试用账号有效期间 · 模型可用性随平台目录变化",
+    "accessSummary": "Yuanjing MaaS account + access token",
+    "checkedSummary": "2026-09-29 / official Yuanjing model docs",
+    "title": "中国联通元景 MaaS · 试用账号 5 次/分钟免费体验",
+    "why": "元景 MaaS 官方多个当前模型文档统一写明“试用账号每分钟可调用 5 次进行模型体验，付费账号可放开限流策略”，并提供标准 OpenAI 兼容 /chat/completions endpoint。官方没有公开统一 Token 赠额或永久期限，因此 FreeLLM 将其建模为 free_rate_limited 的试用账号入口，而不是固定 Token 免费包。",
+    "mechanism": "Trial-account model access limited to 5 calls per minute",
+    "validity": "While the account remains in trial status and the selected model remains available to trial accounts",
+    "access": "Obtain Yuanjing access token and call the OpenAI-compatible chat/completions endpoint",
+    "command": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $ACCESS_TOKEN\" -H \"Content-Type: application/json\" -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+    "register": "https://maas.ai-yuanjing.com/",
+    "registerLabel": "打开元景 MaaS",
+    "links": [
+      [
+        "Qwen3.5-397B-A17B 文档",
+        "https://maas.ai-yuanjing.com/doc/pages/216556925/"
+      ],
+      [
+        "元景-70B 文档",
+        "https://maas.ai-yuanjing.com/doc/pages/216543069/"
+      ],
+      [
+        "Step 3.5 Flash 文档",
+        "https://maas.ai-yuanjing.com/doc/pages/216556886/"
+      ],
+      [
+        "MiniMax-M2.5 文档",
+        "https://maas.ai-yuanjing.com/doc/pages/216556924/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China Unicom Yuanjing MaaS; target model must remain available to trial accounts",
+    "freeMechanism": "trial",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "trial_account_rate_limit",
+      "amount": 5,
+      "unit": "calls/min",
+      "period": "trial account"
+    },
+    "quota": "5 calls per minute for trial accounts; no universal public token quota documented",
+    "renewal": "No recurring token grant documented; paid accounts can raise rate limits",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Trial access is for model experience; use paid account/terms for production",
+    "limits": {
+      "requestsPerMinute": 5,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://maas.ai-yuanjing.com/doc/pages/216556925/",
+      "https://maas.ai-yuanjing.com/doc/pages/216543069/",
+      "https://maas.ai-yuanjing.com/doc/pages/216556886/",
+      "https://maas.ai-yuanjing.com/doc/pages/216556924/"
+    ],
+    "evidence": "元景 MaaS 当前多个官方模型页明确写明：试用账号每分钟可调用 5 次进行模型体验，付费账号可放开限流；同页确认 OpenAI 兼容请求 URL https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions 与 Bearer access token 鉴权。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "这是试用账号的速率限制型免费体验，不是永久免费 Token 包。模型可用性随平台目录变化，调用前需确认目标模型仍对试用账号开放。",
+    "freeModels": [
+      {
+        "model": "qwen35-397b-a17b",
+        "quota": "Trial account: 5 calls/min",
+        "note": "Official model doc explicitly states trial-account rate limit.",
+        "sourceUrl": "https://maas.ai-yuanjing.com/doc/pages/216556925/"
+      },
+      {
+        "model": "yuanjing-70b-chat",
+        "quota": "Trial account model experience",
+        "note": "OpenAI-compatible endpoint documented on the official Yuanjing-70B page.",
+        "sourceUrl": "https://maas.ai-yuanjing.com/doc/pages/216543069/"
+      },
+      {
+        "model": "step3.5-flash",
+        "quota": "Trial account model experience",
+        "note": "OpenAI-compatible model currently documented in Yuanjing MaaS.",
+        "sourceUrl": "https://maas.ai-yuanjing.com/doc/pages/216556886/"
+      },
+      {
+        "model": "minimax-m2.5",
+        "quota": "Trial account model experience",
+        "note": "Current Yuanjing MaaS model page; availability can change.",
+        "sourceUrl": "https://maas.ai-yuanjing.com/doc/pages/216556924/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验中国联通元景 MaaS 试用账号 5 次/分钟、OpenAI 兼容 endpoint 和 access-token 鉴权。",
+      "method": [
+        "读取元景 MaaS 多个官方模型页，确认试用账号每分钟可调用 5 次、付费账号可放开限流。",
+        "核对 OpenAI 兼容请求 URL 与 Authorization: Bearer access token。",
+        "当前没有元景试用账号 access token，因此未验证真实请求、模型目录权限与 429 行为。"
+      ],
+      "result": "官方公开预检通过：平台多个模型文档重复确认 5 calls/min 试用账号规则和 OpenAI 兼容调用路径。",
+      "limitations": "未使用真实试用账号；未验证注册门槛、试用持续时间、所有模型是否都向试用账号开放、真实响应和 429 限流头。",
+      "evidence": [
+        {
+          "label": "Qwen3.5-397B-A17B 官方文档",
+          "url": "https://maas.ai-yuanjing.com/doc/pages/216556925/",
+          "note": "明确试用账号 5 次/分钟 + OpenAI endpoint"
+        },
+        {
+          "label": "元景-70B 官方文档",
+          "url": "https://maas.ai-yuanjing.com/doc/pages/216543069/",
+          "note": "确认 OpenAI 兼容模型调用"
+        },
+        {
+          "label": "Step 3.5 Flash 官方文档",
+          "url": "https://maas.ai-yuanjing.com/doc/pages/216556886/",
+          "note": "确认同一平台兼容调用"
+        }
+      ]
+    }
   }
 ]
