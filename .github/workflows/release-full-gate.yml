@@ -2,7 +2,13 @@ name: release-full-gate
 on:
   push:
     branches:
-      - release/dev-convergence-20260929
+      - dev
+      - main
+      - 'release/dev-convergence-*'
+  pull_request:
+    branches:
+      - dev
+      - main
 
 permissions:
   contents: read
