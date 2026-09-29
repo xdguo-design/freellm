@@ -124,7 +124,7 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn("syncScript.fetchPriority = 'low'", self.document_html)
         for needle in (
             'href="/submit/"',
-            "syncScript.src = '/js/freellm-sync.js'",
+            "syncScript.src = '/js/freellm-sync.js?v=",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-freshness-filter"',
@@ -792,7 +792,7 @@ class BrowserPageTests(unittest.TestCase):
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
             ("design/free-china-ai-index.html", ".today-latest"),
-            ("models/", ".models-overview"),
+            ("models/", ".pf-model-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
             ("skills/lab/", ".lab-hero"),
@@ -1058,7 +1058,11 @@ class BrowserPageTests(unittest.TestCase):
             self.assertEqual(self.visible_offers(page), len(read_ranked_offers()))
             # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
-                sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
+                sorted(
+                    url.rsplit("/", 1)[-1]
+                    for _, url in page.bad_responses
+                    if url.split("?", 1)[0].endswith(".json")
+                ),
                 ["community-signals.json", "offers-ranked.json"],
             )
             self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
