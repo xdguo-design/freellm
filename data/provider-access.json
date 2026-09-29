@@ -1372,5 +1372,41 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "Puter 官方明确提供浏览器免费试用和免费账户 AI allowance；“开发者免费”来自 User-Pays 模式，不代表终端用户无限免费。当前未用登录态账户完成真实生成，因此保持 partial。"
+  },
+  {
+    "providerId": "tencent-tokenhub",
+    "profileId": "tencent-tokenhub-api",
+    "registerUrl": "https://console.cloud.tencent.com/maas",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "yes",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册或登录腾讯云账号并完成实名认证。",
+      "开通大模型服务平台 TokenHub，在模型广场或启用管理领取新人免费体验包；支持免费体验的模型首次调用时也可自动领取。",
+      "在 API Key 管理页面按地域创建 API Key。",
+      "广州地域使用 https://tokenhub.tencentmaas.com/v1；新加坡地域使用 https://tokenhub-intl.tencentmaas.com/v1，不支持跨地域调用。",
+      "免费额度耗尽后若未开启后付费，服务自动停止；需要继续使用时再显式开启后付费。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://cloud.tencent.com/document/product/1823/130053",
+      "https://cloud.tencent.com/document/product/1823/130058",
+      "https://cloud.tencent.com/document/product/1823/130078"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "confidence": "high",
+    "notes": "新人免费体验包按主账号、按模型领取；语言模型与多模态理解模型当前均为每模型 100 万 Tokens、领取后 1 年有效。本期活动页面标注至 2026-12-31。"
   }
 ]
