@@ -421,17 +421,17 @@
     },
     "kicker": "CHEAP CODING",
     "badges": [
-      "FIRST MONTH",
-      "¥9.9 → ¥40"
+      "FIRST 2 MONTHS",
+      "¥9.9 / MONTH → ¥40"
     ],
-    "freeSummary": "¥9.9 first month · ¥40 renewal",
-    "validitySummary": "1 month / then renews",
+    "freeSummary": "¥9.9 / month for the first 2 months · ¥40 / month from month 3",
+    "validitySummary": "First 2 months / then regular price",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official article",
+    "checkedSummary": "2026-09-29 / official Volcengine promotion terms",
     "title": "Doubao Seed Code · Coding Plan Lite",
     "why": "This is a first-month promotion, not a free plan. The renewal price is shown next to the promotional price so overseas users do not mistake it for permanent access.",
-    "mechanism": "First month ¥9.9; renewal ¥40 / month",
-    "validity": "First month only; renews after",
+    "mechanism": "First two months ¥9.9 / month; regular price ¥40 / month from month 3",
+    "validity": "Promotion runs through 2026-11-08; each account can receive at most two discounted months, then regular price applies",
     "access": "China account / Volcengine Ark",
     "command": "Configure the official coding endpoint in your supported coding tool after subscribing.",
     "register": "https://www.volcengine.com/activity/codingplan",
@@ -449,20 +449,20 @@
     "originCountry": "China",
     "availability": "China account / Volcengine Ark",
     "freeMechanism": "first_month_promo",
-    "quota": "Coding Plan Lite; first month promotional price",
-    "renewal": "¥40 / month after the first month",
+    "quota": "Coding Plan Lite; up to two promotional months during the campaign",
+    "renewal": "¥40 / month from the third month",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://developer.volcengine.com/articles/7575446945372897322"
+      "https://docs.volcengine.com/docs/ark/agent-plan-personal-universal-promotion?lang=zh"
     ],
-    "evidence": "Official Volcengine announcement describes the first-month price and renewal price.",
+    "evidence": "Official Volcengine promotion terms state the campaign runs 2026-06-08 through 2026-11-08; Lite is ¥9.9/month for up to the first two discounted months and returns to ¥40/month from month 3.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "This is a paid promotion, not a free plan.",
+    "notes": "Paid promotion, not a free plan. 2026-09-29 recheck corrected the previous 'first month' wording to the current official 'first two months' rule.",
     "key": true,
     "endpointCheck": {
       "checkedAt": "2026-09-19",
@@ -3366,7 +3366,7 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -3413,7 +3413,7 @@
     "freeSummary": "Free trial: $5 in free credits after account creation",
     "validitySummary": "One-time credits; consumed by usage",
     "accessSummary": "Cerebras account",
-    "checkedSummary": "Today / official Cerebras pricing page",
+    "checkedSummary": "2026-09-29 / official Cerebras Inference pricing",
     "title": "Cerebras · free inference credits",
     "why": "The official Cerebras pricing page lists an 'Inference API access / Free Trial' tier: 'Get started with $5 in free credits after making an account. Access to all Cerebras powered models'. The docs also note free accounts have lower per-minute limits than paid accounts.",
     "mechanism": "One-time $5 free credits granted after account creation",
@@ -3448,7 +3448,7 @@
       "https://www.cerebras.ai/pricing",
       "https://inference-docs.cerebras.ai/quickstart"
     ],
-    "evidence": "Official pricing page: 'Free Trial Get started with $5 in free credits after making an account Access to all Cerebras powered models'; docs: 'Free accounts have lower per-minute limits than paid accounts'.",
+    "evidence": "Official Cerebras Inference page currently states a Free Trial with $5 in free credit after account creation.",
     "confidence": "high",
     "notes": "International option included in the China-first global directory. Credits are a one-time trial, not a permanent free tier.",
     "endpointCheck": {
@@ -3671,7 +3671,7 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -3718,7 +3718,7 @@
     "freeSummary": "Trial API key: free, rate-limited, not permitted for production or commercial use",
     "validitySummary": "Ongoing trial keys; rate limits apply",
     "accessSummary": "Cohere personal account",
-    "checkedSummary": "Today / official Cohere pricing page",
+    "checkedSummary": "2026-09-29 / official Cohere pricing + rate-limit docs",
     "title": "Cohere · free trial API key",
     "why": "Cohere's official pricing page FAQ states: 'API calls made from a Trial API key are free. However, trial keys are rate limited and are not permitted to be used for production or commercial purposes.' Every new account begins with trial access.",
     "mechanism": "Free rate-limited Trial API key for evaluation",
@@ -3747,14 +3747,14 @@
       "unit": null,
       "period": null
     },
-    "quota": "1,000 API calls / month; trial chat models 20 req/min, Rerank 10 req/min",
+    "quota": "Free trial key; currently 1,000 API calls/month plus endpoint-specific per-minute limits",
     "renewal": "Trial keys remain usable within rate limits; not time-boxed to a calendar period on the pricing page",
     "sourceUrls": [
       "https://cohere.com/pricing",
       "https://docs.cohere.com/docs/rate-limits",
       "https://docs.cohere.com/reference/chat"
     ],
-    "evidence": "Cohere docs: “Trial keys (and prod keys on newer Chat model variants) are limited to 1,000 API calls a month.” Trial chat models are capped at 20 req/min and Rerank at 10 req/min. The pricing FAQ adds that trial API calls are free but are not permitted for production or commercial use.",
+    "evidence": "Official Cohere pricing and documentation currently state that Trial API keys are free, rate-limited, non-production keys; trial usage is limited and the current docs list a 1,000 API calls/month cap with endpoint-specific rate limits.",
     "confidence": "high",
     "notes": "International option included in the China-first global directory.",
     "endpointCheck": {
@@ -4377,7 +4377,7 @@
   },
   {
     "date": "2026-09-08",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4430,7 +4430,7 @@
     "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
     "validitySummary": "Limited-time offer; model availability and free status can change",
     "accessSummary": "StepFun Open Platform account and API key",
-    "checkedSummary": "2026-09-08 / official StepFun pricing and API docs",
+    "checkedSummary": "2026-09-29 / official StepFun pricing",
     "title": "StepFun · Limited-time free API models",
     "titleZh": "StepFun · 限时免费 API 模型",
     "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
@@ -4474,27 +4474,33 @@
       "https://platform.stepfun.com/docs/zh/quickstart/overview",
       "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
     ],
-    "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
+    "evidence": "Official StepFun pricing currently marks stepaudio-3-realtime-preview, stepaudio-3-chat-preview, stepaudio-3-gen-preview, and stepaudio-3-music-preview as limited-time free.",
     "confidence": "high",
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
     "notes": "2026-09-17 复验：原先记录的 step-audio-r1.1、step-1x-edit、step-2x-large 已不是当前限免模型。官方页面显示 step-2x-large 已于 2026-06-12 结束限免、改为 0.1 元/张计费，step-1x-edit 未在页面列出。当前限免为 stepaudio-3-* 系列四个模型，已更正。",
     "freeModels": [
       {
-        "model": "step-audio-r1.1",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-realtime-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-1x-edit",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-chat-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-2x-large",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-gen-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-music-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       }
     ],
@@ -4514,7 +4520,7 @@
   },
   {
     "date": "2026-09-10",
-    "lastVerifiedAt": "2026-09-19",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4565,12 +4571,12 @@
     "freeSummary": "Dots3-Note Preview 当前免费试用，按官方限速使用",
     "validitySummary": "限时免费；额度和模型可用性以 Dots 官方页面为准",
     "accessSummary": "小红书账号或手机号登录 Dots 国内平台",
-    "checkedSummary": "2026-09-10 / Dots 官方平台与文档",
+    "checkedSummary": "2026-09-29 / official Dots API docs",
     "title": "小红书 Dots · Dots3-Note Preview API",
     "titleZh": "小红书 Dots · Dots3-Note Preview API",
     "why": "Dots 官方国内平台提供 Dots3-Note Preview 模型入口；注册可使用小红书账号或手机号，官方文档给出国内 Base URL 与 API 调用说明。",
-    "mechanism": "限时免费模型 API，按官方 RPM/TPM 限制使用",
-    "validity": "限时免费；使用前重新核对官方平台状态",
+    "mechanism": "当前免费体验，暂不收费；默认 60 RPM / 1,500,000 TPM",
+    "validity": "当前免费体验；恢复收费前官方承诺在官网及 API 页面提前公告",
     "access": "国内 Dots 平台；小红书账号或手机号登录后创建 API Key",
     "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'",
     "register": "https://dots.ai/platform",
@@ -4601,7 +4607,7 @@
       "https://dots.ai/platform",
       "https://dots.ai/platform/docs"
     ],
-    "evidence": "2026-09-19 复验（官方来源）：Dots 官方文档写明当前免费体验、暂不收费，“恢复收费前将通过官网及 API 页面提前告知”；限速表为 RPM 60 次/分钟、TPM 1,500,000；端点 https://note3-prev-api.askdiandian.com（POST /v1/chat/completions）；官方 /v1/models 实测返回 {\"id\":\"dots3-note-prev\"}。",
+    "evidence": "Official Dots API docs currently state the service is available free of charge and billing will be announced in advance; current default limits are 60 RPM and 1,500,000 TPM for dots3-note-prev.",
     "confidence": "high",
     "notes": "2026-09-19 复验：官方 /v1/models 实测返回的模型 ID 是 dots3-note-prev，此前步骤里写的 dots3-note-preview 不正确，已更正；免费政策、60 RPM / 1,500,000 TPM 限速、端点域名与小红书账号 / 手机号登录方式均与官方一致。另外，data/models.json 里 dots-api-cn 条目的 canonicalModelId 仍是 dots3-note-preview（来自上游聚合源），与官方 /v1/models 不一致，需要走爬虫流水线核对，此处不改观测字段。官方页面未明确写出“中国大陆可用”，该表述仍属推断。",
     "endpointCheck": {
@@ -4767,9 +4773,9 @@
   },
   {
     "date": "2026-09-11",
-    "lastVerifiedAt": "2026-09-19",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "status": "verified",
+    "status": "needs_review",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check Xiaomi MiMo Desktop beta terms",
@@ -4779,7 +4785,7 @@
     ],
     "id": "xiaomi-mimo-desktop",
     "order": 41,
-    "name": "Xiaomi MiMo Desktop invitation beta",
+    "name": "Xiaomi MiMo Desktop former invitation beta",
     "providerMark": "米",
     "provider": "Xiaomi MiMo",
     "providerMeta": "Xiaomi MiMo · China / Overseas",
@@ -4810,43 +4816,35 @@
     },
     "kicker": "DESKTOP BETA",
     "badges": [
-      "INVITATION ONLY",
-      "LIMITED TIME",
-      "LIMITED QUOTA"
+      "BETA ENDING",
+      "MEMBERSHIP LAUNCHED",
+      "RECHECK ACCESS"
     ],
-    "freeSummary": "获批申请者可在邀请制测试期间免费体验两款 Preview 模型",
-    "freeSummaryEn": "Approved applicants can try two Preview models for free during the invitation beta",
-    "validitySummary": "Invitation beta / limited time and quota",
+    "freeSummary": "The original invitation-only free Preview beta was announced to end one week after the 2026-09-22 MiMo-V2.6 release",
+    "freeSummaryEn": "The original invitation-only free Preview beta was announced to end one week after the 2026-09-22 MiMo-V2.6 release",
+    "validitySummary": "Original beta ending around 2026-09-29; current membership/access must be rechecked",
     "accessSummary": "申请并获批；国内与海外入口不同",
-    "checkedSummary": "2026-09-11 / official Xiaomi MiMo Desktop announcement",
-    "title": "Xiaomi MiMo Desktop · invitation-only beta",
-    "titleZh": "Xiaomi MiMo Desktop · 邀请制 Beta",
+    "checkedSummary": "2026-09-29 / official MiMo-V2.6 release",
+    "title": "Xiaomi MiMo Desktop · beta transition",
+    "titleZh": "Xiaomi MiMo Desktop · 邀测转正式方案",
     "why": "小米 MiMo 官方公告宣布 MiMo Desktop 开启邀请制测试。获批申请者可在测试期间免费体验 MiMo-X-Pro-Preview 与 MiMo-X-Flash-Preview，但官方明确这是限时、限额的 Preview 体验，不是长期免费桌面应用承诺。",
     "whyEn": "Xiaomi MiMo's official announcement opens invitation-based testing for MiMo Desktop. Approved applicants can try MiMo-X-Pro-Preview and MiMo-X-Flash-Preview for free during the beta, with time and quota limits; this is not a promise of a permanently free desktop app.",
-    "mechanism": "Invitation-only desktop beta with two Preview models",
+    "mechanism": "Original invitation beta is transitioning to the released MiMo Desktop membership model",
     "mechanismEn": "Invitation-only desktop beta with two Preview models",
-    "validity": "Limited-time invitation beta; Preview behavior and availability may change",
+    "validity": "Official 2026-09-22 release says the original invitation-only beta will end in one week; existing qualified users may continue after switching model names",
     "access": "Invitation-based testing; approved applicants can download and use MiMo Desktop. Existing Xiaomi MiMo Open Platform users are prioritized.",
     "command": "Apply through the official domestic or overseas invitation page, then download MiMo Desktop after approval.",
-    "register": "https://mimo.xiaomimimo.com/desktop/invite/",
+    "register": "https://mimo.xiaomimimo.com/desktop/",
     "registerLabel": "MiMo Desktop 国内申请",
     "registerLabelEn": "Apply for MiMo Desktop",
     "links": [
       [
-        "MiMo Desktop 官方公告",
-        "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop"
+        "MiMo-V2.6 release",
+        "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
       ],
       [
-        "国内申请入口",
-        "https://mimo.xiaomimimo.com/desktop/invite/"
-      ],
-      [
-        "海外申请入口",
-        "https://mimo-ai.xiaomimimo.com/desktop/invite/"
-      ],
-      [
-        "MiMo FAQ（独立 App 说明）",
-        "https://mimo.mi.com/docs/en-US/quick-start/faq/others"
+        "MiMo Desktop",
+        "https://mimo.xiaomimimo.com/desktop/"
       ]
     ],
     "originCountry": "China",
@@ -4862,15 +4860,13 @@
     "quota": "Two Preview models are free for a limited time and with limited quota during the invitation-only testing period",
     "renewal": "No renewal promise; beta access and quota can end or change",
     "sourceUrls": [
-      "https://mimo.mi.com/docs/en-US/news/latest/mimo-desktop",
-      "https://mimo.xiaomimimo.com/desktop/invite/",
-      "https://mimo-ai.xiaomimimo.com/desktop/invite/",
-      "https://mimo.mi.com/docs/en-US/quick-start/faq/others"
+      "https://mimo.mi.com/docs/en-US/news/latest/v2-6",
+      "https://mimo.xiaomimimo.com/desktop/"
     ],
-    "evidence": "Xiaomi MiMo's official September 8, 2026 announcement says MiMo Desktop is in invitation-based testing, lists domestic and overseas application links, and states that approved applicants can try MiMo-X-Pro-Preview and MiMo-X-Flash-Preview for free with limited time and limited quota. The official FAQ separately says there is no standalone MiMo app, so this entry is labeled as a desktop beta rather than a general app download.",
-    "confidence": "high",
-    "confidenceReason": "The beta status, application routes, Preview model names and limited free terms are stated on Xiaomi MiMo's official announcement; invitation approval remains account-dependent.",
-    "notes": "只使用官方申请入口，不要把它写成无门槛或长期免费的独立 App；需要等待邀请审批，并重新核对官方公告的额度与可用性。2026-09-19 复验：邀请制状态、两款 Preview 模型名称与限时限额免费均与 2026-09-08 公告一致，未见转为公开或收费的新公告；国内与海外申请页均返回 200，且都注明暂不支持英国、韩国、欧盟等国家/地区（已补入 availability）。申请表单为客户端渲染，静态页面无法完整确认，邀请审批仍取决于账号。",
+    "evidence": "Xiaomi MiMo's 2026-09-22 release says MiMo Desktop and a membership plan launched and the original invitation-only beta would end in one week; existing beta-qualified users can continue after switching model names.",
+    "confidence": "medium",
+    "confidenceReason": "The transition announcement is official; exact cutover timing/account entitlements on 2026-09-29 remain account-dependent.",
+    "notes": "Do not advertise the old invitation beta as currently open free access. Recheck the live Desktop membership/account flow before restoring verified status.",
     "key": true,
     "endpointCheck": {
       "checkedAt": "2026-09-19",
@@ -5274,12 +5270,12 @@
     "id": "workbuddy-intl",
     "order": 45,
     "date": "2026-09-16",
-    "name": "Tencent WorkBuddy international edition",
+    "name": "Tencent WorkBuddy Free plan promotion",
     "providerMark": "WB",
     "provider": "WorkBuddy",
     "providerMeta": "Tencent Buddy AI · International",
     "providerMetaEn": "Tencent Buddy AI · International",
-    "model": "Hy4 preview / Hy3 / DeepSeek-V4.1-Flash（限免）",
+    "model": "Auto routing · promotional all-model access",
     "modelMeta": "International build of the Tencent office AI agent; several models are free to use, no card required",
     "type": [
       "desktop",
@@ -5311,39 +5307,31 @@
     },
     "kicker": "FREE MODELS · INTL",
     "badges": [
-      "HY4 PREVIEW FREE",
-      "DEEPSEEK V4.1-FLASH FREE",
-      "GOOGLE / GITHUB LOGIN"
+      "FREE PLAN",
+      "ALL MODELS PROMO",
+      "30 ACTIVE CREDITS / DAY"
     ],
-    "freeSummary": "国际版多个模型限时免费（Free now, 0.00x）：Hy4 preview 全天免费、Hy3 限免、DeepSeek-V4.1-Flash 免费；新用户赠试用积分（两周有效），免费用户每日积分重置",
+    "freeSummary": "Free plan: 100 credits/month; during the promotion all models are selectable, completions are unlimited, and automated tasks increase to 99",
     "validitySummary": "限免为限时政策，随官方模型页调整；积分规则以官方价格页为准",
     "accessSummary": "Windows / macOS / Linux 客户端；Google 或 GitHub 登录；当前开放中国香港、中国澳门、新加坡、马来西亚、泰国、菲律宾、印度尼西亚等地区",
-    "checkedSummary": "2026-09-16 / WorkBuddy 国际版官方文档与实测对比",
-    "title": "Tencent WorkBuddy · international edition free models",
-    "titleZh": "腾讯 WorkBuddy 国际版 · 免费模型",
+    "checkedSummary": "2026-09-29 / official WorkBuddy pricing + model docs",
+    "title": "Tencent WorkBuddy · Free plan promotional benefits",
+    "titleZh": "Tencent WorkBuddy · Free 版限免权益",
     "why": "WorkBuddy 国际版（workbuddy.ai）与国内版账号和积分相互独立，模型池更偏国际化，并直接提供多个限免模型：Hy4 preview 在国际版全天免费（国内版仅夜间免费），DeepSeek-V4.1-Flash 在国际版为 0.00x 免费，而国内版需付费倍率；国际版还独有 GPT-6-Astra、GPT-5.6-Sol 等模型。对只想零成本试用国际模型的用户，这是与国内版不同的免费入口。",
-    "mechanism": "限免模型直接以 0.00x 倍率计费，不消耗积分；新用户赠试用积分，免费用户每日有基础积分重置",
-    "validity": "限免模型与倍率为限时政策，官方可能随时调整；新用户试用积分有效期约两周",
+    "mechanism": "Free plan includes 100 base credits/month; limited-time promotion adds 30 active-use credits/day, all-model selection, unlimited code completion, and 99 automated tasks",
+    "validity": "Limited-time promotional benefits; official pricing says the end date will be announced in advance",
     "access": "Windows / macOS / Linux 桌面客户端，可与国内版共存；Google / GitHub 登录；首次访问需国际网络环境",
     "command": "Download the international client from workbuddy.ai, sign in with Google or GitHub, then pick a free model such as Hy4 preview in the model selector.",
     "register": "https://www.workbuddy.ai/",
     "registerLabel": "打开 WorkBuddy 国际版官网",
     "links": [
       [
-        "WorkBuddy 国际版官网",
-        "https://www.workbuddy.ai/"
+        "Official pricing",
+        "https://www.workbuddy.ai/docs/workbuddy/pricing"
       ],
       [
-        "官方模型配置文档",
+        "Model configuration",
         "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model"
-      ],
-      [
-        "国际版 vs 国内版免费模型对比（实测）",
-        "https://www.xmsumi.com/detail/4135"
-      ],
-      [
-        "国际版注册与下载教程（腾讯云社区）",
-        "https://cloud.tencent.com/developer/article/2708353"
       ]
     ],
     "originCountry": "China",
@@ -5351,11 +5339,10 @@
     "freeMechanism": "limited_time_free",
     "pricingModel": "permanent_free",
     "freePolicy": {
-      "type": "free_models",
+      "type": "limited_time_free",
       "amount": null,
-      "unit": "models",
-      "period": "limited time",
-      "signupBonus": null
+      "unit": "promotional_free_plan_benefits",
+      "period": "until official promotion ends"
     },
     "limits": {
       "requestsPerMinute": null,
@@ -5374,17 +5361,15 @@
     "productId": "workbuddy-intl",
     "offerVariant": "international-free-models",
     "sourceUrls": [
-      "https://www.workbuddy.ai/",
-      "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model",
-      "https://www.xmsumi.com/detail/4135",
-      "https://cloud.tencent.com/developer/article/2708353"
+      "https://www.workbuddy.ai/docs/workbuddy/pricing",
+      "https://www.workbuddy.ai/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Model"
     ],
-    "evidence": "WorkBuddy 国际版官方文档确认国际站点存在内置模型与自定义模型配置；第三方实测（xmsumi）逐项对比国际版与国内版模型页，列出国际版 Hy4 preview（Free now, 0.00x）、Hy3、DeepSeek-V4.1-Flash 处于限免状态，并说明国际版独有 GPT-6-Astra、GPT-5.6-Sol；腾讯云社区教程列出国际版官网 workbuddy.ai、Google/GitHub 登录方式、新用户试用积分（两周有效）与每日积分重置。",
+    "evidence": "Official WorkBuddy pricing currently lists a Free plan with 100 monthly base credits and limited-time promotional benefits: 30 active-use credits/day, all-model selection, unlimited code completion, and 99 automated tasks. The official model page says actual built-in models can vary by version, account type, and availability.",
     "status": "verified",
     "confidence": "medium",
-    "lastVerifiedAt": "2026-09-16",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "限免模型清单与倍率来自第三方实测对比，官方未逐条公开免费模型名单，可能随官方模型页随时调整；国际站与国内站账号、积分互不相通。",
+    "notes": "2026-09-29: removed stale named-model / 0.00x claims that are not present in the current official pricing page; retain only current official Free-plan promotion terms.",
     "editions": [
       "cn",
       "intl"
@@ -5407,13 +5392,16 @@
       "cnHost": "www.workbuddy.ai",
       "cnMs": 520,
       "intlMs": 447
-    }
+    },
+    "freeSummaryEn": "Free plan: 100 credits/month; during the promotion all models are selectable, completions are unlimited, and automated tasks increase to 99",
+    "quota": "100 base credits/month; promotional 30 active credits/day; promotional all-model access; 99 automated tasks",
+    "renewal": "Free plan continues after promotion with base plan limits; promotional benefits revert when the campaign ends"
   },
   {
     "date": "2026-09-17",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "status": "verified",
+    "status": "needs_review",
     "phoneRequired": "unknown",
     "cardRequired": "no",
     "commercialUse": "以 Atria 控制台官方条款为准",
@@ -5456,18 +5444,18 @@
     },
     "kicker": "1 亿 TOKENS",
     "badges": [
-      "100M TOKENS",
-      "NO CARD",
-      "CHINA"
+      "API LIVE",
+      "256K CONTEXT",
+      "TOKEN PLAN RECHECK"
     ],
-    "freeSummary": "注册即领 1 亿 Token 免费额度；控制台当前档位 Atria-Dawn-Preview 输入/输出单价为 $0",
-    "validitySummary": "额度期限与扣减规则以控制台 Token Plan 页为准，官方未公示到期日",
+    "freeSummary": "Atria-Dawn-Preview API is live; previously recorded 100M-token entitlement requires re-verification",
+    "validitySummary": "API verified; free Token Plan amount not confirmed from current crawlable official docs",
     "accessSummary": "国际控制台需 Google 账号；国内可走 discovery.intern-ai.org.cn Token Plan 入口",
-    "checkedSummary": "今日 / 官方 API 文档 + 官方 GitHub + 控制台第三方实测（2026-09-15）",
+    "checkedSummary": "2026-09-29 / official Atria API docs; Token Plan amount unresolved",
     "title": "上海人工智能实验室 · Atria Dawn Preview（注册 1 亿 Token）",
     "why": "上海人工智能实验室 2026-09 发布的新一代 Agent 模型：744B MoE（GLM-5.2 底座）、256K 上下文、MIT 开源权重；官方基准中 DeepSearchQA 96.0、BrowseComp 92.5、AutomationBench 53.8 领先 GPT-5.6 sol / Claude Opus 5 / Qwen 3.8 Max。当前控制台档位 $0 计价，新用户注册领 1 亿 Token，无需信用卡。",
-    "mechanism": "新用户注册赠送 100,000,000 Token；当前控制台档位 Atria-Dawn-Preview 按 $0/M tokens 计价（限时免费档位）",
-    "validity": "额度条款以控制台 Token Plan 页为准，官方未公示到期日；Preview 阶段定价未发布，额度用完后计费规则未定",
+    "mechanism": "Atria-Dawn-Preview API access; free Token Plan entitlement pending re-verification",
+    "validity": "API service is live; do not rely on the previously recorded 100M-token amount until the Token Plan is re-verified",
     "access": "api.atria-asi.ai/console 注册（Google 账号）；国内入口 discovery.intern-ai.org.cn；无需信用卡",
     "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://api.atria-asi.ai/console",
@@ -5500,23 +5488,23 @@
       "unit": "tokens",
       "period": null
     },
-    "quota": "注册赠 1 亿 Token；控制台当前档位 Atria-Dawn-Preview 输入/输出/缓存命中均 $0/M tokens",
+    "quota": "Token Plan entitlement amount pending re-verification",
     "renewal": "额度用完后按控制台计费规则扣费（Preview 阶段官方定价未发布，需关注控制台更新）",
     "sourceUrls": [
       "https://api.atria-asi.ai/docs",
       "https://github.com/atria-asi/Atria-Dawn-Preview",
       "https://discovery.intern-ai.org.cn/token-plan/home"
     ],
-    "evidence": "官方 API 文档确认模型 ID Atria-Dawn-Preview、256K 上下文与 OpenAI/Anthropic 兼容端点及 60 RPM 示例；官方 GitHub README 确认上海人工智能实验室出品、744B MoE、MIT 许可与基准表；第三方控制台实测（2026-09-15）确认注册赠 1 亿 Token、无需信用卡。",
-    "confidence": "high",
+    "evidence": "Official Atria API docs currently show Atria-Dawn-Preview as the available 256K-context model and document API-key access, but the crawlable official docs checked on 2026-09-29 do not substantiate the previously recorded 100M-token entitlement.",
+    "confidence": "medium",
     "notes": "仅文本输入（图片/PDF 返回 400）；最大输出控制台模型卡显示 32,768 tokens；支持思考模式与工具调用，提示缓存关闭。",
     "freeModels": [
       {
         "model": "Atria-Dawn-Preview",
-        "quota": "注册赠 100,000,000 Token（限时档位 $0/M tokens）",
-        "label": "744B MoE · 256K 上下文 · MIT 开源",
-        "note": "额度条款以控制台 Token Plan 页为准",
-        "sourceUrl": "https://discovery.intern-ai.org.cn/token-plan/home"
+        "quota": "Free Token Plan amount requires re-verification",
+        "label": "256K context · API live",
+        "note": "Current official API docs confirm the model/API, but not the previously recorded 100M-token entitlement.",
+        "sourceUrl": "https://api.atria-asi.ai/docs"
       }
     ],
     "editions": [
@@ -5547,7 +5535,9 @@
       "quotaTier": "high",
       "reason": "实测 216ms · 免费额度 100,000,000 tokens",
       "reasonEn": "216 ms measured · free quota 100,000,000 tokens"
-    }
+    },
+    "freeSummaryEn": "Atria-Dawn-Preview API is live; the previously recorded 100M-token entitlement requires re-verification",
+    "confidenceReason": "API/model availability is official and current; free entitlement amount is not currently verifiable from crawlable official documentation."
   },
   {
     "id": "huawei-codearts-daily-token",
@@ -5597,7 +5587,7 @@
     "freeSummary": "每日 1,000 万免费 Token；当日有效，0 点清零，不累计",
     "validitySummary": "限时福利；每日额度仅当日有效；官方注明先到先得并可调整或终止活动",
     "accessSummary": "仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度",
-    "checkedSummary": "2026-09-20 / 华为云官方活动页",
+    "checkedSummary": "2026-09-29 / official Huawei Cloud CodeArts campaign",
     "title": "华为云码道 CodeArts · 每日 1000 万免费 Token",
     "titleZh": "华为云码道 CodeArts · 每日 1000 万免费 Token",
     "why": "华为云官方活动页明确提供每日 1,000 万免费 Token：登录码道即可使用，当日有效、0 点清零不累计，仅限华为云码道内使用。当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，具体可选模型会持续调整，以码道 IDE / 插件内显示为准。",
@@ -5631,10 +5621,10 @@
     "sourceUrls": [
       "https://activity.huaweicloud.com/codearts_agent.html"
     ],
-    "evidence": "华为云官方活动页写明“每日1,000万免费 Token”，登录华为云码道即可使用；额度当日有效、0点清零不累计，且仅限华为云码道内使用、先到先得。页面同时列出码道 IDE、JetBrains 系列与 VS Code 系列插件，并说明当前福利模型包括 GLM-5.3-flash、DeepSeek V4 Pro、DeepSeek V4 Flash 等，模型会持续更新变换。",
+    "evidence": "Official Huawei Cloud campaign page currently states users receive 10,000,000 free Tokens per day in CodeArts, valid only for that day and reset at midnight; welfare models can change and the campaign is time-limited.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-20",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "notes": "这是码道内部的限时每日福利，不是可导出的 API Key 或外部 API 免费额度；活动模型和活动期限可能动态变化。",
     "freeModels": [
@@ -5902,9 +5892,9 @@
   },
   {
     "date": "2026-09-20",
-    "lastVerifiedAt": "2026-09-22",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "status": "verified",
+    "status": "needs_review",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check StepFun Step Plan terms and each model's official terms",
@@ -5951,22 +5941,22 @@
     },
     "kicker": "STEP PLAN FREE EXPERIENCE",
     "badges": [
-      "UP TO 75 DAYS",
-      "FLAGSHIP MODELS",
-      "1M CONTEXT"
+      "PROMO ENDED",
+      "2026-08-24",
+      "RECHECK CURRENT PLAN"
     ],
-    "freeSummary": "Step Plan 当前免费体验活动最高可叠加至 75 天；登录、首次 API 调用和邀请奖励按活动页实时规则发放",
-    "freeSummaryEn": "Current Step Plan promotion can stack up to 75 days; login, first-call and referral rewards follow the live campaign rules",
-    "validitySummary": "Limited-time promotion; entitlement and invitation rules can change",
+    "freeSummary": "The previously recorded Step Plan free-trial promotion has ended; do not treat it as current free access",
+    "freeSummaryEn": "The previously recorded Step Plan free-trial promotion has ended; do not treat it as current free access",
+    "validitySummary": "Previous promotion ended 2026-08-24",
     "accessSummary": "StepFun account + Step API Key; Step Plan entitlement required",
-    "checkedSummary": "2026-09-22 / official Step Plan and API docs + current promotion cross-check",
+    "checkedSummary": "2026-09-29 / official Step Plan trial terms",
     "title": "StepFun · Step Plan 最高 75 天免费体验",
     "titleZh": "阶跃星辰 Step Plan · 最高 75 天免费体验",
     "why": "StepFun 官方 Step Plan 页面确认该订阅覆盖旗舰模型，官方快速开始给出 Step Plan 专用 OpenAI/Anthropic 兼容接口并推荐 step-5-preview。当前活动信息显示免费体验可通过登录、首次 API 调用和邀请奖励叠加，最高达到 75 天；具体邀请名额、体验档位和到期时间以登录后的活动页为准。",
     "whyEn": "StepFun's official Step Plan page confirms flagship-model access, while the official quick start documents dedicated OpenAI- and Anthropic-compatible endpoints and recommends step-5-preview. Current promotion reports show the free experience can stack through login, first API call and referral rewards up to 75 days; exact referral limits, trial tier and expiry should be confirmed in the logged-in campaign page.",
-    "mechanism": "Limited-time Step Plan subscription trial; login / first-call / referral rewards can extend the entitlement",
+    "mechanism": "Historical Step Plan trial promotion; current plan terms require a fresh offer record",
     "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
-    "validity": "Promotion is time-sensitive; current account entitlement and campaign terms control",
+    "validity": "Official promotion terms state this trial ended on 2026-08-24 at 23:59 UTC",
     "access": "StepFun Open Platform account and API key; Step Plan must be active",
     "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/step-plan",
@@ -5996,37 +5986,17 @@
       "unit": "day",
       "period": "maximum stacked promotional entitlement; live campaign terms apply"
     },
-    "quota": "Step Plan subscription credits are consumed from the active plan pool; exact free-experience tier is not hard-coded because current public sources conflict",
+    "quota": "Previous trial promotion ended 2026-08-24; no current free quota asserted",
     "renewal": "Free-experience entitlement expires; paid renewal and plan pricing follow the current Step Plan page",
     "sourceUrls": [
       "https://platform.stepfun.com/step-plan",
       "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
       "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
     ],
-    "evidence": "Official Step Plan materials confirm flagship-model access; official quick-start docs list https://api.stepfun.com/step_plan/v1 for OpenAI-compatible Chat Completions and https://api.stepfun.com/step_plan for Anthropic-compatible Messages, recommending step-5-preview. Official Step 5 Preview docs specify a 1M-token context window. The live campaign's 75-day stacking mechanics are time-sensitive and were cross-checked against multiple contemporaneous reports; the logged-in Step Plan campaign page remains authoritative for exact reward/tier details.",
-    "confidence": "medium",
-    "confidenceReason": "Official docs verify the product, flagship-model access, Step Plan endpoints and 1M context. The 75-day promotion is corroborated by multiple current reports, but the public crawler does not expose the expanded official referral-rule text and sources disagree on the exact free-experience tier.",
-    "notes": "2026-09-22 新增。与 stepfun-limited-time-free 分开：旧条目记录单个 API 模型的限免状态，本条目记录 Step Plan 订阅体验活动。未写死 ¥99 / Flash Plus，因为当前可访问的官方页面未公开显示体验档位，第三方来源存在 Flash Mini / Flash Plus 冲突。",
-    "freeModels": [
-      {
-        "model": "step-5-preview",
-        "quota": "Uses Step Plan credit pool",
-        "note": "1M-token context window per official model docs",
-        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
-      },
-      {
-        "model": "step-3.7-flash",
-        "quota": "Uses Step Plan credit pool",
-        "note": "Listed as a current flagship model on the official Step Plan site",
-        "sourceUrl": "https://platform.stepfun.com/step-plan"
-      },
-      {
-        "model": "StepAudio 3 family",
-        "quota": "Uses Step Plan credit pool",
-        "note": "Voice-model family listed on the official Step Plan site",
-        "sourceUrl": "https://platform.stepfun.com/step-plan"
-      }
-    ],
+    "evidence": "Official Step Plan Free Trial Promotion Terms state the promotion ended on 2026-08-24 at 23:59 UTC.",
+    "confidence": "high",
+    "confidenceReason": "End date is explicit in official promotion terms.",
+    "notes": "Expired campaign retained as needs_review/history until the current Step Plan offer is modeled separately.",
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "partial",
