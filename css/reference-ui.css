@@ -295,6 +295,7 @@ body[data-reference-style="v1"] .skill-details{border-radius:10px!important}
 
 /* Responsive: preserve the existing seven direct nav entries and keep them all visible. */
 @media(max-width:800px){
+  body[data-reference-style="v1"]{padding:0!important;max-width:none!important;overflow-x:hidden!important}
   body[data-reference-style="v1"]>.fl-site-rail{
     position:relative!important;width:100%!important;height:auto!important;min-height:0!important;padding:10px 10px 12px!important;overflow:visible!important
   }
