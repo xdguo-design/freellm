@@ -15,6 +15,10 @@ from typing import Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAX_AGE_DAYS = 7
+DEFAULT_OFFER_MAX_AGE_DAYS = 14
+VOLATILE_OFFER_FREE_MECHANISMS = {"limited_time_free", "trial", "first_month_promo"}
+VOLATILE_OFFER_POLICY_TYPES = {"limited_time_free", "one_time_credits"}
+VOLATILE_OFFER_VALIDITY_RE = re.compile(r"limited[- ]time|\btrial\b|\bpromo(?:tion)?\b|first\s+(?:month|two\s+months)|限时|试用|活动", re.IGNORECASE)
 # 首页是一份自包含的应用壳：整份 offers JSON 内嵌在 HTML 里（约占 44%），
 # 再加静态兜底卡片、内联 CSS/JS。每加一个内容字段，这个文件就长一点，
 # 所以预算按「当前实测 + 约 2% 余量」维护，而不是钉死一个旧数字。
@@ -79,6 +83,65 @@ def check_freshness(
             errors.append(f"{label} item {index}: date {value} is {age} days old; maximum is {max_age_days}")
     return errors
 
+def offer_is_volatile(item: Mapping[str, object]) -> bool:
+    """Return True for offers whose free/promo terms can expire quickly."""
+    mechanism = str(item.get("freeMechanism") or "")
+    pricing_model = str(item.get("pricingModel") or "")
+    policy = item.get("freePolicy")
+    policy_type = str(policy.get("type") or "") if isinstance(policy, dict) else ""
+    validity = " ".join(
+        str(item.get(field) or "")
+        for field in ("validity", "validitySummary", "renewal")
+    )
+    return (
+        mechanism in VOLATILE_OFFER_FREE_MECHANISMS
+        or pricing_model in VOLATILE_OFFER_FREE_MECHANISMS
+        or policy_type in VOLATILE_OFFER_POLICY_TYPES
+        or bool(VOLATILE_OFFER_VALIDITY_RE.search(validity))
+    )
+
+
+def check_offer_freshness(
+    offers: Sequence[object],
+    as_of: date,
+    *,
+    volatile_max_age_days: int = DEFAULT_MAX_AGE_DAYS,
+    stable_max_age_days: int = DEFAULT_OFFER_MAX_AGE_DAYS,
+) -> list[str]:
+    """Apply tighter freshness to volatile verified offers.
+
+    needs_review rows are intentionally not treated as verified facts. They remain
+    visible for follow-up, but their age must not be disguised as a successful
+    verification. Release blocking freshness applies only to rows published as
+    verified.
+    """
+    errors: list[str] = []
+    for index, item in enumerate(offers):
+        if not isinstance(item, dict):
+            errors.append(f"offers freshness item {index}: record is not an object")
+            continue
+        if item.get("status") == "needs_review":
+            continue
+        max_age = volatile_max_age_days if offer_is_volatile(item) else stable_max_age_days
+        value = item.get("lastVerifiedAt")
+        try:
+            observed = parse_iso_date(value)
+        except ValueError as error:
+            errors.append(f"offers freshness item {index}: {error}")
+            continue
+        age = (as_of - observed).days
+        if age < 0:
+            errors.append(
+                f"offers freshness item {index}: date {value} is in the future relative to {as_of}"
+            )
+        elif age > max_age:
+            tier = "volatile" if offer_is_volatile(item) else "stable"
+            errors.append(
+                f"offers freshness item {index} ({tier}): date {value} is {age} days old; maximum is {max_age}"
+            )
+    return errors
+
+
 
 def check_size_budget(path: Path, budget: int) -> list[str]:
     if not path.is_file():
@@ -140,11 +203,11 @@ def build_report(
     models_path = root / "data" / "models.json"
     try:
         offers = _read_json(offers_path)
-        errors.extend(check_freshness(
-            [item.get("lastVerifiedAt") for item in offers if isinstance(item, dict)],
+        errors.extend(check_offer_freshness(
+            offers,
             checked_on,
-            max_age_days,
-            "offers freshness",
+            volatile_max_age_days=max_age_days,
+            stable_max_age_days=DEFAULT_OFFER_MAX_AGE_DAYS,
         ))
     except (OSError, json.JSONDecodeError, TypeError) as error:
         errors.append(f"offers data cannot be checked: {error}")
@@ -173,6 +236,7 @@ def build_report(
         "releaseSha": release_sha,
         "sizes": sizes,
         "maxAgeDays": max_age_days,
+        "offerStableMaxAgeDays": DEFAULT_OFFER_MAX_AGE_DAYS,
         "errors": errors,
         "ok": not errors,
     }
