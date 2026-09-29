@@ -169,5 +169,34 @@ class ApiHealthBrowserTests(unittest.TestCase):
             self.assertNotIn(excluded, visible_ids)
 
 
+    def test_health_first_screen_matches_reference_layout_system(self):
+        page = self.load_health()
+        page.set_viewport_size({"width": 1536, "height": 1024})
+        page.wait_for_timeout(50)
+
+        rail = page.locator(".fl-site-rail").bounding_box()
+        ribbon = page.locator(".fl-site-ribbon").bounding_box()
+        hero = page.locator(".health-hero").bounding_box()
+        metrics = page.locator(".summary-grid .metric").evaluate_all(
+            "els => els.map(el => ({height: el.getBoundingClientRect().height, radius: getComputedStyle(el).borderRadius, border: getComputedStyle(el).borderTopWidth}))"
+        )
+        active_filter = page.locator('.filter[data-filter="all"]')
+        active_bg = active_filter.evaluate("el => getComputedStyle(el).backgroundColor")
+        hero_side_bg = page.locator(".hero-side").evaluate("el => getComputedStyle(el).backgroundImage")
+
+        self.assertIsNotNone(rail)
+        self.assertIsNotNone(ribbon)
+        self.assertIsNotNone(hero)
+        self.assertAlmostEqual(rail["width"], 230, delta=1)
+        self.assertAlmostEqual(ribbon["height"], 78, delta=1)
+        self.assertLessEqual(hero["height"], 360)
+        self.assertEqual(len(metrics), 5)
+        self.assertLessEqual(max(m["height"] for m in metrics) - min(m["height"] for m in metrics), 1)
+        self.assertTrue(all(m["radius"] == "0px" for m in metrics))
+        self.assertTrue(all(m["border"] == "1px" for m in metrics))
+        self.assertIn("16, 17, 19", active_bg)
+        self.assertIn("free-method-night-window.png", hero_side_bg)
+
+
 if __name__ == "__main__":
     unittest.main()
