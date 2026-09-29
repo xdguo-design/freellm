@@ -6294,6 +6294,39 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Guangzhou base URL: https://tokenhub.tencentmaas.com. Singapore base URL: https://tokenhub-intl.tencentmaas.com. The current campaign page says the campaign runs through 2026-12-31 and may later be extended or adjusted."
+    "notes": "Guangzhou base URL: https://tokenhub.tencentmaas.com. Singapore base URL: https://tokenhub-intl.tencentmaas.com. The current campaign page says the campaign runs through 2026-12-31 and may later be extended or adjusted.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验腾讯云 TokenHub 新人免费体验包的额度、有效期、领取规则、实名/API Key 前置条件、OpenAI 兼容端点与免费额度耗尽后的停止行为；在没有登录态腾讯云账号和真实 API Key 的前提下，不把额度到账和模型生成写成已实测。",
+      "method": [
+        "读取腾讯云 TokenHub 官方新人免费体验包文档，核对语言模型和多模态理解模型的免费额度、有效期、领取次数与活动截止日期。",
+        "读取官方快速入门，核对腾讯云账号、实名认证、领取免费体验包、创建 API Key 与首次 API 调用流程。",
+        "读取官方 API 使用说明，核对广州/新加坡地域端点、OpenAI/Anthropic 协议兼容、Authorization Bearer 鉴权与 GET /v1/models。",
+        "核对免费额度耗尽后的行为：未开启后付费时服务自动停止，不继续扣费。",
+        "当前测试环境没有登录态腾讯云账号和可用 TokenHub API Key，因此没有验证账户内 1,000,000 Tokens 实际到账或一次真实模型响应。"
+      ],
+      "result": "官方公开链路预检通过：语言模型与多模态理解模型均标注每模型 1,000,000 Tokens 免费体验、领取后 1 年有效；每主账号每模型仅可领取一次；当前活动页面标注至 2026-12-31。官方快速入门与 API 使用说明确认实名认证、API Key、广州/新加坡端点和 OpenAI 兼容调用路径。",
+      "limitations": "未使用登录态腾讯云账号和真实 TokenHub API Key，未验证具体账户内免费额度到账、实时模型列表、模型级限流、实际生成响应和延迟。因此本条标记为预检通过，不标记实际调用已验证。",
+      "evidence": [
+        {
+          "label": "腾讯云 TokenHub 新人免费体验包",
+          "url": "https://cloud.tencent.com/document/product/1823/130053",
+          "note": "核对 1M Tokens/模型、1 年有效期、一次领取、活动截止与额度耗尽停止规则"
+        },
+        {
+          "label": "腾讯云 TokenHub 快速入门",
+          "url": "https://cloud.tencent.com/document/product/1823/130058",
+          "note": "核对实名认证、领取体验包、创建 API Key 与 OpenAI 兼容调用示例"
+        },
+        {
+          "label": "腾讯云 TokenHub API 使用说明",
+          "url": "https://cloud.tencent.com/document/product/1823/130078",
+          "note": "核对广州/新加坡端点、鉴权、GET /v1/models 与当前模型参数"
+        }
+      ]
+    }
   }
 ]
