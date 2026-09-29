@@ -135,5 +135,39 @@ class ApiHealthBrowserTests(unittest.TestCase):
         self.assertIn("官方信息超过", text)
 
 
+    def test_limited_filter_excludes_rate_limited_ongoing_offers(self):
+        page = self.load_health()
+        page.locator('[data-filter="limited"]').click()
+        page.wait_for_function(
+            """document.querySelector('.filter[data-filter="limited"]')?.classList.contains('active')"""
+        )
+        visible_ids = page.locator("#channel-list .health-row").evaluate_all(
+            "els => els.map(el => el.dataset.id)"
+        )
+        self.assertEqual(
+            visible_ids,
+            [
+                "sensecore",
+                "opencode-zen-free",
+                "aliyun-qwen-free-quota",
+                "cerebras-free",
+                "stepfun-limited-time-free",
+                "dots-api-free",
+                "atria-dawn-preview",
+                "catalog-z-ai",
+            ],
+        )
+        for excluded in (
+            "google-ai-studio-free",
+            "groq-free",
+            "mistral-free-mode",
+            "cohere-trial-key",
+            "modelscope-api-inference-free",
+            "agnes-ai-free",
+            "catalog-nvidia-nim",
+        ):
+            self.assertNotIn(excluded, visible_ids)
+
+
 if __name__ == "__main__":
     unittest.main()
