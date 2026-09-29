@@ -4479,10 +4479,30 @@
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
     "notes": "2026-09-17 复验：原先记录的 step-audio-r1.1、step-1x-edit、step-2x-large 已不是当前限免模型。官方页面显示 step-2x-large 已于 2026-06-12 结束限免、改为 0.1 元/张计费，step-1x-edit 未在页面列出。当前限免为 stepaudio-3-* 系列四个模型，已更正。",
     "freeModels": [
-      "stepaudio-3-realtime-preview",
-      "stepaudio-3-chat-preview",
-      "stepaudio-3-gen-preview",
-      "stepaudio-3-music-preview"
+      {
+        "model": "stepaudio-3-realtime-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-chat-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-gen-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-music-preview",
+        "quota": "限时免费",
+        "note": "官方 2026-09-29 定价页当前标注限时免费",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      }
     ],
     "endpointCheck": {
       "checkedAt": "2026-09-19",
@@ -5468,7 +5488,7 @@
       "unit": "tokens",
       "period": null
     },
-    "quota": "注册赠 1 亿 Token；控制台当前档位 Atria-Dawn-Preview 输入/输出/缓存命中均 $0/M tokens",
+    "quota": "Token Plan entitlement amount pending re-verification",
     "renewal": "额度用完后按控制台计费规则扣费（Preview 阶段官方定价未发布，需关注控制台更新）",
     "sourceUrls": [
       "https://api.atria-asi.ai/docs",
@@ -5481,10 +5501,10 @@
     "freeModels": [
       {
         "model": "Atria-Dawn-Preview",
-        "quota": "注册赠 100,000,000 Token（限时档位 $0/M tokens）",
-        "label": "744B MoE · 256K 上下文 · MIT 开源",
-        "note": "额度条款以控制台 Token Plan 页为准",
-        "sourceUrl": "https://discovery.intern-ai.org.cn/token-plan/home"
+        "quota": "Free Token Plan amount requires re-verification",
+        "label": "256K context · API live",
+        "note": "Current official API docs confirm the model/API, but not the previously recorded 100M-token entitlement.",
+        "sourceUrl": "https://api.atria-asi.ai/docs"
       }
     ],
     "editions": [
@@ -5966,7 +5986,7 @@
       "unit": "day",
       "period": "maximum stacked promotional entitlement; live campaign terms apply"
     },
-    "quota": "Step Plan subscription credits are consumed from the active plan pool; exact free-experience tier is not hard-coded because current public sources conflict",
+    "quota": "Previous trial promotion ended 2026-08-24; no current free quota asserted",
     "renewal": "Free-experience entitlement expires; paid renewal and plan pricing follow the current Step Plan page",
     "sourceUrls": [
       "https://platform.stepfun.com/step-plan",
@@ -5977,26 +5997,6 @@
     "confidence": "high",
     "confidenceReason": "End date is explicit in official promotion terms.",
     "notes": "Expired campaign retained as needs_review/history until the current Step Plan offer is modeled separately.",
-    "freeModels": [
-      {
-        "model": "step-5-preview",
-        "quota": "Uses Step Plan credit pool",
-        "note": "1M-token context window per official model docs",
-        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
-      },
-      {
-        "model": "step-3.7-flash",
-        "quota": "Uses Step Plan credit pool",
-        "note": "Listed as a current flagship model on the official Step Plan site",
-        "sourceUrl": "https://platform.stepfun.com/step-plan"
-      },
-      {
-        "model": "StepAudio 3 family",
-        "quota": "Uses Step Plan credit pool",
-        "note": "Voice-model family listed on the official Step Plan site",
-        "sourceUrl": "https://platform.stepfun.com/step-plan"
-      }
-    ],
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "partial",
