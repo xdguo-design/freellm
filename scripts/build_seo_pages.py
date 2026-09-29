@@ -5325,9 +5325,14 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     daily_logs = _load_daily_logs(data_path)
     vendor_directory = _load_vendor_directory(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent, vendor_directory=vendor_directory)
-    # generated/manual page ownership boundary: keep bespoke product pages out
-    # of exact-output checks and writes so regeneration cannot erase reviewed UI.
-    manual_product_pages = set(MANUAL_PRODUCT_PAGES)
+    # generated/manual page ownership boundary: preserve bespoke product pages
+    # only when they already exist in the target tree. Fresh output roots (used
+    # by build/tests) must still receive a complete generated site.
+    output_root = Path(output_root)
+    manual_product_pages = {
+        path for path in MANUAL_PRODUCT_PAGES
+        if (output_root / path).is_file()
+    }
     files = {relative: content for relative, content in files.items() if relative not in manual_product_pages}
     files = {
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
@@ -5365,7 +5370,6 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: _ensure_reference_ui(content, relative)
         for relative, content in files.items()
     }
-    output_root = Path(output_root)
     if check:
         stale = []
         for relative, content in files.items():
