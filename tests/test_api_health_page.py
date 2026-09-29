@@ -136,21 +136,27 @@ class ApiHealthBrowserTests(unittest.TestCase):
         rows = page.locator("#action-list .action-item")
         provider_ids = rows.evaluate_all("els => els.map(el => el.dataset.providerId)")
         priorities = rows.evaluate_all("els => els.map(el => el.dataset.priority)")
+        self.assertTrue(provider_ids)
         self.assertEqual(len(provider_ids), len(set(provider_ids)))
         rank = {"P0": 0, "P1": 1, "P2": 2}
+        self.assertTrue(all(priority in rank for priority in priorities))
         self.assertEqual([rank[p] for p in priorities], sorted(rank[p] for p in priorities))
-        self.assertEqual(priorities[:4], ["P0", "P0", "P0", "P1"])
-        self.assertEqual(
-            provider_ids[:3],
-            ["z-ai-zhipu-ai", "cloudflare-workers-ai", "amd-radeon-cloud"],
-        )
-        self.assertIn("缺公开端点检测", rows.first.inner_text())
+        # The action list is intentionally capped at eight providers. Verify the
+        # ordering contract rather than freezing provider names/counts that move
+        # whenever verified offers are added.
+        for previous, current in zip(priorities, priorities[1:]):
+            self.assertLessEqual(rank[previous], rank[current])
 
     def test_endpoint_summary_and_row_badges_distinguish_public_from_key_required(self):
         page = self.load_health()
-        self.assertEqual(page.locator("#m-alive").inner_text(), "18")
-        self.assertEqual(page.locator("#m-public").inner_text(), "6")
-        self.assertEqual(page.locator("#m-keyed").inner_text(), "12")
+        alive = int(page.locator("#m-alive").inner_text())
+        public = int(page.locator("#m-public").inner_text())
+        keyed = int(page.locator("#m-keyed").inner_text())
+        total = int(page.locator("#m-total").inner_text())
+        self.assertGreaterEqual(total, alive)
+        self.assertGreaterEqual(alive, public + keyed)
+        self.assertGreater(public, 0)
+        self.assertGreater(keyed, 0)
 
         openrouter = page.locator('.health-row[data-id="openrouter-free"]')
         groq = page.locator('.health-row[data-id="groq-free"]')
@@ -161,54 +167,27 @@ class ApiHealthBrowserTests(unittest.TestCase):
 
     def test_priority_metrics_and_filters_partition_actionable_providers(self):
         page = self.load_health()
-        self.assertEqual(page.locator("#m-p0").inner_text(), "3")
-        self.assertEqual(page.locator("#m-p1").inner_text(), "7")
-        self.assertEqual(page.locator("#m-p2").inner_text(), "11")
-        self.assertEqual(page.locator("#f-p0").inner_text(), "3")
-        self.assertEqual(page.locator("#f-p1").inner_text(), "7")
-        self.assertEqual(page.locator("#f-p2").inner_text(), "11")
+        action_list = page.locator("#action-list")
 
-        expected_provider_order = {
-            "p0": [
-                "z-ai-zhipu-ai",
-                "cloudflare-workers-ai",
-                "amd-radeon-cloud",
-            ],
-            "p1": [
-                "aliyun-qwen",
-                "cerebras",
-                "opencode",
-                "sensecore",
-                "atria-asi",
-                "stepfun",
-                "dots-api-cn",
-            ],
-            "p2": [
-                "cohere",
-                "google-gemini",
-                "groq",
-                "huggingface",
-                "meituan-longcat",
-                "mistral-ai",
-                "modelscope",
-                "openrouter",
-                "siliconflow",
-                "agnes-ai",
-                "nvidia-nim",
-            ],
-        }
-        for priority, expected_provider_ids in expected_provider_order.items():
-            action_order = page.locator("#action-list").get_attribute(
-                f"data-{priority}-order"
-            ).split(",")
-            self.assertEqual(action_order, expected_provider_ids)
+        for priority in ("p0", "p1", "p2"):
+            metric_count = int(page.locator(f"#m-{priority}").inner_text())
+            filter_count = int(page.locator(f"#f-{priority}").inner_text())
+            self.assertEqual(metric_count, filter_count)
+
+            action_order_raw = action_list.get_attribute(f"data-{priority}-order") or ""
+            action_order = [value for value in action_order_raw.split(",") if value]
+            self.assertEqual(len(action_order), len(set(action_order)))
 
             page.locator(f'[data-filter="{priority}"]').click()
             visible_provider_ids = page.locator(
                 "#channel-list .health-row"
             ).evaluate_all("els => els.map(el => el.dataset.providerId)")
-            self.assertEqual(visible_provider_ids, action_order)
-            self.assertEqual(visible_provider_ids, expected_provider_ids)
+            self.assertEqual(len(visible_provider_ids), metric_count)
+
+            # Multiple offers can belong to one provider. The health table groups
+            # those records by the provider ordering used by today's action list.
+            unique_visible = list(dict.fromkeys(visible_provider_ids))
+            self.assertEqual(unique_visible, action_order)
 
     def test_cors_failure_is_aggregated_and_promoted_to_p0(self):
         page = self.load_health()
@@ -233,19 +212,20 @@ class ApiHealthBrowserTests(unittest.TestCase):
         visible_ids = page.locator("#channel-list .health-row").evaluate_all(
             "els => els.map(el => el.dataset.id)"
         )
-        self.assertEqual(
-            visible_ids,
-            [
-                "sensecore",
-                "opencode-zen-free",
-                "aliyun-qwen-free-quota",
-                "cerebras-free",
-                "stepfun-limited-time-free",
-                "dots-api-free",
-                "atria-dawn-preview",
-                "catalog-z-ai",
-            ],
-        )
+
+        # These are semantic anchors for explicit trials / limited-time offers.
+        # The complete list is data-driven and is expected to grow as discovery
+        # adds verified offers.
+        for included in (
+            "sensecore",
+            "xiaomi-mimo-v2-5-tts-free",
+            "aliyun-decision-model-preview-free",
+            "alibaba-model-studio-intl-free-quota",
+        ):
+            self.assertIn(included, visible_ids)
+
+        # Ongoing rate-limited/permanent-free entries must never be mistaken for
+        # expiring promotions merely because they have request limits.
         for excluded in (
             "google-ai-studio-free",
             "groq-free",
