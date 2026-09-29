@@ -156,7 +156,7 @@ class ApiHealthBrowserTests(unittest.TestCase):
         groq = page.locator('.health-row[data-id="groq-free"]')
         amd = page.locator('.health-row[data-id="amd-radeon-cloud-free"]')
         self.assertIn("公开可读", openrouter.locator(".badge").first.inner_text())
-        self.assertIn("需 Key", groq.locator(".badge").first.inner_text())
+        self.assertIn("需 KEY", groq.locator(".badge").first.inner_text())
         self.assertIn("未检测", amd.locator(".badge").first.inner_text())
 
     def test_priority_metrics_and_filters_partition_actionable_providers(self):
