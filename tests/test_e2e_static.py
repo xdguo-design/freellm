@@ -198,7 +198,7 @@ class StaticContractTests(unittest.TestCase):
         latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
         observed_models = len(latest["observed"]["models"])
         self.assertRegex(log, rf'<strong>{observed_models} <span lang="zh-CN">模型</span>')
-        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
+        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前数据文件中的模型记录</span>', log)
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
         self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">资源</span>')
@@ -210,16 +210,16 @@ class StaticContractTests(unittest.TestCase):
         log = LOG_PATH.read_text(encoding="utf-8")
         for needle in (
             'data-site-nav="logs"',
-            '今天的 AI 资源有什么变化？',
+            '最近一次 AI 资源扫描有什么变化？',
             '我们每天检查官方来源，记录新增、恢复、下线和异常。',
-            '查看今日变化',
+            '查看最近变化',
             'id="daily-log-badge"',
         ):
             self.assertIn(needle, self.html)
         self.assertIn('每日更新', self.html)
-        self.assertIn('今天的 AI 资源有什么变化？', log)
+        self.assertIn('最近一次 AI 资源扫描有什么变化？', log)
         self.assertIn('我们每天检查官方来源，记录新增、恢复、下线和异常。', log)
-        self.assertIn('查看今日变化', self.html)
+        self.assertIn('查看最近变化', self.html)
 
     def test_homepage_links_to_theme_guides(self):
         for slug in (
@@ -356,8 +356,8 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1>', self.html)
-        self.assertIn("精选优质的免费 AI 模型、实用技能、工具与工作流", self.html)
+        self.assertIn('<h1><span class="ref-kicker">FREE AI INDEX</span>全部资源<br><em>免费 AI 模型、API 与工具</em></h1>', self.html)
+        self.assertIn("统一收录并持续核验免费 AI 模型、LLM API、编程工具、网页能力与学生方案", self.html)
         self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
@@ -706,20 +706,16 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/design/free-china-ai-index.html")
         page.wait_for_selector("#catalog-offer-rows .offer")
 
-        order = page.evaluate("""() => {
-            const ids = ['today-latest', 'catalog-offers', 'student-offers', 'catalog-compare'];
-            const nodes = {
-                'today-latest': document.querySelector('.today-latest'),
-                'catalog-offers': document.getElementById('catalog-offers'),
-                'student-offers': document.getElementById('student-offers'),
-                'catalog-compare': document.getElementById('catalog-compare'),
+        boxes = page.evaluate("""() => {
+            const box = selector => {
+                const node = document.querySelector(selector);
+                const r = node && node.getBoundingClientRect();
+                return r ? {top:r.top,bottom:r.bottom} : null;
             };
-            return ids.map(id => [id, Array.from(document.body.querySelectorAll('*')).indexOf(nodes[id])]);
+            return {hero:box('.catalog-hero'),stats:box('.home-stat-strip'),offers:box('#catalog-offers')};
         }""")
-        positions = dict(order)
-        self.assertLess(positions["today-latest"], positions["catalog-offers"])
-        self.assertLess(positions["catalog-offers"], positions["student-offers"])
-        self.assertLess(positions["student-offers"], positions["catalog-compare"])
+        self.assertLess(boxes["hero"]["top"], boxes["stats"]["top"])
+        self.assertLess(boxes["stats"]["top"], boxes["offers"]["top"])
         page.close()
 
         checks = (
@@ -785,7 +781,7 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".today-latest"),
+            ("design/free-china-ai-index.html", ".catalog-hero"),
             ("models/", ".models-overview"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
@@ -866,7 +862,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click(".category-card[data-filter='ide']")
+        page.click(".filter-strip [data-filter='ide']")
         ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
 
@@ -893,16 +889,15 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
 
         hero = page.locator(".catalog-hero").bounding_box()
-        today = page.locator(".today-latest").bounding_box()
+        stats = page.locator(".home-stat-strip").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
-        student = page.locator("#student-offers").bounding_box()
         self.assertIsNotNone(hero)
-        self.assertIsNotNone(today)
+        self.assertIsNotNone(stats)
         self.assertIsNotNone(offers)
-        self.assertIsNotNone(student)
-        self.assertLess(hero["y"], today["y"])
-        self.assertLess(today["y"], offers["y"])
-        self.assertLess(offers["y"], student["y"])
+        self.assertLess(hero["y"], stats["y"])
+        self.assertLess(stats["y"], offers["y"])
+        for legacy in (".today-latest", "#student-offers", "#catalog-compare"):
+            self.assertEqual(page.locator(legacy).evaluate("el => getComputedStyle(el).display"), "none")
 
         heights = page.eval_on_selector_all(
             "#catalog-offer-rows .offer:not(.hidden)",
@@ -944,7 +939,7 @@ class BrowserPageTests(unittest.TestCase):
 
         # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
         page.fill("#catalog-search", "Qwen3")
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
+        page.click(".filter-strip [data-filter='free_quota']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
@@ -956,7 +951,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
+        page.click(".filter-strip [data-filter='free_quota']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
@@ -1037,6 +1032,8 @@ class BrowserPageTests(unittest.TestCase):
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("*-prototype-v2.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
             assets.mkdir(parents=True)
             (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
@@ -1073,6 +1070,8 @@ class BrowserPageTests(unittest.TestCase):
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
+                (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            for source in (ROOT / "css").glob("*-prototype-v2.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
