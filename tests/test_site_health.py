@@ -7,7 +7,9 @@ from pathlib import Path
 from scripts.site_health import (
     DEFAULT_SIZE_BUDGETS,
     check_freshness,
+    check_offer_freshness,
     check_size_budget,
+    offer_is_volatile,
     resolve_release_sha,
 )
 
@@ -25,6 +27,47 @@ class SiteHealthTests(unittest.TestCase):
         errors = check_freshness([None, "not-a-date", "2026-09-12", "2026-09-01"], as_of, 7)
         self.assertEqual(len(errors), 4)
         self.assertTrue(all("freshness" in error.lower() for error in errors))
+
+    def test_offer_freshness_uses_tighter_gate_for_volatile_terms(self):
+        as_of = date(2026, 9, 29)
+        offers = [
+            {
+                "id": "stable",
+                "status": "verified",
+                "freeMechanism": "permanent",
+                "validity": "Ongoing",
+                "lastVerifiedAt": "2026-09-15",
+            },
+            {
+                "id": "promo",
+                "status": "verified",
+                "freeMechanism": "limited_time_free",
+                "validity": "Limited-time promotion",
+                "lastVerifiedAt": "2026-09-21",
+            },
+        ]
+        errors = check_offer_freshness(offers, as_of)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("volatile", errors[0])
+        self.assertIn("maximum is 7", errors[0])
+
+    def test_offer_freshness_does_not_promote_needs_review_to_verified(self):
+        as_of = date(2026, 9, 29)
+        offers = [
+            {
+                "id": "unresolved",
+                "status": "needs_review",
+                "freeMechanism": "limited_time_free",
+                "lastVerifiedAt": "2026-09-01",
+            }
+        ]
+        self.assertEqual(check_offer_freshness(offers, as_of), [])
+
+    def test_offer_volatility_uses_structured_terms(self):
+        self.assertTrue(offer_is_volatile({"freeMechanism": "first_month_promo"}))
+        self.assertTrue(offer_is_volatile({"freePolicy": {"type": "limited_time_free"}}))
+        self.assertTrue(offer_is_volatile({"validity": "限时福利活动"}))
+        self.assertFalse(offer_is_volatile({"freeMechanism": "permanent", "validity": "Ongoing"}))
 
     def test_size_budget_reports_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -83,7 +126,7 @@ class ReadmeFactsTests(unittest.TestCase):
         offers = len(json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")))
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         self.assertIn(f">{offers}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn(f">{models}+<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
+        self.assertIn(f">{models}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
         provider_cards = len(json.loads((ROOT / "data" / "provider-access.json").read_text(encoding="utf-8")))
         models_page = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f"{provider_cards} 家提供商", models_page)

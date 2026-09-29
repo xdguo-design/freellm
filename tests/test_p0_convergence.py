@@ -28,7 +28,7 @@ class P0ConvergenceTests(unittest.TestCase):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         for count, label in (
             (len(models), "模型记录"),
-            (len(provider_pages), "厂家目录"),
+            (len(provider_pages), "公开厂家页"),
             (len(active_ids), "当前数据 Provider ID"),
             (len(offers), "免费资源"),
         ):

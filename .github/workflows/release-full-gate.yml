@@ -1,0 +1,37 @@
+name: release-full-gate
+on:
+  push:
+    branches:
+      - release/dev-convergence-20260929
+
+permissions:
+  contents: read
+
+jobs:
+  full-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install test dependencies
+        run: python -m pip install playwright pytest && python -m playwright install --with-deps chromium
+      - name: Run full Python test suite
+        run: python -m unittest discover -s tests -v
+      - name: Run ranking tests
+        run: node --test tests/ranking.test.ts
+      - name: Verify ranking artifact
+        run: node scripts/generate_ranking.ts --check
+      - name: Verify generated outputs
+        run: |
+          python scripts/build_tools_index.py --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+      - name: Run site health gate
+        run: python scripts/site_health.py --report site-health-report.json
+      - name: Run AdSense gate
+        run: python scripts/check_adsense.py --report adsense-report.json
