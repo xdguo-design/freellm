@@ -20,6 +20,7 @@
   };
   const regionLabel = (value) => ({ domestic: '国内接入', international: '国际接入', global: '全球接入' }[value] || '地区待核验');
   const modelHref = (item) => {
+    if (item.directoryHref) return item.directoryHref;
     const id = item.canonicalModelId || item.id || item.model;
     const slug = String(id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return '/models/' + slug + '/';
@@ -94,7 +95,7 @@
     const items = sortModels(state.models.filter(matches));
     const shown = items.slice(0, state.page * state.pageSize);
     $('#ml-card-grid').innerHTML = shown.length ? shown.map(cardHtml).join('') : '<div class="ml-empty-state">没有找到符合条件的模型，试试清空筛选。</div>';
-    $('#ml-results-status').textContent = '显示 ' + shown.length + ' / ' + items.length + ' 个模型 · 目录共 ' + state.models.length + ' 条模型记录';
+    $('#ml-results-status').textContent = '显示 ' + shown.length + ' / ' + items.length + ' 个模型 · 目录共 ' + state.models.length + ' 条模型记录' + (state.dataFallback ? ' · 使用目录快照' : '');
     $('#ml-total').textContent = '(' + state.models.length + ')';
     let more = root.querySelector('#ml-load-more');
     if (!more) {
@@ -181,17 +182,72 @@
       }
     });
   };
+  const parseDirectoryRows = (html) => {
+    const parsed = new DOMParser().parseFromString(html, 'text/html');
+    const rows = [...parsed.querySelectorAll('#model-catalog tbody tr.catalog-row')];
+    return rows.map((row) => {
+      const link = row.querySelector('.model-name');
+      const name = row.querySelector('.model-name strong') || link;
+      const provider = row.querySelector('.provider-filter');
+      const href = link ? link.getAttribute('href') : '';
+      const modelName = name ? name.textContent.trim() : 'Unknown model';
+      const route = href ? href.split('/').filter(Boolean).pop() : modelName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const region = row.getAttribute('data-cn') || '';
+      const status = row.querySelector('.status-online') ? 'online' : 'unknown';
+      return {
+        id: row.getAttribute('data-model-id') || route,
+        providerId: row.getAttribute('data-provider-id') || '',
+        provider: provider ? provider.textContent.trim() : 'Unknown provider',
+        model: modelName,
+        context: row.getAttribute('data-context') || '',
+        modality: (row.getAttribute('data-modality') || '').split(',').filter(Boolean),
+        status,
+        sourceKind: 'catalog',
+        canonicalModelId: route,
+        directoryHref: href || '/models/all/',
+        accessRegion: region === 'available' ? 'domestic' : region === 'unavailable' ? 'international' : '',
+        released: row.getAttribute('data-released') || ''
+      };
+    });
+  };
+  const loadDirectorySnapshot = async () => {
+    const response = await fetch('/models/all/');
+    if (!response.ok) throw new Error('model directory snapshot unavailable');
+    const html = await response.text();
+    const routes = [...new Set([...html.matchAll(/href="(\/models\/all\/page\/\d+\/)"/g)].map((match) => match[1]))];
+    const pages = await Promise.allSettled(routes.map(async (route) => {
+      const page = await fetch(route);
+      if (!page.ok) throw new Error('model directory page unavailable');
+      return page.text();
+    }));
+    const pagesHtml = pages.filter((result) => result.status === 'fulfilled').map((result) => result.value);
+    const rows = parseDirectoryRows(html).concat(...pagesHtml.map(parseDirectoryRows));
+    if (!rows.length) throw new Error('model directory contains no rows');
+    return rows;
+  };
   const loadData = async () => {
     try {
-      const responses = await Promise.all([fetch('/data/models.json'), fetch('/data/offers.json')]);
-      if (!responses[0].ok || !responses[1].ok) throw new Error('model data unavailable');
-      const rawModels = await responses[0].json();
-      state.offers = await responses[1].json();
+      const modelTask = fetch('/data/models.json').then((response) => {
+        if (!response.ok) throw new Error('model JSON unavailable');
+        return response.json();
+      });
+      const offerTask = fetch('/data/offers.json').then((response) => {
+        if (!response.ok) throw new Error('offer JSON unavailable');
+        return response.json();
+      }).catch(() => []);
+      let rawModels;
+      try {
+        rawModels = await modelTask;
+      } catch (_) {
+        rawModels = await loadDirectorySnapshot();
+        state.dataFallback = true;
+      }
+      state.offers = await offerTask;
       state.all = rawModels;
       state.models = groupModels(rawModels);
       $('#ml-model-count').textContent = rawModels.length;
       $('#ml-provider-count').textContent = new Set(rawModels.map((item) => item.providerId).filter(Boolean)).size;
-      $('#ml-offer-count').textContent = state.offers.length;
+      if (state.offers.length) $('#ml-offer-count').textContent = state.offers.length;
       let saved = [];
       try { saved = JSON.parse(localStorage.getItem('freellm-model-library-recent') || '[]'); } catch (_) {}
       state.recent = Array.isArray(saved) ? saved.map((entry) => byId(typeof entry === 'string' ? entry : entry && entry.id)).filter(Boolean).map((item) => ({ id:item.key, name:item.model, href:item.href, mark:(item.provider || 'AI').slice(0,1).toUpperCase(), time:'最近浏览' })) : [];
@@ -200,7 +256,7 @@
       renderCards(true);
       renderCompare();
     } catch (error) {
-      $('#ml-results-status').textContent = '模型数据暂时无法加载，请进入完整模型目录继续浏览。';
+      $('#ml-results-status').textContent = '模型目录暂时无法加载，请进入完整模型目录继续浏览。';
       $('#ml-card-grid').innerHTML = '<div class="ml-empty-state"><a href="/models/all/">打开完整模型目录 →</a></div>';
     }
   };
