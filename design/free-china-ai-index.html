@@ -64,15 +64,6 @@
       document.head.appendChild(vercelInsights);
     }
   </script>
-  <script>
-    // file:// 预览走内嵌数据；线上同步能力延后执行，避免阻塞首页首屏解析与 FCP。
-    if (window.location.protocol !== 'file:') {
-      const syncScript = document.createElement('script');
-      syncScript.src = '/js/freellm-sync.js';
-      syncScript.defer = true;
-      document.head.appendChild(syncScript);
-    }
-  </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
   <script type="application/ld+json">
@@ -637,8 +628,32 @@
     <div class="detail-block"><div class="detail-label">External platform signals</div><div class="signal-list" id="drawerSignals"><div class="signal-empty">No public rating found. External platform data will appear here with its original source and capture time.</div></div></div>
     <div class="detail-block"><div class="detail-label">Important</div><div class="detail-value">A free web or IDE plan is not the same as a free API. Open weights are free to download, but storage, GPU memory, inference time and network egress may cost money.</div></div>
   </aside>
-<script defer src="../js/homepage.a5e882a865.js"></script>
-  <script defer src="../js/homepage-i18n.9aacee97e4.js"></script>
+<script>
+  (() => {
+    const queue = window.location.protocol === 'file:'
+      ? ['../js/homepage.a5e882a865.js', '../js/homepage-i18n.9aacee97e4.js']
+      : ['/js/freellm-sync.js', '../js/homepage.a5e882a865.js', '../js/homepage-i18n.9aacee97e4.js'];
+
+    const loadNext = () => {
+      const src = queue.shift();
+      if (!src) return;
+      const syncScript = document.createElement('script');
+      syncScript.src = src;
+      syncScript.onload = loadNext;
+      syncScript.onerror = loadNext;
+      document.body.appendChild(syncScript);
+    };
+
+    const schedule = () => {
+      requestAnimationFrame(() => requestAnimationFrame(loadNext));
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', schedule, { once: true });
+    } else {
+      schedule();
+    }
+  })();
+</script>
   <script>
     (() => {
       const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
