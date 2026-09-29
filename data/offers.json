@@ -8676,5 +8676,311 @@
         }
       ]
     }
+  },
+  {
+    "id": "ppio-invite-new-user-5cny",
+    "order": 68,
+    "date": "2026-09-29",
+    "name": "PPIO invited new-user ¥5 API credit",
+    "providerMark": "PP",
+    "provider": "PPIO",
+    "providerMeta": "派欧云 · invited new-user trial · China",
+    "model": "PPIO Model API catalog",
+    "modelMeta": "OpenAI-compatible · ¥5 invited-new-user credit",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "通过 PPIO 官方邀请注册入口领取 ¥5 新用户免费额度，再用 OpenAI 兼容 API 调用模型",
+      "prerequisites": [
+        "PPIO account",
+        "Invitation registration link/code",
+        "PPIO API Key"
+      ],
+      "steps": [
+        "使用 PPIO 官方带邀请参数的注册页完成注册；当前官方注册/登录页显示“新用户受邀注册，立得 ¥5 免费额度”。",
+        "登录后创建 PPIO API Key，并在账户余额/代金券页面确认 ¥5 权益到账。",
+        "使用 https://api.ppio.com/openai 作为 Base URL 调用模型；先用小请求确认优先消耗赠送额度。"
+      ],
+      "endpoint": "https://api.ppio.com/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${PPIO_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://ppio.com/ai-computing/llm-api"
+    },
+    "kicker": "¥5 INVITE CREDIT",
+    "badges": [
+      "INVITE REQUIRED",
+      "~5M DS-V3 TOKENS",
+      "OPENAI COMPATIBLE"
+    ],
+    "freeSummary": "PPIO 官方注册/登录页当前显示：受邀新用户注册可获 ¥5 免费额度，页面估算约可调用 500 万 DeepSeek-V3 Tokens。",
+    "validitySummary": "邀请注册型新用户权益 · 到期规则以账户内代金券为准",
+    "accessSummary": "需通过官方邀请注册入口/邀请码完成注册",
+    "checkedSummary": "2026-09-29 / official PPIO registration + model API pages",
+    "title": "PPIO 派欧云 · 受邀新用户 ¥5 免费 API 额度",
+    "why": "PPIO 官方注册与登录页面当前明确显示“新用户受邀注册，立得 ¥5 免费额度”，并给出“约 500 万 DeepSeek-V3 tokens”的估算。PPIO 官方模型页同时提供 OpenAI 兼容 Base URL 与 /v1/chat/completions。由于权益依赖邀请入口，FreeLLM 不把它写成所有新用户无条件赠送。",
+    "mechanism": "Invite-gated one-time account credit for new PPIO users",
+    "validity": "Account coupon/credit validity is account-specific; check the coupon wallet after registration",
+    "access": "Register through an official PPIO invite link/code, create an API key, then call the OpenAI-compatible API",
+    "command": "curl https://api.ppio.com/openai/v1/chat/completions -H \"Authorization: Bearer $PPIO_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://ppio.com/user/register",
+    "registerLabel": "Open PPIO registration",
+    "links": [
+      [
+        "PPIO registration",
+        "https://ppio.com/user/register"
+      ],
+      [
+        "PPIO Model API",
+        "https://ppio.com/ai-computing/llm-api"
+      ],
+      [
+        "PPIO 4B model example",
+        "https://ppio.com/model/ppio-4b"
+      ],
+      [
+        "Model API terms",
+        "https://ppio.com/legal/model-terms-of-service"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "PPIO account; invite-gated signup credit",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "invite_new_user_credit",
+      "amount": 5,
+      "unit": "CNY",
+      "period": "one-time"
+    },
+    "quota": "¥5 invited-new-user credit; official page estimates roughly 5M DeepSeek-V3 tokens at current reference pricing",
+    "renewal": "One-time signup credit; no recurring refill documented",
+    "phoneRequired": "yes",
+    "cardRequired": "unknown",
+    "commercialUse": "Check PPIO model-service and model-specific terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": true,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "wallet",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://ppio.com/user/register",
+      "https://ppio.com/user/login",
+      "https://ppio.com/ai-computing/llm-api",
+      "https://ppio.com/model/ppio-4b",
+      "https://ppio.com/legal/model-terms-of-service"
+    ],
+    "evidence": "PPIO 官方注册/登录页当前显示“新用户受邀注册，立得 ¥5 免费额度，约 500 万 DeepSeek-V3 tokens”；官方模型 API 页面确认 Base URL https://api.ppio.com/openai 和 OpenAI-compatible chat completions 接口。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "邀请条件是权益的一部分；不要把 ¥5 赠额写成普通注册必得。具体代金券有效期、实名要求和可抵扣模型以账户内展示为准。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 PPIO 受邀新用户 ¥5 赠额与 OpenAI 兼容 API 接入路径。",
+      "method": [
+        "读取 PPIO 官方注册/登录页面，确认受邀新用户 ¥5 免费额度与约 500 万 DeepSeek-V3 tokens 文案。",
+        "读取 PPIO 官方模型 API / 模型页，确认 https://api.ppio.com/openai 与 /v1/chat/completions。",
+        "读取 PPIO 模型服务协议，确认平台存在 API 试用机制。",
+        "当前没有新建 PPIO 邀请账号和 API Key，因此未验证 ¥5 实际到账、券有效期和真实模型调用。"
+      ],
+      "result": "官方公开预检通过：邀请型 ¥5 新用户额度和标准 OpenAI-compatible API 均有官方页面。",
+      "limitations": "未创建新账号，未验证邀请券到账、实名认证、实际抵扣顺序、可用模型范围和过期时间。",
+      "evidence": [
+        {
+          "label": "PPIO 注册页",
+          "url": "https://ppio.com/user/register"
+        },
+        {
+          "label": "PPIO Model API",
+          "url": "https://ppio.com/ai-computing/llm-api"
+        },
+        {
+          "label": "PPIO 模型服务协议",
+          "url": "https://ppio.com/legal/model-terms-of-service"
+        }
+      ]
+    }
+  },
+  {
+    "id": "infini-genstudio-embedding-rerank-free",
+    "order": 69,
+    "date": "2026-09-29",
+    "name": "Infini-AI GenStudio free Embedding + Rerank APIs",
+    "providerMark": "∞",
+    "provider": "Infini-AI GenStudio / 无问芯穹",
+    "providerMeta": "GenStudio · Retrieval APIs · China",
+    "model": "bge-m3 · bge-reranker-v2-m3",
+    "modelMeta": "Embeddings + Rerank · currently free",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用 GenStudio API Key 免费调用当前暂不收费的 Embedding 与 Rerank API",
+      "prerequisites": [
+        "Infini-AI account",
+        "GenStudio API Key"
+      ],
+      "steps": [
+        "登录无问芯穹智算云并创建 GenStudio API Key。",
+        "Embedding 使用 bge-m3 和 https://cloud.infini-ai.com/maas/v1/embeddings。",
+        "Rerank 使用 bge-reranker-v2-m3 和 https://cloud.infini-ai.com/maas/v1/rerank。",
+        "使用前重新查看 FAQ/计费规则，确认 Embedding/Rerank 仍“暂不收费”；不要把这一免费状态外推到 LLM API。"
+      ],
+      "endpoint": "https://cloud.infini-ai.com/maas/v1",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${INFINIAI_API_KEY}",
+      "examples": {
+        "curl": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'"
+      },
+      "docsUrl": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
+    },
+    "kicker": "EMBED + RERANK FREE",
+    "badges": [
+      "CURRENTLY FREE",
+      "RAG",
+      "LLM IS PAYG"
+    ],
+    "freeSummary": "无问芯穹官方 FAQ 当前明确：GenStudio 向量嵌入模型 API 与重排序模型 API 仍暂不收费；基础版 LLM API 已于 2026-03-30 停止免费。",
+    "validitySummary": "当前暂不收费 · 无统一结束日期",
+    "accessSummary": "GenStudio API Key · cloud.infini-ai.com",
+    "checkedSummary": "2026-09-29 / official Infini-AI FAQ + API tutorials",
+    "title": "无问芯穹 GenStudio · Embedding / Rerank API 当前免费",
+    "why": "无问芯穹官方 FAQ 明确写明：自 2026-03-30 起基础版 LLM API 已停止免费、按 Token 计费，但向量嵌入（Embeddings）和重排序（Reranker）模型 API 仍暂不收费。官方教程分别给出 bge-m3 embeddings 与 bge-reranker-v2-m3 rerank 调用方式。",
+    "mechanism": "Current no-charge policy for GenStudio retrieval APIs (Embeddings and Rerank)",
+    "validity": "Currently free / no-charge; no public end date, recheck the official FAQ before production use",
+    "access": "Create a GenStudio API key and call the retrieval endpoints",
+    "command": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H \"Authorization: Bearer $INFINIAI_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'",
+    "register": "https://cloud.infini-ai.com/",
+    "registerLabel": "Open Infini-AI GenStudio",
+    "links": [
+      [
+        "GenStudio FAQ",
+        "https://docs.infini-ai.com/support/faq.html"
+      ],
+      [
+        "Embeddings tutorial",
+        "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
+      ],
+      [
+        "Rerank tutorial",
+        "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html"
+      ],
+      [
+        "API reference",
+        "https://docs.infini-ai.com/gen-studio/api/reference/maas.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Infini-AI GenStudio cloud API",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "current_no_charge_retrieval_apis",
+      "amount": 2,
+      "unit": "api categories",
+      "period": "until pricing changes"
+    },
+    "quota": "No universal free token/request quota published; API calls are subject to GenStudio rate limits",
+    "renewal": "Not a grant; current no-charge status persists until Infini-AI changes pricing",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Infini-AI service terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://docs.infini-ai.com/support/faq.html",
+      "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html",
+      "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html",
+      "https://docs.infini-ai.com/gen-studio/api/reference/maas.html"
+    ],
+    "evidence": "Infini-AI official FAQ says LLM API free service ended 2026-03-30 while Embeddings and Reranker APIs remain temporarily free. Official tutorials document bge-m3 at /maas/v1/embeddings and bge-reranker-v2-m3 at /maas/v1/rerank with Bearer API key authentication.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Do not label GenStudio LLM APIs as free. Only Embedding/Rerank retrieval APIs are currently no-charge; web experience-center access is a separate non-API free path.",
+    "freeModels": [
+      {
+        "model": "bge-m3",
+        "quota": "Currently no-charge Embeddings API",
+        "note": "Official tutorial endpoint /maas/v1/embeddings.",
+        "sourceUrl": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
+      },
+      {
+        "model": "bge-reranker-v2-m3",
+        "quota": "Currently no-charge Rerank API",
+        "note": "Official tutorial endpoint /maas/v1/rerank.",
+        "sourceUrl": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验无问芯穹 GenStudio Embedding/Rerank 当前免费状态与 API endpoint。",
+      "method": [
+        "读取官方 FAQ，确认 2026-03-30 后 LLM API 已付费，而 Embedding/Rerank API 仍暂不收费。",
+        "读取 Embeddings 教程，确认 bge-m3 与 /maas/v1/embeddings。",
+        "读取 Rerank 教程，确认 bge-reranker-v2-m3 与 /maas/v1/rerank。",
+        "读取统一 API 参考，确认 Bearer API Key 鉴权。",
+        "当前没有 GenStudio API Key，因此未做真实调用。"
+      ],
+      "result": "官方公开预检通过：两个检索 API 当前暂不收费，模型和端点均有官方文档。",
+      "limitations": "未使用真实账号/API Key，未验证当前账户速率限制、真实响应和未来定价切换时间。",
+      "evidence": [
+        {
+          "label": "GenStudio FAQ",
+          "url": "https://docs.infini-ai.com/support/faq.html"
+        },
+        {
+          "label": "Embeddings tutorial",
+          "url": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
+        },
+        {
+          "label": "Rerank tutorial",
+          "url": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-rerank.html"
+        }
+      ]
+    }
   }
 ]
