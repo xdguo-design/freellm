@@ -406,3 +406,20 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-play-icon{
   body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero::after{width:100%!important;height:200px!important;top:auto!important;bottom:0!important;}
   body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1{font-size:clamp(36px,9vw,46px)!important;}
 }
+
+/* Fill the space beside the global rail; remove the legacy Skill Lab inset. */
+body[data-reference-style="v1"][data-fl-section="workflow"] .skill-lab-page{
+  width:calc(100% - 186px)!important;max-width:none!important;margin-left:186px!important;
+  padding:10px 24px 56px!important;
+}
+body[data-reference-style="v1"][data-fl-section="workflow"] .lab-content{
+  width:100%!important;max-width:none!important;margin:0!important;padding:0!important;
+}
+body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero{
+  min-height:0!important;padding:24px clamp(24px,3.2vw,48px)!important;
+}
+@media(max-width:700px){
+  body[data-reference-style="v1"][data-fl-section="workflow"] .skill-lab-page{
+    width:100%!important;margin-left:0!important;padding:12px 16px 48px!important;
+  }
+}
