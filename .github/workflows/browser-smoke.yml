@@ -41,7 +41,7 @@ jobs:
         run: python -m unittest tests.test_audit_seo_metadata -v
 
       - name: Run P0 convergence contracts
-        run: python -m unittest tests.test_skills_page tests.test_p0_convergence -v
+        run: python -m unittest tests.test_skills_page tests.test_p0_convergence tests.test_api_health_page -v
 
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v

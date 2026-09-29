@@ -1,0 +1,52 @@
+{
+  "providerId": "xiaomi-mimo",
+  "provider": "Xiaomi MiMo",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "xiaomi-mimo-v2-5-tts-free",
+    "xiaomi-mimo-desktop"
+  ],
+  "paths": [
+    {
+      "id": "v2-5-tts-limited-free",
+      "label": "MiMo-V2.5-TTS 限时免费 API",
+      "productType": "api",
+      "prerequisites": [
+        "Xiaomi MiMo Open Platform account",
+        "MiMo API Key",
+        "当前价格页仍标 TTS 限时免费"
+      ],
+      "steps": [
+        {
+          "title": "复核免费状态",
+          "detail": "在官方 PAYG 定价或模型页确认 mimo-v2.5-tts / voicedesign / voiceclone 仍标“限时免费”。"
+        },
+        {
+          "title": "创建 API Key",
+          "detail": "在 MiMo 控制台创建普通 API Key，保存到 MIMO_API_KEY。"
+        },
+        {
+          "title": "发送 TTS 请求",
+          "detail": "通过 OpenAI 兼容 Chat Completions API 请求音频并解码返回的 base64 音频数据。",
+          "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H 'Authorization: Bearer ${MIMO_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+          "expected": "返回包含音频数据的 completion；费用页不产生 TTS 调用费用。"
+        }
+      ],
+      "endpoint": "https://api.xiaomimimo.com/v1/chat/completions",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.xiaomimimo.com/v1/chat/completions -H 'Authorization: Bearer ${MIMO_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+      "validation": "请求成功且当前费用页没有 TTS 调用费用；若价格页不再显示限时免费，应立即把 Offer 标记 changed/expired。",
+      "limits": "官方模型页当前列出 RPM 100、TPM 10M；免费结束日期未公开。",
+      "commonIssues": [
+        "MiMo API 不是整体免费，只有当前标注限免的 TTS 系列走本路径。",
+        "VoiceClone 需要合法的声音样本授权和同意。",
+        "限免结束后可能恢复按量计费，调用前必须重新核价格页。"
+      ],
+      "sourceUrls": [
+        "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release",
+        "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go",
+        "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+      ]
+    }
+  ]
+}

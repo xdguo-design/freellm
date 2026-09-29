@@ -1,0 +1,46 @@
+{
+  "providerId": "tencent-tokenhub",
+  "provider": "Tencent Cloud TokenHub",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "tencent-tokenhub-free-trial"
+  ],
+  "paths": [
+    {
+      "id": "new-user-free-api",
+      "label": "领取 TokenHub 新人免费额度并调用 API",
+      "productType": "api",
+      "prerequisites": [
+        "腾讯云账号",
+        "已完成实名认证",
+        "已在 TokenHub 创建 API Key"
+      ],
+      "steps": [
+        {
+          "title": "领取免费体验包",
+          "detail": "在 TokenHub 模型广场或启用管理领取新人免费体验包；支持免费体验的模型首次调用时也可自动领取。每个语言模型和多模态理解模型当前提供 1,000,000 Tokens，领取后 1 年有效。",
+          "action": "打开 https://console.cloud.tencent.com/maas"
+        },
+        {
+          "title": "创建地域 API Key",
+          "detail": "按实际服务地域创建 API Key。广州与新加坡地域不支持跨地域调用，密钥和 Base URL 要保持同地域。"
+        },
+        {
+          "title": "发送 OpenAI 兼容请求",
+          "detail": "广州地域使用 tokenhub.tencentmaas.com；新加坡地域使用 tokenhub-intl.tencentmaas.com。免费额度耗尽且未开启后付费时服务自动停止。",
+          "command": "curl https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "返回 choices[0].message.content；若免费额度耗尽且未开启后付费，应停止服务而不是继续扣费。"
+        }
+      ],
+      "endpoint": "https://tokenhub.tencentmaas.com/v1",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://tokenhub.tencentmaas.com/v1/models -H 'Authorization: Bearer ${TOKENHUB_API_KEY}'",
+      "validation": "GET /v1/models 返回 HTTP 200；同时在 TokenHub 控制台确认目标模型免费体验包剩余额度与到期时间。",
+      "sourceUrls": [
+        "https://cloud.tencent.com/document/product/1823/130053",
+        "https://cloud.tencent.com/document/product/1823/130058",
+        "https://cloud.tencent.com/document/product/1823/130078"
+      ]
+    }
+  ]
+}

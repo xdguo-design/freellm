@@ -1,0 +1,45 @@
+{
+  "providerId": "ctyun-tokenhub",
+  "provider": "China Telecom Xingchen TokenHub",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "ctyun-tokenhub-free-trial"
+  ],
+  "paths": [
+    {
+      "id": "free-api",
+      "label": "领取 50 万 Tokens / 14 天免费体验",
+      "productType": "api",
+      "prerequisites": [
+        "天翼云账号",
+        "可访问星辰 TokenHub 控制台",
+        "已创建 APP Key"
+      ],
+      "steps": [
+        {
+          "title": "领取免费体验",
+          "detail": "在在线推理 > 预置服务选择支持免费体验的模型并开启免费体验。"
+        },
+        {
+          "title": "开启费用保护",
+          "detail": "勾选“免费额度耗尽或过期后，自动关闭服务”，避免自动转按量计费。"
+        },
+        {
+          "title": "调用 API",
+          "detail": "创建服务组与 APP Key 后，使用大陆 OpenAI 兼容端点发送最小请求。",
+          "command": "curl https://ai.ctaigw.cn/v1/chat/completions -H 'Authorization: Bearer ${CTYUN_APP_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "返回 chat completion；控制台免费额度减少，且费用保护保持开启。"
+        }
+      ],
+      "endpoint": "https://ai.ctaigw.cn/v1/chat/completions",
+      "auth": "Authorization: Bearer APP Key",
+      "example": "curl https://ai.ctaigw.cn/v1/chat/completions -H 'Authorization: Bearer ${CTYUN_APP_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "validation": "请求成功，并在控制台确认目标模型的免费额度仍有效且“额度耗尽自动关闭”已开启。",
+      "sourceUrls": [
+        "https://www.ctyun.cn/document/11061839/11097250",
+        "https://www.ctyun.cn/document/11061839/11062271",
+        "https://www.ctyun.cn/document/11061839/11099156"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "providerId": "scnet",
+  "provider": "SCNet",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "scnet-doc-parsing-api-free"
+  ],
+  "paths": [
+    {
+      "id": "document-parsing-free",
+      "label": "SCNet 文档解析限时免费 API",
+      "productType": "api",
+      "prerequisites": [
+        "SCNet 账号",
+        "通用 API Key",
+        "活动页/服务页仍显示免费"
+      ],
+      "steps": [
+        {
+          "title": "创建 API Key",
+          "detail": "在 SCNet API Key 管理创建通用 API Key。"
+        },
+        {
+          "title": "提交文档",
+          "detail": "调用 ocrdoc/submit 提交本地文件或 file_url。",
+          "command": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
+          "expected": "返回 task_id。"
+        },
+        {
+          "title": "查询结果",
+          "detail": "调用 ocrdoc/result 轮询 task_id，直到任务成功并获取结果下载地址。"
+        },
+        {
+          "title": "复核免费状态",
+          "detail": "因为活动未给统一结束日期，批量调用前再次检查活动页和服务页的免费标记。"
+        }
+      ],
+      "endpoint": "https://api.scnet.cn/api/llm/v1/ocrdoc/submit",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
+      "validation": "任务可提交并返回 task_id；当前服务页/活动页仍为免费；如免费标记消失则立即停止免费宣传。",
+      "sourceUrls": [
+        "https://www1.scnet.cn/home/news/133595.html",
+        "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/ocrdoc.html",
+        "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/apikeymgt.html"
+      ]
+    }
+  ]
+}

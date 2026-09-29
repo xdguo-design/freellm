@@ -104,6 +104,15 @@ jobs:
           --timeout 12
           --date "$(date -u +%F)"
 
+      - name: Audit WusRouter public pricing and API compatibility
+        if: always()
+        env:
+          WUSROUTER_API_KEY: ${{ secrets.WUSROUTER_API_KEY }}
+        run: >-
+          python scripts/audit_wusrouter.py
+          --output .tmp/provider-audit/wusrouter.json
+          --timeout 12
+
       - name: Validate external community signals
         if: always()
         run: python -m crawler.cli signals --input data/community-signals.json --out data/community-signals.json
@@ -116,9 +125,9 @@ jobs:
         if: always()
         run: python -m crawler.cli snapshot --input data/offers.json --dir data/snapshots
 
-      - name: Diff current offers against review queue
+      - name: Validate persistent review queue
         if: always()
-        run: python -m crawler.cli diff --previous data/offers.json --current data/offers.json --out data/review-queue.json
+        run: python -m json.tool data/review-queue.json > /dev/null
 
       - name: Build check (embedded page data must be current)
         run: python scripts/build_static.py --check
@@ -141,6 +150,7 @@ jobs:
             data/coverage.json
             data/review-queue.json
             .tmp/model-audit/
+            .tmp/provider-audit/
             site-health-report.json
             adsense-report.json
           if-no-files-found: error

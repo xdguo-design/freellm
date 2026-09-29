@@ -304,7 +304,7 @@ def render_static_catalog(data: list[dict], limit: int = 20) -> str:
 def replace_static_catalog(html: str, data: list[dict]) -> str:
     count = len(data)
     updated = re.sub(
-        r'(<span>资源总览</span><strong>)\d+(</strong><small>按免费方式、地区和能力筛选</small>)',
+        r'(<span>资源总览</span><strong>)\d+(</strong>)',
         rf"\g<1>{count}\g<2>",
         html,
         count=1,

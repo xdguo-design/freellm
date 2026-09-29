@@ -100,7 +100,7 @@ def fetch_public_page(url: str, allowed_domains: list[str], timeout: int = 15, m
     try:
         with DIRECT_OPENER.open(request, timeout=timeout) as response:
             content_type = response.headers.get_content_type()
-            if content_type not in {"text/html", "application/xhtml+xml", "text/plain", "application/xml", "text/xml", "application/rss+xml", "application/atom+xml"}:
+            if content_type not in {"text/html", "application/xhtml+xml", "text/plain", "application/json", "application/xml", "text/xml", "application/rss+xml", "application/atom+xml"}:
                 return {"url": url, "status": "rejected", "reason": f"unsupported content type: {content_type}", "checkedAt": checked_at}
             body = read_limited(response, max_bytes)
             if len(body) > max_bytes:

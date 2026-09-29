@@ -1,0 +1,45 @@
+{
+  "providerId": "baichuan-ai",
+  "provider": "Baichuan AI",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "baichuan-m3-plus-medical-free"
+  ],
+  "paths": [
+    {
+      "id": "haina-baichuan-medical-api",
+      "label": "海纳百川计划 Baichuan-M3 Plus API",
+      "productType": "api",
+      "prerequisites": [
+        "获批机构",
+        "临床辅助决策或医学教育真实服务场景",
+        "Baichuan API Key"
+      ],
+      "steps": [
+        {
+          "title": "完成准入审核",
+          "detail": "通过百川智能官网申请海纳百川计划；申请审核与解释权归百川智能。"
+        },
+        {
+          "title": "检查合规条件",
+          "detail": "仅用于真实服务场景，不用于数据生产；产品需展示 Powered by 百川，且不得对模型输出做影响准确性的修改。"
+        },
+        {
+          "title": "调用模型",
+          "detail": "使用标准 chat/completions endpoint 与 Baichuan-M3-Plus 模型 ID 发起请求。",
+          "command": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "expected": "获批账号返回 chat completion；普通未获批账号不能据此假定免费。"
+        }
+      ],
+      "endpoint": "https://api.baichuan-ai.com/v1/chat/completions",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "validation": "确认账号已获批海纳百川计划，并在实际账单/资源页验证计划内 Baichuan-M3 Plus 调用不收费。",
+      "sourceUrls": [
+        "https://www.baichuan-ai.com/",
+        "https://platform.baichuan-ai.com/docs-v2/api",
+        "https://platform.baichuan-ai.com/prices"
+      ]
+    }
+  ]
+}

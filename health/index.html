@@ -1,0 +1,649 @@
+<!doctype html>
+<html class="fl-pastel-ui" lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>免费大模型 API 健康台与可用性检测｜FreeLLM</title>
+  <meta name="description" content="FreeLLM API 健康台：汇总免费大模型 API 的公开端点、网络可达性、延迟、免费政策、活动有效期、浏览器 CORS 快检与实时免费模型池。">
+  <link rel="canonical" href="https://freellm.top/health/">
+  <meta name="robots" content="index,follow">
+  <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260921b">
+  <script defer src="/js/freellm-sync.js"></script>
+  <style>
+    :root{
+      --health-ink:#101113;
+      --health-muted:#65707a;
+      --health-line:#d7dce1;
+      --health-paper:#f5f7f8;
+      --health-blue:#1744e8;
+      --health-blue-soft:#e9edff;
+      --health-yellow:#ffd51f;
+      --health-green:#b8f1cc;
+      --health-green-ink:#0b5f35;
+      --health-red:#ffe4dc;
+      --health-red-ink:#9d351f;
+      --health-mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+      --health-sans:"DM Sans","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    }
+    .api-health-page *,.fl-site-rail,.fl-site-ribbon{box-sizing:border-box}
+    html.fl-pastel-ui body.fl-ui-v2{
+      max-width:none!important;
+      margin:0!important;
+      padding:0 0 64px 230px!important;
+      color:var(--health-ink)!important;
+      background:
+        linear-gradient(90deg,rgba(16,17,19,.035) 1px,transparent 1px) 0 0/24px 24px,
+        var(--health-paper)!important;
+      font-family:var(--health-sans)!important;
+    }
+    html.fl-pastel-ui body.fl-ui-v2:before{display:none!important}
+    .fl-site-rail{
+      width:230px!important;
+      padding:22px 16px!important;
+      gap:32px!important;
+      border-right:1px solid var(--health-line)!important;
+      background:rgba(255,255,255,.84)!important;
+      border-radius:0!important;
+      box-shadow:none!important;
+    }
+    .fl-site-brand{padding:0 0 20px!important;border-bottom:1px solid var(--health-line)!important}
+    .fl-site-brand-mark{
+      width:54px!important;height:54px!important;border:0!important;border-radius:0!important;
+      background:var(--health-blue)!important;color:#fff!important;box-shadow:none!important;
+      font:800 14px/1 var(--health-sans)!important;letter-spacing:-.04em
+    }
+    .fl-site-brand-copy strong{font-size:18px!important;color:var(--health-ink)!important}
+    .fl-site-brand-copy small{font:10px var(--health-mono)!important;text-transform:uppercase;letter-spacing:.08em;color:var(--health-muted)!important}
+    .fl-site-nav{gap:4px!important}
+    .fl-site-nav a{
+      min-height:42px!important;padding:11px 10px!important;border-radius:0!important;
+      color:var(--health-muted)!important;font-weight:700!important
+    }
+    .fl-site-nav a:hover,.fl-site-nav a[aria-current="page"]{
+      color:#fff!important;background:var(--health-ink)!important;transform:none!important;box-shadow:none!important
+    }
+    .fl-site-nav-icon{color:inherit!important}
+    .fl-site-rail-note{
+      margin-top:auto!important;padding:14px 12px!important;border:1px solid var(--health-line);
+      color:var(--health-muted)!important;background:#fff;font:600 12px/1.55 var(--health-sans)!important;
+      transform:none!important
+    }
+    .fl-site-rail-note:before{display:none!important}
+    .fl-site-ribbon{
+      width:100%!important;max-width:none!important;min-height:78px!important;margin:0!important;
+      padding:16px 30px!important;border:0!important;border-bottom:1px solid var(--health-line)!important;
+      border-radius:0!important;background:rgba(255,255,255,.8)!important;box-shadow:none!important;backdrop-filter:none!important
+    }
+    .fl-site-ribbon-title{font:11px var(--health-mono)!important;text-transform:uppercase;letter-spacing:.08em;color:var(--health-muted)!important}
+    .fl-site-ribbon a{border-radius:0!important;font:700 12px var(--health-sans)!important}
+    .fl-site-ribbon a:hover{color:#fff!important;background:var(--health-ink)!important}
+
+    .api-health-page{width:min(100%,1540px)!important;max-width:1540px!important;margin:0 auto!important;padding:34px 36px 42px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+    .health-hero{
+      position:relative;display:grid;grid-template-columns:minmax(0,7fr) minmax(420px,5fr);gap:28px;
+      align-items:stretch;overflow:visible;padding:0 0 22px;border:0;border-bottom:1px solid var(--health-ink);
+      border-radius:0;background:transparent;color:var(--health-ink);box-shadow:none
+    }
+    .health-hero:after{display:none}
+    .health-kicker{margin-bottom:14px;color:var(--health-blue);font:10px var(--health-mono);letter-spacing:.14em;text-transform:uppercase;opacity:1}
+    .health-hero h1{
+      max-width:780px;margin:0!important;color:var(--health-ink)!important;
+      font:800 clamp(42px,6vw,82px)/.91 var(--health-sans)!important;letter-spacing:-.075em!important
+    }
+    .health-hero p{max-width:680px;margin:22px 0 0;color:#4e5962;font-size:17px;line-height:1.5}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+    .hero-actions button,.hero-actions a{
+      min-height:40px;padding:0 12px;border:1px solid var(--health-ink);border-radius:0;background:#fff;
+      color:var(--health-ink);font-weight:800;text-decoration:none;box-shadow:none
+    }
+    .hero-actions button:hover,.hero-actions a:hover{color:#fff;background:var(--health-ink)}
+    .hero-actions .primary{border-color:var(--health-blue);background:var(--health-blue);color:#fff}
+    .hero-actions .primary:hover{background:var(--health-ink);border-color:var(--health-ink)}
+    .hero-side{
+      position:relative;min-height:254px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:end;
+      padding:14px;border:1px solid var(--health-ink);
+      background:
+        linear-gradient(180deg,rgba(7,17,36,.12),rgba(7,17,36,.82)),
+        url('/design/assets/free-method-night-window.png') center/cover no-repeat;
+    }
+    .hero-note{
+      position:relative;z-index:1;padding:12px;border:1px solid rgba(255,255,255,.54);border-radius:0;
+      background:rgba(7,17,36,.76);backdrop-filter:none;color:#fff
+    }
+    .hero-note strong{display:block;margin-bottom:5px;color:#fff;font-size:12px}
+    .hero-note span{color:#dce4ef;font-size:11px;line-height:1.45}
+
+    .summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0 22px}
+    .metric{
+      min-height:118px;padding:14px;border:1px solid var(--health-ink);border-radius:0;background:#fff;
+      box-shadow:none;display:flex;flex-direction:column;justify-content:space-between
+    }
+    .metric:nth-child(2){background:var(--health-blue);color:#fff}
+    .metric:nth-child(3){background:var(--health-green)}
+    .metric:nth-child(4){background:var(--health-yellow)}
+    .metric:nth-child(5){background:#edf0ff}
+    .metric span{display:block;color:inherit;font:11px var(--health-mono);letter-spacing:.1em;text-transform:uppercase}
+    .metric strong{display:block;margin:10px 0 6px;color:inherit;font-size:34px;line-height:.9;letter-spacing:-.06em}
+    .metric small{color:var(--health-muted);font-size:12px;line-height:1.35}
+    .metric:nth-child(2) small{color:#d8deff}.metric:nth-child(4) small{color:#5a4b00}
+    .metric-priority{gap:7px}
+    .priority-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:3px 0}
+    .priority-counts b{min-width:0;display:grid;grid-template-columns:auto 1fr;align-items:end;gap:4px;font-weight:800}
+    .priority-counts em{font:800 9px var(--health-mono);font-style:normal;letter-spacing:.04em}
+    .priority-counts strong{margin:0!important;font-size:24px!important;line-height:.9!important;letter-spacing:-.06em}
+    .priority-counts b:nth-child(1){color:var(--health-red-ink)}
+    .priority-counts b:nth-child(2){color:#5a4b00}
+    .priority-counts b:nth-child(3){color:#59626a}
+    .filter em{margin-left:5px;font:800 9px var(--health-mono);font-style:normal;opacity:.72}
+    .filter.active em{color:inherit;opacity:.8}
+
+    .grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin:0 0 22px}
+    .panel{padding:18px;border:1px solid var(--health-ink);border-radius:0;background:#fff;box-shadow:none}
+    .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+    .panel-head h2{margin:0!important;color:var(--health-ink)!important;font-size:25px!important;line-height:1!important;letter-spacing:-.045em!important}
+    .panel-head p{margin:7px 0 0;color:var(--health-muted);font-size:12px;line-height:1.45}
+    .panel-head button{min-height:36px;padding:0 11px;border:1px solid var(--health-ink);border-radius:0;background:#fff;color:var(--health-ink);font-weight:800}
+    .panel-head button:hover{background:var(--health-ink);color:#fff}
+
+    .action-list,.expiry-list,.pool-list{display:grid;gap:0;border-top:1px solid var(--health-line)}
+    .action-item,.expiry-item,.pool-item{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;
+      padding:12px 2px;border:0;border-bottom:1px solid var(--health-line);border-radius:0;background:#fff
+    }
+    .action-item strong,.expiry-item strong,.pool-item strong{display:block;font-size:13px}
+    .action-item span,.expiry-item span,.pool-item span{display:block;margin-top:4px;color:var(--health-muted);font-size:11px;line-height:1.45}
+    .severity{white-space:nowrap;padding:5px 7px;border-radius:0;font:800 10px var(--health-mono)}
+    .sev-high{background:var(--health-red);color:var(--health-red-ink)}
+    .sev-mid{background:var(--health-yellow);color:#5a4b00}
+    .sev-low{background:var(--health-green);color:var(--health-green-ink)}
+
+    .toolbar{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:12px;margin:14px 0 12px}
+    .toolbar input{
+      min-height:48px;padding:0 15px;border:1px solid var(--health-ink)!important;border-radius:0!important;
+      background:#fff!important;color:var(--health-ink)!important;box-shadow:none!important;outline:none
+    }
+    .toolbar input:focus{box-shadow:4px 4px 0 var(--health-blue)!important}
+    .filters{display:flex;flex-wrap:wrap;gap:8px}
+    .filter{
+      min-height:48px;padding:0 12px;border:1px solid var(--health-ink);border-radius:0;
+      background:transparent;color:var(--health-ink);font-weight:800;font-size:12px
+    }
+    .filter:hover,.filter.active{border-color:var(--health-ink);background:var(--health-ink);color:#fff}
+
+    .health-table{overflow:auto;border:1px solid var(--health-ink);border-radius:0;background:#fff}
+    .health-head,.health-row{min-width:1120px;display:grid;grid-template-columns:1.35fr .72fr .72fr .8fr 1.45fr .86fr 1.2fr;gap:10px;align-items:center}
+    .health-head{padding:10px 14px;background:var(--health-ink);color:#fff;font:10px var(--health-mono);letter-spacing:.09em;text-transform:uppercase}
+    .health-row{padding:14px;border-top:1px solid var(--health-line)}
+    .health-row:first-of-type{border-top:0}.health-row:hover{background:#f0f3ff}
+    .provider-cell strong{display:block;font-size:13px}.provider-cell small{display:block;margin-top:4px;color:var(--health-muted);font:10px var(--health-mono)}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:0!important;font:800 10px var(--health-mono);text-transform:uppercase}
+    .badge:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+    .ok{background:var(--health-green);color:var(--health-green-ink)}
+    .warn{background:var(--health-yellow);color:#5a4b00}
+    .bad{background:var(--health-red);color:var(--health-red-ink)}
+    .neutral{background:#eef0f2;color:#59626a}
+    .mono{font:11px var(--health-mono)}.quota{font-size:11px;line-height:1.45;color:#4e5962}
+    .row-actions{display:flex;flex-wrap:wrap;gap:6px}
+    .row-actions button,.row-actions a{
+      min-height:30px;padding:0 8px;border:1px solid var(--health-ink);border-radius:0;background:#fff;
+      color:var(--health-ink);font:800 10px var(--health-sans);text-decoration:none
+    }
+    .row-actions button:hover,.row-actions a:hover{border-color:var(--health-blue);background:var(--health-blue);color:#fff}
+    .cors-result{margin-top:4px;color:var(--health-muted);font:10px var(--health-mono)}
+    .pool-meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+    .pill{padding:6px 8px;border:1px solid var(--health-line);border-radius:0;background:#f5f7f8;color:var(--health-muted);font:11px var(--health-mono)}
+    .empty{padding:24px;text-align:center;color:var(--health-muted);font-size:12px}
+
+    .modal{position:fixed;z-index:3000;inset:0;display:none;place-items:center;padding:20px;background:rgba(16,17,19,.48)}
+    .modal.open{display:grid}.modal-card{width:min(760px,100%);max-height:84vh;overflow:auto;padding:18px;border:1px solid var(--health-ink);border-radius:0;background:#fff;box-shadow:14px 14px 0 rgba(16,17,19,.15)}
+    .modal-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.modal-head h3{margin:0!important}
+    .modal-close{width:34px;height:34px;border:1px solid var(--health-ink);border-radius:0;background:#fff;color:var(--health-ink)}
+    pre.command{overflow:auto;padding:14px;border-radius:0!important;background:#071124!important;color:#dcecff;font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end}.modal-actions button{min-height:36px;padding:0 12px;border:1px solid var(--health-blue);border-radius:0;background:var(--health-blue);color:#fff;font-weight:800}
+    .safety-note{margin:10px 0;padding:10px 12px;border:1px solid var(--health-ink);border-radius:0;background:var(--health-yellow);color:var(--health-ink);font-size:11px;line-height:1.55}
+    .hidden-file{display:none}
+
+    @media(max-width:1100px){
+      html.fl-pastel-ui body.fl-ui-v2{padding-left:0!important}
+      .fl-site-rail{position:relative!important;width:auto!important;min-height:0!important;flex-direction:row!important;align-items:center!important;padding:12px 16px!important;gap:14px!important;border-right:0!important;border-bottom:1px solid var(--health-line)!important}
+      .fl-site-brand{padding:0!important;border:0!important}.fl-site-brand-mark{width:38px!important;height:38px!important}.fl-site-brand-copy small,.fl-site-rail-note{display:none!important}
+      .fl-site-nav{display:flex!important;flex-wrap:wrap!important}.fl-site-nav a{min-height:36px!important;padding:8px 10px!important}
+      .health-hero{grid-template-columns:1fr}.hero-side{min-height:220px}.grid-2{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .fl-site-ribbon{min-height:58px!important;padding:10px 14px!important}
+      .api-health-page{padding:22px 14px 36px!important}
+      .health-hero h1{font-size:48px!important}.summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .toolbar{grid-template-columns:1fr}.filters{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.filter{white-space:nowrap}
+      .hero-actions{display:grid;grid-template-columns:1fr 1fr}.hero-actions button,.hero-actions a{width:100%}
+      .hero-side{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body class="fl-ui-v2">
+  <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+    <a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a>
+    <nav class="fl-site-nav">
+      <a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
+      <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
+      <a href="/health/" data-site-nav="health" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>API 健康</span></a>
+      <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
+      <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
+      <a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+      <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+      <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
+    </nav>
+    <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
+  </aside>
+  <div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / API 健康台</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/">资源首页 ↗</a></span></div>
+  <main class="api-health-page" id="fl-main-content">
+    <section class="health-hero">
+      <div>
+        <div class="health-kicker">FREE API / HEALTH WORKBENCH</div>
+        <h1>免费 API 健康台</h1>
+        <p>把“目录里有这条渠道”升级成“今天到底能不能用”。公开探测、国内/海外网络、延迟、限时政策、浏览器 CORS 和免费模型池放在一屏里；真实 API Key 不保存到 FreeLLM。</p>
+        <div class="hero-actions">
+          <button class="primary" id="refresh-all" type="button">刷新公开状态</button>
+          <button id="export-state" type="button">导出状态 JSON</button>
+          <button id="import-state" type="button">导入状态</button>
+          <a href="/models/center/">打开模型中心</a>
+          <input class="hidden-file" id="import-file" type="file" accept="application/json">
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="hero-note"><strong>快速检测</strong><span>在浏览器直接读公开 /models 或同类端点。能读到响应只代表端点/CORS 可达，不代表 Key 有效。</span></div>
+        <div class="hero-note"><strong>深度检测</strong><span>生成本机最小调用命令，Key 通过环境变量注入；FreeLLM 页面不接收、不保存真实凭据。</span></div>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="API 健康摘要">
+      <article class="metric"><span>API 渠道</span><strong id="m-total">—</strong><small>正式 API Offer + 高优先级待完善渠道</small></article>
+      <article class="metric"><span>端点有响应</span><strong id="m-alive">—</strong><small>公开可读 <b id="m-public">—</b> · 需 Key <b id="m-keyed">—</b></small></article>
+      <article class="metric"><span>国内可达</span><strong id="m-cn">—</strong><small>来自现有 networkCheck 证据</small></article>
+      <article class="metric metric-priority"><span>需要处理</span><div class="priority-counts"><b><em>P0</em><strong id="m-p0">—</strong></b><b><em>P1</em><strong id="m-p1">—</strong></b><b><em>P2</em><strong id="m-p2">—</strong></b></div><small>紧急故障 / 即将影响 / 维护治理</small></article>
+      <article class="metric"><span>模型快照</span><strong id="m-models">—</strong><small>当前模型目录记录</small></article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head">
+          <div><h2>今天需要处理</h2><p>按 P0 → P1 → P2 排序；同一 Provider 的异常和维护原因聚合在一行。</p></div>
+        </div>
+        <div class="action-list" id="action-list"><div class="empty">正在计算…</div></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head">
+          <div><h2>到期 / 活动状态</h2><p>只对有证据的截止规则做结构化展示；没有公开日期就明确标“待确认”。</p></div>
+        </div>
+        <div class="expiry-list" id="expiry-list"><div class="empty">正在计算…</div></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>通道矩阵</h2><p>快速检测不会把“公开端点 200”误判为“Key 真能用”；深度检测命令才验证端到端调用。</p></div>
+      </div>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="搜索 OpenRouter / 智谱 / 硅基流动 / NVIDIA…">
+        <div class="filters" id="filters">
+          <button class="filter active" data-filter="all" type="button">全部</button>
+          <button class="filter" data-filter="p0" type="button">P0 紧急 <em id="f-p0">—</em></button>
+          <button class="filter" data-filter="p1" type="button">P1 关注 <em id="f-p1">—</em></button>
+          <button class="filter" data-filter="p2" type="button">P2 维护 <em id="f-p2">—</em></button>
+          <button class="filter" data-filter="cn" type="button">国内可达</button>
+          <button class="filter" data-filter="intl" type="button">海外可达</button>
+          <button class="filter" data-filter="limited" type="button">限时/试用</button>
+          <button class="filter" data-filter="cors" type="button">CORS 已通过</button>
+        </div>
+      </div>
+      <div class="health-table">
+        <div class="health-head"><span>渠道</span><span>公开状态</span><span>网络</span><span>延迟</span><span>免费条件</span><span>核验</span><span>操作</span></div>
+        <div id="channel-list"><div class="empty">正在读取 FreeLLM 数据…</div></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <div class="panel-head">
+          <div><h2>OpenRouter 实时免费池</h2><p>直接读取公开模型端点，并与 FreeLLM 当前快照比较新增/消失项。</p></div>
+          <button id="refresh-pool" type="button">刷新实时池</button>
+        </div>
+        <div class="pool-meta" id="pool-meta"><span class="pill">尚未刷新</span></div>
+        <div class="pool-list" id="pool-list"><div class="empty">点击“刷新实时池”获取当次结果。</div></div>
+      </article>
+      <article class="panel">
+        <div class="panel-head">
+          <div><h2>数据边界</h2><p>健康台把公开事实、运行状态和个人凭据分开。</p></div>
+        </div>
+        <div class="action-list">
+          <div class="action-item"><div><strong>公开事实</strong><span>额度、官方来源、模型目录、最近核验日期。</span></div><b class="severity sev-low">FreeLLM</b></div>
+          <div class="action-item"><div><strong>运行状态</strong><span>端点响应、延迟、网络地区、浏览器 CORS，当次现测。</span></div><b class="severity sev-mid">动态</b></div>
+          <div class="action-item"><div><strong>真实 Key</strong><span>不进入本站存储。深测命令只引用本机环境变量 API_KEY。</span></div><b class="severity sev-high">仅本机</b></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal" id="command-modal" role="dialog" aria-modal="true" aria-labelledby="command-title">
+    <div class="modal-card">
+      <div class="modal-head"><h3 id="command-title">深度检测命令</h3><button class="modal-close" id="modal-close" type="button" aria-label="关闭">×</button></div>
+      <div class="safety-note">先在本机设置 <code>API_KEY</code> 环境变量，再运行下面命令。命令文本不会包含真实 Key；本站也不会要求你粘贴真实凭据。</div>
+      <pre class="command" id="command-text"></pre>
+      <div class="modal-actions"><button id="copy-command" type="button">复制 PowerShell 命令</button></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  'use strict';
+  var state={offers:[],models:[],latency:[],records:[],cors:{},filter:'all',query:'',pool:null};
+  var aliases={
+    'openrouter-free':'openrouter','groq-free':'groq','mistral-free-mode':'mistral-ai',
+    'siliconflow-free-models':'siliconflow','modelscope-api-inference-free':'modelscope',
+    'dots-api-free':'dots-api-cn','amd-radeon-cloud-free':'amd-radeon-cloud',
+    'google-ai-studio-free':'google-gemini','hf-inference-free':'huggingface',
+    'cohere-trial-key':'cohere','cerebras-free':'cerebras','agnes-ai-free':'agnes-ai',
+    'atria-dawn-preview':'atria-asi','aliyun-qwen-free-quota':'aliyun-qwen',
+    'stepfun-limited-time-free':'stepfun','longcat-2-0':'meituan-longcat',
+    'sensecore':'sensecore','opencode-zen-free':'opencode'
+  };
+  var catalogExtras=[
+    {id:'catalog-cloudflare-workers-ai',providerId:'cloudflare-workers-ai',provider:'Cloudflare Workers AI',title:'Cloudflare Workers AI · free allocation',quota:'10,000 Neurons / day free allocation; selected frontier models may require Workers Paid',validity:'Ongoing free allocation; model eligibility can change',register:'https://dash.cloudflare.com/sign-up',sourceUrls:['https://developers.cloudflare.com/workers-ai/platform/pricing/'],usageGuide:{endpoint:'https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/run/@cf/meta/llama-3.2-1b-instruct'},lastVerifiedAt:'2026-09-29',catalogOnly:true,networkCheck:null,freePolicy:{type:'daily_quota'}},
+    {id:'catalog-nvidia-nim',providerId:'nvidia-nim',provider:'NVIDIA NIM',title:'NVIDIA API Catalog / NIM',quota:'Developer Program / API Catalog access; exact cloud trial credits are account-dependent',validity:'Developer access ongoing; trial/enterprise terms vary',register:'https://build.nvidia.com/',sourceUrls:['https://docs.nvidia.com/nim/'],usageGuide:{endpoint:'https://integrate.api.nvidia.com/v1/chat/completions'},lastVerifiedAt:'2026-09-29',catalogOnly:true,networkCheck:null,freePolicy:{type:'catalog_access'}},
+    {id:'catalog-z-ai',providerId:'z-ai-zhipu-ai',provider:'Z.AI / BigModel',title:'Z.AI · GLM API access',quota:'Free/experience quota is campaign and account dependent; check the current account page',validity:'Promotional quota can expire; no permanent free API quota is asserted here',register:'https://z.ai/model-api',sourceUrls:['https://z.ai/model-api'],usageGuide:{endpoint:'https://api.z.ai/api/paas/v4/chat/completions'},lastVerifiedAt:'2026-09-29',catalogOnly:true,networkCheck:null,freePolicy:{type:'trial'}}
+  ];
+
+  function $(id){return document.getElementById(id)}
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function fetchJson(url){return fetch(url,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json()})}
+  function daysOld(date){if(!date)return 999;var d=new Date(date+'T00:00:00Z');return Math.floor((Date.now()-d.getTime())/86400000)}
+  function providerIdFor(o){return o.providerId||aliases[o.id]||String(o.provider||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+  function isLimited(o){
+    var type=String((o.freePolicy&&o.freePolicy.type)||'').toLowerCase();
+    if(['trial','limited_time_free','one_time_credits'].indexOf(type)>=0)return true;
+    if(['rate_limited','daily_quota','monthly_credits','permanent_free','free_models','catalog_access'].indexOf(type)>=0)return false;
+    var validity=String(o.validity||'')+' '+String(o.validitySummary||'');
+    return /\blimited[- ]?time\b|限时|公测|\bvalid for \d+ days\b|\b\d+ days from\b/i.test(validity);
+  }
+  function publicAlive(r){var v=endpointVerdict(r);return ['OK','NEEDS_KEY','ALIVE','RATE_LIMITED'].indexOf(v)>=0}
+  function publicReadable(r){var v=endpointVerdict(r);return ['OK','ALIVE'].indexOf(v)>=0}
+  function needsKeyResponse(r){return endpointVerdict(r)==='NEEDS_KEY'}
+  function networkLabel(r){var n=r.networkCheck&&r.networkCheck.region;if(n==='both')return '中 / 海外';if(n==='cn')return '国内';if(n==='intl')return '海外';return '待测'}
+  function networkClass(r){var n=r.networkCheck&&r.networkCheck.region;return n?'ok':'neutral'}
+  function endpointFor(r){return r.usageGuide&&r.usageGuide.endpoint?r.usageGuide.endpoint:''}
+  function modelFor(r){var f=r.freeModels||[];return (f[0]&&(f[0].model||f[0].id))||'YOUR_MODEL'}
+  function modelsUrl(r){
+    if(r.latency&&r.latency.endpoint)return r.latency.endpoint;
+    var e=endpointFor(r);
+    if(!e)return '';
+    if(/\/chat\/completions\/?$/i.test(e))return e.replace(/\/chat\/completions\/?$/i,'/models');
+    if(/\/v1\/?$/i.test(e))return e.replace(/\/?$/,'/models');
+    if(/\/models\/?$/i.test(e))return e;
+    return '';
+  }
+  function issueFor(r){
+    var issues=[];
+    if(r.catalogOnly)issues.push('尚未转成正式 API Offer');
+    if(!r.latency&&!r.endpointCheck)issues.push('缺公开端点检测');
+    if(daysOld(r.lastVerifiedAt)>7)issues.push('官方信息超过 7 天未复核');
+    if(isLimited(r)&&!/\d{4}-\d{2}-\d{2}/.test(String(r.validity||'')))issues.push('限时权益无明确截止日');
+    return issues;
+  }
+  function actionPriorityRank(level){return level==='P0'?0:(level==='P1'?1:2)}
+  function actionSeverityClass(level){return level==='P0'?'sev-high':(level==='P1'?'sev-mid':'sev-low')}
+  function endpointVerdict(r){return String((r.endpointCheck&&r.endpointCheck.verdict)||(r.latency&&r.latency.verdict)||'').toUpperCase()}
+  function endpointIsHealthy(r){
+    var verdict=endpointVerdict(r);
+    return !verdict||['OK','NEEDS_KEY','ALIVE','RATE_LIMITED'].indexOf(verdict)>=0;
+  }
+  function expiryDate(r){
+    var match=String(r.validity||'').match(/\b(20\d{2}-\d{2}-\d{2})\b/);
+    return match?match[1]:'';
+  }
+  function daysUntil(date){
+    if(!date)return null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var target=new Date(date+'T00:00:00');
+    return Math.ceil((target.getTime()-today.getTime())/86400000);
+  }
+  function hasExpiringPolicy(r){return isLimited(r)}
+  function actionReasons(r){
+    var reasons=[];
+    var cors=state.cors[r.id];
+    var verdict=endpointVerdict(r);
+    var exp=expiryDate(r);
+    var until=daysUntil(exp);
+
+    if(!r.latency&&!r.endpointCheck)reasons.push({level:'P0',code:'missing_probe',label:'缺公开端点检测'});
+    if(verdict&&!endpointIsHealthy(r))reasons.push({level:'P0',code:'endpoint_down',label:'端点失效 / '+verdict});
+    if(r.networkCheck&&['none','down','unreachable'].indexOf(String(r.networkCheck.region||'').toLowerCase())>=0)reasons.push({level:'P0',code:'network_down',label:'网络不可达'});
+    if(cors&&cors.ok===false&&cors.reason!=='no_models_endpoint')reasons.push({level:'P0',code:'cors_failed',label:'CORS 快检失败'});
+    if(exp&&until<0)reasons.push({level:'P0',code:'expired',label:'活动已到期 '+exp});
+
+    if(exp&&until>=0&&until<=7)reasons.push({level:'P1',code:'expiring',label:until===0?'活动今天到期':'活动 '+until+' 天后到期'});
+    if(!exp&&hasExpiringPolicy(r)){
+      if(/90 days from/i.test(String(r.validity||'')))reasons.push({level:'P1',code:'relative_expiry',label:'按账号起始日计算到期（90 天）'});
+      else reasons.push({level:'P1',code:'unknown_expiry',label:'限时 / 试用权益未给出明确截止日'});
+    }
+
+    if(r.catalogOnly)reasons.push({level:'P2',code:'catalog_only',label:'尚未转成正式 API Offer'});
+    if(daysOld(r.lastVerifiedAt)>7)reasons.push({level:'P2',code:'stale_verification',label:'官方信息超过 '+daysOld(r.lastVerifiedAt)+' 天未复核'});
+    return reasons;
+  }
+  function recordPriority(r){
+    var reasons=actionReasons(r);
+    if(!reasons.length)return '';
+    reasons.sort(function(a,b){return actionPriorityRank(a.level)-actionPriorityRank(b.level)});
+    return reasons[0].level;
+  }
+  function priorityCounts(){
+    var counts={P0:0,P1:0,P2:0};
+    providerActionItems().forEach(function(item){
+      if(item.level)counts[item.level]+=1;
+    });
+    return counts;
+  }
+  function providerActionItems(){
+    var grouped={};
+    state.records.forEach(function(r){
+      var key=r.providerId||r.id;
+      var reasons=actionReasons(r);
+      if(!reasons.length)return;
+      if(!grouped[key])grouped[key]={key:key,provider:r.provider||r.title||r.id,reasons:[],age:daysOld(r.lastVerifiedAt)};
+      grouped[key].age=Math.max(grouped[key].age,daysOld(r.lastVerifiedAt));
+      reasons.forEach(function(reason){
+        if(!grouped[key].reasons.some(function(existing){return existing.code===reason.code&&existing.label===reason.label}))grouped[key].reasons.push(reason);
+      });
+    });
+    return Object.keys(grouped).map(function(key){
+      var item=grouped[key];
+      item.reasons.sort(function(a,b){return actionPriorityRank(a.level)-actionPriorityRank(b.level)});
+      item.level=item.reasons[0].level;
+      return item;
+    }).sort(function(a,b){
+      var priority=actionPriorityRank(a.level)-actionPriorityRank(b.level);
+      if(priority)return priority;
+      var reasonCount=b.reasons.length-a.reasons.length;
+      if(reasonCount)return reasonCount;
+      var age=b.age-a.age;
+      if(age)return age;
+      return a.provider.localeCompare(b.provider,'zh-CN');
+    });
+  }
+  function normalize(offers,latency){
+    var lm={};(latency.providers||[]).forEach(function(x){lm[x.providerId]=x});
+    var records=offers.filter(function(o){return o.productType==='api'}).map(function(o){
+      var pid=providerIdFor(o),copy=Object.assign({},o);copy.providerId=pid;copy.latency=lm[pid]||null;return copy;
+    });
+    catalogExtras.forEach(function(x){
+      if(!records.some(function(r){return r.providerId===x.providerId})){var c=Object.assign({},x);c.latency=lm[x.providerId]||null;records.push(c)}
+    });
+    return records;
+  }
+  function statusBadge(r){
+    var verdict=endpointVerdict(r);
+    if(verdict==='OK'||verdict==='ALIVE')return '<span class="badge ok">公开可读</span>';
+    if(verdict==='NEEDS_KEY')return '<span class="badge warn">需 Key · 网关在线</span>';
+    if(verdict==='RATE_LIMITED')return '<span class="badge warn">限流 · 网关在线</span>';
+    if(r.endpointCheck||r.latency)return '<span class="badge bad">端点异常 · '+esc(verdict||'UNKNOWN')+'</span>';
+    return '<span class="badge neutral">未检测</span>';
+  }
+  function corsText(id){var x=state.cors[id];if(!x)return 'CORS 未测';if(x.ok)return 'CORS ✓ '+x.ms+'ms';return 'CORS/网络不可读'}
+  function actionKeysForLevel(level){
+    return providerActionItems().filter(function(item){return item.level===level}).map(function(item){return item.key});
+  }
+  function priorityOrderedRecords(level){
+    var keys=actionKeysForLevel(level);
+    var grouped={};
+    state.records.forEach(function(r){
+      if(recordPriority(r)!==level)return;
+      var key=r.providerId||r.id;
+      if(!grouped[key])grouped[key]=r;
+    });
+    return keys.map(function(key){return grouped[key]}).filter(Boolean);
+  }
+  function rowsForCurrentFilter(){
+    var level=state.filter==='p0'?'P0':(state.filter==='p1'?'P1':(state.filter==='p2'?'P2':''));
+    var source=level?priorityOrderedRecords(level):state.records;
+    return source.filter(rowMatches);
+  }
+  function rowMatches(r){
+    var q=state.query.trim().toLowerCase();
+    if(q&&JSON.stringify([r.provider,r.title,r.quota,r.id]).toLowerCase().indexOf(q)<0)return false;
+    if(state.filter==='p0')return recordPriority(r)==='P0';
+    if(state.filter==='p1')return recordPriority(r)==='P1';
+    if(state.filter==='p2')return recordPriority(r)==='P2';
+    if(state.filter==='cn')return r.networkCheck&&['cn','both'].indexOf(r.networkCheck.region)>=0;
+    if(state.filter==='intl')return r.networkCheck&&['intl','both'].indexOf(r.networkCheck.region)>=0;
+    if(state.filter==='limited')return isLimited(r);
+    if(state.filter==='cors')return state.cors[r.id]&&state.cors[r.id].ok;
+    return true;
+  }
+  function renderRows(){
+    var list=rowsForCurrentFilter();
+    $('channel-list').innerHTML=list.length?list.map(function(r){
+      var latency=(r.latency&&r.latency.ms)||(r.endpointCheck&&r.endpointCheck.ms);
+      var issues=issueFor(r);
+      return '<div class="health-row" data-id="'+esc(r.id)+'" data-provider-id="'+esc(r.providerId||r.id)+'">'+
+        '<div class="provider-cell"><strong>'+esc(r.provider||r.title||r.id)+'</strong><small>'+esc(r.title||r.id)+(r.catalogOnly?' · 待转正式 Offer':'')+'</small></div>'+
+        '<div>'+statusBadge(r)+'<div class="cors-result">'+esc(corsText(r.id))+'</div></div>'+
+        '<div><span class="badge '+networkClass(r)+'">'+esc(networkLabel(r))+'</span></div>'+
+        '<div class="mono">'+(latency?esc(latency)+' ms':'—')+'</div>'+
+        '<div class="quota">'+esc(r.quota||r.freeSummary||'以官方页面为准')+'</div>'+
+        '<div><span class="badge '+(daysOld(r.lastVerifiedAt)<=7?'ok':'warn')+'">'+esc(r.lastVerifiedAt||'待核验')+'</span></div>'+
+        '<div class="row-actions">'+
+          '<button type="button" data-action="cors" data-id="'+esc(r.id)+'">浏览器快检</button>'+
+          '<button type="button" data-action="deep" data-id="'+esc(r.id)+'">深度检测</button>'+
+          '<button type="button" data-action="copy" data-id="'+esc(r.id)+'">复制 Base URL</button>'+
+          (r.register?'<a href="'+esc(r.register)+'" target="_blank" rel="noopener noreferrer">官方入口</a>':'')+
+        '</div>'+
+      '</div>';
+    }).join(''):'<div class="empty">没有符合当前筛选条件的渠道。</div>';
+  }
+  function renderSummary(){
+    var counts=priorityCounts();
+    $('m-total').textContent=state.records.length;
+    $('m-alive').textContent=state.records.filter(publicAlive).length;
+    $('m-public').textContent=state.records.filter(publicReadable).length;
+    $('m-keyed').textContent=state.records.filter(needsKeyResponse).length;
+    $('m-cn').textContent=state.records.filter(function(r){return r.networkCheck&&['cn','both'].indexOf(r.networkCheck.region)>=0}).length;
+    $('m-p0').textContent=counts.P0;
+    $('m-p1').textContent=counts.P1;
+    $('m-p2').textContent=counts.P2;
+    $('f-p0').textContent=counts.P0;
+    $('f-p1').textContent=counts.P1;
+    $('f-p2').textContent=counts.P2;
+    $('m-models').textContent=state.models.length;
+  }
+  function renderActions(){
+    var items=providerActionItems();
+    $('action-list').dataset.p0Order=actionKeysForLevel('P0').join(',');
+    $('action-list').dataset.p1Order=actionKeysForLevel('P1').join(',');
+    $('action-list').dataset.p2Order=actionKeysForLevel('P2').join(',');
+    $('action-list').innerHTML=items.length?items.slice(0,8).map(function(item){
+      var reasons=item.reasons.map(function(reason){return reason.label}).join(' · ');
+      return '<div class="action-item" data-provider-id="'+esc(item.key)+'" data-priority="'+esc(item.level)+'"><div><strong>'+esc(item.provider)+'</strong><span>'+esc(reasons)+'</span></div><b class="severity '+actionSeverityClass(item.level)+'">'+esc(item.level)+'</b></div>';
+    }).join(''):'<div class="empty">当前没有待处理项。</div>';
+  }
+  function renderExpiry(){
+    var rows=state.records.filter(isLimited);
+    $('expiry-list').innerHTML=rows.length?rows.map(function(r){
+      var exact=(String(r.validity||'').match(/\d{4}-\d{2}-\d{2}/)||[])[0];
+      var label=exact?exact:(/90 days/i.test(r.validity||'')?'开户后 90 天':'待官方公布截止日');
+      return '<div class="expiry-item"><div><strong>'+esc(r.provider||r.title)+'</strong><span>'+esc(r.validity||'限时/试用政策，以官方页面为准')+'</span></div><b class="severity '+(exact?'sev-mid':'sev-high')+'">'+esc(label)+'</b></div>';
+    }).join(''):'<div class="empty">暂无限时 API 记录。</div>';
+  }
+  function renderAll(){renderSummary();renderActions();renderExpiry();renderRows()}
+  function recordById(id){return state.records.find(function(r){return r.id===id})}
+  function deepCommand(r){
+    var e=endpointFor(r);if(!e)return '# 当前条目没有可执行 API endpoint，请先打开官方入口确认。';
+    var model=modelFor(r);
+    if(e.indexOf(':generateContent')>=0){
+      return '$headers = @{ "x-goog-api-key" = $env:API_KEY; "Content-Type" = "application/json" }\n'+
+        "$body = '{\"contents\":[{\"parts\":[{\"text\":\"ping\"}]}]}'\n"+
+        'curl.exe -sS -X POST "'+e+'" -H "x-goog-api-key: $env:API_KEY" -H "Content-Type: application/json" -d $body';
+    }
+    var body='{"model":"'+String(model).replace(/"/g,'')+'","messages":[{"role":"user","content":"ping"}],"max_tokens":1}';
+    return "$body = '"+body.replace(/'/g,"''")+"'\n"+
+      'curl.exe -sS -X POST "'+e+'" -H "Authorization: Bearer $env:API_KEY" -H "Content-Type: application/json" -d $body';
+  }
+  function baseUrl(r){
+    var e=endpointFor(r);if(!e)return '';
+    try{var u=new URL(e);var p=u.pathname.replace(/\/chat\/completions\/?$/,'').replace(/\/models\/?$/,'');return u.origin+p}catch(_){return e}
+  }
+  function copyText(text){return navigator.clipboard.writeText(text).catch(function(){var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()})}
+  function quickCors(r,button){
+    var url=modelsUrl(r);if(!url){state.cors[r.id]={ok:false,reason:'no_models_endpoint'};renderRows();return}
+    var started=performance.now();button.disabled=true;button.textContent='检测中…';
+    fetch(url,{method:'GET',mode:'cors',cache:'no-store'}).then(function(resp){
+      state.cors[r.id]={ok:true,status:resp.status,ms:Math.round(performance.now()-started),checkedAt:new Date().toISOString()};
+    }).catch(function(err){
+      state.cors[r.id]={ok:false,error:String(err&&err.name||'TypeError'),checkedAt:new Date().toISOString()};
+    }).finally(function(){button.disabled=false;button.textContent='浏览器快检';renderAll()});
+  }
+  function showCommand(r){$('command-title').textContent=(r.provider||r.title)+' · 深度检测';$('command-text').textContent=deepCommand(r);$('command-modal').classList.add('open')}
+  function refreshPublic(){
+    $('refresh-all').disabled=true;$('refresh-all').textContent='刷新中…';
+    Promise.all([fetchJson('/data/offers.json'),fetchJson('/data/models.json'),fetchJson('/data/endpoint-latency.json').catch(function(){return {providers:[]}})]).then(function(all){
+      state.offers=all[0];state.models=all[1];state.latency=all[2];state.records=normalize(state.offers,state.latency);renderAll();
+    }).catch(function(err){$('channel-list').innerHTML='<div class="empty">读取公开数据失败：'+esc(err.message)+'</div>'}).finally(function(){$('refresh-all').disabled=false;$('refresh-all').textContent='刷新公开状态'})
+  }
+  function refreshPool(){
+    $('refresh-pool').disabled=true;$('refresh-pool').textContent='刷新中…';
+    fetchJson('https://openrouter.ai/api/v1/models').then(function(payload){
+      var live=(payload.data||[]).filter(function(m){var p=m.pricing||{};return Number(p.prompt||0)===0&&Number(p.completion||0)===0});
+      var snap=state.models.filter(function(m){return m.providerId==='openrouter'&&m.freePricingConfirmed===true});
+      var liveIds=new Set(live.map(function(m){return m.id}));
+      var snapIds=new Set(snap.map(function(m){return String(m.sourceUrl||'').split('openrouter.ai/')[1]||''}).filter(Boolean));
+      var added=live.filter(function(m){return !snapIds.has(m.id)});
+      var missing=snap.filter(function(m){var id=String(m.sourceUrl||'').split('openrouter.ai/')[1]||'';return id&&!liveIds.has(id)});
+      state.pool={count:live.length,added:added,missing:missing,checkedAt:new Date().toISOString()};
+      $('pool-meta').innerHTML='<span class="pill">实时免费模型 '+live.length+'</span><span class="pill">相对快照新增 '+added.length+'</span><span class="pill">快照中未见 '+missing.length+'</span>';
+      var show=live.slice(0,8);
+      $('pool-list').innerHTML=show.map(function(m){return '<div class="pool-item"><div><strong>'+esc(m.name||m.id)+'</strong><span>'+esc(m.id)+'</span></div><b class="severity sev-low">$0</b></div>'}).join('')||'<div class="empty">当前端点没有返回 $0 模型。</div>';
+    }).catch(function(err){$('pool-meta').innerHTML='<span class="pill">实时请求失败</span>';$('pool-list').innerHTML='<div class="empty">浏览器无法读取 OpenRouter 模型端点：'+esc(err.message)+'</div>'}).finally(function(){$('refresh-pool').disabled=false;$('refresh-pool').textContent='刷新实时池'})
+  }
+  function exportState(){
+    var payload={schemaVersion:1,exportedAt:new Date().toISOString(),cors:state.cors,pool:state.pool,notice:'No API keys or credentials are stored in this file.'};
+    var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='freellm-api-health-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  }
+  function importState(file){
+    if(!file)return;var reader=new FileReader();reader.onload=function(){try{var p=JSON.parse(reader.result);state.cors=p.cors||{};state.pool=p.pool||null;renderAll();if(state.pool){$('pool-meta').innerHTML='<span class="pill">已导入上次实时池状态</span>'}}catch(_){alert('状态文件格式不正确')}};reader.readAsText(file)
+  }
+
+  $('search').addEventListener('input',function(e){state.query=e.target.value;renderRows()});
+  $('filters').addEventListener('click',function(e){var b=e.target.closest('[data-filter]');if(!b)return;state.filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(function(x){x.classList.toggle('active',x===b)});renderRows()});
+  $('channel-list').addEventListener('click',function(e){var b=e.target.closest('[data-action]');if(!b)return;var r=recordById(b.dataset.id);if(!r)return;if(b.dataset.action==='cors')quickCors(r,b);if(b.dataset.action==='deep')showCommand(r);if(b.dataset.action==='copy'){copyText(baseUrl(r)||endpointFor(r));b.textContent='已复制';setTimeout(function(){b.textContent='复制 Base URL'},1200)}});
+  $('modal-close').addEventListener('click',function(){$('command-modal').classList.remove('open')});
+  $('command-modal').addEventListener('click',function(e){if(e.target===$('command-modal'))$('command-modal').classList.remove('open')});
+  $('copy-command').addEventListener('click',function(){copyText($('command-text').textContent);this.textContent='已复制';var self=this;setTimeout(function(){self.textContent='复制 PowerShell 命令'},1200)});
+  $('refresh-all').addEventListener('click',refreshPublic);
+  $('refresh-pool').addEventListener('click',refreshPool);
+  $('export-state').addEventListener('click',exportState);
+  $('import-state').addEventListener('click',function(){$('import-file').click()});
+  $('import-file').addEventListener('change',function(){importState(this.files&&this.files[0]);this.value=''});
+  refreshPublic();
+})();
+</script>
+</body>
+</html>
