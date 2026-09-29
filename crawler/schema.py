@@ -27,7 +27,7 @@ FEATURED_QUOTA_TIERS = {"very_high", "high"}
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent",
-    "model_api", "free_ide", "coding_plan", "open_weights", "desktop_app",
+    "model_api", "free_ide", "coding_plan", "open_weights", "desktop_app", "agent_trial",
 }
 API_CAPABILITIES = {
     "search", "fetch", "extract", "crawl", "map", "browser", "agent", "model_api",
