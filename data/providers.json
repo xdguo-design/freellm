@@ -76,14 +76,18 @@
     "aliases": [
       "百度千帆",
       "文心一言",
-      "ERNIE"
+      "ERNIE",
+      "千帆 ModelBuilder"
     ],
     "allowedDomains": [
-      "cloud.baidu.com"
+      "cloud.baidu.com",
+      "qianfan.cloud.baidu.com",
+      "console.bce.baidu.com"
     ],
     "discoveryUrls": [
-      "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
-      "https://cloud.baidu.com/product-wenxinworkshop"
+      "https://cloud.baidu.com/product/qianfan.html",
+      "https://cloud.baidu.com/doc/wenxinworkshop/index.html",
+      "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
     ]
   },
   {
@@ -145,15 +149,18 @@
     "aliases": [
       "智谱",
       "GLM",
-      "智谱清言"
+      "智谱清言",
+      "BigModel"
     ],
     "allowedDomains": [
       "docs.bigmodel.cn",
-      "open.bigmodel.cn"
+      "open.bigmodel.cn",
+      "bigmodel.cn"
     ],
     "discoveryUrls": [
-      "https://docs.bigmodel.cn/cn/coding-plan/faq",
-      "https://docs.bigmodel.cn/cn/coding-plan/quick-start"
+      "https://open.bigmodel.cn/console",
+      "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+      "https://docs.bigmodel.cn/"
     ]
   },
   {
@@ -224,11 +231,12 @@
     ],
     "allowedDomains": [
       "platform.minimaxi.com",
-      "www.minimaxi.com"
+      "www.minimaxi.com",
+      "solutions.minimaxi.com"
     ],
     "discoveryUrls": [
-      "https://platform.minimaxi.com/document/Price",
-      "https://platform.minimaxi.com/document/"
+      "https://platform.minimaxi.com/subscribe/token-plan",
+      "https://solutions.minimaxi.com/"
     ]
   },
   {
@@ -241,11 +249,14 @@
     ],
     "allowedDomains": [
       "platform.moonshot.cn",
-      "www.moonshot.cn"
+      "platform.kimi.com",
+      "platform.kimi.ai",
+      "api.moonshot.cn",
+      "api.moonshot.ai"
     ],
     "discoveryUrls": [
-      "https://platform.moonshot.cn/docs/pricing",
-      "https://platform.moonshot.cn/docs/"
+      "https://platform.kimi.com/",
+      "https://platform.kimi.ai/"
     ]
   },
   {
@@ -742,6 +753,48 @@
       "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
       "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
       "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ]
+  },
+  {
+    "id": "streamlake-wanqing",
+    "name": "StreamLake Vanchin",
+    "aliases": [
+      "StreamLake",
+      "快手万擎",
+      "万擎",
+      "KwaiKAT"
+    ],
+    "allowedDomains": [
+      "streamlake.com",
+      "www.streamlake.com",
+      "wanqing.streamlakeapi.com",
+      "console.streamlake.com"
+    ],
+    "discoveryUrls": [
+      "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",
+      "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv",
+      "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+    ]
+  },
+  {
+    "id": "ctyun-tokenhub",
+    "name": "China Telecom Xingchen TokenHub",
+    "aliases": [
+      "天翼云",
+      "星辰TokenHub",
+      "星辰 TokenHub",
+      "中国电信 TokenHub"
+    ],
+    "allowedDomains": [
+      "ctyun.cn",
+      "www.ctyun.cn",
+      "ai.ctaigw.cn",
+      "ai.ctaigw.com"
+    ],
+    "discoveryUrls": [
+      "https://www.ctyun.cn/document/11061839/11097250",
+      "https://www.ctyun.cn/document/11061839/11062271",
+      "https://www.ctyun.cn/document/11061839/11099156"
     ]
   }
 ]

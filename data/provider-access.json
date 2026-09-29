@@ -1408,5 +1408,140 @@
     "verificationStatus": "verified",
     "confidence": "high",
     "notes": "新人免费体验包按主账号、按模型领取；语言模型与多模态理解模型当前均为每模型 100 万 Tokens、领取后 1 年有效。本期活动页面标注至 2026-12-31。"
+  },
+  {
+    "providerId": "baidu-qianfan",
+    "profileId": "baidu-qianfan-api",
+    "registerUrl": "https://cloud.baidu.com/product/qianfan.html",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册或登录百度智能云并开通千帆 ModelBuilder。",
+      "确认账户新客免费资源包已到账，并在控制台查看可抵扣模型与到期时间。",
+      "在 IAM 创建 API Key，使用 https://qianfan.baidubce.com/v2 调用；先小请求验证免费额度扣减。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://cloud.baidu.com/product/qianfan.html",
+      "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方产品页确认新客最高 1,000,000+ Tokens；具体到账额度、模型范围和有效期必须登录控制台确认。"
+  },
+  {
+    "providerId": "streamlake-wanqing",
+    "profileId": "streamlake-wanqing-api",
+    "registerUrl": "https://www.streamlake.com/product/wanqing",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "yes",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_model_catalog",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册 StreamLake 并按官方快速开始完成实名认证。",
+      "开通快手万擎服务，在系统管理 > API Key 管理创建 API Key。",
+      "先查看价格页确认目标 KAT 模型仍免费，再创建在线推理点并发起最小请求；其他模型默认为后付费。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",
+      "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv",
+      "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "当前价格页确认两款 KAT 模型免费，但万擎整体默认后付费；免费模型状态和活动结束时间需每次使用前复核。"
+  },
+  {
+    "providerId": "ctyun-tokenhub",
+    "profileId": "ctyun-tokenhub-api",
+    "registerUrl": "https://www.ctyun.cn/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "登录星辰 TokenHub，在在线推理 > 预置服务找到支持免费体验的模型。",
+      "点击开启免费体验，建议勾选“免费额度耗尽或过期后自动关闭服务”。",
+      "在 APP Key 管理创建服务组与 APP Key，再使用对应地域 OpenAI 兼容端点调用。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.ctyun.cn/document/11061839/11097250",
+      "https://www.ctyun.cn/document/11061839/11062271",
+      "https://www.ctyun.cn/document/11061839/11099156"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "当前 v2.0 规则为支持免费体验模型 50 万 Tokens / 14 天。若不勾选自动关闭，额度耗尽或到期后可能转按量计费。"
+  },
+  {
+    "providerId": "zhipu-glm",
+    "profileId": "zhipu-glm-api",
+    "registerUrl": "https://open.bigmodel.cn/console",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "yes",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "wallet",
+    "searchMethod": "official_website_console",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "使用手机号注册或登录智谱 BigModel。",
+      "确认新用户 20,000,000 Tokens 体验资源包已经进入账户，并查看资源包模型范围和到期日。",
+      "创建平台 API Key 后使用标准 BigModel API；额度耗尽前先查看账户余额与后续计费设置。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://open.bigmodel.cn/console",
+      "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+      "https://docs.bigmodel.cn/"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方注册页和活动页确认新用户 2000 万 Tokens；公开页面未完整显示资源包模型拆分、到期时间和实名要求。"
   }
 ]

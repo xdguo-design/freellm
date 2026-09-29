@@ -1,0 +1,45 @@
+{
+  "providerId": "zhipu-glm",
+  "provider": "Zhipu BigModel",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "zhipu-bigmodel-new-user-20m"
+  ],
+  "paths": [
+    {
+      "id": "free-api",
+      "label": "使用新用户 2000 万 Tokens 体验包",
+      "productType": "api",
+      "prerequisites": [
+        "智谱 BigModel 新用户账号",
+        "账户已显示新用户体验资源包",
+        "已创建 API Key"
+      ],
+      "steps": [
+        {
+          "title": "确认资源包",
+          "detail": "登录 BigModel 后确认 20,000,000 Tokens 新用户体验包已到账，并查看模型适用范围和到期日。"
+        },
+        {
+          "title": "创建 API Key",
+          "detail": "在 BigModel 控制台创建 API Key，并妥善保存。"
+        },
+        {
+          "title": "发送最小请求",
+          "detail": "使用标准 BigModel Chat Completions 接口发起最小请求，再检查资源包扣减。",
+          "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H 'Authorization: Bearer ${ZHIPU_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "expected": "返回 chat completion；账户资源包页面显示对应消耗。"
+        }
+      ],
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H 'Authorization: Bearer ${ZHIPU_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "validation": "请求成功，并确认实际扣减来自新用户体验资源包而非现金余额。",
+      "sourceUrls": [
+        "https://open.bigmodel.cn/console",
+        "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+        "https://docs.bigmodel.cn/"
+      ]
+    }
+  ]
+}

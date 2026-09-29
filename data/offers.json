@@ -6328,5 +6328,576 @@
         }
       ]
     }
+  },
+  {
+    "id": "baidu-qianfan-new-user-free",
+    "order": 52,
+    "date": "2026-09-29",
+    "name": "Baidu Qianfan new-user free model quota",
+    "providerMark": "BD",
+    "provider": "Baidu Qianfan",
+    "providerMeta": "百度智能云千帆 · China",
+    "model": "ERNIE family + supported preset models",
+    "modelMeta": "OpenAI-compatible /v2 model API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "开通百度千帆并领取新客免费调用额度，再通过 OpenAI 兼容 /v2 接口调用支持模型",
+      "prerequisites": [
+        "百度智能云账号",
+        "千帆 ModelBuilder 已开通",
+        "已创建 IAM API Key"
+      ],
+      "steps": [
+        "打开千帆产品页并确认当前账号的新客免费额度已经发放；产品页当前标注最高 1,000,000+ Tokens，实际额度以控制台为准。",
+        "在百度智能云 IAM 创建 API Key，并确认目标模型是否可由当前免费额度抵扣。",
+        "使用 https://qianfan.baidubce.com/v2 作为 OpenAI SDK Base URL，先发送最小请求并在控制台核对免费额度扣减。"
+      ],
+      "endpoint": "https://qianfan.baidubce.com/v2/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${QIANFAN_API_KEY}",
+      "examples": {
+        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header 'Authorization: Bearer ${QIANFAN_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+    },
+    "kicker": "NEW USER FREE QUOTA",
+    "badges": [
+      "1M+ TOKENS",
+      "NEW USER",
+      "CHINA"
+    ],
+    "freeSummary": "百度千帆当前产品页明确标注：新客开通可免费领取最高 1,000,000+ Tokens 调用量；具体模型与额度以控制台为准。",
+    "validitySummary": "一次性新客额度；公开产品页未给出统一到期日",
+    "accessSummary": "百度智能云账号 + 千帆开通 + IAM API Key",
+    "checkedSummary": "2026-09-29 / 百度智能云官方产品页 + API 文档",
+    "title": "百度千帆 · 新客最高 100 万+ Tokens 免费调用",
+    "why": "百度智能云千帆官方产品页当前直接宣传“新客开通免费领取高达 1000000+ tokens 调用量”。官方 API 文档同时确认千帆支持 OpenAI SDK 兼容调用，Base URL 为 https://qianfan.baidubce.com/v2。由于公开页没有统一列出每个账号、每个模型的精确资源包明细和到期时间，本条只记录“最高 100 万+ Tokens”的官方口径，实际可抵扣模型和有效期必须以登录后的控制台为准。",
+    "mechanism": "新客开通后获得一次性模型调用免费额度，具体资源包由千帆控制台下发",
+    "validity": "公开产品页未给出统一有效期；以账户内免费资源包的剩余时间为准",
+    "access": "开通百度智能云千帆，创建 IAM API Key，并使用支持免费额度抵扣的模型",
+    "command": "curl https://qianfan.baidubce.com/v2/chat/completions -H \"Authorization: Bearer $QIANFAN_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://cloud.baidu.com/product/qianfan.html",
+    "registerLabel": "打开百度千帆",
+    "links": [
+      [
+        "千帆产品页",
+        "https://cloud.baidu.com/product/qianfan.html"
+      ],
+      [
+        "OpenAI SDK 调用文档",
+        "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+      ],
+      [
+        "千帆文档中心",
+        "https://cloud.baidu.com/doc/wenxinworkshop/index.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆百度智能云；实际模型可用性和资源包以账户控制台为准",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_quota",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": null,
+      "note": "official page says up to 1,000,000+ tokens"
+    },
+    "quota": "最高 1,000,000+ Tokens（官方产品页口径）；具体模型与账户额度以控制台为准",
+    "renewal": "一次性新客权益；未确认周期性续领",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Baidu Qianfan and model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://cloud.baidu.com/product/qianfan.html",
+      "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+    ],
+    "evidence": "百度智能云千帆官方产品页在 2026-09-29 抓取时标注“新客开通免费领取高达1000000+tokens调用量”；官方 OpenAI SDK 文档确认 Base URL 为 https://qianfan.baidubce.com/v2，并使用 API Key 鉴权。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "页面同时存在“10w+ tokens”较旧文案，因此 FreeLLM 不将 100 万写成所有账号固定到账值，而保留“最高 100 万+”并要求以控制台为准。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验百度千帆当前新客免费额度宣传、OpenAI 兼容 Base URL 和 API Key 调用路径。",
+      "method": [
+        "读取百度智能云千帆官方产品页，确认当前新客免费额度文案。",
+        "读取千帆 OpenAI SDK 官方文档，确认 Base URL、API Key 鉴权和 chat completions 调用方式。",
+        "当前没有登录态百度智能云账号和可用 API Key，因此不验证账户实际到账金额、模型覆盖范围和真实生成。"
+      ],
+      "result": "官方公开预检通过：产品页当前宣传新客最高 1,000,000+ Tokens；官方文档确认 OpenAI 兼容 /v2 API 调用路径。",
+      "limitations": "未登录实际千帆账号，未验证具体账户到账额度、免费资源包有效期、模型级适用范围、真实生成和超额后的账户行为。",
+      "evidence": [
+        {
+          "label": "百度千帆产品页",
+          "url": "https://cloud.baidu.com/product/qianfan.html"
+        },
+        {
+          "label": "千帆 OpenAI SDK 调用文档",
+          "url": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+        }
+      ]
+    }
+  },
+  {
+    "id": "streamlake-wanqing-free-models",
+    "order": 53,
+    "date": "2026-09-29",
+    "name": "StreamLake Vanchin current free KAT models",
+    "providerMark": "SL",
+    "provider": "StreamLake Vanchin",
+    "providerMeta": "快手万擎 · StreamLake · China",
+    "model": "KAT-Coder-Air-V1 · KAT-Coder-Exp-72B-1010",
+    "modelMeta": "Current price table: input / output / cache = Free",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在快手万擎创建 API Key 与在线推理点，调用当前价格表标为免费的 KAT 模型",
+      "prerequisites": [
+        "StreamLake 账号",
+        "完成实名认证",
+        "已开通快手万擎服务",
+        "已创建 API Key"
+      ],
+      "steps": [
+        "先查看官方模型服务价格页，确认目标 KAT 模型仍显示“免费”；免费状态可能变化。",
+        "在万擎控制台的 API Key 管理创建密钥，并为目标模型创建在线推理点。",
+        "使用 OpenAI Chat Completions 兼容端点发送最小请求；同时查看费用中心，确认当前请求实际减免为 0。"
+      ],
+      "endpoint": "https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${WQ_API_KEY}",
+      "examples": {
+        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header 'Authorization: Bearer ${WQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+      },
+      "docsUrl": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+    },
+    "kicker": "CURRENT ¥0 MODELS",
+    "badges": [
+      "KAT FREE",
+      "OPENAI COMPATIBLE",
+      "CHECK BILLING"
+    ],
+    "freeSummary": "StreamLake 万擎官方价格表当前将 KAT-Coder-Air-V1 与 KAT-Coder-Exp-72B-1010 的输入、输出和缓存全部标为“免费”。",
+    "validitySummary": "当前价格表有效；官方未给出这两个免费价的统一结束日期",
+    "accessSummary": "账号 + 实名 + 万擎开通 + API Key / 推理点",
+    "checkedSummary": "2026-09-29 / StreamLake 官方价格 + 快速开始",
+    "title": "快手万擎 StreamLake · 当前 2 款 KAT API ¥0",
+    "why": "StreamLake 快手万擎官方模型服务价格页（2026-09-17 更新）当前把 KAT-Coder-Air-V1 和 KAT-Coder-Exp-72B-1010 的输入、输出、缓存写入和缓存命中都列为“免费”。官方计费 FAQ 同时说明平台存在“模型限时免费”机制，因此 FreeLLM 将其视为当前有效的限时免费价格，而不是承诺永久免费。",
+    "mechanism": "官方模型价格表中的当前 ¥0 / 免费模型价格，结合平台限时免费减免机制",
+    "validity": "以万擎实时价格表为准；官方未公开统一结束日期",
+    "access": "注册并实名 StreamLake，开通万擎，创建 API Key 与在线推理点",
+    "command": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H \"Authorization: Bearer $WQ_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+    "register": "https://www.streamlake.com/product/wanqing",
+    "registerLabel": "打开快手万擎",
+    "links": [
+      [
+        "模型服务价格",
+        "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      ],
+      [
+        "API 快速开始",
+        "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+      ],
+      [
+        "计费常见问题",
+        "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆 StreamLake / 快手万擎",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_free_models",
+      "amount": 2,
+      "unit": "models",
+      "period": "until provider changes current price table"
+    },
+    "quota": "当前价格表为免费；官方未在公开价格表给出统一 token 上限",
+    "renewal": "不是周期额度；免费价格是否持续取决于官方价格表和活动状态",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check StreamLake Vanchin terms and each model license",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",
+      "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv",
+      "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+    ],
+    "evidence": "StreamLake 官方模型价格页（2026-09-17 更新）列出 KAT-Coder-Air-V1 与 KAT-Coder-Exp-72B-1010 的输入、输出和缓存为“免费”；官方快速开始确认 OpenAI Chat Completions 兼容端点与 API Key；计费 FAQ 说明限时免费账单会自动减免为 0。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "万擎默认后付费，其他收费模型或免费活动结束后可能产生账单；使用前务必重新看价格页和费用中心，不要把这两款的当前免费状态外推到所有万擎模型。",
+    "freeModels": [
+      {
+        "model": "KAT-Coder-Air-V1",
+        "quota": "Current official price: Free input / output / cache",
+        "note": "No public end date in current price table; recheck before use.",
+        "sourceUrl": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      },
+      {
+        "model": "KAT-Coder-Exp-72B-1010",
+        "quota": "Current official price: Free input / output / cache",
+        "note": "Experimental model; current official price table still lists it as free.",
+        "sourceUrl": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验快手万擎当前免费 KAT 模型价格、API Key 获取流程、OpenAI 兼容端点和计费风险。",
+      "method": [
+        "读取官方模型服务价格表，确认两款 KAT 模型当前所有 token 计费项均为“免费”。",
+        "读取官方 API 快速开始和 API Key 管理文档，核对创建 Key、推理点和 OpenAI Chat Completions 端点。",
+        "读取官方计费 FAQ，确认限时免费账单减免和默认后付费的风险。",
+        "当前没有 StreamLake 登录态和 API Key，因此未进行真实生成和账单核验。"
+      ],
+      "result": "官方公开预检通过：两款 KAT 模型当前价格为免费，API 接入路径和计费风险均有官方文档支持。",
+      "limitations": "未验证真实账号能否立即创建这两款模型推理点、实际请求是否 0 元、限流/并发和免费活动结束时间。",
+      "evidence": [
+        {
+          "label": "万擎模型服务价格",
+          "url": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+        },
+        {
+          "label": "万擎 API 快速开始",
+          "url": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+        },
+        {
+          "label": "万擎计费 FAQ",
+          "url": "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+        }
+      ]
+    }
+  },
+  {
+    "id": "ctyun-tokenhub-free-trial",
+    "order": 54,
+    "date": "2026-09-29",
+    "name": "China Telecom Xingchen TokenHub free model trial",
+    "providerMark": "CT",
+    "provider": "China Telecom Xingchen TokenHub",
+    "providerMeta": "天翼云 · 星辰 TokenHub · China",
+    "model": "Supported preset models",
+    "modelMeta": "OpenAI-compatible · per-model free experience",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在星辰 TokenHub 为支持免费体验的模型领取 50 万 Tokens / 14 天额度，并通过 APP Key 调用",
+      "prerequisites": [
+        "天翼云账号",
+        "已进入星辰 TokenHub 控制台",
+        "已创建服务组与 APP Key"
+      ],
+      "steps": [
+        "在在线推理 / 预置服务中选择支持免费体验的模型，点击“开启免费体验”。",
+        "强烈建议在领取弹窗勾选“免费额度耗尽或过期后，自动关闭服务”，避免自动转按量计费。",
+        "在 APP Key 管理创建服务组并获取 APP Key，然后调用大陆 OpenAI 兼容端点。"
+      ],
+      "endpoint": "https://ai.ctaigw.cn/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${CTYUN_APP_KEY}",
+      "examples": {
+        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header 'Authorization: Bearer ${CTYUN_APP_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://www.ctyun.cn/document/11061839/11062271"
+    },
+    "kicker": "500K TOKENS / 14 DAYS",
+    "badges": [
+      "PER MODEL",
+      "14 DAYS",
+      "AUTO-CLOSE RECOMMENDED"
+    ],
+    "freeSummary": "平台升级后的官方规则：支持免费体验的模型赠送 500,000 Tokens 免费推理额度，自领取起 14 天有效。",
+    "validitySummary": "领取后 14 天 · 支持模型以控制台为准",
+    "accessSummary": "星辰 TokenHub + APP Key；建议开启免费额度耗尽自动关闭",
+    "checkedSummary": "2026-09-29 / 天翼云官方文档",
+    "title": "天翼云星辰 TokenHub · 支持模型 50 万 Tokens / 14 天",
+    "why": "天翼云 2026-09 的星辰 TokenHub v2.0 升级说明明确写明：支持免费体验的模型赠送 50 万 Tokens 免费推理额度，自领取日起 14 天有效。快速入门说明免费额度用完后可自动转按需计费，因此如果只想免费测试，应在开启免费体验时勾选“额度耗尽或到期后自动关闭服务”。",
+    "mechanism": "支持模型按模型领取免费体验额度；平台 v2.0 当前规则为 500,000 Tokens，14 天有效",
+    "validity": "自领取日起 14 天；模型是否支持免费体验以控制台为准",
+    "access": "天翼云星辰 TokenHub 控制台领取免费体验，创建 APP Key 后调用 OpenAI 兼容 API",
+    "command": "curl https://ai.ctaigw.cn/v1/chat/completions -H \"Authorization: Bearer $CTYUN_APP_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://www.ctyun.cn/",
+    "registerLabel": "打开天翼云星辰 TokenHub",
+    "links": [
+      [
+        "v2.0 升级与免费额度说明",
+        "https://www.ctyun.cn/document/11061839/11097250"
+      ],
+      [
+        "快速入门",
+        "https://www.ctyun.cn/document/11061839/11062271"
+      ],
+      [
+        "计费 FAQ",
+        "https://www.ctyun.cn/document/11061839/11062379"
+      ],
+      [
+        "OpenAI 兼容 Chat API",
+        "https://www.ctyun.cn/document/11061839/11099156"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆端点；全球模型另有美洲 / 欧洲 / 亚洲分区端点",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "per_supported_model_trial",
+      "amount": 500000,
+      "unit": "tokens",
+      "period": "14 days from claim"
+    },
+    "quota": "500,000 Tokens for each supported free-experience model under current v2.0 policy; exact eligible models are dynamic",
+    "renewal": "一次领取窗口；到期或用尽后不自动刷新，可能转按量计费",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check China Telecom Cloud and model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.ctyun.cn/document/11061839/11097250",
+      "https://www.ctyun.cn/document/11061839/11062271",
+      "https://www.ctyun.cn/document/11061839/11062379",
+      "https://www.ctyun.cn/document/11061839/11099156"
+    ],
+    "evidence": "天翼云官方 v2.0 升级说明明确支持免费体验的模型获赠 50 万 Tokens、14 天有效；官方快速入门和计费 FAQ 说明免费体验的领取、主子账号共享、到期/耗尽后的按量计费以及自动关闭选项；OpenAI 兼容 API 文档确认大陆端点 https://ai.ctaigw.cn/v1/chat/completions 与 Bearer APP Key 鉴权。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "示例中的 GLM-5.1 仅用于说明官方 OpenAI 兼容调用格式，不代表它一定属于当前可领取免费体验的模型；免费模型资格必须看控制台。未勾选自动关闭时，到期/耗尽后可能继续按量出账。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验天翼云星辰 TokenHub v2.0 免费额度、14 天有效期、自动关闭选项和 OpenAI 兼容 API。",
+      "method": [
+        "读取平台升级与用户割接说明，确认当前 50 万 Tokens / 14 天免费额度规则。",
+        "读取在线推理快速入门与计费 FAQ，确认免费体验领取、到期/耗尽后的按量计费以及自动关闭开关。",
+        "读取 OpenAI 兼容 Chat API 文档，确认大陆端点与 Bearer APP Key 鉴权。",
+        "当前没有天翼云登录态与 APP Key，因此未验证具体账号可领取模型集合和真实生成。"
+      ],
+      "result": "官方公开预检通过：当前 v2.0 文档明确 500,000 Tokens / 14 天，且提供避免超额计费的自动关闭选项和 OpenAI 兼容调用路径。",
+      "limitations": "未验证登录后模型列表、每个模型的领取按钮、真实额度到账、真实响应、限流和全球分区端点的账户权限。",
+      "evidence": [
+        {
+          "label": "星辰 TokenHub v2.0 升级说明",
+          "url": "https://www.ctyun.cn/document/11061839/11097250"
+        },
+        {
+          "label": "星辰 TokenHub 快速入门",
+          "url": "https://www.ctyun.cn/document/11061839/11062271"
+        },
+        {
+          "label": "OpenAI 兼容 Chat API",
+          "url": "https://www.ctyun.cn/document/11061839/11099156"
+        }
+      ]
+    }
+  },
+  {
+    "id": "zhipu-bigmodel-new-user-20m",
+    "order": 55,
+    "date": "2026-09-29",
+    "name": "Zhipu BigModel new-user 20M-token trial",
+    "providerMark": "ZP",
+    "provider": "Zhipu BigModel",
+    "providerMeta": "智谱 AI 开放平台 · China",
+    "model": "GLM API models covered by the new-user resource pack",
+    "modelMeta": "BigModel API · resource-pack trial",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "注册智谱 BigModel 新用户领取 2,000 万 Tokens 体验包，创建 API Key 后调用 GLM API",
+      "prerequisites": [
+        "智谱 BigModel 账号",
+        "新用户资格",
+        "已创建 API Key"
+      ],
+      "steps": [
+        "打开智谱 BigModel 官方登录/注册页，确认新用户 20,000,000 Tokens 体验包权益。",
+        "登录后在资源包页面确认体验包的模型适用范围和到期时间，再创建 API Key。",
+        "使用 BigModel OpenAI 兼容接口发送最小请求，并核对资源包扣减。"
+      ],
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ZHIPU_API_KEY}",
+      "examples": {
+        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header 'Authorization: Bearer ${ZHIPU_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://docs.bigmodel.cn/"
+    },
+    "kicker": "20M TOKENS NEW USER",
+    "badges": [
+      "20M TOKENS",
+      "NEW USER",
+      "GLM API"
+    ],
+    "freeSummary": "智谱 BigModel 官方注册页当前标注：新用户免费赠送专享 20,000,000 Tokens 体验包。",
+    "validitySummary": "体验包有效期与模型适用范围以登录后资源包页为准",
+    "accessSummary": "BigModel 注册 + API Key；资源包范围需登录确认",
+    "checkedSummary": "2026-09-29 / 智谱官方注册页 + 活动页",
+    "title": "智谱 BigModel · 新用户 2000 万 Tokens 体验包",
+    "why": "智谱 BigModel 官方登录/注册页面当前明确显示“新用户免费赠送专享 20.00million tokens体验包”，官方活动页也显示“新用户注册得 2000万 Tokens”。公开页面没有完整展开当前资源包的模型覆盖和统一到期时间，因此 FreeLLM 只确认总体验包规模，不把它写成所有 GLM 模型永久免费。",
+    "mechanism": "BigModel 新用户一次性 20,000,000 Tokens 体验资源包",
+    "validity": "以登录后资源包的到期时间和模型适用范围为准",
+    "access": "注册 BigModel，领取新用户体验资源包并创建平台 API Key",
+    "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer $ZHIPU_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://open.bigmodel.cn/console",
+    "registerLabel": "打开智谱 BigModel",
+    "links": [
+      [
+        "BigModel 注册页",
+        "https://open.bigmodel.cn/console"
+      ],
+      [
+        "新用户体验活动",
+        "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
+      ],
+      [
+        "智谱开放文档",
+        "https://docs.bigmodel.cn/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆 BigModel 开放平台",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_resource_pack",
+      "amount": 20000000,
+      "unit": "tokens",
+      "period": null
+    },
+    "quota": "20,000,000 Tokens new-user trial pack; exact model split and expiry are account/resource-pack specific",
+    "renewal": "一次性新用户资源包；不按月刷新",
+    "phoneRequired": "yes",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Zhipu BigModel and each model's terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://open.bigmodel.cn/console",
+      "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+      "https://docs.bigmodel.cn/"
+    ],
+    "evidence": "智谱官方开放平台注册页当前显示“新用户免费赠送专享 20.00million tokens体验包”，官方新用户活动页也明确“新用户注册得 2000万 Tokens”。因此可确认新用户体验包存在；具体模型拆分与有效期仍需登录后查看资源包。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "不采用第三方“永久免费 GLM-4-Flash / 30 并发”等说法作为本条依据；本条只记录官方页面可直接确认的 2000 万 Tokens 新用户体验包。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验智谱 BigModel 当前新用户 2000 万 Tokens 体验包及标准 API 接入入口。",
+      "method": [
+        "读取官方 BigModel 登录/注册页，确认新用户 20.00million tokens 体验包文案。",
+        "读取官方新用户活动页，交叉确认新用户注册得 2000 万 Tokens。",
+        "核对官方开放文档入口；当前没有登录态账号和 API Key，因此不验证资源包模型拆分、到期时间和真实请求。"
+      ],
+      "result": "官方公开预检通过：BigModel 新用户 20,000,000 Tokens 体验包存在，且官方活动页与注册页口径一致。",
+      "limitations": "未登录实际账号，未验证资源包具体由哪些模型额度组成、有效期、是否要求实名、真实模型调用和超额后的扣费路径。",
+      "evidence": [
+        {
+          "label": "智谱 BigModel 注册页",
+          "url": "https://open.bigmodel.cn/console"
+        },
+        {
+          "label": "智谱新用户活动页",
+          "url": "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
+        }
+      ]
+    }
   }
 ]
