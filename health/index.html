@@ -485,6 +485,25 @@
     return '<span class="badge neutral">未检测</span>';
   }
   function corsText(id){var x=state.cors[id];if(!x)return 'CORS 未测';if(x.ok)return 'CORS ✓ '+x.ms+'ms';return 'CORS/网络不可读'}
+  function priorityOrderedRecords(level){
+    var keys=providerActionItems().filter(function(item){return item.level===level}).map(function(item){return item.key});
+    var grouped={};
+    state.records.forEach(function(r){
+      var key=r.providerId||r.id;
+      if(!grouped[key])grouped[key]=[];
+      grouped[key].push(r);
+    });
+    var ordered=[];
+    keys.forEach(function(key){
+      (grouped[key]||[]).forEach(function(r){ordered.push(r)});
+    });
+    return ordered;
+  }
+  function rowsForCurrentFilter(){
+    var level=state.filter==='p0'?'P0':(state.filter==='p1'?'P1':(state.filter==='p2'?'P2':''));
+    var source=level?priorityOrderedRecords(level):state.records;
+    return source.filter(rowMatches);
+  }
   function rowMatches(r){
     var q=state.query.trim().toLowerCase();
     if(q&&JSON.stringify([r.provider,r.title,r.quota,r.id]).toLowerCase().indexOf(q)<0)return false;
@@ -498,7 +517,7 @@
     return true;
   }
   function renderRows(){
-    var list=state.records.filter(rowMatches);
+    var list=rowsForCurrentFilter();
     $('channel-list').innerHTML=list.length?list.map(function(r){
       var latency=(r.latency&&r.latency.ms)||(r.endpointCheck&&r.endpointCheck.ms);
       var issues=issueFor(r);
