@@ -276,7 +276,7 @@ body[data-visual-style="aurora"] .today-latest{
   backdrop-filter:blur(16px);
 }
 body[data-visual-style="aurora"] .today-latest-grid{
-  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
   gap:10px !important;
 }
 body[data-visual-style="aurora"] .today-latest-card{
@@ -302,6 +302,19 @@ body[data-visual-style="aurora"] .today-latest-card:hover{
 body[data-visual-style="aurora"] .today-latest-card span,
 body[data-visual-style="aurora"] .today-latest-card small{color:var(--aurora-ink-2) !important;}
 body[data-visual-style="aurora"] .today-latest-card strong{color:var(--aurora-ink) !important;}
+body[data-visual-style="aurora"] .today-hotspot-card{
+  min-height:132px !important;
+}
+body[data-visual-style="aurora"] .today-hotspot-card strong{
+  font-size:15px !important;
+  line-height:1.45 !important;
+  letter-spacing:0 !important;
+  font-weight:760 !important;
+}
+body[data-visual-style="aurora"] .today-hotspot-card small{
+  color:var(--aurora-blue-deep) !important;
+  font-weight:800 !important;
+}
 
 /* Filters / categories */
 body[data-visual-style="aurora"] .catalog-filter-bar{
