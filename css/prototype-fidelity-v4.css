@@ -413,3 +413,34 @@ body.model-directory-prototype.prototype-model-v4 .prototype-model-nav{
   body[data-fl-section="about"] .ref-value-row{grid-template-columns:1fr!important;margin-inline:0!important}
   body[data-fl-section="about"]>main{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
 }
+
+
+/* 2026-09-29 geometry pass: defeat legacy reference selectors with equal/higher specificity. */
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .catalog-header,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .catalog-hero,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .today-latest,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .catalog-filter-bar,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] #categories,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .featured-section,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .ref-home-news,
+html.fl-pastel-ui body.fl-ui-v2.prototype-resource-v4[data-reference-style="v1"][data-fl-section="home"] .ref-student-banner{
+  display:none!important;
+}
+
+@media(max-width:800px){
+  body[data-reference-style="v1"][data-fl-section]>.fl-site-rail{
+    position:relative!important;inset:auto!important;width:100%!important;max-width:100%!important;height:auto!important;
+    min-height:0!important;margin:0!important;padding:10px!important;box-sizing:border-box!important;overflow:visible!important;
+  }
+  body[data-reference-style="v1"][data-fl-section]>.ref-topbar{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;
+    width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;height:48px!important;
+    margin:8px 10px 10px!important;padding:5px 8px!important;box-sizing:border-box!important;
+  }
+  body[data-reference-style="v1"][data-fl-section]>.ref-topbar .ref-search{
+    min-width:0!important;width:auto!important;max-width:none!important;flex:1 1 auto!important;
+  }
+  body.prototype-model-v4 .pf-model-hero{
+    width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important;
+  }
+}
