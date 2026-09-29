@@ -1,0 +1,47 @@
+name: ranking-check
+
+on:
+  pull_request:
+    paths:
+      - "data/offers.json"
+      - "data/ranking-*.json"
+      - "data/ranked-offers.json"
+      - "data/offers-ranked.json"
+      - "data/offers.js"
+      - "scripts/ranking_engine.ts"
+      - "scripts/generate_ranking.ts"
+      - "scripts/build_static.py"
+      - "tests/ranking.test.ts"
+      - "tests/test_build_static.py"
+      - "design/free-china-ai-index.html"
+      - ".github/workflows/ranking-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ranking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: TypeScript ranking tests
+        run: node --test tests/ranking.test.ts
+
+      - name: Ranking artifact is current
+        run: node scripts/generate_ranking.ts --check
+
+      - name: Homepage ranking integration tests
+        run: python -m unittest tests/test_build_static.py -v
+
+      - name: Static homepage artifact is current
+        run: python scripts/build_static.py --check

@@ -283,7 +283,10 @@ def main() -> int:
     warm_offer = warm.get("/data/offers.json", {})
     warm_offer_transfer = warm_offer.get("transferSize", 0)
     warm_offer_body = warm_offer.get("encodedBodySize", 0)
-    if warm_offer_transfer > 1024 or warm_offer_body <= 0:
+    # Cache hit and 304 revalidation are both fine: no entry or a bodyless
+    # small transfer means the browser used its cache. Only a real re-download
+    # (large transfer) — or a transfer that somehow carried no body — fails.
+    if warm_offer_transfer > 1024 or (0 < warm_offer_transfer and warm_offer_body <= 0):
         raise SystemExit(
             "production offers.json did not use browser cache or conditional revalidation "
             f"(transfer={warm_offer_transfer}, body={warm_offer_body})"

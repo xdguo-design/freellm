@@ -123,17 +123,17 @@
     },
     "kicker": "FREE IDE",
     "badges": [
-      "TRIAL",
-      "14 days + 300 credits"
+      "QWEN3.8 0× UNTIL SEP 30",
+      "100 CREDITS / DAY"
     ],
-    "freeSummary": "Basic model messages + 14-day Pro trial",
-    "validitySummary": "14 days / 300 trial credits",
+    "freeSummary": "Qwen3.8-Flash consumes 0 Credits through 2026-09-30 23:59:59 (UTC+8), plus a manually claimable 100 Credits each day; baseline free/trial access remains.",
+    "validitySummary": "Qwen3.8 promo ends Sep 30 · daily reward valid 30 days",
     "accessSummary": "International",
-    "checkedSummary": "Today / official docs",
+    "checkedSummary": "2026-09-29 / official pricing + announcement",
     "title": "Qoder · Experience plan",
-    "why": "New users can receive a one-time 14-day Pro trial with 300 credits. The free experience plan continues with basic-model messages after the trial.",
-    "mechanism": "Basic-model messages; one-time Pro trial",
-    "validity": "14-day Pro trial; 300 credits",
+    "why": "Qoder's official announcements state that Qwen3.8-Flash runs at 0.0× Credits from Sep 18 through Sep 30, 2026 (UTC+8), and individual users can manually claim 100 Credits per day. The daily reward expires 30 days after each claim.",
+    "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
+    "validity": "Qwen3.8-Flash 0× Credits through 2026-09-30 23:59:59 UTC+8; each claimed daily 100-Credit reward expires after 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -151,20 +151,21 @@
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "300 trial credits; basic-model messages",
+    "quota": "Qwen3.8-Flash at 0× Credits during the promotion; 100 Credits/day claim window for eligible individual users; baseline trial rules still apply",
     "renewal": "Trial terms may change; check the official account page",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://docs.qoder.com/zh/account/pricing"
+      "https://docs.qoder.com/zh/account/pricing",
+      "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
     ],
-    "evidence": "Official pricing documentation describes a free experience plan and one-time 14-day Pro trial with 300 credits.",
+    "evidence": "Official Qoder announcement: Qwen3.8-Flash consumes no Credits from 2026-09-18 10:00 through 2026-09-30 23:59:59 (UTC+8); a new 100-Credit claim window opens daily at 10:00, and each reward is valid for 30 days.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Trial and renewal conditions can change.",
+    "notes": "The Qwen3.8-Flash 0× promotion is time-limited. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -177,7 +178,15 @@
       "cnHost": "qoder.com",
       "cnMs": 475,
       "intlMs": 472
-    }
+    },
+    "freeModels": [
+      {
+        "model": "Qwen3.8-Flash",
+        "quota": "0× Credits through 2026-09-30 23:59:59 UTC+8",
+        "note": "Temporary Qoder promotion; no claim required for model usage.",
+        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+      }
+    ]
   },
   {
     "id": "trae",
@@ -477,8 +486,8 @@
     "providerMark": "GLM",
     "provider": "GLM Coding Plan",
     "providerMeta": "Zhipu AI · China",
-    "model": "GLM-5.2 / GLM-4.7",
-    "modelMeta": "Coding tools only",
+    "model": "GLM-5.3 / GLM-5.3-Flash",
+    "modelMeta": "Coding tools only · 5-hour + weekly limits",
     "type": [
       "coding",
       "promo"
@@ -504,22 +513,22 @@
     },
     "kicker": "CHEAP CODING",
     "badges": [
-      "OFF-PEAK",
-      "5-HOUR RESET"
+      "NIGHT FREE",
+      "DOUBLE-FESTIVAL PROMO"
     ],
-    "freeSummary": "Quota multiplier changes by provider time",
-    "validitySummary": "5-hour windows / weekly limit",
+    "freeSummary": "Sep 3–Oct 7: GLM-5.3-Flash is unlimited in ZCode/AutoClaw from 23:00–09:00 (UTC+8); other Agents get doubled quota. Sep 25–Oct 7 all day uses off-peak 50% point consumption.",
+    "validitySummary": "Night promo through Oct 7 · 5-hour + weekly limits",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official docs",
+    "checkedSummary": "2026-09-29 / official Coding Plan docs",
     "title": "GLM Coding Plan",
-    "why": "The official FAQ documents time-dependent quota consumption. The product converts the provider’s UTC+8 window into the visitor’s local time rather than claiming that every midnight is cheaper.",
-    "mechanism": "Off-peak model calls consume 50% of base credits; peak hours are Mon-Fri 14:00-18:00 (UTC+8)",
-    "validity": "5-hour windows + weekly limit",
+    "why": "Current official GLM Coding Plan docs list GLM-5.3 and GLM-5.3-Flash. The Sep 3–Oct 7 night campaign gives unlimited GLM-5.3-Flash usage in ZCode and AutoClaw from 23:00–09:00 UTC+8, while other Agents receive doubled quota; Sep 25–Oct 7 uses off-peak point consumption all day.",
+    "mechanism": "Base plan has 5-hour and weekly point caps; off-peak model calls consume 50% of base points. During the Sep 25–Oct 7 double-festival campaign, the off-peak rule applies all day; the Sep 3–Oct 7 night campaign adds GLM-5.3-Flash unlimited use in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
+    "validity": "Campaigns end 2026-10-07; base plan keeps rolling 5-hour and weekly limits",
     "access": "China account; supported tools only",
     "command": "Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.",
     "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
     "registerLabel": "Register / open GLM Coding",
-    "timeWindow": "Provider peak: 14:00–18:00 UTC+8. Use the remaining window for the lower multiplier; the exact promotion can change.",
+    "timeWindow": "Base peak: Mon–Fri 14:00–18:00 UTC+8. Sep 25–Oct 7: all-day off-peak point rate. Sep 3–Oct 7: 23:00–09:00 UTC+8 GLM-5.3-Flash unlimited in ZCode/AutoClaw; other supported Agents receive doubled quota.",
     "links": [
       [
         "Official FAQ",
@@ -533,7 +542,7 @@
     "originCountry": "China",
     "availability": "China account; supported tools only",
     "freeMechanism": "first_month_promo",
-    "quota": "Every-5-hour + weekly credit caps (Lite 2,000/10,000 - Pro 12,000/60,000 - Max 28,000/140,000); off-peak calls cost 50%",
+    "quota": "Lite 2,000/10,000, Pro 12,000/60,000, Max 28,000/140,000 points (5-hour/weekly); promotions temporarily improve effective quota through 2026-10-07",
     "renewal": "Plan and time windows are provider-controlled",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
@@ -542,12 +551,12 @@
       "https://docs.bigmodel.cn/cn/coding-plan/overview",
       "https://docs.bigmodel.cn/cn/coding-plan/faq"
     ],
-    "evidence": "Official overview: “套餐同时设有每 5 小时和每周额度上限” and “非高峰时段内，模型调用按基础积分消耗的 50% 抵扣。高峰时段：每周一至周五的 14:00～18:00 （UTC+8）”",
+    "evidence": "Official Coding Plan overview (checked 2026-09-29) lists GLM-5.3 and GLM-5.3-Flash, 5-hour + weekly caps, 50% off-peak point consumption, all-day off-peak consumption Sep 25–Oct 7, and a Sep 3–Oct 7 night campaign with unlimited GLM-5.3-Flash in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Never describe this as a universal local-midnight discount.",
+    "notes": "Campaign benefits are temporary and tool-specific; do not describe them as a general-purpose free GLM API.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -566,17 +575,17 @@
     "id": "longcat-2-0",
     "order": 7,
     "date": "2026-09-06",
-    "name": "LongCat-2.0",
+    "name": "LongCat-2.5 Preview / LongCat-2.0",
     "providerMark": "LC",
     "provider": "LongCat",
     "providerMeta": "Meituan · API + open weights",
-    "model": "LongCat-2.0",
-    "modelMeta": "API · Open weights",
+    "model": "LongCat-2.5-Preview · LongCat-2.0",
+    "modelMeta": "Official API · LongCat-2.0 open weights",
     "contextWindow": {
-      "tokens": 262144,
-      "en": "256K tokens",
-      "zh": "256K tokens",
-      "sourceUrl": "https://huggingface.co/meituan-longcat/LongCat-2.0/blob/main/config.json"
+      "tokens": 1048576,
+      "en": "1M tokens",
+      "zh": "1M tokens",
+      "sourceUrl": "https://longcat.chat/platform/docs/zh/"
     },
     "type": [
       "coding",
@@ -589,42 +598,46 @@
       "open_weights"
     ],
     "usageGuide": {
-      "summary": "通过 LongCat 官方平台调用模型 API；也可下载权重本地部署",
+      "summary": "通过 LongCat 官方 OpenAI/Anthropic 兼容 API 调用 LongCat-2.5-Preview 或 LongCat-2.0；LongCat-2.0 也可下载权重本地部署",
       "prerequisites": [
-        "LongCat 账号（API 路径）",
-        "确认 API 资格和计费规则，或满足本地部署硬件要求"
+        "LongCat 账号与 API Key",
+        "API 账户有足够余额或 Token 资源包；本地部署需自备硬件"
       ],
       "steps": [
-        "选择 API 调用或下载权重入口",
-        "API 路径创建凭据发送请求；权重路径打开模型仓库并启动本地推理"
+        "在 LongCat 平台创建 API Key，并确认 Usage 页余额/资源包",
+        "使用 OpenAI 或 Anthropic 兼容端点调用 LongCat-2.5-Preview；如需免费权重，下载 LongCat-2.0 本地部署"
       ],
       "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-Flash-Chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
         "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
-      "docsUrl": "https://longcat.ai/platform/docs/zh/"
+      "docsUrl": "https://longcat.chat/platform/docs/zh/"
     },
     "accessPaths": [
       {
         "id": "api",
         "label": "API 调用",
         "productType": "api",
-        "summary": "在线调用 LongCat API",
-        "freeSummary": "免费额度未确认",
+        "summary": "在线调用 LongCat-2.5-Preview / LongCat-2.0",
+        "freeSummary": "官方文档未确认长期免费 API；需有余额或 Token 资源包",
         "access": "Email / phone",
         "endpoint": "https://api.longcat.chat/openai/v1/chat/completions",
-        "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
+        "command": "curl https://api.longcat.chat/openai/v1/chat/completions -H \"Authorization: Bearer $LONGCAT_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
         "links": [
           [
             "API docs",
-            "https://longcat.ai/platform/docs/zh/"
+            "https://longcat.chat/platform/docs/zh/"
           ],
           [
             "FAQ",
-            "https://longcat.ai/platform/docs/zh/faq"
+            "https://longcat.chat/platform/docs/zh/FAQ.html"
+          ],
+          [
+            "Change log",
+            "https://longcat.chat/platform/docs/zh/ChangeLog.html"
           ]
         ]
       },
@@ -651,32 +664,36 @@
     ],
     "kicker": "API + OPEN WEIGHTS",
     "badges": [
-      "VERIFY API",
-      "OPEN WEIGHTS"
+      "LONGCAT 2.5",
+      "PAID API + OPEN WEIGHTS"
     ],
-    "freeSummary": "API 免费额度未确认；权重免费，算力不免费",
-    "validitySummary": "API 条款待确认；权重遵循 MIT / 模型卡",
+    "freeSummary": "官方 API 需余额或 Token 资源包，未确认长期免费额度；LongCat-2.0 权重可免费下载，自备算力",
+    "validitySummary": "API paid / quota-based · LongCat-2.0 weights open",
     "accessSummary": "API Email / phone；权重 Global",
-    "checkedSummary": "Today / official API docs + GitHub",
-    "title": "LongCat-2.0 · API + open weights",
-    "why": "LongCat-2.0 is one model with two access paths: an official API whose free quota is not confirmed, and downloadable weights whose license permits access but still requires storage and GPU infrastructure.",
-    "mechanism": "API access plus downloadable open weights",
-    "validity": "API quota unknown; model license applies to weights",
+    "checkedSummary": "2026-09-29 / official API docs + changelog",
+    "title": "LongCat-2.5 Preview / 2.0 · API + open weights",
+    "why": "Official docs now list LongCat-2.5-Preview and LongCat-2.0 with OpenAI/Anthropic-compatible endpoints and 1M context. The FAQ requires sufficient account balance or a Token Resource Pack, so the API must not be advertised as durably free. LongCat-2.0 downloadable weights remain a separate free-access path.",
+    "mechanism": "Paid/quota-backed official API plus downloadable LongCat-2.0 open weights",
+    "validity": "API requires balance or Token Resource Pack; LongCat-2.0 model license applies to weights",
     "access": "API email / phone; weights global download path",
-    "command": "curl https://api.longcat.chat/openai/v1/models -H \"Authorization: Bearer $LONGCAT_API_KEY\"",
-    "register": "https://longcat.ai/platform/",
+    "command": "curl https://api.longcat.chat/openai/v1/chat/completions -H \"Authorization: Bearer $LONGCAT_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://longcat.chat/platform/",
     "registerLabel": "Open LongCat",
     "links": [
       [
         "API docs",
-        "https://longcat.ai/platform/docs/zh/"
+        "https://longcat.chat/platform/docs/zh/"
       ],
       [
-        "Official GitHub",
+        "Change log",
+        "https://longcat.chat/platform/docs/zh/ChangeLog.html"
+      ],
+      [
+        "Official GitHub (2.0 weights)",
         "https://github.com/meituan-longcat/LongCat-2.0"
       ],
       [
-        "Hugging Face",
+        "Hugging Face (2.0 weights)",
         "https://huggingface.co/meituan-longcat/LongCat-2.0"
       ]
     ],
@@ -684,23 +701,24 @@
     "availability": "API email / phone; weights global",
     "freeMechanism": "not_confirmed",
     "pricingModel": "not_confirmed",
-    "quota": "API free quota not confirmed; downloadable weights",
-    "renewal": "API unknown; model license applies to weights",
+    "quota": "Official API free quota not confirmed; Token Resource Pack and pay-as-you-go billing support LongCat-2.5-Preview and LongCat-2.0",
+    "renewal": "Token Resource Packs are time-limited; pay-as-you-go consumes account balance; model license applies to LongCat-2.0 weights",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check API terms and MIT/model-card terms",
     "sourceUrls": [
-      "https://longcat.ai/platform/docs/zh/",
-      "https://longcat.ai/platform/docs/zh/faq",
+      "https://longcat.chat/platform/docs/zh/",
+      "https://longcat.chat/platform/docs/zh/FAQ.html",
+      "https://longcat.chat/platform/docs/zh/ChangeLog.html",
       "https://github.com/meituan-longcat/LongCat-2.0",
       "https://huggingface.co/meituan-longcat/LongCat-2.0"
     ],
-    "evidence": "Official API docs confirm API access but do not confirm a durable free quota; the official repository documents LongCat-2.0 downloadable weights and the model license.",
+    "evidence": "Official LongCat docs list LongCat-2.5-Preview and LongCat-2.0, 1M context and OpenAI/Anthropic-compatible APIs. The official FAQ tells users to ensure the account has sufficient balance and states Token Resource Packs support both models; no durable free API quota is documented.",
     "status": "needs_review",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "One model, two access paths. Do not promote the API as free without a public quota rule; weights free does not mean GPU, storage or inference free.",
+    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -925,7 +943,7 @@
     "provider": "SenseNova",
     "providerMeta": "SenseTime · China",
     "model": "SenseNova 6.8 Flash Lite · SenseNova U1 Fast",
-    "modelMeta": "Token Plan 公测免费模型 · OpenAI 兼容接口",
+    "modelMeta": "Token Plan Free public beta · OpenAI-compatible API",
     "type": [
       "free"
     ],
@@ -958,13 +976,13 @@
       "API CONFIRMED",
       "NO CARD"
     ],
-    "freeSummary": "公测期完全免费：Free 档 60,000 积分 / 5 小时；无需充值或绑卡",
-    "validitySummary": "限时免费公测；付费档位（Lite/Pro）标注即将上线",
-    "accessSummary": "China account",
-    "checkedSummary": "2026-09-08 / official Token Plan page",
+    "freeSummary": "公测期完全免费：Free 档 ¥0/月，60,000 积分 / 5 小时；特殊模型除外；最多 20 个 API Key。",
+    "validitySummary": "Public beta · paid Lite / Pro tiers are not yet live",
+    "accessSummary": "SenseNova account + API Key · public-beta quota",
+    "checkedSummary": "2026-09-29 / official SenseNova Token Plan",
     "title": "SenseNova · Token Plan 公测免费",
-    "why": "商汤官方 Token Plan 页面显示：公测期 Free 档免费，配额为 60,000 积分 / 5 小时，最多 20 个 API Key，提供 OpenAI 兼容接口。官方页面当前列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast 两个模型；2026 年 5 月发布时的公开报道覆盖 6.7 Flash-Lite、U1 Fast、DeepSeek V4 Flash 且描述各模型配额独立计数。积分规则与特殊模型排除项以控制台实际显示为准。",
-    "mechanism": "Token Plan 公测免费配额（积分制，每 5 小时刷新）",
+    "why": "SenseNova 官方 Token Plan 页面当前仍明确显示“公测期完全免费开放”：Free 档 ¥0/月、60,000 积分 / 5 小时，特殊模型除外，支持 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast，并允许最多 20 个 API Key。当前页面没有说明两个模型各自独立获得 60,000 积分，因此 FreeLLM 将它记录为 Free 档的 5 小时积分池，而不再写成每模型独立 60,000。",
+    "mechanism": "Token Plan public-beta Free tier with a 60,000-credit / 5-hour plan quota",
     "validity": "限时免费公测；付费档位标注即将上线",
     "access": "China account",
     "command": "在 platform.sensenova.cn/token-plan 领取 Free 公测档，创建 API Key 后用 OpenAI 兼容接口调用免费模型。",
@@ -987,25 +1005,26 @@
     "originCountry": "China",
     "availability": "China account",
     "freeMechanism": "trial",
-    "quota": "60,000 积分 / 5 小时（Free 档，公测期免费；特殊模型除外）",
-    "renewal": "每 5 小时刷新（公测期）",
+    "quota": "60,000 credits / 5 hours on the Free public-beta tier; special models excluded",
+    "renewal": "5-hour public-beta quota window; paid Lite/Pro tiers are marked coming soon",
     "phoneRequired": "yes",
     "cardRequired": "no",
     "commercialUse": "check provider terms",
     "sourceUrls": [
       "https://www.sensenova.cn/token-plan",
+      "https://www.sensenova.cn/models",
       "https://www.sensecore.cn/help/docs/model-as-a-service/nova"
     ],
-    "evidence": "Official Token Plan page (checked 2026-09-08) shows a free public-beta tier with 60,000 credits per 5 hours and an OpenAI-compatible endpoint; May 2026 launch coverage reports phone-number sign-up and per-model independent quotas.",
+    "evidence": "SenseNova 官方 Token Plan 页面（2026-09-29 复核）显示 Free 公测档 ¥0/月、60,000 积分 / 5 小时、最多 20 个 API Key，并列出 SenseNova 6.8 Flash Lite 与 SenseNova U1 Fast；付费 Lite / Pro 仍标记“即将上线”。",
     "status": "verified",
-    "confidence": "medium",
-    "lastVerifiedAt": "2026-09-17",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "公测期限时免费；积分到账、模型 ID 与特殊模型排除规则以控制台为准。",
+    "notes": "积分是 Free 档窗口额度；官方公开页面未说明每个模型分别拥有独立 60,000 积分。特殊模型可能被排除，实际模型 ID 与剩余额度以控制台为准。",
     "freeSummaryEn": "Completely free during public beta: 60,000 credits per 5 hours on the Free tier; no top-up or card required",
     "pricingModel": "trial",
     "freePolicy": {
-      "type": "trial",
+      "type": "public_beta_credit_window",
       "amount": 60000,
       "unit": "credits",
       "period": "5h"
@@ -1014,15 +1033,15 @@
       {
         "model": "sensenova-6.8-flash-lite",
         "label": "SenseNova 6.8 Flash Lite",
-        "quota": "60,000 积分 / 5 小时",
-        "note": "轻量多模态；模型 ID 以控制台为准",
+        "quota": "Uses the Free plan 60,000 credits / 5h pool",
+        "note": "Official Token Plan lists this model on the Free public-beta tier; special-model exclusions still apply.",
         "sourceUrl": "https://www.sensenova.cn/token-plan"
       },
       {
         "model": "sensenova-u1-fast",
         "label": "SenseNova U1 Fast",
-        "quota": "60,000 积分 / 5 小时",
-        "note": "信息图与图文生成；模型 ID 以控制台为准",
+        "quota": "Uses the Free plan 60,000 credits / 5h pool",
+        "note": "Official Token Plan lists this model on the Free public-beta tier; model availability may change.",
         "sourceUrl": "https://www.sensenova.cn/token-plan"
       }
     ],
@@ -1056,8 +1075,8 @@
     "providerMark": "DS",
     "provider": "DeepSeek API",
     "providerMeta": "DeepSeek · official API",
-    "model": "DeepSeek V4 Flash",
-    "modelMeta": "OpenAI-compatible endpoint",
+    "model": "DeepSeek V4.1 Flash",
+    "modelMeta": "OpenAI/Anthropic-compatible · native multimodal",
     "type": [
       "free"
     ],
@@ -1066,67 +1085,73 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "使用 DeepSeek PAYG API 并控制余额消耗",
+      "summary": "使用 DeepSeek V4.1 Flash PAYG API，并控制余额消耗",
       "prerequisites": [
         "DeepSeek 平台账号",
         "充值前确认当前价格"
       ],
       "steps": [
         "打开官方平台创建 API Key",
-        "设置消费上限后发送一条最小请求"
+        "使用 model=deepseek-flash 发送最小请求，并按当前峰谷价格控制消耗"
       ],
       "endpoint": "https://api.deepseek.com/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${DEEPSEEK_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://api-docs.deepseek.com/quick_start/pricing"
+      "docsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
     },
     "kicker": "LOW COST",
     "badges": [
       "PAYG",
-      "INTERNATIONAL API"
+      "V4.1 FLASH"
     ],
-    "freeSummary": "Very low unit price; not a free quota",
+    "freeSummary": "Pay-as-you-go; not a free quota. V4.1 Flash replaced the retired V4 Flash model.",
     "validitySummary": "Pay-as-you-go / no expiry",
     "accessSummary": "International API",
-    "checkedSummary": "Today / official pricing",
-    "title": "DeepSeek API · low cost, not free",
-    "why": "DeepSeek is useful as a cost benchmark, but it is not a free quota entry. The directory keeps low-cost pay-as-you-go offers visible without calling them free.",
-    "mechanism": "Pay-as-you-go API pricing",
+    "checkedSummary": "2026-09-29 / official release + pricing",
+    "title": "DeepSeek V4.1 Flash API · low cost, not free",
+    "why": "DeepSeek V4.1 Flash is the current Flash API model. The official changelog says to call it with model=deepseek-flash; previous V4 Flash aliases are retired and temporarily route to V4.1 Flash. This remains a pay-as-you-go entry, not a free quota.",
+    "mechanism": "Pay-as-you-go API with peak/off-peak pricing",
     "validity": "Balance-based",
     "access": "Official international API",
-    "command": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\"",
+    "command": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.deepseek.com/",
     "registerLabel": "Register / open DeepSeek",
     "links": [
       [
         "Official pricing",
-        "https://api-docs.deepseek.com/quick_start/pricing"
+        "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
       ],
       [
-        "API docs",
-        "https://api-docs.deepseek.com/"
+        "V4.1 Flash release",
+        "https://api-docs.deepseek.com/zh-cn/news/news260910/"
+      ],
+      [
+        "Change log",
+        "https://api-docs.deepseek.com/zh-cn/updates/"
       ]
     ],
     "originCountry": "China",
     "availability": "Official international API",
     "freeMechanism": "not_confirmed",
-    "quota": "Pay-as-you-go API pricing",
+    "quota": "Pay-as-you-go API; official pricing currently lists a 2500 concurrency limit for V4.1 Flash",
     "renewal": "Balance-based",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
-      "https://api-docs.deepseek.com/quick_start/pricing"
+      "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+      "https://api-docs.deepseek.com/zh-cn/news/news260910/",
+      "https://api-docs.deepseek.com/zh-cn/updates/"
     ],
-    "evidence": "Official pricing documents a pay-as-you-go API; no free quota is represented here.",
+    "evidence": "Official DeepSeek docs released V4.1 Flash on 2026-09-10, specify model=deepseek-flash, retire V4 Flash/V4 Flash Vision Exp while temporarily routing their aliases to V4.1 Flash, and list pay-as-you-go peak/off-peak pricing plus a 2500 concurrency limit.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Low cost is intentionally separate from free.",
+    "notes": "Low cost is intentionally separate from free. Legacy V4 Flash aliases are compatibility routes, not separate live models.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -1139,18 +1164,26 @@
       "cnHost": "api.deepseek.com",
       "cnMs": 220,
       "intlMs": 278
+    },
+    "pricingModel": "payg",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": 2500
     }
   },
   {
     "id": "opencode-zen-free",
     "order": 13,
-    "date": "2026-09-07",
+    "date": "2026-09-23",
     "name": "OpenCode Zen free models",
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
-    "modelMeta": "Hosted coding models",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
       "free"
@@ -1160,34 +1193,36 @@
       "model_api"
     ],
     "usageGuide": {
-      "summary": "在 OpenCode Zen 中选择官方列出的模型",
+      "summary": "在 OpenCode Zen 中选择 mimo-v2.6-flash-free 限时免费模型",
       "prerequisites": [
-        "OpenCode 账号或支持的客户端"
+        "OpenCode 账号 / Zen API Key（实际生成请求）"
       ],
       "steps": [
-        "打开官方 Zen 文档并确认当前模型列表",
-        "按 Provider 文档配置凭据后选择模型发送请求"
+        "打开 OpenCode Zen 官方文档确认 MiMo-V2.6-Flash Free 仍在免费列表",
+        "在 OpenCode/Zen 中创建或配置凭据",
+        "使用模型 ID mimo-v2.6-flash-free 调用 OpenAI-compatible chat completions；不要提交敏感或机密数据"
       ],
       "endpoint": "https://opencode.ai/zen/v1/chat/completions",
       "method": "POST",
-      "authentication": "Provider-specific API key",
+      "authentication": "OpenCode Zen API key",
       "examples": {
-        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"model-id\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
-      "docsUrl": "https://dev.opencode.ai/docs/zen/"
+      "docsUrl": "https://opencode.ai/docs/en/zen/"
     },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
+      "MIMO V2.6 FREE",
       "LIMITED-TIME FREE",
       "OPEN SOURCE CLI"
     ],
-    "freeSummary": "Selected Zen models · input, output and cache listed as Free",
-    "validitySummary": "Limited time / model pool can change",
+    "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
+    "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "Today / official OpenCode docs",
+    "checkedSummary": "2026-09-24 / official OpenCode Zen docs + live model catalog + real OpenCode CLI generation",
     "title": "OpenCode Zen · free model pool",
-    "why": "OpenCode's official Zen documentation lists selected hosted coding models at Free input, output and cache pricing for a limited time. This is a provider-hosted free model pool, not a claim that every upstream model is free everywhere.",
-    "mechanism": "Selected Zen models free for a limited time",
+    "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
+    "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
     "validity": "Limited time; verify the official Zen page before use",
     "access": "Global OpenCode account; regional availability may vary",
     "command": "curl -fsSL https://opencode.ai/install | bash\nopencode",
@@ -1195,41 +1230,40 @@
     "registerLabel": "OpenCode / sign in",
     "links": [
       [
-        "Official Zen pricing",
-        "https://dev.opencode.ai/docs/zen/"
+        "OpenCode Zen 官方模型与定价",
+        "https://opencode.ai/docs/en/zen/"
       ],
       [
-        "Providers",
-        "https://opencode.ai/docs/providers"
+        "OpenCode Zen 实时模型目录",
+        "https://opencode.ai/zen/v1/models"
       ],
       [
-        "Install",
-        "https://opencode.ai/docs"
+        "OpenCode Providers",
+        "https://opencode.ai/docs/en/providers/"
       ]
     ],
     "originCountry": "International",
     "availability": "Global; provider and model availability may vary by region",
     "freeMechanism": "limited_time_free",
-    "quota": "Selected models at Free input, output and cache pricing",
+    "quota": "MiMo-V2.6-Flash Free: input, output and cached read are currently listed as Free; OpenCode does not publish a fixed end date",
     "renewal": "No subscription required for the listed free Zen models; availability can change",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check OpenCode and each model's terms",
     "sourceUrls": [
-      "https://dev.opencode.ai/docs/zen/",
-      "https://opencode.ai/docs/providers"
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/zen/v1/models"
     ],
-    "evidence": "Official OpenCode Zen documentation lists Big Pickle, MiMo-V2.5 Free, Ling 3.0 Flash Fin Free, Nemotron and Muse Spark models at Free pricing.",
+    "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-24",
     "checkedBy": "manual",
-    "notes": "International option included in the China-first global directory. Free status is time-limited and should be rechecked.",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
     "endpointCheck": {
-      "checkedAt": "2026-09-19",
+      "checkedAt": "2026-09-23",
       "verdict": "OK",
-      "note": "接口探测通过，模型目录可匿名访问；调用需注册 API Key",
-      "ms": 1023
+      "note": "公开 /zen/v1/models 可匿名访问，已确认 mimo-v2.6-flash-free 在实时目录；chat completions 需 Zen API Key"
     },
     "networkCheck": {
       "checkedAt": "2026-09-19",
@@ -1237,6 +1271,45 @@
       "cnHost": "opencode.ai",
       "cnMs": 1272,
       "intlMs": 380
+    },
+    "whyEn": "OpenCode Zen officially lists MiMo-V2.6-Flash Free with free input, output and cached-read pricing for a limited time. This OpenCode-hosted route is separate from Xiaomi's paid official API.",
+    "freeLLMTest": {
+      "testLevel": "e2e",
+      "status": "passed",
+      "testedAt": "2026-09-24",
+      "actualUsageVerified": true,
+      "task": "核验 OpenCode Zen 是否真实公开 MiMo-V2.6-Flash Free、当前模型 ID、免费定价和调用路径，并通过官方 OpenCode CLI 对免费模型路径完成一次真实端到端生成。",
+      "method": [
+        "打开 OpenCode Zen 官方文档，核对 MiMo-V2.6-Flash Free、模型 ID、chat completions endpoint 与限时免费定价。",
+        "访问 OpenCode Zen 公共 /zen/v1/models，确认 mimo-v2.6-flash-free 仍在实时模型目录。",
+        "在 GitHub Actions 安装官方 OpenCode CLI 1.18.32，并刷新 OpenCode 模型列表。",
+        "使用 opencode run --model opencode/mimo-v2.6-flash-free --format json 发送最小真实生成请求。",
+        "要求真实助手输出包含 MiMo OK；无 mock、无 skip、无仓库 API Key。"
+      ],
+      "result": "真实生成通过：2026-09-24 GitHub Actions 使用 OpenCode CLI 调用 opencode/mimo-v2.6-flash-free，模型返回 MiMo OK，记录延迟 6372 ms，actualUsageVerified=true。",
+      "limitations": "本次证明 OpenCode 官方 CLI 免费模型路径至少一次真实生成可用；不代表永久免费，也不代表已经验证持续限流、工具调用、多模态输入、长上下文稳定性或整体生成质量。Zen 直连 HTTP chat completions 仍需要 Zen API Key。",
+      "evidence": [
+        {
+          "label": "OpenCode Zen 官方模型与定价",
+          "url": "https://opencode.ai/docs/en/zen/",
+          "note": "核验模型 ID、endpoint、Free 定价与 limited-time free 说明"
+        },
+        {
+          "label": "OpenCode Zen 实时模型目录",
+          "url": "https://opencode.ai/zen/v1/models",
+          "note": "公开目录返回 mimo-v2.6-flash-free"
+        },
+        {
+          "label": "FreeLLM GitHub Actions 真实生成记录",
+          "url": "https://github.com/xdguo-design/freellm/actions/runs/35943191315",
+          "note": "OpenCode CLI 实际返回 MiMo OK；latencyMs=6372；actualUsageVerified=true"
+        },
+        {
+          "label": "Xiaomi MiMo-V2.6-Flash 官方模型页",
+          "url": "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+          "note": "核验 1M context、128K max output、100 RPM / 10M TPM 与 Xiaomi 官方付费 API 价格"
+        }
+      ]
     }
   },
   {
@@ -1645,12 +1718,12 @@
     "date": "2026-09-07",
     "name": "Alibaba Qwen / 通义千问 new-user quota",
     "providerMark": "QW",
-    "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
+    "provider": "Alibaba Cloud Model Studio CN / 阿里云百炼",
     "providerEn": "Alibaba Cloud Model Studio / Qwen",
-    "providerMeta": "通义千问 · Alibaba Cloud · China",
+    "providerMeta": "通义千问 · China site · North China 2 (Beijing)",
     "providerMetaEn": "Qwen · Alibaba Cloud · China",
-    "model": "Qwen models · qwen-max and more",
-    "modelMeta": "API / real-time inference",
+    "model": "Qwen and other eligible Model Studio real-time inference models",
+    "modelMeta": "Beijing region · typically 1M tokens per eligible model · 90 days",
     "type": [
       "free",
       "api"
@@ -1680,47 +1753,58 @@
     "kicker": "NEW USER FREE QUOTA",
     "badges": [
       "90 DAYS",
-      "USUALLY 1M TOKENS / MODEL"
+      "TYPICALLY 1M / MODEL",
+      "FREE-QUOTA-ONLY SWITCH"
     ],
-    "freeSummary": "New-user free quota · usually 1,000,000 tokens per model",
-    "validitySummary": "90 days from activation / model eligibility",
-    "accessSummary": "Beijing region models",
-    "checkedSummary": "Today / official Alibaba docs",
-    "title": "通义千问 · 阿里云百炼新人免费额度",
-    "why": "Alibaba Cloud Model Studio automatically grants eligible new users free quota for supported models. This makes Qwen a clear free API route, but the quota is regional, one-time and time-limited rather than a permanent unlimited plan.",
-    "mechanism": "Automatic new-user free quota for supported Qwen models",
-    "validity": "Valid for 90 days from opening, model publication or application, whichever is later",
-    "access": "Use Alibaba Cloud Model Studio models in the North China 2 (Beijing) region; check regional access before creating a key",
+    "freeSummary": "中国站：仅华北2（北京）符合条件的模型享新人免费额度；通常每模型 1,000,000 Tokens、90 天有效，具体以模型价格页为准。",
+    "validitySummary": "CN / Beijing · 90 days",
+    "accessSummary": "中国站百炼 · 北京地域 · 通用 API Key",
+    "checkedSummary": "2026-09-29 / official Model Studio free-quota docs",
+    "title": "阿里云百炼中国站 · 北京地域新人免费额度",
+    "why": "阿里云百炼官方新人免费额度文档（2026-09 当前版本）确认：仅华北2（北京）地域提供新人免费额度；不同模型额度彼此独立，通常每模型 100 万 Tokens；有效期为 90 天。未实名认证用户免费额度耗尽后默认停止，已实名用户若未开启“免费额度用完即停”会自动转按量付费。官方同页还说明 OAuth 认证有独立的每日 2,000 次免费调用额度，不计入 API Key Token 免费额度。",
+    "mechanism": "北京地域新用户按模型独立发放 Token 免费额度；OAuth 认证另有每日 2,000 次独立免费额度",
+    "validity": "API Key 新人额度有效期 90 days / 90 天：自开通百炼、模型发布或申请通过之日起计算（取较晚者）；OAuth 独立额度按日刷新",
+    "access": "使用百炼北京地域通用 API Key 调用实时推理；Token Plan/Coding Plan 专属 Key 不消耗新人免费额度",
     "command": "Create a regular Model Studio API key in the Beijing region, then use the official Qwen API quick-start example. Enable the free-quota-exhausted stop setting before testing.",
     "register": "https://bailian.console.aliyun.com/",
     "registerLabel": "Open Alibaba Qwen console",
     "links": [
       [
-        "Official free quota rules",
-        "https://help.aliyun.com/zh/model-studio/new-free-quota"
+        "新人免费额度与用完即停",
+        "https://help.aliyun.com/zh/model-studio/new-free-quota/"
       ],
       [
-        "Model Studio console",
+        "免费额度有效期调整公告",
+        "https://help.aliyun.com/zh/model-studio/new-free-quota-validity-adjustment"
+      ],
+      [
+        "模型价格与免费额度",
+        "https://help.aliyun.com/zh/model-studio/model-pricing"
+      ],
+      [
+        "Model Studio 控制台",
         "https://bailian.console.aliyun.com/"
       ]
     ],
     "originCountry": "China",
-    "availability": "Only supported models in North China 2 (Beijing) have this new-user quota; other regions do not",
+    "availability": "China site: only China (Beijing) / 华北2 region models with China Mainland deployment scope are eligible",
     "freeMechanism": "trial",
-    "quota": "Usually 1,000,000 input + output tokens per model; exact quota varies by model",
-    "renewal": "One-time new-user quota; expires automatically and does not reset or extend",
+    "quota": "Eligible models usually receive 1,000,000 shared input+output tokens each; exact quota varies by model. OAuth authentication has a separate 2,000 calls/day free allowance.",
+    "renewal": "API Key new-user quota is one-time and expires after 90 days; OAuth allowance refreshes daily",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check Alibaba Cloud Model Studio and model terms",
     "sourceUrls": [
-      "https://help.aliyun.com/zh/model-studio/new-free-quota"
+      "https://help.aliyun.com/zh/model-studio/new-free-quota/",
+      "https://help.aliyun.com/zh/model-studio/model-pricing",
+      "https://help.aliyun.com/en/model-studio/new-free-quota"
     ],
-    "evidence": "Alibaba Cloud's official documentation states that eligible new users receive automatic model free quota, that Beijing-region models are covered, and that the quota is valid for 90 days; it also warns that pay-as-you-go may continue after exhaustion.",
+    "evidence": "阿里云中国站官方文档（2026-09-21/22 复核）明确：仅华北2（北京）且服务部署范围为中国内地的模型享新人免费额度；有效期 90 天；模型额度独立，具体额度按模型价格页。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Use a regular API key for the new-user quota, not a Token Plan dedicated key. Turn on the stop switch when the free quota is exhausted to avoid accidental charges.",
+    "notes": "不要把“通常 100 万 Tokens/模型”写成所有模型固定 100 万；部分模型没有免费额度。已实名用户若未开启“免费额度用完即停”，超额会自动转 PAYG。OAuth 2,000 次/日是独立认证额度，与 API Key Token 免费额度不互通。",
     "key": true,
     "endpointCheck": {
       "checkedAt": "2026-09-19",
@@ -1742,7 +1826,30 @@
       "quotaTier": "high",
       "reason": "实测 116ms · 免费额度 1,000,000 tokens",
       "reasonEn": "116 ms measured · free quota 1,000,000 tokens"
-    }
+    },
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": "90 days",
+      "note": "usually 1M per eligible Beijing-region model; OAuth has separate 2,000 calls/day"
+    },
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "edition": "cn"
   },
   {
     "id": "keenable-search-free",
@@ -3768,7 +3875,7 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -3785,7 +3892,7 @@
     "provider": "SiliconFlow",
     "providerMeta": "SiliconFlow 硅基流动 · China",
     "providerMetaEn": "SiliconFlow · China",
-    "model": "PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI bge-m3 / bge-reranker-v2-m3 / bge-large · Kwai-Kolors (¥0 listed)",
+    "model": "Xing4.0-29B · PaddleOCR-VL-1.5 · Hunyuan-MT-7B · BAAI embeddings/reranker · Kwai-Kolors (¥0 listed)",
     "modelMeta": "¥0-priced models on the official price list",
     "type": [
       "api",
@@ -3814,12 +3921,12 @@
       "¥0 MODELS",
       "CHINA"
     ],
-    "freeSummary": "Selected models listed at ¥0 (free) on the official price list, plus paid models",
+    "freeSummary": "Selected official ¥0 models now include China Telecom Xing4.0-29B alongside OCR, embedding, reranker and image models.",
     "validitySummary": "Free listing can change; recheck the price page",
     "accessSummary": "SiliconFlow account; China registration",
-    "checkedSummary": "Today / official SiliconFlow price page",
+    "checkedSummary": "2026-09-29 / official price + model pages",
     "title": "SiliconFlow · ¥0 listed models",
-    "why": "The official SiliconFlow price page lists multiple models at 免费/¥0 — including PaddleOCR-VL-1.5, Hunyuan-MT-7B, BAAI bge-m3, bge-reranker-v2-m3, bge-large-zh/en-v1.5 and Kwai-Kolors — alongside paid models.",
+    "why": "SiliconFlow's current official price/model pages list XingChenAGI/Xing4.0-29B at ¥0 input and ¥0 output, alongside other ¥0 models. Xing4.0 is a China Telecom model released on 2026-09-17 with 29B total / 4B active parameters and native 256K context.",
     "mechanism": "Selected models permanently listed at ¥0 on the official price list",
     "validity": "Ongoing while listed; the ¥0 list can change at any time",
     "access": "SiliconFlow account; registration via the China platform",
@@ -3850,12 +3957,22 @@
     "renewal": "No quota period; the ¥0 price applies per request for listed models",
     "sourceUrls": [
       "https://siliconflow.cn/pricing",
-      "https://docs.siliconflow.cn/cn/userguide/quickstart"
+      "https://docs.siliconflow.cn/cn/userguide/quickstart",
+      "https://cloud.siliconflow.cn/models",
+      "https://github.com/XingChen-AGI/Xing4.0-29B-A4B"
     ],
-    "evidence": "官方价格页列出 PaddleOCR-VL-1.5、Hunyuan-MT-7B、BAAI/bge-m3、bge-reranker-v2-m3、bge-large-zh-v1.5、bge-large-en-v1.5、Kwai-Kolors 价格为「免费」；官方快速开始文档给出 Base URL https://api.siliconflow.cn/v1。",
+    "evidence": "Official SiliconFlow pages list XingChenAGI/Xing4.0-29B at ¥0 for both input and output. The official XingChen-AGI repository confirms China Telecom developed Xing4.0-29B-A4B, released it on 2026-09-17, and documents 29B total parameters, 4B active per token and native 256K context extensible to 512K.",
     "confidence": "high",
     "notes": "China-first entry. Embedding/reranker and OCR models at ¥0 complement paid chat models on the same platform.",
     "freeModels": [
+      {
+        "model": "XingChenAGI/Xing4.0-29B",
+        "label": "Xing4.0-29B",
+        "quota": "¥0 input / ¥0 output on SiliconFlow",
+        "contextWindow": "256K native; extensible to 512K",
+        "note": "China Telecom XingChen model; official SiliconFlow price/model pages list the hosted API at ¥0. Recheck before production use because the ¥0 list can change.",
+        "sourceUrl": "https://siliconflow.cn/pricing"
+      },
       {
         "model": "PaddleOCR-VL-1.5",
         "quota": "¥0（官方价目表标注免费）",
@@ -5779,6 +5896,1795 @@
         {
           "label": "AMD Radeon Cloud authentication",
           "url": "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/"
+        }
+      ]
+    }
+  },
+  {
+    "date": "2026-09-20",
+    "lastVerifiedAt": "2026-09-22",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check StepFun Step Plan terms and each model's official terms",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "id": "stepfun-step-plan-promo",
+    "order": 49,
+    "name": "StepFun Step Plan free experience",
+    "providerMark": "ST",
+    "provider": "StepFun",
+    "providerMeta": "StepFun 阶跃星辰 · China",
+    "providerMetaEn": "StepFun · China",
+    "model": "Step 5 Preview · Step 3.7 Flash · StepAudio 3 family",
+    "modelMeta": "Step Plan subscription · flagship models",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "usageGuide": {
+      "summary": "先确认账号已开通 Step Plan，再创建 Step API Key；按工具协议选择 OpenAI 兼容或 Anthropic 兼容 Base URL",
+      "summaryEn": "Confirm Step Plan access first, create a Step API Key, then choose the OpenAI-compatible or Anthropic-compatible Base URL for your tool",
+      "prerequisites": [
+        "StepFun account",
+        "Active Step Plan entitlement",
+        "Step API key"
+      ],
+      "steps": [
+        "Open the Step Plan page and confirm the current free-experience entitlement on your account",
+        "Create a Step API Key in the StepFun Open Platform",
+        "For OpenAI-compatible Chat Completions use https://api.stepfun.com/step_plan/v1",
+        "For Anthropic-compatible Messages use https://api.stepfun.com/step_plan",
+        "Use step-5-preview for a first verification request"
+      ],
+      "endpoint": "https://api.stepfun.com/step_plan/v1",
+      "method": "POST",
+      "authentication": "API key via Authorization: Bearer header",
+      "examples": {
+        "curl": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://platform.stepfun.com/docs/zh/step-plan/quick-start"
+    },
+    "kicker": "STEP PLAN FREE EXPERIENCE",
+    "badges": [
+      "UP TO 75 DAYS",
+      "FLAGSHIP MODELS",
+      "1M CONTEXT"
+    ],
+    "freeSummary": "Step Plan 当前免费体验活动最高可叠加至 75 天；登录、首次 API 调用和邀请奖励按活动页实时规则发放",
+    "freeSummaryEn": "Current Step Plan promotion can stack up to 75 days; login, first-call and referral rewards follow the live campaign rules",
+    "validitySummary": "Limited-time promotion; entitlement and invitation rules can change",
+    "accessSummary": "StepFun account + Step API Key; Step Plan entitlement required",
+    "checkedSummary": "2026-09-22 / official Step Plan and API docs + current promotion cross-check",
+    "title": "StepFun · Step Plan 最高 75 天免费体验",
+    "titleZh": "阶跃星辰 Step Plan · 最高 75 天免费体验",
+    "why": "StepFun 官方 Step Plan 页面确认该订阅覆盖旗舰模型，官方快速开始给出 Step Plan 专用 OpenAI/Anthropic 兼容接口并推荐 step-5-preview。当前活动信息显示免费体验可通过登录、首次 API 调用和邀请奖励叠加，最高达到 75 天；具体邀请名额、体验档位和到期时间以登录后的活动页为准。",
+    "whyEn": "StepFun's official Step Plan page confirms flagship-model access, while the official quick start documents dedicated OpenAI- and Anthropic-compatible endpoints and recommends step-5-preview. Current promotion reports show the free experience can stack through login, first API call and referral rewards up to 75 days; exact referral limits, trial tier and expiry should be confirmed in the logged-in campaign page.",
+    "mechanism": "Limited-time Step Plan subscription trial; login / first-call / referral rewards can extend the entitlement",
+    "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
+    "validity": "Promotion is time-sensitive; current account entitlement and campaign terms control",
+    "access": "StepFun Open Platform account and API key; Step Plan must be active",
+    "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://platform.stepfun.com/step-plan",
+    "registerLabel": "打开 Step Plan 官方页面",
+    "registerLabelEn": "Open official Step Plan page",
+    "links": [
+      [
+        "Step Plan（官方）",
+        "https://platform.stepfun.com/step-plan"
+      ],
+      [
+        "Step Plan 快速开始（官方文档）",
+        "https://platform.stepfun.com/docs/zh/step-plan/quick-start"
+      ],
+      [
+        "Step 5 Preview（官方文档）",
+        "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "StepFun Open Platform; campaign eligibility and account availability may vary",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": 75,
+      "unit": "day",
+      "period": "maximum stacked promotional entitlement; live campaign terms apply"
+    },
+    "quota": "Step Plan subscription credits are consumed from the active plan pool; exact free-experience tier is not hard-coded because current public sources conflict",
+    "renewal": "Free-experience entitlement expires; paid renewal and plan pricing follow the current Step Plan page",
+    "sourceUrls": [
+      "https://platform.stepfun.com/step-plan",
+      "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
+      "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
+    ],
+    "evidence": "Official Step Plan materials confirm flagship-model access; official quick-start docs list https://api.stepfun.com/step_plan/v1 for OpenAI-compatible Chat Completions and https://api.stepfun.com/step_plan for Anthropic-compatible Messages, recommending step-5-preview. Official Step 5 Preview docs specify a 1M-token context window. The live campaign's 75-day stacking mechanics are time-sensitive and were cross-checked against multiple contemporaneous reports; the logged-in Step Plan campaign page remains authoritative for exact reward/tier details.",
+    "confidence": "medium",
+    "confidenceReason": "Official docs verify the product, flagship-model access, Step Plan endpoints and 1M context. The 75-day promotion is corroborated by multiple current reports, but the public crawler does not expose the expanded official referral-rule text and sources disagree on the exact free-experience tier.",
+    "notes": "2026-09-22 新增。与 stepfun-limited-time-free 分开：旧条目记录单个 API 模型的限免状态，本条目记录 Step Plan 订阅体验活动。未写死 ¥99 / Flash Plus，因为当前可访问的官方页面未公开显示体验档位，第三方来源存在 Flash Mini / Flash Plus 冲突。",
+    "freeModels": [
+      {
+        "model": "step-5-preview",
+        "quota": "Uses Step Plan credit pool",
+        "note": "1M-token context window per official model docs",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
+      },
+      {
+        "model": "step-3.7-flash",
+        "quota": "Uses Step Plan credit pool",
+        "note": "Listed as a current flagship model on the official Step Plan site",
+        "sourceUrl": "https://platform.stepfun.com/step-plan"
+      },
+      {
+        "model": "StepAudio 3 family",
+        "quota": "Uses Step Plan credit pool",
+        "note": "Voice-model family listed on the official Step Plan site",
+        "sourceUrl": "https://platform.stepfun.com/step-plan"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-22",
+      "actualUsageVerified": false,
+      "task": "核对 Step Plan 当前官方接入链路、Step 5 Preview 模型规格、双协议 Base URL 与限时免费体验活动口径；在没有登录态 Step Plan 权益和 API Key 的前提下，不把真实额度到账和模型生成写成已实测。",
+      "method": [
+        "打开 StepFun 官方 Step Plan 页面，确认 Step Plan 为订阅制服务并覆盖旗舰模型。",
+        "打开官方 Step Plan 快速开始，核对 OpenAI 兼容 Base URL、Anthropic 兼容 Base URL、API Key 前置条件和推荐验证模型 step-5-preview。",
+        "打开官方 Step 5 Preview 模型页，核对 1M tokens 上下文、1M 最大输入和 64k 最大输出。",
+        "交叉核对 2026-09-20 至 2026-09-22 的当前活动信息，确认登录 15 天、首次 API 调用再 15 天、邀请奖励可将总体验期叠加至最高 75 天的活动口径。",
+        "当前测试环境没有登录后的 StepFun Step Plan 权益和可用 API Key，因此没有实际验证免费体验天数到账、具体体验档位、Credit 余额或一次真实模型响应。"
+      ],
+      "result": "官方产品与接入预检通过：Step Plan、旗舰模型覆盖、step-5-preview、1M 上下文以及两套兼容接口均可由官方页面确认。最高 75 天活动口径有多处当周信息一致，但公开抓取无法展开官方登录态邀请规则，因此保留 medium confidence，并要求用户以账户活动页的实际权益和到期时间为准。",
+      "limitations": "未使用登录态 StepFun 账号和真实 Step API Key，未验证 15/30/75 天权益在账户中的实际到账、邀请计数、免费体验具体套餐档位、Credit 月池数值、并发限制和真实生成响应。公开来源对免费体验档位存在 Flash Mini / Flash Plus 冲突，因此 FreeLLM 不写死 ¥99 或 1600M Credits。",
+      "evidence": [
+        {
+          "label": "Step Plan 官方页面",
+          "url": "https://platform.stepfun.com/step-plan",
+          "note": "确认 Step Plan 为订阅制服务，并支持旗舰模型"
+        },
+        {
+          "label": "Step Plan 快速开始",
+          "url": "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
+          "note": "确认 OpenAI / Anthropic 兼容 Base URL、API Key 与 step-5-preview"
+        },
+        {
+          "label": "Step 5 Preview 官方模型页",
+          "url": "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview",
+          "note": "确认 1M tokens 上下文窗口、最大输入和模型规格"
+        }
+      ]
+    }
+  },
+  {
+    "id": "puter-mimo-v2-6-flash-free",
+    "order": 50,
+    "date": "2026-09-23",
+    "name": "Puter.js MiMo-V2.6-Flash free allowance",
+    "providerMark": "P",
+    "provider": "Puter.js",
+    "providerMeta": "Puter · Global · User-Pays AI",
+    "providerMetaEn": "Puter · Global · User-Pays AI",
+    "model": "Xiaomi MiMo-V2.6-Flash",
+    "modelMeta": "Browser Playground · Puter.js User-Pays",
+    "type": [
+      "api",
+      "free",
+      "web"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "先在 Puter 官方 Playground 或浏览器 Puter.js 免费额度中试用 MiMo-V2.6-Flash；服务端 OpenAI-compatible 接口不属于免费账户路径。",
+      "prerequisites": [
+        "Puter 账号或浏览器临时用户",
+        "浏览器 Puter.js 无需 Xiaomi API Key；OpenAI-compatible 服务端接口需要 Puter auth token，且官方当前要求付费 Puter 计划"
+      ],
+      "steps": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 页面，点击 Try it free，或在浏览器页面直接加载 Puter.js。",
+        "使用 puter.ai.chat 调用模型 xiaomi/mimo-v2.6-flash，发送最小提示词并确认真实返回文本。",
+        "免费账户路径以浏览器 Puter.js / Playground 为准；账号 allowance 用尽后的继续使用和付费由用户自己的 Puter 账户决定。",
+        "如需 CLI、Python 或服务端 OpenAI-compatible 接入，先确认 Puter 付费计划与 auth token 要求，不把该接口描述成免费账户能力。"
+      ],
+      "endpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Browser Puter.js handles user auth automatically; OpenAI-compatible server/CLI uses Authorization: Bearer ${PUTER_AUTH_TOKEN} and currently requires a paid Puter plan",
+      "examples": {
+        "javascript": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
+        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
+      },
+      "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+    },
+    "kicker": "FREE ACCOUNT ALLOWANCE",
+    "badges": [
+      "FREE PLAYGROUND",
+      "1M CONTEXT",
+      "USER-PAYS"
+    ],
+    "freeSummary": "Puter 账号自带免费 AI allowance；MiMo-V2.6-Flash 可在官方浏览器 Playground 免费试用",
+    "freeSummaryEn": "Every Puter account includes a free AI allowance; MiMo-V2.6-Flash is available in the official browser playground",
+    "validitySummary": "Account allowance; fixed amount/reset not published on the model page",
+    "accessSummary": "Global · Puter account · browser no Xiaomi key",
+    "checkedSummary": "2026-09-24 / official Puter model page + pricing + rate-limit docs",
+    "title": "Puter.js · MiMo-V2.6-Flash 免费 Playground",
+    "titleEn": "Puter.js · MiMo-V2.6-Flash free playground",
+    "why": "Puter 官方 MiMo-V2.6-Flash 页面明确提供“Try it free”浏览器 Playground，并说明每个 Puter 账号包含免费 AI allowance。对开发者而言，Puter.js 采用 User-Pays：开发者无需承担用户的模型费用；对终端用户而言，免费 allowance 用完后是否继续付费由其自己的 Puter 账户决定。",
+    "whyEn": "Puter's official MiMo-V2.6-Flash page offers a free browser playground and states that every Puter account includes a free AI allowance. Puter.js uses a User-Pays model, so developers are not billed for users' AI usage; users decide whether to pay after their allowance is exhausted.",
+    "mechanism": "Free AI allowance on each Puter account plus a browser playground; developers integrate at $0 under User-Pays",
+    "validity": "Ongoing account allowance; exact free amount/reset is not published on the MiMo model page and can change",
+    "access": "Use the official Puter browser playground or Puter.js for the free-account allowance; the OpenAI-compatible server endpoint requires a Puter auth token and currently a paid Puter plan",
+    "command": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
+    "register": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+    "registerLabel": "打开 Puter MiMo-V2.6-Flash 免费 Playground",
+    "registerLabelEn": "Open the Puter MiMo-V2.6-Flash playground",
+    "links": [
+      [
+        "MiMo-V2.6-Flash Playground",
+        "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      ],
+      [
+        "Puter.js User-Pays pricing",
+        "https://developer.puter.com/pricing/"
+      ],
+      [
+        "Puter rate limits and quotas",
+        "https://docs.puter.com/rate-limits-and-quotas/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "Global Puter account access; regional availability may still vary by network/account",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "account_allowance",
+      "amount": null,
+      "unit": "AI allowance",
+      "period": "account-managed"
+    },
+    "quota": "Every Puter account includes a free AI allowance; the public MiMo page does not publish a fixed token/credit amount or reset period",
+    "renewal": "Allowance and overage policy are controlled by the user's Puter account; heavy users top up directly with Puter",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Puter terms and Xiaomi MiMo model terms",
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": [
+        {
+          "capability": "model_api",
+          "unit": "1M input tokens",
+          "price": "$0.14"
+        },
+        {
+          "capability": "model_api",
+          "unit": "1M output tokens",
+          "price": "$0.28"
+        }
+      ]
+    },
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/pricing/",
+      "https://docs.puter.com/rate-limits-and-quotas/"
+    ],
+    "evidence": "2026-09-24 复核：Puter 官方 MiMo-V2.6-Flash 页面提供免费浏览器 Playground，模型 ID 为 xiaomi/mimo-v2.6-flash，并说明每个账号带免费 AI allowance。Puter rate limits 文档同时明确：免费/匿名账户可使用 puter.ai.*；OpenAI-compatible endpoint 额外要求付费计划，因此两条路径不能混写。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-24",
+    "checkedBy": "manual",
+    "notes": "不要把“开发者 $0”误写成“终端用户无限免费”。免费账户验证应以浏览器 Puter.js / Playground 为准；OpenAI-compatible 服务端接口当前要求付费 Puter 计划。真实模型生成尚未标记为通过，直到 CI 的浏览器实测返回真实文本。",
+    "freeModels": [
+      {
+        "model": "xiaomi/mimo-v2.6-flash",
+        "label": "Xiaomi MiMo-V2.6-Flash",
+        "contextWindow": "1,000,000 tokens",
+        "quota": "Puter account free AI allowance; fixed public amount not stated",
+        "note": "Browser Playground can be tried with a Puter account; overage is user-paid",
+        "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-23",
+      "actualUsageVerified": false,
+      "task": "核验 Puter 是否真实提供 MiMo-V2.6-Flash 免费浏览器入口、模型 ID、账号免费 allowance 与 User-Pays 费用边界，并用 CI 浏览器真实生成门禁验证最小文本响应。",
+      "method": [
+        "打开 Puter 官方 MiMo-V2.6-Flash 模型页，核对 Try it free Playground、模型 ID、上下文窗口和页面说明。",
+        "打开 Puter 官方 pricing 页面，核对每个账号包含免费 AI allowance，以及开发者 $0 / 用户自付超额的 User-Pays 模式。",
+        "核对 Puter 官方 rate limits / quotas：免费账户可用 puter.ai.*，但 OpenAI-compatible endpoint 当前要求付费 Puter 计划。",
+        "CI 使用 Playwright + Puter.js 临时浏览器用户调用 xiaomi/mimo-v2.6-flash；只有真实返回助手文本才算通过。"
+      ],
+      "result": "公开路径预检通过：Puter 官方模型页与 pricing 证明 MiMo-V2.6-Flash 可通过账号免费 allowance 和浏览器 Puter.js 试用；服务端 OpenAI-compatible 接口单独受付费计划限制。CI 浏览器真实生成结果待当前流水线确认。",
+      "limitations": "尚未完成 CI 浏览器真实生成门禁时，不声明实际生成、延迟或质量已验证；该门禁只验证最小文本生成，不覆盖工具调用、多模态和额度耗尽后的收费提示。",
+      "evidence": [
+        {
+          "label": "Puter MiMo-V2.6-Flash model page",
+          "url": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
+        },
+        {
+          "label": "Puter.js User-Pays pricing",
+          "url": "https://developer.puter.com/pricing/"
+        },
+        {
+          "label": "Puter rate limits and quotas",
+          "url": "https://docs.puter.com/rate-limits-and-quotas/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "tencent-tokenhub-free-trial",
+    "order": 51,
+    "date": "2026-09-29",
+    "name": "Tencent Cloud TokenHub new-user free trial",
+    "providerMark": "TH",
+    "provider": "Tencent Cloud TokenHub",
+    "providerMeta": "Tencent Cloud · China / Singapore",
+    "model": "All language and multimodal-understanding models",
+    "modelMeta": "OpenAI / Anthropic-compatible API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "领取 TokenHub 新人免费体验包并通过 OpenAI 兼容 API 调用模型",
+      "prerequisites": [
+        "腾讯云账号",
+        "完成实名认证",
+        "在 TokenHub 创建 API Key"
+      ],
+      "steps": [
+        "登录 TokenHub 控制台并领取新人免费体验包；支持免费体验的模型首次调用也可自动领取",
+        "创建 API Key 后，按服务地域选择广州或新加坡端点并调用 /v1/chat/completions"
+      ],
+      "endpoint": "https://tokenhub.tencentmaas.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${TOKENHUB_API_KEY}",
+      "examples": {
+        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://cloud.tencent.com/document/product/1823/130058"
+    },
+    "kicker": "1M TOKENS / MODEL",
+    "badges": [
+      "NEW USER",
+      "1 YEAR"
+    ],
+    "freeSummary": "Each language and multimodal-understanding model offers 1,000,000 free Tokens for new users; each model's package is claimable once.",
+    "validitySummary": "1 year after claim · campaign currently through Dec 31, 2026",
+    "accessSummary": "Tencent Cloud account + identity verification",
+    "checkedSummary": "2026-09-29 / official Tencent Cloud docs",
+    "title": "Tencent Cloud TokenHub · 1M free Tokens per model",
+    "why": "Tencent Cloud's official TokenHub documentation states that every language model and every multimodal-understanding model provides a 1,000,000-Token new-user trial valid for one year. Each account can claim the free package once per model, and free usage stops when exhausted unless the user explicitly enables post-pay.",
+    "mechanism": "One-time new-user free package per model; first use can auto-claim supported packages",
+    "validity": "1 year from claim; current campaign period published through 2026-12-31",
+    "access": "Tencent Cloud account; identity verification required; API Key required",
+    "command": "curl https://tokenhub.tencentmaas.com/v1/models -H \"Authorization: Bearer $TOKENHUB_API_KEY\"",
+    "register": "https://console.cloud.tencent.com/maas",
+    "registerLabel": "Open Tencent Cloud TokenHub",
+    "links": [
+      [
+        "Official free-trial rules",
+        "https://cloud.tencent.com/document/product/1823/130053"
+      ],
+      [
+        "Quick start",
+        "https://cloud.tencent.com/document/product/1823/130058"
+      ],
+      [
+        "API usage",
+        "https://cloud.tencent.com/document/product/1823/130078"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Guangzhou endpoint for mainland China; Singapore endpoint for global routing; no cross-region calls",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": "1 year"
+    },
+    "quota": "1,000,000 Tokens for each language model and each multimodal-understanding model; each account can claim once per model",
+    "renewal": "One-time per-model new-user package; unused quota expires one year after claim",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://cloud.tencent.com/document/product/1823/130053",
+      "https://cloud.tencent.com/document/product/1823/130058",
+      "https://cloud.tencent.com/document/product/1823/130078"
+    ],
+    "evidence": "Official Tencent Cloud docs (updated Sep 2026) state that all language and multimodal-understanding models provide 1M Tokens of free trial quota valid for one year; each model can be claimed once per main account. Free quota is consumed first, and service stops after exhaustion unless post-pay is enabled.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Guangzhou base URL: https://tokenhub.tencentmaas.com. Singapore base URL: https://tokenhub-intl.tencentmaas.com. The current campaign page says the campaign runs through 2026-12-31 and may later be extended or adjusted.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验腾讯云 TokenHub 新人免费体验包的额度、有效期、领取规则、实名/API Key 前置条件、OpenAI 兼容端点与免费额度耗尽后的停止行为；在没有登录态腾讯云账号和真实 API Key 的前提下，不把额度到账和模型生成写成已实测。",
+      "method": [
+        "读取腾讯云 TokenHub 官方新人免费体验包文档，核对语言模型和多模态理解模型的免费额度、有效期、领取次数与活动截止日期。",
+        "读取官方快速入门，核对腾讯云账号、实名认证、领取免费体验包、创建 API Key 与首次 API 调用流程。",
+        "读取官方 API 使用说明，核对广州/新加坡地域端点、OpenAI/Anthropic 协议兼容、Authorization Bearer 鉴权与 GET /v1/models。",
+        "核对免费额度耗尽后的行为：未开启后付费时服务自动停止，不继续扣费。",
+        "当前测试环境没有登录态腾讯云账号和可用 TokenHub API Key，因此没有验证账户内 1,000,000 Tokens 实际到账或一次真实模型响应。"
+      ],
+      "result": "官方公开链路预检通过：语言模型与多模态理解模型均标注每模型 1,000,000 Tokens 免费体验、领取后 1 年有效；每主账号每模型仅可领取一次；当前活动页面标注至 2026-12-31。官方快速入门与 API 使用说明确认实名认证、API Key、广州/新加坡端点和 OpenAI 兼容调用路径。",
+      "limitations": "未使用登录态腾讯云账号和真实 TokenHub API Key，未验证具体账户内免费额度到账、实时模型列表、模型级限流、实际生成响应和延迟。因此本条标记为预检通过，不标记实际调用已验证。",
+      "evidence": [
+        {
+          "label": "腾讯云 TokenHub 新人免费体验包",
+          "url": "https://cloud.tencent.com/document/product/1823/130053",
+          "note": "核对 1M Tokens/模型、1 年有效期、一次领取、活动截止与额度耗尽停止规则"
+        },
+        {
+          "label": "腾讯云 TokenHub 快速入门",
+          "url": "https://cloud.tencent.com/document/product/1823/130058",
+          "note": "核对实名认证、领取体验包、创建 API Key 与 OpenAI 兼容调用示例"
+        },
+        {
+          "label": "腾讯云 TokenHub API 使用说明",
+          "url": "https://cloud.tencent.com/document/product/1823/130078",
+          "note": "核对广州/新加坡端点、鉴权、GET /v1/models 与当前模型参数"
+        }
+      ]
+    }
+  },
+  {
+    "id": "baidu-qianfan-new-user-free",
+    "order": 52,
+    "date": "2026-09-29",
+    "name": "Baidu Qianfan new-user free model quota",
+    "providerMark": "BD",
+    "provider": "Baidu Qianfan",
+    "providerMeta": "百度智能云千帆 · China",
+    "model": "ERNIE family + supported preset models",
+    "modelMeta": "OpenAI-compatible /v2 model API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "开通百度千帆并领取新客免费调用额度，再通过 OpenAI 兼容 /v2 接口调用支持模型",
+      "prerequisites": [
+        "百度智能云账号",
+        "千帆 ModelBuilder 已开通",
+        "已创建 IAM API Key"
+      ],
+      "steps": [
+        "打开千帆产品页并确认当前账号的新客免费额度已经发放；产品页当前标注最高 1,000,000+ Tokens，实际额度以控制台为准。",
+        "在百度智能云 IAM 创建 API Key，并确认目标模型是否可由当前免费额度抵扣。",
+        "使用 https://qianfan.baidubce.com/v2 作为 OpenAI SDK Base URL，先发送最小请求并在控制台核对免费额度扣减。"
+      ],
+      "endpoint": "https://qianfan.baidubce.com/v2/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${QIANFAN_API_KEY}",
+      "examples": {
+        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header 'Authorization: Bearer ${QIANFAN_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+    },
+    "kicker": "NEW USER FREE QUOTA",
+    "badges": [
+      "1M+ TOKENS",
+      "NEW USER",
+      "CHINA"
+    ],
+    "freeSummary": "百度千帆当前产品页明确标注：新客开通可免费领取最高 1,000,000+ Tokens 调用量；具体模型与额度以控制台为准。",
+    "validitySummary": "一次性新客额度；公开产品页未给出统一到期日",
+    "accessSummary": "百度智能云账号 + 千帆开通 + IAM API Key",
+    "checkedSummary": "2026-09-29 / 百度智能云官方产品页 + API 文档",
+    "title": "百度千帆 · 新客最高 100 万+ Tokens 免费调用",
+    "why": "百度智能云千帆官方产品页当前直接宣传“新客开通免费领取高达 1000000+ tokens 调用量”。官方 API 文档同时确认千帆支持 OpenAI SDK 兼容调用，Base URL 为 https://qianfan.baidubce.com/v2。由于公开页没有统一列出每个账号、每个模型的精确资源包明细和到期时间，本条只记录“最高 100 万+ Tokens”的官方口径，实际可抵扣模型和有效期必须以登录后的控制台为准。",
+    "mechanism": "新客开通后获得一次性模型调用免费额度，具体资源包由千帆控制台下发",
+    "validity": "公开产品页未给出统一有效期；以账户内免费资源包的剩余时间为准",
+    "access": "开通百度智能云千帆，创建 IAM API Key，并使用支持免费额度抵扣的模型",
+    "command": "curl https://qianfan.baidubce.com/v2/chat/completions -H \"Authorization: Bearer $QIANFAN_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://cloud.baidu.com/product/qianfan.html",
+    "registerLabel": "打开百度千帆",
+    "links": [
+      [
+        "千帆产品页",
+        "https://cloud.baidu.com/product/qianfan.html"
+      ],
+      [
+        "OpenAI SDK 调用文档",
+        "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+      ],
+      [
+        "千帆文档中心",
+        "https://cloud.baidu.com/doc/wenxinworkshop/index.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆百度智能云；实际模型可用性和资源包以账户控制台为准",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_quota",
+      "amount": 1000000,
+      "unit": "tokens",
+      "period": null,
+      "note": "official page says up to 1,000,000+ tokens"
+    },
+    "quota": "最高 1,000,000+ Tokens（官方产品页口径）；具体模型与账户额度以控制台为准",
+    "renewal": "一次性新客权益；未确认周期性续领",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Baidu Qianfan and model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://cloud.baidu.com/product/qianfan.html",
+      "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+    ],
+    "evidence": "百度智能云千帆官方产品页在 2026-09-29 抓取时标注“新客开通免费领取高达1000000+tokens调用量”；官方 OpenAI SDK 文档确认 Base URL 为 https://qianfan.baidubce.com/v2，并使用 API Key 鉴权。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "页面同时存在“10w+ tokens”较旧文案，因此 FreeLLM 不将 100 万写成所有账号固定到账值，而保留“最高 100 万+”并要求以控制台为准。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验百度千帆当前新客免费额度宣传、OpenAI 兼容 Base URL 和 API Key 调用路径。",
+      "method": [
+        "读取百度智能云千帆官方产品页，确认当前新客免费额度文案。",
+        "读取千帆 OpenAI SDK 官方文档，确认 Base URL、API Key 鉴权和 chat completions 调用方式。",
+        "当前没有登录态百度智能云账号和可用 API Key，因此不验证账户实际到账金额、模型覆盖范围和真实生成。"
+      ],
+      "result": "官方公开预检通过：产品页当前宣传新客最高 1,000,000+ Tokens；官方文档确认 OpenAI 兼容 /v2 API 调用路径。",
+      "limitations": "未登录实际千帆账号，未验证具体账户到账额度、免费资源包有效期、模型级适用范围、真实生成和超额后的账户行为。",
+      "evidence": [
+        {
+          "label": "百度千帆产品页",
+          "url": "https://cloud.baidu.com/product/qianfan.html"
+        },
+        {
+          "label": "千帆 OpenAI SDK 调用文档",
+          "url": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
+        }
+      ]
+    }
+  },
+  {
+    "id": "streamlake-wanqing-free-models",
+    "order": 53,
+    "date": "2026-09-29",
+    "name": "StreamLake Vanchin current free KAT models",
+    "providerMark": "SL",
+    "provider": "StreamLake Vanchin",
+    "providerMeta": "快手万擎 · StreamLake · China",
+    "model": "KAT-Coder-Air-V1 · KAT-Coder-Exp-72B-1010",
+    "modelMeta": "Current price table: input / output / cache = Free",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在快手万擎创建 API Key 与在线推理点，调用当前价格表标为免费的 KAT 模型",
+      "prerequisites": [
+        "StreamLake 账号",
+        "完成实名认证",
+        "已开通快手万擎服务",
+        "已创建 API Key"
+      ],
+      "steps": [
+        "先查看官方模型服务价格页，确认目标 KAT 模型仍显示“免费”；免费状态可能变化。",
+        "在万擎控制台的 API Key 管理创建密钥，并为目标模型创建在线推理点。",
+        "使用 OpenAI Chat Completions 兼容端点发送最小请求；同时查看费用中心，确认当前请求实际减免为 0。"
+      ],
+      "endpoint": "https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${WQ_API_KEY}",
+      "examples": {
+        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header 'Authorization: Bearer ${WQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+      },
+      "docsUrl": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+    },
+    "kicker": "CURRENT ¥0 MODELS",
+    "badges": [
+      "KAT FREE",
+      "OPENAI COMPATIBLE",
+      "CHECK BILLING"
+    ],
+    "freeSummary": "StreamLake 万擎官方价格表当前将 KAT-Coder-Air-V1 与 KAT-Coder-Exp-72B-1010 的输入、输出和缓存全部标为“免费”。",
+    "validitySummary": "当前价格表有效；官方未给出这两个免费价的统一结束日期",
+    "accessSummary": "账号 + 实名 + 万擎开通 + API Key / 推理点",
+    "checkedSummary": "2026-09-29 / StreamLake 官方价格 + 快速开始",
+    "title": "快手万擎 StreamLake · 当前 2 款 KAT API ¥0",
+    "why": "StreamLake 快手万擎官方模型服务价格页（2026-09-17 更新）当前把 KAT-Coder-Air-V1 和 KAT-Coder-Exp-72B-1010 的输入、输出、缓存写入和缓存命中都列为“免费”。官方计费 FAQ 同时说明平台存在“模型限时免费”机制，因此 FreeLLM 将其视为当前有效的限时免费价格，而不是承诺永久免费。",
+    "mechanism": "官方模型价格表中的当前 ¥0 / 免费模型价格，结合平台限时免费减免机制",
+    "validity": "以万擎实时价格表为准；官方未公开统一结束日期",
+    "access": "注册并实名 StreamLake，开通万擎，创建 API Key 与在线推理点",
+    "command": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H \"Authorization: Bearer $WQ_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+    "register": "https://www.streamlake.com/product/wanqing",
+    "registerLabel": "打开快手万擎",
+    "links": [
+      [
+        "模型服务价格",
+        "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      ],
+      [
+        "API 快速开始",
+        "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+      ],
+      [
+        "计费常见问题",
+        "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆 StreamLake / 快手万擎",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_free_models",
+      "amount": 2,
+      "unit": "models",
+      "period": "until provider changes current price table"
+    },
+    "quota": "当前价格表为免费；官方未在公开价格表给出统一 token 上限",
+    "renewal": "不是周期额度；免费价格是否持续取决于官方价格表和活动状态",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check StreamLake Vanchin terms and each model license",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",
+      "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv",
+      "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+    ],
+    "evidence": "StreamLake 官方模型价格页（2026-09-17 更新）列出 KAT-Coder-Air-V1 与 KAT-Coder-Exp-72B-1010 的输入、输出和缓存为“免费”；官方快速开始确认 OpenAI Chat Completions 兼容端点与 API Key；计费 FAQ 说明限时免费账单会自动减免为 0。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "万擎默认后付费，其他收费模型或免费活动结束后可能产生账单；使用前务必重新看价格页和费用中心，不要把这两款的当前免费状态外推到所有万擎模型。",
+    "freeModels": [
+      {
+        "model": "KAT-Coder-Air-V1",
+        "quota": "Current official price: Free input / output / cache",
+        "note": "No public end date in current price table; recheck before use.",
+        "sourceUrl": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      },
+      {
+        "model": "KAT-Coder-Exp-72B-1010",
+        "quota": "Current official price: Free input / output / cache",
+        "note": "Experimental model; current official price table still lists it as free.",
+        "sourceUrl": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验快手万擎当前免费 KAT 模型价格、API Key 获取流程、OpenAI 兼容端点和计费风险。",
+      "method": [
+        "读取官方模型服务价格表，确认两款 KAT 模型当前所有 token 计费项均为“免费”。",
+        "读取官方 API 快速开始和 API Key 管理文档，核对创建 Key、推理点和 OpenAI Chat Completions 端点。",
+        "读取官方计费 FAQ，确认限时免费账单减免和默认后付费的风险。",
+        "当前没有 StreamLake 登录态和 API Key，因此未进行真实生成和账单核验。"
+      ],
+      "result": "官方公开预检通过：两款 KAT 模型当前价格为免费，API 接入路径和计费风险均有官方文档支持。",
+      "limitations": "未验证真实账号能否立即创建这两款模型推理点、实际请求是否 0 元、限流/并发和免费活动结束时间。",
+      "evidence": [
+        {
+          "label": "万擎模型服务价格",
+          "url": "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn"
+        },
+        {
+          "label": "万擎 API 快速开始",
+          "url": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
+        },
+        {
+          "label": "万擎计费 FAQ",
+          "url": "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+        }
+      ]
+    }
+  },
+  {
+    "id": "ctyun-tokenhub-free-trial",
+    "order": 54,
+    "date": "2026-09-29",
+    "name": "China Telecom Xingchen TokenHub free model trial",
+    "providerMark": "CT",
+    "provider": "China Telecom Xingchen TokenHub",
+    "providerMeta": "天翼云 · 星辰 TokenHub · China",
+    "model": "Supported preset models",
+    "modelMeta": "OpenAI-compatible · per-model free experience",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在星辰 TokenHub 为支持免费体验的模型领取 50 万 Tokens / 14 天额度，并通过 APP Key 调用",
+      "prerequisites": [
+        "天翼云账号",
+        "已进入星辰 TokenHub 控制台",
+        "已创建服务组与 APP Key"
+      ],
+      "steps": [
+        "在在线推理 / 预置服务中选择支持免费体验的模型，点击“开启免费体验”。",
+        "强烈建议在领取弹窗勾选“免费额度耗尽或过期后，自动关闭服务”，避免自动转按量计费。",
+        "在 APP Key 管理创建服务组并获取 APP Key，然后调用大陆 OpenAI 兼容端点。"
+      ],
+      "endpoint": "https://ai.ctaigw.cn/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${CTYUN_APP_KEY}",
+      "examples": {
+        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header 'Authorization: Bearer ${CTYUN_APP_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://www.ctyun.cn/document/11061839/11062271"
+    },
+    "kicker": "500K TOKENS / 14 DAYS",
+    "badges": [
+      "PER MODEL",
+      "14 DAYS",
+      "AUTO-CLOSE RECOMMENDED"
+    ],
+    "freeSummary": "平台升级后的官方规则：支持免费体验的模型赠送 500,000 Tokens 免费推理额度，自领取起 14 天有效。",
+    "validitySummary": "领取后 14 天 · 支持模型以控制台为准",
+    "accessSummary": "星辰 TokenHub + APP Key；建议开启免费额度耗尽自动关闭",
+    "checkedSummary": "2026-09-29 / 天翼云官方文档",
+    "title": "天翼云星辰 TokenHub · 支持模型 50 万 Tokens / 14 天",
+    "why": "天翼云 2026-09 的星辰 TokenHub v2.0 升级说明明确写明：支持免费体验的模型赠送 50 万 Tokens 免费推理额度，自领取日起 14 天有效。快速入门说明免费额度用完后可自动转按需计费，因此如果只想免费测试，应在开启免费体验时勾选“额度耗尽或到期后自动关闭服务”。",
+    "mechanism": "支持模型按模型领取免费体验额度；平台 v2.0 当前规则为 500,000 Tokens，14 天有效",
+    "validity": "自领取日起 14 天；模型是否支持免费体验以控制台为准",
+    "access": "天翼云星辰 TokenHub 控制台领取免费体验，创建 APP Key 后调用 OpenAI 兼容 API",
+    "command": "curl https://ai.ctaigw.cn/v1/chat/completions -H \"Authorization: Bearer $CTYUN_APP_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://www.ctyun.cn/",
+    "registerLabel": "打开天翼云星辰 TokenHub",
+    "links": [
+      [
+        "v2.0 升级与免费额度说明",
+        "https://www.ctyun.cn/document/11061839/11097250"
+      ],
+      [
+        "快速入门",
+        "https://www.ctyun.cn/document/11061839/11062271"
+      ],
+      [
+        "计费 FAQ",
+        "https://www.ctyun.cn/document/11061839/11062379"
+      ],
+      [
+        "OpenAI 兼容 Chat API",
+        "https://www.ctyun.cn/document/11061839/11099156"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆端点；全球模型另有美洲 / 欧洲 / 亚洲分区端点",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "per_supported_model_trial",
+      "amount": 500000,
+      "unit": "tokens",
+      "period": "14 days from claim"
+    },
+    "quota": "500,000 Tokens for each supported free-experience model under current v2.0 policy; exact eligible models are dynamic",
+    "renewal": "一次领取窗口；到期或用尽后不自动刷新，可能转按量计费",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check China Telecom Cloud and model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.ctyun.cn/document/11061839/11097250",
+      "https://www.ctyun.cn/document/11061839/11062271",
+      "https://www.ctyun.cn/document/11061839/11062379",
+      "https://www.ctyun.cn/document/11061839/11099156"
+    ],
+    "evidence": "天翼云官方 v2.0 升级说明明确支持免费体验的模型获赠 50 万 Tokens、14 天有效；官方快速入门和计费 FAQ 说明免费体验的领取、主子账号共享、到期/耗尽后的按量计费以及自动关闭选项；OpenAI 兼容 API 文档确认大陆端点 https://ai.ctaigw.cn/v1/chat/completions 与 Bearer APP Key 鉴权。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "示例中的 GLM-5.1 仅用于说明官方 OpenAI 兼容调用格式，不代表它一定属于当前可领取免费体验的模型；免费模型资格必须看控制台。未勾选自动关闭时，到期/耗尽后可能继续按量出账。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验天翼云星辰 TokenHub v2.0 免费额度、14 天有效期、自动关闭选项和 OpenAI 兼容 API。",
+      "method": [
+        "读取平台升级与用户割接说明，确认当前 50 万 Tokens / 14 天免费额度规则。",
+        "读取在线推理快速入门与计费 FAQ，确认免费体验领取、到期/耗尽后的按量计费以及自动关闭开关。",
+        "读取 OpenAI 兼容 Chat API 文档，确认大陆端点与 Bearer APP Key 鉴权。",
+        "当前没有天翼云登录态与 APP Key，因此未验证具体账号可领取模型集合和真实生成。"
+      ],
+      "result": "官方公开预检通过：当前 v2.0 文档明确 500,000 Tokens / 14 天，且提供避免超额计费的自动关闭选项和 OpenAI 兼容调用路径。",
+      "limitations": "未验证登录后模型列表、每个模型的领取按钮、真实额度到账、真实响应、限流和全球分区端点的账户权限。",
+      "evidence": [
+        {
+          "label": "星辰 TokenHub v2.0 升级说明",
+          "url": "https://www.ctyun.cn/document/11061839/11097250"
+        },
+        {
+          "label": "星辰 TokenHub 快速入门",
+          "url": "https://www.ctyun.cn/document/11061839/11062271"
+        },
+        {
+          "label": "OpenAI 兼容 Chat API",
+          "url": "https://www.ctyun.cn/document/11061839/11099156"
+        }
+      ]
+    }
+  },
+  {
+    "id": "zhipu-bigmodel-new-user-20m",
+    "order": 55,
+    "date": "2026-09-29",
+    "name": "Zhipu BigModel new-user 20M-token trial",
+    "providerMark": "ZP",
+    "provider": "Zhipu BigModel",
+    "providerMeta": "智谱 AI 开放平台 · China",
+    "model": "GLM API models covered by the new-user resource pack",
+    "modelMeta": "BigModel API · resource-pack trial",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "注册智谱 BigModel 新用户领取 2,000 万 Tokens 体验包，创建 API Key 后调用 GLM API",
+      "prerequisites": [
+        "智谱 BigModel 账号",
+        "新用户资格",
+        "已创建 API Key"
+      ],
+      "steps": [
+        "打开智谱 BigModel 官方登录/注册页，确认新用户 20,000,000 Tokens 体验包权益。",
+        "登录后在资源包页面确认体验包的模型适用范围和到期时间，再创建 API Key。",
+        "使用 BigModel OpenAI 兼容接口发送最小请求，并核对资源包扣减。"
+      ],
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ZHIPU_API_KEY}",
+      "examples": {
+        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header 'Authorization: Bearer ${ZHIPU_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://docs.bigmodel.cn/"
+    },
+    "kicker": "20M TOKENS NEW USER",
+    "badges": [
+      "20M TOKENS",
+      "NEW USER",
+      "GLM API"
+    ],
+    "freeSummary": "智谱 BigModel 官方注册页当前标注：新用户免费赠送专享 20,000,000 Tokens 体验包。",
+    "validitySummary": "体验包有效期与模型适用范围以登录后资源包页为准",
+    "accessSummary": "BigModel 注册 + API Key；资源包范围需登录确认",
+    "checkedSummary": "2026-09-29 / 智谱官方注册页 + 活动页",
+    "title": "智谱 BigModel · 新用户 2000 万 Tokens 体验包",
+    "why": "智谱 BigModel 官方登录/注册页面当前明确显示“新用户免费赠送专享 20.00million tokens体验包”，官方活动页也显示“新用户注册得 2000万 Tokens”。公开页面没有完整展开当前资源包的模型覆盖和统一到期时间，因此 FreeLLM 只确认总体验包规模，不把它写成所有 GLM 模型永久免费。",
+    "mechanism": "BigModel 新用户一次性 20,000,000 Tokens 体验资源包",
+    "validity": "以登录后资源包的到期时间和模型适用范围为准",
+    "access": "注册 BigModel，领取新用户体验资源包并创建平台 API Key",
+    "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer $ZHIPU_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://open.bigmodel.cn/console",
+    "registerLabel": "打开智谱 BigModel",
+    "links": [
+      [
+        "BigModel 注册页",
+        "https://open.bigmodel.cn/console"
+      ],
+      [
+        "新用户体验活动",
+        "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
+      ],
+      [
+        "智谱开放文档",
+        "https://docs.bigmodel.cn/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆 BigModel 开放平台",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_resource_pack",
+      "amount": 20000000,
+      "unit": "tokens",
+      "period": null
+    },
+    "quota": "20,000,000 Tokens new-user trial pack; exact model split and expiry are account/resource-pack specific",
+    "renewal": "一次性新用户资源包；不按月刷新",
+    "phoneRequired": "yes",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Zhipu BigModel and each model's terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://open.bigmodel.cn/console",
+      "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+      "https://docs.bigmodel.cn/"
+    ],
+    "evidence": "智谱官方开放平台注册页当前显示“新用户免费赠送专享 20.00million tokens体验包”，官方新用户活动页也明确“新用户注册得 2000万 Tokens”。因此可确认新用户体验包存在；具体模型拆分与有效期仍需登录后查看资源包。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "不采用第三方“永久免费 GLM-4-Flash / 30 并发”等说法作为本条依据；本条只记录官方页面可直接确认的 2000 万 Tokens 新用户体验包。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验智谱 BigModel 当前新用户 2000 万 Tokens 体验包及标准 API 接入入口。",
+      "method": [
+        "读取官方 BigModel 登录/注册页，确认新用户 20.00million tokens 体验包文案。",
+        "读取官方新用户活动页，交叉确认新用户注册得 2000 万 Tokens。",
+        "核对官方开放文档入口；当前没有登录态账号和 API Key，因此不验证资源包模型拆分、到期时间和真实请求。"
+      ],
+      "result": "官方公开预检通过：BigModel 新用户 20,000,000 Tokens 体验包存在，且官方活动页与注册页口径一致。",
+      "limitations": "未登录实际账号，未验证资源包具体由哪些模型额度组成、有效期、是否要求实名、真实模型调用和超额后的扣费路径。",
+      "evidence": [
+        {
+          "label": "智谱 BigModel 注册页",
+          "url": "https://open.bigmodel.cn/console"
+        },
+        {
+          "label": "智谱新用户活动页",
+          "url": "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
+        }
+      ]
+    }
+  },
+  {
+    "id": "xiaomi-mimo-v2-5-tts-free",
+    "order": 56,
+    "date": "2026-09-29",
+    "name": "Xiaomi MiMo V2.5 TTS limited-free API",
+    "providerMark": "米",
+    "provider": "Xiaomi MiMo",
+    "providerMeta": "Xiaomi MiMo Open Platform · China / Global",
+    "model": "mimo-v2.5-tts · mimo-v2.5-tts-voicedesign · mimo-v2.5-tts-voiceclone",
+    "modelMeta": "TTS · OpenAI-compatible Chat Completions · RPM 100 · TPM 10M",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 Xiaomi MiMo 开放平台创建 API Key，调用当前限时免费的 MiMo-V2.5-TTS 三款语音合成 API",
+      "prerequisites": [
+        "Xiaomi MiMo Open Platform account",
+        "MiMo API Key"
+      ],
+      "steps": [
+        "打开 MiMo 官方定价或 TTS 模型页，确认三款 V2.5-TTS 仍标记“限时免费”。",
+        "在 MiMo 控制台创建普通 API Key，并保存为 MIMO_API_KEY。",
+        "使用 OpenAI 兼容 https://api.xiaomimimo.com/v1 接口调用 TTS 模型；返回音频为 base64 数据，测试后再次核对费用/用量页面。"
+      ],
+      "endpoint": "https://api.xiaomimimo.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${MIMO_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header 'Authorization: Bearer ${MIMO_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
+      },
+      "docsUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+    },
+    "kicker": "3 TTS APIS FREE NOW",
+    "badges": [
+      "LIMITED FREE",
+      "OPENAI COMPATIBLE",
+      "RPM 100"
+    ],
+    "freeSummary": "MiMo 官方定价与模型页当前将 V2.5-TTS、VoiceDesign、VoiceClone 三款 API 标为限时免费。",
+    "validitySummary": "限时免费 · 官方未公布统一结束日期",
+    "accessSummary": "MiMo account + API Key · China / overseas pricing pages both mark TTS free",
+    "checkedSummary": "2026-09-29 / official Xiaomi MiMo release + pricing + model pages",
+    "title": "Xiaomi MiMo · V2.5 TTS 三款 API 当前限时免费",
+    "why": "Xiaomi MiMo 官方 V2.5-TTS 发布公告、按量定价页和模型详情页都明确写明三款 TTS API 当前“限时免费”。官方模型页同时给出 OpenAI 兼容接入、Base URL、RPM 100 与 TPM 10M。免费没有公布固定结束时间，因此必须按限时活动处理，不能标为永久免费。",
+    "mechanism": "Three MiMo V2.5 TTS APIs are temporarily priced at zero on the official Open Platform",
+    "validity": "Limited-time free; no public end date, recheck the official pricing/model page before use",
+    "access": "Create a Xiaomi MiMo Open Platform API Key and call the OpenAI-compatible API",
+    "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer $MIMO_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+    "register": "https://platform.xiaomimimo.com/",
+    "registerLabel": "Open Xiaomi MiMo Platform",
+    "links": [
+      [
+        "V2.5-TTS release",
+        "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+      ],
+      [
+        "PAYG pricing",
+        "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go"
+      ],
+      [
+        "MiMo-V2.5-TTS model page",
+        "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+      ],
+      [
+        "VoiceDesign model page",
+        "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Official Xiaomi MiMo API; domestic and overseas pricing both list the TTS series as limited-time free",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_zero_price_models",
+      "amount": 3,
+      "unit": "models",
+      "period": "until Xiaomi changes pricing"
+    },
+    "quota": "No public free-token/seconds cap published; model page currently lists RPM 100 and TPM 10,000,000",
+    "renewal": "Not a recurring grant; free price persists only while Xiaomi marks the models as limited-time free",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Xiaomi MiMo terms and voice-cloning restrictions",
+    "limits": {
+      "requestsPerMinute": 100,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null,
+      "tokensPerMinute": 10000000
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release",
+      "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go",
+      "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts",
+      "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+    ],
+    "evidence": "Xiaomi MiMo 官方 V2.5-TTS 发布页明确三款 TTS 模型均在开放平台限时免费；官方按量定价页在国内与海外价格表中均将三款 TTS 标为“限时免费”；官方模型页给出 API Key、OpenAI 兼容 Base URL、RPM 100 和 TPM 10M。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "VoiceClone 涉及声音权利与授权风险，使用前需确认自己拥有相应声音素材的合法授权。免费结束时间未公开，必须在调用前重新核官方价格页。",
+    "freeModels": [
+      {
+        "model": "mimo-v2.5-tts",
+        "quota": "Current official price: limited-time free",
+        "note": "Built-in premium voices; RPM 100, TPM 10M.",
+        "sourceUrl": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+      },
+      {
+        "model": "mimo-v2.5-tts-voicedesign",
+        "quota": "Current official price: limited-time free",
+        "note": "Voice design from natural-language descriptions.",
+        "sourceUrl": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts-voicedesign"
+      },
+      {
+        "model": "mimo-v2.5-tts-voiceclone",
+        "quota": "Current official price: limited-time free",
+        "note": "Voice cloning; ensure voice/sample rights and consent.",
+        "sourceUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Xiaomi MiMo V2.5-TTS 三款开放 API 的当前限时免费状态、Base URL 和限流信息。",
+      "method": [
+        "读取 Xiaomi MiMo 官方 V2.5-TTS 发布公告，确认三款模型均在开放平台限时免费。",
+        "读取官方 PAYG 定价页，确认国内和海外 TTS 系列当前均标记限时免费。",
+        "读取官方 MiMo-V2.5-TTS / VoiceDesign 模型页，核对 OpenAI 兼容 Base URL、API Key、RPM 100 与 TPM 10M。",
+        "当前没有可用 MiMo API Key，因此没有实际生成音频或验证账单为 0。"
+      ],
+      "result": "官方公开预检通过：三款 V2.5-TTS API 当前均为限时免费，OpenAI 兼容接入和 RPM/TPM 规格可由官方页面确认。",
+      "limitations": "未使用真实 MiMo API Key，未验证账号是否需要充值/实名、真实音频响应、实际账单、VoiceClone 素材上传流程和活动结束时间。",
+      "evidence": [
+        {
+          "label": "MiMo V2.5-TTS 发布公告",
+          "url": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
+        },
+        {
+          "label": "MiMo API 定价",
+          "url": "https://mimo.mi.com/docs/zh-CN/price/pay-as-you-go"
+        },
+        {
+          "label": "MiMo-V2.5-TTS 模型页",
+          "url": "https://mimo.mi.com/models/zh-CN/mimo-v2.5-tts"
+        }
+      ]
+    }
+  },
+  {
+    "id": "nvidia-nim-free-endpoints",
+    "order": 57,
+    "date": "2026-09-29",
+    "name": "NVIDIA NIM Free Endpoints",
+    "providerMark": "NV",
+    "provider": "NVIDIA NIM",
+    "providerMeta": "NVIDIA API Catalog · Developer Program",
+    "model": "38 current Free Endpoint models",
+    "modelMeta": "Cloud-hosted NIM APIs · dynamic model-level rate limits",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "加入免费的 NVIDIA Developer Program，在 build.nvidia.com 为当前标记 Free Endpoint 的 NIM 模型生成 API Key 并调用云端 API",
+      "prerequisites": [
+        "NVIDIA account",
+        "NVIDIA Developer Program access",
+        "NVIDIA API key"
+      ],
+      "steps": [
+        "打开 NVIDIA API Catalog，并使用 Free Endpoint 过滤器确认目标模型当前仍标记 Free Endpoint。",
+        "登录 NVIDIA 账号并加入免费的 NVIDIA Developer Program，在 API Catalog / settings 中生成 API Key。",
+        "打开目标模型 Integrate 页面复制其当前 endpoint 与模型 ID；不同 NIM 的 API 路径可能不同，不要手工猜 URL。",
+        "发送最小请求并观察模型级 rate limit；免费开发者访问的限流会随模型、场景和平台流量变化。"
+      ],
+      "endpoint": "https://integrate.api.nvidia.com/v1",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${NVIDIA_API_KEY}",
+      "examples": {
+        "curl": "Use the exact cURL / Python snippet shown on the selected model's Integrate tab at build.nvidia.com."
+      },
+      "docsUrl": "https://docs.api.nvidia.com/nim/docs/product"
+    },
+    "kicker": "38 FREE ENDPOINTS",
+    "badges": [
+      "FREE DEVELOPER ACCESS",
+      "38 ENDPOINTS",
+      "RATE LIMITED"
+    ],
+    "freeSummary": "NVIDIA API Catalog 当前显示 38 个 Free Endpoint；免费 NVIDIA Developer Program 可访问托管 NIM API endpoints。",
+    "validitySummary": "当前 Free Endpoint 标签有效；模型和限流可动态变化",
+    "accessSummary": "Free NVIDIA Developer Program + API Key · no card required",
+    "checkedSummary": "2026-09-29 / NVIDIA API Catalog + NIM product FAQ",
+    "title": "NVIDIA NIM · 当前 38 个 Free Endpoint",
+    "why": "NVIDIA 官方 API Catalog 当前显示 38 个 Free Endpoint，示例包括 DeepSeek V4.1 Flash、GLM-5.3、GLM-5.3-Flash 和 Kimi K3。NVIDIA NIM 官方 FAQ 同时明确：开发者可免费加入 NVIDIA Developer Program，并通过 build.nvidia.com 访问 NIM 云端 API endpoints。官方没有在公开 FAQ 中承诺统一固定的 token 赠额，因此 FreeLLM 不把论坛里的“1000 credits”写成正式额度，只记录官方可确认的免费开发者访问和动态限流。",
+    "mechanism": "Free NVIDIA Developer Program access to catalog models currently labeled Free Endpoint",
+    "validity": "While the model remains labeled Free Endpoint in NVIDIA API Catalog; availability and per-model rate limits can change",
+    "access": "Join the free NVIDIA Developer Program, generate an API key, then use the model's Integrate tab",
+    "command": "Open the selected model at https://build.nvidia.com/models and copy its current Integrate example; do not infer a generic endpoint for every NIM.",
+    "register": "https://build.nvidia.com/models",
+    "registerLabel": "Open NVIDIA API Catalog",
+    "links": [
+      [
+        "NVIDIA Free Endpoint catalog",
+        "https://build.nvidia.com/models"
+      ],
+      [
+        "NIM product FAQ",
+        "https://docs.api.nvidia.com/nim/docs/product"
+      ],
+      [
+        "API Catalog quickstart",
+        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+      ]
+    ],
+    "originCountry": "United States",
+    "availability": "Global NVIDIA Developer Program access subject to account / region restrictions",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "current_free_endpoints",
+      "amount": 38,
+      "unit": "models",
+      "period": "while labeled Free Endpoint"
+    },
+    "quota": "No single official public token quota; free developer access is rate-limited per model/use-case/platform load",
+    "renewal": "No periodic token grant documented in the public FAQ; Free Endpoint membership and rate limits can change",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Developer Program access is for research, application development and experimentation; enterprise production use should review NVIDIA AI Enterprise terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://build.nvidia.com/models",
+      "https://docs.api.nvidia.com/nim/docs/product",
+      "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+    ],
+    "evidence": "NVIDIA API Catalog showed 38 models under the Free Endpoint filter on 2026-09-29. The official NIM FAQ says developers can join the free NVIDIA Developer Program and access NIM API endpoints on build.nvidia.com. Public official docs do not define one universal credits allowance, so no fixed credits value is claimed.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Do not publish forum-reported 1,000 / 5,000 credit numbers as official quota. Always re-check the target model's Free Endpoint label and current Integrate snippet before use.",
+    "freeModels": [
+      {
+        "model": "deepseek-v4.1-flash",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "glm-5-3",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "glm-5-3-flash",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "kimi-k3",
+        "quota": "Free Endpoint",
+        "note": "Downloadable + Free Endpoint in current NVIDIA API Catalog.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 NVIDIA NIM 当前 Free Endpoint 数量、免费开发者访问资格和云端 API 接入方式。",
+      "method": [
+        "读取 NVIDIA API Catalog，确认 Free Endpoint 过滤器当前显示 38 个模型，并抽查 DeepSeek V4.1 Flash、GLM-5.3、GLM-5.3-Flash、Kimi K3。",
+        "读取 NVIDIA NIM 官方 FAQ，确认 NVIDIA Developer Program 免费加入且包含 build.nvidia.com 云端 NIM endpoints 访问。",
+        "读取 API Catalog Quickstart，确认使用 API Key 和模型 Integrate 页面调用托管 NIM。",
+        "当前未登录 NVIDIA 账号，因此未创建真实 API Key，也未实测特定 Free Endpoint 的 200 响应与当前 rate limit。"
+      ],
+      "result": "官方公开预检通过：Free Endpoint 当前为 38 个，免费 Developer Program 包含云端 NIM API 访问；具体模型级限流动态变化。",
+      "limitations": "未使用真实 NVIDIA API Key；未验证账户默认 credits 显示、具体模型的当前 RPM、真实响应延迟和区域限制。",
+      "evidence": [
+        {
+          "label": "NVIDIA API Catalog",
+          "url": "https://build.nvidia.com/models",
+          "note": "38 current Free Endpoint models"
+        },
+        {
+          "label": "NIM General FAQ",
+          "url": "https://docs.api.nvidia.com/nim/docs/product",
+          "note": "free Developer Program access"
+        },
+        {
+          "label": "API Catalog Quickstart",
+          "url": "https://docs.api.nvidia.com/nim/re/docs/api-quickstart",
+          "note": "cloud endpoint integration"
+        }
+      ]
+    }
+  },
+  {
+    "id": "aliyun-decision-model-preview-free",
+    "order": 58,
+    "date": "2026-09-29",
+    "name": "Alibaba Cloud decision-model-preview limited-free API",
+    "providerMark": "阿里",
+    "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
+    "providerMeta": "Model Studio · Beijing + Singapore",
+    "model": "decision-model-preview",
+    "modelMeta": "System One decision API · 65,536 context · 1,200 RPM · 2M TPM",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用百炼 decision-model-preview 的 System One API，在北京或新加坡地域进行分类、是非判断和评分；当前模型价格为限时免费",
+      "prerequisites": [
+        "Alibaba Cloud Model Studio account",
+        "DASHSCOPE_API_KEY",
+        "Workspace ID"
+      ],
+      "steps": [
+        "打开 decision-model-preview 官方模型页，确认北京/新加坡价格仍显示“限时免费”。",
+        "在百炼创建 API Key，并记录业务空间 Workspace ID。",
+        "按目标地域使用 /compatible-mode/v1/systemone endpoint，提交 state 与 choice / noul / score 类型问题。",
+        "调用前后检查模型价格页与账单，避免限免结束后继续请求。"
+      ],
+      "endpoint": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
+      "examples": {
+        "curl": "Use the official Decision Model API example and replace {WorkspaceId} with your Model Studio workspace ID."
+      },
+      "docsUrl": "https://help.aliyun.com/zh/model-studio/decision-model-api"
+    },
+    "kicker": "LIMITED-TIME FREE",
+    "badges": [
+      "BEIJING + SINGAPORE",
+      "1200 RPM",
+      "2M TPM"
+    ],
+    "freeSummary": "百炼官方模型页当前将 decision-model-preview 在北京和新加坡的调用价格都标为“限时免费”。",
+    "validitySummary": "限时免费 · 官方未公布统一结束日期",
+    "accessSummary": "Model Studio API Key + Workspace ID · Beijing / Singapore",
+    "checkedSummary": "2026-09-29 / official Alibaba model + API docs",
+    "title": "阿里云百炼 decision-model-preview · 北京/新加坡限时免费",
+    "why": "阿里云百炼官方 decision-model-preview 模型页在 2026-09-24 更新后明确显示：华北2（北京）和新加坡两地当前均“限时免费”，且限流为 1,200 RPM / 2,000,000 TPM。它不是文本生成模型，而是一次前向返回分类、是非判断、评分及概率/置信度的结构化决策 API，适合 Agent 路由、审核、工单分流和结果校验。",
+    "mechanism": "Current zero-price limited-time preview for decision-model-preview in Beijing and Singapore",
+    "validity": "Limited-time free; no public end date, recheck official model page before every production rollout",
+    "access": "Create Model Studio API Key and call the System One endpoint with your Workspace ID",
+    "command": "POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone with Authorization: Bearer $DASHSCOPE_API_KEY",
+    "register": "https://bailian.console.aliyun.com/",
+    "registerLabel": "Open Alibaba Model Studio",
+    "links": [
+      [
+        "decision-model-preview model page",
+        "https://help.aliyun.com/zh/model-studio/decision-model-preview"
+      ],
+      [
+        "Decision Model API",
+        "https://help.aliyun.com/zh/model-studio/decision-model-api"
+      ],
+      [
+        "Model release history",
+        "https://help.aliyun.com/zh/model-studio/newly-released-models"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "North China 2 (Beijing) and Singapore",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_zero_price_model",
+      "amount": 1,
+      "unit": "model",
+      "period": "until Alibaba changes the preview price"
+    },
+    "quota": "No free-token cap published on the model page; current service limit is 1,200 RPM and 2,000,000 TPM",
+    "renewal": "Not a recurring grant; free price lasts only during preview promotion",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Alibaba Cloud Model Studio terms; preview pricing can change",
+    "limits": {
+      "requestsPerMinute": 1200,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null,
+      "tokensPerMinute": 2000000
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://help.aliyun.com/zh/model-studio/decision-model-preview",
+      "https://help.aliyun.com/zh/model-studio/decision-model-api",
+      "https://help.aliyun.com/zh/model-studio/newly-released-models"
+    ],
+    "evidence": "Alibaba Cloud's official model page updated 2026-09-24 lists decision-model-preview as limited-time free in both Beijing and Singapore, with 1,200 RPM and 2,000,000 TPM. The official API page documents POST /compatible-mode/v1/systemone and Workspace-ID based endpoints.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "This is a structured decision model, not a general chat LLM. The model page explicitly says promotional pricing can differ from original pricing and directs users to the console for activity status; recheck before large-volume use.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 decision-model-preview 的当前限免状态、地域、限流与 System One API。",
+      "method": [
+        "读取阿里云百炼官方模型页，确认北京与新加坡当前均标“限时免费”，并核对 1,200 RPM / 2,000,000 TPM。",
+        "读取官方 Decision Model API，确认 POST /compatible-mode/v1/systemone 和 Workspace ID endpoint。",
+        "读取官方模型上下架页，确认模型于 2026-09-24 上线。",
+        "当前没有可用 DASHSCOPE_API_KEY / Workspace ID，因此未进行真实调用与账单验证。"
+      ],
+      "result": "官方公开预检通过：北京与新加坡当前限时免费，API 形式与限流均有官方文档。",
+      "limitations": "未使用真实百炼账户，不验证当前控制台活动结束时间、真实账单、Workspace 权限和实际响应。",
+      "evidence": [
+        {
+          "label": "decision-model-preview model page",
+          "url": "https://help.aliyun.com/zh/model-studio/decision-model-preview"
+        },
+        {
+          "label": "Decision Model API",
+          "url": "https://help.aliyun.com/zh/model-studio/decision-model-api"
+        }
+      ]
+    }
+  },
+  {
+    "id": "volcengine-ark-new-user-500k",
+    "order": 59,
+    "date": "2026-09-29",
+    "name": "Volcengine Ark new-user free inference quota",
+    "providerMark": "火",
+    "provider": "Volcengine Ark",
+    "providerMeta": "火山方舟 · China",
+    "model": "Supported Ark online inference models",
+    "modelMeta": "500K free Tokens · Safe Experience Mode",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "开通火山方舟新用户免费推理额度，并在安心体验模式下通过 OpenAI 兼容 v3 API 调用支持模型",
+      "prerequisites": [
+        "火山引擎账号",
+        "火山方舟新用户资格",
+        "ARK_API_KEY"
+      ],
+      "steps": [
+        "在方舟开通管理页确认账号仍可开启安心体验模式；该模式仅面向尚未开通过模型服务的新用户。",
+        "开启安心体验模式后，平台赠送的 500,000 Tokens 免费推理额度用尽时模型服务会自动暂停，避免继续产生模型推理费用。",
+        "在 API Key 管理创建 ARK_API_KEY；2026-09-17 之后新建的 ModelArk API Key 使用新版明文格式，但鉴权方式不变。",
+        "使用 https://ark.cn-beijing.volces.com/api/v3/chat/completions 发送最小请求，并在开通管理/费用中心检查免费额度消耗。"
+      ],
+      "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ARK_API_KEY}",
+      "examples": {
+        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+    },
+    "kicker": "500K TOKENS",
+    "badges": [
+      "NEW USER",
+      "SAFE MODE",
+      "AUTO PAUSE"
+    ],
+    "freeSummary": "火山方舟官方安心体验模式：新用户可使用平台赠送的 500,000 Tokens 免费推理额度；额度接近/耗尽后服务自动暂停，避免继续产生模型推理费用。",
+    "validitySummary": "新用户体验额度；安心体验模式关闭后无法重新开启",
+    "accessSummary": "Ark account + API Key · Beijing v3 OpenAI-compatible API",
+    "checkedSummary": "2026-09-29 / official Ark safe-experience + API docs",
+    "title": "火山方舟 · 新用户 50 万 Tokens + 安心体验模式",
+    "why": "火山方舟官方安心体验模式文档明确：平台为新用户提供 50 万 Tokens 免费推理额度，安心体验模式开启时只消耗这部分免费额度，达到边界后服务自动暂停；关闭安心体验模式后无法重新开启。免费额度仅抵扣模型推理 Token，不抵扣联网插件、知识库等附加费用。",
+    "mechanism": "New-user platform gift of 500,000 inference tokens with optional Safe Experience Mode that pauses model service at the free-quota boundary",
+    "validity": "New-user entitlement; Safe Experience Mode is available only before enabling model service and cannot be re-enabled after being turned off",
+    "access": "Create an Ark API Key and call the Beijing v3 OpenAI-compatible endpoint for supported models",
+    "command": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://console.volcengine.com/ark",
+    "registerLabel": "打开火山方舟控制台",
+    "links": [
+      [
+        "安心体验模式",
+        "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+      ],
+      [
+        "获取 API Key",
+        "https://docs.volcengine.com/docs/ark/api-key?lang=zh"
+      ],
+      [
+        "OpenAI 兼容 v3 说明",
+        "https://docs.volcengine.com/docs/82379/1355331"
+      ],
+      [
+        "ChatCompletions API Explorer",
+        "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "火山方舟中国大陆服务；安心体验支持模型以开通管理页面为准",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_account_quota",
+      "amount": 500000,
+      "unit": "tokens",
+      "period": "until exhausted"
+    },
+    "quota": "500,000 free inference Tokens at account level under Safe Experience Mode; model-level free-package display can lag actual API consumption",
+    "renewal": "One-time new-user free inference quota; no recurring refill documented",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Volcengine Ark and selected model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",
+      "https://docs.volcengine.com/docs/ark/api-key?lang=zh",
+      "https://docs.volcengine.com/docs/82379/1355331",
+      "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+    ],
+    "evidence": "火山方舟官方安心体验文档（最近更新 2026-08-13）明确平台赠送 50 万 Token 免费推理额度，并在安心体验模式下于额度耗尽时自动暂停服务；API Key 文档与 v3 文档确认 Bearer API Key 和 https://ark.cn-beijing.volces.com/api/v3/chat/completions OpenAI 兼容调用。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "安心体验只保护模型推理 Token 费用，联网插件、知识库等附加能力仍可能产生费用。安心体验模式关闭后无法重新开启。实际可用模型以控制台开通管理页为准。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验火山方舟新用户 50 万 Tokens、安心体验自动暂停与 OpenAI 兼容调用路径。",
+      "method": [
+        "读取官方安心体验模式文档，确认 50 万 Tokens、额度耗尽自动暂停、关闭后不可重新开启。",
+        "读取官方 API Key 文档，确认 ModelArk API Key 创建与 Bearer 鉴权。",
+        "读取官方 v3 / API Explorer，确认 ChatCompletions endpoint 与 OpenAI 协议兼容。",
+        "当前无登录态火山引擎账号和 ARK_API_KEY，因此未验证真实额度到账、支持模型集合和一次真实生成。"
+      ],
+      "result": "官方公开预检通过：50 万 Tokens、新用户安心体验自动暂停以及 v3 ChatCompletions 调用路径均有官方文档。",
+      "limitations": "未使用真实 Ark 账号/API Key，未验证账户是否仍满足安心体验开启条件、模型列表、实际剩余额度和附加插件账单。",
+      "evidence": [
+        {
+          "label": "安心体验模式",
+          "url": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+        },
+        {
+          "label": "Ark API Key",
+          "url": "https://docs.volcengine.com/docs/ark/api-key?lang=zh"
+        },
+        {
+          "label": "ChatCompletions API",
+          "url": "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+        }
+      ]
+    }
+  },
+  {
+    "id": "alibaba-model-studio-intl-free-quota",
+    "order": 60,
+    "date": "2026-09-29",
+    "name": "Alibaba Cloud Model Studio International new-user quota",
+    "providerMark": "ALI",
+    "provider": "Alibaba Cloud Model Studio International",
+    "providerMeta": "International site · Singapore region",
+    "model": "Eligible Model Studio Singapore-region models",
+    "modelMeta": "Singapore only · 90-day new-user quota",
+    "edition": "intl",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 Alibaba Cloud 国际站首次开通 Model Studio 新加坡地域，使用各模型新人免费额度",
+      "prerequisites": [
+        "Alibaba Cloud International account",
+        "Completed required account information",
+        "Singapore-region Model Studio API Key"
+      ],
+      "steps": [
+        "首次开通 Alibaba Cloud Model Studio 新加坡地域前，按国际站要求完善账户信息。",
+        "开通后在免费额度页面查看各模型独立的新人免费额度和 90 天到期时间。",
+        "如需避免自动转 PAYG，手动开启 Free Quota Only；国际站文档明确该开关默认关闭。",
+        "使用新加坡地域 Model Studio endpoint 与 API Key 调用支持免费额度的模型。"
+      ],
+      "endpoint": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
+      "examples": {
+        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+    },
+    "kicker": "SINGAPORE NEW USER",
+    "badges": [
+      "90 DAYS",
+      "INTL",
+      "FREE-QUOTA-ONLY"
+    ],
+    "freeSummary": "国际站：首次开通 Model Studio 新加坡地域后，平台自动发放各模型新人免费额度；仅新加坡地域享该免费额度，其他国际地域无此新人额度。",
+    "validitySummary": "Singapore region · 90 days",
+    "accessSummary": "Alibaba Cloud International account + required account information + Singapore API Key",
+    "checkedSummary": "2026-09-29 / official Alibaba Cloud International free-quota docs",
+    "title": "Alibaba Cloud Model Studio 国际站 · 新加坡新人免费额度",
+    "why": "Alibaba Cloud 国际站官方文档 2026-09-22 更新明确：首次开通 Model Studio 新加坡地域时，平台自动发放各模型新人免费额度；仅新加坡地域模型享免费额度；自 9 月 8 日起新开通用户额度有效期为 90 天。9 月 15 日起需先完善账户信息，且 Free Quota Only 默认关闭，若不手动开启，额度耗尽后会自动转 PAYG。",
+    "mechanism": "Singapore-region new-user per-model free quota on Alibaba Cloud International",
+    "validity": "90 days from Model Studio activation, model release, or approval date, whichever is later",
+    "access": "Complete required international-account information, activate Singapore-region Model Studio, create API Key, and optionally enable Free Quota Only",
+    "command": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://modelstudio.console.alibabacloud.com/",
+    "registerLabel": "Open Alibaba Cloud Model Studio",
+    "links": [
+      [
+        "International free quota rules",
+        "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+      ],
+      [
+        "90-day validity notice",
+        "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Alibaba Cloud International: Singapore region only for this new-user quota",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": null,
+      "unit": "model-specific quota",
+      "period": "90 days"
+    },
+    "quota": "Per-model new-user quota; exact amounts differ by model and are shown in the international Model Studio pricing/console",
+    "renewal": "One-time new-user quota; not replenished after expiry",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Alibaba Cloud Model Studio and model-specific terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+    ],
+    "evidence": "Alibaba Cloud International official docs updated Sep 2026 state that only Singapore-region models receive the new-user free quota, valid for 90 days for newly activated users; Free Quota Only is disabled by default and can be enabled to prevent automatic PAYG after exhaustion.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Do not merge this policy with the China-site Beijing quota. They are different editions/accounts/regions. Exact per-model quota amounts must be read from the international pricing/console.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Alibaba Cloud International 新加坡地域新人免费额度、90 天有效期和 Free Quota Only 规则。",
+      "method": [
+        "读取 Alibaba Cloud International 官方新人免费额度页面，确认仅新加坡地域享额度。",
+        "读取官方有效期调整通知，确认 9 月 8 日后新开通用户为 90 天。",
+        "确认 9 月 15 日后开通前需完善账户信息，Free Quota Only 默认关闭。",
+        "当前无国际站登录态与 API Key，因此未验证具体模型额度到账与真实调用。"
+      ],
+      "result": "官方公开预检通过：新加坡地域新人免费额度、90 天有效期、信息完善前置与 Free Quota Only 规则均有官方文档。",
+      "limitations": "未登录国际站控制台，未验证单个模型的实际免费额度、API Key 创建、真实请求和账单。",
+      "evidence": [
+        {
+          "label": "International new-user free quota",
+          "url": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+        },
+        {
+          "label": "International 90-day validity notice",
+          "url": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
         }
       ]
     }

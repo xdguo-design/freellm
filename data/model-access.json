@@ -1,5 +1,59 @@
 [
   {
+    "modelId": "puter/mimo-v2-6-flash",
+    "providerId": "puter",
+    "registrationProfileId": "puter-ai",
+    "modelSearchName": "xiaomi/mimo-v2.6-flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free Puter account includes an AI allowance; exact allowance is account-dependent and not hard-coded.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "partial",
+    "notes": "官方页面确认可在浏览器 Playground 免费试用，且 Puter.js 无需开发者自备 API Key；真实登录态生成仍待补测。"
+  },
+  {
+    "modelId": "opencode/mimo-v2-6-flash-free",
+    "providerId": "opencode",
+    "registrationProfileId": "opencode-api",
+    "modelSearchName": "mimo-v2.6-flash-free",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/zen/v1/models"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "verified",
+    "notes": "2026-09-23 已从公开 /v1/models 目录确认 mimo-v2.6-flash-free 存在；Zen 定价表将其 input/output/cache 标为 Free，并注明限时免费。"
+  },
+  {
+    "modelId": "xiaomi-mimo/mimo-v2-6-flash",
+    "providerId": "xiaomi-mimo",
+    "registrationProfileId": "xiaomi-mimo-api",
+    "modelSearchName": "MiMo-V2.6-Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+      "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "verified",
+    "notes": "官方 API：1M context、128K max output、100 RPM、10M TPM；API 为付费。OpenCode Zen 另有有限期免费托管版本。"
+  },
+  {
     "modelId": "agnes-ai/agnes-2-5-flash",
     "providerId": "agnes-ai",
     "registrationProfileId": "agnes-ai-api",
@@ -3939,5 +3993,24 @@
     "lastVerifiedAt": "2026-09-22",
     "verificationStatus": "verified",
     "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "siliconflow/xing4-0-29b",
+    "providerId": "siliconflow",
+    "registrationProfileId": "siliconflow-api",
+    "modelSearchName": "XingChenAGI/Xing4.0-29B",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "SiliconFlow official price/model pages list input ¥0 / M Tokens and output ¥0 / M Tokens as of 2026-09-29; recheck before production use because hosted free pricing can change.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://siliconflow.cn/pricing",
+      "https://cloud.siliconflow.cn/models",
+      "https://github.com/XingChen-AGI/Xing4.0-29B-A4B"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "notes": "SiliconFlow 托管入口当前为 ¥0；模型由中国电信 XingChen-AGI 发布。模型权重与托管 API 是不同访问路径，本卡描述 SiliconFlow API 路径。"
   }
 ]

@@ -102,5 +102,50 @@
     "freeSummary": "截图标注上下文/额度：1M",
     "catalogStatus": "draft",
     "lastVerifiedAt": "2026-09-08"
+  },
+  {
+    "id": "360-api-new-user-50rmb",
+    "providerId": "360-ai",
+    "provider": "360智脑开放平台",
+    "model": "360gpt-pro / other 360 chat models (trial-credit coverage still pending account verification)",
+    "name": "360 API 新用户 50 元体验金",
+    "capabilities": [
+      "chat"
+    ],
+    "register": "https://ai.360.com/open",
+    "docsUrl": "https://ai.360.com/docs/quick-start",
+    "apiEndpoint": "https://api.360.cn/v1/chat/completions",
+    "freeSummary": "官方已分别确认：新注册 API 平台用户有 50 元体验金；平台存在标准 /v1/chat/completions 与 360gpt-pro。仍缺一条官方公开规则证明 50 元体验金可直接抵扣普通 chat 模型，因此继续留在 review queue。",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-29",
+    "sourceUrls": [
+      "https://ai.360.com/docs/8256390m0",
+      "https://ai.360.com/docs/413291998e0",
+      "https://ai.360.com/docs/518899372e0",
+      "https://ai.360.com/docs/models",
+      "https://ai.360.com/docs/quick-start"
+    ],
+    "reviewNote": "Official docs now close two sides of the loop (¥50 new-user trial exists; chat/completions with 360gpt-pro exists), but do not explicitly state that the same ¥50 trial balance pays for standard chat models. Keep unpublished until a logged-in account or billing rule confirms it."
+  },
+  {
+    "id": "scnet-doc-parsing-api-limited-free",
+    "providerId": "scnet",
+    "provider": "国家超算互联网 SCNet",
+    "model": "Document Parsing API",
+    "name": "SCNet 文档解析 API 限时免费",
+    "capabilities": [
+      "document_ai"
+    ],
+    "register": "https://www.scnet.cn/",
+    "docsUrl": "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/ocrdoc.html",
+    "apiEndpoint": null,
+    "freeSummary": "国家超算互联网官方 618 活动公告称“文档解析服务 API 调用免费用，不限次数”。公告未给明确结束日期，但当前模型服务总览仍以 PAYG/TokenPlan 为主，因此需登录控制台复核活动是否仍有效。",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-09-29",
+    "sourceUrls": [
+      "https://www1.scnet.cn/home/news/133595.html",
+      "https://www1.scnet.cn/ac/openapi/doc/2.0/moduleapi/tutorial/quickstart.html"
+    ],
+    "reviewNote": "Official campaign page states unlimited free Document Parsing API from the campaign start, but there is no current public pricing page confirming the promotion remains active on 2026-09-29. Verify in console before publishing."
   }
 ]

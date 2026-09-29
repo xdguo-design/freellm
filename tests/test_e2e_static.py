@@ -20,8 +20,8 @@ HOMEPAGE_CSS_PATH = ROOT / "css" / "homepage.css"
 HOMEPAGE_EDITORIAL_CSS_PATH = ROOT / "css" / "homepage-editorial.css"
 HOMEPAGE_JS_PATH = ROOT / "js" / "homepage.js"
 HOMEPAGE_I18N_JS_PATH = ROOT / "js" / "homepage-i18n.js"
-ASSET_PATH = ROOT / "design" / "assets" / "free-method-night-window.png"
 OFFERS_PATH = ROOT / "data" / "offers.json"
+OFFERS_RANKED_PATH = ROOT / "data" / "offers-ranked.json"
 OFFERS_BUNDLE_PATH = ROOT / "data" / "offers.js"
 SIGNALS_PATH = ROOT / "data" / "community-signals.json"
 ROBOTS_PATH = ROOT / "robots.txt"
@@ -34,6 +34,10 @@ SUBMIT_PATH = ROOT / "submit" / "index.html"
 
 def read_offers() -> list:
     return json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
+
+
+def read_ranked_offers() -> list:
+    return json.loads(OFFERS_RANKED_PATH.read_text(encoding="utf-8"))
 
 
 def read_signals() -> list:
@@ -66,8 +70,12 @@ class StaticContractTests(unittest.TestCase):
         ))
         self.runtime_source = self.html
 
-    def test_external_offer_bundle_matches_offers_json(self):
-        self.assertEqual(bundled_offer_data(), read_offers())
+    def test_external_offer_bundle_matches_ranked_runtime_json(self):
+        self.assertEqual(bundled_offer_data(), read_ranked_offers())
+        self.assertEqual(
+            {item["id"] for item in read_ranked_offers()},
+            {item["id"] for item in read_offers()},
+        )
 
     def test_page_has_required_data_hooks(self):
         for needle in (
@@ -348,8 +356,8 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>免费 AI 模型与 API，<span>每天核验</span></h1>', self.html)
-        self.assertIn("免费 LLM API、OpenAI 兼容接口、模型、IDE 与试用入口", self.html)
+        self.assertIn('<h1><span class="ref-kicker">FreeLLM</span>免费 AI 资源导航<br><em>发现、验证、持续更新</em></h1>', self.html)
+        self.assertIn("精选优质的免费 AI 模型、实用技能、工具与工作流", self.html)
         self.assertIn("<span>✓</span> 每日核验 · 官方来源", self.html)
 
     def test_homepage_includes_vercel_web_analytics(self):
@@ -437,8 +445,6 @@ class StaticContractTests(unittest.TestCase):
     def test_page_uses_free_method_categories(self):
         for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
-        self.assertTrue(ASSET_PATH.is_file())
-        self.assertGreater(ASSET_PATH.stat().st_size, 1000)
         catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
         for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
             self.assertNotIn(f'data-filter="{name}"', catalog_html)
@@ -663,8 +669,159 @@ class BrowserPageTests(unittest.TestCase):
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
         self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
-            self.assertEqual(page.locator(f'.fl-site-nav a[data-site-nav="{key}"]').count(), 1)
+            link = page.locator(f'.fl-site-nav a[data-site-nav="{key}"]')
+            self.assertEqual(link.count(), 1)
+            self.assertTrue(link.is_visible(), f"mobile nav item {key} must be visible without opening another menu")
 
+    def test_primary_pages_use_aurora_and_mobile_without_page_overflow(self):
+        routes = (
+            ("design/free-china-ai-index.html", ".catalog-app"),
+            ("models/", 'body[data-fl-section="models"]'),
+            ("skills/", ".skills-page"),
+            ("tools/", ".tools-page"),
+            ("skills/lab/", ".skill-lab-page"),
+            ("logs/", ".daily-log-dashboard"),
+            ("about/", 'body[data-fl-section="about"]'),
+        )
+        for width, height in ((1280, 900), (390, 844)):
+            for route, selector in routes:
+                with self.subTest(route=route, width=width):
+                    page = self.new_page()
+                    page.set_viewport_size({"width": width, "height": height})
+                    page.goto(f"{self.site.url}/{route}")
+                    page.wait_for_selector(selector)
+                    self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
+                    self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
+                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
+                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                    self.assertLessEqual(
+                        page.evaluate("document.documentElement.scrollWidth"),
+                        width + 4,
+                        f"{route} creates page-level horizontal overflow at {width}px",
+                    )
+                    page.close()
+    def test_visual_regression_equal_height_cards_and_home_hierarchy(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(f"{self.site.url}/design/free-china-ai-index.html")
+        page.wait_for_selector("#catalog-offer-rows .offer")
+
+        order = page.evaluate("""() => {
+            const ids = ['today-latest', 'catalog-offers', 'student-offers', 'catalog-compare'];
+            const nodes = {
+                'today-latest': document.querySelector('.today-latest'),
+                'catalog-offers': document.getElementById('catalog-offers'),
+                'student-offers': document.getElementById('student-offers'),
+                'catalog-compare': document.getElementById('catalog-compare'),
+            };
+            return ids.map(id => [id, Array.from(document.body.querySelectorAll('*')).indexOf(nodes[id])]);
+        }""")
+        positions = dict(order)
+        self.assertLess(positions["today-latest"], positions["catalog-offers"])
+        self.assertLess(positions["catalog-offers"], positions["student-offers"])
+        self.assertLess(positions["student-offers"], positions["catalog-compare"])
+        page.close()
+
+        checks = (
+            ("design/free-china-ai-index.html", "#catalog-offer-rows .offer:not(.hidden)"),
+            ("models/", ".models-overview-grid > article"),
+            ("skills/", "#skill-grid .skill-card:not([hidden])"),
+            ("tools/", "#tool-grid .tool-card:not([hidden])"),
+            ("skills/lab/", ".workflow-grid .workflow-card"),
+            ("logs/", ".log-stat-grid .log-stat-card"),
+            ("about/", ".stat-row .stat"),
+        )
+        for route, selector in checks:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 1440, "height": 1000})
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(selector)
+                heights = page.eval_on_selector_all(
+                    selector,
+                    """els => {
+                        const visible = els
+                          .filter(el => {
+                            const s = getComputedStyle(el);
+                            const r = el.getBoundingClientRect();
+                            return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 10 && r.height > 10;
+                          })
+                          .map(el => {
+                            const r = el.getBoundingClientRect();
+                            return { top: r.top, height: r.height };
+                          });
+                        if (!visible.length) return [];
+                        const firstTop = Math.min(...visible.map(item => item.top));
+                        return visible.filter(item => Math.abs(item.top - firstTop) <= 3).map(item => item.height);
+                    }""",
+                )
+                self.assertGreaterEqual(len(heights), 2, f"{route}: expected at least two cards in first desktop row")
+                self.assertLessEqual(
+                    max(heights) - min(heights),
+                    2.0,
+                    f"{route}: first-row card heights drifted: {heights}",
+                )
+                page.close()
+
+    def test_visual_regression_mobile_chrome_has_no_duplicate_headers_or_overlap(self):
+        routes = (
+            ("skills/", ".skills-page", ".skills-header"),
+            ("tools/", ".tools-page", ".tools-header"),
+        )
+        for route, root_selector, legacy_header in routes:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 390, "height": 844})
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(root_selector)
+                self.assertEqual(page.locator(legacy_header).evaluate("el => getComputedStyle(el).display"), "none")
+                rail = page.locator(".fl-site-rail").bounding_box()
+                hero = page.locator(".skills-hero, .tools-hero").first.bounding_box()
+                self.assertIsNotNone(rail)
+                self.assertIsNotNone(hero)
+                self.assertGreaterEqual(hero["y"], rail["y"] + rail["height"] + 6)
+                self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+                page.close()
+
+    def test_visual_regression_aurora_tokens_on_primary_pages(self):
+        routes = (
+            ("design/free-china-ai-index.html", ".today-latest"),
+            ("models/", ".models-overview"),
+            ("skills/", ".skills-hero"),
+            ("tools/", ".tools-hero"),
+            ("skills/lab/", ".lab-hero"),
+            ("logs/", ".log-hero"),
+            ("about/", 'body[data-fl-section="about"] > header'),
+        )
+        for route, surface in routes:
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.set_viewport_size({"width": 1280, "height": 900})
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector(surface)
+                tokens = page.evaluate("""() => {
+                    const s = getComputedStyle(document.body);
+                    return {
+                      page: s.getPropertyValue('--aurora-page').trim(),
+                      ink: s.getPropertyValue('--aurora-ink').trim(),
+                      blue: s.getPropertyValue('--aurora-blue').trim()
+                    };
+                }""")
+                self.assertEqual(tokens["page"].lower(), "#f5f9ff")
+                self.assertEqual(tokens["ink"].lower(), "#102745")
+                self.assertEqual(tokens["blue"].lower(), "#2f7de1")
+                page.close()
+    def test_theme_toggle_is_frozen_while_aurora_is_the_single_style(self):
+        for route in ("skills/", "tools/", "about/"):
+            with self.subTest(route=route):
+                page = self.new_page()
+                page.goto(f"{self.site.url}/{route}")
+                page.wait_for_selector("body[data-visual-style='aurora']")
+                self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                local_toggle = page.locator(".theme-toggle")
+                if local_toggle.count():
+                    self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                page.close()
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
@@ -714,7 +871,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), ide_count)
 
         page.fill("#catalog-search", "Qwen3")
-        self.assertEqual(self.visible_offers(page), 3)
+        self.assertEqual(self.visible_offers(page), 4)
 
         page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
@@ -725,6 +882,60 @@ class BrowserPageTests(unittest.TestCase):
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
         self.assertEqual(len(page.problems), 0, page.problems)
+
+    def test_homepage_aurora_phase_one_visual_contracts(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1440, "height": 1000})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
+        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        today = page.locator(".today-latest").bounding_box()
+        offers = page.locator("#catalog-offers").bounding_box()
+        student = page.locator("#student-offers").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(today)
+        self.assertIsNotNone(offers)
+        self.assertIsNotNone(student)
+        self.assertLess(hero["y"], today["y"])
+        self.assertLess(today["y"], offers["y"])
+        self.assertLess(offers["y"], student["y"])
+
+        heights = page.eval_on_selector_all(
+            "#catalog-offer-rows .offer:not(.hidden)",
+            """els => {
+              const items = els.slice(0, 6).map(el => {
+                const r = el.getBoundingClientRect();
+                return {top:r.top,height:r.height};
+              });
+              if (!items.length) return [];
+              const firstTop = items[0].top;
+              return items.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
+            }"""
+        )
+        self.assertGreaterEqual(len(heights), 2)
+        self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
+
+    def test_homepage_aurora_phase_one_mobile_layout(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+        for index in range(7):
+            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+
+        hero = page.locator(".catalog-hero").bounding_box()
+        search = page.locator(".hero-search").bounding_box()
+        self.assertIsNotNone(hero)
+        self.assertIsNotNone(search)
+        self.assertLessEqual(search["x"] + search["width"], 390)
+        self.assertGreaterEqual(search["x"], 0)
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
@@ -772,10 +983,14 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        self.assertEqual(self.visible_offers(page), len(read_offers()))
+        ranked = read_ranked_offers()
+        self.assertEqual(self.visible_offers(page), len(ranked))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
-        self.assertEqual(len(item_list), len(read_offers()))
-        self.assertEqual(item_list[3]["name"], "Baidu Comate · Auto-Free mode")
+        self.assertEqual(len(item_list), len(ranked))
+        self.assertEqual(
+            [entry["name"] for entry in item_list[:5]],
+            [item["title"] for item in ranked[:5]],
+        )
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_locale_query_switches_shell_language(self):
@@ -784,20 +999,20 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "中文")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
-        self.assertEqual(page.locator("[data-locale-toggle]").inner_text(), "EN")
+        self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-        page.click("[data-locale-toggle]")
+        page.click("[data-reference-locale-toggle]")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
         # Locale lives in local storage now; the URL stays canonical (no ?lang=) with its hash.
         self.assertNotIn("?lang=", page.url)
@@ -812,13 +1027,19 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
+            assets = Path(directory) / "assets" / "reference"
+            assets.mkdir(parents=True)
+            (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
@@ -827,11 +1048,11 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), len(read_offers()))
-            # 场景本身就是 data 两个 JSON 404；除此之外不允许任何失败请求或 JS 错误。
+            self.assertEqual(self.visible_offers(page), len(read_ranked_offers()))
+            # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
                 sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
-                ["community-signals.json", "offers.json"],
+                ["community-signals.json", "offers-ranked.json"],
             )
             self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
 
@@ -843,11 +1064,14 @@ class BrowserPageTests(unittest.TestCase):
             js = Path(directory) / "js"
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
             css.mkdir()
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))

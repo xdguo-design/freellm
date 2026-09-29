@@ -1,0 +1,18 @@
+body[data-visual-style="aurora"][data-fl-section="logs"] .daily-log-dashboard{background:transparent!important;}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-hero{
+  position:relative;overflow:hidden;min-height:280px;padding:clamp(34px,4.5vw,58px)!important;
+  border:1px solid var(--aurora-line)!important;border-radius:28px!important;
+  background:radial-gradient(circle at 88% 10%,rgba(83,205,168,.15),transparent 18rem),linear-gradient(135deg,#edf6ff,#fff 60%,#effcf8)!important;
+  box-shadow:var(--aurora-shadow)!important;
+}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-hero h1{font-size:clamp(42px,5vw,70px)!important;line-height:1.05!important;letter-spacing:-.045em!important;}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-hero-meta > div{border:1px solid var(--aurora-line)!important;border-radius:16px!important;background:rgba(255,255,255,.84)!important;}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-stat-grid,
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-snapshot-grid{align-items:stretch!important;gap:12px!important;}
+body[data-visual-style="aurora"][data-fl-section="logs"] :is(.log-stat-card,.log-snapshot-card,.log-panel,.log-snapshot-panel,.log-day,.log-event-panel,.log-new-card,.log-offline-card){
+  border:1px solid var(--aurora-line)!important;border-radius:18px!important;background:rgba(255,255,255,.9)!important;box-shadow:none!important;
+}
+body[data-visual-style="aurora"][data-fl-section="logs"] :is(.log-stat-card,.log-snapshot-card){height:100%!important;}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-date-nav{gap:8px!important;overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none;}
+body[data-visual-style="aurora"][data-fl-section="logs"] .log-date-link{flex:0 0 auto;border-radius:999px!important;border-color:var(--aurora-line)!important;background:#f8fbff!important;}
+@media(max-width:700px){body[data-visual-style="aurora"][data-fl-section="logs"] .log-hero{min-height:0;padding:24px 18px!important;border-radius:22px!important;}}

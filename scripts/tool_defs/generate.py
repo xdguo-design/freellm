@@ -485,7 +485,7 @@ var fields = {
   title: T.input('FreeLLM - 免费 AI 资源导航', { class: 'grow' }),
   desc: T.input('精选免费 AI 资源、模型与工具', { class: 'grow' }),
   url: T.input('https://freellm.top', { class: 'grow mono' }),
-  img: T.input('/freellm-01-hero.png', { class: 'grow mono' }),
+  img: T.input('/freellm-06-faq.png', { class: 'grow mono' }),
   site: T.input('FreeLLM', { class: 'grow' }),
   type: T.select([{value:'website',label:'website'},{value:'article',label:'article'}],'website')
 };

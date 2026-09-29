@@ -40,7 +40,7 @@
     var themeLink = document.createElement('link');
     themeLink.id = 'freellm-site-theme';
     themeLink.rel = 'stylesheet';
-    themeLink.href = '/css/freellm-pastel-ui.css?v=20260921b';
+    themeLink.href = '/css/freellm-pastel-ui.css?v=20260923b';
     document.head.appendChild(themeLink);
 
     function sectionFor(path) {

@@ -1,0 +1,89 @@
+/*
+ * FreeLLM Aurora — shared page system
+ * Used by Models / Skills / Tools / Workflows / Updates / About.
+ */
+html.fl-pastel-ui body[data-visual-style="aurora"],
+html.fl-pastel-ui[data-theme="dark"] body[data-visual-style="aurora"]{
+  --aurora-page:#f5f9ff;
+  --aurora-surface:#ffffff;
+  --aurora-surface-soft:#f1f7ff;
+  --aurora-surface-mint:#effcf8;
+  --aurora-surface-pink:#fff4f8;
+  --aurora-ink:#102745;
+  --aurora-ink-2:#526a86;
+  --aurora-ink-3:#7990aa;
+  --aurora-line:#d8e6f4;
+  --aurora-line-strong:#b8d2ea;
+  --aurora-blue:#2f7de1;
+  --aurora-blue-deep:#195fae;
+  --aurora-mint:#53cda8;
+  --aurora-violet:#8a6df0;
+  --aurora-shadow:0 18px 48px rgba(45,86,132,.10);
+  --aurora-shadow-hover:0 24px 60px rgba(45,86,132,.15);
+  --aurora-radius-lg:28px;
+  --aurora-radius-md:18px;
+  --aurora-radius-sm:12px;
+  --fl-canvas:var(--aurora-page);
+  --fl-surface-solid:var(--aurora-surface);
+  --fl-surface-blue:var(--aurora-surface-soft);
+  --fl-surface-pink:var(--aurora-surface-pink);
+  --fl-surface-mint:var(--aurora-surface-mint);
+  --fl-ink:var(--aurora-ink);
+  --fl-ink-2:var(--aurora-ink-2);
+  --fl-ink-3:var(--aurora-ink-3);
+  --fl-line:var(--aurora-line);
+  --fl-line-strong:var(--aurora-line-strong);
+  --fl-blue:var(--aurora-blue);
+  --fl-blue-deep:var(--aurora-blue-deep);
+  --fl-mint:var(--aurora-mint);
+  --fl-shadow:var(--aurora-shadow);
+  color:var(--aurora-ink)!important;
+  background:
+    radial-gradient(circle at 72% -8%,rgba(92,164,255,.20),transparent 32rem),
+    radial-gradient(circle at 104% 28%,rgba(155,113,246,.11),transparent 28rem),
+    linear-gradient(180deg,#f8fbff 0%,#f3f8ff 50%,#f8fbff 100%)!important;
+}
+body[data-visual-style="aurora"] .fl-site-theme-toggle,
+body[data-visual-style="aurora"] .theme-toggle{display:none!important;}
+html.fl-pastel-ui body[data-visual-style="aurora"] .fl-site-rail,
+html.fl-pastel-ui[data-theme="dark"] body[data-visual-style="aurora"] .fl-site-rail{
+  color:#d8e9f9!important;
+  border:1px solid #173857!important;
+  background:radial-gradient(circle at 34% 80%,rgba(53,143,237,.20),transparent 12rem),linear-gradient(180deg,#07172d 0%,#061326 58%,#081b33 100%)!important;
+  box-shadow:18px 0 54px rgba(19,49,84,.16)!important;
+}
+body[data-visual-style="aurora"] .fl-site-brand-copy strong{color:#f7fbff!important;}
+body[data-visual-style="aurora"] .fl-site-brand-copy small,
+body[data-visual-style="aurora"] .fl-site-rail-note{color:#98b5cf!important;}
+body[data-visual-style="aurora"] .fl-site-brand-mark{
+  color:#c8e6ff!important;border-color:#2d577e!important;
+  background:linear-gradient(145deg,#123557,#0a223f)!important;
+}
+body[data-visual-style="aurora"] .fl-site-nav a{color:#a9c3db!important;}
+body[data-visual-style="aurora"] .fl-site-nav a:hover{color:#fff!important;background:rgba(48,124,199,.18)!important;}
+body[data-visual-style="aurora"] .fl-site-nav a[aria-current="page"]{
+  color:#fff!important;background:linear-gradient(90deg,rgba(45,119,217,.66),rgba(83,205,168,.15))!important;
+  box-shadow:inset 0 0 0 1px rgba(128,196,255,.24),0 12px 30px rgba(0,0,0,.12)!important;
+}
+body[data-visual-style="aurora"] .fl-site-ribbon{
+  border-color:rgba(184,210,234,.82)!important;
+  background:rgba(248,252,255,.84)!important;
+  backdrop-filter:blur(18px);
+}
+body[data-visual-style="aurora"] :is(h1,h2,h3,strong){color:var(--aurora-ink);}
+body[data-visual-style="aurora"] :is(p,small,.muted,.lead){color:var(--aurora-ink-2);}
+body[data-visual-style="aurora"] :is(input,select,textarea,button){font:inherit;}
+body[data-visual-style="aurora"] :focus-visible{outline:3px solid rgba(47,125,225,.28);outline-offset:2px;}
+@media(max-width:700px){
+  html.fl-pastel-ui body[data-visual-style="aurora"],
+  html.fl-pastel-ui[data-theme="dark"] body[data-visual-style="aurora"]{padding-top:70px!important;}
+}
+@media(max-width:480px){
+  body[data-visual-style="aurora"] .fl-site-nav{
+    min-width:0!important;flex:1 1 auto!important;display:grid!important;
+    grid-template-columns:repeat(7,minmax(28px,1fr))!important;gap:1px!important;overflow:visible!important;
+  }
+  body[data-visual-style="aurora"] .fl-site-nav a{min-width:0!important;padding:5px 2px!important;justify-content:center!important;}
+  body[data-visual-style="aurora"] .fl-site-nav a span:last-child{display:none!important;}
+  body[data-visual-style="aurora"] .fl-site-nav-icon{display:inline-block!important;width:auto!important;font-size:15px!important;}
+}

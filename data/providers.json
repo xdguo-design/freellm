@@ -55,15 +55,19 @@
     "aliases": [
       "腾讯云",
       "TokenHub",
-      "混元"
+      "混元",
+      "腾讯云大模型服务平台",
+      "Tencent MaaS"
     ],
     "allowedDomains": [
       "cloud.tencent.com",
-      "console.cloud.tencent.com"
+      "console.cloud.tencent.com",
+      "intl.cloud.tencent.com"
     ],
     "discoveryUrls": [
       "https://cloud.tencent.com/document/product/1823/130053",
-      "https://cloud.tencent.com/document/product/1729"
+      "https://cloud.tencent.com/document/product/1823/130058",
+      "https://cloud.tencent.com/document/product/1823/130078"
     ]
   },
   {
@@ -72,14 +76,18 @@
     "aliases": [
       "百度千帆",
       "文心一言",
-      "ERNIE"
+      "ERNIE",
+      "千帆 ModelBuilder"
     ],
     "allowedDomains": [
-      "cloud.baidu.com"
+      "cloud.baidu.com",
+      "qianfan.cloud.baidu.com",
+      "console.bce.baidu.com"
     ],
     "discoveryUrls": [
-      "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
-      "https://cloud.baidu.com/product-wenxinworkshop"
+      "https://cloud.baidu.com/product/qianfan.html",
+      "https://cloud.baidu.com/doc/wenxinworkshop/index.html",
+      "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
     ]
   },
   {
@@ -124,15 +132,20 @@
     "aliases": [
       "火山方舟",
       "豆包",
-      "Doubao Seed Code"
+      "Doubao",
+      "ModelArk"
     ],
     "allowedDomains": [
+      "docs.volcengine.com",
+      "api.volcengine.com",
+      "console.volcengine.com",
       "developer.volcengine.com",
       "www.volcengine.com"
     ],
     "discoveryUrls": [
-      "https://developer.volcengine.com/articles/7616702041779994643",
-      "https://www.volcengine.com/activity/codingplan"
+      "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",
+      "https://docs.volcengine.com/docs/ark/api-key?lang=zh",
+      "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
     ]
   },
   {
@@ -141,15 +154,18 @@
     "aliases": [
       "智谱",
       "GLM",
-      "智谱清言"
+      "智谱清言",
+      "BigModel"
     ],
     "allowedDomains": [
       "docs.bigmodel.cn",
-      "open.bigmodel.cn"
+      "open.bigmodel.cn",
+      "bigmodel.cn"
     ],
     "discoveryUrls": [
-      "https://docs.bigmodel.cn/cn/coding-plan/faq",
-      "https://docs.bigmodel.cn/cn/coding-plan/quick-start"
+      "https://open.bigmodel.cn/console",
+      "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
+      "https://docs.bigmodel.cn/"
     ]
   },
   {
@@ -158,15 +174,19 @@
     "aliases": [
       "美团",
       "LongCat",
-      "LongCat-2.0"
+      "LongCat-2.0",
+      "LongCat-2.5",
+      "LongCat-2.5-Preview"
     ],
     "allowedDomains": [
-      "longcat.ai",
       "github.com",
-      "huggingface.co"
+      "huggingface.co",
+      "longcat.chat"
     ],
     "discoveryUrls": [
-      "https://longcat.ai/platform/docs/zh/",
+      "https://longcat.chat/platform/docs/zh/",
+      "https://longcat.chat/platform/docs/zh/ChangeLog.html",
+      "https://longcat.chat/platform/docs/zh/FAQ.html",
       "https://github.com/meituan-longcat/LongCat-2.0",
       "https://huggingface.co/meituan-longcat"
     ]
@@ -216,11 +236,19 @@
     ],
     "allowedDomains": [
       "platform.minimaxi.com",
-      "www.minimaxi.com"
+      "www.minimaxi.com",
+      "solutions.minimaxi.com"
     ],
     "discoveryUrls": [
-      "https://platform.minimaxi.com/document/Price",
-      "https://platform.minimaxi.com/document/"
+      "https://platform.minimaxi.com/subscribe/token-plan",
+      "https://solutions.minimaxi.com/"
+    ],
+    "freeOfferStatus": "not_confirmed",
+    "freeOfferCheckedAt": "2026-09-29",
+    "freeOfferNote": "Official MiniMax public Token Plan is paid subscription; no current official public free API entitlement was found on 2026-09-29. Expired third-party/channel promotions are not treated as MiniMax official free API.",
+    "freeOfferEvidence": [
+      "https://platform.minimaxi.com/subscribe/token-plan",
+      "https://solutions.minimaxi.com/"
     ]
   },
   {
@@ -233,11 +261,20 @@
     ],
     "allowedDomains": [
       "platform.moonshot.cn",
-      "www.moonshot.cn"
+      "platform.kimi.com",
+      "platform.kimi.ai",
+      "api.moonshot.cn",
+      "api.moonshot.ai"
     ],
     "discoveryUrls": [
-      "https://platform.moonshot.cn/docs/pricing",
-      "https://platform.moonshot.cn/docs/"
+      "https://platform.kimi.com/",
+      "https://platform.kimi.ai/"
+    ],
+    "freeOfferStatus": "not_confirmed",
+    "freeOfferCheckedAt": "2026-09-29",
+    "freeOfferNote": "Official Kimi platform currently exposes self-service PAYG pricing for K3/K2.7 Code/K2.6; no current official public free API entitlement was found on 2026-09-29.",
+    "freeOfferEvidence": [
+      "https://platform.kimi.com/"
     ]
   },
   {
@@ -734,6 +771,104 @@
       "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
       "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
       "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ]
+  },
+  {
+    "id": "streamlake-wanqing",
+    "name": "StreamLake Vanchin",
+    "aliases": [
+      "StreamLake",
+      "快手万擎",
+      "万擎",
+      "KwaiKAT"
+    ],
+    "allowedDomains": [
+      "streamlake.com",
+      "www.streamlake.com",
+      "wanqing.streamlakeapi.com",
+      "console.streamlake.com"
+    ],
+    "discoveryUrls": [
+      "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",
+      "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv",
+      "https://streamlake.com/document/WANQING/mdsoumbcut9ukas6bb"
+    ]
+  },
+  {
+    "id": "ctyun-tokenhub",
+    "name": "China Telecom Xingchen TokenHub",
+    "aliases": [
+      "天翼云",
+      "星辰TokenHub",
+      "星辰 TokenHub",
+      "中国电信 TokenHub"
+    ],
+    "allowedDomains": [
+      "ctyun.cn",
+      "www.ctyun.cn",
+      "ai.ctaigw.cn",
+      "ai.ctaigw.com"
+    ],
+    "discoveryUrls": [
+      "https://www.ctyun.cn/document/11061839/11097250",
+      "https://www.ctyun.cn/document/11061839/11062271",
+      "https://www.ctyun.cn/document/11061839/11099156"
+    ]
+  },
+  {
+    "id": "nvidia-nim",
+    "name": "NVIDIA NIM",
+    "aliases": [
+      "NVIDIA API Catalog",
+      "NVIDIA Build",
+      "build.nvidia.com",
+      "NIM API"
+    ],
+    "allowedDomains": [
+      "build.nvidia.com",
+      "docs.api.nvidia.com",
+      "docs.nvidia.com",
+      "developer.nvidia.com",
+      "registry.ngc.nvidia.com"
+    ],
+    "discoveryUrls": [
+      "https://build.nvidia.com/models",
+      "https://docs.api.nvidia.com/nim/docs/product",
+      "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+    ]
+  },
+  {
+    "id": "alibaba-model-studio-intl",
+    "name": "Alibaba Cloud Model Studio International",
+    "aliases": [
+      "Alibaba Cloud Model Studio",
+      "百炼国际站",
+      "Model Studio Singapore"
+    ],
+    "allowedDomains": [
+      "alibabacloud.com",
+      "modelstudio.console.alibabacloud.com",
+      "dashscope-intl.aliyuncs.com"
+    ],
+    "discoveryUrls": [
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+    ]
+  },
+  {
+    "id": "tencent-legacy-llm",
+    "name": "Tencent Cloud legacy LLM platform",
+    "aliases": [
+      "腾讯混元旧平台",
+      "混元旧平台",
+      "知识引擎原子能力 DeepSeek API"
+    ],
+    "allowedDomains": [
+      "cloud.tencent.com",
+      "console.cloud.tencent.com"
+    ],
+    "discoveryUrls": [
+      "https://cloud.tencent.com/announce/detail/2287"
     ]
   }
 ]

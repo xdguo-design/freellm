@@ -22,11 +22,21 @@ jobs:
         with:
           python-version: "3.11"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Validate offers schema
         run: python -m crawler.cli validate data/offers.json
 
       - name: Unit tests
         run: python -m unittest discover -s tests -v
+
+      - name: Ranking engine tests
+        run: node --test tests/ranking.test.ts
+
+      - name: Ranking artifact is current
+        run: node scripts/generate_ranking.ts --check
 
       - name: Scan official public sources
         id: scan
