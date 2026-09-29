@@ -118,7 +118,7 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-footer{margin-t
 }
 /* Regression guard: page-specific desktop rail geometry must not beat reference-ui mobile shell. */
 @media(max-width:800px){
-  body[data-reference-style="v1"]>.fl-site-rail{
+  body[data-reference-style="v1"][data-fl-section]>.fl-site-rail{
     position:relative!important;
     left:auto!important;right:auto!important;top:auto!important;
     width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;
@@ -126,7 +126,7 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-footer{margin-t
     box-sizing:border-box!important;
     overflow:visible!important;
   }
-  body[data-reference-style="v1"] .ref-topbar{
+  body[data-reference-style="v1"][data-fl-section] .ref-topbar{
     position:relative!important;
     left:auto!important;right:auto!important;top:auto!important;
     width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;
