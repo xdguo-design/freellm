@@ -871,7 +871,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), ide_count)
 
         page.fill("#catalog-search", "Qwen3")
-        self.assertEqual(self.visible_offers(page), 3)
+        self.assertEqual(self.visible_offers(page), 4)
 
         page.fill("#catalog-search", "")
         page.click(".offer[data-detail='comate'] .row-arrow")
