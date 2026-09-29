@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "asOf": "2026-09-24",
+  "asOf": "2026-09-29",
   "weights": {
     "freshness": 0.35,
     "freeValue": 0.3,
@@ -21,36 +21,16 @@
       "penaltyScore": 0,
       "penalties": [],
       "components": {
-        "freshnessScore": 85,
+        "freshnessScore": 76.5,
         "freeValueScore": 88.5,
         "popularityScore": 70,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 75.3
+      "rankingScore": 72.33
     },
     {
       "rank": 2,
-      "id": "huawei-codearts-daily-token",
-      "provider": "Huawei Cloud CodeArts",
-      "sourceOrder": 47,
-      "effectiveEventAt": "2026-09-20",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 76.5,
-        "freeValueScore": 83,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 66.67
-    },
-    {
-      "rank": 3,
       "id": "google-ai-studio-free",
       "provider": "Google AI Studio",
       "sourceOrder": 28,
@@ -62,35 +42,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 89.5,
+        "freeValueScore": 88.5,
         "popularityScore": 90,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 66.21
+      "rankingScore": 65.91
     },
     {
-      "rank": 4,
-      "id": "opencode-zen-free",
-      "provider": "OpenCode Zen",
-      "sourceOrder": 13,
-      "effectiveEventAt": "2026-09-23",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 85,
-        "freeValueScore": 67,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 64.85
-    },
-    {
-      "rank": 5,
+      "rank": 3,
       "id": "cnb-ai",
       "provider": "CNB",
       "sourceOrder": 42,
@@ -110,7 +70,7 @@
       "rankingScore": 64.46
     },
     {
-      "rank": 6,
+      "rank": 4,
       "id": "github-copilot-free",
       "provider": "GitHub Copilot",
       "sourceOrder": 14,
@@ -122,15 +82,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 83,
+        "freeValueScore": 82,
         "popularityScore": 88,
         "behaviorScore": 50,
         "specialOfferScore": 10
       },
-      "rankingScore": 64.36
+      "rankingScore": 64.06
     },
     {
-      "rank": 7,
+      "rank": 5,
       "id": "trae",
       "provider": "TraeCode CN",
       "sourceOrder": 3,
@@ -142,55 +102,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 90.5,
+        "freeValueScore": 89.5,
         "popularityScore": 78,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 64.11
+      "rankingScore": 63.81
     },
     {
-      "rank": 8,
-      "id": "cursor-hobby",
-      "provider": "Cursor",
-      "sourceOrder": 15,
-      "effectiveEventAt": "2026-09-07",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 83,
-        "popularityScore": 85,
-        "behaviorScore": 50,
-        "specialOfferScore": 10
-      },
-      "rankingScore": 63.76
-    },
-    {
-      "rank": 9,
-      "id": "groq-free",
-      "provider": "Groq",
-      "sourceOrder": 29,
-      "effectiveEventAt": "2026-09-07",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 90.5,
-        "popularityScore": 75,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 63.51
-    },
-    {
-      "rank": 10,
+      "rank": 6,
       "id": "siliconflow-free-models",
       "provider": "SiliconFlow",
       "sourceOrder": 35,
@@ -210,10 +130,30 @@
       "rankingScore": 63.51
     },
     {
-      "rank": 11,
-      "id": "mistral-free-mode",
-      "provider": "Mistral AI",
-      "sourceOrder": 32,
+      "rank": 7,
+      "id": "cursor-hobby",
+      "provider": "Cursor",
+      "sourceOrder": 15,
+      "effectiveEventAt": "2026-09-07",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 82,
+        "popularityScore": 85,
+        "behaviorScore": 50,
+        "specialOfferScore": 10
+      },
+      "rankingScore": 63.46
+    },
+    {
+      "rank": 8,
+      "id": "groq-free",
+      "provider": "Groq",
+      "sourceOrder": 29,
       "effectiveEventAt": "2026-09-07",
       "studentOnly": false,
       "pinned": false,
@@ -230,7 +170,27 @@
       "rankingScore": 63.21
     },
     {
-      "rank": 12,
+      "rank": 9,
+      "id": "mistral-free-mode",
+      "provider": "Mistral AI",
+      "sourceOrder": 32,
+      "effectiveEventAt": "2026-09-07",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 88.5,
+        "popularityScore": 75,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 62.91
+    },
+    {
+      "rank": 10,
       "id": "openrouter-free",
       "provider": "OpenRouter",
       "sourceOrder": 31,
@@ -242,15 +202,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 86,
+        "freeValueScore": 85,
         "popularityScore": 80,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 63.16
+      "rankingScore": 62.86
     },
     {
-      "rank": 13,
+      "rank": 11,
       "id": "astudio",
       "provider": "iFlytek AStudio",
       "sourceOrder": 43,
@@ -270,11 +230,11 @@
       "rankingScore": 62.81
     },
     {
-      "rank": 14,
-      "id": "manus-free-agent",
-      "provider": "Manus AI",
-      "sourceOrder": 40,
-      "effectiveEventAt": "2026-09-10",
+      "rank": 12,
+      "id": "huawei-codearts-daily-token",
+      "provider": "Huawei Cloud CodeArts",
+      "sourceOrder": 47,
+      "effectiveEventAt": "2026-09-20",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -282,19 +242,19 @@
       "penalties": [],
       "components": {
         "freshnessScore": 63.75,
-        "freeValueScore": 85,
+        "freeValueScore": 82,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 62.81
+      "rankingScore": 61.91
     },
     {
-      "rank": 15,
-      "id": "atria-dawn-preview",
-      "provider": "Shanghai AI Laboratory",
-      "sourceOrder": 46,
-      "effectiveEventAt": "2026-09-17",
+      "rank": 13,
+      "id": "opencode-zen-free",
+      "provider": "OpenCode Zen",
+      "sourceOrder": 13,
+      "effectiveEventAt": "2026-09-23",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -302,19 +262,19 @@
       "penalties": [],
       "components": {
         "freshnessScore": 76.5,
-        "freeValueScore": 70,
+        "freeValueScore": 67,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 62.77
+      "rankingScore": 61.88
     },
     {
-      "rank": 16,
-      "id": "puter-mimo-v2-6-flash-free",
-      "provider": "Puter.js",
-      "sourceOrder": 50,
-      "effectiveEventAt": "2026-09-23",
+      "rank": 14,
+      "id": "tencent-tokenhub-free-trial",
+      "provider": "Tencent Cloud TokenHub",
+      "sourceOrder": 51,
+      "effectiveEventAt": "2026-09-29",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -330,47 +290,7 @@
       "rankingScore": 61.25
     },
     {
-      "rank": 17,
-      "id": "stepfun-step-plan-promo",
-      "provider": "StepFun",
-      "sourceOrder": 49,
-      "effectiveEventAt": "2026-09-20",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 76.5,
-        "freeValueScore": 64,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 60.97
-    },
-    {
-      "rank": 18,
-      "id": "hf-inference-free",
-      "provider": "Hugging Face",
-      "sourceOrder": 34,
-      "effectiveEventAt": "2026-09-07",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 78,
-        "popularityScore": 80,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 60.76
-    },
-    {
-      "rank": 19,
+      "rank": 15,
       "id": "workbuddy",
       "provider": "WorkBuddy",
       "sourceOrder": 44,
@@ -390,11 +310,11 @@
       "rankingScore": 60.71
     },
     {
-      "rank": 20,
-      "id": "comate",
-      "provider": "Baidu Comate",
-      "sourceOrder": 4,
-      "effectiveEventAt": "2026-09-06",
+      "rank": 16,
+      "id": "hf-inference-free",
+      "provider": "Hugging Face",
+      "sourceOrder": 34,
+      "effectiveEventAt": "2026-09-07",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -402,19 +322,19 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 91.5,
-        "popularityScore": 50,
+        "freeValueScore": 77,
+        "popularityScore": 80,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 58.81
+      "rankingScore": 60.46
     },
     {
-      "rank": 21,
-      "id": "agnes-ai-free",
-      "provider": "Agnes AI",
-      "sourceOrder": 37,
-      "effectiveEventAt": "2026-09-08",
+      "rank": 17,
+      "id": "comate",
+      "provider": "Baidu Comate",
+      "sourceOrder": 4,
+      "effectiveEventAt": "2026-09-06",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -430,11 +350,31 @@
       "rankingScore": 58.51
     },
     {
-      "rank": 22,
-      "id": "modelscope-api-inference-free",
-      "provider": "ModelScope",
-      "sourceOrder": 36,
-      "effectiveEventAt": "2026-09-07",
+      "rank": 18,
+      "id": "puter-mimo-v2-6-flash-free",
+      "provider": "Puter.js",
+      "sourceOrder": 50,
+      "effectiveEventAt": "2026-09-23",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 76.5,
+        "freeValueScore": 55,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 58.27
+    },
+    {
+      "rank": 19,
+      "id": "agnes-ai-free",
+      "provider": "Agnes AI",
+      "sourceOrder": 37,
+      "effectiveEventAt": "2026-09-08",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -450,11 +390,11 @@
       "rankingScore": 58.21
     },
     {
-      "rank": 23,
-      "id": "xiaomi-mimo-desktop",
-      "provider": "Xiaomi MiMo",
-      "sourceOrder": 41,
-      "effectiveEventAt": "2026-09-11",
+      "rank": 20,
+      "id": "atria-dawn-preview",
+      "provider": "Shanghai AI Laboratory",
+      "sourceOrder": 46,
+      "effectiveEventAt": "2026-09-17",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -462,35 +402,35 @@
       "penalties": [],
       "components": {
         "freshnessScore": 63.75,
-        "freeValueScore": 67,
+        "freeValueScore": 69,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 57.41
+      "rankingScore": 58.01
     },
     {
-      "rank": 24,
-      "id": "dots-api-free",
-      "provider": "Dots API（国内）",
-      "sourceOrder": 39,
-      "effectiveEventAt": "2026-09-10",
+      "rank": 21,
+      "id": "modelscope-api-inference-free",
+      "provider": "ModelScope",
+      "sourceOrder": 36,
+      "effectiveEventAt": "2026-09-07",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
       "penaltyScore": 0,
       "penalties": [],
       "components": {
-        "freshnessScore": 63.75,
-        "freeValueScore": 67,
+        "freshnessScore": 46.75,
+        "freeValueScore": 88.5,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 57.41
+      "rankingScore": 57.91
     },
     {
-      "rank": 25,
+      "rank": 22,
       "id": "workbuddy-intl",
       "provider": "WorkBuddy",
       "sourceOrder": 45,
@@ -510,11 +450,11 @@
       "rankingScore": 57.11
     },
     {
-      "rank": 26,
-      "id": "you-web-free-tier",
-      "provider": "You.com",
-      "sourceOrder": 24,
-      "effectiveEventAt": "2026-09-07",
+      "rank": 23,
+      "id": "manus-free-agent",
+      "provider": "Manus AI",
+      "sourceOrder": 40,
+      "effectiveEventAt": "2026-09-10",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -530,7 +470,47 @@
       "rankingScore": 56.56
     },
     {
-      "rank": 27,
+      "rank": 24,
+      "id": "stepfun-step-plan-promo",
+      "provider": "StepFun",
+      "sourceOrder": 49,
+      "effectiveEventAt": "2026-09-20",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 63.75,
+        "freeValueScore": 64,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 56.51
+    },
+    {
+      "rank": 25,
+      "id": "you-web-free-tier",
+      "provider": "You.com",
+      "sourceOrder": 24,
+      "effectiveEventAt": "2026-09-07",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 83,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 56.26
+    },
+    {
+      "rank": 26,
       "id": "keenable-search-free",
       "provider": "Keenable",
       "sourceOrder": 19,
@@ -542,15 +522,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 82,
+        "freeValueScore": 81,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.96
+      "rankingScore": 55.66
     },
     {
-      "rank": 28,
+      "rank": 27,
       "id": "tavily-web-free-credits",
       "provider": "Tavily",
       "sourceOrder": 22,
@@ -562,15 +542,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 82,
+        "freeValueScore": 81,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.96
+      "rankingScore": 55.66
     },
     {
-      "rank": 29,
+      "rank": 28,
       "id": "exa-web-free-credits",
       "provider": "Exa",
       "sourceOrder": 23,
@@ -582,15 +562,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 82,
+        "freeValueScore": 81,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.96
+      "rankingScore": 55.66
     },
     {
-      "rank": 30,
+      "rank": 29,
       "id": "firecrawl-web-free-credits",
       "provider": "Firecrawl",
       "sourceOrder": 25,
@@ -602,15 +582,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 82,
+        "freeValueScore": 81,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.96
+      "rankingScore": 55.66
     },
     {
-      "rank": 31,
+      "rank": 30,
       "id": "google-antigravity-free",
       "provider": "Google Antigravity",
       "sourceOrder": 17,
@@ -622,15 +602,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 81.5,
+        "freeValueScore": 80.5,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.81
+      "rankingScore": 55.51
     },
     {
-      "rank": 32,
+      "rank": 31,
       "id": "aliyun-qwen-free-quota",
       "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
       "sourceOrder": 18,
@@ -642,15 +622,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 57,
+        "freeValueScore": 56,
         "popularityScore": 85,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.46
+      "rankingScore": 55.16
     },
     {
-      "rank": 33,
+      "rank": 32,
       "id": "amazon-q-free",
       "provider": "Amazon Q Developer",
       "sourceOrder": 16,
@@ -662,15 +642,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 79,
+        "freeValueScore": 78,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.06
+      "rankingScore": 54.76
     },
     {
-      "rank": 34,
+      "rank": 33,
       "id": "codebuddy",
       "provider": "CodeBuddy",
       "sourceOrder": 1,
@@ -682,15 +662,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 79,
+        "freeValueScore": 78,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 55.06
+      "rankingScore": 54.76
     },
     {
-      "rank": 35,
+      "rank": 34,
       "id": "browserbase-free-tier",
       "provider": "Browserbase",
       "sourceOrder": 27,
@@ -702,15 +682,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 78,
+        "freeValueScore": 77,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 54.76
+      "rankingScore": 54.46
     },
     {
-      "rank": 36,
+      "rank": 35,
       "id": "qwen-download",
       "provider": "Alibaba Qwen3-4B / 通义千问",
       "sourceOrder": 9,
@@ -722,15 +702,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 78,
+        "freeValueScore": 77,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 54.76
+      "rankingScore": 54.46
     },
     {
-      "rank": 37,
+      "rank": 36,
       "id": "glm-download",
       "provider": "GLM-4.7-Flash",
       "sourceOrder": 10,
@@ -742,15 +722,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 78,
+        "freeValueScore": 77,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 54.76
+      "rankingScore": 54.46
     },
     {
-      "rank": 38,
+      "rank": 37,
       "id": "tinyfish-search-fetch-free",
       "provider": "TinyFish",
       "sourceOrder": 20,
@@ -764,15 +744,15 @@
       ],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 94.5,
+        "freeValueScore": 93.5,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 54.71
+      "rankingScore": 54.41
     },
     {
-      "rank": 39,
+      "rank": 38,
       "id": "brave-search-free-credits",
       "provider": "Brave Search",
       "sourceOrder": 26,
@@ -784,19 +764,39 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 74,
+        "freeValueScore": 73,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 53.56
+      "rankingScore": 53.26
+    },
+    {
+      "rank": 39,
+      "id": "xiaomi-mimo-desktop",
+      "provider": "Xiaomi MiMo",
+      "sourceOrder": 41,
+      "effectiveEventAt": "2026-09-11",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 66,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 51.16
     },
     {
       "rank": 40,
-      "id": "stepfun-limited-time-free",
-      "provider": "StepFun",
-      "sourceOrder": 38,
-      "effectiveEventAt": "2026-09-08",
+      "id": "dots-api-free",
+      "provider": "Dots API（国内）",
+      "sourceOrder": 39,
+      "effectiveEventAt": "2026-09-10",
       "studentOnly": false,
       "pinned": false,
       "manualBoost": 0,
@@ -813,6 +813,26 @@
     },
     {
       "rank": 41,
+      "id": "stepfun-limited-time-free",
+      "provider": "StepFun",
+      "sourceOrder": 38,
+      "effectiveEventAt": "2026-09-08",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 65,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 50.86
+    },
+    {
+      "rank": 42,
       "id": "doubao",
       "provider": "Doubao Seed Code",
       "sourceOrder": 5,
@@ -824,32 +844,12 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 42.5,
+        "freeValueScore": 41.5,
         "popularityScore": 80,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 50.11
-    },
-    {
-      "rank": 42,
-      "id": "sensecore",
-      "provider": "SenseNova",
-      "sourceOrder": 11,
-      "effectiveEventAt": "2026-09-06",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 59,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 49.06
+      "rankingScore": 49.81
     },
     {
       "rank": 43,
@@ -873,6 +873,26 @@
     },
     {
       "rank": 44,
+      "id": "sensecore",
+      "provider": "SenseNova",
+      "sourceOrder": 11,
+      "effectiveEventAt": "2026-09-06",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 46.75,
+        "freeValueScore": 58,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 48.76
+    },
+    {
+      "rank": 45,
       "id": "cerebras-free",
       "provider": "Cerebras",
       "sourceOrder": 30,
@@ -884,15 +904,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 57,
+        "freeValueScore": 56,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 48.46
+      "rankingScore": 48.16
     },
     {
-      "rank": 45,
+      "rank": 46,
       "id": "cohere-trial-key",
       "provider": "Cohere",
       "sourceOrder": 33,
@@ -904,15 +924,15 @@
       "penalties": [],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 57,
+        "freeValueScore": 56,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 48.46
+      "rankingScore": 48.16
     },
     {
-      "rank": 46,
+      "rank": 47,
       "id": "glm",
       "provider": "GLM Coding Plan",
       "sourceOrder": 6,
@@ -932,7 +952,7 @@
       "rankingScore": 44.11
     },
     {
-      "rank": 47,
+      "rank": 48,
       "id": "deepseek",
       "provider": "DeepSeek API",
       "sourceOrder": 12,
@@ -954,7 +974,7 @@
       "rankingScore": 25.96
     },
     {
-      "rank": 48,
+      "rank": 49,
       "id": "tinyfish-agent-browser-metered",
       "provider": "TinyFish",
       "sourceOrder": 21,
@@ -969,15 +989,15 @@
       ],
       "components": {
         "freshnessScore": 46.75,
-        "freeValueScore": 26,
+        "freeValueScore": 25,
         "popularityScore": 50,
         "behaviorScore": 50,
         "specialOfferScore": 0
       },
-      "rankingScore": 14.16
+      "rankingScore": 13.86
     },
     {
-      "rank": 49,
+      "rank": 50,
       "id": "longcat-2-0",
       "provider": "LongCat",
       "sourceOrder": 7,
