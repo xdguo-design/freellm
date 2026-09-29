@@ -423,3 +423,9 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero{
     width:100%!important;margin-left:0!important;padding:12px 16px 48px!important;
   }
 }
+
+@media(min-width:1200px){
+  body[data-reference-style="v1"][data-fl-section="workflow"] .lab-content{
+    position:relative;left:-204px;width:calc(100% + 204px)!important;
+  }
+}
