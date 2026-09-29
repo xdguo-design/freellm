@@ -331,3 +331,85 @@ body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card
 body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-flags{padding:0 10px!important}
 body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-body{padding:8px 10px!important}
 body.prototype-resource-v4 #catalog-offer-rows.pf-resource-list-view .offer-card-footer{padding:10px 14px!important}
+
+
+/* 2026-09-29 regression cleanup: v4 is the single visible prototype layer. */
+body[data-visual-style="aurora"].prototype-resource-v4 .fl-site-theme-toggle,
+body[data-visual-style="aurora"].prototype-model-v4 .fl-site-theme-toggle,
+body[data-visual-style="aurora"][data-reference-style="v1"] .fl-site-theme-toggle{
+  display:none!important;
+}
+
+/* The retired model-directory prototype hid the universal rail/topbar.
+   The approved v4 board uses the same dark left rail as the other core pages. */
+body.model-directory-prototype.prototype-model-v4[data-fl-section="models"]>.fl-site-rail{
+  display:flex!important;visibility:visible!important;opacity:1!important;
+}
+body.model-directory-prototype.prototype-model-v4[data-fl-section="models"]>.ref-topbar{
+  display:flex!important;visibility:visible!important;opacity:1!important;
+}
+body.model-directory-prototype.prototype-model-v4 .prototype-model-nav{
+  display:none!important;
+}
+
+/* Do not let desktop art gutters create phone-level horizontal overflow. */
+@media(max-width:800px){
+  html,body{max-width:100%;overflow-x:clip}
+  body[data-reference-style="v1"][data-fl-section="skills"],
+  body[data-reference-style="v1"][data-fl-section="tools"],
+  body[data-reference-style="v1"][data-fl-section="workflow"],
+  body[data-reference-style="v1"][data-fl-section="logs"],
+  body[data-reference-style="v1"][data-fl-section="about"]{
+    width:100%!important;max-width:100%!important;margin:0!important;padding:0 10px 34px!important;overflow-x:clip!important;
+  }
+  body[data-reference-style="v1"]>.ref-topbar,
+  body.prototype-model-v4>.ref-topbar,
+  body.prototype-resource-v4>.ref-topbar{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;
+    width:calc(100% - 20px)!important;max-width:calc(100% - 20px)!important;height:48px!important;
+    margin:8px 10px 10px!important;padding:5px 8px!important;box-sizing:border-box!important;
+  }
+  body[data-reference-style="v1"]>.ref-topbar .ref-search,
+  body.prototype-model-v4>.ref-topbar .ref-search,
+  body.prototype-resource-v4>.ref-topbar .ref-search{
+    min-width:0!important;width:auto!important;max-width:none!important;flex:1 1 auto!important;
+  }
+  body.model-directory-prototype.prototype-model-v4[data-fl-section="models"]>.fl-site-rail,
+  body[data-reference-style="v1"]>.fl-site-rail{
+    position:relative!important;inset:auto!important;width:100%!important;max-width:100%!important;height:auto!important;
+    min-height:0!important;margin:0!important;padding:10px!important;box-sizing:border-box!important;overflow:visible!important;
+  }
+  body.prototype-model-v4 .pf-model-shell{
+    width:100%!important;max-width:100%!important;margin-left:0!important;padding:0 10px 34px!important;box-sizing:border-box!important;overflow-x:clip!important;
+  }
+  body[data-fl-section="skills"] .skills-page,
+  body[data-fl-section="tools"] .tools-page,
+  body[data-fl-section="workflow"] .skill-lab-page,
+  body[data-fl-section="logs"] .daily-log-dashboard{
+    width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;min-width:0!important;overflow-x:clip!important;
+  }
+  body[data-fl-section="skills"] .skills-hero,
+  body[data-fl-section="tools"] .tools-hero,
+  body[data-fl-section="workflow"] .lab-hero,
+  body[data-fl-section="logs"] .log-hero,
+  body[data-fl-section="about"]>header{
+    width:100%!important;max-width:100%!important;min-width:0!important;min-height:0!important;
+    margin:0!important;padding:18px 14px!important;box-sizing:border-box!important;overflow:hidden!important;
+  }
+  body[data-fl-section="skills"] .hero-note,
+  body[data-fl-section="tools"] .hero-note,
+  body[data-fl-section="workflow"] .lab-hero-aside{
+    position:static!important;width:auto!important;max-width:100%!important;min-width:0!important;margin-top:12px!important;
+  }
+  body[data-fl-section="skills"] .pf-skill-collections,
+  body[data-fl-section="skills"] .pf-skill-layout,
+  body[data-fl-section="tools"] .ref-tool-feature-grid,
+  body[data-fl-section="workflow"] .ref-workflow-feature,
+  body[data-fl-section="about"] .ref-about-process-grid{
+    width:100%!important;max-width:100%!important;min-width:0!important;
+  }
+  body[data-fl-section="skills"] .pf-skill-collections{grid-template-columns:1fr!important}
+  body[data-fl-section="tools"] .ref-tool-feature-grid{grid-template-columns:1fr!important}
+  body[data-fl-section="about"] .ref-value-row{grid-template-columns:1fr!important;margin-inline:0!important}
+  body[data-fl-section="about"]>main{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
+}
