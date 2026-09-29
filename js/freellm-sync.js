@@ -789,6 +789,87 @@
     });
   }
 
+  function enhanceProviderDetail() {
+    var body = document.body;
+    if (!body || body.dataset.offerId) return;
+    var match = /^\/providers\/([^/]+)\/?$/.exec(location.pathname);
+    if (!match) return;
+    var providerId = body.dataset.providerId || match[1];
+    body.dataset.providerId = providerId;
+    body.dataset.providerDetail = 'true';
+    body.setAttribute('data-reference-style', 'v1');
+    body.setAttribute('data-visual-style', 'aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection = 'models';
+
+    var title = body.querySelector('header h1');
+    var item = { type:'provider', id:providerId, name:title ? title.textContent.trim() : providerId, url:location.pathname };
+    var header = body.querySelector('body > header');
+    if (header && !header.querySelector('.provider-favorite-action')) {
+      var fav = document.createElement('button');
+      fav.type = 'button';
+      fav.className = 'provider-favorite-action';
+      function paint() {
+        var active = isFav('provider', providerId);
+        fav.classList.toggle('is-fav', active);
+        fav.textContent = active ? '★ 已收藏厂家' : '☆ 收藏厂家';
+        fav.setAttribute('aria-pressed', String(active));
+      }
+      fav.addEventListener('click', function () {
+        var added = toggleFav(item);
+        toast(added ? '已收藏「' + item.name + '」' : '已取消收藏');
+      });
+      on('fav', paint);
+      paint();
+      header.appendChild(fav);
+    }
+
+    var main = body.querySelector('main');
+    if (main && header && !body.querySelector('.provider-section-nav')) {
+      var targets = [];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'), function(section,index) {
+        var h2 = section.querySelector('h2');
+        if (!h2) return;
+        section.id = section.id || ('provider-section-' + (index + 1));
+        var label = (h2.querySelector('[lang="zh-CN"]') || h2).textContent.trim();
+        if (label && targets.length < 7) targets.push({id:section.id,label:label});
+      });
+      if (targets.length) {
+        var nav = document.createElement('nav');
+        nav.className = 'provider-section-nav';
+        nav.setAttribute('aria-label','厂家详情目录');
+        nav.innerHTML = targets.map(function(x){ return '<a href="#' + x.id + '">' + x.label + '</a>'; }).join('');
+        header.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    var table = main && main.querySelector('.catalog-table');
+    if (table && !main.querySelector('.provider-model-filter')) {
+      var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+      var wrap = table.closest('.catalog-table-wrap');
+      var box = document.createElement('div');
+      box.className = 'provider-model-filter';
+      box.innerHTML = '<label><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索模型名称、ID、状态或来源…" aria-label="搜索该厂家的模型"></label><span class="provider-model-count"></span>';
+      wrap.parentNode.insertBefore(box,wrap);
+      var input = box.querySelector('input');
+      var count = box.querySelector('.provider-model-count');
+      var empty = document.createElement('div');
+      empty.className='provider-filter-empty';
+      empty.hidden=true;
+      empty.textContent='没有找到匹配的模型记录。';
+      wrap.insertAdjacentElement('afterend',empty);
+      function apply() {
+        var q=input.value.trim().toLowerCase(),visible=0;
+        rows.forEach(function(row){var show=!q || (row.textContent||'').toLowerCase().indexOf(q)>=0;row.hidden=!show;if(show) visible++;});
+        count.textContent='显示 ' + visible + ' / ' + rows.length + ' 个模型';
+        empty.hidden=visible!==0;
+      }
+      input.addEventListener('input',apply);
+      apply();
+    }
+    track(item);
+  }
+
   function enhanceOfferDetail() {
     var body = document.body;
     if (!body || !body.dataset.offerId) return;
@@ -855,6 +936,7 @@
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceProviderDetail();
     enhanceOfferDetail();
     bind(document);
     autoBind(document);
