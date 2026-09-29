@@ -789,6 +789,75 @@
     });
   }
 
+  function enhanceGuidePage() {
+    var body=document.body;
+    if(!body) return;
+    var match=/^\/guides\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match) return;
+    var slug=match[1];
+    body.dataset.guideDetail='true';
+    body.dataset.guideSlug=slug;
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var labels={
+      'free-llm':'免费 LLM 总览',
+      'free-openai-compatible-apis':'兼容 API',
+      'free-ai-coding-tools':'AI 编程工具',
+      'free-ai-search-apis':'AI 搜索 API',
+      'open-weight-models':'开放权重',
+      'model-context-windows':'上下文窗口',
+      'china-free-ai-api':'国内 API',
+      'free-openai-api-alternatives':'OpenAI 替代',
+      'claude-code-free-alternatives':'Claude Code 替代'
+    };
+    var header=body.querySelector('body > header'),main=body.querySelector('main');
+    if(!header||!main)return;
+
+    if(!header.querySelector('.guide-source-boundary')){
+      var note=document.createElement('div');note.className='guide-source-boundary';
+      note.textContent=slug==='free-llm'
+        ? '来源边界：本页包含外部 Free-LLM README 的整理快照；实时可用性、免费条件和最终接入结论仍以本站 Offer 数据与官方来源为准。'
+        : '来源边界：本页用于整理和比较；免费额度、地区、模型参数和兼容性均可能变化，最终以对应详情页和官方来源为准。';
+      header.appendChild(note);
+    }
+
+    if(!body.querySelector('.guide-tabs')){
+      var tabs=document.createElement('nav');tabs.className='guide-tabs';tabs.setAttribute('aria-label','Guide 页面');
+      tabs.innerHTML=Object.keys(labels).map(function(key){
+        return '<a href="/guides/'+key+'/"'+(key===slug?' aria-current="page"':'')+'>'+labels[key]+'</a>';
+      }).join('');
+      header.insertAdjacentElement('afterend',tabs);
+    }
+
+    if(!body.querySelector('.guide-section-nav')){
+      var targets=[];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'),function(section,index){
+        var h2=section.querySelector('h2');if(!h2)return;
+        section.id=section.id||('guide-section-'+(index+1));
+        var label=(h2.querySelector('[lang="zh-CN"]')||h2).textContent.replace(/\s+/g,' ').trim();
+        if(label&&targets.length<10)targets.push({id:section.id,label:label});
+      });
+      if(targets.length){
+        var nav=document.createElement('nav');nav.className='guide-section-nav';nav.setAttribute('aria-label','本页目录');
+        nav.innerHTML=targets.map(function(x){return '<a href="#'+x.id+'">'+x.label+'</a>';}).join('');
+        var tabsEl=body.querySelector('.guide-tabs');tabsEl.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    Array.prototype.forEach.call(main.querySelectorAll('pre'),function(pre,index){
+      if(pre.querySelector('.guide-copy-code'))return;
+      var btn=document.createElement('button');btn.type='button';btn.className='guide-copy-code';btn.textContent='复制代码';
+      btn.addEventListener('click',function(){
+        var code=pre.querySelector('code');var value=(code||pre).innerText;
+        navigator.clipboard.writeText(value).then(function(){btn.textContent='已复制';setTimeout(function(){btn.textContent='复制代码';},1200);});
+      });
+      pre.appendChild(btn);
+    });
+  }
+
   function enhanceCategoryPage() {
     var body=document.body;
     if(!body || body.dataset.offerId || body.dataset.providerDetail==='true' || body.dataset.modelDetail==='true') return;
@@ -1070,6 +1139,7 @@
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceGuidePage();
     enhanceCategoryPage();
     enhanceModelDetail();
     enhanceProviderDetail();

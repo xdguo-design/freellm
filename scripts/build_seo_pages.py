@@ -1064,7 +1064,7 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-guide-detail="true" data-guide-slug="{_esc(slug)}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">FreeLLM Free AI Index</a> / Guides</div>
     {_static_locale_nav()}
@@ -2071,7 +2071,7 @@ print(response.choices[0].message.content)'''
     @media (max-width: 620px) {{ h1 {{ font-size: 40px; }} }}
   </style>
 </head>
-<body>
+<body data-guide-detail="true" data-guide-slug="free-llm" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / 使用指南</div>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
@@ -2265,7 +2265,7 @@ def render_special_guide_page(
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body>
+<body data-guide-detail="true" data-guide-slug="{_esc(path.strip('/').split('/')[-1])}" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / Guides</div>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
