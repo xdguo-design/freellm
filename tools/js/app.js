@@ -93,6 +93,7 @@
     var allBtn = document.createElement('button');
     allBtn.className = 'tool-category-tab' + (activeCat === 'all' ? ' is-active' : '');
     allBtn.type = 'button';
+    allBtn.setAttribute('aria-pressed', String(activeCat === 'all'));
     allBtn.innerHTML = '<span>全部</span><small>' + Tools.total + '</small>';
     allBtn.onclick = function () { setCat('all'); };
     tabsEl.appendChild(allBtn);
@@ -101,6 +102,7 @@
       var btn = document.createElement('button');
       btn.className = 'tool-category-tab' + (activeCat === c.id ? ' is-active' : '');
       btn.type = 'button';
+      btn.setAttribute('aria-pressed', String(activeCat === c.id));
       btn.innerHTML = '<span>' + c.label + '</span><small>' + c.count + '</small>';
       btn.onclick = function () { setCat(c.id); };
       tabsEl.appendChild(btn);
@@ -145,6 +147,8 @@
 
   function clearSearch() {
     searchEl.value = '';
+    activeCat = 'all';
+    renderTabs();
     renderGrid();
   }
   searchEl.addEventListener('input', U.debounce(renderGrid, 120));

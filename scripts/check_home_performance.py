@@ -289,10 +289,16 @@ def main() -> int:
     current_html = current_path.read_text(encoding="utf-8")
     if current_size > 100_000:
         raise SystemExit(f"homepage HTML budget exceeded: {current_size} bytes")
-    fingerprint_refs = re.findall(
-        r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
-        current_html,
-    )
+    fingerprint_refs = sorted(set(
+        re.findall(
+            r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
+            current_html,
+        )
+        + re.findall(
+            r"['\"]\.\./((?:js)/homepage(?:-i18n)?\.[0-9a-f]{10}\.js)['\"]",
+            current_html,
+        )
+    ))
     if len(fingerprint_refs) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {fingerprint_refs}")
 
