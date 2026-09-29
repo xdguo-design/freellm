@@ -9,7 +9,7 @@
     {
       "id": "free-debug-trial",
       "label": "AgentArts 200 万 Tokens 调测 / 试运行",
-      "productType": "web_infrastructure",
+      "productType": "web",
       "prerequisites": [
         "Huawei Cloud account",
         "AgentArts free experience edition activated"
@@ -32,8 +32,6 @@
           "detail": "正式发布智能体或通过 API 调用时，需要开通 MaaS 付费模型并配置 API Key。"
         }
       ],
-      "endpoint": null,
-      "auth": "No API key required for the platform-internal free debug allowance",
       "example": "Use the AgentArts UI to debug preset models or run an unpublished agent within the 2M-token shared allowance.",
       "validation": "资源与订阅显示 2,000,000-token赠送额度，调测/试运行消耗该额度；正式 API 调用不应标记为免费。",
       "sourceUrls": [
