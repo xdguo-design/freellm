@@ -258,7 +258,7 @@
 
     <section class="summary-grid" aria-label="API 健康摘要">
       <article class="metric"><span>API 渠道</span><strong id="m-total">—</strong><small>正式 API Offer + 高优先级待完善渠道</small></article>
-      <article class="metric"><span>公开端点可达</span><strong id="m-alive">—</strong><small>HTTP 有响应 / 模型列表公开</small></article>
+      <article class="metric"><span>端点有响应</span><strong id="m-alive">—</strong><small>公开可读 <b id="m-public">—</b> · 需 Key <b id="m-keyed">—</b></small></article>
       <article class="metric"><span>国内可达</span><strong id="m-cn">—</strong><small>来自现有 networkCheck 证据</small></article>
       <article class="metric metric-priority"><span>需要处理</span><div class="priority-counts"><b><em>P0</em><strong id="m-p0">—</strong></b><b><em>P1</em><strong id="m-p1">—</strong></b><b><em>P2</em><strong id="m-p2">—</strong></b></div><small>紧急故障 / 即将影响 / 维护治理</small></article>
       <article class="metric"><span>模型快照</span><strong id="m-models">—</strong><small>当前模型目录记录</small></article>
@@ -365,7 +365,9 @@
     var validity=String(o.validity||'')+' '+String(o.validitySummary||'');
     return /\blimited[- ]?time\b|限时|公测|\bvalid for \d+ days\b|\b\d+ days from\b/i.test(validity);
   }
-  function publicAlive(r){var v=String((r.latency&&r.latency.verdict)||(r.endpointCheck&&r.endpointCheck.verdict)||'').toLowerCase();return ['ok','needs_key','alive','rate_limited'].some(function(x){return v.indexOf(x)>=0})}
+  function publicAlive(r){var v=endpointVerdict(r);return ['OK','NEEDS_KEY','ALIVE','RATE_LIMITED'].indexOf(v)>=0}
+  function publicReadable(r){var v=endpointVerdict(r);return ['OK','ALIVE'].indexOf(v)>=0}
+  function needsKeyResponse(r){return endpointVerdict(r)==='NEEDS_KEY'}
   function networkLabel(r){var n=r.networkCheck&&r.networkCheck.region;if(n==='both')return '中 / 海外';if(n==='cn')return '国内';if(n==='intl')return '海外';return '待测'}
   function networkClass(r){var n=r.networkCheck&&r.networkCheck.region;return n?'ok':'neutral'}
   function endpointFor(r){return r.usageGuide&&r.usageGuide.endpoint?r.usageGuide.endpoint:''}
@@ -480,8 +482,11 @@
     return records;
   }
   function statusBadge(r){
-    if(publicAlive(r))return '<span class="badge ok">端点可达</span>';
-    if(r.endpointCheck||r.latency)return '<span class="badge warn">需复核</span>';
+    var verdict=endpointVerdict(r);
+    if(verdict==='OK'||verdict==='ALIVE')return '<span class="badge ok">公开可读</span>';
+    if(verdict==='NEEDS_KEY')return '<span class="badge warn">需 Key · 网关在线</span>';
+    if(verdict==='RATE_LIMITED')return '<span class="badge warn">限流 · 网关在线</span>';
+    if(r.endpointCheck||r.latency)return '<span class="badge bad">端点异常 · '+esc(verdict||'UNKNOWN')+'</span>';
     return '<span class="badge neutral">未检测</span>';
   }
   function corsText(id){var x=state.cors[id];if(!x)return 'CORS 未测';if(x.ok)return 'CORS ✓ '+x.ms+'ms';return 'CORS/网络不可读'}
@@ -544,6 +549,8 @@
     var counts=priorityCounts();
     $('m-total').textContent=state.records.length;
     $('m-alive').textContent=state.records.filter(publicAlive).length;
+    $('m-public').textContent=state.records.filter(publicReadable).length;
+    $('m-keyed').textContent=state.records.filter(needsKeyResponse).length;
     $('m-cn').textContent=state.records.filter(function(r){return r.networkCheck&&['cn','both'].indexOf(r.networkCheck.region)>=0}).length;
     $('m-p0').textContent=counts.P0;
     $('m-p1').textContent=counts.P1;
