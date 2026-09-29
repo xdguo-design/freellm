@@ -1856,5 +1856,40 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "多个官方模型页明确试用账号 5 次/分钟，但没有公开统一试用期限或 token 额度。实际模型可用性以当前试用账号目录为准。"
+  },
+  {
+    "providerId": "baichuan-ai",
+    "profileId": "baichuan-ai-medical-program",
+    "registerUrl": "https://www.baichuan-ai.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "yes",
+    "cardRequired": "no",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "yes",
+    "modelApproval": "yes",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_website_console",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "确认申请主体属于为医务工作者提供服务的机构，且使用场景为临床辅助决策或医学教育。",
+      "通过百川智能官网“海纳百川计划”提交申请并等待准入审核。",
+      "获批后取得/创建 API Key，并确保真实产品展示 Powered by 百川。",
+      "使用标准 chat/completions API 调用 Baichuan-M3 Plus；不得将计划权益用于数据生产。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.baichuan-ai.com/",
+      "https://platform.baichuan-ai.com/docs-v2/api",
+      "https://platform.baichuan-ai.com/prices"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "计划内永久免费仅对获批机构有效；普通开放平台 Baichuan-M3 Plus 仍按量收费。"
   }
 ]

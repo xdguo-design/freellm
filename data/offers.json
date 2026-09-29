@@ -8532,5 +8532,149 @@
         }
       ]
     }
+  },
+  {
+    "id": "baichuan-m3-plus-medical-free",
+    "order": 67,
+    "date": "2026-09-29",
+    "name": "Baichuan M3 Plus medical public-interest API",
+    "providerMark": "百",
+    "provider": "Baichuan AI",
+    "providerMeta": "海纳百川计划 · Medical institutions / healthcare service providers",
+    "model": "Baichuan-M3 Plus",
+    "modelMeta": "Medical LLM · targeted permanent-free program",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "符合“海纳百川计划”准入条件的机构申请后，使用 Baichuan-M3 Plus API 服务真实医疗场景",
+      "prerequisites": [
+        "申请主体为为医务工作者提供服务的机构",
+        "使用场景属于临床辅助决策或医学教育",
+        "仅用于真实服务场景，不用于数据生产",
+        "产品明确展示 Powered by 百川",
+        "申请通过并取得 API Key"
+      ],
+      "steps": [
+        "在百川智能官网“海纳百川计划”入口提交申请，等待准入审核。",
+        "获批后在百川 API 平台创建或获取 API Key。",
+        "调用前确认实际产品符合计划用途限制与品牌展示要求。",
+        "通过 https://api.baichuan-ai.com/v1/chat/completions 调用 Baichuan-M3 Plus，并按医疗场景要求进行人工复核与安全控制。"
+      ],
+      "endpoint": "https://api.baichuan-ai.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${BAICHUAN_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"请总结以下临床教育材料的关键点\"}]}'"
+      },
+      "docsUrl": "https://platform.baichuan-ai.com/docs-v2/api"
+    },
+    "kicker": "PERMANENT FREE · ELIGIBILITY REQUIRED",
+    "badges": [
+      "MEDICAL",
+      "PERMANENT FREE",
+      "APPLICATION REQUIRED"
+    ],
+    "freeSummary": "百川“海纳百川计划”对符合准入条件的医疗服务机构提供 Baichuan-M3 Plus API 永久免费调用。",
+    "validitySummary": "长期计划 · 需申请并通过准入审核",
+    "accessSummary": "仅限指定机构/场景；普通开放平台调用仍按官方价格计费",
+    "checkedSummary": "2026-09-29 / Baichuan official homepage + API/pricing docs",
+    "title": "百川 Baichuan-M3 Plus · 医疗机构定向永久免费 API",
+    "why": "百川智能官网“海纳百川计划”明确写明核心权益为“永久免费调用 Baichuan-M3 Plus API”，但同时给出严格准入范围：适用对象为为医务工作者提供服务的机构，场景仅限临床辅助决策和医学教育，仅用于真实服务场景，不得用于数据生产，并要求产品展示 Powered by 百川。普通开放平台价格页仍对 Baichuan-M3 Plus 按 Token 收费，因此这不是面向所有开发者的通用免费 API。",
+    "mechanism": "Application-based permanent-free access under the Haina Baichuan medical public-interest program",
+    "validity": "Ongoing while the program and approved eligibility remain valid",
+    "access": "Apply to the Haina Baichuan program, pass review, obtain API access, and comply with medical-use restrictions",
+    "command": "curl https://api.baichuan-ai.com/v1/chat/completions -H \"Authorization: Bearer $BAICHUAN_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://www.baichuan-ai.com/",
+    "registerLabel": "Apply for Haina Baichuan program",
+    "links": [
+      [
+        "Haina Baichuan program",
+        "https://www.baichuan-ai.com/"
+      ],
+      [
+        "Baichuan API guide",
+        "https://platform.baichuan-ai.com/docs-v2/api"
+      ],
+      [
+        "Baichuan pricing",
+        "https://platform.baichuan-ai.com/prices"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China; eligibility restricted to approved organizations serving medical workers and specified healthcare scenarios",
+    "freeMechanism": "permanent",
+    "pricingModel": "permanent_free",
+    "freePolicy": {
+      "type": "eligibility_program",
+      "amount": null,
+      "unit": "approved API access",
+      "period": "ongoing",
+      "note": "Permanent free only for approved Haina Baichuan program participants"
+    },
+    "quota": "No public universal token quota published for the program; usage is governed by approval and program terms",
+    "renewal": "No recurring grant model disclosed; program benefit is described as permanent free access for approved participants",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Restricted program use: real clinical-support / medical-education services only; not for data production",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.baichuan-ai.com/",
+      "https://platform.baichuan-ai.com/docs-v2/api",
+      "https://platform.baichuan-ai.com/prices"
+    ],
+    "evidence": "百川智能官网“海纳百川计划”明确核心权益为 Baichuan-M3 Plus API 永久免费，并列出适用对象、场景、用途限制和 Powered by 百川要求；百川 API 文档确认 https://api.baichuan-ai.com/v1/chat/completions 与 Bearer API Key 调用方式；价格页显示普通开放平台 Baichuan-M3-Plus 仍按 Token 收费，证明该免费权益属于定向计划而非通用免费。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "这是定向公益/合作计划，不应出现在“任何开发者都可免费”的筛选结果中。申请准入审核和解释权归百川智能所有。医疗场景输出需要由具备资质的专业人员按实际业务要求进行审核。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验百川海纳百川计划的永久免费权益、准入限制与 API 接入路径。",
+      "method": [
+        "读取百川智能官网海纳百川计划，确认“永久免费调用 Baichuan-M3 Plus API”及适用对象/场景/用途限制。",
+        "读取百川 API 文档，确认 chat/completions endpoint 与 Bearer API Key 鉴权。",
+        "读取百川价格页，确认普通开放平台的 Baichuan-M3 Plus 仍按量收费，从而区分计划内免费与通用付费。",
+        "当前没有获批的计划账号/API Key，因此未执行真实模型调用。"
+      ],
+      "result": "官方公开预检通过：计划内永久免费的事实、严格资格限制和标准 API 调用路径均由百川官方页面支持。",
+      "limitations": "未验证申请审核时长、批准后的实际限流/额度、真实响应与计划终止机制。",
+      "evidence": [
+        {
+          "label": "百川海纳百川计划",
+          "url": "https://www.baichuan-ai.com/"
+        },
+        {
+          "label": "百川 API 文档",
+          "url": "https://platform.baichuan-ai.com/docs-v2/api"
+        },
+        {
+          "label": "百川价格页",
+          "url": "https://platform.baichuan-ai.com/prices"
+        }
+      ]
+    }
   }
 ]
