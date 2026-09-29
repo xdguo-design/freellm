@@ -1,0 +1,39 @@
+name: regen-free-api-batch6
+on:
+  push:
+    branches: [update/free-api-news-20260929-batch6]
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: update/free-api-news-20260929-batch6
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "24"}
+      - run: python -m pip install pytest
+      - name: Validate source
+        run: python -m crawler.cli validate data/offers.json
+      - name: Regenerate
+        run: |
+          node scripts/generate_ranking.ts
+          python scripts/build_static.py
+          python scripts/build_seo_pages.py
+      - name: Regression
+        run: |
+          node --test tests/ranking.test.ts
+          python -m unittest tests.test_schema tests.test_build_static tests.test_e2e_static tests.test_site_visual_system -v
+          node scripts/generate_ranking.ts --check
+          python scripts/build_static.py --check
+          python scripts/build_seo_pages.py --check
+      - name: Commit generated artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "No generated changes"; else git commit -m "build: regenerate batch 6 artifacts on latest dev"; git push origin HEAD:update/free-api-news-20260929-batch6; fi
