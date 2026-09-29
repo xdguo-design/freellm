@@ -438,9 +438,8 @@
   }
   function priorityCounts(){
     var counts={P0:0,P1:0,P2:0};
-    state.records.forEach(function(r){
-      var level=recordPriority(r);
-      if(level)counts[level]+=1;
+    providerActionItems().forEach(function(item){
+      if(item.level)counts[item.level]+=1;
     });
     return counts;
   }
@@ -497,15 +496,11 @@
     var keys=actionKeysForLevel(level);
     var grouped={};
     state.records.forEach(function(r){
+      if(recordPriority(r)!==level)return;
       var key=r.providerId||r.id;
-      if(!grouped[key])grouped[key]=[];
-      grouped[key].push(r);
+      if(!grouped[key])grouped[key]=r;
     });
-    var ordered=[];
-    keys.forEach(function(key){
-      (grouped[key]||[]).forEach(function(r){ordered.push(r)});
-    });
-    return ordered;
+    return keys.map(function(key){return grouped[key]}).filter(Boolean);
   }
   function rowsForCurrentFilter(){
     var level=state.filter==='p0'?'P0':(state.filter==='p1'?'P1':(state.filter==='p2'?'P2':''));
