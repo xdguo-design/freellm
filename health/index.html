@@ -485,8 +485,11 @@
     return '<span class="badge neutral">未检测</span>';
   }
   function corsText(id){var x=state.cors[id];if(!x)return 'CORS 未测';if(x.ok)return 'CORS ✓ '+x.ms+'ms';return 'CORS/网络不可读'}
+  function actionKeysForLevel(level){
+    return providerActionItems().filter(function(item){return item.level===level}).map(function(item){return item.key});
+  }
   function priorityOrderedRecords(level){
-    var keys=providerActionItems().filter(function(item){return item.level===level}).map(function(item){return item.key});
+    var keys=actionKeysForLevel(level);
     var grouped={};
     state.records.forEach(function(r){
       var key=r.providerId||r.id;
@@ -521,7 +524,7 @@
     $('channel-list').innerHTML=list.length?list.map(function(r){
       var latency=(r.latency&&r.latency.ms)||(r.endpointCheck&&r.endpointCheck.ms);
       var issues=issueFor(r);
-      return '<div class="health-row" data-id="'+esc(r.id)+'">'+
+      return '<div class="health-row" data-id="'+esc(r.id)+'" data-provider-id="'+esc(r.providerId||r.id)+'">'+
         '<div class="provider-cell"><strong>'+esc(r.provider||r.title||r.id)+'</strong><small>'+esc(r.title||r.id)+(r.catalogOnly?' · 待转正式 Offer':'')+'</small></div>'+
         '<div>'+statusBadge(r)+'<div class="cors-result">'+esc(corsText(r.id))+'</div></div>'+
         '<div><span class="badge '+networkClass(r)+'">'+esc(networkLabel(r))+'</span></div>'+
@@ -552,6 +555,9 @@
   }
   function renderActions(){
     var items=providerActionItems();
+    $('action-list').dataset.p0Order=actionKeysForLevel('P0').join(',');
+    $('action-list').dataset.p1Order=actionKeysForLevel('P1').join(',');
+    $('action-list').dataset.p2Order=actionKeysForLevel('P2').join(',');
     $('action-list').innerHTML=items.length?items.slice(0,8).map(function(item){
       var reasons=item.reasons.map(function(reason){return reason.label}).join(' · ');
       return '<div class="action-item" data-provider-id="'+esc(item.key)+'" data-priority="'+esc(item.level)+'"><div><strong>'+esc(item.provider)+'</strong><span>'+esc(reasons)+'</span></div><b class="severity '+actionSeverityClass(item.level)+'">'+esc(item.level)+'</b></div>';
