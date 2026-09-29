@@ -3180,7 +3180,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-model-slug="{_esc(_safe_slug(model_name, 'model'))}" data-model-detail="true" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('全部模型', 'All models')}</a></p>
     {_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>{_esc(model_name)}</h1>
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>

@@ -789,6 +789,77 @@
     });
   }
 
+  function enhanceModelDetail() {
+    var body=document.body;
+    if(!body || body.dataset.offerId || body.dataset.providerDetail==='true') return;
+    var match=/^\/models\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match || match[1]==='all' || match[1]==='center') return;
+    var modelId=body.dataset.modelSlug || match[1];
+    body.dataset.modelSlug=modelId;
+    body.dataset.modelDetail='true';
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var title=body.querySelector('header h1');
+    var item={type:'model',id:modelId,name:title?title.textContent.trim():modelId,url:location.pathname};
+    var header=body.querySelector('body > header');
+    if(header && !header.querySelector('.model-favorite-action')){
+      var fav=document.createElement('button');
+      fav.type='button';fav.className='model-favorite-action';
+      function paint(){
+        var active=isFav('model',modelId);
+        fav.classList.toggle('is-fav',active);
+        fav.textContent=active?'★ 已收藏模型':'☆ 收藏模型';
+        fav.setAttribute('aria-pressed',String(active));
+      }
+      fav.addEventListener('click',function(){
+        var added=toggleFav(item);
+        toast(added?'已收藏「'+item.name+'」':'已取消收藏');
+      });
+      on('fav',paint);paint();header.appendChild(fav);
+    }
+
+    var main=body.querySelector('main');
+    if(main && header && !body.querySelector('.model-section-nav')){
+      var targets=[];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'),function(section,index){
+        var h2=section.querySelector('h2');if(!h2)return;
+        section.id=section.id||('model-section-'+(index+1));
+        var label=(h2.querySelector('[lang="zh-CN"]')||h2).textContent.trim();
+        if(label && targets.length<7)targets.push({id:section.id,label:label});
+      });
+      if(targets.length){
+        var nav=document.createElement('nav');nav.className='model-section-nav';nav.setAttribute('aria-label','模型详情目录');
+        nav.innerHTML=targets.map(function(x){return '<a href="#'+x.id+'">'+x.label+'</a>';}).join('');
+        header.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    var table=main && main.querySelector('.catalog-table');
+    if(table){
+      var rows=Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+      if(rows.length>1 && !main.querySelector('.model-record-filter')){
+        var wrap=table.closest('.catalog-table-wrap');
+        var box=document.createElement('div');box.className='model-record-filter';
+        box.innerHTML='<label><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索平台、状态、限制或来源…" aria-label="搜索该模型的平台记录"></label><span class="model-record-count"></span>';
+        wrap.parentNode.insertBefore(box,wrap);
+        var input=box.querySelector('input'),count=box.querySelector('.model-record-count');
+        var empty=document.createElement('div');empty.className='model-record-empty';empty.hidden=true;empty.textContent='没有找到匹配的平台记录。';
+        wrap.insertAdjacentElement('afterend',empty);
+        function apply(){
+          var q=input.value.trim().toLowerCase(),visible=0;
+          rows.forEach(function(row){var show=!q||(row.textContent||'').toLowerCase().indexOf(q)>=0;row.hidden=!show;if(show)visible++;});
+          count.textContent='显示 '+visible+' / '+rows.length+' 条平台记录';
+          empty.hidden=visible!==0;
+        }
+        input.addEventListener('input',apply);apply();
+      }
+    }
+    track(item);
+  }
+
   function enhanceProviderDetail() {
     var body = document.body;
     if (!body || body.dataset.offerId) return;
@@ -936,6 +1007,7 @@
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceModelDetail();
     enhanceProviderDetail();
     enhanceOfferDetail();
     bind(document);
