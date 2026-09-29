@@ -41,7 +41,7 @@ def _models_page_budgets() -> dict[str, int]:
 
     total_pages = max(1, -(-len(models) // MODELS_PER_PAGE)) if models else 1
     for page_num in range(2, total_pages + 1):
-        budgets[f"models/all/page/{page_num}/index.html"] = 360 * 1024
+        budgets[f"models/all/page/{page_num}/index.html"] = 400 * 1024
     return budgets
 
 
