@@ -284,12 +284,8 @@
         else if (categories) categories.insertAdjacentElement('beforebegin', news);
         else featured.insertAdjacentElement('beforebegin', news);
       }
-      if (featured && !$('.ref-student-banner')) {
-        const banner = document.createElement('section');
-        banner.className = 'ref-student-banner';
-        banner.innerHTML = '<div class="ref-student-visual" aria-hidden="true"><img src="../design/assets/student-illustration.png" alt=""></div><div class="ref-student-copy"><strong>学生专属福利</strong><p>完成学生认证，解锁更多优质 AI 资源与专属权益</p></div><div class="ref-student-perks" aria-label="学生福利分类"><span><i>♧</i>教育优惠</span><span><i>▣</i>专属资源</span><span><i>♟</i>学习社区</span><span><i>✦</i>开发工具</span></div><a href="#student-offers" data-filter="student">查看认证入口 <b aria-hidden="true">→</b></a><span class="ref-student-tagline" aria-hidden="true">更好的 AI，<br>从校园开始！</span>';
-        featured.insertAdjacentElement('afterend', banner);
-      }
+      // Student programs now live in the unified resource catalog; no standalone banner.
+
     }
 
     if (section === 'tools') {
