@@ -713,24 +713,27 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/design/free-china-ai-index.html")
         page.wait_for_selector("#catalog-offer-rows .offer")
 
+        page.wait_for_selector(".pf-resource-overview")
         order = page.evaluate("""() => {
-            const ids = ['today-latest', 'catalog-offers', 'catalog-compare'];
+            const ids = ['resource-hero', 'resource-filters', 'catalog-offers', 'catalog-compare'];
             const nodes = {
-                'today-latest': document.querySelector('.today-latest'),
+                'resource-hero': document.querySelector('.pf-resource-hero'),
+                'resource-filters': document.querySelector('.pf-resource-filters'),
                 'catalog-offers': document.getElementById('catalog-offers'),
                 'catalog-compare': document.getElementById('catalog-compare'),
             };
             return ids.map(id => [id, Array.from(document.body.querySelectorAll('*')).indexOf(nodes[id])]);
         }""")
         positions = dict(order)
-        self.assertLess(positions["today-latest"], positions["catalog-offers"])
+        self.assertLess(positions["resource-hero"], positions["resource-filters"])
+        self.assertLess(positions["resource-filters"], positions["catalog-offers"])
         self.assertLess(positions["catalog-offers"], positions["catalog-compare"])
         self.assertEqual(page.locator("#student-offers").count(), 0)
         page.close()
 
         checks = (
             ("design/free-china-ai-index.html", "#catalog-offer-rows .offer:not(.hidden)"),
-            ("models/", ".models-overview-grid > article"),
+            ("models/", ".pf-model-grid .pf-model-card"),
             ("skills/", "#skill-grid .skill-card:not([hidden])"),
             ("tools/", "#tool-grid .tool-card:not([hidden])"),
             ("skills/lab/", ".workflow-grid .workflow-card"),
@@ -791,7 +794,7 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".today-latest"),
+            ("design/free-china-ai-index.html", ".pf-resource-hero"),
             ("models/", ".pf-model-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
@@ -898,17 +901,18 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
         self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        today = page.locator(".today-latest").bounding_box()
+        page.wait_for_selector(".pf-resource-overview")
+        hero = page.locator(".pf-resource-hero").bounding_box()
+        filters = page.locator(".pf-resource-filters").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
         compare = page.locator("#catalog-compare").bounding_box()
         self.assertIsNotNone(hero)
-        self.assertIsNotNone(today)
+        self.assertIsNotNone(filters)
         self.assertIsNotNone(offers)
         self.assertIsNotNone(compare)
         self.assertEqual(page.locator("#student-offers").count(), 0)
-        self.assertLess(hero["y"], today["y"])
-        self.assertLess(today["y"], offers["y"])
+        self.assertLess(hero["y"], filters["y"])
+        self.assertLess(filters["y"], offers["y"])
         self.assertLess(offers["y"], compare["y"])
 
         heights = page.eval_on_selector_all(
@@ -937,37 +941,38 @@ class BrowserPageTests(unittest.TestCase):
         for index in range(7):
             self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        search = page.locator(".hero-search").bounding_box()
+        page.wait_for_selector(".pf-resource-overview")
+        hero = page.locator(".pf-resource-hero").bounding_box()
+        search = page.locator(".ref-topbar .ref-search").bounding_box()
         self.assertIsNotNone(hero)
         self.assertIsNotNone(search)
         self.assertLessEqual(search["x"] + search["width"], 390)
         self.assertGreaterEqual(search["x"], 0)
 
-    def test_featured_resource_link_filters_catalog(self):
+    def test_resource_free_filter_clears_stale_search(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.wait_for_selector(".pf-resource-overview")
 
-        # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
         page.fill("#catalog-search", "Qwen3")
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
-        self.assertEqual(self.visible_offers(page), 20)
+        self.assertEqual(self.visible_offers(page), 3)
+        page.click(".pf-resource-filters [data-pf-kind='free']")
+        page.wait_for_function("document.getElementById('catalog-search').value === ''")
+        visible = self.visible_offers(page)
+        self.assertGreater(visible, 0)
+        self.assertLess(visible, len(read_offers()))
         self.assertEqual(len(page.problems), 0, page.problems)
 
-    def test_featured_resource_link_filters_catalog_without_stale_query(self):
+    def test_resource_student_filter_uses_unified_catalog(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.wait_for_selector(".pf-resource-overview")
 
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
-        self.assertEqual(self.visible_offers(page), 20)
+        page.click(".pf-resource-filters [data-pf-kind='student']")
+        self.assertEqual(self.visible_offers(page), 2)
+        self.assertEqual(page.locator("#student-offers").count(), 0)
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_web_offer_drawer_shows_usage_guide(self):

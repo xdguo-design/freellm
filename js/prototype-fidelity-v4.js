@@ -218,8 +218,16 @@
         apply();
       };
 
-      $$('[data-pf-kind]', overview).forEach(btn => btn.addEventListener('click', () => {
-        $$('[data-pf-kind]', overview).forEach(x => x.classList.remove('active'));
+      const clearCatalogSearch = () => {
+        const input = $('#catalog-search');
+        if (!input || !input.value) return;
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      $('[data-pf-kind]', overview).forEach(btn => btn.addEventListener('click', () => {
+        clearCatalogSearch();
+        $('[data-pf-kind]', overview).forEach(x => x.classList.remove('active'));
         btn.classList.add('active'); kind = btn.dataset.pfKind; apply();
       }));
       $$('[data-pf-region-resource]', overview).forEach(btn => btn.addEventListener('click', () => {
