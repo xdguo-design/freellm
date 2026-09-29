@@ -121,7 +121,8 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
-            "document.write('<script src=\"/js/freellm-sync.js\"><\\/script>')",
+            "syncScript.src = '/js/freellm-sync.js';",
+            "syncScript.defer = true;",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-freshness-filter"',
