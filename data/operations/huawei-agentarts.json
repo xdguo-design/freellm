@@ -1,0 +1,46 @@
+{
+  "providerId": "huawei-agentarts",
+  "provider": "Huawei Cloud AgentArts",
+  "lastVerifiedAt": "2026-09-29",
+  "offerIds": [
+    "huawei-agentarts-2m-trial"
+  ],
+  "paths": [
+    {
+      "id": "free-debug-trial",
+      "label": "AgentArts 200 万 Tokens 调测 / 试运行",
+      "productType": "web_infrastructure",
+      "prerequisites": [
+        "Huawei Cloud account",
+        "AgentArts free experience edition activated"
+      ],
+      "steps": [
+        {
+          "title": "免费开通体验版",
+          "detail": "在 AgentArts 勾选服务声明并免费开通体验版。"
+        },
+        {
+          "title": "确认 200 万 Tokens",
+          "detail": "首次开通后查看资源与订阅，确认平台预置 MaaS 模型的 2,000,000 Tokens 赠送额度。"
+        },
+        {
+          "title": "调测预置模型",
+          "detail": "资产广场中选择标有“限额体验”的预置模型进行模型调测或智能体试运行。"
+        },
+        {
+          "title": "发布前切换计费路径",
+          "detail": "正式发布智能体或通过 API 调用时，需要开通 MaaS 付费模型并配置 API Key。"
+        }
+      ],
+      "endpoint": null,
+      "auth": "No API key required for the platform-internal free debug allowance",
+      "example": "Use the AgentArts UI to debug preset models or run an unpublished agent within the 2M-token shared allowance.",
+      "validation": "资源与订阅显示 2,000,000-token赠送额度，调测/试运行消耗该额度；正式 API 调用不应标记为免费。",
+      "sourceUrls": [
+        "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html",
+        "https://support.huaweicloud.com/price-agentarts/agentarts_08_0001.html",
+        "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0095.html"
+      ]
+    }
+  ]
+}

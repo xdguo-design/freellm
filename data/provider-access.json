@@ -1040,12 +1040,14 @@
     "replacement": null,
     "sourceUrls": [
       "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
-      "https://www.xfyun.cn/doc/spark/Web.html"
+      "https://www.xfyun.cn/doc/spark/Web.html",
+      "https://www.xfyun.cn/services/embedding",
+      "https://www.xfyun.cn/doc/spark/Embedding_new_api.html"
     ],
     "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "partial",
     "confidence": "high",
-    "notes": "Lite 当前官方文档明确免费使用，但未公开统一 Token 配额和固定结束日期；实际日/秒/并发流控以账户授权为准。"
+    "notes": "Lite 当前官方文档明确免费使用，但未公开统一 Token 配额和固定结束日期；实际日/秒/并发流控以账户授权为准。；Embedding 是独立授权产品：个人 100 万 Tokens/QPS2、企业 200 万 Tokens/QPS5，均 1 年有效，使用 AppID/APIKey/APISecret 签名鉴权。"
   },
   {
     "providerId": "cnb",
@@ -1960,5 +1962,40 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "仅 Embedding/Rerank 当前暂不收费；不要外推到 LLM API。"
+  },
+  {
+    "providerId": "huawei-agentarts",
+    "profileId": "huawei-agentarts-free-experience",
+    "registerUrl": "https://console.huaweicloud.com/agentarts/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "no",
+    "licenseAcceptance": "yes",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "登录 Huawei Cloud AgentArts，勾选服务声明并免费开通体验版。",
+      "首次开通后确认 2,000,000 Tokens 模型赠送额度。",
+      "在资产广场 > 模型中选择标有“限额体验”的预置模型，仅用于调测和智能体试运行。",
+      "智能体发布或需要 API 正式调用时，改为接入 MaaS 付费模型并配置 API Key。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html",
+      "https://support.huaweicloud.com/price-agentarts/agentarts_08_0001.html",
+      "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0095.html"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "200 万 Tokens 仅用于平台内模型调测/智能体试运行。正式发布后的 Agent API 调用需要 MaaS 付费模型，不能标成生产免费 API。"
   }
 ]

@@ -1,43 +1,48 @@
 {
   "providerId": "iflytek-spark",
-  "provider": "iFlytek Spark",
+  "provider": "iFlytek Spark / Open Platform",
   "lastVerifiedAt": "2026-09-29",
   "offerIds": [
-    "iflytek-spark-lite-free"
+    "iflytek-spark-lite-free",
+    "iflytek-embedding-free-trial"
   ],
   "paths": [
     {
-      "id": "spark-lite-free-api",
-      "label": "Spark Lite 当前免费 OpenAI-compatible API",
+      "id": "embedding-free-trial",
+      "label": "讯飞 Embedding 免费试用 API",
       "productType": "api",
       "prerequisites": [
         "讯飞开放平台账号",
-        "Spark Lite 授权",
-        "HTTP APIPassword"
+        "Embedding 免费试用已领取",
+        "AppID + APIKey + APISecret"
       ],
       "steps": [
         {
-          "title": "确认 Lite 免费状态",
-          "detail": "打开官方 HTTP 文档/控制台，确认 Lite 仍为支持免费使用。"
+          "title": "领取免费试用",
+          "detail": "个人开发者领取 100 万 Tokens/QPS2，企业开发者领取 200 万 Tokens/QPS5；两档有效期 1 年。"
         },
         {
-          "title": "获取 APIPassword",
-          "detail": "在星火 API 控制台获取 HTTP 服务认证信息中的 APIPassword。"
+          "title": "获取应用密钥",
+          "detail": "创建/选择应用并获取 AppID、APIKey、APISecret；Embedding 授权与 Spark LLM 独立。"
         },
         {
-          "title": "调用 model=lite",
-          "detail": "向 /v1/chat/completions 发送 OpenAI-compatible 请求。",
-          "command": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
-          "expected": "返回 chat completion；若出现 11201/11202/11203 按流控处理。"
+          "title": "调用 Embeddingp",
+          "detail": "按官方签名鉴权生成 URL，POST 文档/知识库内容至 Embeddingp。",
+          "action": "Use official signed request example at https://www.xfyun.cn/doc/spark/Embedding_new_api.html"
+        },
+        {
+          "title": "调用 Embeddingq",
+          "detail": "用户查询向量化使用 Embeddingq；两个服务均支持 2K token 输入并返回 2560 维向量。"
         }
       ],
-      "endpoint": "https://spark-api-open.xf-yun.com/v1/chat/completions",
-      "auth": "Authorization: Bearer APIPassword",
-      "example": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
-      "validation": "请求成功且 model=lite；官方文档仍标 Lite 支持免费使用。",
+      "endpoint": "https://cn-huabei-1.xf-yun.com/v1/private/sa8a05c27",
+      "auth": "AppID + APIKey + APISecret signed request",
+      "example": "Follow the official Embedding_new_api demo to sign the HTTP request; keep APISecret server-side.",
+      "validation": "返回向量数组，控制台免费 Token 余额发生扣减，且调用未超个人/企业 QPS。",
       "sourceUrls": [
-        "https://www.xfyun.cn/doc/spark/HTTP调用文档.html",
-        "https://www.xfyun.cn/doc/spark/Web.html"
+        "https://www.xfyun.cn/services/embedding",
+        "https://www.xfyun.cn/doc/spark/Embedding_new_api.html",
+        "https://www.xfyun.cn/doc/spark/embedding_api.html"
       ]
     }
   ]

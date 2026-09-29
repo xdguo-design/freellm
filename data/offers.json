@@ -8982,5 +8982,286 @@
         }
       ]
     }
+  },
+  {
+    "id": "iflytek-embedding-free-trial",
+    "order": 70,
+    "date": "2026-09-29",
+    "name": "iFlytek Embedding free trial API",
+    "providerMark": "讯",
+    "provider": "iFlytek Open Platform",
+    "providerMeta": "讯飞开放平台 · Text Embedding · China",
+    "model": "Embeddingp + Embeddingq / llm embedding",
+    "modelMeta": "Personal 1M Tokens · Enterprise 2M Tokens · 1 year",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在讯飞开放平台领取文本向量化 Embedding 免费试用包，创建应用并使用 AppID/APIKey/APISecret 调用文档向量化和问题向量化 API",
+      "prerequisites": [
+        "讯飞开放平台账号",
+        "已创建应用",
+        "Embedding 服务授权",
+        "AppID + APIKey + APISecret"
+      ],
+      "steps": [
+        "打开讯飞文本向量化 embedding 产品页，按个人/企业开发者身份领取对应免费试用包。",
+        "在控制台创建或选择应用，获取 AppID、APIKey、APISecret；Embedding 授权与星火大模型授权相互独立。",
+        "按官方鉴权规则生成请求签名 URL；Embeddingp 用于文档/知识库向量化，Embeddingq 用于用户问题向量化。",
+        "先小请求验证返回 2560 维向量，并在控制台查看免费 Tokens 剩余量和 1 年有效期。"
+      ],
+      "endpoint": "https://cn-huabei-1.xf-yun.com/v1/private/sa8a05c27",
+      "method": "POST",
+      "authentication": "AppID + APIKey + APISecret signed URL",
+      "examples": {
+        "action": "Use the official Embedding API demo to generate the signed request URL; do not send APISecret as a plain Bearer token."
+      },
+      "docsUrl": "https://www.xfyun.cn/doc/spark/Embedding_new_api.html"
+    },
+    "kicker": "1M / 2M TOKENS",
+    "badges": [
+      "1 YEAR",
+      "EMBEDDING",
+      "PERSONAL + ENTERPRISE"
+    ],
+    "freeSummary": "讯飞官方产品页：个人开发者免费试用 1,000,000 Tokens、QPS 2；企业开发者免费试用 2,000,000 Tokens、QPS 5；两档有效期均为 1 年。",
+    "validitySummary": "1 year from trial activation",
+    "accessSummary": "iFlytek app + AppID/APIKey/APISecret · signed WebAPI",
+    "checkedSummary": "2026-09-29 / official iFlytek product + API docs",
+    "title": "讯飞 Embedding · 个人 100 万 / 企业 200 万 Tokens 免费试用",
+    "why": "讯飞开放平台文本向量化 embedding 官方产品页当前明确列出两个免费试用包：个人开发者 100 万 Tokens、QPS 2、有效期 1 年；企业开发者 200 万 Tokens、QPS 5、有效期 1 年。官方 API 文档说明 Embeddingp/Embeddingq 分别用于文档和问题向量化，支持 2K token 输入并返回 2560 维向量。",
+    "mechanism": "One-year free trial package for iFlytek text embedding, with separate personal and enterprise quotas",
+    "validity": "1 year; exact start point and remaining quota are shown in the iFlytek console after claiming",
+    "access": "Create an iFlytek app, obtain AppID/APIKey/APISecret, and use signed HTTP(S) requests",
+    "command": "Use the official signed-URL demo from https://www.xfyun.cn/doc/spark/Embedding_new_api.html with AppID, APIKey and APISecret stored server-side.",
+    "register": "https://www.xfyun.cn/services/embedding",
+    "registerLabel": "领取讯飞 Embedding 免费试用",
+    "links": [
+      [
+        "Embedding 产品页",
+        "https://www.xfyun.cn/services/embedding"
+      ],
+      [
+        "Embedding 新版 API",
+        "https://www.xfyun.cn/doc/spark/Embedding_new_api.html"
+      ],
+      [
+        "llm embedding 协议",
+        "https://www.xfyun.cn/doc/spark/embedding_api.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "China iFlytek Open Platform",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "developer_trial",
+      "amount": null,
+      "unit": "tokens",
+      "period": "1 year",
+      "note": "personal: 1M tokens / QPS 2; enterprise: 2M tokens / QPS 5"
+    },
+    "quota": "Personal: 1,000,000 Tokens, QPS 2. Enterprise: 2,000,000 Tokens, QPS 5. Both valid for 1 year.",
+    "renewal": "Free trial package; no recurring yearly refill documented",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check iFlytek Open Platform service terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.xfyun.cn/services/embedding",
+      "https://www.xfyun.cn/doc/spark/Embedding_new_api.html",
+      "https://www.xfyun.cn/doc/spark/embedding_api.html"
+    ],
+    "evidence": "讯飞开放平台文本向量化 embedding 官方产品页显示个人免费试用包 100 万 Tokens / QPS 2 / 1 年，企业免费试用包 200 万 Tokens / QPS 5 / 1 年；官方 API 文档确认 Embeddingp/Embeddingq host、POST 调用、AppID/APIKey/APISecret 鉴权、2K token 输入和 2560 维向量返回。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Embedding 授权与星火大模型授权独立。不要把本条免费额度与 Spark Lite 免费 LLM API 混为一谈；两者是不同产品/鉴权。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验讯飞 Embedding 个人/企业免费试用额度、有效期、QPS 和 API 接入方式。",
+      "method": [
+        "读取讯飞官方 embedding 产品页，确认个人 100 万 Tokens/QPS2/1 年，企业 200 万 Tokens/QPS5/1 年。",
+        "读取官方 Embedding API 文档，确认 Embeddingp/Embeddingq 两个服务、POST host、签名鉴权、2K 输入与 2560 维输出。",
+        "当前没有专用 Embedding AppID/APIKey/APISecret，因此未执行真实向量请求。"
+      ],
+      "result": "官方公开预检通过：免费额度、1 年有效期、QPS 与 API 参数都有官方直接证据。",
+      "limitations": "未创建/领取实际试用包，未验证控制台到账时间、真实请求、试用包耗尽后的实时行为。",
+      "evidence": [
+        {
+          "label": "讯飞 Embedding 产品页",
+          "url": "https://www.xfyun.cn/services/embedding"
+        },
+        {
+          "label": "讯飞 Embedding API",
+          "url": "https://www.xfyun.cn/doc/spark/Embedding_new_api.html"
+        }
+      ]
+    }
+  },
+  {
+    "id": "huawei-agentarts-2m-trial",
+    "order": 71,
+    "date": "2026-09-29",
+    "name": "Huawei Cloud AgentArts 2M-token trial",
+    "providerMark": "HW",
+    "provider": "Huawei Cloud AgentArts",
+    "providerMeta": "智果 AgentArts · model debugging / agent trial · China",
+    "model": "AgentArts preset MaaS models",
+    "modelMeta": "2M shared Tokens · debug/trial only · formal Agent API requires paid MaaS",
+    "type": [
+      "web",
+      "agent",
+      "free"
+    ],
+    "productType": "web_infrastructure",
+    "capabilities": [
+      "agent"
+    ],
+    "usageGuide": {
+      "summary": "免费开通 AgentArts 体验版，使用首次开通赠送的 200 万 Tokens 调测预置模型和试运行智能体",
+      "prerequisites": [
+        "Huawei Cloud account",
+        "AgentArts free experience edition activated"
+      ],
+      "steps": [
+        "免费开通 AgentArts 体验版；首次开通会获得平台预置 MaaS 模型共享的 2,000,000 Tokens。",
+        "在资产广场 > 模型选择标有“限额体验”的预置模型，用于模型调测和智能体试运行。",
+        "在资源与订阅/模型用量中查看免费 Tokens 剩余量。",
+        "注意：免费额度耗尽，或智能体发布后通过 API 正式调用时，需要开通 MaaS 付费模型并配置 API Key。"
+      ],
+      "examples": {
+        "action": "Open AgentArts, choose a preset model marked 限额体验, then debug or run the agent before publishing."
+      },
+      "docsUrl": "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html"
+    },
+    "kicker": "2M TOKENS FOR DEBUG",
+    "badges": [
+      "FREE EXPERIENCE",
+      "AGENT DEBUG",
+      "NOT FREE PROD API"
+    ],
+    "freeSummary": "首次开通 AgentArts 默认赠送 2,000,000 Tokens，共享给标有“限额体验”的预置模型，用于模型调测和智能体试运行。",
+    "validitySummary": "First activation grant · not reissued after unsubscribe/reopen",
+    "accessSummary": "AgentArts free experience edition · preset models only for debug/trial",
+    "checkedSummary": "2026-09-29 / official Huawei AgentArts docs",
+    "title": "华为云 AgentArts · 首次开通 200 万 Tokens 调测额度",
+    "why": "华为云 AgentArts 官方 2026-09 文档明确：开通 AgentArts 后默认提供 200 万 Tokens，可用于模型调测、智能体试运行；体验版本身免费。免费额度用尽，或智能体发布后通过 API 正式调用时，需要开通 MaaS 付费模型并完成鉴权。因此本条是 Agent 开发/调测额度，不是生产免费 API。",
+    "mechanism": "One-time 2M-token shared allowance for preset-model debugging and agent trial runs inside AgentArts",
+    "validity": "Granted on first activation; unsubscribe/reopen does not grant it again, though remaining granted tokens can still be used",
+    "access": "Use AgentArts preset models marked limited trial for debugging and pre-release agent runs",
+    "command": "Open Huawei Cloud AgentArts and use the preset-model debug/trial flow; formal Agent API calls require a paid MaaS model.",
+    "register": "https://console.huaweicloud.com/agentarts/",
+    "registerLabel": "免费开通 AgentArts 体验版",
+    "links": [
+      [
+        "免费模型与使用额度",
+        "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html"
+      ],
+      [
+        "一键接入模型最佳实践",
+        "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0094.html"
+      ],
+      [
+        "免费套餐",
+        "https://support.huaweicloud.com/price-agentarts/agentarts_08_0001.html"
+      ],
+      [
+        "接入 MaaS 付费模型",
+        "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0095.html"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Huawei Cloud AgentArts regions supported by the current service",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "first_activation_shared_model_quota",
+      "amount": 2000000,
+      "unit": "tokens",
+      "period": "until exhausted"
+    },
+    "quota": "2,000,000 shared Tokens for preset-model debugging and agent trial runs",
+    "renewal": "No second grant after unsubscribe/reopen; free experience package may auto-renew, but the 2M model-token gift is first-activation only",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Debug/trial only; production Agent API requires paid MaaS model service",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html",
+      "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0094.html",
+      "https://support.huaweicloud.com/price-agentarts/agentarts_08_0001.html",
+      "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0095.html"
+    ],
+    "evidence": "华为云官方 AgentArts 文档（2026-09-16）明确首次开通默认提供 2,000,000 Tokens，用于模型调测与智能体试运行；免费套餐说明退订后重新开通不再赠送；付费模型最佳实践明确免费额度耗尽、智能体发布或通过 API 正式调用时需要 MaaS 付费模型。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "严禁将这 200 万 Tokens 描述成生产免费 API。它是 AgentArts 平台内预置模型调测/试运行额度；正式 Agent API 调用属于付费路径。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 AgentArts 200 万 Tokens 的领取条件、适用范围及正式 API 是否免费。",
+      "method": [
+        "读取官方免费模型与使用额度页面，确认开通后默认 2,000,000 Tokens，适用于模型调测与智能体试运行。",
+        "读取免费套餐页面，确认首次开通赠送以及退订后重新开通不再赠送。",
+        "读取付费模型最佳实践，确认智能体发布/正式 API 调用需要 MaaS 付费模型。",
+        "当前未登录 Huawei Cloud AgentArts，因此未验证账户实际到账和当前预置模型列表。"
+      ],
+      "result": "官方公开预检通过：2M Tokens 为调测/试运行权益，而不是生产 API 免费额度。",
+      "limitations": "未使用真实 AgentArts 账号，未验证具体预置模型、剩余额度 UI、地区和实际调测响应。",
+      "evidence": [
+        {
+          "label": "AgentArts 免费模型与使用额度",
+          "url": "https://support.huaweicloud.com/lowcode-agentarts/agentarts_05_0186.html"
+        },
+        {
+          "label": "AgentArts 免费套餐",
+          "url": "https://support.huaweicloud.com/price-agentarts/agentarts_08_0001.html"
+        },
+        {
+          "label": "AgentArts 付费模型条件",
+          "url": "https://support.huaweicloud.com/bestpractice-agentarts/agentarts_06_0095.html"
+        }
+      ]
+    }
   }
 ]
