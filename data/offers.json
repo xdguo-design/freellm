@@ -1718,9 +1718,9 @@
     "date": "2026-09-07",
     "name": "Alibaba Qwen / 通义千问 new-user quota",
     "providerMark": "QW",
-    "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
+    "provider": "Alibaba Cloud Model Studio CN / 阿里云百炼",
     "providerEn": "Alibaba Cloud Model Studio / Qwen",
-    "providerMeta": "通义千问 · Alibaba Cloud · China",
+    "providerMeta": "China site · North China 2 (Beijing)",
     "providerMetaEn": "Qwen · Alibaba Cloud · China",
     "model": "Qwen and other eligible Model Studio real-time inference models",
     "modelMeta": "Beijing region · typically 1M tokens per eligible model · 90 days",
@@ -1756,11 +1756,11 @@
       "TYPICALLY 1M / MODEL",
       "FREE-QUOTA-ONLY SWITCH"
     ],
-    "freeSummary": "北京地域新人模型免费额度：符合条件的模型通常各 1,000,000 Tokens，额度彼此独立；另有 OAuth 独立免费额度 2,000 次/日。",
-    "validitySummary": "API Key 新人额度 90 天 · OAuth 独立额度每日刷新",
-    "accessSummary": "北京地域 · 通用 API Key；未实名用户免费额度用完后强制停止",
+    "freeSummary": "中国站：仅华北2（北京）符合条件的模型享新人免费额度；通常每模型 1,000,000 Tokens、90 天有效，具体以模型价格页为准。",
+    "validitySummary": "CN / Beijing · 90 days",
+    "accessSummary": "中国站百炼 · 北京地域 · 通用 API Key",
     "checkedSummary": "2026-09-29 / official Model Studio free-quota docs",
-    "title": "通义千问 · 阿里云百炼新人免费额度",
+    "title": "阿里云百炼中国站 · 北京地域新人免费额度",
     "why": "阿里云百炼官方新人免费额度文档（2026-09 当前版本）确认：仅华北2（北京）地域提供新人免费额度；不同模型额度彼此独立，通常每模型 100 万 Tokens；有效期为 90 天。未实名认证用户免费额度耗尽后默认停止，已实名用户若未开启“免费额度用完即停”会自动转按量付费。官方同页还说明 OAuth 认证有独立的每日 2,000 次免费调用额度，不计入 API Key Token 免费额度。",
     "mechanism": "北京地域新用户按模型独立发放 Token 免费额度；OAuth 认证另有每日 2,000 次独立免费额度",
     "validity": "API Key 新人额度有效期 90 days / 90 天：自开通百炼、模型发布或申请通过之日起计算（取较晚者）；OAuth 独立额度按日刷新",
@@ -1787,7 +1787,7 @@
       ]
     ],
     "originCountry": "China",
-    "availability": "Only supported models in North China 2 (Beijing) have this new-user quota; other regions do not",
+    "availability": "China site: only China (Beijing) / 华北2 region models with China Mainland deployment scope are eligible",
     "freeMechanism": "trial",
     "quota": "Eligible models usually receive 1,000,000 shared input+output tokens each; exact quota varies by model. OAuth authentication has a separate 2,000 calls/day free allowance.",
     "renewal": "API Key new-user quota is one-time and expires after 90 days; OAuth allowance refreshes daily",
@@ -1796,10 +1796,10 @@
     "commercialUse": "Check Alibaba Cloud Model Studio and model terms",
     "sourceUrls": [
       "https://help.aliyun.com/zh/model-studio/new-free-quota/",
-      "https://help.aliyun.com/zh/model-studio/new-free-quota-validity-adjustment",
-      "https://help.aliyun.com/zh/model-studio/model-pricing"
+      "https://help.aliyun.com/zh/model-studio/model-pricing",
+      "https://help.aliyun.com/en/model-studio/new-free-quota"
     ],
-    "evidence": "阿里云官方文档确认：仅北京地域享新人模型免费额度；免费额度 90 天有效；不同模型额度独立且通常各 100 万 Tokens；未实名用户耗尽后强制停止，已实名用户可开启“免费额度用完即停”；通用 API Key 才会优先消耗免费额度；OAuth 认证另有每日 2,000 次独立免费调用额度。",
+    "evidence": "阿里云中国站官方文档（2026-09-21/22 复核）明确：仅华北2（北京）且服务部署范围为中国内地的模型享新人免费额度；有效期 90 天；模型额度独立，具体额度按模型价格页。",
     "status": "verified",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-29",
@@ -1848,7 +1848,8 @@
       "autoReload": "no",
       "overageBehavior": "metered",
       "prices": []
-    }
+    },
+    "edition": "cn"
   },
   {
     "id": "keenable-search-free",
@@ -7405,6 +7406,285 @@
         {
           "label": "Decision Model API",
           "url": "https://help.aliyun.com/zh/model-studio/decision-model-api"
+        }
+      ]
+    }
+  },
+  {
+    "id": "volcengine-ark-new-user-500k",
+    "order": 59,
+    "date": "2026-09-29",
+    "name": "Volcengine Ark new-user free inference quota",
+    "providerMark": "火",
+    "provider": "Volcengine Ark",
+    "providerMeta": "火山方舟 · China",
+    "model": "Supported Ark online inference models",
+    "modelMeta": "500K free Tokens · Safe Experience Mode",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "开通火山方舟新用户免费推理额度，并在安心体验模式下通过 OpenAI 兼容 v3 API 调用支持模型",
+      "prerequisites": [
+        "火山引擎账号",
+        "火山方舟新用户资格",
+        "ARK_API_KEY"
+      ],
+      "steps": [
+        "在方舟开通管理页确认账号仍可开启安心体验模式；该模式仅面向尚未开通过模型服务的新用户。",
+        "开启安心体验模式后，平台赠送的 500,000 Tokens 免费推理额度用尽时模型服务会自动暂停，避免继续产生模型推理费用。",
+        "在 API Key 管理创建 ARK_API_KEY；2026-09-17 之后新建的 ModelArk API Key 使用新版明文格式，但鉴权方式不变。",
+        "使用 https://ark.cn-beijing.volces.com/api/v3/chat/completions 发送最小请求，并在开通管理/费用中心检查免费额度消耗。"
+      ],
+      "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ARK_API_KEY}",
+      "examples": {
+        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+    },
+    "kicker": "500K TOKENS",
+    "badges": [
+      "NEW USER",
+      "SAFE MODE",
+      "AUTO PAUSE"
+    ],
+    "freeSummary": "火山方舟官方安心体验模式：新用户可使用平台赠送的 500,000 Tokens 免费推理额度；额度接近/耗尽后服务自动暂停，避免继续产生模型推理费用。",
+    "validitySummary": "新用户体验额度；安心体验模式关闭后无法重新开启",
+    "accessSummary": "Ark account + API Key · Beijing v3 OpenAI-compatible API",
+    "checkedSummary": "2026-09-29 / official Ark safe-experience + API docs",
+    "title": "火山方舟 · 新用户 50 万 Tokens + 安心体验模式",
+    "why": "火山方舟官方安心体验模式文档明确：平台为新用户提供 50 万 Tokens 免费推理额度，安心体验模式开启时只消耗这部分免费额度，达到边界后服务自动暂停；关闭安心体验模式后无法重新开启。免费额度仅抵扣模型推理 Token，不抵扣联网插件、知识库等附加费用。",
+    "mechanism": "New-user platform gift of 500,000 inference tokens with optional Safe Experience Mode that pauses model service at the free-quota boundary",
+    "validity": "New-user entitlement; Safe Experience Mode is available only before enabling model service and cannot be re-enabled after being turned off",
+    "access": "Create an Ark API Key and call the Beijing v3 OpenAI-compatible endpoint for supported models",
+    "command": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://console.volcengine.com/ark",
+    "registerLabel": "打开火山方舟控制台",
+    "links": [
+      [
+        "安心体验模式",
+        "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+      ],
+      [
+        "获取 API Key",
+        "https://docs.volcengine.com/docs/ark/api-key?lang=zh"
+      ],
+      [
+        "OpenAI 兼容 v3 说明",
+        "https://docs.volcengine.com/docs/82379/1355331"
+      ],
+      [
+        "ChatCompletions API Explorer",
+        "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "火山方舟中国大陆服务；安心体验支持模型以开通管理页面为准",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_account_quota",
+      "amount": 500000,
+      "unit": "tokens",
+      "period": "until exhausted"
+    },
+    "quota": "500,000 free inference Tokens at account level under Safe Experience Mode; model-level free-package display can lag actual API consumption",
+    "renewal": "One-time new-user free inference quota; no recurring refill documented",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Volcengine Ark and selected model terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",
+      "https://docs.volcengine.com/docs/ark/api-key?lang=zh",
+      "https://docs.volcengine.com/docs/82379/1355331",
+      "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+    ],
+    "evidence": "火山方舟官方安心体验文档（最近更新 2026-08-13）明确平台赠送 50 万 Token 免费推理额度，并在安心体验模式下于额度耗尽时自动暂停服务；API Key 文档与 v3 文档确认 Bearer API Key 和 https://ark.cn-beijing.volces.com/api/v3/chat/completions OpenAI 兼容调用。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "安心体验只保护模型推理 Token 费用，联网插件、知识库等附加能力仍可能产生费用。安心体验模式关闭后无法重新开启。实际可用模型以控制台开通管理页为准。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验火山方舟新用户 50 万 Tokens、安心体验自动暂停与 OpenAI 兼容调用路径。",
+      "method": [
+        "读取官方安心体验模式文档，确认 50 万 Tokens、额度耗尽自动暂停、关闭后不可重新开启。",
+        "读取官方 API Key 文档，确认 ModelArk API Key 创建与 Bearer 鉴权。",
+        "读取官方 v3 / API Explorer，确认 ChatCompletions endpoint 与 OpenAI 协议兼容。",
+        "当前无登录态火山引擎账号和 ARK_API_KEY，因此未验证真实额度到账、支持模型集合和一次真实生成。"
+      ],
+      "result": "官方公开预检通过：50 万 Tokens、新用户安心体验自动暂停以及 v3 ChatCompletions 调用路径均有官方文档。",
+      "limitations": "未使用真实 Ark 账号/API Key，未验证账户是否仍满足安心体验开启条件、模型列表、实际剩余额度和附加插件账单。",
+      "evidence": [
+        {
+          "label": "安心体验模式",
+          "url": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
+        },
+        {
+          "label": "Ark API Key",
+          "url": "https://docs.volcengine.com/docs/ark/api-key?lang=zh"
+        },
+        {
+          "label": "ChatCompletions API",
+          "url": "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+        }
+      ]
+    }
+  },
+  {
+    "id": "alibaba-model-studio-intl-free-quota",
+    "order": 60,
+    "date": "2026-09-29",
+    "name": "Alibaba Cloud Model Studio International new-user quota",
+    "providerMark": "ALI",
+    "provider": "Alibaba Cloud Model Studio International",
+    "providerMeta": "International site · Singapore region",
+    "model": "Eligible Model Studio Singapore-region models",
+    "modelMeta": "Singapore only · 90-day new-user quota",
+    "edition": "intl",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 Alibaba Cloud 国际站首次开通 Model Studio 新加坡地域，使用各模型新人免费额度",
+      "prerequisites": [
+        "Alibaba Cloud International account",
+        "Completed required account information",
+        "Singapore-region Model Studio API Key"
+      ],
+      "steps": [
+        "首次开通 Alibaba Cloud Model Studio 新加坡地域前，按国际站要求完善账户信息。",
+        "开通后在免费额度页面查看各模型独立的新人免费额度和 90 天到期时间。",
+        "如需避免自动转 PAYG，手动开启 Free Quota Only；国际站文档明确该开关默认关闭。",
+        "使用新加坡地域 Model Studio endpoint 与 API Key 调用支持免费额度的模型。"
+      ],
+      "endpoint": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
+      "examples": {
+        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+    },
+    "kicker": "SINGAPORE NEW USER",
+    "badges": [
+      "90 DAYS",
+      "INTL",
+      "FREE-QUOTA-ONLY"
+    ],
+    "freeSummary": "国际站：首次开通 Model Studio 新加坡地域后，平台自动发放各模型新人免费额度；仅新加坡地域享该免费额度，其他国际地域无此新人额度。",
+    "validitySummary": "Singapore region · 90 days",
+    "accessSummary": "Alibaba Cloud International account + required account information + Singapore API Key",
+    "checkedSummary": "2026-09-29 / official Alibaba Cloud International free-quota docs",
+    "title": "Alibaba Cloud Model Studio 国际站 · 新加坡新人免费额度",
+    "why": "Alibaba Cloud 国际站官方文档 2026-09-22 更新明确：首次开通 Model Studio 新加坡地域时，平台自动发放各模型新人免费额度；仅新加坡地域模型享免费额度；自 9 月 8 日起新开通用户额度有效期为 90 天。9 月 15 日起需先完善账户信息，且 Free Quota Only 默认关闭，若不手动开启，额度耗尽后会自动转 PAYG。",
+    "mechanism": "Singapore-region new-user per-model free quota on Alibaba Cloud International",
+    "validity": "90 days from Model Studio activation, model release, or approval date, whichever is later",
+    "access": "Complete required international-account information, activate Singapore-region Model Studio, create API Key, and optionally enable Free Quota Only",
+    "command": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://modelstudio.console.alibabacloud.com/",
+    "registerLabel": "Open Alibaba Cloud Model Studio",
+    "links": [
+      [
+        "International free quota rules",
+        "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+      ],
+      [
+        "90-day validity notice",
+        "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Alibaba Cloud International: Singapore region only for this new-user quota",
+    "freeMechanism": "trial",
+    "pricingModel": "trial",
+    "freePolicy": {
+      "type": "new_user_per_model",
+      "amount": null,
+      "unit": "model-specific quota",
+      "period": "90 days"
+    },
+    "quota": "Per-model new-user quota; exact amounts differ by model and are shown in the international Model Studio pricing/console",
+    "renewal": "One-time new-user quota; not replenished after expiry",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Alibaba Cloud Model Studio and model-specific terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "no",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+    ],
+    "evidence": "Alibaba Cloud International official docs updated Sep 2026 state that only Singapore-region models receive the new-user free quota, valid for 90 days for newly activated users; Free Quota Only is disabled by default and can be enabled to prevent automatic PAYG after exhaustion.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Do not merge this policy with the China-site Beijing quota. They are different editions/accounts/regions. Exact per-model quota amounts must be read from the international pricing/console.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 Alibaba Cloud International 新加坡地域新人免费额度、90 天有效期和 Free Quota Only 规则。",
+      "method": [
+        "读取 Alibaba Cloud International 官方新人免费额度页面，确认仅新加坡地域享额度。",
+        "读取官方有效期调整通知，确认 9 月 8 日后新开通用户为 90 天。",
+        "确认 9 月 15 日后开通前需完善账户信息，Free Quota Only 默认关闭。",
+        "当前无国际站登录态与 API Key，因此未验证具体模型额度到账与真实调用。"
+      ],
+      "result": "官方公开预检通过：新加坡地域新人免费额度、90 天有效期、信息完善前置与 Free Quota Only 规则均有官方文档。",
+      "limitations": "未登录国际站控制台，未验证单个模型的实际免费额度、API Key 创建、真实请求和账单。",
+      "evidence": [
+        {
+          "label": "International new-user free quota",
+          "url": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
+        },
+        {
+          "label": "International 90-day validity notice",
+          "url": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
         }
       ]
     }

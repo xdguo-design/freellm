@@ -132,15 +132,20 @@
     "aliases": [
       "火山方舟",
       "豆包",
-      "Doubao Seed Code"
+      "Doubao",
+      "ModelArk"
     ],
     "allowedDomains": [
+      "docs.volcengine.com",
+      "api.volcengine.com",
+      "console.volcengine.com",
       "developer.volcengine.com",
       "www.volcengine.com"
     ],
     "discoveryUrls": [
-      "https://developer.volcengine.com/articles/7616702041779994643",
-      "https://www.volcengine.com/activity/codingplan"
+      "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",
+      "https://docs.volcengine.com/docs/ark/api-key?lang=zh",
+      "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
     ]
   },
   {
@@ -830,6 +835,40 @@
       "https://build.nvidia.com/models",
       "https://docs.api.nvidia.com/nim/docs/product",
       "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+    ]
+  },
+  {
+    "id": "alibaba-model-studio-intl",
+    "name": "Alibaba Cloud Model Studio International",
+    "aliases": [
+      "Alibaba Cloud Model Studio",
+      "百炼国际站",
+      "Model Studio Singapore"
+    ],
+    "allowedDomains": [
+      "alibabacloud.com",
+      "modelstudio.console.alibabacloud.com",
+      "dashscope-intl.aliyuncs.com"
+    ],
+    "discoveryUrls": [
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+    ]
+  },
+  {
+    "id": "tencent-legacy-llm",
+    "name": "Tencent Cloud legacy LLM platform",
+    "aliases": [
+      "腾讯混元旧平台",
+      "混元旧平台",
+      "知识引擎原子能力 DeepSeek API"
+    ],
+    "allowedDomains": [
+      "cloud.tencent.com",
+      "console.cloud.tencent.com"
+    ],
+    "discoveryUrls": [
+      "https://cloud.tencent.com/announce/detail/2287"
     ]
   }
 ]

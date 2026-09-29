@@ -1585,5 +1585,101 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "官方页面确认 Free 公测档 ¥0/月、60,000 积分 / 5 小时、最多 20 个 API Key；特殊模型可能排除。当前无付费档位可自动超额，具体停止行为仍需账户实测。"
+  },
+  {
+    "providerId": "volcengine-ark",
+    "profileId": "volcengine-ark-api",
+    "registerUrl": "https://console.volcengine.com/ark",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "注册/登录火山引擎并进入火山方舟开通管理。",
+      "若仍符合新用户条件，先开启安心体验模式；关闭后无法重新开启。",
+      "创建 ModelArk API Key，再使用北京地域 v3 OpenAI 兼容 endpoint 调用支持模型。",
+      "免费额度耗尽后安心体验会暂停模型服务；联网插件、知识库等附加能力仍可能单独计费。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",
+      "https://docs.volcengine.com/docs/ark/api-key?lang=zh",
+      "https://api.volcengine.com/api-explorer/?action=ChatCompletions&groupName=Chat+API&serviceCode=ark&version=2024-01-01"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方确认新用户 50 万 Tokens 与安心体验自动暂停；尚未用真实账号验证当前账户资格和可用模型。"
+  },
+  {
+    "providerId": "alibaba-model-studio-intl",
+    "profileId": "alibaba-model-studio-intl-api",
+    "registerUrl": "https://modelstudio.console.alibabacloud.com/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "metered",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "使用 Alibaba Cloud International 账号完善平台要求的账户信息。",
+      "首次开通 Model Studio 新加坡地域后查看各模型新人免费额度和 90 天有效期。",
+      "创建新加坡地域 API Key，并按需手动开启 Free Quota Only，避免额度耗尽后自动转 PAYG。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",
+      "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota-validity-adjustment"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "仅 Alibaba Cloud International 新加坡地域。与阿里云中国站北京地域免费额度是两套独立政策。"
+  },
+  {
+    "providerId": "tencent-legacy-llm",
+    "profileId": "tencent-legacy-llm-retired",
+    "registerUrl": null,
+    "accountRequired": "unknown",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "unknown",
+    "billingRequired": "unknown",
+    "apiKeyRequired": "unknown",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "unknown",
+    "searchMethod": "retired_service",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [],
+    "registrationStatus": "unavailable",
+    "replacement": "Tencent Cloud TokenHub",
+    "sourceUrls": [
+      "https://cloud.tencent.com/announce/detail/2287"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "confidence": "high",
+    "notes": "旧平台已于 2026-06-30 停止售卖，并将在 2026-09-30 00:00 全面停服；官方要求迁移至 TokenHub。完成迁移的用户可按公告申领 3 个月有效的迁移免费体验额度。"
   }
 ]
