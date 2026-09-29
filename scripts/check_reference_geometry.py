@@ -11,41 +11,53 @@ REPORT = ROOT / "artifacts" / "visual-regression" / "report.json"
 
 DESKTOP = {
     "home": {
-        "hero.x": (202, 214), "hero.y": (58, 66), "hero.height": (284, 300),
-        "primaryContent.x": (202, 214),
+        "rail.x": (-1, 1), "rail.width": (182, 186),
+        "topbar.x": (224, 232), "topbar.y": (9, 17), "topbar.height": (36, 44),
+        "hero.x": (212, 220), "hero.y": (62, 70), "hero.height": (244, 256),
+        "primaryContent.x": (212, 220), "primaryContent.width": (1196, 1204),
+        "featured.x": (212, 220), "featured.width": (1196, 1204),
     },
     "models": {
-        "prototypeNav.x": (-1, 1), "prototypeNav.width": (1446, 1450), "prototypeNav.height": (62, 74),
-        "hero.x": (28, 36), "hero.y": (66, 74), "hero.height": (250, 370),
-        "primaryContent.x": (28, 36), "primaryContent.width": (1376, 1392),
-        "featured.x": (28, 36), "featured.width": (1376, 1392),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (-1, 1), "topbar.height": (56, 60),
+        "hero.x": (180, 184), "hero.y": (56, 60), "hero.height": (312, 322),
+        "primaryContent.x": (196, 204), "primaryContent.width": (1226, 1234),
+        "featured.x": (196, 204), "featured.width": (996, 1006),
+        "sideRail.x": (1211, 1219), "sideRail.width": (211, 219),
     },
     "skills": {
-        "hero.x": (202, 214), "hero.y": (58, 66), "hero.height": (245, 265),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (9, 17), "topbar.height": (56, 60),
+        "hero.x": (204, 212), "hero.y": (58, 66), "hero.height": (248, 258),
+        "featured.x": (204, 212), "featured.width": (1208, 1216),
     },
     "tools": {
-        "hero.x": (202, 214), "hero.y": (58, 66), "hero.height": (268, 284),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (9, 17), "topbar.height": (56, 60),
+        "hero.x": (204, 212), "hero.y": (58, 66), "hero.height": (271, 281),
+        "featured.x": (204, 212), "featured.width": (1208, 1216),
     },
     "workflow": {
-        "hero.x": (204, 212), "hero.y": (58, 66), "hero.height": (220, 232),
-        "primaryContent.x": (204, 212), "primaryContent.width": (955, 990),
-        "featured.x": (204, 212), "sideRail.x": (1186, 1204), "sideRail.width": (198, 206),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (9, 17), "topbar.height": (56, 60),
+        "hero.x": (204, 212), "hero.y": (58, 66), "hero.height": (221, 231),
+        "primaryContent.x": (204, 212), "primaryContent.width": (968, 976),
+        "featured.x": (204, 212), "featured.width": (968, 976),
+        "sideRail.x": (1190, 1198), "sideRail.width": (198, 206),
     },
     "updates": {
-        "hero.x": (204, 214), "hero.y": (58, 67), "hero.height": (220, 240),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (9, 17), "topbar.height": (56, 60),
+        "hero.x": (205, 213), "hero.y": (59, 67), "hero.height": (224, 234),
+        "featured.x": (205, 213), "featured.width": (1206, 1214),
     },
     "about": {
-        "hero.x": (178, 182), "hero.y": (-1, 1), "hero.height": (315, 325),
-        "primaryContent.x": (206, 216),
+        "rail.x": (-1, 1), "rail.width": (180, 184),
+        "topbar.x": (180, 184), "topbar.y": (9, 17), "topbar.height": (56, 60),
+        "hero.x": (176, 184), "hero.y": (66, 74), "hero.height": (315, 325),
+        "primaryContent.x": (206, 214), "primaryContent.width": (1182, 1190),
+        "featured.x": (206, 214), "featured.width": (1182, 1190),
     },
-}
-
-COMMON_DESKTOP = {
-    "rail.x": (-1, 1),
-    "rail.width": (178, 182),
-    "topbar.x": (220, 228),
-    "topbar.y": (10, 16),
-    "topbar.height": (36, 44),
 }
 
 
@@ -88,9 +100,6 @@ def main() -> int:
         if not item:
             errors.append(f"missing visual state {state}")
             continue
-        if page != "models":
-            for field, bounds in COMMON_DESKTOP.items():
-                check_range(errors, state, item, field, bounds)
         for field, bounds in rules.items():
             check_range(errors, state, item, field, bounds)
 
@@ -101,7 +110,7 @@ def main() -> int:
         return 1
 
     print("REFERENCE_GEOMETRY_GATE=PASS")
-    print("7 desktop boards + tablet/mobile horizontal-overflow checks are within tolerance.")
+    print("7 v4 desktop boards + tablet/mobile horizontal-overflow checks are within tolerance.")
     return 0
 
 
