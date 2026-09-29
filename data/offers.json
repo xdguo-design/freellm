@@ -1763,7 +1763,7 @@
     "title": "通义千问 · 阿里云百炼新人免费额度",
     "why": "阿里云百炼官方新人免费额度文档（2026-09 当前版本）确认：仅华北2（北京）地域提供新人免费额度；不同模型额度彼此独立，通常每模型 100 万 Tokens；有效期为 90 天。未实名认证用户免费额度耗尽后默认停止，已实名用户若未开启“免费额度用完即停”会自动转按量付费。官方同页还说明 OAuth 认证有独立的每日 2,000 次免费调用额度，不计入 API Key Token 免费额度。",
     "mechanism": "北京地域新用户按模型独立发放 Token 免费额度；OAuth 认证另有每日 2,000 次独立免费额度",
-    "validity": "API Key 新人额度自开通百炼、模型发布或申请通过之日起 90 天（取较晚者）；OAuth 独立额度按日刷新",
+    "validity": "API Key 新人额度有效期 90 days / 90 天：自开通百炼、模型发布或申请通过之日起计算（取较晚者）；OAuth 独立额度按日刷新",
     "access": "使用百炼北京地域通用 API Key 调用实时推理；Token Plan/Coding Plan 专属 Key 不消耗新人免费额度",
     "command": "Create a regular Model Studio API key in the Beijing region, then use the official Qwen API quick-start example. Enable the free-quota-exhausted stop setting before testing.",
     "register": "https://bailian.console.aliyun.com/",
