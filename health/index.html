@@ -126,7 +126,7 @@
     <section class="grid-2">
       <article class="panel">
         <div class="panel-head">
-          <div><h2>今天需要处理</h2><p>先处理会影响“今天能不能用”的问题，而不是先看完整目录。</p></div>
+          <div><h2>今天需要处理</h2><p>按 P0 → P1 → P2 排序；同一 Provider 的异常和维护原因聚合在一行。</p></div>
         </div>
         <div class="action-list" id="action-list"><div class="empty">正在计算…</div></div>
       </article>
@@ -238,6 +238,79 @@
     if(isLimited(r)&&!/\d{4}-\d{2}-\d{2}/.test(String(r.validity||'')))issues.push('限时权益无明确截止日');
     return issues;
   }
+  function actionPriorityRank(level){return level==='P0'?0:(level==='P1'?1:2)}
+  function actionSeverityClass(level){return level==='P0'?'sev-high':(level==='P1'?'sev-mid':'sev-low')}
+  function endpointVerdict(r){return String((r.endpointCheck&&r.endpointCheck.verdict)||(r.latency&&r.latency.verdict)||'').toUpperCase()}
+  function endpointIsHealthy(r){
+    var verdict=endpointVerdict(r);
+    return !verdict||['OK','NEEDS_KEY','ALIVE','RATE_LIMITED'].indexOf(verdict)>=0;
+  }
+  function expiryDate(r){
+    var match=String(r.validity||'').match(/\b(20\d{2}-\d{2}-\d{2})\b/);
+    return match?match[1]:'';
+  }
+  function daysUntil(date){
+    if(!date)return null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var target=new Date(date+'T00:00:00');
+    return Math.ceil((target.getTime()-today.getTime())/86400000);
+  }
+  function hasExpiringPolicy(r){
+    var type=String((r.freePolicy&&r.freePolicy.type)||'').toLowerCase();
+    var validity=String(r.validity||'').toLowerCase();
+    if(type==='trial'||type==='limited_time_free')return true;
+    return /\blimited[- ]?time\b|\btrial\b|限时|公测|90 days from|promotional quota can expire/i.test(validity);
+  }
+  function actionReasons(r){
+    var reasons=[];
+    var cors=state.cors[r.id];
+    var verdict=endpointVerdict(r);
+    var exp=expiryDate(r);
+    var until=daysUntil(exp);
+
+    if(!r.latency&&!r.endpointCheck)reasons.push({level:'P0',code:'missing_probe',label:'缺公开端点检测'});
+    if(verdict&&!endpointIsHealthy(r))reasons.push({level:'P0',code:'endpoint_down',label:'端点失效 / '+verdict});
+    if(r.networkCheck&&['none','down','unreachable'].indexOf(String(r.networkCheck.region||'').toLowerCase())>=0)reasons.push({level:'P0',code:'network_down',label:'网络不可达'});
+    if(cors&&cors.ok===false&&cors.reason!=='no_models_endpoint')reasons.push({level:'P0',code:'cors_failed',label:'CORS 快检失败'});
+    if(exp&&until<0)reasons.push({level:'P0',code:'expired',label:'活动已到期 '+exp});
+
+    if(exp&&until>=0&&until<=7)reasons.push({level:'P1',code:'expiring',label:until===0?'活动今天到期':'活动 '+until+' 天后到期'});
+    if(!exp&&hasExpiringPolicy(r)){
+      if(/90 days from/i.test(String(r.validity||'')))reasons.push({level:'P1',code:'relative_expiry',label:'按账号起始日计算到期（90 天）'});
+      else reasons.push({level:'P1',code:'unknown_expiry',label:'限时 / 试用权益未给出明确截止日'});
+    }
+
+    if(r.catalogOnly)reasons.push({level:'P2',code:'catalog_only',label:'尚未转成正式 API Offer'});
+    if(daysOld(r.lastVerifiedAt)>7)reasons.push({level:'P2',code:'stale_verification',label:'官方信息超过 '+daysOld(r.lastVerifiedAt)+' 天未复核'});
+    return reasons;
+  }
+  function providerActionItems(){
+    var grouped={};
+    state.records.forEach(function(r){
+      var key=r.providerId||r.id;
+      var reasons=actionReasons(r);
+      if(!reasons.length)return;
+      if(!grouped[key])grouped[key]={key:key,provider:r.provider||r.title||r.id,reasons:[],age:daysOld(r.lastVerifiedAt)};
+      grouped[key].age=Math.max(grouped[key].age,daysOld(r.lastVerifiedAt));
+      reasons.forEach(function(reason){
+        if(!grouped[key].reasons.some(function(existing){return existing.code===reason.code&&existing.label===reason.label}))grouped[key].reasons.push(reason);
+      });
+    });
+    return Object.keys(grouped).map(function(key){
+      var item=grouped[key];
+      item.reasons.sort(function(a,b){return actionPriorityRank(a.level)-actionPriorityRank(b.level)});
+      item.level=item.reasons[0].level;
+      return item;
+    }).sort(function(a,b){
+      var priority=actionPriorityRank(a.level)-actionPriorityRank(b.level);
+      if(priority)return priority;
+      var reasonCount=b.reasons.length-a.reasons.length;
+      if(reasonCount)return reasonCount;
+      var age=b.age-a.age;
+      if(age)return age;
+      return a.provider.localeCompare(b.provider,'zh-CN');
+    });
+  }
   function normalize(offers,latency){
     var lm={};(latency.providers||[]).forEach(function(x){lm[x.providerId]=x});
     var records=offers.filter(function(o){return o.productType==='api'}).map(function(o){
@@ -293,11 +366,10 @@
     $('m-models').textContent=state.models.length;
   }
   function renderActions(){
-    var items=[];
-    state.records.forEach(function(r){issueFor(r).forEach(function(msg){items.push({r:r,msg:msg,sev:/缺|超过|截止/.test(msg)?'mid':'low'})})});
-    items.sort(function(a,b){return daysOld(b.r.lastVerifiedAt)-daysOld(a.r.lastVerifiedAt)});
-    $('action-list').innerHTML=items.length?items.slice(0,8).map(function(x){
-      return '<div class="action-item"><div><strong>'+esc(x.r.provider||x.r.title)+'</strong><span>'+esc(x.msg)+'</span></div><b class="severity sev-'+x.sev+'">处理</b></div>';
+    var items=providerActionItems();
+    $('action-list').innerHTML=items.length?items.slice(0,8).map(function(item){
+      var reasons=item.reasons.map(function(reason){return reason.label}).join(' · ');
+      return '<div class="action-item" data-provider-id="'+esc(item.key)+'" data-priority="'+esc(item.level)+'"><div><strong>'+esc(item.provider)+'</strong><span>'+esc(reasons)+'</span></div><b class="severity '+actionSeverityClass(item.level)+'">'+esc(item.level)+'</b></div>';
     }).join(''):'<div class="empty">当前没有待处理项。</div>';
   }
   function renderExpiry(){
