@@ -32,6 +32,25 @@
 (function (global) {
   'use strict';
 
+  /* Load page-family prototype CSS only where it is used.
+     Keeping these out of the global pastel stylesheet prevents the homepage
+     from downloading every detail-page visual bundle. */
+  (function installScopedPrototypeStyles() {
+    var path = window.location.pathname || '/';
+    var href = '';
+    if (/^\/offers\/[^/]+\/?$/.test(path)) href = '/css/offer-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/providers\/[^/]+\/?$/.test(path)) href = '/css/provider-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/models\/(?!all(?:\/|$)|center(?:\/|$))[^/]+\/?$/.test(path)) href = '/css/model-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/category\/[^/]+\/?$/.test(path)) href = '/css/category-prototype-v2.css?v=20260929a';
+    else if (/^\/guides\/[^/]+\/?$/.test(path)) href = '/css/guide-prototype-v2.css?v=20260929a';
+    if (!href || document.querySelector('link[href="' + href + '"]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset.freellmScopedPrototype = 'true';
+    document.head.appendChild(link);
+  })();
+
   /* ---------- FreeLLM 2026 site-wide visual system ---------- */
   (function installSiteVisualSystem() {
     if (document.documentElement.classList.contains('fl-pastel-ui')) return;
@@ -48,7 +67,6 @@
       if (path.indexOf('/skills/lab') === 0) return 'workflow';
       if (path.indexOf('/skills') === 0) return 'skills';
       if (path.indexOf('/tools') === 0) return 'tools';
-      if (path.indexOf('/health') === 0) return 'health';
       if (path.indexOf('/logs') === 0) return 'logs';
       if (path.indexOf('/models') === 0 || path.indexOf('/providers') === 0) return 'models';
       if (path.indexOf('/about') === 0 || path.indexOf('/links') === 0 || path.indexOf('/privacy') === 0 || path.indexOf('/terms') === 0) return 'about';
@@ -86,7 +104,6 @@
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
             railLink('/models/', '▣', '模型', 'models', current) +
-            railLink('/health/', '⌁', 'API 健康', 'health', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
@@ -791,10 +808,361 @@
     });
   }
 
+  function enhanceGuidePage() {
+    var body=document.body;
+    if(!body) return;
+    var match=/^\/guides\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match) return;
+    var slug=match[1];
+    body.dataset.guideDetail='true';
+    body.dataset.guideSlug=slug;
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var labels={
+      'free-llm':'免费 LLM 总览',
+      'free-openai-compatible-apis':'兼容 API',
+      'free-ai-coding-tools':'AI 编程工具',
+      'free-ai-search-apis':'AI 搜索 API',
+      'open-weight-models':'开放权重',
+      'model-context-windows':'上下文窗口',
+      'china-free-ai-api':'国内 API',
+      'free-openai-api-alternatives':'OpenAI 替代',
+      'claude-code-free-alternatives':'Claude Code 替代'
+    };
+    var header=body.querySelector('body > header'),main=body.querySelector('main');
+    if(!header||!main)return;
+
+    if(!header.querySelector('.guide-source-boundary')){
+      var note=document.createElement('div');note.className='guide-source-boundary';
+      note.textContent=slug==='free-llm'
+        ? '来源边界：本页包含外部 Free-LLM README 的整理快照；实时可用性、免费条件和最终接入结论仍以本站 Offer 数据与官方来源为准。'
+        : '来源边界：本页用于整理和比较；免费额度、地区、模型参数和兼容性均可能变化，最终以对应详情页和官方来源为准。';
+      header.appendChild(note);
+    }
+
+    if(!body.querySelector('.guide-tabs')){
+      var tabs=document.createElement('nav');tabs.className='guide-tabs';tabs.setAttribute('aria-label','Guide 页面');
+      tabs.innerHTML=Object.keys(labels).map(function(key){
+        return '<a href="/guides/'+key+'/"'+(key===slug?' aria-current="page"':'')+'>'+labels[key]+'</a>';
+      }).join('');
+      header.insertAdjacentElement('afterend',tabs);
+    }
+
+    if(!body.querySelector('.guide-section-nav')){
+      var targets=[];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'),function(section,index){
+        var h2=section.querySelector('h2');if(!h2)return;
+        section.id=section.id||('guide-section-'+(index+1));
+        var label=(h2.querySelector('[lang="zh-CN"]')||h2).textContent.replace(/\s+/g,' ').trim();
+        if(label&&targets.length<10)targets.push({id:section.id,label:label});
+      });
+      if(targets.length){
+        var nav=document.createElement('nav');nav.className='guide-section-nav';nav.setAttribute('aria-label','本页目录');
+        nav.innerHTML=targets.map(function(x){return '<a href="#'+x.id+'">'+x.label+'</a>';}).join('');
+        var tabsEl=body.querySelector('.guide-tabs');tabsEl.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    Array.prototype.forEach.call(main.querySelectorAll('pre'),function(pre,index){
+      if(pre.querySelector('.guide-copy-code'))return;
+      var btn=document.createElement('button');btn.type='button';btn.className='guide-copy-code';btn.textContent='复制代码';
+      btn.addEventListener('click',function(){
+        var code=pre.querySelector('code');var value=(code||pre).innerText;
+        navigator.clipboard.writeText(value).then(function(){btn.textContent='已复制';setTimeout(function(){btn.textContent='复制代码';},1200);});
+      });
+      pre.appendChild(btn);
+    });
+  }
+
+  function enhanceCategoryPage() {
+    var body=document.body;
+    if(!body || body.dataset.offerId || body.dataset.providerDetail==='true' || body.dataset.modelDetail==='true') return;
+    var match=/^\/category\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match) return;
+    var slug=match[1];
+    body.dataset.categoryDetail='true';
+    body.dataset.categorySlug=slug;
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var labels={
+      'free-quota':'免费额度','free-ide':'免费 AI IDE','api':'AI API',
+      'promo':'试用与优惠','student':'学生优惠','web':'网页工具','open-weights':'开放权重'
+    };
+    var header=body.querySelector('body > header');
+    var main=body.querySelector('main');
+    if(!header || !main) return;
+
+    var summary=header.querySelector('h1~p:last-of-type');
+    if(summary && /经过核验的资源|verified resources/i.test(summary.textContent||'')){
+      var count=main.querySelectorAll(':scope > article').length;
+      summary.classList.add('category-summary');
+      summary.innerHTML='<span lang="zh-CN">收录 '+count+' 条资源；核验状态见每张卡片。</span><span lang="en">'+count+' resources; verification status is shown per card.</span>';
+    }
+
+    Array.prototype.forEach.call(main.querySelectorAll(':scope > article'),function(card){
+      if(card.querySelector('.category-status')) return;
+      var h2=card.querySelector('h2');
+      var isReview=/longcat-2-0/i.test((h2&&h2.textContent)||'') || /longcat-2-0/.test(card.innerHTML);
+      var badge=document.createElement('span');
+      badge.className='category-status'+(isReview?' needs-review':'');
+      badge.textContent=isReview?'待复核':'来源已核验';
+      card.insertBefore(badge,card.firstChild);
+    });
+
+    if(!body.querySelector('.category-tabs')){
+      var tabs=document.createElement('nav');tabs.className='category-tabs';tabs.setAttribute('aria-label','资源分类');
+      tabs.innerHTML=Object.keys(labels).map(function(key){
+        return '<a href="/category/'+key+'/"'+(key===slug?' aria-current="page"':'')+'>'+labels[key]+'</a>';
+      }).join('');
+      header.insertAdjacentElement('afterend',tabs);
+    }
+
+    var cards=Array.prototype.slice.call(main.querySelectorAll(':scope > article'));
+    if(cards.length && !body.querySelector('.category-toolbar')){
+      var toolbar=document.createElement('div');toolbar.className='category-toolbar';
+      toolbar.innerHTML='<label class="category-search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索资源、厂商、免费方式或访问条件…" aria-label="搜索当前分类资源"></label><span class="category-count"></span>';
+      main.insertAdjacentElement('beforebegin',toolbar);
+      var input=toolbar.querySelector('input'),countEl=toolbar.querySelector('.category-count');
+      var empty=document.createElement('div');empty.className='category-empty';empty.hidden=true;empty.textContent='没有找到匹配的资源。';main.appendChild(empty);
+      function apply(){
+        var q=input.value.trim().toLowerCase(),visible=0;
+        cards.forEach(function(card){var show=!q||(card.textContent||'').toLowerCase().indexOf(q)>=0;card.hidden=!show;if(show)visible++;});
+        countEl.textContent='显示 '+visible+' / '+cards.length+' 条资源';
+        empty.hidden=visible!==0;
+      }
+      input.addEventListener('input',apply);apply();
+    }
+  }
+
+  function enhanceModelDetail() {
+    var body=document.body;
+    if(!body || body.dataset.offerId || body.dataset.providerDetail==='true') return;
+    var match=/^\/models\/([^/]+)\/?$/.exec(location.pathname);
+    if(!match || match[1]==='all' || match[1]==='center') return;
+    var modelId=body.dataset.modelSlug || match[1];
+    body.dataset.modelSlug=modelId;
+    body.dataset.modelDetail='true';
+    body.setAttribute('data-reference-style','v1');
+    body.setAttribute('data-visual-style','aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection='models';
+
+    var title=body.querySelector('header h1');
+    var item={type:'model',id:modelId,name:title?title.textContent.trim():modelId,url:location.pathname};
+    var header=body.querySelector('body > header');
+    if(header && !header.querySelector('.model-favorite-action')){
+      var fav=document.createElement('button');
+      fav.type='button';fav.className='model-favorite-action';
+      function paint(){
+        var active=isFav('model',modelId);
+        fav.classList.toggle('is-fav',active);
+        fav.textContent=active?'★ 已收藏模型':'☆ 收藏模型';
+        fav.setAttribute('aria-pressed',String(active));
+      }
+      fav.addEventListener('click',function(){
+        var added=toggleFav(item);
+        toast(added?'已收藏「'+item.name+'」':'已取消收藏');
+      });
+      on('fav',paint);paint();header.appendChild(fav);
+    }
+
+    var main=body.querySelector('main');
+    if(main && header && !body.querySelector('.model-section-nav')){
+      var targets=[];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'),function(section,index){
+        var h2=section.querySelector('h2');if(!h2)return;
+        section.id=section.id||('model-section-'+(index+1));
+        var label=(h2.querySelector('[lang="zh-CN"]')||h2).textContent.trim();
+        if(label && targets.length<7)targets.push({id:section.id,label:label});
+      });
+      if(targets.length){
+        var nav=document.createElement('nav');nav.className='model-section-nav';nav.setAttribute('aria-label','模型详情目录');
+        nav.innerHTML=targets.map(function(x){return '<a href="#'+x.id+'">'+x.label+'</a>';}).join('');
+        header.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    var table=main && main.querySelector('.catalog-table');
+    if(table){
+      var rows=Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+      if(rows.length>1 && !main.querySelector('.model-record-filter')){
+        var wrap=table.closest('.catalog-table-wrap');
+        var box=document.createElement('div');box.className='model-record-filter';
+        box.innerHTML='<label><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索平台、状态、限制或来源…" aria-label="搜索该模型的平台记录"></label><span class="model-record-count"></span>';
+        wrap.parentNode.insertBefore(box,wrap);
+        var input=box.querySelector('input'),count=box.querySelector('.model-record-count');
+        var empty=document.createElement('div');empty.className='model-record-empty';empty.hidden=true;empty.textContent='没有找到匹配的平台记录。';
+        wrap.insertAdjacentElement('afterend',empty);
+        function apply(){
+          var q=input.value.trim().toLowerCase(),visible=0;
+          rows.forEach(function(row){var show=!q||(row.textContent||'').toLowerCase().indexOf(q)>=0;row.hidden=!show;if(show)visible++;});
+          count.textContent='显示 '+visible+' / '+rows.length+' 条平台记录';
+          empty.hidden=visible!==0;
+        }
+        input.addEventListener('input',apply);apply();
+      }
+    }
+    track(item);
+  }
+
+  function enhanceProviderDetail() {
+    var body = document.body;
+    if (!body || body.dataset.offerId) return;
+    var match = /^\/providers\/([^/]+)\/?$/.exec(location.pathname);
+    if (!match) return;
+    var providerId = body.dataset.providerId || match[1];
+    body.dataset.providerId = providerId;
+    body.dataset.providerDetail = 'true';
+    body.setAttribute('data-reference-style', 'v1');
+    body.setAttribute('data-visual-style', 'aurora');
+    body.classList.add('fl-ui-v2');
+    body.dataset.flSection = 'models';
+
+    var title = body.querySelector('header h1');
+    var item = { type:'provider', id:providerId, name:title ? title.textContent.trim() : providerId, url:location.pathname };
+    var header = body.querySelector('body > header');
+    if (header && !header.querySelector('.provider-favorite-action')) {
+      var fav = document.createElement('button');
+      fav.type = 'button';
+      fav.className = 'provider-favorite-action';
+      function paint() {
+        var active = isFav('provider', providerId);
+        fav.classList.toggle('is-fav', active);
+        fav.textContent = active ? '★ 已收藏厂家' : '☆ 收藏厂家';
+        fav.setAttribute('aria-pressed', String(active));
+      }
+      fav.addEventListener('click', function () {
+        var added = toggleFav(item);
+        toast(added ? '已收藏「' + item.name + '」' : '已取消收藏');
+      });
+      on('fav', paint);
+      paint();
+      header.appendChild(fav);
+    }
+
+    var main = body.querySelector('main');
+    if (main && header && !body.querySelector('.provider-section-nav')) {
+      var targets = [];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'), function(section,index) {
+        var h2 = section.querySelector('h2');
+        if (!h2) return;
+        section.id = section.id || ('provider-section-' + (index + 1));
+        var label = (h2.querySelector('[lang="zh-CN"]') || h2).textContent.trim();
+        if (label && targets.length < 7) targets.push({id:section.id,label:label});
+      });
+      if (targets.length) {
+        var nav = document.createElement('nav');
+        nav.className = 'provider-section-nav';
+        nav.setAttribute('aria-label','厂家详情目录');
+        nav.innerHTML = targets.map(function(x){ return '<a href="#' + x.id + '">' + x.label + '</a>'; }).join('');
+        header.insertAdjacentElement('afterend',nav);
+      }
+    }
+
+    var table = main && main.querySelector('.catalog-table');
+    if (table && !main.querySelector('.provider-model-filter')) {
+      var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+      var wrap = table.closest('.catalog-table-wrap');
+      var box = document.createElement('div');
+      box.className = 'provider-model-filter';
+      box.innerHTML = '<label><span aria-hidden="true">⌕</span><input type="search" placeholder="搜索模型名称、ID、状态或来源…" aria-label="搜索该厂家的模型"></label><span class="provider-model-count"></span>';
+      wrap.parentNode.insertBefore(box,wrap);
+      var input = box.querySelector('input');
+      var count = box.querySelector('.provider-model-count');
+      var empty = document.createElement('div');
+      empty.className='provider-filter-empty';
+      empty.hidden=true;
+      empty.textContent='没有找到匹配的模型记录。';
+      wrap.insertAdjacentElement('afterend',empty);
+      function apply() {
+        var q=input.value.trim().toLowerCase(),visible=0;
+        rows.forEach(function(row){var show=!q || (row.textContent||'').toLowerCase().indexOf(q)>=0;row.hidden=!show;if(show) visible++;});
+        count.textContent='显示 ' + visible + ' / ' + rows.length + ' 个模型';
+        empty.hidden=visible!==0;
+      }
+      input.addEventListener('input',apply);
+      apply();
+    }
+    track(item);
+  }
+
+  function enhanceOfferDetail() {
+    var body = document.body;
+    if (!body || !body.dataset.offerId) return;
+    body.setAttribute('data-reference-style', 'v1');
+    body.setAttribute('data-visual-style', 'aurora');
+    body.classList.add('fl-ui-v2');
+    if (!body.dataset.flSection) body.dataset.flSection = 'models';
+
+    var offerId = body.dataset.offerId;
+    var titleEl = body.querySelector('header h1');
+    var item = {
+      type: 'offer',
+      id: offerId,
+      name: titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 80) : offerId,
+      url: location.pathname
+    };
+
+    var cta = body.querySelector('header .header-cta');
+    if (cta && !cta.querySelector('.offer-favorite-action')) {
+      var fav = document.createElement('button');
+      fav.type = 'button';
+      fav.className = 'offer-favorite-action';
+      function paintOfferFav() {
+        var active = isFav('offer', offerId);
+        fav.classList.toggle('is-fav', active);
+        fav.textContent = active ? '★ 已收藏' : '☆ 收藏资源';
+        fav.setAttribute('aria-pressed', String(active));
+      }
+      fav.addEventListener('click', function () {
+        var added = toggleFav(item);
+        toast(added ? '已收藏「' + item.name + '」' : '已取消收藏');
+      });
+      on('fav', paintOfferFav);
+      paintOfferFav();
+      cta.appendChild(fav);
+    }
+
+    var main = body.querySelector('main');
+    var header = body.querySelector('body > header');
+    if (main && header && !body.querySelector('.offer-section-nav')) {
+      var targets = [];
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'), function (section, index) {
+        var h2 = section.querySelector('h2');
+        if (!h2) return;
+        var id = section.id || ('offer-section-' + (index + 1));
+        section.id = id;
+        var label = (h2.querySelector('[lang="zh-CN"]') || h2).textContent.trim();
+        if (label && targets.length < 8) targets.push({ id: id, label: label });
+      });
+      if (targets.length) {
+        var nav = document.createElement('nav');
+        nav.className = 'offer-section-nav';
+        nav.setAttribute('aria-label', '资源详情目录');
+        nav.innerHTML = targets.map(function (target) {
+          return '<a href="#' + target.id + '">' + target.label + '</a>';
+        }).join('');
+        header.insertAdjacentElement('afterend', nav);
+      }
+    }
+    track(item);
+  }
+
   function init() {
     handleOAuthRedirect();
     normalizeLocaleUrls();
     applyTheme();
+    enhanceGuidePage();
+    enhanceCategoryPage();
+    enhanceModelDetail();
+    enhanceProviderDetail();
+    enhanceOfferDetail();
     bind(document);
     autoBind(document);
     bindAuthButton(document.getElementById('fl-sync-auth') || document.getElementById('gh-login'));

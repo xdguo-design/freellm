@@ -389,6 +389,19 @@ SKILL_LAB_PAGE_PATH = "/skills/lab/"
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
 MODELS_PER_PAGE = 45
 
+# These primary product pages are intentionally hand-maintained after the
+# site-prototype-v2 redesign. The SEO generator still owns their surrounding
+# sitemap entries and all template families, but must not overwrite these files.
+MANUAL_PRODUCT_PAGES = {
+    Path("skills/index.html"),
+    Path("skills/lab/index.html"),
+    Path("models/index.html"),
+    Path("models/all/index.html"),
+    Path("models/center/index.html"),
+    Path("providers/index.html"),
+    Path("logs/index.html"),
+}
+
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
 
@@ -1064,7 +1077,7 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-guide-detail="true" data-guide-slug="{_esc(slug)}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">FreeLLM Free AI Index</a> / Guides</div>
     {_static_locale_nav()}
@@ -1851,8 +1864,9 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     @media (max-width: 680px) {{ .qs-grid {{ grid-template-columns: 1fr; }} }}
         footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
+  <link rel="stylesheet" href="/css/offer-detail-prototype-v2.css?v=20260929a">
 </head>
-<body data-offer-id="{_esc(offer.get('id'))}" data-static-locale="true">
+<body data-offer-id="{_esc(offer.get('id'))}" data-offer-status="{_esc(offer.get('status') or 'unknown')}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
 {_adsense_slot_markup()}
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
@@ -1861,6 +1875,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
+    {'<p class="offer-review-alert">' + _locale_pair('⚠ 此资源仍需复核：不要把开放权重、试用或促销条件自动等同于永久免费 API / 推理额度。', '⚠ This offer still needs review: do not treat open weights, trials or promotions as permanently free API / inference quota.') + '</p>' if offer.get("status") == "needs_review" else ""}
     {featured_note_markup}
     <nav aria-label="Categories">{category_links}</nav>
     {header_cta_markup}
@@ -1910,12 +1925,13 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     matching = [offer for offer in offers if category in categorize_offer(offer)]
     path = category_url(category)
     title = f"{definition['name_zh']} · FreeLLM 免费 AI 资源索引"
-    description = f"{definition['description_zh']}当前有 {len(matching)} 个经过核验的资源，均提供官方入口与有效期说明。"
+    description = f"{definition['description_zh']}当前收录 {len(matching)} 条资源，页面逐条标注来源核验状态、官方入口与有效期说明。"
     # 条目不足的分类页是薄页：既然主动 noindex，就不再挂广告代码（同模型聚合页的规则）。
     indexable = len(matching) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
     social_meta = _social_meta(site_url, path, title, description, "website", indexable=indexable)
     items = "".join(
-        f'''<article>
+        f'''<article data-offer-id="{_esc(offer.get("id"))}" data-offer-status="{_esc(offer.get("status") or "unknown")}">
+          <span class="category-status{" needs-review" if offer.get("status") == "needs_review" else ""}">{_locale_pair("待复核", "Needs review") if offer.get("status") == "needs_review" else _locale_pair("来源已核验", "Source verified")}</span>
           <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a>{_featured_chip(offer)}</h2>
           <p>{_offer_locale_pair(offer, ("freeSummary", "mechanism"), "Free access details unavailable")}</p>
           <p class="muted">{_offer_locale_pair(offer, ("validitySummary", "validity"), "Validity follows provider terms")} · {_offer_locale_pair(offer, ("accessSummary", "access"), "Official account required")}</p>
@@ -1969,14 +1985,14 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-category-detail="true" data-category-slug="{_esc(category)}" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('FreeLLM 免费 AI 资源索引', 'FreeLLM Free AI Index')}</a> / {_locale_pair('分类', 'Category')}</p>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
     <h1>{_locale_pair(definition['name_zh'], definition['name'])}</h1>
     <p>{_locale_pair(definition['description_zh'], definition['description'])}</p>
-    <p>{_locale_pair(f'{len(matching)} 个经过核验的资源', f'{len(matching)} verified resources')}</p>
+    <p class="category-summary">{_locale_pair(f'收录 {len(matching)} 条资源；核验状态见每张卡片。', f'{len(matching)} resources; verification status is shown per card.')}</p>
   </header>
   <main>
     {items}
@@ -2068,7 +2084,7 @@ print(response.choices[0].message.content)'''
     @media (max-width: 620px) {{ h1 {{ font-size: 40px; }} }}
   </style>
 </head>
-<body>
+<body data-guide-detail="true" data-guide-slug="free-llm" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / 使用指南</div>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
@@ -2262,7 +2278,7 @@ def render_special_guide_page(
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body>
+<body data-guide-detail="true" data-guide-slug="{_esc(path.strip('/').split('/')[-1])}" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header>
     <div class="crumb"><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / Guides</div>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
@@ -3178,7 +3194,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     footer {{ color: var(--ink-secondary); font-size: 13px; }}
   </style>
 </head>
-<body data-static-locale="true">
+<body data-model-slug="{_esc(_safe_slug(model_name, 'model'))}" data-model-detail="true" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1">
   <header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('全部模型', 'All models')}</a></p>
     {_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">MODEL AGGREGATION</div><h1>{_esc(model_name)}</h1>
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>
@@ -3226,7 +3242,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <style>{EDITORIAL_BASE_CSS}</style>
 <style>h1 {{margin:10px 0;font-size:clamp(30px,5vw,48px);}}main section h2 {{font-size:clamp(22px,3.4vw,30px);}}.related-list {{padding-left:20px;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
+<body data-provider-id="{_esc(provider.get('id'))}" data-provider-detail="true" data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
 def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str) -> str:
@@ -4501,7 +4517,6 @@ def sitemap_section_paths(
         "/privacy/",
         "/submit/",
         "/tools/",
-        "/health/",
         guide_url(),
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
@@ -5310,6 +5325,15 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     daily_logs = _load_daily_logs(data_path)
     vendor_directory = _load_vendor_directory(data_path)
     files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent, vendor_directory=vendor_directory)
+    # generated/manual page ownership boundary: preserve bespoke product pages
+    # only when they already exist in the target tree. Fresh output roots (used
+    # by build/tests) must still receive a complete generated site.
+    output_root = Path(output_root)
+    manual_product_pages = {
+        path for path in MANUAL_PRODUCT_PAGES
+        if (output_root / path).is_file()
+    }
+    files = {relative: content for relative, content in files.items() if relative not in manual_product_pages}
     files = {
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
@@ -5346,7 +5370,6 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: _ensure_reference_ui(content, relative)
         for relative, content in files.items()
     }
-    output_root = Path(output_root)
     if check:
         stale = []
         for relative, content in files.items():
@@ -5369,6 +5392,9 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         return True
 
     managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills"}}
+    # Preserve hand-maintained product pages during cleanup even though they are
+    # intentionally excluded from generated writes.
+    managed.update(path.as_posix() for path in manual_product_pages if (output_root / path).is_file())
     # Write the new pages before deleting retired ones: a crash or an external
     # delete guard must never leave the output tree emptied.
     for relative, content in files.items():
