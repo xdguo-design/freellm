@@ -39,8 +39,13 @@
     (() => {
       const value = new URLSearchParams(window.location.search).get('lang') || '';
       const lang = value.toLowerCase();
-      if (lang === 'en' || lang.startsWith('en-')) document.documentElement.lang = 'en';
-      else if (lang === 'zh' || lang.startsWith('zh-')) document.documentElement.lang = 'zh-CN';
+      if (lang === 'en' || lang.startsWith('en-')) {
+        document.documentElement.lang = 'en';
+        window.__FREELLM_BOOT_LOCALE__ = 'en';
+      } else if (lang === 'zh' || lang.startsWith('zh-')) {
+        document.documentElement.lang = 'zh-CN';
+        window.__FREELLM_BOOT_LOCALE__ = 'zh-CN';
+      }
     })();
   </script>
   <title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>

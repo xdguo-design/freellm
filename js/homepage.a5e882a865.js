@@ -50,6 +50,8 @@ let offerIndex = {};
       const url = new URL(source.href || source, window.location.href);
       const explicit = normalizeLocale(url.searchParams.get('lang'));
       if (explicit) return explicit;
+      const bootLocale = normalizeLocale(window.__FREELLM_BOOT_LOCALE__);
+      if (bootLocale) return bootLocale;
       const pathMatch = url.pathname.match(/(?:^|\/)(zh|en)(?:\/|$)/i);
       const pathLocale = normalizeLocale(pathMatch?.[1]);
       if (pathLocale) return pathLocale;
