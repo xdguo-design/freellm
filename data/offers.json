@@ -7099,5 +7099,314 @@
         }
       ]
     }
+  },
+  {
+    "id": "nvidia-nim-free-endpoints",
+    "order": 57,
+    "date": "2026-09-29",
+    "name": "NVIDIA NIM Free Endpoints",
+    "providerMark": "NV",
+    "provider": "NVIDIA NIM",
+    "providerMeta": "NVIDIA API Catalog · Developer Program",
+    "model": "38 current Free Endpoint models",
+    "modelMeta": "Cloud-hosted NIM APIs · dynamic model-level rate limits",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "加入免费的 NVIDIA Developer Program，在 build.nvidia.com 为当前标记 Free Endpoint 的 NIM 模型生成 API Key 并调用云端 API",
+      "prerequisites": [
+        "NVIDIA account",
+        "NVIDIA Developer Program access",
+        "NVIDIA API key"
+      ],
+      "steps": [
+        "打开 NVIDIA API Catalog，并使用 Free Endpoint 过滤器确认目标模型当前仍标记 Free Endpoint。",
+        "登录 NVIDIA 账号并加入免费的 NVIDIA Developer Program，在 API Catalog / settings 中生成 API Key。",
+        "打开目标模型 Integrate 页面复制其当前 endpoint 与模型 ID；不同 NIM 的 API 路径可能不同，不要手工猜 URL。",
+        "发送最小请求并观察模型级 rate limit；免费开发者访问的限流会随模型、场景和平台流量变化。"
+      ],
+      "endpoint": "https://integrate.api.nvidia.com/v1",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${NVIDIA_API_KEY}",
+      "examples": {
+        "curl": "Use the exact cURL / Python snippet shown on the selected model's Integrate tab at build.nvidia.com."
+      },
+      "docsUrl": "https://docs.api.nvidia.com/nim/docs/product"
+    },
+    "kicker": "38 FREE ENDPOINTS",
+    "badges": [
+      "FREE DEVELOPER ACCESS",
+      "38 ENDPOINTS",
+      "RATE LIMITED"
+    ],
+    "freeSummary": "NVIDIA API Catalog 当前显示 38 个 Free Endpoint；免费 NVIDIA Developer Program 可访问托管 NIM API endpoints。",
+    "validitySummary": "当前 Free Endpoint 标签有效；模型和限流可动态变化",
+    "accessSummary": "Free NVIDIA Developer Program + API Key · no card required",
+    "checkedSummary": "2026-09-29 / NVIDIA API Catalog + NIM product FAQ",
+    "title": "NVIDIA NIM · 当前 38 个 Free Endpoint",
+    "why": "NVIDIA 官方 API Catalog 当前显示 38 个 Free Endpoint，示例包括 DeepSeek V4.1 Flash、GLM-5.3、GLM-5.3-Flash 和 Kimi K3。NVIDIA NIM 官方 FAQ 同时明确：开发者可免费加入 NVIDIA Developer Program，并通过 build.nvidia.com 访问 NIM 云端 API endpoints。官方没有在公开 FAQ 中承诺统一固定的 token 赠额，因此 FreeLLM 不把论坛里的“1000 credits”写成正式额度，只记录官方可确认的免费开发者访问和动态限流。",
+    "mechanism": "Free NVIDIA Developer Program access to catalog models currently labeled Free Endpoint",
+    "validity": "While the model remains labeled Free Endpoint in NVIDIA API Catalog; availability and per-model rate limits can change",
+    "access": "Join the free NVIDIA Developer Program, generate an API key, then use the model's Integrate tab",
+    "command": "Open the selected model at https://build.nvidia.com/models and copy its current Integrate example; do not infer a generic endpoint for every NIM.",
+    "register": "https://build.nvidia.com/models",
+    "registerLabel": "Open NVIDIA API Catalog",
+    "links": [
+      [
+        "NVIDIA Free Endpoint catalog",
+        "https://build.nvidia.com/models"
+      ],
+      [
+        "NIM product FAQ",
+        "https://docs.api.nvidia.com/nim/docs/product"
+      ],
+      [
+        "API Catalog quickstart",
+        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+      ]
+    ],
+    "originCountry": "United States",
+    "availability": "Global NVIDIA Developer Program access subject to account / region restrictions",
+    "freeMechanism": "free_rate_limited",
+    "pricingModel": "free_rate_limited",
+    "freePolicy": {
+      "type": "current_free_endpoints",
+      "amount": 38,
+      "unit": "models",
+      "period": "while labeled Free Endpoint"
+    },
+    "quota": "No single official public token quota; free developer access is rate-limited per model/use-case/platform load",
+    "renewal": "No periodic token grant documented in the public FAQ; Free Endpoint membership and rate limits can change",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Developer Program access is for research, application development and experimentation; enterprise production use should review NVIDIA AI Enterprise terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://build.nvidia.com/models",
+      "https://docs.api.nvidia.com/nim/docs/product",
+      "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+    ],
+    "evidence": "NVIDIA API Catalog showed 38 models under the Free Endpoint filter on 2026-09-29. The official NIM FAQ says developers can join the free NVIDIA Developer Program and access NIM API endpoints on build.nvidia.com. Public official docs do not define one universal credits allowance, so no fixed credits value is claimed.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "Do not publish forum-reported 1,000 / 5,000 credit numbers as official quota. Always re-check the target model's Free Endpoint label and current Integrate snippet before use.",
+    "freeModels": [
+      {
+        "model": "deepseek-v4.1-flash",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "glm-5-3",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "glm-5-3-flash",
+        "quota": "Free Endpoint",
+        "note": "Current NVIDIA API Catalog label; recheck before use.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      },
+      {
+        "model": "kimi-k3",
+        "quota": "Free Endpoint",
+        "note": "Downloadable + Free Endpoint in current NVIDIA API Catalog.",
+        "sourceUrl": "https://build.nvidia.com/models"
+      }
+    ],
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 NVIDIA NIM 当前 Free Endpoint 数量、免费开发者访问资格和云端 API 接入方式。",
+      "method": [
+        "读取 NVIDIA API Catalog，确认 Free Endpoint 过滤器当前显示 38 个模型，并抽查 DeepSeek V4.1 Flash、GLM-5.3、GLM-5.3-Flash、Kimi K3。",
+        "读取 NVIDIA NIM 官方 FAQ，确认 NVIDIA Developer Program 免费加入且包含 build.nvidia.com 云端 NIM endpoints 访问。",
+        "读取 API Catalog Quickstart，确认使用 API Key 和模型 Integrate 页面调用托管 NIM。",
+        "当前未登录 NVIDIA 账号，因此未创建真实 API Key，也未实测特定 Free Endpoint 的 200 响应与当前 rate limit。"
+      ],
+      "result": "官方公开预检通过：Free Endpoint 当前为 38 个，免费 Developer Program 包含云端 NIM API 访问；具体模型级限流动态变化。",
+      "limitations": "未使用真实 NVIDIA API Key；未验证账户默认 credits 显示、具体模型的当前 RPM、真实响应延迟和区域限制。",
+      "evidence": [
+        {
+          "label": "NVIDIA API Catalog",
+          "url": "https://build.nvidia.com/models",
+          "note": "38 current Free Endpoint models"
+        },
+        {
+          "label": "NIM General FAQ",
+          "url": "https://docs.api.nvidia.com/nim/docs/product",
+          "note": "free Developer Program access"
+        },
+        {
+          "label": "API Catalog Quickstart",
+          "url": "https://docs.api.nvidia.com/nim/re/docs/api-quickstart",
+          "note": "cloud endpoint integration"
+        }
+      ]
+    }
+  },
+  {
+    "id": "aliyun-decision-model-preview-free",
+    "order": 58,
+    "date": "2026-09-29",
+    "name": "Alibaba Cloud decision-model-preview limited-free API",
+    "providerMark": "阿里",
+    "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
+    "providerMeta": "Model Studio · Beijing + Singapore",
+    "model": "decision-model-preview",
+    "modelMeta": "System One decision API · 65,536 context · 1,200 RPM · 2M TPM",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "使用百炼 decision-model-preview 的 System One API，在北京或新加坡地域进行分类、是非判断和评分；当前模型价格为限时免费",
+      "prerequisites": [
+        "Alibaba Cloud Model Studio account",
+        "DASHSCOPE_API_KEY",
+        "Workspace ID"
+      ],
+      "steps": [
+        "打开 decision-model-preview 官方模型页，确认北京/新加坡价格仍显示“限时免费”。",
+        "在百炼创建 API Key，并记录业务空间 Workspace ID。",
+        "按目标地域使用 /compatible-mode/v1/systemone endpoint，提交 state 与 choice / noul / score 类型问题。",
+        "调用前后检查模型价格页与账单，避免限免结束后继续请求。"
+      ],
+      "endpoint": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
+      "examples": {
+        "curl": "Use the official Decision Model API example and replace {WorkspaceId} with your Model Studio workspace ID."
+      },
+      "docsUrl": "https://help.aliyun.com/zh/model-studio/decision-model-api"
+    },
+    "kicker": "LIMITED-TIME FREE",
+    "badges": [
+      "BEIJING + SINGAPORE",
+      "1200 RPM",
+      "2M TPM"
+    ],
+    "freeSummary": "百炼官方模型页当前将 decision-model-preview 在北京和新加坡的调用价格都标为“限时免费”。",
+    "validitySummary": "限时免费 · 官方未公布统一结束日期",
+    "accessSummary": "Model Studio API Key + Workspace ID · Beijing / Singapore",
+    "checkedSummary": "2026-09-29 / official Alibaba model + API docs",
+    "title": "阿里云百炼 decision-model-preview · 北京/新加坡限时免费",
+    "why": "阿里云百炼官方 decision-model-preview 模型页在 2026-09-24 更新后明确显示：华北2（北京）和新加坡两地当前均“限时免费”，且限流为 1,200 RPM / 2,000,000 TPM。它不是文本生成模型，而是一次前向返回分类、是非判断、评分及概率/置信度的结构化决策 API，适合 Agent 路由、审核、工单分流和结果校验。",
+    "mechanism": "Current zero-price limited-time preview for decision-model-preview in Beijing and Singapore",
+    "validity": "Limited-time free; no public end date, recheck official model page before every production rollout",
+    "access": "Create Model Studio API Key and call the System One endpoint with your Workspace ID",
+    "command": "POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone with Authorization: Bearer $DASHSCOPE_API_KEY",
+    "register": "https://bailian.console.aliyun.com/",
+    "registerLabel": "Open Alibaba Model Studio",
+    "links": [
+      [
+        "decision-model-preview model page",
+        "https://help.aliyun.com/zh/model-studio/decision-model-preview"
+      ],
+      [
+        "Decision Model API",
+        "https://help.aliyun.com/zh/model-studio/decision-model-api"
+      ],
+      [
+        "Model release history",
+        "https://help.aliyun.com/zh/model-studio/newly-released-models"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "North China 2 (Beijing) and Singapore",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "current_zero_price_model",
+      "amount": 1,
+      "unit": "model",
+      "period": "until Alibaba changes the preview price"
+    },
+    "quota": "No free-token cap published on the model page; current service limit is 1,200 RPM and 2,000,000 TPM",
+    "renewal": "Not a recurring grant; free price lasts only during preview promotion",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Alibaba Cloud Model Studio terms; preview pricing can change",
+    "limits": {
+      "requestsPerMinute": 1200,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null,
+      "tokensPerMinute": 2000000
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "metered",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://help.aliyun.com/zh/model-studio/decision-model-preview",
+      "https://help.aliyun.com/zh/model-studio/decision-model-api",
+      "https://help.aliyun.com/zh/model-studio/newly-released-models"
+    ],
+    "evidence": "Alibaba Cloud's official model page updated 2026-09-24 lists decision-model-preview as limited-time free in both Beijing and Singapore, with 1,200 RPM and 2,000,000 TPM. The official API page documents POST /compatible-mode/v1/systemone and Workspace-ID based endpoints.",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-09-29",
+    "checkedBy": "manual",
+    "notes": "This is a structured decision model, not a general chat LLM. The model page explicitly says promotional pricing can differ from original pricing and directs users to the console for activity status; recheck before large-volume use.",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-09-29",
+      "actualUsageVerified": false,
+      "task": "核验 decision-model-preview 的当前限免状态、地域、限流与 System One API。",
+      "method": [
+        "读取阿里云百炼官方模型页，确认北京与新加坡当前均标“限时免费”，并核对 1,200 RPM / 2,000,000 TPM。",
+        "读取官方 Decision Model API，确认 POST /compatible-mode/v1/systemone 和 Workspace ID endpoint。",
+        "读取官方模型上下架页，确认模型于 2026-09-24 上线。",
+        "当前没有可用 DASHSCOPE_API_KEY / Workspace ID，因此未进行真实调用与账单验证。"
+      ],
+      "result": "官方公开预检通过：北京与新加坡当前限时免费，API 形式与限流均有官方文档。",
+      "limitations": "未使用真实百炼账户，不验证当前控制台活动结束时间、真实账单、Workspace 权限和实际响应。",
+      "evidence": [
+        {
+          "label": "decision-model-preview model page",
+          "url": "https://help.aliyun.com/zh/model-studio/decision-model-preview"
+        },
+        {
+          "label": "Decision Model API",
+          "url": "https://help.aliyun.com/zh/model-studio/decision-model-api"
+        }
+      ]
+    }
   }
 ]

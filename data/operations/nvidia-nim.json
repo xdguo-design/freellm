@@ -1,21 +1,89 @@
 {
   "providerId": "nvidia-nim",
   "provider": "NVIDIA NIM",
-  "lastVerifiedAt": "2026-09-09",
+  "lastVerifiedAt": "2026-09-29",
   "paths": [
+    {
+      "id": "free-cloud-endpoint",
+      "label": "调用 NVIDIA API Catalog Free Endpoint",
+      "productType": "api",
+      "prerequisites": [
+        "NVIDIA account",
+        "Free NVIDIA Developer Program",
+        "NVIDIA API Key"
+      ],
+      "steps": [
+        {
+          "title": "筛选 Free Endpoint",
+          "detail": "打开 build.nvidia.com/models，使用 Free Endpoint 过滤器确认目标模型仍为免费云端 endpoint。"
+        },
+        {
+          "title": "生成 API Key",
+          "detail": "登录后在目标模型 Integrate 页面或账户设置生成 API Key。"
+        },
+        {
+          "title": "复制当前集成代码",
+          "detail": "直接复制目标模型页面给出的 endpoint / model ID / SDK 示例，避免手工猜测不同 NIM 的路径。"
+        },
+        {
+          "title": "小流量验证",
+          "detail": "先发最小请求并观察 429 / rate-limit 响应；开发者免费层的限流会动态变化。"
+        }
+      ],
+      "endpoint": "Use the exact endpoint from the selected model's Integrate tab",
+      "auth": "Authorization: Bearer NVIDIA API key",
+      "example": "Open https://build.nvidia.com/models and copy the selected Free Endpoint integration snippet.",
+      "validation": "目标模型页面仍标 Free Endpoint，API 请求成功；若标签消失或 endpoint 变化，则停止按免费入口宣传。",
+      "limits": "Dynamic by model, use-case and service load; official public docs do not publish one universal free-tier RPM/credits value.",
+      "commonIssues": [
+        "不要把论坛里的 1,000 credits / 40 RPM 当统一官方规则。",
+        "Free Endpoint 列表会变。",
+        "self-host NIM 与 NVIDIA-hosted free endpoint 是两条不同路径。"
+      ],
+      "sourceUrls": [
+        "https://build.nvidia.com/models",
+        "https://docs.api.nvidia.com/nim/docs/product",
+        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+      ]
+    },
     {
       "id": "build-nim-container",
       "label": "用 NVIDIA NIM 容器部署模型",
       "productType": "download",
-      "prerequisites": ["NVIDIA GPU 与匹配驱动", "已安装 Docker", "已获得 NGC API key 并保存为 NGC_API_KEY"],
+      "prerequisites": [
+        "NVIDIA GPU 与匹配驱动",
+        "已安装 Docker",
+        "已获得 NGC API key 并保存为 NGC_API_KEY"
+      ],
       "steps": [
-        {"title": "登录 NGC", "detail": "在 NVIDIA NGC 账户设置中创建 API key，并用环境变量登录容器仓库。", "command": "echo ${NGC_API_KEY} | docker login nvcr.io --username '$oauthtoken' --password-stdin"},
-        {"title": "选择 NIM 容器", "detail": "在 NGC Catalog 按模型查找对应 NIM 镜像，并确认 GPU、显存和许可要求。", "action": "打开 https://catalog.ngc.nvidia.com/"},
-        {"title": "启动容器", "detail": "把官方文档中的镜像名、模型缓存目录和端口参数替换为当前选择，启动后从本机端口调用。", "action": "按照 NIM 官方 Quickstart 复制当前镜像对应的 docker run 命令。"},
-        {"title": "验证服务", "detail": "查看容器日志确认服务已 ready，再访问本机健康检查或 OpenAI 兼容 models 接口。"}
+        {
+          "title": "登录 NGC",
+          "detail": "在 NVIDIA NGC 账户设置中创建 API key，并用环境变量登录容器仓库。",
+          "command": "echo ${NGC_API_KEY} | docker login nvcr.io --username '$oauthtoken' --password-stdin"
+        },
+        {
+          "title": "选择 NIM 容器",
+          "detail": "在 NGC Catalog 按模型查找对应 NIM 镜像，并确认 GPU、显存和许可要求。",
+          "action": "打开 https://catalog.ngc.nvidia.com/"
+        },
+        {
+          "title": "启动容器",
+          "detail": "把官方文档中的镜像名、模型缓存目录和端口参数替换为当前选择，启动后从本机端口调用。",
+          "action": "按照 NIM 官方 Quickstart 复制当前镜像对应的 docker run 命令。"
+        },
+        {
+          "title": "验证服务",
+          "detail": "查看容器日志确认服务已 ready，再访问本机健康检查或 OpenAI 兼容 models 接口。"
+        }
       ],
       "validation": "容器日志显示服务 ready，并且本机 API 能返回模型列表或健康状态。",
-      "sourceUrls": ["https://docs.nvidia.com/nim/", "https://catalog.ngc.nvidia.com/"]
+      "sourceUrls": [
+        "https://docs.nvidia.com/nim/",
+        "https://catalog.ngc.nvidia.com/"
+      ]
     }
+  ],
+  "offerIds": [
+    "nvidia-nim-free-endpoints"
   ]
 }

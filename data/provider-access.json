@@ -730,26 +730,27 @@
     "apiKeyRequired": "yes",
     "licenseAcceptance": "model_dependent",
     "modelApproval": "unknown",
-    "gpuRequired": "yes",
-    "overageBehavior": "unknown",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
     "searchMethod": "official_model_catalog",
     "regionPolicyId": "policy-unknown-default",
     "registrationSteps": [
-      "访问 build.nvidia.com 注册并验证 NVIDIA/NGC 账号（登录即同意加入 NVIDIA Developer Program）。",
-      "在 build.nvidia.com/settings/api-keys 或 NGC 控制台生成 API Key。",
-      "云端按试用积分调用；本地部署按操作指南需 GPU 与 Docker。"
+      "访问 build.nvidia.com 并登录 NVIDIA 账号；NIM 官方 FAQ 明确 NVIDIA Developer Program 可免费加入。",
+      "在 API Catalog 使用 Free Endpoint 过滤器选择当前免费模型，并在模型 Integrate 页面生成/使用 API Key。",
+      "直接使用模型页面给出的当前 API endpoint 和代码示例；不同 NIM API 形态可能不同。",
+      "免费开发者访问受动态 rate limit 约束；如需企业级稳定性/商用支持，应评估 NVIDIA AI Enterprise 90-day Trial 或正式方案。"
     ],
     "registrationStatus": "available",
     "replacement": null,
     "sourceUrls": [
-      "https://build.nvidia.com/",
-      "https://registry.ngc.nvidia.com/",
-      "https://docs.nvidia.com/nim/"
+      "https://build.nvidia.com/models",
+      "https://docs.api.nvidia.com/nim/docs/product",
+      "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
     ],
-    "lastVerifiedAt": "2026-09-09",
+    "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "partial",
-    "confidence": "medium",
-    "notes": "试用积分制（开发者论坛称注册即赠 1,000 积分、上限 5,000，以控制台实际显示为准），无需信用卡；登录流程会自动加入 NVIDIA Developer Program。"
+    "confidence": "high",
+    "notes": "官方可确认的是免费 Developer Program + 当前 Free Endpoint 标签；不要把论坛用户报告的 1,000 credits / 40 RPM 当成统一官方额度。云端 Free Endpoint 不需要本地 GPU；只有 self-host NIM 才需要 GPU。"
   },
   {
     "providerId": "ollama-cloud",

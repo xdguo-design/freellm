@@ -3,7 +3,8 @@
   "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
   "lastVerifiedAt": "2026-09-29",
   "offerIds": [
-    "aliyun-qwen-free-quota"
+    "aliyun-qwen-free-quota",
+    "aliyun-decision-model-preview-free"
   ],
   "paths": [
     {
@@ -48,6 +49,49 @@
       "sourceUrls": [
         "https://help.aliyun.com/zh/model-studio/new-free-quota/",
         "https://help.aliyun.com/zh/model-studio/model-pricing"
+      ]
+    },
+    {
+      "id": "decision-model-preview",
+      "label": "decision-model-preview System One 限时免费 API",
+      "productType": "api",
+      "prerequisites": [
+        "百炼 API Key",
+        "业务空间 Workspace ID",
+        "模型页仍显示限时免费"
+      ],
+      "steps": [
+        {
+          "title": "确认限免",
+          "detail": "在官方 decision-model-preview 模型页确认北京/新加坡价格仍为“限时免费”。"
+        },
+        {
+          "title": "准备 Workspace",
+          "detail": "记录百炼业务空间 Workspace ID，并使用对应地域 endpoint。"
+        },
+        {
+          "title": "发送 System One 请求",
+          "detail": "POST /compatible-mode/v1/systemone，提交 state 与 choice/noul/score 类型问题；模型返回结构化判定与置信度。",
+          "action": "按 https://help.aliyun.com/zh/model-studio/decision-model-api 的最新示例构造请求。"
+        },
+        {
+          "title": "检查账单",
+          "detail": "调用后检查控制台价格/账单；限免结束后停止大批量调用。"
+        }
+      ],
+      "endpoint": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone",
+      "auth": "Authorization: Bearer API key",
+      "example": "POST /compatible-mode/v1/systemone with your Workspace ID and DASHSCOPE_API_KEY",
+      "validation": "请求返回结构化 decision results；控制台模型价格仍为限时免费且账单未产生付费调用。",
+      "limits": "1,200 RPM / 2,000,000 TPM in both Beijing and Singapore according to the current official model page.",
+      "commonIssues": [
+        "它不是 chat/completions 文本生成模型。",
+        "Endpoint 需要 Workspace ID。",
+        "限免结束时间未公开，必须复核价格页。"
+      ],
+      "sourceUrls": [
+        "https://help.aliyun.com/zh/model-studio/decision-model-preview",
+        "https://help.aliyun.com/zh/model-studio/decision-model-api"
       ]
     }
   ]
