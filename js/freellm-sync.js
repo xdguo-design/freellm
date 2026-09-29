@@ -32,6 +32,25 @@
 (function (global) {
   'use strict';
 
+  /* Load page-family prototype CSS only where it is used.
+     Keeping these out of the global pastel stylesheet prevents the homepage
+     from downloading every detail-page visual bundle. */
+  (function installScopedPrototypeStyles() {
+    var path = window.location.pathname || '/';
+    var href = '';
+    if (/^\/offers\/[^/]+\/?$/.test(path)) href = '/css/offer-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/providers\/[^/]+\/?$/.test(path)) href = '/css/provider-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/models\/(?!all(?:\/|$)|center(?:\/|$))[^/]+\/?$/.test(path)) href = '/css/model-detail-prototype-v2.css?v=20260929a';
+    else if (/^\/category\/[^/]+\/?$/.test(path)) href = '/css/category-prototype-v2.css?v=20260929a';
+    else if (/^\/guides\/[^/]+\/?$/.test(path)) href = '/css/guide-prototype-v2.css?v=20260929a';
+    if (!href || document.querySelector('link[href="' + href + '"]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset.freellmScopedPrototype = 'true';
+    document.head.appendChild(link);
+  })();
+
   /* ---------- FreeLLM 2026 site-wide visual system ---------- */
   (function installSiteVisualSystem() {
     if (document.documentElement.classList.contains('fl-pastel-ui')) return;
