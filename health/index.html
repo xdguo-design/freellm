@@ -392,12 +392,7 @@
     var target=new Date(date+'T00:00:00');
     return Math.ceil((target.getTime()-today.getTime())/86400000);
   }
-  function hasExpiringPolicy(r){
-    var type=String((r.freePolicy&&r.freePolicy.type)||'').toLowerCase();
-    var validity=String(r.validity||'').toLowerCase();
-    if(type==='trial'||type==='limited_time_free')return true;
-    return /\blimited[- ]?time\b|\btrial\b|限时|公测|90 days from|promotional quota can expire/i.test(validity);
-  }
+  function hasExpiringPolicy(r){return isLimited(r)}
   function actionReasons(r){
     var reasons=[];
     var cors=state.cors[r.id];
