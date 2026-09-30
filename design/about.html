@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>关于 FreeLLM｜让优质的 AI 资源被更多人看见和使用</title>
+<meta name="description" content="FreeLLM 是一个专注于收集、验证和整理优质 AI 资源的平台。我们相信，好的工具和知识应该被更多人看见，并降低使用门槛，让每个人都能从 AI 的进步中受益。" />
+<style>
+:root{
+  --navy:#0a1130; --ink:#0c1230; --blue:#0b57f0; --blue-deep:#0631ca;
+  --text-2:#4a5878; --text-3:#5a6a8c; --card-line:rgba(255,255,255,.75);
+  --rail-w:184px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+  background:#f6fafe;color:var(--ink);-webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+
+/* ---------- layout ---------- */
+.page{display:flex;min-height:100vh;align-items:stretch}
+.rail{height:100vh;position:sticky;top:0}
+.main{flex:1;min-width:0;position:relative;overflow:hidden;
+  background:
+    radial-gradient(900px 420px at 78% -80px, rgba(147,190,247,.55), rgba(147,190,247,0) 70%),
+    radial-gradient(700px 300px at 30% -60px, rgba(190,216,248,.5), rgba(190,216,248,0) 70%),
+    linear-gradient(180deg,#f2f7fe 0%,#f5f9fe 260px,#f6fafe 55%,#f6fafe 100%);
+}
+.wrap{position:relative;margin:0 16px 0 33px;max-width:1214px}
+.text-indent{padding-left:15px}
+
+/* ---------- sidebar ---------- */
+.rail{width:var(--rail-w);flex:0 0 var(--rail-w);position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#0a1428 0%,#0b1730 30%,#0a1934 52%,#0a1428 78%,#0a1424 100%);
+  display:flex;flex-direction:column;color:#e8eefc;z-index:5}
+.rail::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(120px 90px at 78% 16%, rgba(64,120,220,.28), transparent 70%),
+    radial-gradient(100px 70px at 20% 44%, rgba(50,100,200,.18), transparent 70%);
+}
+.rail-brand{display:flex;align-items:center;gap:10px;padding:22px 14px 10px;position:relative}
+.rail-brand svg{width:38px;height:38px;flex:0 0 38px}
+.rail-brand b{font-size:21px;letter-spacing:.2px;color:#fff;font-weight:800}
+.rail-brand small{display:block;font-size:11px;color:#7e93bd;font-weight:500;margin-top:1px}
+.rail-nav{padding:14px 0 0;position:relative}
+.rail-nav a{display:flex;align-items:center;gap:12px;height:54px;padding:0 12px 0 15px;
+  color:#c2cfe8;font-size:16px;position:relative}
+.rail-nav a svg{width:21px;height:21px;flex:0 0 21px;opacity:.9}
+.rail-nav a .dot{position:absolute;left:118px;top:13px;width:7px;height:7px;border-radius:50%;
+  background:#ff5a52;box-shadow:0 0 0 3px rgba(255,90,82,.18)}
+.rail-nav a.active{height:47px;margin:2px 12px 2px 2px;padding:0 10px 0 13px;border-radius:24px;
+  color:#fff;font-weight:700;
+  background:linear-gradient(90deg,#2b63d9 0%,#1d47a8 42%,#122b66 100%);
+  box-shadow:0 6px 16px rgba(10,30,90,.45), inset 0 1px 0 rgba(255,255,255,.25)}
+.rail-nav a.active .ic{width:24px;height:24px;border-radius:50%;background:#f4f7ff;color:#1743c9;
+  display:flex;align-items:center;justify-content:center}
+.rail-nav a.active .ic svg{width:14px;height:14px;opacity:1}
+.rail-nav a .chev{margin-left:auto;opacity:.8}
+.rail-toggle{margin:42px 26px 0;display:flex;align-items:center;justify-content:space-between;
+  height:40px;border-radius:20px;padding:4px 14px;position:relative;
+  background:linear-gradient(90deg,rgba(56,96,190,.55),rgba(22,42,92,.55));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.rail-toggle .sun{width:26px;height:26px;border-radius:50%;background:#dfe8fb;display:flex;
+  align-items:center;justify-content:center;color:#3c66c4}
+.rail-toggle .moon{color:#93a7cf}
+.rail-toggle svg{width:15px;height:15px}
+.rail-foot{margin-top:auto;position:relative}
+.rail-foot img{display:block;width:100%}
+.rail-foot .fm{padding:2px 20px 18px;position:relative}
+.rail-foot .fm b{font-size:14px;color:#eef3fd;display:block;margin-bottom:6px}
+.rail-foot .fm p{font-size:12.5px;line-height:1.6;color:#8fa3c8}
+.rail-foot .copy{padding:0 20px 16px;font-size:11.5px;color:#64789f}
+.rail .stars i{position:absolute;border-radius:50%;background:#cfe0ff;opacity:.7}
+
+/* ---------- topbar ---------- */
+.topbar{display:flex;align-items:center;gap:16px;padding:14px 0 0;position:relative;z-index:3}
+.search{flex:0 0 auto;width:910px;max-width:calc(100% - 300px);height:36px;border-radius:18px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 4px 14px rgba(120,150,200,.10);
+  display:flex;align-items:center;gap:10px;padding:0 6px 0 14px;color:#8a94a8}
+.search svg{width:16px;height:16px;color:#98a2b8}
+.search input{flex:1;border:0;background:transparent;outline:none;font:inherit;font-size:13.5px;color:#3c4a66}
+.search input::placeholder{color:#8a94a8}
+.search .kbd{display:flex;gap:2px;align-items:center;font-size:12px;color:#7c88a0;background:rgba(255,255,255,.85);
+  border:1px solid #e3e9f4;border-radius:8px;padding:3px 8px;margin-right:4px}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:14px}
+.bell{position:relative;color:#202b46;display:flex}
+.bell svg{width:21px;height:21px}
+.bell i{position:absolute;top:-1px;right:-1px;width:8px;height:8px;border-radius:50%;background:#ff5a52}
+.btn-login{height:39px;padding:0 26px;border-radius:10px;background:#fff;color:#1b2540;
+  font-size:14.5px;font-weight:600;display:flex;align-items:center;box-shadow:0 4px 12px rgba(130,155,205,.14)}
+.btn-reg{height:39px;padding:0 24px;border-radius:10px;color:#fff;font-size:14.5px;font-weight:600;
+  display:flex;align-items:center;background:linear-gradient(180deg,#2f80ff,#0b5cf5);
+  box-shadow:0 6px 14px rgba(17,92,245,.30)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:278px}
+.hero-art{position:absolute;top:3px;right:-16px;width:888px;height:278px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 90px);
+  mask-image:linear-gradient(90deg,transparent 0,#000 90px)}
+.hero-copy{position:relative;z-index:1;padding-top:16px;max-width:680px}
+.eyebrow{color:var(--blue-deep);font-size:17px;font-weight:700}
+.hero h1{margin-top:9px;font-size:47px;line-height:52px;font-weight:900;color:var(--navy);letter-spacing:.5px}
+.hero h1 span{color:var(--blue)}
+.hero .lead{margin-top:24px;font-size:20.5px;line-height:26px;color:var(--text-2);font-weight:400}
+
+/* ---------- cards common ---------- */
+.card{background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 8px 22px rgba(140,165,215,.10);border-radius:16px;backdrop-filter:blur(6px)}
+.solid{background:#fff;border:1px solid #edf1f8;box-shadow:0 8px 20px rgba(150,170,215,.08)}
+
+/* feature trio */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:2px}
+.feat{display:flex;align-items:center;gap:18px;height:97px;padding:0 26px}
+.ic-bub{width:54px;height:54px;border-radius:50%;flex:0 0 54px;display:flex;align-items:center;justify-content:center}
+.ic-bub svg{width:26px;height:26px}
+.bub-blue{background:#dbe7fd;color:#2b6ef6}
+.bub-green{background:#d9f2e4;color:#1fa05a}
+.bub-red{background:#fde3e1;color:#f0564a}
+.feat b{font-size:17.5px;color:#1546df;font-weight:800;display:block;margin-bottom:7px}
+.feat p{font-size:14px;color:#5c6a8a}
+
+/* quote */
+.quote{margin-top:26px;height:72px;border-radius:14px;position:relative;display:flex;align-items:center;
+  padding:0 34px;background:linear-gradient(90deg,#dce8f9 0%,#d3e2f7 55%,#dbe7f9 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.quote .qm{font-size:44px;line-height:1;color:#aecbf3;font-family:Georgia,serif;font-weight:700;margin-right:18px}
+.quote .qe{margin-left:auto;font-size:44px;line-height:1;color:#aecbf3;font-family:Georgia,serif;font-weight:700;align-self:flex-end;padding-bottom:10px}
+.quote blockquote{font-size:19.5px;font-weight:800;color:#12234e;letter-spacing:.3px}
+.quote .who{margin-left:auto;display:flex;align-items:center;gap:14px;color:#3c5382;font-size:14.5px}
+.quote .who .line{width:34px;height:2px;background:#7d97c9;border-radius:2px}
+.quote .who img{height:48px;display:block}
+
+/* doing */
+.sec-head{display:flex;align-items:baseline;gap:16px;margin:12px 0 10px}
+.sec-head h2{font-size:26px;font-weight:900;color:var(--ink);letter-spacing:.5px}
+.sec-head .sub{font-size:15px;color:#5a6b8c}
+.sec-head .more{margin-left:auto;color:#1a56f0;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.sec-head .more svg{width:15px;height:15px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.step{position:relative;padding:20px 18px 18px;min-height:148px;display:flex;gap:13px}
+.step .arw{position:absolute;right:-19px;top:64px;color:#7ea4e8;z-index:2}
+.step .arw svg{width:17px;height:17px}
+.step .head{display:flex;align-items:center;gap:0;margin-bottom:9px}
+.step .ic-sq{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;flex:0 0 52px}
+.step .ic-sq svg{width:26px;height:26px}
+.step .tx{flex:1;min-width:0}
+.sq-purple{background:#ece4fd;color:#8b45e8}
+.sq-green{background:#dcf2e5;color:#22a55c}
+.sq-blue{background:#d8e6fc;color:#2b6ef6}
+.sq-cyan{background:#d9ecfb;color:#1f8fe8}
+.step .num{font-size:16px;font-weight:800;color:#2049c8;margin-right:2px}
+.step .tit{font-size:16.5px;font-weight:800;color:#101b3e}
+.step p{font-size:13.8px;line-height:1.68;color:#5a6a8c}
+
+/* criteria trio */
+.trio3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:14px}
+.crit{padding:16px 20px 12px}
+.crit .head{display:flex;align-items:center;gap:13px}
+.crit .head .ic-sq{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.crit .head .ic-sq svg{width:22px;height:22px}
+.crit .head b{font-size:17.5px;font-weight:800;color:#101b3e}
+.crit .head .more{margin-left:auto;color:#1a56f0;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:5px}
+.crit .head .more svg{width:14px;height:14px}
+.crit ul{margin-top:6px;display:grid;gap:0}
+.crit li{display:flex;align-items:center;gap:11px;font-size:14.5px;line-height:21px;color:#2c3a5c}
+.crit li .ck{width:19px;height:19px;border-radius:50%;background:#22a55c;color:#fff;flex:0 0 19px;
+  display:flex;align-items:center;justify-content:center}
+.crit li .ck svg{width:10px;height:10px}
+
+/* bottom quad */
+.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:14px 0 6px}
+.qcard{position:relative;padding:14px 18px;min-height:157px;overflow:hidden}
+.qcard .head{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.qcard .head svg.ic{width:22px;height:22px}
+.qcard .head b{font-size:16px;font-weight:800;color:#101b3e}
+.qcard>p{font-size:12.5px;line-height:1.65;color:#5a6a8c;position:relative;z-index:1}
+.qcard .art{position:absolute;right:6px;bottom:0;pointer-events:none}
+.btn-mini{display:inline-flex;align-items:center;gap:7px;height:35px;padding:0 16px;border-radius:10px;
+  font-size:13px;font-weight:600;margin-top:9px;position:relative;z-index:1}
+.btn-mini svg{width:14px;height:14px}
+.btn-blue{background:linear-gradient(180deg,#2f80ff,#0b5cf5);color:#fff;box-shadow:0 5px 12px rgba(17,92,245,.28)}
+.btn-ghost{background:#fff;color:#2050d8;border:1px solid #d7e2f6}
+.c4 .more{position:absolute;top:20px;right:18px;color:#1a56f0;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.c4 .more svg{width:13px;height:13px}
+.miles{margin-top:10px;display:grid;gap:0;position:relative;z-index:1}
+.mile{display:grid;grid-template-columns:60px 24px 1fr;align-items:center;min-height:19.5px}
+.mile .d{font-size:12.5px;font-weight:700;color:#31405f}
+.mile .node{position:relative;display:flex;align-items:center;justify-content:center;height:100%}
+.mile .node::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#dbe6f8;transform:translateX(-50%)}
+.mile:first-child .node::before{top:50%}
+.mile:last-child .node::before{bottom:50%}
+.mile .node i{position:relative;width:8px;height:8px;border-radius:50%;background:#c9d9f5;box-shadow:0 0 0 3px #eef3fd}
+.mile .t{font-size:12.5px;color:#31405f;padding-left:2px}
+.mile.now .d,.mile.now .t{color:#0b57f0;font-weight:800}
+.mile.now .node i{width:15px;height:15px;background:#0b57f0;box-shadow:0 0 0 4px #d8e5fd}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ======================= SIDEBAR ======================= -->
+  <aside class="rail">
+    <i class="stars" style="display:none"></i>
+    <a class="rail-brand" href="#">
+      <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" fill="url(#lg1)"/>
+        <path d="M14 15c4-6 12-7 17-3l-5 5c-3-2-7-1-9 2l-3-4z" fill="#fff" opacity=".95"/>
+        <path d="M34 33c-4 6-12 7-17 3l5-5c3 2 7 1 9-2l3 4z" fill="#fff" opacity=".8"/>
+        <defs><linearGradient id="lg1" x1="6" y1="4" x2="42" y2="44">
+          <stop stop-color="#4f8df8"/><stop offset=".55" stop-color="#2456e0"/><stop offset="1" stop-color="#123a9e"/>
+        </linearGradient></defs>
+      </svg>
+      <span><b>FreeLLM</b><small>AI for Everyone</small></span>
+    </a>
+
+    <nav class="rail-nav">
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.2 12 4l9 7.2"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.4h4V20"/></svg><span>首页</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="2.6"/><circle cx="17.5" cy="6.5" r="2.6"/><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="17.5" cy="17.5" r="2.6"/><path d="M9.1 6.5h5.8M9.1 17.5h5.8M6.5 9.1v5.8M17.5 9.1v5.8"/></svg><span>模型</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2z"/><path d="M8.4 8.2 12 10v4.4l-3.6 1.9L8.4 8.2z" fill="currentColor" stroke="none" opacity=".25"/><path d="m12 10 3.8-1.9M12 10v4.4"/></svg><span>Skills</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="7" width="17.2" height="12.4" rx="2.6"/><path d="M9 7V5.6A1.6 1.6 0 0 1 10.6 4h2.8A1.6 1.6 0 0 1 15 5.6V7"/><path d="M3.4 12h17.2"/></svg><span>工具</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2 14 5h2.8l1.4 2.1 2.4.7.2 2.5 1.8 1.7-1.8 1.7-.2 2.5-2.4.7-1.4 2.1H14l-2 1.8-2-1.8H9.2L7.8 17l-2.4-.7-.2-2.5L3.4 12l1.8-1.7.2-2.5 2.4-.7L9.2 5H12l2-1.8z" transform="translate(0 1.4) scale(.92)"/><circle cx="12" cy="12" r="3.1"/></svg><span>工作流</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7.6" r="3.4"/><path d="M3.8 20c.6-3.6 3.1-5.6 6.2-5.6 1.5 0 2.9.5 4 1.4"/><path d="m15.5 19.4 2 2 3.4-4"/></svg><span>更新</span><i class="dot"></i></a>
+      <a class="active" href="#" aria-current="page"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="none"/><path d="M12 8.2v.2M12 11.4V16"/></svg></span><span>关于</span><span class="chev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></span></a>
+    </nav>
+
+    <div class="rail-toggle" role="group" aria-label="主题切换">
+      <span class="sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/></svg></span>
+      <span class="moon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg></span>
+    </div>
+
+    <div class="rail-foot">
+      <img src="assets/about-rail.png" alt="" width="184" height="356">
+      <div class="fm">
+        <b>FreeLLM</b>
+        <p>让优质的 AI 资源<br>触手可及。</p>
+      </div>
+      <div class="copy">© 2026 FreeLLM</div>
+    </div>
+  </aside>
+
+  <!-- ======================= MAIN ======================= -->
+  <div class="main">
+    <div class="wrap">
+
+      <!-- topbar -->
+      <header class="topbar text-indent">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+          <input type="search" placeholder="搜索模型、工具、Skills 或任何你感兴趣的 AI 资源...">
+          <span class="kbd">⌘ K</span>
+        </label>
+        <div class="top-actions">
+          <span class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9.5a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17s-2.5-1-2.5-7"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg><i></i></span>
+          <a class="btn-login" href="#">登录</a>
+          <a class="btn-reg" href="#">注册</a>
+        </div>
+      </header>
+
+      <!-- hero -->
+      <section class="hero">
+        <img class="hero-art" src="assets/about-hero.png" alt="" width="888" height="278">
+        <div class="hero-copy text-indent">
+          <p class="eyebrow">关于 FreeLLM</p>
+          <h1>让优质的 <span>AI 资源</span><br>被更多人看见和使用</h1>
+          <p class="lead">FreeLLM 是一个专注于收集、验证和整理优质 AI 资源的平台。<br>我们相信，好的工具和知识应该被更多人看见，并降低使用门槛，<br>让每个人都能从 AI 的进步中受益。</p>
+        </div>
+      </section>
+
+      <!-- feature trio -->
+      <section class="trio">
+        <div class="card feat">
+          <span class="ic-bub bub-blue"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8.2" cy="9" r="3"/><circle cx="15.8" cy="9" r="3"/><path d="M2.6 18.6c.5-3 2.6-4.8 5.6-4.8s5.1 1.8 5.6 4.8l.1.8H2.5l.1-.8z"/><path d="M13.4 14.6c.8-.5 1.5-.7 2.4-.7 3 0 5.1 1.8 5.6 4.8l.1.8h-6.2l-.4-3.2c-.3-.7-.9-1.2-1.5-1.7z" opacity=".75"/></svg></span>
+          <div><b>开放共享</b><p>打破信息壁垒，共享优质资源</p></div>
+        </div>
+        <div class="card feat">
+          <span class="ic-bub bub-green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4 20 5v6.2c0 5-3.4 8.6-8 10.4-4.6-1.8-8-5.4-8-10.4V5l8-2.6z"/><path d="m8.6 11.8 2.3 2.3 4.5-4.6 1.4 1.4-5.9 6-3.7-3.7 1.4-1.4z" fill="#fff"/></svg></span>
+          <div><b>真实可靠</b><p>人工验证与社区共建，确保可用可信</p></div>
+        </div>
+        <div class="card feat">
+          <span class="ic-bub bub-red"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.8C6.6 17.2 3.2 13.9 3.2 9.9 3.2 7 5.4 4.8 8.2 4.8c1.5 0 3 .7 3.8 1.9.8-1.2 2.3-1.9 3.8-1.9 2.8 0 5 2.2 5 5.1 0 4-3.4 7.3-8.8 10.9z"/></svg></span>
+          <div><b>社区共建</b><p>汇聚全球开发者与 AI 爱好者的力量</p></div>
+        </div>
+      </section>
+
+      <!-- quote -->
+      <section class="quote">
+        <span class="qm">“</span>
+        <blockquote>我们相信，AI 的价值不只属于少数人，而应属于每一个对未来充满好奇的人。</blockquote>
+        <div class="who">
+          <span class="line"></span>
+          <span>FreeLLM 团队</span>
+          <img src="assets/avatars.png" alt="FreeLLM 团队成员" width="104" height="50">
+        </div>
+        <span class="qe">”</span>
+      </section>
+
+      <!-- doing -->
+      <div class="sec-head">
+        <h2>我们在做什么</h2>
+        <span class="sub">从发现到使用，构建更好的 AI 资源生态</span>
+        <a class="more" href="#">了解更多 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+      </div>
+      <section class="steps">
+        <div class="card solid step">
+          <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></span>
+          <span class="ic-sq sq-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.2"/><path d="m15.2 15.2 5 5"/></svg></span>
+          <div class="tx">
+            <div class="head"><span class="num">01</span> <span class="tit">发现资源</span></div>
+            <p>在全球范围内发现有价值的 AI 模型、工具和应用，关注创新与实用性。</p>
+          </div>
+        </div>
+        <div class="card solid step">
+          <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></span>
+          <span class="ic-sq sq-green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4 20 5v6.2c0 5-3.4 8.6-8 10.4-4.6-1.8-8-5.4-8-10.4V5l8-2.6z"/><path d="m8.6 11.8 2.3 2.3 4.5-4.6 1.4 1.4-5.9 6-3.7-3.7 1.4-1.4z" fill="#fff"/></svg></span>
+          <div class="tx">
+            <div class="head"><span class="num">02</span> <span class="tit">验证可用性</span></div>
+            <p>通过人工测试与社区反馈，验证资源的可用性、安全性和稳定性。</p>
+          </div>
+        </div>
+        <div class="card solid step">
+          <span class="arw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></span>
+          <span class="ic-sq sq-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 2.8 20.5 7v10L12 21.2 3.5 17V7L12 2.8z"/><path d="M3.8 7.2 12 11.4l8.2-4.2M12 11.4v9.4"/></svg></span>
+          <div class="tx">
+            <div class="head"><span class="num">03</span> <span class="tit">结构化整理</span></div>
+            <p>对资源进行多维度分类和标签化整理，提供清晰的导航和使用指南。</p>
+          </div>
+        </div>
+        <div class="card solid step">
+          <span class="ic-sq sq-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 3.6v4h-4"/></svg></span>
+          <div class="tx">
+            <div class="head"><span class="num">04</span> <span class="tit">持续更新</span></div>
+            <p>紧跟 AI 领域最新动态，持续收录和更新优质资源，让你始终领先一步。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- criteria trio -->
+      <section class="trio3">
+        <div class="card solid crit">
+          <div class="head">
+            <span class="ic-sq" style="background:#ece4fd;color:#8b45e8"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6c1.1 3.9 2.4 5.2 6.3 6.3-3.9 1.1-5.2 2.4-6.3 6.3-1.1-3.9-2.4-5.2-6.3-6.3 3.9-1.1 5.2-2.4 6.3-6.3z" transform="rotate(12 12 10) translate(0 -1)"/><path d="M18.6 14.2c.6 2.1 1.3 2.8 3.4 3.4-2.1.6-2.8 1.3-3.4 3.4-.6-2.1-1.3-2.8-3.4-3.4 2.1-.6 2.8-1.3 3.4-3.4z" transform="translate(-1.5 .5)"/></svg></span>
+            <b>收录标准</b>
+            <a class="more" href="#">了解详情 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          </div>
+          <ul>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>具有实际使用价值和应用场景</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>来源可靠，优先官方或知名团队</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>无恶意代码，符合社区使用规范</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>涵盖多样化领域，兼顾创新与实用</li>
+          </ul>
+        </div>
+        <div class="card solid crit">
+          <div class="head">
+            <span class="ic-sq" style="background:#dcf2e5;color:#22a55c"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4 20 5v6.2c0 5-3.4 8.6-8 10.4-4.6-1.8-8-5.4-8-10.4V5l8-2.6z"/><path d="m8.6 11.8 2.3 2.3 4.5-4.6 1.4 1.4-5.9 6-3.7-3.7 1.4-1.4z" fill="#fff"/></svg></span>
+            <b>验证方法</b>
+            <a class="more" href="#">了解详情 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          </div>
+          <ul>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>团队人工测试核心功能</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>验证官网、文档与使用体验</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>参考社区真实用户反馈</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>持续监控资源的可用性与稳定性</li>
+          </ul>
+        </div>
+        <div class="card solid crit">
+          <div class="head">
+            <span class="ic-sq" style="background:#d8e6fc;color:#2b6ef6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 3.6v4h-4"/></svg></span>
+            <b>更新机制</b>
+            <a class="more" href="#">了解详情 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          </div>
+          <ul>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>定期跟踪行业动态与热门资源</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>社区用户提交与推荐</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>建立版本追踪与可用性监测</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 6.4 2.6 2.6L10 3.4"/></svg></span>不定期清理失效或过时资源</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- bottom quad -->
+      <section class="quad">
+        <div class="card solid qcard">
+          <div class="head">
+            <svg class="ic" viewBox="0 0 24 24" fill="#2b6ef6"><circle cx="8.2" cy="8.4" r="2.7"/><circle cx="15.8" cy="8.4" r="2.7"/><path d="M3 17.2c.5-2.8 2.4-4.4 5.2-4.4s4.7 1.6 5.2 4.4l.1.7H2.9l.1-.7z"/><path d="M13.6 13.6c.7-.4 1.4-.6 2.2-.6 2.8 0 4.7 1.6 5.2 4.4l.1.7h-5.7l-.3-2.9c-.3-.6-.9-1.1-1.5-1.6z" opacity=".75"/></svg>
+            <b>社区贡献</b>
+          </div>
+          <p>FreeLLM 因社区而更强大，欢迎你推荐优质资源、分享使用体验或参与内容共建。</p>
+          <a class="btn-mini btn-blue" href="#">我想贡献 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          <img class="art" src="assets/illu-people.png" alt="" width="122" height="106">
+        </div>
+        <div class="card solid qcard">
+          <div class="head">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#2b6ef6" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.4"/><path d="m3.6 6.4 8.4 6.4 8.4-6.4"/></svg>
+            <b>联系我们</b>
+          </div>
+          <p>有建议、合作意向或任何问题？<br>我们很乐意与你交流。</p>
+          <a class="btn-mini btn-ghost" href="#">发送消息 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          <img class="art" src="assets/illu-plane.png" alt="" width="118" height="84">
+        </div>
+        <div class="card solid qcard">
+          <div class="head">
+            <svg class="ic" viewBox="0 0 24 24" fill="#f0564a"><path d="M12 20.8C6.6 17.2 3.2 13.9 3.2 9.9 3.2 7 5.4 4.8 8.2 4.8c1.5 0 3 .7 3.8 1.9.8-1.2 2.3-1.9 3.8-1.9 2.8 0 5 2.2 5 5.1 0 4-3.4 7.3-8.8 10.9z"/></svg>
+            <b>我们的价值观</b>
+          </div>
+          <p>开放、包容、真实、长期主义。<br>我们致力于构建一个更公平、<br>更普惠的 AI 资源生态。</p>
+          <a class="btn-mini btn-ghost" href="#">了解我们的价值观 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          <img class="art" src="assets/illu-plant.png" alt="" width="95" height="100" style="right:8px;bottom:0">
+        </div>
+        <div class="card solid qcard c4">
+          <a class="more" href="#">查看更多 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></a>
+          <div class="head">
+            <svg class="ic" viewBox="0 0 24 24" fill="#2b6ef6"><rect x="4" y="13" width="3.4" height="7" rx="1"/><rect x="10.3" y="8" width="3.4" height="12" rx="1"/><rect x="16.6" y="4" width="3.4" height="16" rx="1"/></svg>
+            <b>成长历程</b>
+          </div>
+          <div class="miles">
+            <div class="mile"><span class="d">2026.05</span><span class="node"><i></i></span><span class="t">FreeLLM 项目正式启动</span></div>
+            <div class="mile"><span class="d">2026.06</span><span class="node"><i></i></span><span class="t">首批 100+ 优质资源收录</span></div>
+            <div class="mile"><span class="d">2026.08</span><span class="node"><i></i></span><span class="t">每日自动核验上线</span></div>
+            <div class="mile"><span class="d">2026.09</span><span class="node"><i></i></span><span class="t">推出工具与工作流专区</span></div>
+            <div class="mile now"><span class="d">现在</span><span class="node"><i></i></span><span class="t">持续成长中 …</span></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
