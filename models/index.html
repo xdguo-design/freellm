@@ -174,93 +174,24 @@ pre code { padding:0; background:none; color:inherit; }
 .models-overview-grid article{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .models-overview-grid h2{margin:0 0 8px;font-size:22px}@media(max-width:700px){.models-overview-grid{grid-template-columns:1fr}}
 </style><link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b"><link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
-<link rel="stylesheet" href="/css/aurora-models.css?v=20260929b"><link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">
-</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview model-library-hero" id="fl-main-content">
-<div class="ml-hero-copy">
-<div class="eyebrow">MODEL DIRECTORY <span>·</span> FREE AI, BUILT FOR YOU</div>
-<h1>模型库</h1>
-<p class="ml-hero-subtitle">发现、比较和使用全球优质 AI 模型</p>
-<p class="lead">汇集文本、多模态、图像与音频模型，按能力、上下文、接入地区快速筛选，找到适合你的 AI 能力。</p>
-<div class="ml-hero-stats" aria-label="模型库统计">
-<div><strong id="ml-model-count">234</strong><span>模型记录</span></div>
-<div><strong id="ml-provider-count">17</strong><span>当前数据来源</span></div>
-<div><strong id="ml-offer-count">68</strong><span>免费资源入口</span></div>
-</div>
-</div>
-<div class="ml-hero-visual" aria-hidden="true">
-<div class="ml-orbit ml-orbit-one"></div><div class="ml-orbit ml-orbit-two"></div>
-<div class="ml-glass-tile ml-tile-capability">▣ <span>更强大的模型<small>More Capabilities</small></span></div>
-<div class="ml-glass-tile ml-tile-open">⬡ <span>更开放的生态<small>More Open</small></span></div>
-<div class="ml-glass-tile ml-tile-future">▥ <span>更美好的未来<small>A Brighter Tomorrow</small></span></div>
-<div class="ml-ai-cube"><span>AI</span></div>
-<div class="ml-figure"><i></i><b></b></div>
-<div class="ml-art-signature">A Brighter Tomorrow</div>
-</div>
-</header>
-<main class="model-library-main">
-<section class="ml-workspace" id="model-library-app" aria-label="模型库">
-<div class="ml-primary-column">
-<form class="ml-filters" id="ml-filters" role="search" onsubmit="return false">
-<label class="ml-filter-search"><span aria-hidden="true">⌕</span><input id="ml-search" type="search" placeholder="搜索模型名称、厂商或能力…" autocomplete="off" aria-label="搜索模型名称、厂商或能力"></label>
-<label><span>厂商</span><select id="ml-provider"><option value="">全部</option></select></label>
-<label><span>模态</span><select id="ml-modality"><option value="">全部</option><option value="text">文本</option><option value="image">图像</option><option value="audio">音频</option><option value="video">视频</option><option value="reasoning">推理</option></select></label>
-<label><span>上下文长度</span><select id="ml-context"><option value="">全部</option><option value="short">32K 以下</option><option value="medium">32K–128K</option><option value="long">128K 以上</option><option value="million">1M 及以上</option></select></label>
-<label><span>免费入口</span><select id="ml-free"><option value="">全部</option><option value="yes">有免费资源</option><option value="no">无匹配资源</option></select></label>
-<label><span>地区</span><select id="ml-region"><option value="">全部</option><option value="domestic">国内</option><option value="international">国际</option><option value="unknown">待核验</option></select></label>
-<button class="ml-reset" id="ml-reset" type="button">↻ 重置筛选</button>
-</form>
-
-<article class="ml-featured">
-<div class="ml-featured-badge">✦ 编辑精选</div>
-<div class="ml-featured-copy">
-<div class="ml-featured-kicker">FEATURED MODEL <span>·</span> MULTIMODAL</div>
-<h2>MiMo-V2.6-Flash <span class="ml-hot-badge">免费模型池</span></h2>
-<div class="ml-feature-tags"><span>1M 上下文</span><span>多模态</span><span>推理</span><span>可免费体验</span></div>
-<p>支持文本、图像、视频与音频理解，超长上下文适合复杂任务。可通过 OpenCode Zen 等入口体验，免费资格与速率限制以平台页面为准。</p>
-<a class="ml-primary-action" href="/models/mimo-v2-6-flash/">查看模型入口 <span>→</span></a>
-<a class="ml-secondary-action" href="/models/mimo-v2-6-flash/">模型详情</a>
-</div>
-<div class="ml-featured-art" aria-hidden="true">
-<div class="ml-feature-orbit"></div><div class="ml-feature-card ml-float-left">1,000,000<small>上下文长度</small></div>
-<div class="ml-feature-cube"><span>M</span></div><div class="ml-feature-card ml-float-right">多模态<span>·</span>推理</div>
-<div class="ml-feature-screen"></div>
-</div>
-<div class="ml-feature-footer"><span>✦ 1M 上下文</span><span>⬡ 多模态理解</span><span>◈ 全球接入</span><span>✦ 高性价比</span></div>
-</article>
-
-<div class="ml-catalog-heading">
-<div><span class="ml-section-label">MODEL LIBRARY</span><h2>探索模型</h2><p>根据真实模型目录生成，查看厂家、能力、上下文与可用入口。</p></div>
-<label class="ml-sort">排序 <select id="ml-sort"><option value="new">最新发布</option><option value="context">上下文优先</option><option value="name">名称 A–Z</option></select></label>
-</div>
-<nav class="ml-category-tabs" aria-label="模型类别">
-<button class="active" type="button" data-category="">全部模型 <span id="ml-total">(234)</span></button>
-<button type="button" data-category="text">语言模型</button>
-<button type="button" data-category="multimodal">多模态模型</button>
-<button type="button" data-category="image">图像模型</button>
-<button type="button" data-category="audio">音频模型</button>
-<button type="button" data-category="video">视频模型</button>
-<button type="button" data-category="reasoning">推理模型</button>
-<a href="/models/all/">全部目录 →</a>
-</nav>
-<div class="ml-results-status" id="ml-results-status" aria-live="polite"></div>
-<div class="ml-card-grid" id="ml-card-grid" aria-live="polite"></div>
-<div class="ml-load-more-wrap"><a class="ml-load-more" href="/models/all/">打开完整模型目录 <span>→</span></a></div>
-</div>
-
-<aside class="ml-sidebar">
-<section class="ml-side-panel ml-compare-panel">
-<div class="ml-side-heading"><h2>模型对比</h2><button id="ml-clear-compare" type="button">清空</button></div>
-<div id="ml-compare-empty" class="ml-compare-empty"><span class="ml-plus">＋</span><p>点击模型卡片上的<br>对比按钮，添加模型</p></div>
-<div id="ml-compare-list" class="ml-compare-list"></div>
-<button class="ml-compare-start" id="ml-compare-start" type="button" disabled>开始对比 <span id="ml-compare-count">(0/4)</span></button>
-<div class="ml-compare-table" id="ml-compare-table" hidden></div>
-</section>
-<section class="ml-side-panel ml-recent-panel">
-<div class="ml-side-heading"><h2>最近浏览</h2><button id="ml-clear-recent" type="button">清空</button></div>
-<div class="ml-recent-list" id="ml-recent-list"><p class="ml-muted">打开模型详情后，会显示最近浏览记录。</p></div>
-</section>
-<div class="ml-data-note">模型数据与免费入口分开统计。免费资格、地区和速率可能变化，请以官方来源为准。</div>
-</aside>
-</section>
-</main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260924a"></script>
-<script src="/js/model-library.js?v=20260929b" defer></script></body></html>
+<link rel="stylesheet" href="/css/aurora-models.css?v=20260924a"><link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">
+</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview">
+<div class="eyebrow">MODEL DIRECTORY / 数据口径已拆分</div><h1>全部免费 AI 模型与 API 一览<br><span>含中国大陆可用性标注</span></h1>
+<p class="lead">“模型记录”“厂家目录”“当前模型数据 Provider ID”“免费资源 / Offer”是四种不同实体。这里分别统计，再进入对应目录继续浏览。</p>
+<nav class="model-section-tabs" aria-label="模型页面">
+      <a href="/models/" aria-current="page">概览</a>
+      <a href="/models/all/">全部模型</a>
+      <a href="/providers/">按厂家</a>
+      <a href="/category/api/">免费 API / Offer</a>
+    </nav><div class="fl-stat-grid" aria-label="模型目录统计">
+      <div class="fl-stat-card"><strong>234</strong><span>模型记录 / model records</span></div>
+      <div class="fl-stat-card"><strong>46</strong><span>厂家目录 / vendor directory</span></div>
+      <div class="fl-stat-card"><strong>17</strong><span>当前数据 Provider ID</span></div>
+      <div class="fl-stat-card"><strong>68</strong><span>免费资源 / verified offers</span></div>
+    </div></header><main><section class="models-overview-grid">
+<article><h2>全部模型</h2><p>查看模型名称、厂家、上下文、状态和来源。</p><a class="button" href="/models/all/">打开完整模型目录 →</a></article>
+<article><h2>按厂家</h2><p>浏览厂家目录；厂家目录总数不等于当前模型快照里的 providerId 数。</p><a class="button" href="/providers/">查看厂家目录 →</a></article>
+<article><h2>免费 API / Offer</h2><p>这是可注册、可试用或可下载的资源入口，不拿它冒充模型数量。</p><a class="button" href="/category/api/">查看免费 API / Offer →</a></article>
+<article><h2>模型中心</h2><p>先看精选资源，再进入模型目录与接入信息。</p><a class="button" href="/models/center/">进入模型中心 →</a></article>
+</section></main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260924a"></script>
+</body></html>
