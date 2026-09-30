@@ -67,6 +67,13 @@
   const sortModels = (items) => {
     const sort = $('#ml-sort').value;
     return items.sort((a, b) => {
+      if (sort === 'featured') {
+        return Number(Boolean(b.hasFree)) - Number(Boolean(a.hasFree))
+          || Number(b.status === 'online') - Number(a.status === 'online')
+          || contextValue(b.context) - contextValue(a.context)
+          || String(b.released).localeCompare(String(a.released))
+          || a.model.localeCompare(b.model);
+      }
       if (sort === 'context') return contextValue(b.context) - contextValue(a.context) || a.model.localeCompare(b.model);
       if (sort === 'name') return a.model.localeCompare(b.model);
       return String(b.released).localeCompare(String(a.released)) || a.model.localeCompare(b.model);
@@ -159,6 +166,15 @@
     $('#ml-clear-compare').addEventListener('click', () => { state.compare = []; renderCompare(); });
     $('#ml-clear-recent').addEventListener('click', () => { state.recent = []; try { localStorage.removeItem('freellm-model-library-recent'); } catch (_) {} renderRecent(); });
     $('#ml-compare-start').addEventListener('click', startCompare);
+    document.querySelectorAll('[data-ml-theme]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const dark = button.dataset.mlTheme === 'dark';
+        if (dark) document.documentElement.dataset.theme = 'dark';
+        else delete document.documentElement.dataset.theme;
+        try { localStorage.setItem('freellm-theme', dark ? 'dark' : ''); } catch (_) {}
+        document.querySelectorAll('[data-ml-theme]').forEach((item) => item.classList.toggle('is-active', item === button));
+      });
+    });
     root.addEventListener('click', (event) => {
       const add = event.target.closest('[data-compare-id]');
       if (add) {
