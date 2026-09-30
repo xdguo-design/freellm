@@ -3616,6 +3616,17 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
         flags=re.I,
     )
     head = re.sub(
+        r'\s*<link rel="stylesheet" href="../css/home-prototype-exact\.css\?v=[^"]+">',
+        "",
+        head,
+        count=1,
+        flags=re.I,
+    )
+    prototype_start = body.find('<section class="prototype-home"')
+    legacy_hero_start = body.find('<section class="catalog-hero">', prototype_start)
+    if prototype_start >= 0 and legacy_hero_start > prototype_start:
+        body = body[:prototype_start] + body[legacy_hero_start:]
+    head = re.sub(
         r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
         r'href="../../css/\1"',
         head,
@@ -5161,6 +5172,10 @@ AURORA_PAGE_STYLES = {
     Path("about/index.html"): "aurora-about.css",
 }
 
+AURORA_PAGE_STYLE_VERSIONS = {
+    Path("models/index.html"): "20260929b",
+}
+
 
 def _ensure_aurora_page_style(content: str, path: Path) -> str:
     """Attach the single approved Aurora style only to pages already in their visual phase."""
@@ -5177,7 +5192,8 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
             updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
 
     core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">'
-    page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260924a">'
+    page_version = AURORA_PAGE_STYLE_VERSIONS.get(path, "20260924a")
+    page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v={page_version}">'
     if core_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", core_tag + "\n" + page_tag + "</head>", 1)
     elif page_tag not in updated and "</head>" in updated:
@@ -5201,7 +5217,8 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
             attrs += ' data-reference-style="v1"'
             updated = updated[:body_match.start()] + f"<body{attrs}>" + updated[body_match.end():]
 
-    css_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
+    reference_version = "20260929-workflow4" if path == Path("skills/lab/index.html") else "20260924a"
+    css_tag = f'<link rel="stylesheet" href="/css/reference-ui.css?v={reference_version}">'
     if css_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", css_tag + "\n</head>", 1)
 
