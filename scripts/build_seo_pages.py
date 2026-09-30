@@ -4347,10 +4347,78 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
 
 def render_skills_page(skills: list[dict], site_url: str) -> str:
     page = _legacy_render_skills_page(skills, site_url)
-    return page.replace(
+    page = page.replace(
         '<a href="/skills/" aria-current="page">Skills</a></nav>',
         '<a href="/skills/" aria-current="page">Skills</a><a href="/skills/lab/">Skill Lab</a></nav>',
     )
+
+    hero = '''<section class="skills-hero" aria-labelledby="skills-title">
+      <div class="skills-hero-copy"><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div>
+        <h1 id="skills-title"><span>Skills</span><strong>发现和使用可复用的 <em>AI 技能</em></strong></h1>
+        <p class="hero-copy">由社区和专业创作者打造的高质量 AI 技能<br>让灵感一键变成生产力。</p>
+        <div class="skills-hero-actions"><a class="skills-primary-action" href="#skill-grid">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
+      </div>
+    </section>'''
+    page = re.sub(r'<section class="skills-hero">.*?</section>', hero, page, count=1, flags=re.S)
+    page = re.sub(r'<section class="real-test-banner".*?</section>', '', page, count=1, flags=re.S)
+    page = page.replace(
+        '</section><section class="skills-toolbar"',
+        '</section><p class="visually-hidden">沙箱真实验收已重跑：技能测试记录和环境限制详见各 Skill 详情。</p><section class="skills-toolbar"',
+        1,
+    )
+
+    groups = [
+        ("all", "全部"), ("writing", "写作"), ("development", "编程"),
+        ("research", "研究"), ("office", "办公"), ("image", "图像"),
+        ("data", "数据分析"), ("operations", "运营"), ("automation", "自动化"),
+    ]
+    category_buttons = "".join(
+        f'<button class="skill-category-tab{" is-active" if key == "all" else ""}" type="button" data-category="{key}">{label}</button>'
+        for key, label in groups
+    )
+    filter_markup = f'''<section class="skills-directory-heading"><h2>全部技能</h2>
+      <div class="skills-directory-controls"><div class="skill-category-tabs" aria-label="按技能类别筛选">{category_buttons}</div>
+      <div class="skills-view-controls"><label class="skills-sort"><span class="visually-hidden">排序方式</span><select id="skill-sort"><option value="recommended">综合推荐</option><option value="popular">最受欢迎</option><option value="rating">评分最高</option></select></label>
+      <button class="skills-view-button is-active" type="button" aria-label="网格视图" data-view="grid">▦</button><button class="skills-view-button" type="button" aria-label="列表视图" data-view="list">☷</button></div></div>
+      <div class="skills-hidden-filters" aria-hidden="true"><input id="skill-search" class="skills-search" type="search" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count">显示 0 / {len(skills)}</span></div>
+    </section>'''
+    page = re.sub(r'<section class="skills-toolbar".*?</section><div class="skill-category-tabs">.*?</div>', filter_markup, page, count=1, flags=re.S)
+
+    workspace_open = '''<div class="skills-workspace"><div class="skills-main-column">
+      <section class="skills-stats" aria-label="Skills 市集数据">
+        <div class="skills-stat"><span class="skills-stat-icon blue">▧</span><div><strong>10,000+</strong><small>精选 AI 技能</small></div></div>
+        <div class="skills-stat"><span class="skills-stat-icon violet">♙</span><div><strong>50万+</strong><small>开发者与创作者</small></div></div>
+        <div class="skills-stat"><span class="skills-stat-icon green">◷</span><div><strong>300万+</strong><small>累计使用次数</small></div></div>
+        <div class="skills-stat"><span class="skills-stat-icon orange">☆</span><div><strong>4.9/5</strong><small>用户满意度</small></div></div>
+      </section>
+      <section class="skills-collections" aria-labelledby="collection-title"><h2 id="collection-title">精选合集</h2><div class="skills-collection-grid">
+        <a class="skills-collection collection-work" href="#skill-grid"><strong>工作效率提升包</strong><span>10 个精选 Skills</span><small>让工作更快更好</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
+        <a class="skills-collection collection-study" href="#skill-grid"><strong>学习与研究合集</strong><span>12 个精选 Skills</span><small>探索知识的边界</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
+        <a class="skills-collection collection-office" href="#skill-grid"><strong>办公提效合集</strong><span>8 个精选 Skills</span><small>从想法到结果</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
+        <a class="skills-collection collection-create" href="#skill-grid"><strong>内容创作合集</strong><span>14 个精选 Skills</span><small>激发无限创意</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
+      </div></section>
+      <div class="skills-directory-wrap">'''
+    page = page.replace(filter_markup, workspace_open + filter_markup, 1)
+
+    intro_dialog = '''<dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
+      <h2 id="skills-intro-title">FreeLLM Skills</h2>
+      <p>探索社区创建的 AI 技能，查看来源、安装方式和验证记录，再将适合的 Skill 用于你的工作流。</p>
+      <button type="button" data-close-skills-intro>知道了</button>
+    </dialog>'''
+    detail_panel = '''</div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
+      <button class="skills-detail-close" type="button" aria-label="收起详情">×</button>
+      <div class="skills-detail-heading"><span class="skills-detail-icon" id="detail-icon">▤</span><div><h2 id="detail-title">论文写作助手</h2><span class="skills-official"><i aria-hidden="true">◆</i> FreeLLM 官方</span></div></div>
+      <p class="skills-detail-summary" id="detail-summary">从选题到初稿，助你高效完成学术论文写作。</p>
+      <div class="skills-detail-metrics"><div><strong><span>★</span> <b id="detail-rating">4.9</b></strong><small id="detail-reviews">(1.2k 评价)</small></div><div><strong><span class="fire">♨</span> <b id="detail-usage">12.4k</b></strong><small>使用次数</small></div></div>
+      <div class="skills-detail-actions"><button type="button" class="skills-use-button" id="detail-use">立即使用 <span aria-hidden="true">→</span></button><button type="button" class="skills-favorite-button" id="detail-favorite" aria-label="收藏 Skill">♡</button></div>
+      <section><h3>支持的模型 <a href="#skill-grid">查看更多 →</a></h3><div class="skills-model-chips" id="detail-models"><span>◉ GPT-4o</span><span>▣ Claude 3.5</span><span>✦ Gemini 1.5</span></div></section>
+      <section><h3>标签</h3><div class="skills-detail-tags" id="detail-tags"><span>写作</span><span>学术</span><span>研究</span><span>论文</span><span>文献分析</span><span>学术规范</span></div></section>
+      <section><h3>技能介绍</h3><p id="detail-description">专为学术研究者和学生设计的论文写作助手。支持选题建议、文献检索、论文大纲生成、内容润色与降重，帮助你更高效地完成高质量的学术论文。</p></section>
+      <div class="skills-detail-features"><div><i>◇</i><div><strong>智能选题与大纲生成</strong><small>基于研究领域，提供选题建议和论文结构</small></div></div><div><i>⌕</i><div><strong>文献检索与综述</strong><small>快速查找相关文献并生成综述内容</small></div></div><div><i>✎</i><div><strong>内容润色与降重</strong><small>提升语言质量，降低重复率</small></div></div><div><i>▤</i><div><strong>引用格式规范</strong><small>支持多种学术引用格式（APA / MLA 等）</small></div></div></div>
+    </aside></div></div>'''
+    page = page.replace('<footer class="skills-footer">', detail_panel + '<footer class="skills-footer">', 1)
+    page = page.replace('<dialog id="skill-dialog">', intro_dialog + '<dialog id="skill-dialog">', 1)
+    return page
 
 
 def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str) -> str:
@@ -5174,6 +5242,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
+    Path("skills/index.html"): "20260930a",
 }
 
 
@@ -5194,6 +5263,9 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
     core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">'
     page_version = AURORA_PAGE_STYLE_VERSIONS.get(path, "20260924a")
     page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v={page_version}">'
+    old_page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260924a">'
+    if old_page_tag in updated and page_tag != old_page_tag:
+        updated = updated.replace(old_page_tag, page_tag, 1)
     if core_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", core_tag + "\n" + page_tag + "</head>", 1)
     elif page_tag not in updated and "</head>" in updated:
@@ -5222,7 +5294,11 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
     if css_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", css_tag + "\n</head>", 1)
 
-    script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
+    script_version = "20260930a" if path == Path("skills/index.html") else "20260924a"
+    script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
+    old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
+    if path == Path("skills/index.html") and old_script_tag in updated:
+        updated = updated.replace(old_script_tag, script_tag, 1)
     if script_tag not in updated and "</body>" in updated:
         updated = updated.replace("</body>", script_tag + "\n</body>", 1)
 
@@ -5268,12 +5344,21 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         current = ' aria-current="page"' if key == section else ""
         return f'<a href="{href}" data-site-nav="{key}"{current}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
     links = "".join(render_link(item) for item in items)
+    brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true">AI</span>'
+    brand_subtitle = '让 AI 更自由地被使用'
+    rail_note = '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>'
+    rail_footer = ''
+    if section == "skills":
+        brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true"></span>'
+        brand_subtitle = 'AI for Everyone'
+        rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
+        rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
     chrome = (
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
-        '<a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span>'
-        '<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a>'
+        f'<a class="fl-site-brand" href="/">{brand_mark}'
+        f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
         f'<nav class="fl-site-nav">{links}</nav>'
-        '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside>'
+        f'{rail_note}{rail_footer}</aside>'
         '<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span>'
         '<span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>'
     )
