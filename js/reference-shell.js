@@ -21,7 +21,7 @@
     topbar.className = 'ref-topbar';
     topbar.setAttribute('role', 'search');
     const localeLabel = document.documentElement.lang === 'en' ? '中文' : 'EN';
-    if (section === 'home') {
+    if (section === 'home' || section === 'models') {
       topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="搜索模型、工具、Skills 或任何你感兴趣的 AI 资源..."><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><button class="prototype-login" type="button">登录</button><button class="prototype-register" type="button">注册</button></div>';
     } else {
       topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true">⌕</span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a></div>';
@@ -37,7 +37,7 @@
     });
 
     const topInput = topbar.querySelector('input');
-    const targets = ['#catalog-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
+    const targets = ['#catalog-search','#tool-search','#skill-search','#skill-library-search','#ml-search'].map(s => document.querySelector(s)).filter(Boolean);
     const target = targets[0];
     const sync = () => {
       const value = topInput.value.trim();
