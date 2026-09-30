@@ -548,12 +548,13 @@
 <link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css">
 <link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">
 <link rel="stylesheet" href="../css/aurora-home.css?v=20260929b">
+<link rel="stylesheet" href="../css/home-prototype-exact.css?v=20260930a">
 </head>
 <body class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json">
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
-    <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span>
+    <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>
   </a>
   <nav class="fl-site-nav">
     <a href="/" data-site-nav="home" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
@@ -564,7 +565,9 @@
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
-  <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
+  <div class="prototype-theme-toggle" aria-label="主题切换"><span class="active">☀</span><span>◔</span></div>
+  <div class="fl-site-rail-note" aria-hidden="true"></div>
+  <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2024 FreeLLM</small></div>
 </aside>
 <div class="fl-site-ribbon">
   <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
@@ -585,6 +588,57 @@
         <div class="header-actions"><a class="header-submit" href="/submit/">提交资源</a><div class="local-clock" id="catalog-clock">Local time <span>Detecting timezone…</span></div><span class="profile-dot" aria-hidden="true">AI</span><span class="profile-chevron" aria-hidden="true">⌄</span></div>
       </header>
       <div class="catalog-content">
+        <section class="prototype-home" aria-label="FreeLLM 首页原型">
+          <section class="prototype-hero">
+            <div class="prototype-hero-copy">
+              <span class="prototype-kicker">FreeLLM</span>
+              <h1>今天发现，<br>更好的 <em>AI 资源</em></h1>
+              <p>汇聚全球优质的 AI 模型、工具与应用<br>让每个人都能轻松使用先进的 AI。</p>
+              <div class="prototype-hero-actions">
+                <a class="prototype-primary" href="#prototype-fresh">开始探索 <span>→</span></a>
+                <a class="prototype-secondary" href="/about/"><span class="prototype-play">▶</span>了解 FreeLLM</a>
+              </div>
+            </div>
+            <div class="prototype-hero-art" aria-hidden="true"></div>
+          </section>
+          <section class="prototype-stats" aria-label="今日概览">
+            <article class="prototype-stat is-blue"><span class="prototype-stat-icon">◆</span><div><small>今日新增资源</small><strong>12 <i>↑ +33%</i></strong><p>持续发现优质 AI 产品</p></div></article>
+            <article class="prototype-stat is-purple"><span class="prototype-stat-icon">✦</span><div><small>最新模型</small><strong>8 <i>↑ +60%</i></strong><p>紧跟全球最新发布</p></div></article>
+            <article class="prototype-stat is-green"><span class="prototype-stat-icon">🎁</span><div><small>限时免费</small><strong>6 <i>↑ +200%</i></strong><p>不错过任何福利</p></div></article>
+            <article class="prototype-stat is-orange"><span class="prototype-stat-icon">◆</span><div><small>今日已验证</small><strong>24 <i>↑ +41%</i></strong><p>安全 · 可用 · 值得信赖</p></div></article>
+            <article class="prototype-stat is-red"><span class="prototype-stat-icon">🔥</span><div><small>热门入口</small><strong class="prototype-top10">TOP 10</strong><p>大家都在用的 AI 工具</p></div></article>
+          </section>
+          <section class="prototype-hot" aria-labelledby="prototype-hot-title">
+            <div class="prototype-hot-head">
+              <div class="prototype-hot-title"><span class="prototype-fire">🔥</span><div><h2 id="prototype-hot-title">今日 AI 热点 <b>NEW</b></h2><p>追踪免费模型、API、Token 福利、开源项目与重要 AI 更新</p></div></div>
+              <div class="prototype-hot-metrics">
+                <span><i>▣</i><small>今日新热点</small><b>12</b></span>
+                <span><i>🎁</i><small>免费资源变化</small><b>5</b></span>
+                <span><i>◆</i><small>新模型 / API</small><b>4</b></span>
+                <span><i>◷</i><small>即将到期</small><b>3</b></span>
+                <label class="prototype-free-toggle"><small>只看免费</small><input type="checkbox"><i></i></label>
+                <a href="#prototype-fresh">查看全部 →</a>
+              </div>
+            </div>
+            <div class="prototype-hot-grid">
+              <article class="prototype-hot-card"><div class="prototype-hot-cover cover-1"><span class="prototype-heat">🔥 96</span></div><h3>Xing4.0-29B-A4B 上线硅基流动，可免费调用</h3><div class="prototype-meta"><span>◉</span> 硅基流动　2 小时前</div><p>国产高性能模型 Xing4.0-29B-A4B 已上线，提供免费 API 调用额度。</p><div class="prototype-tags"><span>免费 API</span><span>国产模型</span><span>已核验</span></div><a href="/models/">立即查看 →</a></article>
+              <article class="prototype-hot-card"><div class="prototype-hot-cover cover-2"><span class="prototype-heat">🔥 92</span></div><h3>Today 新用户送 1 亿 Token + 1 个月 Pro</h3><div class="prototype-meta"><span>●</span> Today　4 小时前</div><p>Today 推出新用户福利，注册即可获得 1 亿 Token 和 1 个月 Pro。</p><div class="prototype-tags"><span>限时活动</span><span>赠送额度</span><span>官方来源</span></div><a href="#catalog-offers">立即参与 →</a></article>
+              <article class="prototype-hot-card"><div class="prototype-hot-cover cover-3"><span class="prototype-heat">🔥 89</span></div><h3>Kimi 免费 API 额度调整</h3><div class="prototype-meta"><span>◉</span> Kimi　6 小时前</div><p>Kimi 调整免费 API 额度，新用户每月可获得更多免费额度。</p><div class="prototype-tags"><span>政策更新</span><span>免费 API</span><span>已核验</span></div><a href="#catalog-offers">查看详情 →</a></article>
+              <article class="prototype-hot-card"><div class="prototype-hot-cover cover-4"><span class="prototype-heat">🔥 87</span></div><h3>Qwen-Image 最新版本开源</h3><div class="prototype-meta"><span>▱</span> 阿里云　8 小时前</div><p>Qwen-Image 最新版本正式开源，支持文生图、图像编辑等能力。</p><div class="prototype-tags"><span>开源</span><span>国产模型</span><span>已核验</span></div><a href="/models/">前往查看 →</a></article>
+              <article class="prototype-hot-card"><div class="prototype-hot-cover cover-5"><span class="prototype-heat">🔥 84</span></div><h3>Gemini 2.5 Flash 限时免费试用</h3><div class="prototype-meta"><span>G</span> Google　12 小时前</div><p>Gemini 2.5 Flash 提供限时免费试用，性能大幅提升。</p><div class="prototype-tags"><span>限时免费</span><span>海外</span><span>官方来源</span></div><a href="#catalog-offers">立即体验 →</a></article>
+            </div>
+          </section>
+          <section class="prototype-fresh" id="prototype-fresh" aria-labelledby="prototype-fresh-title">
+            <div class="prototype-fresh-heading"><h2 id="prototype-fresh-title">全新资源 <span>全新资源</span></h2><button type="button">综合排序⌄</button></div>
+            <nav class="prototype-tabs" aria-label="资源分类"><button class="active" type="button">全部</button><button type="button">AI 模型</button><button type="button">AI 工具</button><button type="button">开发编程</button><button type="button">图像生成</button><button type="button">生产力</button><button type="button">数据分析</button><button type="button">学术研究</button><button type="button">设计创作</button><button type="button">语音视频</button><button type="button">更多⌄</button></nav>
+            <div class="prototype-resource-grid">
+              <article class="prototype-resource-card"><span class="prototype-resource-logo agnes">A</span><div class="prototype-resource-copy"><h3>Agnes AI</h3><small>你的全能 AI 助手</small><p>集搜索、阅读、写作与任务执行于一体的智能助手，支持多模态理解与联网搜索。</p><div class="prototype-resource-tags"><span>AI 助手</span><span>生产力</span><span>多模态</span></div><div class="prototype-resource-meta">🔥 1.2k　♧ 98%　⚡ 120ms</div></div><b class="prototype-resource-status free">● 限时免费</b><a href="#catalog-offers">立即使用 →</a></article>
+              <article class="prototype-resource-card"><span class="prototype-resource-logo github">●</span><div class="prototype-resource-copy"><h3>GitHub Copilot</h3><small>更高效的编程伙伴</small><p>基于最新大模型的 AI 编程助手，支持多编程语言，在你的开发流程中提供智能建议。</p><div class="prototype-resource-tags"><span>开发编程</span><span>代码生成</span><span>IDE 插件</span></div><div class="prototype-resource-meta">🔥 3.4k　♧ 96%　⚡ 180ms</div></div><b class="prototype-resource-status hot">🔥 热门</b><a href="/offers/github-copilot-free/">立即使用 →</a></article>
+              <article class="prototype-resource-card"><span class="prototype-resource-logo trae">▰</span><div class="prototype-resource-copy"><h3>TraeCode CN</h3><small>更懂中文开发者的 AI IDE</small><p>面向中文开发者的新一代 AI 编程工具，内置多模型能力，支持对话、代码补全和项目理解。</p><div class="prototype-resource-tags"><span>开发工具</span><span>AI IDE</span><span>中文优化</span></div><div class="prototype-resource-meta">🔥 2.1k　♧ 94%　⚡ 150ms</div></div><b class="prototype-resource-status china">● 国内可用</b><a href="/offers/trae/">立即使用 →</a></article>
+            </div>
+            <aside class="prototype-student-banner"><div class="prototype-student-art" aria-hidden="true">🎓</div><div><strong>学生专属福利</strong><p>完成学生认证，解锁更多优质 AI 资源与专属权益</p></div><div class="prototype-student-links"><span>教育优惠</span><span>专属资源</span><span>学习社区</span><span>未来先行者</span></div><a href="#catalog-offers">立即认证 →</a><em>更好的 AI，<br>从校园开始！</em></aside>
+          </section>
+        </section>
         <section class="catalog-hero">
           <div class="catalog-hero-copy"><div class="hero-badge"><span>✓</span> 官方来源 · 条件透明</div><h1>发现真正好<br>用的<span>免费 AI</span></h1><p class="hero-copy">模型、API、IDE 与限时试用，一站比较</p><label class="hero-search"><span aria-hidden="true">⌕</span><input id="catalog-search" type="search" placeholder="搜索模型、平台或功能，例如 DeepSeek、Qwen3" aria-label="Search offers"><button type="button">搜索</button></label><div class="hot-searches"><span>热门搜索：</span><button type="button">Qwen3</button><button type="button">豆包</button><button type="button">免费 API</button><button type="button">AI IDE</button></div><nav class="hero-intent-links" aria-label="热门免费 AI 指南"><a href="/guides/free-openai-compatible-apis/">免费 LLM API</a><a href="/guides/china-free-ai-api/">国内免费 AI API</a><a href="/guides/free-openai-api-alternatives/">OpenAI API 替代</a><a href="/guides/free-ai-coding-tools/">免费 AI 编程工具</a></nav></div>
           <div class="hero-intel"><div class="hero-intel-head"><div class="hero-intel-title-row"><strong>今天的 AI 资源有什么变化？</strong><span class="intel-update-badge" id="daily-log-badge" data-new-count="1" data-change-count="4">新增 1 项</span></div><span>▣ &nbsp;2026 年 9 月 29 日</span><a class="intel-log-link" href="/logs/">查看今日变化 →</a></div><p class="intel-story-copy">我们每天检查官方来源，记录新增、恢复、下线和异常。</p><div class="hero-intel-main"><div><b id="heroCount">68</b><strong>个优质资源</strong><p>显示官方条件与最近核验日期</p></div><div class="mini-chart" aria-label="资源趋势"><i style="height:36%"></i><i style="height:52%"></i><i style="height:46%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:100%"></i><small>较上周 <b>+35%</b></small></div></div><div class="intel-pills"><div><span>∞</span><b>永久免费</b><small>长期可用</small></div><div><span>ϟ</span><b>限时试用</b><small>把握机会</small></div><div><span>◇</span><b>开源可下载</b><small>自由使用</small></div></div><div class="hero-intel-note">好的 AI<br>应该被更多人<br>轻松使用</div></div>
