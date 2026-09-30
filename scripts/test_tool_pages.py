@@ -14,14 +14,11 @@
   5. 骨架完整：.tool 容器存在且 h1 非空
 """
 import argparse
-import io
 import json
 import pathlib
 import re
 import sys
 import time
-
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -108,6 +105,8 @@ def smoke(page, base):
 
 
 def main():
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', default='http://127.0.0.1:8901')
     ap.add_argument('--report', default='')

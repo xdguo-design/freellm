@@ -108,12 +108,13 @@
     #dialog-style-section .skill-style-format { margin:0; } #dialog-style-section .skill-style-format code { font:500 12px/1.5 var(--font-mono); color:var(--ink); background:var(--surface-soft); border:1px solid var(--line); border-radius:4px; padding:2px 8px; } #dialog-style-summary { margin:10px 0 0; color:var(--ink-secondary); font-size:13.5px; line-height:1.65; }
     @media (max-width:800px) { .skills-page { padding:12px 18px 48px; } .skills-header { align-items:flex-start; flex-direction:column; } .header-right { width:100%; justify-content:space-between; } .skills-count { margin-left:0; } .skill-preview-layout { grid-template-columns:1fr; } } @media (max-width:560px) { .skills-hero h1 { font-size:36px; } .skill-grid { grid-template-columns:1fr; } .skill-card p { -webkit-line-clamp:5; } .skill-preview-canvas { min-height:150px; } }
     </style><link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b"><link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
-<link rel="stylesheet" href="/css/aurora-skills.css?v=20260930a"><link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">
+<link rel="stylesheet" href="/css/aurora-skills.css?v=20260930k"><link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">
+<link rel="stylesheet" href="/css/reference-rail.css?v=20260930e">
 </head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="skills" data-visual-style="aurora" data-reference-style="v1"><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true"></span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div><div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero" aria-labelledby="skills-title">
       <div class="skills-hero-copy"><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div>
         <h1 id="skills-title"><span>Skills</span><strong>发现和使用可复用的 <em>AI 技能</em></strong></h1>
         <p class="hero-copy">由社区和专业创作者打造的高质量 AI 技能<br>让灵感一键变成生产力。</p>
-        <div class="skills-hero-actions"><a class="skills-primary-action" href="#skill-grid">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
+        <div class="skills-hero-actions"><a class="skills-primary-action" id="skills-browse-all" href="#skill-grid" aria-expanded="false">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
       </div>
     </section><p class="visually-hidden">沙箱真实验收已重跑：技能测试记录和环境限制详见各 Skill 详情。</p><div class="skills-workspace"><div class="skills-main-column">
       <section class="skills-stats" aria-label="Skills 市集数据">
@@ -405,7 +406,7 @@
       <div class="skill-card-top"><span class="skill-category yellow">简历与求职</span><span class="skill-status verified"><span lang="zh-CN">已核验</span><span lang="en">Verified</span></span></div>
       <h2>resume-beautifier</h2><div class="freellm-test-strip partial"><strong>PARTIAL</strong><span>FreeLLM 真测 · 部分验证</span><small>partial</small></div><details class="freellm-test-inline"><summary>查看真实测试任务、限制与评价</summary><div class="freellm-test-inline-body"><p><strong>测试任务：</strong>复核原 Skill 要求的 build_resume_html.py、audit_pii.py 与自包含导出链</p><p><strong>评价：</strong>旧页面只有自制 A4 HTML，没有运行原仓库脚本和 PII audit，也未验证自包含 html2canvas 导出，因此撤回“8.7 通过”。</p><p><strong>环境：</strong>OpenAI sandbox · local runtime validation · no public network</p><p><strong>测试时间：</strong>2026-09-20 · partial</p><div class="freellm-test-evidence"><a href="/skills/test-artifacts/sandbox-2026-09-20/#jzcreative-html-resume-beautifier" target="_blank" rel="noopener">查看本轮沙箱验收记录 ↗</a></div></div></details><p><span class="skill-description-zh" lang="zh-CN">从结构化内容或现有简历生成精致且保护隐私的 A4 HTML 简历，支持样式选择、PNG/PDF 导出和隐私审计。</span><span class="skill-description-en" lang="en">Create polished, privacy-safe A4 resume designs from structured resume content or existing resume files. Use when Codex needs to extract resume facts, remove personal example data, choose a visual style, generate an editable HTML resume, add client-side PNG/PDF export, audit for private information before open sourcing, or prepare a reusable resume-design workflow.</span></p><div class="skill-style"><span class="skill-style-label">样式</span><span class="skill-style-text">自包含 A4 HTML 简历（打印 CSS + html2canvas 导出）；主题为品牌灵感 style tokens，正式简历建议克制风格</span></div><div class="skill-chips"><span class="skill-chip">Claude Code</span><span class="skill-chip">OpenCode</span><span class="skill-chip">Codex</span></div><div class="skill-card-meta"><span class="skill-stat">★ 11</span><span class="skill-link-chip ok"><span lang="zh-CN">原文已收录</span><span lang="en">Source indexed</span></span></div>
       <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="jzcreative-html-resume-beautifier"><span lang="zh-CN">查看 SKILL.md 与社区参考 →</span><span lang="en">Source &amp; community reference →</span></button><a class="skill-source-link" href="https://github.com/jzcreative/html-resume-beautifier/tree/main" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a></div>
-    </article></section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section></div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
+    </article></section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section></div></div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
       <button class="skills-detail-close" type="button" aria-label="收起详情">×</button>
       <div class="skills-detail-heading"><span class="skills-detail-icon" id="detail-icon">▤</span><div><h2 id="detail-title">论文写作助手</h2><span class="skills-official"><i aria-hidden="true">◆</i> FreeLLM 官方</span></div></div>
       <p class="skills-detail-summary" id="detail-summary">从选题到初稿，助你高效完成学术论文写作。</p>
@@ -415,7 +416,89 @@
       <section><h3>标签</h3><div class="skills-detail-tags" id="detail-tags"><span>写作</span><span>学术</span><span>研究</span><span>论文</span><span>文献分析</span><span>学术规范</span></div></section>
       <section><h3>技能介绍</h3><p id="detail-description">专为学术研究者和学生设计的论文写作助手。支持选题建议、文献检索、论文大纲生成、内容润色与降重，帮助你更高效地完成高质量的学术论文。</p></section>
       <div class="skills-detail-features"><div><i>◇</i><div><strong>智能选题与大纲生成</strong><small>基于研究领域，提供选题建议和论文结构</small></div></div><div><i>⌕</i><div><strong>文献检索与综述</strong><small>快速查找相关文献并生成综述内容</small></div></div><div><i>✎</i><div><strong>内容润色与降重</strong><small>提升语言质量，降低重复率</small></div></div><div><i>▤</i><div><strong>引用格式规范</strong><small>支持多种学术引用格式（APA / MLA 等）</small></div></div></div>
-    </aside></div></div><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p><nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer></main><dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
+    </aside></div><div class="skills-lower-sections">
+      <section class="skills-hot-section" aria-labelledby="skills-hot-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-hot-title">热门工具组合</h2><p>把多个 Skills 串成可执行的工作流</p></div><a href="/skills/lab/">查看全部组合 →</a></div>
+        <div class="skills-hot-grid"><article class="skills-hot-card">
+              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/workflow-cover-research.png" alt="" loading="lazy"></a>
+              <div class="skills-hot-copy"><h3>从一句想法到可执行计划</h3>
+                <p>把模糊想法压成团队能评审、能排期、能验收的实施计划。</p>
+                <div class="skills-hot-tags"><span>产品设计</span><span>工程计划</span></div>
+                <div class="skills-hot-foot"><span>brainstorming · writing-plans · executing-plans</span><a href="/skills/lab/">查看配方 →</a></div>
+              </div>
+            </article><article class="skills-hot-card">
+              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/workflow-cover-prd.png" alt="" loading="lazy"></a>
+              <div class="skills-hot-copy"><h3>从数据表到汇报演示</h3>
+                <p>把一张没人想看的数据表，变成有结论、有图表、能汇报的演示文稿。</p>
+                <div class="skills-hot-tags"><span>数据分析</span><span>经营汇报</span></div>
+                <div class="skills-hot-foot"><span>xlsx · officecli-xlsx · officecli-data-dashboard</span><a href="/skills/lab/">查看配方 →</a></div>
+              </div>
+            </article><article class="skills-hot-card">
+              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/workflow-cover-code.png" alt="" loading="lazy"></a>
+              <div class="skills-hot-copy"><h3>从草稿到正式文档</h3>
+                <p>把粗糙草稿逐段打磨成可对外发送的 Word / PDF 正式文档。</p>
+                <div class="skills-hot-tags"><span>办公文档</span><span>协作润色</span></div>
+                <div class="skills-hot-foot"><span>doc-coauthoring · docx · pdf</span><a href="/skills/lab/">查看配方 →</a></div>
+              </div>
+            </article><article class="skills-hot-card">
+              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/workflow-cover-content.png" alt="" loading="lazy"></a>
+              <div class="skills-hot-copy"><h3>从选题到公众号发布</h3>
+                <p>把一个选题变成有配图、有排版、可直接发布到公众号的内容资产。</p>
+                <div class="skills-hot-tags"><span>内容创作</span><span>公众号运营</span></div>
+                <div class="skills-hot-foot"><span>content-research-writer · baoyu-cover-image · baoyu-markdown-to-html</span><a href="/skills/lab/">查看配方 →</a></div>
+              </div>
+            </article></div>
+      </section>
+      <section class="skills-community-section" aria-labelledby="skills-community-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-community-title">社区精选</h2><p>按当前收录的社区评价与 GitHub 数据精选</p></div><a href="/skills/">查看全部技能 →</a></div>
+        <div class="skills-community-grid"><a class="skills-community-card tone-1" href="https://github.com/anthropics/skills/tree/main/skills/docx" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">♥</span>
+              <span class="skills-community-copy"><strong>docx</strong><small>用于创建、读取、编辑和整理 Word 文档或模板；支持目录、标题、页码、信头、图片、批注、修订和格式化输出。</small>
+                <span class="skills-community-meta">★ 176.5k · 6 条社区评价</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a><a class="skills-community-card tone-2" href="https://github.com/anthropics/skills/tree/main/skills/pdf" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">▶</span>
+              <span class="skills-community-copy"><strong>pdf</strong><small>用于处理 PDF 文件，包括读取文本和表格、合并拆分、旋转、加水印、填写表单、加密解密、提取图片和扫描件 OCR。</small>
+                <span class="skills-community-meta">★ 176.5k · 6 条社区评价</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a><a class="skills-community-card tone-3" href="https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">◆</span>
+              <span class="skills-community-copy"><strong>doc-coauthoring</strong><small>通过结构化流程协作撰写文档、提案、技术规格和决策记录，帮助传递上下文、迭代内容并验证读者体验。</small>
+                <span class="skills-community-meta">★ 176.5k · 6 条社区评价</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a><a class="skills-community-card tone-4" href="https://github.com/anthropics/skills/tree/main/skills/xlsx" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">▧</span>
+              <span class="skills-community-copy"><strong>xlsx</strong><small>当表格是主要输入或输出时使用；支持读写 xlsx、xlsm、csv、tsv，处理数据、公式、图表、格式和清洗任务。</small>
+                <span class="skills-community-meta">★ 176.5k · 6 条社区评价</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a><a class="skills-community-card tone-5" href="https://github.com/anthropics/skills/tree/main/skills/pptx" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">✦</span>
+              <span class="skills-community-copy"><strong>pptx</strong><small>用于创建、读取、编辑和整理 PPTX 或模板，包括演示文稿、页面布局、讲稿、评论、模板和导出。</small>
+                <span class="skills-community-meta">★ 176.5k · 6 条社区评价</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a></div>
+      </section>
+      <section class="skills-tutorial-banner" aria-labelledby="skills-tutorial-title">
+        <div><span>SKILLS GUIDE / 使用指南</span><h2 id="skills-tutorial-title">不会使用？从教程开始</h2><p>从挑选、查看来源到组合工作流，循序了解怎样把 AI Skills 用起来。</p></div>
+        <a href="/skills/lab/">查看教程 <span aria-hidden="true">→</span></a>
+      </section>
+      <footer class="skills-site-footer">
+        <div class="skills-footer-brand"><a href="/" class="skills-footer-logo"><span aria-hidden="true">◈</span><span><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><p>让优质的 AI 资源，触手可及。</p></div>
+        <nav aria-label="产品"><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具集</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav>
+        <nav aria-label="资源"><strong>资源</strong><a href="/logs/">最新更新</a><a href="/guides/free-llm/">热门资源</a><a href="/skills/lab/">使用教程</a><a href="/about/">关于 FreeLLM</a></nav>
+        <nav aria-label="社区"><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/skills/lab/">加入社区</a><a href="/about/">反馈建议</a></nav>
+        <a class="skills-footer-slogan" href="/">Better AI<br> A Brighter Tomorrow</a>
+      </footer>
+    </div><footer class="skills-footer skills-footer-bottom">
+      <p>© 2024 FreeLLM. All rights reserved.</p>
+      <div class="skills-footer-social" aria-label="Social links">
+        <span aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.05c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.7 2.05 3.36 1.55.1-.72.39-1.22.7-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.04-1.14 3.04-1.14.61 1.53.23 2.67.12 2.95.71.78 1.14 1.77 1.14 2.99 0 4.29-2.6 5.23-5.09 5.51.4.35.75 1.02.75 2.06V22c0 .29.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></span>
+        <span aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 5.9a8.3 8.3 0 0 1-2.36.65 4.12 4.12 0 0 0 1.8-2.27 8.23 8.23 0 0 1-2.6.99 4.1 4.1 0 0 0-7 3.74 11.64 11.64 0 0 1-8.45-4.28 4.1 4.1 0 0 0 1.27 5.47 4.08 4.08 0 0 1-1.86-.52v.05a4.1 4.1 0 0 0 3.29 4.02 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.83 2.84A8.23 8.23 0 0 1 2 18.36a11.62 11.62 0 0 0 6.29 1.84c7.55 0 11.68-6.25 11.68-11.68l-.01-.53A8.35 8.35 0 0 0 22 5.9Z"/></svg></span>
+        <span aria-label="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.7 5.1a18.4 18.4 0 0 0-4.55-1.4l-.56 1.14a17 17 0 0 0-5.18 0l-.57-1.14a18.2 18.2 0 0 0-4.55 1.4C1.4 9.35.62 13.5 1.01 17.6a18.4 18.4 0 0 0 5.58 2.82l1.2-1.95a11.9 11.9 0 0 1-1.89-.9l.46-.36c3.64 1.68 7.59 1.68 11.19 0l.46.36c-.6.36-1.24.66-1.9.9l1.2 1.95a18.3 18.3 0 0 0 5.59-2.82c.46-4.76-.79-8.88-3.2-12.5ZM8.32 14.82c-1.1 0-2-.99-2-2.2s.88-2.2 2-2.2 2.02 1 2 2.2c0 1.21-.88 2.2-2 2.2Zm7.36 0c-1.1 0-2-.99-2-2.2s.88-2.2 2-2.2 2.02 1 2 2.2c0 1.21-.88 2.2-2 2.2Z"/></svg></span>
+      </div>
+      <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>
+      <nav class="visually-hidden" aria-label="Legal information"><a href="/about/">关于本站</a><a href="/links/">友链与相关资源</a><a href="/terms/">使用条款与免责声明</a><a href="/privacy/">隐私政策</a></nav>
+    </footer></main><dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
       <h2 id="skills-intro-title">FreeLLM Skills</h2>
       <p>探索社区创建的 AI 技能，查看来源、安装方式和验证记录，再将适合的 Skill 用于你的工作流。</p>
       <button type="button" data-close-skills-intro>知道了</button>

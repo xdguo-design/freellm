@@ -15,6 +15,11 @@
   var searchEl = document.getElementById('tool-search');
   var countEl = document.getElementById('tool-count');
   var totalEl = document.getElementById('tool-total');
+  var showAllButton = document.getElementById('tool-show-all');
+  var categoryOverview = document.getElementById('tool-category-overview-grid');
+  var popularPreview = document.getElementById('tool-popular-list');
+  var historyPreview = document.getElementById('tools-history-preview');
+  var favoritesPreview = document.getElementById('tools-favorites-preview');
 
   var favSection = document.getElementById('favorites-section');
   var favGrid = document.getElementById('favorites-grid');
@@ -28,6 +33,7 @@
   var favIcon = document.getElementById('fav-icon');
 
   var activeCat = 'all';
+  var showAll = false;
   var currentTool = null;
 
   if (!Tools) return;
@@ -74,12 +80,14 @@
     card.setAttribute('data-sync-url', '/tools/?tool=' + t.id);
     card.setAttribute('data-sync-star', '');
     card.innerHTML =
+      '<span class="tool-reference-icon" aria-hidden="true"></span>' +
       '<div class="tool-card-top">' +
         '<span class="tool-category ' + (cat ? cat.cls : '') + '">' + (cat ? cat.label : t.cat) + '</span>' +
         (t.hot ? '<span class="tool-hot">热门</span>' : '') +
       '</div>' +
       '<h2>' + t.name + '</h2>' +
-      '<p>' + t.desc + '</p>';
+      '<p>' + t.desc + '</p>' +
+      '<div class="tool-card-reference-tags"><span>' + (cat ? cat.label : t.cat) + '</span><span>本地运行</span></div>';
     card.addEventListener('click', function (e) {
       e.preventDefault();
       openTool(t);
@@ -109,6 +117,7 @@
 
   function setCat(id) {
     activeCat = id;
+    showAll = false;
     renderTabs();
     renderGrid();
   }
@@ -127,8 +136,11 @@
 
   function renderGrid() {
     var list = getFiltered();
+    var query = (searchEl.value || '').trim();
+    var hasFilter = activeCat !== 'all' || !!query;
+    var visible = !hasFilter && !showAll ? list.slice(0, 24) : list;
     gridEl.innerHTML = '';
-    if (!list.length) {
+    if (!visible.length) {
       gridEl.innerHTML =
         '<div class="tools-empty"><p>没有匹配的工具</p>' +
         '<button id="clear-filter-btn" type="button">清空筛选</button></div>';
@@ -137,17 +149,53 @@
       return;
     }
     var frag = document.createDocumentFragment();
-    list.forEach(function (t) { frag.appendChild(cardEl(t)); });
+    visible.forEach(function (t) { frag.appendChild(cardEl(t)); });
     gridEl.appendChild(frag);
     if (Sync) Sync.bind(gridEl); // 为动态卡片注入历史追踪 + 星标
-    countEl.textContent = '显示 ' + list.length + ' / ' + Tools.total;
+    countEl.textContent = '显示 ' + visible.length + ' / ' + Tools.total;
+    if (showAllButton) {
+      showAllButton.hidden = hasFilter;
+      showAllButton.setAttribute('aria-expanded', showAll && !hasFilter ? 'true' : 'false');
+      showAllButton.textContent = showAll && !hasFilter ? '收起工具 ↑' : '查看全部工具 →';
+    }
+    var supporting = document.getElementById('tools-supporting-content');
+    if (supporting) supporting.hidden = showAll && !hasFilter;
+    var pageRoot = document.querySelector('.tools-page');
+    if (pageRoot) pageRoot.classList.toggle('is-all-tools', showAll && !hasFilter);
   }
 
   function clearSearch() {
     searchEl.value = '';
     renderGrid();
   }
-  searchEl.addEventListener('input', U.debounce(renderGrid, 120));
+  searchEl.addEventListener('input', U.debounce(function () { showAll = false; renderGrid(); }, 120));
+  if (showAllButton) showAllButton.addEventListener('click', function () {
+    showAll = !showAll;
+    renderGrid();
+  });
+
+  function renderReferencePreviews() {
+    if (categoryOverview) {
+      var icons = ['🔐','🧩','▦','⌗','▤','⊞','▣','♧','⌘','▧','♙','◉','⬟'];
+      categoryOverview.innerHTML = '';
+      Tools.cats.filter(function (category) { return category.count; }).forEach(function (category, index) {
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'tool-category-overview-card';
+        button.innerHTML = '<i>' + icons[index % icons.length] + '</i><span><strong>' + category.label + '</strong><small>' + category.count + ' 个工具</small></span>';
+        button.addEventListener('click', function () { setCat(category.id); gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        categoryOverview.appendChild(button);
+      });
+    }
+    if (popularPreview) {
+      popularPreview.innerHTML = '';
+      Tools.all.slice(0, 5).forEach(function (tool, index) {
+        var row = document.createElement('li');
+        row.innerHTML = '<b>' + (index + 1) + '</b><span>' + tool.name + '</span>';
+        popularPreview.appendChild(row);
+      });
+    }
+  }
 
   /* ---------- 收藏区 / 历史区 ---------- */
   function renderFavorites() {
@@ -166,6 +214,15 @@
     });
     favGrid.appendChild(frag);
     Sync.bind(favGrid);
+    if (favoritesPreview) {
+      favoritesPreview.innerHTML = '';
+      favs.slice(0, 5).forEach(function (favorite) {
+        var row = document.createElement('div');
+        row.className = 'tools-preview-row';
+        row.textContent = favorite.name || favorite.id;
+        favoritesPreview.appendChild(row);
+      });
+    }
   }
 
   function renderHistory() {
@@ -190,6 +247,16 @@
       });
       histList.appendChild(row);
     });
+    if (historyPreview) {
+      historyPreview.innerHTML = '';
+      items.slice(0, 5).forEach(function (item) {
+        var row = document.createElement('div');
+        row.className = 'tools-preview-row';
+        var tool = Tools.get(item.id);
+        row.textContent = tool ? tool.name : item.id;
+        historyPreview.appendChild(row);
+      });
+    }
   }
 
   document.getElementById('clear-favorites').addEventListener('click', function () {
@@ -290,6 +357,7 @@
 
   /* ---------- 启动 ---------- */
   renderTabs();
+  renderReferencePreviews();
   renderGrid();
   renderFavorites();
   renderHistory();

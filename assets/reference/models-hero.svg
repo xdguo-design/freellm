@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1063 350" fill="none">
+<defs>
+<radialGradient id="mhGlow" cx=".5" cy=".5" r=".5"><stop stop-color="#bcd9ff" stop-opacity=".85"/><stop offset=".55" stop-color="#d8e9ff" stop-opacity=".38"/><stop offset="1" stop-color="#eaf4ff" stop-opacity="0"/></radialGradient>
+<radialGradient id="mhGlow2" cx=".5" cy=".5" r=".5"><stop stop-color="#e5f1ff" stop-opacity=".9"/><stop offset="1" stop-color="#e5f1ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="mhTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfe4ff"/></linearGradient>
+<linearGradient id="mhLeft" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8fbcff"/><stop offset="1" stop-color="#3b7bf0"/></linearGradient>
+<linearGradient id="mhRight" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2f6ceb"/><stop offset="1" stop-color="#9cc6ff"/></linearGradient>
+<linearGradient id="mhPlat" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dbe9fd"/><stop offset="1" stop-color="#b7d4f8"/></linearGradient>
+<linearGradient id="mhGlass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity=".92"/><stop offset="1" stop-color="#d3e7ff" stop-opacity=".65"/></linearGradient>
+<filter id="mhSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
+<filter id="mhBlur2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="18"/></filter>
+</defs>
+
+<!-- ambient glows -->
+<circle cx="660" cy="140" r="240" fill="url(#mhGlow)"/>
+<circle cx="980" cy="230" r="180" fill="url(#mhGlow2)"/>
+<circle cx="250" cy="90" r="150" fill="url(#mhGlow2)"/>
+<ellipse cx="512" cy="320" rx="300" ry="46" fill="#c9defa" opacity=".55" filter="url(#mhBlur2)"/>
+<!-- light beams -->
+<g opacity=".16" fill="#ffffff">
+<path d="M120 350 420 0l90 0L240 350z"/>
+<path d="M610 350 880 0l70 0L720 350z"/>
+</g>
+
+<!-- scattered glass cubes -->
+<g stroke="#ffffff" stroke-width="1.5">
+<g opacity=".9"><polygon points="272,86 296,98 272,110 248,98" fill="url(#mhTop)"/><polygon points="248,98 272,110 272,142 248,130" fill="url(#mhLeft)" opacity=".75"/><polygon points="296,98 272,110 272,142 296,130" fill="url(#mhRight)" opacity=".8"/></g>
+<g opacity=".8"><polygon points="192,246 212,256 192,266 172,256" fill="url(#mhTop)"/><polygon points="172,256 192,266 192,290 172,280" fill="url(#mhLeft)" opacity=".7"/><polygon points="212,256 192,266 192,290 212,280" fill="url(#mhRight)" opacity=".75"/></g>
+<g opacity=".85"><polygon points="722,60 744,71 722,82 700,71" fill="url(#mhTop)"/><polygon points="700,71 722,82 722,110 700,99" fill="url(#mhLeft)" opacity=".7"/><polygon points="744,71 722,82 722,110 744,99" fill="url(#mhRight)" opacity=".75"/></g>
+<g opacity=".9"><polygon points="772,250 798,263 772,276 746,263" fill="url(#mhTop)"/><polygon points="746,263 772,276 772,308 746,295" fill="url(#mhLeft)" opacity=".75"/><polygon points="798,263 772,276 772,308 798,295" fill="url(#mhRight)" opacity=".8"/></g>
+<g opacity=".7"><polygon points="882,200 900,209 882,218 864,209" fill="url(#mhTop)"/><polygon points="864,209 882,218 882,238 864,229" fill="url(#mhLeft)" opacity=".65"/><polygon points="900,209 882,218 882,238 900,229" fill="url(#mhRight)" opacity=".7"/></g>
+<g opacity=".75"><polygon points="992,110 1012,120 992,130 972,120" fill="url(#mhTop)"/><polygon points="972,120 992,130 992,152 972,142" fill="url(#mhLeft)" opacity=".65"/><polygon points="1012,120 992,130 992,152 1012,142" fill="url(#mhRight)" opacity=".7"/></g>
+<g opacity=".65"><polygon points="60,300 78,309 60,318 42,309" fill="url(#mhTop)"/><polygon points="42,309 60,318 60,336 42,327" fill="url(#mhLeft)" opacity=".6"/><polygon points="78,309 60,318 60,336 78,327" fill="url(#mhRight)" opacity=".65"/></g>
+<g opacity=".7"><polygon points="420,180 436,188 420,196 404,188" fill="url(#mhTop)"/><polygon points="404,188 420,196 420,214 404,206" fill="url(#mhLeft)" opacity=".6"/><polygon points="436,188 420,196 420,214 436,206" fill="url(#mhRight)" opacity=".65"/></g>
+</g>
+
+<!-- glass platform -->
+<g>
+<ellipse cx="512" cy="292" rx="212" ry="46" fill="#a5c8f2" opacity=".45"/>
+<ellipse cx="512" cy="283" rx="212" ry="46" fill="url(#mhPlat)" opacity=".92" stroke="#ffffff" stroke-width="1.6" stroke-opacity=".8"/>
+<ellipse cx="512" cy="278" rx="206" ry="44" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="1"/>
+<ellipse cx="512" cy="272" rx="150" ry="31" fill="#d5e8fc" opacity=".8"/>
+<ellipse cx="512" cy="264" rx="92" ry="19" fill="#e8f2fe" opacity=".9"/>
+<ellipse cx="512" cy="264" rx="92" ry="19" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-opacity=".8"/>
+</g>
+
+<!-- glowing AI cube -->
+<g>
+<circle cx="640" cy="140" r="118" fill="url(#mhGlow)"/>
+<polygon points="640,72 706,105 640,138 574,105" fill="url(#mhTop)" stroke="#ffffff" stroke-width="2"/>
+<polygon points="574,105 640,138 640,222 574,189" fill="url(#mhLeft)" stroke="#ffffff" stroke-width="2"/>
+<polygon points="706,105 640,138 640,222 706,189" fill="url(#mhRight)" stroke="#ffffff" stroke-width="2"/>
+<text x="640" y="196" text-anchor="middle" font-family="Arial, 'Segoe UI', sans-serif" font-size="52" font-weight="900" fill="#ffffff" letter-spacing="-1" transform="rotate(-4 640 180)">AI</text>
+<polygon points="640,72 706,105 640,138 574,105" fill="#ffffff" opacity=".25"/>
+</g>
+
+<!-- person silhouette -->
+<g fill="#1c2c50">
+<circle cx="502" cy="207" r="7.5"/>
+<path d="M495 217q7-4 14 0l3 20q1 8-3 16l-2 12h-5l-1-11h-1l-1 11h-5l-2-12q-4-8-3-16z"/>
+<rect x="490" y="220" width="7" height="15" rx="3" fill="#16233f"/>
+<rect x="497" y="252" width="4.5" height="12" rx="2" fill="#16233f"/>
+<rect x="505" y="252" width="4.5" height="12" rx="2" fill="#16233f"/>
+</g>
+
+<!-- sparkles -->
+<g fill="#ffffff" opacity=".9">
+<path d="M320 60l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
+<path d="M840 96l2.4 6.4 6.4 2.4-6.4 2.4-2.4 6.4-2.4-6.4-6.4-2.4 6.4-2.4z"/>
+<path d="M180 190l2 5.4 5.4 2-5.4 2-2 5.4-2-5.4-5.4-2 5.4-2z"/>
+<path d="M936 300l2 5.4 5.4 2-5.4 2-2 5.4-2-5.4-5.4-2 5.4-2z"/>
+<circle cx="380" cy="120" r="3.4"/>
+<circle cx="760" cy="40" r="3"/>
+<circle cx="1030" cy="180" r="3.4"/>
+<circle cx="86" cy="240" r="2.6"/>
+<circle cx="580" cy="30" r="2.6"/>
+</g>
+<g stroke="#9cc4f5" stroke-width="2" stroke-linecap="round" opacity=".8">
+<path d="M470 84v12M464 90h12"/>
+<path d="M700 250v10M695 255h10"/>
+</g>
+</svg>

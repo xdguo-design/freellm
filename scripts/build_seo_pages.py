@@ -4345,7 +4345,80 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 全部重新分级：原链路能跑就跑；任务型明确标“任务级”；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"><span lang="zh-CN">Skill 详情</span><span lang="en">Skill details</span></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
-def render_skills_page(skills: list[dict], site_url: str) -> str:
+def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
+    skill_by_id = {str(skill.get("id")): skill for skill in skills}
+    covers = (
+        "workflow-cover-research.png",
+        "workflow-cover-prd.png",
+        "workflow-cover-code.png",
+        "workflow-cover-content.png",
+    )
+    workflow_cards = []
+    for index, recipe in enumerate((recipes or [])[:4]):
+        steps = recipe.get("steps") or []
+        skill_names = [
+            str(skill_by_id.get(str(step.get("skillId")), {}).get("name") or step.get("label") or "")
+            for step in steps[:3]
+        ]
+        tags = "".join(f'<span>{_esc(tag)}</span>' for tag in (recipe.get("tags") or [])[:2])
+        workflow_cards.append(
+            f'''<article class="skills-hot-card">
+              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/{covers[index]}" alt="" loading="lazy"></a>
+              <div class="skills-hot-copy"><h3>{_esc(recipe.get("title") or "Skill 工作流")}</h3>
+                <p>{_esc(recipe.get("description") or "由已收录的 Skill 组成的可复用工作流。")}</p>
+                <div class="skills-hot-tags">{tags}</div>
+                <div class="skills-hot-foot"><span>{_esc(" · ".join(skill_names))}</span><a href="/skills/lab/">查看配方 →</a></div>
+              </div>
+            </article>'''
+        )
+
+    community = sorted(
+        skills,
+        key=lambda skill: (
+            len(skill.get("reviews") or []),
+            (skill.get("repoStats") or {}).get("stars") or 0,
+        ),
+        reverse=True,
+    )[:5]
+    community_cards = []
+    for index, skill in enumerate(community):
+        stars = _format_star_count((skill.get("repoStats") or {}).get("stars")) or "—"
+        reviews = len(skill.get("reviews") or [])
+        href = skill.get("githubUrl") or "/skills/"
+        description = skill.get("description_zh") or skill.get("description") or "查看这个社区 Skill 的来源与说明。"
+        community_cards.append(
+            f'''<a class="skills-community-card tone-{index + 1}" href="{_esc(href)}" target="_blank" rel="nofollow noopener">
+              <span class="skills-community-icon" aria-hidden="true">{("♥", "▶", "◆", "▧", "✦")[index]}</span>
+              <span class="skills-community-copy"><strong>{_esc(skill.get("name") or "Community Skill")}</strong><small>{_esc(description)}</small>
+                <span class="skills-community-meta">★ {stars}{f" · {reviews} 条社区评价" if reviews else " · GitHub 热度"}</span></span>
+              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+            </a>'''
+        )
+
+    return f'''<div class="skills-lower-sections">
+      <section class="skills-hot-section" aria-labelledby="skills-hot-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-hot-title">热门工具组合</h2><p>把多个 Skills 串成可执行的工作流</p></div><a href="/skills/lab/">查看全部组合 →</a></div>
+        <div class="skills-hot-grid">{"".join(workflow_cards)}</div>
+      </section>
+      <section class="skills-community-section" aria-labelledby="skills-community-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-community-title">社区精选</h2><p>按当前收录的社区评价与 GitHub 数据精选</p></div><a href="/skills/">查看全部技能 →</a></div>
+        <div class="skills-community-grid">{"".join(community_cards)}</div>
+      </section>
+      <section class="skills-tutorial-banner" aria-labelledby="skills-tutorial-title">
+        <div><span>SKILLS GUIDE / 使用指南</span><h2 id="skills-tutorial-title">不会使用？从教程开始</h2><p>从挑选、查看来源到组合工作流，循序了解怎样把 AI Skills 用起来。</p></div>
+        <a href="/skills/lab/">查看教程 <span aria-hidden="true">→</span></a>
+      </section>
+      <footer class="skills-site-footer">
+        <div class="skills-footer-brand"><a href="/" class="skills-footer-logo"><span aria-hidden="true">◈</span><span><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><p>让优质的 AI 资源，触手可及。</p></div>
+        <nav aria-label="产品"><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具集</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav>
+        <nav aria-label="资源"><strong>资源</strong><a href="/logs/">最新更新</a><a href="/guides/free-llm/">热门资源</a><a href="/skills/lab/">使用教程</a><a href="/about/">关于 FreeLLM</a></nav>
+        <nav aria-label="社区"><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/skills/lab/">加入社区</a><a href="/about/">反馈建议</a></nav>
+        <a class="skills-footer-slogan" href="/">Better AI<br> A Brighter Tomorrow</a>
+      </footer>
+    </div>'''
+
+
+def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | None = None) -> str:
     page = _legacy_render_skills_page(skills, site_url)
     page = page.replace(
         '<a href="/skills/" aria-current="page">Skills</a></nav>',
@@ -4356,7 +4429,7 @@ def render_skills_page(skills: list[dict], site_url: str) -> str:
       <div class="skills-hero-copy"><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div>
         <h1 id="skills-title"><span>Skills</span><strong>发现和使用可复用的 <em>AI 技能</em></strong></h1>
         <p class="hero-copy">由社区和专业创作者打造的高质量 AI 技能<br>让灵感一键变成生产力。</p>
-        <div class="skills-hero-actions"><a class="skills-primary-action" href="#skill-grid">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
+        <div class="skills-hero-actions"><a class="skills-primary-action" id="skills-browse-all" href="#skill-grid" aria-expanded="false">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
       </div>
     </section>'''
     page = re.sub(r'<section class="skills-hero">.*?</section>', hero, page, count=1, flags=re.S)
@@ -4405,7 +4478,7 @@ def render_skills_page(skills: list[dict], site_url: str) -> str:
       <p>探索社区创建的 AI 技能，查看来源、安装方式和验证记录，再将适合的 Skill 用于你的工作流。</p>
       <button type="button" data-close-skills-intro>知道了</button>
     </dialog>'''
-    detail_panel = '''</div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
+    detail_panel = '''</div></div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
       <button class="skills-detail-close" type="button" aria-label="收起详情">×</button>
       <div class="skills-detail-heading"><span class="skills-detail-icon" id="detail-icon">▤</span><div><h2 id="detail-title">论文写作助手</h2><span class="skills-official"><i aria-hidden="true">◆</i> FreeLLM 官方</span></div></div>
       <p class="skills-detail-summary" id="detail-summary">从选题到初稿，助你高效完成学术论文写作。</p>
@@ -4415,8 +4488,25 @@ def render_skills_page(skills: list[dict], site_url: str) -> str:
       <section><h3>标签</h3><div class="skills-detail-tags" id="detail-tags"><span>写作</span><span>学术</span><span>研究</span><span>论文</span><span>文献分析</span><span>学术规范</span></div></section>
       <section><h3>技能介绍</h3><p id="detail-description">专为学术研究者和学生设计的论文写作助手。支持选题建议、文献检索、论文大纲生成、内容润色与降重，帮助你更高效地完成高质量的学术论文。</p></section>
       <div class="skills-detail-features"><div><i>◇</i><div><strong>智能选题与大纲生成</strong><small>基于研究领域，提供选题建议和论文结构</small></div></div><div><i>⌕</i><div><strong>文献检索与综述</strong><small>快速查找相关文献并生成综述内容</small></div></div><div><i>✎</i><div><strong>内容润色与降重</strong><small>提升语言质量，降低重复率</small></div></div><div><i>▤</i><div><strong>引用格式规范</strong><small>支持多种学术引用格式（APA / MLA 等）</small></div></div></div>
-    </aside></div></div>'''
-    page = page.replace('<footer class="skills-footer">', detail_panel + '<footer class="skills-footer">', 1)
+    </aside></div>'''
+    lower_sections = _render_skills_below_fold(skills, recipes or [])
+    footer_bottom = f'''<footer class="skills-footer skills-footer-bottom">
+      <p>© 2024 FreeLLM. All rights reserved.</p>
+      <div class="skills-footer-social" aria-label="Social links">
+        <span aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.05c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.7 2.05 3.36 1.55.1-.72.39-1.22.7-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.04-1.14 3.04-1.14.61 1.53.23 2.67.12 2.95.71.78 1.14 1.77 1.14 2.99 0 4.29-2.6 5.23-5.09 5.51.4.35.75 1.02.75 2.06V22c0 .29.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></span>
+        <span aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 5.9a8.3 8.3 0 0 1-2.36.65 4.12 4.12 0 0 0 1.8-2.27 8.23 8.23 0 0 1-2.6.99 4.1 4.1 0 0 0-7 3.74 11.64 11.64 0 0 1-8.45-4.28 4.1 4.1 0 0 0 1.27 5.47 4.08 4.08 0 0 1-1.86-.52v.05a4.1 4.1 0 0 0 3.29 4.02 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.83 2.84A8.23 8.23 0 0 1 2 18.36a11.62 11.62 0 0 0 6.29 1.84c7.55 0 11.68-6.25 11.68-11.68l-.01-.53A8.35 8.35 0 0 0 22 5.9Z"/></svg></span>
+        <span aria-label="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.7 5.1a18.4 18.4 0 0 0-4.55-1.4l-.56 1.14a17 17 0 0 0-5.18 0l-.57-1.14a18.2 18.2 0 0 0-4.55 1.4C1.4 9.35.62 13.5 1.01 17.6a18.4 18.4 0 0 0 5.58 2.82l1.2-1.95a11.9 11.9 0 0 1-1.89-.9l.46-.36c3.64 1.68 7.59 1.68 11.19 0l.46.36c-.6.36-1.24.66-1.9.9l1.2 1.95a18.3 18.3 0 0 0 5.59-2.82c.46-4.76-.79-8.88-3.2-12.5ZM8.32 14.82c-1.1 0-2-.99-2-2.2s.88-2.2 2-2.2 2.02 1 2 2.2c0 1.21-.88 2.2-2 2.2Zm7.36 0c-1.1 0-2-.99-2-2.2s.88-2.2 2-2.2 2.02 1 2 2.2c0 1.21-.88 2.2-2 2.2Z"/></svg></span>
+      </div>
+      {_static_locale_nav()}
+      <nav class="visually-hidden" aria-label="Legal information"><a href="/about/">关于本站</a><a href="/links/">友链与相关资源</a><a href="/terms/">使用条款与免责声明</a><a href="/privacy/">隐私政策</a></nav>
+    </footer>'''
+    page = re.sub(
+        r'<footer class="skills-footer">.*?</footer>',
+        detail_panel + lower_sections + footer_bottom,
+        page,
+        count=1,
+        flags=re.S,
+    )
     page = page.replace('<dialog id="skill-dialog">', intro_dialog + '<dialog id="skill-dialog">', 1)
     return page
 
@@ -4736,7 +4826,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     files: dict[Path, str] = {
         **render_sitemaps(offers, categories, site_url, model_catalog, providers),
         Path(FEED_PATH): render_feed(offers, site_url),
-        Path("skills") / "index.html": render_skills_page(skills or [], site_url),
+        Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("skills") / "lab" / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
@@ -5242,7 +5332,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
-    Path("skills/index.html"): "20260930a",
+    Path("skills/index.html"): "20260930k",
 }
 
 
@@ -5293,6 +5383,11 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
     css_tag = f'<link rel="stylesheet" href="/css/reference-ui.css?v={reference_version}">'
     if css_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", css_tag + "\n</head>", 1)
+
+    if path in (Path("skills/index.html"), Path("models/index.html")):
+        rail_tag = '<link rel="stylesheet" href="/css/reference-rail.css?v=20260930e">'
+        if rail_tag not in updated and "</head>" in updated:
+            updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
     script_version = "20260930a" if path == Path("skills/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'

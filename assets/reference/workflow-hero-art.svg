@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="85" y1="22" x2="825" y2="304" gradientUnits="userSpaceOnUse"><stop stop-color="#F6FCFF" stop-opacity=".1"/><stop offset=".52" stop-color="#C7E2FF" stop-opacity=".74"/><stop offset="1" stop-color="#EFF8FF" stop-opacity=".16"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#42A9FF"/><stop offset="1" stop-color="#0758E8"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2=".95" y2="1"><stop stop-color="#FFF" stop-opacity=".92"/><stop offset="1" stop-color="#DCEEFF" stop-opacity=".72"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#D5ECFF"/><stop offset=".48" stop-color="#75B9FF"/><stop offset="1" stop-color="#E7F5FF"/></linearGradient>
+    <filter id="shadow" x="-35%" y="-35%" width="170%" height="190%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#428DEB" flood-opacity=".19"/></filter>
+    <filter id="blur"><feGaussianBlur stdDeviation="15"/></filter>
+  </defs>
+  <g transform="translate(0 32)">
+  <ellipse cx="522" cy="267" rx="326" ry="46" fill="#83BBFF" opacity=".24" filter="url(#blur)"/>
+  <path d="M108 238 312 127l204 70-215 111z" fill="url(#sky)" stroke="#fff" stroke-opacity=".8"/>
+  <path d="m301 309 215-112 283 35-220 98z" fill="#C8E4FF" fill-opacity=".55" stroke="#fff" stroke-opacity=".8"/>
+  <path d="m312 270 207-112 184 56-211 115z" fill="#fff" fill-opacity=".5" stroke="#C8E3FF" stroke-opacity=".8"/>
+  <g opacity=".63" stroke="#fff" stroke-width="2"><path d="m102 216 63-34 0 35-63 34z" fill="#CDE8FF"/><path d="m730 185 74-40v50l-74 42z" fill="#D5EAFF"/><path d="m217 122 45-25v36l-45 25z" fill="#fff"/><path d="m811 102 42-23v34l-42 23z" fill="#fff"/></g>
+  <g filter="url(#shadow)" transform="translate(-45 0)">
+    <path d="m402 187 105-58 105 38-108 61z" fill="#F9FDFF" stroke="#9BCBFF" stroke-width="2"/>
+    <path d="m402 187 102 41v56l-102-42z" fill="#D9ECFF" stroke="#9BCBFF" stroke-width="2"/>
+    <path d="m507 228 105-61v56l-105 61z" fill="#A7D2FF" stroke="#72B1FF" stroke-width="2"/>
+    <path d="m425 184 81-45 79 28-82 46z" fill="#E9F5FF" stroke="#fff" stroke-width="3"/>
+    <path d="m467 130 58-33 60 22-60 35z" fill="#65B7FF" fill-opacity=".7" stroke="#DDF2FF" stroke-width="3"/>
+    <path d="m467 130 58 24v63l-58-25z" fill="url(#blue)"/>
+    <path d="m525 154 60-35v62l-60 36z" fill="#1678F4"/>
+    <path d="m490 162 34-20 33 20-34 20z" fill="#fff"/>
+    <path d="m513 161 13-8 13 8-13 24z" fill="#1372EE"/><path d="m525 161 14-8v18l-14 8z" fill="#59AEFF"/>
+    <path d="m516 179 10 6 10-6" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#shadow)">
+    <g transform="translate(16 0) rotate(8 323 105)"><rect x="257" y="70" width="136" height="72" rx="12" fill="url(#glass)" stroke="#fff" stroke-width="2"/><circle cx="282" cy="106" r="14" fill="#E5F4FF"/><path d="m275 107 6-8 7 8-7 8z" fill="#1686FF"/><text x="304" y="111" fill="#2263B5" font-size="15" font-family="Arial,'Microsoft YaHei',sans-serif" font-weight="700">更高效率</text></g>
+    <g transform="translate(-42 14) rotate(7 697 145)"><rect x="633" y="112" width="142" height="71" rx="12" fill="url(#glass)" stroke="#fff" stroke-width="2"/><rect x="653" y="131" width="31" height="31" rx="8" fill="#E5F1FF"/><rect x="662" y="139" width="14" height="14" rx="3" fill="#1678F4"/><text x="694" y="153" fill="#2263B5" font-size="15" font-family="Arial,'Microsoft YaHei',sans-serif" font-weight="700">可复用</text></g>
+    <g transform="translate(0 20) translate(12 35) rotate(5 290 208)"><rect x="226" y="176" width="138" height="68" rx="12" fill="url(#glass)" stroke="#fff" stroke-width="2"/><circle cx="251" cy="210" r="15" fill="#DDF9EA"/><path d="m245 208 5 6 9-12" stroke="#0BA771" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="274" y="216" fill="#2263B5" font-size="15" font-family="Arial,'Microsoft YaHei',sans-serif" font-weight="700">连接一切</text></g>
+  </g>
+  <g fill="none" stroke="#2E8AFF" stroke-width="2" opacity=".8"><path d="M179 183c19-6 31-1 39 12"/><path d="M611 218c14-4 22-14 28-28"/><path d="M610 99c18-9 27-9 44-3"/></g>
+  <g fill="#3D89F8" opacity=".58"><circle cx="187" cy="159" r="3"/><circle cx="218" cy="263" r="4"/><circle cx="612" cy="246" r="3"/><circle cx="791" cy="220" r="4"/><circle cx="566" cy="87" r="3"/></g>
+  </g>
+  <text x="500" y="90" fill="#075DEA" font-size="21" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-8 500 90)">Workflows</text>
+  <text x="500" y="120" fill="#075DEA" font-size="19" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-8 500 120)">Make Ideas Happen</text>
+  <text x="700" y="280" fill="#075DEA" font-size="22" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-13 700 280)">AI for Everyone</text>
+  <path d="M704 291c39-8 75-13 111-26" stroke="#075DEA" stroke-width="2" stroke-linecap="round"/>
+</svg>
