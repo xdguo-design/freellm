@@ -14,11 +14,11 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
   position: relative !important;
   isolation: isolate;
   overflow: hidden !important;
-  width: calc(100% - 120px) !important;
+  width: calc(100% - var(--prototype-rail)) !important;
   max-width: none !important;
   height: 282px !important;
   min-height: 282px !important;
-  margin: 0 0 0 120px !important;
+  margin: 0 0 0 var(--prototype-rail) !important;
   padding: 56px 22px 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -80,8 +80,8 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  width: calc(100% - 160px) !important;
-  margin: 5px 18px 12px 142px !important;
+  width: calc(100% - var(--prototype-rail) - 40px) !important;
+  margin: 5px 18px 12px calc(var(--prototype-rail) + 22px) !important;
 }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-value-card {
   display: flex !important;
@@ -122,9 +122,9 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  width: calc(100% - 160px) !important;
+  width: calc(100% - var(--prototype-rail) - 40px) !important;
   min-height: 61px !important;
-  margin: 0 18px 27px 142px !important;
+  margin: 0 18px 27px calc(var(--prototype-rail) + 22px) !important;
   padding: 0 14px !important;
   border: 1px solid #e2edfb !important;
   border-radius: 9px !important;
@@ -138,9 +138,9 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-quote img { display: block !important; width: 76px; height: 26px !important; object-fit: contain; }
 
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-status {
-  width: calc(100% - 160px) !important;
+  width: calc(100% - var(--prototype-rail) - 40px) !important;
   min-height: 0 !important;
-  margin: 5px 18px 27px 142px !important;
+  margin: 5px 18px 27px calc(var(--prototype-rail) + 22px) !important;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -169,9 +169,9 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
 
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page {
   display: block !important;
-  width: calc(100% - 160px) !important;
+  width: calc(100% - var(--prototype-rail) - 40px) !important;
   max-width: none !important;
-  margin: 0 18px 0 142px !important;
+  margin: 0 18px 0 calc(var(--prototype-rail) + 22px) !important;
   padding: 0 0 16px !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -181,7 +181,7 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-page > .about-section {
   min-width: 0 !important;
   margin: 0 0 25px !important;
-  padding: 0 !important;
+  padding: 0 14px !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -231,7 +231,7 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-values,
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-quote,
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-status,
-  html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page { width: calc(100% - 142px) !important; margin-left: 132px !important; margin-right: 10px !important; }
+  html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page { width: calc(100% - var(--prototype-rail) - 20px) !important; margin-left: calc(var(--prototype-rail) + 10px) !important; margin-right: 10px !important; }
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-card-grid.four-columns { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-update-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
   html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .about-step-arrow { display: none !important; }
@@ -254,15 +254,23 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-hero { padding: 56px 22px 0 !important; }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-hero::before { content: none !important; display: none !important; }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-hero .about-eyebrow { display: block !important; }
-html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .ref-topbar { inset: 6px 20px auto 142px !important; }
+html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .ref-topbar { inset: 6px 20px auto calc(var(--prototype-rail) + 22px) !important; }
+@media (min-width: 601px) and (max-width: 820px) {
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .ref-topbar.ref-topbar {
+    position: fixed !important;
+    inset: 6px 14px auto calc(var(--prototype-rail) + 16px) !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
+}
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .ref-search { max-width: 435px !important; }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .ref-search input { min-width: 0 !important; }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] .ref-search kbd { flex: 0 0 auto !important; white-space: nowrap !important; }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page {
-  display: block !important; margin: 0 18px 0 142px !important; gap: 0 !important;
+  display: block !important; margin: 0 18px 0 calc(var(--prototype-rail) + 22px) !important; gap: 0 !important;
 }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page > .about-section {
-  min-height: 0 !important; height: auto !important; margin: 0 0 29px !important; padding: 0 !important;
+  min-height: 0 !important; height: auto !important; margin: 0 0 29px !important; padding: 0 14px !important;
 }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .about-page > .about-section.about-community {
   min-height: 0 !important; margin-bottom: 16px !important;
@@ -298,7 +306,7 @@ html body[data-reference-style="v1"][data-fl-section="about"][data-about-static=
   grid-column: 2 !important; grid-row: 2 !important; clear: none !important; margin: 0 !important;
 }
 html body[data-reference-style="v1"][data-fl-section="about"][data-about-static="true"] > .prototype-footer {
-  position: relative !important; left: 120px !important; width: calc(100vw - 120px) !important; max-width: none !important;
+  position: relative !important; left: var(--prototype-rail) !important; width: calc(100% - var(--prototype-rail)) !important; max-width: none !important;
   min-height: 233px !important; margin: 0 !important; padding-top: 15px !important; overflow: hidden !important;
   padding-left: 27px !important; padding-right: 18px !important;
   border: 0 !important; border-radius: 0 !important; box-shadow: none !important;

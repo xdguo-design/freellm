@@ -152,8 +152,8 @@ if (section === 'home' || section === 'models') {
       if (page) {
         page.style.setProperty('box-sizing', 'border-box', 'important');
         page.style.setProperty('position', 'relative', 'important');
-        page.style.setProperty('left', '120px', 'important');
-        page.style.setProperty('width', 'calc(100vw - 120px)', 'important');
+        page.style.setProperty('left', 'var(--prototype-rail)', 'important');
+        page.style.setProperty('width', 'calc(100% - var(--prototype-rail))', 'important');
         page.style.setProperty('max-width', 'none', 'important');
         page.style.setProperty('margin-left', '0', 'important');
         page.style.setProperty('margin-right', '0', 'important');
@@ -162,10 +162,21 @@ if (section === 'home' || section === 'models') {
       if (footer) {
         footer.style.setProperty('box-sizing', 'border-box', 'important');
         footer.style.setProperty('position', 'relative', 'important');
-        footer.style.setProperty('left', section === 'about' ? '120px' : '-14px', 'important');
-        footer.style.setProperty('width', section === 'about' ? 'calc(100vw - 120px)' : 'calc(100% + 28px)', 'important');
+        footer.style.setProperty('left', section === 'about' ? 'var(--prototype-rail)' : '-22px', 'important');
+        footer.style.setProperty('width', section === 'about' ? 'calc(100% - var(--prototype-rail))' : 'calc(100% + 36px)', 'important');
         footer.style.setProperty('max-width', 'none', 'important');
-        footer.style.setProperty('margin', '0', 'important');
+        footer.style.setProperty('margin', section === 'logs' ? '5px 0 0' : '0', 'important');
+      }
+      if (section === 'logs') {
+        const archive = body.querySelector('#log-archive');
+        const archiveLink = body.querySelector('.ref-update-history-head a[href="#log-archive"]');
+        archiveLink?.addEventListener('click', event => {
+          event.preventDefault();
+          if (archive) {
+            archive.open = true;
+            archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
       }
     }
     if (section === 'about' && body.dataset.aboutStatic === 'true') {
@@ -175,9 +186,9 @@ if (section === 'home' || section === 'models') {
         page.style.setProperty('position', 'relative', 'important');
         page.style.setProperty('left', '0', 'important');
         const compact = window.innerWidth <= 740;
-        page.style.setProperty('width', compact ? 'calc(100vw - 142px)' : 'calc(100vw - 160px)', 'important');
+        page.style.setProperty('width', compact ? 'calc(100% - var(--prototype-rail) - 20px)' : 'calc(100% - var(--prototype-rail) - 40px)', 'important');
         page.style.setProperty('max-width', 'none', 'important');
-        page.style.setProperty('margin', compact ? '5px 10px 0 132px' : '5px 18px 0 142px', 'important');
+        page.style.setProperty('margin', compact ? '5px 10px 0 calc(var(--prototype-rail) + 10px)' : '5px 18px 0 calc(var(--prototype-rail) + 22px)', 'important');
         page.style.setProperty('padding', '0 0 16px', 'important');
         page.style.setProperty('display', 'block', 'important');
         page.style.setProperty('gap', '0', 'important');

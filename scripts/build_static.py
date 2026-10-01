@@ -24,7 +24,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001f"></script>
+SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001-updates11"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -35,7 +35,7 @@ SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001f"></script>
     <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
     <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
-    <a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+    <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>

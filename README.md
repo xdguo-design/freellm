@@ -105,10 +105,10 @@ vercel.json                      Vercel 路由配置
 ### 本地运行
 
 ```powershell
-python -m http.server 8000
+python scripts/serve_local.py --port 8901
 ```
 
-然后打开 <http://localhost:8000/design/free-china-ai-index.html>。如需本地行为与线上根路径一致，可使用 `npx vercel dev`。
+然后打开 <http://127.0.0.1:8901/>。本地服务会将 `/` 映射到首页；如需运行 Vercel Functions，可使用 `npx vercel dev`。
 
 ### 验证与构建
 
@@ -192,10 +192,10 @@ See the [Chinese section](#中文) for the full tree. Key paths:
 ### Local development
 
 ```bash
-python -m http.server 8000
+python scripts/serve_local.py --port 8901
 ```
 
-Then open <http://localhost:8000/design/free-china-ai-index.html>. For root-path parity with production, use `npx vercel dev`.
+Then open <http://127.0.0.1:8901/>. The local server maps `/` to the home page. Use `npx vercel dev` when Vercel Functions are needed.
 
 ### Verify & build
 

@@ -35,7 +35,7 @@
   /* Load the persistent primary-navigation controller once per document. */
   if (!global.FreeLLMNavigation && !document.querySelector('script[data-freellm-site-navigation]')) {
     var navigationScript = document.createElement('script');
-    navigationScript.src = '/js/site-navigation.js?v=20261001d';
+    navigationScript.src = '/js/site-navigation.js?v=20261001-updates11';
     navigationScript.async = false;
     navigationScript.dataset.freellmSiteNavigation = '1';
     document.head.appendChild(navigationScript);
@@ -54,7 +54,7 @@
 
     function sectionFor(path) {
       if (path === '/' || path.indexOf('/design/free-china-ai-index') === 0) return 'home';
-      if (path.indexOf('/skills/lab') === 0) return 'workflow';
+      if (path.indexOf('/workflow') === 0 || path.indexOf('/skills/lab') === 0) return 'workflow';
       if (path.indexOf('/skills') === 0) return 'skills';
       if (path.indexOf('/tools') === 0) return 'tools';
       if (path.indexOf('/health') === 0) return 'models';
@@ -97,7 +97,7 @@
             railLink('/models/', '▣', '模型', 'models', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
-            railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +
+            railLink('/workflow/', '⌁', '工作流', 'workflow', current) +
             railLink('/logs/', '◷', '更新', 'logs', current) +
             railLink('/about/', 'ⓘ', '关于', 'about', current) +
           '</nav>' +

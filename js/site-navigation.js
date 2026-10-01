@@ -10,13 +10,37 @@
     ['/health/', 'health'],
     ['/skills/', 'skills'],
     ['/tools/', 'tools'],
-    ['/skills/lab/', 'workflow'],
+    ['/workflow/', 'workflow'],
     ['/logs/', 'logs'],
     ['/about/', 'about']
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261001d';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261001-updates9';
+  var updateIndicatorReady = false;
+
+  function setUpdateIndicator(visible) {
+    var link = document.querySelector('.fl-site-nav [data-site-nav="logs"]');
+    if (!link) return;
+    if (visible) link.setAttribute('data-has-update', 'true');
+    else link.removeAttribute('data-has-update');
+  }
+
+  function refreshUpdateIndicator() {
+    if (updateIndicatorReady) return;
+    updateIndicatorReady = true;
+    fetch('/daily-update-status.json', { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (response) { if (!response.ok) throw new Error('status unavailable'); return response.json(); })
+      .then(function (status) {
+        var parts = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'
+        }).formatToParts(new Date());
+        var today = Object.fromEntries(parts.filter(function (part) { return part.type !== 'literal'; }).map(function (part) { return [part.type, part.value]; }));
+        var date = today.year + '-' + today.month + '-' + today.day;
+        setUpdateIndicator(status.latestDate === date && status.hasCatalogChanges === true);
+      })
+      .catch(function () { setUpdateIndicator(false); });
+  }
 
   function ensureSharedNavigationStyles() {
     var link = document.head.querySelector('link[data-fl-shared-navigation-styles]');
@@ -48,6 +72,7 @@
     }
     if (rail.dataset.flSharedNavigation === 'true') {
       updateCurrentItem();
+      refreshUpdateIndicator();
       return;
     }
 
@@ -58,7 +83,7 @@
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
       ['skills', '/skills/', '✦', 'Skills'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
-      ['workflow', '/skills/lab/', '⌁', english ? 'Workflows' : '工作流'],
+      ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Updates' : '更新'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
@@ -99,6 +124,7 @@
     }
     rail.dataset.flSharedNavigation = 'true';
     updateCurrentItem();
+    refreshUpdateIndicator();
   }
 
   function currentPage() {
@@ -149,6 +175,11 @@
     if (canonical) canonical.remove();
     var nextCanonical = parsed.head.querySelector('link[rel="canonical"]');
     if (nextCanonical) document.head.appendChild(nextCanonical.cloneNode(true));
+    // Keep inert page data available to scripts that initialize after mount.
+    document.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) { node.remove(); });
+    parsed.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) {
+      document.head.appendChild(node.cloneNode(true));
+    });
     document.documentElement.lang = parsed.documentElement.lang || 'zh-CN';
   }
 
@@ -217,8 +248,11 @@
     });
 
     var pageNodes = Array.from(targetBody.childNodes).filter(function (node) {
-      return !(node.nodeType === Node.ELEMENT_NODE &&
-        (node.matches('.fl-site-rail, .fl-site-ribbon') || node.matches('script')));
+      if (node.nodeType !== Node.ELEMENT_NODE) return true;
+      if (node.matches('.fl-site-rail, .fl-site-ribbon')) return false;
+      // JSON scripts are page data, not executable code. Skills needs its
+      // #skill-data node before the shared page-mount handler renders cards.
+      return !node.matches('script') || /^(?:application\/json|application\/ld\+json)$/i.test((node.type || '').trim());
     }).map(function (node) { return document.importNode(node, true); });
     body.replaceChildren.apply(body, (skipLink ? [skipLink] : []).concat([rail, ribbon]));
     pageNodes.forEach(function (node) { body.appendChild(node); });
@@ -263,6 +297,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     ensureSharedNavigation();
     activateMenu(document);
+    refreshUpdateIndicator();
   });
 
   function findArgumentEnd(source, start) {
@@ -402,7 +437,7 @@
     }
   }
 
-  document.addEventListener('click', function (clickEvent) {
+  window.addEventListener('click', function (clickEvent) {
     if (clickEvent.defaultPrevented || clickEvent.button !== 0 || clickEvent.metaKey || clickEvent.ctrlKey || clickEvent.shiftKey || clickEvent.altKey) return;
     var link = clickEvent.target.closest('a[data-site-nav]');
     if (!link || !navigationKeys.has(link.dataset.siteNav) || link.target || link.hasAttribute('download')) return;
@@ -410,7 +445,7 @@
     if (!navigationPaths.has(url.pathname) || url.origin !== window.location.origin) return;
     clickEvent.preventDefault();
     navigate(url.href, { history: true });
-  });
+  }, true);
 
   window.addEventListener('popstate', function (popEvent) {
     var url = new URL(window.location.href);

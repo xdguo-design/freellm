@@ -24,7 +24,7 @@ PAGES = [
     ("provider-groq", "/providers/groq/"),
     ("logs", "/logs/"),
     ("skills", "/skills/"),
-    ("skills-lab", "/skills/lab/"),
+    ("workflow", "/workflow/"),
     ("about", "/about/"),
     ("model-center", "/models/center/"),
 ]

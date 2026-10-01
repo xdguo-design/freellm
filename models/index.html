@@ -175,16 +175,16 @@ pre code { padding:0; background:none; color:inherit; }
 .models-overview-grid h2{margin:0 0 8px;font-size:22px}@media(max-width:700px){.models-overview-grid{grid-template-columns:1fr}}
 </style><link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b"><link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
 <link rel="stylesheet" href="/css/aurora-models.css?v=20260929b"><link rel="stylesheet" href="/css/reference-ui.css?v=20261001f">
-<link rel="stylesheet" href="/css/model-library-prototype.css?v=20261001h"><link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><link rel="stylesheet" href="/css/reference-rail.css?v=20261001a">
-</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><script src="/js/site-navigation.js?v=20261001d"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="ml-rail-theme" aria-label="主题切换"><button class="is-active" type="button" data-ml-theme="light" aria-label="浅色主题">☀</button><button type="button" data-ml-theme="dark" aria-label="深色主题">☾</button></div><div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You...</div><div class="ml-rail-footer"><strong>FreeLLM</strong>让优质的 AI 资源<br>触手可及。</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview model-library-hero" id="fl-main-content">
+<link rel="stylesheet" href="/css/model-library-prototype.css?v=20261001i"><link rel="stylesheet" href="/css/model-directory-cards.css?v=20261001a"><link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><link rel="stylesheet" href="/css/reference-rail.css?v=20261001a">
+</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><script src="/js/site-navigation.js?v=20261001g"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="ml-rail-theme" aria-label="主题切换"><button class="is-active" type="button" data-ml-theme="light" aria-label="浅色主题">☀</button><button type="button" data-ml-theme="dark" aria-label="深色主题">☾</button></div><div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You...</div><div class="ml-rail-footer"><strong>FreeLLM</strong>让优质的 AI 资源<br>触手可及。</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview model-library-hero" id="fl-main-content">
 <div class="ml-hero-copy">
 <div class="eyebrow">模型</div>
 <h1>模型库</h1>
 <p class="ml-hero-subtitle">发现、比较和使用全球优质的 AI 模型</p>
 <p class="lead">汇聚全球顶尖的开源与商业模型，支持多维度筛选与对比，帮你找到最适合的 AI 能力。</p>
 <div class="ml-hero-stats" aria-label="模型库统计">
-<div><strong>300+</strong><span>收录模型</span></div>
-<div><strong>50+</strong><span>模型厂商</span></div>
+<div><strong id="ml-model-count">291</strong><span>收录模型</span></div>
+<div><strong id="ml-provider-count">30</strong><span>模型厂商</span></div>
 <div><strong>1000万+</strong><span>开发者在使用</span></div>
 </div>
 </div>
@@ -236,7 +236,7 @@ pre code { padding:0; background:none; color:inherit; }
 </article>
 
 <nav class="ml-category-tabs" aria-label="模型类别">
-<button class="active" type="button" data-category="">免费模型入口 <span id="ml-total">(…)</span></button>
+<button class="active" type="button" data-category="">精选模型 <span id="ml-total">(6)</span></button>
 <button type="button" data-category="text">语言模型</button>
 <button type="button" data-category="multimodal">多模态模型</button>
 <button type="button" data-category="image">图像模型</button>
@@ -258,7 +258,7 @@ pre code { padding:0; background:none; color:inherit; }
 <path id="i-flame" d="M12 2c.8 3.2-.6 5-2.2 6.8C8 10.7 6.5 12.6 6.5 15.5A5.5 5.5 0 0 0 12 21a5.5 5.5 0 0 0 5.5-5.5c0-2.3-1-4.1-2.3-5.8C13.8 7.8 12.6 5 12 2z"/>
 <path id="i-crown" d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.6 10H4.6L3 8zm2.2 12h13.6v2H5.2v-2z"/>
 </defs></svg>
-<div class="ml-card-grid" id="ml-card-grid" aria-live="polite" aria-busy="true"><p class="ml-empty-state">正在加载可用模型入口…</p></div>
+<div class="ml-card-grid" id="ml-card-grid" aria-live="polite" aria-busy="true"><p class="ml-empty-state">正在加载模型目录…</p></div>
 <div class="ml-load-more-wrap"><button class="ml-load-more" id="ml-load-more" type="button" hidden>加载更多模型 ↓</button></div>
 </div>
 
@@ -283,7 +283,32 @@ pre code { padding:0; background:none; color:inherit; }
 <div class="ml-data-note">模型数据与免费入口分开统计。免费资格、地区和速率可能变化，请以官方来源为准。</div>
 </aside>
 </section>
-</main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260930a"></script><script src="/js/model-offer-cards.js?v=20261001c" defer></script>
+<section class="ml-directory" id="ml-directory" aria-labelledby="ml-directory-heading">
+  <div class="ml-directory-heading">
+    <div><span class="ml-directory-eyebrow">MODEL DIRECTORY / FREELLM.NET</span><h2 id="ml-directory-heading">模型目录 <small>同步自 freellm.net</small></h2><p>已将来源模型快照保存到本站，支持搜索、筛选和分页浏览。</p></div>
+    <div class="ml-directory-count" id="ml-directory-count">正在读取本地模型快照…</div>
+  </div>
+  <nav class="ml-directory-categories" aria-label="模型快捷筛选">
+    <button class="is-active" type="button" data-directory-category="all">全部 <span id="ml-directory-total">285</span></button>
+    <button type="button" data-directory-category="popular">热门</button>
+    <button type="button" data-directory-category="latest">最新</button>
+    <button type="button" data-directory-category="free">免费 API</button>
+    <button type="button" data-directory-category="limited">限时免费</button>
+    <button type="button" data-directory-category="no-card">无需信用卡</button>
+    <button type="button" data-directory-category="verified">已验证</button>
+  </nav>
+  <form class="ml-directory-filters" role="search" onsubmit="return false">
+    <label class="ml-directory-search"><span aria-hidden="true">⌕</span><input id="ml-directory-search" type="search" placeholder="搜索模型、厂商或能力…" aria-label="搜索模型、厂商或能力"></label>
+    <label><select id="ml-directory-provider" aria-label="按厂商筛选"><option value="">厂商</option></select></label>
+    <label><select id="ml-directory-context" aria-label="按上下文筛选"><option value="">上下文</option><option value="short">32K 以下</option><option value="medium">32K–128K</option><option value="long">128K 以上</option><option value="million">1M 及以上</option></select></label>
+    <label><select id="ml-directory-modality" aria-label="按模态筛选"><option value="">模态</option><option value="text">文本</option><option value="image">图像</option><option value="audio">音频</option><option value="video">视频</option><option value="reasoning">推理</option><option value="embedding">向量</option></select></label>
+    <button id="ml-directory-clear" type="button">重置筛选</button>
+  </form>
+  <div class="ml-directory-grid" id="ml-directory-grid" aria-live="polite"><p class="ml-directory-empty">正在加载模型目录…</p></div>
+  <div class="ml-directory-pagination-wrap"><nav class="ml-directory-pagination" id="ml-directory-pagination" aria-label="模型目录分页"></nav><span id="ml-directory-page-summary">共 285 个模型　跳转到第 1 页</span></div>
+</section>
+</main><footer><p>模型列表来自 freellm.net；精选模型由 FreeLLM 编辑维护，免费资源详情来自 data/offers.json。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260930a"></script><script src="/js/model-library.js?v=20261001i" defer></script>
+<script src="/js/model-directory-cards.js?v=20261001b" defer></script>
 <script>
 /* Model-entry cards load from the canonical offer data; the theme and panel controls stay local. */
 (() => {

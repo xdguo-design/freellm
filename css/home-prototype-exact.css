@@ -186,7 +186,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{
    it starts behind the top bar and ends just above the stat cards */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero::after{
   content:"";position:absolute;right:-12px;top:-46px;width:min(840px,68vw);height:clamp(255px,29.7vw,442px);z-index:0;pointer-events:none;
-  background:url("../assets/reference/home-hero.svg") right top/100% 100% no-repeat;
+  background:url("../assets/reference/home-hero.svg?v=20261001b") right top/100% 100% no-repeat;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-copy{
   position:relative;z-index:2;width:520px;margin-left:14px;padding-left:0;

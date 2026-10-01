@@ -3,6 +3,14 @@
   if (!root) return;
   const $ = (selector) => root.querySelector(selector);
   const state = { models: [], all: [], offers: [], category: '', page: 1, pageSize: 6, compare: [], recent: [] };
+  const CURATED_MODELS = [
+    { id:'curated/openai/gpt-4o-mini', providerId:'openai', provider:'OpenAI', model:'GPT-4o mini', context:'128000', modality:['text','image'], license:'commercial', status:'online', canonicalModelId:'curated/gpt-4o-mini', description:'强大的多模态模型，具备高性能与低延迟，适合广泛场景。', badges:['热门'], featured:true, featuredOrder:0, directoryHref:'/models/all/' },
+    { id:'curated/anthropic/claude-3-5-haiku', providerId:'anthropic', provider:'Anthropic', model:'Claude 3.5 Haiku', context:'200000', modality:['text'], license:'commercial', status:'online', canonicalModelId:'curated/claude-3-5-haiku', description:'新一代高效模型，推理、创作和代码能力均衡。', badges:['热门'], featured:true, featuredOrder:1, directoryHref:'/models/all/' },
+    { id:'curated/google/gemini-1-5-flash', providerId:'google', provider:'Google', model:'Gemini 1.5 Flash', context:'1000000', modality:['text','image','audio','video'], license:'commercial', status:'online', canonicalModelId:'curated/gemini-1-5-flash', description:'支持超长上下文的多模态模型，适用于复杂推理与多媒体任务。', badges:['热门'], featured:true, featuredOrder:2, directoryHref:'/models/all/' },
+    { id:'curated/qwen/qwen2-5-72b', providerId:'qwen', provider:'通义千问', model:'Qwen2.5 72B', context:'128000', modality:['text'], license:'apache-2.0', status:'online', canonicalModelId:'curated/qwen2-5-72b', description:'阿里云开源的大语言模型，在中文理解与复杂任务上表现优秀。', badges:['推荐'], featured:true, featuredOrder:3, directoryHref:'/models/all/' },
+    { id:'curated/deepseek/deepseek-v3', providerId:'deepseek', provider:'DeepSeek', model:'DeepSeek V3', context:'128000', modality:['text','reasoning'], license:'mit', status:'online', canonicalModelId:'curated/deepseek-v3', description:'高性能开源模型，在数学、代码和中文理解方面表现突出。', badges:['热门'], featured:true, featuredOrder:4, directoryHref:'/models/all/' },
+    { id:'curated/mimo/mimo-v2-6-flash', providerId:'mimo', provider:'MiMo', model:'MiMo V2.6 Flash', context:'1000000', modality:['text','image','audio'], license:'apache-2.0', status:'online', canonicalModelId:'curated/mimo-v2-6-flash', description:'支持 1M 超长上下文的多模态模型，现有限时免费入口。', badges:['限时免费'], featured:true, featuredOrder:5, directoryHref:'/models/mimo-v2-6-flash/' }
+  ];
   const normalize = (value) => String(value || '').toLowerCase().normalize('NFKC');
   const esc = (value) => String(value == null ? '' : value).replace(/[&<>\"']/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#39;' }[char]));
   const contextValue = (value) => {
@@ -25,23 +33,30 @@
     const slug = String(id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     return '/models/' + slug + '/';
   };
-  const hasFreeOffer = (item) => {
-    const provider = normalize(item.provider);
-    const name = normalize(item.model).replace(/[^a-z0-9]/g, '');
-    return state.offers.some((offer) => {
+  const modelKey = (value) => normalize(value).replace(/[^a-z0-9]/g, '');
+  const matchingFreeOffer = (row) => {
+    const name = modelKey(row.model);
+    if (name.length < 5) return null;
+    return state.offers.find((offer) => {
       const types = Array.isArray(offer.type) ? offer.type : [];
-      if (!types.includes('free')) return false;
-      const offeredModel = normalize(offer.model).replace(/[^a-z0-9]/g, '');
-      const offeredProvider = normalize(offer.provider);
-      return name.length > 5 && offeredModel.includes(name);
-    });
+      const capabilities = Array.isArray(offer.capabilities) ? offer.capabilities : [];
+      if (!types.includes('free') || !capabilities.includes('model_api')) return false;
+      const models = Array.isArray(offer.freeModels) && offer.freeModels.length
+        ? offer.freeModels.map((entry) => entry && entry.model)
+        : [offer.model];
+      return models.some((model) => {
+        const offered = modelKey(model);
+        return offered.length >= 5 && (offered === name || (offered.length > 8 && name.length > 8 && (offered.includes(name) || name.includes(offered))));
+      });
+    }) || null;
   };
+  const hasFreeOffer = (row) => Boolean(row.isFree || ['trial','permanent','limited'].includes(row.tierType) || matchingFreeOffer(row));
   const byId = (id) => state.models.find((item) => item.key === id);
   const groupModels = (rows) => {
     const groups = new Map();
     rows.forEach((row) => {
       const key = row.canonicalModelId || normalize(row.model);
-      if (!groups.has(key)) groups.set(key, { key, model: row.model, provider: row.provider, providers: [], context: row.context, modality: [], status: row.status, sourceKind: row.sourceKind, accessRegion: row.accessRegion || '', released: row.released || '', canonicalModelId: row.canonicalModelId || '', records: [] });
+      if (!groups.has(key)) groups.set(key, { key, model: row.model, provider: row.provider, providers: [], context: row.context, modality: [], status: row.status, sourceKind: row.sourceKind, accessRegion: row.accessRegion || '', license: row.license || '', released: row.released || '', canonicalModelId: row.canonicalModelId || '', description: row.description || '', score: row.score || 0, rateLimit: row.rateLimit || '', usageActivity: row.usageActivity || '', tierType: row.tierType || '', directoryHref: row.directoryHref || '', featured: Boolean(row.featured), featuredOrder: Number.isFinite(row.featuredOrder) ? row.featuredOrder : 999, badges: row.badges || [], records: [] });
       const item = groups.get(key);
       item.records.push(row);
       if (!item.providers.includes(row.provider)) item.providers.push(row.provider);
@@ -51,24 +66,42 @@
       if (!item.accessRegion && row.accessRegion) item.accessRegion = row.accessRegion;
       if (row.released && (!item.released || row.released > item.released)) item.released = row.released;
       if (row.sourceKind === 'official') item.sourceKind = 'official';
+      if (!item.description && row.description) item.description = row.description;
+      if (!item.license && row.license) item.license = row.license;
+      item.score = Math.max(item.score, Number(row.score || 0));
+      if (!item.rateLimit && row.rateLimit) item.rateLimit = row.rateLimit;
+      if (!item.usageActivity && row.usageActivity) item.usageActivity = row.usageActivity;
+      if (row.featured) item.featured = true;
+      if (Number.isFinite(row.featuredOrder)) item.featuredOrder = row.featuredOrder;
     });
     return [...groups.values()].map((item, index) => {
       item.key = String(item.key || index);
       item.hasFree = item.records.some(hasFreeOffer);
-      item.href = modelHref(item.records[0]);
+      if (!item.accessRegion) {
+        const matched = item.records.map((row) => matchingFreeOffer(row)).find(Boolean);
+        if (matched && matched.originCountry) item.accessRegion = /china|中国|国内/i.test(matched.originCountry) ? 'domestic' : 'international';
+      }
+      item.href = item.directoryHref || modelHref(item.records[0]);
+      item.tierType = item.records.some((row) => row.tierType === 'trial') ? 'trial' : item.tierType;
       return item;
     });
   };
   const cardHtml = (item) => {
     const mark = (item.provider || 'AI').trim().slice(0, 2).toUpperCase();
-    const tags = [contextLabel(item.context), modalitiesLabel(item.modality).split(' · ')[0], item.providers.length > 1 ? item.providers.length + ' 个入口' : regionLabel(item.accessRegion)];
-    return '<article class="ml-model-card"><div class="ml-model-card-top"><span class="ml-provider-mark" aria-hidden="true">' + esc(mark) + '</span><div class="ml-card-title"><small>' + esc(item.provider) + (item.providers.length > 1 ? ' +' + (item.providers.length - 1) : '') + '</small><h3>' + esc(item.model) + '</h3></div><span class="ml-status-badge">' + (item.hasFree ? '免费入口' : (item.status === 'online' ? '可查询' : '待核验')) + '</span></div><p>' + modalitiesLabel(item.modality) + '模型，最高 ' + contextLabel(item.context) + ' 上下文；查看接入平台、来源与限制。</p><div class="ml-model-tags">' + tags.map((tag) => '<span>' + esc(tag) + '</span>').join('') + '</div><div class="ml-card-actions"><a href="' + item.href + '" data-model-id="' + item.key + '">查看详情 →</a><button type="button" data-compare-id="' + esc(item.key) + '" aria-pressed="' + state.compare.includes(item.key) + '">' + (state.compare.includes(item.key) ? '✓ 已加入' : '＋ 对比') + '</button></div></article>';
+    const licenseLabels = { commercial: '商业授权', 'apache-2.0': 'Apache 2.0', mit: 'MIT' };
+    const tags = [contextLabel(item.context), modalitiesLabel(item.modality).split(' · ')[0], licenseLabels[item.license] || (item.providers.length > 1 ? item.providers.length + ' 个入口' : regionLabel(item.accessRegion))];
+    const label = item.featured ? (item.badges[0] || '精选') : item.hasFree ? (item.tierType === 'trial' ? '免费试用' : '免费入口') : (item.status === 'online' ? '可查询' : '待核验');
+    const description = item.description || modalitiesLabel(item.modality) + '模型，最高 ' + contextLabel(item.context) + ' 上下文。';
+    const metrics = [item.score ? '<span>指数 ' + esc(item.score) + '</span>' : '', item.usageActivity ? '<span>↗ ' + esc(item.usageActivity) + '</span>' : '', item.rateLimit ? '<span>⚡ ' + esc(item.rateLimit) + '</span>' : ''].filter(Boolean).join('');
+    return '<article class="ml-model-card"><div class="ml-model-card-top"><span class="ml-provider-mark" aria-hidden="true">' + esc(mark) + '</span><div class="ml-card-title"><small>' + esc(item.provider) + (item.providers.length > 1 ? ' +' + (item.providers.length - 1) : '') + '</small><h3>' + esc(item.model) + '</h3></div><span class="ml-status-badge">' + esc(label) + '</span></div><p>' + esc(description) + '</p><div class="ml-model-tags">' + tags.map((tag) => '<span>' + esc(tag) + '</span>').join('') + '</div><div class="ml-card-actions"><span class="ml-card-stats">' + metrics + '</span><a href="' + esc(item.href) + '" data-model-id="' + esc(item.key) + '">查看详情 →</a><button type="button" data-compare-id="' + esc(item.key) + '" aria-pressed="' + state.compare.includes(item.key) + '">' + (state.compare.includes(item.key) ? '✓ 已加入' : '＋ 对比') + '</button></div></article>';
   };
   const sortModels = (items) => {
     const sort = $('#ml-sort').value;
     return items.sort((a, b) => {
       if (sort === 'featured') {
-        return Number(Boolean(b.hasFree)) - Number(Boolean(a.hasFree))
+        return Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+          || (a.featured ? a.featuredOrder - b.featuredOrder : 0)
+          || Number(Boolean(b.hasFree)) - Number(Boolean(a.hasFree))
           || Number(b.status === 'online') - Number(a.status === 'online')
           || contextValue(b.context) - contextValue(a.context)
           || String(b.released).localeCompare(String(a.released))
@@ -86,6 +119,7 @@
     const context = $('#ml-context').value;
     const free = $('#ml-free').value;
     const region = $('#ml-region').value;
+    const license = $('#ml-license') ? $('#ml-license').value : '';
     const terms = normalize([item.model, item.provider, item.providers.join(' '), modalitiesLabel(item.modality), item.canonicalModelId].join(' '));
     const n = contextValue(item.context);
     const textMatch = !q || terms.includes(q);
@@ -95,23 +129,26 @@
     const contextMatch = !context || (context === 'short' && n > 0 && n < 32000) || (context === 'medium' && n >= 32000 && n < 128000) || (context === 'long' && n >= 128000) || (context === 'million' && n >= 1000000);
     const freeMatch = !free || (free === 'yes' ? item.hasFree : !item.hasFree);
     const regionMatch = !region || (region === 'domestic' ? item.accessRegion === 'domestic' : region === 'international' ? ['global','international'].includes(item.accessRegion) : !item.accessRegion);
-    return textMatch && providerMatch && modalityMatch && categoryMatch && contextMatch && freeMatch && regionMatch;
+    const licenseMatch = !license || (item.license || '').toLowerCase() === license;
+    return textMatch && providerMatch && modalityMatch && categoryMatch && contextMatch && freeMatch && regionMatch && licenseMatch;
   };
   const renderCards = (resetPage) => {
     if (resetPage) state.page = 1;
     const items = sortModels(state.models.filter(matches));
     const shown = items.slice(0, state.page * state.pageSize);
     $('#ml-card-grid').innerHTML = shown.length ? shown.map(cardHtml).join('') : '<div class="ml-empty-state">没有找到符合条件的模型，试试清空筛选。</div>';
-    $('#ml-results-status').textContent = '显示 ' + shown.length + ' / ' + items.length + ' 个模型 · 目录共 ' + state.models.length + ' 条模型记录' + (state.dataFallback ? ' · 使用目录快照' : '');
+    $('#ml-results-status').textContent = '显示 ' + shown.length + ' / ' + items.length + ' 款精选模型';
     $('#ml-total').textContent = '(' + state.models.length + ')';
     let more = root.querySelector('#ml-load-more');
     if (!more) {
       const wrap = root.querySelector('.ml-load-more-wrap');
       wrap.innerHTML = '<button class="ml-load-more" id="ml-load-more" type="button">加载更多模型 ↓</button>';
       more = $('#ml-load-more');
-      more.addEventListener('click', () => { state.page += 1; renderCards(false); });
     }
-    more.hidden = shown.length >= items.length;
+    more.textContent = shown >= items.length ? '已显示全部模型' : '加载更多模型 ↓';
+    more.disabled = shown >= items.length;
+    more.hidden = false;
+    if (shown.length >= items.length) more.hidden = true;
   };
   const renderCompare = () => {
     const list = $('#ml-compare-list');
@@ -148,9 +185,14 @@
   const initControls = () => {
     const providers = [...new Set(state.models.flatMap((item) => item.providers))].sort((a, b) => a.localeCompare(b));
     $('#ml-provider').innerHTML = '<option value="">全部</option>' + providers.map((provider) => '<option value="' + esc(provider) + '">' + esc(provider) + '</option>').join('');
-    ['ml-search','ml-provider','ml-modality','ml-context','ml-free','ml-region','ml-sort'].forEach((id) => {
+    const licenseSelect = $('#ml-license');
+    if (licenseSelect) {
+      const licenses = [...new Set(state.models.map((item) => item.license).filter(Boolean))].sort();
+      licenseSelect.innerHTML = '<option value="">全部</option>' + licenses.map((license) => '<option value="' + esc(license) + '">' + esc(license.toUpperCase()) + '</option>').join('');
+    }
+    ['ml-search','ml-provider','ml-modality','ml-context','ml-free','ml-region','ml-license','ml-sort'].forEach((id) => {
       const el = document.getElementById(id);
-      el.addEventListener(id === 'ml-search' ? 'input' : 'change', () => renderCards(true));
+      if (el && !el.disabled) el.addEventListener(id === 'ml-search' ? 'input' : 'change', () => renderCards(true));
     });
     root.querySelectorAll('[data-category]').forEach((button) => button.addEventListener('click', () => {
       state.category = button.dataset.category;
@@ -158,7 +200,10 @@
       renderCards(true);
     }));
     $('#ml-reset').addEventListener('click', () => {
-      ['ml-search','ml-provider','ml-modality','ml-context','ml-free','ml-region'].forEach((id) => { document.getElementById(id).value = ''; });
+      ['ml-search','ml-provider','ml-modality','ml-context','ml-free','ml-region','ml-license'].forEach((id) => {
+        const control = document.getElementById(id);
+        if (control) control.value = '';
+      });
       state.category = '';
       root.querySelectorAll('[data-category]').forEach((tab) => tab.classList.toggle('active', !tab.dataset.category));
       renderCards(true);
@@ -166,6 +211,12 @@
     $('#ml-clear-compare').addEventListener('click', () => { state.compare = []; renderCompare(); });
     $('#ml-clear-recent').addEventListener('click', () => { state.recent = []; try { localStorage.removeItem('freellm-model-library-recent'); } catch (_) {} renderRecent(); });
     $('#ml-compare-start').addEventListener('click', startCompare);
+    root.addEventListener('click', (event) => {
+      if (event.target.closest('#ml-load-more')) {
+        state.page += 1;
+        renderCards(false);
+      }
+    });
     document.querySelectorAll('[data-ml-theme]').forEach((button) => {
       button.addEventListener('click', () => {
         const dark = button.dataset.mlTheme === 'dark';
@@ -251,28 +302,26 @@
 ];
   const loadData = async () => {
     try {
-      const modelTask = fetch('/data/models.json').then((response) => {
-        if (!response.ok) throw new Error('model JSON unavailable');
+      const modelTask = fetch('/data/freellm-net-models.json?v=20261001b').then((response) => {
+        if (!response.ok) throw new Error('freellm.net model snapshot unavailable');
         return response.json();
       });
       const offerTask = fetch('/data/offers.json').then((response) => {
         if (!response.ok) throw new Error('offer JSON unavailable');
         return response.json();
       }).catch(() => []);
-      let rawModels;
-      try {
-        rawModels = await modelTask;
-      } catch (_) {
-        try { rawModels = await loadDirectorySnapshot(); }
-        catch (_) { rawModels = EMBEDDED_MODEL_FALLBACK; }
-        state.dataFallback = true;
-      }
+      const snapshot = await modelTask;
+      const directoryModels = Array.isArray(snapshot.models) ? snapshot.models : [];
+      const rawModels = CURATED_MODELS;
+      if (!Array.isArray(snapshot.models) || !snapshot.models.length) throw new Error('freellm.net snapshot is empty');
       state.offers = await offerTask;
       state.all = rawModels;
       state.models = groupModels(rawModels);
-      $('#ml-model-count').textContent = rawModels.length;
-      $('#ml-provider-count').textContent = new Set(rawModels.map((item) => item.providerId).filter(Boolean)).size;
-      if (state.offers.length) $('#ml-offer-count').textContent = state.offers.length;
+      const modelCount = document.getElementById('ml-model-count');
+      const providerCount = document.getElementById('ml-provider-count');
+      if (modelCount) modelCount.textContent = directoryModels.length;
+      if (providerCount) providerCount.textContent = new Set(directoryModels.map((item) => item.providerId).filter(Boolean)).size;
+      if ($('#ml-offer-count') && state.offers.length) $('#ml-offer-count').textContent = state.offers.length;
       let saved = [];
       try { saved = JSON.parse(localStorage.getItem('freellm-model-library-recent') || '[]'); } catch (_) {}
       state.recent = Array.isArray(saved) ? saved.map((entry) => byId(typeof entry === 'string' ? entry : entry && entry.id)).filter(Boolean).map((item) => ({ id:item.key, name:item.model, href:item.href, mark:(item.provider || 'AI').slice(0,1).toUpperCase(), time:'最近浏览' })) : [];
