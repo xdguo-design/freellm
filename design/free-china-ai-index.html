@@ -64,6 +64,7 @@
       document.head.appendChild(vercelInsights);
     }
   </script>
+  <script src="/js/site-navigation.js?v=20261001f"></script>
   <script>
     // file:// 预览走内嵌数据，网络同步脚本只在 http(s) 下同步加载（document.write 保持原有阻塞顺序）。
     if (window.location.protocol !== 'file:') document.write('<script src="/js/freellm-sync.js"><\/script>');
@@ -548,10 +549,10 @@
 <link rel="stylesheet" href="../css/homepage-editorial.b8e13d3cc8.css">
 <link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">
 <link rel="stylesheet" href="../css/aurora-home.css?v=20260929b">
-<link rel="stylesheet" href="../css/home-prototype-exact.css?v=20261001i">
+<link rel="stylesheet" href="../css/home-prototype-exact.css?v=20261001j">
 <link rel="stylesheet" href="../css/reference-rail.css?v=20261001a">
 </head>
-<body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script src="/js/site-navigation.js?v=20261001d"></script>
+<body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script src="/js/site-navigation.js?v=20261001f"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -668,16 +669,7 @@
           </section>
           <section class="prototype-updates" aria-labelledby="prototype-updates-title">
             <div class="prototype-lower-heading"><div><h2 id="prototype-updates-title">最新更新</h2><p>持续收录全球优质 AI 资源，数据每日核查更新</p></div><a href="/logs/">查看全部更新 →</a></div>
-            <div class="prototype-update-table-wrap"><table class="prototype-update-table"><thead><tr><th>资源名称</th><th>类型</th><th>更新时间</th><th>状态</th><th>热度</th><th>操作</th></tr></thead><tbody>
-              <tr><td><b class="prototype-update-logo openai">◉</b><strong>GPT-4o mini</strong></td><td>AI 模型</td><td>2 小时前</td><td><i class="state-free">免费可用</i></td><td>🔥 12.4k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo anthropic">AI</b><strong>Claude 3.5 Haiku</strong></td><td>AI 模型</td><td>4 小时前</td><td><i class="state-new">最新上线</i></td><td>🔥 8.7k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo google">G</b><strong>Gemini 1.5 Flash</strong></td><td>AI 模型</td><td>6 小时前</td><td><i class="state-updated">持续更新</i></td><td>🔥 6.1k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo qwen">✿</b><strong>Qwen2.5 72B</strong></td><td>AI 模型</td><td>8 小时前</td><td><i class="state-api">API 更新</i></td><td>🔥 5.3k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo deepseek">◉</b><strong>DeepSeek V3</strong></td><td>AI 模型</td><td>12 小时前</td><td><i class="state-api">开发者版</i></td><td>🔥 4.9k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo stable">✿</b><strong>Stable Diffusion 3</strong></td><td>图像模型</td><td>18 小时前</td><td><i class="state-new">版本更新</i></td><td>🔥 4.2k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo meta">∞</b><strong>Llama 3.1 70B</strong></td><td>AI 模型</td><td>1 天前</td><td><i class="state-free">免费可用</i></td><td>🔥 3.8k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-              <tr><td><b class="prototype-update-logo microsoft">▦</b><strong>Phi 3 Mini</strong></td><td>AI 模型</td><td>1 天前</td><td><i class="state-new">新上线</i></td><td>🔥 3.5k</td><td><a href="/models/">浏览模型库 →</a></td></tr>
-            </tbody></table></div>
+            <div class="prototype-update-table-wrap"><table class="prototype-update-table"><thead><tr><th>资源名称</th><th>类型</th><th>更新时间</th><th>状态</th><th>提供方</th><th>操作</th></tr></thead><tbody><tr><td><b class="prototype-update-logo">L</b><strong>minimax-m3</strong></td><td>AI 模型</td><td>今天</td><td><i class="state-api">API 更新</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">L</b><strong>GLM-5.3-Flash</strong></td><td>AI 模型</td><td>今天</td><td><i class="state-off">暂时下线</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">N</b><strong>mistral-nemotron</strong></td><td>AI 模型</td><td>今天</td><td><i class="state-off">暂时下线</i></td><td>NVIDIA NIM</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">O</b><strong>inclusionAI: Ling 3.0 Flash Fin (free)</strong></td><td>AI 模型</td><td>今天</td><td><i class="state-off">暂时下线</i></td><td>OpenRouter</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">L</b><strong>gpt-6-sol</strong></td><td>AI 模型</td><td>2 天前</td><td><i class="state-new">最新上线</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">L</b><strong>Voxtral-Mini-3B-2507</strong></td><td>AI 模型</td><td>2 天前</td><td><i class="state-new">最新上线</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">L</b><strong>Voxtral-Small-24B-2507</strong></td><td>AI 模型</td><td>2 天前</td><td><i class="state-new">最新上线</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr><tr><td><b class="prototype-update-logo">L</b><strong>kimi-k2.6</strong></td><td>AI 模型</td><td>2 天前</td><td><i class="state-api">API 更新</i></td><td>LLM7</td><td><a href="/models/">浏览模型库 →</a></td></tr></tbody></table></div>
           </section>
           <section class="prototype-benefits" aria-label="FreeLLM 社区资源">
             <article><i class="benefit-student">♟</i><h3>学生专属福利</h3><p>完成学生认证，解锁更多优质 AI 资源与专属权益</p><ul><li>专属免费额度</li><li>学生专属活动</li><li>教育优惠</li><li>优先体验新功能</li></ul><a href="/category/student/">查看学生优惠 →</a></article>
