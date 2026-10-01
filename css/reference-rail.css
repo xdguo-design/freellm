@@ -197,19 +197,8 @@ body[data-reference-style="v1"][data-fl-section="skills"] {
     mask: var(--rail-i-chevron) center / contain no-repeat;
   }
 
-  /* red dot on 更新 (after the label, as on the boards) */
-  body[data-reference-style="v1"][data-fl-section="home"] .fl-site-nav > a[data-site-nav="logs"]::after,
-  body[data-reference-style="v1"][data-fl-section="models"] .fl-site-nav > a[data-site-nav="logs"]::after,
-  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-nav > a[data-site-nav="logs"]::after {
-    content: "" !important;
-    position: static !important;
-    width: 7px !important; height: 7px !important;
-    margin: -14px 0 0 2px !important;
-    border-radius: 50% !important;
-    background: #ff4c58 !important;
-    -webkit-mask: none !important;
-    mask: none !important;
-  }
+  /* red dot on 更新 now lives only in primary-menu.css (site-wide authority);
+     a second definition here rendered a duplicate dot on v1 pages. */
   body[data-reference-style="v1"][data-fl-section="home"] .fl-site-nav > a[data-site-nav="logs"][aria-current="page"]::after {
     content: "" !important;
     position: absolute !important;
