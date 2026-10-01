@@ -295,6 +295,12 @@ body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-vi
 }
 body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-view .skill-card-heading{grid-row:1/4;margin:0}
 body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-view .skill-card h3{grid-column:2;white-space:normal}
+
+/* Pre-render static cards keep the pastel structure (no aurora heading/icon,
+   and no .showcase-card class). In the aurora icon grid their blocks would
+   auto-flow into the 46px icon column and wrap vertically; stretch every
+   direct child across both columns. */
+body[data-reference-style="v1"][data-fl-section="skills"] .skill-card:not(.showcase-card) > *{grid-column:1/-1}
 body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-view .skill-card p{grid-column:2;grid-row:2;-webkit-line-clamp:1!important;min-height:0}
 body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-view .skill-card-tags{grid-column:2;grid-row:3}
 body[data-reference-style="v1"][data-fl-section="skills"] .skill-grid.is-list-view .skill-card-metrics{grid-column:3;grid-row:1;margin:0}
