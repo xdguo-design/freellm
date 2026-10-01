@@ -32,6 +32,15 @@
 (function (global) {
   'use strict';
 
+  /* Load the persistent primary-navigation controller once per document. */
+  if (!global.FreeLLMNavigation && !document.querySelector('script[data-freellm-site-navigation]')) {
+    var navigationScript = document.createElement('script');
+    navigationScript.src = '/js/site-navigation.js?v=20261001d';
+    navigationScript.async = false;
+    navigationScript.dataset.freellmSiteNavigation = '1';
+    document.head.appendChild(navigationScript);
+  }
+
   /* ---------- FreeLLM 2026 site-wide visual system ---------- */
   (function installSiteVisualSystem() {
     if (document.documentElement.classList.contains('fl-pastel-ui')) return;
@@ -48,7 +57,7 @@
       if (path.indexOf('/skills/lab') === 0) return 'workflow';
       if (path.indexOf('/skills') === 0) return 'skills';
       if (path.indexOf('/tools') === 0) return 'tools';
-      if (path.indexOf('/health') === 0) return 'health';
+      if (path.indexOf('/health') === 0) return 'models';
       if (path.indexOf('/logs') === 0) return 'logs';
       if (path.indexOf('/models') === 0 || path.indexOf('/providers') === 0) return 'models';
       if (path.indexOf('/about') === 0 || path.indexOf('/links') === 0 || path.indexOf('/privacy') === 0 || path.indexOf('/terms') === 0) return 'about';
@@ -86,7 +95,6 @@
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
             railLink('/models/', '▣', '模型', 'models', current) +
-            railLink('/health/', '⌁', 'API 健康', 'health', current) +
             railLink('/skills/', '✦', 'Skills', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/skills/lab/', '⌁', '工作流', 'workflow', current) +

@@ -23,7 +23,8 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001d"></script>
+<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
     <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>

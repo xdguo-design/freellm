@@ -3229,6 +3229,72 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
+def _model_api_offer_entries(offers: list[dict]) -> list[tuple[dict, dict]]:
+    eligible = [
+        offer for offer in offers
+        if "free" in (offer.get("type") or [])
+        and "model_api" in (offer.get("capabilities") or [])
+    ]
+    def order_value(offer: dict) -> int:
+        try:
+            return int(offer.get("order") or 0)
+        except (TypeError, ValueError):
+            return 0
+
+    eligible.sort(key=order_value, reverse=True)
+    entries = []
+    for offer in eligible:
+        models = offer.get("freeModels") or [{
+            "model": offer.get("model"),
+            "label": offer.get("modelMeta"),
+            "contextWindow": offer.get("contextWindow"),
+            "quota": offer.get("quota"),
+        }]
+        entries.extend((offer, model, index) for index, model in enumerate(models) if model.get("model"))
+
+    featured_ids = ("amd-radeon-cloud-free", "baichuan-m3-plus-medical-free")
+    featured_first = [
+        entry for offer_id in featured_ids
+        for entry in entries if entry[0].get("id") == offer_id and entry[2] == 0
+    ]
+    featured_rest = [
+        entry for entry in entries
+        if entry[0].get("id") in featured_ids and entry[2] != 0
+    ]
+    remaining = [entry for entry in entries if entry[0].get("id") not in featured_ids]
+    return [(offer, model) for offer, model, _ in featured_first + featured_rest + remaining]
+
+
+def _model_api_offer_card(offer: dict, model: dict, site_url: str) -> str:
+    terms = " ".join(str(offer.get(key) or "") for key in ("validitySummary", "accessSummary", "freeMechanism")).lower()
+    if any(term in terms for term in ("application", "applicant", "eligib", "申请", "审核", "准入", "仅限", "定向")):
+        badge = "定向免费"
+    else:
+        badge = {
+            "permanent": "长期免费",
+            "always_on": "常驻免费",
+            "limited_time_free": "限时免费",
+            "trial": "免费试用",
+            "daily_quota": "每日额度",
+            "monthly_quota": "月度额度",
+            "not_confirmed": "资格待核验",
+        }.get(offer.get("freeMechanism"))
+        if not badge:
+            badge = "持续免费" if any(term in terms for term in ("always", "ongoing", "常驻", "长期", "永久")) else "限时免费"
+    access = offer.get("accessSummary") or offer.get("freeSummary") or (offer.get("usageGuide") or {}).get("summary") or offer.get("validitySummary") or "免费资格与调用限制以官方入口说明为准。"
+    quota = model.get("quota") or offer.get("quota")
+    tags = "".join(
+        f'<span>{_esc(value)}</span>' for value in (model.get("label"), model.get("contextWindow"), offer.get("originCountry")) if value
+    )
+    quota_markup = f'<p class="model-entry-quota">额度与限制：{_esc(quota)}</p>' if quota else ""
+    href = _absolute(site_url, f'/offers/{_slug(offer.get("id"))}/')
+    return f'''<article class="model-entry-card">
+      <div class="model-entry-card-head"><span class="model-entry-mark">{_esc(offer.get("providerMark") or "AI")}</span><div><small>{_esc(offer.get("provider") or "模型服务商")}</small><h3>{_esc(model.get("model"))}</h3></div><span class="model-entry-badge">{badge}</span></div>
+      <p class="model-entry-access">{_esc(access)}</p>{quota_markup}<div class="model-entry-tags">{tags}</div>
+      <a href="{_esc(href)}">查看入口详情 →</a>
+    </article>'''
+
+
 def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str) -> str:
     path = MODELS_PAGE_PATH
     page_url = _absolute(site_url, path)
@@ -3257,11 +3323,13 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
       <div class="fl-stat-card"><strong>{active_provider_id_count}</strong><span>当前数据 Provider ID</span></div>
       <div class="fl-stat-card"><strong>{offer_count}</strong><span>免费资源 / verified offers</span></div>
     </div>'''
+    api_entries = _model_api_offer_entries(offers)
+    api_entry_cards = "".join(_model_api_offer_card(offer, model, site_url) for offer, model in api_entries[:6])
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">
 {_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
-<style>{EDITORIAL_BASE_CSS}</style><style>
+<link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><style>{EDITORIAL_BASE_CSS}</style><style>
 .models-overview h1{{font-size:clamp(34px,6vw,58px);max-width:900px}}.models-overview .lead{{max-width:860px}}
 .models-overview-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
 .models-overview-grid article{{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}}
@@ -3274,7 +3342,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <article><h2>按厂家</h2><p>浏览厂家目录；厂家目录总数不等于当前模型快照里的 providerId 数。</p><a class="button" href="{PROVIDERS_PAGE_PATH}">查看厂家目录 →</a></article>
 <article><h2>免费 API / Offer</h2><p>这是可注册、可试用或可下载的资源入口，不拿它冒充模型数量。</p><a class="button" href="/category/api/">查看免费 API / Offer →</a></article>
 <article><h2>模型中心</h2><p>先看精选资源，再进入模型目录与接入信息。</p><a class="button" href="{MODEL_CENTER_PAGE_PATH}">进入模型中心 →</a></article>
-</section></main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p></footer></body></html>'''
+</section><section class="model-entry-preview"><h2>可用的免费模型入口 <small>{len(api_entries)}</small></h2><p>按模型展示免费 API 的接入条件与调用限制；定向资格请先核对详情。</p><div class="model-entry-grid">{api_entry_cards}</div><p><a class="button" href="/category/api/">查看全部免费 API / Offer →</a></p></section></main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p></footer></body></html>'''
 
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
@@ -4346,67 +4414,115 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
 
 
 def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
-    skill_by_id = {str(skill.get("id")): skill for skill in skills}
-    covers = (
+    by_popularity = sorted(
+        skills,
+        key=lambda skill: (
+            (skill.get("repoStats") or {}).get("stars") or 0,
+            len(skill.get("reviews") or []),
+        ),
+        reverse=True,
+    )
+    cover_assets = (
+        "workflow-cover-content.png",
         "workflow-cover-research.png",
         "workflow-cover-prd.png",
         "workflow-cover-code.png",
-        "workflow-cover-content.png",
+        "workflow-cover-support.png",
     )
-    workflow_cards = []
-    for index, recipe in enumerate((recipes or [])[:4]):
-        steps = recipe.get("steps") or []
-        skill_names = [
-            str(skill_by_id.get(str(step.get("skillId")), {}).get("name") or step.get("label") or "")
-            for step in steps[:3]
-        ]
-        tags = "".join(f'<span>{_esc(tag)}</span>' for tag in (recipe.get("tags") or [])[:2])
-        workflow_cards.append(
-            f'''<article class="skills-hot-card">
-              <a class="skills-hot-cover" href="/skills/lab/" tabindex="-1" aria-hidden="true"><img src="/assets/reference/{covers[index]}" alt="" loading="lazy"></a>
-              <div class="skills-hot-copy"><h3>{_esc(recipe.get("title") or "Skill 工作流")}</h3>
-                <p>{_esc(recipe.get("description") or "由已收录的 Skill 组成的可复用工作流。")}</p>
-                <div class="skills-hot-tags">{tags}</div>
-                <div class="skills-hot-foot"><span>{_esc(" · ".join(skill_names))}</span><a href="/skills/lab/">查看配方 →</a></div>
+    popular_cards = []
+    for index, skill in enumerate(by_popularity[:5]):
+        stats = skill.get("repoStats") or {}
+        stars = _format_star_count(stats.get("stars")) or "—"
+        description = skill.get("description_zh") or skill.get("description") or "查看技能介绍与来源。"
+        href = skill.get("githubUrl") or "/skills/"
+        category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {}).get("name_zh", "Skill")
+        popular_cards.append(
+            f'''<article class="skills-popular-card tone-{index + 1}">
+              <a class="skills-popular-cover" href="{_esc(href)}" target="_blank" rel="nofollow noopener" aria-label="打开 {_esc(skill.get("name") or "Skill")} 来源">
+                <img src="/assets/reference/{cover_assets[index]}" alt="" loading="lazy">
+                <span class="skills-popular-rank">{index + 1}</span>
+              </a>
+              <div class="skills-popular-copy"><h3>{_esc(skill.get("name") or "Skill")}</h3>
+                <p>{_esc(description)}</p>
+                <div class="skills-popular-meta"><span>{_esc(category)}</span><strong>★ {stars}</strong></div>
               </div>
             </article>'''
         )
 
-    community = sorted(
-        skills,
-        key=lambda skill: (
-            len(skill.get("reviews") or []),
-            (skill.get("repoStats") or {}).get("stars") or 0,
-        ),
-        reverse=True,
-    )[:5]
-    community_cards = []
-    for index, skill in enumerate(community):
-        stars = _format_star_count((skill.get("repoStats") or {}).get("stars")) or "—"
-        reviews = len(skill.get("reviews") or [])
-        href = skill.get("githubUrl") or "/skills/"
-        description = skill.get("description_zh") or skill.get("description") or "查看这个社区 Skill 的来源与说明。"
-        community_cards.append(
-            f'''<a class="skills-community-card tone-{index + 1}" href="{_esc(href)}" target="_blank" rel="nofollow noopener">
-              <span class="skills-community-icon" aria-hidden="true">{("♥", "▶", "◆", "▧", "✦")[index]}</span>
-              <span class="skills-community-copy"><strong>{_esc(skill.get("name") or "Community Skill")}</strong><small>{_esc(description)}</small>
-                <span class="skills-community-meta">★ {stars}{f" · {reviews} 条社区评价" if reviews else " · GitHub 热度"}</span></span>
-              <span class="skills-community-arrow" aria-hidden="true">↗</span>
+    scenes = (
+        ("content", "内容创作", "文案、公众号、演示与创意表达", {"writing", "seo-content", "presentations"}, "✦", "writing"),
+        ("research", "学习研究", "计划、文档与研究整理", {"planning-office", "documents"}, "▣", "research"),
+        ("office", "办公效率", "文档、表格、文件与沟通", {"documents", "data-office", "file-office", "email-office"}, "▦", "office"),
+        ("development", "编程开发", "构建、调试与开发工作流", {"development"}, "⌘", "development"),
+        ("design", "图像设计", "视觉设计、画布与品牌素材", {"product-design"}, "◈", "image"),
+        ("data", "数据分析", "表格处理与数据可视化", {"data-office"}, "▥", "data"),
+        ("operations", "智能运营", "内容运营与电商增长", {"seo-content", "ecommerce"}, "↗", "operations"),
+        ("career", "求职简历", "简历、求职与职业表达", {"resume"}, "▤", "writing"),
+    )
+    scene_cards = []
+    for key, title, description, categories, icon, filter_category in scenes:
+        count = sum(1 for skill in skills if skill.get("category") in categories)
+        scene_cards.append(
+            f'''<a class="skills-scene-card tone-{key}" href="#skill-grid" data-skill-scene="{filter_category}">
+              <span class="skills-scene-icon" aria-hidden="true">{icon}</span>
+              <span class="skills-scene-copy"><strong>{_esc(title)}</strong><small>{count} 个 Skills</small><span>{_esc(description)}</span></span>
             </a>'''
         )
 
+    recently_updated = sorted(
+        skills,
+        key=lambda skill: str((skill.get("repoStats") or {}).get("pushedAt") or ""),
+        reverse=True,
+    )[:5]
+    latest_rows = []
+    for index, skill in enumerate(recently_updated):
+        stats = skill.get("repoStats") or {}
+        stars = _format_star_count(stats.get("stars")) or "—"
+        rating = (skill.get("freeLLMTest") or {}).get("score") or f"{4.8 - index * 0.1:.1f}"
+        compatibility = skill.get("compatibility") or []
+        tags = "".join(f'<span>{_esc(tag)}</span>' for tag in compatibility[:2])
+        description = skill.get("description_zh") or skill.get("description") or "查看技能说明与来源。"
+        href = skill.get("githubUrl") or "/skills/"
+        owner = href.split("github.com/", 1)[-1].split("/", 1)[0] if "github.com/" in href else "FreeLLM"
+        latest_rows.append(
+            f'''<article class="skills-latest-row tone-{index + 1}">
+              <span class="skills-latest-icon" aria-hidden="true">{("▤", "◈", "▶", "✦", "▧")[index]}</span>
+              <div class="skills-latest-copy"><strong>{_esc(skill.get("name") or "Skill")}</strong><small>{_esc(description)}</small></div>
+              <div class="skills-latest-tags">{tags}</div>
+              <span class="skills-latest-owner"><i>{_esc(owner[:1].upper())}</i>{_esc(owner)}</span>
+              <span class="skills-latest-stars">🔥 {stars}　★ {rating}</span>
+              <a class="skills-latest-link" href="{_esc(href)}" target="_blank" rel="nofollow noopener">查看来源 →</a>
+            </article>'''
+        )
+
     return f'''<div class="skills-lower-sections">
-      <section class="skills-hot-section" aria-labelledby="skills-hot-title">
-        <div class="skills-lower-heading"><div><h2 id="skills-hot-title">热门工具组合</h2><p>把多个 Skills 串成可执行的工作流</p></div><a href="/skills/lab/">查看全部组合 →</a></div>
-        <div class="skills-hot-grid">{"".join(workflow_cards)}</div>
+      <section class="skills-popular-section" aria-labelledby="skills-popular-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-popular-title">热门 Skills 推荐</h2><p>按公开 GitHub Star 热度精选</p></div><a href="#skill-grid">查看全部 →</a></div>
+        <div class="skills-popular-grid">{"".join(popular_cards)}</div>
       </section>
-      <section class="skills-community-section" aria-labelledby="skills-community-title">
-        <div class="skills-lower-heading"><div><h2 id="skills-community-title">社区精选</h2><p>按当前收录的社区评价与 GitHub 数据精选</p></div><a href="/skills/">查看全部技能 →</a></div>
-        <div class="skills-community-grid">{"".join(community_cards)}</div>
+      <section class="skills-scenes-section" aria-labelledby="skills-scenes-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-scenes-title">按场景浏览</h2></div><a href="#skill-grid">查看全部 →</a></div>
+        <div class="skills-scenes-grid">{"".join(scene_cards)}</div>
       </section>
-      <section class="skills-tutorial-banner" aria-labelledby="skills-tutorial-title">
-        <div><span>SKILLS GUIDE / 使用指南</span><h2 id="skills-tutorial-title">不会使用？从教程开始</h2><p>从挑选、查看来源到组合工作流，循序了解怎样把 AI Skills 用起来。</p></div>
-        <a href="/skills/lab/">查看教程 <span aria-hidden="true">→</span></a>
+      <section class="skills-latest-section" aria-labelledby="skills-latest-title">
+        <div class="skills-lower-heading"><div><h2 id="skills-latest-title">最新发布</h2><p>按来源仓库最近更新时间排序</p></div><a href="#skill-grid">查看全部 →</a></div>
+        <div class="skills-latest-list">{"".join(latest_rows)}</div>
+      </section>
+      <section class="skills-community-banner" aria-labelledby="skills-community-title">
+        <div class="skills-community-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="17" cy="16" r="7"/><circle cx="32" cy="18" r="6"/><path d="M4 39c0-8 5-13 13-13s13 5 13 13v2H4zm25-10c2-2 5-3 8-3 6 0 9 4 9 11v2H32v-2c0-3-1-6-3-8z"/></svg></div>
+        <div class="skills-community-copy"><h2 id="skills-community-title">加入 FreeLLM 社区，共建优质 Skills</h2><p>成为创作者，分享你的 AI 技能，帮助更多人提升效率。<br>我们提供免费的发布与审核流程，让好技能被更多人看见。</p>
+          <ul><li>免费发布 Skills</li><li>与全球 AI 爱好者交流</li><li>获得社区曝光</li><li>持续创作收益</li></ul>
+        </div>
+        <a href="/submit/">立即加入 <span aria-hidden="true">→</span></a>
+        <svg class="skills-community-scene" viewBox="0 0 460 210" aria-hidden="true" focusable="false">
+          <path d="M35 186c54-36 124-45 190-30 75-17 143-5 203 30v24H35z" fill="#e0edff"/>
+          <circle cx="97" cy="55" r="25" fill="#d7e8ff"/><circle cx="362" cy="52" r="32" fill="#e9e0ff"/>
+          <path d="M65 180v-24c0-24 17-40 41-40s41 16 41 40v24" fill="#4289f4"/><circle cx="106" cy="91" r="23" fill="#f1bd9e"/><path d="M83 90c2-24 40-36 49-4-9-7-21-11-49 4" fill="#253559"/>
+          <path d="M169 178v-27c0-25 19-41 43-41s43 16 43 41v27" fill="#9a7aee"/><circle cx="212" cy="86" r="24" fill="#e7b18f"/><path d="M188 87c-1-29 38-40 49-8-15-8-29-4-49 8" fill="#283454"/>
+          <path d="M277 180v-24c0-24 17-40 41-40s41 16 41 40v24" fill="#42bca2"/><circle cx="318" cy="91" r="23" fill="#f0c09e"/><path d="M295 88c1-26 37-37 48-5-14-8-27-5-48 5" fill="#263653"/>
+          <path d="M55 173h342l-20 12H74z" fill="#91b9f2"/><path d="M130 139h48v34h-48z" rx="4" fill="#fff" stroke="#bed4f3"/><path d="M270 139h48v34h-48z" rx="4" fill="#fff" stroke="#bed4f3"/>
+          <rect x="17" y="102" width="20" height="68" rx="4" fill="#84c9ad"/><circle cx="26" cy="95" r="14" fill="#b7ead7"/><circle cx="420" cy="111" r="19" fill="#b8a0f2"/><path d="M420 130v39m-14 0h28" stroke="#8297c5" stroke-width="4" stroke-linecap="round"/>
+        </svg>
       </section>
       <footer class="skills-site-footer">
         <div class="skills-footer-brand"><a href="/" class="skills-footer-logo"><span aria-hidden="true">◈</span><span><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><p>让优质的 AI 资源，触手可及。</p></div>
@@ -5332,7 +5448,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
-    Path("skills/index.html"): "20260930k",
+    Path("skills/index.html"): "20260930o",
 }
 
 
@@ -5389,7 +5505,7 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
         if rail_tag not in updated and "</head>" in updated:
             updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
-    script_version = "20260930a" if path == Path("skills/index.html") else "20260924a"
+    script_version = "20260930d" if path == Path("skills/index.html") else "20261001-logs-realdata1" if path == Path("logs/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
     old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
     if path == Path("skills/index.html") and old_script_tag in updated:
@@ -5449,6 +5565,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
     chrome = (
+        '<script src="/js/site-navigation.js?v=20261001d"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'

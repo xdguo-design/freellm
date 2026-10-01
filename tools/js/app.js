@@ -35,9 +35,21 @@
   var activeCat = 'all';
   var showAll = false;
   var currentTool = null;
+  var featuredOrder = ['base64','url-encode','md5','sha','html-entity','unicode','aes','file-hash','hmac','gzip','caesar','rot13','file-hex','base32','base58','base85','rsa','rsa-encrypt','ecc','hybrid-encrypt','jwt','totp','x509'];
+  var categoryIcons = ['♧','⚖','✣','⚒','▤','▦','◷','▣','⌘','▧','◉','▧','⬟'];
 
   if (!Tools) return;
   totalEl.textContent = Tools.total;
+
+  // Allow category cards elsewhere on the site to open this page pre-filtered.
+  (function selectCategoryFromQuery() {
+    var requestedCategory = new URLSearchParams(location.search).get('category');
+    if (requestedCategory && Tools.cats.some(function (category) {
+      return category.id === requestedCategory && category.count;
+    })) {
+      activeCat = requestedCategory;
+    }
+  })();
 
   /* ---------- 主题 ---------- */
   function applyTheme() {
@@ -101,7 +113,7 @@
     var allBtn = document.createElement('button');
     allBtn.className = 'tool-category-tab' + (activeCat === 'all' ? ' is-active' : '');
     allBtn.type = 'button';
-    allBtn.innerHTML = '<span>全部</span><small>' + Tools.total + '</small>';
+    allBtn.innerHTML = '<i aria-hidden="true">⌕</i><span>全部</span><small>' + Tools.total + '</small>'; 
     allBtn.onclick = function () { setCat('all'); };
     tabsEl.appendChild(allBtn);
     Tools.cats.forEach(function (c) {
@@ -109,7 +121,7 @@
       var btn = document.createElement('button');
       btn.className = 'tool-category-tab' + (activeCat === c.id ? ' is-active' : '');
       btn.type = 'button';
-      btn.innerHTML = '<span>' + c.label + '</span><small>' + c.count + '</small>';
+      btn.innerHTML = '<i aria-hidden="true">' + categoryIcons[Tools.cats.indexOf(c) % categoryIcons.length] + '</i><span>' + c.label + '</span><small>' + c.count + '</small>'; 
       btn.onclick = function () { setCat(c.id); };
       tabsEl.appendChild(btn);
     });
@@ -118,6 +130,11 @@
   function setCat(id) {
     activeCat = id;
     showAll = false;
+    var params = new URLSearchParams(location.search);
+    if (id === 'all') params.delete('category');
+    else params.set('category', id);
+    var query = params.toString();
+    history.replaceState(history.state, '', location.pathname + (query ? '?' + query : '') + location.hash);
     renderTabs();
     renderGrid();
   }
@@ -131,6 +148,9 @@
         if (!hay.includes(q)) return false;
       }
       return true;
+    }).sort(function (a, b) {
+      var ai = featuredOrder.indexOf(a.id), bi = featuredOrder.indexOf(b.id);
+      return (ai < 0 ? 10000 : ai) - (bi < 0 ? 10000 : bi);
     });
   }
 
@@ -138,7 +158,7 @@
     var list = getFiltered();
     var query = (searchEl.value || '').trim();
     var hasFilter = activeCat !== 'all' || !!query;
-    var visible = !hasFilter && !showAll ? list.slice(0, 24) : list;
+    var visible = !hasFilter && !showAll ? list.slice(0, featuredOrder.length) : list;
     gridEl.innerHTML = '';
     if (!visible.length) {
       gridEl.innerHTML =
@@ -150,6 +170,14 @@
     }
     var frag = document.createDocumentFragment();
     visible.forEach(function (t) { frag.appendChild(cardEl(t)); });
+    if (!hasFilter && !showAll) {
+      var more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'tool-card tool-more-card';
+      more.innerHTML = '<span class="tool-more-icon" aria-hidden="true">▦</span><strong>更多工具 …</strong><span>探索更多实用工具，更多精彩工具持续上新中</span><b>浏览更多工具 →</b>';
+      more.addEventListener('click', function () { showAll = true; renderGrid(); gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      frag.appendChild(more);
+    }
     gridEl.appendChild(frag);
     if (Sync) Sync.bind(gridEl); // 为动态卡片注入历史追踪 + 星标
     countEl.textContent = '显示 ' + visible.length + ' / ' + Tools.total;
@@ -169,6 +197,10 @@
     renderGrid();
   }
   searchEl.addEventListener('input', U.debounce(function () { showAll = false; renderGrid(); }, 120));
+  var searchSubmit = document.getElementById('tool-search-submit');
+  if (searchSubmit) searchSubmit.addEventListener('click', function () {
+    searchEl.dispatchEvent(new Event('input', { bubbles: true }));
+  });
   if (showAllButton) showAllButton.addEventListener('click', function () {
     showAll = !showAll;
     renderGrid();
@@ -176,7 +208,7 @@
 
   function renderReferencePreviews() {
     if (categoryOverview) {
-      var icons = ['🔐','🧩','▦','⌗','▤','⊞','▣','♧','⌘','▧','♙','◉','⬟'];
+      var icons = categoryIcons;
       categoryOverview.innerHTML = '';
       Tools.cats.filter(function (category) { return category.count; }).forEach(function (category, index) {
         var button = document.createElement('button');
@@ -186,12 +218,17 @@
         button.addEventListener('click', function () { setCat(category.id); gridEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
         categoryOverview.appendChild(button);
       });
+      var submit = document.createElement('a');
+      submit.className = 'tool-category-submit';
+      submit.href = '/submit/';
+      submit.innerHTML = '<i aria-hidden="true">➤</i><span><strong>提交工具</strong><small>推荐一个您喜欢的实用工具，让更多人受益</small><b>立即提交 →</b></span>';
+      categoryOverview.appendChild(submit);
     }
     if (popularPreview) {
       popularPreview.innerHTML = '';
-      Tools.all.slice(0, 5).forEach(function (tool, index) {
+      ['base64', 'json', 'jwt', 'md5', 'aes'].map(function (id) { return Tools.get(id); }).filter(Boolean).forEach(function (tool, index) {
         var row = document.createElement('li');
-        row.innerHTML = '<b>' + (index + 1) + '</b><span>' + tool.name + '</span>';
+        row.innerHTML = '<b>' + (index + 1) + '</b><i aria-hidden="true">' + ['♧','♨','♨','▧','⬟'][index] + '</i><span>' + tool.name + '</span>'; 
         popularPreview.appendChild(row);
       });
     }

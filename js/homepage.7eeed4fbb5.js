@@ -717,13 +717,15 @@ let offerIndex = {};
       drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
     };
     const closeDrawer = () => { drawer.classList.remove('open'); backdrop.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; };
+    const pageLifecycle = new AbortController();
+    window.addEventListener('freellm:page-unmount', () => pageLifecycle.abort(), { once: true });
     document.querySelector('.table-wrap').addEventListener('click', e => {
       const button = e.target.closest('.row-arrow');
       if (button) openDrawer(button.closest('.offer').dataset.detail);
     });
     document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
     backdrop.addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); }, { signal: pageLifecycle.signal });
     const bindCopyButton = (buttonId, sourceId) => {
       document.getElementById(buttonId).addEventListener('click', async e => {
         const button = e.currentTarget;

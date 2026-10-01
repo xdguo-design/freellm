@@ -1,0 +1,52 @@
+body[data-fl-section="models"] .ml-card-quota {
+  display: -webkit-box;
+  margin: 0 0 7px;
+  overflow: hidden;
+  color: #607596;
+  font-size: 11.5px;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+body[data-fl-section="models"] .ml-load-more[hidden] { display: none !important; }
+
+.model-entry-preview {
+  margin-top: 24px;
+  padding: 22px;
+  border: 1px solid #dce7f5;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.model-entry-preview h2 { margin: 0 0 6px; font-size: 24px; }
+.model-entry-preview h2 small { color: #71839e; font-size: 14px; }
+.model-entry-preview > p { color: #687a95; }
+.model-entry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.model-entry-card { display: flex; min-width: 0; flex-direction: column; padding: 16px; border: 1px solid #e4ebf6; border-radius: 13px; background: #fff; }
+.model-entry-card-head { display: flex; align-items: flex-start; gap: 9px; }
+.model-entry-card-head > div { min-width: 0; flex: 1; }
+.model-entry-mark { display: grid; width: 36px; height: 36px; flex: none; place-items: center; border-radius: 10px; background: #eef4ff; color: #285da9; font-weight: 800; }
+.model-entry-card small { color: #657894; font-size: 12px; }
+.model-entry-card h3 { margin: 3px 0 0; overflow: hidden; color: #16294e; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.model-entry-badge { flex: none; padding: 4px 7px; border-radius: 999px; background: #eee7ff; color: #6846ca; font-size: 10px; font-weight: 700; }
+.model-entry-access, .model-entry-quota { display: -webkit-box; margin: 10px 0 0; overflow: hidden; color: #607596; font-size: 12px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.model-entry-quota { margin-top: 5px; }
+.model-entry-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.model-entry-tags span { padding: 3px 7px; border-radius: 999px; background: #f0f3f9; color: #71839e; font-size: 10px; }
+.model-entry-card > a { align-self: flex-end; margin-top: auto; padding-top: 12px; color: #176be8; font-size: 12px; font-weight: 800; text-decoration: none; }
+
+@media (max-width: 640px) {
+  .model-entry-grid { grid-template-columns: 1fr; }
+  .model-entry-preview { padding: 16px; }
+
+  body[data-fl-section="models"] .ml-model-card {
+    height: auto !important;
+    min-height: 150px !important;
+  }
+
+  body[data-fl-section="models"] .ml-card-quota {
+    margin-bottom: 4px;
+    font-size: 8px;
+  }
+}

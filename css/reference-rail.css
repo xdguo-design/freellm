@@ -329,7 +329,7 @@ body[data-reference-style="v1"][data-fl-section="skills"] {
   body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle {
     position: relative !important;
     inset: auto !important;
-    margin: 52px 0 0 20px !important;
+    margin: 0 0 0 20px !important;
   }
 }
 
@@ -430,4 +430,119 @@ body[data-reference-style="v1"][data-fl-section="skills"] {
     height: 328px !important;
     background-size: 100% 328px !important;
   }
+}
+
+/* Skills rail follows the shared compact header navigation on narrow viewports. */
+@media (max-width: 800px) {
+  body[data-reference-style="v1"][data-fl-section="skills"] {
+    --fl-reference-rail: 0px;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] > .fl-site-rail {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 10px 10px 12px !important;
+    overflow: visible !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] > .fl-site-rail::after,
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-rail-note,
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-rail-footer {
+    display: none !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-brand {
+    padding: 0 4px 9px !important;
+    margin: 0 0 8px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-brand-mark {
+    width: 32px !important;
+    height: 32px !important;
+    flex: none !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-brand-copy strong {
+    font-size: 15px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-brand-copy small {
+    font-size: 9px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-nav {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-nav > a {
+    min-height: 34px !important;
+    height: 34px !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 0 6px !important;
+    border-radius: 9px !important;
+    font-size: 10px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-nav > a > span:last-child {
+    display: inline !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-nav-icon {
+    width: auto !important;
+    height: 15px !important;
+    flex: none !important;
+    font-size: 12px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle {
+    display: flex !important;
+    position: absolute !important;
+    top: 13px !important;
+    right: 12px !important;
+    width: 66px !important;
+    min-height: 27px !important;
+    height: 27px !important;
+    margin: 0 !important;
+    padding: 3px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    background: #142c53 !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-label {
+    display: none !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-moon,
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-sun {
+    display: grid !important;
+    flex: 1 1 50% !important;
+    height: 19px !important;
+    place-items: center !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-sun {
+    background: linear-gradient(180deg, #97abd0, #5e739c) !important;
+  }
+  html.fl-pastel-ui[data-theme="dark"] body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-sun {
+    background: transparent !important;
+  }
+  html.fl-pastel-ui[data-theme="dark"] body[data-reference-style="v1"][data-fl-section="skills"] .fl-site-theme-toggle .fl-theme-moon {
+    background: linear-gradient(180deg, #97abd0, #5e739c) !important;
+  }
+html.fl-pastel-ui body.fl-ui-v2[data-fl-section="skills"] .skills-page {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 14px 36px !important;
+  }
+}
+
+/* Keep the persistent navigation typography identical on every v1 page. */
+body.fl-ui-v2[data-reference-style="v1"][data-fl-section] > .fl-site-rail .fl-site-nav > a,
+body.fl-ui-v2[data-reference-style="v1"][data-fl-section] > .fl-site-rail .fl-site-nav > a > span:last-child {
+  font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
 }

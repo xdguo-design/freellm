@@ -175,21 +175,9 @@ body[data-reference-style="v1"][data-fl-section="home"] .catalog-content{
   width:auto!important;max-width:none!important;margin:0!important;padding:0 18px 48px!important;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home{padding-top:0!important}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-hero,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.ref-feature-row,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.today-latest,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-filter-bar,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.category-section,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.featured-section{display:none!important}
-/* The homepage prototype ends with its curated resource cards, categories, update table and community cards. */
+/* The reference board is the complete homepage; everything after its own footer is legacy catalog content. */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banner,
-body[data-reference-style="v1"][data-fl-section="home"] #student-offers,
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-compare,
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-downloads,
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-faq,
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-methodology{display:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .catalog-content>.footer,
-body[data-reference-style="v1"][data-fl-section="home"] .catalog-content>.footer-legal{display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~*{display:none!important}
 
 /* hero */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{
@@ -302,6 +290,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle i
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle i::after{
   content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.14);
 }
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-original-note{height:30px;padding:0 10px;display:inline-flex;align-items:center;border:1px solid #d5efe4;border-radius:15px;background:#eef9f4;color:#21815f;font-size:10px;font-weight:650;white-space:nowrap}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics>a{color:#1169ef;font-size:12px;font-weight:650;white-space:nowrap;flex:0 0 auto}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{
@@ -316,7 +305,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-heat{
   position:absolute;z-index:2;left:8px;top:8px;height:22px;padding:0 9px;display:flex;align-items:center;gap:3px;border-radius:11px;background:#fff;color:#3c4d6b;font-size:11px;font-weight:700;box-shadow:0 3px 8px rgba(32,80,145,.14)
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card h3{
-  margin:0 0 8px!important;color:#101a32!important;font-size:14px!important;line-height:1.42!important;letter-spacing:-.01em!important;min-height:40px;
+  margin:0 0 8px!important;color:#101a32!important;font-size:14px!important;line-height:1.42!important;letter-spacing:-.01em!important;min-height:40px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-meta{color:#7184a4;font-size:10.5px;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-meta .pm{
@@ -353,8 +342,9 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-fresh-heading
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs{
   display:flex;align-items:center;gap:10px;margin:7px 0 9px;overflow:hidden;
 }
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs button{
-  height:30px;padding:0 15px;border:1px solid #dfe8f4;border-radius:15px;background:#fff;color:#526b91;font-size:11px;white-space:nowrap;
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs button,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs>a{
+  height:30px;padding:0 15px;border:1px solid #dfe8f4;border-radius:15px;background:#fff;color:#526b91;font-size:11px;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs .active{background:#1390ff;border-color:#1390ff;color:#fff}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -410,9 +400,6 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banne
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banner em{
   font:italic 700 12px/1.35 "Segoe Print","Comic Sans MS",cursive;color:#0a77ef;transform:rotate(-6deg);text-align:center;
 }
-
-/* keep the verified catalog below the approved first-screen design */
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-offers{margin-top:22px!important}
 
 /* responsive fallback without changing other pages */
 @media(max-width:1100px) and (min-width:801px){
@@ -627,7 +614,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics>span i svg{width:11px;height:11px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics small{font-size:6.5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics b{font-size:10px}
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle{width:auto;height:30px;gap:4px;font-size:7px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-original-note{height:21px;padding:0 6px;font-size:6.5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle i{width:29px;height:17px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle i::after{width:13px;height:13px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics>a{font-size:8px}
@@ -648,7 +635,8 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-fresh-heading h2 span{margin-left:14px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-fresh-heading button{height:24px;padding:0 9px;border-radius:7px;font-size:8px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs{gap:5px;margin:5px 0 7px}
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs button{height:23px;padding:0 8px;border-radius:12px;font-size:8px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs button,
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-tabs>a{height:23px;padding:0 8px;border-radius:12px;font-size:8px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-grid{gap:7px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-card{height:130px;padding:8px 7px 5px 12px;border-radius:8px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-head{gap:8px}
@@ -674,13 +662,3 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-categories,
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-updates{margin-top:12px}
 }
-
-/* Catalog seam: the live offer grid stays functional below the board flow,
-   restyled to the board language (tabs above already cover category filtering). */
-body[data-reference-style="v1"][data-fl-section="home"] #catalog-offers{margin:30px 0 6px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .offers-heading .eyebrow{display:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .offers-heading > div > p{display:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .offers-heading h2{margin:0 0 4px!important;font-size:30px!important;letter-spacing:-.03em!important}
-body[data-reference-style="v1"][data-fl-section="home"] .offers-heading{margin:0 0 12px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;justify-content:space-between!important}
-body[data-reference-style="v1"][data-fl-section="home"] .filter-strip{display:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .table-wrap{border:0!important;background:none!important;box-shadow:none!important;padding:0!important}

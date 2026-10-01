@@ -1,0 +1,54 @@
+/* Shared navigation layout primitives. Page themes provide colors and sizing. */
+.fl-site-rail,
+.fl-site-ribbon {
+  box-sizing: border-box;
+}
+
+.fl-site-rail *,
+.fl-site-ribbon * {
+  box-sizing: inherit;
+}
+
+.fl-site-rail {
+  display: flex;
+  flex-direction: column;
+}
+
+.fl-site-brand,
+.fl-site-nav > a,
+.fl-site-ribbon,
+.fl-site-ribbon-actions,
+.fl-site-theme-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.fl-site-brand {
+  gap: 10px;
+  text-decoration: none;
+}
+
+.fl-site-brand-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fl-site-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.fl-site-nav > a {
+  gap: 10px;
+  text-decoration: none;
+}
+
+.fl-site-ribbon {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fl-site-ribbon-actions {
+  gap: 12px;
+}

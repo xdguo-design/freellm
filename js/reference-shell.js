@@ -14,7 +14,7 @@
       tools: ['搜索工具、功能、场景…', '提交资源', '/submit/'],
       workflow: ['搜索模型、工具、Skills 或任何你感兴趣的 AI 资源...', '浏览 Skills', '/skills/'],
       logs: ['搜索今天的新增、恢复或下线记录…', '查看资源', '/'],
-      about: ['搜索 FreeLLM 的模型、工具和 Skills…', '提交资源', '/submit/']
+      about: ['搜索模型、工具、Skills 或任何你感兴趣的 AI 资源…', '提交资源', '/submit/']
     }[section] || ['搜索 FreeLLM…', '查看资源', '/'];
 
     const topbar = document.createElement('div');
@@ -69,11 +69,15 @@ if (section === 'home' || section === 'models') {
       }
     };
     topInput.addEventListener('keydown', event => { if (event.key === 'Enter') sync(); });
-    document.addEventListener('keydown', event => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault(); topInput.focus();
-      }
-    });
+    if (!window.__freellmReferenceShortcutBound) {
+      window.__freellmReferenceShortcutBound = true;
+      document.addEventListener('keydown', event => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+          const activeSearch = document.querySelector('.ref-topbar input');
+          if (activeSearch) { event.preventDefault(); activeSearch.focus(); }
+        }
+      });
+    }
 
     if (section === 'home') {
       const hero = document.querySelector('.catalog-hero');
@@ -115,89 +119,7 @@ if (section === 'home' || section === 'models') {
         footerNav.append(' · ', trigger);
       }
     }
-    if (section === 'about') {
-      const header = body.querySelector(':scope > header');
-      if (header && !header.querySelector('.about-reference-art')) {
-        const art = document.createElement('img');
-        art.className = 'about-reference-art';
-        art.src = '/assets/reference/about-hero-prototype.png';
-        art.alt = '';
-        art.setAttribute('aria-hidden', 'true');
-        header.appendChild(art);
-      }
-      if (header && !document.querySelector('.ref-value-row')) {
-        const row = document.createElement('section');
-        row.className = 'ref-value-row';
-        row.innerHTML = '<article class="ref-value"><i>♟</i><div><strong>开放共享</strong><span>打破信息壁垒，共享优质资源</span></div></article><article class="ref-value"><i>✓</i><div><strong>真实可靠</strong><span>人工验证与社区共建，确保可用可信</span></div></article><article class="ref-value"><i>♥</i><div><strong>社区共建</strong><span>汇聚全球开发者与 AI 爱好者的力量</span></div></article>';
-        header.insertAdjacentElement('afterend', row);
-      }
-      const values = document.querySelector('.ref-value-row');
-      if (values && !document.querySelector('.about-quote')) {
-        const quote = document.createElement('section');
-        quote.className = 'about-quote';
-        quote.innerHTML = '<span aria-hidden="true">“</span><p>我们相信，AI 的价值不只属于少数人，而应属于每一个对未来充满好奇的人。</p><small>— FreeLLM 团队</small><b aria-hidden="true">”</b>';
-        values.insertAdjacentElement('afterend', quote);
-      }
-      const statRow = document.querySelector('body[data-fl-section="about"] .stat-row');
-      if (statRow && !document.querySelector('.about-status')) {
-        const status = document.createElement('section');
-        status.className = 'about-status';
-        status.innerHTML = '<div class="about-status-heading"><h2>FreeLLM 现状</h2><span>持续收录和验证全球优质的 AI 资源</span><small>数据统计截至 2026年9月30日</small></div>';
-        status.appendChild(statRow);
-        document.querySelector('.about-quote')?.insertAdjacentElement('afterend', status);
-      }
-      const main = document.querySelector('body[data-fl-section="about"]>main');
-      if (main && !main.querySelector('.about-community')) {
-        const community = document.createElement('section');
-        community.className = 'about-community';
-        community.innerHTML = '<div class="about-community-heading"><h2>社区共建与问题反馈</h2><span>帮助我们做得更好</span></div><div class="about-community-grid"><article><i>…</i><div><h3>发现问题？</h3><p>如果您发现资源无法访问、信息有误或有新的优质资源推荐，欢迎通过以下方式联系我们。</p><a href="/logs/">提交反馈 →</a></div></article><article><i>✉</i><div><h3>联系我们</h3><p>有任何建议、合作意向或其他问题，欢迎通过邮件与我们联系。</p><a href="mailto:xdguo0527@gmail.com">发送邮件 →</a></div></article></div>';
-        main.appendChild(community);
-      }
-      if (main && !main.querySelector('.about-reason-grid')) {
-        const sections = main.querySelectorAll(':scope > section');
-        if (sections[0]) sections[0].insertAdjacentHTML('beforeend', '<div class="about-reason-grid"><article><i>➤</i><h3>信息分散，难以查找</h3><p>优质的免费 AI 资源散落在各个平台、社区和文档中，用户要跨页面、及时地找到适合自己的资源。</p></article><article><i>▤</i><h3>信息过时，真假难辨</h3><p>很多资源已失效或限制变更，用户需要花费大量时间验证可用性。</p></article><article><i>♟</i><h3>降低 AI 使用门槛</h3><p>通过系统化的收集、验证和整理，让更多人能够轻松找到并使用优质的 AI 资源。</p></article></div>');
-        if (sections[2]) sections[2].insertAdjacentHTML('beforeend', '<div class="about-update-steps"><article><i>♟</i><h3>自动监控</h3><p>每日自动检查官方页面，检测资源的可用性和变更。</p></article><b>→</b><article><i>♟</i><h3>人工验证</h3><p>重要变更由人工再次验证，确保信息准确无误。</p></article><b>→</b><article><i>▤</i><h3>更新发布</h3><p>通过审核后，及时更新到网站。</p></article><b>→</b><article><i>◷</i><h3>公开日志</h3><p>所有重要变更都会在更新页面公示。</p></article></div>');
-        if (sections[3]) sections[3].insertAdjacentHTML('beforeend', '<div class="about-independence-grid"><article><i>▤</i><h3>不接受付费收录</h3><p>所有资源均基于公开信息收录，不接受任何形式的付费收录。</p></article><article><i>▥</i><h3>不进行商业排名</h3><p>网站不做商业排名，所有资源按照分类和更新时间展示。</p></article><article><i>⬟</i><h3>广告与内容分离</h3><p>网站使用 Google AdSense 进行展示广告，广告位与目录内容严格分离。</p></article></div>');
-      }
-    }
-
-    if (section === 'logs') {
-      const dashboard = body.querySelector('.daily-log-dashboard');
-      const hero = dashboard?.querySelector('.log-hero');
-      if (hero && !dashboard.querySelector('.ref-update-metrics')) {
-        const title = hero.querySelector('h1 [lang="zh-CN"]');
-        if (title) title.textContent = '今日更新，发现 AI 新可能';
-        const lead = hero.querySelector('.lead [lang="zh-CN"]');
-        if (lead) lead.textContent = '我们持续追踪全球 AI 生态的最新动态，为你筛选真正有价值的更新，让先进的 AI 触手可及。';
-        const metrics = document.createElement('section');
-        metrics.className = 'ref-update-metrics';
-        metrics.innerHTML = '<article><i>▣</i><span>今日新增</span><strong>1</strong><small>全新路径加入资源目录</small></article><article><i>⬟</i><span>今日恢复</span><strong>0</strong><small>持续检查可用性</small></article><article><i>▦</i><span>最新模型</span><strong>234</strong><small>已收录模型记录</small></article><article><i>⌁</i><span>最新工具</span><strong>68</strong><small>免费与试用资源</small></article><article><i>♨</i><span>即时变动</span><strong>3</strong><small>今日确认下线</small></article>';
-        hero.insertAdjacentElement('afterend', metrics);
-        const highlights = document.createElement('section');
-        highlights.className = 'ref-update-highlights';
-        highlights.innerHTML = '<div class="ref-update-feature"><h2>最近 24 小时重点</h2><div><article><b>OpenAI</b><strong>今日资源目录更新</strong><p>持续追踪官方来源，记录新增、恢复与状态变化。</p><small>免费资源　API　开发者友好</small></article><article><b>Anthropic</b><strong>来源状态已核验</strong><p>每日检查官方来源，保留可验证的资源信息。</p><small>模型　官方来源　可用性</small></article><article><b>Google</b><strong>模型资源持续更新</strong><p>收录最新模型和免费使用入口，方便快速核对。</p><small>多模态　API　生产力</small></article></div></div><aside class="ref-update-credibility"><h2>本周更新概览</h2><div class="ref-update-bars"><i style="height:35%"></i><i style="height:48%"></i><i style="height:61%"></i><i style="height:82%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:36%"></i></div><p><b>234</b> 本周目录记录　<strong>+28%</strong> 环比上周</p><h3>来源可信度</h3><p>OpenAI　━━━━　98%</p><p>Anthropic　━━━━　96%</p><p>Google　━━━━　94%</p></aside>';
-        metrics.insertAdjacentElement('afterend', highlights);
-      }
-      const legacyFooter = dashboard?.querySelector('.log-footer');
-      const logDays = dashboard?.querySelector('.log-days');
-      if (logDays && !dashboard.querySelector('.ref-update-history')) {
-        logDays.hidden = true;
-        const history = document.createElement('section');
-        history.className = 'ref-update-history';
-        history.innerHTML = '<div class="ref-update-history-head"><div><h2>2026-09-29 新增详情（4）</h2><p>目录变更与来源状态记录</p></div><button type="button">综合排序　⌄</button></div><div class="ref-update-history-table"><div class="row head"><span>资源名称</span><span>类型</span><span>Provider</span><span>更新时间</span><span>状态</span><span>报告</span></div><div class="row"><b>minimax-m3</b><span>模型</span><span>LLM7</span><span>2026-09-29 14:32</span><strong>已验证</strong><a href="#log-day-2026-09-29">查看详情　→</a></div><div class="row"><b>GLM-5.3-Flash</b><span>模型</span><span>LLM7</span><span>2026-09-29</span><strong>确认下线</strong><a href="#log-day-2026-09-29">查看详情　→</a></div><div class="row"><b>mistral-nemotron</b><span>模型</span><span>NVIDIA</span><span>2026-09-29</span><strong>确认下线</strong><a href="#log-day-2026-09-29">查看详情　→</a></div><div class="row"><b>inclusionAI: Ling 3.0 Flash Fin (free)</b><span>模型</span><span>OpenRouter</span><span>2026-09-29</span><strong>确认下线</strong><a href="#log-day-2026-09-29">查看详情　→</a></div><div class="row"><b>模型来源</b><span>来源</span><span>FreeLLM</span><span>2026-09-29</span><strong>正常运行</strong><a href="#log-day-2026-09-29">查看详情　→</a></div><div class="row"><b>资源来源</b><span>来源</span><span>FreeLLM</span><span>2026-09-29</span><strong>正常运行</strong><a href="#log-day-2026-09-29">查看详情　→</a></div></div>';
-        logDays.insertAdjacentElement('afterend', history);
-      }
-      if (legacyFooter && !dashboard.querySelector('.ref-update-extras')) {
-        const extras = document.createElement('section');
-        extras.className = 'ref-update-extras';
-        extras.innerHTML = '<article><h2>更新机制说明</h2><p>我们每天从官方来源抓取数据，开发者和社区伙伴核验最新 AI 模型、工具和优惠信息，经过自动化抓取、人工审核和可用性验证后发布。</p><ul><li>自动抓取　多源信息收集</li><li>人工审核　质量与安全审核</li><li>可用性验证　实际访问与检测</li><li>每日更新　北京时间 8:00</li></ul></article><article><h2>订阅更新通知</h2><p>第一时间获取最新的 AI 更新、优惠活动和折扣信息。</p><label>输入您的邮箱地址　　<button type="button">立即订阅</button></label><small>□ 重要更新　□ 限时优惠　□ 每周摘要</small></article>';
-        legacyFooter.insertAdjacentElement('beforebegin', extras);
-        const panels = document.createElement('section');
-        panels.className = 'ref-update-bottom';
-        panels.innerHTML = '<article><h2>来源健康状态</h2><p>OpenAI　正常　━━━━　99%</p><p>Anthropic　正常　━━━━　98%</p><p>Google　正常　━━━━　97%</p><p>阿里云　正常　━━━━　96%</p><p>DeepSeek　正常　━━━━　95%</p></article><article><h2>FreeLLM 自测 / Test</h2><p>GPT-4o mini　320ms　可用</p><p>Claude 3.5 Haiku　410ms　可用</p><p>Gemini 1.5 Flash　530ms　可用</p><p>Qwen2.5 72B　620ms　可用</p><button type="button">开始自测　→</button></article><article><h2>历史更新　2026年9月</h2><div class="ref-update-calendar">一　二　三　四　五　六　日<br>　　1　2　3　4　5　6<br>7　8　9　10　11　12　13<br>14　15　16　17　18　19　20<br>21　22　23　24　25　26　27<br>28　29　30</div><small>● 有更新　● 重要更新　● 限时活动</small></article>';
-        extras.insertAdjacentElement('beforebegin', panels);
-      }
-    }
+    // Render the generated daily-log archive as-is; do not replace it with demo update cards.
 
     if (['tools', 'workflow', 'logs', 'about'].includes(section) && !document.querySelector('.prototype-footer')) {
       const legacyFooter = section === 'about'
@@ -206,7 +128,10 @@ if (section === 'home' || section === 'models') {
       if (legacyFooter) {
         const footer = document.createElement('footer');
         footer.className = 'prototype-footer';
-        footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具箱</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/about/">使用说明</a><a href="/submit/">提交资源</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2024 FreeLLM. All rights reserved.</span><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub">●</a><span aria-label="Twitter">♥</span><span aria-label="Discord">◈</span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
+        footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具箱</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/about/">使用说明</a><a href="/submit/">提交资源</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2024 FreeLLM. All rights reserved.</span><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub">●</a><span aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
+        if (section === 'about') {
+          footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/skills/">Skills</a><a href="/tools/">工具</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/guide/">使用教程</a><a href="https://github.com/xdguo-design/freellm">开发文档</a><a href="/category/student/">学生优惠</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/community/">加入社区</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2024 FreeLLM. All rights reserved.</span><nav class="prototype-footer-legal"><a href="/privacy/">隐私政策</a><a href="/terms/">服务条款</a><a href="/terms/#disclaimer">免责声明</a></nav><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.54 2.36 1.1 2.94.84.09-.65.35-1.1.64-1.36-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.91c.85 0 1.71.11 2.52.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a><span aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
+        }
         legacyFooter.classList.add('prototype-legacy-footer');
         legacyFooter.insertAdjacentElement('afterend', footer);
         const locale = footer.querySelector('[data-locale-switch]');
@@ -220,7 +145,7 @@ if (section === 'home' || section === 'models') {
       }
     }
 
-    if (section === 'logs' || section === 'about') {
+    if (section === 'logs' || (section === 'about' && body.dataset.aboutStatic !== 'true')) {
       const page = section === 'logs'
         ? body.querySelector(':scope > .daily-log-dashboard')
         : body.querySelector(':scope > main');
@@ -242,15 +167,20 @@ if (section === 'home' || section === 'models') {
         footer.style.setProperty('max-width', 'none', 'important');
         footer.style.setProperty('margin', '0', 'important');
       }
-      if (section === 'about') {
-        const status = body.querySelector('.about-status');
-        if (status) status.style.setProperty('min-height', '186px', 'important');
-        const main = body.querySelector(':scope > main');
-        if (main) main.style.setProperty('gap', '28px', 'important');
-        main?.querySelectorAll(':scope > section').forEach((card, index) => {
-          card.style.setProperty('min-height', ['153px','184px','166px','131px','164px'][index] || '164px', 'important');
-        });
-        if (footer) footer.style.setProperty('min-height', '230px', 'important');
+    }
+    if (section === 'about' && body.dataset.aboutStatic === 'true') {
+      const page = body.querySelector(':scope > .about-page');
+      if (page) {
+        page.style.setProperty('box-sizing', 'border-box', 'important');
+        page.style.setProperty('position', 'relative', 'important');
+        page.style.setProperty('left', '0', 'important');
+        const compact = window.innerWidth <= 740;
+        page.style.setProperty('width', compact ? 'calc(100vw - 142px)' : 'calc(100vw - 160px)', 'important');
+        page.style.setProperty('max-width', 'none', 'important');
+        page.style.setProperty('margin', compact ? '5px 10px 0 132px' : '5px 18px 0 142px', 'important');
+        page.style.setProperty('padding', '0 0 16px', 'important');
+        page.style.setProperty('display', 'block', 'important');
+        page.style.setProperty('gap', '0', 'important');
       }
     }
     if (section === 'workflow') {
@@ -303,7 +233,10 @@ if (section === 'home' || section === 'models') {
     skills.sort((a,b)=>(showcaseRank.get(a.id) ?? showcaseOrder.length)-(showcaseRank.get(b.id) ?? showcaseOrder.length));
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const counts = Object.fromEntries(skills.map(item => [item.id, showcase[item.id] || null]));
+    const workspace = page.querySelector('.skills-workspace');
+    const detailPanel = document.getElementById('selected-skill-panel');
     let selectedId = skills[0]?.id || '';
+    let panelOpen = false;
     let view = 'grid';
     let showAllSkills = false;
     const filtered = () => {
@@ -335,7 +268,7 @@ if (section === 'home' || section === 'models') {
       const rating = item?.rating || (skill.freeLLMTest?.score ? Number(skill.freeLLMTest.score).toFixed(1) : '4.8');
       const owner = item?.owner || (skill.repoStats?.owner || 'Open Source');
       const icon = item?.icon || 'default';
-      const active = selectedId === skill.id;
+      const active = panelOpen && selectedId === skill.id;
       return `<article class="skill-card showcase-card${active?' is-selected':''}" data-skill-id="${copy(skill.id)}" data-category="${copy(skill.category)}" data-status="${copy(skill.status)}" tabindex="0" aria-label="${copy(title)}：${copy(description)}"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="${icon}" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="${copy(skill.id)}" aria-label="选择 ${copy(title)}">${active?'✓':'＋'}</button></div><h3>${copy(title)}</h3><p>${copy(description)}</p><div class="skill-card-tags">${tags.map(tag=>`<span>${copy(tag)}</span>`).join('')}</div><div class="skill-card-metrics"><span>♨ ${copy(usage)}</span><span>★ ${copy(rating)}</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-${icon}" aria-hidden="true"></span><span>${copy(owner)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${copy(skill.id)}" aria-label="查看 ${copy(title)} 详情">⋮</button></div></article>`;
     };
     const updatePanel = skill => {
@@ -357,8 +290,8 @@ if (section === 'home' || section === 'models') {
       document.getElementById('detail-favorite').dataset.skillId = skill.id;
       const models = (skill.compatibility || []).slice(0,3);
       if (models.length) document.getElementById('detail-models').innerHTML = models.map((model,index)=>`<span>${['◉','▣','✦'][index%3]} ${copy(model)}</span>`).join('');
-      grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', node.dataset.skillId === skill.id));
-      grid.querySelectorAll('.skill-card-select').forEach(node => { const active=node.dataset.selectSkill===skill.id; node.textContent=active?'✓':'＋'; node.setAttribute('aria-pressed',String(active)); });
+      grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', panelOpen && node.dataset.skillId === skill.id));
+      grid.querySelectorAll('.skill-card-select').forEach(node => { const active=panelOpen && node.dataset.selectSkill===skill.id; node.textContent=active?'✓':'＋'; node.setAttribute('aria-pressed',String(active)); });
     };
     const render = () => {
       const matches = filtered();
@@ -367,7 +300,7 @@ if (section === 'home' || section === 'models') {
         (page.dataset.skillCategory || 'all') !== 'all' ||
         (document.getElementById('skill-sort')?.value || 'recommended') !== 'recommended' ||
         view === 'list';
-      const visible = !showAllSkills && !hasFilters ? matches.slice(0, 12) : matches;
+      const visible = !showAllSkills && !hasFilters ? matches.slice(0, 8) : matches;
       grid.innerHTML = visible.map(card).join('');
       document.getElementById('skill-empty').hidden = matches.length > 0;
       document.getElementById('skill-count').textContent = `显示 ${visible.length} / ${matches.length}`;
@@ -405,6 +338,9 @@ if (section === 'home' || section === 'models') {
       const cardNode = event.target.closest('.skill-card');
       if (!cardNode) return;
       const skill = skills.find(item => item.id === cardNode.dataset.skillId);
+      panelOpen = true;
+      workspace?.classList.add('has-detail');
+      detailPanel?.classList.remove('is-collapsed');
       updatePanel(skill);
       grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', node === cardNode));
     });
@@ -426,7 +362,13 @@ if (section === 'home' || section === 'models') {
       try { localStorage.setItem(key,JSON.stringify(ids)); } catch {}
       button.classList.toggle('is-favorite',ids.includes(id)); button.textContent=ids.includes(id)?'♥':'♡';
     });
-    document.querySelector('.skills-detail-close')?.addEventListener('click',()=>document.getElementById('selected-skill-panel').classList.toggle('is-collapsed'));
+    document.querySelector('.skills-detail-close')?.addEventListener('click',()=>{
+      panelOpen = false;
+      workspace?.classList.remove('has-detail');
+      detailPanel?.classList.add('is-collapsed');
+      grid.querySelectorAll('.skill-card').forEach(node => node.classList.remove('is-selected'));
+      grid.querySelectorAll('.skill-card-select').forEach(node => { node.textContent='＋'; node.setAttribute('aria-pressed','false'); });
+    });
     document.querySelector('[data-skills-intro]')?.addEventListener('click',()=>{
       document.getElementById('skills-intro-notice')?.showModal();
     });
@@ -435,6 +377,8 @@ if (section === 'home' || section === 'models') {
     const accountNotice=document.createElement('div'); accountNotice.id='skills-account-notice'; accountNotice.className='skills-toast'; accountNotice.setAttribute('role','status'); accountNotice.hidden=true; page.append(accountNotice);
     render();
   };
+  window.FreeLLMReferenceShell = { mount: boot };
+  window.addEventListener('freellm:page-mount', boot);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();
 })();

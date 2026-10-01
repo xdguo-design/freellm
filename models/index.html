@@ -175,8 +175,8 @@ pre code { padding:0; background:none; color:inherit; }
 .models-overview-grid h2{margin:0 0 8px;font-size:22px}@media(max-width:700px){.models-overview-grid{grid-template-columns:1fr}}
 </style><link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b"><link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
 <link rel="stylesheet" href="/css/aurora-models.css?v=20260929b"><link rel="stylesheet" href="/css/reference-ui.css?v=20261001f">
-<link rel="stylesheet" href="/css/model-library-prototype.css?v=20261001h"><link rel="stylesheet" href="/css/reference-rail.css?v=20260930e">
-</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="ml-rail-theme" aria-label="主题切换"><button class="is-active" type="button" data-ml-theme="light" aria-label="浅色主题">☀</button><button type="button" data-ml-theme="dark" aria-label="深色主题">☾</button></div><div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You...</div><div class="ml-rail-footer"><strong>FreeLLM</strong>让优质的 AI 资源<br>触手可及。</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview model-library-hero" id="fl-main-content">
+<link rel="stylesheet" href="/css/model-library-prototype.css?v=20261001h"><link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><link rel="stylesheet" href="/css/reference-rail.css?v=20260930-navfont3">
+</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="models" data-visual-style="aurora" data-reference-style="v1"><script src="/js/site-navigation.js?v=20261001d"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="ml-rail-theme" aria-label="主题切换"><button class="is-active" type="button" data-ml-theme="light" aria-label="浅色主题">☀</button><button type="button" data-ml-theme="dark" aria-label="深色主题">☾</button></div><div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You...</div><div class="ml-rail-footer"><strong>FreeLLM</strong>让优质的 AI 资源<br>触手可及。</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><header class="models-overview model-library-hero" id="fl-main-content">
 <div class="ml-hero-copy">
 <div class="eyebrow">模型</div>
 <h1>模型库</h1>
@@ -236,7 +236,7 @@ pre code { padding:0; background:none; color:inherit; }
 </article>
 
 <nav class="ml-category-tabs" aria-label="模型类别">
-<button class="active" type="button" data-category="">全部模型 <span id="ml-total">(300+)</span></button>
+<button class="active" type="button" data-category="">免费模型入口 <span id="ml-total">(…)</span></button>
 <button type="button" data-category="text">语言模型</button>
 <button type="button" data-category="multimodal">多模态模型</button>
 <button type="button" data-category="image">图像模型</button>
@@ -258,111 +258,8 @@ pre code { padding:0; background:none; color:inherit; }
 <path id="i-flame" d="M12 2c.8 3.2-.6 5-2.2 6.8C8 10.7 6.5 12.6 6.5 15.5A5.5 5.5 0 0 0 12 21a5.5 5.5 0 0 0 5.5-5.5c0-2.3-1-4.1-2.3-5.8C13.8 7.8 12.6 5 12 2z"/>
 <path id="i-crown" d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.6 10H4.6L3 8zm2.2 12h13.6v2H5.2v-2z"/>
 </defs></svg>
-<div class="ml-card-grid" id="ml-card-grid" aria-live="polite">
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-openai" aria-hidden="true"><svg viewBox="0 0 28 28"><use href="#mk-openai"/></svg></span>
-<div class="ml-card-id"><small>OpenAI</small><h3>GPT-4o mini</h3></div>
-<span class="ml-card-flag"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg>热门</span>
-</div>
-<p class="ml-card-desc">强大的多模态模型，兼具高性能与低成本，适合广泛的场景。</p>
-<div class="ml-card-tags"><span>多模态</span><span>128K</span><span>商业授权</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.8</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>128.3k</span>
-<span class="stat-bolt"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>低延迟</span>
-</div>
-<a class="ml-card-cta" href="/models/all/">立即使用 <i>→</i></a>
-</div>
-</article>
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-claude" aria-hidden="true">A\</span>
-<div class="ml-card-id"><small>Anthropic</small><h3>Claude 3.5 Haiku</h3></div>
-<span class="ml-card-flag"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg>热门</span>
-</div>
-<p class="ml-card-desc">新一代高效语言模型，在推理、创作和代码方面表现出色。</p>
-<div class="ml-card-tags"><span>文本</span><span>200K</span><span>商业授权</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.7</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>96.5k</span>
-<span class="stat-bolt"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>稳定</span>
-</div>
-<a class="ml-card-cta" href="/models/all/">立即使用 <i>→</i></a>
-</div>
-</article>
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-google" aria-hidden="true"><svg viewBox="0 0 48 48"><use href="#mk-google"/></svg></span>
-<div class="ml-card-id"><small>Google</small><h3>Gemini 1.5 Flash</h3></div>
-<span class="ml-card-flag flag-blue"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg>热门</span>
-</div>
-<p class="ml-card-desc">支持超长上下文的多模态模型，适用于复杂推理和多媒体任务。</p>
-<div class="ml-card-tags"><span>多模态</span><span>1M</span><span>商业授权</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.6</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>89.1k</span>
-<span class="stat-bolt green-text"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>高性价比</span>
-</div>
-<a class="ml-card-cta" href="/models/all/">立即使用 <i>→</i></a>
-</div>
-</article>
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-qwen" aria-hidden="true"><svg viewBox="0 0 28 28"><use href="#mk-qwen"/></svg></span>
-<div class="ml-card-id"><small>通义千问</small><h3>Qwen2.5 72B</h3></div>
-<span class="ml-card-flag flag-red"><svg viewBox="0 0 24 24"><use href="#i-flame"/></svg>推荐</span>
-</div>
-<p class="ml-card-desc">阿里云开源的大语言模型，在中文能力和复杂任务上表现优异。</p>
-<div class="ml-card-tags"><span>文本</span><span>128K</span><span>Apache 2.0</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.7</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>76.4k</span>
-<span class="stat-bolt"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>稳定</span>
-</div>
-<a class="ml-card-cta" href="/models/all/">立即使用 <i>→</i></a>
-</div>
-</article>
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-deepseek" aria-hidden="true"><svg viewBox="0 0 28 28"><use href="#mk-deepseek"/></svg></span>
-<div class="ml-card-id"><small>DeepSeek</small><h3>DeepSeek V3</h3></div>
-<span class="ml-card-flag flag-red"><svg viewBox="0 0 24 24"><use href="#i-flame"/></svg>热门</span>
-</div>
-<p class="ml-card-desc">高性能开源模型，在数学、代码和中文理解方面表现出色。</p>
-<div class="ml-card-tags"><span>文本</span><span>128K</span><span>MIT</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.8</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>102.6k</span>
-<span class="stat-bolt"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>低延迟</span>
-</div>
-<a class="ml-card-cta" href="/models/all/">立即使用 <i>→</i></a>
-</div>
-</article>
-<article class="ml-model-card">
-<div class="ml-card-head">
-<span class="ml-logo logo-mimo" aria-hidden="true">M</span>
-<div class="ml-card-id"><small>MiMo</small><h3>MiMo V2.6 Flash</h3></div>
-<span class="ml-card-flag flag-purple"><svg viewBox="0 0 24 24"><use href="#i-crown"/></svg>限时免费</span>
-</div>
-<p class="ml-card-desc">支持 1M 超长上下文的多模态模型，开源开放，限时免费体验。</p>
-<div class="ml-card-tags"><span>多模态</span><span>1M</span><span>Apache 2.0</span></div>
-<div class="ml-card-foot">
-<div class="ml-card-stats">
-<span><svg viewBox="0 0 24 24" fill="#f5a623"><use href="#i-star"/></svg>4.9</span>
-<span><svg viewBox="0 0 24 24" fill="#8194ad"><use href="#i-thumb"/></svg>45.8k</span>
-<span class="stat-bolt green-text"><svg viewBox="0 0 24 24" fill="#1f9d61"><use href="#i-bolt"/></svg>限免中</span>
-</div>
-<a class="ml-card-cta" href="/models/mimo-v2-6-flash/">立即使用 <i>→</i></a>
-</div>
-</article>
-</div>
-<div class="ml-load-more-wrap"><a class="ml-load-more" href="/models/all/">打开完整模型目录 <span>→</span></a></div>
+<div class="ml-card-grid" id="ml-card-grid" aria-live="polite" aria-busy="true"><p class="ml-empty-state">正在加载可用模型入口…</p></div>
+<div class="ml-load-more-wrap"><button class="ml-load-more" id="ml-load-more" type="button" hidden>加载更多模型 ↓</button></div>
 </div>
 
 <aside class="ml-sidebar">
@@ -386,10 +283,9 @@ pre code { padding:0; background:none; color:inherit; }
 <div class="ml-data-note">模型数据与免费入口分开统计。免费资格、地区和速率可能变化，请以官方来源为准。</div>
 </aside>
 </section>
-</main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260930a"></script>
+</main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p><p><a href="/about/"><span lang="zh-CN">关于本站</span><span lang="en">About</span></a> · <a href="/links/"><span lang="zh-CN">友链与相关资源</span><span lang="en">Links</span></a> · <a href="/terms/"><span lang="zh-CN">使用条款与免责声明</span><span lang="en">Terms &amp; Disclaimer</span></a> · <a href="/privacy/"><span lang="zh-CN">隐私政策（含广告 Cookie 说明）</span><span lang="en">Privacy Policy (incl. ad cookies)</span></a></p></footer><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20260930a"></script><script src="/js/model-offer-cards.js?v=20261001c" defer></script>
 <script>
-/* Static model-library prototype: the design board content is rendered server-side/statically.
-   Only the rail theme toggle and the panel clear buttons stay interactive. */
+/* Model-entry cards load from the canonical offer data; the theme and panel controls stay local. */
 (() => {
   document.querySelectorAll('[data-ml-theme]').forEach((button) => {
     button.addEventListener('click', () => {
