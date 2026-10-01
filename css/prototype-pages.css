@@ -898,9 +898,8 @@ html body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-calenda
 html body[data-reference-style="v1"][data-fl-section="logs"] .prototype-footer-main{grid-template-columns:1.2fr .7fr .5fr .5fr 1.6fr!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-bottom{margin-top:18px!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"] > .daily-log-dashboard{padding-bottom:1px!important;}
-html body[data-reference-style="v1"][data-fl-section="logs"]{--fl-menu-rail-width:120px!important;--prototype-rail:120px!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"]::-webkit-scrollbar{width:0!important;height:0!important;}
-html body[data-reference-style="v1"][data-fl-section="logs"]>.daily-log-dashboard{width:calc(100vw - 120px)!important;margin-left:120px!important;}
+html body[data-reference-style="v1"][data-fl-section="logs"]>.daily-log-dashboard{width:calc(100vw - var(--fl-menu-rail-width))!important;margin-left:var(--fl-menu-rail-width)!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"] .log-hero::after{width:74%!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-layout .ref-update-feature{min-height:215px!important;padding-top:12px!important;}
 html body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-layout .ref-update-feature h2{margin-bottom:10px!important;}

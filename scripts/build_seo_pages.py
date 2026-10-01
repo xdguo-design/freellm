@@ -5620,7 +5620,7 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
 
     updated = content
     if path == Path("logs/index.html"):
-        prototype_tag = '<link rel="stylesheet" href="/css/prototype-pages.css?v=20261001-updates1">'
+        prototype_tag = '<link rel="stylesheet" href="/css/prototype-pages.css?v=20261002a">'
         if "prototype-pages.css" not in updated and "</head>" in updated:
             updated = updated.replace("</head>", prototype_tag + "\n</head>", 1)
     body_match = re.search(r"<body([^>]*)>", updated, flags=re.I)

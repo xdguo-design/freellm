@@ -16,7 +16,7 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261001-updates9';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261002a';
   var updateIndicatorReady = false;
 
   function setUpdateIndicator(visible) {

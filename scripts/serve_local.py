@@ -21,6 +21,13 @@ class LocalSiteHandler(SimpleHTTPRequestHandler):
             path = HOME_DOCUMENT
         return super().translate_path(path)
 
+    def end_headers(self) -> None:
+        # Local preview must always reflect the working tree: without this the
+        # browser heuristically caches HTML/CSS and stale pages keep rendering
+        # after edits until a hard refresh.
+        self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
