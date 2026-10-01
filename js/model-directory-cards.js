@@ -40,18 +40,39 @@
       && (!modality || (model.modality || []).includes(modality))
       && contextMatches;
   };
+  const BRAND_TOKENS = { deepseek:'DeepSeek', glm:'GLM', kimi:'Kimi', qwen:'Qwen', mimo:'MiMo', gemma:'Gemma', gemini:'Gemini', llama:'Llama', mistral:'Mistral', llm:'LLM', api:'API', ai:'AI', tts:'TTS', ocr:'OCR', rag:'RAG', agi:'AGI', vlm:'VLM', coder:'Coder' };
+  const prettifyModel = (value) => {
+    const raw = String(value || '').trim();
+    if (!raw) return '未命名模型';
+    if (raw.includes('/') || /[\u4e00-\u9fff]/.test(raw)) return raw;
+    return raw.split(/[-_\s]+/).filter(Boolean).map((token) => {
+      const lower = token.toLowerCase();
+      if (BRAND_TOKENS[lower]) return BRAND_TOKENS[lower];
+      if (/^\d+(\.\d+)?[bkm]?$/i.test(token)) return token.toUpperCase();
+      return token.charAt(0).toUpperCase() + token.slice(1);
+    }).join(' ');
+  };
+  const markHue = (value) => {
+    const text = String(value || 'ai');
+    let hash = 0;
+    for (let i = 0; i < text.length; i += 1) hash = (hash * 31 + text.charCodeAt(i)) % 360;
+    return hash;
+  };
   const cardHtml = (model) => {
     const mark = String(model.provider || 'AI').trim().slice(0, 2).toUpperCase();
+    const hue = markHue(model.providerId || model.provider);
     const tier = model.tierType === 'limited' ? '限时免费' : model.tierType === 'trial' ? '免费试用' : model.isFree ? '免费 API' : '免费资源';
+    const tierClass = model.tierType === 'limited' ? 'is-limited' : model.tierType === 'trial' ? 'is-trial' : '';
     const modalities = (model.modality || []).filter((item) => item !== 'unknown').slice(0, 3).map(modalityLabel);
     const tags = [contextLabel(model.context), ...modalities, model.noCard ? '无需信用卡' : ''].filter(Boolean).slice(0, 4);
     const facts = [
-      model.score ? '<span class="ml-directory-score">指数 ' + esc(model.score) + '</span>' : '',
-      model.usageActivity && model.usageActivity !== '—' ? '<span>↗ ' + esc(model.usageActivity) + '</span>' : '',
+      model.score ? '<span class="ml-directory-score">热度 ' + esc(model.score) + '</span>' : '',
+      model.usageActivity && model.usageActivity !== '—' ? '<span>用量 ' + esc(model.usageActivity) + '</span>' : '',
       model.rateLimit ? '<span title="速率限制">⚡ ' + esc(model.rateLimit) + '</span>' : '',
     ].filter(Boolean).join('');
     const destination = /^https:\/\//i.test(model.directoryHref || '') ? model.directoryHref : 'https://freellm.net/models/';
-    return '<article class="ml-directory-card"><div class="ml-directory-card-head"><span class="ml-directory-provider-mark" aria-hidden="true">' + esc(mark) + '</span><div class="ml-directory-title"><small>' + esc(model.provider) + '</small><h3>' + esc(model.model) + '</h3></div><span class="ml-directory-badge ' + (model.tierType === 'limited' ? 'is-limited' : '') + '">' + tier + '</span></div><p>' + esc(model.description || '免费或试用模型入口，具体额度与使用条件请查看来源说明。') + '</p><div class="ml-directory-tags">' + tags.map((tag) => '<span>' + esc(tag) + '</span>').join('') + '</div><div class="ml-directory-card-footer"><span class="ml-directory-facts">' + facts + '</span><a href="' + esc(destination) + '" target="_blank" rel="noopener noreferrer">查看入口 <span aria-hidden="true">→</span></a></div></article>';
+    const markStyle = 'style="background:linear-gradient(145deg,hsl(' + hue + ',78%,95%),hsl(' + hue + ',68%,86%));color:hsl(' + hue + ',52%,36%)"';
+    return '<article class="ml-directory-card"><div class="ml-directory-card-head"><span class="ml-directory-provider-mark" ' + markStyle + ' aria-hidden="true">' + esc(mark) + '</span><div class="ml-directory-title"><small>' + esc(model.provider) + '</small><h3>' + esc(prettifyModel(model.model)) + '</h3></div><span class="ml-directory-badge ' + tierClass + '">' + tier + '</span></div><p>' + esc(model.description || '免费或试用模型入口，具体额度与使用条件请查看来源说明。') + '</p><div class="ml-directory-tags">' + tags.map((tag) => '<span>' + esc(tag) + '</span>').join('') + '</div><div class="ml-directory-card-footer"><span class="ml-directory-facts">' + facts + '</span><a href="' + esc(destination) + '" target="_blank" rel="noopener noreferrer">立即使用 <span aria-hidden="true">→</span></a></div></article>';
   };
   const pageItems = (page, pageCount) => {
     const candidates = new Set([1, pageCount, page - 1, page, page + 1, page <= 3 ? 2 : 0, pageCount - page < 2 ? pageCount - 1 : 0]);
@@ -110,7 +131,7 @@
     root.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  fetch('/data/freellm-net-models.json?v=20261001b')
+  fetch('/data/freellm-net-models.json?v=20261002a')
     .then((response) => { if (!response.ok) throw new Error('model snapshot unavailable'); return response.json(); })
     .then((snapshot) => {
       if (!Array.isArray(snapshot.models) || !snapshot.models.length) throw new Error('empty model snapshot');

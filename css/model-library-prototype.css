@@ -129,7 +129,7 @@ body[data-fl-section="models"] .ml-glass-tile small{margin-top:2px!important;col
 body[data-fl-section="models"] .ml-tile-capability{left:368px!important;top:96px!important}
 body[data-fl-section="models"] .ml-tile-future{left:auto!important;right:119px!important;top:118px!important}
 body[data-fl-section="models"] .ml-glass-tile{bottom:auto!important}
-body[data-fl-section="models"] .ml-tile-open{left:567px!important;top:228px!important}
+body[data-fl-section="models"] .ml-tile-open{left:567px!important;top:min(228px,calc(100% - 58px))!important}
 body[data-fl-section="models"] .ml-art-signature{
   position:absolute!important;right:6px!important;bottom:26px!important;z-index:3;margin:0!important;text-align:right!important;
   color:#2b66ee!important;font-family:"Segoe Script","Bradley Hand","Comic Sans MS",cursive!important;
@@ -307,7 +307,7 @@ body[data-fl-section="models"] .ml-model-card{
 body[data-fl-section="models"] .ml-card-head{display:flex;align-items:flex-start;gap:11px}
 body[data-fl-section="models"] .ml-logo{
   width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:12px;overflow:hidden;
-  background:#f2f6fc;font-size:18px;font-weight:900;color:#243f6d
+  background:#f2f6fc;font-size:var(--ml-logo-size,18px);font-weight:900;color:#243f6d
 }
 body[data-fl-section="models"] .ml-logo svg{width:26px;height:26px;display:block}
 body[data-fl-section="models"] .ml-logo.logo-openai{background:#0d0d0d;border-radius:50%;color:#fff}
@@ -317,8 +317,8 @@ body[data-fl-section="models"] .ml-logo.logo-qwen{background:#fff;border:1px sol
 body[data-fl-section="models"] .ml-logo.logo-deepseek{background:#fff;border:1px solid #eef2f8}
 body[data-fl-section="models"] .ml-logo.logo-mimo{background:linear-gradient(140deg,#8f7bfa,#5f45e8);color:#fff;font-size:22px}
 body[data-fl-section="models"] .ml-card-id{min-width:0;flex:1;padding-top:1px}
-body[data-fl-section="models"] .ml-card-id small{display:block;color:#5f7390!important;font-size:12.5px!important;line-height:1.2!important}
-body[data-fl-section="models"] .ml-card-id h3{margin:4px 0 0!important;color:#0f2242!important;font-size:19px!important;line-height:1.15!important;font-weight:800!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-fl-section="models"] .ml-card-id small{display:block;color:#5f7390!important;font-size:12.5px!important;line-height:1.2!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-fl-section="models"] .ml-card-id h3{margin:4px 0 0!important;color:#0f2242!important;font-size:17px!important;line-height:1.15!important;font-weight:800!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body[data-fl-section="models"] .ml-card-flag{
   margin-left:auto!important;flex:none;display:inline-flex!important;align-items:center!important;gap:3px!important;height:25px!important;padding:0 8px!important;
   border-radius:999px!important;background:#e2f5ea!important;color:#179158!important;font-size:11.5px!important;font-weight:700!important;white-space:nowrap
@@ -342,6 +342,20 @@ body[data-fl-section="models"] .ml-card-cta{
   color:#fff!important;font-size:13px!important;font-weight:800!important;text-decoration:none!important;box-shadow:0 8px 18px rgba(11,102,250,.22)!important;cursor:pointer
 }
 body[data-fl-section="models"] .ml-card-cta i{font-style:normal;font-size:14px;line-height:1}
+body[data-fl-section="models"] .ml-card-flag.flag-orange{background:#fdeae5!important;color:#e0432e!important}
+body[data-fl-section="models"] .ml-card-flag.flag-gray{background:#eef2f8!important;color:#6d819f!important}
+body[data-fl-section="models"] .ml-card-stats{flex:1 1 auto;min-width:0;overflow:hidden}
+body[data-fl-section="models"] .ml-card-stats .stat-score{color:#e89818}
+body[data-fl-section="models"] .ml-card-stats .stat-rate{color:#7d90ad}
+body[data-fl-section="models"] .ml-card-compare{
+  flex:none;display:inline-flex!important;align-items:center!important;justify-content:center!important;height:40px!important;padding:0 12px!important;
+  border:1px solid #dbe6f4!important;border-radius:10px!important;background:#fff!important;color:#5c789e!important;
+  font-size:12.5px!important;font-weight:700!important;cursor:pointer;white-space:nowrap
+}
+body[data-fl-section="models"] .ml-card-compare[aria-pressed="true"]{border-color:#7eabf8!important;background:#eaf3ff!important;color:#1f69e5!important}
+body[data-fl-section="models"] .ml-card-compare:disabled{opacity:.5;cursor:default}
+body[data-fl-section="models"] .ml-card-detail{flex:none;color:#5f7390!important;font-size:12px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap}
+body[data-fl-section="models"] .ml-card-detail:hover{color:#1f69e5!important}
 body[data-fl-section="models"] .ml-load-more-wrap{text-align:center;padding:16px 0 2px}
 body[data-fl-section="models"] .ml-load-more{
   display:inline-flex!important;align-items:center!important;gap:7px!important;min-height:38px!important;padding:0 18px!important;
@@ -471,7 +485,8 @@ body[data-fl-section="models"]>footer{margin:0!important;width:100%!important;bo
   body[data-fl-section="models"] .ml-feature-cube{left:230px!important;top:55px!important;width:103px!important;height:103px!important;border-radius:20px!important}
   body[data-fl-section="models"] .ml-feature-cube span{font-size:44px!important}
   body[data-fl-section="models"] .ml-code-screen{left:350px!important;top:88px!important;width:87px!important;height:75px!important;padding:5px!important;border-width:3px!important;border-radius:9px!important}
-  body[data-fl-section="models"] .ml-feature-footer{left:80px!important;right:14px!important;bottom:7px!important;gap:6px!important;font-size:8.5px!important}
+  body[data-fl-section="models"] .ml-feature-footer{left:226px!important;right:14px!important;bottom:7px!important;gap:6px!important;font-size:8.5px!important}
+  body[data-fl-section="models"] .ml-tile-open{left:500px!important}
   body[data-fl-section="models"] .ml-feature-footer .ic{width:16px!important;height:16px!important}
   body[data-fl-section="models"] .ml-feature-footer .ic svg{width:9px!important;height:9px!important}
   body[data-fl-section="models"] .ml-side-panel{padding:10px 10px!important;border-radius:10px!important}
@@ -504,7 +519,7 @@ body[data-fl-section="models"]>footer{margin:0!important;width:100%!important;bo
   body[data-fl-section="models"] .ml-card-actions a{font-size:8px!important;white-space:nowrap}
   body[data-fl-section="models"] .ml-card-actions button{padding:4px 6px!important;font-size:8px!important;white-space:nowrap}
   body[data-fl-section="models"] .ml-card-head{gap:6px!important}
-  body[data-fl-section="models"] .ml-logo{width:28px!important;height:28px!important;border-radius:8px!important;font-size:13px!important}
+  body[data-fl-section="models"] .ml-logo{width:28px!important;height:28px!important;border-radius:8px!important;font-size:var(--ml-logo-size,13px)!important}
   body[data-fl-section="models"] .ml-logo svg{width:18px!important;height:18px!important}
   body[data-fl-section="models"] .ml-card-id small{font-size:8px!important}
   body[data-fl-section="models"] .ml-card-id h3{font-size:12.5px!important;margin-top:2px!important}
