@@ -377,7 +377,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-stat
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-status.hot{color:#ef6339;background:#ffefe8}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-status.china{color:#1d72e9;background:#e9f2ff}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-row>a{
-  flex:0 0 auto;width:103px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:15px;background:#0b6cf5;color:#fff!important;font-size:11px;font-weight:700;box-shadow:0 5px 12px rgba(7,103,240,.18)
+  flex:0 0 auto;min-width:103px;width:max-content;height:28px;display:flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:15px;background:#0b6cf5;color:#fff!important;font-size:11px;font-weight:700;box-shadow:0 5px 12px rgba(7,103,240,.18)
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banner{
   height:68px;margin-top:4px;display:grid;grid-template-columns:158px minmax(230px,auto) 1fr 116px 128px;align-items:center;gap:14px;padding:0 16px 0 0;
@@ -652,7 +652,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-tags span{padding:2px 4px;font-size:6.5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-status{gap:2px;padding:3px 5px;font-size:6.5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-status i{font-size:6px}
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-row>a{width:66px;height:20px;font-size:7px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-row>a{min-width:66px;height:20px;font-size:7px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-meta{gap:5px;font-size:7px;margin-top:-5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-meta em{font-size:8px}
 

@@ -260,7 +260,7 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-footer nav{gap:
 body[data-reference-style="v1"][data-fl-section="workflow"] .lab-footer nav button{font-size:7px!important;}
 
 body[data-reference-style="v1"][data-fl-section="logs"] .log-hero{min-height:180px!important;height:180px!important;margin:0!important;padding:6px!important;border:0!important;border-radius:0!important;background:linear-gradient(90deg,#fff 0 42%,rgba(255,255,255,.25) 70%,#edf6ff 100%)!important;box-shadow:none!important;}
-body[data-reference-style="v1"][data-fl-section="logs"] .log-hero::after{content:"";position:absolute;z-index:0;inset:0 0 0 auto;width:58%;height:100%;background:url("../assets/reference/about-hero.svg") right center/cover no-repeat;opacity:.72;}
+body[data-reference-style="v1"][data-fl-section="logs"] .log-hero::after{content:"";position:absolute;z-index:0;inset:0 0 0 auto;width:58%;height:100%;background:url("../assets/reference/updates-hero.svg") right center/cover no-repeat;opacity:.92;}
 body[data-reference-style="v1"][data-fl-section="logs"] .log-hero>*{position:relative;z-index:1;}
 body[data-reference-style="v1"][data-fl-section="logs"] .log-hero h1{max-width:480px!important;margin:3px 0 5px!important;font-size:25px!important;line-height:1.08!important;}
 body[data-reference-style="v1"][data-fl-section="logs"] .log-hero .lead{max-width:430px!important;margin:0!important;font-size:9px!important;line-height:1.4!important;}
@@ -427,8 +427,8 @@ body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-extras label
 body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-extras button { float:right!important;padding:5px 12px!important;border:0!important;border-radius:6px!important;background:#0868f7!important;color:#fff!important;font-size:7px!important; }
 body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-extras small { color:#7185a6!important;font-size:7px!important; }
 /* Reference hero artwork and final page-specific sizing. */
-html body[data-reference-style="v1"][data-fl-section="about"] > header::after { top:24px!important;right:0!important;width:56%!important;height:248px!important;background:url("../assets/reference/about-hero-prototype.png") right center/contain no-repeat!important;opacity:1!important; }
-html body[data-reference-style="v1"][data-fl-section="logs"] .log-hero::after { inset:0 0 0 auto!important;width:54%!important;height:100%!important;background:url("../assets/reference/updates-hero-prototype.png") right center/cover no-repeat!important;opacity:1!important; }
+html body[data-reference-style="v1"][data-fl-section="about"] > header::after { content:none!important; }
+html body[data-reference-style="v1"][data-fl-section="logs"] .log-hero::after { inset:0 0 0 auto!important;width:54%!important;height:100%!important;background:url("../assets/reference/updates-hero.svg") right center/cover no-repeat!important;opacity:1!important; }
 html body[data-reference-style="v1"][data-fl-section="tools"] .prototype-footer { min-height:190px!important; }
 html body[data-reference-style="v1"][data-fl-section="workflow"] .prototype-footer { min-height:250px!important; }
 body[data-reference-style="v1"][data-fl-section="logs"] .ref-update-history { margin:0 0 8px!important;padding:9px!important;border:1px solid #e1ebf7!important;border-radius:9px!important;background:#fff!important; }
@@ -474,7 +474,7 @@ html body[data-reference-style="v1"][data-fl-section="about"] .about-update-step
 html body[data-reference-style="v1"][data-fl-section="about"] > main > section:nth-child(4) .about-independence-grid { display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;margin-top:9px!important; }
 /* Ensure the artwork backgrounds sit above legacy decorative circles. */
 body[data-reference-style="v1"][data-fl-section="tools"][data-visual-style="aurora"] .tools-hero::after { z-index:1!important;background-image:url("../assets/reference/tools-hero-prototype.png")!important;background-position:center!important;background-size:cover!important; }
-body[data-reference-style="v1"][data-fl-section="about"][data-visual-style="aurora"] > header::after { z-index:1!important;background-image:url("../assets/reference/about-hero-prototype.png")!important;background-position:right center!important;background-size:contain!important; }
+body[data-reference-style="v1"][data-fl-section="about"][data-visual-style="aurora"] > header::after { content:none!important; }
 html body[data-reference-style="v1"][data-fl-section="about"] > main > section:nth-child(2) li { min-height:104px!important; }
 html body[data-reference-style="v1"][data-fl-section="about"] > main > section:nth-child(4) > p,
 html body[data-reference-style="v1"][data-fl-section="about"] > main > section:nth-child(4) > .callout { display:none!important; }
@@ -494,7 +494,7 @@ html body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero{
   height:176px!important;min-height:176px!important;padding-right:42%!important;
 }
 html body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero::after{
-  background-image:url("../assets/reference/workflow-reference-hero.png")!important;
+  background-image:url("../assets/reference/workflow-hero.svg")!important;
   background-position:right center!important;background-size:auto 100%!important;
 }
 html body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1{
