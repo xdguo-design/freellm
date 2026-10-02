@@ -11,6 +11,70 @@ body[data-fl-section="models"] .ml-card-quota {
 
 body[data-fl-section="models"] .ml-load-more[hidden] { display: none !important; }
 
+/* 精选模型：产品 / 免费方式 / 额度 / 有效期 / 地区 / 核验状态 同卡展示 */
+.ml-offers { margin: 26px 0 6px; }
+.ml-catalog { margin: 30px 0 0; }
+.ml-catalog-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 12px; }
+.ml-catalog-head h2 { margin: 0; color: #071633; font-size: 24px; letter-spacing: -.01em; }
+.ml-catalog-head p { margin: 0; color: #62779b; font-size: 13px; }
+.ml-catalog-head a { color: #0868ff; font-weight: 700; }
+html[data-theme="dark"] .ml-catalog-head h2 { color: #e7effc; }
+html[data-theme="dark"] .ml-catalog-head p { color: #93a7c6; }
+.ml-offers-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin: 0 0 14px; }
+.ml-offers-eyebrow { margin: 0 0 6px; color: #0868ff; font: 700 11px/1 var(--ml-mono, 'JetBrains Mono', monospace); letter-spacing: .14em; text-transform: uppercase; }
+.ml-offers-head h2 { margin: 0 0 6px; color: #071633; font-size: 24px; letter-spacing: -.01em; }
+.ml-offers-head p { margin: 0; color: #62779b; font-size: 13px; }
+.ml-offers-count { flex: none; margin: 0 0 4px; color: #8195b4; font: 500 11.5px/1.4 var(--ml-mono, 'JetBrains Mono', monospace); text-align: right; }
+.ml-offer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.ml-offer-card { display: flex; min-width: 0; flex-direction: column; padding: 16px 16px 13px; border: 1px solid #dbe8f7; border-radius: 16px; background: #fff; box-shadow: 0 10px 24px -18px rgba(23, 58, 110, .35); }
+.ml-offer-head { display: flex; align-items: flex-start; gap: 10px; }
+.ml-offer-title { min-width: 0; flex: 1; }
+.ml-offer-title strong { display: block; overflow: hidden; color: #071633; font-size: 15.5px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.ml-offer-title small { display: block; overflow: hidden; margin-top: 2px; color: #62779b; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
+.ml-offer-card .ml-card-flag { flex: none; margin-top: 2px; }
+.ml-offer-flags { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 0; }
+.ml-offer-chip { max-width: 100%; overflow: hidden; padding: 3px 8px; border-radius: 999px; font: 700 10px/1.5 var(--ml-mono, 'JetBrains Mono', monospace); letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
+.ml-offer-chip.is-featured { border: 1px solid #ffe2a6; background: #ffefd0; color: #8a5a12; }
+.ml-offer-chip.is-key { border: 1px solid #d9e2f5; background: #eef3fd; color: #2c4d8e; }
+.ml-offer-chip.is-ok { border: 1px solid #c9ecd6; background: #e7f7ee; color: #1d7a4a; }
+.ml-offer-chip.is-fail { border: 1px solid #f3d2d2; background: #fdeaea; color: #a33; }
+.ml-offer-chip.is-region { border: 1px solid #dbe8f7; background: #f2f7ff; color: #35619c; }
+.ml-offer-chip.is-speed { border: 1px solid #e3e3ef; background: #f4f4fa; color: #5d5d7a; }
+.ml-offer-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin: 12px 0 0; padding: 11px 0 9px; border-top: 1px solid #e7effa; }
+.ml-offer-metric { min-width: 0; }
+.ml-offer-metric label { display: block; margin: 0 0 3px; color: #8195b4; font: 700 10px/1.4 var(--ml-mono, 'JetBrains Mono', monospace); letter-spacing: .1em; }
+.ml-offer-metric p { display: -webkit-box; overflow: hidden; margin: 0; color: #3f5578; font-size: 12px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.ml-offer-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; border-top: 1px solid #e7effa; }
+.ml-offer-verified { color: #1d7a4a; font: 700 11px/1.4 var(--ml-mono, 'JetBrains Mono', monospace); }
+.ml-offer-verified.is-pending { color: #9a7b2d; }
+.ml-offer-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.ml-offer-detail { color: #35619c; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.ml-offer-detail:hover { text-decoration: underline; }
+.ml-offer-card .ml-card-cta { display: inline-flex; align-items: center; gap: 4px; padding: 7px 13px; border-radius: 999px; background: #0868ff; color: #fff; font-size: 12px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.ml-offer-card .ml-card-cta:hover { background: #0356db; }
+.ml-offers-more-wrap { display: flex; justify-content: center; margin: 16px 0 4px; }
+.ml-offers-more { padding: 9px 22px; border: 1px solid #bcd4f2; border-radius: 999px; background: #fff; color: #0868ff; font-size: 12.5px; font-weight: 800; cursor: pointer; }
+.ml-offers-more:hover { border-color: #0868ff; }
+.ml-offers-more[hidden] { display: none; }
+
+html[data-theme="dark"] .ml-offer-card,
+html[data-theme="dark"] .ml-offers-more { background: #0e1c33; }
+html[data-theme="dark"] .ml-offers-head h2,
+html[data-theme="dark"] .ml-offer-title strong { color: #e7effc; }
+html[data-theme="dark"] .ml-offers-head p,
+html[data-theme="dark"] .ml-offer-title small,
+html[data-theme="dark"] .ml-offer-count,
+html[data-theme="dark"] .ml-offer-metric p { color: #93a7c6; }
+html[data-theme="dark"] .ml-offer-card { border-color: #24344f; box-shadow: none; }
+html[data-theme="dark"] .ml-offer-metrics,
+html[data-theme="dark"] .ml-offer-foot { border-color: #24344f; }
+
+@media (max-width: 900px) {
+  .ml-offer-grid { grid-template-columns: 1fr; }
+  .ml-offers-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .ml-offers-count { text-align: left; }
+}
+
 .model-entry-preview {
   margin-top: 24px;
   padding: 22px;

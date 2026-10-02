@@ -4,8 +4,9 @@
   const root = document.getElementById('model-library-app');
   if (!root) return;
   const $ = (selector) => root.querySelector(selector);
-  const state = { featured: [], models: [], all: [], offers: [], category: '', page: 1, pageSize: 6, compare: [], recent: [] };
-  const FEATURED_LIMIT = 6;
+  const state = { featured: [], models: [], all: [], offers: [], category: '', page: 1, pageSize: 6, compare: [], recent: [], offerPage: 1 };
+  const OFFER_PAGE_SIZE = 12;
+  const NETWORK_REGION_LABELS = { both: '国内外均可用', cn: '仅国内可用', intl: '仅国外可用' };
   const normalize = (value) => String(value || '').toLowerCase().normalize('NFKC');
   const esc = (value) => String(value == null ? '' : value).replace(/[&<>\"']/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#39;' }[char]));
   const contextValue = (value) => {
@@ -22,8 +23,6 @@
     return (items || []).map((item) => map[item] || item).slice(0, 3).join(' · ') || '能力待核验';
   };
   const regionLabel = (value) => ({ domestic: '国内接入', international: '国际接入', global: '全球接入' }[value] || '地区待核验');
-  const MECH_LABELS = { permanent: '永久免费', limited_time_free: '限时免费', daily_quota: '每日额度', monthly_quota: '每月额度', trial: '免费试用', not_confirmed: '资格待核验' };
-  const ORIGIN_LABELS = { 'United States': '美国', 'China': '中国', 'International': '国际', 'Global': '全球' };
   const BRAND_TOKENS = { deepseek:'DeepSeek', glm:'GLM', kimi:'Kimi', qwen:'Qwen', mimo:'MiMo', gemma:'Gemma', gemini:'Gemini', llama:'Llama', mistral:'Mistral', llm:'LLM', api:'API', ai:'AI', tts:'TTS', ocr:'OCR', rag:'RAG', agi:'AGI', vlm:'VLM', coder:'Coder' };
   const prettifyModel = (value) => {
     const raw = String(value || '').trim();
@@ -111,45 +110,87 @@
   const buildFeatured = (rows) => (Array.isArray(rows) ? rows : [])
     .filter((offer) => Array.isArray(offer.capabilities) && offer.capabilities.includes('model_api')
       && Array.isArray(offer.type) && offer.type.includes('free'))
-    .slice(0, FEATURED_LIMIT)
-    .map((offer) => {
-      const limited = (Array.isArray(offer.type) && offer.type.includes('promo')) || offer.freeMechanism === 'limited_time_free';
-      const freeModelCount = Array.isArray(offer.freeModels) ? offer.freeModels.length : 0;
-      const title = String(offer.model || offer.name || '未命名模型')
-        .replace(/\s*\([^)]*\)\s*/g, ' ')
-        .split(/\s+and\s+(?:other|supported)/i)[0]
-        .replace(/\s+/g, ' ')
-        .trim();
-      return {
-        key: 'featured/' + offer.id,
-        provider: offer.provider || offer.name || '未知厂商',
-        mark: String(offer.providerMark || offer.provider || 'AI').trim().slice(0, 4),
-        model: title,
-        badge: limited ? { label: '限时免费', tone: 'orange' } : { label: '免费 API', tone: 'green' },
-        description: (offer.usageGuide && offer.usageGuide.summary) || offer.freeSummary || '',
-        tags: [
-          ORIGIN_LABELS[offer.originCountry] || offer.originCountry || '',
-          MECH_LABELS[offer.freeMechanism] || '',
-          freeModelCount > 1 ? freeModelCount + ' 个免费模型' : ''
-        ].filter(Boolean).slice(0, 3),
-        href: offer.register || ('/offers/' + offer.id + '/'),
-        detailHref: '/offers/' + offer.id + '/',
-        verifiedAt: offer.lastVerifiedAt || ''
-      };
-    });
+    .sort((a, b) => Number(b.rankingScore || 0) - Number(a.rankingScore || 0) || Number(a.order || 0) - Number(b.order || 0));
+  const offerField = (value, fallback) => {
+    const text = String(value == null ? '' : value).trim();
+    return text || fallback;
+  };
+  const offerTitle = (offer) => offerField(offer.title, offerField(offer.name, '未命名产品')).replace(/\s+/g, ' ');
+  const offerNetworkChips = (offer) => {
+    const check = offer.networkCheck;
+    if (!check || typeof check !== 'object') return [];
+    const region = check.region;
+    if (!NETWORK_REGION_LABELS[region] && region !== 'none') return [];
+    if (region === 'none') return ['<span class="ml-offer-chip is-fail">✗ 本次未连通</span>'];
+    const latencies = [];
+    if (check.cnMs) latencies.push('国内 ' + check.cnMs + 'ms');
+    if (check.intlMs) latencies.push('海外 ' + check.intlMs + 'ms');
+    const title = esc('实测于 ' + offerField(check.checkedAt, '近期') + '｜仅实测网络可达性与往返延迟，不代表注册门槛或模型生成速度' + (latencies.length ? '｜' + latencies.join(' · ') : ''));
+    return [
+      '<span class="ml-offer-chip is-ok" title="' + title + '">✓ 实测通过</span>',
+      '<span class="ml-offer-chip is-region">' + esc(NETWORK_REGION_LABELS[region]) + '</span>',
+      latencies.length ? '<span class="ml-offer-chip is-speed">' + esc(latencies.join(' · ')) + '</span>' : ''
+    ].filter(Boolean);
+  };
+  const offerFlagChips = (offer) => {
+    const chips = [];
+    const featured = offer.featured;
+    if (featured && typeof featured === 'object' && featured.reason) {
+      chips.push('<span class="ml-offer-chip is-featured" title="' + esc('加精｜' + featured.reason) + '">◆ 加精</span>');
+    }
+    if (offer.key) chips.push('<span class="ml-offer-chip is-key">★ 重点</span>');
+    const endpoint = offer.endpointCheck;
+    if (endpoint && endpoint.verdict !== 'NETWORK_ERROR') {
+      const label = offer.usageGuide && offer.usageGuide.endpoint ? '接口已验证' : '官网已验证';
+      const suffix = typeof endpoint.ms === 'number' ? ' · ' + endpoint.ms + 'ms' : '';
+      chips.push('<span class="ml-offer-chip is-ok">' + esc('✓ ' + label + suffix) + '</span>');
+    }
+    return chips.concat(offerNetworkChips(offer));
+  };
   const badgeHtml = (badge) => '<span class="ml-card-flag flag-' + badge.tone + '">' + esc(badge.label) + '</span>';
   const featuredCardHtml = (offer) => {
-    const verified = offer.verifiedAt ? String(offer.verifiedAt).slice(5).replace('-', '/') : '';
-    return '<article class="ml-model-card is-featured-card">'
-      + '<div class="ml-card-head"><span class="ml-logo" style="' + logoStyle(markHue(offer.mark), offer.mark) + '" aria-hidden="true">' + esc(offer.mark) + '</span>'
-      + '<div class="ml-card-id"><small>' + esc(offer.provider) + '</small><h3 title="' + esc(offer.model) + '">' + esc(offer.model) + '</h3></div>'
-      + badgeHtml(offer.badge) + '</div>'
-      + '<p class="ml-card-desc">' + esc(offer.description || '免费模型入口，具体额度与使用条件以官方页面为准。') + '</p>'
-      + '<div class="ml-card-tags">' + offer.tags.map((tag) => '<span>' + esc(tag) + '</span>').join('') + '</div>'
-      + '<div class="ml-card-foot"><span class="ml-card-stats">' + (verified ? '<span>✓ 已核验 ' + esc(verified) + '</span>' : '') + '</span>'
-      + '<a class="ml-card-cta" href="' + esc(offer.href) + '" target="_blank" rel="noopener">立即使用 <i>→</i></a>'
-      + '<a class="ml-card-detail" href="' + esc(offer.detailHref) + '">详情</a></div>'
+    const mark = String(offer.providerMark || offer.provider || 'AI').trim().slice(0, 4);
+    const limited = (Array.isArray(offer.type) && offer.type.includes('promo')) || offer.freeMechanism === 'limited_time_free';
+    const href = /^https:\/\//i.test(String(offer.register || '')) ? offer.register : '/offers/' + offer.id + '/';
+    const verifiedDate = offerField(offer.lastVerifiedAt, '');
+    const verified = offer.status === 'verified' && verifiedDate
+      ? '<span class="ml-offer-verified">✓ 已核验 ' + esc(verifiedDate) + '</span>'
+      : '<span class="ml-offer-verified is-pending">核验状态：' + esc(offerField(offer.status, 'unknown')) + '</span>';
+    const metrics = [
+      ['免费方式', offerField(offer.freeSummary, offerField(offer.mechanism, '见官方条款'))],
+      ['额度 / 价格', offerField(offer.quota, '以官方页面为准')],
+      ['有效期', offerField(offer.validitySummary, offerField(offer.validity, '见官方条款'))],
+      ['地区', offerField(offer.accessSummary, offerField(offer.access, '见官方条款'))]
+    ];
+    return '<article class="ml-offer-card">'
+      + '<div class="ml-offer-head"><span class="ml-logo" style="' + logoStyle(markHue(offer.provider || offer.id), mark) + '" aria-hidden="true">' + esc(mark) + '</span>'
+      + '<div class="ml-offer-title"><strong title="' + esc(offerTitle(offer)) + '">' + esc(offerTitle(offer)) + '</strong>'
+      + '<small>' + esc(offerField(offer.provider, '官方入口')) + '</small></div>'
+      + badgeHtml(limited ? { label: '限时免费', tone: 'orange' } : { label: '免费 API', tone: 'green' }) + '</div>'
+      + '<div class="ml-offer-flags">' + offerFlagChips(offer).join('') + '</div>'
+      + '<div class="ml-offer-metrics">' + metrics.map((metric) => '<div class="ml-offer-metric"><label>' + metric[0] + '</label><p>' + esc(metric[1]) + '</p></div>').join('') + '</div>'
+      + '<div class="ml-offer-foot">' + verified
+      + '<span class="ml-offer-actions"><a class="ml-offer-detail" href="/offers/' + esc(offer.id) + '/">查看详情 ↗</a>'
+      + '<a class="ml-card-cta" href="' + esc(href) + '"' + (/^https:\/\//i.test(href) ? ' target="_blank" rel="noopener"' : '') + '>立即使用 <i>→</i></a></span></div>'
       + '</article>';
+  };
+  const renderOffers = () => {
+    const grid = document.getElementById('ml-offer-grid');
+    if (!grid) return;
+    const shown = state.featured.slice(0, state.offerPage * OFFER_PAGE_SIZE);
+    grid.innerHTML = shown.length
+      ? shown.map(featuredCardHtml).join('')
+      : '<div class="ml-empty-state">精选入口暂时无法加载，<a href="/models/all/">打开完整模型目录 →</a></div>';
+    grid.setAttribute('aria-busy', 'false');
+    const count = document.getElementById('ml-offers-count');
+    if (count) count.textContent = '显示 ' + shown.length + ' / ' + state.featured.length + ' 个已核验免费入口';
+    const more = document.getElementById('ml-offers-more');
+    if (more) {
+      const exhausted = shown.length >= state.featured.length;
+      more.textContent = exhausted ? '已显示全部精选入口' : '显示更多精选入口 ↓（还有 ' + (state.featured.length - shown.length) + ' 个）';
+      more.disabled = exhausted;
+      more.hidden = exhausted;
+    }
   };
   const poolCardHtml = (item) => {
     const providerName = item.providers[0] || item.provider || 'AI';
@@ -222,15 +263,6 @@
   const renderCards = (resetPage) => {
     if (resetPage) state.page = 1;
     const grid = $('#ml-card-grid');
-    if (state.category === '') {
-      grid.innerHTML = state.featured.length
-        ? state.featured.map(featuredCardHtml).join('')
-        : '<div class="ml-empty-state">精选模型暂时无法加载，<a href="/models/all/">打开完整模型目录 →</a></div>';
-      $('#ml-results-status').textContent = '显示 ' + state.featured.length + ' 个精选模型';
-      const more = $('#ml-load-more');
-      if (more) more.hidden = true;
-      return;
-    }
     const items = sortModels(state.models.filter(matches));
     const shown = items.slice(0, state.page * state.pageSize);
     grid.innerHTML = shown.length ? shown.map(poolCardHtml).join('') : '<div class="ml-empty-state">没有找到符合条件的模型，试试清空筛选。</div>';
@@ -312,6 +344,10 @@
         state.page += 1;
         renderCards(false);
       }
+      if (event.target.closest('#ml-offers-more')) {
+        state.offerPage += 1;
+        renderOffers();
+      }
     });
     document.querySelectorAll('[data-ml-theme]').forEach((button) => {
       button.addEventListener('click', () => {
@@ -364,7 +400,8 @@
       if (modelCount) modelCount.textContent = state.models.length;
       if (providerCount) providerCount.textContent = new Set(directoryModels.map((item) => item.providerId).filter(Boolean)).size;
       const total = document.getElementById('ml-total');
-      if (total) total.textContent = '(' + state.featured.length + ')';
+      if (total) total.textContent = '(' + state.models.length + ')';
+      renderOffers();
       let saved = [];
       try { saved = JSON.parse(localStorage.getItem('freellm-model-library-recent') || '[]'); } catch (_) {}
       state.recent = Array.isArray(saved) ? saved.map((entry) => byId(typeof entry === 'string' ? entry : entry && entry.id)).filter(Boolean).map((item) => ({ id:item.key, name:prettifyModel(item.model), href:item.href, mark:(item.provider || 'AI').slice(0,1).toUpperCase(), time:'最近浏览' })) : [];
