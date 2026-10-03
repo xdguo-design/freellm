@@ -57,6 +57,9 @@ def remove_legacy_global_nav(html: str) -> str:
 def ensure_pastel_shell(html: str) -> str:
     """Render the visual shell in HTML itself instead of depending on JS to add it."""
     updated = html
+    # SITE_CHROME below owns the navigation initializer. Older generated pages
+    # may have copies both before and after the rail, so remove them first.
+    updated = re.sub(r'<script src="/js/site-navigation\.js[^"]*"></script>\s*', "", updated, flags=re.I)
     updated = re.sub(
         r'<html(?![^>]*\bclass=)([^>]*)>',
         r'<html class="fl-pastel-ui"\1>',
@@ -102,17 +105,14 @@ def ensure_pastel_shell(html: str) -> str:
 
     # Always normalize the shell. Older generated HTML may already contain
     # a ten-item rail, so "only inject if missing" would preserve stale navigation.
-    # The leading scripts group keeps the rewrite idempotent: SITE_CHROME places
-    # its script *before* the rail, so a bare aside match would prepend one more
-    # script on every build.
-    shell_pattern = r'(?:<script src="/js/site-navigation\.js[^"]*"></script>\s*)*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
     matches = list(re.finditer(shell_pattern, updated, flags=re.I | re.S))
     if matches:
         first = matches[0]
         rebuilt = updated[: first.start()] + SITE_CHROME + updated[first.end() :]
         tail_start = first.start() + len(SITE_CHROME)
         tail = re.sub(
-            r'\s*(?:<script src="/js/site-navigation\.js[^"]*"></script>\s*)*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
+            r'\s*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
             "",
             rebuilt[tail_start:],
             flags=re.I | re.S,

@@ -3332,6 +3332,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><style>{EDITORIAL_BASE_CSS}</style><style>
 .models-overview h1{{font-size:clamp(34px,6vw,58px);max-width:900px}}.models-overview .lead{{max-width:860px}}
+body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>header.models-overview{{padding-left:18px!important;padding-right:18px!important}}
 .models-overview-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
 .models-overview-grid article{{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}}
 .models-overview-grid h2{{margin:0 0 8px;font-size:22px}}@media(max-width:700px){{.models-overview-grid{{grid-template-columns:1fr}}}}
@@ -3705,6 +3706,11 @@ def render_model_center_page(offers: list[dict], site_url: str, models: list[dic
         r'src="../../js/\1"',
         body,
     )
+    # The template lives under /design, but this page is served from
+    # /models/center/. Resolve all shared assets from the site root so they do
+    # not accidentally request /models/css or /models/js.
+    head = re.sub(r'href="(?:\.\./)+css/([^\"]+)"', r'href="/css/\1"', head)
+    body = re.sub(r'src="(?:\.\./)+js/([^\"]+)"', r'src="/js/\1"', body)
     head = head.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
     reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
     if reference_ui_tag not in head:
@@ -5114,15 +5120,36 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     if Path("about/index.html") in files:
         about = files[Path("about/index.html")]
         active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in model_catalog if item.get("providerId")})
-        replacement = (
-            '<div class="stat-row">'
-            f'<div class="stat"><strong>{len(offers)}</strong><span><span lang="zh-CN">已核验资源条目</span><span lang="en">verified offers</span></span></div>'
-            f'<div class="stat"><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型目录记录</span><span lang="en">model records</span></span></div>'
-            f'<div class="stat"><strong>{len(providers)}</strong><span><span lang="zh-CN">厂家目录</span><span lang="en">vendor directory</span></span></div>'
-            f'<div class="stat"><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">当前数据 Provider ID</span><span lang="en">active provider IDs</span></span></div>'
+        about_stats = (
+            '<div class="about-stat-grid">'
+            f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong>{len(offers)}</strong><span><span lang="zh-CN">已验证的免费资源</span><span lang="en">verified offers</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-green" aria-hidden="true">▥</span><div><strong>{len(providers)}</strong><span><span lang="zh-CN">模型 / 服务商</span><span lang="en">vendors</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-amber" aria-hidden="true">‹/›</span><div><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">活跃 Provider ID</span><span lang="en">active providers</span></span></div></article>'
             '</div>'
         )
-        about = re.sub(r'<div class="stat-row">.*?</div>\s*</section>', replacement + '\n    </section>', about, count=1, flags=re.S)
+        about = re.sub(
+            r'<div class="about-stat-grid">.*?</div>\s*</section>',
+            about_stats + '\n  </section>',
+            about,
+            count=1,
+            flags=re.S,
+        )
+        latest_data_date = max(
+            (str(log.get("date") or "") for log in (daily_logs or []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(log.get("date") or ""))),
+            default="",
+        )
+        date_copy = (
+            f'<span lang="zh-CN">数据快照截至 {latest_data_date}</span><span lang="en">Data snapshot as of {latest_data_date}</span>'
+            if latest_data_date
+            else '<span lang="zh-CN">数据来自当前公开目录</span><span lang="en">Counts reflect the current public directories</span>'
+        )
+        about = re.sub(
+            r'<span lang="zh-CN">(?:数据统计截至 [^<]*|数据快照截至 [^<]*|数据来自当前公开目录)</span><span lang="en">(?:Data updated [^<]*|Data snapshot as of [^<]*|Counts reflect the current public directories)</span>',
+            date_copy,
+            about,
+            count=1,
+        )
         files[Path("about/index.html")] = about
     for path, page in list(files.items()):
         if path.suffix != ".html":
@@ -5672,6 +5699,27 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
     return updated
 
 
+def _dedupe_shared_shell_scripts(content: str) -> str:
+    """Keep only one initializer for each shared navigation/reference shell."""
+    updated = content
+    for filename in ("site-navigation.js", "reference-shell.js"):
+        pattern = re.compile(
+            rf'<script\b[^>]*\bsrc=["\']/js/{re.escape(filename)}(?:\?[^"\']*)?["\'][^>]*>\s*</script>',
+            flags=re.I,
+        )
+        seen = False
+
+        def keep_first(match: re.Match[str]) -> str:
+            nonlocal seen
+            if seen:
+                return ""
+            seen = True
+            return match.group(0)
+
+        updated = pattern.sub(keep_first, updated)
+    return updated
+
+
 def _remove_legacy_global_nav(content: str) -> str:
     return re.sub(r'<nav class="top-nav"[^>]*>.*?</nav>', "", content, flags=re.I | re.S)
 
@@ -5703,6 +5751,9 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         brand_subtitle = 'AI for Everyone'
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
+    # Rebuilds can otherwise leave one old navigation initializer before the
+    # previous rail plus another after its ribbon. Keep the shell's one copy.
+    content = re.sub(r'<script src="/js/site-navigation\.js[^\"]*"></script>\s*', "", content, flags=re.I)
     chrome = (
         '<script src="/js/site-navigation.js?v=20261003-models-align"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
@@ -5797,6 +5848,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     files = {
         relative: _ensure_reference_ui(content, relative)
+        for relative, content in files.items()
+    }
+    files = {
+        relative: (_dedupe_shared_shell_scripts(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
     output_root = Path(output_root)
