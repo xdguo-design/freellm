@@ -7076,6 +7076,13 @@
       "status": "partial",
       "testedAt": "2026-09-29",
       "actualUsageVerified": false,
+      "ttsSample": {
+        "status": "pending",
+        "sampleText": "清晨的阳光落在窗边，街道慢慢苏醒。今天，我们用同一段文字，听听不同音色怎样表达温柔、清晰和自然。",
+        "model": "mimo-v2.5-tts",
+        "format": "wav",
+        "audioUrl": ""
+      },
       "task": "核验 Xiaomi MiMo V2.5-TTS 三款开放 API 的当前限时免费状态、Base URL 和限流信息。",
       "method": [
         "读取 Xiaomi MiMo 官方 V2.5-TTS 发布公告，确认三款模型均在开放平台限时免费。",
@@ -8982,5 +8989,290 @@
         }
       ]
     }
+  },
+  {
+    "id": "ant-ling-3-1-flash-free",
+    "order": 70,
+    "date": "2026-10-02",
+    "lastVerifiedAt": "2026-10-02",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Vercel AI Gateway and the serving provider terms before commercial use.",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "Ant Ling Ling-3.1-flash · Vercel AI Gateway",
+    "title": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API",
+    "titleEn": "Ant Ling Ling-3.1-flash · Limited-time free API",
+    "providerMark": "百灵",
+    "provider": "Vercel AI Gateway",
+    "providerMeta": "Vercel AI Gateway · InclusionAI",
+    "providerMetaEn": "Vercel AI Gateway · InclusionAI",
+    "model": "Ling-3.1-flash · 560B 总参数 / 25B 激活参数",
+    "modelMeta": "560B total parameters · 25B active per token",
+    "freeModels": [
+      {
+        "model": "inclusionai/ling-3.1-flash-free",
+        "label": "文本 · 混合推理 · Agent",
+        "contextWindow": "262,144 tokens（Vercel AI Gateway 当前提供商路由）",
+        "quota": "限时免费至 2026-10-13；Vercel 标注促销结束后 -free ID 停止服务",
+        "note": "Vercel AI Gateway 模型目录显示当前由 Novita AI 提供免费路由。该窗口与蚂蚁百灵官方平台规则分开核验。",
+        "sourceUrl": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+      }
+    ],
+    "type": [
+      "api",
+      "free"
+    ],
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-09-29",
+      "endDate": "2026-10-13",
+      "unit": "promotion"
+    },
+    "freeSummary": "Vercel AI Gateway 的 inclusionai/ling-3.1-flash-free 路由限时免费至 2026-10-13",
+    "freeSummaryEn": "The inclusionai/ling-3.1-flash-free route on Vercel AI Gateway is free through 2026-10-13",
+    "quota": "当前 Vercel 提供商路由上下文 262K；免费促销截止 2026-10-13",
+    "validitySummary": "Vercel AI Gateway 公告：免费至 2026-10-13；后续以模型页实时规则为准",
+    "validitySummaryEn": "Vercel AI Gateway lists the promotion through 2026-10-13; check the live model page for changes",
+    "accessSummary": "需要 Vercel AI Gateway 账户与 API Key；此处免费规则仅适用于 Vercel 路由",
+    "accessSummaryEn": "Vercel AI Gateway account and API key required; the free terms apply only to this route",
+    "kicker": "LIMITED-TIME FREE MODEL API",
+    "badges": [
+      "限时免费",
+      "262K 上下文",
+      "API"
+    ],
+    "checkedSummary": "2026-10-02 / Vercel AI Gateway official sources",
+    "why": "FreeLLM 评估：这条 Vercel 路由适合在免费窗口内验证中文摘要、代码修复和多步工具任务。560B 总参数、25B 激活参数说明了模型规模，但不能单独证明速度或输出质量；当前可核对的服务上下文是 262K，不能把 1M 写成这条免费 API 的能力。免费入口有明确截止日期，适合试用和原型验证，不建议直接依赖在生产服务中。",
+    "whyEn": "FreeLLM assessment: this Vercel route is worth testing for Chinese summarization, code repair, and multi-step tool tasks during the free window. Its 560B total and 25B active parameter counts describe model scale, not speed or output quality. The verifiable context for this route is 262K, so do not treat 1M as the free API limit. The dated promotion suits evaluation and prototypes, not production dependency.",
+    "mechanism": "Vercel AI Gateway lists a promotional free route for Ling-3.1-flash. Use the distinct -free model ID to avoid the standard model ID that may become billable after the promotion.",
+    "validity": "Free through 2026-10-13 according to Vercel; availability may change.",
+    "access": "Vercel AI Gateway account and API key; provider availability and network access can vary.",
+    "command": "Call inclusionai/ling-3.1-flash-free through the Vercel AI Gateway OpenAI-compatible Chat Completions API.",
+    "register": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free",
+    "registerLabel": "打开 Vercel 免费模型页",
+    "registerLabelEn": "Open Vercel free model page",
+    "links": [
+      [
+        "FreeLLM 二级详情页",
+        "https://freellm.top/offers/ant-ling-3-1-flash-free/"
+      ],
+      [
+        "Vercel 模型页",
+        "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+      ],
+      [
+        "Vercel 发布说明",
+        "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
+      ],
+      [
+        "蚂蚁百灵模型文档",
+        "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+      ]
+    ],
+    "sourceUrls": [
+      "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway",
+      "https://vercel.com/ai-gateway/models/ling-3-1-flash-free",
+      "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+    ],
+    "usageGuide": {
+      "summary": "在 Vercel AI Gateway 创建 API Key，使用限时免费模型 ID 调用 Ling-3.1-flash。",
+      "summaryEn": "Create a Vercel AI Gateway API key and call Ling-3.1-flash with the limited-time free model ID.",
+      "prerequisites": [
+        "Vercel account",
+        "Vercel AI Gateway API key"
+      ],
+      "steps": [
+        "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
+        "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
+        "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
+        "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
+      ],
+      "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${AI_GATEWAY_API_KEY}",
+      "examples": {
+        "curl": "curl https://ai-gateway.vercel.sh/v1/chat/completions --header \"Authorization: Bearer ${AI_GATEWAY_API_KEY}\" --header \"Content-Type: application/json\" --data '{\"model\":\"inclusionai/ling-3.1-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
+    },
+    "availability": "Vercel AI Gateway; account access and network availability may vary.",
+    "freeModelsSource": "Vercel AI Gateway",
+    "freeMechanismSource": "Vercel limited-time promotion",
+    "confidence": "high",
+    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
+    "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "blocked",
+      "testedAt": "2026-10-02",
+      "actualUsageVerified": false,
+      "task": "检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。",
+      "method": [
+        "核对 Vercel AI Gateway 官方公告与当前免费模型页。",
+        "使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。",
+        "三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。"
+      ],
+      "result": "FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。",
+      "limitations": "HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。",
+      "evidence": [
+        {
+          "label": "Vercel 发布说明",
+          "url": "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
+        },
+        {
+          "label": "Vercel 免费模型页",
+          "url": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+        },
+        {
+          "label": "Vercel Chat Completions API 文档",
+          "url": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
+        }
+      ]
+    },
+    "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
+    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+  },
+  {
+    "id": "vercel-laya-free",
+    "order": 71,
+    "date": "2026-10-03",
+    "lastVerifiedAt": "2026-10-03",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Vercel AI Gateway and the serving provider terms before commercial use.",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "Convai Innovations Laya · Vercel AI Gateway",
+    "title": "Laya 结构化判定模型 · 限时免费 API",
+    "titleEn": "Laya structured decision model · Limited-time free API",
+    "providerMark": "Laya",
+    "provider": "Vercel AI Gateway",
+    "providerMeta": "Vercel AI Gateway · Boundless",
+    "providerMetaEn": "Vercel AI Gateway · Boundless",
+    "model": "Laya · System One evaluation model",
+    "modelMeta": "Structured decision model · 8K context",
+    "freeModels": [
+      {
+        "model": "convaiinnovations/laya-free",
+        "label": "结构化判定 · 分类 · 路由 · 布尔/评分/选择题",
+        "contextWindow": "8,192 tokens",
+        "quota": "Vercel AI Gateway 当前标为 Free；限时免费至 2026-10-31",
+        "note": "此模型返回结构化判断与概率，不生成自由文本；通过 AI SDK experimental_evaluate 调用。",
+        "sourceUrl": "https://vercel.com/ai-gateway/models/laya-free"
+      }
+    ],
+    "type": [
+      "api",
+      "free"
+    ],
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-10-01",
+      "endDate": "2026-10-31",
+      "unit": "promotion"
+    },
+    "freeSummary": "Vercel AI Gateway 的 convaiinnovations/laya-free 当前免费至 2026-10-31；用于结构化判定，不是通用聊天模型",
+    "freeSummaryEn": "convaiinnovations/laya-free is free on Vercel AI Gateway through 2026-10-31; it performs structured evaluation rather than general chat",
+    "quota": "Vercel 当前列为 Free；公开限流额度未注明；上下文 8K",
+    "validitySummary": "Vercel AI Gateway 标注促销截至 2026-10-31；以模型页实时状态为准",
+    "validitySummaryEn": "Vercel AI Gateway lists the promotion through 2026-10-31; verify the live model page",
+    "accessSummary": "需要 Vercel AI Gateway API Key；通过 AI SDK experimental_evaluate 调用",
+    "accessSummaryEn": "Vercel AI Gateway API key required; call through AI SDK experimental_evaluate",
+    "kicker": "LIMITED-TIME FREE DECISION MODEL API",
+    "badges": [
+      "限时免费",
+      "结构化判定",
+      "8K 上下文"
+    ],
+    "checkedSummary": "2026-10-03 / Vercel AI Gateway official model page and changelog",
+    "why": "Laya 是面向分类、路由、守护规则与评分的结构化判定模型，可对一次输入回答多个选择题、评分题或是非题。它不生成自由文本，适合验证工作流中的判断步骤。Vercel AI Gateway 目前将其标为免费，促销截至 2026-10-31；未公开的请求额度不作推测。",
+    "whyEn": "Laya is a structured evaluation model for classification, routing, guardrails, and scoring. It answers choice, score, or boolean questions about shared state rather than generating free-form text. Vercel AI Gateway lists it as free through 2026-10-31; unpublished request limits are not inferred.",
+    "mechanism": "Vercel AI Gateway lists the Laya free route with promotional pricing through 2026-10-31. Call it with the AI SDK experimental_evaluate interface; standard chat-completion clients are not the documented integration.",
+    "validity": "Free through 2026-10-31 according to Vercel AI Gateway; availability may change.",
+    "access": "Vercel AI Gateway account and API key; use AI SDK experimental_evaluate.",
+    "command": "Use the AI SDK experimental_evaluate function with model convaiinnovations/laya-free.",
+    "register": "https://vercel.com/ai-gateway/models/laya-free",
+    "registerLabel": "打开 Vercel Laya 免费模型页",
+    "registerLabelEn": "Open Vercel Laya free model page",
+    "links": [
+      [
+        "Vercel Laya 免费模型页",
+        "https://vercel.com/ai-gateway/models/laya-free"
+      ],
+      [
+        "Vercel 发布说明",
+        "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+      ]
+    ],
+    "sourceUrls": [
+      "https://vercel.com/ai-gateway/models/laya-free",
+      "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+    ],
+    "usageGuide": {
+      "summary": "通过 Vercel AI Gateway 和 AI SDK 的 experimental_evaluate 调用 Laya 结构化判定模型。",
+      "summaryEn": "Call Laya for structured evaluation through Vercel AI Gateway and the AI SDK experimental_evaluate interface.",
+      "prerequisites": [
+        "Vercel account",
+        "Vercel AI Gateway API key",
+        "Node.js project with the AI SDK"
+      ],
+      "steps": [
+        "在 Vercel AI Gateway 创建 API Key，并设置 AI_GATEWAY_API_KEY 环境变量。",
+        "安装并使用 AI SDK 的 experimental_evaluate，从 convaiinnovations/laya-free 模型发送 state 与 questions。",
+        "检查返回的结构化结果；模型用于分类、路由和判定，不用于自由文本生成。",
+        "免费促销截至 2026-10-31；使用前复核模型页的免费状态与提供商条款。"
+      ],
+      "endpoint": "https://ai-gateway.vercel.sh/v1/evaluate",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${AI_GATEWAY_API_KEY}",
+      "examples": {
+        "typescript": "import { experimental_evaluate as evaluate } from 'ai';\nconst result = await evaluate({\n  model: 'convaiinnovations/laya-free',\n  state: 'The support agent issued a full refund to the customer.',\n  questions: { refunded: { type: 'boolean', instructions: 'Was a refund issued?' } },\n});\nconsole.log(result);"
+      },
+      "docsUrl": "https://vercel.com/ai-gateway/models/laya-free"
+    },
+    "availability": "Vercel AI Gateway; account access and network availability may vary.",
+    "freeModelsSource": "Vercel AI Gateway",
+    "freeMechanismSource": "Vercel limited-time promotion",
+    "confidence": "high",
+    "notes": "仅记录 Vercel AI Gateway 上 Laya 的免费路由及结构化评估用途；不代表其他提供方的免费政策。",
+    "evidence": "Vercel AI Gateway 官方发布说明及模型页说明 Laya 的结构化评估用途、8K 上下文和免费至 2026-10-31。实际调用、额度和输出质量尚未实测。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-03",
+      "actualUsageVerified": false,
+      "task": "核对 Laya 的模型用途、集成方式和限时免费截止日；未进行 API 推理调用。",
+      "method": [
+        "检查 Vercel AI Gateway 官方 Laya 发布说明和模型页，核对结构化评估用途、8K 上下文、experimental_evaluate 集成方式及免费期限。",
+        "本次未使用有效 Vercel AI Gateway API Key 发送推理请求，因此没有模型输出质量或延迟数据。"
+      ],
+      "result": "官方资料确认 Laya 是面向结构化判定的模型，Vercel 标注免费至 2026-10-31。API 调用和实际免费额度尚未验证。",
+      "limitations": "未验证 API 连通性、输出质量、请求额度、限流或稳定性；免费状态和路由可能变化。",
+      "evidence": [
+        {
+          "label": "Vercel Laya 发布说明",
+          "url": "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+        },
+        {
+          "label": "Vercel Laya 免费模型页",
+          "url": "https://vercel.com/ai-gateway/models/laya-free"
+        }
+      ]
+    },
+    "freeLLMTestNotes": "资料预检已完成，官方标注免费至 2026-10-31；尚无 API 推理结果，模型输出质量和实际额度待验证。",
+    "titleZh": "Laya 结构化判定模型 · 限时免费 API"
   }
 ]
