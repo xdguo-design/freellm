@@ -32,13 +32,20 @@
 (function (global) {
   'use strict';
 
-  /* Load the persistent primary-navigation controller once per document. */
-  if (!global.FreeLLMNavigation && !document.querySelector('script[data-freellm-site-navigation]')) {
+  /* Load the primary-navigation controller only when the page does not already
+     declare it. Wait for parsing to finish so a script in the body is visible. */
+  function ensurePrimaryNavigation() {
+    if (global.FreeLLMNavigation || document.querySelector('script[data-freellm-site-navigation], script[src*="/js/site-navigation.js"]')) return;
     var navigationScript = document.createElement('script');
     navigationScript.src = '/js/site-navigation.js?v=20261001-updates11';
     navigationScript.async = false;
     navigationScript.dataset.freellmSiteNavigation = '1';
     document.head.appendChild(navigationScript);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensurePrimaryNavigation, { once: true });
+  } else {
+    ensurePrimaryNavigation();
   }
 
   /* ---------- FreeLLM 2026 site-wide visual system ---------- */
