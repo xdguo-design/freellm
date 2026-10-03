@@ -280,3 +280,17 @@ html body[data-fl-section="logs"] #fl-main-content .ref-update-layout .log-snaps
 html body[data-fl-section="logs"] #fl-main-content .log-archive { display: none !important; }
 html body[data-fl-section="logs"] #fl-main-content .log-archive[open] { display: block !important; }
 html body[data-fl-section="logs"] > .prototype-footer { left: -22px !important; width: calc(100% + 36px) !important; height: 200px !important; min-height: 200px !important; margin-top: -75px !important; }
+
+/* The overview hero and its directory cards must share one rail-aware desktop column. */
+@media (min-width: 601px) {
+  body[data-fl-section="models"]:not(.model-center-page):not([data-provider-directory]) > header.models-overview,
+  body[data-fl-section="models"]:not(.model-center-page):not([data-provider-directory]) > main#fl-main-content:not(.model-library-main) {
+    position: relative !important;
+    left: var(--fl-menu-rail-width) !important;
+    box-sizing: border-box !important;
+    width: calc(100% - var(--fl-menu-rail-width) - 36px) !important;
+    max-width: none !important;
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+  }
+}
