@@ -14,14 +14,12 @@
   5. 骨架完整：.tool 容器存在且 h1 非空
 """
 import argparse
-import io
+import base64
 import json
 import pathlib
 import re
 import sys
 import time
-
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -41,7 +39,12 @@ SMOKE = [
     ('json', '{"a":1}', '"a"', None, 'output'),
     ('diff', 'abc\nxyz', None, None, 'outputdiv'),
     ('color-convert', '#1744E8', 'rgb(23, 68, 232)', None, 'table'),
+    ('image-resize', None, None, 'upload:pixel.png', 'image'),
 ]
+
+TINY_PNG = base64.b64decode(
+    'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFUlEQVR4nGMQaPjwH4QZPjQI/AdhAFb0Cf0qzkBmAAAAAElFTkSuQmCC'
+)
 
 
 def registry_ids():
@@ -68,6 +71,16 @@ def smoke(page, base):
                 label = action.split(':', 1)[1]
                 page.get_by_role('button', name=label).first.click()
                 page.wait_for_timeout(300)
+            elif action and action.startswith('upload:'):
+                name = action.split(':', 1)[1]
+                page.locator('input[type=file]').first.set_input_files({
+                    'name': name, 'mimeType': 'image/png', 'buffer': TINY_PNG,
+                })
+                page.wait_for_function(
+                    "document.querySelector('.tool canvas') && "
+                    "document.querySelector('.tool canvas').style.display !== 'none'",
+                    timeout=5000,
+                )
             else:
                 ta = page.locator('textarea:not([readonly])').first
                 if ta.count() == 0:
@@ -78,6 +91,11 @@ def smoke(page, base):
                 n = page.locator('canvas, svg').count()
                 item['detail'] = 'canvas/svg=%d' % n
                 item['ok'] = n > 0
+            elif assert_kind == 'image':
+                canvas = page.locator('.tool canvas').first
+                dims = canvas.evaluate('(c) => [c.width, c.height]')
+                item['detail'] = 'canvas=%sx%s' % tuple(dims)
+                item['ok'] = dims == [2, 2]
             elif assert_kind == 'stats':
                 n = page.locator('.stat b').count()
                 vals = page.locator('.stat b').all_text_contents()
@@ -108,6 +126,8 @@ def smoke(page, base):
 
 
 def main():
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', default='http://127.0.0.1:8901')
     ap.add_argument('--report', default='')

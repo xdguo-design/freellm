@@ -21,7 +21,7 @@ ROUTES = [
     ("models", "/models/", 'body[data-fl-section="models"]'),
     ("skills", "/skills/", ".skills-page"),
     ("tools", "/tools/", ".tools-page"),
-    ("workflow", "/skills/lab/", ".skill-lab-page"),
+    ("workflow", "/workflow/", ".skill-lab-page"),
     ("updates", "/logs/", ".daily-log-dashboard"),
     ("about", "/about/", 'body[data-fl-section="about"]'),
 ]

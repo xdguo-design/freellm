@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 360" fill="none">
+  <defs>
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#F6FAFF"/></linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F1FFF9"/><stop offset="1" stop-color="#D9F8EC"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-35%" width="160%" height="190%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#518DD5" flood-opacity=".13"/></filter>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 6 3 0 6" stroke="#4A94FA" stroke-width="1.6" fill="none"/></marker>
+  </defs>
+  <g stroke="#8ABEFF" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+    <path d="M108 171c40 0 28-85 74-85h16"/><path d="M108 184c39 0 36 72 77 72h16"/>
+    <path d="M300 88h51c39 0 31 46 71 46h16"/><path d="M300 256h46c43 0 34-92 77-92h15"/>
+    <path d="M440 149h45"/><path d="M519 191v30"/><path d="M478 247H390c-29 0-40 31-40 45"/>
+    <path d="M301 291h32"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="18" y="139" width="91" height="93" rx="16" fill="url(#mint)" stroke="#CDEFE1"/>
+    <rect x="198" y="49" width="104" height="82" rx="15" fill="url(#node)" stroke="#DFEAFE"/>
+    <rect x="198" y="218" width="104" height="82" rx="15" fill="url(#node)" stroke="#DFEAFE"/>
+    <rect x="421" y="108" width="99" height="85" rx="15" fill="url(#node)" stroke="#DFEAFE"/>
+    <rect x="475" y="222" width="122" height="83" rx="15" fill="url(#node)" stroke="#DFEAFE"/>
+    <rect x="316" y="273" width="112" height="77" rx="15" fill="url(#node)" stroke="#DFEAFE"/>
+    <rect x="70" y="15" width="70" height="40" rx="9" fill="#fff" fill-opacity=".86" stroke="#E5EEFC"/>
+  </g>
+  <g text-anchor="middle" font-family="Arial,'Microsoft YaHei',sans-serif">
+    <circle cx="63" cy="168" r="17" fill="#10A96C"/><path d="M57 157v22l17-11z" fill="#fff"/>
+    <text x="63" y="204" fill="#1B3158" font-size="14" font-weight="700">触发器</text><text x="63" y="220" fill="#8499B9" font-size="11">输入文章/链接</text>
+    <rect x="234" y="62" width="32" height="28" rx="5" fill="#873EF2"/><path d="M241 70h18m-18 6h18m-18 6h12" stroke="#fff" stroke-width="2" stroke-linecap="round"/><text x="250" y="108" fill="#1B3158" font-size="13" font-weight="700">内容改写</text><text x="250" y="123" fill="#8499B9" font-size="10">多风格生成</text>
+    <circle cx="250" cy="247" r="16" fill="#1786F7"/><circle cx="250" cy="247" r="8" stroke="#fff" stroke-width="2.5"/><path d="m262 259 9 9" stroke="#fff" stroke-width="3" stroke-linecap="round"/><text x="250" y="281" fill="#1B3158" font-size="13" font-weight="700">内容解析</text><text x="250" y="295" fill="#8499B9" font-size="10">提取要点</text>
+    <rect x="455" y="121" width="31" height="27" rx="6" fill="#1688F9"/><circle cx="470" cy="134" r="7" fill="#DDF0FF"/><circle cx="470" cy="134" r="4" fill="#1688F9"/><text x="470" y="166" fill="#1B3158" font-size="13" font-weight="700">生成配图</text><text x="470" y="181" fill="#8499B9" font-size="10">AI 生成封面图</text>
+    <path d="M497 247h39l-19 20z" fill="#1688F9"/><text x="536" y="283" fill="#1B3158" font-size="13" font-weight="700">发布建议</text><text x="536" y="298" fill="#8499B9" font-size="10">标题/标签/时间</text>
+    <circle cx="372" cy="300" r="14" fill="#FB861C"/><path d="M365 297h14l-2 11h-10zM368 294h8" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><text x="372" y="328" fill="#1B3158" font-size="13" font-weight="700">格式输出</text><text x="372" y="343" fill="#8499B9" font-size="10">适配多平台格式</text>
+  </g>
+  <text x="453" y="39" fill="#1875EF" font-size="14" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-7 453 39)">一个想法，</text>
+  <text x="448" y="57" fill="#1875EF" font-size="14" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-7 448 57)">多平台的影响力！</text>
+  <path d="M478 63c33-4 68-11 91-21" stroke="#1875EF" stroke-width="1.5"/>
+  <text x="19" y="321" fill="#1875EF" font-size="14" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-10 19 321)">Let AI</text>
+  <text x="35" y="340" fill="#1875EF" font-size="14" font-family="'Segoe Print','Comic Sans MS',cursive" font-style="italic" transform="rotate(-10 35 340)">Work for You.</text>
+</svg>

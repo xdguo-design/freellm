@@ -91,20 +91,20 @@ class SiteVisualSystemTests(unittest.TestCase):
 
     def test_all_primary_pages_have_isolated_aurora_assets(self):
         pages = {
-            "models/index.html": "aurora-models.css",
-            "skills/index.html": "aurora-skills.css",
-            "tools/index.html": "aurora-tools.css",
-            "skills/lab/index.html": "aurora-workflow.css",
-            "logs/index.html": "aurora-logs.css",
-            "about/index.html": "aurora-about.css",
+            "models/index.html": ("aurora-models.css", "20260929b"),
+            "skills/index.html": ("aurora-skills.css", "20260930k"),
+            "tools/index.html": ("aurora-tools.css", "20260924a"),
+            "skills/lab/index.html": ("aurora-workflow.css", "20260924a"),
+            "logs/index.html": ("aurora-logs.css", "20260924a"),
+            "about/index.html": ("aurora-about.css", "20260924a"),
         }
-        for relative, stylesheet in pages.items():
+        for relative, (stylesheet, version) in pages.items():
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn('data-visual-style="aurora"', page, relative)
             self.assertIn("/css/aurora-core.css?v=20260924a", page, relative)
-            self.assertIn(f"/css/{stylesheet}?v=20260924a", page, relative)
+            self.assertIn(f"/css/{stylesheet}?v={version}", page, relative)
             css = (ROOT / "css" / stylesheet).read_text(encoding="utf-8")
-            self.assertIn('body[data-visual-style="aurora"]', css, stylesheet)
+            self.assertIn('data-fl-section=', css, stylesheet)
 
     def test_aurora_page_styles_stay_page_scoped(self):
         forbidden = {

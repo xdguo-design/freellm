@@ -779,7 +779,7 @@ let offerIndex = {};
     };
     const setFilter = (filter) => {
       activeFilter = filter;
-      document.querySelectorAll('.catalog-app [data-filter]').forEach(el => {
+      document.querySelectorAll('.catalog-app [data-filter], .prototype-tabs [data-filter]').forEach(el => {
         const isActive = el.dataset.filter === filter;
         el.classList.toggle('active', isActive);
         if (el.tagName === 'BUTTON') el.setAttribute('aria-pressed', String(isActive));
@@ -800,6 +800,11 @@ let offerIndex = {};
     document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {
       clearCatalogSearch();
       setFilter(el.dataset.filter);
+    }));
+    document.querySelectorAll('.prototype-tabs [data-filter]').forEach(el => el.addEventListener('click', () => {
+      clearCatalogSearch();
+      setFilter(el.dataset.filter);
+      document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     document.querySelectorAll('.catalog-app [data-region-chip]').forEach(el => el.addEventListener('click', () => {
       const region = el.dataset.regionChip;

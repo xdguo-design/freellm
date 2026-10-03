@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdfffe"/>
+      <stop offset=".55" stop-color="#f0faff"/>
+      <stop offset="1" stop-color="#e2f7f1"/>
+    </linearGradient>
+    <radialGradient id="globe" cx=".4" cy=".32" r=".95">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".5" stop-color="#c9ecff"/>
+      <stop offset="1" stop-color="#7cc7f0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#effcf8" stop-opacity=".9"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#3fb59a" flood-opacity=".18"/>
+    </filter>
+    <filter id="tiny" x="-40%" y="-40%" width="180%" height="190%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#4a90e2" flood-opacity=".22"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="420" fill="url(#sky)"/>
+  <circle cx="620" cy="200" r="170" fill="#ffffff" opacity=".4"/>
+
+  <!-- glass globe -->
+  <g filter="url(#soft)">
+    <circle cx="620" cy="196" r="118" fill="url(#globe)"/>
+    <g fill="none" stroke="#ffffff" stroke-width="2.4" opacity=".85">
+      <circle cx="620" cy="196" r="118"/>
+      <ellipse cx="620" cy="196" rx="118" ry="46"/>
+      <ellipse cx="620" cy="196" rx="52" ry="118"/>
+      <path d="M530 130c40 18 96 26 150 16"/>
+      <path d="M522 240c52 22 122 26 182 8"/>
+    </g>
+    <!-- land blobs -->
+    <g fill="#7fe0b8" opacity=".85">
+      <path d="M560 150c18-16 44-18 58-4s2 34-16 42-38 4-46-12 2-18 4-26z"/>
+      <path d="M660 210c16-8 34-2 38 12s-10 28-26 28-28-10-26-24 6-12 14-16z"/>
+      <path d="M600 246c10-6 22-2 24 8s-8 18-18 16-16-8-14-16 4-6 8-8z"/>
+    </g>
+    <ellipse cx="620" cy="326" rx="120" ry="16" fill="#3fb59a" opacity=".12"/>
+  </g>
+
+  <!-- orbit ring + satellite dot -->
+  <ellipse cx="620" cy="196" rx="182" ry="70" fill="none" stroke="#9fd8c8" stroke-width="2" stroke-dasharray="6 10" opacity=".7" transform="rotate(-14 620 196)"/>
+  <circle cx="438" cy="150" r="8" fill="#ffb45c"/>
+
+  <!-- person leaning on globe -->
+  <g filter="url(#tiny)">
+    <circle cx="760" cy="258" r="11" fill="#1d4f88"/>
+    <rect x="750" y="268" width="20" height="44" rx="9" fill="#1d4f88"/>
+    <path d="M754 280l-20 30M766 280l14 8" stroke="#1d4f88" stroke-width="8" stroke-linecap="round"/>
+    <path d="M780 288l16 24" stroke="#1d4f88" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <!-- floating update cards -->
+  <g filter="url(#tiny)">
+    <g transform="translate(300,96) rotate(-6)">
+      <rect width="158" height="66" rx="13" fill="url(#glass)" stroke="#c9ece2" stroke-width="1.6"/>
+      <circle cx="28" cy="33" r="14" fill="#e6f9f2"/>
+      <path d="M28 24v18M20 30l8-8 8 8" stroke="#17ad6c" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="50" y="29" font-size="13" font-weight="700" fill="#134a3d">今日新增</text>
+      <text x="50" y="47" font-size="10" fill="#5c8a7d">官方来源核对</text>
+    </g>
+  </g>
+  <g filter="url(#tiny)">
+    <g transform="translate(352,208) rotate(5)">
+      <rect width="158" height="66" rx="13" fill="url(#glass)" stroke="#c9ece2" stroke-width="1.6"/>
+      <circle cx="28" cy="33" r="14" fill="#e6f9f2"/>
+      <path d="M20 36l8-10 6 7 9-12" fill="none" stroke="#f0925c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="50" y="29" font-size="13" font-weight="700" fill="#134a3d">状态变化</text>
+      <text x="50" y="47" font-size="10" fill="#5c8a7d">恢复 / 离线 / 来源</text>
+    </g>
+  </g>
+  <g filter="url(#tiny)">
+    <g transform="translate(740,84) rotate(6)">
+      <rect width="150" height="62" rx="13" fill="url(#glass)" stroke="#c9ece2" stroke-width="1.6"/>
+      <circle cx="27" cy="31" r="13" fill="#e6f9f2"/>
+      <circle cx="27" cy="31" r="8" fill="none" stroke="#127dfd" stroke-width="2.4"/>
+      <path d="M27 22v9l6 5" stroke="#127dfd" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <text x="48" y="27" font-size="13" font-weight="700" fill="#134a3d">每日扫描</text>
+      <text x="48" y="45" font-size="10" fill="#5c8a7d">What changed today</text>
+    </g>
+  </g>
+
+  <!-- sparkles -->
+  <g fill="#7fd0bb">
+    <path d="M160 210l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" opacity=".7"/>
+    <path d="M836 320l2.6 6.8 6.8 2.6-6.8 2.6-2.6 6.8-2.6-6.8-6.8-2.6 6.8-2.6z" opacity=".7"/>
+    <circle cx="240" cy="330" r="3.6" opacity=".55"/>
+    <circle cx="520" cy="60" r="3.2" opacity=".5"/>
+  </g>
+
+  <text x="90" y="150" transform="rotate(-4 90 150)" font-family="'Segoe Script','KaiTi','STKaiti',cursive" font-size="22" font-weight="600" fill="#3d9a86">What changed in AI today?</text>
+  <path d="M96 160c46 10 100 12 144 6" fill="none" stroke="#9fd8c8" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+</svg>

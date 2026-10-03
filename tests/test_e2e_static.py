@@ -821,13 +821,17 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertEqual(tokens["ink"].lower(), "#102745")
                 self.assertEqual(tokens["blue"].lower(), "#2f7de1")
                 page.close()
-    def test_theme_toggle_is_frozen_while_aurora_is_the_single_style(self):
+    def test_reference_pages_use_the_rail_theme_toggle(self):
+        # The prototype pages expose the theme switch in the shared navigation rail;
+        # page-local legacy controls stay hidden so they cannot duplicate it.
         for route in ("skills/", "tools/", "about/"):
             with self.subTest(route=route):
                 page = self.new_page()
                 page.goto(f"{self.site.url}/{route}")
                 page.wait_for_selector("body[data-visual-style='aurora']")
-                self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                rail_toggle = page.locator(".fl-site-theme-toggle")
+                self.assertEqual(rail_toggle.count(), 1)
+                self.assertEqual(rail_toggle.evaluate("el => getComputedStyle(el).display"), "flex")
                 local_toggle = page.locator(".theme-toggle")
                 if local_toggle.count():
                     self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
@@ -983,12 +987,21 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), free_quota_count)
         self.assertEqual(len(page.problems), 0, page.problems)
 
+    def test_homepage_prototype_tabs_filter_the_catalog(self):
+        page = self.new_page()
+        page.goto(HTML_PATH.as_uri())
+        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.click(".prototype-tabs [data-filter='web']")
+        page.wait_for_function("document.querySelector('.prototype-tabs [data-filter=web]').getAttribute('aria-pressed') === 'true'")
+        self.assertLess(page.locator(".offer:not(.hidden)").count(), page.locator(".offer").count())
+        page.close()
+
     def test_web_offer_drawer_shows_usage_guide(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
-        page.click(".filter-strip [data-filter='web']")
+        page.click(".prototype-tabs [data-filter='web']")
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search + Fetch", page.locator("#drawerTitle").inner_text())

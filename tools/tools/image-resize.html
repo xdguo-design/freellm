@@ -60,25 +60,27 @@ function render() {
   info.textContent = canvas.width + '×' + canvas.height;
 }
 function loadFile(f) {
-  T.loadImage(function (i) {
-    img = i;
-    w.value = i.width;
-    h.value = i.height;
-    info.textContent = '原图 ' + i.width + '×' + i.height;
+  if (!f) return;
+  var url = URL.createObjectURL(f);
+  var image = new Image();
+  image.onload = function () {
+    img = image;
+    w.value = image.naturalWidth;
+    h.value = image.naturalHeight;
+    info.textContent = '原图 ' + image.naturalWidth + '×' + image.naturalHeight;
     render();
-  });
-  var reader = new FileReader();
-  reader.onload = function () {};
+    URL.revokeObjectURL(url);
+  };
+  image.onerror = function () {
+    URL.revokeObjectURL(url);
+    T.toast('图片解析失败');
+  };
+  image.src = url;
 }
 inp.addEventListener('change', function () {
   var f = inp.files[0];
-  if (!f) return;
-  T.loadImage(function (i) {
-    img = i;
-    w.value = i.width;
-    h.value = i.height;
-    render();
-  });
+  loadFile(f);
+  inp.value = '';
 });
 drop.addEventListener('click', function () { inp.click(); });
 drop.addEventListener('dragover', function (e) { e.preventDefault(); });
@@ -102,7 +104,7 @@ app.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, '
   T.button('下载 JPEG', function () { canvas.toBlob(function (b) { T.download('resize.jpg', b); }, 'image/jpeg', 0.9); })]));
 })();
 </script>
-<script type="application/json" id="tool-source">{"id": "image-resize", "title": "图片尺寸调整", "desc": "按预设 / 自定义尺寸缩放图片，保持比例可选", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar w = T.num(800, { min: 1, style: 'width:90px' });\nvar h = T.num(600, { min: 1, style: 'width:90px' });\nvar lock = T.check('锁定比例', true);\nvar preset = T.select([\n  { value: '', label: '自定义…' }, { value: '1920x1080', label: '1920×1080 全高清' },\n  { value: '1280x720', label: '1280×720' }, { value: '1080x1080', label: '1080×1080 方图' },\n  { value: '1080x1920', label: '1080×1920 竖屏' }, { value: '800x600', label: '800×600' }\n], '');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar info = T.badge('—');\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  canvas.width = Math.max(1, +w.value);\n  canvas.height = Math.max(1, +h.value);\n  var ctx = canvas.getContext('2d');\n  ctx.imageSmoothingQuality = 'high';\n  ctx.clearRect(0, 0, canvas.width, canvas.height);\n  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);\n  canvas.style.display = '';\n  info.textContent = canvas.width + '×' + canvas.height;\n}\nfunction loadFile(f) {\n  T.loadImage(function (i) {\n    img = i;\n    w.value = i.width;\n    h.value = i.height;\n    info.textContent = '原图 ' + i.width + '×' + i.height;\n    render();\n  });\n  var reader = new FileReader();\n  reader.onload = function () {};\n}\ninp.addEventListener('change', function () {\n  var f = inp.files[0];\n  if (!f) return;\n  T.loadImage(function (i) {\n    img = i;\n    w.value = i.width;\n    h.value = i.height;\n    render();\n  });\n});\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\nfunction syncWH(changed) {\n  if (!lock._input.checked || !img) return;\n  var ratio = img.width / img.height;\n  if (changed === 'w') h.value = Math.round(+w.value / ratio);\n  else w.value = Math.round(+h.value * ratio);\n}\nw.addEventListener('input', function () { syncWH('w'); render(); });\nh.addEventListener('input', function () { syncWH('h'); render(); });\npreset.addEventListener('change', function () {\n  var p = preset.value.split('x');\n  if (p.length === 2) { w.value = p[0]; h.value = p[1]; lock._input.checked = false; render(); }\n});\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '宽' }), w, T.el('span', { text: '高' }), h, lock, preset, info]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'resize-' + w.value + 'x' + h.value + '.png'); }, true),\n  T.button('下载 JPEG', function () { canvas.toBlob(function (b) { T.download('resize.jpg', b); }, 'image/jpeg', 0.9); })]));"}</script>
+<script type="application/json" id="tool-source">{"id": "image-resize", "title": "图片尺寸调整", "desc": "按预设 / 自定义尺寸缩放图片，保持比例可选", "scripts": "", "code": "var drop = T.msg('点击或拖入图片', '');\ndrop.style.border = '1px dashed var(--line)';\ndrop.style.padding = '24px';\ndrop.style.textAlign = 'center';\ndrop.style.cursor = 'pointer';\nvar w = T.num(800, { min: 1, style: 'width:90px' });\nvar h = T.num(600, { min: 1, style: 'width:90px' });\nvar lock = T.check('锁定比例', true);\nvar preset = T.select([\n  { value: '', label: '自定义…' }, { value: '1920x1080', label: '1920×1080 全高清' },\n  { value: '1280x720', label: '1280×720' }, { value: '1080x1080', label: '1080×1080 方图' },\n  { value: '1080x1920', label: '1080×1920 竖屏' }, { value: '800x600', label: '800×600' }\n], '');\nvar canvas = T.el('canvas', { style: 'max-width:100%;border:1px solid var(--line);border-radius:8px;display:none' });\nvar info = T.badge('—');\nvar inp = T.el('input', { type: 'file', accept: 'image/*', style: 'display:none' });\ndocument.body.appendChild(inp);\nvar img = null;\nfunction render() {\n  if (!img) return;\n  canvas.width = Math.max(1, +w.value);\n  canvas.height = Math.max(1, +h.value);\n  var ctx = canvas.getContext('2d');\n  ctx.imageSmoothingQuality = 'high';\n  ctx.clearRect(0, 0, canvas.width, canvas.height);\n  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);\n  canvas.style.display = '';\n  info.textContent = canvas.width + '×' + canvas.height;\n}\nfunction loadFile(f) {\n  if (!f) return;\n  var url = URL.createObjectURL(f);\n  var image = new Image();\n  image.onload = function () {\n    img = image;\n    w.value = image.naturalWidth;\n    h.value = image.naturalHeight;\n    info.textContent = '原图 ' + image.naturalWidth + '×' + image.naturalHeight;\n    render();\n    URL.revokeObjectURL(url);\n  };\n  image.onerror = function () {\n    URL.revokeObjectURL(url);\n    T.toast('图片解析失败');\n  };\n  image.src = url;\n}\ninp.addEventListener('change', function () {\n  var f = inp.files[0];\n  loadFile(f);\n  inp.value = '';\n});\ndrop.addEventListener('click', function () { inp.click(); });\ndrop.addEventListener('dragover', function (e) { e.preventDefault(); });\ndrop.addEventListener('drop', function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; inp.dispatchEvent(new Event('change')); } });\nfunction syncWH(changed) {\n  if (!lock._input.checked || !img) return;\n  var ratio = img.width / img.height;\n  if (changed === 'w') h.value = Math.round(+w.value / ratio);\n  else w.value = Math.round(+h.value * ratio);\n}\nw.addEventListener('input', function () { syncWH('w'); render(); });\nh.addEventListener('input', function () { syncWH('h'); render(); });\npreset.addEventListener('change', function () {\n  var p = preset.value.split('x');\n  if (p.length === 2) { w.value = p[0]; h.value = p[1]; lock._input.checked = false; render(); }\n});\napp.appendChild(drop);\napp.appendChild(T.row([T.el('span', { text: '宽' }), w, T.el('span', { text: '高' }), h, lock, preset, info]));\napp.appendChild(canvas);\napp.appendChild(T.row([T.button('下载 PNG', function () { T.dlCanvas(canvas, 'resize-' + w.value + 'x' + h.value + '.png'); }, true),\n  T.button('下载 JPEG', function () { canvas.toBlob(function (b) { T.download('resize.jpg', b); }, 'image/jpeg', 0.9); })]));"}</script>
 <script>ToolCommon.sourcePanel();</script>
 </body>
 </html>

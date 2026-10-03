@@ -37,3 +37,11 @@ logs/*.json
 # stray UI screenshots captured during local verification
 skills-dialog-*.png
 skills-grid.png
+
+# local visual-regression runs and preview captures
+artifacts/
+docs/png/
+
+# one-off pixel-comparison scratch scripts
+/crop*.py
+/probe.py

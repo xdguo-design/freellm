@@ -1,9 +1,160 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420">
-<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#f9fdff"/><stop offset="1" stop-color="#d9efff"/></linearGradient><linearGradient id="c" x1="0" x2="1" y1="1"><stop stop-color="#559fff"/><stop offset="1" stop-color="#cae7ff"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#4a9bf2" flood-opacity=".18"/></filter></defs>
-<rect width="900" height="420" fill="url(#g)"/><path d="M290 330l118-118 90 38 82-116 162 152 158 44v90H290z" fill="#e0f1ff"/>
-<g filter="url(#s)"><polygon points="510,255 650,185 782,244 643,318" fill="url(#c)"/><polygon points="510,255 643,318 643,354 510,291" fill="#8cc3ff"/><polygon points="643,318 782,244 782,278 643,354" fill="#cfe9ff"/></g>
-<g fill="#fff" stroke="#aed4f6" filter="url(#s)"><rect x="350" y="105" width="165" height="78" rx="14" transform="rotate(-9 350 105)"/><rect x="612" y="82" width="180" height="82" rx="14" transform="rotate(8 612 82)"/><rect x="690" y="212" width="155" height="75" rx="14"/></g>
-<g fill="#1b76e8" font-family="Arial" font-weight="700"><text x="380" y="133" font-size="18">Create</text><text x="646" y="116" font-size="18">Build</text><text x="724" y="244" font-size="18">Explore</text></g>
-<circle cx="615" cy="216" r="46" fill="#116ff1"/><circle cx="615" cy="216" r="20" fill="#fff" opacity=".92"/><path d="M595 216h40M615 196v40" stroke="#116ff1" stroke-width="5"/>
-<text x="382" y="56" font-family="Arial" font-size="28" font-style="italic" fill="#266fd1">Better Tools · A Brighter Tomorrow</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbfdff"/>
+      <stop offset=".55" stop-color="#eef7ff"/>
+      <stop offset="1" stop-color="#dcedff"/>
+    </linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f8fd"/>
+      <stop offset="1" stop-color="#c3d2e4"/>
+    </linearGradient>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dfe9f5"/>
+      <stop offset="1" stop-color="#aebfd4"/>
+    </linearGradient>
+    <linearGradient id="inner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fa5c0"/>
+      <stop offset="1" stop-color="#b9c9dd"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#eef5ff" stop-opacity=".9"/>
+    </linearGradient>
+    <linearGradient id="bulb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3c4"/>
+      <stop offset="1" stop-color="#ffd257"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef3fa"/>
+      <stop offset="1" stop-color="#b7c6da"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#4a90e2" flood-opacity=".2"/>
+    </filter>
+    <filter id="tiny" x="-40%" y="-40%" width="180%" height="190%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#4a90e2" flood-opacity=".22"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="420" fill="url(#sky)"/>
+  <circle cx="700" cy="96" r="120" fill="#ffffff" opacity=".45"/>
+  <circle cx="760" cy="150" r="150" fill="#ffffff" opacity=".3"/>
+
+  <ellipse cx="600" cy="218" rx="252" ry="96" fill="none" stroke="#9cc4f2" stroke-width="1.6" stroke-dasharray="7 9" opacity=".6"/>
+  <ellipse cx="600" cy="218" rx="196" ry="70" fill="none" stroke="#b9d7f7" stroke-width="1.2" stroke-dasharray="4 8" opacity=".5"/>
+
+  <g fill="#8fc0f5">
+    <path d="M168 96l3.6 9.4 9.4 3.6-9.4 3.6-3.6 9.4-3.6-9.4-9.4-3.6 9.4-3.6z"/>
+    <path d="M806 292l2.8 7.2 7.2 2.8-7.2 2.8-2.8 7.2-2.8-7.2-7.2-2.8 7.2-2.8z" opacity=".8"/>
+    <path d="M262 268l2.2 5.8 5.8 2.2-5.8 2.2-2.2 5.8-2.2-5.8-5.8-2.2 5.8-2.2z" opacity=".65"/>
+    <circle cx="470" cy="70" r="4" opacity=".55"/>
+    <circle cx="742" cy="330" r="3.4" opacity=".5"/>
+  </g>
+
+  <!-- toolbox: open lid behind, body in front -->
+  <g filter="url(#soft)">
+    <g transform="rotate(-8 600 208)">
+      <rect x="452" y="112" width="296" height="104" rx="14" fill="url(#lid)" stroke="#9fb3cc" stroke-width="2"/>
+      <rect x="452" y="112" width="296" height="26" rx="13" fill="#ffffff" opacity=".5"/>
+      <rect x="584" y="104" width="32" height="112" rx="8" fill="#f39c3d"/>
+      <rect x="588" y="112" width="24" height="14" rx="7" fill="#ffd9a3"/>
+    </g>
+    <rect x="428" y="204" width="344" height="140" rx="16" fill="url(#box)" stroke="#93a9c4" stroke-width="2"/>
+    <rect x="428" y="204" width="344" height="30" rx="15" fill="#ffffff" opacity=".55"/>
+    <path d="M444 236h312v92a10 10 0 0 1-10 10H454a10 10 0 0 1-10-10z" fill="url(#inner)"/>
+    <rect x="470" y="252" width="58" height="66" rx="8" fill="#7e93ad" opacity=".55"/>
+    <rect x="544" y="252" width="58" height="66" rx="8" fill="#7e93ad" opacity=".4"/>
+    <rect x="618" y="252" width="58" height="66" rx="8" fill="#7e93ad" opacity=".55"/>
+    <rect x="692" y="252" width="40" height="66" rx="8" fill="#7e93ad" opacity=".4"/>
+    <path d="M556 196c0-16 10-26 44-26s44 10 44 26" fill="none" stroke="#8298b4" stroke-width="10" stroke-linecap="round"/>
+    <g fill="#f39c3d" stroke="#d97f1f" stroke-width="1.4">
+      <rect x="470" y="196" width="26" height="20" rx="5"/>
+      <rect x="704" y="196" width="26" height="20" rx="5"/>
+    </g>
+    <g fill="#3c5a7c">
+      <circle cx="572" cy="292" r="6"/>
+      <circle cx="628" cy="292" r="6"/>
+      <path d="M570 312q30 16 60 0" fill="none" stroke="#3c5a7c" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- flying tools with faces -->
+  <g filter="url(#tiny)" transform="rotate(-24 320 140)">
+    <rect x="298" y="118" width="34" height="128" rx="14" fill="url(#metal)" stroke="#93a9c4" stroke-width="2"/>
+    <path d="M292 100c0-16 12-28 28-28l-9 15 12 8 10-16c5 5 8 12 8 21 0 18-11 30-24 30s-25-13-25-30z" fill="#cfdcee" stroke="#93a9c4" stroke-width="2"/>
+    <circle cx="312" cy="152" r="4" fill="#3c5a7c"/>
+    <circle cx="322" cy="152" r="4" fill="#3c5a7c"/>
+    <path d="M308 168q8 6 16 0" fill="none" stroke="#3c5a7c" stroke-width="3.4" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#tiny)" transform="rotate(18 828 128)">
+    <rect x="818" y="64" width="20" height="70" rx="6" fill="#f39c3d" stroke="#d97f1f" stroke-width="1.6"/>
+    <rect x="820" y="130" width="16" height="44" rx="5" fill="#dfe9f5" stroke="#93a9c4" stroke-width="1.6"/>
+    <path d="M824 172h8l-2 26h-4z" fill="#8fa5c0"/>
+    <circle cx="828" cy="96" r="3.6" fill="#3c5a7c"/>
+    <circle cx="828" cy="108" r="3.6" fill="#3c5a7c"/>
+    <path d="M822 120q6 5 12 0" fill="none" stroke="#3c5a7c" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#tiny)" transform="translate(214,266)">
+    <g fill="#bcd0e8" stroke="#93a9c4" stroke-width="2">
+      <circle cx="46" cy="46" r="34"/>
+      <rect x="38" y="2" width="16" height="18" rx="4"/>
+      <rect x="38" y="72" width="16" height="18" rx="4"/>
+      <rect x="2" y="38" width="18" height="16" rx="4"/>
+      <rect x="72" y="38" width="18" height="16" rx="4"/>
+    </g>
+    <circle cx="46" cy="46" r="12" fill="#7e93ad"/>
+    <circle cx="38" cy="40" r="3.4" fill="#3c5a7c"/>
+    <circle cx="54" cy="40" r="3.4" fill="#3c5a7c"/>
+    <path d="M38 54q8 6 16 0" fill="none" stroke="#3c5a7c" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#tiny)" transform="translate(760,52)">
+    <circle cx="52" cy="46" r="38" fill="url(#bulb)" stroke="#eeb93c" stroke-width="2.4"/>
+    <rect x="40" y="82" width="24" height="16" rx="5" fill="#c3d2e4" stroke="#93a9c4" stroke-width="1.6"/>
+    <g stroke="#f6b93b" stroke-width="3.4" stroke-linecap="round">
+      <path d="M52 -6v-12"/>
+      <path d="M16 8L6 -2"/>
+      <path d="M88 8l10-10"/>
+    </g>
+    <circle cx="42" cy="42" r="4" fill="#3c5a7c"/>
+    <circle cx="62" cy="42" r="4" fill="#3c5a7c"/>
+    <path d="M42 58q10 7 20 0" fill="none" stroke="#3c5a7c" stroke-width="3.4" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#tiny)" transform="rotate(34 132 336)">
+    <rect x="66" y="312" width="150" height="34" rx="8" fill="#eaf3ff" stroke="#93a9c4" stroke-width="2"/>
+    <g stroke="#7fa2c9" stroke-width="2.4">
+      <path d="M84 312v12"/><path d="M102 312v18"/><path d="M120 312v12"/><path d="M138 312v18"/><path d="M156 312v12"/><path d="M174 312v18"/><path d="M192 312v12"/>
+    </g>
+  </g>
+
+  <!-- glass info cards -->
+  <g filter="url(#tiny)">
+    <g transform="translate(120,60)">
+      <rect width="132" height="58" rx="12" fill="url(#glass)" stroke="#cfe2f7" stroke-width="1.6"/>
+      <circle cx="26" cy="29" r="12" fill="#e4f3ff"/>
+      <path d="M22 29a4 4 0 1 1 8 0 4 4 0 0 1-8 0m3.4-4.6a6.5 6.5 0 0 0 0 9.2m6.9-10.4a8 8 0 0 1 0 11.6" fill="none" stroke="#127dfd" stroke-width="1.8" stroke-linecap="round"/>
+      <text x="46" y="26" font-size="12.5" font-weight="700" fill="#17325c">本地运行</text>
+      <text x="46" y="43" font-size="10.5" fill="#5f7ba3">数据不出浏览器</text>
+    </g>
+  </g>
+  <g filter="url(#tiny)">
+    <g transform="translate(668,326)">
+      <rect width="150" height="58" rx="12" fill="url(#glass)" stroke="#cfe2f7" stroke-width="1.6"/>
+      <rect x="14" y="16" width="26" height="26" rx="7" fill="#e4f3ff"/>
+      <path d="M20 32l6-7 5 5 8-9" fill="none" stroke="#17ad6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="50" y="26" font-size="12.5" font-weight="700" fill="#17325c">0 数据上传</text>
+      <text x="50" y="43" font-size="10.5" fill="#5f7ba3">安全可靠</text>
+    </g>
+  </g>
+  <g filter="url(#tiny)">
+    <g transform="translate(388,34)">
+      <rect width="128" height="58" rx="12" fill="url(#glass)" stroke="#cfe2f7" stroke-width="1.6"/>
+      <text x="16" y="26" font-size="15" font-weight="800" fill="#127dfd">291</text>
+      <text x="16" y="45" font-size="10.5" fill="#5f7ba3">个实用工具</text>
+      <g stroke="#bcd5f3" stroke-width="2"><path d="M64 20h48M64 30h40M64 40h44"/></g>
+    </g>
+  </g>
+
+  <text x="88" y="212" transform="rotate(-4 88 212)" font-family="'Segoe Script','KaiTi','STKaiti',cursive" font-size="21" font-weight="600" fill="#4d7ec5">Better Tools, Better Flow</text>
+  <path d="M92 220c34 10 76 12 118 6" fill="none" stroke="#8cc6f5" stroke-width="3" stroke-linecap="round" opacity=".8"/>
 </svg>

@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 from urllib.parse import quote
 
@@ -23,21 +24,24 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001-updates11"></script>
+<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
-    <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span>
+    <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>
   </a>
   <nav class="fl-site-nav">
     <a href="/" data-site-nav="home" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
     <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
     <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
-    <a href="/skills/lab/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+    <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
-  <div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>
+  <div class="prototype-theme-toggle" aria-label="主题切换"><span class="active">☀</span><span>◔</span></div>
+  <div class="fl-site-rail-note" aria-hidden="true"></div>
+  <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2024 FreeLLM</small></div>
 </aside>
 <div class="fl-site-ribbon">
   <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
@@ -98,9 +102,22 @@ def ensure_pastel_shell(html: str) -> str:
 
     # Always normalize the shell. Older generated HTML may already contain
     # a ten-item rail, so "only inject if missing" would preserve stale navigation.
-    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
-    if re.search(shell_pattern, updated, flags=re.I | re.S):
-        updated = re.sub(shell_pattern, SITE_CHROME, updated, count=1, flags=re.I | re.S)
+    # The leading scripts group keeps the rewrite idempotent: SITE_CHROME places
+    # its script *before* the rail, so a bare aside match would prepend one more
+    # script on every build.
+    shell_pattern = r'(?:<script src="/js/site-navigation\.js[^"]*"></script>\s*)*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    matches = list(re.finditer(shell_pattern, updated, flags=re.I | re.S))
+    if matches:
+        first = matches[0]
+        rebuilt = updated[: first.start()] + SITE_CHROME + updated[first.end() :]
+        tail_start = first.start() + len(SITE_CHROME)
+        tail = re.sub(
+            r'\s*(?:<script src="/js/site-navigation\.js[^"]*"></script>\s*)*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
+            "",
+            rebuilt[tail_start:],
+            flags=re.I | re.S,
+        )
+        updated = rebuilt[:tail_start] + tail
     else:
         updated = re.sub(
             r'(<body[^>]*>)',
@@ -389,6 +406,71 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
+def update_prototype_updates_table(html: str, data_path: Path) -> str:
+    """Replace the placeholder rows of the homepage prototype-updates table
+    with the latest events from the daily-log pipeline."""
+    log_dir = data_path.parent / "daily-log"
+    log_paths = sorted(log_dir.glob("*.json"))[-7:]
+    events: list[dict] = []
+    for path in reversed(log_paths):
+        try:
+            log = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        events.extend(
+            event
+            for event in (log.get("events") or [])
+            if isinstance(event, dict) and event.get("eventType") and event.get("asOf")
+        )
+    if not events:
+        return html
+    events.sort(key=lambda event: str(event["asOf"]), reverse=True)
+    events = events[:8]
+
+    kind_labels = {"model": "AI 模型", "offer": "免费接入"}
+    state_labels = {
+        "new": ("最新上线", "state-new"),
+        "new_route": ("API 更新", "state-api"),
+        "recovered": ("已恢复", "state-updated"),
+        "offline": ("暂时下线", "state-off"),
+        "source_unavailable": ("源不可用", "state-off"),
+    }
+    # Relative labels are anchored to the newest event, not the build day, so
+    # the generated markup stays byte-stable for --check runs on later days.
+    today = date.fromisoformat(str(events[0]["asOf"]))
+    rows = []
+    for event in events:
+        details = event.get("details") if isinstance(event.get("details"), dict) else {}
+        provider = str(details.get("provider") or event.get("id") or "?")
+        title = str(event.get("title") or event.get("id") or "?")
+        label, state = state_labels.get(str(event.get("eventType")), (str(event.get("eventType")), "state-off"))
+        try:
+            delta = (today - date.fromisoformat(str(event["asOf"]))).days
+        except ValueError:
+            delta = -1
+        when = "今天" if delta == 0 else "昨天" if delta == 1 else f"{delta} 天前" if delta >= 0 else str(event["asOf"])
+        kind = kind_labels.get(str(event.get("kind")), "AI 模型")
+        initial = (provider[:1] or "?").upper()
+        rows.append(
+            f'<tr><td><b class="prototype-update-logo">{html_lib.escape(initial)}</b>'
+            f"<strong>{html_lib.escape(title)}</strong></td>"
+            f"<td>{html_lib.escape(kind)}</td><td>{when}</td>"
+            f'<td><i class="{state}">{html_lib.escape(label)}</i></td>'
+            f"<td>{html_lib.escape(provider)}</td>"
+            f'<td><a href="/models/">浏览模型库 →</a></td></tr>'
+        )
+    updated, replaced = re.subn(
+        r'(<table class="prototype-update-table">.*?<tbody>).*?(</tbody>)',
+        lambda match: match.group(1) + "".join(rows) + match.group(2),
+        html,
+        count=1,
+        flags=re.S,
+    )
+    if replaced:
+        updated = updated.replace("<th>热度</th>", "<th>提供方</th>", 1)
+    return updated
+
+
 def update_static_item_list(html: str, data: list[dict]) -> str:
     start = html.find(LD_START)
     if start < 0:
@@ -518,6 +600,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
+    updated = update_prototype_updates_table(updated, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',
