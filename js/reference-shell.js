@@ -36,7 +36,7 @@ if (section === 'home' || section === 'models') {
 
     const localeButton = topbar.querySelector('.ref-locale');
     localeButton?.addEventListener('click', () => {
-      const legacyToggle = document.querySelector('[data-locale-toggle]');
+      const legacyToggle = document.querySelector('[data-locale-toggle], [data-locale-switch]');
       if (legacyToggle) legacyToggle.click();
     });
 
@@ -56,18 +56,23 @@ if (section === 'home' || section === 'models') {
     const topInput = topbar.querySelector('input');
     const targets = ['#catalog-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
     const target = targets[0];
+    const mirrorSearch = () => {
+      if (!target) return;
+      target.value = topInput.value.trim();
+      target.dispatchEvent(new Event('input', { bubbles: true }));
+      target.dispatchEvent(new Event('change', { bubbles: true }));
+    };
     const sync = () => {
       const value = topInput.value.trim();
       if (target) {
-        target.value = value;
-        target.dispatchEvent(new Event('input', { bubbles: true }));
-        target.dispatchEvent(new Event('change', { bubbles: true }));
+        mirrorSearch();
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         target.focus({ preventScroll: true });
       } else if (value) {
         location.href = '/?q=' + encodeURIComponent(value);
       }
     };
+    topInput.addEventListener('input', mirrorSearch);
     topInput.addEventListener('keydown', event => { if (event.key === 'Enter') sync(); });
     if (!window.__freellmReferenceShortcutBound) {
       window.__freellmReferenceShortcutBound = true;

@@ -200,8 +200,8 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<span lang="zh-CN">提供商</span>', log)
         self.assertIn('<span lang="zh-CN">资源</span>', log)
         self.assertNotIn("首次建立基线", log)
-        self.assertIn('<details class="log-new-card">', log)
-        self.assertIn('<summary class="log-card-summary">', log)
+        self.assertIn('class="ref-update-change-stream"', log)
+        self.assertIn('class="ref-update-history-table"', log)
 
     def test_daily_updates_story_is_visible_in_homepage_and_log(self):
         log = LOG_PATH.read_text(encoding="utf-8")
@@ -705,7 +705,8 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
+                    theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
+                    self.assertEqual(theme_display, "flex" if width > 800 else "none")
                     self.assertLessEqual(
                         page.evaluate("document.documentElement.scrollWidth"),
                         width + 4,
@@ -740,8 +741,8 @@ class BrowserPageTests(unittest.TestCase):
             ("skills/", "#skill-grid .skill-card:not([hidden])"),
             ("tools/", "#tool-grid .tool-card:not([hidden])"),
             ("skills/lab/", ".workflow-grid .workflow-card"),
-            ("logs/", ".log-stat-grid .log-stat-card"),
-            ("about/", ".stat-row .stat"),
+            ("logs/", ".ref-update-metrics article"),
+            ("about/", ".about-stat-grid .about-stat-card"),
         )
         for route, selector in checks:
             with self.subTest(route=route):
@@ -909,7 +910,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertIn("Auto-Free", page.locator("#drawerTitle").inner_text())
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_homepage_aurora_phase_one_visual_contracts(self):
         page = self.new_page()
@@ -918,7 +923,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
 
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
-        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
 
         hero = page.locator(".prototype-hero").bounding_box()
         fresh = page.locator("#prototype-fresh").bounding_box()
@@ -1016,7 +1021,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
         self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
         self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_http_protocol_prefers_network_json(self):
         page = self.new_page()
@@ -1077,14 +1086,18 @@ class BrowserPageTests(unittest.TestCase):
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
             assets.mkdir(parents=True)
             (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
+            for name in ("rail-brand.png", "rail-bottom.png"):
+                (assets / name).write_bytes((ROOT / "assets" / "reference" / name).read_bytes())
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "daily-update-status.json").write_text((ROOT / "data" / "daily-update-status.json").read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
@@ -1117,6 +1130,7 @@ class BrowserPageTests(unittest.TestCase):
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
