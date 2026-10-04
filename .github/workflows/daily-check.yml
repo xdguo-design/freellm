@@ -26,6 +26,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Validate offers schema
         run: python -m crawler.cli validate data/offers.json
 
@@ -33,12 +36,15 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Ranking engine tests
+        if: always()
         run: node --test tests/ranking.test.ts
 
       - name: Ranking artifact is current
+        if: always()
         run: node scripts/generate_ranking.ts --check
 
       - name: Scan official public sources
+        if: always()
         id: scan
         run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
 
@@ -118,7 +124,7 @@ jobs:
         run: python -m crawler.cli signals --input data/community-signals.json --out data/community-signals.json
 
       - name: Build source coverage report
-        if: always()
+        if: always() && steps.scan.outcome == 'success'
         run: python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
 
       - name: Snapshot current offers
@@ -130,12 +136,15 @@ jobs:
         run: python -m json.tool data/review-queue.json > /dev/null
 
       - name: Build check (embedded page data must be current)
+        if: always()
         run: python scripts/build_static.py --check
 
       - name: Site health gate (freshness, size budgets, release SHA)
+        if: always()
         run: python scripts/site_health.py --report site-health-report.json
 
       - name: AdSense gate (ads.txt match, loader coverage, thin-page ad risk)
+        if: always()
         run: python scripts/check_adsense.py --report adsense-report.json
 
       - name: Upload scan evidence

@@ -58,6 +58,8 @@ class VercelHeaderContractTests(unittest.TestCase):
         self.assertEqual(values["Referrer-Policy"], "strict-origin-when-cross-origin")
         self.assertEqual(values["Permissions-Policy"], "camera=(), microphone=(), geolocation=()")
         self.assertEqual(values["X-Frame-Options"], "SAMEORIGIN")
+        self.assertIn("object-src 'none'", values["Content-Security-Policy"])
+        self.assertIn("frame-ancestors 'self'", values["Content-Security-Policy"])
 
     def test_vercel_keeps_homepage_rewrite(self):
         config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
@@ -83,7 +85,7 @@ class ReadmeFactsTests(unittest.TestCase):
         offers = len(json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")))
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         self.assertIn(f">{offers}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn(f">{models}+<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
+        self.assertIn(f">{models}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
         provider_cards = len(json.loads((ROOT / "data" / "provider-access.json").read_text(encoding="utf-8")))
         models_page = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f"{provider_cards} 家提供商", models_page)

@@ -162,7 +162,7 @@ class StaticContractTests(unittest.TestCase):
             ("models", "/models/"),
             ("skills", "/skills/"),
             ("tools", "/tools/"),
-            ("workflow", "/skills/lab/"),
+            ("workflow", "/workflow/"),
             ("logs", "/logs/"),
             ("about", "/about/"),
         ):
@@ -181,13 +181,13 @@ class StaticContractTests(unittest.TestCase):
         for needle in (
             'class="daily-log-dashboard"',
             'class="log-hero"',
-            'class="log-stat-card blue"',
-            'id="static-locale-script"',
-            '.log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }',
-            '.log-stat-card { min-height:92px;',
-            '.log-days::before { content:"";',
-            '.log-registration { margin:12px 0;',
-            ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
+            'class="ref-update-metrics"',
+            'class="ref-update-layout"',
+            'class="ref-update-history"',
+            'class="log-snapshot-card"',
+            'class="ref-update-change-stream"',
+            'class="ref-update-calendar-grid"',
+            'data-static-locale="true"',
         ):
             self.assertIn(needle, log)
         # Snapshot counters must track the live data, not a frozen literal: the
@@ -217,8 +217,8 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, self.html)
         self.assertIn('每日更新', self.html)
-        self.assertIn('今天的 AI 资源有什么变化？', log)
-        self.assertIn('我们每天检查官方来源，记录新增、恢复、下线和异常。', log)
+        self.assertIn('今日更新，', log)
+        self.assertIn('我们持续追踪全球 AI 生态的最新动态', log)
         self.assertIn('查看今日变化', self.html)
 
     def test_homepage_links_to_theme_guides(self):
@@ -449,7 +449,8 @@ class StaticContractTests(unittest.TestCase):
         for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
         catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
-        for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
+        self.assertIn('data-filter="agent"', catalog_html)
+        for name in ("search", "fetch", "extract", "crawl", "map", "browser"):
             self.assertNotIn(f'data-filter="{name}"', catalog_html)
 
     def test_page_has_adsense_site_verification_script(self):
