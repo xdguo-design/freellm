@@ -707,10 +707,25 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
                     theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
                     self.assertEqual(theme_display, "flex" if width > 800 else "none")
+                    scroll_width = page.evaluate("document.documentElement.scrollWidth")
+                    overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
+                        .map(el => {
+                            const r = el.getBoundingClientRect();
+                            return {
+                                tag: el.tagName.toLowerCase(),
+                                id: el.id || '',
+                                cls: typeof el.className === 'string' ? el.className : '',
+                                left: Math.round(r.left * 10) / 10,
+                                right: Math.round(r.right * 10) / 10,
+                                width: Math.round(r.width * 10) / 10,
+                            };
+                        })
+                        .filter(x => x.width > 1 && (x.right > innerWidth + 4 || x.left < -4))
+                        .slice(0, 12)""")
                     self.assertLessEqual(
-                        page.evaluate("document.documentElement.scrollWidth"),
+                        scroll_width,
                         width + 4,
-                        f"{route} creates page-level horizontal overflow at {width}px",
+                        f"{route} creates page-level horizontal overflow at {width}px: {overflowers}",
                     )
                     page.close()
     def test_visual_regression_equal_height_cards_and_home_hierarchy(self):
