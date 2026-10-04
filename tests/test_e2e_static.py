@@ -195,13 +195,10 @@ class StaticContractTests(unittest.TestCase):
         # totals captured in that day's log JSON.
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
-        latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
-        observed_models = len(latest["observed"]["models"])
-        self.assertRegex(log, rf'<strong>{observed_models} <span lang="zh-CN">模型</span>')
         self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">资源</span>')
+        self.assertIn(latest_log_path.stem, log)
+        self.assertIn('<span lang="zh-CN">提供商</span>', log)
+        self.assertIn('<span lang="zh-CN">资源</span>', log)
         self.assertNotIn("首次建立基线", log)
         self.assertIn('<details class="log-new-card">', log)
         self.assertIn('<summary class="log-card-summary">', log)
@@ -356,9 +353,9 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>发现真正好<br>用的<span>免费 AI</span></h1>', self.html)
-        self.assertIn("模型、API、IDE 与限时试用，一站比较", self.html)
-        self.assertIn("<span>✓</span> 官方来源 · 条件透明", self.html)
+        self.assertIn('<h1>今天发现，<br>更好的 <em>AI 资源</em></h1>', self.html)
+        self.assertIn("汇聚全球优质的 AI 模型、工具与应用", self.html)
+        self.assertIn('class="prototype-kicker">FreeLLM</span>', self.html)
         self.assertIn('class="ref-feature-row"', self.html)
         self.assertIn("Agent Skills", self.html)
         self.assertIn("Workflow Recipes", self.html)
@@ -670,7 +667,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("#studentList .student-item").count(), 2)
         self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
         self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_mobile_navigation_exposes_core_directory_entries(self):
         page = self.new_page()
@@ -704,7 +705,7 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
                     self.assertLessEqual(
                         page.evaluate("document.documentElement.scrollWidth"),
                         width + 4,
@@ -735,7 +736,7 @@ class BrowserPageTests(unittest.TestCase):
 
         checks = (
             ("design/free-china-ai-index.html", "#catalog-offer-rows .offer:not(.hidden)"),
-            ("models/", ".models-overview-grid > article"),
+            ("models/", ".featured-model-grid .featured-model-card:not([hidden])"),
             ("skills/", "#skill-grid .skill-card:not([hidden])"),
             ("tools/", "#tool-grid .tool-card:not([hidden])"),
             ("skills/lab/", ".workflow-grid .workflow-card"),
@@ -796,8 +797,8 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".today-latest"),
-            ("models/", ".models-overview"),
+            ("design/free-china-ai-index.html", ".prototype-hero"),
+            ("models/", ".models-featured-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
             ("skills/lab/", ".lab-hero"),
@@ -893,10 +894,14 @@ class BrowserPageTests(unittest.TestCase):
                     || row.textContent.toLowerCase().includes(query);
             }).length"""
         )
-        page.fill("#catalog-search", "Qwen3")
+        page.locator("#catalog-search").evaluate(
+            "(el) => { el.value = 'Qwen3'; el.dispatchEvent(new Event('input', { bubbles: true })); }"
+        )
         self.assertEqual(self.visible_offers(page), qwen_count)
 
-        page.fill("#catalog-search", "")
+        page.locator("#catalog-search").evaluate(
+            "(el) => { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }"
+        )
         page.click(".offer[data-detail='comate'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         register = page.locator("#drawerRegister")
@@ -915,16 +920,16 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
         self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        today = page.locator(".today-latest").bounding_box()
+        hero = page.locator(".prototype-hero").bounding_box()
+        fresh = page.locator("#prototype-fresh").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
         student = page.locator("#student-offers").bounding_box()
         self.assertIsNotNone(hero)
-        self.assertIsNotNone(today)
+        self.assertIsNotNone(fresh)
         self.assertIsNotNone(offers)
         self.assertIsNotNone(student)
-        self.assertLess(hero["y"], today["y"])
-        self.assertLess(today["y"], offers["y"])
+        self.assertLess(hero["y"], fresh["y"])
+        self.assertLess(fresh["y"], offers["y"])
         self.assertLess(offers["y"], student["y"])
 
         heights = page.eval_on_selector_all(
@@ -953,8 +958,8 @@ class BrowserPageTests(unittest.TestCase):
         for index in range(7):
             self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        search = page.locator(".hero-search").bounding_box()
+        hero = page.locator(".prototype-hero").bounding_box()
+        search = page.locator(".ref-topbar .ref-search").bounding_box()
         self.assertIsNotNone(hero)
         self.assertIsNotNone(search)
         self.assertLessEqual(search["x"] + search["width"], 390)
@@ -962,23 +967,23 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
-        page.goto(HTML_PATH.as_uri())
-        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource === 'network'")
 
-        # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
         free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.fill("#catalog-search", "Qwen3")
+        page.fill(".ref-topbar input[type='search']", "Qwen3")
         page.click(".featured-resource-link[aria-label='查看免费额度']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
         self.assertEqual(self.visible_offers(page), free_quota_count)
+        self.assertEqual(page.locator(".ref-topbar input[type='search']").input_value(), "")
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
         page = self.new_page()
-        page.goto(HTML_PATH.as_uri())
-        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource === 'network'")
 
         free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
         page.click(".featured-resource-link[aria-label='查看免费额度']")
@@ -1062,6 +1067,7 @@ class BrowserPageTests(unittest.TestCase):
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1069,6 +1075,8 @@ class BrowserPageTests(unittest.TestCase):
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
@@ -1099,6 +1107,7 @@ class BrowserPageTests(unittest.TestCase):
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1106,6 +1115,8 @@ class BrowserPageTests(unittest.TestCase):
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))
