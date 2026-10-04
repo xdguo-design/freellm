@@ -1097,7 +1097,7 @@ class BrowserPageTests(unittest.TestCase):
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
-            (data / "daily-update-status.json").write_text((ROOT / "data" / "daily-update-status.json").read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()

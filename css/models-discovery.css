@@ -640,3 +640,28 @@ body[data-reference-style="v1"][data-fl-section="models"] .featured-agent-mark.h
   body[data-reference-style="v1"][data-fl-section="models"] .featured-model-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   body[data-reference-style="v1"][data-fl-section="models"] .featured-agent-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+@media (max-width: 430px) {
+  body[data-reference-style="v1"][data-fl-section="models"] {
+    overflow-x: hidden;
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .models-featured-page {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip;
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .models-quick-links,
+  body[data-reference-style="v1"][data-fl-section="models"] .models-featured-page > main,
+  body[data-reference-style="v1"][data-fl-section="models"] .featured-model-section,
+  body[data-reference-style="v1"][data-fl-section="models"] .featured-agents-section,
+  body[data-reference-style="v1"][data-fl-section="models"] .models-page-footer {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .models-quick-links {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
