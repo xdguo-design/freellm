@@ -213,6 +213,10 @@ body[data-fl-section="models"] .featured-model-grid.is-list .featured-model-acti
 }
 @media (max-width: 620px) {
   body[data-fl-section="models"] .featured-model-grid { grid-template-columns: 1fr; }
+  body[data-reference-style="v1"][data-fl-section="models"] .models-quick-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
   body[data-fl-section="models"] .models-page-toolbar { align-items: stretch; flex-direction: column; gap: 8px; padding: 10px 14px; }
   body[data-fl-section="models"] .models-page-search { width: 100%; }
   body[data-fl-section="models"] .models-toolbar-actions { justify-content: space-between; gap: 6px; }
