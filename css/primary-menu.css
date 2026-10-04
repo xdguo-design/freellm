@@ -110,6 +110,27 @@ body[data-fl-section] {
 #fl-shared-site-menu .fl-site-theme-toggle .fl-theme-moon { --fl-theme-icon: var(--rail-i-moon); }
 #fl-shared-site-menu .fl-site-theme-toggle .fl-theme-label { display: none !important; }
 
+/* Workflow's reference board hid live labels because its sidebar artwork
+   contained a baked-in menu. The shared rail uses a different background,
+   so keep the actual brand and navigation visible on this page. */
+@media (min-width: 1201px) {
+  html body[data-reference-style="v1"][data-fl-section="workflow"] #fl-shared-site-menu::after {
+    display: none !important;
+  }
+  html body[data-reference-style="v1"][data-fl-section="workflow"] #fl-shared-site-menu .fl-site-nav > a {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: clamp(28px, 3.3vw, 42px) !important;
+    min-height: clamp(28px, 3.3vw, 42px) !important;
+    margin: 0 !important;
+  }
+  html body[data-reference-style="v1"][data-fl-section="workflow"] #fl-shared-site-menu .fl-site-brand > *,
+  html body[data-reference-style="v1"][data-fl-section="workflow"] #fl-shared-site-menu .fl-site-nav > a > * {
+    opacity: 1 !important;
+  }
+}
+
 /* The prototype uses the same compact global search on every primary page. */
 html body[data-reference-style="v1"][data-fl-section]:is([data-fl-section]) .ref-topbar.ref-topbar {
   position: fixed !important;
@@ -224,8 +245,39 @@ html body[data-reference-style="v1"][data-fl-section]:is([data-fl-section]) .ref
 
 body[data-fl-section="skills"] .skills-page { width: calc(100% - var(--fl-menu-rail-width)) !important; margin-left: var(--fl-menu-rail-width) !important; }
 body[data-fl-section="skills"] .ref-topbar { left: var(--fl-menu-rail-width) !important; }
-body[data-fl-section="about"] > main { left: var(--fl-menu-rail-width) !important; width: calc(100vw - var(--fl-menu-rail-width)) !important; }
-body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-width) !important; width: calc(100vw - var(--fl-menu-rail-width)) !important; }
+
+/* Keep standalone model, provider and offer detail pages clear of the fixed rail.
+   The model-library overview owns its own rail-aware grid, so leave it untouched. */
+@media (min-width: 601px) {
+  /* Pages that do not use the shared model-library shell still need an
+     explicit content column beside the fixed rail at narrow desktop widths. */
+  body[data-fl-section="logs"] > .daily-log-dashboard {
+    box-sizing: border-box !important;
+    width: calc(100% - var(--fl-menu-rail-width)) !important;
+    max-width: none !important;
+    margin: 0 0 0 var(--fl-menu-rail-width) !important;
+  }
+  body[data-fl-section="about"] > main,
+  body[data-fl-section="about"] > .prototype-footer {
+    width: calc(100% - var(--fl-menu-rail-width)) !important;
+    max-width: none !important;
+  }
+  body[data-fl-section="models"]:not(.fl-ui-v2):not(.model-center-page):not([data-provider-directory]) > .model-section-tabs,
+  body[data-fl-section="models"]:not(.fl-ui-v2):not(.model-center-page):not([data-provider-directory]) > header:not(.models-overview),
+  body[data-fl-section="models"]:not(.fl-ui-v2):not(.model-center-page):not([data-provider-directory]) > header.models-overview,
+  body[data-fl-section="models"]:not(.fl-ui-v2):not(.model-center-page):not([data-provider-directory]) > main#fl-main-content:not(.model-library-main),
+  body[data-fl-section="models"]:not(.fl-ui-v2):not(.model-center-page):not([data-provider-directory]) > footer {
+    position: relative !important;
+    left: var(--fl-menu-rail-width) !important;
+    box-sizing: border-box !important;
+    width: calc(100% - var(--fl-menu-rail-width) - 36px) !important;
+    max-width: none !important;
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+  }
+}
+body[data-fl-section="about"] > main { left: var(--fl-menu-rail-width) !important; width: calc(100% - var(--fl-menu-rail-width)) !important; }
+body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-width) !important; width: calc(100% - var(--fl-menu-rail-width)) !important; }
 
 @media (max-width: 600px) {
   body[data-fl-section] { --fl-menu-rail-width: 0px !important; }
@@ -240,13 +292,17 @@ body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-wid
   body[data-fl-section="skills"] .skills-page { width: 100% !important; margin-left: 0 !important; }
   body[data-fl-section="skills"] .ref-topbar { left: 0 !important; }
   body[data-fl-section="about"] > main, body[data-fl-section="about"] > .prototype-footer { left: 0 !important; width: 100% !important; }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-card { min-width: 0 !important; }
+  body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-cover { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; }
+  html body[data-reference-style="v1"][data-fl-section="logs"] .ref-topbar.ref-topbar.ref-topbar { left: 0 !important; width: calc(100% - 20px) !important; }
 }
 
 @media (max-width: 820px) {
   html body[data-reference-style="v1"][data-fl-section]:is([data-fl-section]) .ref-topbar.ref-topbar {
     position: relative !important;
     inset: auto !important;
-    width: calc(100% - 20px) !important;
+    width: calc(100% - var(--fl-menu-rail-width) - 26px) !important;
     height: 30px !important;
     min-height: 30px !important;
     margin: 8px 10px 10px !important;
@@ -257,6 +313,12 @@ body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-wid
   }
   html body[data-reference-style="v1"][data-fl-section]:is([data-fl-section]) .ref-search.ref-search kbd {
     display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  html body[data-reference-style="v1"][data-fl-section="logs"] .ref-topbar.ref-topbar.ref-topbar {
+    width: calc(100% - 20px) !important;
   }
 }
 
@@ -280,3 +342,47 @@ html body[data-fl-section="logs"] #fl-main-content .ref-update-layout .log-snaps
 html body[data-fl-section="logs"] #fl-main-content .log-archive { display: none !important; }
 html body[data-fl-section="logs"] #fl-main-content .log-archive[open] { display: block !important; }
 html body[data-fl-section="logs"] > .prototype-footer { left: -22px !important; width: calc(100% + 36px) !important; height: 200px !important; min-height: 200px !important; margin-top: -75px !important; }
+@media (max-width: 600px) {
+  html body[data-reference-style="v1"][data-fl-section="logs"] .ref-topbar.ref-topbar.ref-topbar { left: 0 !important; width: calc(100% - 20px) !important; }
+}
+body[data-offer-id] .qs-grid,
+body[data-offer-id] .qs-step,
+body[data-offer-id] .qs-code,
+body[data-offer-id] .qs-code .operation-command-head { min-width: 0 !important; }
+body[data-offer-id] .qs-code { width: 100% !important; max-width: 100% !important; }
+body[data-offer-id] .qs-step pre { box-sizing: border-box !important; width: 100% !important; min-width: 0 !important; max-width: 100% !important; }
+body[data-offer-id] .qs-desc,
+body[data-offer-id] .qs-link { overflow-wrap: anywhere !important; }
+
+/* The all-models directory uses a wide table inside its own horizontal scroller.
+   Keep the page shell rail-aware and prevent that table's min-content width from
+   expanding the page's implicit single-column grid. */
+@media (min-width: 601px) {
+  body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs,
+  body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs + header,
+  body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs + header + main#fl-main-content,
+  body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs + header + main#fl-main-content + footer {
+    position: relative !important;
+    left: var(--fl-menu-rail-width) !important;
+    box-sizing: border-box !important;
+    width: calc(100% - var(--fl-menu-rail-width)) !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs + header + main#fl-main-content {
+  min-width: 0 !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+body.fl-ui-v2[data-fl-section="models"] > .model-section-tabs + header + main#fl-main-content > #model-directory {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+body.fl-ui-v2[data-fl-section="models"] #model-directory .catalog-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+}

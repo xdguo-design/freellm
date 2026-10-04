@@ -322,6 +322,7 @@ let offerIndex = {};
       if (isIde) categories.push('ide');
       if (item.freeMechanism === 'first_month_promo' || item.timeWindow || tokens.has('promo')) categories.push('promo');
       if (isWeb) categories.push('web');
+      if (tokens.has('agent')) categories.push('agent');
       if (isDownloadOrLowCost) categories.push('download_lowcost');
       return categories;
     };

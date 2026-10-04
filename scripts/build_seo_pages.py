@@ -10,7 +10,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -3374,6 +3374,34 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
     description = f"FreeLLM 团队人工精选 {len(curated_models)} 个 AI 模型，另收录 {len(agent_offers)} 个 Agent。按地区、模态和实测速度信息浏览。"
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"]}
 
+    icon_hosts = {
+        "openai": "openai.com", "google": "google.com", "anthropic": "anthropic.com",
+        "meta": "meta.com", "deepseek": "deepseek.com", "alibaba": "alibabagroup.com",
+        "qwen": "qwen.ai", "xiaomi mimo": "mimo.mi.com", "xiaomi": "mi.com",
+        "agnes ai": "agnes-ai.cn", "puter.js": "puter.com", "opencode zen": "opencode.ai",
+        "manus ai": "manus.im", "cnb": "cnb.cool", "iflytek astudio": "xfyun.cn",
+        "workbuddy": "codebuddy.ai",
+    }
+
+    def brand_icon_host(brand: str, url: str = "") -> str:
+        normalized = re.sub(r"\s+", " ", brand.strip().lower())
+        for key, host in icon_hosts.items():
+            if key in normalized:
+                return host
+        try:
+            host = (urlsplit(url).hostname or "").lower()
+        except ValueError:
+            host = ""
+        return host.removeprefix("www.")
+
+    def brand_icon_markup(brand: str, url: str, mark: str) -> str:
+        host = brand_icon_host(brand, url)
+        fallback = f'<span class="brand-icon-fallback">{mark}</span>'
+        if not host:
+            return fallback
+        icon_url = f"https://www.google.com/s2/favicons?domain={host}&sz=128"
+        return f'{fallback}<img class="brand-icon-image" src="{_esc(icon_url)}" data-icon-host="{_esc(host)}" alt="{_esc(brand)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">'
+
     def category_keys(model: dict) -> list[str]:
         modalities = {str(item).lower() for item in model.get("modality") or []}
         model_name = f"{model.get('id', '')} {model.get('model', '')}".lower()
@@ -3412,7 +3440,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
             return "text"
 
         chips = "".join(
-            f'<span class="featured-capability-chip capability-{capability_class(label)}">{_locale_pair(_esc(label), _esc(capability_en.get(label, label)))}</span>'
+            f'<span class="featured-capability-chip capability-{capability_class(label)}" title="{_esc(label)}">{_locale_pair(_esc({"图片·方向待核实": "图片待核实", "音频·方向待核实": "音频待核实", "视频·方向待核实": "视频待核实"}.get(label, label)), _esc(capability_en.get(label, label)))}</span>'
             for label in capabilities
         )
         facts = []
@@ -3448,6 +3476,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         )
         model_slug = _safe_slug(model_name, "model")
         source_url = str(model.get("sourceUrl") or "").strip()
+        icon = brand_icon_markup(provider, source_url, mark)
         detail_url = model_aggregate_url(model) if model_slug in indexable_slugs else ALL_MODELS_PAGE_PATH
         detail_external = detail_url.startswith("http")
         categories = " ".join(category_keys(model))
@@ -3467,7 +3496,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
                 capability_values.add(capability_tokens[item["name"]])
         return f'''<article class="featured-model-card" data-model-id="{_esc(model_id)}" data-model-name="{_esc(model_name)}" data-provider="{_esc(provider)}" data-region="{_esc(region_info["filterValue"])}" data-region-label="{_esc(region_info["label"])}" data-model-categories="{categories}" data-capabilities="{_esc(" ".join(sorted(capability_values)))}" data-search-text="{search_text}" data-context="{_esc(str(model.get("context") or ""))}" data-max-output="{_esc(str(model.get("maxOutput") or ""))}" data-source-url="{_esc(source_url)}" data-benchmark-protocol="{_esc(benchmark["protocolVersion"] if benchmark else "")}" data-benchmark-task="{_esc(benchmark["taskId"] if benchmark else "")}" data-benchmark-language="{_esc(benchmark["language"] if benchmark else "")}" data-benchmark-sampling-mode="{_esc(benchmark["samplingMode"] if benchmark else "")}" data-benchmark-temperature="{_esc(str(benchmark["temperature"]) if benchmark else "")}" data-benchmark-max-output="{_esc(str(benchmark["maxOutputTokens"]) if benchmark else "")}" data-benchmark-warmups="{_esc(str(benchmark["warmups"]) if benchmark else "")}" data-benchmark-sample-count="{_esc(str(benchmark["sampleCount"]) if benchmark else "")}" data-benchmark-ttft="{_esc(str(benchmark["ttftMsMedian"]) if benchmark else "")}" data-benchmark-tokens-per-second="{_esc(str(benchmark["outputTokensPerSecondMedian"]) if benchmark else "")}" data-benchmark-region="{_esc(benchmark["testRegion"] if benchmark else "")}" data-benchmark-date="{_esc(benchmark["testedAt"] if benchmark else "")}">
       <div class="featured-model-card-top"><span class="featured-model-badge">{_locale_pair("团队精选", "Team pick")}</span></div>
-      <div class="featured-model-title-row"><span class="featured-model-mark">{mark}</span><div><h3>{_esc(model_name)}</h3><span class="featured-model-provider">{_esc(provider)}</span></div></div>
+      <div class="featured-model-title-row"><span class="featured-model-mark">{icon}</span><div><h3>{_esc(model_name)}</h3><span class="featured-model-provider">{_esc(provider)}</span></div></div>
       <p class="featured-model-summary">{_locale_pair(_esc(summary_text), _esc("Capabilities and availability depend on the provider's current documentation."))}</p>
       <div class="featured-model-chips">{chips or f'<span>{_locale_pair("能力待核实", "Capabilities unverified")}</span>'}</div><div class="featured-model-facts">{''.join(facts)}</div>
       {speed_status}
@@ -3484,10 +3513,11 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
             usage = offer.get("freeSummary") or offer.get("why") or ""
         mark = _esc(str(offer.get("providerMark") or offer.get("provider") or "AI")[:2])
         provider = _esc(str(offer.get("provider") or "AI Agent"))
+        icon = brand_icon_markup(str(offer.get("provider") or "AI Agent"), str(offer.get("register") or ""), mark)
         tags = "".join(f'<span>{_esc(str(item))}</span>' for item in (offer.get("badges") or [])[:2])
         search_text = _esc(" ".join((title_text, provider, str(usage))).lower())
         href = f'/offers/{_slug(agent_id)}/'
-        return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-search-text="{search_text}"><div class="featured-agent-mark">{mark}</div><div class="featured-agent-content"><h3>{_esc(title_text)}</h3><small>{provider}</small><p>{_esc(str(usage))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}">{_locale_pair("查看详情", "Details")} →</a></div></article>'''
+        return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-search-text="{search_text}"><div class="featured-agent-mark">{icon}</div><div class="featured-agent-content"><h3>{_esc(title_text)}</h3><small>{provider}</small><p>{_esc(str(usage))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}">{_locale_pair("查看详情", "Details")} →</a></div></article>'''
 
     featured_cards = "".join(featured_card(model, index) for index, model in enumerate(curated_models, 1))
     agent_cards = "".join(agent_card(offer) for offer in agent_offers)
@@ -3519,7 +3549,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <div class="featured-model-grid" id="featured-model-grid">{featured_cards}</div><p class="models-empty-state" hidden>{_locale_pair('没有符合条件的模型。试试其他筛选条件。', 'No models match. Try another filter.')}</p><button class="models-load-more" id="models-load-more" type="button" hidden>{_locale_pair('加载更多精选模型', 'Load more featured models')} ↓</button></section>
 <section class="featured-model-comparison" id="featured-model-comparison" hidden aria-label="精选模型对比 / Featured model comparison"><div><h3>{_locale_pair('模型对比', 'Model comparison')} <small id="featured-model-compare-count">0 / 3</small></h3><p id="featured-model-compare-status" aria-live="polite"></p></div><div class="featured-model-comparison-scroll"><table><thead><tr><th>{_locale_pair('比较项目', 'Property')}</th><th data-compare-column="0"></th><th data-compare-column="1"></th><th data-compare-column="2"></th></tr></thead><tbody data-comparison-rows></tbody></table></div><button type="button" data-clear-comparison>{_locale_pair('清空对比', 'Clear comparison')}</button></section>
 <section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前展示 {len(agent_offers)} 个已核验 Agent', f'{len(agent_offers)} verified agents')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
-<footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(agent_offers)} 个 Agent。', f'{len(curated_models)} featured models and {len(agent_offers)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004d"></script></body></html>'''.replace("\n+", "\n")
+<footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(agent_offers)} 个 Agent。', f'{len(curated_models)} featured models and {len(agent_offers)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
@@ -4590,7 +4620,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
         + ";"
         + script
     )
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 全部重新分级：原链路能跑就跑；任务型明确标“任务级”；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"><span lang="zh-CN">Skill 详情</span><span lang="en">Skill details</span></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 已完成沙箱验收；之后收录的 Skill 会单独标记执行状态。原链路能跑就跑；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"><span lang="zh-CN">Skill 详情</span><span lang="en">Skill details</span></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
 def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
@@ -5756,7 +5786,7 @@ def _ensure_models_discovery_style(content: str, path: Path) -> str:
     """Attach the model discovery page's prototype-matched component styles."""
     if path != Path("models/index.html") or "models-discovery.css" in content:
         return content
-    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261004f">'
+    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261004o">'
     return content.replace("</head>", tag + "</head>", 1)
 
 
@@ -5792,7 +5822,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261003-gutter-fix"></script>'
+        '<script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
@@ -5800,6 +5830,12 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         f'{rail_note}{rail_footer}</aside>'
         '<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span>'
         '<span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>'
+    )
+    content = re.sub(
+        r'<script\b(?=[^>]*\bsrc=["\'][^"\']*/js/site-navigation\.js(?:\?[^"\']*)?["\'])[^>]*>\s*</script>',
+        "",
+        content,
+        flags=re.I,
     )
     shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
     normalized = re.sub(shell_pattern, "", content, count=1, flags=re.I | re.S)

@@ -35,6 +35,21 @@
   const grid = document.getElementById('featured-model-grid');
   if (!grid) return;
 
+  document.querySelectorAll('.brand-icon-image').forEach(image => {
+    const mark = image.closest('.featured-model-mark, .featured-agent-mark');
+    const showImage = () => mark?.classList.add('has-brand-image');
+    image.addEventListener('load', showImage, { once: true });
+    image.addEventListener('error', () => {
+      if (image.dataset.directFallback !== 'true' && image.dataset.iconHost) {
+        image.dataset.directFallback = 'true';
+        image.src = `https://${image.dataset.iconHost}/favicon.ico`;
+        return;
+      }
+      image.remove();
+    });
+    if (image.complete && image.naturalWidth > 0) showImage();
+  });
+
   const cards = Array.from(grid.querySelectorAll('.featured-model-card'));
   const agentCards = Array.from(document.querySelectorAll('.featured-agent-card'));
   const filterButtons = Array.from(document.querySelectorAll('[data-model-filter]'));

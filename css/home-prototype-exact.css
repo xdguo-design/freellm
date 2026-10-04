@@ -14,6 +14,7 @@ body[data-reference-style="v1"][data-fl-section="home"]{
   color:var(--proto-ink)!important;
   overflow-x:hidden!important;
 }
+
 body[data-reference-style="v1"][data-fl-section="home"] .fl-site-ribbon{display:none!important}
 body[data-reference-style="v1"][data-fl-section="home"] .catalog-header{display:none!important}
 /* the shared pastel shell pads the body for pages without the fixed rail; on home the rail + app margin own the offset */
@@ -291,7 +292,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-free-toggle i
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-original-note{height:30px;padding:0 10px;display:inline-flex;align-items:center;border:1px solid #d5efe4;border-radius:15px;background:#eef9f4;color:#21815f;font-size:10px;font-weight:650;white-space:nowrap}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics>a{color:#1169ef;font-size:12px;font-weight:650;white-space:nowrap;flex:0 0 auto}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{
   min-width:0;min-height:clamp(190px,19.7vw,293px);padding:0 9px 7px;display:flex;flex-direction:column;border:1px solid #e6edf6;border-radius:11px;background:#fff;overflow:hidden;
   box-shadow:0 8px 20px rgba(44,99,166,.05);
@@ -402,7 +403,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banne
 
 /* responsive fallback without changing other pages */
 @media(max-width:1100px) and (min-width:801px){
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{padding-right:7px;padding-left:7px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover{margin-right:-7px;margin-left:-7px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -661,4 +662,48 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-lower-heading>a{font-size:7.5px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-categories,
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-updates{margin-top:12px}
+}
+
+/* Editorial article hierarchy and current Agent discovery cards. */
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured{
+  grid-column:span 2;grid-row:span 2;min-height:420px;padding:0 18px 16px;border-color:#bfd8fa;
+  background:linear-gradient(145deg,#fff 58%,#f3f7ff);box-shadow:0 14px 30px rgba(39,91,160,.11)
+}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover{display:flex;align-items:flex-end;padding:0 20px 16px;background:linear-gradient(135deg,#173f83,#2979d6 58%,#76b9ff)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover strong{position:relative;z-index:1;color:#fff;font-size:20px;line-height:1.1;letter-spacing:-.03em;text-shadow:0 2px 10px rgba(8,33,82,.3)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover .cover-orbit{position:absolute;right:-26px;top:-56px;width:190px;height:190px;border:1px solid rgba(255,255,255,.26);border-radius:50%;box-shadow:0 0 0 20px rgba(255,255,255,.07),0 0 0 42px rgba(255,255,255,.05)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover.cover-2{background:linear-gradient(130deg,#0b4c59,#138da0 58%,#74d8c8)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover.cover-3{background:linear-gradient(130deg,#442276,#7544c8 58%,#c4a6ff)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover.cover-4{background:linear-gradient(130deg,#152745,#33598c 58%,#7da7e9)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover.cover-5{background:linear-gradient(130deg,#173750,#27817e 58%,#9bd5b3)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover{height:clamp(150px,14vw,205px);margin:0 -18px 16px;padding:0 22px 20px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover strong{font-size:clamp(29px,3vw,43px)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-heat{left:18px;top:16px;height:25px;padding:0 11px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured h3{min-height:0;margin-bottom:10px!important;font-size:clamp(19px,1.75vw,24px)!important;line-height:1.38!important;-webkit-line-clamp:4}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-meta{margin-bottom:11px;font-size:11px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured>p{min-height:0;font-size:12px;line-height:1.65;-webkit-line-clamp:3}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-tags{margin-top:14px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.muse{background:linear-gradient(135deg,#2a79f5,#a765e8)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.manus{background:linear-gradient(135deg,#222b3c,#68728b)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.kimi{background:linear-gradient(135deg,#4d67ef,#9c79ff)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.workbuddy{background:linear-gradient(135deg,#12a681,#51c49e)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.mimo{background:linear-gradient(135deg,#263852,#5e83bd);font-size:18px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-logo.wps{background:linear-gradient(135deg,#1676e8,#42b0ff)}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-empty{margin:10px 0;padding:22px;border:1px dashed #cbd9eb;border-radius:12px;background:#fff;color:#6c7f9e;text-align:center;font-size:12px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-card[hidden]{display:none!important}
+
+@media(max-width:1100px) and (min-width:801px){
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured{min-height:372px;height:auto;padding:0 12px 11px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover{height:128px;margin:0 -12px 10px;padding:0 14px 14px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-heat{left:12px;top:10px;height:18px;font-size:8px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured h3{font-size:16px!important;line-height:1.35!important;-webkit-line-clamp:4}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-meta{font-size:8px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured>p{font-size:9px;line-height:1.45}
+}
+@media(max-width:800px){
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured{grid-column:auto;grid-row:auto;min-height:0;height:auto;padding:0 12px 12px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover{height:145px;margin:0 -12px 12px;padding:0 15px 16px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured h3{font-size:18px!important;line-height:1.38!important}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-meta{font-size:9px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured>p{font-size:10px}
 }

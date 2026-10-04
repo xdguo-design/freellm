@@ -174,10 +174,10 @@ class SkillsBuildTests(unittest.TestCase):
             self.assertIn("查看真实测试任务、限制与评价", page_html)
             self.assertIn("环境：", page_html)
             self.assertIn("沙箱真实验收已重跑", page_html)
-            self.assertIn("Skill Lab", lab.read_text(encoding="utf-8"))
+            self.assertIn('http-equiv="refresh" content="0;url=/workflow/"', lab.read_text(encoding="utf-8"))
             sitemap = (output_root / "sitemap-pages.xml").read_text(encoding="utf-8")
             self.assertIn("https://example.test/skills/", sitemap)
-            self.assertIn("https://example.test/skills/lab/", sitemap)
+            self.assertNotIn("https://example.test/skills/lab/", sitemap)
 
     def test_build_site_emits_skill_content_documents(self):
         from scripts.build_seo_pages import build_site
@@ -268,7 +268,7 @@ class SkillsBuildTests(unittest.TestCase):
             "Ocean Depths",
         ):
             self.assertIn(needle, page)
-        self.assertIn("component-dialog-styles", lab)
+        self.assertIn('id="dialog-style-section"', page)
 
     def test_skills_page_exposes_compact_cards_and_visual_preview(self):
         from scripts.build_seo_pages import build_site
@@ -311,30 +311,9 @@ class SkillsBuildTests(unittest.TestCase):
             build_site(ROOT / "data" / "offers.json", output_root, site_url="https://example.test")
             page = (output_root / "skills" / "lab" / "index.html").read_text(encoding="utf-8")
 
-        for needle in (
-            '<link rel="canonical" href="https://example.test/skills/lab/">',
-            'id="skill-data"',
-            'id="skill-library-search"',
-            'id="skill-library-category"',
-            'data-category="',
-            'class="workflow-grid"',
-            'id="component-library"',
-            'id="workflow-dialog"',
-            'id="copy-workflow-command"',
-            'id="copy-component-command"',
-            'navigator.clipboard.writeText',
-            "window.location.protocol !== 'file:'",
-            'skill-lab-page',
-            'class="component-source-link"',
-            'rel="nofollow noopener"',
-            '"@type": "ItemList"',
-            '"@type": "HowTo"',
-            '没有找到匹配的组件',
-        ):
-            self.assertIn(needle, page)
-
-        self.assertEqual(page.count('class="workflow-card"'), 6)
-        self.assertNotIn('<article class="component-card"', page)
+        self.assertIn('http-equiv="refresh" content="0;url=/workflow/"', page)
+        self.assertIn('<link rel="canonical" href="https://example.test/workflow/">', page)
+        self.assertIn('href="/workflow/"', page)
 
     def test_homepage_template_links_to_skill_directory(self):
         homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")

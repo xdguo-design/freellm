@@ -35,7 +35,7 @@
   /* Load the persistent primary-navigation controller once per document. */
   if (!global.FreeLLMNavigation && !document.querySelector('script[data-freellm-site-navigation]')) {
     var navigationScript = document.createElement('script');
-    navigationScript.src = '/js/site-navigation.js?v=20261001-updates11';
+    navigationScript.src = '/js/site-navigation.js?v=20261002-updates12';
     navigationScript.async = false;
     navigationScript.dataset.freellmSiteNavigation = '1';
     document.head.appendChild(navigationScript);

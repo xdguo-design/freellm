@@ -108,14 +108,17 @@
     });
   };
   const buildFeatured = (rows) => (Array.isArray(rows) ? rows : [])
-    .filter((offer) => Array.isArray(offer.capabilities) && offer.capabilities.includes('model_api')
-      && Array.isArray(offer.type) && offer.type.includes('free'))
+    .filter((offer) => offer && offer.status === 'verified')
     .sort((a, b) => Number(b.rankingScore || 0) - Number(a.rankingScore || 0) || Number(a.order || 0) - Number(b.order || 0));
   const offerField = (value, fallback) => {
     const text = String(value == null ? '' : value).trim();
     return text || fallback;
   };
-  const offerTitle = (offer) => offerField(offer.title, offerField(offer.name, '未命名产品')).replace(/\s+/g, ' ');
+  const offerTitle = (offer) => {
+    const isEnglish = document.documentElement.dataset.locale === 'en';
+    const localized = isEnglish ? (offer.titleEn || offer.title) : (offer.titleZh || offer.title);
+    return offerField(localized, offerField(offer.name, '未命名产品')).replace(/\s+/g, ' ');
+  };
   const offerNetworkChips = (offer) => {
     const check = offer.networkCheck;
     if (!check || typeof check !== 'object') return [];
@@ -148,9 +151,22 @@
     return chips.concat(offerNetworkChips(offer));
   };
   const badgeHtml = (badge) => '<span class="ml-card-flag flag-' + badge.tone + '">' + esc(badge.label) + '</span>';
+  const offerBadge = (offer) => {
+    const types = Array.isArray(offer.type) ? offer.type : [];
+    const capabilities = Array.isArray(offer.capabilities) ? offer.capabilities : [];
+    if (types.includes('promo') || offer.freeMechanism === 'limited_time_free') return { label: '限时优惠', tone: 'orange' };
+    if (capabilities.includes('model_api')) return { label: '免费 API', tone: 'green' };
+    if (capabilities.includes('free_ide')) return { label: '免费 AI IDE', tone: 'blue' };
+    if (capabilities.includes('desktop_app')) return { label: 'AI 应用', tone: 'blue' };
+    if (capabilities.includes('open_weights') || types.includes('download')) return { label: '开源下载', tone: 'purple' };
+    if (capabilities.includes('coding_plan')) return { label: '编程计划', tone: 'blue' };
+    if (types.includes('payg')) return { label: '按量付费', tone: 'gray' };
+    if (types.includes('free')) return { label: '免费资源', tone: 'green' };
+    return { label: '已核验资源', tone: 'gray' };
+  };
   const featuredCardHtml = (offer) => {
     const mark = String(offer.providerMark || offer.provider || 'AI').trim().slice(0, 4);
-    const limited = (Array.isArray(offer.type) && offer.type.includes('promo')) || offer.freeMechanism === 'limited_time_free';
+    const badge = offerBadge(offer);
     const href = /^https:\/\//i.test(String(offer.register || '')) ? offer.register : '/offers/' + offer.id + '/';
     const verifiedDate = offerField(offer.lastVerifiedAt, '');
     const verified = offer.status === 'verified' && verifiedDate
@@ -166,7 +182,7 @@
       + '<div class="ml-offer-head"><span class="ml-logo" style="' + logoStyle(markHue(offer.provider || offer.id), mark) + '" aria-hidden="true">' + esc(mark) + '</span>'
       + '<div class="ml-offer-title"><strong title="' + esc(offerTitle(offer)) + '">' + esc(offerTitle(offer)) + '</strong>'
       + '<small>' + esc(offerField(offer.provider, '官方入口')) + '</small></div>'
-      + badgeHtml(limited ? { label: '限时免费', tone: 'orange' } : { label: '免费 API', tone: 'green' }) + '</div>'
+      + badgeHtml(badge) + '</div>'
       + '<div class="ml-offer-flags">' + offerFlagChips(offer).join('') + '</div>'
       + '<div class="ml-offer-metrics">' + metrics.map((metric) => '<div class="ml-offer-metric"><label>' + metric[0] + '</label><p>' + esc(metric[1]) + '</p></div>').join('') + '</div>'
       + '<div class="ml-offer-foot">' + verified
@@ -183,7 +199,7 @@
       : '<div class="ml-empty-state">精选入口暂时无法加载，<a href="/models/all/">打开完整模型目录 →</a></div>';
     grid.setAttribute('aria-busy', 'false');
     const count = document.getElementById('ml-offers-count');
-    if (count) count.textContent = '显示 ' + shown.length + ' / ' + state.featured.length + ' 个已核验免费入口';
+    if (count) count.textContent = '显示 ' + shown.length + ' / ' + state.featured.length + ' 个已核验入口';
     const more = document.getElementById('ml-offers-more');
     if (more) {
       const exhausted = shown.length >= state.featured.length;

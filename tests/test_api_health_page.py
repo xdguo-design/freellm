@@ -66,13 +66,13 @@ class ApiHealthPageTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn('href="/health/" data-site-nav="health" aria-current="page"', page)
+        self.assertIn('href="/models/" data-site-nav="models" aria-current="page"', page)
 
     def test_shared_navigation_and_sitemap_include_health_page(self):
         sync = SYNC.read_text(encoding="utf-8")
         sitemap = SITEMAP.read_text(encoding="utf-8")
-        self.assertIn("path.indexOf('/health') === 0", sync)
-        self.assertIn("railLink('/health/', '⌁', 'API 健康', 'health', current)", sync)
+        self.assertIn("if (path.indexOf('/health') === 0) return 'models';", sync)
+        self.assertIn("railLink('/models/', '▣', '模型', 'models', current)", sync)
         self.assertIn("https://freellm.top/health/", sitemap)
 
 
@@ -256,7 +256,7 @@ class ApiHealthBrowserTests(unittest.TestCase):
         self.assertIsNotNone(rail)
         self.assertIsNotNone(ribbon)
         self.assertIsNotNone(hero)
-        self.assertAlmostEqual(rail["width"], 230, delta=1)
+        self.assertAlmostEqual(rail["width"], 188, delta=1)
         self.assertAlmostEqual(ribbon["height"], 78, delta=1)
         self.assertLessEqual(hero["height"], 360)
         self.assertEqual(len(metrics), 5)

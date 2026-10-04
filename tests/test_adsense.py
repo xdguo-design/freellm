@@ -69,7 +69,7 @@ class AdsenseGateTests(unittest.TestCase):
         self.assertIn("/", paths)
         self.assertIn("/logs/", paths)
         self.assertIn("/skills/", paths)
-        self.assertIn("/skills/lab/", paths)
+        self.assertIn("/workflow/", paths)
 
     def test_page_without_loader_fails(self):
         with tempfile.TemporaryDirectory() as directory:

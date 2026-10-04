@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-16",
+  "updatedAt": "2026-10-02",
   "note": "每个 Skill 的呈现样式档案：format = 产出物形态；summary = 该 Skill 定义的视觉样式/排版规范概览；items = SKILL.md 中点名的样式/主题/色板（截取至多 30 个）；total = 原文声明的可选样式总数；hasStyles = 是否提供可选择或明确约定的视觉样式。来源为各 Skill 的 SKILL.md 原文（data/skill-content/）。",
   "entries": {
     "anthropics-docx": {
@@ -696,6 +696,30 @@
       "summary": "自包含 A4 HTML 简历（打印 CSS + html2canvas 导出）；主题为品牌灵感 style tokens，正式简历建议克制风格",
       "items": [],
       "hasStyles": true
+    },
+    "alibaba-open-code-review": {
+      "format": "SKILL.md 工作流",
+      "summary": "代码审查工作流；需要额外安装 ocr CLI 并配置模型服务。",
+      "items": [],
+      "hasStyles": false
+    },
+    "ayghri-i-have-adhd": {
+      "format": "SKILL.md 输出风格",
+      "summary": "以行动优先、步骤编号和减少跑题来调整 Agent 输出。",
+      "items": [],
+      "hasStyles": false
+    },
+    "cloudflare-security-audit": {
+      "format": "SKILL.md 安全审计流程",
+      "summary": "分阶段执行可追溯的代码安全审计；完整审计前需配置隔离环境。",
+      "items": [],
+      "hasStyles": false
+    },
+    "leonxlnx-design-taste-frontend": {
+      "format": "SKILL.md 前端设计指导",
+      "summary": "聚焦落地页、作品集和重设计的视觉表达，不主打后台仪表盘和复杂产品 UI。",
+      "items": [],
+      "hasStyles": false
     }
   }
 }

@@ -534,3 +534,10 @@ body[data-fl-section="models"]>footer{margin:0!important;width:100%!important;bo
   body[data-fl-section="models"] .ml-card-cta{min-height:24px!important;padding:0 8px!important;border-radius:6px!important;font-size:7.5px!important;gap:4px!important}
   body[data-fl-section="models"] .ml-card-cta i{font-size:9px!important}
 }
+
+/* Prevent the baked-in rail lettering from overlapping the menu on short screens. */
+@media (min-width: 801px) and (max-height: 760px) {
+  html body[data-fl-section="models"] #fl-shared-site-menu::after {
+    height: 150px !important;
+  }
+}

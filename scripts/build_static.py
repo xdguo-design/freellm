@@ -24,7 +24,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261001-updates11"></script>
+SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -90,7 +90,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20260923b">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,

@@ -21,19 +21,16 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn(f'href="/tools/tools/{first_id}.html"', page)
 
     def test_models_landing_uses_four_explicit_data_counts(self):
-        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
         models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
-        provider_pages = list((ROOT / "providers").glob("*/index.html"))
-        active_ids = {str(row.get("providerId") or "").strip() for row in models if row.get("providerId")}
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
-        for count, label in (
-            (len(models), "模型记录"),
-            (len(provider_pages), "厂家目录"),
-            (len(active_ids), "当前数据 Provider ID"),
-            (len(offers), "免费资源"),
-        ):
-            self.assertIn(f"<strong>{count}</strong><span>{label}", page)
-        self.assertNotIn("0 个厂商", page)
+        all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
+        curated_count = page.count('class="featured-model-card"')
+        self.assertIn("精选模型", page)
+        self.assertIn(f"({curated_count})", page)
+        self.assertIn('href="/models/all/"', page)
+        self.assertGreaterEqual(len(models), curated_count)
+        self.assertIn("234+", page)
+        self.assertIn("模型目录", all_models)
 
     def test_home_models_and_logs_share_latest_snapshot(self):
         offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
@@ -49,7 +46,9 @@ class P0ConvergenceTests(unittest.TestCase):
         logs_page = (ROOT / "logs" / "index.html").read_text(encoding="utf-8")
 
         self.assertIn(f"▣ &nbsp;{year} 年 {int(month)} 月 {int(day)} 日", home)
-        self.assertIn(f"<strong>{len(models)}</strong><span>模型记录", models_page)
+        all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="/models/all/"', models_page)
+        self.assertIn(f"{len(models)}", all_models)
         self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
         self.assertIn(
             f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{len(models)}</strong>',
@@ -75,10 +74,12 @@ class P0ConvergenceTests(unittest.TestCase):
     def test_skill_page_prioritizes_freellm_testing(self):
         tests = json.loads((ROOT / "data" / "skill-tests.json").read_text(encoding="utf-8"))["entries"]
         page = (ROOT / "skills" / "index.html").read_text(encoding="utf-8")
-        self.assertEqual(len(tests), 68)
-        self.assertIn("这些 Skill，能跑的真跑；跑不了的明确写阻塞", page)
+        skills = json.loads((ROOT / "data" / "skills.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(tests), len(skills))
+        self.assertIn("AGENT SKILLS / WORKFLOWS", page)
+        self.assertIn('id="skills-title"', page)
         self.assertIn("沙箱真实验收已重跑", page)
-        self.assertGreaterEqual(page.count('class="freellm-test-strip'), 68)
+        self.assertGreaterEqual(page.count('class="freellm-test-strip'), len(tests))
         self.assertIn("测试任务", page)
         self.assertIn("查看真实测试任务、限制与评价", page)
         levels = {entry.get("testLevel") for entry in tests.values()}
@@ -115,13 +116,17 @@ class P0ConvergenceTests(unittest.TestCase):
         for relative in (
             "models/index.html",
             "models/all/index.html",
-            "models/center/index.html",
             "providers/index.html",
         ):
             page = (ROOT / relative).read_text(encoding="utf-8")
-            self.assertIn('class="model-section-tabs"', page, relative)
+            self.assertIn('class="model-section-tabs', page, relative)
             for href in ("/models/", "/models/all/", "/providers/", "/category/api/"):
                 self.assertIn(f'href="{href}"', page, relative)
+
+    def test_model_center_legacy_route_redirects_to_featured_models(self):
+        page = (ROOT / "models" / "center" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('http-equiv="refresh" content="0;url=/models/"', page)
+        self.assertIn('href="/models/"', page)
 
 
 if __name__ == "__main__":
