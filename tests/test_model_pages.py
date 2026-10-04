@@ -2,8 +2,11 @@ import json
 import re
 from pathlib import Path
 
+import pytest
+
 from scripts.build_seo_pages import (
     _exclude_retired_models,
+    _load_featured_agents,
     _load_model_access,
     _model_catalog_row,
     build_site,
@@ -37,6 +40,42 @@ def test_featured_cards_show_unknown_and_untested_states():
     assert "待核实" in page
     assert "未实测" in page
     assert "图片·方向待核实" in page
+
+
+def test_featured_agent_registry_drives_models_page(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    agent_cards = re.findall(r'<article class="featured-agent-card"', page)
+
+    assert len(agent_cards) == 13
+    assert "当前收录 13 个 AI Agent" in page
+    assert "13 个 Agent" in page
+    assert 'href="/offers/manus-free-agent/"' in page
+    assert 'href="/offers/workbuddy/"' in page
+    assert 'href="https://grok.com/" target="_blank" rel="noopener noreferrer"' in page
+    assert 'href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer"' in page
+    assert 'href="https://agent.space/agents" target="_blank" rel="noopener noreferrer"' in page
+    assert 'data-icon-host="muse.ai"' in page
+    assert page.count('class="brand-icon-fallback"') >= 13
+    assert 'data-search-text="grok' in page
+    assert 'data-search-text="claude code' in page
+    assert 'lang="en">General assistant' in page
+
+
+def test_featured_agent_registry_is_validated(tmp_path):
+    agents = _load_featured_agents(ROOT / "data")
+
+    assert len(agents) == 13
+    assert len({agent["id"] for agent in agents}) == len(agents)
+    assert all(agent["url"].startswith("https://") for agent in agents)
+
+    invalid_registry = tmp_path / "featured_agents.json"
+    invalid_registry.write_text(json.dumps([
+        {"id": "duplicate", "url": "https://example.com"},
+        {"id": "duplicate", "url": "http://example.com"},
+    ]), encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate"):
+        _load_featured_agents(tmp_path)
 
 
 def test_featured_page_includes_region_and_capability_filters():

@@ -3356,7 +3356,7 @@ def _model_api_offer_card(offer: dict, model: dict, site_url: str) -> str:
     </article>'''
 
 
-def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str, curated_models: list[dict] | None = None) -> str:
+def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str, curated_models: list[dict] | None = None, featured_agents: list[dict] | None = None) -> str:
     path = MODELS_PAGE_PATH
     page_url = _absolute(site_url, path)
     offer_count = len(offers)
@@ -3367,20 +3367,26 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         if str(model.get("id") or "") in current_model_ids
     ]
     vendor_directory_count = len(vendor_directory)
-    agent_ids = {"manus-free-agent", "xiaomi-mimo-desktop", "cnb-ai", "astudio", "workbuddy"}
-    agent_offers = [offer for offer in offers if str(offer.get("id") or "") in agent_ids and "agent" in (offer.get("type") or [])]
+    featured_agents = featured_agents if featured_agents is not None else _load_featured_agents(ACCESS_DATA_DIR)
+    offers_by_id = {str(offer.get("id") or ""): offer for offer in offers}
+    for agent in featured_agents:
+        offer_id = str(agent.get("offerId") or "")
+        if offer_id and offers and offer_id not in offers_by_id:
+            raise ValueError(f"Featured agent {agent.get('id')}: offerId {offer_id!r} is not present in offers data")
     indexable_slugs = indexable_model_slugs(models)
     title = "精选模型与 AI Agent · FreeLLM"
-    description = f"FreeLLM 团队人工精选 {len(curated_models)} 个 AI 模型，另收录 {len(agent_offers)} 个 Agent。按地区、模态和实测速度信息浏览。"
+    description = f"FreeLLM 团队人工精选 {len(curated_models)} 个 AI 模型，另收录 {len(featured_agents)} 个 Agent。按地区、模态和实测速度信息浏览。"
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"]}
 
     icon_hosts = {
         "openai": "openai.com", "google": "google.com", "anthropic": "anthropic.com",
-        "meta": "meta.com", "deepseek": "deepseek.com", "alibaba": "alibabagroup.com",
+        "meta muse": "muse.ai", "meta": "meta.com", "deepseek": "deepseek.com", "alibaba": "alibabagroup.com",
         "qwen": "qwen.ai", "xiaomi mimo": "mimo.mi.com", "xiaomi": "mi.com",
         "agnes ai": "agnes-ai.cn", "puter.js": "puter.com", "opencode zen": "opencode.ai",
         "manus ai": "manus.im", "cnb": "cnb.cool", "iflytek astudio": "xfyun.cn",
-        "workbuddy": "codebuddy.ai",
+        "workbuddy": "codebuddy.ai", "hermes": "hermes-agent.nousresearch.com",
+        "grok": "grok.com", "pi": "pi.ai", "agent.space": "agent.space", "claude code": "claude.ai",
+        "opencode": "opencode.ai",
     }
 
     def brand_icon_host(brand: str, url: str = "") -> str:
@@ -3503,24 +3509,28 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
       <div class="featured-model-actions"><button type="button" data-compare-toggle aria-pressed="false"><span lang="zh-CN" data-compare-add>＋ 加入对比</span><span lang="en" data-compare-add>＋ Compare</span><span lang="zh-CN" data-compare-remove hidden>✓ 已加入 · 移除</span><span lang="en" data-compare-remove hidden>✓ Added · Remove</span></button><a href="{_esc(detail_url)}"{external_attr}>{_locale_pair("查看详情", "Details")} →</a>{source_link}</div>
     </article>'''.replace("\n+", "\n")
 
-    def agent_card(offer: dict) -> str:
-        agent_id = str(offer.get("id") or "")
-        title_text = str(offer.get("titleZh") or offer.get("name") or offer.get("provider") or "AI Agent")
-        usage = offer.get("usageGuide") or ""
-        if isinstance(usage, dict):
-            usage = usage.get("summary") or usage.get("description") or ""
-        if not usage:
-            usage = offer.get("freeSummary") or offer.get("why") or ""
-        mark = _esc(str(offer.get("providerMark") or offer.get("provider") or "AI")[:2])
-        provider = _esc(str(offer.get("provider") or "AI Agent"))
-        icon = brand_icon_markup(str(offer.get("provider") or "AI Agent"), str(offer.get("register") or ""), mark)
-        tags = "".join(f'<span>{_esc(str(item))}</span>' for item in (offer.get("badges") or [])[:2])
-        search_text = _esc(" ".join((title_text, provider, str(usage))).lower())
-        href = f'/offers/{_slug(agent_id)}/'
-        return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-search-text="{search_text}"><div class="featured-agent-mark">{icon}</div><div class="featured-agent-content"><h3>{_esc(title_text)}</h3><small>{provider}</small><p>{_esc(str(usage))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}">{_locale_pair("查看详情", "Details")} →</a></div></article>'''
+    def agent_card(agent: dict) -> str:
+        agent_id = str(agent["id"])
+        offer_id = str(agent.get("offerId") or "")
+        offer = offers_by_id.get(offer_id) if offer_id else None
+        title_text = str((offer or {}).get("titleZh") or agent["nameZh"])
+        title_en = str((offer or {}).get("title") or agent["nameEn"])
+        provider_text = str((offer or {}).get("provider") or agent["provider"])
+        summary = str(agent["descriptionZh"])
+        summary_en = str(agent["descriptionEn"])
+        mark = str((offer or {}).get("providerMark") or agent.get("mark") or provider_text[:2])
+        icon = brand_icon_markup(provider_text, str(agent["url"]), mark)
+        labels = (offer or {}).get("badges") or agent.get("tagsZh") or []
+        labels_en = (offer or {}).get("badges") or agent.get("tagsEn") or []
+        tags = f'<span class="featured-agent-kind">{_locale_pair(_esc(agent["kindZh"]), _esc(agent["kindEn"]))}</span>'
+        tags += "".join(f'<span>{_locale_pair(_esc(str(zh)), _esc(str(en)))}</span>' for zh, en in zip(labels[:2], labels_en[:2]))
+        search_text = _esc(" ".join((title_text, title_en, provider_text, agent["kindZh"], agent["kindEn"], summary, summary_en, *agent.get("tagsZh", []), *agent.get("tagsEn", []))).lower())
+        href = f'/offers/{_slug(offer_id)}/' if offer else str(agent["url"])
+        external_attrs = '' if offer else ' target="_blank" rel="noopener noreferrer"'
+        return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-agent-kind="{_esc(str(agent["kindEn"]).lower())}" data-search-text="{search_text}"><div class="featured-agent-mark">{icon}</div><div class="featured-agent-content"><h3>{_locale_pair(_esc(title_text), _esc(title_en))}</h3><small>{_esc(provider_text)}</small><p>{_locale_pair(_esc(summary), _esc(summary_en))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}"{external_attrs}>{_locale_pair("查看详情", "Details")} →</a></div></article>'''
 
     featured_cards = "".join(featured_card(model, index) for index, model in enumerate(curated_models, 1))
-    agent_cards = "".join(agent_card(offer) for offer in agent_offers)
+    agent_cards = "".join(agent_card(agent) for agent in featured_agents)
     voice_count = sum("voice" in category_keys(model) for model in curated_models)
     image_count = sum("image" in category_keys(model) for model in curated_models)
     sound_count = sum("sound" in category_keys(model) for model in curated_models)
@@ -3548,8 +3558,8 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <div class="featured-evidence-filters"><label>{_locale_pair('地区适配', 'Region')}<select id="models-region-filter" data-filter="region"><option value="all">{_locale_pair('全部地区', 'All regions')}</option><option value="domestic">{_locale_pair('中国大陆可调用', 'Mainland China verified')}</option><option value="international">{_locale_pair('海外可调用', 'International verified')}</option><option value="both">{_locale_pair('国内外均可调用', 'Both regions verified')}</option><option value="unknown">{_locale_pair('待核实', 'Unverified')}</option></select></label><label>{_locale_pair('能力类型', 'Capability')}<select id="models-capability-filter" data-filter="capability"><option value="all">{_locale_pair('全部能力', 'All capabilities')}</option><option value="text">{_locale_pair('文本 / 推理', 'Text / reasoning')}</option><option value="audio">{_locale_pair('语音 / 音频', 'Speech / audio')}</option><option value="image">{_locale_pair('图片', 'Image')}</option><option value="video">{_locale_pair('视频', 'Video')}</option></select></label><span id="featured-model-count" aria-live="polite">{_locale_pair(f'显示 {len(curated_models)} / {len(curated_models)}', f'Showing {len(curated_models)} / {len(curated_models)}')}</span><button type="button" data-clear-featured-filters>{_locale_pair('清除筛选', 'Clear filters')}</button></div>
 <div class="featured-model-grid" id="featured-model-grid">{featured_cards}</div><p class="models-empty-state" hidden>{_locale_pair('没有符合条件的模型。试试其他筛选条件。', 'No models match. Try another filter.')}</p><button class="models-load-more" id="models-load-more" type="button" hidden>{_locale_pair('加载更多精选模型', 'Load more featured models')} ↓</button></section>
 <section class="featured-model-comparison" id="featured-model-comparison" hidden aria-label="精选模型对比 / Featured model comparison"><div><h3>{_locale_pair('模型对比', 'Model comparison')} <small id="featured-model-compare-count">0 / 3</small></h3><p id="featured-model-compare-status" aria-live="polite"></p></div><div class="featured-model-comparison-scroll"><table><thead><tr><th>{_locale_pair('比较项目', 'Property')}</th><th data-compare-column="0"></th><th data-compare-column="1"></th><th data-compare-column="2"></th></tr></thead><tbody data-comparison-rows></tbody></table></div><button type="button" data-clear-comparison>{_locale_pair('清空对比', 'Clear comparison')}</button></section>
-<section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前展示 {len(agent_offers)} 个已核验 Agent', f'{len(agent_offers)} verified agents')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
-<footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(agent_offers)} 个 Agent。', f'{len(curated_models)} featured models and {len(agent_offers)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
+<section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前收录 {len(featured_agents)} 个 AI Agent', f'{len(featured_agents)} AI agents listed')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
+<footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(featured_agents)} 个 Agent。', f'{len(curated_models)} featured models and {len(featured_agents)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
@@ -5168,7 +5178,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
-        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir)),
+        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers)),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
@@ -5545,6 +5555,53 @@ def _load_curated_models(data_dir: Path | None) -> list[dict]:
         return []
     payload = json.loads(path.read_text(encoding="utf-8"))
     return payload if isinstance(payload, list) else []
+
+
+def _load_featured_agents(data_dir: Path | None, offers: list[dict] | None = None) -> list[dict]:
+    """Load and validate the independently curated agent directory."""
+    path = (Path(data_dir) if data_dir else ACCESS_DATA_DIR) / "featured_agents.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"Featured agents data file not found: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON in featured agents data {path}: {exc}") from exc
+    if not isinstance(payload, list):
+        raise ValueError(f"Featured agents data must be a JSON array: {path}")
+
+    ids = [str(agent.get("id") or "") for agent in payload if isinstance(agent, dict)]
+    duplicate_ids = sorted({agent_id for agent_id in ids if ids.count(agent_id) > 1})
+    if duplicate_ids:
+        raise ValueError(f"Featured agents data contains duplicate IDs: {', '.join(duplicate_ids)}")
+
+    required_fields = (
+        "id", "nameZh", "nameEn", "provider", "kindZh", "kindEn",
+        "descriptionZh", "descriptionEn", "url", "mark",
+    )
+    for index, agent in enumerate(payload):
+        if not isinstance(agent, dict):
+            raise ValueError(f"Featured agents data row {index + 1} must be an object")
+        agent_id = str(agent.get("id") or f"row {index + 1}")
+        missing = [field for field in required_fields if not str(agent.get(field) or "").strip()]
+        if missing:
+            raise ValueError(f"Featured agent {agent_id}: missing required fields {', '.join(missing)}")
+        if not SLUG_RE.fullmatch(agent_id):
+            raise ValueError(f"Featured agent {agent_id}: ID must be a lowercase URL slug")
+        parsed_url = urlsplit(str(agent["url"]))
+        if parsed_url.scheme != "https" or not parsed_url.hostname:
+            raise ValueError(f"Featured agent {agent_id}: URL must be an absolute HTTPS URL")
+        for field in ("tagsZh", "tagsEn"):
+            values = agent.get(field)
+            if not isinstance(values, list) or not all(isinstance(value, str) and value.strip() for value in values):
+                raise ValueError(f"Featured agent {agent_id}: {field} must be an array of non-empty strings")
+
+    if offers is not None:
+        offer_ids = {str(offer.get("id") or "") for offer in offers}
+        for agent in payload:
+            offer_id = str(agent.get("offerId") or "")
+            if offer_id and offer_id not in offer_ids:
+                raise ValueError(f"Featured agent {agent['id']}: offerId {offer_id!r} is not present in offers data")
+    return payload
 
 
 def _load_model_access(data_path: Path) -> list[dict]:
