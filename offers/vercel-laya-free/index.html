@@ -236,6 +236,21 @@ pre code { padding:0; background:none; color:inherit; }
     .freellm-test-state.verified { color:var(--pale-green-text); background:var(--pale-green-bg); }
     .freellm-test-state.partial { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
     .freellm-test-state.blocked { color:var(--pale-red-text); background:var(--pale-red-bg); }
+    .freellm-tts-sample { margin:22px 0; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--surface-soft); }
+    .freellm-tts-sample-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+    .freellm-tts-sample-head h3 { margin:4px 0 0; }
+    .tts-sample-state { display:inline-flex; padding:4px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }
+    .tts-sample-state.ready { color:var(--pale-green-text); background:var(--pale-green-bg); }
+    .tts-sample-state.pending { color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }
+    .freellm-tts-sample blockquote { margin:14px 0; padding:14px 16px; border-left:3px solid var(--accent); border-radius:0 7px 7px 0; background:var(--surface); color:var(--ink); font-size:15px; line-height:1.8; }
+    .freellm-tts-sample audio { display:block; width:100%; margin-top:14px; }
+    .tts-sample-download { display:inline-flex; margin-top:9px; color:var(--accent); font-size:13px; text-decoration:none; }
+    .tts-sample-download:hover { text-decoration:underline; }
+    .tts-sample-pending { margin:12px 0 0; color:var(--pale-yellow-text); font-size:13px; }
+    .tts-sample-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin:12px 0 0; }
+    .tts-sample-facts div { padding:9px 11px; border:1px solid var(--line); border-radius:7px; background:var(--surface); }
+    .tts-sample-facts dt { color:var(--ink-tertiary); font:500 10px/1.5 var(--font-mono); }
+    .tts-sample-facts dd { margin:3px 0 0; font-size:13px; overflow-wrap:anywhere; }
     .flag-endpoint { color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }
     .flag-net-ok { color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }
     .flag-net-region { color: var(--pale-green-text); background: var(--pale-green-bg); }
@@ -249,17 +264,17 @@ pre code { padding:0; background:none; color:inherit; }
     @media (max-width: 680px) { .qs-grid { grid-template-columns: 1fr; } }
         footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
-<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b"></head>
-<body data-offer-id="vercel-laya-free" data-static-locale="true" class="fl-ui-v2" data-fl-section="models"><script src="/js/site-navigation.js?v=20261001-updates11"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
+<body data-offer-id="vercel-laya-free" data-static-locale="true" class="fl-ui-v2" data-fl-section="models"><script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>
 
   <header>
     <p><a href="https://freellm.top/"><span lang="zh-CN">FreeLLM 免费 AI 资源索引</span><span lang="en">FreeLLM Free AI Index</span></a> / <span lang="zh-CN">资源详情</span><span lang="en">Offer details</span></p>
     <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
-    <h1><span lang="zh-CN">Laya 结构化判定模型 · 限时免费 API</span><span lang="en">Laya · API</span></h1>
+    <h1><span lang="zh-CN">蚂蚁百灵 Ling-3.1-flash · 限时免费 API</span><span lang="en">Laya structured decision model · Limited-time free API</span></h1>
     <p><span lang="zh-CN">Vercel AI Gateway · Boundless</span><span lang="en">Vercel AI Gateway · Boundless</span></p>
-    <div class="offer-version-line"><span class="flag-chip flag-test-preflight" title="2026-10-03"><span lang="zh-CN">△ FreeLLM 预检</span><span lang="en">△ FreeLLM preflight</span></span></div>
-
+    <div class="offer-version-line"><span class="flag-chip flag-test-preflight" title="2026-10-02"><span lang="zh-CN">✗ FreeLLM 测试受阻</span><span lang="en">✗ FreeLLM test blocked</span></span></div>
+    
     <nav aria-label="Categories"><a class="tag" href="/category/api/"><span lang="zh-CN">AI API 服务</span><span lang="en">AI API services</span></a><a class="tag" href="/category/promo/"><span lang="zh-CN">AI 试用与优惠</span><span lang="en">AI trials and promotions</span></a></nav>
     <nav class="header-cta" aria-label="Official links"><a class="button" href="https://vercel.com/ai-gateway/models/laya-free" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">立即开始</span><span lang="en">Get started</span> ↗</span><small>打开 Vercel Laya 免费模型页</small></a><a class="button button--ghost" href="https://vercel.com/ai-gateway/models/laya-free" target="_blank" rel="nofollow noopener"><span><span lang="zh-CN">官方文档</span><span lang="en">Documentation</span> ↗</span></a></nav>
   </header>
@@ -300,24 +315,25 @@ pre code { padding:0; background:none; color:inherit; }
       <ul><li><span lang="zh-CN">在 Vercel AI Gateway 创建 API Key，并设置 AI_GATEWAY_API_KEY 环境变量。</span><span lang="en">Vercel AI Gateway API Key， AI_GATEWAY_API_KEY 。</span></li><li><span lang="zh-CN">安装并使用 AI SDK 的 experimental_evaluate，从 convaiinnovations/laya-free 模型发送 state 与 questions。</span><span lang="en">AI SDK experimental_evaluate， convaiinnovations/laya-free state questions。</span></li><li><span lang="zh-CN">检查返回的结构化结果；模型用于分类、路由和判定，不用于自由文本生成。</span><span lang="en">； 、 ， 。</span></li><li><span lang="zh-CN">免费促销截至 2026-10-31；使用前复核模型页的免费状态与提供商条款。</span><span lang="en">2026-10-31； 。</span></li></ul>
     </section>
 <section class="freellm-offer-test">
-      <div class="freellm-offer-test-head"><div><span class="eyebrow">FreeLLM TEST</span><h2><span lang="zh-CN">FreeLLM 自测</span><span lang="en">FreeLLM test</span></h2></div><span class="freellm-test-state partial"><span lang="zh-CN">预检通过 · 登录态实测待补</span><span lang="en">Preflight passed · signed-in test pending</span></span></div>
+      <div class="freellm-offer-test-head"><div><span class="eyebrow">FreeLLM TEST</span><h2><span lang="zh-CN">FreeLLM 自测</span><span lang="en">FreeLLM test</span></h2></div><span class="freellm-test-state blocked"><span lang="zh-CN">测试受阻</span><span lang="en">Test blocked</span></span></div>
       <div class="facts">
-        <div class="fact"><strong><span lang="zh-CN">测试时间</span><span lang="en">Tested at</span></strong><span>2026-10-03</span></div>
+        <div class="fact"><strong><span lang="zh-CN">测试时间</span><span lang="en">Tested at</span></strong><span>2026-10-02</span></div>
         <div class="fact"><strong><span lang="zh-CN">测试级别</span><span lang="en">Test level</span></strong><span>preflight</span></div>
         <div class="fact"><strong><span lang="zh-CN">真实登录使用</span><span lang="en">Signed-in usage</span></strong><span><span lang="zh-CN">未验证</span><span lang="en">Not verified</span></span></div>
       </div>
+      
       <h3><span lang="zh-CN">我们测了什么</span><span lang="en">What we tested</span></h3>
-      <p>核对 Laya 的模型用途、集成方式和限时免费截止日；未进行 API 推理调用。</p>
-      <ol class="steps"><li>检查 Vercel AI Gateway 官方 Laya 发布说明和模型页，核对结构化评估用途、8K 上下文、experimental_evaluate 集成方式及免费期限。</li><li>本次未使用有效 Vercel AI Gateway API Key 发送推理请求，因此没有模型输出质量或延迟数据。</li></ol>
+      <p>检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。</p>
+      <ol class="steps"><li>核对 Vercel AI Gateway 官方公告与当前免费模型页。</li><li>使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。</li><li>三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。</li></ol>
       <h3><span lang="zh-CN">测试结果</span><span lang="en">Result</span></h3>
-      <p>官方资料确认 Laya 是面向结构化判定的模型，Vercel 标注免费至 2026-10-31。API 调用和实际免费额度尚未验证。</p>
-      <div class="callout"><strong><span lang="zh-CN">未验证 / 限制：</span><span lang="en">Not verified / limits</span></strong> 未验证 API 连通性、输出质量、请求额度、限流或稳定性；免费状态和路由可能变化。</div>
-      <h3><span lang="zh-CN">测试证据</span><span lang="en">Test evidence</span></h3><ul class="link-list"><li><a href="https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31" target="_blank" rel="nofollow noopener">Vercel Laya 发布说明 ↗</a></li><li><a href="https://vercel.com/ai-gateway/models/laya-free" target="_blank" rel="nofollow noopener">Vercel Laya 免费模型页 ↗</a></li></ul>
+      <p>FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。</p>
+      <div class="callout"><strong><span lang="zh-CN">未验证 / 限制：</span><span lang="en">Not verified / limits</span></strong> HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。</div>
+      <h3><span lang="zh-CN">测试证据</span><span lang="en">Test evidence</span></h3><ul class="link-list"><li><a href="https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway" target="_blank" rel="nofollow noopener">Vercel 发布说明 ↗</a></li><li><a href="https://vercel.com/ai-gateway/models/ling-3-1-flash-free" target="_blank" rel="nofollow noopener">Vercel 免费模型页 ↗</a></li><li><a href="https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions" target="_blank" rel="nofollow noopener">Vercel Chat Completions API 文档 ↗</a></li></ul>
     </section>
     <section>
       <h2><span lang="zh-CN">官方来源</span><span lang="en">Official sources</span></h2>
-      <p class="muted"><span lang="zh-CN">Vercel AI Gateway 官方发布说明及模型页说明 Laya 的结构化评估用途、8K 上下文和免费至 2026-10-31。实际调用、额度和输出质量尚未实测。</span><span lang="en">Vercel AI Gateway Laya 、8K 2026-10-31。 、 。</span></p>
-      <ul><li><a href="https://vercel.com/ai-gateway/models/laya-free" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Vercel Laya 免费模型页</span><span lang="en">Vercel Laya</span> ↗</a></li><li><a href="https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Vercel 发布说明</span><span lang="en">Vercel</span> ↗</a></li></ul>
+      <p class="muted"><span lang="zh-CN">Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。</span><span lang="en">Vercel 560B 、25B 、262K 2026-10-13；Vercel -free ID 。 Ling-3.0 ， 1M 。</span></p>
+      <ul><li><a href="https://vercel.com/ai-gateway/models/laya-free" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Vercel Laya 免费模型页</span><span lang="en">Vercel Laya</span> ↗</a></li><li><a href="https://vercel.com/changelog" rel="nofollow noopener" target="_blank"><span lang="zh-CN">Vercel 发布说明</span><span lang="en">Vercel</span> ↗</a></li></ul>
     </section>
     <section>
       <h2><span lang="zh-CN">相关资源</span><span lang="en">Related resources</span></h2>

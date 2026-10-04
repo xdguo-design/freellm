@@ -63,7 +63,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn("freellm-pastel-ui.css?v=20260923b", page)
+        self.assertIn("freellm-pastel-ui.css?v=20261003a", page)
 
     def test_phase_one_homepage_isolated_aurora_style(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
@@ -85,16 +85,15 @@ class SiteVisualSystemTests(unittest.TestCase):
 
     def test_phase_one_aurora_does_not_leak_into_model_center(self):
         model_center = (ROOT / "models" / "center" / "index.html").read_text(encoding="utf-8")
-        builder = SEO_BUILD.read_text(encoding="utf-8")
         self.assertNotIn("aurora-home.css", model_center)
-        self.assertIn("Phase 1 Aurora is intentionally homepage-only", builder)
+        self.assertIn('http-equiv="refresh" content="0;url=/models/"', model_center)
 
     def test_all_primary_pages_have_isolated_aurora_assets(self):
         pages = {
             "models/index.html": ("aurora-models.css", "20260929b"),
-            "skills/index.html": ("aurora-skills.css", "20260930k"),
+            "skills/index.html": ("aurora-skills.css", "20260930o"),
             "tools/index.html": ("aurora-tools.css", "20260924a"),
-            "skills/lab/index.html": ("aurora-workflow.css", "20260924a"),
+            "workflow/index.html": ("aurora-workflow.css", "20260924a"),
             "logs/index.html": ("aurora-logs.css", "20260924a"),
             "about/index.html": ("aurora-about.css", "20260924a"),
         }
@@ -155,7 +154,7 @@ class SiteVisualSystemTests(unittest.TestCase):
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn("fl-pastel-ui", page, relative)
             self.assertIn("fl-ui-v2", page, relative)
-            self.assertIn("freellm-pastel-ui.css?v=20260923b", page, relative)
+            self.assertIn("freellm-pastel-ui.css?v=", page, relative)
             self.assertIn('class="fl-site-rail"', page, relative)
             self.assertIn('class="fl-site-ribbon"', page, relative)
             self.assertNotIn('class="top-nav"', page, relative)

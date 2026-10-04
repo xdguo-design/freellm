@@ -225,9 +225,8 @@ def test_access_context_fails_when_required_file_is_invalid(tmp_path, monkeypatc
 def test_model_catalog_page_exposes_mainland_cn_filter(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     all_models_page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
-    center_page = (tmp_path / "models" / "center" / "index.html").read_text(encoding="utf-8")
 
-    for page in (all_models_page, center_page):
+    for page in (all_models_page,):
         assert 'id="model-catalog-region"' in page
         assert 'data-label-zh="中国大陆可用性"' in page
         assert "大陆待核验" in page

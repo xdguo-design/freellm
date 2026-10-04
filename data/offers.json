@@ -9214,12 +9214,12 @@
       ],
       [
         "Vercel 发布说明",
-        "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+        "https://vercel.com/changelog"
       ]
     ],
     "sourceUrls": [
       "https://vercel.com/ai-gateway/models/laya-free",
-      "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+      "https://vercel.com/changelog"
     ],
     "usageGuide": {
       "summary": "通过 Vercel AI Gateway 和 AI SDK 的 experimental_evaluate 调用 Laya 结构化判定模型。",
@@ -9247,32 +9247,37 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "仅记录 Vercel AI Gateway 上 Laya 的免费路由及结构化评估用途；不代表其他提供方的免费政策。",
-    "evidence": "Vercel AI Gateway 官方发布说明及模型页说明 Laya 的结构化评估用途、8K 上下文和免费至 2026-10-31。实际调用、额度和输出质量尚未实测。",
+    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
+    "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
     "freeLLMTest": {
       "testLevel": "preflight",
-      "status": "partial",
-      "testedAt": "2026-10-03",
+      "status": "blocked",
+      "testedAt": "2026-10-02",
       "actualUsageVerified": false,
-      "task": "核对 Laya 的模型用途、集成方式和限时免费截止日；未进行 API 推理调用。",
+      "task": "检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。",
       "method": [
-        "检查 Vercel AI Gateway 官方 Laya 发布说明和模型页，核对结构化评估用途、8K 上下文、experimental_evaluate 集成方式及免费期限。",
-        "本次未使用有效 Vercel AI Gateway API Key 发送推理请求，因此没有模型输出质量或延迟数据。"
+        "核对 Vercel AI Gateway 官方公告与当前免费模型页。",
+        "使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。",
+        "三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。"
       ],
-      "result": "官方资料确认 Laya 是面向结构化判定的模型，Vercel 标注免费至 2026-10-31。API 调用和实际免费额度尚未验证。",
-      "limitations": "未验证 API 连通性、输出质量、请求额度、限流或稳定性；免费状态和路由可能变化。",
+      "result": "FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。",
+      "limitations": "HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。",
       "evidence": [
         {
-          "label": "Vercel Laya 发布说明",
-          "url": "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
+          "label": "Vercel 发布说明",
+          "url": "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
         },
         {
-          "label": "Vercel Laya 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/laya-free"
+          "label": "Vercel 免费模型页",
+          "url": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+        },
+        {
+          "label": "Vercel Chat Completions API 文档",
+          "url": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
         }
       ]
     },
-    "freeLLMTestNotes": "资料预检已完成，官方标注免费至 2026-10-31；尚无 API 推理结果，模型输出质量和实际额度待验证。",
-    "titleZh": "Laya 结构化判定模型 · 限时免费 API"
+    "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
+    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
   }
 ]

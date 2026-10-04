@@ -10,7 +10,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -24,6 +24,7 @@ from crawler.schema import (
     validate_operation_guides,
 )
 from scripts.generate_access_cards import _operation_hints
+from scripts.featured_models import comparable_benchmark, normalize_capabilities, normalize_region
 
 
 SITE_URL = "https://freellm.top"
@@ -1546,6 +1547,45 @@ def _offer_freellm_test_markup(offer: dict) -> str:
         state_zh, state_en, state_class = "部分验证", "Partially verified", "partial"
 
     methods = "".join(f"<li>{_esc(item)}</li>" for item in (test.get("method") or []))
+    sample = test.get("ttsSample")
+    sample_markup = ""
+    if isinstance(sample, dict) and sample.get("sampleText"):
+        sample_status = str(sample.get("status") or "pending")
+        audio_url = str(sample.get("audioUrl") or "").strip()
+        # Only render local, known audio asset paths. In particular, never let data
+        # records inject arbitrary schemes into a media element.
+        safe_audio_url = bool(
+            audio_url.startswith("/assets/audio/freellm-tests/")
+            and ".." not in audio_url.split("/")
+            and re.fullmatch(r"/assets/audio/freellm-tests/[A-Za-z0-9._/-]+\.wav", audio_url)
+        )
+        audio_markup = (
+            f'<audio controls preload="none" src="{_esc(audio_url)}">'
+            f'{_locale_pair("你的浏览器不支持音频播放。", "Your browser does not support audio playback.")}</audio>'
+            f'<a class="tts-sample-download" href="{_esc(audio_url)}" download>'
+            f'{_locale_pair("下载 WAV 样音", "Download WAV sample")} ↓</a>'
+            if safe_audio_url and sample_status == "ready"
+            else f'<p class="tts-sample-pending">{_locale_pair("样音待真实 API 实测后生成；当前不代表模型实测结果。", "A sample will be published after a real API test; this is not a model test result.")}</p>'
+        )
+        sample_facts = []
+        fact_values = (
+            ("测试模型", "Test model", sample.get("model")),
+            ("音色 / 风格", "Voice / style", sample.get("voice")),
+            ("请求耗时", "Request time", f'{sample.get("latencyMs")} ms' if isinstance(sample.get("latencyMs"), (int, float)) else None),
+            ("费用核验", "Billing check", sample.get("billingStatus")),
+            ("生成时间", "Generated", sample.get("generatedAt")),
+        )
+        for label_zh, label_en, value in fact_values:
+            if value not in (None, ""):
+                sample_facts.append(
+                    f'<div><dt>{_locale_pair(label_zh, label_en)}</dt><dd>{_esc(value)}</dd></div>'
+                )
+        sample_markup = f'''<section class="freellm-tts-sample" aria-labelledby="freellm-tts-sample-title">
+        <div class="freellm-tts-sample-head"><div><span class="eyebrow">FIXED TEST TEXT</span><h3 id="freellm-tts-sample-title">{_locale_pair("我们的 TTS 测试样音", "Our TTS test sample")}</h3></div><span class="tts-sample-state {'ready' if safe_audio_url and sample_status == 'ready' else 'pending'}">{_locale_pair("FreeLLM 实测样音" if safe_audio_url and sample_status == "ready" else "等待真实实测", "FreeLLM tested sample" if safe_audio_url and sample_status == "ready" else "Awaiting hands-on test")}</span></div>
+        <blockquote>{_esc(sample.get("sampleText"))}</blockquote>
+        {f'<dl class="tts-sample-facts">{"".join(sample_facts)}</dl>' if sample_facts else ""}
+        {audio_markup}
+      </section>'''
     evidence = "".join(
         f'<li><a href="{_esc(item.get("url"))}" target="_blank" rel="nofollow noopener">{_esc(item.get("label"))} ↗</a>'
         + (f'<small>{_esc(item.get("note"))}</small>' if item.get("note") else "") + "</li>"
@@ -1558,6 +1598,7 @@ def _offer_freellm_test_markup(offer: dict) -> str:
         <div class="fact"><strong>{_locale_pair("测试级别", "Test level")}</strong><span>{_esc(level)}</span></div>
         <div class="fact"><strong>{_locale_pair("真实登录使用", "Signed-in usage")}</strong><span>{_locale_pair("已验证" if actual else "未验证", "Verified" if actual else "Not verified")}</span></div>
       </div>
+      {sample_markup}
       <h3>{_locale_pair("我们测了什么", "What we tested")}</h3>
       <p>{_esc(test.get("task"))}</p>
       <ol class="steps">{methods}</ol>
@@ -1575,6 +1616,9 @@ def _offer_freellm_test_chip(offer: dict) -> str:
     if test.get("actualUsageVerified") is True and test.get("status") == "passed":
         label = _locale_pair("✓ FreeLLM 实测", "✓ FreeLLM hands-on")
         cls = "flag-hands-on"
+    elif test.get("status") == "blocked":
+        label = _locale_pair("✗ FreeLLM 测试受阻", "✗ FreeLLM test blocked")
+        cls = "flag-test-preflight"
     elif test.get("testLevel") == "preflight":
         label = _locale_pair("△ FreeLLM 预检", "△ FreeLLM preflight")
         cls = "flag-test-preflight"
@@ -1839,6 +1883,21 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .freellm-test-state.verified {{ color:var(--pale-green-text); background:var(--pale-green-bg); }}
     .freellm-test-state.partial {{ color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }}
     .freellm-test-state.blocked {{ color:var(--pale-red-text); background:var(--pale-red-bg); }}
+    .freellm-tts-sample {{ margin:22px 0; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--surface-soft); }}
+    .freellm-tts-sample-head {{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }}
+    .freellm-tts-sample-head h3 {{ margin:4px 0 0; }}
+    .tts-sample-state {{ display:inline-flex; padding:4px 10px; border-radius:9999px; font:500 11px/1.5 var(--font-mono); }}
+    .tts-sample-state.ready {{ color:var(--pale-green-text); background:var(--pale-green-bg); }}
+    .tts-sample-state.pending {{ color:var(--pale-yellow-text); background:var(--pale-yellow-bg); }}
+    .freellm-tts-sample blockquote {{ margin:14px 0; padding:14px 16px; border-left:3px solid var(--accent); border-radius:0 7px 7px 0; background:var(--surface); color:var(--ink); font-size:15px; line-height:1.8; }}
+    .freellm-tts-sample audio {{ display:block; width:100%; margin-top:14px; }}
+    .tts-sample-download {{ display:inline-flex; margin-top:9px; color:var(--accent); font-size:13px; text-decoration:none; }}
+    .tts-sample-download:hover {{ text-decoration:underline; }}
+    .tts-sample-pending {{ margin:12px 0 0; color:var(--pale-yellow-text); font-size:13px; }}
+    .tts-sample-facts {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin:12px 0 0; }}
+    .tts-sample-facts div {{ padding:9px 11px; border:1px solid var(--line); border-radius:7px; background:var(--surface); }}
+    .tts-sample-facts dt {{ color:var(--ink-tertiary); font:500 10px/1.5 var(--font-mono); }}
+    .tts-sample-facts dd {{ margin:3px 0 0; font-size:13px; overflow-wrap:anywhere; }}
     .flag-endpoint {{ color: var(--pale-green-text); background: var(--surface); border: 1px solid var(--pale-green-text); }}
     .flag-net-ok {{ color: var(--pale-green-text); background: var(--pale-green-bg); border: 1px solid var(--pale-green-text); }}
     .flag-net-region {{ color: var(--pale-green-text); background: var(--pale-green-bg); }}
@@ -1859,7 +1918,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
-    <h1>{_locale_pair(offer.get("titleZh") or title, title, "Offer details")}</h1>
+    <h1>{_locale_pair(offer.get("titleZh") or title, offer.get("titleEn") or title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
     {featured_note_markup}
@@ -1957,9 +2016,10 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     {EDITORIAL_BASE_CSS}
   </style>
   <style>
-    body {{ max-width: 980px; }}
+    body {{ box-sizing:border-box !important; width:100% !important; max-width:none !important; margin:0 !important; }}
     h1 {{ font-size: clamp(30px, 5vw, 44px); }}
     main {{ padding-top: 6px; }}
+    article, article h2, article h2 a, article p {{ min-width:0; overflow-wrap:anywhere; }}
     article {{ padding: 18px 0; border-bottom: 1px solid var(--line-soft); }}
     article:last-child {{ border-bottom: 0; padding-bottom: 6px; }}
     article h2 {{ margin: 0 0 6px; font-size: 21px; }}
@@ -3296,56 +3356,200 @@ def _model_api_offer_card(offer: dict, model: dict, site_url: str) -> str:
     </article>'''
 
 
-def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str) -> str:
+def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str, curated_models: list[dict] | None = None) -> str:
     path = MODELS_PAGE_PATH
     page_url = _absolute(site_url, path)
     offer_count = len(offers)
     model_record_count = len(models)
+    current_model_ids = {str(model.get("id") or "") for model in models}
+    curated_models = [
+        model for model in (curated_models if curated_models is not None else _load_curated_models(Path("data")))
+        if str(model.get("id") or "") in current_model_ids
+    ]
     vendor_directory_count = len(vendor_directory)
-    active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in models if item.get("providerId")})
-    title = "AI 模型概览：模型记录、厂家目录与免费资源 · FreeLLM"
-    description = (
-        f"FreeLLM 当前整理 {model_record_count} 条模型记录、{vendor_directory_count} 个厂家目录、"
-        f"{active_provider_id_count} 个当前模型数据 Provider ID 与 {offer_count} 条免费资源。四种口径分开统计，避免把 Offer 当成模型。"
-    )
-    schema = {
-        "@context": "https://schema.org", "@type": "CollectionPage", "name": title,
-        "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"],
+    agent_ids = {"manus-free-agent", "xiaomi-mimo-desktop", "cnb-ai", "astudio", "workbuddy"}
+    agent_offers = [offer for offer in offers if str(offer.get("id") or "") in agent_ids and "agent" in (offer.get("type") or [])]
+    indexable_slugs = indexable_model_slugs(models)
+    title = "精选模型与 AI Agent · FreeLLM"
+    description = f"FreeLLM 团队人工精选 {len(curated_models)} 个 AI 模型，另收录 {len(agent_offers)} 个 Agent。按地区、模态和实测速度信息浏览。"
+    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"]}
+
+    icon_hosts = {
+        "openai": "openai.com", "google": "google.com", "anthropic": "anthropic.com",
+        "meta": "meta.com", "deepseek": "deepseek.com", "alibaba": "alibabagroup.com",
+        "qwen": "qwen.ai", "xiaomi mimo": "mimo.mi.com", "xiaomi": "mi.com",
+        "agnes ai": "agnes-ai.cn", "puter.js": "puter.com", "opencode zen": "opencode.ai",
+        "manus ai": "manus.im", "cnb": "cnb.cool", "iflytek astudio": "xfyun.cn",
+        "workbuddy": "codebuddy.ai",
     }
-    tabs = f'''<nav class="model-section-tabs" aria-label="模型页面">
-      <a href="{MODELS_PAGE_PATH}" aria-current="page">概览</a>
-      <a href="{ALL_MODELS_PAGE_PATH}">全部模型</a>
-      <a href="{PROVIDERS_PAGE_PATH}">按厂家</a>
-      <a href="/category/api/">免费 API / Offer</a>
-    </nav>'''
-    stats = f'''<div class="fl-stat-grid" aria-label="模型目录统计">
-      <div class="fl-stat-card"><strong>{model_record_count}</strong><span>模型记录 / model records</span></div>
-      <div class="fl-stat-card"><strong>{vendor_directory_count}</strong><span>厂家目录 / vendor directory</span></div>
-      <div class="fl-stat-card"><strong>{active_provider_id_count}</strong><span>当前数据 Provider ID</span></div>
-      <div class="fl-stat-card"><strong>{offer_count}</strong><span>免费资源 / verified offers</span></div>
-    </div>'''
-    api_entries = _model_api_offer_entries(offers)
-    api_entry_cards = "".join(_model_api_offer_card(offer, model, site_url) for offer, model in api_entries[:6])
+
+    def brand_icon_host(brand: str, url: str = "") -> str:
+        normalized = re.sub(r"\s+", " ", brand.strip().lower())
+        for key, host in icon_hosts.items():
+            if key in normalized:
+                return host
+        try:
+            host = (urlsplit(url).hostname or "").lower()
+        except ValueError:
+            host = ""
+        return host.removeprefix("www.")
+
+    def brand_icon_markup(brand: str, url: str, mark: str) -> str:
+        host = brand_icon_host(brand, url)
+        fallback = f'<span class="brand-icon-fallback">{mark}</span>'
+        if not host:
+            return fallback
+        icon_url = f"https://www.google.com/s2/favicons?domain={host}&sz=128"
+        return f'{fallback}<img class="brand-icon-image" src="{_esc(icon_url)}" data-icon-host="{_esc(host)}" alt="{_esc(brand)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">'
+
+    def category_keys(model: dict) -> list[str]:
+        modalities = {str(item).lower() for item in model.get("modality") or []}
+        model_name = f"{model.get('id', '')} {model.get('model', '')}".lower()
+        keys = []
+        if "image" in modalities:
+            keys.append("image")
+        if "audio" in modalities:
+            keys.append("sound")
+            if any(word in model_name for word in ("live", "voice", "speech", "tts")):
+                keys.append("voice")
+        return keys
+
+    def featured_card(model: dict, index: int) -> str:
+        model_id = str(model.get("id") or "")
+        model_name = str(model.get("model") or model_id)
+        provider = str(model.get("provider") or "模型目录")
+        modalities = [str(item) for item in model.get("modality") or [] if str(item) != "unknown"]
+        capabilities = normalize_capabilities(model)
+        capability_en = {
+            "文本": "Text", "推理": "Reasoning", "图片·方向待核实": "Image · direction unverified",
+            "音频·方向待核实": "Audio · direction unverified", "视频·方向待核实": "Video · direction unverified",
+            "文本输入": "Text input", "文本生成": "Text generation", "图片理解": "Image understanding",
+            "图片生成": "Image generation", "音频输入": "Audio input", "语音生成": "Speech generation",
+            "语音识别": "Speech recognition", "视频理解": "Video understanding", "视频生成": "Video generation",
+        }
+        def capability_class(label: str) -> str:
+            value = label.lower()
+            if value.startswith(("图片", "image")):
+                return "image"
+            if value.startswith(("视频", "video")):
+                return "video"
+            if value.startswith(("音频", "语音", "audio", "speech")):
+                return "audio"
+            if value.startswith(("推理", "reasoning")):
+                return "reasoning"
+            return "text"
+
+        chips = "".join(
+            f'<span class="featured-capability-chip capability-{capability_class(label)}" title="{_esc(label)}">{_locale_pair(_esc({"图片·方向待核实": "图片待核实", "音频·方向待核实": "音频待核实", "视频·方向待核实": "视频待核实"}.get(label, label)), _esc(capability_en.get(label, label)))}</span>'
+            for label in capabilities
+        )
+        facts = []
+        if model.get("context"):
+            value = _format_context_window(model["context"]) if str(model["context"]).isdigit() else str(model["context"])
+            facts.append(f'<span><small>{_locale_pair("上下文", "Context")}</small><b>{_esc(value)}</b></span>')
+        if model.get("maxOutput"):
+            value = _format_context_window(model["maxOutput"]) if str(model["maxOutput"]).isdigit() else str(model["maxOutput"])
+            facts.append(f'<span><small>{_locale_pair("输出上限", "Max output")}</small><b>{_esc(value)}</b></span>')
+        region_info = normalize_region(model)
+        region_en = {
+            "中国大陆可调用": "Mainland China verified", "海外可调用": "International verified",
+            "国内外均可调用": "Mainland China + international verified", "待核实": "Region unverified",
+        }[region_info["label"]]
+        facts.append(f'<span class="featured-region-fact"><small>{_locale_pair("接入地区", "Verified region")}</small><b>{_locale_pair(region_info["label"], region_en)}</b></span>')
+        benchmark = comparable_benchmark(model)
+        if benchmark:
+            ttft = benchmark["ttftMsMedian"]
+            tokens_per_second = benchmark["outputTokensPerSecondMedian"]
+            speed_status = (
+                f'<div class="featured-model-speed"><strong>{_locale_pair(f"首 token {ttft} ms", f"TTFT {ttft} ms")}</strong>'
+                f'<strong>{_locale_pair(f"{tokens_per_second} token/s", f"{tokens_per_second} tokens/s")}</strong>'
+                f'<small>{_locale_pair("实测", "Measured")} · {_locale_pair("中国大陆", "Mainland China") if benchmark["testRegion"] == "domestic" else _locale_pair("海外", "International")} · {_esc(benchmark["testedAt"])}</small></div>'
+            )
+        else:
+            speed_status = f'<div class="featured-model-speed is-untested"><strong>{_locale_pair("生成速度：未实测", "Generation speed: untested")}</strong><small>{_locale_pair("不使用网络连通耗时代替生成速度", "Network latency is not model generation speed")}</small></div>'
+        mark = _esc(provider.strip()[:2] or "AI")
+        modality_labels = {"text": "文本", "image": "图片", "video": "视频", "audio": "音频", "reasoning": "推理"}
+        summary_modalities = list(dict.fromkeys(modality_labels[item.lower()] for item in modalities if item.lower() in modality_labels))
+        summary_text = (
+            f'目录标注{"、".join(summary_modalities)}能力；实际支持范围以服务商说明为准。'
+            if summary_modalities else "能力信息以模型目录与服务商说明为准。"
+        )
+        model_slug = _safe_slug(model_name, "model")
+        source_url = str(model.get("sourceUrl") or "").strip()
+        icon = brand_icon_markup(provider, source_url, mark)
+        detail_url = model_aggregate_url(model) if model_slug in indexable_slugs else ALL_MODELS_PAGE_PATH
+        detail_external = detail_url.startswith("http")
+        categories = " ".join(category_keys(model))
+        search_text = _esc(" ".join((model_name, provider, *modalities)).lower())
+        external_attr = ' target="_blank" rel="noopener noreferrer"' if detail_external else ""
+        source_link = f'<a href="{_esc(source_url)}" target="_blank" rel="noopener noreferrer">{_locale_pair("来源官网", "Official source")} ↗</a>' if source_url else ""
+        capability_tokens = {
+            "text": "text", "image": "image", "audio": "audio", "video": "video",
+            "image_generation": "image", "audio_generation": "audio", "speech_generation": "audio",
+            "speech_recognition": "audio", "video_generation": "video",
+        }
+        capability_values = {capability_tokens[item.lower()] for item in modalities if item.lower() in capability_tokens}
+        if "reasoning" in modalities:
+            capability_values.add("text")
+        for item in model.get("verifiedCapabilities") or []:
+            if isinstance(item, dict) and item.get("name") in capability_tokens:
+                capability_values.add(capability_tokens[item["name"]])
+        return f'''<article class="featured-model-card" data-model-id="{_esc(model_id)}" data-model-name="{_esc(model_name)}" data-provider="{_esc(provider)}" data-region="{_esc(region_info["filterValue"])}" data-region-label="{_esc(region_info["label"])}" data-model-categories="{categories}" data-capabilities="{_esc(" ".join(sorted(capability_values)))}" data-search-text="{search_text}" data-context="{_esc(str(model.get("context") or ""))}" data-max-output="{_esc(str(model.get("maxOutput") or ""))}" data-source-url="{_esc(source_url)}" data-benchmark-protocol="{_esc(benchmark["protocolVersion"] if benchmark else "")}" data-benchmark-task="{_esc(benchmark["taskId"] if benchmark else "")}" data-benchmark-language="{_esc(benchmark["language"] if benchmark else "")}" data-benchmark-sampling-mode="{_esc(benchmark["samplingMode"] if benchmark else "")}" data-benchmark-temperature="{_esc(str(benchmark["temperature"]) if benchmark else "")}" data-benchmark-max-output="{_esc(str(benchmark["maxOutputTokens"]) if benchmark else "")}" data-benchmark-warmups="{_esc(str(benchmark["warmups"]) if benchmark else "")}" data-benchmark-sample-count="{_esc(str(benchmark["sampleCount"]) if benchmark else "")}" data-benchmark-ttft="{_esc(str(benchmark["ttftMsMedian"]) if benchmark else "")}" data-benchmark-tokens-per-second="{_esc(str(benchmark["outputTokensPerSecondMedian"]) if benchmark else "")}" data-benchmark-region="{_esc(benchmark["testRegion"] if benchmark else "")}" data-benchmark-date="{_esc(benchmark["testedAt"] if benchmark else "")}">
+      <div class="featured-model-card-top"><span class="featured-model-badge">{_locale_pair("团队精选", "Team pick")}</span></div>
+      <div class="featured-model-title-row"><span class="featured-model-mark">{icon}</span><div><h3>{_esc(model_name)}</h3><span class="featured-model-provider">{_esc(provider)}</span></div></div>
+      <p class="featured-model-summary">{_locale_pair(_esc(summary_text), _esc("Capabilities and availability depend on the provider's current documentation."))}</p>
+      <div class="featured-model-chips">{chips or f'<span>{_locale_pair("能力待核实", "Capabilities unverified")}</span>'}</div><div class="featured-model-facts">{''.join(facts)}</div>
+      {speed_status}
+      <div class="featured-model-actions"><button type="button" data-compare-toggle aria-pressed="false"><span lang="zh-CN" data-compare-add>＋ 加入对比</span><span lang="en" data-compare-add>＋ Compare</span><span lang="zh-CN" data-compare-remove hidden>✓ 已加入 · 移除</span><span lang="en" data-compare-remove hidden>✓ Added · Remove</span></button><a href="{_esc(detail_url)}"{external_attr}>{_locale_pair("查看详情", "Details")} →</a>{source_link}</div>
+    </article>'''.replace("\n+", "\n")
+
+    def agent_card(offer: dict) -> str:
+        agent_id = str(offer.get("id") or "")
+        title_text = str(offer.get("titleZh") or offer.get("name") or offer.get("provider") or "AI Agent")
+        usage = offer.get("usageGuide") or ""
+        if isinstance(usage, dict):
+            usage = usage.get("summary") or usage.get("description") or ""
+        if not usage:
+            usage = offer.get("freeSummary") or offer.get("why") or ""
+        mark = _esc(str(offer.get("providerMark") or offer.get("provider") or "AI")[:2])
+        provider = _esc(str(offer.get("provider") or "AI Agent"))
+        icon = brand_icon_markup(str(offer.get("provider") or "AI Agent"), str(offer.get("register") or ""), mark)
+        tags = "".join(f'<span>{_esc(str(item))}</span>' for item in (offer.get("badges") or [])[:2])
+        search_text = _esc(" ".join((title_text, provider, str(usage))).lower())
+        href = f'/offers/{_slug(agent_id)}/'
+        return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-search-text="{search_text}"><div class="featured-agent-mark">{icon}</div><div class="featured-agent-content"><h3>{_esc(title_text)}</h3><small>{provider}</small><p>{_esc(str(usage))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}">{_locale_pair("查看详情", "Details")} →</a></div></article>'''
+
+    featured_cards = "".join(featured_card(model, index) for index, model in enumerate(curated_models, 1))
+    agent_cards = "".join(agent_card(offer) for offer in agent_offers)
+    voice_count = sum("voice" in category_keys(model) for model in curated_models)
+    image_count = sum("image" in category_keys(model) for model in curated_models)
+    sound_count = sum("sound" in category_keys(model) for model in curated_models)
+    quick_links = f'''<nav class="model-section-tabs models-quick-links" aria-label="模型与 Agent 目录">
+      <a class="is-current" href="#featured-models"><span class="quick-icon icon-star">★</span><span><b>{_locale_pair("精选模型", "Featured models")}</b><small>{_locale_pair("团队人工精选", "Team curated")}</small></span><i>›</i></a>
+      <a href="{ALL_MODELS_PAGE_PATH}"><span class="quick-icon icon-grid">▦</span><span><b>{_locale_pair("全部模型", "All models")}</b><small>{_locale_pair(f"完整模型目录（{model_record_count}+）", f"Full catalog ({model_record_count}+)" )}</small></span><i>›</i></a>
+      <a href="{PROVIDERS_PAGE_PATH}"><span class="quick-icon icon-city">▤</span><span><b>{_locale_pair("厂家目录", "Providers")}</b><small>{_locale_pair("按厂商浏览", "Browse by provider")}</small></span><i>›</i></a>
+      <a href="/category/api/"><span class="quick-icon icon-gift">✦</span><span><b>Free API / Offer</b><small>{_locale_pair(f"已核验资源（{offer_count}+）", f"Verified offers ({offer_count}+)" )}</small></span><i>›</i></a>
+      <a href="#agent-picks"><span class="quick-icon icon-agent">▣</span><span><b>AI Agent</b><small>{_locale_pair("实用的 AI 助手与智能体", "Useful AI agents")}</small></span><i>›</i></a>
+    </nav>'''.replace("\n+", "\n")
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">
 {_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}
-<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
-<link rel="stylesheet" href="/css/model-offer-cards.css?v=20261001a"><style>{EDITORIAL_BASE_CSS}</style><style>
-.models-overview h1{{font-size:clamp(34px,6vw,58px);max-width:900px}}.models-overview .lead{{max-width:860px}}
-body.fl-ui-v2[data-reference-style="v1"][data-fl-section="models"]>header.models-overview{{padding-left:18px!important;padding-right:18px!important}}
-.models-overview-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
-.models-overview-grid article{{padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}}
-.models-overview-grid h2{{margin:0 0 8px;font-size:22px}}@media(max-width:700px){{.models-overview-grid{{grid-template-columns:1fr}}}}
-</style></head><body data-static-locale="true"><header class="models-overview">
-<div class="eyebrow">MODEL DIRECTORY / 数据口径已拆分</div><h1>模型、厂家、Provider 和免费资源，不再混成一个数字</h1>
-<p class="lead">“模型记录”“厂家目录”“当前模型数据 Provider ID”“免费资源 / Offer”是四种不同实体。这里分别统计，再进入对应目录继续浏览。</p>
-{tabs}{stats}</header><main><section class="models-overview-grid">
-<article><h2>全部模型</h2><p>查看模型名称、厂家、上下文、状态和来源。</p><a class="button" href="{ALL_MODELS_PAGE_PATH}">打开完整模型目录 →</a></article>
-<article><h2>按厂家</h2><p>浏览厂家目录；厂家目录总数不等于当前模型快照里的 providerId 数。</p><a class="button" href="{PROVIDERS_PAGE_PATH}">查看厂家目录 →</a></article>
-<article><h2>免费 API / Offer</h2><p>这是可注册、可试用或可下载的资源入口，不拿它冒充模型数量。</p><a class="button" href="/category/api/">查看免费 API / Offer →</a></article>
-<article><h2>模型中心</h2><p>先看精选资源，再进入模型目录与接入信息。</p><a class="button" href="{MODEL_CENTER_PAGE_PATH}">进入模型中心 →</a></article>
-</section><section class="model-entry-preview"><h2>可用的免费模型入口 <small>{len(api_entries)}</small></h2><p>按模型展示免费 API 的接入条件与调用限制；定向资格请先核对详情。</p><div class="model-entry-grid">{api_entry_cards}</div><p><a class="button" href="/category/api/">查看全部免费 API / Offer →</a></p></section></main><footer><p>统计由 data/offers.json、data/models.json 与 data/provider-catalog.json 构建生成。</p></footer></body></html>'''
-
+<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}<style>{EDITORIAL_BASE_CSS}</style><style>
+.featured-evidence-filters{{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:0 0 16px;padding:12px 14px;border:1px solid var(--line,#dfe6f2);border-radius:14px;background:var(--surface-soft,#f7f9fc)}}.featured-evidence-filters label{{display:grid;gap:5px;color:var(--ink-secondary,#68738a);font-size:12px}}.featured-evidence-filters select{{min-width:150px;padding:8px 10px;border:1px solid var(--line,#dfe6f2);border-radius:9px;background:#fff;color:var(--ink,#172033);font:inherit}}#featured-model-count{{margin-left:auto;color:var(--ink-secondary,#68738a);font-size:12px}}.featured-evidence-filters button{{padding:8px 10px;border:0;border-radius:8px;background:#eaf1ff;color:#3158cd;font:inherit;cursor:pointer}}
+.featured-model-facts .featured-region-fact{{background:#edf4ff}}.featured-model-speed{{display:grid;gap:4px;margin:8px 0 12px;padding:10px 12px;border-radius:10px;background:#eef5ff;color:#285294;font-size:12px}}.featured-model-speed strong{{font-size:12px}}.featured-model-speed small{{color:#71829b;font-size:10px}}.featured-model-speed.is-untested{{background:#f4f5f8;color:#68738a}}
+.featured-model-actions [data-compare-toggle]{{padding:7px 9px;border:1px solid #cad8f4;border-radius:8px;background:#f4f7ff;color:#3158cd;font:inherit;font-size:12px;cursor:pointer}}[data-compare-remove]{{display:none}}[data-compare-toggle][aria-pressed="true"] [data-compare-add]{{display:none}}[data-compare-toggle][aria-pressed="true"] [data-compare-remove]{{display:inline}}
+.featured-model-comparison{{margin:22px 0 12px;padding:18px;border:1px solid #cddbf4;border-radius:16px;background:#fff;box-shadow:0 10px 30px rgba(25,42,78,.06)}}.featured-model-comparison[hidden]{{display:none}}.featured-model-comparison h3{{margin:0 0 4px}}.featured-model-comparison h3 small{{color:#74839a;font-size:12px}}#featured-model-compare-status{{min-height:1.2em;margin:0 0 8px;color:#a16000;font-size:12px}}.featured-model-comparison-scroll{{max-width:100%;overflow-x:auto}}.featured-model-comparison table{{width:100%;min-width:680px;border-collapse:collapse;font-size:12px}}.featured-model-comparison th,.featured-model-comparison td{{min-width:140px;padding:10px;border-bottom:1px solid #e7ebf2;text-align:left;vertical-align:top;overflow-wrap:anywhere}}.featured-model-comparison th:first-child{{position:sticky;left:0;z-index:1;min-width:115px;background:#f6f8fc}}.featured-model-comparison [data-clear-comparison]{{margin-top:12px;padding:8px 11px;border:0;border-radius:8px;background:#eaf1ff;color:#3158cd;font:inherit;cursor:pointer}}
+@media(max-width:700px){{.featured-evidence-filters{{align-items:stretch}}.featured-evidence-filters label{{flex:1 1 42%}}.featured-evidence-filters select{{min-width:0;width:100%}}#featured-model-count{{margin-left:0;align-self:center}}.featured-model-comparison{{margin-inline:-4px;padding:12px}}}}
+</style></head><body data-static-locale="true"><div class="models-featured-page">
+<div class="models-page-toolbar"><label class="models-page-search"><span aria-hidden="true">⌕</span><input id="models-global-search" type="search" placeholder="搜索模型 / Search models" aria-label="搜索精选模型 / Search featured models"></label><div class="models-toolbar-actions"><button type="button" data-locale-switch="en">中文 · EN</button></div></div>
+<header class="models-featured-hero"><div class="models-featured-copy"><div class="eyebrow">FREE AI INDEX / {_locale_pair('精选模型与智能体', 'Featured models and agents')}</div><h1>{_locale_pair('精选模型与', 'Featured models &')} <em>{_locale_pair('AI Agent', 'AI Agents')}</em></h1><p class="lead">{_locale_pair('由 FreeLLM 团队人工精选，地区、能力和生成速度均标明核验状态。', 'Hand-picked by FreeLLM, with clear verification status for region, capabilities and generation speed.')}</p></div><div class="models-featured-sign" aria-hidden="true"><span>好的 AI</span><span>值得被更多人发现</span></div></header>
+{quick_links}<main><section class="featured-model-section" id="featured-models" aria-labelledby="featured-model-title"><div class="featured-model-heading"><div><h2 id="featured-model-title">{_locale_pair('精选模型', 'Featured models')} <small>({len(curated_models)})</small></h2><span class="team-tested-note">{_locale_pair('FreeLLM 团队人工筛选', 'Hand-picked by the FreeLLM team')}</span></div><a class="all-models-link" href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('查看全部模型', 'View all models')} →<small>{_locale_pair(f'完整目录含 {model_record_count}+ 个模型', f'{model_record_count}+ models in catalog')}</small></a></div>
+<div class="model-filter-toolbar"><div class="model-filter-chips" role="group" aria-label="模型类型"><button type="button" class="is-active" data-model-filter="all" aria-pressed="true">{_locale_pair('全部模型', 'All models')} <span>{len(curated_models)}</span></button><button type="button" data-model-filter="voice" aria-pressed="false">{_locale_pair('语音模型', 'Voice')} <span>{voice_count}</span></button><button type="button" data-model-filter="image" aria-pressed="false">{_locale_pair('图片模型', 'Image')} <span>{image_count}</span></button><button type="button" data-model-filter="sound" aria-pressed="false">{_locale_pair('声音模型', 'Audio')} <span>{sound_count}</span></button></div><div class="model-view-controls"><label><span class="sr-only">{_locale_pair('排序', 'Sort')}</span><select id="models-sort"><option value="featured">{_locale_pair('推荐排序', 'Featured')}</option><option value="name">{_locale_pair('名称排序', 'Name')}</option></select></label><button type="button" class="is-active" data-model-view="grid" aria-label="网格视图" aria-pressed="true">▦</button><button type="button" data-model-view="list" aria-label="列表视图" aria-pressed="false">☷</button></div></div>
+<div class="featured-evidence-filters"><label>{_locale_pair('地区适配', 'Region')}<select id="models-region-filter" data-filter="region"><option value="all">{_locale_pair('全部地区', 'All regions')}</option><option value="domestic">{_locale_pair('中国大陆可调用', 'Mainland China verified')}</option><option value="international">{_locale_pair('海外可调用', 'International verified')}</option><option value="both">{_locale_pair('国内外均可调用', 'Both regions verified')}</option><option value="unknown">{_locale_pair('待核实', 'Unverified')}</option></select></label><label>{_locale_pair('能力类型', 'Capability')}<select id="models-capability-filter" data-filter="capability"><option value="all">{_locale_pair('全部能力', 'All capabilities')}</option><option value="text">{_locale_pair('文本 / 推理', 'Text / reasoning')}</option><option value="audio">{_locale_pair('语音 / 音频', 'Speech / audio')}</option><option value="image">{_locale_pair('图片', 'Image')}</option><option value="video">{_locale_pair('视频', 'Video')}</option></select></label><span id="featured-model-count" aria-live="polite">{_locale_pair(f'显示 {len(curated_models)} / {len(curated_models)}', f'Showing {len(curated_models)} / {len(curated_models)}')}</span><button type="button" data-clear-featured-filters>{_locale_pair('清除筛选', 'Clear filters')}</button></div>
+<div class="featured-model-grid" id="featured-model-grid">{featured_cards}</div><p class="models-empty-state" hidden>{_locale_pair('没有符合条件的模型。试试其他筛选条件。', 'No models match. Try another filter.')}</p><button class="models-load-more" id="models-load-more" type="button" hidden>{_locale_pair('加载更多精选模型', 'Load more featured models')} ↓</button></section>
+<section class="featured-model-comparison" id="featured-model-comparison" hidden aria-label="精选模型对比 / Featured model comparison"><div><h3>{_locale_pair('模型对比', 'Model comparison')} <small id="featured-model-compare-count">0 / 3</small></h3><p id="featured-model-compare-status" aria-live="polite"></p></div><div class="featured-model-comparison-scroll"><table><thead><tr><th>{_locale_pair('比较项目', 'Property')}</th><th data-compare-column="0"></th><th data-compare-column="1"></th><th data-compare-column="2"></th></tr></thead><tbody data-comparison-rows></tbody></table></div><button type="button" data-clear-comparison>{_locale_pair('清空对比', 'Clear comparison')}</button></section>
+<section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前展示 {len(agent_offers)} 个已核验 Agent', f'{len(agent_offers)} verified agents')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
+<footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(agent_offers)} 个 Agent。', f'{len(curated_models)} featured models and {len(agent_offers)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
@@ -3666,159 +3870,18 @@ MODEL_CENTER_STYLE = '''<style id="model-center-style">
 
 
 def render_model_center_page(offers: list[dict], site_url: str, models: list[dict]) -> str:
-    template_path = Path(__file__).resolve().parents[1] / "design" / "free-china-ai-index.html"
-    template = template_path.read_text(encoding="utf-8")
-    body_match = re.search(r"<body[^>]*>", template, flags=re.I)
-    if not body_match:
-        raise ValueError("feature template is missing the body element")
-    body_start = body_match.start()
-    body_end = template.rindex("</body>")
-    head = template[:body_start]
-    body = template[body_match.end():body_end]
-    # Phase 1 Aurora is intentionally homepage-only. The model-center page reuses
-    # the homepage markup as a content template, so strip page-scoped assets here
-    # until the model page enters its own visual phase.
-    head = re.sub(
-        r'\s*<link rel="stylesheet" href="../css/aurora-home\.css\?v=[^"]+">',
-        "",
-        head,
-        count=1,
-        flags=re.I,
+    destination = _absolute(site_url, MODELS_PAGE_PATH)
+    return (
+        '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex,follow">'
+        '<meta http-equiv="refresh" content="0;url=/models/">'
+        f'<link rel="canonical" href="{_esc(destination)}">'
+        '<title>模型精选入口已更新 · FreeLLM</title></head><body>'
+        '<p>模型精选入口已迁移到 <a href="/models/">/models/</a>。</p>'
+        '<script>window.location.replace("/models/");</script>'
+        '</body></html>'
     )
-    head = re.sub(
-        r'\s*<link rel="stylesheet" href="../css/home-prototype-exact\.css\?v=[^"]+">',
-        "",
-        head,
-        count=1,
-        flags=re.I,
-    )
-    prototype_start = body.find('<section class="prototype-home"')
-    legacy_hero_start = body.find('<section class="catalog-hero">', prototype_start)
-    if prototype_start >= 0 and legacy_hero_start > prototype_start:
-        body = body[:prototype_start] + body[legacy_hero_start:]
-    head = re.sub(
-        r'href="../css/(homepage(?:-editorial)?(?:\.[0-9a-f]{10})?\.css)"',
-        r'href="../../css/\1"',
-        head,
-    )
-    body = re.sub(
-        r'src="../js/(homepage(?:-i18n)?(?:\.[0-9a-f]{10})?\.js)"',
-        r'src="../../js/\1"',
-        body,
-    )
-    # The template lives under /design, but this page is served from
-    # /models/center/. Resolve all shared assets from the site root so they do
-    # not accidentally request /models/css or /models/js.
-    head = re.sub(r'href="(?:\.\./)+css/([^\"]+)"', r'href="/css/\1"', head)
-    body = re.sub(r'src="(?:\.\./)+js/([^\"]+)"', r'src="/js/\1"', body)
-    head = head.replace('href="../css/reference-ui.css?v=20260924a"', 'href="/css/reference-ui.css?v=20260924a"')
-    reference_ui_tag = '<link rel="stylesheet" href="/css/reference-ui.css?v=20260924a">'
-    if reference_ui_tag not in head:
-        head = head.replace("</head>", reference_ui_tag + "\n</head>", 1)
-    body = re.sub(r'src="../js/(reference-shell\.js\?v=[^"]+)"', r'src="/js/\1"', body, count=1)
-    title = "模型中心 · 精选资源与全部模型 | FreeLLM"
-    description = "FreeLLM 模型中心：先浏览人工核验的特色免费 AI 资源，再切换到完整模型目录，逐行查看中国大陆可用性标注、注册要求（手机号、实名、信用卡）、厂家、上下文、活动和官方来源。"
-    page_url = _absolute(site_url, MODEL_CENTER_PAGE_PATH)
-    head = re.sub(r"<title>.*?</title>", f"<title>{_esc(title)}</title>", head, count=1, flags=re.S)
-    head = re.sub(r'<meta name="description"[^>]*>', f'<meta name="description" content="{_esc(description)}" />', head, count=1)
-    head = re.sub(r'<link rel="canonical"[^>]*>', f'<link rel="canonical" href="{_esc(page_url)}" />', head, count=1)
-    head = re.sub(r'<meta name="robots"[^>]*>', '<meta name="robots" content="index,follow,max-image-preview:large" />', head, count=1)
-    head = re.sub(r'(?:\s*<link rel="alternate"[^>]+>){3}', f'\n  {_hreflang_links(site_url, MODEL_CENTER_PAGE_PATH)}', head, count=1, flags=re.S)
-    head = re.sub(r'(<meta property="og:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
-    head = re.sub(r'(<meta name="twitter:url" content=")[^"]*("[^>]*>)', rf'\g<1>{_esc(page_url)}\g<2>', head, count=1)
-    head = re.sub(
-        r'<html([^>]*)>',
-        lambda m: '<html' + (m.group(1) if 'data-default-locale=' in m.group(1) else m.group(1) + ' data-default-locale="zh-CN"') + '>',
-        head,
-        count=1,
-        flags=re.I,
-    )
-    head = head.replace('href="../css/freellm-pastel-ui.css"', 'href="/css/freellm-pastel-ui.css"')
-    head = head.replace("</head>", f'{MODEL_CENTER_STYLE}\n</head>', 1)
-    body = body.replace('class="catalog-app"', 'class="catalog-app model-center-featured-app"', 1)
-    body = body.replace('href="/models/all/"', 'href="#all-models"')
-    preview_models = models[:24]
-    catalog_markup = _model_catalog_markup(
-        preview_models,
-        include_heading=False,
-        total_models=len(models),
-        linkable_model_slugs=indexable_model_slugs(models),
-    )
-    catalog_markup += f'''<div class="model-center-full-directory">
-      <p>{_locale_pair(
-          f"这里先展示 24 条模型作为快速预览；完整 {len(models)} 条目录使用独立分页，避免模型中心重复下载整份大表。",
-          f"This tab previews 24 models. Open the paginated directory for all {len(models)} records without downloading the full table twice."
-      )}</p>
-      <a class="button" href="{ALL_MODELS_PAGE_PATH}">{_locale_pair("打开完整模型目录", "Open full model directory")} →</a>
-    </div>'''
-    tab_markup = f'''<nav class="model-center-tabs" role="tablist" aria-label="模型中心页面切换">
-  <button id="model-center-tab-featured" class="model-center-tab" type="button" role="tab" aria-controls="categories" aria-selected="true" data-center-tab="featured">{_locale_pair('精选资源', 'Featured resources')} <small>01</small></button>
-  <button id="model-center-tab-all-models" class="model-center-tab" type="button" role="tab" aria-controls="model-center-all-models-panel" aria-selected="false" data-center-tab="all-models">{_locale_pair('全部模型', 'All models')} <small>{len(models)}</small></button>
-</nav>'''
-    tab_script = '''<script id="model-center-tabs-script">
-  (() => {
-    const root = document.body;
-    const tabs = Array.from(document.querySelectorAll('[data-center-tab]'));
-    const syncLocale = () => {
-      const english = document.documentElement.lang !== 'zh-CN';
-      root.dataset.modelCenterLocale = english ? 'en' : 'zh-CN';
-      const search = document.getElementById('model-catalog-search');
-      const provider = document.getElementById('model-catalog-provider');
-      const region = document.getElementById('model-catalog-region');
-      const count = document.getElementById('model-catalog-count');
-      if (search) search.placeholder = english ? search.dataset.placeholderEn : search.dataset.placeholderZh;
-      const allProviders = provider?.querySelector('option[value=""]');
-      if (allProviders) allProviders.textContent = english ? allProviders.dataset.labelEn : allProviders.dataset.labelZh;
-      document.querySelectorAll('#model-catalog-region option[data-label-zh]').forEach(option => {{
-        option.textContent = english ? option.dataset.labelEn : option.dataset.labelZh;
-      }});
-      const rows = Array.from(document.querySelectorAll('#model-catalog .catalog-row'));
-      if (count) count.textContent = english ? `Showing ${rows.filter(row => !row.hidden).length} / ${rows.length}` : `显示 ${rows.filter(row => !row.hidden).length} 条 / 共 ${rows.length} 条`;
-    };
-    syncLocale();
-    new MutationObserver(syncLocale).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-    const activate = (name, updateHash = true) => {
-      const selected = name === 'all-models' ? 'all-models' : 'featured';
-      root.dataset.modelCenterTab = selected;
-      tabs.forEach(tab => {
-        const active = tab.dataset.centerTab === selected;
-        tab.setAttribute('aria-selected', String(active));
-        tab.tabIndex = active ? 0 : -1;
-      });
-      if (updateHash) {
-        const url = new URL(window.location.href);
-        if (selected === 'all-models') url.hash = 'all-models';
-        else url.hash = '';
-        window.history.replaceState(null, '', url.href);
-      }
-    };
-    tabs.forEach(tab => tab.addEventListener('click', () => activate(tab.dataset.centerTab)));
-    tabs.forEach(tab => tab.addEventListener('keydown', event => {
-      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-      event.preventDefault();
-      const index = tabs.indexOf(tab);
-      const next = tabs[(index + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      next.focus();
-      activate(next.dataset.centerTab);
-    }));
-    window.addEventListener('hashchange', () => activate(window.location.hash === '#all-models' ? 'all-models' : 'featured', false));
-    activate(window.location.hash === '#all-models' ? 'all-models' : 'featured', false);
-  })();
-</script>'''
-    insertion = f'''{tab_markup}
-<section id="model-center-all-models-panel" class="model-center-all-models-panel" role="tabpanel" aria-labelledby="model-center-tab-all-models">
-  {catalog_markup}
-</section>'''
-    marker = '<section id="categories"'
-    if marker not in body:
-        raise ValueError("feature template is missing the categories section")
-    body = body.replace(marker, insertion + "\n        " + marker, 1)
-    return head + f'''<body class="model-center-page" data-model-center-tab="featured">
-{body}
-{tab_script}
-</body>
-</html>
-'''
 
 
 def _log_value(value: object) -> str:
@@ -3943,8 +4006,26 @@ def _log_event_table(events: list[dict]) -> str:
     rows = []
     for event in events:
         details = event.get("details") or {}
+        related_links = details.get("relatedLinks") or []
+        reference_markup = ""
+        if related_links:
+            references = []
+            source_url = str(details.get("sourceUrl") or "").strip()
+            if source_url:
+                references.append(("官方模型页", source_url))
+            for item in related_links:
+                if isinstance(item, dict):
+                    label = str(item.get("label") or "相关链接").strip()
+                    url = str(item.get("url") or "").strip()
+                    if url:
+                        references.append((label, url))
+            if references:
+                reference_markup = '<ul class="log-links">' + "".join(
+                    f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(label)} ↗</a></li>'
+                    for label, url in references
+                ) + "</ul>"
         rows.append(
-            f'<tr><td><strong>{_esc(event.get("title"))}</strong><small>{_esc(event.get("id"))}</small></td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
+            f'<tr><td><strong>{_esc(event.get("title"))}</strong><small>{_esc(event.get("id"))}</small>{reference_markup}</td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
         )
     if not rows:
         return f'<p class="muted">{_locale_pair("当天没有此类记录", "No records for this category.")}</p>'
@@ -4149,7 +4230,22 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         f'<section class="log-day" id="log-day-{_esc(str(log.get("date") or "unknown"))}"><div class="log-day-head"><div><span class="log-eyebrow">扫描日期</span><h2>{_esc(str(log.get("date") or "未知日期"))}</h2></div><div class="log-day-summary"><span>新增 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["new"])}</span><span>恢复 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["recovered"])}</span><span>下线 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["offline"])}</span></div></div><div class="log-event-grid">' + ''.join(_log_event_panel(label, en, _log_event_table(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))[key]), _log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))[key]) for key, label, en in (("new", "新增详情", "New entries"), ("recovered", "恢复", "Recovered"), ("offline", "下线", "Offline"), ("unavailable", "来源异常", "Source issues"))) + '</div><section class="log-event-panel log-health-panel"><h3>来源健康</h3>' + _log_health_table(log) + '</section></section>'
         for log in sorted_logs
     ) + '</section></details>'
-    modules = f'<section class="ref-update-metrics">{metrics}</section><nav class="ref-update-filters" aria-label="更新分类">{filters}{date_picker}</nav><div class="ref-update-layout"><div class="ref-update-layout-main">{highlight}{overview}</div><aside class="ref-update-layout-side">{credibility}{source_trust}</aside></div>{history}{bottom}{extras}'
+    ling_offer = next((offer for offer in offers if offer.get("id") == "ant-ling-3-1-flash-free"), None)
+    editorial = ""
+    if ling_offer:
+        detail_url = offer_url(ling_offer)
+        editorial = (
+            '<section class="ref-update-feature" aria-labelledby="ling-editorial-update">'
+            '<h2 id="ling-editorial-update">FreeLLM 评测速递</h2><div><article>'
+            '<div class="ref-update-company"><b>模型评测</b><span>限时免费</span></div>'
+            '<strong>蚂蚁百灵 Ling-3.1-flash</strong>'
+            '<p>Vercel 路由标注 262K 上下文、免费至 2026-10-13。FreeLLM 已核对入口与限制；生成质量实测因鉴权失败暂未完成。</p>'
+            '<div class="ref-update-feature-tags"><span>560B / 25B</span><span>Vercel AI Gateway</span><span>评测结果透明披露</span></div>'
+            '<small>更新于 2026-10-02</small>'
+            f'<p><a href="{_esc(detail_url)}">查看 FreeLLM 评估、使用步骤与官方来源 →</a></p>'
+            '</article></div></section>'
+        )
+    modules = f'{editorial}<section class="ref-update-metrics">{metrics}</section><nav class="ref-update-filters" aria-label="更新分类">{filters}{date_picker}</nav><div class="ref-update-layout"><div class="ref-update-layout-main">{highlight}{overview}</div><aside class="ref-update-layout-side">{credibility}{source_trust}</aside></div>{history}{bottom}{extras}'
     return modules, archive
 
 
@@ -4524,7 +4620,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
         + ";"
         + script
     )
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 全部重新分级：原链路能跑就跑；任务型明确标“任务级”；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"><span lang="zh-CN">Skill 详情</span><span lang="en">Skill details</span></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script type="application/json" id="skill-data">{serialized}</script>{SKILLS_THEME_ASSETS}<style>{style}</style></head><body data-static-locale="true"><main class="skills-page"><header class="skills-header"><a class="brand" href="/"><span class="brand-mark">✦</span><span><span class="brand-name">FreeLLM</span><span class="brand-sub">免费 AI 资源导航</span></span></a><div class="header-right"><nav class="top-nav" aria-label="Page sections"><a href="/logs/">每日更新</a><a href="/models/">资源目录</a><a href="/models/center/">模型中心</a><a href="/providers/">按厂家</a><a href="/skills/" aria-current="page">Skills</a></nav><button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button></div></header><section class="skills-hero"><div><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div><h1>这些 Skill，能跑的真跑；跑不了的明确写阻塞</h1><p class="hero-copy">不再把“生成了一个 Demo”当成通过。页面区分原链路 E2E、真实产物、任务级执行、部分验证和环境阻塞；每项都能追到本轮验收记录。</p></div><aside class="hero-note"><span class="hero-note-label">VERIFIED SKILLS / 已核验组件</span><div class="hero-note-value"><strong>{len(skills)}</strong><span>个可下载 Skill</span></div><p>每个条目均核验过 GitHub 来源，页面内直接展示 SKILL.md 原文与社区评价；star / fork 数据随核验快照更新。</p></aside></section><section class="real-test-banner" aria-label="FreeLLM sandbox acceptance"><div><strong>2026-09-20 沙箱真实验收已重跑</strong><p>68 个 Skill 已完成沙箱验收；之后收录的 Skill 会单独标记执行状态。原链路能跑就跑；网络、账号、CLI 或浏览器策略阻塞的直接标 BLOCKED。仅有 Demo 不再算通过。</p></div><a href="/skills/test-artifacts/sandbox-2026-09-20/">查看 68 项完整验收记录 →</a></section><section class="skills-toolbar" aria-label="Skill filters"><input id="skill-search" class="skills-search" type="search" placeholder="搜索名称、用途、框架或 GitHub 地址" aria-label="搜索 Skill"><select id="skill-status" class="skills-status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="needs_review">待核验</option><option value="candidate">社区候选</option><option value="verified">已核验</option></select><span id="skill-count" class="skills-count">显示 0 / {len(skills)}</span></section><div class="skill-category-tabs"><button class="skill-category-tab is-active" type="button" data-category="all"><span>全部</span><small>{len(skills):02d}</small></button>{category_buttons}</div><section id="skill-grid" class="skill-grid" aria-live="polite">{cards}</section><section id="skill-empty" class="skills-empty" hidden><p>没有找到匹配的 Skill。</p><button id="skill-clear" type="button">清除筛选</button></section><footer class="skills-footer"><p>提示：Skill 通常需要放入对应 Agent 工具的 skills 目录；不同工具的目录结构和触发方式可能不同。所有条目的来源仓库与 SKILL.md 均经过自动核验， star / fork 为核验当日快照。</p>{_static_locale_nav()}</footer></main><dialog id="skill-dialog"><div class="skill-dialog-body"><button class="skill-dialog-close" type="button" aria-label="关闭">×</button><div class="eyebrow">SKILL DETAIL / 条目详情</div><h2 id="dialog-skill-name"><span lang="zh-CN">Skill 详情</span><span lang="en">Skill details</span></h2><p id="dialog-skill-description"><span id="dialog-skill-description-zh" class="skill-description-zh" lang="zh-CN"></span><span id="dialog-skill-description-en" class="skill-description-en" lang="en"></span></p><div id="dialog-skill-stats" class="skill-dialog-stats"></div><section class="skill-dialog-section"><h3><span lang="zh-CN">安装方式</span><span lang="en">Install</span></h3><div class="command-box"><code id="dialog-command"></code><button id="copy-command" class="copy-command" type="button">复制命令</button></div><div class="dialog-actions"><a id="dialog-github" href="#" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a><span class="muted"><span lang="zh-CN">使用前请自行核对仓库状态</span><span lang="en">Verify the repo before use</span></span></div></section><section class="skill-dialog-section" id="dialog-style-section" hidden><h3><span lang="zh-CN">呈现样式</span><span lang="en">Output styles</span></h3><p class="skill-style-format"><code id="dialog-style-format"></code></p><p id="dialog-style-summary"></p><div id="dialog-style-chips" class="skill-style-chips"></div></section><section class="skill-dialog-section"><h3><span lang="zh-CN">Skill 原文</span><span lang="en">Skill source</span></h3><p class="skill-content-meta" id="dialog-content-meta"></p><pre class="skill-content" id="dialog-skill-content" tabindex="0"></pre></section><section class="skill-dialog-section"><h3><span lang="zh-CN">社区评价</span><span lang="en">Community signals</span></h3><ol class="skill-review-list" id="dialog-skill-reviews"></ol></section></div></dialog><script>{script}</script></body></html>'''
 
 
 def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
@@ -4920,7 +5016,6 @@ def sitemap_section_paths(
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
         MODELS_PAGE_PATH,
         ALL_MODELS_PAGE_PATH,
-        MODEL_CENTER_PAGE_PATH,
         PROVIDERS_PAGE_PATH,
         CHANGE_LOG_PAGE_PATH,
         SKILLS_PAGE_PATH,
@@ -5073,7 +5168,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
-        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url),
+        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir)),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
@@ -5120,7 +5215,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     if Path("about/index.html") in files:
         about = files[Path("about/index.html")]
         active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in model_catalog if item.get("providerId")})
-        about_stats = (
+        replacement = (
             '<div class="about-stat-grid">'
             f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong>{len(offers)}</strong><span><span lang="zh-CN">已验证的免费资源</span><span lang="en">verified offers</span></span></div></article>'
             f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
@@ -5130,7 +5225,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         )
         about = re.sub(
             r'<div class="about-stat-grid">.*?</div>\s*</section>',
-            about_stats + '\n  </section>',
+            replacement + '\n  </section>',
             about,
             count=1,
             flags=re.S,
@@ -5443,6 +5538,15 @@ def _load_models(data_path: Path) -> list[dict]:
     return json.loads(models_path.read_text(encoding="utf-8"))
 
 
+def _load_curated_models(data_dir: Path | None) -> list[dict]:
+    """Load the hand-curated model set used by the featured-model landing page."""
+    path = (Path(data_dir) if data_dir else Path("data")) / "models-curated.json"
+    if not path.is_file():
+        return []
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, list) else []
+
+
 def _load_model_access(data_path: Path) -> list[dict]:
     access_path = data_path.parent / "model-access.json"
     if not access_path.is_file():
@@ -5717,7 +5821,15 @@ def _dedupe_shared_shell_scripts(content: str) -> str:
             return match.group(0)
 
         updated = pattern.sub(keep_first, updated)
-    return updated
+    return re.sub(r"\n+\s*</body>", "\n</body>", updated)
+
+
+def _ensure_models_discovery_style(content: str, path: Path) -> str:
+    """Attach the model discovery page's prototype-matched component styles."""
+    if path != Path("models/index.html") or "models-discovery.css" in content:
+        return content
+    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261004o">'
+    return content.replace("</head>", tag + "</head>", 1)
 
 
 def _remove_legacy_global_nav(content: str) -> str:
@@ -5751,11 +5863,8 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         brand_subtitle = 'AI for Everyone'
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
-    # Rebuilds can otherwise leave one old navigation initializer before the
-    # previous rail plus another after its ribbon. Keep the shell's one copy.
-    content = re.sub(r'<script src="/js/site-navigation\.js[^\"]*"></script>\s*', "", content, flags=re.I)
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261003-models-align"></script>'
+        '<script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
@@ -5764,19 +5873,27 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         '<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span>'
         '<span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>'
     )
+    content = re.sub(
+        r'<script\b(?=[^>]*\bsrc=["\'][^"\']*/js/site-navigation\.js(?:\?[^"\']*)?["\'])[^>]*>\s*</script>',
+        "",
+        content,
+        flags=re.I,
+    )
     shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
     normalized = re.sub(shell_pattern, "", content, count=1, flags=re.I | re.S)
     return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + chrome, normalized, count=1, flags=re.I)
 
 
 def _ensure_model_section_tabs(content: str, path: Path) -> str:
-    if path.suffix != ".html" or 'class="model-section-tabs"' in content:
+    if path.suffix != ".html" or re.search(r'class="model-section-tabs(?:\s|\")', content):
         return content
     parts = path.parts
     if not parts or parts[0] not in {"models", "providers"}:
         return content
     route = "/" + "/".join(parts[:-1]) + "/" if parts[-1] == "index.html" else "/" + "/".join(parts) + "/"
-    current = "overview"
+    if route == MODEL_CENTER_PAGE_PATH:
+        return content
+    current = "featured"
     if route.startswith("/models/all/"):
         current = "all"
     elif route.startswith("/providers/"):
@@ -5784,7 +5901,7 @@ def _ensure_model_section_tabs(content: str, path: Path) -> str:
     elif route.startswith("/models/center/"):
         current = "center"
     items = [
-        ("overview", MODELS_PAGE_PATH, "概览"),
+        ("featured", MODELS_PAGE_PATH, "精选模型"),
         ("all", ALL_MODELS_PAGE_PATH, "全部模型"),
         ("providers", PROVIDERS_PAGE_PATH, "按厂家"),
         ("offers", "/category/api/", "免费 API / Offer"),
@@ -5803,7 +5920,23 @@ def _ensure_model_section_tabs(content: str, path: Path) -> str:
 
 def build_site(data_path: str | Path, output_root: str | Path, site_url: str = SITE_URL, check: bool = False) -> BuildResult | bool:
     data_path = Path(data_path)
+    output_root = Path(output_root)
     offers = _load_data(data_path)
+    for offer in offers:
+        sample = (offer.get("freeLLMTest") or {}).get("ttsSample")
+        if not isinstance(sample, dict) or sample.get("status") != "ready":
+            continue
+        audio_url = str(sample.get("audioUrl") or "").strip()
+        safe_path = (
+            audio_url.startswith("/assets/audio/freellm-tests/")
+            and ".." not in audio_url.split("/")
+            and re.fullmatch(r"/assets/audio/freellm-tests/[A-Za-z0-9._/-]+\.wav", audio_url)
+        )
+        if not safe_path:
+            raise ValueError(f"{offer.get('id')}: ready TTS sample needs a local WAV asset path")
+        asset_path = output_root / Path(*audio_url.lstrip("/").split("/"))
+        if not asset_path.is_file():
+            raise FileNotFoundError(f"{offer.get('id')}: TTS sample asset does not exist: {asset_path}")
     models = _load_models(data_path)
     models = _exclude_retired_models(models, _load_model_access(data_path))
     operations = _load_operations(data_path)
@@ -5818,7 +5951,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
-    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260923b">'
+    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a">'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-pastel-ui.css" in content or "</head>" not in content)
                    else content.replace("</head>", theme_tag + "</head>", 1))
@@ -5852,6 +5985,10 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     files = {
         relative: (_dedupe_shared_shell_scripts(content) if relative.suffix == ".html" else content)
+        for relative, content in files.items()
+    }
+    files = {
+        relative: _ensure_models_discovery_style(content, relative)
         for relative, content in files.items()
     }
     output_root = Path(output_root)

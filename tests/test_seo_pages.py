@@ -445,7 +445,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
-    assert "https://freellm.top/models/center/" in sitemap
+    assert "https://freellm.top/models/center/" not in sitemap
     # Sitemap completeness, derived from disk rather than from hardcoded counts (the old
     # arithmetic silently went stale every time a page or static file was added): the
     # sitemaps must advertise exactly the indexable HTML pages, minus the deliberately
@@ -1089,6 +1089,17 @@ def test_category_pages_gate_indexing_and_ads_on_offer_count():
         else:
             assert 'content="index,follow,max-image-preview:large"' in page, slug
             assert "adsbygoogle" in page, f"{slug} 可收录却没有广告代码"
+
+
+def test_category_pages_fit_the_shared_navigation_content_area(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "category" / "api" / "index.html").read_text(encoding="utf-8")
+
+    assert "box-sizing:border-box !important" in page
+    assert "width:100% !important" in page
+    assert "max-width:none !important" in page
+    assert "overflow-wrap:anywhere" in page
+    assert "/css/freellm-pastel-ui.css?v=20261003a" in page
 
 
 def test_thin_category_pages_are_kept_out_of_the_sitemap_but_stay_reachable():

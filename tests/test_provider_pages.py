@@ -7,6 +7,13 @@ ROOT = Path(__file__).resolve().parents[1]
 OFFERS_PATH = ROOT / "data" / "offers.json"
 
 
+def test_pastel_model_pages_do_not_receive_the_legacy_second_rail_offset():
+    shared_menu = (ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8")
+    model_layout_rules = shared_menu.split('body[data-fl-section="models"]', 1)[1].split("\n}", 1)[0]
+
+    assert ":not(.fl-ui-v2)" in model_layout_rules
+
+
 def visible_providers() -> list[dict]:
     """Providers generated from the current model catalog and operation guides."""
     models = _exclude_retired_models(_load_models(OFFERS_PATH), _load_model_access(OFFERS_PATH))
