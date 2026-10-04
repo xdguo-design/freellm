@@ -669,3 +669,14 @@ body[data-reference-style="v1"][data-fl-section="models"] .featured-agent-mark.h
     padding-right: 14px;
   }
 }
+
+@media (max-width: 430px) {
+  body[data-reference-style="v1"][data-fl-section="models"] .models-quick-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  body[data-reference-style="v1"][data-fl-section="models"] .models-quick-links a {
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}

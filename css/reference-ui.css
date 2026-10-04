@@ -792,3 +792,19 @@ body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero-actions{ma
   body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-filter-row button:first-child{width:67px!important;padding:0!important}
   body[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero::after{right:-20px!important}
 }
+
+@media(max-width:430px){
+  body[data-reference-style="v1"] .ref-top-actions{
+    gap:5px!important;
+  }
+  body[data-reference-style="v1"] .ref-top-actions a,
+  body[data-reference-style="v1"] .ref-top-actions button{
+    min-width:64px!important;
+    padding-left:9px!important;
+    padding-right:9px!important;
+  }
+  body[data-reference-style="v1"] .ref-top-actions .ref-bell{
+    min-width:32px!important;
+    width:32px!important;
+  }
+}
