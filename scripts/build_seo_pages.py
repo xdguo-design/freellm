@@ -389,7 +389,7 @@ LEGACY_WORKFLOW_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
-MODELS_PER_PAGE = 28
+MODELS_PER_PAGE = 26
 
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
