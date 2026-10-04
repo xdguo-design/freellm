@@ -1,0 +1,64 @@
+name: dev-generated-sync
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - ".github/workflows/dev-generated-sync.yml"
+      - "data/offers.json"
+      - "data/ranked-offers.json"
+      - "data/models.json"
+      - "data/providers.json"
+      - "data/provider-access.json"
+      - "data/daily-log/**"
+      - "data/skills.json"
+      - "data/skills-i18n.json"
+      - "data/skill-tests.json"
+      - "data/skill-styles.json"
+      - "scripts/build_static.py"
+      - "scripts/build_seo_pages.py"
+      - "scripts/build_tools_index.py"
+      - "css/homepage.css"
+      - "css/homepage-editorial.css"
+      - "js/homepage.js"
+      - "js/homepage-i18n.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dev-generated-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Regenerate static artifacts
+        run: |
+          python scripts/build_tools_index.py
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+
+      - name: Commit one generated batch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Generated artifacts are already current."
+            exit 0
+          fi
+          git commit -m "chore: sync generated artifacts"
+          git push origin HEAD:dev

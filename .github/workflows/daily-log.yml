@@ -25,6 +25,15 @@ jobs:
       - name: Validate current offers
         run: python -m crawler.cli validate data/offers.json
 
+      - name: Refresh official AI release radar
+        continue-on-error: true
+        run: >-
+          python scripts/ai_radar.py
+          --sources data/ai-radar-sources.json
+          --baseline data/ai-radar-baseline.json
+          --out data/ai-radar-baseline.json
+          --timeout 15
+
       - name: Scan current model directory
         id: model_scan
         continue-on-error: true
@@ -90,6 +99,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A -- \
             "data/daily-log/$AS_OF.json" \
+            data/ai-radar-baseline.json \
             design/free-china-ai-index.html \
             offers category guides models providers logs skills \
             sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \
