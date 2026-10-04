@@ -24,11 +24,11 @@ EXCLUDE_PREFIXES = (
 )
 EXCLUDE_FILES = {"design/about.html", "design/updates.html"}
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.I | re.S)
-DESC_RE = re.compile(r'<meta\\s+name=["\\']description["\\']\\s+content=["\\']([^"\\']*)["\\']', re.I)
-CANONICAL_RE = re.compile(r'<link\\s+rel=["\\']canonical["\\']\\s+href=["\\']([^"\\']+)["\\']', re.I)
-ROBOTS_RE = re.compile(r'<meta\\s+name=["\\']robots["\\']\\s+content=["\\']([^"\\']*)["\\']', re.I)
+DESC_RE = re.compile(r"<meta\\s+name=[\"']description[\"']\\s+content=[\"']([^\"']*)[\"']", re.I)
+CANONICAL_RE = re.compile(r"<link\\s+rel=[\"']canonical[\"']\\s+href=[\"']([^\"']+)[\"']", re.I)
+ROBOTS_RE = re.compile(r"<meta\\s+name=[\"']robots[\"']\\s+content=[\"']([^\"']*)[\"']", re.I)
 H1_RE = re.compile(r"<h1(?:\\s|>)", re.I)
-ID_RE = re.compile(r'\\bid=["\\']([^"\\']+)["\\']', re.I)
+ID_RE = re.compile(r"\\bid=[\"']([^\"']+)[\"']", re.I)
 
 
 class AuditParser(HTMLParser):
