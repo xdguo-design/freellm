@@ -32,10 +32,13 @@ jobs:
 
       - name: Compile and verify generated output
         run: |
-          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py scripts/check_public_home_performance.py
+          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py scripts/check_public_home_performance.py scripts/audit_all_pages.py scripts/ai_radar.py scripts/validate_evaluation_framework.py
           python scripts/build_tools_index.py --check
           python scripts/build_static.py --check
           python scripts/build_seo_pages.py --check
+          python scripts/audit_all_pages.py --report .tmp/all-pages-audit.json
+          python scripts/validate_evaluation_framework.py data/evaluation-framework.json
+          python -m unittest tests.test_evaluation_framework -v
 
       - name: Run SEO quality gate unit tests
         run: python -m unittest tests.test_audit_seo_metadata -v
