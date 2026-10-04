@@ -8,12 +8,76 @@ from scripts.build_seo_pages import (
     _model_catalog_row,
     build_site,
     model_record_groups,
+    render_models_landing_page,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OFFERS_PATH = ROOT / "data" / "offers.json"
 MODELS_PATH = ROOT / "data" / "models.json"
+
+
+def build_featured_fixture_page():
+    model = {
+        "id": "fixture/model",
+        "providerId": "fixture",
+        "provider": "Fixture Provider",
+        "model": "Fixture Model",
+        "modality": ["image", "audio", "video"],
+    }
+    return render_models_landing_page(
+        offers=[], models=[model], vendor_directory=[],
+        site_url="https://freellm.top", curated_models=[model],
+    )
+
+
+def test_featured_cards_show_unknown_and_untested_states():
+    page = build_featured_fixture_page()
+
+    assert "待核实" in page
+    assert "未实测" in page
+    assert "图片·方向待核实" in page
+
+
+def test_featured_page_includes_region_and_capability_filters():
+    page = build_featured_fixture_page()
+
+    assert 'data-filter="region"' in page
+    assert 'data-filter="capability"' in page
+    assert 'id="featured-model-count"' in page
+    assert 'id="featured-model-comparison"' in page
+    assert 'data-compare-toggle' in page
+    assert '/js/models-discovery.js?v=' in page
+    assert 'placeholder="搜索模型 / Search models"' in page
+    assert 'placeholder="<span lang=' not in page
+    assert '<em><span lang="zh-CN">AI Agent</span>' in page
+    assert 'aria-label="精选模型对比 / Featured model comparison"' in page
+    assert "挑选并实测" not in page
+
+
+def test_featured_benchmark_attributes_include_comparison_protocol():
+    model = {
+        "id": "fixture/model", "providerId": "fixture", "provider": "Fixture Provider",
+        "model": "Fixture Model", "servicePath": "https://provider.example/v1/chat/completions",
+        "benchmark": {
+            "protocolVersion": "text-stream-v1", "taskId": "short-answer-zh-v1", "language": "zh",
+            "samplingMode": "temperature-0", "temperature": 0, "maxOutputTokens": 256,
+            "warmups": 1, "sampleCount": 3, "ttftMsMedian": 420,
+            "outputTokensPerSecondMedian": 36.4, "testRegion": "domestic",
+            "servicePath": "https://provider.example/v1/chat/completions", "testedAt": "2026-10-04",
+            "rawResultRef": "data/benchmarks/example.json",
+        },
+    }
+    page = render_models_landing_page(
+        offers=[], models=[model], vendor_directory=[],
+        site_url="https://freellm.top", curated_models=[model],
+    )
+
+    assert 'data-benchmark-sampling-mode="temperature-0"' in page
+    assert 'data-benchmark-temperature="0"' in page
+    assert 'data-benchmark-max-output="256"' in page
+    assert 'data-benchmark-warmups="1"' in page
+    assert 'data-benchmark-sample-count="3"' in page
 
 
 def model_slug(name: str) -> str:
@@ -109,49 +173,44 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
     provider_pages = list((tmp_path / "providers").glob("*/index.html"))
-    active_provider_ids = {str(item.get("providerId") or "").strip() for item in models if item.get("providerId")}
+    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
 
-    assert "数据口径已拆分" in overview
-    assert f"<strong>{len(models)}</strong><span>模型记录" in overview
-    assert f"<strong>{len(provider_pages)}</strong><span>厂家目录" in overview
-    assert f"<strong>{len(active_provider_ids)}</strong><span>当前数据 Provider ID" in overview
-    assert f"<strong>{len(offers)}</strong><span>免费资源" in overview
+    assert "精选模型与 AI Agent" in overview
+    assert "精选模型" in overview
+    assert "AI Agent 精选" in overview
+    assert f"完整目录含 {len(models)}+ 个模型" in overview
+    assert f"当前收录 {len(curated)} 个模型" in overview
+    assert provider_pages
     assert 'href="/models/all/"' in overview
     assert 'href="/providers/"' in overview
     assert 'href="/category/api/"' in overview
     assert "实时模型目录" in all_models_page
 
 
-def test_model_center_combines_original_feature_page_and_model_directory_tabs(tmp_path):
+def test_models_landing_shows_curated_models_and_links_to_the_complete_directory(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
+    models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
+
+    assert "精选模型" in page
+    assert "全部模型" in page
+    assert 'id="featured-models"' in page
+    assert f'href="/models/all/"' in page
+    assert page.count('class="featured-model-card"') == len(curated)
+    assert page.count("团队精选") == len(curated)
+    assert f'data-model-id="{curated[0]["id"]}"' in page
+    assert curated[0]["model"] in page
+    assert "可用的免费模型入口" not in page
+
+
+def test_model_center_legacy_route_redirects_to_featured_models(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "center" / "index.html").read_text(encoding="utf-8")
-    original_home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
 
-    assert 'lang="zh-CN"' in page
-    assert 'data-default-locale="zh-CN"' in page
-    assert 'fl-pastel-ui' in page
-    assert 'id="model-center-tab-featured"' in page
-    assert 'id="model-center-tab-all-models"' in page
-    assert 'aria-controls="categories"' in page
-    assert 'id="model-center-all-models-panel"' in page
-    assert "url.hash = 'all-models'" in page
-    assert "免费 AI 资源导航" in page
-    assert "模型大列表" not in page
-    assert "model-center-all-heading" not in page
-    assert "02 / 全部模型" not in page
-    assert 'id="model-directory"' in page
-    assert "const syncLocale = () => {{" not in page
-    assert "new MutationObserver(syncLocale).observe(document.documentElement, {{" not in page
-    assert page.index('class="model-center-tabs"') < page.index('id="model-directory"')
-    assert "免费 AI 资源导航" in original_home
-    assert 'class="fl-site-rail"' in original_home
-    assert 'class="top-nav"' not in original_home
-    assert page.index('class="catalog-hero"') < page.index('class="model-center-tabs"')
-    assert page.index('class="model-center-tabs"') < page.index('id="model-center-all-models-panel"')
-    assert page.index('id="model-center-all-models-panel"') < page.index('id="categories"')
-    assert 'class="model-center-full-directory"' in page
-    assert 'href="/models/all/"' in page
-    assert page.count('class="catalog-row"') == 24
+    assert 'http-equiv="refresh" content="0;url=/models/"' in page
+    assert 'href="/models/"' in page
+    assert '<meta name="robots" content="noindex,follow">' in page
 
 
 def test_model_rows_carry_score_data_for_catalog_ranking():
@@ -178,14 +237,11 @@ def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
     assert "Showing ${visible.length} / ${pairs.length}" in page
 
 
-def test_model_center_tabs_are_localized_and_model_catalog_uses_gradient_score(tmp_path):
+def test_model_center_legacy_route_is_not_in_sitemap(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
-    page = (tmp_path / "models" / "center" / "index.html").read_text(encoding="utf-8")
+    sitemap = (tmp_path / "sitemap-pages.xml").read_text(encoding="utf-8")
 
-    assert '<span lang="zh-CN">精选资源</span><span lang="en">Featured resources</span>' in page
-    assert '<span lang="zh-CN">全部模型</span><span lang="en">All models</span>' in page
-    assert "#1744E8" in page
-    assert "Catalog source" in page
+    assert "https://freellm.top/models/center/" not in sitemap
 
 
 def test_previous_longcat_routes_redirect_to_merged_page(tmp_path):
