@@ -128,8 +128,10 @@ def main(argv: list[str] | None = None) -> int:
                     **fetch_public_page(url, source["allowedDomains"], timeout=args.timeout),
                 })
         _write_json(args.out, results)
-        failed = sum(1 for result in results if result["status"] != "ok")
-        print(f"scan: {len(results)} sources, {failed} failed or rejected")
+        fatal_statuses = {"failed", "rejected"}
+        failed = sum(1 for result in results if result["status"] in fatal_statuses)
+        limited = sum(1 for result in results if result["status"] not in fatal_statuses | {"ok"})
+        print(f"scan: {len(results)} sources, {failed} fatal, {limited} blocked or limited")
         return 1 if failed else 0
     if args.command == "discover":
         providers = _read_json(args.providers)

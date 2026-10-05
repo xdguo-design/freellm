@@ -104,7 +104,7 @@ def fetch_public_page(url: str, allowed_domains: list[str], timeout: int = 15, m
                 return {"url": url, "status": "rejected", "reason": f"unsupported content type: {content_type}", "checkedAt": checked_at}
             body = read_limited(response, max_bytes)
             if len(body) > max_bytes:
-                return {"url": url, "status": "rejected", "reason": "response exceeds maximum size", "checkedAt": checked_at}
+                return {"url": url, "status": "source_limit", "reason": "response exceeds maximum size", "checkedAt": checked_at}
             charset = response.headers.get_content_charset() or "utf-8"
             html = body.decode(charset, errors="replace")
             parsed = extract_evidence(html)
@@ -117,7 +117,8 @@ def fetch_public_page(url: str, allowed_domains: list[str], timeout: int = 15, m
                 **parsed,
             }
     except HTTPError as error:
-        return {"url": url, "status": "failed", "reason": f"HTTP {error.code}", "checkedAt": checked_at}
+        status = "blocked" if error.code in {403, 429} else "failed"
+        return {"url": url, "status": status, "reason": f"HTTP {error.code}", "checkedAt": checked_at}
     except (URLError, TimeoutError, ValueError, OSError) as error:
         return {"url": url, "status": "failed", "reason": str(error), "checkedAt": checked_at}
     finally:
