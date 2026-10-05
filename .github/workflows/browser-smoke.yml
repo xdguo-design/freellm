@@ -38,7 +38,7 @@ jobs:
           python scripts/build_seo_pages.py --check
           python scripts/audit_all_pages.py --report .tmp/all-pages-audit.json
           python scripts/validate_evaluation_framework.py data/evaluation-framework.json
-          python -m unittest tests.test_evaluation_framework -v
+          python -m unittest tests.test_audit_all_pages tests.test_evaluation_framework -v
 
       - name: Run SEO quality gate unit tests
         run: python -m unittest tests.test_audit_seo_metadata -v

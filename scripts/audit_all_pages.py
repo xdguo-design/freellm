@@ -24,11 +24,6 @@ EXCLUDE_PREFIXES = (
 )
 EXCLUDE_FILES = {"design/about.html", "design/updates.html"}
 TITLE_RE = re.compile(r"<title>(.*?)</title>", re.I | re.S)
-DESC_RE = re.compile(r"<meta\\s+name=[\"']description[\"']\\s+content=[\"']([^\"']*)[\"']", re.I)
-CANONICAL_RE = re.compile(r"<link\\s+rel=[\"']canonical[\"']\\s+href=[\"']([^\"']+)[\"']", re.I)
-ROBOTS_RE = re.compile(r"<meta\\s+name=[\"']robots[\"']\\s+content=[\"']([^\"']*)[\"']", re.I)
-H1_RE = re.compile(r"<h1(?:\\s|>)", re.I)
-ID_RE = re.compile(r"\\bid=[\"']([^\"']+)[\"']", re.I)
 
 
 class AuditParser(HTMLParser):
@@ -36,13 +31,34 @@ class AuditParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.hrefs: list[str] = []
         self.images: list[dict[str, str | None]] = []
+        self.description = ""
+        self.robots = ""
+        self.canonical = ""
+        self.ids: list[str] = []
+        self.h1_count = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        values = dict(attrs)
-        if tag.lower() == "a" and values.get("href"):
-            self.hrefs.append(values["href"].strip())
-        if tag.lower() == "img":
+        tag = tag.lower()
+        values = {str(key).lower(): value for key, value in attrs}
+        if values.get("id"):
+            self.ids.append(str(values["id"]))
+        if tag == "h1":
+            self.h1_count += 1
+        if tag == "a" and values.get("href"):
+            self.hrefs.append(str(values["href"]).strip())
+        if tag == "img":
             self.images.append(values)
+        if tag == "meta":
+            name = str(values.get("name") or "").strip().lower()
+            content = str(values.get("content") or "").strip()
+            if name == "description":
+                self.description = content
+            elif name == "robots":
+                self.robots = content
+        if tag == "link":
+            rel_tokens = str(values.get("rel") or "").lower().split()
+            if "canonical" in rel_tokens and values.get("href"):
+                self.canonical = str(values["href"]).strip()
 
 
 def rel(path: Path) -> str:
@@ -85,47 +101,43 @@ def local_target(url_path: str) -> Path | None:
 def audit_page(path: Path) -> dict:
     name = rel(path)
     text = path.read_text(encoding="utf-8", errors="replace")
-    robots_match = ROBOTS_RE.search(text)
-    robots = (robots_match.group(1) if robots_match else "").lower()
-    indexable = "noindex" not in robots
     errors: list[str] = []
     warnings: list[str] = []
-
-    title = TITLE_RE.search(text)
-    desc = DESC_RE.search(text)
-    canonical = CANONICAL_RE.search(text)
-    if indexable and not title:
-        errors.append("missing title")
-    if indexable and not desc:
-        errors.append("missing meta description")
-    if indexable and not canonical:
-        errors.append("missing canonical")
-    if canonical:
-        parsed = urlparse(canonical.group(1).strip())
-        if parsed.scheme != "https" or parsed.netloc != "freellm.top":
-            errors.append(f"canonical outside production origin: {canonical.group(1).strip()}")
-
-    h1_count = len(H1_RE.findall(text))
-    if indexable and h1_count > 1:
-        errors.append(f"multiple h1 elements: {h1_count}")
-    elif indexable and h1_count == 0:
-        warnings.append("no h1")
-
-    ids = ID_RE.findall(text)
-    seen: set[str] = set()
-    duplicates: set[str] = set()
-    for value in ids:
-        if value in seen:
-            duplicates.add(value)
-        seen.add(value)
-    if duplicates:
-        warnings.append("duplicate ids: " + ", ".join(sorted(duplicates)[:10]))
-
     parser = AuditParser()
     try:
         parser.feed(text)
     except Exception as exc:
         errors.append(f"HTML parse error: {exc}")
+
+    robots = parser.robots.lower()
+    indexable = "noindex" not in robots
+    title = TITLE_RE.search(text)
+    canonical = parser.canonical
+    if indexable and not title:
+        errors.append("missing title")
+    if indexable and not parser.description:
+        errors.append("missing meta description")
+    if indexable and not canonical:
+        errors.append("missing canonical")
+    if canonical:
+        parsed = urlparse(canonical)
+        if parsed.scheme != "https" or parsed.netloc != "freellm.top":
+            errors.append(f"canonical outside production origin: {canonical}")
+
+    h1_count = parser.h1_count
+    if indexable and h1_count > 1:
+        errors.append(f"multiple h1 elements: {h1_count}")
+    elif indexable and h1_count == 0:
+        warnings.append("no h1")
+
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for value in parser.ids:
+        if value in seen:
+            duplicates.add(value)
+        seen.add(value)
+    if duplicates:
+        warnings.append("duplicate ids: " + ", ".join(sorted(duplicates)[:10]))
 
     page_url = SITE.rstrip("/") + public_path(path)
     for href in parser.hrefs:
