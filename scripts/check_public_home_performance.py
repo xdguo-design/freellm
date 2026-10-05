@@ -69,10 +69,10 @@ def fetch(url: str) -> dict:
 
 def expected_assets() -> list[str]:
     html = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-    assets = re.findall(
+    assets = list(dict.fromkeys(re.findall(
         r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
         html,
-    )
+    )))
     if len(assets) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {assets}")
     return assets
