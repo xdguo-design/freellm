@@ -4979,6 +4979,7 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
         '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
         '<meta http-equiv="refresh" content="0;url=/workflow/">'
+        '<meta name="robots" content="noindex,follow">'
         f'<link rel="canonical" href="{_esc(destination)}">'
         '<title>工作流已迁移 · FreeLLM</title></head><body>'
         '<p>工作流页面已迁移到 <a href="/workflow/">/workflow/</a>。</p>'
