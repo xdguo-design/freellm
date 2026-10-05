@@ -9,6 +9,21 @@ on:
     branches: [dev]
     paths:
       - ".github/workflows/daily-check.yml"
+      - "crawler/**"
+      - "scripts/site_health.py"
+      - "scripts/audit_all_pages.py"
+      - "scripts/ai_radar.py"
+      - "scripts/validate_evaluation_framework.py"
+      - "data/sources.json"
+      - "data/official-model-sources.json"
+      - "data/providers.json"
+      - "data/provider-access.json"
+      - "data/models.json"
+      - "data/offers.json"
+      - "data/discovery-queries.json"
+      - "data/ai-radar-sources.json"
+      - "data/evaluation-framework.json"
+      - "tests/**"
   schedule:
     - cron: "0 1 * * *" # 01:00 UTC = 09:00 UTC+8, daily
   workflow_dispatch:
