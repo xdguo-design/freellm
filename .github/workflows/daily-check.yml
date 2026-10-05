@@ -5,6 +5,10 @@ name: daily-check
 # regenerated locally after human review.
 
 on:
+  push:
+    branches: [dev]
+    paths:
+      - ".github/workflows/daily-check.yml"
   schedule:
     - cron: "0 1 * * *" # 01:00 UTC = 09:00 UTC+8, daily
   workflow_dispatch:
