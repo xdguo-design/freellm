@@ -14,6 +14,12 @@ class DailyCheckWorkflowTests(unittest.TestCase):
         )
         self.assertIn("python -m json.tool data/review-queue.json", workflow)
 
+    def test_weekly_discovery_installs_pytest_before_full_suite(self):
+        workflow = Path(".github/workflows/discovery-pr.yml").read_text(encoding="utf-8")
+        install = workflow.index("python -m pip install --disable-pip-version-check pytest")
+        tests = workflow.index("python -m unittest discover -s tests -v")
+        self.assertLess(install, tests)
+
 
 if __name__ == "__main__":
     unittest.main()

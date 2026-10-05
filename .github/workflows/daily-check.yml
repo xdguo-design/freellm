@@ -9,6 +9,7 @@ on:
     branches: [dev]
     paths:
       - ".github/workflows/daily-check.yml"
+      - ".github/workflows/discovery-pr.yml"
       - "crawler/**"
       - "scripts/site_health.py"
       - "scripts/audit_all_pages.py"
