@@ -188,13 +188,13 @@ def measure_once(browser) -> dict:
     cdp.send("Emulation.setCPUThrottlingRate", {"rate": 4})
 
     page.goto(PUBLIC_URL, wait_until="domcontentloaded", timeout=60_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=30_000)
+    page.locator("body[data-data-source]").wait_for(state="attached", timeout=30_000)
     page.wait_for_timeout(1200)
     cold = read_metrics(page)
 
     page.goto("about:blank")
     page.goto(PUBLIC_URL, wait_until="domcontentloaded", timeout=60_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=30_000)
+    page.locator("body[data-data-source]").wait_for(state="attached", timeout=30_000)
     page.wait_for_timeout(1200)
     warm = read_metrics(page)
 
