@@ -20,6 +20,8 @@ EXCLUDE_PREFIXES = (
     "design/verification/",
     "design/visual-directions/",
     "skills/test-artifacts/",
+    "docs/marketing/",
+    "docs/wechat/",
     "seo/",
 )
 EXCLUDE_FILES = {"design/about.html", "design/updates.html"}
