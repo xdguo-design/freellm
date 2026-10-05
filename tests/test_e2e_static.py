@@ -526,10 +526,10 @@ class DailyWorkflowTests(unittest.TestCase):
     def setUp(self):
         self.text = (ROOT / ".github" / "workflows" / "daily-check.yml").read_text(encoding="utf-8")
 
-    def test_workflow_runs_daily_without_dependencies(self):
+    def test_workflow_runs_daily_with_explicit_test_dependencies(self):
         self.assertIn("cron:", self.text)
         self.assertIn("python-version", self.text)
-        self.assertNotIn("pip install", self.text)
+        self.assertIn("python -m pip install --disable-pip-version-check pytest", self.text)
 
     def test_workflow_validates_scans_diffs_and_uploads(self):
         for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "scripts/site_health.py", "site-health-report.json", "upload-artifact", "if: always()"):

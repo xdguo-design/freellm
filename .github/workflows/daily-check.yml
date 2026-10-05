@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Install Python test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Validate offers schema
         run: python -m crawler.cli validate data/offers.json
 

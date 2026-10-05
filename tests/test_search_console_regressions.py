@@ -64,7 +64,7 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
     def test_published_pages_do_not_emit_locale_query_links(self) -> None:
         offenders: list[str] = []
-        href_re = re.compile(r'href=["\\']([^"\\']+)["\\']', re.IGNORECASE)
+        href_re = re.compile(r"""href=["']([^"']+)["']""", re.IGNORECASE)
         for path in _published_html_files():
             text = path.read_text(encoding="utf-8")
             for href in href_re.findall(text):
