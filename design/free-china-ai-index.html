@@ -65,8 +65,15 @@
     }
   </script>
   <script>
-    // file:// 预览走内嵌数据，网络同步脚本只在 http(s) 下同步加载（document.write 保持原有阻塞顺序）。
-    if (window.location.protocol !== 'file:') document.write('<script src="/js/freellm-sync.js"><\/script>');
+    // Sync/favorites are not required for first paint; load them after the document is parsed.
+    if (window.location.protocol !== 'file:') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const sync = document.createElement('script');
+        sync.src = '/js/freellm-sync.js';
+        sync.async = true;
+        document.head.appendChild(sync);
+      }, { once: true });
+    }
   </script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231744e8' rx='20'/%3E%3Ctext x='50' y='65' font-family='Arial' font-weight='bold' font-size='40' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E" />
@@ -551,17 +558,20 @@
   ]
 }
   </script>
-  <link rel="stylesheet" href="../css/homepage.68ec3cb553.css">
+  <style>*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input{font:inherit}</style>
+  <link rel="stylesheet" href="../css/homepage.68ec3cb553.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="../css/homepage.68ec3cb553.css"></noscript>
   <!-- Set a real AdSense slot ID here after approval; empty keeps AdSense network loading disabled. -->
   <script>window.FREELLM_ADSENSE_SLOT = '';</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css">
-<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a">
-<link rel="stylesheet" href="../css/aurora-home.css?v=20260929b">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../css/aurora-home.css?v=20260929b" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="../css/home-prototype-exact.css?v=20261002a">
 <link rel="stylesheet" href="../css/reference-rail.css?v=20261001a">
+<noscript><link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css"><link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a"><link rel="stylesheet" href="../css/aurora-home.css?v=20260929b"></noscript>
 </head>
 <body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
