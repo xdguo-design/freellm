@@ -1,6 +1,6 @@
 name: daily-check
 
-# Daily verification + public-source scan. This workflow never edits public
+# Daily verification + public-source scan + release health gates. This workflow never edits public
 # data: scan/diff results land in artifacts and data/review-queue.json is only
 # regenerated locally after human review.
 
