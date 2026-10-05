@@ -124,6 +124,7 @@ def build_report(
 ) -> dict:
     checked_on = as_of or date.today()
     errors: list[str] = []
+    warnings: list[str] = []
     try:
         release_sha = resolve_release_sha(env, current_git_head(root) if git_head is None else git_head)
     except RuntimeError as error:
@@ -140,22 +141,26 @@ def build_report(
     models_path = root / "data" / "models.json"
     try:
         offers = _read_json(offers_path)
-        errors.extend(check_freshness(
+        offer_freshness = check_freshness(
             [item.get("lastVerifiedAt") for item in offers if isinstance(item, dict)],
             checked_on,
             max_age_days,
             "offers freshness",
-        ))
+        )
+        warnings.extend(message for message in offer_freshness if "days old; maximum is" in message)
+        errors.extend(message for message in offer_freshness if "days old; maximum is" not in message)
     except (OSError, json.JSONDecodeError, TypeError) as error:
         errors.append(f"offers data cannot be checked: {error}")
     try:
         models = _read_json(models_path)
-        errors.extend(check_freshness(
+        model_freshness = check_freshness(
             [item.get("lastSeenAt") for item in models if isinstance(item, dict)],
             checked_on,
             max_age_days,
             "models freshness",
-        ))
+        )
+        warnings.extend(message for message in model_freshness if "days old; maximum is" in message)
+        errors.extend(message for message in model_freshness if "days old; maximum is" not in message)
     except (OSError, json.JSONDecodeError, TypeError) as error:
         errors.append(f"models data cannot be checked: {error}")
 
@@ -164,6 +169,8 @@ def build_report(
         "releaseSha": release_sha,
         "sizes": sizes,
         "maxAgeDays": max_age_days,
+        "warnings": warnings,
+        "staleCount": len(warnings),
         "errors": errors,
         "ok": not errors,
     }
