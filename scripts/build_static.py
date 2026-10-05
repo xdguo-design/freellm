@@ -293,7 +293,7 @@ def render_offer_flags(offer: dict) -> str:
     return '<div class="offer-card-flags">' + "".join(chips) + "</div>"
 
 
-def render_static_catalog(data: list[dict], limit: int = 20) -> str:
+def render_static_catalog(data: list[dict], limit: int = 12) -> str:
     cards = []
     for offer in key_first(data)[:limit]:
         href = offer_href(offer)
