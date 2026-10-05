@@ -132,7 +132,7 @@ class StaticContractTests(unittest.TestCase):
             'window.FreeLLM?.Sync?.bind(container)',
         ):
             self.assertIn(needle, self.runtime_source)
-        self.assertNotIn("document.write('<script src=\\"/js/freellm-sync.js", self.runtime_source)
+        self.assertNotIn("document.write(", self.runtime_source)
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
