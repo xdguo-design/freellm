@@ -570,10 +570,10 @@
 <link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="../css/aurora-home.css?v=20260929b" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="../css/home-prototype-exact.css?v=20261002a">
-<link rel="stylesheet" href="../css/reference-rail.css?v=20261001a">
+<link rel="stylesheet" href="../css/reference-rail.css?v=20261001a" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="../css/reference-rail.css?v=20261001a"></noscript>
 <noscript><link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css"><link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a"><link rel="stylesheet" href="../css/aurora-home.css?v=20260929b"></noscript>
 </head>
-<body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
+<body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script defer src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -799,8 +799,8 @@
       }, { capture: true });
     })();
   </script>
-  <script defer src="../js/homepage.af1ac9d3c4.js"></script>
-  <script defer src="../js/homepage-i18n.9aacee97e4.js"></script>
+  <script defer fetchpriority="low" src="../js/homepage.af1ac9d3c4.js"></script>
+  <script defer fetchpriority="low" src="../js/homepage-i18n.9aacee97e4.js"></script>
   <script>
     (() => {
       const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
