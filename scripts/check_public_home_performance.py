@@ -8,8 +8,6 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
-
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_URL = "https://freellm.top/"
 VIEWPORT = {"width": 390, "height": 844}
@@ -245,6 +243,8 @@ def main() -> int:
     offers_policy = cache["assets"]["data/offers.json"]["cacheControl"] or ""
     if "max-age=300" not in offers_policy:
         raise SystemExit(f"offers.json short cache policy missing: {offers_policy}")
+
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
