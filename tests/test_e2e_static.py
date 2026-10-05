@@ -121,7 +121,9 @@ class StaticContractTests(unittest.TestCase):
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
-            "document.write('<script src=\"/js/freellm-sync.js\"><\\/script>')",
+            "window.addEventListener('DOMContentLoaded'",
+            "sync.src = '/js/freellm-sync.js'",
+            "sync.async = true",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-freshness-filter"',
@@ -130,6 +132,7 @@ class StaticContractTests(unittest.TestCase):
             'window.FreeLLM?.Sync?.bind(container)',
         ):
             self.assertIn(needle, self.runtime_source)
+        self.assertNotIn("document.write('<script src=\\"/js/freellm-sync.js", self.runtime_source)
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
