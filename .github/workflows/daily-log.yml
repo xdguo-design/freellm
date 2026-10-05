@@ -53,6 +53,15 @@ jobs:
             echo '[]' > data/snapshots/daily-models.json
           fi
 
+      - name: Sync observed models into stable catalog
+        if: steps.model_scan.outcome == 'success'
+        run: >-
+          python scripts/sync_model_catalog.py
+          --input data/snapshots/daily-models.json
+          --previous data/models.json
+          --output data/models.json
+          --as-of "${{ steps.date.outputs.as_of }}"
+
       - name: Build daily change log
         if: always()
         env:
@@ -100,6 +109,7 @@ jobs:
           git add -A -- \
             "data/daily-log/$AS_OF.json" \
             data/ai-radar-baseline.json \
+            data/models.json \
             design/free-china-ai-index.html \
             offers category guides models providers logs skills \
             sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \
