@@ -324,14 +324,15 @@ pre code { padding:0; background:none; color:inherit; }
             <span lang="zh-CN">卡片</span><span lang="en">Cards</span></button>
         </div>
       </div>
-      <div class="mdir-chips" role="group" aria-label="热门筛选 / Quick filters">
-        <span class="mdir-chips-label"><span lang="zh-CN">热门筛选</span><span lang="en">Quick filters</span></span>
-        <button type="button" class="mdir-chip" data-chip-region="available"><span lang="zh-CN">中国大陆可用</span><span lang="en">Mainland CN available</span></button>
-        <button type="button" class="mdir-chip" data-chip-region="unknown"><span lang="zh-CN">待核验</span><span lang="en">Unverified</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="text"><span lang="zh-CN">文本生成</span><span lang="en">Text</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="reasoning"><span lang="zh-CN">推理模型</span><span lang="en">Reasoning</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="image"><span lang="zh-CN">图像</span><span lang="en">Image</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="audio"><span lang="zh-CN">语音</span><span lang="en">Audio</span></button>
+      <div class="mdir-chips" role="group" aria-label="场景快捷筛选 / Scenario filters">
+        <span class="mdir-chips-label"><span lang="zh-CN">场景快捷筛选</span><span lang="en">Scenario filters</span></span>
+        <button type="button" class="mdir-chip" data-chip-context-min="128000" aria-pressed="false"><span lang="zh-CN">128K+ 上下文</span><span lang="en">128K+ context</span></button>
+        <button type="button" class="mdir-chip" data-chip-region="available" aria-pressed="false"><span lang="zh-CN">中国大陆可用</span><span lang="en">Mainland CN available</span></button>
+        <button type="button" class="mdir-chip" data-chip-region="unknown" aria-pressed="false"><span lang="zh-CN">待核验</span><span lang="en">Unverified</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="text" aria-pressed="false"><span lang="zh-CN">文本生成</span><span lang="en">Text</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="reasoning" aria-pressed="false"><span lang="zh-CN">推理模型</span><span lang="en">Reasoning</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="image" aria-pressed="false"><span lang="zh-CN">图像</span><span lang="en">Image</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="audio" aria-pressed="false"><span lang="zh-CN">语音</span><span lang="en">Audio</span></button>
         <span class="mdir-chips-spacer"></span>
         <span id="model-catalog-count" class="catalog-count"></span>
         <span class="catalog-modes" aria-label="分组方式 / Group by">
@@ -345,370 +346,344 @@ pre code { padding:0; background:none; color:inherit; }
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
         <th class="row-index">#</th><th><span lang="zh-CN">模型名称 (Model)</span><span lang="en">Model</span></th><th><span lang="zh-CN">服务商 (Provider)</span><span lang="en">Provider</span></th><th><span lang="zh-CN">上下文长度</span><span lang="en">Context</span></th><th><span lang="zh-CN">最大输出</span><span lang="en">Max output</span></th><th><span lang="zh-CN">支持模态</span><span lang="en">Modality</span></th><th><span lang="zh-CN">速率限制 (Rate Limit)</span><span lang="en">Rate limit</span></th><th><span lang="zh-CN">接口速度 (API RTT)</span><span lang="en">API latency</span></th><th><span lang="zh-CN">发布时间</span><span lang="en">Released</span></th><th><span lang="zh-CN">在线状态</span><span lang="en">Status</span></th><th><span lang="zh-CN">中国大陆可用性</span><span lang="en">Mainland CN</span></th><th><span lang="zh-CN">操作</span><span lang="en">Actions</span></th>
       </tr></thead><tbody><tr class="catalog-row" data-model-id="puter/mimo-v2-6-flash" data-provider-id="puter" data-cn="unknown" data-modality="audio,image,reasoning,text,video" data-context="1000000" data-released="2026-09-22" data-ms="" data-score="">
-      <td class="row-index" data-label="#">1</td>
-      <td class="model-cell" data-label="模型"><a class="model-name" href="/models/mimo-v2-6-flash/" title="MiMo-V2.6-Flash"><strong>MiMo-V2.6-Flash</strong></a><small class="model-id" title="puter/mimo-v2-6-flash">puter/mimo-v2-6-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="puter">Puter.js</button><a class="provider-page-link" href="/providers/puter/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1000000">1M</td>
-      <td data-label="最大输出">131K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td class="row-index">1</td>
+      <td class="model-cell"><a class="model-name" href="/models/mimo-v2-6-flash/" title="MiMo-V2.6-Flash"><strong>MiMo-V2.6-Flash</strong></a><small class="model-id" title="puter/mimo-v2-6-flash">puter/mimo-v2-6-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="puter">Puter.js</button><a class="provider-page-link" href="/providers/puter/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1000000">1M</td>
+      <td>131K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">2026-09-22</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="/models/mimo-v2-6-flash/">MiMo-V2.6-Flash</a></h3><small class="model-id">puter/mimo-v2-6-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>2026-09-22</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="opencode/mimo-v2-6-flash-free" data-provider-id="opencode" data-cn="unknown" data-modality="audio,image,reasoning,text,video" data-context="1000000" data-released="2026-09-22" data-ms="" data-score="">
-      <td class="row-index" data-label="#">2</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="MiMo-V2.6-Flash Free"><strong>MiMo-V2.6-Flash Free</strong></span><small class="model-id" title="opencode/mimo-v2-6-flash-free">opencode/mimo-v2-6-flash-free</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="opencode">OpenCode Zen</button><a class="provider-page-link" href="/providers/opencode/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1000000">1M</td>
-      <td data-label="最大输出">131K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>2026-09-22</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="opencode/mimo-v2-6-flash-free" data-provider-id="opencode" data-cn="unknown" data-modality="audio,image,reasoning,text,video" data-context="1000000" data-released="2026-09-22" data-ms="" data-score="">
+      <td class="row-index">2</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="MiMo-V2.6-Flash Free"><strong>MiMo-V2.6-Flash Free</strong></span><small class="model-id" title="opencode/mimo-v2-6-flash-free">opencode/mimo-v2-6-flash-free</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="opencode">OpenCode Zen</button><a class="provider-page-link" href="/providers/opencode/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1000000">1M</td>
+      <td>131K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">2026-09-22</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://opencode.ai/docs/en/zen/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>MiMo-V2.6-Flash Free</span></h3><small class="model-id">opencode/mimo-v2-6-flash-free</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>2026-09-22</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://opencode.ai/docs/en/zen/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="xiaomi-mimo/mimo-v2-6-flash" data-provider-id="xiaomi-mimo" data-cn="unknown" data-modality="audio,image,reasoning,text,video" data-context="1000000" data-released="2026-09-22" data-ms="" data-score="">
-      <td class="row-index" data-label="#">3</td>
-      <td class="model-cell" data-label="模型"><a class="model-name" href="/models/mimo-v2-6-flash/" title="MiMo-V2.6-Flash"><strong>MiMo-V2.6-Flash</strong></a><small class="model-id" title="xiaomi-mimo/mimo-v2-6-flash">xiaomi-mimo/mimo-v2-6-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="xiaomi-mimo">Xiaomi MiMo</button><a class="provider-page-link" href="/providers/xiaomi-mimo/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1000000">1M</td>
-      <td data-label="最大输出">131K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">100 RPM · 10M TPM</td>
+      <td>2026-09-22</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://opencode.ai/docs/en/zen/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="xiaomi-mimo/mimo-v2-6-flash" data-provider-id="xiaomi-mimo" data-cn="unknown" data-modality="audio,image,reasoning,text,video" data-context="1000000" data-released="2026-09-22" data-ms="" data-score="">
+      <td class="row-index">3</td>
+      <td class="model-cell"><a class="model-name" href="/models/mimo-v2-6-flash/" title="MiMo-V2.6-Flash"><strong>MiMo-V2.6-Flash</strong></a><small class="model-id" title="xiaomi-mimo/mimo-v2-6-flash">xiaomi-mimo/mimo-v2-6-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="xiaomi-mimo">Xiaomi MiMo</button><a class="provider-page-link" href="/providers/xiaomi-mimo/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1000000">1M</td>
+      <td>131K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div></td>
+      <td>100 RPM · 10M TPM</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">2026-09-22</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://mimo.mi.com/models/en-US/mimo-v2.6-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="/models/mimo-v2-6-flash/">MiMo-V2.6-Flash</a></h3><small class="model-id">xiaomi-mimo/mimo-v2-6-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span><span class="model-badge">audio</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>100 RPM · 10M TPM</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>2026-09-22</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://mimo.mi.com/models/en-US/mimo-v2.6-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="512000" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">4</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes 2.5 Flash"><strong>Agnes 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-flash">agnes-ai/agnes-2-5-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="512000">512K</td>
-      <td data-label="最大输出">66K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>2026-09-22</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://mimo.mi.com/models/en-US/mimo-v2.6-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="512000" data-released="" data-ms="276" data-score="">
+      <td class="row-index">4</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes 2.5 Flash"><strong>Agnes 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-flash">agnes-ai/agnes-2-5-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="512000">512K</td>
+      <td>66K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes 2.5 Flash</span></h3><small class="model-id">agnes-ai/agnes-2-5-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>512K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-pro" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="1000000" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">5</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes 2.5 Pro"><strong>Agnes 2.5 Pro</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-pro">agnes-ai/agnes-2-5-pro</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1000000">1M</td>
-      <td data-label="最大输出">66K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-pro" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="1000000" data-released="" data-ms="276" data-score="">
+      <td class="row-index">5</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes 2.5 Pro"><strong>Agnes 2.5 Pro</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-pro">agnes-ai/agnes-2-5-pro</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1000000">1M</td>
+      <td>66K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes 2.5 Pro</span></h3><small class="model-id">agnes-ai/agnes-2-5-pro</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-pro-beta" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="1000000" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">6</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes 2.5 Pro Beta"><strong>Agnes 2.5 Pro Beta</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-pro-beta">agnes-ai/agnes-2-5-pro-beta</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1000000">1M</td>
-      <td data-label="最大输出">66K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-2-5-pro-beta" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,reasoning,text" data-context="1000000" data-released="" data-ms="276" data-score="">
+      <td class="row-index">6</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes 2.5 Pro Beta"><strong>Agnes 2.5 Pro Beta</strong></span><small class="model-id" title="agnes-ai/agnes-2-5-pro-beta">agnes-ai/agnes-2-5-pro-beta</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1000000">1M</td>
+      <td>66K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro-beta" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes 2.5 Pro Beta</span></h3><small class="model-id">agnes-ai/agnes-2-5-pro-beta</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro-beta" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-3-0-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="512000" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">7</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes 3.0 Flash"><strong>Agnes 3.0 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-3-0-flash">agnes-ai/agnes-3-0-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="512000">512K</td>
-      <td data-label="最大输出">66K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-25-pro-beta" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-3-0-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="512000" data-released="" data-ms="276" data-score="">
+      <td class="row-index">7</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes 3.0 Flash"><strong>Agnes 3.0 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-3-0-flash">agnes-ai/agnes-3-0-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="512000">512K</td>
+      <td>66K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-30-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes 3.0 Flash</span></h3><small class="model-id">agnes-ai/agnes-3-0-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>512K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-30-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-0-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">8</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Image 2.0 Flash"><strong>Agnes Image 2.0 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-0-flash">agnes-ai/agnes-image-2-0-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-30-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-0-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">8</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Image 2.0 Flash"><strong>Agnes Image 2.0 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-0-flash">agnes-ai/agnes-image-2-0-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-20-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Image 2.0 Flash</span></h3><small class="model-id">agnes-ai/agnes-image-2-0-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-20-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-1-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">9</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Image 2.1 Flash"><strong>Agnes Image 2.1 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-1-flash">agnes-ai/agnes-image-2-1-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-20-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-1-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">9</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Image 2.1 Flash"><strong>Agnes Image 2.1 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-1-flash">agnes-ai/agnes-image-2-1-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-21-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Image 2.1 Flash</span></h3><small class="model-id">agnes-ai/agnes-image-2-1-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-21-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">10</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Image 2.5 Flash"><strong>Agnes Image 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-5-flash">agnes-ai/agnes-image-2-5-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-21-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-image-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">10</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Image 2.5 Flash"><strong>Agnes Image 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-image-2-5-flash">agnes-ai/agnes-image-2-5-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Image 2.5 Flash</span></h3><small class="model-id">agnes-ai/agnes-image-2-5-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-2-5" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">11</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Video 2.5"><strong>Agnes Video 2.5</strong></span><small class="model-id" title="agnes-ai/agnes-video-2-5">agnes-ai/agnes-video-2-5</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-image-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-2-5" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">11</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Video 2.5"><strong>Agnes Video 2.5</strong></span><small class="model-id" title="agnes-ai/agnes-video-2-5">agnes-ai/agnes-video-2-5</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Video 2.5</span></h3><small class="model-id">agnes-ai/agnes-video-2-5</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">12</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Video 2.5 Flash"><strong>Agnes Video 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-video-2-5-flash">agnes-ai/agnes-video-2-5-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-2-5-flash" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">12</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Video 2.5 Flash"><strong>Agnes Video 2.5 Flash</strong></span><small class="model-id" title="agnes-ai/agnes-video-2-5-flash">agnes-ai/agnes-video-2-5-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Video 2.5 Flash</span></h3><small class="model-id">agnes-ai/agnes-video-2-5-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-v2-0" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
-      <td class="row-index" data-label="#">13</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Agnes Video V2.0"><strong>Agnes Video V2.0</strong></span><small class="model-id" title="agnes-ai/agnes-video-v2-0">agnes-ai/agnes-video-v2-0</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="agnes-ai/agnes-video-v2-0" data-provider-id="agnes-ai" data-cn="unknown" data-modality="image,text,video" data-context="" data-released="" data-ms="276" data-score="">
+      <td class="row-index">13</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Agnes Video V2.0"><strong>Agnes Video V2.0</strong></span><small class="model-id" title="agnes-ai/agnes-video-v2-0">agnes-ai/agnes-video-v2-0</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="agnes-ai">Agnes AI</button><a class="provider-page-link" href="/providers/agnes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.agnes-ai.cn/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">276ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-v20" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Agnes Video V2.0</span></h3><small class="model-id">agnes-ai/agnes-video-v2-0</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">video</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>276ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-v20" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="atria-asi/atria-dawn-preview" data-provider-id="atria-asi" data-cn="unknown" data-modality="reasoning,text" data-context="256000" data-released="2026-09-14" data-ms="731" data-score="">
-      <td class="row-index" data-label="#">14</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Atria Dawn Preview"><strong>Atria Dawn Preview</strong></span><small class="model-id" title="atria-asi/atria-dawn-preview">atria-asi/atria-dawn-preview</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="atria-asi">Shanghai AI Laboratory</button><a class="provider-page-link" href="/providers/atria-asi/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="256000">256K</td>
-      <td data-label="最大输出">66K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">60 RPM (per account)</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://agnes-ai.cn/zh-Hans/docs/agnes-video-v20" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="atria-asi/atria-dawn-preview" data-provider-id="atria-asi" data-cn="unknown" data-modality="reasoning,text" data-context="256000" data-released="2026-09-14" data-ms="731" data-score="">
+      <td class="row-index">14</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Atria Dawn Preview"><strong>Atria Dawn Preview</strong></span><small class="model-id" title="atria-asi/atria-dawn-preview">atria-asi/atria-dawn-preview</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="atria-asi">Shanghai AI Laboratory</button><a class="provider-page-link" href="/providers/atria-asi/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="256000">256K</td>
+      <td>66K</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
+      <td>60 RPM (per account)</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://api.atria-asi.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">731ms</span></td>
-      <td data-label="发布时间">2026-09-14</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://api.atria-asi.ai/docs" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Atria Dawn Preview</span></h3><small class="model-id">atria-asi/atria-dawn-preview</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>256K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>60 RPM (per account)</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>731ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>2026-09-14</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://api.atria-asi.ai/docs" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/deepseek-v3-2-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">15</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="DeepSeek-V3.2-TEE"><strong>DeepSeek-V3.2-TEE</strong></span><small class="model-id" title="chutes-ai/deepseek-v3-2-tee">chutes-ai/deepseek-v3-2-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>2026-09-14</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://api.atria-asi.ai/docs" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/deepseek-v3-2-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">15</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="DeepSeek-V3.2-TEE"><strong>DeepSeek-V3.2-TEE</strong></span><small class="model-id" title="chutes-ai/deepseek-v3-2-tee">chutes-ai/deepseek-v3-2-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>DeepSeek-V3.2-TEE</span></h3><small class="model-id">chutes-ai/deepseek-v3-2-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/deepseek-v4-flash-0731-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">16</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="DeepSeek-V4-Flash-0731-TEE"><strong>DeepSeek-V4-Flash-0731-TEE</strong></span><small class="model-id" title="chutes-ai/deepseek-v4-flash-0731-tee">chutes-ai/deepseek-v4-flash-0731-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/deepseek-v4-flash-0731-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">16</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="DeepSeek-V4-Flash-0731-TEE"><strong>DeepSeek-V4-Flash-0731-TEE</strong></span><small class="model-id" title="chutes-ai/deepseek-v4-flash-0731-tee">chutes-ai/deepseek-v4-flash-0731-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>DeepSeek-V4-Flash-0731-TEE</span></h3><small class="model-id">chutes-ai/deepseek-v4-flash-0731-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/gemma-4-31b-turbo-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">17</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="gemma-4-31B-turbo-TEE"><strong>gemma-4-31B-turbo-TEE</strong></span><small class="model-id" title="chutes-ai/gemma-4-31b-turbo-tee">chutes-ai/gemma-4-31b-turbo-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/gemma-4-31b-turbo-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">17</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="gemma-4-31B-turbo-TEE"><strong>gemma-4-31B-turbo-TEE</strong></span><small class="model-id" title="chutes-ai/gemma-4-31b-turbo-tee">chutes-ai/gemma-4-31b-turbo-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>gemma-4-31B-turbo-TEE</span></h3><small class="model-id">chutes-ai/gemma-4-31b-turbo-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/glm-5-1-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">18</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="GLM-5.1-TEE"><strong>GLM-5.1-TEE</strong></span><small class="model-id" title="chutes-ai/glm-5-1-tee">chutes-ai/glm-5-1-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/glm-5-1-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">18</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="GLM-5.1-TEE"><strong>GLM-5.1-TEE</strong></span><small class="model-id" title="chutes-ai/glm-5-1-tee">chutes-ai/glm-5-1-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>GLM-5.1-TEE</span></h3><small class="model-id">chutes-ai/glm-5-1-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/glm-5-2-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">19</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="GLM-5.2-TEE"><strong>GLM-5.2-TEE</strong></span><small class="model-id" title="chutes-ai/glm-5-2-tee">chutes-ai/glm-5-2-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/glm-5-2-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">19</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="GLM-5.2-TEE"><strong>GLM-5.2-TEE</strong></span><small class="model-id" title="chutes-ai/glm-5-2-tee">chutes-ai/glm-5-2-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>GLM-5.2-TEE</span></h3><small class="model-id">chutes-ai/glm-5-2-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/kimi-k2-6-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">20</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Kimi-K2.6-TEE"><strong>Kimi-K2.6-TEE</strong></span><small class="model-id" title="chutes-ai/kimi-k2-6-tee">chutes-ai/kimi-k2-6-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/kimi-k2-6-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">20</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Kimi-K2.6-TEE"><strong>Kimi-K2.6-TEE</strong></span><small class="model-id" title="chutes-ai/kimi-k2-6-tee">chutes-ai/kimi-k2-6-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Kimi-K2.6-TEE</span></h3><small class="model-id">chutes-ai/kimi-k2-6-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/kimi-k3-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">21</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Kimi-K3-TEE"><strong>Kimi-K3-TEE</strong></span><small class="model-id" title="chutes-ai/kimi-k3-tee">chutes-ai/kimi-k3-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/kimi-k3-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">21</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Kimi-K3-TEE"><strong>Kimi-K3-TEE</strong></span><small class="model-id" title="chutes-ai/kimi-k3-tee">chutes-ai/kimi-k3-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Kimi-K3-TEE</span></h3><small class="model-id">chutes-ai/kimi-k3-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/mistral-nemo-instruct-2407-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">22</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Mistral-Nemo-Instruct-2407-TEE"><strong>Mistral-Nemo-Instruct-2407-TEE</strong></span><small class="model-id" title="chutes-ai/mistral-nemo-instruct-2407-tee">chutes-ai/mistral-nemo-instruct-2407-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/mistral-nemo-instruct-2407-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">22</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Mistral-Nemo-Instruct-2407-TEE"><strong>Mistral-Nemo-Instruct-2407-TEE</strong></span><small class="model-id" title="chutes-ai/mistral-nemo-instruct-2407-tee">chutes-ai/mistral-nemo-instruct-2407-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Mistral-Nemo-Instruct-2407-TEE</span></h3><small class="model-id">chutes-ai/mistral-nemo-instruct-2407-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/nemotron-3-nano-omni-30b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">23</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Nemotron-3-Nano-Omni-30B-TEE"><strong>Nemotron-3-Nano-Omni-30B-TEE</strong></span><small class="model-id" title="chutes-ai/nemotron-3-nano-omni-30b-tee">chutes-ai/nemotron-3-nano-omni-30b-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/nemotron-3-nano-omni-30b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">23</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Nemotron-3-Nano-Omni-30B-TEE"><strong>Nemotron-3-Nano-Omni-30B-TEE</strong></span><small class="model-id" title="chutes-ai/nemotron-3-nano-omni-30b-tee">chutes-ai/nemotron-3-nano-omni-30b-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Nemotron-3-Nano-Omni-30B-TEE</span></h3><small class="model-id">chutes-ai/nemotron-3-nano-omni-30b-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-235b-a22b-thinking-2507-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">24</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Qwen3-235B-A22B-Thinking-2507-TEE"><strong>Qwen3-235B-A22B-Thinking-2507-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-235b-a22b-thinking-2507-tee">chutes-ai/qwen3-235b-a22b-thinking-2507-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-235b-a22b-thinking-2507-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">24</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Qwen3-235B-A22B-Thinking-2507-TEE"><strong>Qwen3-235B-A22B-Thinking-2507-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-235b-a22b-thinking-2507-tee">chutes-ai/qwen3-235b-a22b-thinking-2507-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Qwen3-235B-A22B-Thinking-2507-TEE</span></h3><small class="model-id">chutes-ai/qwen3-235b-a22b-thinking-2507-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-32b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">25</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Qwen3-32B-TEE"><strong>Qwen3-32B-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-32b-tee">chutes-ai/qwen3-32b-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-32b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">25</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Qwen3-32B-TEE"><strong>Qwen3-32B-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-32b-tee">chutes-ai/qwen3-32b-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Qwen3-32B-TEE</span></h3><small class="model-id">chutes-ai/qwen3-32b-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-5-397b-a17b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
-      <td class="row-index" data-label="#">26</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Qwen3.5-397B-A17B-TEE"><strong>Qwen3.5-397B-A17B-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-5-397b-a17b-tee">chutes-ai/qwen3-5-397b-a17b-tee</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="muted">—</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="chutes-ai/qwen3-5-397b-a17b-tee" data-provider-id="chutes-ai" data-cn="unknown" data-modality="unknown" data-context="" data-released="" data-ms="132" data-score="">
+      <td class="row-index">26</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Qwen3.5-397B-A17B-TEE"><strong>Qwen3.5-397B-A17B-TEE</strong></span><small class="model-id" title="chutes-ai/qwen3-5-397b-a17b-tee">chutes-ai/qwen3-5-397b-a17b-tee</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="chutes-ai">Chutes</button><a class="provider-page-link" href="/providers/chutes-ai/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="muted">—</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://llm.chutes.ai/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">132ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Qwen3.5-397B-A17B-TEE</span></h3><small class="model-id">chutes-ai/qwen3-5-397b-a17b-tee</small><div class="model-badges"></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>132ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr></tbody></table></div>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://chutes.ai/app" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr></tbody></table></div>
       <p id="model-catalog-empty" class="catalog-empty" hidden><span lang="zh-CN">没有匹配的模型。换个关键词或清除筛选条件。</span><span lang="en">No models match this filter. Try another keyword or clear the filters.</span></p>
       <nav class="catalog-pagination" aria-label="分页导航 / Pagination">
         
@@ -721,8 +696,7 @@ pre code { padding:0; background:none; color:inherit; }
           const table = document.getElementById('model-catalog');
           const body = table?.querySelector('tbody');
           const dataRows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
-          const cardRows = body ? Array.from(body.querySelectorAll('.catalog-card-row')) : [];
-          const pairs = dataRows.map((row, index) => ({ row, card: cardRows[index] || null }));
+          const pairs = dataRows.map(row => ({ row }));
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
           const region = document.getElementById('model-catalog-region');
@@ -736,6 +710,7 @@ pre code { padding:0; background:none; color:inherit; }
           const chips = Array.from(document.querySelectorAll('.mdir-chip'));
           let mode = 'provider';
           let sortMode = 'group';
+          let contextMin = 0;
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
@@ -751,10 +726,13 @@ pre code { padding:0; background:none; color:inherit; }
             const regionFilter = region?.value || '';
             const modalityFilter = modality?.value || '';
             const modalities = (row.dataset.modality || '').split(',').filter(Boolean);
+            const contextValue = Number.parseInt(row.dataset.context || '', 10);
+            const matchesContext = !contextMin || (Number.isFinite(contextValue) && contextValue >= contextMin);
             return (!query || textOf(row).includes(query))
               && (!providerId || row.dataset.providerId === providerId)
               && (!regionFilter || row.dataset.cn === regionFilter)
-              && (!modalityFilter || modalities.includes(modalityFilter));
+              && (!modalityFilter || modalities.includes(modalityFilter))
+              && matchesContext;
           };
           const sortedPairs = () => {
             const list = pairs.filter(matches);
@@ -790,13 +768,21 @@ pre code { padding:0; background:none; color:inherit; }
           const apply = () => {
             const cards = section?.dataset.catalogView === 'cards';
             const visible = sortedPairs();
+            const visibleRows = new Set(visible.map(pair => pair.row));
+            pairs.forEach(pair => { pair.row.hidden = !visibleRows.has(pair.row); });
+            const cardLabels = isEnglish()
+              ? ['Row', 'Model', 'Provider', 'Context', 'Max output', 'Modality', 'Rate limit', 'API latency', 'Released', 'Status', 'Mainland CN', 'Actions']
+              : ['序号', '模型', '服务商', '上下文长度', '最大输出', '支持模态', '速率限制', '接口速度', '发布时间', '在线状态', '中国大陆可用性', '操作'];
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
             visible.forEach((pair, index) => {
               const indexCell = pair.row.querySelector('.row-index');
               if (indexCell) indexCell.textContent = String(index + 1);
-              pair.row.hidden = cards;
-              if (pair.card) pair.card.hidden = !cards;
+              pair.row.hidden = false;
+              pair.row.querySelectorAll(':scope > td').forEach((cell, cellIndex) => {
+                if (cards) cell.setAttribute('aria-label', cardLabels[cellIndex] || '');
+                else cell.removeAttribute('aria-label');
+              });
               if (!cards && sortMode === 'group') {
                 const groupCell = mode === 'provider' ? pair.row.querySelector('.provider-filter') : pair.row.querySelector('.model-cell strong');
                 const group = groupCell ? groupCell.textContent.trim() : '';
@@ -813,15 +799,18 @@ pre code { padding:0; background:none; color:inherit; }
                 }
               }
               body.appendChild(pair.row);
-              if (pair.card) body.appendChild(pair.card);
             });
             if (count) count.textContent = isEnglish() ? `Showing ${visible.length} / ${pairs.length}` : `显示 ${visible.length} 条 / 共 ${pairs.length} 条`;
             if (empty) empty.hidden = visible.length !== 0;
             chips.forEach(chip => {
               const chipRegion = chip.dataset.chipRegion;
               const chipModality = chip.dataset.chipModality;
-              const active = (chipRegion && region?.value === chipRegion) || (chipModality && modality?.value === chipModality);
+              const chipContextMin = Number.parseInt(chip.dataset.chipContextMin || '', 10);
+              const active = (chipRegion && region?.value === chipRegion)
+                || (chipModality && modality?.value === chipModality)
+                || (chipContextMin && contextMin === chipContextMin);
               chip.classList.toggle('is-active', Boolean(active));
+              chip.setAttribute('aria-pressed', String(Boolean(active)));
             });
           };
           search?.addEventListener('input', apply);
@@ -845,6 +834,10 @@ pre code { padding:0; background:none; color:inherit; }
           chips.forEach(chip => chip.addEventListener('click', () => {
             if (chip.dataset.chipRegion && region) region.value = region.value === chip.dataset.chipRegion ? '' : chip.dataset.chipRegion;
             if (chip.dataset.chipModality && modality) modality.value = modality.value === chip.dataset.chipModality ? '' : chip.dataset.chipModality;
+            if (chip.dataset.chipContextMin) {
+              const value = Number.parseInt(chip.dataset.chipContextMin, 10);
+              contextMin = contextMin === value ? 0 : value;
+            }
             apply();
           }));
           clear?.addEventListener('click', () => {
@@ -852,6 +845,7 @@ pre code { padding:0; background:none; color:inherit; }
             if (provider) provider.value = '';
             if (region) region.value = '';
             if (modality) modality.value = '';
+            contextMin = 0;
             if (sortSelect) sortSelect.value = 'group';
             sortMode = 'group';
             apply();
@@ -917,19 +911,18 @@ pre code { padding:0; background:none; color:inherit; }
         .model-directory .catalog-table .latency-value { font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }
         .model-directory .catalog-table .latency-unknown { color: var(--ink-tertiary); }
         .model-directory .catalog-latency-note { margin: -4px 0 12px; color: var(--ink-tertiary); font: 400 12px/1.7 var(--font-sans); }
-        .model-directory .catalog-card-row > td { padding: 0; border-bottom: 0; background: transparent; }
-        .model-directory .catalog-card { display: grid; gap: 10px; margin: 6px 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
-        .model-directory .catalog-card h3 { margin: 0; font: 600 15px/1.4 var(--font-mono); }
-        .model-directory .catalog-card h3 a { color: var(--ink); text-decoration: none; }
-        .model-directory .catalog-card h3 a:hover { color: var(--accent); }
-        .model-directory .catalog-card-facts { display: flex; flex-wrap: wrap; gap: 8px 18px; }
-        .model-directory .catalog-card-fact { display: grid; gap: 1px; font: 500 12.5px/1.5 var(--font-sans); color: var(--ink); }
-        .model-directory .catalog-card-fact small { color: var(--ink-tertiary); font: 500 10.5px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
-        .model-directory .catalog-card-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+        .model-directory[data-catalog-view="cards"] .catalog-table { display: block; min-width: 0; }
+        .model-directory[data-catalog-view="cards"] .catalog-table tbody { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 390px), 1fr)); gap: 12px; }
         .model-directory[data-catalog-view="cards"] .catalog-table thead { display: none; }
-        .model-directory[data-catalog-view="cards"] .catalog-row { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 2px 8px rgba(30,40,60,.04); }
+        .model-directory[data-catalog-view="cards"] .catalog-row > td { display: flex; min-width: 0; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--line-soft); background: transparent; text-align: right; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > td::before { content: attr(aria-label); flex: 0 0 auto; color: var(--ink-tertiary); font-size: 11px; text-align: left; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell { grid-column: 1 / -1; display: block; text-align: left; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell::before { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell .model-id { display: block; margin-top: 3px; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .row-index { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .source-cell { grid-column: 1 / -1; justify-content: flex-end; border: 0; }
         .model-directory[data-catalog-view="cards"] .catalog-group-row { display: none; }
-        .model-directory[data-catalog-view="cards"] .catalog-card-row { display: table-row; }
         @media (max-width: 720px) {
           .model-directory .mdir-heading-link { display: none; }
           .model-directory .mdir-field, .model-directory .mdir-field select { flex: 1 1 45%; max-width: none; }
@@ -2102,7 +2095,7 @@ pre code { padding:0; background:none; color:inherit; }
       </dl>
       <div class="badges"><span class="badge">Status</span><span class="badge">262K</span><span class="badge">API</span></div>
       <div class="actions">
-        <a class="btn" href="https://vercel.com/ai-gateway/models/ling-3-1-flash-free" target="_blank" rel="nofollow noopener"><span lang="zh-CN">注册领取</span><span lang="en">Register</span> ↗</a>
+        <a class="btn" href="https://vercel.com/ai-gateway/models/ling-3.1-flash-free" target="_blank" rel="nofollow noopener"><span lang="zh-CN">注册领取</span><span lang="en">Register</span> ↗</a>
         <a class="ghost" href="/offers/ant-ling-3-1-flash-free/"><span lang="zh-CN">详情</span><span lang="en">Details</span> </a>
       </div>
     </article><article class="model-card">
