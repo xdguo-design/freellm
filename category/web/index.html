@@ -194,6 +194,8 @@ pre code { padding:0; background:none; color:inherit; }
     article h2 a { color: var(--ink); text-decoration: none; }
     article h2 a:hover { color: var(--accent); }
     article p { margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }
+    .decision-guide, .verification-guide, .verified-list { margin-bottom: 30px; }
+    .decision-guide h2, .verification-guide h2, .verified-list h2 { font-size: clamp(22px, 3.6vw, 30px); }
     footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
@@ -207,7 +209,24 @@ pre code { padding:0; background:none; color:inherit; }
     <p><span lang="zh-CN">12 个经过核验的资源</span><span lang="en">12 verified resources</span></p>
   </header>
   <main>
-    <article>
+    <section class="decision-guide">
+      <div class="eyebrow"><span lang="zh-CN">怎么选</span><span lang="en">How to choose</span></div>
+      <h2><span lang="zh-CN">先判断它是否真的适合你的使用方式</span><span lang="en">Decide whether the offer actually fits your workload</span></h2>
+      <p><span lang="zh-CN">搜索、抓取和浏览器 API 的成本通常来自请求数、抓取页数、渲染或结果条数；“免费调用次数”只有结合计费单位才有意义。</span><span lang="en">Search, crawl and browser APIs are often metered by requests, pages, rendering or result counts, so a “free request” number only makes sense with its billing unit.</span></p>
+      <ul class="link-list"><li><strong><span lang="zh-CN">计费单位</span><span lang="en">Billing unit</span>：</strong><span lang="zh-CN">确认一次请求是否会消耗多个 credits，以及搜索、抓取、截图、JS 渲染是否分别计费。</span><span lang="en">Check whether one request can consume multiple credits and whether search, crawl, screenshots and JS rendering are metered separately.</span></li><li><strong><span lang="zh-CN">robots 与合规</span><span lang="en">Robots and compliance</span>：</strong><span lang="zh-CN">网页工具仍需遵守目标站点规则、服务条款和数据合规要求；免费额度不是无限抓取许可。</span><span lang="en">Web tools still need to respect target-site rules, terms and data compliance; free quota is not permission for unlimited crawling.</span></li><li><strong><span lang="zh-CN">Agent 适配</span><span lang="en">Agent fit</span>：</strong><span lang="zh-CN">给 Agent 使用时还要看响应结构、引用来源、超时、重试和并发限制，而不只是搜索质量。</span><span lang="en">For agent workflows, also evaluate response structure, citations, timeouts, retries and concurrency rather than search quality alone.</span></li></ul>
+      <div class="callout"><strong><span lang="zh-CN">避免误判</span><span lang="en">Avoid this mistake</span>：</strong><span lang="zh-CN">页面写“每月 N credits”时，不代表一定等于 N 次请求；详情页会尽量保留官方计量口径。</span><span lang="en">A plan advertising N monthly credits does not necessarily mean N requests; detail pages preserve the provider&#x27;s metering semantics where possible.</span></div>
+    </section>
+    <section class="verification-guide">
+      <div class="eyebrow"><span lang="zh-CN">FreeLLM 核验方法</span><span lang="en">How FreeLLM verifies</span></div>
+      <h2><span lang="zh-CN">我们优先保留可回到官方来源的事实</span><span lang="en">We keep claims traceable to official sources</span></h2>
+      <p><span lang="zh-CN">详情页尽量把免费方式、额度、有效期、地区、账号要求和官方入口拆开记录；没有证据的结论保持“待核验”，不会为了凑完整而猜测。</span><span lang="en">Detail pages separate the free mechanism, quota, validity, region, account requirements and official source. Claims without evidence remain unverified rather than being guessed.</span></p>
+      <p><span lang="zh-CN">如果平台规则发生变化，以提供商当前官方页面为准；FreeLLM 的“最后核验”用于告诉你本站什么时候重新检查过这条记录。</span><span lang="en">When provider terms change, the provider&#x27;s current official page is authoritative. FreeLLM&#x27;s “last checked” field tells you when we most recently re-verified the record.</span></p>
+    </section>
+    <section class="verified-list">
+      <div class="eyebrow"><span lang="zh-CN">已核验目录</span><span lang="en">Verified directory</span></div>
+      <h2><span lang="zh-CN">当前可用资源</span><span lang="en">Current verified resources</span></h2>
+      <p><span lang="zh-CN">下面每条记录都可以进入详情页查看官方来源、免费条件、有效期和接入要求。</span><span lang="en">Open any record below to review its official source, free-access mechanism, validity and setup requirements.</span></p>
+      <article>
           <h2><a href="/offers/keenable-search-free/"><span lang="zh-CN">Keenable · Search API free quota</span><span lang="en">Keenable · Search API free quota</span></a></h2>
           <p><span lang="zh-CN">100,000 requests / month · no card</span><span lang="en">100,000 requests / month · no card</span></p>
           <p class="muted"><span lang="zh-CN">Monthly quota; overage metered</span><span lang="en">Monthly quota; overage metered</span> · <span lang="zh-CN">Global · cloud only</span><span lang="en">Global · cloud only</span></p>
@@ -256,6 +275,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">Puter 账号自带免费 AI allowance；MiMo-V2.6-Flash 可在官方浏览器 Playground 免费试用</span><span lang="en">Every Puter account includes a free AI allowance; MiMo-V2.6-Flash is available in the official browser playground</span></p>
           <p class="muted"><span lang="zh-CN">Account allowance; fixed amount/reset not published on the model page</span><span lang="en">Account allowance; fixed amount/reset not published on the model page</span> · <span lang="zh-CN">Global · Puter account · browser no Xiaomi key</span><span lang="en">Global · Puter account · browser no Xiaomi key</span></p>
         </article>
+    </section>
   </main>
   <footer>
     <p><span lang="zh-CN">资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</span><span lang="en">Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.</span></p>

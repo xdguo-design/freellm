@@ -194,6 +194,8 @@ pre code { padding:0; background:none; color:inherit; }
     article h2 a { color: var(--ink); text-decoration: none; }
     article h2 a:hover { color: var(--accent); }
     article p { margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }
+    .decision-guide, .verification-guide, .verified-list { margin-bottom: 30px; }
+    .decision-guide h2, .verification-guide h2, .verified-list h2 { font-size: clamp(22px, 3.6vw, 30px); }
     footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
@@ -207,7 +209,24 @@ pre code { padding:0; background:none; color:inherit; }
     <p><span lang="zh-CN">10 个经过核验的资源</span><span lang="en">10 verified resources</span></p>
   </header>
   <main>
-    <article>
+    <section class="decision-guide">
+      <div class="eyebrow"><span lang="zh-CN">怎么选</span><span lang="en">How to choose</span></div>
+      <h2><span lang="zh-CN">先判断它是否真的适合你的使用方式</span><span lang="en">Decide whether the offer actually fits your workload</span></h2>
+      <p><span lang="zh-CN">AI IDE 的“免费”通常指编辑器内的订阅额度，不等于给你一个可在别处调用的通用 API Key。</span><span lang="en">For AI IDEs, “free” usually means an allowance inside the editor subscription and does not imply a reusable API key for other applications.</span></p>
+      <ul class="link-list"><li><strong><span lang="zh-CN">免费方案边界</span><span lang="en">Plan boundary</span>：</strong><span lang="zh-CN">确认免费方案包含聊天、补全、Agent、终端还是仅部分功能，以及额度多久恢复。</span><span lang="en">Confirm whether the free plan covers chat, completion, agents, terminal use or only selected features, and how often quota renews.</span></li><li><strong><span lang="zh-CN">模型可选性</span><span lang="en">Model choice</span>：</strong><span lang="zh-CN">有些 IDE 自动路由模型，页面出现某个模型名称并不代表免费方案可以永久锁定该模型。</span><span lang="en">Some IDEs route models automatically; seeing a model name does not mean the free plan can permanently pin that model.</span></li><li><strong><span lang="zh-CN">数据与权限</span><span lang="en">Data and permissions</span>：</strong><span lang="zh-CN">Agent 模式可能读取仓库、运行命令或修改文件，接入前应检查权限、隐私和可回滚性。</span><span lang="en">Agent mode may read repositories, run commands or edit files, so review permissions, privacy and rollback options before use.</span></li></ul>
+      <div class="callout"><strong><span lang="zh-CN">避免误判</span><span lang="en">Avoid this mistake</span>：</strong><span lang="zh-CN">不要把“首月免费”“学生资格”“注册送试用”混进长期免费 IDE；这些在 FreeLLM 中会拆成不同资源或明确标注有效期。</span><span lang="en">First-month deals, student eligibility and signup trials should not be mixed into a permanent free-IDE claim; FreeLLM separates or clearly labels them.</span></div>
+    </section>
+    <section class="verification-guide">
+      <div class="eyebrow"><span lang="zh-CN">FreeLLM 核验方法</span><span lang="en">How FreeLLM verifies</span></div>
+      <h2><span lang="zh-CN">我们优先保留可回到官方来源的事实</span><span lang="en">We keep claims traceable to official sources</span></h2>
+      <p><span lang="zh-CN">详情页尽量把免费方式、额度、有效期、地区、账号要求和官方入口拆开记录；没有证据的结论保持“待核验”，不会为了凑完整而猜测。</span><span lang="en">Detail pages separate the free mechanism, quota, validity, region, account requirements and official source. Claims without evidence remain unverified rather than being guessed.</span></p>
+      <p><span lang="zh-CN">如果平台规则发生变化，以提供商当前官方页面为准；FreeLLM 的“最后核验”用于告诉你本站什么时候重新检查过这条记录。</span><span lang="en">When provider terms change, the provider&#x27;s current official page is authoritative. FreeLLM&#x27;s “last checked” field tells you when we most recently re-verified the record.</span></p>
+    </section>
+    <section class="verified-list">
+      <div class="eyebrow"><span lang="zh-CN">已核验目录</span><span lang="en">Verified directory</span></div>
+      <h2><span lang="zh-CN">当前可用资源</span><span lang="en">Current verified resources</span></h2>
+      <p><span lang="zh-CN">下面每条记录都可以进入详情页查看官方来源、免费条件、有效期和接入要求。</span><span lang="en">Open any record below to review its official source, free-access mechanism, validity and setup requirements.</span></p>
+      <article>
           <h2><a href="/offers/codebuddy/"><span lang="zh-CN">CodeBuddy · Personal trial</span><span lang="en">CodeBuddy · Personal trial</span></a></h2>
           <p><span lang="zh-CN">500 credits / month · 5,000 completions</span><span lang="en">500 credits / month · 5,000 completions</span></p>
           <p class="muted"><span lang="zh-CN">Monthly / free plan</span><span lang="en">Monthly / free plan</span> · <span lang="zh-CN">China account</span><span lang="en">China account</span></p>
@@ -248,6 +267,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">每日 1,000 万免费 Token；当日有效，0 点清零，不累计</span><span lang="en">1,000 Token； ，0 ，</span></p>
           <p class="muted"><span lang="zh-CN">限时福利；每日额度仅当日有效；官方注明先到先得并可调整或终止活动</span><span lang="en">； ；</span> · <span lang="zh-CN">仅限华为云码道内使用；支持码道 IDE、VS Code 与 JetBrains 插件；不能作为外部 API 额度</span><span lang="en">； IDE、VS Code JetBrains ； API</span></p>
         </article>
+    </section>
   </main>
   <footer>
     <p><span lang="zh-CN">资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</span><span lang="en">Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.</span></p>

@@ -143,6 +143,18 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(f'href="{href}"', self.html)
 
+    def test_high_value_seo_pages_explain_decision_context(self):
+        category_api = (ROOT / "category" / "api" / "index.html").read_text(encoding="utf-8")
+        providers = (ROOT / "providers" / "index.html").read_text(encoding="utf-8")
+        openai_guide = (ROOT / "guides" / "free-openai-api-alternatives" / "index.html").read_text(encoding="utf-8")
+
+        for needle in ("先判断它是否真的适合你的使用方式", "FreeLLM 核验方法", "免费机制", "生产风险"):
+            self.assertIn(needle, category_api)
+        for needle in ("Provider、模型和免费入口是三件不同的事", "先看最近同步", "最后找免费入口"):
+            self.assertIn(needle, providers)
+        for needle in ("decision checklist", "Quota semantics", "Data handling", "FreeLLM rule"):
+            self.assertIn(needle, openai_guide)
+
     def test_indexable_legal_pages_have_crawler_and_share_metadata(self):
         for relative in ("about/index.html", "terms/index.html", "privacy/index.html"):
             page = (ROOT / relative).read_text(encoding="utf-8")
