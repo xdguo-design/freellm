@@ -5,6 +5,7 @@ from pathlib import Path
 from scripts.check_adsense import (
     EXEMPT_PAGES,
     build_report,
+    head_loader_clients,
     load_rewrites,
     read_ads_txt_publishers,
     sitemap_page_paths,
@@ -43,6 +44,8 @@ class AdsenseGateTests(unittest.TestCase):
         self.assertEqual(report["missing_loader"], [])
         self.assertEqual(report["client_mismatches"], [])
         self.assertEqual(report["noindex_with_loader"], [])
+        self.assertTrue(report["privacy_disclosure_ok"])
+        self.assertEqual(report["manual_units_on_excluded_pages"], [])
 
     def test_ads_txt_publisher_is_parsed(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -82,15 +85,25 @@ class AdsenseGateTests(unittest.TestCase):
     def test_page_with_loader_passes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write_tree(root, {"/about/": f"<html>{LOADER}</html>"}, ["/about/"], ads=VALID_ADS)
+            write_tree(root, {"/about/": f"<html><head>{LOADER}</head><body></body></html>"}, ["/about/"], ads=VALID_ADS)
             report = build_report(root)
             self.assertTrue(report["ok"], report["issues"])
+
+    def test_loader_outside_head_does_not_count_as_site_loader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            body = f"<html><head></head><body>{LOADER}</body></html>"
+            write_tree(root, {"/about/": body}, ["/about/"], ads=VALID_ADS)
+            report = build_report(root)
+            self.assertFalse(report["ok"])
+            self.assertEqual(report["missing_loader"], ["/about/"])
+            self.assertEqual(head_loader_clients(body), set())
 
     def test_client_outside_ads_txt_fails(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             other = LOADER.replace(PUBLISHER, "9999999999999999")
-            write_tree(root, {"/about/": f"<html>{other}</html>"}, ["/about/"], ads=VALID_ADS)
+            write_tree(root, {"/about/": f"<html><head>{other}</head><body></body></html>"}, ["/about/"], ads=VALID_ADS)
             report = build_report(root)
             self.assertFalse(report["ok"])
             self.assertEqual(report["client_mismatches"][0]["path"], "/about/")
@@ -124,7 +137,7 @@ class AdsenseGateTests(unittest.TestCase):
     def test_slot_flag_reflects_configuration(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            write_tree(root, {"/about/": f"<html>{LOADER}</html>"}, ["/about/"], ads=VALID_ADS)
+            write_tree(root, {"/about/": f"<html><head>{LOADER}</head><body></body></html>"}, ["/about/"], ads=VALID_ADS)
             self.assertFalse(build_report(root, slot="")["slot_configured"])
             self.assertFalse(build_report(root, slot="not-a-slot")["slot_configured"])
             self.assertTrue(build_report(root, slot="1234567890")["slot_configured"])

@@ -561,8 +561,6 @@
   <style>*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input{font:inherit}</style>
   <link rel="stylesheet" href="../css/homepage.68ec3cb553.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="../css/homepage.68ec3cb553.css"></noscript>
-  <!-- Set a real AdSense slot ID here after approval; empty keeps AdSense network loading disabled. -->
-  <script>window.FREELLM_ADSENSE_SLOT = '';</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -573,6 +571,7 @@
 <link rel="preload" as="style" href="../css/home-prototype-exact.css?v=20261002a" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="../css/home-prototype-exact.css?v=20261002a"></noscript>
 <link rel="stylesheet" href="../css/reference-rail.css?v=20261001a" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="../css/reference-rail.css?v=20261001a"></noscript>
 <noscript><link rel="stylesheet" href="../css/homepage-editorial.1dee07d530.css"><link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a"><link rel="stylesheet" href="../css/aurora-home.css?v=20260929b"></noscript>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239" crossorigin="anonymous"></script>
 </head>
 <body id="top" class="fl-ui-v2" data-fl-section="home" data-visual-style="aurora" data-reference-style="v1" data-offers-url="../data/offers-ranked.json"><script defer src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
@@ -802,42 +801,7 @@
   </script>
   <script defer fetchpriority="low" src="../js/homepage.af1ac9d3c4.js"></script>
   <script defer fetchpriority="low" src="../js/homepage-i18n.9aacee97e4.js"></script>
-  <script>
-    (() => {
-      const slot = String(window.FREELLM_ADSENSE_SLOT || '').trim();
-      if (!slot) return;
-
-      const unit = document.createElement('ins');
-      unit.className = 'adsbygoogle';
-      unit.style.display = 'block';
-      unit.dataset.adClient = 'ca-pub-2461062743308239';
-      unit.dataset.adSlot = slot;
-      unit.dataset.adFormat = 'auto';
-      unit.dataset.fullWidthResponsive = 'true';
-      document.body.appendChild(unit);
-
-      let loading = false;
-      const load = () => {
-        if (loading) return;
-        loading = true;
-        const script = document.createElement('script');
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239';
-        script.onload = () => (window.adsbygoogle = window.adsbygoogle || []).push({});
-        document.head.appendChild(script);
-      };
-      const schedule = () => {
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(load, { timeout: 3000 });
-        } else {
-          window.setTimeout(load, 1500);
-        }
-      };
-      if (document.readyState === 'complete') schedule();
-      else window.addEventListener('load', schedule, { once: true });
-    })();
-  </script>
+  
 <script id="offer-models-toggle-script">
   (() => {
     const grid = document.getElementById('catalog-offer-rows');
