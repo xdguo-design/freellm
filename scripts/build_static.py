@@ -24,7 +24,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script>
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -59,7 +59,7 @@ def ensure_pastel_shell(html: str) -> str:
     updated = html
     # SITE_CHROME below owns the navigation initializer. Older generated pages
     # may have copies both before and after the rail, so remove them first.
-    updated = re.sub(r'<script src="/js/site-navigation\.js[^"]*"></script>\s*', "", updated, flags=re.I)
+    updated = re.sub(r'<script\b[^>]*\bsrc="/js/site-navigation\.js[^"]*"[^>]*></script>\s*', "", updated, flags=re.I)
     updated = re.sub(
         r'<html(?![^>]*\bclass=)([^>]*)>',
         r'<html class="fl-pastel-ui"\1>',
@@ -293,7 +293,7 @@ def render_offer_flags(offer: dict) -> str:
     return '<div class="offer-card-flags">' + "".join(chips) + "</div>"
 
 
-def render_static_catalog(data: list[dict], limit: int = 20) -> str:
+def render_static_catalog(data: list[dict], limit: int = 11) -> str:
     cards = []
     for offer in key_first(data)[:limit]:
         href = offer_href(offer)

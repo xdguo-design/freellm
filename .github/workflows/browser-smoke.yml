@@ -30,12 +30,26 @@ jobs:
       - name: Install browser test dependencies
         run: python -m pip install playwright pytest && python -m playwright install --with-deps chromium
 
+      - name: Rebuild deterministic static artifacts in CI workspace
+        run: |
+          python scripts/build_tools_index.py
+          python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+
       - name: Compile and verify generated output
         run: |
-          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py scripts/check_public_home_performance.py
+          python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py scripts/check_public_home_performance.py scripts/check_adsense.py scripts/audit_all_pages.py scripts/ai_radar.py scripts/validate_evaluation_framework.py
           python scripts/build_tools_index.py --check
           python scripts/build_static.py --check
           python scripts/build_seo_pages.py --check
+          python scripts/audit_all_pages.py --report .tmp/all-pages-audit.json
+          python scripts/validate_evaluation_framework.py data/evaluation-framework.json
+          python -m unittest tests.test_audit_all_pages tests.test_evaluation_framework -v
+
+      - name: Check AdSense readiness
+        run: |
+          python scripts/check_adsense.py --report .tmp/adsense-readiness.json
+          python -m unittest tests.test_adsense -v
 
       - name: Run SEO quality gate unit tests
         run: python -m unittest tests.test_audit_seo_metadata -v

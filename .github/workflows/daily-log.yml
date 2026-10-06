@@ -25,6 +25,35 @@ jobs:
       - name: Validate current offers
         run: python -m crawler.cli validate data/offers.json
 
+      - name: Observe official offer sources
+        id: offer_scan
+        continue-on-error: true
+        run: >-
+          python -m crawler.cli scan
+          --sources data/sources.json
+          --out data/snapshots/daily-offer-scan.json
+          --timeout 8
+
+      - name: Sync successful offer observations
+        if: always()
+        run: |
+          if [ -f data/snapshots/daily-offer-scan.json ]; then
+            python scripts/sync_offer_observations.py \
+              --offers data/offers.json \
+              --scan data/snapshots/daily-offer-scan.json \
+              --output data/offers.json \
+              --as-of "${{ steps.date.outputs.as_of }}"
+          fi
+
+      - name: Refresh official AI release radar
+        continue-on-error: true
+        run: >-
+          python scripts/ai_radar.py
+          --sources data/ai-radar-sources.json
+          --baseline data/ai-radar-baseline.json
+          --out data/ai-radar-baseline.json
+          --timeout 15
+
       - name: Scan current model directory
         id: model_scan
         continue-on-error: true
@@ -43,6 +72,15 @@ jobs:
           if [ ! -f data/snapshots/daily-models.json ]; then
             echo '[]' > data/snapshots/daily-models.json
           fi
+
+      - name: Sync observed models into stable catalog
+        if: steps.model_scan.outcome == 'success'
+        run: >-
+          python scripts/sync_model_catalog.py
+          --input data/snapshots/daily-models.json
+          --previous data/models.json
+          --output data/models.json
+          --as-of "${{ steps.date.outputs.as_of }}"
 
       - name: Build daily change log
         if: always()
@@ -90,6 +128,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A -- \
             "data/daily-log/$AS_OF.json" \
+            data/ai-radar-baseline.json \
+            data/models.json \
+            data/offers.json \
             design/free-china-ai-index.html \
             offers category guides models providers logs skills \
             sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \

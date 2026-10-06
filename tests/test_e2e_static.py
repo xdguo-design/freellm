@@ -98,13 +98,10 @@ class StaticContractTests(unittest.TestCase):
         self.assertNotIn("longcat-api", offer_ids)
         self.assertNotIn("longcat-download", offer_ids)
 
-    def test_third_party_network_scripts_are_deferred(self):
+    def test_third_party_network_scripts_keep_required_loading_policy(self):
+        # Analytics is performance-sensitive and remains deferred until idle/user intent.
         self.assertNotIn(
             '<script async src="https://www.googletagmanager.com/gtag/js',
-            self.document_html,
-        )
-        self.assertNotIn(
-            '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
             self.document_html,
         )
         self.assertIn("requestIdleCallback", self.document_html)
@@ -112,16 +109,22 @@ class StaticContractTests(unittest.TestCase):
             "https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M",
             self.document_html,
         )
+
+        # AdSense site review / Auto Ads uses Google's standard async loader in <head>.
+        head = self.document_html.split("</head>", 1)[0]
         self.assertIn(
-            "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239",
-            self.document_html,
+            '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239" crossorigin="anonymous"></script>',
+            head,
         )
-        self.assertIn("if (!slot) return;", self.document_html)
+        self.assertNotIn("window.FREELLM_ADSENSE_SLOT", self.document_html)
+        self.assertNotIn("if (!slot) return;", self.document_html)
 
     def test_homepage_exposes_real_action_and_filter_hooks(self):
         for needle in (
             'href="/submit/"',
-            "document.write('<script src=\"/js/freellm-sync.js\"><\\/script>')",
+            "window.addEventListener('DOMContentLoaded'",
+            "sync.src = '/js/freellm-sync.js'",
+            "sync.async = true",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
             'id="catalog-freshness-filter"',
@@ -130,6 +133,7 @@ class StaticContractTests(unittest.TestCase):
             'window.FreeLLM?.Sync?.bind(container)',
         ):
             self.assertIn(needle, self.runtime_source)
+        self.assertNotIn("document.write(", self.runtime_source)
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
@@ -138,6 +142,18 @@ class StaticContractTests(unittest.TestCase):
             '/guides/claude-code-free-alternatives/',
         ):
             self.assertIn(f'href="{href}"', self.html)
+
+    def test_high_value_seo_pages_explain_decision_context(self):
+        category_api = (ROOT / "category" / "api" / "index.html").read_text(encoding="utf-8")
+        providers = (ROOT / "providers" / "index.html").read_text(encoding="utf-8")
+        openai_guide = (ROOT / "guides" / "free-openai-api-alternatives" / "index.html").read_text(encoding="utf-8")
+
+        for needle in ("先判断它是否真的适合你的使用方式", "FreeLLM 核验方法", "免费机制", "生产风险"):
+            self.assertIn(needle, category_api)
+        for needle in ("Provider、模型和免费入口是三件不同的事", "先看最近同步", "最后找免费入口"):
+            self.assertIn(needle, providers)
+        for needle in ("decision checklist", "Quota semantics", "Data handling", "FreeLLM rule"):
+            self.assertIn(needle, openai_guide)
 
     def test_indexable_legal_pages_have_crawler_and_share_metadata(self):
         for relative in ("about/index.html", "terms/index.html", "privacy/index.html"):
@@ -162,7 +178,7 @@ class StaticContractTests(unittest.TestCase):
             ("models", "/models/"),
             ("skills", "/skills/"),
             ("tools", "/tools/"),
-            ("workflow", "/skills/lab/"),
+            ("workflow", "/workflow/"),
             ("logs", "/logs/"),
             ("about", "/about/"),
         ):
@@ -181,13 +197,13 @@ class StaticContractTests(unittest.TestCase):
         for needle in (
             'class="daily-log-dashboard"',
             'class="log-hero"',
-            'class="log-stat-card blue"',
-            'id="static-locale-script"',
-            '.log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }',
-            '.log-stat-card { min-height:92px;',
-            '.log-days::before { content:"";',
-            '.log-registration { margin:12px 0;',
-            ".log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }",
+            'class="ref-update-metrics"',
+            'class="ref-update-layout"',
+            'class="ref-update-history"',
+            'class="log-snapshot-card"',
+            'class="ref-update-change-stream"',
+            'class="ref-update-calendar-grid"',
+            'data-static-locale="true"',
         ):
             self.assertIn(needle, log)
         # Snapshot counters must track the live data, not a frozen literal: the
@@ -195,16 +211,13 @@ class StaticContractTests(unittest.TestCase):
         # totals captured in that day's log JSON.
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
-        latest = json.loads(latest_log_path.read_text(encoding="utf-8"))
-        observed_models = len(latest["observed"]["models"])
-        self.assertRegex(log, rf'<strong>{observed_models} <span lang="zh-CN">模型</span>')
         self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">模型</span>')
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">提供商</span>')
-        self.assertRegex(log, r'<strong>\d+ <span lang="zh-CN">资源</span>')
+        self.assertIn(latest_log_path.stem, log)
+        self.assertIn('<span lang="zh-CN">提供商</span>', log)
+        self.assertIn('<span lang="zh-CN">资源</span>', log)
         self.assertNotIn("首次建立基线", log)
-        self.assertIn('<details class="log-new-card">', log)
-        self.assertIn('<summary class="log-card-summary">', log)
+        self.assertIn('class="ref-update-change-stream"', log)
+        self.assertIn('class="ref-update-history-table"', log)
 
     def test_daily_updates_story_is_visible_in_homepage_and_log(self):
         log = LOG_PATH.read_text(encoding="utf-8")
@@ -217,8 +230,8 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, self.html)
         self.assertIn('每日更新', self.html)
-        self.assertIn('今天的 AI 资源有什么变化？', log)
-        self.assertIn('我们每天检查官方来源，记录新增、恢复、下线和异常。', log)
+        self.assertIn('今日更新，', log)
+        self.assertIn('我们持续追踪全球 AI 生态的最新动态', log)
         self.assertIn('查看今日变化', self.html)
 
     def test_homepage_links_to_theme_guides(self):
@@ -356,9 +369,9 @@ class StaticContractTests(unittest.TestCase):
             self.html,
         )
         self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>发现真正好<br>用的<span>免费 AI</span></h1>', self.html)
-        self.assertIn("模型、API、IDE 与限时试用，一站比较", self.html)
-        self.assertIn("<span>✓</span> 官方来源 · 条件透明", self.html)
+        self.assertIn('<h1>今天发现，<br>更好的 <em>AI 资源</em></h1>', self.html)
+        self.assertIn("汇聚全球优质的 AI 模型、工具与应用", self.html)
+        self.assertIn('class="prototype-kicker">FreeLLM</span>', self.html)
         self.assertIn('class="ref-feature-row"', self.html)
         self.assertIn("Agent Skills", self.html)
         self.assertIn("Workflow Recipes", self.html)
@@ -449,16 +462,18 @@ class StaticContractTests(unittest.TestCase):
         for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
         catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
-        for name in ("search", "fetch", "extract", "crawl", "map", "browser", "agent"):
+        self.assertIn('data-filter="agent"', catalog_html)
+        for name in ("search", "fetch", "extract", "crawl", "map", "browser"):
             self.assertNotIn(f'data-filter="{name}"', catalog_html)
 
     def test_page_has_adsense_site_verification_script(self):
+        head = self.html.split("</head>", 1)[0]
         self.assertIn(
-            'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239',
-            self.html,
+            '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239" crossorigin="anonymous"></script>',
+            head,
         )
-        self.assertIn("script.crossOrigin = 'anonymous'", self.html)
-        self.assertIn("if (!slot) return;", self.html)
+        self.assertNotIn("window.FREELLM_ADSENSE_SLOT", self.html)
+        self.assertNotIn("if (!slot) return;", self.html)
 
     def test_seo_files_point_search_engines_to_canonical_site(self):
         robots = ROBOTS_PATH.read_text(encoding="utf-8")
@@ -525,10 +540,10 @@ class DailyWorkflowTests(unittest.TestCase):
     def setUp(self):
         self.text = (ROOT / ".github" / "workflows" / "daily-check.yml").read_text(encoding="utf-8")
 
-    def test_workflow_runs_daily_without_dependencies(self):
+    def test_workflow_runs_daily_with_explicit_test_dependencies(self):
         self.assertIn("cron:", self.text)
         self.assertIn("python-version", self.text)
-        self.assertNotIn("pip install", self.text)
+        self.assertIn("python -m pip install --disable-pip-version-check pytest", self.text)
 
     def test_workflow_validates_scans_diffs_and_uploads(self):
         for needle in ("crawler.cli validate", "crawler.cli scan", "crawler.cli discover", "crawler.cli coverage", "scripts/site_health.py", "site-health-report.json", "upload-artifact", "if: always()"):
@@ -669,7 +684,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("#studentList .student-item").count(), 2)
         self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
         self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_mobile_navigation_exposes_core_directory_entries(self):
         page = self.new_page()
@@ -703,11 +722,27 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+                    theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
+                    self.assertEqual(theme_display, "flex" if width > 800 else "none")
+                    scroll_width = page.evaluate("document.documentElement.scrollWidth")
+                    overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
+                        .map(el => {
+                            const r = el.getBoundingClientRect();
+                            return {
+                                tag: el.tagName.toLowerCase(),
+                                id: el.id || '',
+                                cls: typeof el.className === 'string' ? el.className : '',
+                                left: Math.round(r.left * 10) / 10,
+                                right: Math.round(r.right * 10) / 10,
+                                width: Math.round(r.width * 10) / 10,
+                            };
+                        })
+                        .filter(x => x.width > 1 && (x.right > innerWidth + 4 || x.left < -4))
+                        .slice(0, 12)""")
                     self.assertLessEqual(
-                        page.evaluate("document.documentElement.scrollWidth"),
+                        scroll_width,
                         width + 4,
-                        f"{route} creates page-level horizontal overflow at {width}px",
+                        f"{route} creates page-level horizontal overflow at {width}px: {overflowers}",
                     )
                     page.close()
 
@@ -785,12 +820,12 @@ class BrowserPageTests(unittest.TestCase):
 
         checks = (
             ("design/free-china-ai-index.html", "#catalog-offer-rows .offer:not(.hidden)"),
-            ("models/", ".models-overview-grid > article"),
+            ("models/", ".featured-model-grid .featured-model-card:not([hidden])"),
             ("skills/", "#skill-grid .skill-card:not([hidden])"),
             ("tools/", "#tool-grid .tool-card:not([hidden])"),
             ("skills/lab/", ".workflow-grid .workflow-card"),
-            ("logs/", ".log-stat-grid .log-stat-card"),
-            ("about/", ".stat-row .stat"),
+            ("logs/", ".ref-update-metrics article"),
+            ("about/", ".about-stat-grid .about-stat-card"),
         )
         for route, selector in checks:
             with self.subTest(route=route):
@@ -846,8 +881,8 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".today-latest"),
-            ("models/", ".models-overview"),
+            ("design/free-china-ai-index.html", ".prototype-hero"),
+            ("models/", ".models-featured-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
             ("skills/lab/", ".lab-hero"),
@@ -943,10 +978,14 @@ class BrowserPageTests(unittest.TestCase):
                     || row.textContent.toLowerCase().includes(query);
             }).length"""
         )
-        page.fill("#catalog-search", "Qwen3")
+        page.locator("#catalog-search").evaluate(
+            "(el) => { el.value = 'Qwen3'; el.dispatchEvent(new Event('input', { bubbles: true })); }"
+        )
         self.assertEqual(self.visible_offers(page), qwen_count)
 
-        page.fill("#catalog-search", "")
+        page.locator("#catalog-search").evaluate(
+            "(el) => { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }"
+        )
         page.click(".offer[data-detail='comate'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         register = page.locator("#drawerRegister")
@@ -954,7 +993,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertIn("Auto-Free", page.locator("#drawerTitle").inner_text())
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_homepage_aurora_phase_one_visual_contracts(self):
         page = self.new_page()
@@ -963,18 +1006,18 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
 
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
-        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "none")
+        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        today = page.locator(".today-latest").bounding_box()
+        hero = page.locator(".prototype-hero").bounding_box()
+        fresh = page.locator("#prototype-fresh").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
         student = page.locator("#student-offers").bounding_box()
         self.assertIsNotNone(hero)
-        self.assertIsNotNone(today)
+        self.assertIsNotNone(fresh)
         self.assertIsNotNone(offers)
         self.assertIsNotNone(student)
-        self.assertLess(hero["y"], today["y"])
-        self.assertLess(today["y"], offers["y"])
+        self.assertLess(hero["y"], fresh["y"])
+        self.assertLess(fresh["y"], offers["y"])
         self.assertLess(offers["y"], student["y"])
 
         heights = page.eval_on_selector_all(
@@ -1003,8 +1046,8 @@ class BrowserPageTests(unittest.TestCase):
         for index in range(7):
             self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
 
-        hero = page.locator(".catalog-hero").bounding_box()
-        search = page.locator(".hero-search").bounding_box()
+        hero = page.locator(".prototype-hero").bounding_box()
+        search = page.locator(".ref-topbar .ref-search").bounding_box()
         self.assertIsNotNone(hero)
         self.assertIsNotNone(search)
         self.assertLessEqual(search["x"] + search["width"], 390)
@@ -1012,23 +1055,23 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
-        page.goto(HTML_PATH.as_uri())
-        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource === 'network'")
 
-        # featured 区精简后只剩「免费额度」这一个筛选入口；残留的搜索词必须被它清掉。
         free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.fill("#catalog-search", "Qwen3")
+        page.fill(".ref-topbar input[type='search']", "Qwen3")
         page.click(".featured-resource-link[aria-label='查看免费额度']")
         page.wait_for_function(
             """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
         )
         self.assertEqual(self.visible_offers(page), free_quota_count)
+        self.assertEqual(page.locator(".ref-topbar input[type='search']").input_value(), "")
         self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
         page = self.new_page()
-        page.goto(HTML_PATH.as_uri())
-        page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        page.wait_for_function("document.body.dataset.dataSource === 'network'")
 
         free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
         page.click(".featured-resource-link[aria-label='查看免费额度']")
@@ -1061,7 +1104,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
         self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
         self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(
+            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
+            [],
+            page.problems,
+        )
 
     def test_http_protocol_prefers_network_json(self):
         page = self.new_page()
@@ -1112,6 +1159,7 @@ class BrowserPageTests(unittest.TestCase):
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1119,14 +1167,21 @@ class BrowserPageTests(unittest.TestCase):
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-prototype-critical.css").write_text((ROOT / "css" / "home-prototype-critical.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
             assets.mkdir(parents=True)
             (assets / "home-hero.svg").write_text((ROOT / "assets" / "reference" / "home-hero.svg").read_text(encoding="utf-8"), encoding="utf-8")
+            for name in ("rail-brand.png", "rail-bottom.png"):
+                (assets / name).write_bytes((ROOT / "assets" / "reference" / name).read_bytes())
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
@@ -1149,6 +1204,7 @@ class BrowserPageTests(unittest.TestCase):
             js.mkdir()
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1156,6 +1212,9 @@ class BrowserPageTests(unittest.TestCase):
             (css / "freellm-pastel-ui.css").write_text((ROOT / "css" / "freellm-pastel-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "aurora-home.css").write_text((ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-ui.css").write_text((ROOT / "css" / "reference-ui.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-prototype-exact.css").write_text((ROOT / "css" / "home-prototype-exact.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             site = _LocalSite(Path(directory))

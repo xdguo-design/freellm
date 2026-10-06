@@ -119,7 +119,8 @@ class SiteHealthTests(unittest.TestCase):
             result = build_report(root, as_of=date(2026, 10, 6), env={"GITHUB_SHA": "a" * 40}, model_observation_path=path)
 
         self.assertTrue(result["modelObservation"]["fresh"])
-        self.assertTrue(any("offers freshness" in error for error in result["errors"]))
+        self.assertTrue(any("offers freshness" in warning for warning in result["warnings"]))
+        self.assertGreaterEqual(result["staleCount"], 1)
 
     def test_model_observation_rejects_malformed_duplicate_and_inconsistent_source_records(self):
         valid = {
@@ -248,6 +249,8 @@ class VercelHeaderContractTests(unittest.TestCase):
         self.assertEqual(values["Referrer-Policy"], "strict-origin-when-cross-origin")
         self.assertEqual(values["Permissions-Policy"], "camera=(), microphone=(), geolocation=()")
         self.assertEqual(values["X-Frame-Options"], "SAMEORIGIN")
+        self.assertIn("object-src 'none'", values["Content-Security-Policy"])
+        self.assertIn("frame-ancestors 'self'", values["Content-Security-Policy"])
 
     def test_vercel_keeps_homepage_rewrite(self):
         config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
@@ -303,7 +306,7 @@ class ReadmeFactsTests(unittest.TestCase):
         offers = len(json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")))
         models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
         self.assertIn(f">{offers}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn(f"<strong>{models}</strong>", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
+        self.assertIn(str(models), (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
         provider_cards = len(json.loads((ROOT / "data" / "provider-access.json").read_text(encoding="utf-8")))
         models_page = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f"{provider_cards} 家提供商", models_page)

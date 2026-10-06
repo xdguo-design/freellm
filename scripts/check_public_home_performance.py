@@ -8,12 +8,10 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
 try:  # direct script execution puts scripts/ on sys.path
     from public_assets import homepage_data_asset
 except ImportError:  # package import from the repository root
     from scripts.public_assets import homepage_data_asset
-
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_URL = "https://freellm.top/"
 VIEWPORT = {"width": 390, "height": 844}
@@ -73,10 +71,10 @@ def fetch(url: str) -> dict:
 
 def expected_assets() -> list[str]:
     html = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-    assets = re.findall(
+    assets = list(dict.fromkeys(re.findall(
         r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
         html,
-    )
+    )))
     if len(assets) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {assets}")
     try:
@@ -198,13 +196,13 @@ def measure_once(browser) -> dict:
     cdp.send("Emulation.setCPUThrottlingRate", {"rate": 4})
 
     page.goto(PUBLIC_URL, wait_until="domcontentloaded", timeout=60_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=30_000)
+    page.locator("body[data-data-source]").wait_for(state="attached", timeout=30_000)
     page.wait_for_timeout(1200)
     cold = read_metrics(page)
 
     page.goto("about:blank")
     page.goto(PUBLIC_URL, wait_until="domcontentloaded", timeout=60_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=30_000)
+    page.locator("body[data-data-source]").wait_for(state="attached", timeout=30_000)
     page.wait_for_timeout(1200)
     warm = read_metrics(page)
 
@@ -242,6 +240,8 @@ def median_profile(samples: list[dict]) -> dict:
 
 
 def main() -> int:
+    from playwright.sync_api import sync_playwright
+
     assets = expected_assets()
     home = wait_for_live_release(assets)
     cache = cache_probe(home, assets)
@@ -254,6 +254,8 @@ def main() -> int:
     data_policy = cache["assets"][data_asset]["cacheControl"] or ""
     if "max-age=300" not in data_policy:
         raise SystemExit(f"homepage data asset short cache policy missing for {data_asset}: {data_policy}")
+
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)

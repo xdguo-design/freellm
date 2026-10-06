@@ -175,7 +175,11 @@ body[data-reference-style="v1"][data-fl-section="home"] .catalog-content{
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home{padding-top:0!important}
 /* The reference board is the complete homepage; everything after its own footer is legacy catalog content. */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banner,
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~*{display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-hero,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.ref-feature-row,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.today-latest{display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home .prototype-footer{display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-filter-bar{margin-top:28px}
 
 /* hero */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{

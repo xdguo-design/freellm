@@ -269,6 +269,87 @@ CATEGORY_DEFINITIONS = {
     },
 }
 
+CATEGORY_DECISION_GUIDANCE = {
+    "api": {
+        "intro_zh": "选 API 时不要只看“免费”两个字。真正影响能否接入的是免费机制、接口兼容性、地区、账号门槛和限流。",
+        "intro_en": "Do not choose an API on the word “free” alone. The practical decision is driven by the free mechanism, API compatibility, region, account requirements and rate limits.",
+        "checks": (
+            ("免费机制", "Free mechanism", "区分长期免费、周期额度、一次性 credits、公测与低价付费；不要把“价格很低”写成“永久免费”。", "Separate recurring free access, renewable quota, one-time credits, public beta and low-cost paid access; low price is not the same as permanently free."),
+            ("接口兼容", "API compatibility", "OpenAI 兼容要核对 Base URL、认证方式、模型 ID、流式输出和工具调用，而不是只看路径里有没有 /v1。", "For OpenAI compatibility, verify the base URL, authentication, model IDs, streaming and tool calling rather than assuming a /v1 path is enough."),
+            ("生产风险", "Production risk", "免费层通常没有稳定 SLA，可能限速、改价、撤下模型或要求额外验证；生产环境要准备降级与替代路由。", "Free tiers rarely guarantee a stable SLA and may change limits, pricing, models or verification requirements; production systems need fallbacks."),
+        ),
+        "pitfall_zh": "最常见的误判是把“注册送额度”“某个模型当前 ¥0”“第三方聚合器免费池”都写成同一种永久免费。FreeLLM 会把这些路径分开标注。",
+        "pitfall_en": "A common mistake is treating signup credits, a currently ¥0 model and a third-party free pool as the same kind of permanent free access. FreeLLM labels these mechanisms separately.",
+    },
+    "free-quota": {
+        "intro_zh": "免费额度适合做原型、学习和低频任务，但要先确认额度是否会恢复，以及输入、输出、缓存和工具调用是否共用同一额度。",
+        "intro_en": "Free quota is useful for prototypes, learning and light workloads, but first confirm whether it renews and whether input, output, cache and tool calls share the same allowance.",
+        "checks": (
+            ("恢复周期", "Renewal window", "优先区分每日、每月、滚动窗口和一次性额度；一次性 credits 用完后通常不会自动恢复。", "Separate daily, monthly, rolling-window and one-time allowances; signup credits usually do not renew."),
+            ("计量方式", "Metering", "确认按请求、Token、积分还是金额扣减；同样写“1M”可能代表完全不同的实际可用量。", "Check whether usage is metered by requests, tokens, credits or currency; the same “1M” label can imply very different real capacity."),
+            ("账号条件", "Account conditions", "手机号、实名、地区、新用户资格和信用卡要求会直接决定你能否拿到页面上看到的额度。", "Phone, identity, region, new-user eligibility and card requirements can determine whether the advertised quota is actually available to you."),
+        ),
+        "pitfall_zh": "如果额度只对新用户、指定地域或指定模型有效，我们会在详情页写清，不把局部优惠泛化成整个平台永久免费。",
+        "pitfall_en": "When quota applies only to new users, specific regions or selected models, the detail page says so instead of generalizing it into a platform-wide free tier.",
+    },
+    "free-ide": {
+        "intro_zh": "AI IDE 的“免费”通常指编辑器内的订阅额度，不等于给你一个可在别处调用的通用 API Key。",
+        "intro_en": "For AI IDEs, “free” usually means an allowance inside the editor subscription and does not imply a reusable API key for other applications.",
+        "checks": (
+            ("免费方案边界", "Plan boundary", "确认免费方案包含聊天、补全、Agent、终端还是仅部分功能，以及额度多久恢复。", "Confirm whether the free plan covers chat, completion, agents, terminal use or only selected features, and how often quota renews."),
+            ("模型可选性", "Model choice", "有些 IDE 自动路由模型，页面出现某个模型名称并不代表免费方案可以永久锁定该模型。", "Some IDEs route models automatically; seeing a model name does not mean the free plan can permanently pin that model."),
+            ("数据与权限", "Data and permissions", "Agent 模式可能读取仓库、运行命令或修改文件，接入前应检查权限、隐私和可回滚性。", "Agent mode may read repositories, run commands or edit files, so review permissions, privacy and rollback options before use."),
+        ),
+        "pitfall_zh": "不要把“首月免费”“学生资格”“注册送试用”混进长期免费 IDE；这些在 FreeLLM 中会拆成不同资源或明确标注有效期。",
+        "pitfall_en": "First-month deals, student eligibility and signup trials should not be mixed into a permanent free-IDE claim; FreeLLM separates or clearly labels them.",
+    },
+    "promo": {
+        "intro_zh": "优惠页最重要的不是折扣数字，而是开始时间、截止时间、自动续费、适用地区和领取资格。",
+        "intro_en": "For promotions, the important details are not only the headline discount but also start/end dates, auto-renewal, region and eligibility.",
+        "checks": (
+            ("有效期", "Validity", "优先记录官方截止日期；没有明确截止时间时，不推断活动会长期存在。", "Prefer explicit official expiry dates; when none is published, do not assume a promotion is permanent."),
+            ("续费价格", "Renewal price", "首月优惠或免费试用结束后可能自动进入付费方案，注册前应核对续费和取消规则。", "A first-month deal or trial may roll into a paid plan, so check renewal and cancellation rules before signup."),
+            ("资格限制", "Eligibility", "地区、新用户、学生、企业账号或支付方式都可能限制活动可领取范围。", "Region, new-user status, student status, enterprise accounts or payment method may limit eligibility."),
+        ),
+        "pitfall_zh": "已过期活动不会因为曾经免费就继续作为“当前免费入口”展示；FreeLLM 会降级、标记或移出主推荐。",
+        "pitfall_en": "Expired promotions are not kept as current free access simply because they were once free; FreeLLM downgrades, labels or removes them from primary recommendations.",
+    },
+    "student": {
+        "intro_zh": "学生优惠的关键是资格验证方式和毕业后的价格，而不只是“学生免费”四个字。",
+        "intro_en": "The key to student offers is how eligibility is verified and what happens after eligibility ends, not merely the phrase “free for students.”",
+        "checks": (
+            ("验证方式", "Verification", "确认需要学校邮箱、第三方学生认证、在读证明还是指定国家/学校资格。", "Check whether verification requires a school email, third-party student verification, enrollment documents or eligible countries/schools."),
+            ("权益范围", "Benefit scope", "学生计划可能只覆盖 IDE、模型请求或特定高级功能，不一定包含完整商业版权益。", "Student plans may cover only the IDE, model requests or selected premium features rather than the full commercial plan."),
+            ("资格结束", "After eligibility", "毕业、认证过期或活动结束后，账户可能降级或转为付费；提前确认续费规则。", "After graduation, verification expiry or the end of a promotion, the account may downgrade or become paid; check renewal terms in advance."),
+        ),
+        "pitfall_zh": "FreeLLM 不会把学生专属权益当作所有用户都能领取的通用免费方案。",
+        "pitfall_en": "FreeLLM does not present student-only benefits as a general free tier available to every user.",
+    },
+    "web": {
+        "intro_zh": "搜索、抓取和浏览器 API 的成本通常来自请求数、抓取页数、渲染或结果条数；“免费调用次数”只有结合计费单位才有意义。",
+        "intro_en": "Search, crawl and browser APIs are often metered by requests, pages, rendering or result counts, so a “free request” number only makes sense with its billing unit.",
+        "checks": (
+            ("计费单位", "Billing unit", "确认一次请求是否会消耗多个 credits，以及搜索、抓取、截图、JS 渲染是否分别计费。", "Check whether one request can consume multiple credits and whether search, crawl, screenshots and JS rendering are metered separately."),
+            ("robots 与合规", "Robots and compliance", "网页工具仍需遵守目标站点规则、服务条款和数据合规要求；免费额度不是无限抓取许可。", "Web tools still need to respect target-site rules, terms and data compliance; free quota is not permission for unlimited crawling."),
+            ("Agent 适配", "Agent fit", "给 Agent 使用时还要看响应结构、引用来源、超时、重试和并发限制，而不只是搜索质量。", "For agent workflows, also evaluate response structure, citations, timeouts, retries and concurrency rather than search quality alone."),
+        ),
+        "pitfall_zh": "页面写“每月 N credits”时，不代表一定等于 N 次请求；详情页会尽量保留官方计量口径。",
+        "pitfall_en": "A plan advertising N monthly credits does not necessarily mean N requests; detail pages preserve the provider's metering semantics where possible.",
+    },
+    "open-weights": {
+        "intro_zh": "开放权重解决的是模型获取问题，不代表推理成本、许可证、商用权限和部署复杂度都为零。",
+        "intro_en": "Open weights solve access to the model files, not inference cost, licensing, commercial rights or deployment complexity.",
+        "checks": (
+            ("许可证", "License", "下载前确认商用、再分发、衍生模型和受限用途条款；“可下载”不自动等于“无限制开源”。", "Check commercial use, redistribution, derivatives and restricted-use terms; downloadable does not automatically mean unrestricted open source."),
+            ("硬件成本", "Hardware cost", "根据参数量、量化方式和上下文长度估算显存、内存、存储与吞吐需求。", "Estimate VRAM, RAM, storage and throughput from parameter size, quantization and context length."),
+            ("部署路径", "Deployment path", "区分官方权重、本地运行工具与第三方托管 API；三者的免费条件和隐私边界不同。", "Separate official weights, local runtimes and third-party hosted APIs because their pricing and privacy boundaries differ."),
+        ),
+        "pitfall_zh": "FreeLLM 会把“权重免费”和“托管 API 免费”拆开，不用一个标签混淆本地部署与在线调用。",
+        "pitfall_en": "FreeLLM separates free weights from free hosted inference instead of using one label for both local deployment and online API access.",
+    },
+}
+
+
 SKILL_CATEGORY_DEFINITIONS = {
     "product-design": {"name_zh": "产品设计", "name_en": "Product design", "accent": "blue"},
     "ecommerce": {"name_zh": "电商运营", "name_en": "E-commerce", "accent": "yellow"},
@@ -389,7 +470,7 @@ LEGACY_WORKFLOW_PAGE_PATH = "/skills/lab/"
 
 # Server-side pagination: each catalog page carries at most this many rows.
 # Keeps individual HTML files small enough for fast parse/DOM build on mobile.
-MODELS_PER_PAGE = 45
+MODELS_PER_PAGE = 26
 
 _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", "audio": "语音", "video": "视频"}
 
@@ -1997,6 +2078,35 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
 '''
 
 
+
+def _category_guidance_markup(category: str) -> str:
+    guidance = CATEGORY_DECISION_GUIDANCE.get(category)
+    if not guidance:
+        return ""
+    checks = "".join(
+        f"<li><strong>{_locale_pair(title_zh, title_en)}：</strong>{_locale_pair(body_zh, body_en)}</li>"
+        for title_zh, title_en, body_zh, body_en in guidance["checks"]
+    )
+    return f'''<section class="decision-guide">
+      <div class="eyebrow">{_locale_pair("怎么选", "How to choose")}</div>
+      <h2>{_locale_pair("先判断它是否真的适合你的使用方式", "Decide whether the offer actually fits your workload")}</h2>
+      <p>{_locale_pair(guidance["intro_zh"], guidance["intro_en"])}</p>
+      <ul class="link-list">{checks}</ul>
+      <div class="callout"><strong>{_locale_pair("避免误判", "Avoid this mistake")}：</strong>{_locale_pair(guidance["pitfall_zh"], guidance["pitfall_en"])}</div>
+    </section>
+    <section class="verification-guide">
+      <div class="eyebrow">{_locale_pair("FreeLLM 核验方法", "How FreeLLM verifies")}</div>
+      <h2>{_locale_pair("我们优先保留可回到官方来源的事实", "We keep claims traceable to official sources")}</h2>
+      <p>{_locale_pair(
+          "详情页尽量把免费方式、额度、有效期、地区、账号要求和官方入口拆开记录；没有证据的结论保持“待核验”，不会为了凑完整而猜测。",
+          "Detail pages separate the free mechanism, quota, validity, region, account requirements and official source. Claims without evidence remain unverified rather than being guessed."
+      )}</p>
+      <p>{_locale_pair(
+          "如果平台规则发生变化，以提供商当前官方页面为准；FreeLLM 的“最后核验”用于告诉你本站什么时候重新检查过这条记录。",
+          "When provider terms change, the provider's current official page is authoritative. FreeLLM's “last checked” field tells you when we most recently re-verified the record."
+      )}</p>
+    </section>'''
+
 def render_category_page(category: str, offers: list[dict], site_url: str) -> str:
     definition = CATEGORY_DEFINITIONS[category]
     matching = [offer for offer in offers if category in categorize_offer(offer)]
@@ -2005,6 +2115,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     description = f"{definition['description_zh']}当前有 {len(matching)} 个经过核验的资源，均提供官方入口与有效期说明。"
     # 条目不足的分类页是薄页：既然主动 noindex，就不再挂广告代码（同模型聚合页的规则）。
     indexable = len(matching) >= MIN_OFFERS_FOR_INDEXABLE_CATEGORY
+    guidance = _category_guidance_markup(category)
     social_meta = _social_meta(site_url, path, title, description, "website", indexable=indexable)
     items = "".join(
         f'''<article>
@@ -2059,6 +2170,8 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     article h2 a {{ color: var(--ink); text-decoration: none; }}
     article h2 a:hover {{ color: var(--accent); }}
     article p {{ margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }}
+    .decision-guide, .verification-guide, .verified-list {{ margin-bottom: 30px; }}
+    .decision-guide h2, .verification-guide h2, .verified-list h2 {{ font-size: clamp(22px, 3.6vw, 30px); }}
     footer {{ color: var(--ink-secondary); font-size: 13.5px; }}
   </style>
 </head>
@@ -2072,7 +2185,13 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
     <p>{_locale_pair(f'{len(matching)} 个经过核验的资源', f'{len(matching)} verified resources')}</p>
   </header>
   <main>
-    {items}
+    {guidance}
+    <section class="verified-list">
+      <div class="eyebrow">{_locale_pair("已核验目录", "Verified directory")}</div>
+      <h2>{_locale_pair("当前可用资源", "Current verified resources")}</h2>
+      <p>{_locale_pair("下面每条记录都可以进入详情页查看官方来源、免费条件、有效期和接入要求。", "Open any record below to review its official source, free-access mechanism, validity and setup requirements.")}</p>
+      {items}
+    </section>
   </main>
   <footer>
     <p>{_locale_pair('资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。', 'Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.')}</p>
@@ -2311,9 +2430,19 @@ def render_special_guide_page(
     setup_heading: str,
     setup_html: str,
     related_html: str,
+    decision_html: str = "",
 ) -> str:
     page_url = _absolute(site_url, path)
     table_rows = _special_guide_rows(offers, site_url, rows)
+    decision_section = (
+        f'''<section>
+      <div class="eyebrow">03 / decision checklist</div>
+      <h2>Choose by integration risk, not just the headline quota</h2>
+      {decision_html}
+    </section>'''
+        if decision_html else ""
+    )
+    related_number = "04" if decision_html else "03"
     schema = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -2321,7 +2450,7 @@ def render_special_guide_page(
         "description": description,
         "url": page_url,
         "inLanguage": "en",
-        "dateModified": "2026-09-08",
+        "dateModified": "2026-10-06",
         "isPartOf": {"@type": "WebSite", "name": "Free AI Index", "url": _absolute(site_url, "/")},
         "breadcrumb": {
             "@type": "BreadcrumbList",
@@ -2375,14 +2504,15 @@ def render_special_guide_page(
       <h2>{_esc(setup_heading)}</h2>
       {setup_html}
     </section>
+    {decision_section}
     <section>
-      <div class="eyebrow">03 / related pages</div>
+      <div class="eyebrow">{related_number} / related pages</div>
       <h2>Continue exploring</h2>
       {related_html}
     </section>
   </main>
   <footer>
-    <p><strong>Last checked:</strong> 8 September 2026. Free access is always subject to provider terms, region, quota and account eligibility.</p>
+    <p><strong>Last checked:</strong> 6 October 2026. Free access is always subject to provider terms, region, quota and account eligibility.</p>
     <p><a href="{_esc(_absolute(site_url, '/'))}">Return to Free AI Index →</a></p>
   </footer>
 </body>
@@ -2421,6 +2551,15 @@ response = client.chat.completions.create(
         <li><a href="/offers/groq-free/">Groq free plan details</a></li>
         <li><a href="/offers/hf-inference-free/">Hugging Face free inference details</a></li>
       </ul>''',
+        decision_html='''<p>An OpenAI-compatible endpoint is useful when it reduces migration work, but compatibility is not binary. Before switching a prototype or agent, verify the exact behavior your application depends on.</p>
+      <ul class="link-list">
+        <li><strong>Authentication and base URL:</strong> confirm the provider's documented key format and endpoint rather than copying another provider's configuration.</li>
+        <li><strong>Model IDs and feature support:</strong> verify streaming, JSON/structured output, tool calling, embeddings and multimodal input separately; providers may support different subsets of the OpenAI API shape.</li>
+        <li><strong>Quota semantics:</strong> distinguish recurring free tiers from one-time credits, promotional pools and models temporarily listed at zero price.</li>
+        <li><strong>Region and reliability:</strong> free access may be unavailable in some regions and normally has no production SLA. Keep a fallback provider if the workload matters.</li>
+        <li><strong>Data handling:</strong> review the provider's privacy, retention and training terms before sending private code, customer data or regulated information.</li>
+      </ul>
+      <div class="callout"><strong>FreeLLM rule:</strong> this page does not imply that OpenAI's official API is free. Every alternative is an independent provider or compatibility layer and is linked to its own official source.</div>''',
     )
 
 
@@ -3303,7 +3442,21 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <style>{EDITORIAL_BASE_CSS}</style>
 <style>body {{max-width:1180px;}}h1 {{font-size:clamp(30px,5vw,48px);}}.provider-card .button {{margin-top:auto;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main><div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自各厂商自己公开的模型目录；公开 API 来源已单独标注，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from the model catalogues each provider publishes, with public-API sources labelled separately; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / {_locale_pair('按厂家浏览', 'Browse by provider')}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><h1>{_locale_pair('按厂家浏览模型', 'Browse models by provider')}</h1><p class="lead">{_locale_pair(description, f'Explore {len(providers)} AI providers and {len(models)} catalog models.')}</p><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')} →</a></p></header><main>
+<section class="provider-directory-guide">
+  <div class="eyebrow">{_locale_pair("先看懂目录", "How to read this directory")}</div>
+  <h2>{_locale_pair("Provider、模型和免费入口是三件不同的事", "Provider, model and free access are three different layers")}</h2>
+  <p>{_locale_pair(
+    "Provider 页面回答“这家厂商当前公开了哪些模型”；模型页回答“同一个模型在哪些接入路径出现”；Offer 详情页才回答“当前有哪些免费、试用、优惠或低成本入口”。把三层分开，可以避免把一个模型存在误判成它一定免费。",
+    "Provider pages answer which models a vendor currently exposes; model pages show where the same model appears; offer pages explain the current free, trial, promotional or low-cost access paths. Keeping these layers separate prevents model availability from being mistaken for free access."
+  )}</p>
+  <ul class="link-list">
+    <li><strong>{_locale_pair("先看最近同步", "Check last sync first")}：</strong>{_locale_pair("模型目录可能变化，最近同步时间可以帮助判断页面是否仍代表当前状态。", "Provider catalogues change, so the last-sync date helps you judge how current the page is.")}</li>
+    <li><strong>{_locale_pair("再看来源级别", "Then check source level")}：</strong>{_locale_pair("“厂商来源”来自公开模型目录；“操作指南”表示我们只有接入/使用证据，不把它伪装成完整模型目录。", "“Provider source” comes from a published model catalogue; “operation guide” means we have setup/use evidence but do not pretend it is a complete catalogue.")}</li>
+    <li><strong>{_locale_pair("最后找免费入口", "Finally find a free path")}：</strong>{_locale_pair("进入厂商详情后再看本站 Offer 记录，核对免费机制、地区、额度、账号要求和最后核验时间。", "Open the provider detail and then the related FreeLLM offer records to verify the free mechanism, region, quota, account requirements and last-checked date.")}</li>
+  </ul>
+</section>
+<div class="provider-grid">{"".join(cards)}</div></main><footer><p>{_locale_pair('目录数据来自各厂商自己公开的模型目录；公开 API 来源已单独标注，具体免费条件和操作步骤进入本站详细资源页核对。', 'Catalog rows come from the model catalogues each provider publishes, with public-API sources labelled separately; verify free terms and operation steps on detailed FreeLLM records.')}</p></footer></body></html>'''
 
 
 def render_provider_page(provider: dict, models: list[dict], offers: list[dict], site_url: str, operations: list[dict] | None = None, provider_access: dict[str, dict] | None = None, model_access: dict[str, dict] | None = None) -> str:
@@ -5025,6 +5178,7 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
         '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
         '<meta http-equiv="refresh" content="0;url=/workflow/">'
+        '<meta name="robots" content="noindex,follow">'
         f'<link rel="canonical" href="{_esc(destination)}">'
         '<title>工作流已迁移 · FreeLLM</title></head><body>'
         '<p>工作流页面已迁移到 <a href="/workflow/">/workflow/</a>。</p>'

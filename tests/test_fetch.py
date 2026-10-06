@@ -1,4 +1,5 @@
 import unittest
+from urllib.error import HTTPError
 from unittest.mock import patch
 
 from crawler.fetch import extract_evidence, extract_page_links, fetch_public_page, fetch_public_text_resource, read_limited
@@ -70,6 +71,38 @@ class FetchTests(unittest.TestCase):
         self.assertEqual(result["status"], "rejected")
         opener.assert_called_once()
 
+
+    def test_public_page_marks_403_as_blocked(self):
+        error = HTTPError("https://example.com/pricing", 403, "Forbidden", hdrs=None, fp=None)
+        with patch("crawler.fetch.DIRECT_OPENER.open", side_effect=error):
+            result = fetch_public_page("https://example.com/pricing", ["example.com"])
+        self.assertEqual(result["status"], "blocked")
+        self.assertEqual(result["reason"], "HTTP 403")
+
+    def test_public_page_marks_oversized_response_as_source_limit(self):
+        class Headers:
+            def get_content_type(self):
+                return "text/html"
+
+            def get_content_charset(self):
+                return "utf-8"
+
+        class Response:
+            headers = Headers()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, size):
+                return b"x" * size
+
+        with patch("crawler.fetch.DIRECT_OPENER.open", return_value=Response()):
+            result = fetch_public_page("https://example.com/docs", ["example.com"], max_bytes=8)
+        self.assertEqual(result["status"], "source_limit")
+        self.assertEqual(result["reason"], "response exceeds maximum size")
 
     def test_public_page_accepts_json_pricing_evidence(self):
         class Headers:

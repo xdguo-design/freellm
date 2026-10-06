@@ -29,6 +29,11 @@ VERCEL_CONFIG = "vercel.json"
 SITE_HOST = "https://freellm.top"
 
 CLIENT_RE = re.compile(r"adsbygoogle\.js\?client=ca-(?:pub-)?(\d+)")
+HEAD_RE = re.compile(r"<head\b[^>]*>(.*?)</head>", re.IGNORECASE | re.DOTALL)
+SCRIPT_SRC_CLIENT_RE = re.compile(
+    r"""<script\b[^>]*\bsrc=["']https://pagead2\.googlesyndication\.com/pagead/js/adsbygoogle\.js\?client=ca-(?:pub-)?(\d+)[^>]*>""",
+    re.IGNORECASE,
+)
 INS_CLIENT_RE = re.compile(r'data-ad-client="ca-(?:pub-)?(\d+)"')
 SLOT_RE = re.compile(r'data-ad-slot="(\d+)"')
 LOC_RE = re.compile(r"<loc>\s*([^<\s]+)\s*</loc>")
@@ -37,12 +42,42 @@ ADS_TXT_RE = re.compile(r"^google\.com\s*,\s*(pub-\d+)\s*,\s*DIRECT\s*,", re.IGN
 
 # 故意不带广告代码的页面。键是 URL 路径，值是理由。
 # 加新条目时请写清「为什么这页不该有广告」，不要只写「暂时不用」。
+PRIVACY_PATH = "/privacy/"
+PRIVACY_MARKERS = (
+    "Google AdSense",
+    "https://policies.google.com/technologies/partner-sites",
+    "https://www.google.com/settings/ads",
+)
+AUTO_ADS_URL_EXCLUSIONS = ("/about/", "/privacy/", "/terms/", "/favorites/", "/submit/")
+MANUAL_AD_EXCLUDED_FILES = {
+    "about/index.html",
+    "privacy/index.html",
+    "terms/index.html",
+    "favorites/index.html",
+    "submit/index.html",
+}
+
 EXEMPT_PAGES: Mapping[str, str] = {
+    "/privacy/": "隐私政策页：保留披露与退出说明，不参与广告变现",
+    "/terms/": "条款与免责声明页：法律/政策信息页保持无广告",
     "/favorites/": "noindex 的个人收藏页：无独立正文，挂广告属「内容不足」风险",
     "/submit/": "纯功能表单页：正文极少，收益趋近于 0 但增加政策风险",
     "/offers/longcat-api/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
     "/offers/longcat-download/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
 }
+
+
+def head_loader_clients(html: str) -> set[str]:
+    """Return AdSense publisher ids from real script src tags inside <head>."""
+    match = HEAD_RE.search(html)
+    if not match:
+        return set()
+    return set(SCRIPT_SRC_CLIENT_RE.findall(match.group(1)))
+
+
+def privacy_disclosure_ok(html: str) -> bool:
+    """Verify the privacy page carries the minimum Google ads disclosures."""
+    return all(marker in html for marker in PRIVACY_MARKERS)
 
 
 def sitemap_page_paths(root: Path) -> list[str]:
@@ -135,8 +170,9 @@ def build_report(root: Path, slot: str | None = None) -> dict:
             continue
         checked += 1
         html = file_path.read_text(encoding="utf-8", errors="replace")
-        clients = set(CLIENT_RE.findall(html)) | set(INS_CLIENT_RE.findall(html))
-        if not clients:
+        loader_clients = head_loader_clients(html)
+        clients = loader_clients | set(INS_CLIENT_RE.findall(html))
+        if not loader_clients:
             missing.append(path)
             continue
         unknown = sorted(clients - {p.replace("pub-", "") for p in publishers})
@@ -148,26 +184,47 @@ def build_report(root: Path, slot: str | None = None) -> dict:
     for entry in mismatched:
         issues.append(f"{entry['path']}: client {', '.join(entry['clients'])} not declared in {ADS_TXT}")
 
+    privacy_ok = True
+    if PRIVACY_PATH in page_paths:
+        privacy_file = url_path_to_file(root, PRIVACY_PATH, rewrites)
+        privacy_html = privacy_file.read_text(encoding="utf-8", errors="replace") if privacy_file.is_file() else ""
+        privacy_ok = privacy_disclosure_ok(privacy_html)
+        if not privacy_ok:
+            issues.append(
+                f"{PRIVACY_PATH}: privacy disclosure must mention Google AdSense, Google Ads Settings, "
+                "and Google's partner-sites data-use policy"
+            )
+
     slot_value = (slot if slot is not None else os.environ.get("FREELLM_ADSENSE_SLOT", "")).strip()
     slot_valid = bool(re.fullmatch(r"\d+", slot_value))
 
     with_loader = 0
     manual_units = 0
     noindex_with_loader: list[str] = []
+    manual_units_on_excluded_pages: list[str] = []
     html_files = 0
     for file_path in iter_site_html(root):
         html_files += 1
         html = file_path.read_text(encoding="utf-8", errors="replace")
-        if CLIENT_RE.search(html):
+        relative = str(file_path.relative_to(root)).replace("\\", "/")
+        if head_loader_clients(html):
             with_loader += 1
             if NOINDEX_RE.search(html):
-                noindex_with_loader.append(str(file_path.relative_to(root)).replace("\\", "/"))
-        manual_units += len(SLOT_RE.findall(html))
+                noindex_with_loader.append(relative)
+        unit_count = len(SLOT_RE.findall(html))
+        manual_units += unit_count
+        if unit_count and relative in MANUAL_AD_EXCLUDED_FILES:
+            manual_units_on_excluded_pages.append(relative)
 
     if noindex_with_loader:
         issues.append(
             "noindex page(s) carrying the AdSense loader (content-thin ad placement risk): "
             + ", ".join(noindex_with_loader)
+        )
+    if manual_units_on_excluded_pages:
+        issues.append(
+            "manual AdSense unit(s) found on legal/utility pages that should remain ad-free: "
+            + ", ".join(manual_units_on_excluded_pages)
         )
 
     return {
@@ -178,6 +235,14 @@ def build_report(root: Path, slot: str | None = None) -> dict:
         "pages_with_loader": with_loader,
         "html_files": html_files,
         "manual_ad_units": manual_units,
+        "manual_units_on_excluded_pages": manual_units_on_excluded_pages,
+        "privacy_disclosure_ok": privacy_ok,
+        "auto_ads_url_exclusions": list(AUTO_ADS_URL_EXCLUSIONS),
+        "cmp_console_required": True,
+        "cmp_note": (
+            "Publish a Google-certified CMP message in AdSense Privacy & messaging for EEA, UK, "
+            "and Switzerland. This repository gate verifies code/disclosures, not AdSense-console state."
+        ),
         "slot_configured": slot_valid,
         "slot_note": (
             "FREELLM_ADSENSE_SLOT is set: manual ad units render."

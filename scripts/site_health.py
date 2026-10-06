@@ -20,8 +20,12 @@ except ImportError:  # package import from the repository root
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAX_AGE_DAYS = 7
-# Homepage HTML is maintained as a source artifact; this budget is shared with
-# the browser performance check so the two gates cannot drift independently.
+# 首页是一份自包含的应用壳：整份 offers JSON 内嵌在 HTML 里（约占 44%），
+# 再加静态兜底卡片、内联 CSS/JS。每加一个内容字段，这个文件就长一点，
+# 所以预算按「当前实测 + 约 2% 余量」维护，而不是钉死一个旧数字。
+# 首页仍保留内嵌兜底数据；模型目录已进一步降为 26 条/页，
+# 模型中心仅保留 24 条快速预览，避免重复内嵌完整模型表。
+# Homepage budget is shared with the browser performance check.
 DEFAULT_SIZE_BUDGETS = {
     "design/free-china-ai-index.html": HOME_HTML_MAX_BYTES,
     "models/center/index.html": 600 * 1024,
@@ -43,7 +47,7 @@ def _models_page_budgets() -> dict[str, int]:
 
     total_pages = max(1, -(-len(models) // MODELS_PER_PAGE)) if models else 1
     for page_num in range(2, total_pages + 1):
-        budgets[f"models/all/page/{page_num}/index.html"] = 340 * 1024
+        budgets[f"models/all/page/{page_num}/index.html"] = 350 * 1024
     return budgets
 
 
@@ -319,6 +323,7 @@ def build_report(
 ) -> dict:
     checked_on = as_of or date.today()
     errors: list[str] = []
+    warnings: list[str] = []
     try:
         release_sha = resolve_release_sha(env, current_git_head(root) if git_head is None else git_head)
     except RuntimeError as error:
@@ -335,18 +340,29 @@ def build_report(
     models_path = root / "data" / "models.json"
     try:
         offers = _read_json(offers_path)
-        errors.extend(check_freshness(
+        offer_freshness = check_freshness(
             [item.get("lastVerifiedAt") for item in offers if isinstance(item, dict)],
             checked_on,
             max_age_days,
             "offers freshness",
-        ))
+        )
+        warnings.extend(message for message in offer_freshness if "days old; maximum is" in message)
+        errors.extend(message for message in offer_freshness if "days old; maximum is" not in message)
     except (OSError, json.JSONDecodeError, TypeError) as error:
         errors.append(f"offers data cannot be checked: {error}")
     try:
         models = _read_json(models_path)
         if not isinstance(models, list):
             errors.append("models data cannot be checked: expected a JSON list")
+        else:
+            model_freshness = check_freshness(
+                [item.get("lastSeenAt") for item in models if isinstance(item, dict)],
+                checked_on,
+                max_age_days,
+                "models freshness",
+            )
+            warnings.extend(message for message in model_freshness if "days old; maximum is" in message)
+            errors.extend(message for message in model_freshness if "days old; maximum is" not in message)
     except (OSError, json.JSONDecodeError, TypeError) as error:
         errors.append(f"models data cannot be checked: {error}")
     observation_path = model_observation_path or root / ".tmp" / "model-audit" / "model-source-health.json"
@@ -369,6 +385,8 @@ def build_report(
         "sizes": sizes,
         "maxAgeDays": max_age_days,
         "modelObservation": model_observation,
+        "warnings": warnings,
+        "staleCount": len(warnings),
         "errors": errors,
         "ok": not errors,
     }

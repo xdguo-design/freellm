@@ -103,7 +103,7 @@ let offerIndex = {};
       setNodeText('.catalog-header .brand-sub', 'brandSub');
       setNodeText('.header-submit', 'submit');
       setNodeHtml('.hero-badge', 'verified');
-      setNodeHtml('.catalog-hero h1', 'heroTitle');
+      setNodeHtml('.catalog-hero .catalog-secondary-title', 'heroTitle');
       setNodeText('.catalog-hero .hero-copy', 'heroCopy');
       setNodeAttribute('#catalog-search', 'placeholder', 'searchPlaceholder');
       setNodeAttribute('#catalog-search', 'aria-label', 'searchLabel');
@@ -791,6 +791,7 @@ let offerIndex = {};
     };
     const clearCatalogSearch = () => {
       document.getElementById('catalog-search').value = '';
+      document.querySelectorAll('.ref-topbar input[type="search"]').forEach(input => { input.value = ''; });
       filterBeforeSearch = null;
     };
     document.querySelectorAll('.featured-resource-link').forEach(link => link.addEventListener('click', event => {

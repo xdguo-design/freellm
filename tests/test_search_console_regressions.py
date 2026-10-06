@@ -4,7 +4,7 @@ import re
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,8 +16,24 @@ META_ROBOTS_RE = re.compile(
 )
 
 
+NON_PUBLIC_PREFIXES = (
+    "data/snapshots/",
+    "design/prototypes/",
+    "design/verification/",
+    "design/visual-directions/",
+    "skills/test-artifacts/",
+    "seo/",
+)
+NON_PUBLIC_FILES = {"design/about.html", "design/updates.html"}
+
+
 def _published_html_files() -> list[Path]:
-    pages = list(ROOT.rglob("index.html"))
+    pages: list[Path] = []
+    for page in ROOT.rglob("index.html"):
+        rel = page.relative_to(ROOT).as_posix()
+        if rel in NON_PUBLIC_FILES or any(rel.startswith(prefix) for prefix in NON_PUBLIC_PREFIXES):
+            continue
+        pages.append(page)
     design_home = ROOT / "design" / "free-china-ai-index.html"
     if design_home.exists():
         pages.append(design_home)
@@ -48,10 +64,14 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
     def test_published_pages_do_not_emit_locale_query_links(self) -> None:
         offenders: list[str] = []
+        href_re = re.compile(r"""href=["']([^"']+)["']""", re.IGNORECASE)
         for path in _published_html_files():
             text = path.read_text(encoding="utf-8")
-            if "?lang=" in text or "&lang=" in text:
-                offenders.append(str(path.relative_to(ROOT)))
+            for href in href_re.findall(text):
+                parsed = urlparse(href)
+                is_internal = (not parsed.netloc) or parsed.netloc in {"freellm.top", "www.freellm.top"}
+                if is_internal and "lang" in parse_qs(parsed.query, keep_blank_values=True):
+                    offenders.append(f"{path.relative_to(ROOT)}: {href}")
         self.assertEqual(
             offenders,
             [],

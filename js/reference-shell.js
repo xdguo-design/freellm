@@ -22,7 +22,7 @@
     topbar.setAttribute('role', 'search');
     const localeLabel = document.documentElement.lang === 'en' ? '中文' : 'EN';
 if (section === 'home' || section === 'models') {
-      topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg></span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-bell" type="button" aria-label="更新提醒"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></button><button class="prototype-login" type="button">登录</button><button class="prototype-register" type="button">注册</button></div>';
+      topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg></span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></button><button class="prototype-login" type="button">登录</button><button class="prototype-register" type="button">注册</button></div>';
     } else {
       const actions = ['skills', 'tools', 'workflow', 'logs', 'about'].includes(section)
         ? '<button class="ref-bell" type="button" aria-label="更新提醒" data-reference-notifications>♧</button><button class="ref-auth-button" type="button" data-auth-action="login">登录</button><button class="ref-auth-button primary" type="button" data-auth-action="register">注册</button>'
@@ -36,7 +36,7 @@ if (section === 'home' || section === 'models') {
 
     const localeButton = topbar.querySelector('.ref-locale');
     localeButton?.addEventListener('click', () => {
-      const legacyToggle = document.querySelector('[data-locale-toggle]');
+      const legacyToggle = document.querySelector('[data-locale-toggle], [data-locale-switch]');
       if (legacyToggle) legacyToggle.click();
     });
 
@@ -56,18 +56,23 @@ if (section === 'home' || section === 'models') {
     const topInput = topbar.querySelector('input');
     const targets = ['#catalog-search','#tool-search','#skill-search','#skill-library-search'].map(s => document.querySelector(s)).filter(Boolean);
     const target = targets[0];
+    const mirrorSearch = () => {
+      if (!target) return;
+      target.value = topInput.value.trim();
+      target.dispatchEvent(new Event('input', { bubbles: true }));
+      target.dispatchEvent(new Event('change', { bubbles: true }));
+    };
     const sync = () => {
       const value = topInput.value.trim();
       if (target) {
-        target.value = value;
-        target.dispatchEvent(new Event('input', { bubbles: true }));
-        target.dispatchEvent(new Event('change', { bubbles: true }));
+        mirrorSearch();
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         target.focus({ preventScroll: true });
       } else if (value) {
         location.href = '/?q=' + encodeURIComponent(value);
       }
     };
+    topInput.addEventListener('input', mirrorSearch);
     topInput.addEventListener('keydown', event => { if (event.key === 'Enter') sync(); });
     if (!window.__freellmReferenceShortcutBound) {
       window.__freellmReferenceShortcutBound = true;

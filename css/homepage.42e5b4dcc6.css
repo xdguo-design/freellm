@@ -392,8 +392,8 @@
     .catalog-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr); gap: clamp(28px, 5vw, 76px); padding: 8px 0 38px; align-items: center; }
     .catalog-hero-copy { max-width: 600px; }
     .hero-kicker, .eyebrow, .category-index { color: var(--blue); font: 10px var(--mono); text-transform: uppercase; letter-spacing: .12em; }
-    .catalog-hero h1 { margin: 16px 0 0; max-width: 600px; font: 850 clamp(58px, 8vw, 112px)/.95 var(--display); letter-spacing: -.055em; text-wrap: balance; }
-    .catalog-hero h1 span { color: var(--blue); }
+    .catalog-hero .catalog-secondary-title { margin: 16px 0 0; max-width: 600px; font: 850 clamp(58px, 8vw, 112px)/.95 var(--display); letter-spacing: -.055em; text-wrap: balance; }
+    .catalog-hero .catalog-secondary-title span { color: var(--blue); }
     .catalog-hero .hero-copy { max-width: 510px; margin: 24px 0 0; color: #4e5962; font-size: 18px; line-height: 1.8; text-wrap: pretty; }
     .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 27px; }
     .hero-cta { display: inline-flex; gap: 14px; align-items: center; padding: 13px 16px; color: white; background: var(--blue); text-decoration: none; font-weight: 850; }
@@ -529,7 +529,7 @@
       .catalog-header .local-clock { display: none; }
       .top-nav { gap: 14px; }
       .catalog-content { padding-top: 26px; }
-      .catalog-hero h1 { font-size: clamp(52px, 16vw, 78px); }
+      .catalog-hero .catalog-secondary-title { font-size: clamp(52px, 16vw, 78px); }
       .catalog-hero .hero-copy { font-size: 16px; line-height: 1.75; }
       .hero-visual { min-height: 240px; }
       .hero-visual img { min-height: 240px; }
@@ -579,8 +579,8 @@
     .catalog-hero-copy { max-width: 670px; align-self: center; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid #cfe0ff; border-radius: 999px; color: #2368f4; background: rgba(238, 246, 255, .9); font: 800 13px var(--sans); }
     .hero-badge span { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; color: white; background: var(--blue-bright); font-size: 12px; }
-    .catalog-hero h1 { max-width: 710px; margin: 24px 0 0; color: #102044; font: 850 clamp(54px, 6vw, 92px)/1.1 var(--display); letter-spacing: -.065em; }
-    .catalog-hero h1 span { display: inline; color: transparent; background: linear-gradient(100deg, #2268f4 20%, #6f39ec 90%); -webkit-background-clip: text; background-clip: text; }
+    .catalog-hero .catalog-secondary-title { max-width: 710px; margin: 24px 0 0; color: #102044; font: 850 clamp(54px, 6vw, 92px)/1.1 var(--display); letter-spacing: -.065em; }
+    .catalog-hero .catalog-secondary-title span { display: inline; color: transparent; background: linear-gradient(100deg, #2268f4 20%, #6f39ec 90%); -webkit-background-clip: text; background-clip: text; }
     .catalog-hero .hero-copy { max-width: none; margin: 12px 0 26px; color: #21345b; font: 700 clamp(23px, 2.1vw, 31px)/1.35 var(--sans); letter-spacing: -.04em; }
     .hero-search { width: min(100%, 680px); min-height: 64px; display: flex; align-items: center; padding: 4px 5px 4px 18px; border: 1.5px solid #bad2ff; border-radius: 18px; background: rgba(255,255,255,.95); box-shadow: 0 0 0 4px rgba(198, 220, 255, .3), 0 12px 30px rgba(68, 120, 229, .1); }
     .hero-search > span { color: #4c618d; font-size: 29px; line-height: 1; transform: rotate(-20deg); }
@@ -731,7 +731,7 @@
       .profile-dot, .profile-chevron { display: none; }
       .catalog-content { padding: 28px 16px 48px; }
       .catalog-hero { padding-top: 0; }
-      .catalog-hero h1 { font-size: clamp(46px, 13vw, 68px); }
+      .catalog-hero .catalog-secondary-title { font-size: clamp(46px, 13vw, 68px); }
       .catalog-hero .hero-copy { font-size: 20px; }
       .hero-search { min-height: 56px; padding-left: 12px; }
       .hero-search input { font-size: 13px; }

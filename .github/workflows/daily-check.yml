@@ -1,10 +1,31 @@
 name: daily-check
 
-# Daily verification + public-source scan. This workflow never edits public
+# Daily verification + public-source scan + release health gates. This workflow never edits public
 # data: scan/diff results land in artifacts and data/review-queue.json is only
 # regenerated locally after human review.
 
 on:
+  push:
+    branches: [dev]
+    paths:
+      - ".github/workflows/daily-check.yml"
+      - ".github/workflows/discovery-pr.yml"
+      - "crawler/**"
+      - "scripts/site_health.py"
+      - "scripts/check_public_home_performance.py"
+      - "scripts/audit_all_pages.py"
+      - "scripts/ai_radar.py"
+      - "scripts/validate_evaluation_framework.py"
+      - "data/sources.json"
+      - "data/official-model-sources.json"
+      - "data/providers.json"
+      - "data/provider-access.json"
+      - "data/models.json"
+      - "data/offers.json"
+      - "data/discovery-queries.json"
+      - "data/ai-radar-sources.json"
+      - "data/evaluation-framework.json"
+      - "tests/**"
   schedule:
     - cron: "0 1 * * *" # 01:00 UTC = 09:00 UTC+8, daily
   workflow_dispatch:
@@ -26,6 +47,9 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Install Python test dependencies
+        run: python -m pip install --disable-pip-version-check pytest
+
       - name: Validate offers schema
         run: python -m crawler.cli validate data/offers.json
 
@@ -33,12 +57,15 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Ranking engine tests
+        if: always()
         run: node --test tests/ranking.test.ts
 
       - name: Ranking artifact is current
+        if: always()
         run: node scripts/generate_ranking.ts --check
 
       - name: Scan official public sources
+        if: always()
         id: scan
         run: python -m crawler.cli scan --sources data/sources.json --out data/snapshots/latest-scan.json --timeout 8
 
@@ -118,7 +145,7 @@ jobs:
         run: python -m crawler.cli signals --input data/community-signals.json --out data/community-signals.json
 
       - name: Build source coverage report
-        if: always()
+        if: always() && steps.scan.outcome == 'success'
         run: python -m crawler.cli coverage --providers data/providers.json --scan data/snapshots/latest-scan.json --scan data/snapshots/discovery-scan.json --candidates data/candidates.json --out data/coverage.json
 
       - name: Snapshot current offers
@@ -129,7 +156,21 @@ jobs:
         if: always()
         run: python -m json.tool data/review-queue.json > /dev/null
 
+      - name: Audit all publishable HTML pages
+        if: always()
+        run: python scripts/audit_all_pages.py --report all-pages-audit.json
+
+      - name: Run official AI release radar
+        if: always()
+        continue-on-error: true
+        run: python scripts/ai_radar.py --sources data/ai-radar-sources.json --baseline data/ai-radar-baseline.json --out .tmp/ai-radar-current.json --timeout 12
+
+      - name: Validate FreeLLM evaluation framework
+        if: always()
+        run: python scripts/validate_evaluation_framework.py data/evaluation-framework.json
+
       - name: Build check (embedded page data must be current)
+        if: always()
         run: python scripts/build_static.py --check
 
       - name: Site health gate (freshness, size budgets, release SHA)
@@ -137,6 +178,7 @@ jobs:
         run: python scripts/site_health.py --model-observation .tmp/model-audit/model-source-health.json --report site-health-report.json
 
       - name: AdSense gate (ads.txt match, loader coverage, thin-page ad risk)
+        if: always()
         run: python scripts/check_adsense.py --report adsense-report.json
 
       - name: Upload scan evidence
@@ -152,6 +194,8 @@ jobs:
             data/review-queue.json
             .tmp/model-audit/
             .tmp/provider-audit/
+            .tmp/ai-radar-current.json
+            all-pages-audit.json
             site-health-report.json
             adsense-report.json
           if-no-files-found: error

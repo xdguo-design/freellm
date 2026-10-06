@@ -1,0 +1,112 @@
+{
+  "version": "freellm-eval-v1",
+  "updatedAt": "2026-10-04",
+  "principle": "No real test, no score. Every published score must be reproducible from a versioned test set and evidence.",
+  "evidenceLevels": [
+    {
+      "id": "official_verified",
+      "labelZh": "官方核验",
+      "requirement": "Official source, free terms, region/access conditions and verification date recorded."
+    },
+    {
+      "id": "connectivity_tested",
+      "labelZh": "FreeLLM 连通实测",
+      "requirement": "A real request or route probe was executed; environment, date, result and latency/error are recorded."
+    },
+    {
+      "id": "full_evaluated",
+      "labelZh": "FreeLLM 完整评测",
+      "requirement": "Versioned test set executed against an exact provider + model ID, with raw per-case results and scoring evidence."
+    }
+  ],
+  "suites": [
+    {
+      "id": "text-api-v1",
+      "scope": "Text model API",
+      "dimensions": [
+        "chinese_factual",
+        "reasoning_math",
+        "python",
+        "instruction_format",
+        "context_extraction"
+      ],
+      "scoreRange": [
+        0,
+        100
+      ]
+    },
+    {
+      "id": "coding-agent-v1",
+      "scope": "Coding agents and CLIs",
+      "dimensions": [
+        "repo_navigation",
+        "edit_correctness",
+        "test_pass_rate",
+        "tool_use",
+        "long_horizon_completion"
+      ],
+      "scoreRange": [
+        0,
+        100
+      ]
+    },
+    {
+      "id": "tool-use-v1",
+      "scope": "Tool calling / MCP / agent tools",
+      "dimensions": [
+        "schema_following",
+        "tool_selection",
+        "multi_step_reliability",
+        "error_recovery"
+      ],
+      "scoreRange": [
+        0,
+        100
+      ]
+    },
+    {
+      "id": "web-research-v1",
+      "scope": "Web and deep-research agents",
+      "dimensions": [
+        "source_quality",
+        "citation_accuracy",
+        "freshness",
+        "coverage",
+        "hallucination_rate"
+      ],
+      "scoreRange": [
+        0,
+        100
+      ]
+    },
+    {
+      "id": "multimodal-v1",
+      "scope": "Vision/audio/realtime",
+      "dimensions": [
+        "input_fidelity",
+        "instruction_following",
+        "latency",
+        "output_quality",
+        "stability"
+      ],
+      "scoreRange": [
+        0,
+        100
+      ]
+    }
+  ],
+  "requiredRunMetadata": [
+    "suiteVersion",
+    "provider",
+    "modelId",
+    "accessRoute",
+    "region",
+    "runAt",
+    "freeTierSnapshot",
+    "requestCount",
+    "successRate",
+    "p50LatencyMs",
+    "p95LatencyMs",
+    "rawEvidencePath"
+  ]
+}
