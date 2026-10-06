@@ -58,6 +58,8 @@ MANUAL_AD_EXCLUDED_FILES = {
 }
 
 EXEMPT_PAGES: Mapping[str, str] = {
+    "/privacy/": "隐私政策页：保留披露与退出说明，不参与广告变现",
+    "/terms/": "条款与免责声明页：法律/政策信息页保持无广告",
     "/favorites/": "noindex 的个人收藏页：无独立正文，挂广告属「内容不足」风险",
     "/submit/": "纯功能表单页：正文极少，收益趋近于 0 但增加政策风险",
     "/offers/longcat-api/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
