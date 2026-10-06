@@ -29,9 +29,9 @@ VERCEL_CONFIG = "vercel.json"
 SITE_HOST = "https://freellm.top"
 
 CLIENT_RE = re.compile(r"adsbygoogle\.js\?client=ca-(?:pub-)?(\d+)")
-HEAD_RE = re.compile(r"<head\\b[^>]*>(.*?)</head>", re.IGNORECASE | re.DOTALL)
+HEAD_RE = re.compile(r"<head\b[^>]*>(.*?)</head>", re.IGNORECASE | re.DOTALL)
 SCRIPT_SRC_CLIENT_RE = re.compile(
-    r"<script\\b[^>]*\\bsrc=[\"']https://pagead2\\.googlesyndication\\.com/pagead/js/adsbygoogle\\.js\\?client=ca-(?:pub-)?(\\d+)[^>]*>",
+    r"""<script\b[^>]*\bsrc=["']https://pagead2\.googlesyndication\.com/pagead/js/adsbygoogle\.js\?client=ca-(?:pub-)?(\d+)[^>]*>""",
     re.IGNORECASE,
 )
 INS_CLIENT_RE = re.compile(r'data-ad-client="ca-(?:pub-)?(\d+)"')
