@@ -1,13 +1,18 @@
 import json
 import re
+from collections import Counter
+from html import unescape
 from pathlib import Path
 
 import pytest
 
 from scripts.build_seo_pages import (
+    MODELS_PER_PAGE,
     _exclude_retired_models,
     _load_featured_agents,
+    _load_access_context,
     _load_model_access,
+    _cn_status_for_model,
     _model_catalog_row,
     build_site,
     model_record_groups,
@@ -262,7 +267,46 @@ def test_model_rows_carry_score_data_for_catalog_ranking():
         "sourceUrl": "https://directory.example/model",
     })
     assert 'data-score="94"' in row
+    assert 'class="model-id" title="alpha/model">alpha/model</small>' in row
     assert "#1744E8" in (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
+
+
+def test_model_directory_rows_store_each_record_once_and_keep_card_mode(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+
+    # The table is the complete static fallback. Card view should be a visual
+    # transformation of the same rows, rather than a second copy of every model.
+    assert 'data-catalog-view="cards"' in page
+    assert 'aria-label="中国大陆可用性"' not in page  # Labels are attached at runtime only in card mode.
+    assert 'cell.setAttribute(\'aria-label\', cardLabels[cellIndex] || \'\')' in page
+    assert 'content: attr(aria-label)' in page
+    assert 'catalog-card-row' not in page
+    assert page.count('class="catalog-row"') == MODELS_PER_PAGE
+
+
+def test_generated_model_directory_pages_fit_health_budget_and_preserve_all_records(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    pages = [tmp_path / "models" / "all" / "index.html"]
+    pages.extend(sorted((tmp_path / "models" / "all").glob("page/*/index.html")))
+
+    assert pages
+    assert all(page.stat().st_size <= 340 * 1024 for page in pages)
+    rendered = "".join(page.read_text(encoding="utf-8") for page in pages)
+    expected = _exclude_retired_models(
+        json.loads(MODELS_PATH.read_text(encoding="utf-8")),
+        _load_model_access(OFFERS_PATH),
+    )
+    rendered_ids = Counter(
+        unescape(model_id)
+        for model_id in re.findall(
+            r'<tr class="catalog-row"[^>]*>.*?<small class="model-id"[^>]*>([^<]*)</small>',
+            rendered,
+            flags=re.DOTALL,
+        )
+    )
+    expected_ids = Counter(str(model.get("id") or "") for model in expected)
+    assert rendered_ids == expected_ids
 
 
 def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
@@ -274,6 +318,80 @@ def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
     assert "共" in page
     assert "Catalog source" in page
     assert "Showing ${visible.length} / ${pairs.length}" in page
+
+
+def test_model_directory_exposes_evidence_backed_scenario_filters(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "all" / "index.html").read_text(encoding="utf-8")
+
+    assert 'aria-label="场景快捷筛选 / Scenario filters"' in page
+    assert 'data-chip-context-min="128000"' in page
+    assert '128K+ 上下文' in page
+    assert '128K+ context' in page
+    assert 'data-chip-modality="image"' in page
+    assert 'data-chip-modality="audio"' in page
+    assert 'data-chip-region="available"' in page
+    assert 'aria-pressed="false"' in page
+    # No scenario claims a capability that the model schema does not record.
+    assert "编程专家" not in page
+    assert "Coding specialist" not in page
+
+
+def test_model_directory_scenario_filters_use_catalog_evidence_and_compose():
+    source = (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
+
+    assert "row.dataset.context" in source
+    assert "row.dataset.modality" in source
+    assert "row.dataset.cn" in source
+    assert "contextMin" in source
+    assert "Number.isFinite(contextValue)" in source
+    assert "contextValue >= contextMin" in source
+    # Scenario predicates are added to, rather than replacing, existing filters.
+    assert "&& (!providerId || row.dataset.providerId === providerId)" in source
+    assert "&& (!regionFilter || row.dataset.cn === regionFilter)" in source
+    assert "&& (!modalityFilter || modalities.includes(modalityFilter))" in source
+    assert "&& matchesContext" in source
+    assert "contextMin = 0" in source
+    assert "chip.setAttribute('aria-pressed', String(Boolean(active)))" in source
+    assert 'id="model-catalog-empty" class="catalog-empty" hidden' in source
+    assert "No models match this filter." in source
+
+
+def test_scenario_filter_row_evidence_matches_catalog_context_modalities_and_region_policy(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page_text = _all_catalog_pages(tmp_path)
+    rows = {
+        unescape(model_id): (region, modality.split(",") if modality else [], context)
+        for model_id, region, modality, context in re.findall(
+            r'<tr class="catalog-row" data-model-id="([^"]*)" data-provider-id="[^"]*" '
+            r'data-cn="([^"]*)" data-modality="([^"]*)" data-context="([^"]*)"',
+            page_text,
+        )
+    }
+    models = _exclude_retired_models(
+        json.loads(MODELS_PATH.read_text(encoding="utf-8")),
+        _load_model_access(OFFERS_PATH),
+    )
+    provider_cards, policies, model_access = _load_access_context(ROOT / "data")
+    model_by_id = {str(model.get("id") or ""): model for model in models}
+
+    long_context = [model for model in models if str(model.get("context") or "").isdigit() and int(model["context"]) >= 128000]
+    image_models = [model for model in models if "image" in (model.get("modality") or [])]
+    audio_models = [model for model in models if "audio" in (model.get("modality") or [])]
+    missing_context = [model for model in models if not str(model.get("context") or "").isdigit()]
+
+    assert long_context and all(int(rows[model["id"]][2]) >= 128000 for model in long_context)
+    assert image_models and all("image" in rows[model["id"]][1] for model in image_models)
+    assert audio_models and all("audio" in rows[model["id"]][1] for model in audio_models)
+    assert missing_context and all(rows[model["id"]][2] == "" for model in missing_context)
+    assert all(
+        rows[model_id][0] == _cn_status_for_model(model, provider_cards, policies, model_access)
+        for model_id, model in model_by_id.items()
+    )
+    # A policy-backed filter can correctly return no rows; absence of CN evidence
+    # must remain unknown instead of being promoted to available.
+    if not any(_cn_status_for_model(model, provider_cards, policies, model_access) == "available" for model in models):
+        assert not any(region == "available" for region, _, _ in rows.values())
 
 
 def test_model_center_legacy_route_is_not_in_sitemap(tmp_path):

@@ -16,6 +16,12 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
+try:  # direct script execution puts scripts/ on sys.path
+    from site_budgets import HOME_HTML_MAX_BYTES
+    from public_assets import homepage_data_asset
+except ImportError:  # package import from the repository root
+    from scripts.site_budgets import HOME_HTML_MAX_BYTES
+    from scripts.public_assets import homepage_data_asset
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE_COMMIT = os.environ.get("FREELLM_PERF_BASELINE", "1bb5a89cadd2a55b4e775e15e8ad42aff3996411")
@@ -59,7 +65,7 @@ class PerfHandler(SimpleHTTPRequestHandler):
         path = self.path.split("?", 1)[0]
         if re.search(r"/(?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js)$", path):
             self.send_header("Cache-Control", "public, max-age=31536000, immutable")
-        elif path.endswith("/data/offers.json"):
+        elif path.endswith(("/data/offers.json", "/data/offers-ranked.json")):
             self.send_header("Cache-Control", "public, max-age=300, must-revalidate")
         else:
             self.send_header("Cache-Control", "public, max-age=0, must-revalidate")
@@ -262,7 +268,8 @@ def remote_cache_probe() -> dict:
         ))
         result["homepageSplitRefs"] = bool(asset_paths)
         result["fingerprintedAssetRefs"] = [path for path in asset_paths if re.search(r"\.[0-9a-f]{10}\.", path)]
-        for path in (*asset_paths, "data/offers.json"):
+        data_asset = homepage_data_asset(decoded, PUBLIC_URL)
+        for path in (*asset_paths, data_asset):
             url = PUBLIC_URL.rstrip("/") + "/" + path
             first = fetch_remote(url)
             headers = first["headers"]
@@ -287,14 +294,18 @@ def main() -> int:
     current_path = ROOT / "design" / "free-china-ai-index.html"
     current_size = current_path.stat().st_size
     current_html = current_path.read_text(encoding="utf-8")
-    if current_size > 100_000:
-        raise SystemExit(f"homepage HTML budget exceeded: {current_size} bytes")
+    if current_size > HOME_HTML_MAX_BYTES:
+        raise SystemExit(
+            f"homepage HTML budget exceeded: {current_size} bytes "
+            f"(budget {HOME_HTML_MAX_BYTES} bytes)"
+        )
     fingerprint_refs = re.findall(
         r'(?:href|src)="\.\./((?:css|js)/homepage(?:-editorial|-i18n)?\.[0-9a-f]{10}\.(?:css|js))"',
         current_html,
     )
     if len(fingerprint_refs) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {fingerprint_refs}")
+    data_asset = homepage_data_asset(current_html, PUBLIC_URL)
 
     vercel_config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
     cache_headers = {
@@ -312,13 +323,13 @@ def main() -> int:
     ):
         if cache_headers.get(source, {}).get("cache-control") != "public, max-age=31536000, immutable":
             raise SystemExit(f"immutable cache rule missing for {source}")
-    offers_headers = cache_headers.get("/data/offers.json", {})
-    if offers_headers.get("cache-control") != "public, max-age=300, must-revalidate":
-        raise SystemExit("offers.json browser cache rule missing")
-    if offers_headers.get("cdn-cache-control") != "public, max-age=60":
-        raise SystemExit("offers.json downstream CDN cache rule missing")
-    if offers_headers.get("vercel-cdn-cache-control") != "public, max-age=60":
-        raise SystemExit("offers.json Vercel CDN cache rule missing")
+    data_headers = cache_headers.get("/" + data_asset, {})
+    if data_headers.get("cache-control") != "public, max-age=300, must-revalidate":
+        raise SystemExit(f"homepage data asset browser cache rule missing for {data_asset}")
+    if data_headers.get("cdn-cache-control") != "public, max-age=60":
+        raise SystemExit(f"homepage data asset downstream CDN cache rule missing for {data_asset}")
+    if data_headers.get("vercel-cdn-cache-control") != "public, max-age=60":
+        raise SystemExit(f"homepage data asset Vercel CDN cache rule missing for {data_asset}")
 
     with tempfile.TemporaryDirectory() as directory:
         temp = Path(directory)
@@ -383,7 +394,7 @@ def main() -> int:
             "homepageEditorialCssBytes": (ROOT / "css" / "homepage-editorial.css").stat().st_size,
             "homepageJsBytes": (ROOT / "js" / "homepage.js").stat().st_size,
             "homepageI18nJsBytes": (ROOT / "js" / "homepage-i18n.js").stat().st_size,
-            "offersJsonBytes": (ROOT / "data" / "offers.json").stat().st_size,
+            "homepageDataBytes": (ROOT / data_asset).stat().st_size,
             "fingerprintedAssets": fingerprint_refs,
         },
         "cachePolicy": {

@@ -576,7 +576,8 @@ let offerIndex = {};
       container.replaceChildren();
       const error = document.createElement('div');
       error.className = 'offer-error';
-      error.textContent = 'Offer data unavailable. The directory could not load data/offers.json or the external data/offers.js fallback.';
+      const dataUrl = document.body.dataset.offersUrl || '../data/offers.json';
+      error.textContent = `Offer data unavailable. The directory could not load ${dataUrl} or the external data/offers.js fallback.`;
       container.append(error);
       document.getElementById('catalog-last-checked').textContent = `${localeText('dateUnknown')} · ${localeText('footerData')}`;
       document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh ? `0 ${localeText('offer')}` : `${localeText('showing')} 0 ${localeText('offers')}`;
@@ -610,14 +611,14 @@ let offerIndex = {};
       }
       try {
         const response = await fetch(document.body.dataset.offersUrl || '../data/offers.json');
-        if (!response.ok) throw new Error(`offers.json returned ${response.status}`);
+        if (!response.ok) throw new Error(`homepage data returned ${response.status}`);
         const data = await response.json();
         if (Array.isArray(data) && data.length) {
           offerDataSource = 'network';
           return data;
         }
       } catch (error) {
-        console.warn(`offers.json unavailable (${error.message}); falling back to external data bundle.`);
+        console.warn(`Homepage data unavailable (${error.message}); falling back to external data bundle.`);
         try {
           const data = await loadOfferBundle();
           offerDataSource = 'embedded-fallback';

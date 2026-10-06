@@ -62,7 +62,7 @@ jobs:
         if: always()
         run: |
           mkdir -p .tmp/model-audit
-          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-audit/fresh-models.json             --providers-out .tmp/model-audit/fresh-providers.json             --date "$(date -u +%F)"             --timeout 20
+          python scripts/build_model_catalog.py             --sources data/official-model-sources.json             --curated data/models-curated.json             --models-out .tmp/model-audit/fresh-models.json             --providers-out .tmp/model-audit/fresh-providers.json             --health-out .tmp/model-audit/model-source-health.json             --date "$(date -u +%F)"             --timeout 20
 
       - name: Compare published models with today's sources
         if: always()
@@ -133,7 +133,8 @@ jobs:
         run: python scripts/build_static.py --check
 
       - name: Site health gate (freshness, size budgets, release SHA)
-        run: python scripts/site_health.py --report site-health-report.json
+        if: always()
+        run: python scripts/site_health.py --model-observation .tmp/model-audit/model-source-health.json --report site-health-report.json
 
       - name: AdSense gate (ads.txt match, loader coverage, thin-page ad risk)
         run: python scripts/check_adsense.py --report adsense-report.json

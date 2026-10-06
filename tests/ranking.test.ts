@@ -98,6 +98,16 @@ test("missing behavior data is neutral instead of zero", () => {
   assert.equal(result.components.behaviorScore, 50);
 });
 
+test("an empty behavior dataset keeps the published neutral score", () => {
+  const result = calculateRanking(
+    { id: "x", date: "2026-09-22", freeMechanism: "permanent", lastVerifiedAt: "2026-09-22" },
+    "2026-09-22",
+    config,
+    { siteAverageCtr: 0.08, items: {} },
+  );
+  assert.equal(result.components.behaviorScore, config.behavior.neutralScore);
+});
+
 test("diversity keeps one provider from filling the top window", () => {
   const items = [
     { id: "a1", provider: "A", order: 1, date: "2026-09-22", freeMechanism: "permanent", lastVerifiedAt: "2026-09-22" },

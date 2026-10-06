@@ -1,6 +1,10 @@
 import json
+import os
 import re
+import subprocess
 from pathlib import Path
+
+import pytest
 
 from scripts.build_seo_pages import (
     CATEGORY_DEFINITIONS,
@@ -83,10 +87,26 @@ def test_offer_quick_start_matches_product_type():
 
     groq_page = render_offer_page(by_id["groq-free"], offers, "https://freellm.top")
     groq_quick = groq_page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
-    assert "获取 API Key" in groq_quick
+    assert "Create a Groq account and generate an API key in the console" in groq_quick
+    assert "Groq account" in groq_quick
     assert "发送第一条请求" in groq_quick
     assert "Copyable command" in groq_quick
     assert "GROQ_API_KEY" in groq_quick
+
+
+def test_ling_model_page_renders_its_registration_prerequisites_and_steps():
+    offers = read_offers()
+    ling = next(offer for offer in offers if offer["id"] == "ant-ling-3-1-flash-free")
+
+    page = render_offer_page(ling, offers, "https://freellm.top")
+    quick_start = page.split('<section class="quick-start">', 1)[1].split("</section>", 1)[0]
+
+    assert "Vercel AI Gateway API key" in quick_start
+    assert "创建 AI Gateway API Key" in quick_start
+    assert "inclusionai/ling-3.1-flash-free" in quick_start
+    assert "促销期截至 2026-10-13" in quick_start
+    assert "Create an AI Gateway API key" in quick_start
+    assert "Model registration page" in quick_start
 
 
 def test_core_theme_guides_have_decision_layer_and_clean_related_links(tmp_path):
@@ -653,6 +673,149 @@ def test_build_site_check_detects_stale_output(tmp_path):
     sitemap = tmp_path / "sitemap.xml"
     sitemap.write_text(sitemap.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     assert not build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top", check=True)
+
+
+def test_expected_files_use_the_injected_data_directory(tmp_path, monkeypatch):
+    from scripts import build_seo_pages
+
+    # An unrelated global data root must not leak into a build that was given
+    # its own complete data directory.
+    monkeypatch.setattr(build_seo_pages, "ACCESS_DATA_DIR", tmp_path / "wrong-global-data")
+    files, _ = build_seo_pages._expected_files(
+        read_offers(),
+        "https://freellm.top",
+        read_models(),
+        data_dir=ROOT / "data",
+    )
+
+    assert Path("models/all/index.html") in files
+    assert "latency-value" in files[Path("models/all/index.html")]
+
+
+def test_check_detects_only_safe_obsolete_manifest_routes_without_deleting(tmp_path, capsys):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    retired = tmp_path / "offers" / "obsolete-route" / "index.html"
+    retired.parent.mkdir(parents=True)
+    retired.write_text("obsolete", encoding="utf-8")
+    unrelated = tmp_path / "private" / "index.html"
+    unrelated.parent.mkdir()
+    unrelated.write_text("unmanaged", encoding="utf-8")
+    outside = tmp_path.parent / f"{tmp_path.name}-outside" / "index.html"
+    outside.parent.mkdir()
+    outside.write_text("outside", encoding="utf-8")
+
+    manifest_path = tmp_path / ".seo-pages-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].extend([
+        "offers/obsolete-route/index.html",
+        "../" + outside.parent.name + "/index.html",
+        "private/index.html",
+    ])
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    assert not build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top", check=True)
+
+    report = capsys.readouterr().out
+    assert "offers/obsolete-route/index.html" in report
+    assert "outside" not in report
+    assert retired.read_text(encoding="utf-8") == "obsolete"
+    assert unrelated.read_text(encoding="utf-8") == "unmanaged"
+    assert outside.read_text(encoding="utf-8") == "outside"
+
+
+def test_check_reports_malformed_manifest_without_deleting_pages(tmp_path, capsys):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = tmp_path / "offers" / "codebuddy" / "index.html"
+    previous = page.read_text(encoding="utf-8")
+    (tmp_path / ".seo-pages-manifest.json").write_text('{"files": [', encoding="utf-8")
+
+    assert not build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top", check=True)
+
+    assert "invalid SEO manifest" in capsys.readouterr().out
+    assert page.read_text(encoding="utf-8") == previous
+
+
+def test_cleanup_unlinks_stale_symlink_route_without_deleting_its_target(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    target = tmp_path / "offers" / "codebuddy" / "index.html"
+    alias = tmp_path / "offers" / "retired-alias" / "index.html"
+    alias.parent.mkdir(parents=True)
+    try:
+        alias.symlink_to(target)
+    except (OSError, NotImplementedError) as error:
+        pytest.skip(f"symlink creation is unavailable: {error}")
+    manifest_path = tmp_path / ".seo-pages-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append("offers/retired-alias/index.html")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    assert not alias.exists()
+    assert target.is_file()
+    assert "CodeBuddy" in target.read_text(encoding="utf-8")
+
+
+def test_cleanup_rejects_directory_link_ancestors_without_junction_api(tmp_path, monkeypatch):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    target = tmp_path / "offers" / "codebuddy" / "index.html"
+    link_dir = tmp_path / "offers" / "retired-parent"
+    try:
+        if os.name == "nt":
+            result = subprocess.run(
+                ["cmd", "/c", "mklink", "/J", str(link_dir), str(target.parent)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode:
+                pytest.skip(f"junction creation is unavailable: {result.stderr or result.stdout}")
+            # Simulate Python 3.11, where Path.is_junction() is unavailable.
+            monkeypatch.setattr(Path, "is_junction", lambda self: False, raising=False)
+        else:
+            link_dir.symlink_to(target.parent, target_is_directory=True)
+    except (OSError, NotImplementedError) as error:
+        pytest.skip(f"directory link creation is unavailable: {error}")
+
+    manifest_path = tmp_path / ".seo-pages-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append("offers/retired-parent/index.html")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    assert target.is_file()
+    assert "CodeBuddy" in target.read_text(encoding="utf-8")
+
+
+def test_manifest_with_nul_path_is_ignored_by_check_and_cleanup(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    target = tmp_path / "offers" / "codebuddy" / "index.html"
+    manifest_path = tmp_path / ".seo-pages-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"].append("offers/\x00bad/index.html")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+    assert build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top", check=True)
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+
+    assert target.is_file()
+    assert "CodeBuddy" in target.read_text(encoding="utf-8")
+
+
+def test_safe_manifest_page_fails_closed_when_path_resolution_errors(tmp_path, monkeypatch):
+    from scripts import build_seo_pages
+
+    original_resolve = Path.resolve
+
+    def fail_for_loop_path(self, *args, **kwargs):
+        if self.name == "loop":
+            raise RuntimeError("symlink loop")
+        return original_resolve(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", fail_for_loop_path)
+
+    assert build_seo_pages._safe_manifest_page(tmp_path, "offers/loop/index.html") is None
 
 
 def test_sensecore_offer_lists_token_plan_free_models():

@@ -9020,7 +9020,7 @@
         "contextWindow": "262,144 tokens（Vercel AI Gateway 当前提供商路由）",
         "quota": "限时免费至 2026-10-13；Vercel 标注促销结束后 -free ID 停止服务",
         "note": "Vercel AI Gateway 模型目录显示当前由 Novita AI 提供免费路由。该窗口与蚂蚁百灵官方平台规则分开核验。",
-        "sourceUrl": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+        "sourceUrl": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
       }
     ],
     "type": [
@@ -9055,9 +9055,9 @@
     "validity": "Free through 2026-10-13 according to Vercel; availability may change.",
     "access": "Vercel AI Gateway account and API key; provider availability and network access can vary.",
     "command": "Call inclusionai/ling-3.1-flash-free through the Vercel AI Gateway OpenAI-compatible Chat Completions API.",
-    "register": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free",
-    "registerLabel": "打开 Vercel 免费模型页",
-    "registerLabelEn": "Open Vercel free model page",
+    "register": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free",
+    "registerLabel": "模型注册页",
+    "registerLabelEn": "Model registration page",
     "links": [
       [
         "FreeLLM 二级详情页",
@@ -9065,7 +9065,7 @@
       ],
       [
         "Vercel 模型页",
-        "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+        "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
       ],
       [
         "Vercel 发布说明",
@@ -9078,7 +9078,7 @@
     ],
     "sourceUrls": [
       "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway",
-      "https://vercel.com/ai-gateway/models/ling-3-1-flash-free",
+      "https://vercel.com/ai-gateway/models/ling-3.1-flash-free",
       "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
     ],
     "usageGuide": {
@@ -9088,13 +9088,19 @@
         "Vercel account",
         "Vercel AI Gateway API key"
       ],
-      "steps": [
-        "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
-        "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
-        "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
-        "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
-      ],
-      "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
+        "steps": [
+          "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
+          "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
+          "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
+          "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
+        ],
+        "stepsEn": [
+          "Open the Ling 3.1 Flash (Free) model page in Vercel AI Gateway and sign in.",
+          "Create an AI Gateway API key; never expose it in browser-side code.",
+          "Send requests with model ID inclusionai/ling-3.1-flash-free and check the actual provider and usage in the dashboard.",
+          "The promotion ends on 2026-10-13; check the model page and billing status before using it afterward."
+        ],
+        "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${AI_GATEWAY_API_KEY}",
       "examples": {
@@ -9128,7 +9134,7 @@
         },
         {
           "label": "Vercel 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+          "url": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
         },
         {
           "label": "Vercel Chat Completions API 文档",
@@ -9269,7 +9275,7 @@
         },
         {
           "label": "Vercel 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/ling-3-1-flash-free"
+          "url": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
         },
         {
           "label": "Vercel Chat Completions API 文档",

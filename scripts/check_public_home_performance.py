@@ -9,6 +9,10 @@ import urllib.request
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
+try:  # direct script execution puts scripts/ on sys.path
+    from public_assets import homepage_data_asset
+except ImportError:  # package import from the repository root
+    from scripts.public_assets import homepage_data_asset
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_URL = "https://freellm.top/"
@@ -75,7 +79,11 @@ def expected_assets() -> list[str]:
     )
     if len(assets) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {assets}")
-    return assets
+    try:
+        data_asset = homepage_data_asset(html, PUBLIC_URL)
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
+    return [*assets, data_asset]
 
 
 def wait_for_live_release(assets: list[str]) -> dict:
@@ -103,7 +111,7 @@ def cache_probe(home: dict, assets: list[str]) -> dict:
         },
         "assets": {},
     }
-    for path in [*assets, "data/offers.json"]:
+    for path in assets:
         first = fetch(PUBLIC_URL + path)
         second = fetch(PUBLIC_URL + path)
         result["assets"][path] = {
@@ -242,9 +250,10 @@ def main() -> int:
         policy = cache["assets"][path]["cacheControl"] or ""
         if "max-age=31536000" not in policy or "immutable" not in policy:
             raise SystemExit(f"immutable cache policy missing on production asset {path}: {policy}")
-    offers_policy = cache["assets"]["data/offers.json"]["cacheControl"] or ""
-    if "max-age=300" not in offers_policy:
-        raise SystemExit(f"offers.json short cache policy missing: {offers_policy}")
+    data_asset = homepage_data_asset(home["body"].decode("utf-8", errors="replace"), PUBLIC_URL)
+    data_policy = cache["assets"][data_asset]["cacheControl"] or ""
+    if "max-age=300" not in data_policy:
+        raise SystemExit(f"homepage data asset short cache policy missing for {data_asset}: {data_policy}")
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
@@ -280,16 +289,17 @@ def main() -> int:
     if missed:
         raise SystemExit(f"production fingerprinted assets missed browser cache: {missed}")
 
-    warm_offer = warm.get("/data/offers.json", {})
-    warm_offer_transfer = warm_offer.get("transferSize", 0)
-    warm_offer_body = warm_offer.get("encodedBodySize", 0)
+    data_asset = homepage_data_asset(home["body"].decode("utf-8", errors="replace"), PUBLIC_URL)
+    warm_data = warm.get("/" + data_asset, {})
+    warm_data_transfer = warm_data.get("transferSize", 0)
+    warm_data_body = warm_data.get("encodedBodySize", 0)
     # Cache hit and 304 revalidation are both fine: no entry or a bodyless
     # small transfer means the browser used its cache. Only a real re-download
     # (large transfer) — or a transfer that somehow carried no body — fails.
-    if warm_offer_transfer > 1024 or (0 < warm_offer_transfer and warm_offer_body <= 0):
+    if warm_data_transfer > 1024 or (0 < warm_data_transfer and warm_data_body <= 0):
         raise SystemExit(
-            "production offers.json did not use browser cache or conditional revalidation "
-            f"(transfer={warm_offer_transfer}, body={warm_offer_body})"
+            f"production {data_asset} did not use browser cache or conditional revalidation "
+            f"(transfer={warm_data_transfer}, body={warm_data_body})"
         )
 
     return 0

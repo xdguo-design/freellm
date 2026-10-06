@@ -1,9 +1,12 @@
 import json
 from pathlib import Path
+from unittest.mock import patch
 
 from crawler.schema import validate_models
-from scripts.build_model_catalog import build_model_catalog, build_provider_catalog
+from scripts.build_model_catalog import build_model_catalog, build_provider_catalog, build_source_health_report
 from scripts.sync_model_catalog import sync_model_catalog
+from scripts.build_model_catalog import main as build_model_catalog_main
+from crawler.official_model_discovery import discover_official_model_sources
 
 
 def valid_model():
@@ -66,6 +69,148 @@ def test_catalog_builder_normalizes_discovery_rows_for_querying():
     assert models[0]["lastSeenAt"] == "2026-09-09"
     assert "modelSlug" not in models[0]
     assert validate_models(models) == []
+
+
+def test_catalog_builder_fails_when_any_source_failed(tmp_path):
+    rows = [{
+        "id": "example-provider/example-model",
+        "providerId": "example-provider",
+        "provider": "Example Provider",
+        "model": "Example Model",
+        "context": "",
+        "maxOutput": "",
+        "modality": ["text"],
+        "rateLimit": "",
+        "released": "",
+        "usageActivity": "",
+        "status": "online",
+        "sourceUrl": "https://example.com/models/example-model",
+        "sourceKind": "official",
+    }]
+    with patch("scripts.build_model_catalog.discover_rows", return_value={
+        "models": rows,
+        "failures": [{"providerId": "failed-provider", "url": "https://example.com/models", "status": "failed", "reason": "timeout"}],
+        "sourceResults": [
+            {"id": "working-source", "url": "https://example.com/working", "status": "success", "rowCount": 1, "truncated": False},
+            {"id": "failed-provider", "url": "https://example.com/models", "status": "failed", "reason": "timeout", "rowCount": 0, "truncated": False},
+        ],
+    }):
+        exit_code = build_model_catalog_main([
+            "--models-out", str(tmp_path / "models.json"),
+            "--providers-out", str(tmp_path / "providers.json"),
+            "--health-out", str(tmp_path / "source-health.json"),
+            "--date", "2026-10-06",
+        ])
+
+    assert exit_code != 0
+    health = json.loads((tmp_path / "source-health.json").read_text(encoding="utf-8"))
+    assert health["status"] == "partial"
+    assert health["complete"] is False
+    assert health["enabledSourceIds"] == ["failed-provider", "working-source"]
+
+
+def test_source_health_report_is_complete_only_when_every_enabled_source_is_complete():
+    report = build_source_health_report("2026-10-06", {
+        "models": [],
+        "sourceResults": [
+            {"id": "source-a", "url": "https://a.example/models", "status": "success", "rowCount": 0, "truncated": False},
+            {"id": "source-b", "url": "https://b.example/models", "status": "success", "rowCount": 2, "truncated": False},
+        ],
+        "failures": [],
+    })
+    assert report["status"] == "complete"
+    assert report["complete"] is True
+    assert report["observationKind"] == "official_model_source_scan"
+    assert report["enabledSourceIds"] == ["source-a", "source-b"]
+    assert report["sources"][0]["rowCount"] == 0
+
+
+def test_source_health_report_preserves_partial_failures_and_truncation():
+    report = build_source_health_report("2026-10-06", {
+        "models": [],
+        "sourceResults": [
+            {"id": "source-a", "url": "https://a.example/models", "status": "success", "rowCount": 1, "truncated": False},
+            {"id": "source-b", "url": "https://b.example/models", "status": "failed", "reason": "timeout", "rowCount": 0, "truncated": False},
+            {"id": "source-c", "url": "https://c.example/models", "status": "success", "rowCount": 10, "truncated": True},
+        ],
+        "failures": [{"providerId": "source-b", "url": "https://b.example/models", "status": "failed", "reason": "timeout"}],
+    })
+    assert report["status"] == "partial"
+    assert report["complete"] is False
+    assert report["failures"]
+    assert report["sources"][2]["truncated"] is True
+
+
+def test_source_health_report_fails_closed_for_malformed_source_results_or_failures():
+    for source_results, failures in [
+        ([{"id": "a", "url": "https://a.example/models", "status": "success", "rowCount": 0}], []),
+        (["not-an-object"], []),
+        ([{"id": "a", "url": "https://a.example/models", "status": "failed", "rowCount": 0, "truncated": False, "reason": "timeout"}], []),
+        ([{"id": "a", "url": "https://a.example/models", "status": "success", "rowCount": 0, "truncated": False}], [{"providerId": "a", "url": "https://wrong.example", "status": "failed", "reason": "timeout"}]),
+        ([{"id": "a", "url": "https://a.example/models", "status": "failed", "rowCount": 0, "truncated": False, "reason": "timeout"}], [
+            {"providerId": "a", "url": "https://a.example/models", "status": "failed", "reason": "timeout"},
+            {"providerId": "a", "url": "https://a.example/models", "status": "failed", "reason": "timeout"},
+        ]),
+        ([{"id": "a", "url": "https://a.example/models", "status": "failed", "rowCount": 0, "truncated": False, "reason": "timeout"}], [
+            {"providerId": "a", "url": "https://a.example/models", "reason": "timeout"},
+        ]),
+    ]:
+        report = build_source_health_report("2026-10-06", {"sourceResults": source_results, "failures": failures})
+        assert report["complete"] is False
+        assert report["status"] != "complete"
+
+
+def test_source_discovery_reports_zero_row_success_separately_from_failure():
+    sources = [
+        {"id": "empty", "providerId": "empty", "provider": "Empty", "kind": "official", "type": "openai_models",
+         "url": "https://empty.example/v1/models", "allowedDomains": ["empty.example"],
+         "modelPageTemplate": "https://empty.example/models/{id}", "enabled": True},
+        {"id": "failed", "providerId": "failed", "provider": "Failed", "kind": "official", "type": "openai_models",
+         "url": "https://failed.example/v1/models", "allowedDomains": ["failed.example"],
+         "modelPageTemplate": "https://failed.example/models/{id}", "enabled": True},
+        {"id": "malformed", "providerId": "malformed", "provider": "Malformed", "kind": "official", "type": "openai_models",
+         "url": "https://malformed.example/v1/models", "allowedDomains": ["malformed.example"],
+         "modelPageTemplate": "https://malformed.example/models/{id}", "enabled": True},
+    ]
+    def fetcher(url, *_):
+        if "empty.example" in url:
+            return {"status": "ok", "content": '{"data": []}'}
+        if "malformed.example" in url:
+            return {"status": "ok", "content": '{"error": "maintenance"}'}
+        return {"status": "failed", "reason": "timeout"}
+
+    result = discover_official_model_sources(sources, fetcher=fetcher)
+    assert result["sourceResults"] == [
+        {"id": "empty", "url": "https://empty.example/v1/models", "status": "success", "rowCount": 0, "truncated": False},
+        {"id": "failed", "url": "https://failed.example/v1/models", "status": "failed", "reason": "timeout", "rowCount": 0, "truncated": False},
+        {"id": "malformed", "url": "https://malformed.example/v1/models", "status": "failed", "reason": "unexpected response schema for openai_models", "rowCount": 0, "truncated": False},
+    ]
+
+
+def test_source_discovery_rejects_partial_catalogue_with_invalid_rows():
+    source = {"id": "mixed", "providerId": "mixed", "provider": "Mixed", "kind": "official", "type": "openai_models",
+        "url": "https://mixed.example/v1/models", "allowedDomains": ["mixed.example"],
+        "modelPageTemplate": "https://mixed.example/models/{id}", "enabled": True}
+    result = discover_official_model_sources([source], fetcher=lambda *_: {
+        "status": "ok", "content": '{"data": [{"id":"valid-model"}, {"name":"missing-id"}]}'
+    })
+    assert result["models"] == []
+    assert result["failures"][0]["providerId"] == "mixed"
+    assert result["sourceResults"][0]["status"] == "failed"
+    assert result["sourceResults"][0]["reason"] == "one or more model rows are missing a valid identifier"
+
+
+def test_ollama_discovery_falls_back_to_trimmed_model_name_and_counts_the_row():
+    source = {"id": "ollama", "providerId": "ollama", "provider": "Ollama", "kind": "official", "type": "ollama_tags",
+        "url": "https://ollama.example/api/tags", "allowedDomains": ["ollama.example"],
+        "modelPageTemplate": "https://ollama.example/library/{name}", "enabled": True}
+    result = discover_official_model_sources([source], fetcher=lambda *_: {
+        "status": "ok", "content": '{"models": [{"name":" ", "model":"llama3"}]}'
+    })
+    assert result["failures"] == []
+    assert result["models"][0]["model"] == "llama3"
+    assert result["sourceResults"][0]["status"] == "success"
+    assert result["sourceResults"][0]["rowCount"] == 1
 
 
 def test_provider_catalog_groups_models_without_collapsing_model_rows():

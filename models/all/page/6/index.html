@@ -324,14 +324,15 @@ pre code { padding:0; background:none; color:inherit; }
             <span lang="zh-CN">卡片</span><span lang="en">Cards</span></button>
         </div>
       </div>
-      <div class="mdir-chips" role="group" aria-label="热门筛选 / Quick filters">
-        <span class="mdir-chips-label"><span lang="zh-CN">热门筛选</span><span lang="en">Quick filters</span></span>
-        <button type="button" class="mdir-chip" data-chip-region="available"><span lang="zh-CN">中国大陆可用</span><span lang="en">Mainland CN available</span></button>
-        <button type="button" class="mdir-chip" data-chip-region="unknown"><span lang="zh-CN">待核验</span><span lang="en">Unverified</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="text"><span lang="zh-CN">文本生成</span><span lang="en">Text</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="reasoning"><span lang="zh-CN">推理模型</span><span lang="en">Reasoning</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="image"><span lang="zh-CN">图像</span><span lang="en">Image</span></button>
-        <button type="button" class="mdir-chip" data-chip-modality="audio"><span lang="zh-CN">语音</span><span lang="en">Audio</span></button>
+      <div class="mdir-chips" role="group" aria-label="场景快捷筛选 / Scenario filters">
+        <span class="mdir-chips-label"><span lang="zh-CN">场景快捷筛选</span><span lang="en">Scenario filters</span></span>
+        <button type="button" class="mdir-chip" data-chip-context-min="128000" aria-pressed="false"><span lang="zh-CN">128K+ 上下文</span><span lang="en">128K+ context</span></button>
+        <button type="button" class="mdir-chip" data-chip-region="available" aria-pressed="false"><span lang="zh-CN">中国大陆可用</span><span lang="en">Mainland CN available</span></button>
+        <button type="button" class="mdir-chip" data-chip-region="unknown" aria-pressed="false"><span lang="zh-CN">待核验</span><span lang="en">Unverified</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="text" aria-pressed="false"><span lang="zh-CN">文本生成</span><span lang="en">Text</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="reasoning" aria-pressed="false"><span lang="zh-CN">推理模型</span><span lang="en">Reasoning</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="image" aria-pressed="false"><span lang="zh-CN">图像</span><span lang="en">Image</span></button>
+        <button type="button" class="mdir-chip" data-chip-modality="audio" aria-pressed="false"><span lang="zh-CN">语音</span><span lang="en">Audio</span></button>
         <span class="mdir-chips-spacer"></span>
         <span id="model-catalog-count" class="catalog-count"></span>
         <span class="catalog-modes" aria-label="分组方式 / Group by">
@@ -345,132 +346,123 @@ pre code { padding:0; background:none; color:inherit; }
       <div class="catalog-table-wrap"><table id="model-catalog" class="catalog-table"><thead><tr>
         <th class="row-index">#</th><th><span lang="zh-CN">模型名称 (Model)</span><span lang="en">Model</span></th><th><span lang="zh-CN">服务商 (Provider)</span><span lang="en">Provider</span></th><th><span lang="zh-CN">上下文长度</span><span lang="en">Context</span></th><th><span lang="zh-CN">最大输出</span><span lang="en">Max output</span></th><th><span lang="zh-CN">支持模态</span><span lang="en">Modality</span></th><th><span lang="zh-CN">速率限制 (Rate Limit)</span><span lang="en">Rate limit</span></th><th><span lang="zh-CN">接口速度 (API RTT)</span><span lang="en">API latency</span></th><th><span lang="zh-CN">发布时间</span><span lang="en">Released</span></th><th><span lang="zh-CN">在线状态</span><span lang="en">Status</span></th><th><span lang="zh-CN">中国大陆可用性</span><span lang="en">Mainland CN</span></th><th><span lang="zh-CN">操作</span><span lang="en">Actions</span></th>
       </tr></thead><tbody><tr class="catalog-row" data-model-id="openrouter/z-ai-glm-5-2-free" data-provider-id="openrouter" data-cn="unknown" data-modality="reasoning,text" data-context="32768" data-released="" data-ms="35" data-score="">
-      <td class="row-index" data-label="#">226</td>
-      <td class="model-cell" data-label="模型"><a class="model-name" href="/models/z-ai-glm-5-2-free/" title="Z.ai: GLM 5.2 (free)"><strong>Z.ai: GLM 5.2 (free)</strong></a><small class="model-id" title="openrouter/z-ai-glm-5-2-free">openrouter/z-ai-glm-5-2-free</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="openrouter">OpenRouter</button><a class="provider-page-link" href="/providers/openrouter/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="32768">33K</td>
-      <td data-label="最大输出">29K</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">reasoning</span><span class="model-badge">text</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td class="row-index">226</td>
+      <td class="model-cell"><a class="model-name" href="/models/z-ai-glm-5-2-free/" title="Z.ai: GLM 5.2 (free)"><strong>Z.ai: GLM 5.2 (free)</strong></a><small class="model-id" title="openrouter/z-ai-glm-5-2-free">openrouter/z-ai-glm-5-2-free</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="openrouter">OpenRouter</button><a class="provider-page-link" href="/providers/openrouter/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="32768">33K</td>
+      <td>29K</td>
+      <td><div class="model-badges"><span class="model-badge">reasoning</span><span class="model-badge">text</span></div></td>
+      <td>—</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://openrouter.ai/api/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">35ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://openrouter.ai/z-ai/glm-5.2:free" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="/models/z-ai-glm-5-2-free/">Z.ai: GLM 5.2 (free)</a></h3><small class="model-id">openrouter/z-ai-glm-5-2-free</small><div class="model-badges"><span class="model-badge">reasoning</span><span class="model-badge">text</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>33K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>35ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://openrouter.ai/z-ai/glm-5.2:free" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="unisound/u2-flash" data-provider-id="unisound" data-cn="unknown" data-modality="reasoning,text" data-context="" data-released="" data-ms="738" data-score="">
-      <td class="row-index" data-label="#">227</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Unisound U2 Flash"><strong>Unisound U2 Flash</strong></span><small class="model-id" title="unisound/u2-flash">unisound/u2-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="unisound">Unisound Token Hub</button><a class="provider-page-link" href="/providers/unisound/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="">—</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">See provider page</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://openrouter.ai/z-ai/glm-5.2:free" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="unisound/u2-flash" data-provider-id="unisound" data-cn="unknown" data-modality="reasoning,text" data-context="" data-released="" data-ms="738" data-score="">
+      <td class="row-index">227</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Unisound U2 Flash"><strong>Unisound U2 Flash</strong></span><small class="model-id" title="unisound/u2-flash">unisound/u2-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="unisound">Unisound Token Hub</button><a class="provider-page-link" href="/providers/unisound/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="">—</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
+      <td>See provider page</td>
       <td class="latency-cell" data-label="接口速度" title="实测于 2026-09-21 · GET https://maas-api.unisound.com/v1/models · 3 次成功请求的中位数 · GitHub Actions hosted runner"><span class="latency-value">738ms</span></td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://maas.unisound.com/models/u2-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Unisound U2 Flash</span></h3><small class="model-id">unisound/u2-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>See provider page</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>738ms</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://maas.unisound.com/models/u2-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-flash" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">228</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="DeepSeek-V4-Flash"><strong>DeepSeek-V4-Flash</strong></span><small class="model-id" title="amd-radeon-cloud/deepseek-v4-flash">amd-radeon-cloud/deepseek-v4-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1048576">1.04858M</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-current"><span lang="zh-CN">当前</span><span lang="en">Current</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://maas.unisound.com/models/u2-flash" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-flash" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
+      <td class="row-index">228</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="DeepSeek-V4-Flash"><strong>DeepSeek-V4-Flash</strong></span><small class="model-id" title="amd-radeon-cloud/deepseek-v4-flash">amd-radeon-cloud/deepseek-v4-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1048576">1.04858M</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>DeepSeek-V4-Flash</span></h3><small class="model-id">amd-radeon-cloud/deepseek-v4-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1.04858M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-flash-vision-exp" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">229</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="DeepSeek-V4-Flash-Vision-Exp"><strong>DeepSeek-V4-Flash-Vision-Exp</strong></span><small class="model-id" title="amd-radeon-cloud/deepseek-v4-flash-vision-exp">amd-radeon-cloud/deepseek-v4-flash-vision-exp</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1048576">1.04858M</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-flash-vision-exp" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
+      <td class="row-index">229</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="DeepSeek-V4-Flash-Vision-Exp"><strong>DeepSeek-V4-Flash-Vision-Exp</strong></span><small class="model-id" title="amd-radeon-cloud/deepseek-v4-flash-vision-exp">amd-radeon-cloud/deepseek-v4-flash-vision-exp</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1048576">1.04858M</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>DeepSeek-V4-Flash-Vision-Exp</span></h3><small class="model-id">amd-radeon-cloud/deepseek-v4-flash-vision-exp</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1.04858M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-1-flash" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">230</td>
-      <td class="model-cell" data-label="模型"><a class="model-name" href="/models/deepseek-v4-1-flash/" title="DeepSeek-V4.1-Flash"><strong>DeepSeek-V4.1-Flash</strong></a><small class="model-id" title="amd-radeon-cloud/deepseek-v4-1-flash">amd-radeon-cloud/deepseek-v4-1-flash</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="1048576">1.04858M</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/deepseek-v4-1-flash" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="1048576" data-released="" data-ms="" data-score="">
+      <td class="row-index">230</td>
+      <td class="model-cell"><a class="model-name" href="/models/deepseek-v4-1-flash/" title="DeepSeek-V4.1-Flash"><strong>DeepSeek-V4.1-Flash</strong></a><small class="model-id" title="amd-radeon-cloud/deepseek-v4-1-flash">amd-radeon-cloud/deepseek-v4-1-flash</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="1048576">1.04858M</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><a href="/models/deepseek-v4-1-flash/">DeepSeek-V4.1-Flash</a></h3><small class="model-id">amd-radeon-cloud/deepseek-v4-1-flash</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>1.04858M</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/qwen3-8-flash-next" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="262144" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">231</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Qwen3.8-Flash-Next"><strong>Qwen3.8-Flash-Next</strong></span><small class="model-id" title="amd-radeon-cloud/qwen3-8-flash-next">amd-radeon-cloud/qwen3-8-flash-next</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="262144">262K</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/qwen3-8-flash-next" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="262144" data-released="" data-ms="" data-score="">
+      <td class="row-index">231</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Qwen3.8-Flash-Next"><strong>Qwen3.8-Flash-Next</strong></span><small class="model-id" title="amd-radeon-cloud/qwen3-8-flash-next">amd-radeon-cloud/qwen3-8-flash-next</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="262144">262K</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Qwen3.8-Flash-Next</span></h3><small class="model-id">amd-radeon-cloud/qwen3-8-flash-next</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>262K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/qwen3-8-27b" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="131072" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">232</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Qwen3.8-27B"><strong>Qwen3.8-27B</strong></span><small class="model-id" title="amd-radeon-cloud/qwen3-8-27b">amd-radeon-cloud/qwen3-8-27b</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="131072">131K</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/qwen3-8-27b" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="image,reasoning,text" data-context="131072" data-released="" data-ms="" data-score="">
+      <td class="row-index">232</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Qwen3.8-27B"><strong>Qwen3.8-27B</strong></span><small class="model-id" title="amd-radeon-cloud/qwen3-8-27b">amd-radeon-cloud/qwen3-8-27b</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="131072">131K</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Qwen3.8-27B</span></h3><small class="model-id">amd-radeon-cloud/qwen3-8-27b</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">image</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>131K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/minicpm5-2b" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="text" data-context="131072" data-released="" data-ms="" data-score="">
-      <td class="row-index" data-label="#">233</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="MiniCPM5-2B"><strong>MiniCPM5-2B</strong></span><small class="model-id" title="amd-radeon-cloud/minicpm5-2b">amd-radeon-cloud/minicpm5-2b</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="131072">131K</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span></div></td>
-      <td data-label="速率限制">Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="amd-radeon-cloud/minicpm5-2b" data-provider-id="amd-radeon-cloud" data-cn="unknown" data-modality="text" data-context="131072" data-released="" data-ms="" data-score="">
+      <td class="row-index">233</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="MiniCPM5-2B"><strong>MiniCPM5-2B</strong></span><small class="model-id" title="amd-radeon-cloud/minicpm5-2b">amd-radeon-cloud/minicpm5-2b</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="amd-radeon-cloud">AMD Radeon Cloud</button><a class="provider-page-link" href="/providers/amd-radeon-cloud/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="131072">131K</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span></div></td>
+      <td>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">—</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>MiniCPM5-2B</span></h3><small class="model-id">amd-radeon-cloud/minicpm5-2b</small><div class="model-badges"><span class="model-badge">text</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>131K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>—</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr><tr class="catalog-row" data-model-id="siliconflow/xing4-0-29b" data-provider-id="siliconflow" data-cn="unknown" data-modality="reasoning,text" data-context="262144" data-released="2026-09-17" data-ms="" data-score="">
-      <td class="row-index" data-label="#">234</td>
-      <td class="model-cell" data-label="模型"><span class="model-name model-name-static" title="Xing4.0-29B"><strong>Xing4.0-29B</strong></span><small class="model-id" title="siliconflow/xing4-0-29b">siliconflow/xing4-0-29b</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="siliconflow">SiliconFlow</button><a class="provider-page-link" href="/providers/siliconflow/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
-      <td data-label="上下文长度" title="262144">262K</td>
-      <td data-label="最大输出">—</td>
-      <td data-label="支持模态"><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
-      <td data-label="速率限制">—</td>
+      <td>—</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span><small class="freshness freshness-new"><span lang="zh-CN">新</span><span lang="en">New</span></small></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://amd-aim.github.io/radeon-cloud-docs/models/overview/" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr><tr class="catalog-row" data-model-id="siliconflow/xing4-0-29b" data-provider-id="siliconflow" data-cn="unknown" data-modality="reasoning,text" data-context="262144" data-released="2026-09-17" data-ms="" data-score="">
+      <td class="row-index">234</td>
+      <td class="model-cell"><span class="model-name model-name-static" title="Xing4.0-29B"><strong>Xing4.0-29B</strong></span><small class="model-id" title="siliconflow/xing4-0-29b">siliconflow/xing4-0-29b</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="siliconflow">SiliconFlow</button><a class="provider-page-link" href="/providers/siliconflow/"><span lang="zh-CN">详情</span><span lang="en">Details</span></a></td>
+      <td title="262144">262K</td>
+      <td>—</td>
+      <td><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div></td>
+      <td>—</td>
       <td class="latency-cell latency-unknown" data-label="接口速度" title="GitHub Actions hosted runner">—</td>
-      <td data-label="发布时间">2026-09-17</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span></td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="https://siliconflow.cn/pricing" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3><span>Xing4.0-29B</span></h3><small class="model-id">siliconflow/xing4-0-29b</small><div class="model-badges"><span class="model-badge">text</span><span class="model-badge">reasoning</span></div><div class="catalog-card-facts"><span class="model-card-fact"><small><span lang="zh-CN">上下文</span><span lang="en">Context</span></small>262K</span><span class="model-card-fact"><small><span lang="zh-CN">速率</span><span lang="en">Rate</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">接口</span><span lang="en">API</span></small>—</span><span class="model-card-fact"><small><span lang="zh-CN">发布</span><span lang="en">Released</span></small>2026-09-17</span></div><div class="catalog-card-meta"><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span><a class="source-link" href="https://siliconflow.cn/pricing" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></div></div></td></tr></tbody></table></div>
+      <td>2026-09-17</td>
+      <td><span class="status-dot status-dot-online"></span><span class="status status-online"><span lang="zh-CN">在线</span><span lang="en">Online</span></span></td>
+      <td><span class="status cn-region cn-region-unknown"><span lang="zh-CN">大陆待核验</span><span lang="en">Unverified in mainland CN</span></span></td>
+      <td class="source-cell"><a class="source-link" href="https://siliconflow.cn/pricing" target="_blank" rel="noopener noreferrer"><span lang="zh-CN">目录来源</span><span lang="en">Catalog source</span> ↗</a></td>
+    </tr></tbody></table></div>
       <p id="model-catalog-empty" class="catalog-empty" hidden><span lang="zh-CN">没有匹配的模型。换个关键词或清除筛选条件。</span><span lang="en">No models match this filter. Try another keyword or clear the filters.</span></p>
       <nav class="catalog-pagination" aria-label="分页导航 / Pagination">
         <a class="catalog-page-link" href="/models/all/page/5/" aria-label="上一页 / Previous page">‹ <span lang="zh-CN">上一页</span><span lang="en">Previous</span></a>
@@ -483,8 +475,7 @@ pre code { padding:0; background:none; color:inherit; }
           const table = document.getElementById('model-catalog');
           const body = table?.querySelector('tbody');
           const dataRows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
-          const cardRows = body ? Array.from(body.querySelectorAll('.catalog-card-row')) : [];
-          const pairs = dataRows.map((row, index) => ({ row, card: cardRows[index] || null }));
+          const pairs = dataRows.map(row => ({ row }));
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
           const region = document.getElementById('model-catalog-region');
@@ -498,6 +489,7 @@ pre code { padding:0; background:none; color:inherit; }
           const chips = Array.from(document.querySelectorAll('.mdir-chip'));
           let mode = 'provider';
           let sortMode = 'group';
+          let contextMin = 0;
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
@@ -513,10 +505,13 @@ pre code { padding:0; background:none; color:inherit; }
             const regionFilter = region?.value || '';
             const modalityFilter = modality?.value || '';
             const modalities = (row.dataset.modality || '').split(',').filter(Boolean);
+            const contextValue = Number.parseInt(row.dataset.context || '', 10);
+            const matchesContext = !contextMin || (Number.isFinite(contextValue) && contextValue >= contextMin);
             return (!query || textOf(row).includes(query))
               && (!providerId || row.dataset.providerId === providerId)
               && (!regionFilter || row.dataset.cn === regionFilter)
-              && (!modalityFilter || modalities.includes(modalityFilter));
+              && (!modalityFilter || modalities.includes(modalityFilter))
+              && matchesContext;
           };
           const sortedPairs = () => {
             const list = pairs.filter(matches);
@@ -552,13 +547,21 @@ pre code { padding:0; background:none; color:inherit; }
           const apply = () => {
             const cards = section?.dataset.catalogView === 'cards';
             const visible = sortedPairs();
+            const visibleRows = new Set(visible.map(pair => pair.row));
+            pairs.forEach(pair => { pair.row.hidden = !visibleRows.has(pair.row); });
+            const cardLabels = isEnglish()
+              ? ['Row', 'Model', 'Provider', 'Context', 'Max output', 'Modality', 'Rate limit', 'API latency', 'Released', 'Status', 'Mainland CN', 'Actions']
+              : ['序号', '模型', '服务商', '上下文长度', '最大输出', '支持模态', '速率限制', '接口速度', '发布时间', '在线状态', '中国大陆可用性', '操作'];
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
             visible.forEach((pair, index) => {
               const indexCell = pair.row.querySelector('.row-index');
               if (indexCell) indexCell.textContent = String(index + 1);
-              pair.row.hidden = cards;
-              if (pair.card) pair.card.hidden = !cards;
+              pair.row.hidden = false;
+              pair.row.querySelectorAll(':scope > td').forEach((cell, cellIndex) => {
+                if (cards) cell.setAttribute('aria-label', cardLabels[cellIndex] || '');
+                else cell.removeAttribute('aria-label');
+              });
               if (!cards && sortMode === 'group') {
                 const groupCell = mode === 'provider' ? pair.row.querySelector('.provider-filter') : pair.row.querySelector('.model-cell strong');
                 const group = groupCell ? groupCell.textContent.trim() : '';
@@ -575,15 +578,18 @@ pre code { padding:0; background:none; color:inherit; }
                 }
               }
               body.appendChild(pair.row);
-              if (pair.card) body.appendChild(pair.card);
             });
             if (count) count.textContent = isEnglish() ? `Showing ${visible.length} / ${pairs.length}` : `显示 ${visible.length} 条 / 共 ${pairs.length} 条`;
             if (empty) empty.hidden = visible.length !== 0;
             chips.forEach(chip => {
               const chipRegion = chip.dataset.chipRegion;
               const chipModality = chip.dataset.chipModality;
-              const active = (chipRegion && region?.value === chipRegion) || (chipModality && modality?.value === chipModality);
+              const chipContextMin = Number.parseInt(chip.dataset.chipContextMin || '', 10);
+              const active = (chipRegion && region?.value === chipRegion)
+                || (chipModality && modality?.value === chipModality)
+                || (chipContextMin && contextMin === chipContextMin);
               chip.classList.toggle('is-active', Boolean(active));
+              chip.setAttribute('aria-pressed', String(Boolean(active)));
             });
           };
           search?.addEventListener('input', apply);
@@ -607,6 +613,10 @@ pre code { padding:0; background:none; color:inherit; }
           chips.forEach(chip => chip.addEventListener('click', () => {
             if (chip.dataset.chipRegion && region) region.value = region.value === chip.dataset.chipRegion ? '' : chip.dataset.chipRegion;
             if (chip.dataset.chipModality && modality) modality.value = modality.value === chip.dataset.chipModality ? '' : chip.dataset.chipModality;
+            if (chip.dataset.chipContextMin) {
+              const value = Number.parseInt(chip.dataset.chipContextMin, 10);
+              contextMin = contextMin === value ? 0 : value;
+            }
             apply();
           }));
           clear?.addEventListener('click', () => {
@@ -614,6 +624,7 @@ pre code { padding:0; background:none; color:inherit; }
             if (provider) provider.value = '';
             if (region) region.value = '';
             if (modality) modality.value = '';
+            contextMin = 0;
             if (sortSelect) sortSelect.value = 'group';
             sortMode = 'group';
             apply();
@@ -679,19 +690,18 @@ pre code { padding:0; background:none; color:inherit; }
         .model-directory .catalog-table .latency-value { font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }
         .model-directory .catalog-table .latency-unknown { color: var(--ink-tertiary); }
         .model-directory .catalog-latency-note { margin: -4px 0 12px; color: var(--ink-tertiary); font: 400 12px/1.7 var(--font-sans); }
-        .model-directory .catalog-card-row > td { padding: 0; border-bottom: 0; background: transparent; }
-        .model-directory .catalog-card { display: grid; gap: 10px; margin: 6px 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
-        .model-directory .catalog-card h3 { margin: 0; font: 600 15px/1.4 var(--font-mono); }
-        .model-directory .catalog-card h3 a { color: var(--ink); text-decoration: none; }
-        .model-directory .catalog-card h3 a:hover { color: var(--accent); }
-        .model-directory .catalog-card-facts { display: flex; flex-wrap: wrap; gap: 8px 18px; }
-        .model-directory .catalog-card-fact { display: grid; gap: 1px; font: 500 12.5px/1.5 var(--font-sans); color: var(--ink); }
-        .model-directory .catalog-card-fact small { color: var(--ink-tertiary); font: 500 10.5px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
-        .model-directory .catalog-card-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+        .model-directory[data-catalog-view="cards"] .catalog-table { display: block; min-width: 0; }
+        .model-directory[data-catalog-view="cards"] .catalog-table tbody { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 390px), 1fr)); gap: 12px; }
         .model-directory[data-catalog-view="cards"] .catalog-table thead { display: none; }
-        .model-directory[data-catalog-view="cards"] .catalog-row { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 2px 8px rgba(30,40,60,.04); }
+        .model-directory[data-catalog-view="cards"] .catalog-row > td { display: flex; min-width: 0; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--line-soft); background: transparent; text-align: right; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > td::before { content: attr(aria-label); flex: 0 0 auto; color: var(--ink-tertiary); font-size: 11px; text-align: left; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell { grid-column: 1 / -1; display: block; text-align: left; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell::before { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell .model-id { display: block; margin-top: 3px; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .row-index { display: none; }
+        .model-directory[data-catalog-view="cards"] .catalog-row > .source-cell { grid-column: 1 / -1; justify-content: flex-end; border: 0; }
         .model-directory[data-catalog-view="cards"] .catalog-group-row { display: none; }
-        .model-directory[data-catalog-view="cards"] .catalog-card-row { display: table-row; }
         @media (max-width: 720px) {
           .model-directory .mdir-heading-link { display: none; }
           .model-directory .mdir-field, .model-directory .mdir-field select { flex: 1 1 45%; max-width: none; }
@@ -1864,7 +1874,7 @@ pre code { padding:0; background:none; color:inherit; }
       </dl>
       <div class="badges"><span class="badge">Status</span><span class="badge">262K</span><span class="badge">API</span></div>
       <div class="actions">
-        <a class="btn" href="https://vercel.com/ai-gateway/models/ling-3-1-flash-free" target="_blank" rel="nofollow noopener"><span lang="zh-CN">注册领取</span><span lang="en">Register</span> ↗</a>
+        <a class="btn" href="https://vercel.com/ai-gateway/models/ling-3.1-flash-free" target="_blank" rel="nofollow noopener"><span lang="zh-CN">模型注册页</span><span lang="en">Model registration page</span> ↗</a>
         <a class="ghost" href="/offers/ant-ling-3-1-flash-free/"><span lang="zh-CN">详情</span><span lang="en">Details</span> </a>
       </div>
     </article><article class="model-card">

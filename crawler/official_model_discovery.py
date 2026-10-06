@@ -230,7 +230,12 @@ def parse_ollama_tags(payload: object, source: dict) -> list[dict]:
     for row in rows:
         if not isinstance(row, dict):
             continue
-        name = str(row.get("name") or row.get("model") or "").strip()
+        name = ""
+        for field in ("name", "model"):
+            candidate = row.get(field)
+            if isinstance(candidate, str) and candidate.strip():
+                name = candidate.strip()
+                break
         if not name:
             continue
         parsed.append({
@@ -259,6 +264,27 @@ _PARSERS: dict[str, Callable[[object, dict], list[dict]]] = {
 }
 
 
+def _payload_has_expected_rows(payload: object, source_type: str) -> bool:
+    """Keep HTTP 200 error objects from being mistaken for empty catalogues."""
+    if source_type == "ollama_tags":
+        rows = payload.get("models") if isinstance(payload, dict) else payload
+    else:
+        rows = payload.get("data") if isinstance(payload, dict) else payload
+    return isinstance(rows, list)
+
+
+def _payload_rows_have_valid_identifiers(payload: object, source_type: str) -> bool:
+    if source_type == "ollama_tags":
+        rows = payload.get("models") if isinstance(payload, dict) else payload
+        return all(
+            isinstance(row, dict)
+            and any(isinstance(row.get(field), str) and row[field].strip() for field in ("name", "model"))
+            for row in rows
+        )
+    rows = payload.get("data") if isinstance(payload, dict) else payload
+    return all(isinstance(row, dict) and isinstance(row.get("id"), str) and bool(row["id"].strip()) for row in rows)
+
+
 def _failure(source_id: str, url: str, response: dict) -> dict:
     return {
         "providerId": source_id,
@@ -285,6 +311,7 @@ def discover_official_model_sources(
 
     models: list[dict] = []
     failures: list[dict] = []
+    source_results: list[dict] = []
     for source in sources:
         if not source.get("enabled", True):
             continue
@@ -294,18 +321,44 @@ def discover_official_model_sources(
         max_bytes = int(source.get("maxBytes", 200_000))
         response = fetcher(str(source["url"]), domains, int(source.get("timeout", 15)), max_bytes)
         if response.get("status") != "ok":
-            failures.append(_failure(source_id, str(source["url"]), response))
+            failure = _failure(source_id, str(source["url"]), response)
+            failures.append(failure)
+            source_results.append({"id": source_id, "url": str(source["url"]), "status": "failed", "reason": failure["reason"], "rowCount": 0, "truncated": False})
             continue
         try:
             payload = json.loads(str(response.get("content") or ""))
         except json.JSONDecodeError as error:
-            failures.append(_failure(source_id, str(source["url"]), {"status": "failed", "reason": f"invalid JSON: {error}"}))
+            failure = _failure(source_id, str(source["url"]), {"status": "failed", "reason": f"invalid JSON: {error}"})
+            failures.append(failure)
+            source_results.append({"id": source_id, "url": str(source["url"]), "status": "failed", "reason": failure["reason"], "rowCount": 0, "truncated": False})
             continue
-        for row in parser(payload, source):
+        if not _payload_has_expected_rows(payload, str(source["type"])):
+            reason = f"unexpected response schema for {source['type']}"
+            failure = _failure(source_id, str(source["url"]), {"status": "failed", "reason": reason})
+            failures.append(failure)
+            source_results.append({"id": source_id, "url": str(source["url"]), "status": "failed", "reason": reason, "rowCount": 0, "truncated": False})
+            continue
+        if not _payload_rows_have_valid_identifiers(payload, str(source["type"])):
+            reason = "one or more model rows are missing a valid identifier"
+            failure = _failure(source_id, str(source["url"]), {"status": "failed", "reason": reason})
+            failures.append(failure)
+            source_results.append({"id": source_id, "url": str(source["url"]), "status": "failed", "reason": reason, "rowCount": 0, "truncated": False})
+            continue
+        parsed_rows = parser(payload, source)
+        appended = 0
+        for row in parsed_rows:
             if len(models) >= max_models:
                 break
             models.append(row)
-    return {"models": models, "failures": failures}
+            appended += 1
+        source_results.append({
+            "id": source_id,
+            "url": str(source["url"]),
+            "status": "success",
+            "rowCount": appended,
+            "truncated": appended < len(parsed_rows),
+        })
+    return {"models": models, "failures": failures, "sourceResults": source_results}
 
 
 def to_catalog_rows(discovered: list[dict]) -> list[dict]:

@@ -1121,6 +1121,7 @@ def _quick_start_markup(offer: dict) -> str:
     action = examples.get("action")
     command = offer.get("command")
     guide_steps = [str(item) for item in (guide.get("steps") or []) if item]
+    guide_steps_en = [str(item) for item in (guide.get("stepsEn") or []) if item]
 
     def step(
         number: int,
@@ -1141,10 +1142,16 @@ def _quick_start_markup(offer: dict) -> str:
             f'</div>'
         )
 
-    def link_body(url: str | None, label_zh: str, label_en: str, custom_label: str | None = None) -> str:
+    def link_body(
+        url: str | None,
+        label_zh: str,
+        label_en: str,
+        custom_label: str | None = None,
+        custom_label_en: str | None = None,
+    ) -> str:
         if not url:
             return f'<p class="muted">{_locale_pair("见官方来源", "See official sources")}</p>'
-        label = _esc(custom_label) if custom_label else _locale_pair(label_zh, label_en)
+        label = _locale_pair(custom_label, custom_label_en or custom_label) if custom_label else _locale_pair(label_zh, label_en)
         return (
             f'<a class="qs-link" href="{_esc(url)}" target="_blank" '
             f'rel="noopener noreferrer">{label} ↗</a>'
@@ -1172,26 +1179,51 @@ def _quick_start_markup(offer: dict) -> str:
         )
 
     register_label = offer.get("registerLabel")
+    register_label_en = offer.get("registerLabelEn")
     copy_enabled = False
 
     is_api_flow = product_type in {"api", "payg"} or (
         product_type == "web_infrastructure" and bool(curl)
     )
     if is_api_flow:
-        body1 = link_body(register_url, "注册账号", "Sign up", register_label)
+        body1 = link_body(register_url, "注册账号", "Sign up", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "查看 API 文档 / 控制台", "API docs / console")
         body3, copy_enabled = command_body(curl or command)
-        steps = "".join(
-            (
-                step(1, "注册账号", "Sign up", "打开官方平台完成注册；部分平台需要手机号或邮箱验证。", "Create an account on the official platform; phone or email verification may apply.", body1),
-                step(2, "获取 API Key", "Get API key", "在官方控制台或文档入口创建密钥，并按提供商要求保存。", "Create a key from the official console or docs flow and store it safely.", body2),
-                step(3, "发送第一条请求", "Send first request", "使用该提供商自己的 Endpoint、模型 ID 和额度规则完成首次调用。", "Use this provider's endpoint, model ID and quota rules for the first request.", body3, wide=True),
+        if guide_steps:
+            prerequisites = [str(item) for item in (guide.get("prerequisites") or []) if item]
+            prerequisites_markup = ""
+            if prerequisites:
+                prereq_items = "".join(f"<li>{_esc(item)}</li>" for item in prerequisites)
+                prerequisites_markup = (
+                    f'<h4>{_locale_pair("准备条件", "Prerequisites")}</h4>'
+                    f'<ul class="qs-notes">{prereq_items}</ul>'
+                )
+            steps_markup = "".join(
+                f"<li>{_locale_pair(item, guide_steps_en[index] if index < len(guide_steps_en) else item)}</li>"
+                for index, item in enumerate(guide_steps)
             )
-        )
-        qs_desc_zh = "注册 → 获取 Key → 发出第一条请求；Endpoint、模型 ID 与免费条件都以该提供商官方页面为准。"
-        qs_desc_en = "Sign up → get a key → send the first request; use this provider's official endpoint, model IDs and live free-tier terms."
+            specific_guide = (
+                '<div class="qs-step qs-step-wide qs-provider-guide">'
+                f'<span class="qs-num">✓</span><h3>{_locale_pair("注册与接入步骤", "Registration and access steps")}</h3>'
+                f'{prerequisites_markup}<ol class="qs-notes">{steps_markup}</ol>'
+                f'<div class="actions">{body1}{body2}</div>'
+                '</div>'
+            )
+            steps = specific_guide + step(4, "发送第一条请求", "Send first request", "使用下方命令开始调用。", "Use the command below to make your first request.", body3, wide=True)
+            qs_desc_zh = str(guide.get("summary") or "按模型专属步骤完成注册、创建密钥并接入模型。")
+            qs_desc_en = str(guide.get("summaryEn") or "Follow the model-specific steps to register, create a key and connect the model.")
+        else:
+            steps = "".join(
+                (
+                    step(1, "注册账号", "Sign up", "打开官方平台完成注册；部分平台需要手机号或邮箱验证。", "Create an account on the official platform; phone or email verification may apply.", body1),
+                    step(2, "获取 API Key", "Get API key", "在官方控制台或文档入口创建密钥，并按提供商要求保存。", "Create a key from the official console or docs flow and store it safely.", body2),
+                    step(3, "发送第一条请求", "Send first request", "使用该提供商自己的 Endpoint、模型 ID 和额度规则完成首次调用。", "Use this provider's endpoint, model ID and quota rules for the first request.", body3, wide=True),
+                )
+            )
+            qs_desc_zh = "注册 → 获取 Key → 发出第一条请求；Endpoint、模型 ID 与免费条件都以该提供商官方页面为准。"
+            qs_desc_en = "Sign up → get a key → send the first request; use this provider's official endpoint, model IDs and live free-tier terms."
     elif product_type == "free_ide":
-        body1 = link_body(register_url, "打开产品 / 下载页", "Open product / download page", register_label)
+        body1 = link_body(register_url, "打开产品 / 下载页", "Open product / download page", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "查看免费方案与额度", "Check free plan and limits")
         body3 = guidance_body("安装后登录，在产品内确认当前免费额度或使用限制。", "Install and sign in, then confirm the current free allowance or usage limits in the product.")
         steps = "".join(
@@ -1204,7 +1236,7 @@ def _quick_start_markup(offer: dict) -> str:
         qs_desc_zh = "下载 / 打开 IDE → 登录免费方案 → 在编辑器内开始使用；这类资源不是通用 API Key。"
         qs_desc_en = "Open or install the IDE → sign in to the free plan → start inside the editor; this is not a generic API-key offer."
     elif product_type == "coding_plan":
-        body1 = link_body(register_url, "打开 Coding Plan", "Open coding plan", register_label)
+        body1 = link_body(register_url, "打开 Coding Plan", "Open coding plan", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "核对价格、额度与支持工具", "Check price, quota and supported tools")
         body3 = guidance_body("按官方文档把计划接入支持的编码工具。", "Follow the official documentation to enable the plan in a supported coding tool.")
         steps = "".join(
@@ -1217,7 +1249,7 @@ def _quick_start_markup(offer: dict) -> str:
         qs_desc_zh = "先确认优惠性质和续费条件，再按官方文档把 Coding Plan 接入支持工具。"
         qs_desc_en = "Confirm whether the offer is recurring, trial or promotional, then enable the coding plan in a supported tool using the official setup."
     elif product_type == "open_weights":
-        body1 = link_body(register_url, "打开模型 / 仓库页", "Open model / repository page", register_label)
+        body1 = link_body(register_url, "打开模型 / 仓库页", "Open model / repository page", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "核对许可证与运行要求", "Check license and runtime requirements")
         body3, copy_enabled = command_body(command or examples.get("command"))
         steps = "".join(
@@ -1230,7 +1262,7 @@ def _quick_start_markup(offer: dict) -> str:
         qs_desc_zh = "确认官方权重 → 核对许可证与硬件 → 下载运行；本地权重与托管 API 是两种不同路径。"
         qs_desc_en = "Confirm the official weights → check license and hardware → download and run; local weights and hosted APIs are separate access paths."
     elif product_type == "desktop_ai_app":
-        body1 = link_body(register_url, "打开官方下载页", "Open official download page", register_label)
+        body1 = link_body(register_url, "打开官方下载页", "Open official download page", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "查看安装 / 账户说明", "Read install / account docs")
         body3 = guidance_body("完成安装后按应用内引导开始使用。", "Finish installation, then follow the in-app onboarding.")
         steps = "".join(
@@ -1243,7 +1275,7 @@ def _quick_start_markup(offer: dict) -> str:
         qs_desc_zh = "下载官方应用 → 安装并核对账户 / 系统要求 → 完成首次配置。"
         qs_desc_en = "Download the official app → check account and system requirements → complete first-run setup."
     else:
-        body1 = link_body(register_url, "打开官方入口", "Open official entry", register_label)
+        body1 = link_body(register_url, "打开官方入口", "Open official entry", register_label, register_label_en)
         body2 = link_body(docs_url or register_url, "查看官方说明", "Read official docs")
         body3 = guidance_body("按官方说明完成首次使用。", "Follow the official instructions for first use.")
         steps = "".join(
@@ -2487,9 +2519,9 @@ _CN_STATUS_LABELS = {
 }
 
 
-def _load_access_context() -> tuple[dict[str, dict], dict[str, dict], dict[str, dict]]:
-    """Load provider access cards and region policies from the repo data directory."""
-    data_dir = ACCESS_DATA_DIR
+def _load_access_context(data_dir: Path | None = None) -> tuple[dict[str, dict], dict[str, dict], dict[str, dict]]:
+    """Load provider access cards and region policies from the selected data directory."""
+    data_dir = Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR
     try:
         provider_cards = json.loads((data_dir / "provider-access.json").read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
@@ -2540,8 +2572,8 @@ def _cn_status_for_policy(policy: dict | None) -> str:
     return "unknown"
 
 
-def _cn_region_status_map() -> dict[str, dict]:
-    cards, policies, _ = _load_access_context()
+def _cn_region_status_map(data_dir: Path | None = None) -> dict[str, dict]:
+    cards, policies, _ = _load_access_context(data_dir)
     statuses: dict[str, dict] = {}
     for provider_id, card in cards.items():
         if card.get("registrationStatus") == "unavailable":
@@ -2570,13 +2602,13 @@ LATENCY_NOTE = (
 )
 
 
-def _load_endpoint_latency() -> tuple[dict[str, dict], dict]:
+def _load_endpoint_latency(data_dir: Path | None = None) -> tuple[dict[str, dict], dict]:
     """Per-provider API-gateway latency measured by scripts/probe_endpoint_latency.py.
 
     The file is written by a real probe run, never by hand: every entry carries
     its own check date, endpoint and samples so the column can be audited.
     """
-    path = ACCESS_DATA_DIR / ENDPOINT_LATENCY_FILE
+    path = (Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / ENDPOINT_LATENCY_FILE
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
@@ -2668,48 +2700,33 @@ def _model_catalog_row(
         if linkable else
         f'<span class="model-name model-name-static" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></span>'
     )
-    card_model_markup = (
-        f'<a href="{_esc(model_aggregate_url(model))}">{_esc(model_name)}</a>'
-        if linkable else
-        f'<span>{_esc(model_name)}</span>'
-    )
-    card_facts = "".join(
-        f'<span class="model-card-fact"><small>{label}</small>{value}</span>'
-        for label, value in (
-            (_locale_pair("上下文", "Context"), _esc(context_text)),
-            (_locale_pair("速率", "Rate"), _esc(model.get("rateLimit") or "—")),
-            (_locale_pair("接口", "API"), f"{_esc(latency_ms)}ms" if latency_ms else "—"),
-            (_locale_pair("发布", "Released"), _esc(model.get("released") or "—")),
-        )
-    )
     return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}" data-modality="{_esc(modality_key)}" data-context="{_esc(str(model.get("context") or ""))}" data-released="{_esc(str(model.get("released") or ""))}" data-ms="{_esc(latency_ms)}" data-score="{_esc(str(model.get("score") or ""))}">
-      <td class="row-index" data-label="#">{row_number or "—"}</td>
-      <td class="model-cell" data-label="模型">{model_name_markup}<small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
-      <td class="provider-cell" data-label="服务商"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
-      <td data-label="上下文长度" title="{_esc(str(model.get("context") or ""))}">{_esc(context_text)}</td>
-      <td data-label="最大输出">{_esc(_format_context_window(model.get("maxOutput")) if str(model.get("maxOutput") or "").isdigit() else (model.get("maxOutput") or "—"))}</td>
-      <td data-label="支持模态"><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
-      <td data-label="速率限制">{_esc(model.get("rateLimit") or "—")}</td>
+      <td class="row-index">{row_number or "—"}</td>
+      <td class="model-cell">{model_name_markup}<small class="model-id" title="{_esc(model_id)}">{_esc(model_id)}</small></td>
+      <td class="provider-cell"><button class="provider-filter" type="button" data-provider-value="{_esc(provider_id)}">{_esc(provider_name)}</button><a class="provider-page-link" href="{_esc(provider_url(provider_id))}">{_locale_pair("详情", "Details")}</a></td>
+      <td title="{_esc(str(model.get("context") or ""))}">{_esc(context_text)}</td>
+      <td>{_esc(_format_context_window(model.get("maxOutput")) if str(model.get("maxOutput") or "").isdigit() else (model.get("maxOutput") or "—"))}</td>
+      <td><div class="model-badges">{modalities or '<span class="muted">—</span>'}</div></td>
+      <td>{_esc(model.get("rateLimit") or "—")}</td>
       {latency_cell}
-      <td data-label="发布时间">{_esc(model.get("released") or "—")}</td>
-      <td data-label="在线状态"><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
-      <td data-label="中国大陆可用性"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
-      <td class="source-cell" data-label="操作"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
-    </tr>
-    <tr class="catalog-card-row" hidden><td colspan="12"><div class="catalog-card"><h3>{card_model_markup}</h3><small class="model-id">{_esc(model_id)}</small><div class="model-badges">{modalities or ""}</div><div class="catalog-card-facts">{card_facts}</div><div class="catalog-card-meta"><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></div></div></td></tr>'''
+      <td>{_esc(model.get("released") or "—")}</td>
+      <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
+      <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
+      <td class="source-cell"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
+    </tr>'''
 
 
-def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0, linkable_model_slugs: set[str] | None = None) -> str:
+def _model_catalog_markup(models: list[dict], include_heading: bool = True, page_num: int = 1, total_pages: int = 1, total_models: int = 0, linkable_model_slugs: set[str] | None = None, data_dir: Path | None = None) -> str:
     if not models:
         return ""
-    provider_cards, policies, model_access = _load_access_context()
+    provider_cards, policies, model_access = _load_access_context(data_dir)
     cn_statuses = {}
     for model in models:
         code = _cn_status_for_model(model, provider_cards, policies, model_access)
         cn_statuses[str(model.get("id") or "")] = {"code": code, "zh": _CN_STATUS_LABELS[code][0], "en": _CN_STATUS_LABELS[code][1]}
     providers = sorted({(str(model.get("providerId") or ""), str(model.get("provider") or "")) for model in models}, key=lambda item: item[1].lower())
     provider_options = "".join(f'<option value="{_esc(provider_id)}">{_esc(name)}</option>' for provider_id, name in providers if provider_id)
-    latencies, latency_meta = _load_endpoint_latency()
+    latencies, latency_meta = _load_endpoint_latency(data_dir)
     start_index = (page_num - 1) * MODELS_PER_PAGE if total_pages > 1 else 0
     rows = "".join(
         _model_catalog_row(model, cn_statuses, row_number=start_index + offset, latencies=latencies, latency_meta=latency_meta, linkable_model_slugs=linkable_model_slugs)
@@ -2795,14 +2812,15 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             {_locale_pair("卡片", "Cards")}</button>
         </div>
       </div>
-      <div class="mdir-chips" role="group" aria-label="热门筛选 / Quick filters">
-        <span class="mdir-chips-label">{_locale_pair("热门筛选", "Quick filters")}</span>
-        <button type="button" class="mdir-chip" data-chip-region="available">{_locale_pair("中国大陆可用", "Mainland CN available")}</button>
-        <button type="button" class="mdir-chip" data-chip-region="unknown">{_locale_pair("待核验", "Unverified")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="text">{_locale_pair("文本生成", "Text")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="reasoning">{_locale_pair("推理模型", "Reasoning")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="image">{_locale_pair("图像", "Image")}</button>
-        <button type="button" class="mdir-chip" data-chip-modality="audio">{_locale_pair("语音", "Audio")}</button>
+      <div class="mdir-chips" role="group" aria-label="场景快捷筛选 / Scenario filters">
+        <span class="mdir-chips-label">{_locale_pair("场景快捷筛选", "Scenario filters")}</span>
+        <button type="button" class="mdir-chip" data-chip-context-min="128000" aria-pressed="false">{_locale_pair("128K+ 上下文", "128K+ context")}</button>
+        <button type="button" class="mdir-chip" data-chip-region="available" aria-pressed="false">{_locale_pair("中国大陆可用", "Mainland CN available")}</button>
+        <button type="button" class="mdir-chip" data-chip-region="unknown" aria-pressed="false">{_locale_pair("待核验", "Unverified")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="text" aria-pressed="false">{_locale_pair("文本生成", "Text")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="reasoning" aria-pressed="false">{_locale_pair("推理模型", "Reasoning")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="image" aria-pressed="false">{_locale_pair("图像", "Image")}</button>
+        <button type="button" class="mdir-chip" data-chip-modality="audio" aria-pressed="false">{_locale_pair("语音", "Audio")}</button>
         <span class="mdir-chips-spacer"></span>
         <span id="model-catalog-count" class="catalog-count"></span>
         <span class="catalog-modes" aria-label="分组方式 / Group by">
@@ -2824,8 +2842,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const table = document.getElementById('model-catalog');
           const body = table?.querySelector('tbody');
           const dataRows = body ? Array.from(body.querySelectorAll('.catalog-row')) : [];
-          const cardRows = body ? Array.from(body.querySelectorAll('.catalog-card-row')) : [];
-          const pairs = dataRows.map((row, index) => ({{ row, card: cardRows[index] || null }}));
+          const pairs = dataRows.map(row => ({{ row }}));
           const search = document.getElementById('model-catalog-search');
           const provider = document.getElementById('model-catalog-provider');
           const region = document.getElementById('model-catalog-region');
@@ -2839,6 +2856,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const chips = Array.from(document.querySelectorAll('.mdir-chip'));
           let mode = 'provider';
           let sortMode = 'group';
+          let contextMin = 0;
           const isEnglish = () => document.documentElement.dataset.locale === 'en' || document.documentElement.lang === 'en';
           const localizeControls = () => {{
             if (search) search.placeholder = isEnglish() ? search.dataset.placeholderEn : search.dataset.placeholderZh;
@@ -2854,10 +2872,13 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             const regionFilter = region?.value || '';
             const modalityFilter = modality?.value || '';
             const modalities = (row.dataset.modality || '').split(',').filter(Boolean);
+            const contextValue = Number.parseInt(row.dataset.context || '', 10);
+            const matchesContext = !contextMin || (Number.isFinite(contextValue) && contextValue >= contextMin);
             return (!query || textOf(row).includes(query))
               && (!providerId || row.dataset.providerId === providerId)
               && (!regionFilter || row.dataset.cn === regionFilter)
-              && (!modalityFilter || modalities.includes(modalityFilter));
+              && (!modalityFilter || modalities.includes(modalityFilter))
+              && matchesContext;
           }};
           const sortedPairs = () => {{
             const list = pairs.filter(matches);
@@ -2893,13 +2914,21 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           const apply = () => {{
             const cards = section?.dataset.catalogView === 'cards';
             const visible = sortedPairs();
+            const visibleRows = new Set(visible.map(pair => pair.row));
+            pairs.forEach(pair => {{ pair.row.hidden = !visibleRows.has(pair.row); }});
+            const cardLabels = isEnglish()
+              ? ['Row', 'Model', 'Provider', 'Context', 'Max output', 'Modality', 'Rate limit', 'API latency', 'Released', 'Status', 'Mainland CN', 'Actions']
+              : ['序号', '模型', '服务商', '上下文长度', '最大输出', '支持模态', '速率限制', '接口速度', '发布时间', '在线状态', '中国大陆可用性', '操作'];
             body.querySelectorAll('.catalog-group-row').forEach(row => row.remove());
             let previousGroup = '';
             visible.forEach((pair, index) => {{
               const indexCell = pair.row.querySelector('.row-index');
               if (indexCell) indexCell.textContent = String(index + 1);
-              pair.row.hidden = cards;
-              if (pair.card) pair.card.hidden = !cards;
+              pair.row.hidden = false;
+              pair.row.querySelectorAll(':scope > td').forEach((cell, cellIndex) => {{
+                if (cards) cell.setAttribute('aria-label', cardLabels[cellIndex] || '');
+                else cell.removeAttribute('aria-label');
+              }});
               if (!cards && sortMode === 'group') {{
                 const groupCell = mode === 'provider' ? pair.row.querySelector('.provider-filter') : pair.row.querySelector('.model-cell strong');
                 const group = groupCell ? groupCell.textContent.trim() : '';
@@ -2916,15 +2945,18 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
                 }}
               }}
               body.appendChild(pair.row);
-              if (pair.card) body.appendChild(pair.card);
             }});
             if (count) count.textContent = isEnglish() ? `Showing ${{visible.length}} / ${{pairs.length}}` : `显示 ${{visible.length}} 条 / 共 ${{pairs.length}} 条`;
             if (empty) empty.hidden = visible.length !== 0;
             chips.forEach(chip => {{
               const chipRegion = chip.dataset.chipRegion;
               const chipModality = chip.dataset.chipModality;
-              const active = (chipRegion && region?.value === chipRegion) || (chipModality && modality?.value === chipModality);
+              const chipContextMin = Number.parseInt(chip.dataset.chipContextMin || '', 10);
+              const active = (chipRegion && region?.value === chipRegion)
+                || (chipModality && modality?.value === chipModality)
+                || (chipContextMin && contextMin === chipContextMin);
               chip.classList.toggle('is-active', Boolean(active));
+              chip.setAttribute('aria-pressed', String(Boolean(active)));
             }});
           }};
           search?.addEventListener('input', apply);
@@ -2948,6 +2980,10 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
           chips.forEach(chip => chip.addEventListener('click', () => {{
             if (chip.dataset.chipRegion && region) region.value = region.value === chip.dataset.chipRegion ? '' : chip.dataset.chipRegion;
             if (chip.dataset.chipModality && modality) modality.value = modality.value === chip.dataset.chipModality ? '' : chip.dataset.chipModality;
+            if (chip.dataset.chipContextMin) {{
+              const value = Number.parseInt(chip.dataset.chipContextMin, 10);
+              contextMin = contextMin === value ? 0 : value;
+            }}
             apply();
           }}));
           clear?.addEventListener('click', () => {{
@@ -2955,6 +2991,7 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
             if (provider) provider.value = '';
             if (region) region.value = '';
             if (modality) modality.value = '';
+            contextMin = 0;
             if (sortSelect) sortSelect.value = 'group';
             sortMode = 'group';
             apply();
@@ -3020,19 +3057,18 @@ def _model_catalog_markup(models: list[dict], include_heading: bool = True, page
         .model-directory .catalog-table .latency-value {{ font: 500 12.5px/1.5 var(--font-mono); color: var(--ink); }}
         .model-directory .catalog-table .latency-unknown {{ color: var(--ink-tertiary); }}
         .model-directory .catalog-latency-note {{ margin: -4px 0 12px; color: var(--ink-tertiary); font: 400 12px/1.7 var(--font-sans); }}
-        .model-directory .catalog-card-row > td {{ padding: 0; border-bottom: 0; background: transparent; }}
-        .model-directory .catalog-card {{ display: grid; gap: 10px; margin: 6px 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }}
-        .model-directory .catalog-card h3 {{ margin: 0; font: 600 15px/1.4 var(--font-mono); }}
-        .model-directory .catalog-card h3 a {{ color: var(--ink); text-decoration: none; }}
-        .model-directory .catalog-card h3 a:hover {{ color: var(--accent); }}
-        .model-directory .catalog-card-facts {{ display: flex; flex-wrap: wrap; gap: 8px 18px; }}
-        .model-directory .catalog-card-fact {{ display: grid; gap: 1px; font: 500 12.5px/1.5 var(--font-sans); color: var(--ink); }}
-        .model-directory .catalog-card-fact small {{ color: var(--ink-tertiary); font: 500 10.5px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }}
-        .model-directory .catalog-card-meta {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }}
+        .model-directory[data-catalog-view="cards"] .catalog-table {{ display: block; min-width: 0; }}
+        .model-directory[data-catalog-view="cards"] .catalog-table tbody {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 390px), 1fr)); gap: 12px; }}
         .model-directory[data-catalog-view="cards"] .catalog-table thead {{ display: none; }}
-        .model-directory[data-catalog-view="cards"] .catalog-row {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row {{ display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 2px 8px rgba(30,40,60,.04); }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > td {{ display: flex; min-width: 0; align-items: baseline; justify-content: space-between; gap: 10px; padding: 7px 0; border: 0; border-bottom: 1px solid var(--line-soft); background: transparent; text-align: right; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > td::before {{ content: attr(aria-label); flex: 0 0 auto; color: var(--ink-tertiary); font-size: 11px; text-align: left; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell {{ grid-column: 1 / -1; display: block; text-align: left; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell::before {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > .model-cell .model-id {{ display: block; margin-top: 3px; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > .row-index {{ display: none; }}
+        .model-directory[data-catalog-view="cards"] .catalog-row > .source-cell {{ grid-column: 1 / -1; justify-content: flex-end; border: 0; }}
         .model-directory[data-catalog-view="cards"] .catalog-group-row {{ display: none; }}
-        .model-directory[data-catalog-view="cards"] .catalog-card-row {{ display: table-row; }}
         @media (max-width: 720px) {{
           .model-directory .mdir-heading-link {{ display: none; }}
           .model-directory .mdir-field, .model-directory .mdir-field select {{ flex: 1 1 45%; max-width: none; }}
@@ -3356,18 +3392,18 @@ def _model_api_offer_card(offer: dict, model: dict, site_url: str) -> str:
     </article>'''
 
 
-def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str, curated_models: list[dict] | None = None, featured_agents: list[dict] | None = None) -> str:
+def render_models_landing_page(offers: list[dict], models: list[dict], vendor_directory: list[dict], site_url: str, curated_models: list[dict] | None = None, featured_agents: list[dict] | None = None, data_dir: Path | None = None) -> str:
     path = MODELS_PAGE_PATH
     page_url = _absolute(site_url, path)
     offer_count = len(offers)
     model_record_count = len(models)
     current_model_ids = {str(model.get("id") or "") for model in models}
     curated_models = [
-        model for model in (curated_models if curated_models is not None else _load_curated_models(Path("data")))
+        model for model in (curated_models if curated_models is not None else _load_curated_models(data_dir or Path("data")))
         if str(model.get("id") or "") in current_model_ids
     ]
     vendor_directory_count = len(vendor_directory)
-    featured_agents = featured_agents if featured_agents is not None else _load_featured_agents(ACCESS_DATA_DIR)
+    featured_agents = featured_agents if featured_agents is not None else _load_featured_agents(data_dir)
     offers_by_id = {str(offer.get("id") or ""): offer for offer in offers}
     for agent in featured_agents:
         offer_id = str(agent.get("offerId") or "")
@@ -3561,7 +3597,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前收录 {len(featured_agents)} 个 AI Agent', f'{len(featured_agents)} AI agents listed')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
 <footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">Skills</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(featured_agents)} 个 Agent。', f'{len(curated_models)} featured models and {len(featured_agents)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
 
-def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1) -> str:
+def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1, data_dir: Path | None = None) -> str:
     """Bilingual (Chinese / English) directory of every verified offer with a
     registration CTA, so one shareable URL serves both language communities."""
     if models is not None and total_pages > 1:
@@ -3579,7 +3615,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
         page_models = model_catalog[start:end]
     else:
         page_models = model_catalog
-    provider_access_count = len(_load_access_context()[0]) if models is not None else 0
+    provider_access_count = len(_load_access_context(data_dir)[0]) if models is not None else 0
     if models is None:
         title = "免费 AI 资源目录：模型、API 与 IDE · Free AI Resources Directory | FreeLLM"
         description = (
@@ -3806,7 +3842,7 @@ def render_models_page(offers: list[dict], site_url: str, models: list[dict] | N
     </div>
     <div class="callout">{_locale_pair('免费额度受地区、账户类型、速率限制和有效期约束，注册前请以官方页面为准。', 'Free access is always subject to region, account type, rate limits and expiry — verify the official page before signing up.')}</div>
   </header>
-  <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog))}{cn_section}{sections_markup}
+  <main>{_model_catalog_markup(page_models, page_num=page_num, total_pages=total_pages, total_models=model_total, linkable_model_slugs=indexable_model_slugs(model_catalog), data_dir=data_dir)}{cn_section}{sections_markup}
     <section>
       <h2>{_locale_pair('按分类浏览', 'Browse by category')}</h2>
       <p class="section-desc">{_locale_pair('每个分类有独立页面，收录同一资源的深度信息。', 'Each category has its own page with the full verified records.')}</p>
@@ -5171,18 +5207,18 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     ]
     model_catalog = models or []
     providers = _provider_catalog_from_models(model_catalog, operations)
-    provider_access, _, model_access = _load_access_context()
+    provider_access, _, model_access = _load_access_context(data_dir)
     files: dict[Path, str] = {
         **render_sitemaps(offers, categories, site_url, model_catalog, providers),
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
-        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers)),
-        Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1),
+        Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers), data_dir=data_dir),
+        Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1, data_dir=data_dir),
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
-        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs(ACCESS_DATA_DIR / "offers.json"), site_url, offers, model_catalog),
+        Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json"), site_url, offers, model_catalog),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
@@ -5197,7 +5233,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     if models:
         total_pages = (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
         for page_num in range(2, total_pages + 1):
-            files[Path("models") / "all" / f"page/{page_num}" / "index.html"] = render_models_page(offers, site_url, models, page_num=page_num, total_pages=total_pages)
+            files[Path("models") / "all" / f"page/{page_num}" / "index.html"] = render_models_page(offers, site_url, models, page_num=page_num, total_pages=total_pages, data_dir=data_dir)
     for definition in THEME_GUIDE_DEFINITIONS:
         path = Path("guides") / definition["slug"] / "index.html"
         files[path] = _render_theme_guide_page_expanded(offers, model_catalog, site_url, definition["slug"])
@@ -5642,9 +5678,52 @@ def _read_manifest(output_root: Path) -> list[str]:
         return []
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return []
-    return [path for path in manifest.get("files", []) if isinstance(path, str)] if isinstance(manifest, dict) else []
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot read SEO manifest {manifest_path}: {error}") from error
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), list) or not all(isinstance(path, str) for path in manifest["files"]):
+        raise ValueError(f"invalid SEO manifest {manifest_path}: expected an object with a files array of paths")
+    return manifest["files"]
+
+
+MANAGED_PAGE_ROOTS = {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow"}
+
+
+def _safe_manifest_page(output_root: Path, relative: str) -> Path | None:
+    """Resolve a manifest entry only when it is a contained, allowlisted page."""
+    try:
+        candidate = Path(relative)
+    except (OSError, RuntimeError, ValueError):
+        return None
+    if candidate.is_absolute() or ".." in candidate.parts or candidate.name != "index.html" or not candidate.parts or candidate.parts[0] not in MANAGED_PAGE_ROOTS:
+        return None
+    if any(any(ord(char) < 32 or ord(char) == 127 for char in part) for part in candidate.parts):
+        return None
+    try:
+        resolved_root = output_root.resolve()
+        resolved = (resolved_root / candidate).resolve()
+        resolved.relative_to(resolved_root)
+        if resolved == resolved_root or resolved_root not in resolved.parents:
+            return None
+        lexical = resolved_root / candidate
+        ancestor = lexical.parent
+        while ancestor != resolved_root:
+            is_junction = getattr(ancestor, "is_junction", lambda: False)
+            if ancestor.is_symlink() or is_junction():
+                # Unlinking a child through a directory link would unlink its
+                # target, so only allow a link at the final manifest route itself.
+                return None
+            lexical_ancestor = os.path.normcase(os.path.abspath(ancestor))
+            resolved_ancestor = os.path.normcase(str(ancestor.resolve(strict=False)))
+            if lexical_ancestor != resolved_ancestor:
+                # Python 3.11 may not identify junctions as symlinks. Resolution
+                # still detects redirects, including redirects elsewhere in-root.
+                return None
+            ancestor = ancestor.parent
+        # Resolve only to validate containment. Cleanup unlinks the manifest
+        # route itself and never the target of a final file symlink.
+        return lexical
+    except (OSError, RuntimeError, ValueError):
+        return None
 
 
 def _clean_previous_pages(output_root: Path, keep: set[str] | None = None) -> int:
@@ -5655,18 +5734,18 @@ def _clean_previous_pages(output_root: Path, keep: set[str] | None = None) -> in
     every managed page, so callers must always write the new pages first.
     """
     removed = 0
-    for relative in _read_manifest(output_root):
+    try:
+        previous_paths = _read_manifest(output_root)
+    except ValueError as error:
+        # An invalid manifest must never authorize deletion. The new output is
+        # already written, so retain old files and report the skipped cleanup.
+        print(f"skipped SEO cleanup: {error}")
+        return 0
+    for relative in previous_paths:
         if keep is not None and relative in keep:
             continue
-        path = (output_root / relative).resolve()
-        root = output_root.resolve()
-        try:
-            relative_path = path.relative_to(root)
-        except ValueError:
-            continue
-        if root not in path.parents or path.name != "index.html" or relative_path.parts[0] not in {"offers", "category", "guides", "models", "providers", "logs", "skills"}:
-            # 深度不限：models/all/page/N/index.html 这类分页页（5 段路径）也是受管页面，
-            # 目录瘦身、分页数变少时同样要随 manifest 清理，否则会留下带死链的陈旧分页。
+        path = _safe_manifest_page(output_root, relative)
+        if path is None:
             continue
         if path.is_file():
             path.unlink()
@@ -6050,6 +6129,21 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     }
     output_root = Path(output_root)
     if check:
+        try:
+            previous_manifest = _read_manifest(output_root)
+        except ValueError as error:
+            print(f"invalid SEO manifest: {error}")
+            return False
+        expected_managed = {
+            path.as_posix()
+            for path in files
+            if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow"}
+        }
+        stale_manifest = sorted({
+            relative
+            for relative in previous_manifest
+            if _safe_manifest_page(output_root, relative) is not None and relative not in expected_managed
+        })
         stale = []
         for relative, content in files.items():
             path = output_root / relative
@@ -6064,8 +6158,11 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
                     print(f"stale detail {relative} @ char {offset}")
                     print("  current :", repr(current[left:right]))
                     print("  expected:", repr(content[left:right]))
-        if stale:
-            print("stale SEO output: " + ", ".join(stale))
+        if stale or stale_manifest:
+            if stale:
+                print("stale SEO output: " + ", ".join(stale))
+            if stale_manifest:
+                print("stale SEO manifest routes: " + ", ".join(stale_manifest))
             return False
         print(f"current SEO output: {len(files)} files")
         return True

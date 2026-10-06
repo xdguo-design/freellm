@@ -710,6 +710,57 @@ class BrowserPageTests(unittest.TestCase):
                         f"{route} creates page-level horizontal overflow at {width}px",
                     )
                     page.close()
+
+    def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/models/all/")
+        page.wait_for_selector("#model-catalog .catalog-row")
+        rows = page.locator("#model-catalog .catalog-row")
+        total = rows.count()
+        context_chip = page.locator('.mdir-chip[data-chip-context-min="128000"]')
+        image_chip = page.locator('.mdir-chip[data-chip-modality="image"]')
+        visible_rows = page.locator("#model-catalog .catalog-row:not([hidden])")
+
+        context_count = rows.evaluate_all(
+            "els => els.filter(row => Number.parseInt(row.dataset.context || '', 10) >= 128000).length"
+        )
+        context_chip.click()
+        self.assertEqual(visible_rows.count(), context_count)
+        self.assertEqual(context_chip.get_attribute("aria-pressed"), "true")
+        self.assertEqual(image_chip.get_attribute("aria-pressed"), "false")
+
+        intersection_count = rows.evaluate_all(
+            "els => els.filter(row => Number.parseInt(row.dataset.context || '', 10) >= 128000 && row.dataset.modality.split(',').includes('image')).length"
+        )
+        image_chip.click()
+        self.assertEqual(visible_rows.count(), intersection_count)
+        self.assertLess(intersection_count, context_count)
+        self.assertEqual(context_chip.get_attribute("aria-pressed"), "true")
+        self.assertEqual(image_chip.get_attribute("aria-pressed"), "true")
+        self.assertTrue(
+            visible_rows.evaluate_all(
+                "els => els.every(row => Number.parseInt(row.dataset.context || '', 10) >= 128000 && row.dataset.modality.split(',').includes('image'))"
+            )
+        )
+
+        page.locator("#model-catalog-clear").click()
+        self.assertEqual(visible_rows.count(), total)
+        self.assertEqual(context_chip.get_attribute("aria-pressed"), "false")
+        self.assertEqual(image_chip.get_attribute("aria-pressed"), "false")
+        self.assertFalse(page.locator("#model-catalog-empty").is_visible())
+
+        context_chip.click()
+        page.locator("#model-catalog-search").fill("__no_catalog_match__")
+        self.assertEqual(visible_rows.count(), 0)
+        self.assertTrue(page.locator("#model-catalog-empty").is_visible())
+        self.assertEqual(context_chip.get_attribute("aria-pressed"), "true")
+        self.assertEqual(image_chip.get_attribute("aria-pressed"), "false")
+        page.locator("#model-catalog-clear").click()
+        self.assertEqual(visible_rows.count(), total)
+        self.assertFalse(page.locator("#model-catalog-empty").is_visible())
+        self.assertEqual(context_chip.get_attribute("aria-pressed"), "false")
+        self.assertEqual(image_chip.get_attribute("aria-pressed"), "false")
+
     def test_visual_regression_equal_height_cards_and_home_hierarchy(self):
         page = self.new_page()
         page.set_viewport_size({"width": 1440, "height": 1000})
