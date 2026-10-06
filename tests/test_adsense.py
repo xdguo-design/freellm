@@ -46,6 +46,8 @@ class AdsenseGateTests(unittest.TestCase):
         self.assertEqual(report["noindex_with_loader"], [])
         self.assertTrue(report["privacy_disclosure_ok"])
         self.assertEqual(report["manual_units_on_excluded_pages"], [])
+        exempt_paths = {entry["path"] for entry in report["exempt_pages"]}
+        self.assertTrue({"/privacy/", "/terms/"} <= exempt_paths)
 
     def test_ads_txt_publisher_is_parsed(self):
         with tempfile.TemporaryDirectory() as directory:
