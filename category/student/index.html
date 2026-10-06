@@ -193,6 +193,8 @@ pre code { padding:0; background:none; color:inherit; }
     article h2 a { color: var(--ink); text-decoration: none; }
     article h2 a:hover { color: var(--accent); }
     article p { margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }
+    .decision-guide, .verification-guide, .verified-list { margin-bottom: 30px; }
+    .decision-guide h2, .verification-guide h2, .verified-list h2 { font-size: clamp(22px, 3.6vw, 30px); }
     footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
@@ -206,7 +208,24 @@ pre code { padding:0; background:none; color:inherit; }
     <p><span lang="zh-CN">2 个经过核验的资源</span><span lang="en">2 verified resources</span></p>
   </header>
   <main>
-    <article>
+    <section class="decision-guide">
+      <div class="eyebrow"><span lang="zh-CN">怎么选</span><span lang="en">How to choose</span></div>
+      <h2><span lang="zh-CN">先判断它是否真的适合你的使用方式</span><span lang="en">Decide whether the offer actually fits your workload</span></h2>
+      <p><span lang="zh-CN">学生优惠的关键是资格验证方式和毕业后的价格，而不只是“学生免费”四个字。</span><span lang="en">The key to student offers is how eligibility is verified and what happens after eligibility ends, not merely the phrase “free for students.”</span></p>
+      <ul class="link-list"><li><strong><span lang="zh-CN">验证方式</span><span lang="en">Verification</span>：</strong><span lang="zh-CN">确认需要学校邮箱、第三方学生认证、在读证明还是指定国家/学校资格。</span><span lang="en">Check whether verification requires a school email, third-party student verification, enrollment documents or eligible countries/schools.</span></li><li><strong><span lang="zh-CN">权益范围</span><span lang="en">Benefit scope</span>：</strong><span lang="zh-CN">学生计划可能只覆盖 IDE、模型请求或特定高级功能，不一定包含完整商业版权益。</span><span lang="en">Student plans may cover only the IDE, model requests or selected premium features rather than the full commercial plan.</span></li><li><strong><span lang="zh-CN">资格结束</span><span lang="en">After eligibility</span>：</strong><span lang="zh-CN">毕业、认证过期或活动结束后，账户可能降级或转为付费；提前确认续费规则。</span><span lang="en">After graduation, verification expiry or the end of a promotion, the account may downgrade or become paid; check renewal terms in advance.</span></li></ul>
+      <div class="callout"><strong><span lang="zh-CN">避免误判</span><span lang="en">Avoid this mistake</span>：</strong><span lang="zh-CN">FreeLLM 不会把学生专属权益当作所有用户都能领取的通用免费方案。</span><span lang="en">FreeLLM does not present student-only benefits as a general free tier available to every user.</span></div>
+    </section>
+    <section class="verification-guide">
+      <div class="eyebrow"><span lang="zh-CN">FreeLLM 核验方法</span><span lang="en">How FreeLLM verifies</span></div>
+      <h2><span lang="zh-CN">我们优先保留可回到官方来源的事实</span><span lang="en">We keep claims traceable to official sources</span></h2>
+      <p><span lang="zh-CN">详情页尽量把免费方式、额度、有效期、地区、账号要求和官方入口拆开记录；没有证据的结论保持“待核验”，不会为了凑完整而猜测。</span><span lang="en">Detail pages separate the free mechanism, quota, validity, region, account requirements and official source. Claims without evidence remain unverified rather than being guessed.</span></p>
+      <p><span lang="zh-CN">如果平台规则发生变化，以提供商当前官方页面为准；FreeLLM 的“最后核验”用于告诉你本站什么时候重新检查过这条记录。</span><span lang="en">When provider terms change, the provider&#x27;s current official page is authoritative. FreeLLM&#x27;s “last checked” field tells you when we most recently re-verified the record.</span></p>
+    </section>
+    <section class="verified-list">
+      <div class="eyebrow"><span lang="zh-CN">已核验目录</span><span lang="en">Verified directory</span></div>
+      <h2><span lang="zh-CN">当前可用资源</span><span lang="en">Current verified resources</span></h2>
+      <p><span lang="zh-CN">下面每条记录都可以进入详情页查看官方来源、免费条件、有效期和接入要求。</span><span lang="en">Open any record below to review its official source, free-access mechanism, validity and setup requirements.</span></p>
+      <article>
           <h2><a href="/offers/github-copilot-free/"><span lang="zh-CN">GitHub Copilot · Free plan</span><span lang="en">GitHub Copilot · Free plan</span></a></h2>
           <p><span lang="zh-CN">2,000 completions / month + limited chat and agent usage</span><span lang="en">2,000 completions / month + limited chat and agent usage</span></p>
           <p class="muted"><span lang="zh-CN">Monthly / recurring free plan</span><span lang="en">Monthly / recurring free plan</span> · <span lang="zh-CN">Global GitHub personal account</span><span lang="en">Global GitHub personal account</span></p>
@@ -215,6 +234,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">Free Hobby plan · limited Agent, Chat and Tab usage</span><span lang="en">Free Hobby plan · limited Agent, Chat and Tab usage</span></p>
           <p class="muted"><span lang="zh-CN">Recurring free plan / limited usage</span><span lang="en">Recurring free plan / limited usage</span> · <span lang="zh-CN">Global Cursor account</span><span lang="en">Global Cursor account</span></p>
         </article>
+    </section>
   </main>
   <footer>
     <p><span lang="zh-CN">资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</span><span lang="en">Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.</span></p>

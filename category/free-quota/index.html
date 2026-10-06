@@ -194,6 +194,8 @@ pre code { padding:0; background:none; color:inherit; }
     article h2 a { color: var(--ink); text-decoration: none; }
     article h2 a:hover { color: var(--accent); }
     article p { margin: 0 0 4px; font-size: 14px; color: var(--ink-secondary); }
+    .decision-guide, .verification-guide, .verified-list { margin-bottom: 30px; }
+    .decision-guide h2, .verification-guide h2, .verified-list h2 { font-size: clamp(22px, 3.6vw, 30px); }
     footer { color: var(--ink-secondary); font-size: 13.5px; }
   </style>
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
@@ -207,7 +209,24 @@ pre code { padding:0; background:none; color:inherit; }
     <p><span lang="zh-CN">21 个经过核验的资源</span><span lang="en">21 verified resources</span></p>
   </header>
   <main>
-    <article>
+    <section class="decision-guide">
+      <div class="eyebrow"><span lang="zh-CN">怎么选</span><span lang="en">How to choose</span></div>
+      <h2><span lang="zh-CN">先判断它是否真的适合你的使用方式</span><span lang="en">Decide whether the offer actually fits your workload</span></h2>
+      <p><span lang="zh-CN">免费额度适合做原型、学习和低频任务，但要先确认额度是否会恢复，以及输入、输出、缓存和工具调用是否共用同一额度。</span><span lang="en">Free quota is useful for prototypes, learning and light workloads, but first confirm whether it renews and whether input, output, cache and tool calls share the same allowance.</span></p>
+      <ul class="link-list"><li><strong><span lang="zh-CN">恢复周期</span><span lang="en">Renewal window</span>：</strong><span lang="zh-CN">优先区分每日、每月、滚动窗口和一次性额度；一次性 credits 用完后通常不会自动恢复。</span><span lang="en">Separate daily, monthly, rolling-window and one-time allowances; signup credits usually do not renew.</span></li><li><strong><span lang="zh-CN">计量方式</span><span lang="en">Metering</span>：</strong><span lang="zh-CN">确认按请求、Token、积分还是金额扣减；同样写“1M”可能代表完全不同的实际可用量。</span><span lang="en">Check whether usage is metered by requests, tokens, credits or currency; the same “1M” label can imply very different real capacity.</span></li><li><strong><span lang="zh-CN">账号条件</span><span lang="en">Account conditions</span>：</strong><span lang="zh-CN">手机号、实名、地区、新用户资格和信用卡要求会直接决定你能否拿到页面上看到的额度。</span><span lang="en">Phone, identity, region, new-user eligibility and card requirements can determine whether the advertised quota is actually available to you.</span></li></ul>
+      <div class="callout"><strong><span lang="zh-CN">避免误判</span><span lang="en">Avoid this mistake</span>：</strong><span lang="zh-CN">如果额度只对新用户、指定地域或指定模型有效，我们会在详情页写清，不把局部优惠泛化成整个平台永久免费。</span><span lang="en">When quota applies only to new users, specific regions or selected models, the detail page says so instead of generalizing it into a platform-wide free tier.</span></div>
+    </section>
+    <section class="verification-guide">
+      <div class="eyebrow"><span lang="zh-CN">FreeLLM 核验方法</span><span lang="en">How FreeLLM verifies</span></div>
+      <h2><span lang="zh-CN">我们优先保留可回到官方来源的事实</span><span lang="en">We keep claims traceable to official sources</span></h2>
+      <p><span lang="zh-CN">详情页尽量把免费方式、额度、有效期、地区、账号要求和官方入口拆开记录；没有证据的结论保持“待核验”，不会为了凑完整而猜测。</span><span lang="en">Detail pages separate the free mechanism, quota, validity, region, account requirements and official source. Claims without evidence remain unverified rather than being guessed.</span></p>
+      <p><span lang="zh-CN">如果平台规则发生变化，以提供商当前官方页面为准；FreeLLM 的“最后核验”用于告诉你本站什么时候重新检查过这条记录。</span><span lang="en">When provider terms change, the provider&#x27;s current official page is authoritative. FreeLLM&#x27;s “last checked” field tells you when we most recently re-verified the record.</span></p>
+    </section>
+    <section class="verified-list">
+      <div class="eyebrow"><span lang="zh-CN">已核验目录</span><span lang="en">Verified directory</span></div>
+      <h2><span lang="zh-CN">当前可用资源</span><span lang="en">Current verified resources</span></h2>
+      <p><span lang="zh-CN">下面每条记录都可以进入详情页查看官方来源、免费条件、有效期和接入要求。</span><span lang="en">Open any record below to review its official source, free-access mechanism, validity and setup requirements.</span></p>
+      <article>
           <h2><a href="/offers/keenable-search-free/"><span lang="zh-CN">Keenable · Search API free quota</span><span lang="en">Keenable · Search API free quota</span></a></h2>
           <p><span lang="zh-CN">100,000 requests / month · no card</span><span lang="en">100,000 requests / month · no card</span></p>
           <p class="muted"><span lang="zh-CN">Monthly quota; overage metered</span><span lang="en">Monthly quota; overage metered</span> · <span lang="zh-CN">Global · cloud only</span><span lang="en">Global · cloud only</span></p>
@@ -292,6 +311,7 @@ pre code { padding:0; background:none; color:inherit; }
           <p><span lang="zh-CN">百川“海纳百川计划”对符合准入条件的医疗服务机构提供 Baichuan-M3 Plus API 永久免费调用。</span><span lang="en">Application-based permanent-free access under the Haina Baichuan medical public-interest program</span></p>
           <p class="muted"><span lang="zh-CN">长期计划 · 需申请并通过准入审核</span><span lang="en">Ongoing while the program and approved eligibility remain valid</span> · <span lang="zh-CN">仅限指定机构/场景；普通开放平台调用仍按官方价格计费</span><span lang="en">Apply to the Haina Baichuan program, pass review, obtain API access, and comply with medical-use restrictions</span></p>
         </article>
+    </section>
   </main>
   <footer>
     <p><span lang="zh-CN">资源按免费额度、试用、优惠、学生资格、开放权重和低成本访问方式区分。使用前请核对官方条款。</span><span lang="en">Resources are grouped by free quota, trials, promotions, student eligibility, open weights and low-cost access. Verify provider terms before use.</span></p>
