@@ -37,6 +37,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-disc
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a>
+    <a href="/evaluations/" data-site-nav="evaluations"><span class="fl-site-nav-icon" aria-hidden="true">◎</span><span>实测</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="prototype-theme-toggle" aria-label="主题切换"><span class="active">☀</span><span>◔</span></div>
@@ -580,6 +581,19 @@ def normalize_home_section_priority(html: str) -> str:
     # Keep them immediately after the main resource catalog and before comparison/download/FAQ.
     return without_student[:compare_match.start()] + student + without_student[compare_match.start():]
 
+def update_eval_leaderboard(html: str) -> str:
+    """Insert the real-evaluation leaderboard (data/evaluations/latest.json) into the homepage."""
+    from scripts.eval_integration import LEADERBOARD_CSS, leaderboard_html
+
+    html = re.sub(r"<!--fl-evalboard-->.*?<!--/fl-evalboard-->", "", html, flags=re.S)
+    board = leaderboard_html(6)
+    anchor = '<section class="prototype-hot"'
+    if not board or anchor not in html:
+        return html
+    block = f"<!--fl-evalboard--><style>{LEADERBOARD_CSS}</style>{board}<!--/fl-evalboard-->"
+    return html.replace(anchor, block + anchor, 1)
+
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -601,6 +615,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
+    updated = update_eval_leaderboard(updated)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',

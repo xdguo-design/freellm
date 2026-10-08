@@ -46,14 +46,16 @@ jobs:
             PROVIDERS="$(tr -d ' \n' < data/evaluations/providers.txt)"
           fi
           EVAL_PROVIDERS="$PROVIDERS" python scripts/eval_models.py --out data/evaluations --merge | tee -a "$GITHUB_STEP_SUMMARY"
-      - name: Build evaluation report page
+      - name: Rebuild pages that show evaluation results
         run: |
-          if [ -f scripts/build_eval_report.py ]; then python scripts/build_eval_report.py; fi
+          python scripts/build_seo_pages.py
+          python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+          python scripts/build_eval_report.py
       - name: Commit results
         run: |
           git config user.name "freellm-eval-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/evaluations evaluations || git add data/evaluations
+          git add -A data/evaluations evaluations models design data/offers.js data/offers-ranked.json
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -m "data(eval): real model evaluation $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
