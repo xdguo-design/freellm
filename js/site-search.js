@@ -24,7 +24,7 @@
   const short = (value, n=190) => String(value || '').replace(/\s+/g,' ').slice(0,n);
   const addOffer = item => ({
     type:'offer', title:item.titleZh || item.title || item.name || item.id,
-    description:short([item.freeSummary,item.freeMechanism,item.accessSummary].filter(Boolean).join(' · ')),
+    description:short([item.status === 'expired' || (item.expires_at && item.expires_at < new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()) ? '已结束' : '', item.sourceKind && item.sourceKind !== 'official' ? '第三方聚合 · 非官方' : '',item.freeSummary,item.freeMechanism,item.accessSummary].filter(Boolean).join(' · ')),
     keywords:[item.name,item.provider,item.model,item.productType,(item.type||[]).join(' '),'免费 API','API',item.freeSummary].join(' '),
     href:'/offers/'+encodeURIComponent(item.id)+'/'
   });
