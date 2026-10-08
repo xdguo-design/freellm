@@ -2853,13 +2853,10 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
-    # Thin single-record pages are directly addressable but are not promoted
-    # by directory links; only explicitly indexable aggregates are linked.
-    linkable = bool(linkable_model_slugs and _safe_slug(model_name, "model") in linkable_model_slugs)
+    # Even a one-record noindex aggregate is a useful human-facing detail page.
+    # noindex controls search indexing, not navigation or link accessibility.
     model_name_markup = (
         f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
-        if linkable else
-        f'<span class="model-name model-name-static" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></span>'
     )
     return f'''<tr class="catalog-row" data-model-id="{_esc(model_id)}" data-provider-id="{_esc(provider_id)}" data-cn="{_esc(cn["code"])}" data-modality="{_esc(modality_key)}" data-context="{_esc(str(model.get("context") or ""))}" data-released="{_esc(str(model.get("released") or ""))}" data-ms="{_esc(latency_ms)}" data-score="{_esc(str(model.get("score") or ""))}">
       <td class="row-index">{row_number or "—"}</td>
@@ -2873,7 +2870,7 @@ def _model_catalog_row(
       <td>{_esc(model.get("released") or "—")}</td>
       <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
       <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
-      <td class="source-cell"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
+      <td class="source-cell"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_catalog_source_label(model)} ↗</a></td>
     </tr>'''
 
 
@@ -3744,6 +3741,13 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         return f'''<article class="featured-agent-card" data-agent-id="{_esc(agent_id)}" data-agent-kind="{_esc(str(agent["kindEn"]).lower())}" data-search-text="{search_text}"><div class="featured-agent-mark">{icon}</div><div class="featured-agent-content"><h3>{_locale_pair(_esc(title_text), _esc(title_en))}</h3><small>{_esc(provider_text)}</small><p>{_locale_pair(_esc(summary), _esc(summary_en))}</p><div class="featured-agent-tags">{tags}</div><a href="{_esc(href)}"{external_attrs}>{_locale_pair("查看详情", "Details")} →</a></div></article>'''
 
     featured_cards = "".join(featured_card(model, index) for index, model in enumerate(curated_models, 1))
+    if not featured_cards:
+        featured_cards = (
+            '<p class="models-empty-state" role="status">'
+            '当前尚无达到可复现推理实测标准的团队精选模型。'
+            '已核验但未实测的模型仍可在 <a href="/models/all/">全部模型</a> 中查看。'
+            '</p>'
+        )
     agent_cards = "".join(agent_card(agent) for agent in featured_agents)
     voice_count = sum("voice" in category_keys(model) for model in curated_models)
     image_count = sum("image" in category_keys(model) for model in curated_models)
@@ -5781,7 +5785,23 @@ def _load_curated_models(data_dir: Path | None) -> list[dict]:
     if not path.is_file():
         return []
     payload = json.loads(path.read_text(encoding="utf-8"))
-    return payload if isinstance(payload, list) else []
+    if not isinstance(payload, list):
+        return []
+    # A directory source being checked is not evidence that the model was
+    # actually invoked. Only models with comparable inference measurements
+    # may be labelled as team picks. Keep untested records in /models/all/.
+    picks = []
+    seen = set()
+    for model in payload:
+        if not isinstance(model, dict) or not comparable_benchmark(model):
+            continue
+        name = re.sub(r"\s+free$", "", str(model.get("model") or ""), flags=re.I)
+        key = _safe_slug(name, "model")
+        if key in seen:
+            continue
+        seen.add(key)
+        picks.append(model)
+    return picks
 
 
 def _load_featured_agents(data_dir: Path | None, offers: list[dict] | None = None) -> list[dict]:
