@@ -3781,6 +3781,54 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
             '已核验但未实测的模型仍可在 <a href="/models/all/">全部模型</a> 中查看。'
             '</p>'
         )
+    # Show one product card per multi-provider model rather than repeating
+    # identical model cards for each gateway. These are *directory* cards,
+    # explicitly not inference-tested team picks.
+    route_groups: dict[str, list[dict]] = {}
+    for item in models:
+        name = str(item.get("model") or "").strip()
+        clean = re.sub(r"(?:\\s+free|\\s*\\(free\\))$", "", name, flags=re.I).strip()
+        if not clean:
+            continue
+        key = _safe_slug(clean, "model")
+        route_groups.setdefault(key, []).append(item)
+    requested_routes = ("mimo-v2-6-flash", "dots-studio-dots3-note-preview")
+    route_cards = []
+    for group_key in requested_routes:
+        records = route_groups.get(group_key) or []
+        if len({str(row.get("providerId") or "") for row in records}) < 2:
+            continue
+        base = next((row for row in records if str(row.get("sourceKind") or "") == "official"), records[0])
+        display_name = re.sub(r"(?:\\s+free|\\s*\\(free\\))$", "", str(base.get("model") or ""), flags=re.I).strip()
+        seen_routes = set()
+        links = []
+        for row in records:
+            provider_id = str(row.get("providerId") or "")
+            url = str(row.get("sourceUrl") or "")
+            if not url.startswith("https://") or (provider_id, url) in seen_routes:
+                continue
+            seen_routes.add((provider_id, url))
+            links.append(
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">'
+                f'{_esc(str(row.get("provider") or provider_id))} · {_catalog_source_label(row)} ↗</a>'
+            )
+        if not links:
+            continue
+        route_cards.append(
+            f'<article class="model-route-card" data-model-canonical="{_esc(group_key)}">'
+            f'<h3><a href="{_esc(model_aggregate_url(base))}">{_esc(display_name)}</a></h3>'
+            f'<p>模型目录已收录 {len(links)} 条接入渠道；来源条件已整理，'
+            f'<strong>生成能力与速度未实测</strong>，以各渠道当前条款为准。</p>'
+            f'<div class="model-route-links">{"".join(links)}</div>'
+            f'</article>'
+        )
+    route_section = (
+        '<section class="multi-route-models" id="multi-route-models">'
+        '<div class="featured-model-heading"><div><h2>多渠道模型 · 同一模型多条接入路径</h2>'
+        '<p>一张卡代表一个模型；同一模型的不同免费渠道独立标注。</p>'
+        '</div></div><div class="model-route-grid">'
+        + "".join(route_cards) + '</div></section>'
+    ) if route_cards else ""
     agent_cards = "".join(agent_card(agent) for agent in featured_agents)
     voice_count = sum("voice" in category_keys(model) for model in curated_models)
     image_count = sum("image" in category_keys(model) for model in curated_models)
@@ -3809,7 +3857,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 <div class="featured-evidence-filters"><label>{_locale_pair('地区适配', 'Region')}<select id="models-region-filter" data-filter="region"><option value="all">{_locale_pair('全部地区', 'All regions')}</option><option value="domestic">{_locale_pair('中国大陆可调用', 'Mainland China verified')}</option><option value="international">{_locale_pair('海外可调用', 'International verified')}</option><option value="both">{_locale_pair('国内外均可调用', 'Both regions verified')}</option><option value="unknown">{_locale_pair('待核实', 'Unverified')}</option></select></label><label>{_locale_pair('能力类型', 'Capability')}<select id="models-capability-filter" data-filter="capability"><option value="all">{_locale_pair('全部能力', 'All capabilities')}</option><option value="text">{_locale_pair('文本 / 推理', 'Text / reasoning')}</option><option value="audio">{_locale_pair('语音 / 音频', 'Speech / audio')}</option><option value="image">{_locale_pair('图片', 'Image')}</option><option value="video">{_locale_pair('视频', 'Video')}</option></select></label><span id="featured-model-count" aria-live="polite">{_locale_pair(f'显示 {len(curated_models)} / {len(curated_models)}', f'Showing {len(curated_models)} / {len(curated_models)}')}</span><button type="button" data-clear-featured-filters>{_locale_pair('清除筛选', 'Clear filters')}</button></div>
 <div class="featured-model-grid" id="featured-model-grid">{featured_cards}</div><p class="models-empty-state" hidden>{_locale_pair('没有符合条件的模型。试试其他筛选条件。', 'No models match. Try another filter.')}</p><button class="models-load-more" id="models-load-more" type="button" hidden>{_locale_pair('加载更多精选模型', 'Load more featured models')} ↓</button></section>
 <section class="featured-model-comparison" id="featured-model-comparison" hidden aria-label="精选模型对比 / Featured model comparison"><div><h3>{_locale_pair('模型对比', 'Model comparison')} <small id="featured-model-compare-count">0 / 3</small></h3><p id="featured-model-compare-status" aria-live="polite"></p></div><div class="featured-model-comparison-scroll"><table><thead><tr><th>{_locale_pair('比较项目', 'Property')}</th><th data-compare-column="0"></th><th data-compare-column="1"></th><th data-compare-column="2"></th></tr></thead><tbody data-comparison-rows></tbody></table></div><button type="button" data-clear-comparison>{_locale_pair('清空对比', 'Clear comparison')}</button></section>
-<section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前收录 {len(featured_agents)} 个 AI Agent', f'{len(featured_agents)} AI agents listed')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
+{route_section}<section class="featured-agents-section" id="agent-picks" aria-labelledby="agent-picks-title"><div class="featured-agent-heading"><div><h2 id="agent-picks-title">{_locale_pair('AI Agent 精选', 'Featured AI Agents')}</h2><p>{_locale_pair('发现优秀的 AI 助手，帮助你完成写作、研究、编程、设计等各类任务。', 'Explore AI agents for writing, research, coding, design and everyday work.')}</p></div><span class="featured-agent-count">{_locale_pair(f'当前收录 {len(featured_agents)} 个 AI Agent', f'{len(featured_agents)} AI agents listed')}</span></div><div class="featured-agent-grid">{agent_cards}</div></section></main>
 <footer class="models-page-footer"><div class="models-footer-brand"><strong>FreeLLM</strong><span>{_locale_pair('让 AI 更自由地被使用', 'AI for Everyone')}</span><small>© 2026 FreeLLM</small></div><nav class="models-footer-links" aria-label="产品目录"><strong>{_locale_pair('产品目录', 'Explore')}</strong><a href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('精选模型', 'Featured models')}</a><a href="{PROVIDERS_PAGE_PATH}">{_locale_pair('厂家目录', 'Providers')}</a><a href="/category/api/">Free API / Offer</a><a href="#agent-picks">AI Agent</a></nav><nav class="models-footer-links" aria-label="资源与支持"><strong>{_locale_pair('资源与支持', 'Resources')}</strong><a href="/logs/">{_locale_pair('最新资讯', 'Updates')}</a><a href="/skills/">技能</a><a href="/submit/">{_locale_pair('提交资源', 'Submit a resource')}</a><a href="/feed.xml">RSS</a></nav><nav class="models-footer-links" aria-label="关于我们"><strong>{_locale_pair('关于我们', 'About')}</strong><a href="/about/">{_locale_pair('关于 FreeLLM', 'About FreeLLM')}</a><a href="/terms/">{_locale_pair('使用条款', 'Terms')}</a><a href="/privacy/">{_locale_pair('隐私政策', 'Privacy')}</a></nav><div class="models-footer-updates"><strong>{_locale_pair('订阅最新动态', 'Latest updates')}</strong><p>{_locale_pair(f'持续更新精选模型与 Agent，当前收录 {len(curated_models)} 个模型和 {len(featured_agents)} 个 Agent。', f'{len(curated_models)} featured models and {len(featured_agents)} AI agents, kept up to date.')}</p><a href="/feed.xml">{_locale_pair('通过 RSS 获取更新', 'Follow updates via RSS')} →</a></div></footer></div><script src="/js/models-discovery.js?v=20261004e"></script></body></html>'''.replace("\n+", "\n")
 
 def render_models_page(offers: list[dict], site_url: str, models: list[dict] | None = None, page_num: int = 1, total_pages: int = 1, data_dir: Path | None = None) -> str:
@@ -6221,7 +6269,7 @@ def _ensure_models_discovery_style(content: str, path: Path) -> str:
     """Attach the model discovery page's prototype-matched component styles."""
     if path != Path("models/index.html") or "models-discovery.css" in content:
         return content
-    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261004o">'
+    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261008-multiroute">'
     return content.replace("</head>", tag + "</head>", 1)
 
 
