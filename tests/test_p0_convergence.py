@@ -87,6 +87,27 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 
+    def test_home_hotspot_strip_is_compact_and_current(self):
+        page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
+        hot = re.search(r'<section class="prototype-hot".*?</section>', page, re.S)
+        self.assertIsNotNone(hot)
+        section = hot.group(0)
+        self.assertEqual(section.count('class="prototype-hot-card"'), 5)
+        self.assertNotIn("prototype-hot-card is-featured", section)
+        for slug in (
+            "OtvEeIj4z_hGSK_2O5VszA",
+            "jMaAj8UILhcoPn3COEbIKg",
+            "Z5xlMKnqVR7Ihzzt5bCOZA",
+            "Ustvh8JxyRc192SNnSisUg",
+            "2-6pjoxc4ln3E83B5UwFJg",
+        ):
+            self.assertIn(slug, section)
+        self.assertIn("模型 / API", section)
+        self.assertIn("Agent 观察", section)
+        self.assertIn("官方核验", section)
+        self.assertNotIn("技术拆解", section)
+        self.assertIn("查看今日发现", section)
+
     def test_primary_navigation_has_exactly_seven_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
