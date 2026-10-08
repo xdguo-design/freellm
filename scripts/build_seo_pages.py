@@ -5225,6 +5225,7 @@ def sitemap_section_paths(
     page_paths = [
         "/",
         "/about/",
+        "/contact/",
         "/links/",
         "/terms/",
         "/privacy/",
