@@ -4571,6 +4571,13 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
         f'<meta name="twitter:description" content="{_esc(share_description)}">'
         f'<meta name="twitter:image" content="{_esc(share_image)}">'
     )
+    # P0-1: /logs/ must retain scan hydration after generated-page rebuilds.
+    # The checked-in HTML alone is not authoritative: CI regenerates this route.
+    page = page.replace(
+        "</body>",
+        '<script defer src="/js/scan-trust.js?v=p0-1-20261008"></script></body>',
+        1,
+    )
     return page.replace(canonical, canonical + social, 1)
 
 
