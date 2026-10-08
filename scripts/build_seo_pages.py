@@ -3787,7 +3787,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
     route_groups: dict[str, list[dict]] = {}
     for item in models:
         name = str(item.get("model") or "").strip()
-        clean = re.sub(r"(?:\\s+free|\\s*\\(free\\))$", "", name, flags=re.I).strip()
+        clean = re.sub(r"(?:\s+free|\s*\(free\))$", "", name, flags=re.I).strip()
         if not clean:
             continue
         key = _safe_slug(clean, "model")
@@ -3799,7 +3799,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         if len({str(row.get("providerId") or "") for row in records}) < 2:
             continue
         base = next((row for row in records if str(row.get("sourceKind") or "") == "official"), records[0])
-        display_name = re.sub(r"(?:\\s+free|\\s*\\(free\\))$", "", str(base.get("model") or ""), flags=re.I).strip()
+        display_name = re.sub(r"(?:\s+free|\s*\(free\))$", "", str(base.get("model") or ""), flags=re.I).strip()
         seen_routes = set()
         links = []
         for row in records:
