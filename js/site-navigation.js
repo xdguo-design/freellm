@@ -56,6 +56,11 @@
   }
 
   function ensureSharedNavigation() {
+    // Do not combine a saved dark preference with the light-only Aurora palette.
+    // Keep the preference in storage so a future complete theme can restore it.
+    if (document.body && document.body.dataset.visualStyle === 'aurora') {
+      document.documentElement.removeAttribute('data-theme');
+    }
     ensureSharedNavigationStyles();
     var rail = document.body && document.body.querySelector('.fl-site-rail');
     if (!rail) return;
@@ -76,7 +81,6 @@
       return;
     }
 
-    var themeButton = rail.querySelector('.fl-site-theme-toggle');
     var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     var labels = [
       ['home', '/', '⌂', english ? 'Home' : '首页'],
@@ -102,26 +106,8 @@
       '<nav class="fl-site-nav" aria-label="主导航">' + links + '</nav>' +
       '<div class="fl-site-rail-note" aria-hidden="true"></div>';
 
-    if (themeButton) rail.appendChild(themeButton);
-    else {
-      themeButton = document.createElement('button');
-      themeButton.type = 'button';
-      themeButton.className = 'fl-site-theme-toggle';
-      themeButton.setAttribute('aria-label', '切换主题');
-      themeButton.innerHTML = '<span class="fl-theme-moon" aria-hidden="true">☾</span><span class="fl-theme-sun" aria-hidden="true">☀</span><span class="fl-theme-label">深色</span>';
-      themeButton.addEventListener('click', function () {
-        var dark = document.documentElement.dataset.theme === 'dark';
-        if (dark) {
-          delete document.documentElement.dataset.theme;
-          try { localStorage.removeItem('freellm-theme'); } catch (error) { /* storage can be unavailable */ }
-        } else {
-          document.documentElement.dataset.theme = 'dark';
-          try { localStorage.setItem('freellm-theme', 'dark'); } catch (error) { /* storage can be unavailable */ }
-        }
-        themeButton.setAttribute('aria-pressed', dark ? 'false' : 'true');
-      });
-      rail.appendChild(themeButton);
-    }
+    // P1-5: the current page styles are light-only. Do not mount a nonworking
+    // dark-mode toggle until every page surface has passed contrast review.
     rail.dataset.flSharedNavigation = 'true';
     updateCurrentItem();
     refreshUpdateIndicator();
