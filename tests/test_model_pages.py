@@ -15,6 +15,7 @@ from scripts.build_seo_pages import (
     _load_model_access,
     _cn_status_for_model,
     _model_catalog_row,
+    _format_context_window,
     build_site,
     model_record_groups,
     render_models_landing_page,
@@ -59,6 +60,11 @@ def test_featured_models_show_multiple_access_routes_without_duplicate_cards():
     assert "接入渠道 / Access routes (2)" in page
     assert "Xiaomi MiMo" in page
     assert "OpenCode Zen" in page
+
+
+def test_rounded_megatoken_context_is_readable_and_exact():
+    assert _format_context_window("1.04858M") == "1M (1,048,576)"
+    assert _format_context_window("1048576") == "1M (1,048,576)"
 
 
 def test_model_directory_distinguishes_third_party_sources():
