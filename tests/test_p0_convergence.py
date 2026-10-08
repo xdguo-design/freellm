@@ -9,6 +9,41 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class P0ConvergenceTests(unittest.TestCase):
+    def test_p1_5_unfinished_dark_mode_is_hidden_and_light_palette_is_accessible(self):
+        nav = (ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8")
+        menu = (ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8")
+        core = (ROOT / "css" / "aurora-core.css").read_text(encoding="utf-8")
+        home = (ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8")
+
+        # The old toggle changed root variables while many cards stayed white.
+        # Remove the control from navigation and hide static prototype controls.
+        self.assertNotIn("themeButton", nav)
+        self.assertIn("removeAttribute('data-theme')", nav)
+        for cls in (".fl-site-theme-toggle", ".prototype-theme-toggle", ".ml-rail-theme", ".theme-toggle"):
+            self.assertIn(cls, menu)
+        self.assertIn("display: none !important", menu)
+
+        for css in (core, home):
+            self.assertIn("--fl-theme-surface:var(--aurora-surface)", css)
+            self.assertIn("--fl-theme-ink:var(--aurora-ink)", css)
+            self.assertIn("--aurora-ink-3:#526a86", css)
+        for cls in ("blockquote", ".callout", ".about-stat-card", ".weekly-scan-cards > article"):
+            self.assertIn(cls, core)
+
+        def luminance(value):
+            channels = [int(value[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+            return sum(x * weight for x, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+        def contrast(foreground, background):
+            high, low = sorted((luminance(foreground), luminance(background)), reverse=True)
+            return (high + 0.05) / (low + 0.05)
+
+        # WCAG AA for normal-sized text over the palest card/page surfaces.
+        for foreground in ("#102745", "#526a86"):
+            for background in ("#ffffff", "#f5f9ff", "#f1f7ff"):
+                self.assertGreaterEqual(contrast(foreground, background), 4.5)
+
     def test_tools_first_paint_is_real_static_content(self):
         _, tools = load_registry()
         page = (ROOT / "tools" / "index.html").read_text(encoding="utf-8")
