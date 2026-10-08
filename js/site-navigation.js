@@ -18,6 +18,21 @@
   var requestController = null;
   var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
   var updateIndicatorReady = false;
+  // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
+  document.addEventListener('keydown', function(event) {
+    if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== 'k') return;
+    var target = event.target;
+    if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+    event.preventDefault();
+    var search = document.getElementById('catalog-search') || document.getElementById('site-search-input');
+    if (search) {
+      search.focus();
+      search.select();
+    } else {
+      window.location.assign('/search/');
+    }
+  });
+
   var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
   function ensureEnglishEntryLink() {
     var actions = document.querySelector('.fl-site-ribbon-actions');
