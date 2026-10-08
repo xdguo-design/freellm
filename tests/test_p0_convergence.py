@@ -36,6 +36,9 @@ class P0ConvergenceTests(unittest.TestCase):
         # Remove the control from navigation and hide static prototype controls.
         self.assertNotIn("themeButton", nav)
         self.assertIn("removeAttribute('data-theme')", nav)
+        self.assertIn("classList.contains('fl-ui-v2')", nav)
+        self.assertIn("html body.fl-ui-v2 :is(", menu)
+        self.assertIn('class="theme-toggle"', (ROOT / "models/all/index.html").read_text(encoding="utf-8"))
         for cls in (".fl-site-theme-toggle", ".prototype-theme-toggle", ".ml-rail-theme", ".theme-toggle"):
             self.assertIn(cls, menu)
         self.assertIn("display: none !important", menu)
