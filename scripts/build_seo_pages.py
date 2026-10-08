@@ -5004,7 +5004,7 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     </aside></div>'''
     lower_sections = _render_skills_below_fold(skills, recipes or [])
     footer_bottom = f'''<footer class="skills-footer skills-footer-bottom">
-      <p>© 2024 FreeLLM. All rights reserved.</p>
+      <p>© 2026 FreeLLM. All rights reserved.</p>
       <div class="skills-footer-social" aria-label="Social links">
         <span aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.05c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.7 2.05 3.36 1.55.1-.72.39-1.22.7-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.04-1.14 3.04-1.14.61 1.53.23 2.67.12 2.95.71.78 1.14 1.77 1.14 2.99 0 4.29-2.6 5.23-5.09 5.51.4.35.75 1.02.75 2.06V22c0 .29.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></span>
         <span aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 5.9a8.3 8.3 0 0 1-2.36.65 4.12 4.12 0 0 0 1.8-2.27 8.23 8.23 0 0 1-2.6.99 4.1 4.1 0 0 0-7 3.74 11.64 11.64 0 0 1-8.45-4.28 4.1 4.1 0 0 0 1.27 5.47 4.08 4.08 0 0 1-1.86-.52v.05a4.1 4.1 0 0 0 3.29 4.02 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.83 2.84A8.23 8.23 0 0 1 2 18.36a11.62 11.62 0 0 0 6.29 1.84c7.55 0 11.68-6.25 11.68-11.68l-.01-.53A8.35 8.35 0 0 0 22 5.9Z"/></svg></span>
@@ -6158,7 +6158,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true"></span>'
         brand_subtitle = 'AI for Everyone'
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
-        rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
+        rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
         '<script src="/js/site-navigation.js?v=20261008-today-discovery"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
