@@ -3696,6 +3696,30 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         icon = brand_icon_markup(provider, source_url, mark)
         detail_url = model_aggregate_url(model)
         detail_external = detail_url.startswith("http")
+        # A model is one product; its provider records are alternative routes.
+        # MiMo-V2.6-Flash Free is a free access route, not a separate base model.
+        identity = _safe_slug(re.sub(r"\\s+free$", "", model_name, flags=re.I))
+        channel_records = []
+        channel_keys = set()
+        for candidate in models:
+            candidate_name = re.sub(r"\\s+free$", "", str(candidate.get("model") or ""), flags=re.I)
+            if _safe_slug(candidate_name) != identity:
+                continue
+            key = (str(candidate.get("providerId") or ""), str(candidate.get("sourceUrl") or ""))
+            if key in channel_keys:
+                continue
+            channel_keys.add(key)
+            channel_records.append(candidate)
+        channel_links = "".join(
+            f'<a href="{_esc(route["sourceUrl"])}" target="_blank" rel="noopener noreferrer">'
+            f'{_esc(str(route.get("provider") or "接入平台"))} · {_catalog_source_label(route)}</a>'
+            for route in channel_records if route.get("sourceUrl")
+        )
+        channel_markup = (
+            f'<div class="featured-model-channels"><small>接入渠道 / Access routes ({len(channel_records)})</small>'
+            f'<div>{channel_links}</div></div>'
+            if channel_links else ""
+        )
         categories = " ".join(category_keys(model))
         search_text = _esc(" ".join((model_name, provider, *modalities)).lower())
         external_attr = ' target="_blank" rel="noopener noreferrer"' if detail_external else ""
@@ -3716,6 +3740,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
       <div class="featured-model-title-row"><span class="featured-model-mark">{icon}</span><div><h3>{_esc(model_name)}</h3><span class="featured-model-provider">{_esc(provider)}</span></div></div>
       <p class="featured-model-summary">{_locale_pair(_esc(summary_text), _esc("Capabilities and availability depend on the provider's current documentation."))}</p>
       <div class="featured-model-chips">{chips or f'<span>{_locale_pair("能力待核实", "Capabilities unverified")}</span>'}</div><div class="featured-model-facts">{''.join(facts)}</div>
+      {channel_markup}
       {speed_status}
       <div class="featured-model-actions"><button type="button" data-compare-toggle aria-pressed="false"><span lang="zh-CN" data-compare-add>＋ 加入对比</span><span lang="en" data-compare-add>＋ Compare</span><span lang="zh-CN" data-compare-remove hidden>✓ 已加入 · 移除</span><span lang="en" data-compare-remove hidden>✓ Added · Remove</span></button><a href="{_esc(detail_url)}"{external_attr}>{_locale_pair("查看详情", "Details")} →</a>{source_link}</div>
     </article>'''.replace("\n+", "\n")
@@ -3769,7 +3794,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
 .featured-model-comparison{{margin:22px 0 12px;padding:18px;border:1px solid #cddbf4;border-radius:16px;background:#fff;box-shadow:0 10px 30px rgba(25,42,78,.06)}}.featured-model-comparison[hidden]{{display:none}}.featured-model-comparison h3{{margin:0 0 4px}}.featured-model-comparison h3 small{{color:#74839a;font-size:12px}}#featured-model-compare-status{{min-height:1.2em;margin:0 0 8px;color:#a16000;font-size:12px}}.featured-model-comparison-scroll{{max-width:100%;overflow-x:auto}}.featured-model-comparison table{{width:100%;min-width:680px;border-collapse:collapse;font-size:12px}}.featured-model-comparison th,.featured-model-comparison td{{min-width:140px;padding:10px;border-bottom:1px solid #e7ebf2;text-align:left;vertical-align:top;overflow-wrap:anywhere}}.featured-model-comparison th:first-child{{position:sticky;left:0;z-index:1;min-width:115px;background:#f6f8fc}}.featured-model-comparison [data-clear-comparison]{{margin-top:12px;padding:8px 11px;border:0;border-radius:8px;background:#eaf1ff;color:#3158cd;font:inherit;cursor:pointer}}
 @media(max-width:700px){{.featured-evidence-filters{{align-items:stretch}}.featured-evidence-filters label{{flex:1 1 42%}}.featured-evidence-filters select{{min-width:0;width:100%}}#featured-model-count{{margin-left:0;align-self:center}}.featured-model-comparison{{margin-inline:-4px;padding:12px}}}}
 </style></head><body data-static-locale="true"><div class="models-featured-page">
-<div class="models-page-toolbar"><label class="models-page-search"><span aria-hidden="true">⌕</span><input id="models-global-search" type="search" placeholder="搜索模型 / Search models" aria-label="搜索精选模型 / Search featured models"></label><div class="models-toolbar-actions"><button type="button" data-locale-switch="en">中文 · EN</button></div></div>
+<div class="models-page-toolbar"><label class="models-page-search"><span aria-hidden="true">⌕</span><input id="models-global-search" type="search" placeholder="搜索模型 / Search models" aria-label="搜索精选模型 / Search featured models"></label><div class="models-toolbar-actions"><button type="button" data-locale-switch="en" lang="en">English →</button></div></div>
 <header class="models-featured-hero"><div class="models-featured-copy"><div class="eyebrow">FREE AI INDEX / {_locale_pair('精选模型与智能体', 'Featured models and agents')}</div><h1>{_locale_pair('精选模型与', 'Featured models &')} <em>{_locale_pair('AI Agent', 'AI Agents')}</em></h1><p class="lead">{_locale_pair('由 FreeLLM 团队人工精选，地区、能力和生成速度均标明核验状态。', 'Hand-picked by FreeLLM, with clear verification status for region, capabilities and generation speed.')}</p></div><div class="models-featured-sign" aria-hidden="true"><span>好的 AI</span><span>值得被更多人发现</span></div></header>
 {quick_links}<main><section class="featured-model-section" id="featured-models" aria-labelledby="featured-model-title"><div class="featured-model-heading"><div><h2 id="featured-model-title">{_locale_pair('精选模型', 'Featured models')} <small>({len(curated_models)})</small></h2><span class="team-tested-note">{_locale_pair('FreeLLM 团队人工筛选', 'Hand-picked by the FreeLLM team')}</span></div><a class="all-models-link" href="{ALL_MODELS_PAGE_PATH}">{_locale_pair('查看全部模型', 'View all models')} →<small>{_locale_pair(f'完整目录含 {model_record_count}+ 个模型', f'{model_record_count}+ models in catalog')}</small></a></div>
 <div class="model-filter-toolbar"><div class="model-filter-chips" role="group" aria-label="模型类型"><button type="button" class="is-active" data-model-filter="all" aria-pressed="true">{_locale_pair('全部模型', 'All models')} <span>{len(curated_models)}</span></button><button type="button" data-model-filter="voice" aria-pressed="false">{_locale_pair('语音模型', 'Voice')} <span>{voice_count}</span></button><button type="button" data-model-filter="image" aria-pressed="false">{_locale_pair('图片模型', 'Image')} <span>{image_count}</span></button><button type="button" data-model-filter="sound" aria-pressed="false">{_locale_pair('声音模型', 'Audio')} <span>{sound_count}</span></button></div><div class="model-view-controls"><label><span class="sr-only">{_locale_pair('排序', 'Sort')}</span><select id="models-sort"><option value="featured">{_locale_pair('推荐排序', 'Featured')}</option><option value="name">{_locale_pair('名称排序', 'Name')}</option></select></label><button type="button" class="is-active" data-model-view="grid" aria-label="网格视图" aria-pressed="true">▦</button><button type="button" data-model-view="list" aria-label="列表视图" aria-pressed="false">☷</button></div></div>
