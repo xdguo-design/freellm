@@ -31,7 +31,9 @@
   const addModel = item => ({
     type:'model', title:item.model || item.id, description:short([item.provider,item.context && '上下文 '+item.context,item.rateLimit].filter(Boolean).join(' · ')),
     keywords:[item.provider,item.id,item.modality?.join(' '),item.sourceKind].join(' '),
-    href:'/models/all/?q='+encodeURIComponent(item.model || item.id)
+    // The static generator publishes a detail route for every model, including
+    // one-provider pages (noindex does not make the page inaccessible).
+    href:'/models/'+(String(item.model || item.id).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'model')+'/'
   });
   const addSkill = item => ({
     type:'skill', title:item.name || item.id,
