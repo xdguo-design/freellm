@@ -29,7 +29,7 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn(f"({curated_count})", page)
         self.assertIn('href="/models/all/"', page)
         self.assertGreaterEqual(len(models), curated_count)
-        self.assertIn("234+", page)
+        self.assertIn(f"{len(models)}+", page)
         self.assertIn("模型目录", all_models)
 
     def test_home_models_and_logs_share_latest_snapshot(self):
