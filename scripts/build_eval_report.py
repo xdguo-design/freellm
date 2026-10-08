@@ -227,11 +227,11 @@ def wrap(inner: str, description: str) -> str:
     prefix = re.sub(r'(<meta (?:property="og:title"|name="twitter:title") content=")[^"]*"', lambda m: m.group(1) + e(TITLE) + '"', prefix)
     prefix = prefix.replace("https://freellm.top/logs/", "https://freellm.top/evaluations/")
     prefix = re.sub(r'<script type="application/ld\+json">.*?</script>', "", prefix, flags=re.S)
-    prefix = prefix.replace('data-fl-section="logs"', 'data-fl-section="logs" data-fl-nav="evaluations"', 1)
+    prefix = prefix.replace('data-fl-section="logs"', 'data-fl-section="logs" data-fl-nav="models"', 1)
     prefix = prefix.replace(' data-site-nav="logs" aria-current="page"', ' data-site-nav="logs"')
-    prefix = prefix.replace(
-        '<a href="/about/" data-site-nav="about">',
-        '<a href="/evaluations/" data-site-nav="evaluations" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">◎</span><span>实测</span></a><a href="/about/" data-site-nav="about">', 1)
+    prefix = prefix.replace('<a href="/models/" data-site-nav="models">', '<a href="/models/" data-site-nav="models" aria-current="page">', 1)
+    tabs = '<nav class="model-section-tabs" aria-label="模型页面"><a href="/models/">精选模型</a><a href="/models/all/">全部模型</a><a href="/providers/">按厂家</a><a href="/category/api/">免费 API / Offer</a><a href="/evaluations/" aria-current="page">实测榜</a></nav>'
+    inner = tabs + inner
     return prefix + '<main class="daily-log-dashboard">' + inner + suffix
 
 

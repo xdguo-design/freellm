@@ -169,10 +169,10 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, page)
 
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
-        """The static first paint exposes exactly one eight-item global rail."""
+        """The static first paint exposes exactly one seven-item global rail."""
         rail = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', self.html, re.S)
         self.assertIsNotNone(rail)
-        self.assertEqual(rail.group(1).count("<a "), 8)
+        self.assertEqual(rail.group(1).count("<a "), 7)
         for key, href in (
             ("home", "/"),
             ("models", "/models/"),
@@ -180,7 +180,6 @@ class StaticContractTests(unittest.TestCase):
             ("tools", "/tools/"),
             ("workflow", "/workflow/"),
             ("logs", "/logs/"),
-            ("evaluations", "/evaluations/"),
             ("about", "/about/"),
         ):
             self.assertIn(f'data-site-nav="{key}"', rail.group(1))

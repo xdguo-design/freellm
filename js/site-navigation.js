@@ -3,7 +3,7 @@
 
   if (window.FreeLLMNavigation) return;
 
-  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'evaluations', 'about']);
+  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'about']);
   var navigationPaths = new Map([
     ['/', 'home'],
     ['/models/', 'models'],
@@ -12,7 +12,6 @@
     ['/tools/', 'tools'],
     ['/workflow/', 'workflow'],
     ['/logs/', 'logs'],
-    ['/evaluations/', 'evaluations'],
     ['/about/', 'about']
   ]);
   var navigationInProgress = false;
@@ -86,7 +85,6 @@
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
-      ['evaluations', '/evaluations/', '◎', english ? 'Benchmarks' : '实测'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
     var active = currentPage();

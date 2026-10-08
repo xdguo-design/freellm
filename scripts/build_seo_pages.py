@@ -3837,6 +3837,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
       <a href="{ALL_MODELS_PAGE_PATH}"><span class="quick-icon icon-grid">▦</span><span><b>{_locale_pair("全部模型", "All models")}</b><small>{_locale_pair(f"完整模型目录（{model_record_count}+）", f"Full catalog ({model_record_count}+)" )}</small></span><i>›</i></a>
       <a href="{PROVIDERS_PAGE_PATH}"><span class="quick-icon icon-city">▤</span><span><b>{_locale_pair("厂家目录", "Providers")}</b><small>{_locale_pair("按厂商浏览", "Browse by provider")}</small></span><i>›</i></a>
       <a href="/category/api/"><span class="quick-icon icon-gift">✦</span><span><b>Free API / Offer</b><small>{_locale_pair(f"已核验资源（{offer_count}+）", f"Verified offers ({offer_count}+)" )}</small></span><i>›</i></a>
+      <a href="/evaluations/"><span class="quick-icon icon-star">◎</span><span><b>{_locale_pair("实测榜", "Benchmarks")}</b><small>{_locale_pair("真实 API 调用评测", "Real API tests")}</small></span><i>›</i></a>
       <a href="#agent-picks"><span class="quick-icon icon-agent">▣</span><span><b>AI Agent</b><small>{_locale_pair("实用的 AI 助手与智能体", "Useful AI agents")}</small></span><i>›</i></a>
     </nav>'''.replace("\n+", "\n")
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6242,7 +6243,7 @@ def _ensure_models_discovery_style(content: str, path: Path) -> str:
     """Attach the model discovery page's prototype-matched component styles."""
     if path != Path("models/index.html") or "models-discovery.css" in content:
         return content
-    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261004o">'
+    tag = '<link rel="stylesheet" href="/css/models-discovery.css?v=20261008-eval">'
     return content.replace("</head>", tag + "</head>", 1)
 
 
@@ -6261,7 +6262,6 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/tools/", "⌘", "工具", "tools"),
         ("/workflow/", "⌁", "工作流", "workflow"),
         ("/logs/", "◷", "更新", "logs"),
-        ("/evaluations/", "◎", "实测", "evaluations"),
         ("/about/", "ⓘ", "关于", "about"),
     ]
     def render_link(item: tuple[str, str, str, str]) -> str:
@@ -6320,6 +6320,7 @@ def _ensure_model_section_tabs(content: str, path: Path) -> str:
         ("all", ALL_MODELS_PAGE_PATH, "全部模型"),
         ("providers", PROVIDERS_PAGE_PATH, "按厂家"),
         ("offers", "/category/api/", "免费 API / Offer"),
+        ("evaluations", "/evaluations/", "实测榜"),
     ]
     links = []
     for key, href, label in items:

@@ -87,12 +87,12 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 
-    def test_primary_navigation_has_exactly_eight_items(self):
+    def test_primary_navigation_has_exactly_seven_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
         self.assertIsNotNone(match)
-        self.assertEqual(match.group(1).count("<a "), 8)
-        for label in ("首页", "模型", "Skills", "工具", "工作流", "更新", "实测", "关于"):
+        self.assertEqual(match.group(1).count("<a "), 7)
+        for label in ("首页", "模型", "Skills", "工具", "工作流", "更新", "关于"):
             self.assertIn(f"<span>{label}</span>", match.group(1))
 
     def test_no_duplicate_global_top_nav_on_key_pages(self):

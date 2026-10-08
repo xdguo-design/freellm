@@ -136,10 +136,10 @@ def leaderboard_html(limit: int = 6, heading_tag: str = "h2") -> str:
 
 LEADERBOARD_CSS = (
     ".fl-evalboard{margin:24px 0;padding:20px 22px;border:1px solid #e3e9f4;border-radius:16px;background:#fff}"
-    ".fl-evalboard-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}"
+    ".fl-evalboard-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}"
     ".fl-evalboard-head h2,.fl-evalboard-head h3{font-size:20px;margin:0}.fl-evalboard-head p{margin:4px 0 0;color:#6a7896;font-size:13px}"
     ".fl-evalboard-head>a{color:#1744E8;font-weight:600;font-size:14px;white-space:nowrap}"
-    ".fl-evalboard ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}"
+    ".fl-evalboard ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:8px}"
     ".fl-evalboard li a{display:grid;grid-template-columns:28px 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:#f6f9fe;color:inherit;text-decoration:none}"
     ".fl-evalboard li a:hover{background:#edf3ff}"
     ".fl-evalboard-rank{grid-row:span 2;width:28px;height:28px;border-radius:50%;background:#1744E8;color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}"
