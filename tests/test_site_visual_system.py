@@ -121,24 +121,26 @@ class SiteVisualSystemTests(unittest.TestCase):
 
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        total = len(offers)
-        self.assertIn(f'<b id="heroCount">{total}</b>', page)
-        self.assertIn(f'<b data-category-count="all">{total}</b>', page)
-        self.assertIn(f'<p id="catalog-result-count">Showing {total} offers</p>', page)
+        summary = __import__("json").loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        # The hero count is historical scan data; category totals hydrate from
+        # active catalog offers, and must not pretend the two counts are equal.
+        self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', page)
+        self.assertIn('data-category-count="all"', page)
+        self.assertIn('id="catalog-result-count"', page)
+        self.assertIn("setCount('all', activeItems.length)", (ROOT / "js" / "homepage.js").read_text(encoding="utf-8"))
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        today = page.index('class="today-latest"')
+        hero = page.index('class="catalog-hero"')
+        weekly = page.index('id="weekly-changes"')
         offers = page.index('id="catalog-offers"')
         student = page.index('id="student-offers"')
-        self.assertLess(today, offers, "TODAY / LATEST must appear before the full resource catalog")
-        self.assertLess(offers, student, "student benefits must remain secondary to the resource catalog")
-
-        css = THEME.read_text(encoding="utf-8")
-        self.assertIn("grid-template-columns:repeat(3,minmax(0,1fr)) !important", css)
-        self.assertIn("margin-top:auto !important", css)
-        self.assertIn("--fl-card-min:286px", css)
+        self.assertLess(hero, weekly)
+        self.assertLess(weekly, offers, "Verified scans should precede the full resource catalog")
+        self.assertLess(offers, student, "Student eligibility belongs after general catalog access")
+        self.assertIn('class="weekly-scan-cards"', page)
+        self.assertIn('class="offer-grid"', page)
+        self.assertIn('class="offer-card-top"', page)
 
     def test_light_and_dark_themes_share_layout_but_have_distinct_tokens(self):
         css = THEME.read_text(encoding="utf-8")
