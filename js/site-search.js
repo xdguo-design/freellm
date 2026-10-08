@@ -29,7 +29,7 @@
     href:'/offers/'+encodeURIComponent(item.id)+'/'
   });
   const addModel = item => ({
-    type:'model', title:item.model || item.id, description:short([item.provider,item.context && '上下文 '+item.context,item.rateLimit].filter(Boolean).join(' · ')),
+    type:'model', title:item.model || item.id, description:short([item.sourceKind === 'third_party_aggregator' || item.sourceKind === 'public_api' ? '第三方聚合 · 非官方' : '',item.provider,item.context && '上下文 '+item.context,item.rateLimit].filter(Boolean).join(' · ')),
     keywords:[item.provider,item.id,item.modality?.join(' '),item.sourceKind].join(' '),
     // The static generator publishes a detail route for every model, including
     // one-provider pages (noindex does not make the page inaccessible).
