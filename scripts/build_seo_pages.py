@@ -2808,6 +2808,14 @@ def _latency_cell(model: dict, latencies: dict[str, dict], meta: dict) -> tuple[
 def _format_context_window(value: object) -> str:
     """Render raw token counts like 256000 as 256K / 1M; pass through anything else."""
     raw = str(value or "").strip()
+    # Some model feeds publish a rounded "1.04858M" instead of a token
+    # count. Normalize the shorthand and keep the exact canonical 1M window
+    # when that rounded value represents 1,048,576 tokens.
+    shorthand = re.fullmatch(r"(\d+(?:\.\d+)?)\s*([kKmM])", raw)
+    if shorthand:
+        unit = 1_000_000 if shorthand.group(2).lower() == "m" else 1_000
+        approximate = round(float(shorthand.group(1)) * unit)
+        raw = str(1_048_576 if unit == 1_000_000 and abs(approximate - 1_048_576) <= 8 else approximate)
     if not raw.isdigit():
         return raw or "—"
     count = int(raw)
