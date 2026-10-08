@@ -32,32 +32,47 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn(f"{len(models)}+", page)
         self.assertIn("模型目录", all_models)
 
-    def test_home_models_and_logs_share_latest_snapshot(self):
-        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
-        log_paths = sorted((ROOT / "data" / "daily-log").glob("*.json"))
-        self.assertTrue(log_paths, "daily log data is required for public freshness metadata")
-        latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
-        latest_date = latest["date"]
-        year, month, day = latest_date.split("-")
+    def test_home_models_logs_and_about_share_canonical_daily_scan(self):
+        summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        logs = sorted((ROOT / "data" / "daily-log").glob("*.json"))
+        self.assertTrue(logs, "daily log data is required for public freshness metadata")
+        latest = json.loads(logs[-1].read_text(encoding="utf-8"))
+        self.assertEqual(summary["date"], latest["date"])
+        self.assertEqual(summary["source"], f'/data/daily-log/{latest["date"]}.json')
+        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
+        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
+        events = [*latest.get("events", []), *latest.get("curatedEvents", [])]
+        fresh = [event for event in events if event.get("eventType") in {"new", "new_route"}]
+        self.assertEqual(summary["newCount"], len(fresh))
 
         home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         logs_page = (ROOT / "logs" / "index.html").read_text(encoding="utf-8")
-
+        about = (ROOT / "about" / "index.html").read_text(encoding="utf-8")
+        year, month, day = summary["date"].split("-")
         self.assertIn(f"▣ &nbsp;{year} 年 {int(month)} 月 {int(day)} 日", home)
+        for page in (home, logs_page, about):
+            self.assertIn("/js/scan-trust.js", page)
+
+        # Static first paint must agree with runtime data, including the original About cards.
+        for key in ("models", "offers"):
+            self.assertIn(
+                f'data-scan-stat="{key}">{summary[key]}</strong>',
+                about,
+            )
+        self.assertNotIn("已验证的免费资源</span>", about)
+        for label, key in (("今日新增", "newCount"), ("模型记录", "models"), ("已收录资源", "offers")):
+            self.assertRegex(
+                logs_page,
+                rf"<span>{label}</span><strong>{summary[key]}</strong>",
+            )
+        self.assertIn(f"<strong>{summary['date']}</strong>", logs_page)
+
+        # Directory counts are a separate layer and must not overwrite scan counts.
+        models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
+        models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="/models/all/"', models_page)
         self.assertIn(f"{len(models)}", all_models)
-        self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
-        self.assertIn(
-            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{len(models)}</strong>',
-            logs_page,
-        )
-        self.assertIn(
-            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{len(offers)}</strong>',
-            logs_page,
-        )
 
     def test_home_surfaces_high_intent_seo_guides_above_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
