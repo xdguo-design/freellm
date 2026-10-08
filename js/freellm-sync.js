@@ -102,7 +102,7 @@
           '<nav class="fl-site-nav">' +
             railLink('/', '⌂', '首页', 'home', current) +
             railLink('/models/', '▣', '模型', 'models', current) +
-            railLink('/skills/', '✦', 'Skills', 'skills', current) +
+            railLink('/skills/', '✦', '技能', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/workflow/', '⌁', '工作流', 'workflow', current) +
             railLink('/logs/', '◷', '更新', 'logs', current) +
