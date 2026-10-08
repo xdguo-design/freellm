@@ -22,6 +22,15 @@ class DevFirstWorkflowTests(unittest.TestCase):
                 self.assertNotIn("git push origin HEAD:${{ github.ref_name }}", contents)
                 self.assertNotIn("\n            git push\n", contents)
 
+    def test_weekly_discovery_pr_targets_dev_not_main(self):
+        path = ROOT / ".github/workflows/discovery-pr.yml"
+        content = path.read_text(encoding="utf-8")
+        self.assertIn("schedule:", content)
+        self.assertIn("- uses: actions/checkout@v4\\n        with:\\n          ref: dev\\n", content)
+        self.assertIn("BASE_BRANCH: dev", content)
+        self.assertIn('gh pr create --base "$BASE_BRANCH"', content)
+        self.assertNotIn("github.event.repository.default_branch", content)
+
 
 if __name__ == "__main__":
     unittest.main()
