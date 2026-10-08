@@ -406,6 +406,98 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
+def _latest_daily_log(data_path: Path) -> dict | None:
+    log_dir = data_path.parent / "daily-log"
+    for path in sorted(log_dir.glob("*.json"), reverse=True) if log_dir.is_dir() else []:
+        try:
+            log = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(log, dict) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(log.get("date") or "")):
+            return log
+    return None
+
+
+def homepage_stats(data: list[dict], data_path: Path) -> dict | None:
+    """Single source of truth for homepage numbers.
+
+    Uses the same latest daily-log snapshot that /logs/ renders, plus the
+    offers catalog, so the homepage can never show numbers the logs page
+    contradicts. No period-over-period deltas are shown: there is no stored
+    baseline for them, so any percentage would be invented.
+    """
+    log = _latest_daily_log(data_path)
+    if log is None:
+        return None
+    events = [
+        event
+        for key in ("events", "curatedEvents")
+        for event in (log.get(key) or [])
+        if isinstance(event, dict)
+    ]
+    observed = log.get("observed") if isinstance(log.get("observed"), dict) else {}
+    models = [m for m in (observed.get("models") or []) if isinstance(m, dict)]
+    offers = [o for o in data if isinstance(o, dict)]
+    verified_dates = sorted(str(o.get("lastVerifiedAt") or "")[:10] for o in offers if o.get("lastVerifiedAt"))
+    dev_types = {"free_ide", "coding_plan", "desktop_ai_app"}
+    return {
+        "date": str(log["date"]),
+        "new": sum(1 for e in events if e.get("eventType") in {"new", "new_route"}),
+        "models": len(models),
+        "providers": len({m.get("providerId") for m in models if m.get("providerId")}),
+        "offers": len(offers),
+        "verified": sum(1 for o in offers if o.get("status") == "verified"),
+        "promo": sum(1 for o in offers if "promo" in (o.get("type") or [])),
+        "dev_tools": sum(1 for o in offers if o.get("productType") in dev_types),
+        "last_verified": verified_dates[-1] if verified_dates else "",
+    }
+
+
+def update_prototype_stats(html: str, data: list[dict], data_path: Path) -> str:
+    """Replace the hard-coded hero stat cards and category counts with real
+    numbers from homepage_stats()."""
+    stats = homepage_stats(data, data_path)
+    if stats is None:
+        return html
+    month, day = (int(part) for part in stats["date"].split("-")[1:])
+    cards = {
+        "is-blue": ("最新新增", str(stats["new"]), f"{month} 月 {day} 日每日扫描"),
+        "is-purple": ("收录模型", str(stats["models"]), f"来自 {stats['providers']} 家提供方"),
+        "is-green": ("限时免费活动", str(stats["promo"]), "有截止日期，过期前请复核"),
+        "is-orange": ("已核验资源", f"{stats['verified']}/{stats['offers']}",
+                      f"最近核验 {stats['last_verified']}" if stats["last_verified"] else "官方来源核验"),
+    }
+    for cls, (label, value, note) in cards.items():
+        html = re.sub(
+            r'(<article class="prototype-stat ' + cls + r'">.*?</span>)<div>.*?</div>(</article>)',
+            lambda m, label=label, value=value, note=note: (
+                m.group(1)
+                + f"<div><small>{html_lib.escape(label)}</small><strong>{html_lib.escape(value)}</strong>"
+                + f"<p>{html_lib.escape(note)}</p></div>"
+                + m.group(2)
+            ),
+            html,
+            count=1,
+            flags=re.S,
+        )
+    category_counts = {
+        "AI 模型": f"{stats['models']} 条模型记录",
+        "开发工具": f"{stats['dev_tools']} 个免费 IDE 与编程工具",
+        "生产力": "本地在线小工具",
+        "数据分析": "本地在线小工具",
+        "语音视频": "本地在线小工具",
+        "设计创作": "本地在线小工具",
+    }
+    for name, count in category_counts.items():
+        html = re.sub(
+            r"(<strong>" + re.escape(name) + r"</strong><small>)[^<]*(</small>)",
+            lambda m, count=count: m.group(1) + html_lib.escape(count) + m.group(2),
+            html,
+            count=1,
+        )
+    return html
+
+
 def update_prototype_updates_table(html: str, data_path: Path) -> str:
     """Replace the placeholder rows of the homepage prototype-updates table
     with the latest events from the daily-log pipeline."""
@@ -601,6 +693,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
+    updated = update_prototype_stats(updated, source_data, data_path)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',
