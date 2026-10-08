@@ -280,7 +280,7 @@ def test_models_landing_shows_curated_models_and_links_to_the_complete_directory
     assert 'id="featured-models"' in page
     assert f'href="/models/all/"' in page
     assert page.count('class="featured-model-card"') == len(curated)
-    assert page.count("团队精选") == len(curated)
+    assert page.count('class="featured-model-badge"') == len(curated)
     if curated:
         assert f'data-model-id="{curated[0]["id"]}"' in page
         assert curated[0]["model"] in page
@@ -357,7 +357,7 @@ def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
     assert "中国大陆可用性" in page
     assert "显示" in page
     assert "共" in page
-    assert "Catalog source" in page
+    assert "Provider official source" in page or "Third-party aggregator · not official" in page
     assert "Showing ${visible.length} / ${pairs.length}" in page
 
 
