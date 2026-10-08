@@ -2794,7 +2794,9 @@ def _format_context_window(value: object) -> str:
         return raw or "—"
     count = int(raw)
     if count >= 1_000_000:
-        return f"{count / 1_000_000:g}M"
+        # Keep a concise headline while exposing the exact official token count.
+        rounded = round(count / 1_000_000)
+        return f"{rounded}M ({count:,})" if rounded >= 1 else f"{count / 1_000_000:.1f}M ({count:,})"
     if count >= 1_000:
         return f"{round(count / 1_000):g}K"
     return raw
@@ -2833,7 +2835,8 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
-    linkable = linkable_model_slugs is None or _safe_slug(model_name, "model") in linkable_model_slugs
+    # Every model receives a human-readable detail page, including thin (noindex) pages.
+    linkable = True
     model_name_markup = (
         f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
         if linkable else
@@ -3577,13 +3580,14 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         "manus ai": "manus.im", "cnb": "cnb.cool", "iflytek astudio": "xfyun.cn",
         "workbuddy": "codebuddy.ai", "hermes": "hermes-agent.nousresearch.com",
         "grok": "grok.com", "pi": "pi.ai", "agent.space": "agent.space", "claude code": "claude.ai",
+        "dots api": "dots.ai", "dots": "dots.ai",
         "opencode": "opencode.ai",
     }
 
     def brand_icon_host(brand: str, url: str = "") -> str:
         normalized = re.sub(r"\s+", " ", brand.strip().lower())
         for key, host in icon_hosts.items():
-            if key in normalized:
+            if re.search(r"(?<![a-z0-9])" + re.escape(key) + r"(?![a-z0-9])", normalized):
                 return host
         try:
             host = (urlsplit(url).hostname or "").lower()
@@ -3674,7 +3678,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         model_slug = _safe_slug(model_name, "model")
         source_url = str(model.get("sourceUrl") or "").strip()
         icon = brand_icon_markup(provider, source_url, mark)
-        detail_url = model_aggregate_url(model) if model_slug in indexable_slugs else ALL_MODELS_PAGE_PATH
+        detail_url = model_aggregate_url(model)
         detail_external = detail_url.startswith("http")
         categories = " ".join(category_keys(model))
         search_text = _esc(" ".join((model_name, provider, *modalities)).lower())
