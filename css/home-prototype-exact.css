@@ -711,3 +711,26 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-card
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-meta{font-size:9px}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured>p{font-size:10px}
 }
+
+
+/* 2026-10-08: five-item "今日 AI 热点" visual strip.
+   Desktop keeps all five cards in one row; narrower screens stay a horizontal rail. */
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;align-items:stretch}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{height:236px!important;min-height:236px!important;padding:0 8px 7px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover{height:82px!important;margin:0 -8px 7px!important;background:#0b1f3d}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover svg{width:100%!important;height:100%!important;object-fit:cover!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card h3{font-size:12.5px!important;line-height:1.38!important;min-height:35px!important;margin:0 0 6px!important;-webkit-line-clamp:2!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card>p{font-size:9.5px!important;line-height:1.45!important;min-height:28px!important;-webkit-line-clamp:2!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-meta{font-size:9px!important;margin-bottom:6px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags{gap:3px!important;margin-top:5px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags span{font-size:8px!important;padding:2px 5px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card>a{margin-top:auto!important;height:24px!important;min-height:24px!important;font-size:9px!important}
+@media(max-width:1100px){
+ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity;padding:0 0 8px!important;gap:9px!important;overscroll-behavior-inline:contain}
+ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{flex:0 0 230px!important;width:230px!important;scroll-snap-align:start}
+}
+@media(max-width:720px){
+ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-head{height:auto!important;min-height:52px!important;align-items:flex-start!important}
+ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-metrics{display:none!important}
+ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-title p{white-space:normal!important;max-width:none!important}
+}
