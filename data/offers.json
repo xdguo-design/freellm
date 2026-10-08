@@ -513,17 +513,17 @@
     },
     "kicker": "CHEAP CODING",
     "badges": [
-      "NIGHT FREE",
-      "DOUBLE-FESTIVAL PROMO"
+      "CODING PLAN",
+      "SEP 3–OCT 7 PROMO ENDED"
     ],
-    "freeSummary": "Sep 3–Oct 7: GLM-5.3-Flash is unlimited in ZCode/AutoClaw from 23:00–09:00 (UTC+8); other Agents get doubled quota. Sep 25–Oct 7 all day uses off-peak 50% point consumption.",
-    "validitySummary": "Night promo through Oct 7 · 5-hour + weekly limits",
+    "freeSummary": "Sep 3–Oct 7 的 GLM-5.3-Flash 夜间不限量 / 双倍额度活动已结束；Coding Plan 当前权益以官方控制台与 FAQ 为准。",
+    "validitySummary": "Sep 3–Oct 7 campaigns ended · recheck current Coding Plan benefits",
     "accessSummary": "China account",
-    "checkedSummary": "2026-09-29 / official Coding Plan docs",
+    "checkedSummary": "2026-10-08 / previous campaign expired",
     "title": "GLM Coding Plan",
-    "why": "Current official GLM Coding Plan docs list GLM-5.3 and GLM-5.3-Flash. The Sep 3–Oct 7 night campaign gives unlimited GLM-5.3-Flash usage in ZCode and AutoClaw from 23:00–09:00 UTC+8, while other Agents receive doubled quota; Sep 25–Oct 7 uses off-peak point consumption all day.",
-    "mechanism": "Base plan has 5-hour and weekly point caps; off-peak model calls consume 50% of base points. During the Sep 25–Oct 7 double-festival campaign, the off-peak rule applies all day; the Sep 3–Oct 7 night campaign adds GLM-5.3-Flash unlimited use in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
-    "validity": "Campaigns end 2026-10-07; base plan keeps rolling 5-hour and weekly limits",
+    "why": "The Sep 3–Oct 7 GLM-5.3-Flash night campaign and Sep 25–Oct 7 off-peak festival campaign have ended. Keep this historical entry only as an expired promotion; current Coding Plan limits and pricing must be rechecked on the official FAQ.",
+    "mechanism": "Expired Sep 3–Oct 7 promotional benefits; no longer treat the night unlimited benefit as active.",
+    "validity": "Campaigns ended 2026-10-07",
     "access": "China account; supported tools only",
     "command": "Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.",
     "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
@@ -542,7 +542,7 @@
     "originCountry": "China",
     "availability": "China account; supported tools only",
     "freeMechanism": "first_month_promo",
-    "quota": "Lite 2,000/10,000, Pro 12,000/60,000, Max 28,000/140,000 points (5-hour/weekly); promotions temporarily improve effective quota through 2026-10-07",
+    "quota": "Previous promotional quota ended 2026-10-07; current plan quota must be checked in the account/official FAQ",
     "renewal": "Plan and time windows are provider-controlled",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
@@ -551,12 +551,12 @@
       "https://docs.bigmodel.cn/cn/coding-plan/overview",
       "https://docs.bigmodel.cn/cn/coding-plan/faq"
     ],
-    "evidence": "Official Coding Plan overview (checked 2026-09-29) lists GLM-5.3 and GLM-5.3-Flash, 5-hour + weekly caps, 50% off-peak point consumption, all-day off-peak consumption Sep 25–Oct 7, and a Sep 3–Oct 7 night campaign with unlimited GLM-5.3-Flash in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
-    "status": "verified",
+    "evidence": "2026-10-08 review: the previously recorded Sep 3–Oct 7 and Sep 25–Oct 7 campaign windows have passed, so the promotional free benefit is no longer shown as active.",
+    "status": "expired",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "Campaign benefits are temporary and tool-specific; do not describe them as a general-purpose free GLM API.",
+    "notes": "Historical campaign entry. Do not describe the Sep 3–Oct 7 night benefit as currently available.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -9088,19 +9088,19 @@
         "Vercel account",
         "Vercel AI Gateway API key"
       ],
-        "steps": [
-          "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
-          "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
-          "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
-          "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
-        ],
-        "stepsEn": [
-          "Open the Ling 3.1 Flash (Free) model page in Vercel AI Gateway and sign in.",
-          "Create an AI Gateway API key; never expose it in browser-side code.",
-          "Send requests with model ID inclusionai/ling-3.1-flash-free and check the actual provider and usage in the dashboard.",
-          "The promotion ends on 2026-10-13; check the model page and billing status before using it afterward."
-        ],
-        "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
+      "steps": [
+        "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
+        "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
+        "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
+        "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
+      ],
+      "stepsEn": [
+        "Open the Ling 3.1 Flash (Free) model page in Vercel AI Gateway and sign in.",
+        "Create an AI Gateway API key; never expose it in browser-side code.",
+        "Send requests with model ID inclusionai/ling-3.1-flash-free and check the actual provider and usage in the dashboard.",
+        "The promotion ends on 2026-10-13; check the model page and billing status before using it afterward."
+      ],
+      "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${AI_GATEWAY_API_KEY}",
       "examples": {
@@ -9285,5 +9285,376 @@
     },
     "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
     "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+  },
+  {
+    "id": "intern-s2-free-api",
+    "order": 72,
+    "date": "2026-10-07",
+    "name": "Intern-S2 official free API quota",
+    "providerMark": "书",
+    "provider": "Shanghai AI Laboratory · Intern AI",
+    "providerMeta": "上海人工智能实验室 · Intern AI",
+    "model": "Intern-S2",
+    "modelMeta": "397B · 256K · OpenAI-compatible Chat Completions",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "申请 Intern API Token 后通过官方 OpenAI 兼容接口调用 Intern-S2",
+      "prerequisites": [
+        "Intern / 书生平台账号",
+        "Intern API Token"
+      ],
+      "steps": [
+        "打开官方模型列表与 Chat API 文档，确认 intern-s2 仍在线且免费额度规则未变化",
+        "创建或获取 API Token，并使用官方 OpenAI-compatible Base URL 调用 intern-s2"
+      ],
+      "endpoint": "https://chat.intern-ai.org.cn/api/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${INTERN_API_TOKEN}",
+      "examples": {
+        "curl": "curl https://chat.intern-ai.org.cn/api/v1/chat/completions -H \"Authorization: Bearer ${INTERN_API_TOKEN}\" -H \"Content-Type: application/json\" -d '{\"model\":\"intern-s2\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+    },
+    "kicker": "397B · 256K",
+    "badges": [
+      "FREE API QUOTA",
+      "OPENAI COMPATIBLE",
+      "30 RPM DEFAULT"
+    ],
+    "freeSummary": "官方确认面向所有用户开放一定额度的免费 API；公开页面未固定承诺具体 Token 数。",
+    "validitySummary": "Official free quota · exact amount/account policy can change",
+    "accessSummary": "Intern account + API Token",
+    "checkedSummary": "2026-10-08 / official Shanghai AI Laboratory + Intern docs",
+    "title": "书生-S2 / Intern-S2 · 官方免费 API",
+    "why": "上海人工智能实验室官方确认书生大模型面向所有用户开放一定额度免费 API。Intern-S2 为正式模型，官方模型列表标注 397B、256K，并提供 OpenAI 风格 Chat Completions。",
+    "mechanism": "Official account-level free API quota; exact token amount is not fixed on the public announcement.",
+    "validity": "No public fixed end date; quota and limits are provider-controlled",
+    "access": "Intern account and API Token; use the official chat.intern-ai.org.cn API",
+    "command": "curl https://chat.intern-ai.org.cn/api/v1/chat/completions -H \"Authorization: Bearer $INTERN_API_TOKEN\" -H \"Content-Type: application/json\" -d '{\"model\":\"intern-s2\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://chat.intern-ai.org.cn/",
+    "registerLabel": "打开 Intern / 书生平台",
+    "links": [
+      [
+        "上海人工智能实验室官方公告",
+        "https://www.shlab.org.cn/news/5444298"
+      ],
+      [
+        "Intern 模型列表",
+        "https://internlm.intern-ai.org.cn/doc/docs/%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8/"
+      ],
+      [
+        "Chat Completions API",
+        "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Official Intern API; account availability may vary",
+    "freeMechanism": "not_confirmed",
+    "quota": "Official public wording: a certain amount of free API quota; exact account quota must be checked after login",
+    "renewal": "Not publicly fixed",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444298",
+      "https://internlm.intern-ai.org.cn/doc/docs/%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8/",
+      "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+    ],
+    "evidence": "官方公告确认面向所有用户开放一定额度免费 API；官方模型列表确认 Intern-S2、397B、256K；Chat API 文档提供 OpenAI SDK/Chat Completions 接入并标注默认约 30 RPM。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "不把第三方账号显示的 1.8 亿 Token/月写成官方固定额度；具体额度登录后确认。"
+  },
+  {
+    "id": "autoclaw-glm-5-3-flash-oct-2026",
+    "order": 73,
+    "date": "2026-10-07",
+    "name": "AutoClaw GLM-5.3-Flash October free-token event",
+    "providerMark": "A",
+    "provider": "Z.ai · AutoClaw",
+    "providerMeta": "Z.ai / AutoClaw",
+    "model": "GLM-5.3-Flash",
+    "modelMeta": "New-user 200M Tokens + daily Credits event",
+    "type": [
+      "agent",
+      "free",
+      "promo"
+    ],
+    "productType": "desktop_ai_app",
+    "usageGuide": {
+      "summary": "注册并登录 AutoClaw，确认新用户赠送与每日 Credits 后用于真实 Agent 任务测试",
+      "prerequisites": [
+        "AutoClaw / Z.ai account"
+      ],
+      "steps": [
+        "打开 AutoClaw 首页确认当前新用户 200M Token 权益仍显示",
+        "在活动期每天登录领取 Credits，并在当天使用，因为每日 Credits 24 小时过期"
+      ],
+      "examples": {
+        "action": "Open https://autoclaw.z.ai/ and sign in, then check the account Credits before running an Agent task."
+      },
+      "docsUrl": "https://autoclaw.z.ai/blog/news/free-token-event/"
+    },
+    "kicker": "200M + DAILY CREDITS",
+    "badges": [
+      "LIMITED EVENT",
+      "NEW USER",
+      "GLM-5.3-FLASH"
+    ],
+    "freeSummary": "AutoClaw 首页当前展示新用户注册登录送 200M Tokens；10 月 4–11 日 UTC 另有每日登录 Credits 活动。",
+    "validitySummary": "Daily Credits event ends 2026-10-11 16:00 UTC (2026-10-12 00:00 UTC+8)",
+    "accessSummary": "AutoClaw / Z.ai account",
+    "checkedSummary": "2026-10-08 / official AutoClaw",
+    "title": "AutoClaw + GLM-5.3-Flash · 2 亿 Token + 每日 Credits",
+    "why": "官方 AutoClaw 活动页给出 2026-10-04 16:00 UTC 至 2026-10-11 16:00 UTC 的每日 Credits 活动，并按 GLM-5.3-Flash 折算为 100M+ Tokens；AutoClaw 首页同时展示新用户注册登录送 200M Tokens。",
+    "mechanism": "Limited-time daily Credits plus a separate new-user token grant; not a permanent free API.",
+    "validity": "Daily event through 2026-10-11 16:00 UTC; new-user grant subject to current AutoClaw homepage rules",
+    "access": "AutoClaw account; benefits are account/product specific",
+    "command": "Open https://autoclaw.z.ai/ and sign in; check Credits and expiry in the account before use.",
+    "register": "https://autoclaw.z.ai/",
+    "registerLabel": "打开 AutoClaw",
+    "links": [
+      [
+        "100M+ Free Tokens 活动",
+        "https://autoclaw.z.ai/blog/news/free-token-event/"
+      ],
+      [
+        "AutoClaw 首页",
+        "https://autoclaw.z.ai/"
+      ]
+    ],
+    "originCountry": "International",
+    "availability": "AutoClaw account; regional access may vary",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "daily_credits_plus_new_user_grant",
+      "amount": null,
+      "unit": "credits_tokens",
+      "period": "event"
+    },
+    "quota": "New user homepage benefit: 200M Tokens; daily Credits vary by event phase and expire after 24 hours",
+    "renewal": "Daily event benefit only during the stated campaign window",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check Z.ai / AutoClaw terms",
+    "sourceUrls": [
+      "https://autoclaw.z.ai/blog/news/free-token-event/",
+      "https://autoclaw.z.ai/"
+    ],
+    "evidence": "AutoClaw 官方活动页明确活动窗口、每日 Credits 和 24 小时过期规则，并说明按 GLM-5.3-Flash 折算可达 100M+ Tokens；首页当前展示新用户 200M Tokens。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "限时 Credits / 新用户赠送，不标为永久免费 API。"
+  },
+  {
+    "id": "zhipu-glm-4-7-flash-free-api",
+    "order": 74,
+    "date": "2026-10-07",
+    "name": "Zhipu GLM-4.7-Flash free BigModel API",
+    "providerMark": "GLM",
+    "provider": "Zhipu BigModel",
+    "providerMeta": "智谱 BigModel · China",
+    "model": "GLM-4.7-Flash",
+    "modelMeta": "30B-A3B · ~200K context · OpenAI-compatible API",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在 BigModel 创建 API Key 后调用 glm-4.7-flash，并在控制台确认当前免费政策",
+      "prerequisites": [
+        "智谱 BigModel 账号",
+        "BigModel API Key"
+      ],
+      "steps": [
+        "打开智谱官方发布页/BigModel 控制台确认 GLM-4.7-Flash 当前仍可免费调用",
+        "创建 API Key 后通过 BigModel Chat Completions 调用 glm-4.7-flash，并检查用量页面"
+      ],
+      "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${ZHIPU_API_KEY}",
+      "examples": {
+        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer ${ZHIPU_API_KEY}\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://docs.bigmodel.cn/"
+    },
+    "kicker": "FREE API · ~200K",
+    "badges": [
+      "FREE CALLS",
+      "30B-A3B",
+      "OPEN WEIGHTS"
+    ],
+    "freeSummary": "智谱官方发布公告明确 GLM-4.7-Flash 在 BigModel.cn 上线并供免费调用。",
+    "validitySummary": "Official free calls · no fixed public end date",
+    "accessSummary": "BigModel account + API Key",
+    "checkedSummary": "2026-10-08 / official Zhipu release",
+    "title": "GLM-4.7-Flash · BigModel 官方免费 API",
+    "why": "智谱官方 2026-01-19 发布页明确写明 GLM-4.7-Flash 在 BigModel.cn 上线并供免费调用，同时开源。官方模型配置 max_position_embeddings 为 202752，可近似理解为约 200K 原生上下文。",
+    "mechanism": "Official BigModel free-call route for GLM-4.7-Flash; provider may change limits or policy.",
+    "validity": "No fixed public end date; recheck BigModel before production use",
+    "access": "BigModel account and API Key",
+    "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer $ZHIPU_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://open.bigmodel.cn/console",
+    "registerLabel": "打开 BigModel",
+    "links": [
+      [
+        "智谱 GLM-4.7-Flash 发布页",
+        "https://www.zhipuai.cn/zh/news/148"
+      ],
+      [
+        "BigModel 文档",
+        "https://docs.bigmodel.cn/"
+      ],
+      [
+        "Hugging Face config",
+        "https://huggingface.co/zai-org/GLM-4.7-Flash/blob/main/config.json"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "BigModel China platform",
+    "freeMechanism": "permanent",
+    "quota": "Official announcement says free calls; public page does not state a fixed token quota",
+    "renewal": "Provider-controlled",
+    "phoneRequired": "yes",
+    "cardRequired": "unknown",
+    "commercialUse": "check Zhipu terms",
+    "sourceUrls": [
+      "https://www.zhipuai.cn/zh/news/148",
+      "https://docs.bigmodel.cn/",
+      "https://huggingface.co/zai-org/GLM-4.7-Flash/blob/main/config.json"
+    ],
+    "evidence": "智谱官方发布页明确“供免费调用”；Hugging Face 官方模型配置显示 max_position_embeddings=202752。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "免费调用不等于无额度/无限并发；具体限制以 BigModel 当前控制台为准。"
+  },
+  {
+    "id": "xiaomi-mimo-new-user-10cny-credit",
+    "order": 75,
+    "date": "2026-10-07",
+    "name": "Xiaomi MiMo new-user ¥10 API credit",
+    "providerMark": "米",
+    "provider": "Xiaomi MiMo",
+    "providerMeta": "Xiaomi MiMo Open Platform · China",
+    "model": "MiMo API models",
+    "modelMeta": "¥10 new-user referral credit · 40 days",
+    "type": [
+      "api",
+      "free",
+      "promo"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "符合条件的新用户完成邀请绑定后领取 ¥10 赠金，用于 MiMo API 按量调用",
+      "prerequisites": [
+        "中国大陆注册地区的 Xiaomi MiMo 新用户",
+        "注册后 3 天内完成邀请关系绑定",
+        "MiMo API Key"
+      ],
+      "steps": [
+        "通过邀请链接或控制台绑定邀请码，确认账户收到 ¥10 赠金与到期日",
+        "创建 API Key 后调用 MiMo API，并在费用/用量页确认赠金抵扣"
+      ],
+      "endpoint": "https://api.xiaomimimo.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${MIMO_API_KEY}",
+      "examples": {
+        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer ${MIMO_API_KEY}\" -H \"Content-Type: application/json\" -d '{\"model\":\"mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+      },
+      "docsUrl": "https://mimo.mi.com/docs/zh-CN/quick-start/faq/promotions"
+    },
+    "kicker": "¥10 · 40 DAYS",
+    "badges": [
+      "NEW USER CREDIT",
+      "API PAYG ONLY",
+      "CHINA ACCOUNT"
+    ],
+    "freeSummary": "符合当前官方邀请规则的新用户完成绑定后双方各得 ¥10 赠金；仅抵扣 API 按量调用。",
+    "validitySummary": "Credit expires 40 days after receipt",
+    "accessSummary": "China-registered MiMo account · referral binding",
+    "checkedSummary": "2026-10-08 / official Xiaomi MiMo promotions FAQ",
+    "title": "Xiaomi MiMo · 新用户 ¥10 API 体验金",
+    "why": "MiMo 官方活动 FAQ 与邀请有礼规则确认，符合条件的新用户在注册 3 天内完成邀请关系绑定后，邀请双方各获得 ¥10 赠金；赠金到账后 40 天有效，只能抵扣 API 按量调用，不能购买 Token Plan。",
+    "mechanism": "One-time referral/new-user API credit, not a permanently free model.",
+    "validity": "40 days after the credit is issued; campaign rules can change",
+    "access": "China-registered account meeting the official new-user/referral conditions",
+    "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer $MIMO_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "register": "https://platform.xiaomimimo.com/",
+    "registerLabel": "打开 Xiaomi MiMo 开放平台",
+    "links": [
+      [
+        "MiMo 活动 FAQ",
+        "https://mimo.mi.com/docs/zh-CN/quick-start/faq/promotions"
+      ],
+      [
+        "邀请有礼规则",
+        "https://mimo.mi.com/docs/zh-CN/quick-start/promotions/refer"
+      ],
+      [
+        "平台更新记录",
+        "https://mimo.mi.com/docs/zh-CN/updates/feature"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "Official rule currently limits the ¥10 registration credit to mainland-China registered accounts",
+    "freeMechanism": "trial",
+    "pricingModel": "free_credits",
+    "freePolicy": {
+      "type": "new_user_referral_credit",
+      "amount": 10,
+      "unit": "CNY",
+      "period": "40_days"
+    },
+    "quota": "¥10 API PAYG credit; not cash and not usable for Token Plan",
+    "renewal": "One-time benefit",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check Xiaomi MiMo terms",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "wallet",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://mimo.mi.com/docs/zh-CN/quick-start/faq/promotions",
+      "https://mimo.mi.com/docs/zh-CN/quick-start/promotions/refer",
+      "https://mimo.mi.com/docs/zh-CN/updates/feature"
+    ],
+    "evidence": "MiMo 官方活动 FAQ 确认中国大陆注册地区新用户邀请赠金 ¥10、40 天有效、仅抵扣 API PAYG；邀请有礼规则说明新用户需在注册 3 天内完成绑定。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "这是账户 Credits，不是某个 MiMo 模型永久免费。"
   }
 ]
