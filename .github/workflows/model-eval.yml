@@ -2,6 +2,10 @@ name: model-eval
 
 on:
   workflow_dispatch:
+    inputs:
+      providers:
+        description: "Comma-separated provider ids (empty = data/evaluations/providers.txt or all)"
+        required: false
   schedule:
     - cron: "0 2 * * 1" # Monday 10:00 Asia/Shanghai
   push:
@@ -10,6 +14,7 @@ on:
     paths:
       - "scripts/eval_models.py"
       - ".github/workflows/model-eval.yml"
+      - "data/evaluations/providers.txt"
 
 permissions:
   contents: write
@@ -21,7 +26,7 @@ concurrency:
 jobs:
   eval:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,12 +40,20 @@ jobs:
           MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
           ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        run: python scripts/eval_models.py --out data/evaluations | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          PROVIDERS="${{ inputs.providers }}"
+          if [ -z "$PROVIDERS" ] && [ "${{ github.event_name }}" = "push" ] && [ -f data/evaluations/providers.txt ]; then
+            PROVIDERS="$(tr -d ' \n' < data/evaluations/providers.txt)"
+          fi
+          EVAL_PROVIDERS="$PROVIDERS" python scripts/eval_models.py --out data/evaluations --merge | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Build evaluation report page
+        run: |
+          if [ -f scripts/build_eval_report.py ]; then python scripts/build_eval_report.py; fi
       - name: Commit results
         run: |
           git config user.name "freellm-eval-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/evaluations
+          git add data/evaluations evaluations || git add data/evaluations
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -m "data(eval): real model evaluation $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME}"

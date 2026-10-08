@@ -29,7 +29,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-SUITE_VERSION = "text-api-lite-v1"
+SUITE_VERSION = "freellm-text-v2"
 TIMEOUT = 90
 
 PROVIDERS = {
@@ -48,14 +48,14 @@ PROVIDERS = {
         "base": "https://openrouter.ai/api/v1",
         "list": True,
         "free_suffix": ":free",
-        "limit": 4,  # free tier is 50 requests/day without credits
+        "limit": 2,  # free tier is 50 requests/day without credits
     },
     "groq": {
         "name": "Groq",
         "env": "GROQ_API_KEY",
         "base": "https://api.groq.com/openai/v1",
         "list": True,
-        "limit": 3,
+        "limit": 4,
     },
     "modelscope": {
         "name": "魔搭 ModelScope",
@@ -91,23 +91,91 @@ EXCLUDE = re.compile(
 PREFER = ["deepseek", "qwen", "glm", "kimi", "gpt-oss", "minimax", "llama", "gemma", "mistral", "nemotron", "ling", "hunyuan", "xing"]
 
 PYTHON_TESTS = {
-    "is_prime": "assert is_prime(2) and is_prime(97) and not is_prime(1) and not is_prime(91) and not is_prime(0)",
-    "reverse_words": "assert reverse_words('I love free AI') == 'AI free love I'\nassert reverse_words('hello') == 'hello'",
+    "merge_intervals": (
+        "assert merge_intervals([[1,3],[2,6],[8,10],[15,18]]) == [[1,6],[8,10],[15,18]]\n"
+        "assert merge_intervals([[1,4],[4,5]]) == [[1,5]]\n"
+        "assert merge_intervals([]) == []\n"
+        "assert merge_intervals([[5,7],[1,2]]) == [[1,2],[5,7]]\n"
+    ),
+    "longest_palindrome": (
+        "assert longest_palindrome('babad') in ('bab','aba')\n"
+        "assert longest_palindrome('cbbd') == 'bb'\n"
+        "assert longest_palindrome('a') == 'a'\n"
+        "assert longest_palindrome('forgeeksskeegfor') == 'geeksskeeg'\n"
+    ),
+    "parse_duration": (
+        "assert parse_duration('1h30m15s') == 5415\n"
+        "assert parse_duration('45s') == 45\n"
+        "assert parse_duration('2h') == 7200\n"
+        "assert parse_duration('10m5s') == 605\n"
+    ),
 }
 
-CASES = [
-    {"id": "zh-fact-1", "dim": "chinese_factual", "prompt": "中国的首都是哪座城市？只回答城市名。", "check": ("contains", "北京")},
-    {"id": "zh-fact-2", "dim": "chinese_factual", "prompt": "《红楼梦》的作者是谁？只回答姓名。", "check": ("contains", "曹雪芹")},
-    {"id": "math-1", "dim": "reasoning_math", "prompt": "计算 37×43，只输出最终数字。", "check": ("number", "1591")},
-    {"id": "math-2", "dim": "reasoning_math", "prompt": "一件衣服原价 200 元，先打八折，再减 30 元，最后多少元？只输出最终数字。", "check": ("number", "130")},
-    {"id": "logic-1", "dim": "reasoning_math", "prompt": "小明比小红高，小红比小刚高。三个人中谁最矮？只回答名字。", "check": ("contains", "小刚")},
-    {"id": "py-1", "dim": "python", "prompt": "用 Python 写一个函数 is_prime(n)，判断 n 是否为质数，返回 True 或 False。只输出代码。", "check": ("python", "is_prime")},
-    {"id": "py-2", "dim": "python", "prompt": "用 Python 写一个函数 reverse_words(s)，把用空格分隔的句子中的单词顺序反转后返回字符串。只输出代码。", "check": ("python", "reverse_words")},
-    {"id": "fmt-1", "dim": "instruction_format", "prompt": "输出一个 JSON 对象，包含 name（字符串）和 age（整数）两个字段，name 为“张三”，age 为 28。只输出 JSON，不要任何解释。", "check": ("json", {"name": "张三", "age": 28})},
-    {"id": "fmt-2", "dim": "instruction_format", "prompt": "列出三种水果，用英文逗号分隔，只输出这三个词，不要编号和其他文字。", "check": ("list3", None)},
-    {"id": "ctx-1", "dim": "context_extraction", "prompt": "阅读下面的通知，回答会议日期，只按 YYYY-MM-DD 格式输出。\n通知：经研究决定，第三届开源模型开发者大会原定于十月举行，现推迟至2026年11月3日在杭州国际博览中心召开，报名截止时间为10月25日。", "check": ("contains", "2026-11-03")},
+TOOLS = [
+    {"type": "function", "function": {"name": "get_weather", "description": "查询某城市某天的天气预报",
+        "parameters": {"type": "object", "properties": {"city": {"type": "string", "description": "城市名"},
+            "date": {"type": "string", "description": "日期，如 today/tomorrow 或 YYYY-MM-DD"},
+            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}}, "required": ["city"]}}},
+    {"type": "function", "function": {"name": "convert_currency", "description": "按实时汇率换算货币",
+        "parameters": {"type": "object", "properties": {"amount": {"type": "number"},
+            "from_currency": {"type": "string", "description": "ISO 4217 代码，如 USD"},
+            "to_currency": {"type": "string", "description": "ISO 4217 代码，如 CNY"}},
+            "required": ["amount", "from_currency", "to_currency"]}}},
+    {"type": "function", "function": {"name": "search_flights", "description": "搜索航班",
+        "parameters": {"type": "object", "properties": {"origin": {"type": "string"}, "destination": {"type": "string"},
+            "date": {"type": "string"}}, "required": ["origin", "destination", "date"]}}},
 ]
 
+
+def _haystack() -> str:
+    """~8k Chinese characters of deterministic filler with two planted facts."""
+    topics = ["城市更新", "乡村物流", "储能电站", "智慧农业", "跨境电商", "社区养老", "数字档案", "低空经济"]
+    paras = []
+    for i in range(64):
+        t = topics[i % len(topics)]
+        paras.append(
+            f"第{i + 1}段：关于{t}的调研显示，相关单位在第{(i * 7) % 12 + 1}季度完成了阶段性评估，"
+            f"参与样本约{(i * 37) % 900 + 100}个，主要问题集中在协同效率、数据口径与资金到位节奏上，"
+            f"报告建议后续加强跨部门联动并建立月度复盘机制，以确保各项指标按计划推进。"
+        )
+    paras.insert(17, "第18段补充：经董事会批准，新项目代号定为“青鸾-7”，由西北分公司牵头实施。")
+    paras.insert(49, "第50段补充：“青鸾-7”项目的首期预算核定为 318 万元，资金将于明年三月拨付。")
+    return "\n".join(paras)
+
+
+HAY = _haystack()
+
+CASES = [
+    # 中文知识
+    {"id": "zh-1", "dim": "chinese_knowledge", "prompt": "“落霞与孤鹜齐飞”的下一句是什么？只输出这一句。", "check": ("contains", "秋水共长天一色")},
+    {"id": "zh-2", "dim": "chinese_knowledge", "prompt": "王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。", "check": ("contains", "南昌")},
+    {"id": "zh-3", "dim": "chinese_knowledge", "prompt": "鲁迅和周树人之间是什么关系？用一句话回答。", "check": ("regex", r"同一(个)?人|是一个人|笔名|本名|原名")},
+    # 推理与数学
+    {"id": "rm-1", "dim": "reasoning_math", "prompt": "一个正整数除以 3 余 2，除以 5 余 3，除以 7 余 2。满足条件的最小正整数是多少？只输出最终数字。", "check": ("number", 23)},
+    {"id": "rm-2", "dim": "reasoning_math", "prompt": "水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。", "check": ("approx", 36 / 7)},
+    {"id": "rm-3", "dim": "reasoning_math", "prompt": "英文单词 strawberry 中一共有几个字母 r？只输出数字。", "check": ("number", 3)},
+    {"id": "rm-4", "dim": "reasoning_math", "prompt": "9.11 和 9.9 哪个更大？只输出更大的那个数。", "check": ("number", 9.9)},
+    {"id": "rm-5", "dim": "reasoning_math", "prompt": "A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。", "check": ("letter", "B")},
+    # 代码
+    {"id": "code-1", "dim": "coding", "prompt": "用 Python 实现函数 merge_intervals(intervals)：输入形如 [[1,3],[2,6]] 的区间列表（可能无序、可能为空），返回合并重叠区间后按起点排序的列表，端点相接也要合并。只输出代码。", "check": ("python", "merge_intervals")},
+    {"id": "code-2", "dim": "coding", "prompt": "用 Python 实现函数 longest_palindrome(s)，返回字符串 s 中最长的回文子串。只输出代码。", "check": ("python", "longest_palindrome")},
+    {"id": "code-3", "dim": "coding", "prompt": "用 Python 实现函数 parse_duration(text)，把 '1h30m15s'、'45s'、'2h'、'10m5s' 这类时长字符串转换为总秒数（int）。只输出代码。", "check": ("python", "parse_duration")},
+    # 指令与格式
+    {"id": "fmt-1", "dim": "instruction_format", "prompt": "把下列城市及其所属省份输出为 JSON 数组，每个元素形如 {\"city\":\"…\",\"province\":\"…\"}，省份不要带“省”字，按给出顺序：杭州、成都、苏州。只输出 JSON。", "check": ("json", [{"city": "杭州", "province": "浙江"}, {"city": "成都", "province": "四川"}, {"city": "苏州", "province": "江苏"}])},
+    {"id": "fmt-2", "dim": "instruction_format", "prompt": "写一首主题为秋天的五言绝句：恰好 4 句，每句恰好 5 个汉字，每句一行，不要标题、作者和任何解释。", "check": ("jueju", None)},
+    {"id": "fmt-3", "dim": "instruction_format", "prompt": "用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。", "check": ("constrained", None)},
+    # 长文本
+    {"id": "long-1", "dim": "long_context", "prompt": HAY + "\n\n问题：上文中新项目的代号是什么？首期预算是多少万元？按“代号，预算”格式回答，例如：某某-1，100。", "check": ("all", ["青鸾-7", "318"])},
+    {"id": "long-2", "dim": "long_context", "prompt": HAY + "\n\n问题：上文中由哪个分公司牵头实施新项目？资金何时拨付？一句话回答。", "check": ("all", ["西北", "三月"])},
+    # 工具调用
+    {"id": "tool-1", "dim": "tool_calling", "prompt": "帮我查一下北京明天的天气，用摄氏度。", "tools": True, "check": ("tool", {"name": "get_weather", "args": {"city": "北京"}})},
+    {"id": "tool-2", "dim": "tool_calling", "prompt": "100 美元现在能换多少人民币？", "tools": True, "check": ("tool", {"name": "convert_currency", "args": {"amount": 100, "from_currency": "USD", "to_currency": "CNY"}})},
+    {"id": "tool-3", "dim": "tool_calling", "prompt": "你好！用一句话介绍一下你自己。", "tools": True, "check": ("no_tool", None)},
+    # 防幻觉
+    {"id": "hal-1", "dim": "honesty", "prompt": "请介绍 2025 年诺贝尔数学奖得主及其主要贡献。", "check": ("regex", r"没有诺贝尔数学奖|不设|没有设立|并没有|并不存在|不存在|并无|没有.{0,6}数学奖|未设")},
+    {"id": "hal-2", "dim": "honesty", "prompt": "请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。", "check": ("regex", r"无法|找不到|未能找到|没有找到|不确定|无法核实|没有相关|并未|不存在|查不到|未检索到|没有.{0,6}记录|可能不存在|虚构")},
+    {"id": "hal-3", "dim": "honesty", "prompt": "《红楼梦》第一百二十一回讲了什么？", "check": ("regex", r"一百二十回|120 ?回|没有第一百二十一回|不存在|并没有|共120|只有")},
+]
 
 def _request(url: str, key: str, body: dict | None = None, stream: bool = False):
     data = json.dumps(body).encode() if body is not None else None
@@ -154,7 +222,8 @@ def list_models(cfg: dict, key: str) -> list[str]:
     def rank(mid: str) -> tuple:
         low = mid.lower()
         pos = next((i for i, p in enumerate(PREFER) if p in low), len(PREFER))
-        return (pos, low)
+        nums = tuple(-float(x) for x in re.findall(r"\d+(?:\.\d+)?", low)[:2])
+        return (pos, nums, low)
 
     # One model per family first, so the sample is diverse.
     picked, seen = [], set()
@@ -172,34 +241,77 @@ def list_models(cfg: dict, key: str) -> list[str]:
 
 def strip_reasoning(text: str) -> str:
     text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
+    text = re.sub(r"^.*?</think>", "", text, flags=re.S)  # opening tag swallowed upstream
     return text.strip()
 
 
 def extract_code(text: str) -> str:
     m = re.findall(r"```(?:python|py)?\s*\n(.*?)```", text, flags=re.S)
-    return (m[0] if m else text).strip()
+    return (max(m, key=len) if m else text).strip()
 
 
-def score(case: dict, output: str) -> bool:
+def _nums(text: str) -> list[float]:
+    return [float(x) for x in re.findall(r"-?\d+(?:\.\d+)?", text.replace(",", ""))]
+
+
+def _han(text: str) -> int:
+    return len(re.findall(r"[\u4e00-\u9fff]", text))
+
+
+def score(case: dict, output: str, tool_calls: list[dict]) -> bool:
     kind, expected = case["check"]
     out = strip_reasoning(output)
+    if kind == "tool":
+        if not tool_calls:
+            return False
+        call = tool_calls[0]
+        if call.get("name") != expected["name"]:
+            return False
+        try:
+            args = json.loads(call.get("arguments") or "{}")
+        except json.JSONDecodeError:
+            return False
+        for k, v in expected["args"].items():
+            got = args.get(k)
+            if isinstance(v, (int, float)):
+                try:
+                    if float(got) != float(v):
+                        return False
+                except (TypeError, ValueError):
+                    return False
+            elif not isinstance(got, str) or v.lower() not in got.lower():
+                return False
+        return True
+    if kind == "no_tool":
+        return not tool_calls and bool(out)
+    if tool_calls and not out:
+        return False
     if kind == "contains":
         return expected in out
+    if kind == "all":
+        return all(x in out for x in expected)
+    if kind == "regex":
+        return re.search(expected, out) is not None
     if kind == "number":
-        nums = re.findall(r"-?\d+(?:\.\d+)?", out.replace(",", ""))
-        return bool(nums) and float(nums[-1]) == float(expected)
+        nums = _nums(out)
+        return bool(nums) and abs(nums[-1] - float(expected)) < 1e-9
+    if kind == "approx":
+        nums = _nums(out)
+        return bool(nums) and abs(nums[-1] - float(expected)) < 0.011
+    if kind == "letter":
+        cleaned = re.sub(r"[\s。.：:*`\"'“”]", "", out)
+        return cleaned.upper() in {expected, f"答案{expected}", f"{expected}说的是真话"} or cleaned.upper().endswith(expected) and len(cleaned) <= 6
     if kind == "json":
-        m = re.search(r"\{.*\}", out, flags=re.S)
+        m = re.search(r"[\[{].*[\]}]", out, flags=re.S)
         try:
             return m is not None and json.loads(m.group(0)) == expected
         except json.JSONDecodeError:
             return False
-    if kind == "list3":
-        line = out.strip().strip("。.")
-        if "\n" in line:
-            return False
-        parts = [p.strip() for p in re.split(r"[,，]", line) if p.strip()]
-        return len(parts) == 3 and all(len(p) <= 20 for p in parts)
+    if kind == "jueju":
+        lines = [l.strip() for l in out.strip().splitlines() if l.strip()]
+        return len(lines) == 4 and all(_han(l) == 5 and len(re.sub(r"[\u4e00-\u9fff，。、！？,.!?；;\s]", "", l)) == 0 for l in lines)
+    if kind == "constrained":
+        return out.startswith("结论：") and not re.search(r"[A-Za-z]", out) and len(re.sub(r"\s", "", out)) <= 60
     if kind == "python":
         code = extract_code(out) + "\n\n" + PYTHON_TESTS[expected] + "\n"
         with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as fh:
@@ -215,68 +327,112 @@ def score(case: dict, output: str) -> bool:
     return False
 
 
+def _stream(cfg: dict, key: str, body: dict) -> dict:
+    start = time.perf_counter()
+    first = None
+    chunks: list[str] = []
+    reasoning_chars = 0
+    usage: dict = {}
+    calls: dict[int, dict] = {}
+    with _request(cfg["base"] + "/chat/completions", key, body) as resp:
+        for raw in resp:
+            line = raw.decode("utf-8", "ignore").strip()
+            if not line.startswith("data:"):
+                continue
+            data = line[5:].strip()
+            if data == "[DONE]":
+                break
+            try:
+                evt = json.loads(data)
+            except json.JSONDecodeError:
+                continue
+            if evt.get("usage"):
+                usage = evt["usage"]
+            for choice in evt.get("choices") or []:
+                delta = choice.get("delta") or {}
+                piece = delta.get("content") or ""
+                think = delta.get("reasoning_content") or delta.get("reasoning") or ""
+                reasoning_chars += len(think)
+                if (piece or think or delta.get("tool_calls")) and first is None:
+                    first = time.perf_counter()
+                chunks.append(piece)
+                for tc in delta.get("tool_calls") or []:
+                    slot = calls.setdefault(tc.get("index", 0), {"name": "", "arguments": ""})
+                    fn = tc.get("function") or {}
+                    if fn.get("name"):
+                        slot["name"] = fn["name"]
+                    if fn.get("arguments"):
+                        slot["arguments"] += fn["arguments"]
+    end = time.perf_counter()
+    return {"start": start, "first": first, "end": end, "output": "".join(chunks),
+            "reasoningChars": reasoning_chars, "usage": usage,
+            "toolCalls": [calls[i] for i in sorted(calls)]}
+
+
 def run_case(cfg: dict, key: str, model: str, case: dict) -> dict:
     body = {
         "model": model,
         "messages": [{"role": "user", "content": case["prompt"]}],
         "temperature": 0,
-        "max_tokens": 1024,
+        "max_tokens": 4096,
         "stream": True,
         "stream_options": {"include_usage": True},
     }
-    start = time.perf_counter()
-    first = None
-    chunks: list[str] = []
-    usage = {}
-    try:
-        with _request(cfg["base"] + "/chat/completions", key, body) as resp:
-            for raw in resp:
-                line = raw.decode("utf-8", "ignore").strip()
-                if not line.startswith("data:"):
-                    continue
-                data = line[5:].strip()
-                if data == "[DONE]":
-                    break
-                try:
-                    evt = json.loads(data)
-                except json.JSONDecodeError:
-                    continue
-                if evt.get("usage"):
-                    usage = evt["usage"]
-                for choice in evt.get("choices") or []:
-                    delta = choice.get("delta") or {}
-                    piece = delta.get("content") or ""
-                    if (piece or delta.get("reasoning_content") or delta.get("reasoning")) and first is None:
-                        first = time.perf_counter()
-                    chunks.append(piece)
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", "ignore")[:200]
-        return {"case": case["id"], "ok": False, "error": f"HTTP {exc.code}", "detail": detail}
-    except Exception as exc:  # noqa: BLE001
-        return {"case": case["id"], "ok": False, "error": type(exc).__name__}
-    end = time.perf_counter()
-    output = "".join(chunks)
-    out_tokens = usage.get("completion_tokens") or max(1, len(output) // 2)
-    gen_time = end - (first or start)
+    if case.get("tools"):
+        body["tools"] = TOOLS
+    res = None
+    for attempt in range(2):
+        try:
+            res = _stream(cfg, key, body)
+            break
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", "ignore")[:240]
+            if exc.code == 429 and attempt == 0 and "quota" not in detail and "余额" not in detail:
+                time.sleep(25)
+                continue
+            return {"case": case["id"], "dim": case["dim"], "ok": False, "error": f"HTTP {exc.code}", "detail": detail}
+        except Exception as exc:  # noqa: BLE001
+            if attempt == 0:
+                time.sleep(5)
+                continue
+            return {"case": case["id"], "dim": case["dim"], "ok": False, "error": type(exc).__name__}
+    output = res["output"]
+    usage = res["usage"]
+    out_tokens = usage.get("completion_tokens") or max(1, (len(output) + res["reasoningChars"]) // 2)
+    gen_time = res["end"] - (res["first"] or res["start"])
     return {
         "case": case["id"],
         "dim": case["dim"],
         "ok": True,
-        "pass": score(case, output),
-        "ttftMs": round(((first or end) - start) * 1000),
-        "totalMs": round((end - start) * 1000),
+        "pass": score(case, output, res["toolCalls"]),
+        "ttftMs": round(((res["first"] or res["end"]) - res["start"]) * 1000),
+        "totalMs": round((res["end"] - res["start"]) * 1000),
         "outputTokens": out_tokens,
-        "tokensPerSec": round(out_tokens / gen_time, 1) if gen_time > 0.05 else None,
-        "output": output[:1500],
+        "reasoningChars": res["reasoningChars"],
+        "tokensPerSec": round(out_tokens / gen_time, 1) if gen_time > 0.2 else None,
+        "toolCalls": res["toolCalls"],
+        "output": output[:1200],
     }
 
 
-def median(values: list[float]) -> float | None:
+def pct(values: list[float], q: float) -> float | None:
     vals = sorted(v for v in values if v is not None)
     if not vals:
         return None
-    mid = len(vals) // 2
-    return vals[mid] if len(vals) % 2 else round((vals[mid - 1] + vals[mid]) / 2, 1)
+    idx = min(len(vals) - 1, max(0, round(q * (len(vals) - 1))))
+    return vals[idx]
+
+
+DIM_LABELS = {
+    "chinese_knowledge": "中文知识",
+    "reasoning_math": "推理数学",
+    "coding": "代码",
+    "instruction_format": "指令格式",
+    "long_context": "长文本",
+    "tool_calling": "工具调用",
+    "honesty": "防幻觉",
+}
+FATAL = {"HTTP 401", "HTTP 402", "HTTP 403", "HTTP 404"}
 
 
 def eval_model(pid: str, cfg: dict, key: str, model: str) -> dict:
@@ -284,15 +440,20 @@ def eval_model(pid: str, cfg: dict, key: str, model: str) -> dict:
     for case in CASES:
         res = run_case(cfg, key, model, case)
         results.append(res)
-        if not res["ok"] and res.get("error") in {"HTTP 401", "HTTP 402", "HTTP 403", "HTTP 404"}:
-            break  # model not available for free on this account; don't burn quota
-        time.sleep(3.5 if pid in {"openrouter", "groq"} else 1.0)
+        if not res["ok"] and (res.get("error") in FATAL or "余额" in res.get("detail", "") or "insufficient_quota" in res.get("detail", "")):
+            if not any(r["ok"] for r in results):
+                break  # not available for free on this account; don't burn quota
+        time.sleep(3.2 if pid in {"openrouter", "groq"} else 1.0)
     answered = [r for r in results if r["ok"]]
     passed = sum(1 for r in answered if r.get("pass"))
-    dims: dict[str, list[bool]] = {}
-    for r in answered:
-        dims.setdefault(r["dim"], []).append(bool(r.get("pass")))
+    dims: dict[str, list[bool]] = {d: [] for d in DIM_LABELS}
+    for r in results:
+        dims[r["dim"]].append(bool(r.get("pass")))
+    dim_scores = {d: round(100 * sum(v) / len(v)) for d, v in dims.items() if v}
     errors = sorted({r["error"] for r in results if not r["ok"]})
+    ttfts = [r.get("ttftMs") for r in answered]
+    tps = [r.get("tokensPerSec") for r in answered]
+    reasoning = sum(1 for r in answered if r.get("reasoningChars", 0) > 50 or "</think>" in r.get("output", ""))
     return {
         "providerId": pid,
         "provider": cfg["name"],
@@ -301,11 +462,17 @@ def eval_model(pid: str, cfg: dict, key: str, model: str) -> dict:
         "score": round(100 * passed / len(CASES)) if answered else None,
         "passed": passed,
         "answered": len(answered),
+        "attempted": len(results),
         "total": len(CASES),
-        "dimensions": {d: round(100 * sum(v) / len(v)) for d, v in dims.items()},
-        "medianTtftMs": median([r.get("ttftMs") for r in answered]),
-        "medianTokensPerSec": median([r.get("tokensPerSec") for r in answered]),
+        "successRate": round(100 * len(answered) / len(results)) if results else 0,
+        "dimensions": dim_scores,
+        "p50TtftMs": pct(ttfts, 0.5),
+        "p95TtftMs": pct(ttfts, 0.95),
+        "p50TotalMs": pct([r.get("totalMs") for r in answered], 0.5),
+        "medianTokensPerSec": pct(tps, 0.5),
+        "thinksByDefault": reasoning >= max(3, len(answered) // 2),
         "errors": errors,
+        "errorDetail": next((r.get("detail", "") for r in results if not r["ok"]), ""),
         "cases": results,
     }
 
@@ -313,48 +480,60 @@ def eval_model(pid: str, cfg: dict, key: str, model: str) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="data/evaluations")
-    ap.add_argument("--providers", default=",".join(PROVIDERS))
+    ap.add_argument("--providers", default=os.environ.get("EVAL_PROVIDERS") or ",".join(PROVIDERS))
+    ap.add_argument("--merge", action="store_true", help="merge into existing latest.json (replace same provider)")
     args = ap.parse_args()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    jobs = []
+    plans = []
     skipped = []
-    for pid in args.providers.split(","):
+    for pid in [p for p in args.providers.split(",") if p]:
         cfg = PROVIDERS[pid]
         key = os.environ.get(cfg["env"], "").strip()
         if not key:
             skipped.append({"providerId": pid, "reason": f"{cfg['env']} not set"})
             continue
-        models = list_models(cfg, key)
-        print(f"{cfg['name']}: {len(models)} model(s) selected: {models}")
-        if not models:
+        lim = cfg["limit"]
+        cfg = dict(cfg, limit=lim * 3)  # extra candidates replace models that 404 for this account
+        cands = list_models(cfg, key)
+        print(f"{cfg['name']}: candidates {cands}")
+        if not cands:
             skipped.append({"providerId": pid, "reason": "no free text models found"})
-        for model in models:
-            jobs.append((pid, cfg, key, model))
+        plans.append((pid, cfg, key, cands, lim))
+
+    def run_provider(plan):
+        pid, cfg, key, cands, lim = plan
+        out, ok = [], 0
+        for model in cands:
+            if ok >= lim:
+                break
+            r = eval_model(pid, cfg, key, model)
+            out.append(r)
+            ok += 1 if r["available"] else 0
+        return out
 
     results = []
-    # Providers run in parallel; models within one provider run sequentially to respect rate limits.
-    by_provider: dict[str, list] = {}
-    for job in jobs:
-        by_provider.setdefault(job[0], []).append(job)
-
-    def run_provider(items):
-        return [eval_model(*item) for item in items]
-
-    with cf.ThreadPoolExecutor(max_workers=len(by_provider) or 1) as pool:
-        for chunk in pool.map(run_provider, by_provider.values()):
+    with cf.ThreadPoolExecutor(max_workers=len(plans) or 1) as pool:
+        for chunk in pool.map(run_provider, plans):
             results.extend(chunk)
 
-    results.sort(key=lambda r: (r["score"] is None, -(r["score"] or 0), r["medianTtftMs"] or 1e9))
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8)))
+    if args.merge and (out_dir / "latest.json").exists():
+        prev = json.loads((out_dir / "latest.json").read_text(encoding="utf-8"))
+        if prev.get("suite") == SUITE_VERSION:
+            ran = {p[0] for p in plans}
+            results = [m for m in prev.get("models", []) if m["providerId"] not in ran] + results
+
+    results.sort(key=lambda r: (r["score"] is None, -(r["score"] or 0), r["p50TtftMs"] or 1e9))
     report = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "suite": SUITE_VERSION,
         "runAt": now.isoformat(timespec="seconds"),
-        "vantage": os.environ.get("EVAL_VANTAGE", "GitHub Actions hosted runner (US)"),
-        "method": "每个模型用同一组 10 道固定题（中文事实、推理数学、Python、格式遵循、长文抽取）调用一次，temperature=0，流式记录首 token 延迟与生成速度；自动评分，Python 题实际执行单元测试。",
-        "cases": [{k: c[k] for k in ("id", "dim", "prompt")} for c in CASES],
+        "vantage": os.environ.get("EVAL_VANTAGE", "GitHub Actions 托管运行器（美国）"),
+        "method": "每个模型用同一组 22 道固定题、7 个维度调用一次，temperature=0，max_tokens=4096，流式记录首 token 延迟与生成速度；全部自动评分：Python 题实际运行单元测试，工具调用题检查函数名与参数，长文本题在约 8000 字干扰文本中检索两处信息，防幻觉题检查模型是否拒绝编造。",
+        "dimensions": DIM_LABELS,
+        "cases": [{"id": c["id"], "dim": c["dim"], "prompt": (c["prompt"] if not c["id"].startswith("long") else "[约 8000 字干扰文本]\n" + c["prompt"].split("\n\n")[-1])} for c in CASES],
         "skipped": skipped,
         "models": results,
     }
@@ -362,9 +541,10 @@ def main() -> int:
     for name in (f"{stamp}.json", "latest.json"):
         (out_dir / name).write_text(json.dumps(report, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
-    print("\n| 模型 | 提供方 | 得分 | 首token ms | tok/s | 错误 |")
+    print("\n| 模型 | 提供方 | 总分 | " + " | ".join(DIM_LABELS.values()) + " | 首token p50 | tok/s | 成功率 | 错误 |")
     for r in results:
-        print(f"| {r['model']} | {r['provider']} | {r['score']} | {r['medianTtftMs']} | {r['medianTokensPerSec']} | {','.join(r['errors'])} |")
+        dims = " | ".join(str(r["dimensions"].get(d, "-")) for d in DIM_LABELS)
+        print(f"| {r['model']} | {r['provider']} | {r['score']} | {dims} | {r['p50TtftMs']} | {r['medianTokensPerSec']} | {r['successRate']}% | {','.join(r['errors'])} |")
     return 0
 
 
