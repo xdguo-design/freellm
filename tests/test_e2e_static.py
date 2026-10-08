@@ -837,6 +837,12 @@ class BrowserPageTests(unittest.TestCase):
                 page = self.new_page()
                 page.set_viewport_size({"width": 1440, "height": 1000})
                 page.goto(f"{self.site.url}/{route}")
+                # A truthful zero-pick state is valid until actual reproducible
+                # inference runs exist. Do not manufacture "tested" cards.
+                if route == "models/" and page.locator(selector).count() == 0:
+                    self.assertEqual(page.locator("#featured-model-grid .models-empty-state").count(), 1)
+                    page.close()
+                    continue
                 page.wait_for_selector(selector)
                 heights = page.eval_on_selector_all(
                     selector,
