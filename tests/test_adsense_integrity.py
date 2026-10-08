@@ -37,7 +37,7 @@ class AdsenseIntegrityTests(unittest.TestCase):
 
     def test_skill_evidence_is_deployable_and_nonindexable(self):
         ignore_text = (ROOT / ".vercelignore").read_text(encoding="utf-8")
-        self.assertNotIn("skills/test-artifacts/\\n", ignore_text)
+        self.assertNotIn("skills/test-artifacts/", [line.strip() for line in ignore_text.splitlines()])
         config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
         rule = [row for row in config["headers"] if row["source"] == "/skills/test-artifacts/:path*"]
         self.assertEqual(len(rule), 1)
