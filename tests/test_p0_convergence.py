@@ -20,6 +20,35 @@ class P0ConvergenceTests(unittest.TestCase):
         first_id = tools[0]["id"]
         self.assertIn(f'href="/tools/tools/{first_id}.html"', page)
 
+    def test_p1_3_tool_use_case_links_and_runtime_filter_contract(self):
+        page = (ROOT / "tools" / "index.html").read_text(encoding="utf-8")
+        runtime = (ROOT / "tools" / "js" / "app.js").read_text(encoding="utf-8")
+        _, tools = load_registry()
+        tool_ids = {tool["id"] for tool in tools}
+        tool_cats = {tool["cat"] for tool in tools}
+        category_links = {
+            "dev": "开发工具",
+            "productivity": "生产力",
+            "analytics": "数据分析",
+            "media": "语音视频",
+            "design": "设计创作",
+        }
+        for key, label in category_links.items():
+            self.assertIn(
+                f'data-use-case-cat="{key}" href="/tools/?category={key}">{label}</a>',
+                page,
+            )
+        self.assertIn('data-static-tool-cat="dev"', page)
+        self.assertIn("new URLSearchParams(location.search).get('category')", runtime)
+        self.assertIn("if (!matchesCategory(t, activeCat)) return false;", runtime)
+        self.assertIn("useCaseCount(requestedCategory) > 0", runtime)
+        self.assertIn("category=dev", page)
+        # Virtual groups may never resolve to an unfiltered directory or an empty result.
+        self.assertTrue({"text", "datetime", "util"} <= tool_cats)
+        self.assertTrue({"css", "image"} <= tool_cats)
+        self.assertTrue({"tts", "audio-record", "video2gif", "spectrum", "whitenoise"} <= tool_ids)
+        self.assertTrue({"csv-json", "csv-format", "excel-convert", "jsonpath"} <= tool_ids)
+
     def test_models_landing_uses_four_explicit_data_counts(self):
         models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
