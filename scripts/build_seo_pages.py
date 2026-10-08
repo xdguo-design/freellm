@@ -3698,11 +3698,11 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         detail_external = detail_url.startswith("http")
         # A model is one product; its provider records are alternative routes.
         # MiMo-V2.6-Flash Free is a free access route, not a separate base model.
-        identity = _safe_slug(re.sub(r"\\s+free$", "", model_name, flags=re.I))
+        identity = _safe_slug(re.sub(r"\s+free$", "", model_name, flags=re.I))
         channel_records = []
         channel_keys = set()
         for candidate in models:
-            candidate_name = re.sub(r"\\s+free$", "", str(candidate.get("model") or ""), flags=re.I)
+            candidate_name = re.sub(r"\s+free$", "", str(candidate.get("model") or ""), flags=re.I)
             if _safe_slug(candidate_name) != identity:
                 continue
             key = (str(candidate.get("providerId") or ""), str(candidate.get("sourceUrl") or ""))
