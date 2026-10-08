@@ -4012,5 +4012,41 @@
     "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "verified",
     "notes": "SiliconFlow 托管入口当前为 ¥0；模型由中国电信 XingChen-AGI 发布。模型权重与托管 API 是不同访问路径，本卡描述 SiliconFlow API 路径。"
+  },
+  {
+    "modelId": "intern-ai/intern-s2",
+    "providerId": "intern-ai",
+    "registrationProfileId": "intern-ai-api",
+    "modelSearchName": "Intern-S2",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "官方确认一定额度免费 API；具体 Token 数登录后查看；默认约 30 RPM",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444298",
+      "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+    ],
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "公开资料预检通过；尚未用登录态 API Token 做真实推理与账单验证。"
+  },
+  {
+    "modelId": "zhipu-glm/glm-4-7-flash",
+    "providerId": "zhipu-glm",
+    "registrationProfileId": "zhipu-glm-api",
+    "modelSearchName": "GLM-4.7-Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "智谱官方宣布 BigModel.cn 免费调用；公开页未给固定 Token 配额",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.zhipuai.cn/zh/news/148",
+      "https://docs.bigmodel.cn/"
+    ],
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "免费调用声明与约 200K 上下文已由官方来源核验；尚未用登录态 API Key 做真实调用与账号级限流验证。"
   }
 ]

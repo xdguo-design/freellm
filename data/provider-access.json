@@ -1960,5 +1960,39 @@
     "verificationStatus": "partial",
     "confidence": "high",
     "notes": "仅 Embedding/Rerank 当前暂不收费；不要外推到 LLM API。"
+  },
+  {
+    "providerId": "intern-ai",
+    "profileId": "intern-ai-api",
+    "registerUrl": "https://chat.intern-ai.org.cn/",
+    "accountRequired": "yes",
+    "emailRequired": "unknown",
+    "phoneRequired": "unknown",
+    "identityRequired": "unknown",
+    "cardRequired": "no",
+    "billingRequired": "no",
+    "apiKeyRequired": "yes",
+    "licenseAcceptance": "unknown",
+    "modelApproval": "no",
+    "gpuRequired": "no",
+    "overageBehavior": "stop",
+    "searchMethod": "official_docs",
+    "regionPolicyId": "policy-unknown-default",
+    "registrationSteps": [
+      "打开 Intern / 书生平台并登录，进入 API Token 管理入口。",
+      "创建 API Token，并核对账号当前显示的免费额度；公开公告只承诺“一定额度”，不把第三方额度当官方固定值。",
+      "使用 https://chat.intern-ai.org.cn/api/v1/ 的 OpenAI 兼容 Chat Completions 调用模型 intern-s2。"
+    ],
+    "registrationStatus": "available",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444298",
+      "https://internlm.intern-ai.org.cn/doc/docs/%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8/",
+      "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+    ],
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "confidence": "high",
+    "notes": "官方公开资料确认免费 API、模型 ID、256K 上下文与默认约 30 RPM；尚未使用登录态 Token 验证账号实际免费额度与真实推理。"
   }
 ]
