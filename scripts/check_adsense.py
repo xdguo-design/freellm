@@ -48,13 +48,14 @@ PRIVACY_MARKERS = (
     "https://policies.google.com/technologies/partner-sites",
     "https://www.google.com/settings/ads",
 )
-AUTO_ADS_URL_EXCLUSIONS = ("/about/", "/privacy/", "/terms/", "/favorites/", "/submit/")
+AUTO_ADS_URL_EXCLUSIONS = ("/about/", "/privacy/", "/terms/", "/favorites/", "/submit/", "/contact/")
 MANUAL_AD_EXCLUDED_FILES = {
     "about/index.html",
     "privacy/index.html",
     "terms/index.html",
     "favorites/index.html",
     "submit/index.html",
+    "contact/index.html",
 }
 
 EXEMPT_PAGES: Mapping[str, str] = {
@@ -62,6 +63,7 @@ EXEMPT_PAGES: Mapping[str, str] = {
     "/terms/": "条款与免责声明页：法律/政策信息页保持无广告",
     "/favorites/": "noindex 的个人收藏页：无独立正文，挂广告属「内容不足」风险",
     "/submit/": "纯功能表单页：正文极少，收益趋近于 0 但增加政策风险",
+    "/contact/": "联系方式与资源反馈页：属于低商业价值的站务页面，故意不展示广告",
     "/offers/longcat-api/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
     "/offers/longcat-download/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
 }
