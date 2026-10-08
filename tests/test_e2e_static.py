@@ -678,7 +678,8 @@ class BrowserPageTests(unittest.TestCase):
                 && document.querySelector('#search-results .search-result')"""
             )
             self.assertGreater(page.locator("#search-results .search-result").count(), 0)
-            self.assertIn(keyword, page.url)
+            from urllib.parse import parse_qs, urlparse
+            self.assertEqual(parse_qs(urlparse(page.url).query).get('q'), [keyword])
 
 
     def test_file_protocol_renders_embedded_data(self):
