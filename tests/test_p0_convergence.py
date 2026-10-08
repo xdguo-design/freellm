@@ -9,6 +9,69 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class P0ConvergenceTests(unittest.TestCase):
+    def test_p1_6_retired_hotspot_strip_does_not_reintroduce_overlapping_badges(self):
+        home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        self.assertIn('class="weekly-scan-cards"', home)
+        self.assertIn('id="weekly-changes"', home)
+        self.assertNotIn('class="prototype-hot-grid"', home)
+        self.assertNotIn('class="prototype-original-note"', home)
+        self.assertNotIn('class="today-hotspot-card"', home)
+
+    def test_p1_7_mobile_drawer_chips_and_native_catalog_cards(self):
+        nav = (ROOT / "js/site-navigation.js").read_text(encoding="utf-8")
+        css = (ROOT / "css/primary-menu.css").read_text(encoding="utf-8")
+        models = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
+        self.assertIn('aria-controls="fl-primary-links"', nav)
+        self.assertIn('aria-expanded="false"', nav)
+        self.assertIn("event.key === 'Escape'", nav)
+        self.assertIn("fl-mobile-menu-open", nav)
+        self.assertIn("activateMobileModelCards();", nav)
+        self.assertIn("@media (max-width: 600px)", css)
+        self.assertIn(".mdir-chips", css)
+        self.assertIn("overflow-x: auto !important", css)
+        self.assertIn('#model-directory[data-catalog-view="cards"]', css)
+        self.assertIn('#model-directory tr[hidden] { display: none !important; }', css)
+        self.assertIn('data-catalog-view="cards"', models)
+        self.assertIn("if (cards) cell.setAttribute('aria-label'", models)
+
+    def test_p1_5_unfinished_dark_mode_is_hidden_and_light_palette_is_accessible(self):
+        nav = (ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8")
+        menu = (ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8")
+        core = (ROOT / "css" / "aurora-core.css").read_text(encoding="utf-8")
+        home = (ROOT / "css" / "aurora-home.css").read_text(encoding="utf-8")
+
+        # The old toggle changed root variables while many cards stayed white.
+        # Remove the control from navigation and hide static prototype controls.
+        self.assertNotIn("themeButton", nav)
+        self.assertIn("removeAttribute('data-theme')", nav)
+        self.assertIn("classList.contains('fl-ui-v2')", nav)
+        self.assertIn("html body.fl-ui-v2 :is(", menu)
+        self.assertIn('class="theme-toggle"', (ROOT / "models/all/index.html").read_text(encoding="utf-8"))
+        for cls in (".fl-site-theme-toggle", ".prototype-theme-toggle", ".ml-rail-theme", ".theme-toggle"):
+            self.assertIn(cls, menu)
+        self.assertIn("display: none !important", menu)
+
+        for css in (core, home):
+            self.assertIn("--fl-theme-surface:var(--aurora-surface)", css)
+            self.assertIn("--fl-theme-ink:var(--aurora-ink)", css)
+            self.assertIn("--aurora-ink-3:#526a86", css)
+        for cls in ("blockquote", ".callout", ".about-stat-card", ".weekly-scan-cards > article"):
+            self.assertIn(cls, core)
+
+        def luminance(value):
+            channels = [int(value[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            linear = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+            return sum(x * weight for x, weight in zip(linear, (0.2126, 0.7152, 0.0722)))
+
+        def contrast(foreground, background):
+            high, low = sorted((luminance(foreground), luminance(background)), reverse=True)
+            return (high + 0.05) / (low + 0.05)
+
+        # WCAG AA for normal-sized text over the palest card/page surfaces.
+        for foreground in ("#102745", "#526a86"):
+            for background in ("#ffffff", "#f5f9ff", "#f1f7ff"):
+                self.assertGreaterEqual(contrast(foreground, background), 4.5)
+
     def test_tools_first_paint_is_real_static_content(self):
         _, tools = load_registry()
         page = (ROOT / "tools" / "index.html").read_text(encoding="utf-8")
@@ -19,6 +82,35 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertGreaterEqual(page.count('class="tool-card static-tool-card"'), 24)
         first_id = tools[0]["id"]
         self.assertIn(f'href="/tools/tools/{first_id}.html"', page)
+
+    def test_p1_3_tool_use_case_links_and_runtime_filter_contract(self):
+        page = (ROOT / "tools" / "index.html").read_text(encoding="utf-8")
+        runtime = (ROOT / "tools" / "js" / "app.js").read_text(encoding="utf-8")
+        _, tools = load_registry()
+        tool_ids = {tool["id"] for tool in tools}
+        tool_cats = {tool["cat"] for tool in tools}
+        category_links = {
+            "dev": "开发工具",
+            "productivity": "生产力",
+            "analytics": "数据分析",
+            "media": "语音视频",
+            "design": "设计创作",
+        }
+        for key, label in category_links.items():
+            self.assertIn(
+                f'data-use-case-cat="{key}" href="/tools/?category={key}">{label}</a>',
+                page,
+            )
+        self.assertIn('data-static-tool-cat="dev"', page)
+        self.assertIn("new URLSearchParams(location.search).get('category')", runtime)
+        self.assertIn("if (!matchesCategory(t, activeCat)) return false;", runtime)
+        self.assertIn("useCaseCount(requestedCategory) > 0", runtime)
+        self.assertIn("category=dev", page)
+        # Virtual groups may never resolve to an unfiltered directory or an empty result.
+        self.assertTrue({"text", "datetime", "util"} <= tool_cats)
+        self.assertTrue({"css", "image"} <= tool_cats)
+        self.assertTrue({"tts", "audio-record", "video2gif", "spectrum", "whitenoise"} <= tool_ids)
+        self.assertTrue({"csv-json", "csv-format", "excel-convert", "jsonpath"} <= tool_ids)
 
     def test_models_landing_uses_four_explicit_data_counts(self):
         models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
@@ -32,32 +124,47 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn(f"{len(models)}+", page)
         self.assertIn("模型目录", all_models)
 
-    def test_home_models_and_logs_share_latest_snapshot(self):
-        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
-        log_paths = sorted((ROOT / "data" / "daily-log").glob("*.json"))
-        self.assertTrue(log_paths, "daily log data is required for public freshness metadata")
-        latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
-        latest_date = latest["date"]
-        year, month, day = latest_date.split("-")
+    def test_home_models_logs_and_about_share_canonical_daily_scan(self):
+        summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        logs = sorted((ROOT / "data" / "daily-log").glob("*.json"))
+        self.assertTrue(logs, "daily log data is required for public freshness metadata")
+        latest = json.loads(logs[-1].read_text(encoding="utf-8"))
+        self.assertEqual(summary["date"], latest["date"])
+        self.assertEqual(summary["source"], f'/data/daily-log/{latest["date"]}.json')
+        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
+        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
+        events = [*latest.get("events", []), *latest.get("curatedEvents", [])]
+        fresh = [event for event in events if event.get("eventType") in {"new", "new_route"}]
+        self.assertEqual(summary["newCount"], len(fresh))
 
         home = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         logs_page = (ROOT / "logs" / "index.html").read_text(encoding="utf-8")
-
+        about = (ROOT / "about" / "index.html").read_text(encoding="utf-8")
+        year, month, day = summary["date"].split("-")
         self.assertIn(f"▣ &nbsp;{year} 年 {int(month)} 月 {int(day)} 日", home)
+        for page in (home, logs_page, about):
+            self.assertIn("/js/scan-trust.js", page)
+
+        # Static first paint must agree with runtime data, including the original About cards.
+        for key in ("models", "offers"):
+            self.assertIn(
+                f'data-scan-stat="{key}">{summary[key]}</strong>',
+                about,
+            )
+        self.assertNotIn("已验证的免费资源</span>", about)
+        for label, key in (("今日新增", "newCount"), ("模型记录", "models"), ("已收录资源", "offers")):
+            self.assertRegex(
+                logs_page,
+                rf"<span>{label}</span><strong>{summary[key]}</strong>",
+            )
+        self.assertIn(f"<strong>{summary['date']}</strong>", logs_page)
+
+        # Directory counts are a separate layer and must not overwrite scan counts.
+        models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
+        models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="/models/all/"', models_page)
         self.assertIn(f"{len(models)}", all_models)
-        self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
-        self.assertIn(
-            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{len(models)}</strong>',
-            logs_page,
-        )
-        self.assertIn(
-            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{len(offers)}</strong>',
-            logs_page,
-        )
 
     def test_home_surfaces_high_intent_seo_guides_above_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
@@ -87,26 +194,22 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 
-    def test_home_hotspot_strip_is_compact_and_current(self):
+    def test_home_latest_scan_strip_has_real_metrics_without_invented_growth(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        hot = re.search(r'<section class="prototype-hot".*?</section>', page, re.S)
-        self.assertIsNotNone(hot)
-        section = hot.group(0)
-        self.assertEqual(section.count('class="prototype-hot-card"'), 5)
-        self.assertNotIn("prototype-hot-card is-featured", section)
-        for slug in (
-            "OtvEeIj4z_hGSK_2O5VszA",
-            "jMaAj8UILhcoPn3COEbIKg",
-            "Z5xlMKnqVR7Ihzzt5bCOZA",
-            "Ustvh8JxyRc192SNnSisUg",
-            "2-6pjoxc4ln3E83B5UwFJg",
-        ):
-            self.assertIn(slug, section)
-        self.assertIn("模型 / API", section)
-        self.assertIn("Agent 观察", section)
-        self.assertIn("官方核验", section)
-        self.assertNotIn("技术拆解", section)
-        self.assertIn("查看今日发现", section)
+        summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        section = re.search(
+            r'<section id="weekly-changes"[^>]*>.*?</section>', page, re.S
+        )
+        self.assertIsNotNone(section, "latest scan is required above the catalog")
+        weekly = section.group(0)
+        self.assertEqual(weekly.count("<article>"), 4)
+        for key in ("newCount", "newModels", "models", "offers"):
+            self.assertIn(f'data-scan-stat="{key}">{summary[key]}</strong>', weekly)
+        self.assertIn(f'<span data-scan-date>{summary["date"]}</span>', weekly)
+        self.assertIn('href="/logs/"', weekly)
+        self.assertIn("未建立可比较的同口径历史基线", weekly)
+        self.assertNotRegex(weekly, r"(?:↑|↓|环比\\s*[+\\-]?\\d+%|较上周\\s*[+\\-]?\\d+%)")
+        self.assertNotIn('class="prototype-hot-card"', weekly)
 
     def test_primary_navigation_has_exactly_seven_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")

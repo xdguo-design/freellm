@@ -1,0 +1,71 @@
+name: "提交 AI 资源 / 纠正信息"
+description: "向 FreeLLM 提交有官方证据的免费 AI 资源，或纠正已有条目。"
+title: "[资源提交] "
+labels: ["resource-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢贡献！提交内容将由维护者人工核验，不会自动上线。
+        请勿粘贴 API Key、密码或个人身份信息。
+  - type: input
+    id: resource_name
+    attributes:
+      label: 资源名称
+      placeholder: "例如：官方 API 免费额度"
+    validations:
+      required: true
+  - type: dropdown
+    id: product_type
+    attributes:
+      label: 产品类型
+      options: ["AI 模型 / API", "IDE / 编程助手", "Agent", "Web 工具", "开源权重", "学生优惠", "其他"]
+    validations:
+      required: true
+  - type: input
+    id: official_url
+    attributes:
+      label: 官方产品链接
+      placeholder: "https://example.com/"
+    validations:
+      required: true
+  - type: textarea
+    id: free_quota
+    attributes:
+      label: 免费方式、额度和限制
+      description: "说明永久免费、周期重置额度、试用额度或限时活动；请标明准确单位。"
+      placeholder: "免费方式：\n额度：\n重置周期："
+    validations:
+      required: true
+  - type: input
+    id: expiry
+    attributes:
+      label: 有效期 / 到期日期
+      placeholder: "YYYY-MM-DD 或 未公布/长期"
+    validations:
+      required: true
+  - type: textarea
+    id: eligibility
+    attributes:
+      label: 地区、账户与付款要求
+      placeholder: "地区限制：\n是否需要账号：\n是否需要信用卡："
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 官方证据链接
+      description: "官方定价页、帮助文档或活动公告；请勿只附第三方转载。"
+      placeholder: "https://docs.example.com/pricing"
+    validations:
+      required: true
+  - type: input
+    id: existing_entry
+    attributes:
+      label: 纠错现有条目（可选）
+      placeholder: "https://freellm.top/offers/..."
+  - type: textarea
+    id: correction
+    attributes:
+      label: 纠错内容或补充说明（可选）
+      placeholder: "指出错误字段、失效日期或可复现问题。"

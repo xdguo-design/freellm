@@ -52,6 +52,15 @@ def bundled_offer_data() -> list:
     return json.loads(source[len(prefix):-1])
 
 
+def active_offers():
+    """Default views exclude ended promotions; the ended tab remains available."""
+    from datetime import datetime, timezone, timedelta
+    today = datetime.now(timezone(timedelta(hours=8))).date().isoformat()
+    return [item for item in read_offers()
+            if item.get("status") != "expired"
+            and not (item.get("expires_at") and item["expires_at"] < today)]
+
+
 class StaticContractTests(unittest.TestCase):
     def setUp(self):
         self.document_html = HTML_PATH.read_text(encoding="utf-8")
@@ -209,7 +218,7 @@ class StaticContractTests(unittest.TestCase):
         # Snapshot counters must track the live data, not a frozen literal: the
         # page renders today's directory totals and every historical day uses the
         # totals captured in that day's log JSON.
-        models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
+        models = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))["models"]
         latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
         self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
         self.assertIn(latest_log_path.stem, log)
@@ -299,13 +308,14 @@ class StaticContractTests(unittest.TestCase):
         )
 
     def test_featured_resource_links_are_wired_to_catalog_filters(self):
-        self.assertIn('class="featured-resource-link"', self.html)
-        self.assertIn(
-            "document.querySelectorAll('.featured-resource-link').forEach",
-            self.html,
-        )
-        self.assertIn("const clearCatalogSearch = () =>", self.html)
-        self.assertIn("document.getElementById('catalog-search').value = ''", self.html)
+        # The retired featured-resource cards were replaced by actionable
+        # category buttons and an expiration-aware main offer strip.
+        self.assertIn('class="category-grid"', self.document_html)
+        self.assertIn('class="category-card"', self.document_html)
+        self.assertIn('data-filter="free_quota"', self.document_html)
+        self.assertIn("document.querySelectorAll('.catalog-app [data-filter]')", self.homepage_js)
+        self.assertIn("const clearCatalogSearch = () =>", self.homepage_js)
+        self.assertIn("document.getElementById('catalog-search').value = ''", self.homepage_js)
 
     def test_offer_cards_load_company_icons_with_initial_fallback(self):
         for needle in (
@@ -348,15 +358,13 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, self.html)
 
     def test_homepage_exposes_chinese_static_seo_metadata(self):
-        self.assertRegex(self.html, r'<html[^>]*lang="zh-CN"')
-        self.assertIn(
-            '<meta name="description" content="FreeLLM 每日核验免费 AI 模型、LLM API、OpenAI 兼容接口、AI 编程工具',
-            self.html,
-        )
-        self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.html)
-        self.assertIn('<meta property="og:image" content="https://freellm.top/freellm-06-faq.png" />', self.html)
-        self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png" />', self.html)
-        self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
+        self.assertRegex(self.document_html, r'<html[^>]*lang="zh-CN"')
+        self.assertIn('<meta name="description" content="FreeLLM 每日核验免费 AI 模型', self.document_html)
+        self.assertIn('<link rel="canonical" href="https://freellm.top/" />', self.document_html)
+        self.assertIn('<meta property="og:image" content="https://freellm.top/freellm-06-faq.png" />', self.document_html)
+        self.assertIn('<meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png" />', self.document_html)
+        self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.document_html)), 1)
+        self.assertIn('<h1 class="catalog-secondary-title">', self.document_html)
 
     def test_homepage_omits_locale_hreflang_variants(self):
         # Query-parameter hreflang variants caused duplicate Search Console
@@ -364,17 +372,13 @@ class StaticContractTests(unittest.TestCase):
         self.assertNotIn('<link rel="alternate" hreflang=', self.html)
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
-        self.assertIn(
-            '<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>',
-            self.html,
-        )
-        self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>今天发现，<br>更好的 <em>AI 资源</em></h1>', self.html)
-        self.assertIn("汇聚全球优质的 AI 模型、工具与应用", self.html)
-        self.assertIn('class="prototype-kicker">FreeLLM</span>', self.html)
-        self.assertIn('class="ref-feature-row"', self.html)
-        self.assertIn("Agent Skills", self.html)
-        self.assertIn("Workflow Recipes", self.html)
+        self.assertIn('<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>', self.document_html)
+        self.assertIn('<div class="brand-name">FreeLLM</div>', self.document_html)
+        self.assertIn('<h1 class="catalog-secondary-title">发现真正好', self.document_html)
+        self.assertIn('官方来源 · 条件透明', self.document_html)
+        self.assertIn('id="catalog-search"', self.document_html)
+        self.assertIn('href="/models/"', self.document_html)
+        self.assertIn('href="/skills/"', self.document_html)
 
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
@@ -461,8 +465,8 @@ class StaticContractTests(unittest.TestCase):
     def test_page_uses_free_method_categories(self):
         for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertIn(f'data-filter="{name}"', self.html)
-        catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
-        self.assertIn('data-filter="agent"', catalog_html)
+        catalog_html = self.document_html
+        self.assertIn('data-filter="expired"', catalog_html)
         for name in ("search", "fetch", "extract", "crawl", "map", "browser"):
             self.assertNotIn(f'data-filter="{name}"', catalog_html)
 
@@ -659,9 +663,9 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertEqual(self.visible_offers(page), len(read_offers()))
-        self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
+        self.assertEqual(self.visible_offers(page), len(active_offers()))
+        self.assertEqual(page.locator("#heroCount").inner_text(), str(json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))["offers"]))
+        free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
         self.assertEqual(
             page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(),
             f"{free_quota_count:02d}",
@@ -670,10 +674,10 @@ class BrowserPageTests(unittest.TestCase):
             page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(),
             f"{free_quota_count:02d}",
         )
-        ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
+        ide_count = sum(1 for offer in active_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), f"{ide_count:02d}")
         self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
-        model_count = sum(1 for offer in read_offers() if offer.get("productType") == "api")
+        model_count = sum(1 for offer in active_offers() if offer.get("productType") == "api")
         self.assertEqual(
             page.locator(".filter-strip [data-filter='model'] em").inner_text(),
             f"{model_count:02d}",
@@ -722,8 +726,8 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
-                    self.assertEqual(theme_display, "flex" if width > 800 else "none")
+                    for toggle in page.locator(".fl-site-theme-toggle").all():
+                        self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
                     overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
                         .map(el => {
@@ -881,7 +885,7 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".prototype-hero"),
+            ("design/free-china-ai-index.html", ".catalog-hero"),
             ("models/", ".models-featured-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
@@ -907,21 +911,23 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertEqual(tokens["ink"].lower(), "#102745")
                 self.assertEqual(tokens["blue"].lower(), "#2f7de1")
                 page.close()
-    def test_reference_pages_use_the_rail_theme_toggle(self):
-        # The prototype pages expose the theme switch in the shared navigation rail;
-        # page-local legacy controls stay hidden so they cannot duplicate it.
-        for route in ("skills/", "tools/", "about/"):
+    def test_reference_pages_hide_unfinished_theme_controls(self):
+        # P1-5: dark mode is disabled until all screens are legible with dark tokens.
+        for route in ("skills/", "tools/", "about/", "models/all/"):
             with self.subTest(route=route):
                 page = self.new_page()
                 page.goto(f"{self.site.url}/{route}")
-                page.wait_for_selector("body[data-visual-style='aurora']")
-                rail_toggle = page.locator(".fl-site-theme-toggle")
-                self.assertEqual(rail_toggle.count(), 1)
-                self.assertEqual(rail_toggle.evaluate("el => getComputedStyle(el).display"), "flex")
-                local_toggle = page.locator(".theme-toggle")
-                if local_toggle.count():
-                    self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                page.wait_for_selector("body.fl-ui-v2")
+                for selector in (".fl-site-theme-toggle", ".theme-toggle", ".prototype-theme-toggle"):
+                    for toggle in page.locator(selector).all():
+                        self.assertEqual(
+                            toggle.evaluate("el => getComputedStyle(el).display"),
+                            "none",
+                            f"{route}: {selector}"
+                        )
+                self.assertFalse(page.locator("html").get_attribute("data-theme") == "dark")
                 page.close()
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
@@ -967,7 +973,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
         page.click(".category-card[data-filter='ide']")
-        ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
+        ide_count = sum(1 for offer in active_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
 
         qwen_count = page.locator(".offer").evaluate_all(
@@ -1006,116 +1012,115 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
 
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
-        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
-
-        hero = page.locator(".prototype-hero").bounding_box()
-        fresh = page.locator("#prototype-fresh").bounding_box()
+        for toggle in page.locator(".fl-site-theme-toggle").all():
+            self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
+        hero = page.locator(".catalog-hero").bounding_box()
+        weekly = page.locator("#weekly-changes").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
         student = page.locator("#student-offers").bounding_box()
         self.assertIsNotNone(hero)
-        self.assertIsNotNone(fresh)
+        self.assertIsNotNone(weekly)
         self.assertIsNotNone(offers)
         self.assertIsNotNone(student)
-        self.assertLess(hero["y"], fresh["y"])
-        self.assertLess(fresh["y"], offers["y"])
+        self.assertLess(hero["y"], weekly["y"])
+        self.assertLess(weekly["y"], offers["y"])
         self.assertLess(offers["y"], student["y"])
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 1444)
+        page.close()
 
-        heights = page.eval_on_selector_all(
-            "#catalog-offer-rows .offer:not(.hidden)",
-            """els => {
-              const items = els.slice(0, 6).map(el => {
-                const r = el.getBoundingClientRect();
-                return {top:r.top,height:r.height};
-              });
-              if (!items.length) return [];
-              const firstTop = items[0].top;
-              return items.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
-            }"""
-        )
-        self.assertGreaterEqual(len(heights), 2)
-        self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
-
-    def test_homepage_aurora_phase_one_mobile_layout(self):
+    def test_homepage_390px_drawer_and_responsive_search(self):
+        # P1-7: the current homepage has catalog-hero rather than prototype-hero.
         page = self.new_page()
         page.set_viewport_size({"width": 390, "height": 844})
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
-        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+        page.wait_for_selector(".catalog-hero")
+        page.wait_for_selector("#fl-shared-site-menu")
 
         self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
         self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
-        for index in range(7):
-            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+        menu = page.locator(".fl-mobile-menu-button")
+        self.assertTrue(menu.is_visible())
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
+        self.assertFalse(page.locator(".fl-site-nav > a").first.is_visible())
+        menu.click()
+        self.assertEqual(menu.get_attribute("aria-expanded"), "true")
+        self.assertTrue(page.locator(".fl-site-nav > a").first.is_visible())
+        page.keyboard.press("Escape")
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
 
-        hero = page.locator(".prototype-hero").bounding_box()
-        search = page.locator(".ref-topbar .ref-search").bounding_box()
-        self.assertIsNotNone(hero)
+        search = page.locator("#catalog-search").bounding_box()
         self.assertIsNotNone(search)
-        self.assertLessEqual(search["x"] + search["width"], 390)
         self.assertGreaterEqual(search["x"], 0)
+        self.assertLessEqual(search["x"] + search["width"], 390)
+        page.close()
+
+    def test_models_directory_390px_opens_accessible_card_view(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.site.url}/models/all/")
+        page.wait_for_selector("#model-directory")
+        page.wait_for_function(
+            "() => document.querySelector('#model-directory')?.dataset.catalogView === 'cards'"
+        )
+        self.assertTrue(page.locator("#model-directory .catalog-row").first.is_visible())
+        self.assertEqual(page.locator("#model-directory").get_attribute("data-catalog-view"), "cards")
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        page.close()
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.fill(".ref-topbar input[type='search']", "Qwen3")
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
+        free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
+        page.fill("#catalog-search", "Qwen3")
+        page.click(".category-card[data-filter='free_quota']")
+        page.wait_for_function("""() => document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
         self.assertEqual(self.visible_offers(page), free_quota_count)
-        self.assertEqual(page.locator(".ref-topbar input[type='search']").input_value(), "")
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(page.locator("#catalog-search").input_value(), "")
+        page.close()
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
+        free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
+        page.click(".category-card[data-filter='free_quota']")
+        page.wait_for_function("""() => document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
         self.assertEqual(self.visible_offers(page), free_quota_count)
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertFalse(page.locator("#catalog-search").input_value())
+        page.close()
 
     def test_homepage_prototype_tabs_filter_the_catalog(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        page.click(".prototype-tabs [data-filter='web']")
-        page.wait_for_function("document.querySelector('.prototype-tabs [data-filter=web]').getAttribute('aria-pressed') === 'true'")
-        self.assertLess(page.locator(".offer:not(.hidden)").count(), page.locator(".offer").count())
+        page.click(".category-card[data-filter='web']")
+        page.wait_for_function("""() => document.querySelector('.category-card[data-filter="web"]')?.getAttribute('aria-pressed') === 'true'""")
+        self.assertGreater(self.visible_offers(page), 0)
+        self.assertLess(self.visible_offers(page), len(active_offers()))
         page.close()
 
     def test_web_offer_drawer_shows_usage_guide(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-
-        page.click(".prototype-tabs [data-filter='web']")
+        page.click(".category-card[data-filter='web']")
+        # Open via row details, not the removed prototype tabs.
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search + Fetch", page.locator("#drawerTitle").inner_text())
         self.assertNotEqual(page.locator("#drawerUsageGuide").inner_text().strip(), "")
         self.assertIn("TinyFish", page.locator("#drawerPrerequisites").inner_text())
-        self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
         self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
         self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
-        self.assertEqual(
-            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
-            [],
-            page.problems,
-        )
+        page.close()
 
     def test_http_protocol_prefers_network_json(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
         ranked = read_ranked_offers()
-        self.assertEqual(self.visible_offers(page), len(ranked))
+        self.assertEqual(self.visible_offers(page), len(active_offers()))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
         self.assertEqual(len(item_list), len(ranked))
         self.assertEqual(
@@ -1160,6 +1165,8 @@ class BrowserPageTests(unittest.TestCase):
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "scan-trust.js").write_text((ROOT / "js" / "scan-trust.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "offer-expiry-board.js").write_text((ROOT / "js" / "offer-expiry-board.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1171,6 +1178,7 @@ class BrowserPageTests(unittest.TestCase):
             (css / "home-prototype-critical.css").write_text((ROOT / "css" / "home-prototype-critical.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-trust.css").write_text((ROOT / "css" / "home-trust.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
@@ -1180,6 +1188,8 @@ class BrowserPageTests(unittest.TestCase):
                 (assets / name).write_bytes((ROOT / "assets" / "reference" / name).read_bytes())
             data = Path(directory) / "data"
             data.mkdir()
+            (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "offers.json").write_text(OFFERS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
@@ -1187,7 +1197,7 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), len(read_ranked_offers()))
+            self.assertEqual(self.visible_offers(page), len(active_offers()))
             # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
                 sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),

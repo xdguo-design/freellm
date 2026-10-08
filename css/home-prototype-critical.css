@@ -145,3 +145,91 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-stats{
     min-height:190px;
   }
 }
+
+/* P1-PERF: stable catalog hero on the very first paint.
+ * The old critical stylesheet only reserved .prototype-hero, which has been retired.
+ * Keep this equivalent to the actual v1 Aurora hero geometry: late-loading skins
+ * must not move the heading, search control or scan card. */
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero{
+  position:relative!important;isolation:isolate;overflow:hidden!important;
+  display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr)!important;
+  align-items:center!important;min-height:365px!important;
+  padding:48px 42px!important;border:1px solid #dbe9f8!important;border-radius:18px!important;
+  background:linear-gradient(115deg,#fff 0 42%,#f4faff 67%,#eaf6ff 100%)!important;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero::after{
+  content:"";position:absolute;right:0;top:0;width:57%;height:100%;z-index:-1;
+  background:url("../assets/reference/home-hero.svg") right center/cover no-repeat;
+  pointer-events:none;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero-copy{
+  position:relative;z-index:2;max-width:680px!important;min-width:0;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero .catalog-secondary-title{
+  margin:0 0 14px!important;color:#071a3a!important;
+  font:900 clamp(44px,5vw,72px)/.98 Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif!important;
+  letter-spacing:-.045em!important;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero .catalog-secondary-title span{color:#0868f7!important}
+body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero .hero-copy{
+  font-size:16px!important;line-height:1.6!important;margin:0 0 16px!important;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-badge{
+  display:inline-flex;align-items:center;margin:0 0 14px;font-size:14px;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-search{
+  display:flex!important;align-items:center!important;position:relative;z-index:3;
+  width:100%;max-width:620px!important;min-height:60px;
+  margin-top:22px!important;padding:4px!important;border:1px solid #cfe2f6!important;
+  border-radius:14px!important;background:rgba(255,255,255,.92)!important;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-search input{
+  flex:1 1 auto;min-width:0;min-height:46px;padding:0 12px;border:0;background:transparent;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-search button{
+  flex:0 0 auto;min-width:92px;min-height:46px;border:0;border-radius:10px;
+  background:#0868f7;color:#fff;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel{
+  position:absolute!important;z-index:4;right:34px!important;bottom:30px!important;
+  width:318px!important;min-height:112px!important;
+  padding:14px 116px 14px 16px!important;
+  border:1px solid #cfe2f6!important;border-radius:16px!important;
+  background:rgba(255,255,255,.88)!important;
+}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel :is(.intel-story-copy,.intel-pills,.hero-intel-head>span,.hero-intel-main p){display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel-main{display:block;margin-top:6px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel-main>div:first-child{display:flex;align-items:baseline;gap:7px}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel-main b{font-size:30px;font-weight:850}
+body[data-reference-style="v1"][data-fl-section="home"] .hero-intel-note{
+  position:absolute;right:10px;top:10px;width:98px;min-height:90px;padding:10px 8px;
+  font-size:12px;line-height:1.4;
+}
+@media(max-width:800px){
+  body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero{
+    display:block!important;min-height:0!important;
+    padding:24px 16px 170px!important;border-radius:15px!important;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero::after{
+    width:100%;height:180px;top:auto;bottom:0;background-position:right bottom;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .catalog-hero .catalog-secondary-title{
+    font-size:39px!important;line-height:1.05!important;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-search{max-width:100%!important}
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-intel{
+    right:12px!important;bottom:14px!important;width:210px!important;
+    min-height:94px!important;padding:12px 14px!important;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-intel-note{display:none!important}
+}
+@media(max-width:600px){
+  body[data-reference-style="v1"][data-fl-section="home"] .fl-site-rail{
+    min-height:56px!important;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-search{
+    min-height:52px!important;
+  }
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-search input{min-height:42px}
+  body[data-reference-style="v1"][data-fl-section="home"] .hero-search button{min-height:42px}
+}

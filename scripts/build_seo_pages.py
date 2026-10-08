@@ -2794,7 +2794,9 @@ def _format_context_window(value: object) -> str:
         return raw or "—"
     count = int(raw)
     if count >= 1_000_000:
-        return f"{count / 1_000_000:g}M"
+        # Keep a concise headline while exposing the exact official token count.
+        rounded = round(count / 1_000_000)
+        return f"{rounded}M ({count:,})" if rounded >= 1 else f"{count / 1_000_000:.1f}M ({count:,})"
     if count >= 1_000:
         return f"{round(count / 1_000):g}K"
     return raw
@@ -2833,7 +2835,9 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
-    linkable = linkable_model_slugs is None or _safe_slug(model_name, "model") in linkable_model_slugs
+    # The thin model detail URL still exists for direct navigation, but only
+    # indexable multi-provider aggregates belong in the public directory links.
+    linkable = bool(linkable_model_slugs and _safe_slug(model_name, "model") in linkable_model_slugs)
     model_name_markup = (
         f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
         if linkable else
@@ -3264,6 +3268,8 @@ def _catalog_source_label(model: dict) -> str:
     upstream lab and has to be visible as such.
     """
     kind = str(model.get("sourceKind") or "")
+    if kind == "third_party_aggregator" or str(model.get("providerId") or "") == "llm7-io":
+        return _locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official")
     if kind == "official":
         return _locale_pair("厂商官方来源", "Provider official source")
     if kind == "public_api":
@@ -3435,7 +3441,7 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
     for provider in providers:
         provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
         latest = _latest_date(provider_models, "lastSeenAt")
-        source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
+        source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
         cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p><a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
@@ -3470,7 +3476,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
     routes_markup = _access_routes_markup(provider_models)
     registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
-    source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
+    source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": (_absolute(site_url, model_aggregate_url(model)) if _safe_slug(model.get("model"), "model") in indexable_model_slugs(models) else (model.get("sourceUrl") or page_url))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
@@ -3575,13 +3581,14 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         "manus ai": "manus.im", "cnb": "cnb.cool", "iflytek astudio": "xfyun.cn",
         "workbuddy": "codebuddy.ai", "hermes": "hermes-agent.nousresearch.com",
         "grok": "grok.com", "pi": "pi.ai", "agent.space": "agent.space", "claude code": "claude.ai",
+        "dots api": "dots.ai", "dots": "dots.ai",
         "opencode": "opencode.ai",
     }
 
     def brand_icon_host(brand: str, url: str = "") -> str:
         normalized = re.sub(r"\s+", " ", brand.strip().lower())
         for key, host in icon_hosts.items():
-            if key in normalized:
+            if re.search(r"(?<![a-z0-9])" + re.escape(key) + r"(?![a-z0-9])", normalized):
                 return host
         try:
             host = (urlsplit(url).hostname or "").lower()
@@ -3672,7 +3679,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
         model_slug = _safe_slug(model_name, "model")
         source_url = str(model.get("sourceUrl") or "").strip()
         icon = brand_icon_markup(provider, source_url, mark)
-        detail_url = model_aggregate_url(model) if model_slug in indexable_slugs else ALL_MODELS_PAGE_PATH
+        detail_url = model_aggregate_url(model)
         detail_external = detail_url.startswith("http")
         categories = " ".join(category_keys(model))
         search_text = _esc(" ".join((model_name, provider, *modalities)).lower())
@@ -4457,21 +4464,9 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
-    # The hero snapshot describes the currently published directories, not a
-    # transient crawler observation. Keep it sourced from the same data that
-    # renders /models/ so the public model/provider counts cannot drift.
-    if models is not None:
-        published_models = [item for item in models if isinstance(item, dict)]
-        published_providers = {
-            str(item.get("providerId") or "").strip()
-            for item in published_models
-            if str(item.get("providerId") or "").strip()
-        }
-        latest_snapshot = {
-            "models": len(published_models),
-            "providers": len(published_providers),
-            "offers": len(offers or []),
-        }
+    # P0-1: all public counters must be sourced from this same scan snapshot.
+    # Current published model catalogs can include delayed and third-party paths;
+    # they must never silently overwrite the scan totals.
     latest_has_changes = any(latest_groups.values())
     latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
     latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
@@ -4576,6 +4571,13 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
         f'<meta name="twitter:title" content="{_esc(share_title)}">'
         f'<meta name="twitter:description" content="{_esc(share_description)}">'
         f'<meta name="twitter:image" content="{_esc(share_image)}">'
+    )
+    # P0-1: /logs/ must retain scan hydration after generated-page rebuilds.
+    # The checked-in HTML alone is not authoritative: CI regenerates this route.
+    page = page.replace(
+        "</body>",
+        '<script defer src="/js/scan-trust.js?v=p0-1-20261008"></script></body>',
+        1,
     )
     return page.replace(canonical, canonical + social, 1)
 
@@ -5016,7 +5018,7 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     </aside></div>'''
     lower_sections = _render_skills_below_fold(skills, recipes or [])
     footer_bottom = f'''<footer class="skills-footer skills-footer-bottom">
-      <p>© 2024 FreeLLM. All rights reserved.</p>
+      <p>© 2026 FreeLLM. All rights reserved.</p>
       <div class="skills-footer-social" aria-label="Social links">
         <span aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.05c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.7 2.05 3.36 1.55.1-.72.39-1.22.7-1.5-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.04-1.14 3.04-1.14.61 1.53.23 2.67.12 2.95.71.78 1.14 1.77 1.14 2.99 0 4.29-2.6 5.23-5.09 5.51.4.35.75 1.02.75 2.06V22c0 .29.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></span>
         <span aria-label="Twitter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 5.9a8.3 8.3 0 0 1-2.36.65 4.12 4.12 0 0 0 1.8-2.27 8.23 8.23 0 0 1-2.6.99 4.1 4.1 0 0 0-7 3.74 11.64 11.64 0 0 1-8.45-4.28 4.1 4.1 0 0 0 1.27 5.47 4.08 4.08 0 0 1-1.86-.52v.05a4.1 4.1 0 0 0 3.29 4.02 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.83 2.84A8.23 8.23 0 0 1 2 18.36a11.62 11.62 0 0 0 6.29 1.84c7.55 0 11.68-6.25 11.68-11.68l-.01-.53A8.35 8.35 0 0 0 22 5.9Z"/></svg></span>
@@ -5379,6 +5381,24 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     }
     latest_daily_log = max(daily_logs or [], key=lambda item: str(item.get("date") or ""), default={})
     latest_groups = _log_event_groups(list(latest_daily_log.get("events") or []), list(latest_daily_log.get("curatedEvents") or []))
+    # P0-1: materialize the same daily-log snapshot read by /logs/, home and /about/.
+    observed = latest_daily_log.get("observed") or {}
+    scan_events = [*(latest_daily_log.get("events") or []), *(latest_daily_log.get("curatedEvents") or [])]
+    new_events = [e for e in scan_events if e.get("eventType") in {"new", "new_route"}]
+    scan_summary = {
+        "schemaVersion": 1,
+        "date": str(latest_daily_log.get("date") or ""),
+        "source": f"/data/daily-log/{latest_daily_log.get('date')}.json" if latest_daily_log.get("date") else "",
+        "models": len(observed.get("models") or []),
+        "offers": len(observed.get("offers") or []),
+        "newCount": len(new_events),
+        "newModels": sum(e.get("kind") == "model" for e in new_events),
+        "newOffers": sum(e.get("kind") == "offer" for e in new_events),
+        "sourceChecks": sum(v.get("status") == "ok" for v in (latest_daily_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
+        "hasHistoricalBaseline": False,
+    }
+    files[Path("data/scan-summary.json")] = json.dumps(scan_summary, ensure_ascii=False, indent=2) + "\n"
+
     files[Path("daily-update-status.json")] = json.dumps({
         "latestDate": str(latest_daily_log.get("date") or ""),
         "hasCatalogChanges": any(latest_groups[key] for key in ("new", "recovered", "offline")),
@@ -5417,8 +5437,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in model_catalog if item.get("providerId")})
         replacement = (
             '<div class="about-stat-grid">'
-            f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong>{len(offers)}</strong><span><span lang="zh-CN">已验证的免费资源</span><span lang="en">verified offers</span></span></div></article>'
-            f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong data-scan-stat="offers">{scan_summary["offers"] if scan_summary["date"] else "—"}</strong><span><span lang="zh-CN">已收录资源</span><span lang="en">catalogued offers</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong data-scan-stat="models">{scan_summary["models"] if scan_summary["date"] else "—"}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
             f'<article class="about-stat-card"><span class="about-icon icon-green" aria-hidden="true">▥</span><div><strong>{len(providers)}</strong><span><span lang="zh-CN">模型 / 服务商</span><span lang="en">vendors</span></span></div></article>'
             f'<article class="about-stat-card"><span class="about-icon icon-amber" aria-hidden="true">‹/›</span><div><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">活跃 Provider ID</span><span lang="en">active providers</span></span></div></article>'
             '</div>'
@@ -5430,10 +5450,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             count=1,
             flags=re.S,
         )
-        latest_data_date = max(
-            (str(log.get("date") or "") for log in (daily_logs or []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(log.get("date") or ""))),
-            default="",
-        )
+        latest_data_date = scan_summary["date"]
         date_copy = (
             f'<span lang="zh-CN">数据快照截至 {latest_data_date}</span><span lang="en">Data snapshot as of {latest_data_date}</span>'
             if latest_data_date
@@ -6152,7 +6169,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true"></span>'
         brand_subtitle = 'AI for Everyone'
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
-        rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2024 FreeLLM</small></div>'
+        rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
         '<script src="/js/site-navigation.js?v=20261008-today-discovery"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'

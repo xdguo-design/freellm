@@ -13,7 +13,7 @@ html.fl-pastel-ui[data-theme="dark"] body[data-visual-style="aurora"]{
   --aurora-surface-pink:#fff4f8;
   --aurora-ink:#102745;
   --aurora-ink-2:#526a86;
-  --aurora-ink-3:#7990aa;
+  --aurora-ink-3:#526a86; /* readable auxiliary text */
   --aurora-line:#d8e6f4;
   --aurora-line-strong:#b8d2ea;
   --aurora-blue:#2f7de1;
@@ -43,6 +43,10 @@ html.fl-pastel-ui[data-theme="dark"] body[data-visual-style="aurora"]{
   --fl-mint:var(--aurora-mint);
   --fl-shadow:var(--aurora-shadow);
   --fl-shadow-hover:var(--aurora-shadow-hover);
+  --fl-theme-surface:var(--aurora-surface);
+  --fl-theme-quote:var(--aurora-surface-soft);
+  --fl-theme-ink:var(--aurora-ink);
+  --fl-theme-muted:var(--aurora-ink-2);
 
   color:var(--aurora-ink) !important;
   background:

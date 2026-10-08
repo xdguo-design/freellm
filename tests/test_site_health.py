@@ -303,10 +303,12 @@ class ReadmeFactsTests(unittest.TestCase):
         self.assertIn(f"**{models}** third-party", readme)
 
     def test_about_and_generated_model_page_counts_match_current_data(self):
-        offers = len(json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8")))
-        models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
-        self.assertIn(f">{offers}<", (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
-        self.assertIn(str(models), (ROOT / "about" / "index.html").read_text(encoding="utf-8"))
+        # About reports the canonical daily scan, not the catalog's separate
+        # raw 74 offers / 236 model records (including expired/retired rows).
+        scan = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        about = (ROOT / "about" / "index.html").read_text(encoding="utf-8")
+        self.assertIn(f'data-scan-stat="offers">{scan["offers"]}</strong>', about)
+        self.assertIn(f'data-scan-stat="models">{scan["models"]}</strong>', about)
         provider_cards = len(json.loads((ROOT / "data" / "provider-access.json").read_text(encoding="utf-8")))
         models_page = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f"{provider_cards} 家提供商", models_page)

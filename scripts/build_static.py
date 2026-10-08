@@ -41,7 +41,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-disc
   </nav>
   <div class="prototype-theme-toggle" aria-label="主题切换"><span class="active">☀</span><span>◔</span></div>
   <div class="fl-site-rail-note" aria-hidden="true"></div>
-  <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2024 FreeLLM</small></div>
+  <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2026 FreeLLM</small></div>
 </aside>
 <div class="fl-site-ribbon">
   <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
@@ -318,24 +318,36 @@ def render_static_catalog(data: list[dict], limit: int = 11) -> str:
     return STATIC_OFFER_START + "".join(cards) + STATIC_OFFER_END
 
 
-def replace_static_catalog(html: str, data: list[dict]) -> str:
+def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | None = None) -> str:
     count = len(data)
+    # The hero reports the canonical daily scan, not the raw offer-feed length.
+    # The catalog itself includes ended promotions for explicit historical access.
+    hero_count = scan_offer_count if isinstance(scan_offer_count, int) else count
+    today = date.today().isoformat()
+    active_count = sum(
+        offer.get("status") != "expired"
+        and not (
+            re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(offer.get("expires_at") or ""))
+            and str(offer["expires_at"]) < today
+        )
+        for offer in data
+    )
     updated = re.sub(
         r'(<span>资源总览</span><strong>)\d+(</strong>)',
         rf"\g<1>{count}\g<2>",
         html,
         count=1,
     )
-    updated = re.sub(r'(<b id="heroCount">)[^<]*(</b>)', rf"\g<1>{count}\g<2>", updated, count=1)
+    updated = re.sub(r'(<b id="heroCount">)[^<]*(</b>)', rf"\g<1>{hero_count}\g<2>", updated, count=1)
     updated = re.sub(
         r'(<b data-category-count="all">)[^<]*(</b>)',
-        rf"\g<1>{count}\g<2>",
+        rf"\g<1>{active_count}\g<2>",
         updated,
         count=1,
     )
     updated = re.sub(
         r'(<button class="filter-chip active" data-filter="all"[^>]*>[^<]*<em>)[^<]*(</em>)',
-        rf"\g<1>{count}\g<2>",
+        rf"\g<1>{active_count}\g<2>",
         updated,
         count=1,
     )
@@ -596,7 +608,14 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     )
     updated = update_trust_copy(updated)
     updated = remove_legacy_app(updated)
-    updated = replace_static_catalog(updated, source_data)
+    scan_path = data_path.with_name("scan-summary.json")
+    scan_offer_count = None
+    if scan_path.exists():
+        scan_summary = json.loads(scan_path.read_text(encoding="utf-8"))
+        if not isinstance(scan_summary.get("offers"), int) or scan_summary["offers"] < 0:
+            raise ValueError("Invalid canonical scan offer count")
+        scan_offer_count = scan_summary["offers"]
+    updated = replace_static_catalog(updated, source_data, scan_offer_count=scan_offer_count)
     updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
