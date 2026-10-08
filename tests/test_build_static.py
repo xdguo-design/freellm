@@ -32,6 +32,7 @@ class BuildStaticTests(unittest.TestCase):
                 "lastVerifiedAt": "2026-09-06",
             }
             data_path.write_text(json.dumps([offer]), encoding="utf-8")
+            (root / "scan-summary.json").write_text(json.dumps({"offers": 9}), encoding="utf-8")
             html_path.write_text(
                 '<b id="heroCount">27</b>'
                 '<b data-category-count="all">27</b>'
@@ -45,7 +46,7 @@ class BuildStaticTests(unittest.TestCase):
             self.assertTrue(build(data_path, html_path))
             rendered = html_path.read_text(encoding="utf-8")
 
-            self.assertIn('<b id="heroCount">1</b>', rendered)
+            self.assertIn('<b id="heroCount">9</b>', rendered)
             self.assertIn('<b data-category-count="all">1</b>', rendered)
             self.assertIn('href="/offers/x/"', rendered)
             self.assertIn('"url": "https://freellm.top/offers/x/"', rendered)

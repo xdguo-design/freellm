@@ -973,7 +973,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
 
         page.click(".category-card[data-filter='ide']")
-        ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
+        ide_count = sum(1 for offer in active_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
 
         qwen_count = page.locator(".offer").evaluate_all(
@@ -1165,6 +1165,8 @@ class BrowserPageTests(unittest.TestCase):
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "scan-trust.js").write_text((ROOT / "js" / "scan-trust.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "offer-expiry-board.js").write_text((ROOT / "js" / "offer-expiry-board.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1176,6 +1178,7 @@ class BrowserPageTests(unittest.TestCase):
             (css / "home-prototype-critical.css").write_text((ROOT / "css" / "home-prototype-critical.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-trust.css").write_text((ROOT / "css" / "home-trust.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
@@ -1185,6 +1188,7 @@ class BrowserPageTests(unittest.TestCase):
                 (assets / name).write_bytes((ROOT / "assets" / "reference" / name).read_bytes())
             data = Path(directory) / "data"
             data.mkdir()
+            (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
