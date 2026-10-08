@@ -293,9 +293,50 @@ def render_offer_flags(offer: dict) -> str:
     return '<div class="offer-card-flags">' + "".join(chips) + "</div>"
 
 
+def is_active_offer(offer: dict, today: str) -> bool:
+    """One lifecycle predicate for both no-JS fallback and visible counters."""
+    if offer.get("status") == "expired":
+        return False
+    expires = str(offer.get("expires_at") or "")
+    return not (re.fullmatch(r"\d{4}-\d{2}-\d{2}", expires) and expires < today)
+
+
+def offer_filter_categories(offer: dict) -> set[str]:
+    """Mirror js/homepage.js offerCategories for stable SSR facet counts."""
+    type_values = offer.get("type") or []
+    capability_values = offer.get("capabilities") or []
+    if isinstance(type_values, str):
+        type_values = [type_values]
+    if isinstance(capability_values, str):
+        capability_values = [capability_values]
+    tokens = set(type_values) | set(capability_values) | {offer.get("productType")}
+    kind, mechanism = offer.get("productType"), offer.get("freeMechanism")
+    ide = kind == "free_ide" or bool(tokens & {"ide", "free_ide"})
+    web = kind == "web_infrastructure" or "web" in tokens
+    local = kind in {"open_weights", "payg"} or bool(tokens & {"download", "payg"})
+    result: set[str] = set()
+    if "student" in tokens or offer.get("studentSummary"):
+        result.add("student")
+    if kind == "api":
+        result.add("model")
+    if mechanism in {"daily_quota", "weekly_quota", "monthly_quota", "permanent"} and not ide and not local:
+        result.add("free_quota")
+    if mechanism in {"trial", "limited_time_free"}:
+        result.add("credits")
+    if ide:
+        result.add("ide")
+    if mechanism == "first_month_promo" or offer.get("timeWindow") or "promo" in tokens:
+        result.add("promo")
+    if web:
+        result.add("web")
+    if local:
+        result.add("download_lowcost")
+    return result
+
+
 def render_static_catalog(data: list[dict], limit: int = 11) -> str:
     cards = []
-    for offer in key_first(data)[:limit]:
+    for offer in key_first([item for item in data if is_active_offer(item, date.today().isoformat())])[:limit]:
         href = offer_href(offer)
         title = html_lib.escape(str(offer.get("title") or offer.get("name") or "AI offer"))
         provider = html_lib.escape(str(offer.get("provider") or "Official provider"))
@@ -324,17 +365,11 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
     # The catalog itself includes ended promotions for explicit historical access.
     hero_count = scan_offer_count if isinstance(scan_offer_count, int) else count
     today = date.today().isoformat()
-    active_count = sum(
-        offer.get("status") != "expired"
-        and not (
-            re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(offer.get("expires_at") or ""))
-            and str(offer["expires_at"]) < today
-        )
-        for offer in data
-    )
+    active = [offer for offer in data if is_active_offer(offer, today)]
+    active_count = len(active)
     updated = re.sub(
         r'(<span>资源总览</span><strong>)\d+(</strong>)',
-        rf"\g<1>{count}\g<2>",
+        rf"\g<1>{hero_count}\g<2>",
         html,
         count=1,
     )
@@ -356,6 +391,32 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
         rf"\g<1>{count}\g<2>",
         updated,
         count=1,
+    )
+    # Crawler-visible facet totals should be useful even when JS is disabled.
+    for category in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
+        category_count = sum(category in offer_filter_categories(offer) for offer in active)
+        updated = re.sub(
+            rf'(<b data-category-count="{category}">)[^<]*(</b>)',
+            lambda match: f"{match.group(1)}{category_count}{match.group(2)}",
+            updated,
+            count=1,
+        )
+        updated = re.sub(
+            rf'(<button[^>]*data-filter="{category}"[^>]*>(?:(?!</button>).)*?<em>)[^<]*(</em>)',
+            lambda match: f"{match.group(1)}{category_count}{match.group(2)}",
+            updated,
+            count=1,
+            flags=re.S,
+        )
+    updated = re.sub(
+        r'(<p id="catalog-result-count">)[^<]*(</p>)',
+        lambda m: f"{m.group(1)}{active_count} 个当前有效入口（共存档 {count} 条）{m.group(2)}",
+        updated,
+        count=1,
+    )
+    updated = updated.replace(
+        "分类可以重叠，一条资源可能同时属于多个入口。",
+        "分类可以重叠；目录按有效优惠入口计数，扫描汇总按资源快照计数，口径不同。",
     )
     static_catalog = render_static_catalog(data)
     marker_pattern = rf"({re.escape(STATIC_OFFER_START)}).*?({re.escape(STATIC_OFFER_END)})"
