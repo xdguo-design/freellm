@@ -540,7 +540,7 @@ let offerIndex = {};
         document.querySelectorAll(`.catalog-app [data-category-count="${filter}"]`).forEach(node => { node.textContent = pad(count); });
       };
 
-      document.getElementById('heroCount').textContent = items.length;
+      // P0-1: hero resource total is set by /data/scan-summary.json, not catalog item count.
       setCount('all', items.length);
       ['free_quota', 'model', 'credits', 'ide', 'promo', 'student', 'web', 'download_lowcost'].forEach(category => setCount(category, countCategory(category)));
       setCount('featured', items.filter(item => item.featured?.reason).length);
