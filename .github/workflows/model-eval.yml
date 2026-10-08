@@ -1,0 +1,47 @@
+name: model-eval
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1" # Monday 10:00 Asia/Shanghai
+  push:
+    branches:
+      - "eval/**"
+    paths:
+      - "scripts/eval_models.py"
+      - ".github/workflows/model-eval.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: model-eval-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run real model evaluation
+        env:
+          SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: python scripts/eval_models.py --out data/evaluations | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Commit results
+        run: |
+          git config user.name "freellm-eval-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/evaluations
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "data(eval): real model evaluation $(date -u +%F)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
