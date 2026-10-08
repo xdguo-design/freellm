@@ -864,8 +864,13 @@ let offerIndex = {};
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       input.focus();
     }));
-    document.querySelector('.hero-search button')?.addEventListener('click', () => {
-      document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const searchAll = () => {
+      const q = document.getElementById('catalog-search').value.trim();
+      location.href = '/search/?q=' + encodeURIComponent(q);
+    };
+    document.querySelector('.hero-search button')?.addEventListener('click', searchAll);
+    document.getElementById('catalog-search')?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); searchAll(); }
     });
     document.getElementById('catalog-reset-filters').addEventListener('click', () => {
       document.getElementById('catalog-search').value = '';
