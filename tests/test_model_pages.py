@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.featured_models import comparable_benchmark
 from scripts.build_seo_pages import (
     MODELS_PER_PAGE,
     _exclude_retired_models,
@@ -200,11 +201,10 @@ def test_model_rows_link_only_to_indexable_aggregation_pages(tmp_path):
     thin = next(slug for slug, records in groups.items() if len(records) == 1)
     all_pages = _all_catalog_pages(tmp_path)
 
-    # Rich aggregate pages are crawlable destinations; thin single-record pages
-    # stay reachable by direct URL but are noindex and therefore not promoted
-    # by the model directory.
+    # Human navigation links to every detail page; only multi-source model
+    # aggregates may appear in the sitemap / search index.
     assert f'href="/models/{rich}/"' in all_pages
-    assert f'href="/models/{thin}/"' not in all_pages
+    assert f'href="/models/{thin}/"' in all_pages
     last_provider_href = f'href="/providers/{model_slug(models[-1].get("providerId"))}/"'
     assert last_provider_href in all_pages
 
@@ -217,7 +217,7 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
     provider_pages = list((tmp_path / "providers").glob("*/index.html"))
-    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
+    curated = [m for m in json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8")) if comparable_benchmark(m)]
 
     assert "精选模型与 AI Agent" in overview
     assert "精选模型" in overview
@@ -234,7 +234,7 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
 def test_models_landing_shows_curated_models_and_links_to_the_complete_directory(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
-    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
+    curated = [m for m in json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8")) if comparable_benchmark(m)]
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
 
     assert "精选模型" in page
@@ -243,8 +243,11 @@ def test_models_landing_shows_curated_models_and_links_to_the_complete_directory
     assert f'href="/models/all/"' in page
     assert page.count('class="featured-model-card"') == len(curated)
     assert page.count("团队精选") == len(curated)
-    assert f'data-model-id="{curated[0]["id"]}"' in page
-    assert curated[0]["model"] in page
+    if curated:
+        assert f'data-model-id="{curated[0]["id"]}"' in page
+        assert curated[0]["model"] in page
+    else:
+        assert "当前尚无达到可复现推理实测标准" in page
     assert "可用的免费模型入口" not in page
 
 
