@@ -68,9 +68,9 @@ PROVIDERS = {
         "name": "智谱 BigModel",
         "env": "ZHIPU_API_KEY",
         "base": "https://open.bigmodel.cn/api/paas/v4",
-        "list": True,
-        "match": ["flash"],
-        "fallback": ["glm-4.7-flash", "glm-4.5-flash", "glm-4-flash-250414", "glm-4-flash"],
+        # Official free models only (docs.bigmodel.cn/cn/guide/models/free). GLM-5.3 / 5.3-Flash are paid.
+        "list": False,
+        "fixed": ["glm-4.7-flash", "glm-4-flash-250414"],
         "limit": 2,
     },
     "nvidia": {
@@ -127,6 +127,8 @@ def _request(url: str, key: str, body: dict | None = None, stream: bool = False)
 
 
 def list_models(cfg: dict, key: str) -> list[str]:
+    if cfg.get("fixed"):
+        return list(cfg["fixed"])[: cfg["limit"]]
     ids: list[str] = []
     try:
         with _request(cfg["base"] + "/models", key) as resp:
