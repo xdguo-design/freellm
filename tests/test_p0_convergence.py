@@ -131,26 +131,22 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 
-    def test_home_hotspot_strip_is_compact_and_current(self):
+    def test_home_latest_scan_strip_has_real_metrics_without_invented_growth(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        hot = re.search(r'<section class="prototype-hot".*?</section>', page, re.S)
-        self.assertIsNotNone(hot)
-        section = hot.group(0)
-        self.assertEqual(section.count('class="prototype-hot-card"'), 5)
-        self.assertNotIn("prototype-hot-card is-featured", section)
-        for slug in (
-            "OtvEeIj4z_hGSK_2O5VszA",
-            "jMaAj8UILhcoPn3COEbIKg",
-            "Z5xlMKnqVR7Ihzzt5bCOZA",
-            "Ustvh8JxyRc192SNnSisUg",
-            "2-6pjoxc4ln3E83B5UwFJg",
-        ):
-            self.assertIn(slug, section)
-        self.assertIn("模型 / API", section)
-        self.assertIn("Agent 观察", section)
-        self.assertIn("官方核验", section)
-        self.assertNotIn("技术拆解", section)
-        self.assertIn("查看今日发现", section)
+        summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        section = re.search(
+            r'<section id="weekly-changes"[^>]*>.*?</section>', page, re.S
+        )
+        self.assertIsNotNone(section, "latest scan is required above the catalog")
+        weekly = section.group(0)
+        self.assertEqual(weekly.count("<article>"), 4)
+        for key in ("newCount", "newModels", "models", "offers"):
+            self.assertIn(f'data-scan-stat="{key}">{summary[key]}</strong>', weekly)
+        self.assertIn(f'<span data-scan-date>{summary["date"]}</span>', weekly)
+        self.assertIn('href="/logs/"', weekly)
+        self.assertIn("未建立可比较的同口径历史基线", weekly)
+        self.assertNotRegex(weekly, r"(?:↑|↓|环比\\s*[+\\-]?\\d+%|较上周\\s*[+\\-]?\\d+%)")
+        self.assertNotIn('class="prototype-hot-card"', weekly)
 
     def test_primary_navigation_has_exactly_seven_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
