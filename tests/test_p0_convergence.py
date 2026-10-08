@@ -4,11 +4,43 @@ import unittest
 from pathlib import Path
 
 from scripts.build_tools_index import load_registry
+from scripts.build_seo_pages import _render_update_reference_modules
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class P0ConvergenceTests(unittest.TestCase):
+    def test_p0_5_latest_highlights_exclude_nonofficial_aggregators(self):
+        log = {
+            "date": "2026-10-08",
+            "events": [
+                {
+                    "kind": "model", "eventType": "new", "id": "llm7-io/fake",
+                    "title": "Aggregator listing", "asOf": "2026-10-08",
+                    "details": {"providerId": "llm7-io", "provider": "LLM7",
+                                "sourceKind": "third_party_aggregator"},
+                },
+                {
+                    "kind": "model", "eventType": "new", "id": "official/real",
+                    "title": "Official release", "asOf": "2026-10-08",
+                    "details": {"providerId": "official", "provider": "Official",
+                                "sourceKind": "official"},
+                },
+            ],
+            "curatedEvents": [], "sourceHealth": {},
+        }
+        modules, _ = _render_update_reference_modules(
+            [log], [], [], {"models": 2, "offers": 0}
+        )
+        feature = re.search(
+            r'<section class="ref-update-feature"><h2>最近重点更新</h2>.*?</section>',
+            modules, re.S,
+        )
+        self.assertIsNotNone(feature)
+        self.assertIn("Official release", feature.group(0))
+        self.assertNotIn("Aggregator listing", feature.group(0))
+
+
     def test_p1_6_retired_hotspot_strip_does_not_reintroduce_overlapping_badges(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         self.assertIn('class="weekly-scan-cards"', home)
