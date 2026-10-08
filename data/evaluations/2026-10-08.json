@@ -1,0 +1,2130 @@
+{
+ "schemaVersion": 1,
+ "suite": "text-api-lite-v1",
+ "runAt": "2026-10-08T16:46:41+08:00",
+ "vantage": "GitHub Actions hosted runner (US)",
+ "method": "每个模型用同一组 10 道固定题（中文事实、推理数学、Python、格式遵循、长文抽取）调用一次，temperature=0，流式记录首 token 延迟与生成速度；自动评分，Python 题实际执行单元测试。",
+ "cases": [
+  {
+   "id": "zh-fact-1",
+   "dim": "chinese_factual",
+   "prompt": "中国的首都是哪座城市？只回答城市名。"
+  },
+  {
+   "id": "zh-fact-2",
+   "dim": "chinese_factual",
+   "prompt": "《红楼梦》的作者是谁？只回答姓名。"
+  },
+  {
+   "id": "math-1",
+   "dim": "reasoning_math",
+   "prompt": "计算 37×43，只输出最终数字。"
+  },
+  {
+   "id": "math-2",
+   "dim": "reasoning_math",
+   "prompt": "一件衣服原价 200 元，先打八折，再减 30 元，最后多少元？只输出最终数字。"
+  },
+  {
+   "id": "logic-1",
+   "dim": "reasoning_math",
+   "prompt": "小明比小红高，小红比小刚高。三个人中谁最矮？只回答名字。"
+  },
+  {
+   "id": "py-1",
+   "dim": "python",
+   "prompt": "用 Python 写一个函数 is_prime(n)，判断 n 是否为质数，返回 True 或 False。只输出代码。"
+  },
+  {
+   "id": "py-2",
+   "dim": "python",
+   "prompt": "用 Python 写一个函数 reverse_words(s)，把用空格分隔的句子中的单词顺序反转后返回字符串。只输出代码。"
+  },
+  {
+   "id": "fmt-1",
+   "dim": "instruction_format",
+   "prompt": "输出一个 JSON 对象，包含 name（字符串）和 age（整数）两个字段，name 为“张三”，age 为 28。只输出 JSON，不要任何解释。"
+  },
+  {
+   "id": "fmt-2",
+   "dim": "instruction_format",
+   "prompt": "列出三种水果，用英文逗号分隔，只输出这三个词，不要编号和其他文字。"
+  },
+  {
+   "id": "ctx-1",
+   "dim": "context_extraction",
+   "prompt": "阅读下面的通知，回答会议日期，只按 YYYY-MM-DD 格式输出。\n通知：经研究决定，第三届开源模型开发者大会原定于十月举行，现推迟至2026年11月3日在杭州国际博览中心召开，报名截止时间为10月25日。"
+  }
+ ],
+ "skipped": [],
+ "models": [
+  {
+   "providerId": "groq",
+   "provider": "Groq",
+   "model": "qwen/qwen3.8-27b",
+   "available": true,
+   "score": 100,
+   "passed": 10,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 146.5,
+   "medianTokensPerSec": 480.2,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 159,
+     "totalMs": 161,
+     "outputTokens": 2,
+     "tokensPerSec": null,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 149,
+     "totalMs": 154,
+     "outputTokens": 4,
+     "tokensPerSec": null,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 156,
+     "totalMs": 164,
+     "outputTokens": 5,
+     "tokensPerSec": null,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 144,
+     "totalMs": 150,
+     "outputTokens": 4,
+     "tokensPerSec": null,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 111,
+     "totalMs": 114,
+     "outputTokens": 2,
+     "tokensPerSec": null,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 159,
+     "totalMs": 335,
+     "outputTokens": 91,
+     "tokensPerSec": 518.1,
+     "output": "```python\ndef is_prime(n):\n    if n < 2:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n**0.5) + 1, 2):\n        if n % i == 0:\n            return False\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 109,
+     "totalMs": 161,
+     "outputTokens": 23,
+     "tokensPerSec": 442.4,
+     "output": "```python\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 122,
+     "totalMs": 160,
+     "outputTokens": 20,
+     "tokensPerSec": null,
+     "output": "{\n  \"name\": \"张三\",\n  \"age\": 28\n}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 141,
+     "totalMs": 153,
+     "outputTokens": 6,
+     "tokensPerSec": null,
+     "output": "apple, banana, orange"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 225,
+     "totalMs": 245,
+     "outputTokens": 11,
+     "tokensPerSec": null,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "groq",
+   "provider": "Groq",
+   "model": "openai/gpt-oss-120b",
+   "available": true,
+   "score": 100,
+   "passed": 10,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 149.0,
+   "medianTokensPerSec": 493.7,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 202,
+     "totalMs": 312,
+     "outputTokens": 57,
+     "tokensPerSec": 518.1,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 203,
+     "totalMs": 308,
+     "outputTokens": 54,
+     "tokensPerSec": 517.1,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 145,
+     "totalMs": 384,
+     "outputTokens": 118,
+     "tokensPerSec": 493.7,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 312,
+     "totalMs": 507,
+     "outputTokens": 98,
+     "tokensPerSec": 501.7,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 142,
+     "totalMs": 325,
+     "outputTokens": 90,
+     "tokensPerSec": 491.9,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 148,
+     "totalMs": 599,
+     "outputTokens": 220,
+     "tokensPerSec": 488.7,
+     "output": "```python\nimport math\n\ndef is_prime(n: int) -> bool:\n    \"\"\"Return True if n is a prime number, else False.\"\"\"\n    if n < 2:\n        return False\n    if n in (2, 3):\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n\n    limit = int(math.isqrt(n))\n    i = 5\n    while i <= limit:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 119,
+     "totalMs": 515,
+     "outputTokens": 166,
+     "tokensPerSec": 419.1,
+     "output": "```python\ndef reverse_words(s: str) -> str:\n    \"\"\"\n    Reverse the order of words in a space‑separated sentence.\n\n    Args:\n        s: Input string containing words separated by spaces.\n\n    Returns:\n        A new string with the word order reversed. Consecutive spaces are\n        treated as a single separator, and leading/trailing spaces are removed.\n    \"\"\"\n    # Split on whitespace, reverse the list, then join with a single space\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 83,
+     "totalMs": 163,
+     "outputTokens": 42,
+     "tokensPerSec": 526.2,
+     "output": "{\n  \"name\": \"张三\",\n  \"age\": 28\n}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 549,
+     "totalMs": 551,
+     "outputTokens": 88,
+     "tokensPerSec": null,
+     "output": "apple, banana, cherry"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 150,
+     "totalMs": 377,
+     "outputTokens": 102,
+     "tokensPerSec": 450.8,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "nvidia",
+   "provider": "NVIDIA NIM",
+   "model": "openai/gpt-oss-20b",
+   "available": true,
+   "score": 100,
+   "passed": 10,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 239.0,
+   "medianTokensPerSec": 50.6,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 399,
+     "totalMs": 1440,
+     "outputTokens": 57,
+     "tokensPerSec": 54.8,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 875,
+     "totalMs": 2710,
+     "outputTokens": 75,
+     "tokensPerSec": 40.9,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 173,
+     "totalMs": 983,
+     "outputTokens": 94,
+     "tokensPerSec": 116.1,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 163,
+     "totalMs": 791,
+     "outputTokens": 66,
+     "tokensPerSec": 105.1,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 245,
+     "totalMs": 2115,
+     "outputTokens": 62,
+     "tokensPerSec": 33.2,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 143,
+     "totalMs": 2172,
+     "outputTokens": 162,
+     "tokensPerSec": 79.8,
+     "output": "```python\ndef is_prime(n: int) -> bool:\n    \"\"\"Return True if n is a prime number, otherwise False.\"\"\"\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 513,
+     "totalMs": 4208,
+     "outputTokens": 107,
+     "tokensPerSec": 29.0,
+     "output": "```python\ndef reverse_words(s: str) -> str:\n    return ' '.join(reversed(s.split()))\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 255,
+     "totalMs": 1569,
+     "outputTokens": 61,
+     "tokensPerSec": 46.4,
+     "output": "{\"name\":\"张三\",\"age\":28}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 165,
+     "totalMs": 1152,
+     "outputTokens": 78,
+     "tokensPerSec": 79.0,
+     "output": "Apple, Banana, Cherry"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 233,
+     "totalMs": 3133,
+     "outputTokens": 103,
+     "tokensPerSec": 35.5,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "nvidia",
+   "provider": "NVIDIA NIM",
+   "model": "z-ai/glm-5.3",
+   "available": true,
+   "score": 100,
+   "passed": 10,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 475.0,
+   "medianTokensPerSec": 46.5,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 933,
+     "totalMs": 2361,
+     "outputTokens": 71,
+     "tokensPerSec": 49.7,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 269,
+     "totalMs": 1819,
+     "outputTokens": 135,
+     "tokensPerSec": 87.1,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 2165,
+     "totalMs": 4065,
+     "outputTokens": 89,
+     "tokensPerSec": 46.8,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 255,
+     "totalMs": 2725,
+     "outputTokens": 73,
+     "tokensPerSec": 29.6,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 5217,
+     "totalMs": 12638,
+     "outputTokens": 117,
+     "tokensPerSec": 15.8,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 699,
+     "totalMs": 17906,
+     "outputTokens": 532,
+     "tokensPerSec": 30.9,
+     "output": "```python\ndef is_prime(n):\n    if n < 2:\n        return False\n    if n < 4:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 681,
+     "totalMs": 2048,
+     "outputTokens": 159,
+     "tokensPerSec": 116.4,
+     "output": "```python\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 237,
+     "totalMs": 3504,
+     "outputTokens": 136,
+     "tokensPerSec": 41.6,
+     "output": "{\"name\": \"张三\", \"age\": 28}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 252,
+     "totalMs": 3864,
+     "outputTokens": 167,
+     "tokensPerSec": 46.2,
+     "output": "苹果, 香蕉, 橙子"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 257,
+     "totalMs": 1556,
+     "outputTokens": 143,
+     "tokensPerSec": 110.0,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "modelscope",
+   "provider": "魔搭 ModelScope",
+   "model": "Qwen/Qwen3.5-122B-A10B",
+   "available": true,
+   "score": 100,
+   "passed": 10,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 1142.0,
+   "medianTokensPerSec": 117.1,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1114,
+     "totalMs": 3467,
+     "outputTokens": 219,
+     "tokensPerSec": 93.1,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1307,
+     "totalMs": 2977,
+     "outputTokens": 284,
+     "tokensPerSec": 170.1,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1142,
+     "totalMs": 3543,
+     "outputTokens": 398,
+     "tokensPerSec": 165.8,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1142,
+     "totalMs": 5561,
+     "outputTokens": 352,
+     "tokensPerSec": 79.7,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1202,
+     "totalMs": 4006,
+     "outputTokens": 277,
+     "tokensPerSec": 98.8,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1107,
+     "totalMs": 11599,
+     "outputTokens": 1255,
+     "tokensPerSec": 119.6,
+     "output": "```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1094,
+     "totalMs": 11456,
+     "outputTokens": 1464,
+     "tokensPerSec": 141.3,
+     "output": "```python\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1098,
+     "totalMs": 5373,
+     "outputTokens": 723,
+     "tokensPerSec": 169.1,
+     "output": "{\"name\": \"张三\", \"age\": 28}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1412,
+     "totalMs": 19611,
+     "outputTokens": 1851,
+     "tokensPerSec": 101.7,
+     "output": "苹果，香蕉，橙子"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1149,
+     "totalMs": 5310,
+     "outputTokens": 477,
+     "tokensPerSec": 114.6,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "openrouter",
+   "provider": "OpenRouter",
+   "model": "inclusionai/ling-3.0-flash-sante:free",
+   "available": true,
+   "score": 90,
+   "passed": 9,
+   "answered": 9,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 652,
+   "medianTokensPerSec": 224.5,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 635,
+     "totalMs": 735,
+     "outputTokens": 17,
+     "tokensPerSec": 170.1,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1823,
+     "totalMs": 2127,
+     "outputTokens": 71,
+     "tokensPerSec": 233.8,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 583,
+     "totalMs": 791,
+     "outputTokens": 41,
+     "tokensPerSec": 196.6,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 581,
+     "totalMs": 1355,
+     "outputTokens": 189,
+     "tokensPerSec": 244.5,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 649,
+     "totalMs": 996,
+     "outputTokens": 101,
+     "tokensPerSec": 291.1,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1110,
+     "totalMs": 5519,
+     "outputTokens": 990,
+     "tokensPerSec": 224.5,
+     "output": "```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n ** 0.5) + 1, 2):\n        if n % i == 0:\n            return False\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"inclusionai/ling-3.0-flash-sante:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to acc"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 732,
+     "totalMs": 1588,
+     "outputTokens": 100,
+     "tokensPerSec": 116.9,
+     "output": "```json\n{\n  \"name\": \"张三\",\n  \"age\": 28\n}\n```"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 652,
+     "totalMs": 934,
+     "outputTokens": 66,
+     "tokensPerSec": 234.3,
+     "output": "apple, banana, orange"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 900,
+     "totalMs": 1490,
+     "outputTokens": 117,
+     "tokensPerSec": 198.3,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "siliconflow",
+   "provider": "硅基流动 SiliconFlow",
+   "model": "tencent/Hunyuan-MT-7B",
+   "available": true,
+   "score": 90,
+   "passed": 9,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 0
+   },
+   "medianTtftMs": 1003.0,
+   "medianTokensPerSec": 37.0,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1020,
+     "totalMs": 1047,
+     "outputTokens": 1,
+     "tokensPerSec": null,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1924,
+     "totalMs": 1943,
+     "outputTokens": 9,
+     "tokensPerSec": null,
+     "output": "《红楼梦》的作者是曹雪芹。"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 959,
+     "totalMs": 1189,
+     "outputTokens": 11,
+     "tokensPerSec": 47.8,
+     "output": "37×43 = 1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 992,
+     "totalMs": 3833,
+     "outputTokens": 70,
+     "tokensPerSec": 24.6,
+     "output": "首先，衣服原价是200元，打八折后的价格是200元 * 0.8 = 160元。然后，再减30元，最终价格是160元 - 30元 = 130元。所以，最后的价格是130元。"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1107,
+     "totalMs": 1176,
+     "outputTokens": 2,
+     "tokensPerSec": 28.8,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 980,
+     "totalMs": 2761,
+     "outputTokens": 56,
+     "tokensPerSec": 31.4,
+     "output": "```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 988,
+     "totalMs": 3353,
+     "outputTokens": 94,
+     "tokensPerSec": 39.7,
+     "output": "```python\ndef reverse_words(s):\n    words = s.split()\n    reversed_words = words[::-1]\n    return ' '.join(reversed_words)\n```\n\n这个函数首先使用 `split()` 方法将输入的字符串 `s` 按照空格分割成单词列表 `words`，然后使用列表切片 `[::-1]` 将单词列表反转，最后使用 `join()` 方法将反转后的单词列表连接成一个字符串并返回。"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1005,
+     "totalMs": 1644,
+     "outputTokens": 22,
+     "tokensPerSec": 34.4,
+     "output": "```json\n{\n  \"name\": \"张三\",\n  \"age\": 28\n}\n```"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1001,
+     "totalMs": 1126,
+     "outputTokens": 5,
+     "tokensPerSec": 39.8,
+     "output": "apple, banana, orange"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 1371,
+     "totalMs": 1662,
+     "outputTokens": 13,
+     "tokensPerSec": 44.7,
+     "output": "会议日期：2026年11月3日"
+    }
+   ]
+  },
+  {
+   "providerId": "siliconflow",
+   "provider": "硅基流动 SiliconFlow",
+   "model": "XingChenAGI/Xing4.0-29B",
+   "available": true,
+   "score": 90,
+   "passed": 9,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 50,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 1116.5,
+   "medianTokensPerSec": 41.5,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1145,
+     "totalMs": 2719,
+     "outputTokens": 76,
+     "tokensPerSec": 48.3,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1114,
+     "totalMs": 3298,
+     "outputTokens": 86,
+     "tokensPerSec": 39.4,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1119,
+     "totalMs": 5896,
+     "outputTokens": 204,
+     "tokensPerSec": 42.7,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1085,
+     "totalMs": 4612,
+     "outputTokens": 227,
+     "tokensPerSec": 64.4,
+     "output": "130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1113,
+     "totalMs": 5367,
+     "outputTokens": 171,
+     "tokensPerSec": 40.2,
+     "output": "小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 1123,
+     "totalMs": 32620,
+     "outputTokens": 1024,
+     "tokensPerSec": 32.5,
+     "output": ""
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1332,
+     "totalMs": 16450,
+     "outputTokens": 530,
+     "tokensPerSec": 35.1,
+     "output": "```python\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1222,
+     "totalMs": 5264,
+     "outputTokens": 236,
+     "tokensPerSec": 58.4,
+     "output": "{\n  \"name\": \"张三\",\n  \"age\": 28\n}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1114,
+     "totalMs": 4291,
+     "outputTokens": 171,
+     "tokensPerSec": 53.8,
+     "output": "Apple, banana, orange"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1065,
+     "totalMs": 12708,
+     "outputTokens": 248,
+     "tokensPerSec": 21.3,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "openrouter",
+   "provider": "OpenRouter",
+   "model": "apodex/apodex-1.1-mini:free",
+   "available": true,
+   "score": 80,
+   "passed": 8,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 50,
+    "instruction_format": 50,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 624.5,
+   "medianTokensPerSec": 253.6,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 597,
+     "totalMs": 1337,
+     "outputTokens": 198,
+     "tokensPerSec": 267.4,
+     "output": "\n\n北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 581,
+     "totalMs": 1914,
+     "outputTokens": 293,
+     "tokensPerSec": 219.8,
+     "output": "\n\n曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 590,
+     "totalMs": 8118,
+     "outputTokens": 350,
+     "tokensPerSec": 46.5,
+     "output": "\n\n1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 888,
+     "totalMs": 2969,
+     "outputTokens": 249,
+     "tokensPerSec": 119.6,
+     "output": "\n\n130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 745,
+     "totalMs": 1747,
+     "outputTokens": 279,
+     "tokensPerSec": 278.3,
+     "output": "\n\n小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 578,
+     "totalMs": 4569,
+     "outputTokens": 1024,
+     "tokensPerSec": 256.6,
+     "output": "\n\n```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(n**0.5) + 1, 2"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 652,
+     "totalMs": 4460,
+     "outputTokens": 954,
+     "tokensPerSec": 250.5,
+     "output": "\n\n```python\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n```"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 590,
+     "totalMs": 1618,
+     "outputTokens": 303,
+     "tokensPerSec": 294.6,
+     "output": "\n\n{\"name\": \"张三\", \"age\": 28}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 931,
+     "totalMs": 5866,
+     "outputTokens": 1024,
+     "tokensPerSec": 207.5,
+     "output": ""
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 3105,
+     "totalMs": 4642,
+     "outputTokens": 438,
+     "tokensPerSec": 285.0,
+     "output": "\n\n2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "groq",
+   "provider": "Groq",
+   "model": "allam-2-7b",
+   "available": true,
+   "score": 70,
+   "passed": 7,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 50,
+    "reasoning_math": 33,
+    "python": 100,
+    "instruction_format": 100,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 251.5,
+   "medianTokensPerSec": 1401.2,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 238,
+     "totalMs": 255,
+     "outputTokens": 26,
+     "tokensPerSec": null,
+     "output": "中国的首都是北京。 "
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 252,
+     "totalMs": 322,
+     "outputTokens": 92,
+     "tokensPerSec": 1307.6,
+     "output": "您的问题是关于《红楼梦》作者的。这是中国古代文学作品，作者是吴忠。 "
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 266,
+     "totalMs": 270,
+     "outputTokens": 7,
+     "tokensPerSec": null,
+     "output": "1571 "
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 235,
+     "totalMs": 364,
+     "outputTokens": 185,
+     "tokensPerSec": 1425.0,
+     "output": "首先对价格进行操作：\n1. 将原价200减去8折的80元，得到打8折后的价格：200-80=120元。\n2. 再将120减去30元，得到最终价格：120-30=90元。\n\n最终数字为90。 "
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 252,
+     "totalMs": 300,
+     "outputTokens": 69,
+     "tokensPerSec": null,
+     "output": "小刚是最矮的，因为小明和小红都被声称为比小刚高。 "
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 250,
+     "totalMs": 312,
+     "outputTokens": 88,
+     "tokensPerSec": 1403.6,
+     "output": "def is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True "
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 231,
+     "totalMs": 322,
+     "outputTokens": 127,
+     "tokensPerSec": 1398.7,
+     "output": "def reverse_words(s):\n    words = s.split()  # 将句子分割成单词数组\n    reversed_words = ' '.join(reversed(words))  # 将单词顺序反转后再拼接成字符串\n    return reversed_words "
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 258,
+     "totalMs": 276,
+     "outputTokens": 26,
+     "tokensPerSec": null,
+     "output": "{\n  \"name\": \"张三\",\n  \"age\": 28\n} "
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 251,
+     "totalMs": 256,
+     "outputTokens": 8,
+     "tokensPerSec": null,
+     "output": "Apple, Orange, Banana "
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 260,
+     "totalMs": 268,
+     "outputTokens": 13,
+     "tokensPerSec": null,
+     "output": "2026-11-03 "
+    }
+   ]
+  },
+  {
+   "providerId": "modelscope",
+   "provider": "魔搭 ModelScope",
+   "model": "MiniMax/MiniMax-M1-80k",
+   "available": true,
+   "score": 70,
+   "passed": 7,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100,
+    "python": 0,
+    "instruction_format": 50,
+    "context_extraction": 100
+   },
+   "medianTtftMs": 1461.5,
+   "medianTokensPerSec": 86.2,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1479,
+     "totalMs": 2285,
+     "outputTokens": 48,
+     "tokensPerSec": 59.5,
+     "output": "<think>用户问中国的首都是哪座城市，要求只回答城市名。这是一个简单的问题，按照我的行为标准，应该客观理性地完成问答。\n\n中国的首都是北京。我需要用简洁的方式回答，只给出城市名\"北京\"。\n北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1447,
+     "totalMs": 1819,
+     "outputTokens": 27,
+     "tokensPerSec": 72.5,
+     "output": "<think>用户要求只回答《红楼梦》的作者姓名。根据我的知识，《红楼梦》的作者是曹雪芹。\n曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1469,
+     "totalMs": 2174,
+     "outputTokens": 61,
+     "tokensPerSec": 86.5,
+     "output": "<think>用户要求计算 37×43，这是一个简单的乘法运算。\n\n37 × 43 = 37 × (40 + 3) = 37×40 + 37×3 = 1480 + 111 = 1591\n\n所以最终答案是 1591。\n1591"
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1427,
+     "totalMs": 2209,
+     "outputTokens": 70,
+     "tokensPerSec": 89.5,
+     "output": "<think>用户问：一件衣服原价200元，先打八折，再减30元，最后多少元？\n\n计算过程：\n1. 原价200元，打八折：200 × 0.8 = 160元\n2. 再减30元：160 - 30 = 130元\n\n最终答案是130元。\n130"
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1454,
+     "totalMs": 2168,
+     "outputTokens": 65,
+     "tokensPerSec": 91.0,
+     "output": "<think>让我分析这个问题：\n\n1. 小明比小红高 → 小明 > 小红\n2. 小红比小刚高 → 小红 > 小刚\n\n所以顺序是：小明 > 小红 > 小刚\n\n最矮的是小刚。\n\n用户要求只回答名字，所以答案应该是\"小刚\"。\n小刚"
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 1432,
+     "totalMs": 3566,
+     "outputTokens": 192,
+     "tokensPerSec": 89.9,
+     "output": "<think>The user wants me to write a Python function is_prime(n) that checks if n is a prime number and returns True or False. They only want the code output.\n\nLet me write a clean, efficient prime checking function:\n\n1. Handle edge cases: n <= 1 is not prime\n2. Handle n = 2 (the only even prime)\n3. Check divisibility up to sqrt(n)\n\nHere's the code:\n```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or</think>\n\n n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n```"
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 1529,
+     "totalMs": 5827,
+     "outputTokens": 369,
+     "tokensPerSec": 85.9,
+     "output": "<think>The user asks: \"用 Python 写一个函数 reverse_words(s)，把用空格分隔的句子中的单词顺序反转后返回字符串。只输出代码。\"\n\nThus they want just the Python code for a function that reverses the order of words in a sentence separated by spaces, returning a string. They specifically say \"只输出代码\" (only output code). So we should output the function definition in Python.\n\nWe must be mindful that they are Chinese, but they didn't request anything that conflicts with policy. It's a simple request. So we can comply: provide the Python code for reverse_words(s). Use just code.\n\nPotential considerations: Should we handle multiple spaces? Probably not needed. They only said \"用空格分隔\" i.e., separated by spaces.\n\nThus output:\n\ndef reverse_words(s):\n    return ' '.join(s.split()[::-1])\n\nAlternatively can handle empty string.\n\nWe could also provide a more robust version. But the instruction says just output code, presumably minimal. But we can also add some comments? The user says \"只输出代码\". That likely means not explanation. So output only code.\n\nWe could output something like:\n\ndef reverse_words(s):\n    \"\"\"\n    Reverse the order of words in a string separated by spaces.\n    \"\"\"\n    words = s.split()\n    return ' '.join(reversed(words))\n\nBut that's also code including docstring. They might accept. The request is short, so perhaps just the function with maybe a test example. But they want only code. So we can provide a simple code:\n\ndef reverse_words(s):\n    return \" \".join(s.split()[::-1])\n\nThat's all. Should we include a call? P"
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1445,
+     "totalMs": 1813,
+     "outputTokens": 31,
+     "tokensPerSec": 84.2,
+     "output": "<think>The user wants a JSON object with name and age fields, no explanation.\n{\"name\": \"张三\", \"age\": 28}"
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 1508,
+     "totalMs": 4321,
+     "outputTokens": 232,
+     "tokensPerSec": 82.5,
+     "output": "<think>The user asks: \"列出三种水果，用英文逗号分隔，只输出这三个词，不要编号和其他文字。\" (List three fruits, separated by English commas, only output these three words, no numbering and no other text.)\n\nIn Chinese: \"列出三种水果，用英文逗号分隔，只输出这三个词，不要编号和其他文字。\"\n\nSo they want three fruit names, separated by commas (English commas), and only those three words, no numbering or any other text. So output like \"apple, banana, orange\" or something like that.\n\nWe need to respond with exactly that: three fruit names, separated by commas, no extra spaces? Probably there can be spaces after commas, but they didn't say no spaces. \"用英文逗号分隔\" means use English comma. So \"apple, banana, orange\". That's it. There's no constraint about not providing profanity; it's safe.\n\nThus answer: \"apple, banana, orange\". Or any three fruits. Provide just those three words.\n\nWe must not include anything else. That satisfies the request.\n\nHence final answer: \"apple, banana, orange\".\napple, banana, orange"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 1564,
+     "totalMs": 2397,
+     "outputTokens": 87,
+     "tokensPerSec": 104.3,
+     "output": "<think>用户要求我阅读通知并回答会议日期，只按 YYYY-MM-DD 格式输出。\n\n根据通知内容：\n\"第三届开源模型开发者大会原定于十月举行，现推迟至2026年11月3日在杭州国际博览中心召开\"\n\n会议日期是：2026年11月3日\n\n按照 YYYY-MM-DD 格式输出：2026-11-03\n2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "modelscope",
+   "provider": "魔搭 ModelScope",
+   "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "available": true,
+   "score": 30,
+   "passed": 3,
+   "answered": 3,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 100,
+    "reasoning_math": 100
+   },
+   "medianTtftMs": 2352,
+   "medianTokensPerSec": 111.2,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 2159,
+     "totalMs": 2249,
+     "outputTokens": 10,
+     "tokensPerSec": 111.2,
+     "output": "北京"
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 2486,
+     "totalMs": 2658,
+     "outputTokens": 16,
+     "tokensPerSec": 93.0,
+     "output": "曹雪芹"
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 2352,
+     "totalMs": 2704,
+     "outputTokens": 44,
+     "tokensPerSec": 125.0,
+     "output": "1591"
+    },
+    {
+     "case": "math-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "logic-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "py-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "fmt-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "fmt-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    },
+    {
+     "case": "ctx-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"insufficient_quota\",\"message\":\"You exceeded your current quota, please check your plan and billing details. For details, see: https://help.aliyun.com/zh/model-studio/error-code#token"
+    }
+   ]
+  },
+  {
+   "providerId": "openrouter",
+   "provider": "OpenRouter",
+   "model": "google/gemma-4-26b-a4b-it:free",
+   "available": true,
+   "score": 10,
+   "passed": 1,
+   "answered": 1,
+   "total": 10,
+   "dimensions": {
+    "context_extraction": 100
+   },
+   "medianTtftMs": 542,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "zh-fact-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "math-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "math-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "logic-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "py-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "fmt-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "fmt-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate"
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": true,
+     "ttftMs": 542,
+     "totalMs": 549,
+     "outputTokens": 10,
+     "tokensPerSec": null,
+     "output": "2026-11-03"
+    }
+   ]
+  },
+  {
+   "providerId": "openrouter",
+   "provider": "OpenRouter",
+   "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+   "available": true,
+   "score": 0,
+   "passed": 0,
+   "answered": 10,
+   "total": 10,
+   "dimensions": {
+    "chinese_factual": 0,
+    "reasoning_math": 0,
+    "python": 0,
+    "instruction_format": 0,
+    "context_extraction": 0
+   },
+   "medianTtftMs": 233.5,
+   "medianTokensPerSec": 5.0,
+   "errors": [],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 387,
+     "totalMs": 387,
+     "outputTokens": 1,
+     "tokensPerSec": 2.6,
+     "output": ""
+    },
+    {
+     "case": "zh-fact-2",
+     "dim": "chinese_factual",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 90,
+     "totalMs": 90,
+     "outputTokens": 1,
+     "tokensPerSec": 11.2,
+     "output": ""
+    },
+    {
+     "case": "math-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 95,
+     "totalMs": 95,
+     "outputTokens": 1,
+     "tokensPerSec": 10.6,
+     "output": ""
+    },
+    {
+     "case": "math-2",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 432,
+     "totalMs": 432,
+     "outputTokens": 1,
+     "tokensPerSec": 2.3,
+     "output": ""
+    },
+    {
+     "case": "logic-1",
+     "dim": "reasoning_math",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 100,
+     "totalMs": 100,
+     "outputTokens": 1,
+     "tokensPerSec": 10.0,
+     "output": ""
+    },
+    {
+     "case": "py-1",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 864,
+     "totalMs": 864,
+     "outputTokens": 1,
+     "tokensPerSec": 1.2,
+     "output": ""
+    },
+    {
+     "case": "py-2",
+     "dim": "python",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 128,
+     "totalMs": 128,
+     "outputTokens": 1,
+     "tokensPerSec": 7.8,
+     "output": ""
+    },
+    {
+     "case": "fmt-1",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 325,
+     "totalMs": 325,
+     "outputTokens": 1,
+     "tokensPerSec": 3.1,
+     "output": ""
+    },
+    {
+     "case": "fmt-2",
+     "dim": "instruction_format",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 11514,
+     "totalMs": 11514,
+     "outputTokens": 1,
+     "tokensPerSec": 0.1,
+     "output": ""
+    },
+    {
+     "case": "ctx-1",
+     "dim": "context_extraction",
+     "ok": true,
+     "pass": false,
+     "ttftMs": 142,
+     "totalMs": 142,
+     "outputTokens": 1,
+     "tokensPerSec": 7.0,
+     "output": ""
+    }
+   ]
+  },
+  {
+   "providerId": "modelscope",
+   "provider": "魔搭 ModelScope",
+   "model": "ZhipuAI/GLM-4.7-Flash",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"0d9a95b4-a36a-4a0c-b632-56bc0459de35\"}"
+    },
+    {
+     "case": "zh-fact-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"5d1554b6-fe40-4343-aca4-6eef85123e92\"}"
+    },
+    {
+     "case": "math-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"185e5af5-7719-4ba2-bcaa-6d2ce08c6319\"}"
+    },
+    {
+     "case": "math-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"},\"request_id\":\"814fd7d5-0211-4786-98ca-ffc14f4e5afb\"}"
+    },
+    {
+     "case": "logic-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"We have to rate limit you for model ZhipuAI/GLM-4.7-Flash. If you need higher limits, please consider other (commercial) API providers.\",\"request_id\":\"f86094ea-2c04-4df4-9d50-f9ef"
+    },
+    {
+     "case": "py-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"f73d8efa-b05c-49f9-abf7-f96cc51d30ed\"}"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"df19e3bf-8ccb-41d8-9b9f-918ca5a264ae\"}"
+    },
+    {
+     "case": "fmt-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"},\"request_id\":\"82a096db-365f-4ca6-a47c-d9bf1ae9532a\"}"
+    },
+    {
+     "case": "fmt-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"},\"request_id\":\"d0e829bd-14cb-4ebc-b54e-bb73d4002248\"}"
+    },
+    {
+     "case": "ctx-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"message\":\"We have to rate limit you for model ZhipuAI/GLM-4.7-Flash. If you need higher limits, please consider other (commercial) API providers.\",\"request_id\":\"e7defb92-4f0a-477e-9146-8a31"
+    }
+   ]
+  },
+  {
+   "providerId": "zhipu",
+   "provider": "智谱 BigModel",
+   "model": "glm-5.3-flash",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "zh-fact-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "math-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "math-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "logic-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "py-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "fmt-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "fmt-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "ctx-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    }
+   ]
+  },
+  {
+   "providerId": "zhipu",
+   "provider": "智谱 BigModel",
+   "model": "glm-5.3-flashx",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 429"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "zh-fact-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "math-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "math-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "logic-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "py-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "py-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "fmt-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "fmt-2",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    },
+    {
+     "case": "ctx-1",
+     "ok": false,
+     "error": "HTTP 429",
+     "detail": "{\"error\":{\"code\":\"1113\",\"message\":\"余额不足或无可用资源包,请充值。\"}}"
+    }
+   ]
+  },
+  {
+   "providerId": "nvidia",
+   "provider": "NVIDIA NIM",
+   "model": "deepseek-ai/deepseek-coder-6.7b-instruct",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 404"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 404",
+     "detail": "{\"status\":404,\"title\":\"Not Found\",\"detail\":\"Function 'e503b15c-62b0-4d69-b532-a88f0bfa2656': Not found for account 'pfX4LEsSptGCa__Eyzt4oPprYUAfqzD_My3penp5K1s'\"}"
+    }
+   ]
+  },
+  {
+   "providerId": "nvidia",
+   "provider": "NVIDIA NIM",
+   "model": "moonshotai/kimi-k2.6",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 404"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 404",
+     "detail": "{\"status\":404,\"title\":\"Not Found\",\"detail\":\"Function '23d4f03a-b8a6-4adb-a183-7daa083a09cc': Not found for account 'pfX4LEsSptGCa__Eyzt4oPprYUAfqzD_My3penp5K1s'\"}"
+    }
+   ]
+  },
+  {
+   "providerId": "nvidia",
+   "provider": "NVIDIA NIM",
+   "model": "meta/codellama-70b",
+   "available": false,
+   "score": null,
+   "passed": 0,
+   "answered": 0,
+   "total": 10,
+   "dimensions": {},
+   "medianTtftMs": null,
+   "medianTokensPerSec": null,
+   "errors": [
+    "HTTP 404"
+   ],
+   "cases": [
+    {
+     "case": "zh-fact-1",
+     "ok": false,
+     "error": "HTTP 404",
+     "detail": "{\"status\":404,\"title\":\"Not Found\",\"detail\":\"Function 'f6b06895-d073-4714-8bb2-26c09e9f6597': Not found for account 'pfX4LEsSptGCa__Eyzt4oPprYUAfqzD_My3penp5K1s'\"}"
+    }
+   ]
+  }
+ ]
+}
