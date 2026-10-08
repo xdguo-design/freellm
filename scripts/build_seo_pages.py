@@ -4457,21 +4457,9 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
-    # The hero snapshot describes the currently published directories, not a
-    # transient crawler observation. Keep it sourced from the same data that
-    # renders /models/ so the public model/provider counts cannot drift.
-    if models is not None:
-        published_models = [item for item in models if isinstance(item, dict)]
-        published_providers = {
-            str(item.get("providerId") or "").strip()
-            for item in published_models
-            if str(item.get("providerId") or "").strip()
-        }
-        latest_snapshot = {
-            "models": len(published_models),
-            "providers": len(published_providers),
-            "offers": len(offers or []),
-        }
+    # P0-1: all public counters must be sourced from this same scan snapshot.
+    # Current published model catalogs can include delayed and third-party paths;
+    # they must never silently overwrite the scan totals.
     latest_has_changes = any(latest_groups.values())
     latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
     latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
@@ -5379,6 +5367,24 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     }
     latest_daily_log = max(daily_logs or [], key=lambda item: str(item.get("date") or ""), default={})
     latest_groups = _log_event_groups(list(latest_daily_log.get("events") or []), list(latest_daily_log.get("curatedEvents") or []))
+    # P0-1: materialize the same daily-log snapshot read by /logs/, home and /about/.
+    observed = latest_daily_log.get("observed") or {}
+    scan_events = [*(latest_daily_log.get("events") or []), *(latest_daily_log.get("curatedEvents") or [])]
+    new_events = [e for e in scan_events if e.get("eventType") in {"new", "new_route"}]
+    scan_summary = {
+        "schemaVersion": 1,
+        "date": str(latest_daily_log.get("date") or ""),
+        "source": f"/data/daily-log/{latest_daily_log.get('date')}.json" if latest_daily_log.get("date") else "",
+        "models": len(observed.get("models") or []),
+        "offers": len(observed.get("offers") or []),
+        "newCount": len(new_events),
+        "newModels": sum(e.get("kind") == "model" for e in new_events),
+        "newOffers": sum(e.get("kind") == "offer" for e in new_events),
+        "sourceChecks": sum(v.get("status") == "ok" for v in (latest_daily_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
+        "hasHistoricalBaseline": False,
+    }
+    files[Path("data/scan-summary.json")] = json.dumps(scan_summary, ensure_ascii=False, indent=2) + "\\n"
+
     files[Path("daily-update-status.json")] = json.dumps({
         "latestDate": str(latest_daily_log.get("date") or ""),
         "hasCatalogChanges": any(latest_groups[key] for key in ("new", "recovered", "offline")),
