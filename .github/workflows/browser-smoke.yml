@@ -57,6 +57,9 @@ jobs:
       - name: Run P0 convergence contracts
         run: python -m unittest tests.test_skills_page tests.test_p0_convergence tests.test_api_health_page -v
 
+      - name: Run unified repository unit tests
+        run: python -m unittest discover -s tests -v
+
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
