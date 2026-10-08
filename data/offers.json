@@ -123,17 +123,17 @@
     },
     "kicker": "FREE IDE",
     "badges": [
-      "QWEN3.8 0× UNTIL SEP 30",
+      "QWEN3.8-FLASH 0× EXTENDED",
       "100 CREDITS / DAY"
     ],
-    "freeSummary": "Qwen3.8-Flash consumes 0 Credits through 2026-09-30 23:59:59 (UTC+8), plus a manually claimable 100 Credits each day; baseline free/trial access remains.",
-    "validitySummary": "Qwen3.8 promo ends Sep 30 · daily reward valid 30 days",
+    "freeSummary": "Qwen3.8-Flash 限时 0× Credits 已延长：原定 9 月 30 日结束，10 月 1 日起继续免费，结束时间将在官方活动页提前公告；另可每日在桌面端手动领取 100 通用 Credits（30 天有效）。",
+    "validitySummary": "Qwen3.8-Flash 免费期已延长 · 结束日待官方公告 · 每日奖励 30 天有效",
     "accessSummary": "International",
-    "checkedSummary": "2026-09-29 / official pricing + announcement",
+    "checkedSummary": "2026-10-08 / official Qoder pricing + event pages",
     "title": "Qoder · Experience plan",
-    "why": "Qoder's official announcements state that Qwen3.8-Flash runs at 0.0× Credits from Sep 18 through Sep 30, 2026 (UTC+8), and individual users can manually claim 100 Credits per day. The daily reward expires 30 days after each claim.",
+    "why": "Qoder 官方活动页说明：自 2026-09-18 10:00（UTC+8）起，Qoder 国际版个人用户（含免费体验版和 Credits 余额为 0 的账号）调用 Qwen3.8-Flash 不消耗 Credits；原定 9 月 30 日结束的免费期已延长，10 月 1 日起继续免费，结束时间将提前在该页公告。个人用户还可每天在 Qoder 桌面端手动领取 100 通用 Credits，每笔自领取起 30 天有效。团队版与企业版不适用。",
     "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
-    "validity": "Qwen3.8-Flash 0× Credits through 2026-09-30 23:59:59 UTC+8; each claimed daily 100-Credit reward expires after 30 days",
+    "validity": "Qwen3.8-Flash 0× Credits since 2026-09-18 10:00 UTC+8, extended past 2026-09-30 with no announced end date yet; each claimed daily 100-Credit reward expires after 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -144,6 +144,10 @@
         "https://docs.qoder.com/zh/account/pricing"
       ],
       [
+        "Qwen3.8-Flash free event",
+        "https://docs.qoder.com/zh/events/flashoffer"
+      ],
+      [
         "Download",
         "https://qoder.com/"
       ]
@@ -151,21 +155,22 @@
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "Qwen3.8-Flash at 0× Credits during the promotion; 100 Credits/day claim window for eligible individual users; baseline trial rules still apply",
+    "quota": "Qwen3.8-Flash at 0× Credits while the extended promotion runs; 100 Credits/day manual claim for individual users (desktop client only); baseline free plan has limited basic-model messages",
     "renewal": "Trial terms may change; check the official account page",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
       "https://docs.qoder.com/zh/account/pricing",
-      "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+      "https://docs.qoder.com/zh/events/flashoffer",
+      "https://docs.qoder.com/zh/events/100credits"
     ],
-    "evidence": "Official Qoder announcement: Qwen3.8-Flash consumes no Credits from 2026-09-18 10:00 through 2026-09-30 23:59:59 (UTC+8); a new 100-Credit claim window opens daily at 10:00, and each reward is valid for 30 days.",
+    "evidence": "2026-10-08 复核 Qoder 官方活动页：Qwen3.8-Flash 计费系数由 0.1× 降至 0.0×，原定 9 月 30 日结束，现已延长，10 月 1 日起继续免费，结束时间将提前公告；每日领取 100 Credits 活动结束时间“另行公告”，每笔奖励 30 天有效，仅限桌面端领取。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "The Qwen3.8-Flash 0× promotion is time-limited. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
+    "notes": "Qwen3.8-Flash 免费期已延长但仍是限时活动，结束日以官方活动页公告为准；仅限国际版个人用户，团队版/企业版不适用。每日 100 Credits 需手动领取，错过不补。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -182,9 +187,9 @@
     "freeModels": [
       {
         "model": "Qwen3.8-Flash",
-        "quota": "0× Credits through 2026-09-30 23:59:59 UTC+8",
-        "note": "Temporary Qoder promotion; no claim required for model usage.",
-        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+        "quota": "0× Credits; extended past 2026-09-30, end date to be announced",
+        "note": "Qoder 国际版个人用户自动生效，无需领取；团队版/企业版不适用。",
+        "sourceUrl": "https://docs.qoder.com/zh/events/flashoffer"
       }
     ]
   },
@@ -511,24 +516,24 @@
       },
       "docsUrl": "https://docs.bigmodel.cn/cn/coding-plan/faq"
     },
-    "kicker": "CHEAP CODING",
+    "kicker": "PROMO ENDED",
     "badges": [
-      "NIGHT FREE",
-      "DOUBLE-FESTIVAL PROMO"
+      "PROMO ENDED",
+      "PAID PLAN"
     ],
-    "freeSummary": "Sep 3–Oct 7: GLM-5.3-Flash is unlimited in ZCode/AutoClaw from 23:00–09:00 (UTC+8); other Agents get doubled quota. Sep 25–Oct 7 all day uses off-peak 50% point consumption.",
-    "validitySummary": "Night promo through Oct 7 · 5-hour + weekly limits",
+    "freeSummary": "已结束：9 月 3 日–10 月 7 日的夜间畅用与双节全天非高峰活动均已到期；GLM Coding Plan 本身是付费订阅，GLM-5.3 / GLM-5.3-Flash 不是免费模型。",
+    "validitySummary": "活动已于 2026-10-07 结束 · 付费套餐",
     "accessSummary": "China account",
-    "checkedSummary": "2026-09-29 / official Coding Plan docs",
+    "checkedSummary": "2026-10-08 / official Coding Plan overview + API pricing",
     "title": "GLM Coding Plan",
-    "why": "Current official GLM Coding Plan docs list GLM-5.3 and GLM-5.3-Flash. The Sep 3–Oct 7 night campaign gives unlimited GLM-5.3-Flash usage in ZCode and AutoClaw from 23:00–09:00 UTC+8, while other Agents receive doubled quota; Sep 25–Oct 7 uses off-peak point consumption all day.",
-    "mechanism": "Base plan has 5-hour and weekly point caps; off-peak model calls consume 50% of base points. During the Sep 25–Oct 7 double-festival campaign, the off-peak rule applies all day; the Sep 3–Oct 7 night campaign adds GLM-5.3-Flash unlimited use in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
-    "validity": "Campaigns end 2026-10-07; base plan keeps rolling 5-hour and weekly limits",
+    "why": "官方 Coding Plan 套餐概览中的夜间畅用活动（9 月 3 日–10 月 7 日）和庆双节全天非高峰活动（9 月 25 日–10 月 7 日）均已到期。剩余的 GLM Coding Plan 是 Lite/Pro/Max 付费订阅；智谱 API 定价页把 GLM-5.3、GLM-5.3-Flash 列为按 Token 计费（输入 8 元 / 0.8 元每百万 Tokens），并非免费模型。智谱官方免费模型为 GLM-4.7-Flash、GLM-4-Flash-250414、GLM-4.6V-Flash 等，见 zhipu-bigmodel-new-user-20m 条目。",
+    "mechanism": "Paid GLM Coding Plan (Lite/Pro/Max) with 5-hour and weekly point caps; off-peak calls consume 50% of base points. The Sep 3–Oct 7 night campaign and Sep 25–Oct 7 all-day off-peak campaign have ended.",
+    "validity": "Campaigns ended 2026-10-07; the remaining GLM Coding Plan is a paid subscription with 5-hour + weekly limits",
     "access": "China account; supported tools only",
     "command": "Use the dedicated coding endpoint in Claude Code, Cursor, Cline or another supported tool.",
     "register": "https://open.bigmodel.cn/glm-coding?plantype=team",
     "registerLabel": "Register / open GLM Coding",
-    "timeWindow": "Base peak: Mon–Fri 14:00–18:00 UTC+8. Sep 25–Oct 7: all-day off-peak point rate. Sep 3–Oct 7: 23:00–09:00 UTC+8 GLM-5.3-Flash unlimited in ZCode/AutoClaw; other supported Agents receive doubled quota.",
+    "timeWindow": "Base peak: Mon–Fri 14:00–18:00 UTC+8 (off-peak calls use 50% of base points). Sep 3–Oct 7 night campaign and Sep 25–Oct 7 all-day off-peak campaign ended on 2026-10-07.",
     "links": [
       [
         "Official FAQ",
@@ -542,21 +547,22 @@
     "originCountry": "China",
     "availability": "China account; supported tools only",
     "freeMechanism": "first_month_promo",
-    "quota": "Lite 2,000/10,000, Pro 12,000/60,000, Max 28,000/140,000 points (5-hour/weekly); promotions temporarily improve effective quota through 2026-10-07",
+    "quota": "Lite 2,000/10,000, Pro 12,000/60,000, Max 28,000/140,000 points (5-hour/weekly) on the paid plan; no free allowance",
     "renewal": "Plan and time windows are provider-controlled",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
       "https://docs.bigmodel.cn/cn/coding-plan/overview",
-      "https://docs.bigmodel.cn/cn/coding-plan/faq"
+      "https://docs.bigmodel.cn/cn/coding-plan/faq",
+      "https://docs.bigmodel.cn/cn/guide/start/pricing"
     ],
-    "evidence": "Official Coding Plan overview (checked 2026-09-29) lists GLM-5.3 and GLM-5.3-Flash, 5-hour + weekly caps, 50% off-peak point consumption, all-day off-peak consumption Sep 25–Oct 7, and a Sep 3–Oct 7 night campaign with unlimited GLM-5.3-Flash in ZCode/AutoClaw from 23:00–09:00 UTC+8.",
-    "status": "verified",
+    "evidence": "2026-10-08 复核官方 Coding Plan 套餐概览：夜间畅用活动写明 9 月 3 日至 10 月 7 日，庆双节活动写明 9 月 25 日至 10 月 7 日，二者均已到期；套餐为 Lite/Pro/Max 付费订阅。官方 API 定价页将 GLM-5.3 列为输入 8 元 / 输出 28 元每百万 Tokens，GLM-5.3-Flash 为 0.8 元 / 2.8 元，均非免费。",
+    "status": "expired",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "Campaign benefits are temporary and tool-specific; do not describe them as a general-purpose free GLM API.",
+    "notes": "2026-10-08 标记为 expired：限时活动已结束，剩余内容为付费套餐，不再作为免费入口展示。GLM-5.3 / GLM-5.3-Flash 为付费模型；官方免费模型是 glm-4.7-flash、glm-4-flash-250414、glm-4.6v-flash（glm-4.5-flash 已于 2026-01-30 下线）。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -569,7 +575,8 @@
       "cnHost": "open.bigmodel.cn",
       "cnMs": 156,
       "intlMs": 331
-    }
+    },
+    "expires_at": "2026-10-07"
   },
   {
     "id": "longcat-2-0",
@@ -1182,7 +1189,7 @@
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "model": "Big Pickle · Space Bunny Free · LongCat 2.5 Preview Free · Exo Free · Fledge Alpha Free · MiMo-V2.6-Flash Free · MiMo-V2.5 Free · Ling 3.1 Flash Free · Ling 3.0 Flash Fin Free · Nemotron 3 Ultra Free · Nemotron 3.5 Lightning Free · Muse Spark 1.3 Contributor Free · Jev 1.13 Free",
     "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
@@ -1219,7 +1226,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-09-24 / official OpenCode Zen docs + live model catalog + real OpenCode CLI generation",
+    "checkedSummary": "2026-10-08 / official OpenCode Zen docs",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -1254,10 +1261,10 @@
       "https://opencode.ai/docs/en/zen/",
       "https://opencode.ai/zen/v1/models"
     ],
-    "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
+    "evidence": "2026-10-08 复核 OpenCode Zen 官方文档（页面更新于 2026-10-08）：定价表将 Big Pickle、Space Bunny Free、LongCat 2.5 Preview Free、Exo Free、Fledge Alpha Free、MiMo-V2.6-Flash Free、MiMo-V2.5 Free、Ling 3.1 Flash Free、Ling 3.0 Flash Fin Free、Nemotron 3 Ultra Free、Nemotron 3.5 Lightning Free、Muse Spark 1.3 Contributor Free、Jev 1.13 Free 的输入/输出标为 Free，并逐一注明为限时免费；免费期间部分模型的请求数据可能用于改进模型。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-24",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
     "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
     "endpointCheck": {
@@ -4377,7 +4384,7 @@
   },
   {
     "date": "2026-09-08",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4394,7 +4401,7 @@
     "provider": "StepFun",
     "providerMeta": "StepFun 阶跃星辰 · China",
     "providerMetaEn": "StepFun · China",
-    "model": "step-audio-r1.1 · step-1x-edit · step-2x-large",
+    "model": "stepaudio-3-realtime-preview · stepaudio-3-chat-preview · stepaudio-3-gen-preview · stepaudio-3-music-preview",
     "modelMeta": "Official API models marked limited free",
     "type": [
       "api",
@@ -4430,7 +4437,7 @@
     "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
     "validitySummary": "Limited-time offer; model availability and free status can change",
     "accessSummary": "StepFun Open Platform account and API key",
-    "checkedSummary": "2026-09-08 / official StepFun pricing and API docs",
+    "checkedSummary": "2026-10-08 / official StepFun pricing page",
     "title": "StepFun · Limited-time free API models",
     "titleZh": "StepFun · 限时免费 API 模型",
     "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
@@ -4474,27 +4481,33 @@
       "https://platform.stepfun.com/docs/zh/quickstart/overview",
       "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
     ],
-    "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
+    "evidence": "2026-10-08 复核 StepFun 官方定价与限速页：stepaudio-3-realtime-preview、stepaudio-3-chat-preview 当前状态为“限时免费”，stepaudio-3-gen-preview、stepaudio-3-music-preview 单价为“限时免费”。旧条目中的 step-audio-r1.1 已不在价格表；step-2x-large 已于 2026-06-12 结束限时免费（0.1 元/张），并将于 2026-10-10 下线；step-1x-edit 已不在价格表。",
     "confidence": "high",
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
-    "notes": "2026-09-17 复验：原先记录的 step-audio-r1.1、step-1x-edit、step-2x-large 已不是当前限免模型。官方页面显示 step-2x-large 已于 2026-06-12 结束限免、改为 0.1 元/张计费，step-1x-edit 未在页面列出。当前限免为 stepaudio-3-* 系列四个模型，已更正。",
+    "notes": "2026-10-08 修正免费模型列表：由 step-audio-r1.1 / step-1x-edit / step-2x-large 更正为 StepAudio 3 系列四个 Preview 模型。限免是模型级临时状态，使用前复核官方价格表。",
     "freeModels": [
       {
-        "model": "step-audio-r1.1",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-realtime-preview",
+        "quota": "限时免费",
+        "note": "StepFun 官方定价页当前状态为“限时免费”。",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-1x-edit",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-chat-preview",
+        "quota": "限时免费",
+        "note": "StepFun 官方定价页当前状态为“限时免费”。",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-2x-large",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-gen-preview",
+        "quota": "限时免费",
+        "note": "StepFun 官方定价页当前状态为“限时免费”。",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-music-preview",
+        "quota": "限时免费",
+        "note": "StepFun 官方定价页当前状态为“限时免费”。",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       }
     ],
@@ -5902,9 +5915,9 @@
   },
   {
     "date": "2026-09-20",
-    "lastVerifiedAt": "2026-09-22",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "status": "verified",
+    "status": "expired",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check StepFun Step Plan terms and each model's official terms",
@@ -5949,24 +5962,23 @@
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/step-plan/quick-start"
     },
-    "kicker": "STEP PLAN FREE EXPERIENCE",
+    "kicker": "FREE TRIAL CLOSED",
     "badges": [
-      "UP TO 75 DAYS",
-      "FLAGSHIP MODELS",
-      "1M CONTEXT"
+      "FREE TRIAL CLOSED",
+      "PAID PLAN"
     ],
-    "freeSummary": "Step Plan 当前免费体验活动最高可叠加至 75 天；登录、首次 API 调用和邀请奖励按活动页实时规则发放",
+    "freeSummary": "已结束：Step Plan 官网已挂出“关于免费体验及 Plan 购买名额调整的通知”，新增免费体验领取通道已关闭；“最高 75 天”攻略不再适用。",
     "freeSummaryEn": "Current Step Plan promotion can stack up to 75 days; login, first-call and referral rewards follow the live campaign rules",
-    "validitySummary": "Limited-time promotion; entitlement and invitation rules can change",
+    "validitySummary": "新增免费体验通道已关闭（不晚于 2026-09-22）· 现为付费月池套餐",
     "accessSummary": "StepFun account + Step API Key; Step Plan entitlement required",
-    "checkedSummary": "2026-09-22 / official Step Plan and API docs + current promotion cross-check",
+    "checkedSummary": "2026-10-08 / official Step Plan page + Step Plan overview",
     "title": "StepFun · Step Plan 最高 75 天免费体验",
     "titleZh": "阶跃星辰 Step Plan · 最高 75 天免费体验",
-    "why": "StepFun 官方 Step Plan 页面确认该订阅覆盖旗舰模型，官方快速开始给出 Step Plan 专用 OpenAI/Anthropic 兼容接口并推荐 step-5-preview。当前活动信息显示免费体验可通过登录、首次 API 调用和邀请奖励叠加，最高达到 75 天；具体邀请名额、体验档位和到期时间以登录后的活动页为准。",
+    "why": "StepFun 官方 Step Plan 页面常见问题已列出“关于免费体验及 Plan 购买名额调整的通知”，同期多家报道记录该通知关闭了新增免费体验领取通道。官方 Step Plan 概述当前只列 Flash Mini ¥49/月、Flash Plus ¥99/月、Flash Pro ¥199/月、Flash Max ¥699/月四档付费套餐，没有免费档。已领取用户的剩余权益以账户页为准。",
     "whyEn": "StepFun's official Step Plan page confirms flagship-model access, while the official quick start documents dedicated OpenAI- and Anthropic-compatible endpoints and recommends step-5-preview. Current promotion reports show the free experience can stack through login, first API call and referral rewards up to 75 days; exact referral limits, trial tier and expiry should be confirmed in the logged-in campaign page.",
-    "mechanism": "Limited-time Step Plan subscription trial; login / first-call / referral rewards can extend the entitlement",
+    "mechanism": "Former Step Plan free-trial promotion (login / first call / referral stacking). New claims are closed; Step Plan is a paid Credit monthly pool (1M Credit = ¥1).",
     "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
-    "validity": "Promotion is time-sensitive; current account entitlement and campaign terms control",
+    "validity": "New free-trial claims closed no later than 2026-09-22; Step Plan is now a paid Credit monthly-pool subscription (Flash Mini ¥49/month and up)",
     "access": "StepFun Open Platform account and API key; Step Plan must be active",
     "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/step-plan",
@@ -6000,13 +6012,13 @@
     "renewal": "Free-experience entitlement expires; paid renewal and plan pricing follow the current Step Plan page",
     "sourceUrls": [
       "https://platform.stepfun.com/step-plan",
-      "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
-      "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
+      "https://platform.stepfun.com/docs/zh/step-plan/overview",
+      "https://www.aipromonow.com/promos/stepfun-step-plan-15d-login-firstcall-invite-sep2026"
     ],
-    "evidence": "Official Step Plan materials confirm flagship-model access; official quick-start docs list https://api.stepfun.com/step_plan/v1 for OpenAI-compatible Chat Completions and https://api.stepfun.com/step_plan for Anthropic-compatible Messages, recommending step-5-preview. Official Step 5 Preview docs specify a 1M-token context window. The live campaign's 75-day stacking mechanics are time-sensitive and were cross-checked against multiple contemporaneous reports; the logged-in Step Plan campaign page remains authoritative for exact reward/tier details.",
+    "evidence": "2026-10-08 复核：官方 Step Plan 页面 FAQ 第 09 项为“关于免费体验及 Plan 购买名额调整的通知”；官方 Step Plan 概述只列四档付费套餐（¥49/¥99/¥199/¥699 月付）。第三方活动追踪页记录 9 月 22 日官网弹窗写明“关闭新增免费体验领取通道”。",
     "confidence": "medium",
     "confidenceReason": "Official docs verify the product, flagship-model access, Step Plan endpoints and 1M context. The 75-day promotion is corroborated by multiple current reports, but the public crawler does not expose the expanded official referral-rule text and sources disagree on the exact free-experience tier.",
-    "notes": "2026-09-22 新增。与 stepfun-limited-time-free 分开：旧条目记录单个 API 模型的限免状态，本条目记录 Step Plan 订阅体验活动。未写死 ¥99 / Flash Plus，因为当前可访问的官方页面未公开显示体验档位，第三方来源存在 Flash Mini / Flash Plus 冲突。",
+    "notes": "2026-10-08 标记为 expired：新用户已无法领取免费体验。已领取用户的剩余天数以账户页为准，本条不再作为免费入口展示。",
     "freeModels": [
       {
         "model": "step-5-preview",
@@ -6059,7 +6071,8 @@
           "note": "确认 1M tokens 上下文窗口、最大输入和模型规格"
         }
       ]
-    }
+    },
+    "expires_at": "2026-09-22"
   },
   {
     "id": "puter-mimo-v2-6-flash-free",
@@ -6847,13 +6860,13 @@
     "freeSummary": "智谱 BigModel 官方注册页当前标注：新用户免费赠送专享 20,000,000 Tokens 体验包。",
     "validitySummary": "体验包有效期与模型适用范围以登录后资源包页为准",
     "accessSummary": "BigModel 注册 + API Key；资源包范围需登录确认",
-    "checkedSummary": "2026-09-29 / 智谱官方注册页 + 活动页",
+    "checkedSummary": "2026-10-08 / 智谱官方注册页 + API 定价页",
     "title": "智谱 BigModel · 新用户 2000 万 Tokens 体验包",
     "why": "智谱 BigModel 官方登录/注册页面当前明确显示“新用户免费赠送专享 20.00million tokens体验包”，官方活动页也显示“新用户注册得 2000万 Tokens”。公开页面没有完整展开当前资源包的模型覆盖和统一到期时间，因此 FreeLLM 只确认总体验包规模，不把它写成所有 GLM 模型永久免费。",
     "mechanism": "BigModel 新用户一次性 20,000,000 Tokens 体验资源包",
     "validity": "以登录后资源包的到期时间和模型适用范围为准",
     "access": "注册 BigModel，领取新用户体验资源包并创建平台 API Key",
-    "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer $ZHIPU_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "command": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions -H \"Authorization: Bearer $ZHIPU_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"glm-4.7-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://open.bigmodel.cn/console",
     "registerLabel": "打开智谱 BigModel",
     "links": [
@@ -6902,14 +6915,14 @@
     "sourceUrls": [
       "https://open.bigmodel.cn/console",
       "https://bigmodel.cn/activity/trial-card/GBG6IX0OID",
-      "https://docs.bigmodel.cn/"
+      "https://docs.bigmodel.cn/cn/guide/start/pricing"
     ],
-    "evidence": "智谱官方开放平台注册页当前显示“新用户免费赠送专享 20.00million tokens体验包”，官方新用户活动页也明确“新用户注册得 2000万 Tokens”。因此可确认新用户体验包存在；具体模型拆分与有效期仍需登录后查看资源包。",
+    "evidence": "智谱官方开放平台注册页当前显示“新用户免费赠送专享 20.00million tokens体验包”，官方新用户活动页也明确“新用户注册得 2000万 Tokens”。因此可确认新用户体验包存在；具体模型拆分与有效期仍需登录后查看资源包。 2026-10-08 补充：官方 API 定价页将 GLM-4.7-Flash、GLM-4-Flash-250414、GLM-4.6V-Flash 的输入/输出均标为“免费”；GLM-5.3（8/28 元每百万 Tokens）与 GLM-5.3-Flash（0.8/2.8 元）为付费模型。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "不采用第三方“永久免费 GLM-4-Flash / 30 并发”等说法作为本条依据；本条只记录官方页面可直接确认的 2000 万 Tokens 新用户体验包。",
+    "notes": "2000 万 Tokens 体验包会被付费模型调用消耗；官方长期免费的是 glm-4.7-flash、glm-4-flash-250414、glm-4.6v-flash（glm-4.5-flash 已于 2026-01-30 下线）。GLM-5.3 / GLM-5.3-Flash 为付费模型，不要写成免费。",
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "partial",
@@ -6933,7 +6946,27 @@
           "url": "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
         }
       ]
-    }
+    },
+    "freeModels": [
+      {
+        "model": "glm-4.7-flash",
+        "quota": "输入/输出免费",
+        "note": "官方 API 定价页标注免费；200K 上下文。",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/start/pricing"
+      },
+      {
+        "model": "glm-4-flash-250414",
+        "quota": "输入/输出免费",
+        "note": "官方 API 定价页标注免费；128K 上下文。",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/start/pricing"
+      },
+      {
+        "model": "glm-4.6v-flash",
+        "quota": "输入/输出免费",
+        "note": "官方 API 定价页标注免费的视觉理解模型。",
+        "sourceUrl": "https://docs.bigmodel.cn/cn/guide/start/pricing"
+      }
+    ]
   },
   {
     "id": "xiaomi-mimo-v2-5-tts-free",
@@ -7156,7 +7189,7 @@
     "freeSummary": "NVIDIA API Catalog 当前显示 38 个 Free Endpoint；免费 NVIDIA Developer Program 可访问托管 NIM API endpoints。",
     "validitySummary": "当前 Free Endpoint 标签有效；模型和限流可动态变化",
     "accessSummary": "Free NVIDIA Developer Program + API Key · no card required",
-    "checkedSummary": "2026-09-29 / NVIDIA API Catalog + NIM product FAQ",
+    "checkedSummary": "2026-10-08 / NVIDIA API Catalog Free Endpoint filter + NIM FAQ",
     "title": "NVIDIA NIM · 当前 38 个 Free Endpoint",
     "why": "NVIDIA 官方 API Catalog 当前显示 38 个 Free Endpoint，示例包括 DeepSeek V4.1 Flash、GLM-5.3、GLM-5.3-Flash 和 Kimi K3。NVIDIA NIM 官方 FAQ 同时明确：开发者可免费加入 NVIDIA Developer Program，并通过 build.nvidia.com 访问 NIM 云端 API endpoints。官方没有在公开 FAQ 中承诺统一固定的 token 赠额，因此 FreeLLM 不把论坛里的“1000 credits”写成正式额度，只记录官方可确认的免费开发者访问和动态限流。",
     "mechanism": "Free NVIDIA Developer Program access to catalog models currently labeled Free Endpoint",
@@ -7176,7 +7209,7 @@
       ],
       [
         "API Catalog quickstart",
-        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+        "https://docs.api.nvidia.com/nim/docs/api-quickstart"
       ]
     ],
     "originCountry": "United States",
@@ -7211,14 +7244,14 @@
     "sourceUrls": [
       "https://build.nvidia.com/models",
       "https://docs.api.nvidia.com/nim/docs/product",
-      "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+      "https://docs.api.nvidia.com/nim/docs/api-quickstart"
     ],
-    "evidence": "NVIDIA API Catalog showed 38 models under the Free Endpoint filter on 2026-09-29. The official NIM FAQ says developers can join the free NVIDIA Developer Program and access NIM API endpoints on build.nvidia.com. Public official docs do not define one universal credits allowance, so no fixed credits value is claimed.",
+    "evidence": "2026-10-08 复核：NVIDIA API Catalog 的 Free Endpoint 筛选仍显示 38 个模型（含 deepseek-v4.1-flash、glm-5-3、glm-5-3-flash、kimi-k3）。官方 NIM FAQ 说明开发者可免费加入 NVIDIA Developer Program 并访问 build.nvidia.com 托管端点。公开文档未给出统一 credits 额度，因此不写固定额度。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "Do not publish forum-reported 1,000 / 5,000 credit numbers as official quota. Always re-check the target model's Free Endpoint label and current Integrate snippet before use.",
+    "notes": "只以模型页的 Free Endpoint 标签为准：/v1/models 列出的 ID 不等于免费账号可调用。2026-10-08 实测免费账号调用 moonshotai/kimi-k2.6、deepseek-ai/deepseek-coder-6.7b-instruct、meta/codellama-70b 返回 404；codellama-70b 模型页已标注 Deprecated。不要发布论坛流传的 1,000 / 5,000 credits 作为官方额度。",
     "freeModels": [
       {
         "model": "deepseek-v4.1-flash",
@@ -9149,7 +9182,7 @@
     "id": "vercel-laya-free",
     "order": 71,
     "date": "2026-10-03",
-    "lastVerifiedAt": "2026-10-03",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9203,7 +9236,7 @@
       "结构化判定",
       "8K 上下文"
     ],
-    "checkedSummary": "2026-10-03 / Vercel AI Gateway official model page and changelog",
+    "checkedSummary": "2026-10-08 / Vercel AI Gateway model page + changelog",
     "why": "Laya 是面向分类、路由、守护规则与评分的结构化判定模型，可对一次输入回答多个选择题、评分题或是非题。它不生成自由文本，适合验证工作流中的判断步骤。Vercel AI Gateway 目前将其标为免费，促销截至 2026-10-31；未公开的请求额度不作推测。",
     "whyEn": "Laya is a structured evaluation model for classification, routing, guardrails, and scoring. It answers choice, score, or boolean questions about shared state rather than generating free-form text. Vercel AI Gateway lists it as free through 2026-10-31; unpublished request limits are not inferred.",
     "mechanism": "Vercel AI Gateway lists the Laya free route with promotional pricing through 2026-10-31. Call it with the AI SDK experimental_evaluate interface; standard chat-completion clients are not the documented integration.",
@@ -9220,12 +9253,12 @@
       ],
       [
         "Vercel 发布说明",
-        "https://vercel.com/changelog"
+        "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
       ]
     ],
     "sourceUrls": [
       "https://vercel.com/ai-gateway/models/laya-free",
-      "https://vercel.com/changelog"
+      "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
     ],
     "usageGuide": {
       "summary": "通过 Vercel AI Gateway 和 AI SDK 的 experimental_evaluate 调用 Laya 结构化判定模型。",
@@ -9253,37 +9286,296 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
-    "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
+    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。",
+    "evidence": "Vercel 官方发布说明（2026-10-01）：Laya 通过 Boundless 在 AI Gateway 免费 1 个月至 2026-10-31，convaiinnovations/laya 与 convaiinnovations/laya-free 两个 ID 在此期间均免费；-free ID 在促销结束后停止服务，标准 ID 开始计费。官方模型页显示 8K 上下文、价格 Free，并注明 Promotional pricing ends on October 31, 2026。",
+    "titleZh": "Laya 结构化判定模型 · 限时免费 API",
     "freeLLMTest": {
       "testLevel": "preflight",
-      "status": "blocked",
-      "testedAt": "2026-10-02",
+      "status": "partial",
+      "testedAt": "2026-10-08",
       "actualUsageVerified": false,
-      "task": "检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。",
+      "task": "核验 Laya 免费路由、促销截止日与调用方式。",
       "method": [
-        "核对 Vercel AI Gateway 官方公告与当前免费模型页。",
-        "使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。",
-        "三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。"
+        "读取 Vercel AI Gateway Laya (Free) 官方模型页，确认价格为 Free、8K 上下文与 Promotional pricing ends on October 31, 2026。",
+        "读取 Vercel 2026-10-01 发布说明，确认 laya 与 laya-free 在 Boundless 上免费至 2026-10-31。",
+        "当前没有 Vercel AI Gateway API Key，未发起真实调用。"
       ],
-      "result": "FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。",
-      "limitations": "HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。",
+      "result": "官方公开预检通过：免费路由与截止日期有官方页面支持。",
+      "limitations": "未实测调用，未验证结构化判定质量、限流与稳定性；此前误挂的 Ling-3.1-flash 401 记录已删除。",
       "evidence": [
         {
+          "label": "Vercel Laya 免费模型页",
+          "url": "https://vercel.com/ai-gateway/models/laya-free"
+        },
+        {
           "label": "Vercel 发布说明",
-          "url": "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
-        },
-        {
-          "label": "Vercel 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
-        },
-        {
-          "label": "Vercel Chat Completions API 文档",
-          "url": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
+          "url": "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
         }
       ]
+    }
+  },
+  {
+    "id": "unisound-u2-flash-free-month",
+    "order": 72,
+    "date": "2026-10-08",
+    "name": "Unisound U2 Flash free month",
+    "providerMark": "云",
+    "provider": "Unisound MaaS",
+    "providerMeta": "云知声 MaaS 平台 · China",
+    "model": "U2 Flash (u2-flash)",
+    "modelMeta": "Agent / Coding LLM · OpenAI & Anthropic compatible",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在云知声 MaaS 创建 API Key，活动期内以 0 元调用 u2-flash（OpenAI 兼容 Chat Completions）",
+      "prerequisites": [
+        "云知声 MaaS 账号",
+        "API Key（按量计费&资源包 > API Key 管理）"
+      ],
+      "steps": [
+        "登录 https://maas.unisound.com/ ，在“按量计费&资源包 > API Key 管理”创建 API Key。",
+        "使用 https://maas-api.unisound.com/v1 作为 OpenAI 兼容 base_url，模型 ID 填 u2-flash。",
+        "活动期 2026-09-30 至 2026-10-31 内输入、缓存命中、输出均为 0 元；活动结束后按官方价格表计费，长期使用前复核。"
+      ],
+      "endpoint": "https://maas-api.unisound.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${UNISOUND_API_KEY}",
+      "examples": {
+        "curl": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://maas.unisound.com/docs/api/text/openai-compatible"
     },
-    "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
-    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+    "kicker": "FREE UNTIL OCT 31",
+    "badges": [
+      "限时免费",
+      "不限 Token",
+      "OPENAI 兼容"
+    ],
+    "freeSummary": "云知声官方价格页：U2 Flash 活动时间 2026-09-30 至 2026-10-31，输入、缓存命中、输出价格均为 0 元/百万 Tokens；官网横幅写明“限时免费无限量调用”。",
+    "validitySummary": "限时免费至 2026-10-31",
+    "accessSummary": "云知声 MaaS 账号 + API Key",
+    "checkedSummary": "2026-10-08 / official Unisound MaaS pricing + API docs",
+    "title": "云知声 U2 Flash · 国庆免费月 API",
+    "why": "云知声 MaaS 官方价格页在 U2 Flash 下标注“限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”，官网顶部横幅写明“限时免费无限量调用”。U2 Flash 面向 Agent 与 Coding 场景，官方文档给出 OpenAI 兼容 base_url https://maas-api.unisound.com/v1 与模型 ID u2-flash。官方未公布活动期内的具体速率限制，FreeLLM 不作推测。",
+    "mechanism": "Limited-time ¥0 pricing for U2 Flash input, cached input and output on the official Unisound MaaS API",
+    "validity": "Free from 2026-09-30 through 2026-10-31 per the official pricing page; standard pricing applies afterwards",
+    "access": "Register on Unisound MaaS, create an API key, call model u2-flash",
+    "command": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://maas.unisound.com/",
+    "registerLabel": "打开云知声 MaaS",
+    "links": [
+      [
+        "官方价格页",
+        "https://maas.unisound.com/docs/price/overview"
+      ],
+      [
+        "U2 Flash 模型页",
+        "https://maas.unisound.com/models/u2-flash"
+      ],
+      [
+        "OpenAI 兼容接口",
+        "https://maas.unisound.com/docs/api/text/openai-compatible"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆云知声 MaaS 平台；账号与网络可用性以官方为准",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-09-30",
+      "endDate": "2026-10-31",
+      "unit": "promotion"
+    },
+    "expires_at": "2026-10-31",
+    "quota": "Input, cached input and output priced at ¥0 during the promotion; official banner says unlimited calls; rate limits not published for the promotion",
+    "renewal": "One-off promotion; standard U2 Flash pricing after 2026-10-31",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Unisound MaaS user agreement",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "unknown",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://maas.unisound.com/docs/price/overview",
+      "https://maas.unisound.com/models/u2-flash",
+      "https://maas.unisound.com/docs/api/text/openai-compatible"
+    ],
+    "evidence": "2026-10-08 读取云知声 MaaS 官方价格页：U2 Flash “限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”；官网横幅“U2 Flash 全新上线！限时免费无限量调用（2026.09.30-2026.10.31）”；官方平台介绍给出 base_url https://maas-api.unisound.com/v1 与 model=u2-flash 示例。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "限时活动，10 月 31 日后按官方价格表计费；未实测调用，未验证速率限制。U2 Decision 在价格页也标为限时免费，但未标注结束日期，本条不纳入。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-08",
+      "actualUsageVerified": false,
+      "task": "核验 U2 Flash 限时免费期、价格与 OpenAI 兼容接入参数。",
+      "method": [
+        "读取云知声 MaaS 官方价格页，确认 U2 Flash 活动期 2026-09-30 至 2026-10-31 输入/缓存命中/输出均为 0 元。",
+        "读取官方平台介绍与 OpenAI 兼容 Chat 文档，确认 base_url https://maas-api.unisound.com/v1 与 model=u2-flash。",
+        "当前没有云知声 API Key，未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：免费期、价格与接口参数均有官方页面支持。",
+      "limitations": "未实测调用，未验证注册门槛、速率限制、“无限量”在实际账号中的表现与输出质量。",
+      "evidence": [
+        {
+          "label": "云知声 MaaS 价格页",
+          "url": "https://maas.unisound.com/docs/price/overview"
+        },
+        {
+          "label": "OpenAI 兼容接口",
+          "url": "https://maas.unisound.com/docs/api/text/openai-compatible"
+        }
+      ]
+    }
+  },
+  {
+    "id": "intern-inkstone-token-plan-free",
+    "order": 73,
+    "date": "2026-10-08",
+    "name": "Intern InkStone Token Plan monthly free quota",
+    "providerMark": "书",
+    "provider": "Intern InkStone",
+    "providerMeta": "上海人工智能实验室 · 书生·端砚 · China",
+    "model": "书生 Intern-S2 / Atria-Dawn-Preview / Agents-A1 + 第三方模型（按墨点计费）",
+    "modelMeta": "Research model API · OpenAI & Anthropic compatible",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "登录书生·端砚，进入“科研模型（Token Plan）”查看测试期免费墨点并创建 API Key",
+      "prerequisites": [
+        "书生·端砚账号",
+        "Token Plan 页 API Key"
+      ],
+      "steps": [
+        "打开 https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0 并登录，查看墨点余额与使用限额。",
+        "在 API Key 页创建密钥；OpenAI 协议 base_url 为 https://discovery-api.intern-ai.org.cn/v1，Anthropic 协议为 https://discovery-api.intern-ai.org.cn。",
+        "先调用 /v1/models 查看当前账号可用模型 ID，再按模型列表与计费页选择模型；不同模型按不同单价扣墨点。"
+      ],
+      "endpoint": "https://discovery-api.intern-ai.org.cn/v1/models",
+      "method": "GET",
+      "authentication": "Authorization: Bearer ${INTERN_API_KEY}",
+      "examples": {
+        "curl": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\""
+      },
+      "docsUrl": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+    },
+    "kicker": "MONTHLY FREE TOKENS (BETA)",
+    "badges": [
+      "测试期每月免费",
+      "OPENAI / ANTHROPIC 兼容",
+      "科研模型"
+    ],
+    "freeSummary": "上海 AI 实验室官方公告：书生·端砚“墨点计划”（Token Plan）测试期间，每位用户每月可获免费 Token，用于调用多元模型与科研服务。",
+    "validitySummary": "测试期按月发放 · 结束时间未公布",
+    "accessSummary": "书生·端砚账号 + Token Plan API Key",
+    "checkedSummary": "2026-10-08 / 上海 AI 实验室官方公告 + Token Plan 控制台页",
+    "title": "书生·端砚 墨点计划 · 测试期每月免费 Token",
+    "why": "上海人工智能实验室 2026-09-13 官方新闻写明：书生·端砚推出科研模型“墨点计划”（Token Plan），测试期间每位用户每月可获免费 Token。官方 Token Plan 控制台页给出 OpenAI 协议 base_url https://discovery-api.intern-ai.org.cn/v1 与 Anthropic 协议地址，并注明 1 墨点最多可抵扣 5,000 万 tokens（以 DeepSeek-V4-Flash 为例）。社区普遍反馈注册后每月约 10 墨点，但官方公开页面未写明具体数量，FreeLLM 不把它写成承诺额度。",
+    "mechanism": "Beta-period monthly free 墨点 (credits) on the Intern InkStone Token Plan; different models deduct credits at different rates",
+    "validity": "Monthly free allocation during the beta test period; no public end date",
+    "access": "Sign in to Intern InkStone, open 科研模型 / Token Plan, create an API key",
+    "command": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\"",
+    "register": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0",
+    "registerLabel": "打开书生·端砚 Token Plan",
+    "links": [
+      [
+        "官方公告",
+        "https://www.shlab.org.cn/news/5444294"
+      ],
+      [
+        "Token Plan 控制台",
+        "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆书生·端砚平台；账号与测试期规则以控制台为准",
+    "freeMechanism": "monthly_quota",
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "beta_monthly_credits",
+      "amount": null,
+      "unit": "墨点",
+      "period": "month"
+    },
+    "quota": "Monthly free 墨点 during beta (exact amount shown in the account; 1 墨点 deducts up to 50M tokens for DeepSeek-V4-Flash per the console); shared RPM/TPM limits across API keys",
+    "renewal": "Monthly allocation during the beta test period",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Intern InkStone terms; positioned for research use",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444294",
+      "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+    ],
+    "evidence": "上海人工智能实验室官方新闻（2026-09-13）：“书生·端砚现已推出本地客户端及科研模型‘墨点计划’（Token Plan）。测试期间，每位用户每月可获免费Token”。官方 Token Plan 页显示 OpenAI 协议 https://discovery-api.intern-ai.org.cn/v1、Anthropic 协议 https://discovery-api.intern-ai.org.cn，以及“1 墨点最多可抵扣 5000,0000 tokens，以 DeepSeek-V4-Flash 为例”。",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "具体每月墨点数量（社区称 10 墨点）、哪些自有模型限时不扣墨点，均来自社区与登录后页面，官方公开公告未写明，FreeLLM 未登录核验。测试期结束时间未公布。与 atria-dawn-preview 条目（api.atria-asi.ai）是不同入口。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-08",
+      "actualUsageVerified": false,
+      "task": "核验书生·端砚墨点计划测试期免费 Token 与 API 接入地址。",
+      "method": [
+        "读取上海人工智能实验室 2026-09-13 官方新闻，确认测试期间每位用户每月可获免费 Token。",
+        "读取 Token Plan 控制台公开页，确认 OpenAI / Anthropic 协议 base_url 与“1 墨点最多可抵扣 5000 万 tokens（以 DeepSeek-V4-Flash 为例）”。",
+        "未登录账号，未核验每月实际墨点数量，也未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：测试期按月免费与接口地址有官方来源。",
+      "limitations": "每月具体墨点数、自有模型是否限时不扣墨点、RPM/TPM 数值与测试期结束时间均未经 FreeLLM 登录核验。",
+      "evidence": [
+        {
+          "label": "上海 AI 实验室官方新闻",
+          "url": "https://www.shlab.org.cn/news/5444294"
+        },
+        {
+          "label": "Token Plan 控制台",
+          "url": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+        }
+      ]
+    }
   }
 ]

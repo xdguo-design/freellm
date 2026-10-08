@@ -70,5 +70,10 @@
   "alibaba-open-code-review": {"description_zh": "用 ocr CLI 审查 Git 改动，输出行级问题并可按要求应用修复；需先安装 CLI 并配置受支持的模型服务。"},
   "ayghri-i-have-adhd": {"description_zh": "让回答优先给出下一步、将多步任务编号并减少跑题；原仓库通过 /i-have-adhd 显式启用。"},
   "cloudflare-security-audit": {"description_zh": "按范围侦察、漏洞排查、独立验证和报告等阶段审查代码安全；完整审计需要支持多 Agent 的运行环境、Node.js 和系统级沙箱。"},
-  "leonxlnx-design-taste-frontend": {"description_zh": "面向落地页、作品集和界面重设计，帮助 Agent 选择视觉方向、布局、字体、留白与动效；仓库默认 v2 仍标为 experimental。"}
+  "leonxlnx-design-taste-frontend": {"description_zh": "面向落地页、作品集和界面重设计，帮助 Agent 选择视觉方向、布局、字体、留白与动效；仓库默认 v2 仍标为 experimental。"},
+  "anthropics-claude-api": {"description_zh": "用于编写或调试调用 Claude API / Anthropic SDK 的代码：模型 ID、价格、参数、流式输出、工具调用、MCP、提示缓存与模型迁移；要求先查官方资料而不是凭记忆回答。"},
+  "obra-dispatching-parallel-agents": {"description_zh": "当有 2 个以上互不依赖的任务时，把它们拆给并行子 Agent 处理，并规定任务边界、上下文交接与结果汇总方式。"},
+  "obra-using-git-worktrees": {"description_zh": "开始需要隔离的功能开发或执行实现计划前，先用原生工具或 git worktree 建立独立工作区，避免污染当前分支。"},
+  "obra-finishing-a-development-branch": {"description_zh": "实现完成且测试通过后，引导选择合并、开 PR 或保留分支等收尾方式，并在清理前再次验证。"},
+  "vercel-labs-react-view-transitions": {"description_zh": "用 React View Transition API（<ViewTransition>、addTransitionType 与 CSS 伪元素）实现页面切换、共享元素、列表重排和前进/后退方向动画，含 Next.js 集成。"}
 }
