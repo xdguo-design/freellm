@@ -4428,12 +4428,25 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     ) + '</div>'
     date_picker = f'<a class="ref-update-date" href="#log-day-{_esc(dates[0]) if dates else ""}">▣　{_esc(dates[0] if dates else "暂无日志")}　⌄</a>'
 
-    feature_events = current_events[:3]
-    if not feature_events:
-        feature_cards = '<article><b>FreeLLM</b><strong>今日暂无目录变更</strong><p>扫描结果会在这里显示，可查看历史记录与来源状态。</p><small>当前日志日期：' + _esc(dates[0] if dates else "—") + '</small></article>'
+    # The complete event log keeps third-party entries for transparency,
+    # but the prominent highlights must not imply that a reseller is a
+    # manufacturer's official new release.
+    def eligible_highlight(event: dict) -> bool:
+        details = event.get("details") or {}
+        provider_id = str(details.get("providerId") or event.get("providerId") or "").lower()
+        source_kind = str(details.get("sourceKind") or event.get("sourceKind") or "").lower()
+        return provider_id != "llm7-io" and source_kind != "third_party_aggregator"
+
+    feature_entries = [
+        (latest, key, event)
+        for key in event_kinds for event in latest_groups[key]
+        if eligible_highlight(event)
+    ][:3]
+    if not feature_entries:
+        feature_cards = '<article><b>FreeLLM</b><strong>今日暂无可推荐的官方目录变更</strong><p>第三方聚合记录仍保留在完整日志中。</p><small>当前日志日期：' + _esc(dates[0] if dates else "—") + '</small></article>'
     else:
         cards = []
-        for log, key, event in [(latest, key, event) for key in event_kinds for event in latest_groups[key]][:3]:
+        for log, key, event in feature_entries:
             cards.append(f'<article><div class="ref-update-company"><b>{_esc(provider_name(event))}</b><span>{event_labels[key][0]}</span></div><strong>{_esc(display_title(event))}</strong><p>{_esc(str(event.get("reason") or "官方来源记录到目录变化。"))}</p><div class="ref-update-feature-tags"><span>{_esc(str(event.get("kind") or "目录"))}</span><span>{_esc(str(event.get("eventType") or key))}</span></div><small>{_esc(str(log.get("date") or ""))}　{_esc(str((event.get("details") or {}).get("sourceKind") or "来源记录"))}</small></article>')
         feature_cards = "".join(cards)
     bars = []
