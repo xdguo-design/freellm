@@ -5,10 +5,11 @@
     : Promise.resolve();
   const set = (node, text) => { if (node) node.textContent = String(text); };
   const onToday = date => {
-    const today = new Intl.DateTimeFormat('en-CA', {
+    const values = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
       timeZone:'Asia/Shanghai', year:'numeric', month:'2-digit', day:'2-digit'
-    }).format(new Date());
-    return date === today;
+    }).formatToParts(new Date()).filter(part => ['year','month','day'].includes(part.type))
+      .map(part => [part.type, part.value]));
+    return date === [values.year,values.month,values.day].join('-');
   };
   const metric = (container, name, value, selector = 'strong') => {
     if (!container) return;
