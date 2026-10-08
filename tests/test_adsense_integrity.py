@@ -31,8 +31,9 @@ class AdsenseIntegrityTests(unittest.TestCase):
 
     def test_facet_fallback_counts_are_not_placeholders(self):
         html = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
-        for category in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
+        for category in ("free_quota", "model", "credits", "ide", "student", "web", "download_lowcost"):
             self.assertRegex(html, rf'data-category-count="{category}">[0-9]+</b>')
+        self.assertNotRegex(html, r'data-category-count="[^"]+">—</b>')
 
     def test_skill_evidence_is_deployable_and_nonindexable(self):
         ignore_text = (ROOT / ".vercelignore").read_text(encoding="utf-8")
