@@ -400,3 +400,10 @@ body.fl-ui-v2[data-fl-section="models"] #model-directory .catalog-table-wrap {
   min-width: 0 !important;
   overflow-x: auto !important;
 }
+
+/* P1-5: dark-mode UI is unavailable until all Aurora surfaces are audited.
+   Use the shared menu ID to outrank historical reference-rail !important rules. */
+#fl-shared-site-menu :is(.fl-site-theme-toggle,.prototype-theme-toggle,.ml-rail-theme),
+html body.fl-ui-v2[data-visual-style="aurora"] :is(.fl-site-theme-toggle,.prototype-theme-toggle,.ml-rail-theme,.theme-toggle) {
+  display: none !important;
+}
