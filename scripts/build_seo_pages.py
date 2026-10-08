@@ -2853,12 +2853,9 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
-    # Thin single-record pages remain directly addressable, but directory
-    # listings only promote aggregates that meet the indexability threshold.
-    linkable = (
-        linkable_model_slugs is None
-        or _safe_slug(model_name, "model") in linkable_model_slugs
-    )
+    # Thin single-record pages are directly addressable but are not promoted
+    # by directory links; only explicitly indexable aggregates are linked.
+    linkable = bool(linkable_model_slugs and _safe_slug(model_name, "model") in linkable_model_slugs)
     model_name_markup = (
         f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
         if linkable else
