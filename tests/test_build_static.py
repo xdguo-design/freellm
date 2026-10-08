@@ -225,3 +225,43 @@ class BuildStaticTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HomepageStatsTest(unittest.TestCase):
+    def test_stats_come_from_latest_log_and_offers(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from scripts.build_static import homepage_stats, update_prototype_stats
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "daily-log").mkdir()
+            (root / "daily-log" / "2026-10-07.json").write_text(json.dumps({"date": "2026-10-07", "events": [], "observed": {"models": []}}), encoding="utf-8")
+            (root / "daily-log" / "2026-10-08.json").write_text(json.dumps({
+                "date": "2026-10-08",
+                "events": [{"eventType": "new"}],
+                "curatedEvents": [{"eventType": "new_route"}, {"eventType": "offline"}],
+                "observed": {"models": [{"providerId": "a"}, {"providerId": "a"}, {"providerId": "b"}]},
+            }), encoding="utf-8")
+            offers = [
+                {"status": "verified", "type": ["api", "promo"], "productType": "api", "lastVerifiedAt": "2026-10-01"},
+                {"status": "needs_review", "type": ["ide"], "productType": "free_ide", "lastVerifiedAt": "2026-10-03"},
+            ]
+            stats = homepage_stats(offers, root / "offers.json")
+            self.assertEqual(stats["new"], 2)
+            self.assertEqual(stats["models"], 3)
+            self.assertEqual(stats["providers"], 2)
+            self.assertEqual(stats["verified"], 1)
+            self.assertEqual(stats["promo"], 1)
+            self.assertEqual(stats["dev_tools"], 1)
+            self.assertEqual(stats["last_verified"], "2026-10-03")
+
+            html = ('<article class="prototype-stat is-purple"><span>x</span><div><small>最新模型</small>'
+                    '<strong>8 <i>↑ +60%</i></strong><p>紧跟</p></div></article>'
+                    '<a><strong>AI 模型</strong><small>300+ 优质模型</small></a>')
+            out = update_prototype_stats(html, offers, root / "offers.json")
+            self.assertIn("<strong>3</strong>", out)
+            self.assertNotIn("%", out)
+            self.assertIn("3 条模型记录", out)
+            self.assertNotIn("300+", out)
