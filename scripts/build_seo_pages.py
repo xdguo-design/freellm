@@ -732,10 +732,28 @@ def _static_locale_nav() -> str:
     return '<nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>'
 
 
+# P1-4: Only authored, crawlable English counterparts are advertised.
+ENGLISH_LOCALE_PATHS: dict[str, str] = {
+    "/": "/en/",
+    "/models/": "/en/models/",
+    "/models/all/": "/en/models/all/",
+    "/providers/": "/en/providers/",
+    "/skills/": "/en/skills/",
+    "/tools/": "/en/tools/",
+    "/workflow/": "/en/workflow/",
+    "/logs/": "/en/logs/",
+    "/about/": "/en/about/",
+}
+
+
 def _hreflang_links(site_url: str, path: str) -> str:
-    """Expose only non-locale alternates until languages have distinct crawlable URLs."""
     feed = _absolute(site_url, "/" + FEED_PATH)
-    return f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">'
+    links = [f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">']
+    english = ENGLISH_LOCALE_PATHS.get(path)
+    if english:
+        for lang, alternate in (("zh-CN", path), ("en", english), ("x-default", path)):
+            links.append(f'<link rel="alternate" hreflang="{lang}" href="{_esc(_absolute(site_url, alternate))}">')
+    return "\n  ".join(links)
 
 
 def _inject_hreflang_links(page: str, site_url: str, path: str) -> str:
@@ -5188,7 +5206,7 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
     )
 
 
-SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models")
+SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models", "english")
 
 
 def sitemap_section_paths(
@@ -5269,6 +5287,7 @@ def render_sitemaps(
     providers: list[dict] | None = None,
 ) -> dict[Path, str]:
     sections = sitemap_section_paths(offers, categories, models, providers)
+    sections["english"] = list(ENGLISH_LOCALE_PATHS.values())
     files = {
         Path(f"sitemap-{section}.xml"): render_url_sitemap(paths, site_url)
         for section, paths in sections.items()
@@ -6297,6 +6316,16 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: _ensure_models_discovery_style(content, relative)
         for relative, content in files.items()
     }
+    # Preserve authored English pages across static builds; do not rewrite them
+    # with the Chinese-only shared shell.
+    english_root = Path(__file__).resolve().parents[1]
+    for english_url in ENGLISH_LOCALE_PATHS.values():
+        relative = Path(english_url.lstrip("/")) / "index.html"
+        source = english_root / relative
+        if not source.is_file():
+            raise FileNotFoundError(f"Missing English locale page: {source}")
+        files[relative] = source.read_text(encoding="utf-8")
+
     output_root = Path(output_root)
     if check:
         try:
@@ -6307,7 +6336,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         expected_managed = {
             path.as_posix()
             for path in files
-            if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow"}
+            if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "en"}
         }
         stale_manifest = sorted({
             relative
@@ -6337,7 +6366,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         print(f"current SEO output: {len(files)} files")
         return True
 
-    managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow"}}
+    managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "en"}}
     # Write the new pages before deleting retired ones: a crash or an external
     # delete guard must never leave the output tree emptied.
     for relative, content in files.items():
