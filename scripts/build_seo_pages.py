@@ -2835,8 +2835,9 @@ def _model_catalog_row(
     context_text = _format_context_window(model.get("context"))
     cn = (cn_statuses or {}).get(model_id) or (cn_statuses or {}).get(provider_id) or {"code": "unknown", "zh": _CN_STATUS_LABELS["unknown"][0], "en": _CN_STATUS_LABELS["unknown"][1]}
     latency_cell, latency_ms = _latency_cell(model, latencies or {}, latency_meta or {})
-    # Every model receives a human-readable detail page, including thin (noindex) pages.
-    linkable = True
+    # The thin model detail URL still exists for direct navigation, but only
+    # indexable multi-provider aggregates belong in the public directory links.
+    linkable = bool(linkable_model_slugs and _safe_slug(model_name, "model") in linkable_model_slugs)
     model_name_markup = (
         f'<a class="model-name" href="{_esc(model_aggregate_url(model))}" title="{_esc(model_name)}"><strong>{_esc(model_name)}</strong></a>'
         if linkable else
