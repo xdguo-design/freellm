@@ -1766,14 +1766,15 @@
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
-    "accessStatus": "needs_review",
+    "accessStatus": "stale",
     "replacement": null,
     "sourceUrls": [
-      "https://build.nvidia.com/meta/codellama-70b"
+      "https://build.nvidia.com/meta/codellama-70b",
+      "https://build.nvidia.com/models"
     ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "verified",
+    "notes": "2026-10-08：官方模型页标注 Deprecated（This NIM Endpoint has been deprecated），NVIDIA 免费开发者账号调用返回 404；按“非免费可调用 / 已弃用”处理，可改用 Free Endpoint 中的 moonshotai/kimi-k3 或 poolside/laguna-xs-2.1 等编程模型。"
   },
   {
     "modelId": "nvidia-nim/codestral-22b-instruct-v0-1",
@@ -1834,14 +1835,15 @@
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
-    "accessStatus": "needs_review",
+    "accessStatus": "stale",
     "replacement": null,
     "sourceUrls": [
-      "https://build.nvidia.com/deepseek-ai/deepseek-coder-6.7b-instruct"
+      "https://build.nvidia.com/deepseek-ai/deepseek-coder-6.7b-instruct",
+      "https://build.nvidia.com/models"
     ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "2026-10-08：/v1/models 仍列出该 ID，但 NVIDIA 免费开发者账号实测调用返回 404，且未出现在 Free Endpoint 筛选首页；按“非免费可调用”处理，待复核后再决定是否退役。"
   },
   {
     "modelId": "nvidia-nim/deepseek-v4-flash-0731",
@@ -2157,14 +2159,15 @@
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
-    "accessStatus": "needs_review",
+    "accessStatus": "stale",
     "replacement": null,
     "sourceUrls": [
-      "https://build.nvidia.com/moonshotai/kimi-k2.6"
+      "https://build.nvidia.com/moonshotai/kimi-k2.6",
+      "https://build.nvidia.com/models"
     ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "2026-10-08：/v1/models 仍列出该 ID，但 NVIDIA 免费开发者账号实测调用返回 404，且未出现在 Free Endpoint 筛选首页；按“非免费可调用”处理，待复核后再决定是否退役。"
   },
   {
     "modelId": "nvidia-nim/kimi-k3",
