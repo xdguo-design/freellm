@@ -343,11 +343,22 @@ def render_static_catalog(data: list[dict], limit: int = 11) -> str:
         validity = html_lib.escape(str(offer.get("validitySummary") or offer.get("validity") or "See official terms"))
         access = html_lib.escape(str(offer.get("accessSummary") or offer.get("access") or "See official terms"))
         checked = html_lib.escape(str(offer.get("lastVerifiedAt") or "Unknown"))
+        last_checked = str(offer.get("lastVerifiedAt") or "")
+        try:
+            needs_review = (date.today() - date.fromisoformat(last_checked)).days > 14
+        except ValueError:
+            needs_review = True
+        review_badge = (
+            '<span class="offer-lifecycle offer-needs-review" '
+            'style="display:inline-block;background:#fef3c7;color:#92400e;'
+            'border-radius:999px;padding:3px 9px;font-weight:700">待复核</span>'
+            if needs_review else ''
+        )
         cards.append(
             f'<article class="offer static-offer" data-detail="{html_lib.escape(str(offer["id"]))}">'
             f'<div class="offer-card-top"><div class="provider-name"><strong>{title}</strong>'
             f'<small>{provider}</small></div><a class="row-arrow" href="{href}" aria-label="查看 {title} 详情">→</a></div>'
-            f'{render_offer_flags(offer)}'
+            f'{render_offer_flags(offer)}{review_badge}'
             f'<div class="offer-card-body"><div class="offer-card-metrics">'
             f'<div class="offer-card-metric"><label>免费方式</label><p>{summary}</p></div>'
             f'<div class="offer-card-metric"><label>有效期</label><p>{validity}</p></div>'
