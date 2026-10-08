@@ -84,7 +84,7 @@
       ['skills', '/skills/', '✦', 'Skills'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
-      ['logs', '/logs/', '◷', english ? 'Updates' : '更新'],
+      ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
     var active = currentPage();
