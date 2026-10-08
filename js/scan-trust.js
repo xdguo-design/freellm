@@ -87,8 +87,12 @@
       if (!response.ok) throw new Error('scan source unavailable');
       render(await response.json());
     } catch (error) {
-      document.querySelectorAll('.prototype-stats .prototype-stat strong:not(.prototype-top10), [data-scan-stat]').forEach(n => set(n,'—'));
+      // Fail closed: never leave server-rendered snapshot numbers presented as live scan data.
+      document.querySelectorAll('.prototype-stats .prototype-stat strong:not(.prototype-top10), [data-scan-stat], .ref-update-metrics > article strong, .ref-update-snapshot .log-snapshot-card strong').forEach(n => set(n,'—'));
+      set(document.getElementById('heroCount'),'—');
       set(document.getElementById('daily-log-badge'),'最近扫描：暂无记录');
+      set(document.querySelector('.hero-intel-head > span'),'最近扫描：暂无记录');
+      document.querySelectorAll('[data-scan-date]').forEach(n => set(n,'最近扫描：暂无记录'));
       document.querySelectorAll('.mini-chart').forEach(n=>n.remove());
     }
   });
