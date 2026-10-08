@@ -1190,6 +1190,7 @@ class BrowserPageTests(unittest.TestCase):
             data = Path(directory) / "data"
             data.mkdir()
             (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "offers.json").write_text(OFFERS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
@@ -1198,15 +1199,10 @@ class BrowserPageTests(unittest.TestCase):
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
             self.assertEqual(self.visible_offers(page), len(active_offers()))
-            # Ranked JSON and optional public signals are deliberately absent.
-            # Depending on bundle load ordering, the plain offers.json retry
-            # can be skipped; either path must render the bundled data safely.
-            missing = sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses)
-            self.assertIn("community-signals.json", missing)
-            self.assertIn("offers-ranked.json", missing)
-            self.assertTrue(
-                set(missing) <= {"community-signals.json", "offers-ranked.json", "offers.json"},
-                f"Unexpected network failures: {missing}",
+            # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
+            self.assertEqual(
+                sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
+                ["community-signals.json", "offers-ranked.json"],
             )
             self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
 
