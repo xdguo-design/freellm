@@ -5429,8 +5429,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         active_provider_id_count = len({str(item.get("providerId") or "").strip() for item in model_catalog if item.get("providerId")})
         replacement = (
             '<div class="about-stat-grid">'
-            f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong>{len(offers)}</strong><span><span lang="zh-CN">已验证的免费资源</span><span lang="en">verified offers</span></span></div></article>'
-            f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong>{len(model_catalog)}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-blue" aria-hidden="true">⬡</span><div><strong data-scan-stat="offers">{scan_summary["offers"] if scan_summary["date"] else "—"}</strong><span><span lang="zh-CN">已收录资源</span><span lang="en">catalogued offers</span></span></div></article>'
+            f'<article class="about-stat-card"><span class="about-icon icon-violet" aria-hidden="true">✦</span><div><strong data-scan-stat="models">{scan_summary["models"] if scan_summary["date"] else "—"}</strong><span><span lang="zh-CN">模型记录</span><span lang="en">model records</span></span></div></article>'
             f'<article class="about-stat-card"><span class="about-icon icon-green" aria-hidden="true">▥</span><div><strong>{len(providers)}</strong><span><span lang="zh-CN">模型 / 服务商</span><span lang="en">vendors</span></span></div></article>'
             f'<article class="about-stat-card"><span class="about-icon icon-amber" aria-hidden="true">‹/›</span><div><strong>{active_provider_id_count}</strong><span><span lang="zh-CN">活跃 Provider ID</span><span lang="en">active providers</span></span></div></article>'
             '</div>'
@@ -5442,10 +5442,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             count=1,
             flags=re.S,
         )
-        latest_data_date = max(
-            (str(log.get("date") or "") for log in (daily_logs or []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(log.get("date") or ""))),
-            default="",
-        )
+        latest_data_date = scan_summary["date"]
         date_copy = (
             f'<span lang="zh-CN">数据快照截至 {latest_data_date}</span><span lang="en">Data snapshot as of {latest_data_date}</span>'
             if latest_data_date
