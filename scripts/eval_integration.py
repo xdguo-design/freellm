@@ -85,15 +85,16 @@ def card_block(model_name: str, provider_label: str, locale_pair) -> str | None:
         return None
     run_date = str(load_results().get("runAt", ""))[:10]
     href = f"{REPORT_URL}#{anchor(m)}"
-    if exact and m.get("successRate", 100) < 80:
+    score, rate, prov = m["score"], m.get("successRate", 100), m["provider"]
+    if exact and rate < 80:
         return (
-            f'<div class="featured-model-speed is-reference"><strong>{locale_pair(f"实测：频繁限流，成功率 {m["successRate"]}%", f"Rate-limited: {m["successRate"]}% success")}</strong>'
+            f'<div class="featured-model-speed is-reference"><strong>{locale_pair(f"实测：频繁限流，成功率 {rate}%", f"Rate-limited: {rate}% success")}</strong>'
             f'<small>{locale_pair("FreeLLM 实测", "FreeLLM test")} · {_e(run_date)} · <a href="{_e(href)}">{locale_pair("看报告", "Report")} →</a></small></div>'
         )
     if exact:
         ttft = m.get("p50TtftMs")
         tps = m.get("medianTokensPerSec")
-        parts = [f'<strong>{locale_pair(f"实测 {m["score"]} 分", f"Score {m["score"]}")}</strong>']
+        parts = [f'<strong>{locale_pair(f"实测 {score} 分", f"Score {score}")}</strong>']
         if ttft:
             parts.append(f'<strong>{locale_pair(f"首 token {ttft:.0f} ms", f"TTFT {ttft:.0f} ms")}</strong>')
         if tps:
@@ -103,7 +104,7 @@ def card_block(model_name: str, provider_label: str, locale_pair) -> str | None:
             f'<small>{locale_pair("FreeLLM 实测", "FreeLLM test")} · {_e(run_date)} · <a href="{_e(href)}">{locale_pair("看报告", "Report")} →</a></small></div>'
         )
     return (
-        f'<div class="featured-model-speed is-reference"><strong>{locale_pair(f"同款模型经 {m["provider"]} 实测 {m["score"]} 分", f"Same model on {m["provider"]}: {m["score"]}")}</strong>'
+        f'<div class="featured-model-speed is-reference"><strong>{locale_pair(f"同款模型经 {prov} 实测 {score} 分", f"Same model on {prov}: {score}")}</strong>'
         f'<small>{locale_pair("本渠道速度未实测", "This route untested")} · <a href="{_e(href)}">{locale_pair("看报告", "Report")} →</a></small></div>'
     )
 
