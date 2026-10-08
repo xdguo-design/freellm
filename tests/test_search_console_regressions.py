@@ -22,6 +22,7 @@ NON_PUBLIC_PREFIXES = (
     "design/verification/",
     "design/visual-directions/",
     "skills/test-artifacts/",
+    ".tmp-chrome-profile/",
     "seo/",
 )
 NON_PUBLIC_FILES = {"design/about.html", "design/updates.html"}

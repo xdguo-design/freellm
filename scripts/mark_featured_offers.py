@@ -260,7 +260,9 @@ def main() -> int:
     rendered = render(offers)
 
     if args.check:
-        if rendered.encode("utf-8") != raw:
+        # Check the generated data, not its incidental whitespace/newlines.
+        # Existing hand-maintained JSON uses CRLF and a different indent.
+        if offers != json.loads(raw.decode("utf-8")):
             print(f"stale: {data_path} does not match the featured-offer rule")
             return 1
         print(f"current: {data_path}")

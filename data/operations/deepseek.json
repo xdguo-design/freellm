@@ -1,0 +1,75 @@
+{
+  "providerId": "deepseek",
+  "provider": "DeepSeek API",
+  "officialDocsReviewedAt": "2026-10-07",
+  "offerIds": [
+    "deepseek"
+  ],
+  "tutorialRequirements": {
+    "network": "调用地址为 api.deepseek.com；大陆网络连通性未由本指南实测，请在自己的网络环境先验证。",
+    "account": "DeepSeek Platform 账号和 API Key。",
+    "phone": "官方 API 快速开始页未说明统一手机号要求；以账号注册页面提示为准。",
+    "identity": "官方 API 快速开始页未说明统一实名认证要求；以账号页面提示为准。",
+    "creditCard": "官方 API 按量计费，不是免费额度；调用前先确认账户余额和价格。付款方式要求未确认。"
+  },
+  "paths": [
+    {
+      "id": "official-api-first-call",
+      "label": "DeepSeek 官方 API 第一次调用（按量计费）",
+      "productType": "api",
+      "prerequisites": [
+        "DeepSeek Platform 账号",
+        "已创建 API Key 并保存到 DEEPSEEK_API_KEY 环境变量",
+        "已查看官方价格并确认账户余额；此入口不是免费额度"
+      ],
+      "steps": [
+        {
+          "title": "创建 API Key 并查看价格",
+          "detail": "在 DeepSeek Platform 创建密钥。官方 API 按量计费；先查看当前模型价格与账户余额，再发请求。",
+          "action": "打开 https://platform.deepseek.com/"
+        },
+        {
+          "title": "安装 OpenAI Python SDK",
+          "detail": "官方 API 兼容 OpenAI Chat Completions 格式。建议使用 Python 3.9+ 虚拟环境。",
+          "command": "python -m pip install -U openai"
+        },
+        {
+          "title": "发送第一条请求",
+          "detail": "使用官方当前模型 ID deepseek-flash。该模型名替代已退役的旧 Flash 名称。",
+          "command": "curl https://api.deepseek.com/chat/completions -H 'Content-Type: application/json' -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" -d '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"用一句话解释 API 是什么。\"}],\"stream\":false}'",
+          "expected": "返回 choices[0].message.content；同时检查控制台余额和用量记录。"
+        },
+        {
+          "title": "Python SDK 示例",
+          "detail": "密钥从环境变量读取；不在代码中粘贴真实密钥。",
+          "command": "import os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    api_key=os.environ[\"DEEPSEEK_API_KEY\"],\n    base_url=\"https://api.deepseek.com\",\n)\nresponse = client.chat.completions.create(\n    model=\"deepseek-flash\",\n    messages=[{\"role\": \"user\", \"content\": \"用一句话解释 API 是什么。\"}],\n)\nprint(response.choices[0].message.content)",
+          "expected": "终端打印模型回复。"
+        },
+        {
+          "title": "Node.js SDK 示例",
+          "detail": "安装 OpenAI 官方 Node.js SDK；Node.js 20 LTS 或更新版本。",
+          "command": "npm install openai\n\nimport OpenAI from \"openai\";\n\nconst client = new OpenAI({\n  apiKey: process.env.DEEPSEEK_API_KEY,\n  baseURL: \"https://api.deepseek.com\",\n});\nconst response = await client.chat.completions.create({\n  model: \"deepseek-flash\",\n  messages: [{ role: \"user\", content: \"用一句话解释 API 是什么。\" }],\n});\nconsole.log(response.choices[0].message.content);",
+          "expected": "Node.js 打印模型回复；控制台可查看本次调用用量。"
+        }
+      ],
+      "endpoint": "https://api.deepseek.com",
+      "auth": "Authorization: Bearer API key",
+      "example": "curl https://api.deepseek.com/chat/completions -H \"Authorization: Bearer $DEEPSEEK_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "validation": "响应包含 choices 数组中的模型文本，并在控制台确认账户余额和用量变化。",
+      "limits": "按量计费；价格、并发和限流规则按官方价格与 Rate Limit 页面为准。",
+      "commonIssues": [
+        "401：检查 API Key 是否正确，且没有把 API URL 填进 Key 字段。",
+        "402：账户余额不足；停止重试并检查价格和余额。",
+        "404：确认模型 ID 为当前官方模型名，例如 deepseek-flash。",
+        "429：降低请求频率并按官方建议等待后再重试。"
+      ],
+      "sourceUrls": [
+        "https://api-docs.deepseek.com/guides/codex",
+        "https://api-docs.deepseek.com/api/create-chat-completion/",
+        "https://api-docs.deepseek.com/quick_start/error_codes/",
+        "https://api-docs.deepseek.com/quick_start/rate_limit/"
+      ]
+    }
+  ],
+  "environmentVariable": "DEEPSEEK_API_KEY"
+}

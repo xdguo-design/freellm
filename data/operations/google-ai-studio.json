@@ -1,0 +1,73 @@
+{
+  "providerId": "google-ai-studio",
+  "provider": "Google AI Studio / Gemini API",
+  "officialDocsReviewedAt": "2026-10-07",
+  "offerIds": [
+    "google-ai-studio-free"
+  ],
+  "tutorialRequirements": {
+    "network": "仅在 Google AI Studio 官方支持的地区开放；大陆注册与 API 连通状态未实测，先核对官方地区列表。",
+    "account": "Google 账号；在 Google AI Studio 的 API Keys 页面创建或查看 API Key。",
+    "phone": "官方快速开始文档未将手机号列为统一前置条件；以账号注册页面提示为准。",
+    "identity": "官方快速开始文档未将单独实名认证列为统一前置条件；以账号页面提示为准。",
+    "creditCard": "Free Tier 与 Paid Tier 分开；不要绑定付费项目的密钥来验证免费条件。付款要求依账号与地区而定，当前未确认。"
+  },
+  "paths": [
+    {
+      "id": "gemini-api-first-call",
+      "label": "Gemini API 第一次调用",
+      "productType": "api",
+      "prerequisites": [
+        "Google AI Studio 支持地区内可用的 Google 账号",
+        "从 Google AI Studio API Keys 页面获取密钥",
+        "从当前模型列表确认目标 Gemini 模型及其 Free Tier 状态"
+      ],
+      "steps": [
+        {
+          "title": "创建或查看 API Key",
+          "detail": "登录 Google AI Studio，在 API Keys 页面创建或查看项目密钥。将密钥保存到 GEMINI_API_KEY 环境变量，不要写进源码、截图或公开仓库。",
+          "action": "打开 https://aistudio.google.com/app/apikey"
+        },
+        {
+          "title": "确认模型和免费层级",
+          "detail": "先在官方模型与定价页面确认模型是否有 Free Tier，以及账号所在地区能否使用。模型清单和速率限制会变化。",
+          "action": "打开 https://ai.google.dev/gemini-api/docs/pricing"
+        },
+        {
+          "title": "发送 REST 请求",
+          "detail": "将模型名替换为当前官方模型页确认的可用 ID。",
+          "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent -H 'Content-Type: application/json' -H \"x-goog-api-key: $GEMINI_API_KEY\" -d '{\"contents\":[{\"parts\":[{\"text\":\"用一句话解释 API 是什么。\"}]}]}'",
+          "expected": "返回 candidates[0].content.parts 中的文本；到 Google AI Studio Usage 页面检查请求与用量。"
+        },
+        {
+          "title": "Python SDK 示例",
+          "detail": "Python 3.9+；SDK 从 GEMINI_API_KEY 环境变量读取密钥。",
+          "command": "python -m pip install -U google-genai\n\nfrom google import genai\n\nclient = genai.Client()\nresponse = client.models.generate_content(\n    model=\"gemini-3.8-flash\",\n    contents=\"用一句话解释 API 是什么。\",\n)\nprint(response.text)",
+          "expected": "终端打印模型生成的文本；若模型不可用，先从当前官方模型清单复制模型 ID。"
+        },
+        {
+          "title": "Node.js SDK 示例",
+          "detail": "安装官方 Google Gen AI SDK；确保启动终端的环境中已设置 GEMINI_API_KEY。",
+          "command": "npm install @google/genai\n\nimport { GoogleGenAI } from \"@google/genai\";\n\nconst ai = new GoogleGenAI({});\nconst response = await ai.models.generateContent({\n  model: \"gemini-3.8-flash\",\n  contents: \"用一句话解释 API 是什么。\",\n});\nconsole.log(response.text);",
+          "expected": "Node.js 打印模型生成的文本。"
+        }
+      ],
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta",
+      "auth": "x-goog-api-key: API Key",
+      "example": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent -H 'Content-Type: application/json' -H \"x-goog-api-key: $GEMINI_API_KEY\" -d '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
+      "validation": "响应包含 candidates 文本；在 AI Studio Usage 页面确认请求记入预期项目与层级。",
+      "limits": "官方 Free Tier 按模型与账号项目分别设置限额；具体 RPM、token/minute 与每日限制在 AI Studio Usage / 官方定价页核对。",
+      "commonIssues": [
+        "400 或 403：检查 API Key、项目权限、模型 ID 与账号地区支持情况。",
+        "429：查看 AI Studio Usage 中该模型的速率限制与配额重置时间；降低请求频率后再试。",
+        "免费层级不用于敏感数据；Google 官方定价说明 Free Tier 内容可能用于改进产品。"
+      ],
+      "sourceUrls": [
+        "https://ai.google.dev/gemini-api/docs/get-started",
+        "https://ai.google.dev/gemini-api/docs/pricing",
+        "https://ai.google.dev/gemini-api/docs/models"
+      ]
+    }
+  ],
+  "environmentVariable": "GEMINI_API_KEY"
+}

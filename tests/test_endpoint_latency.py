@@ -88,6 +88,13 @@ def test_endpoint_latency_file_is_well_formed_and_provider_complete():
             assert entry["attempts"], "a measured latency keeps its samples"
             assert entry["checkedAt"]
 
+    unmeasured = [entry for entry in payload["providers"] if entry["verdict"] == "not_measured"]
+    for entry in unmeasured:
+        assert entry["ms"] is None
+        assert entry["endpoint"] is None
+        assert entry["attempts"] == []
+        assert entry["checkedAt"] is None
+
 
 def test_model_rows_render_the_measured_latency_and_stay_honest_without_one():
     latencies = {"demo": {"checkedAt": "2026-09-19", "endpoint": "https://api.demo.example/v1/models", "ms": 412}}

@@ -28,6 +28,18 @@
         {
           "title": "小流量验证",
           "detail": "先发最小请求并观察 429 / rate-limit 响应；开发者免费层的限流会动态变化。"
+        },
+        {
+          "title": "Python SDK 示例",
+          "detail": "安装 OpenAI SDK；在运行环境设置 NVIDIA_API_KEY，示例代码通过环境变量读取密钥。",
+          "command": "python -m pip install -U openai\n\nimport os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    api_key=os.environ[\"NVIDIA_API_KEY\"],\n    base_url=\"https://integrate.api.nvidia.com/v1\",\n)\nresponse = client.chat.completions.create(\n    model=\"openai/gpt-oss-20b\",\n    messages=[{\"role\": \"user\", \"content\": \"用一句话解释 API 是什么。\"}],\n    max_tokens=256,\n)\nprint(response.choices[0].message.content)",
+          "expected": "终端打印模型生成的回复；再到提供商控制台确认请求状态和额度扣减。"
+        },
+        {
+          "title": "Node.js SDK 示例",
+          "detail": "安装 OpenAI SDK；在运行环境设置 NVIDIA_API_KEY，示例代码通过环境变量读取密钥。",
+          "command": "npm install openai\n\nimport OpenAI from \"openai\";\n\nconst client = new OpenAI({\n  apiKey: process.env.NVIDIA_API_KEY,\n  baseURL: \"https://integrate.api.nvidia.com/v1\",\n});\nconst response = await client.chat.completions.create({\n  model: \"openai/gpt-oss-20b\",\n  messages: [{ role: \"user\", content: \"用一句话解释 API 是什么。\" }],\n  max_tokens: 256,\n});\nconsole.log(response.choices[0].message.content);",
+          "expected": "Node.js 打印模型生成的回复；再到提供商控制台确认请求状态和额度扣减。"
         }
       ],
       "endpoint": "https://integrate.api.nvidia.com/v1",
@@ -43,7 +55,8 @@
       "sourceUrls": [
         "https://build.nvidia.com/models",
         "https://docs.api.nvidia.com/nim/docs/product",
-        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart"
+        "https://docs.api.nvidia.com/nim/re/docs/api-quickstart",
+        "https://docs.api.nvidia.com/nim/reference/llm-apis"
       ]
     },
     {
@@ -85,5 +98,14 @@
   ],
   "offerIds": [
     "nvidia-nim-free-endpoints"
-  ]
+  ],
+  "officialDocsReviewedAt": "2026-10-07",
+  "tutorialRequirements": {
+    "network": "托管 API 需能访问 integrate.api.nvidia.com；大陆账号与网络支持情况未由本教程实测。",
+    "account": "NVIDIA Developer 账号和 API Key；选择带 Free Endpoint 标签的模型。",
+    "phone": "官方托管 API 文档未说明统一手机号要求；以账号注册页面提示为准。",
+    "identity": "官方托管 API 文档未说明统一实名认证要求；以账号注册页面提示为准。",
+    "creditCard": "只有目录中标注 Free Endpoint 的模型可按当前免费条件试用；绑卡要求未从 API 文档确认。"
+  },
+  "environmentVariable": "NVIDIA_API_KEY"
 }

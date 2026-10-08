@@ -477,6 +477,17 @@ _MODALITY_LABELS = {"text": "文本", "reasoning": "推理", "image": "图像", 
 
 OPENAI_ALTERNATIVES_GUIDE_PATH = "/guides/free-openai-api-alternatives/"
 CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH = "/guides/claude-code-free-alternatives/"
+GETTING_STARTED_GUIDE_PATH = "/guides/getting-started/"
+GETTING_STARTED_PROVIDER_IDS = (
+    "openrouter",
+    "groq",
+    "google-ai-studio",
+    "siliconflow",
+    "aliyun-qwen",
+    "zhipu-glm",
+    "deepseek",
+    "nvidia-nim",
+)
 
 THEME_GUIDE_DEFINITIONS = (
     {
@@ -1097,6 +1108,7 @@ def _render_theme_guide_page_expanded(offers: list[dict], models: list[dict], si
     related_number = "04" if slug == "china-free-ai-api" and decision_markup else ("03" if decision_markup or china_callout else "02")
     related_targets = [
         (models_url(), ("模型目录", "Model directory")),
+        (GETTING_STARTED_GUIDE_PATH, ("从零开始：第一次 API 调用", "Getting started: first API call")),
         (guide_url(), ("免费 LLM / API 接入指南", "Free LLM / API quick-start guide")),
         ("/guides/free-openai-compatible-apis/", ("免费 LLM API 与 OpenAI 兼容接口", "Free LLM APIs")),
         ("/guides/free-ai-coding-tools/", ("免费 AI 编程工具", "Free AI Coding Tools")),
@@ -1517,7 +1529,7 @@ def _operation_guides_markup(guides: list[dict], reference_command: str = "") ->
             sources = "".join(f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(url)} ↗</a></li>' for url in path.get("sourceUrls") or [])
             paths.append(f'''<article class="operation-path"><h3>{_esc(path.get("label") or path.get("id"))}</h3><p class="operation-type">{_esc(path.get("productType") or "operation")}</p>{endpoint_markup}{limits_markup}<h4>{_locale_pair("前置条件", "Prerequisites")}</h4>{prerequisite_markup}<h4>{_locale_pair("操作步骤", "Steps")}</h4><ol class="operation-steps">{"".join(steps)}</ol><div class="operation-validation"><strong>{_locale_pair("验证动作", "Validation")}</strong><p>{_esc(path.get("validation") or "")}</p></div>{issues_markup}<h4>{_locale_pair("官方来源", "Official sources")}</h4><ul class="link-list">{sources}</ul></article>''')
         rendered_guides.append("".join(paths))
-    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
+    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。curl 命令按 macOS / Linux shell 编写，Windows 用户可使用同页的 Python 或 Node.js 示例。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy. The curl examples use a macOS/Linux shell; Windows users can run the Python or Node.js examples on this page.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
 
 
 def render_legacy_offer_redirect(legacy_id: str, target_id: str, site_url: str) -> str:
@@ -2327,6 +2339,7 @@ print(response.choices[0].message.content)'''
         <li><strong>接入代码：</strong>把 Base URL 与模型 ID 填入下面的 OpenAI 兼容示例，并根据官方限制控制速率和用量。</li>
       </ol>
       <p class="meta">完整提供商详情和社区备注请查看原始项目及各 Provider 官方文档。</p>
+      <p><a class="button" href="{_esc(_absolute(site_url, GETTING_STARTED_GUIDE_PATH))}">从零开始：跑通第一次 API 调用 →</a></p>
     </section>
     <section>
       <div class="eyebrow">03 / quick start</div>
@@ -3508,6 +3521,99 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
+def _getting_started_entries(offers: list[dict], operations: list[dict]) -> list[tuple[dict, list[dict]]]:
+    """Return the planned provider quick-starts in a stable, editorial order."""
+    by_id = {str(guide.get("providerId") or ""): guide for guide in operations}
+    offers_by_id = {str(offer.get("id") or ""): offer for offer in offers}
+    entries = []
+    for provider_id in GETTING_STARTED_PROVIDER_IDS:
+        guide = by_id.get(provider_id)
+        if not guide:
+            continue
+        related = [offers_by_id[offer_id] for offer_id in guide.get("offerIds") or [] if offer_id in offers_by_id]
+        entries.append((guide, related))
+    return entries
+
+
+def render_getting_started_index(offers: list[dict], operations: list[dict], site_url: str) -> str:
+    path = GETTING_STARTED_GUIDE_PATH
+    page_url = _absolute(site_url, path)
+    entries = _getting_started_entries(offers, operations)
+    title = "免费 AI API 从零开始：8 家提供商第一次调用教程 · FreeLLM"
+    description = "从注册、获取 API Key 到发送第一条请求。提供商免费条件、地区与账号要求以官方页面和 FreeLLM 资源记录为准。"
+    cards = []
+    for guide, related in entries:
+        provider_id = str(guide.get("providerId") or "")
+        name = str(guide.get("provider") or provider_id)
+        offer_links = "".join(
+            f'<a href="{_esc(_absolute(site_url, offer_url(offer)))}">{_esc(offer.get("titleZh") or offer.get("title") or offer.get("id"))}</a>'
+            for offer in related
+        )
+        offer_summary = "<br>".join(_esc(offer.get("freeSummary") or "") for offer in related if offer.get("freeSummary"))
+        card_url = _absolute(site_url, path + provider_id + "/")
+        cards.append(f'''<article class="quickstart-card"><div class="eyebrow">{_esc(provider_id)}</div><h2><a href="{_esc(card_url)}">{_esc(name)}</a></h2><p>{offer_summary or _locale_pair("免费条件待核验，请先查看官方页面。", "Free terms need verification; check the official page first.")}</p><div class="quickstart-offers">{offer_links}</div><a class="button" href="{_esc(card_url)}">{_locale_pair("打开第一次调用教程", "Open first-call guide")} →</a></article>''')
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": title,
+        "description": description,
+        "url": page_url,
+        "inLanguage": ["zh-CN", "en"],
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": len(entries),
+            "itemListElement": [
+                {"@type": "ListItem", "position": index, "name": guide.get("provider"), "url": _absolute(site_url, path + str(guide.get("providerId") or "") + "/")}
+                for index, (guide, _) in enumerate(entries, start=1)
+            ],
+        },
+    }
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
+<style>{EDITORIAL_BASE_CSS}</style><style>body {{max-width:1180px}}h1 {{font-size:clamp(32px,5vw,52px)}}.quickstart-grid {{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:16px}}.quickstart-card {{display:flex;flex-direction:column;padding:22px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}}.quickstart-card h2 {{margin:8px 0;font-size:25px}}.quickstart-card p {{color:var(--ink-secondary);font-size:14px}}.quickstart-offers {{display:grid;gap:4px;margin:0 0 14px;font-size:13px}}.quickstart-card .button {{margin-top:auto}}.notice {{margin:18px 0;padding:16px;border-left:3px solid var(--pale-yellow-text);background:var(--pale-yellow-bg);color:var(--ink)}}</style></head>
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, "/"))}">Free AI Index</a> / {_locale_pair("从零开始", "Getting started")}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">FREE LLM / FIRST API CALL</div><h1>{_locale_pair("从零开始，跑通第一次 API 调用", "Make your first API call")}</h1><p class="lead">{_locale_pair("按提供商查看注册前提、获取密钥、安装 SDK、发送请求、检查响应和排查常见错误。各家的免费范围、地区与账户要求不同，调用前先核对官方来源和对应资源页。", "Follow each provider's signup, API key, SDK, first request, response check and troubleshooting steps. Free access, region and account requirements vary; verify official sources and the linked offer before calling.")}</p><div class="notice"><strong>{_locale_pair("先看免费条件", "Check free terms first")}</strong><p>{_locale_pair("API Key 能调用不等于当前有免费额度。DeepSeek 官方 API 是按量计费；页面会明确标出。其他提供商的免费条件也可能按模型、地区、身份或活动变化。", "An API key does not mean an API call is free. DeepSeek's official API is pay-as-you-go; the guide labels this clearly. Other providers' terms can also vary by model, region, identity or promotion.")}</p></div></header><main><section><h2>{_locale_pair("提供商教程", "Provider guides")}</h2><div class="quickstart-grid">{"".join(cards)}</div></section></main><footer><p>{_locale_pair("教程优先引用官方文档；无法从公开来源确认的注册要求会标注待核验。", "Guides prioritize official documentation. Signup requirements that cannot be confirmed from public sources are labelled unverified.")}</p><p><a href="{_esc(_absolute(site_url, guide_url()))}">{_locale_pair("返回免费 LLM / API 指南", "Back to Free LLM / API guide")}</a></p></footer></body></html>'''
+
+
+def render_getting_started_provider_page(guide: dict, related_offers: list[dict], site_url: str) -> str:
+    provider_id = str(guide.get("providerId") or "")
+    path = GETTING_STARTED_GUIDE_PATH + provider_id + "/"
+    page_url = _absolute(site_url, path)
+    name = str(guide.get("provider") or provider_id)
+    display_name = name[:-4].rstrip() if name.endswith(" API") else name
+    title = f"{display_name} API 第一次调用教程 · FreeLLM"
+    description = f"{display_name} API 从注册、获取 API Key 到发送第一条请求的步骤、常见问题和官方文档。"
+    requirements = guide.get("tutorialRequirements") or {}
+    env_name = str(guide.get("environmentVariable") or "API_KEY")
+    requirement_fields = [
+        ("network", "网络 / 地区"),
+        ("account", "账号"),
+        ("phone", "手机号"),
+        ("identity", "实名认证"),
+        ("creditCard", "信用卡 / 付款方式"),
+    ]
+    requirement_cards = "".join(
+        f'<div><dt>{_esc(label)}</dt><dd>{_esc(requirements.get(key) or "官方公开资料未确认；注册前请检查服务商页面。")}</dd></div>'
+        for key, label in requirement_fields
+    )
+    env_markup = (
+        '<div class="env-box"><p><strong>' + _locale_pair("在终端设置密钥", "Set the key in your terminal") + '</strong></p>'
+        + '<p>' + _locale_pair("以下命令只为当前终端会话设置环境变量。请在自己的电脑上把尖括号内容替换成真实密钥，不要把密钥发给 FreeLLM 或粘贴到公开代码。", "These commands set a variable for the current terminal session. Replace the angle-bracket text with your key on your own device; never send it to FreeLLM or commit it to source code.") + '</p>'
+        + f'<p>{_locale_pair("Windows PowerShell", "Windows PowerShell")}</p><pre><code>$env:{_esc(env_name)} = "&lt;在此粘贴本地 API Key&gt;"</code></pre>'
+        + f'<p>{_locale_pair("macOS / Linux", "macOS / Linux")}</p><pre><code>export {_esc(env_name)}="&lt;在此粘贴本地 API Key&gt;"</code></pre></div>'
+    )
+    offer_markup = "".join(
+        f'<li><a href="{_esc(_absolute(site_url, offer_url(offer)))}">{_esc(offer.get("titleZh") or offer.get("title") or offer.get("id"))}</a><p>{_esc(offer.get("freeSummary") or "")}</p><small>{_locale_pair("资源记录核验日期", "Offer checked")}: {_esc(offer.get("lastVerifiedAt") or "未标注")}</small></li>'
+        for offer in related_offers
+    ) or f'<li>{_locale_pair("当前没有关联的 FreeLLM 免费资源记录。", "No related FreeLLM free-access record is currently linked.")}</li>'
+    api_guides = [{**guide, "paths": [item for item in guide.get("paths") or [] if item.get("productType") == "api"]}]
+    operation_markup = _operation_guides_markup(api_guides)
+    provider_link = _absolute(site_url, provider_url({"id": provider_id}))
+    hub_link = _absolute(site_url, GETTING_STARTED_GUIDE_PATH)
+    schema = {"@context": "https://schema.org", "@type": "TechArticle", "headline": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": guide.get("officialDocsReviewedAt") or guide.get("lastVerifiedAt"), "isPartOf": {"@type": "WebSite", "name": "FreeLLM", "url": _absolute(site_url, "/")}}
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
+<style>{EDITORIAL_BASE_CSS}</style><style>body {{max-width:1020px}}h1 {{font-size:clamp(30px,5vw,46px)}}main section h2 {{font-size:clamp(22px,3.4vw,30px)}}.requirement-grid {{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}}.requirement-grid > div {{padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--surface-soft)}}.requirement-grid dt {{font-size:12px;color:var(--ink-secondary)}}.requirement-grid dd {{margin:5px 0 0;font-size:14px}}.offer-links li {{margin:14px 0}}.offer-links p {{margin:3px 0;color:var(--ink-secondary)}}.verification-note,.env-box {{padding:14px 16px;border-left:3px solid var(--pale-yellow-text);background:var(--pale-yellow-bg)}}.env-box pre {{margin:6px 0 12px}}footer {{color:var(--ink-secondary);font-size:13px}}</style></head>
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, "/"))}">Free AI Index</a> / <a href="{_esc(hub_link)}">{_locale_pair("从零开始", "Getting started")}</a> / {_esc(name)}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">FIRST API CALL / {_esc(provider_id)}</div><h1>{_locale_pair(f"{_esc(display_name)}：跑通第一次 API 调用", f"Make your first {_esc(display_name)} API call")}</h1><p class="lead">{_locale_pair("先确认注册与免费条件，再按步骤获取密钥、安装依赖并验证返回结果。教程只使用环境变量读取密钥。", "Check signup and free terms first, then create a key, install dependencies and validate the response. Examples read credentials from environment variables.")}</p><div class="stats"><span>{_locale_pair("官方文档复核", "Official docs reviewed")}: {_esc(guide.get("officialDocsReviewedAt") or "未标注")}</span><span>{_locale_pair("独立 API 实测", "Independent API test")}: {_locale_pair("尚未记录", "Not recorded")}</span></div></header><main><section><h2>{_locale_pair("注册与网络前提", "Signup and network requirements")}</h2><dl class="requirement-grid">{requirement_cards}</dl><p class="verification-note">{_locale_pair("这些条件会因账号、地区和产品计划而变化。标注“待核验”表示 FreeLLM 尚未从当前链接的官方资料确认；不要据此推断为不需要。", "These requirements can vary by account, region and plan. “Unverified” means FreeLLM has not confirmed the condition from the linked official sources; it does not mean the requirement is absent.")}</p></section><section><h2>{_locale_pair("获取并安全设置 API Key", "Get and safely set your API key")}</h2>{env_markup}</section><section><h2>{_locale_pair("FreeLLM 资源记录", "FreeLLM resource records")}</h2><ul class="offer-links">{offer_markup}</ul></section>{operation_markup}<footer><p><a href="{_esc(hub_link)}">← {_locale_pair("返回提供商教程列表", "Back to provider guides")}</a> · <a href="{_esc(provider_link)}">{_locale_pair("查看模型 / 提供商详情", "View provider and model details")}</a></p></footer></main></body></html>'''
+
+
 def _model_api_offer_entries(offers: list[dict]) -> list[tuple[dict, dict]]:
     eligible = [
         offer for offer in offers
@@ -4612,7 +4718,15 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
             f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("扫描日期", "Scan date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{_locale_pair("当日快照", "Daily snapshot")}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
         )
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
-    reference_modules, history_archive = _render_update_reference_modules(sorted_logs, offers or [], models or [], latest_snapshot)
+    body = re.sub(r"(?m)^[ \t]+$", "", body)
+    reference_modules, _ = _render_update_reference_modules(sorted_logs, offers or [], models or [], latest_snapshot)
+    history_archive = (
+        '<details class="log-archive" id="log-archive"><summary>查看完整历史与来源详情　（'
+        + str(len(sorted_logs))
+        + ' 天）</summary><section class="log-days">'
+        + body
+        + '</section></details>'
+    )
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM daily discovery log", "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": dates[0] if dates else None}
     style = '''<style>
 ''' + EDITORIAL_TOKENS_CSS + '''
@@ -4663,12 +4777,13 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 .log-registration { margin:12px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--canvas-warm); }.log-registration h4 { margin:0; font-size:15px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 10px; border:1px solid var(--line); border-radius:9999px; background:var(--surface); color:var(--accent); font-size:11px; text-decoration:none; }.log-registration-link:hover { border-color:var(--accent); }
 .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12.5px; }.table-wrap th,.table-wrap td { padding:9px 11px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top; }.table-wrap th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 9px; border-radius:9999px; background:var(--pale-green-bg); color:var(--pale-green-text); font:500 11px/1.6 var(--font-mono); }.health-pill.issue { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
 .log-footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.7; }
+.log-archive { margin-top:18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-archive > summary { padding:14px 18px; color:var(--ink); cursor:pointer; font-weight:600; }.log-archive[open] > summary { border-bottom:1px solid var(--line); }.log-archive > .log-days { padding:0 18px 18px; }
 @media (max-width:900px) { .log-overview-grid { grid-template-columns:1fr; } }
 @media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; }.log-day::before { left:-34px; top:20px; width:10px; height:10px; }.log-day-summary { justify-content:flex-start; } }
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     page = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1><span lang="zh-CN">今日更新，<br>发现 AI 新可能</span><span lang="en">What changed in AI today?</span></h1><p class="lead"><span lang="zh-CN">我们持续追踪全球 AI 生态的最新动态，为你筛选真正有价值的更新，让先进的 AI 触手可及。</span><span lang="en">We check official sources daily and record new, recovered, offline and source issues.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{reference_modules}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer>{history_archive}</main>{style}</body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1><span lang="zh-CN">今日更新，<br>发现 AI 新可能</span><span lang="en">What changed in AI today?</span></h1><p class="lead"><span lang="zh-CN">我们持续追踪全球 AI 生态的最新动态，为你筛选真正有价值的更新，让先进的 AI 触手可及。</span><span lang="en">We check official sources daily and record new, recovered, offline and source issues.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{reference_modules}{history_archive}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
@@ -5331,6 +5446,8 @@ def sitemap_section_paths(
         "/tools/",
         "/health/",
         guide_url(),
+        GETTING_STARTED_GUIDE_PATH,
+        *[GETTING_STARTED_GUIDE_PATH + provider_id + "/" for provider_id in GETTING_STARTED_PROVIDER_IDS],
         OPENAI_ALTERNATIVES_GUIDE_PATH,
         CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH,
         MODELS_PAGE_PATH,
@@ -5494,6 +5611,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
         Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json"), site_url, offers, model_catalog),
         Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
+        Path("guides") / "getting-started" / "index.html": render_getting_started_index(offers, operations or [], site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
     }
@@ -5529,6 +5647,9 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     for definition in THEME_GUIDE_DEFINITIONS:
         path = Path("guides") / definition["slug"] / "index.html"
         files[path] = _render_theme_guide_page_expanded(offers, model_catalog, site_url, definition["slug"])
+    for guide, related_offers in _getting_started_entries(offers, operations or []):
+        provider_id = _safe_slug(guide.get("providerId"), "provider")
+        files[Path("guides") / "getting-started" / provider_id / "index.html"] = render_getting_started_provider_page(guide, related_offers, site_url)
     for offer in offers:
         files[Path("offers") / _slug(offer["id"]) / "index.html"] = render_offer_page(offer, offers, site_url, operations)
     for legacy_id, target_id in LEGACY_OFFER_REDIRECTS.items():

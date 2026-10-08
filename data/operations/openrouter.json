@@ -2,23 +2,73 @@
   "providerId": "openrouter",
   "provider": "OpenRouter",
   "lastVerifiedAt": "2026-09-09",
-  "offerIds": ["openrouter-free"],
+  "offerIds": [
+    "openrouter-free"
+  ],
   "paths": [
     {
       "id": "free-model-api",
       "label": "调用免费模型",
       "productType": "api",
-      "prerequisites": ["已注册 OpenRouter", "已创建 API key", "已从模型页确认当前免费模型 ID"],
+      "prerequisites": [
+        "已注册 OpenRouter",
+        "已创建 API key",
+        "已从模型页确认当前免费模型 ID"
+      ],
       "steps": [
-        {"title": "创建 API key", "detail": "进入 OpenRouter Keys 页面创建密钥，并将它放入 OPENROUTER_API_KEY 环境变量。"},
-        {"title": "选择免费模型", "detail": "在官方 Models 页面筛选价格为 0 的模型；免费标记和可用性会变化，不要长期写死目录中的模型。", "action": "打开 https://openrouter.ai/models?max_price=0"},
-        {"title": "发送 OpenAI 兼容请求", "detail": "将 model 替换成模型页显示的完整 ID。", "command": "curl https://openrouter.ai/api/v1/chat/completions -H 'Authorization: Bearer ${OPENROUTER_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'", "expected": "响应包含 choices[0].message.content。"}
+        {
+          "title": "创建 API key",
+          "detail": "进入 OpenRouter Keys 页面创建密钥，并将它放入 OPENROUTER_API_KEY 环境变量。"
+        },
+        {
+          "title": "选择免费模型",
+          "detail": "在官方 Models 页面筛选价格为 0 的模型；免费标记和可用性会变化，不要长期写死目录中的模型。",
+          "action": "打开 https://openrouter.ai/models?max_price=0"
+        },
+        {
+          "title": "发送 OpenAI 兼容请求",
+          "detail": "将 model 替换成模型页显示的完整 ID。",
+          "command": "curl https://openrouter.ai/api/v1/chat/completions -H 'Authorization: Bearer ${OPENROUTER_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "expected": "响应包含 choices[0].message.content。"
+        },
+        {
+          "title": "Python SDK 示例",
+          "detail": "安装 OpenAI SDK；在运行环境设置 OPENROUTER_API_KEY，示例代码通过环境变量读取密钥。",
+          "command": "python -m pip install -U openai\n\nimport os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    api_key=os.environ[\"OPENROUTER_API_KEY\"],\n    base_url=\"https://openrouter.ai/api/v1\",\n)\nresponse = client.chat.completions.create(\n    model=\"openai/gpt-oss-20b:free\",\n    messages=[{\"role\": \"user\", \"content\": \"用一句话解释 API 是什么。\"}],\n)\nprint(response.choices[0].message.content)",
+          "expected": "终端打印模型生成的回复；再到提供商控制台确认请求状态和额度扣减。"
+        },
+        {
+          "title": "Node.js SDK 示例",
+          "detail": "安装 OpenAI SDK；在运行环境设置 OPENROUTER_API_KEY，示例代码通过环境变量读取密钥。",
+          "command": "npm install openai\n\nimport OpenAI from \"openai\";\n\nconst client = new OpenAI({\n  apiKey: process.env.OPENROUTER_API_KEY,\n  baseURL: \"https://openrouter.ai/api/v1\",\n});\nconst response = await client.chat.completions.create({\n  model: \"openai/gpt-oss-20b:free\",\n  messages: [{ role: \"user\", content: \"用一句话解释 API 是什么。\" }],\n});\nconsole.log(response.choices[0].message.content);",
+          "expected": "Node.js 打印模型生成的回复；再到提供商控制台确认请求状态和额度扣减。"
+        }
       ],
       "endpoint": "https://openrouter.ai/api/v1",
       "auth": "Authorization: Bearer API key",
       "example": "curl https://openrouter.ai/api/v1/models -H 'Authorization: Bearer ${OPENROUTER_API_KEY}'",
       "validation": "GET /api/v1/models 返回 HTTP 200；随后聊天请求返回 choices 数组。",
-      "sourceUrls": ["https://openrouter.ai/docs/quickstart", "https://openrouter.ai/models?max_price=0", "https://openrouter.ai/docs/api-reference/overview"]
+      "sourceUrls": [
+        "https://openrouter.ai/docs/quickstart",
+        "https://openrouter.ai/models?max_price=0",
+        "https://openrouter.ai/docs/api-reference/overview",
+        "https://openrouter.ai/docs/api-reference/limits"
+      ],
+      "limits": "调用额度与限流按提供商当前控制台和官方文档为准；免费条件可能按模型、账号和地区变化。",
+      "commonIssues": [
+        "401：检查 API Key、环境变量和认证 Header。",
+        "404：从官方模型清单复制当前模型 ID，并确认 endpoint 与账号地域一致。",
+        "429：查看当前限流和配额重置说明，降低请求频率后再重试。"
+      ]
     }
-  ]
+  ],
+  "officialDocsReviewedAt": "2026-10-07",
+  "tutorialRequirements": {
+    "network": "国际服务；大陆账号注册与 API 连通性未由本教程实测，先在本人网络环境确认。",
+    "account": "OpenRouter 账号和 API Key；免费模型标识及限额可能变化。",
+    "phone": "官方 Quickstart 未说明统一手机号要求；以注册页面提示为准。",
+    "identity": "官方 Quickstart 未说明统一实名认证要求；以账号页面提示为准。",
+    "creditCard": "免费模型和付费模型走同一平台；付款方式要求依账户和所选路由而定，当前未确认。"
+  },
+  "environmentVariable": "OPENROUTER_API_KEY"
 }
