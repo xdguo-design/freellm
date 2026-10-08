@@ -40,6 +40,38 @@ def build_featured_fixture_page():
     )
 
 
+def test_featured_models_show_multiple_access_routes_without_duplicate_cards():
+    primary = {
+        "id": "xiaomi-mimo/mimo-v2-6-flash", "providerId": "xiaomi-mimo",
+        "provider": "Xiaomi MiMo", "model": "MiMo-V2.6-Flash",
+        "sourceKind": "official", "sourceUrl": "https://mimo.mi.com/models",
+    }
+    alternative = {
+        "id": "opencode/mimo-v2-6-flash-free", "providerId": "opencode",
+        "provider": "OpenCode Zen", "model": "MiMo-V2.6-Flash Free",
+        "sourceKind": "public_api", "sourceUrl": "https://opencode.ai/docs/en/zen/",
+    }
+    page = render_models_landing_page(
+        offers=[], models=[primary, alternative], vendor_directory=[],
+        site_url="https://freellm.top", curated_models=[primary],
+    )
+    assert page.count('class="featured-model-card"') == 1
+    assert "接入渠道 / Access routes (2)" in page
+    assert "Xiaomi MiMo" in page
+    assert "OpenCode Zen" in page
+
+
+def test_model_directory_distinguishes_third_party_sources():
+    row = _model_catalog_row({
+        "id": "llm7-io/example", "providerId": "llm7-io",
+        "provider": "LLM7", "model": "Example",
+        "sourceKind": "third_party_aggregator",
+        "sourceUrl": "https://llm7.io/models",
+    })
+    assert "第三方聚合 · 非官方" in row
+    assert "厂商官方来源" not in row
+
+
 def test_featured_cards_show_unknown_and_untested_states():
     page = build_featured_fixture_page()
 
