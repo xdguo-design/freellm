@@ -52,7 +52,7 @@
     }
     document.querySelectorAll('.ref-update-metrics > article').forEach(article => {
       const label = article.querySelector('span')?.textContent.trim();
-      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:scan.sourceChecks + '/2',最近变更:scan.newCount}[label];
+      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks),最近变更:scan.newCount}[label];
       if (value !== undefined) set(article.querySelector('strong'),value);
       if (label === '今日新增' && !current) {
         set(article.querySelector('span'),'上次扫描新增');
