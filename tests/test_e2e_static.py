@@ -722,8 +722,8 @@ class BrowserPageTests(unittest.TestCase):
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
                     self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
-                    self.assertEqual(theme_display, "flex" if width > 800 else "none")
+                    for toggle in page.locator(".fl-site-theme-toggle").all():
+                        self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
                     overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
                         .map(el => {
@@ -907,21 +907,23 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertEqual(tokens["ink"].lower(), "#102745")
                 self.assertEqual(tokens["blue"].lower(), "#2f7de1")
                 page.close()
-    def test_reference_pages_use_the_rail_theme_toggle(self):
-        # The prototype pages expose the theme switch in the shared navigation rail;
-        # page-local legacy controls stay hidden so they cannot duplicate it.
-        for route in ("skills/", "tools/", "about/"):
+    def test_reference_pages_hide_unfinished_theme_controls(self):
+        # P1-5: dark mode is disabled until all screens are legible with dark tokens.
+        for route in ("skills/", "tools/", "about/", "models/all/"):
             with self.subTest(route=route):
                 page = self.new_page()
                 page.goto(f"{self.site.url}/{route}")
-                page.wait_for_selector("body[data-visual-style='aurora']")
-                rail_toggle = page.locator(".fl-site-theme-toggle")
-                self.assertEqual(rail_toggle.count(), 1)
-                self.assertEqual(rail_toggle.evaluate("el => getComputedStyle(el).display"), "flex")
-                local_toggle = page.locator(".theme-toggle")
-                if local_toggle.count():
-                    self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                page.wait_for_selector("body.fl-ui-v2")
+                for selector in (".fl-site-theme-toggle", ".theme-toggle", ".prototype-theme-toggle"):
+                    for toggle in page.locator(selector).all():
+                        self.assertEqual(
+                            toggle.evaluate("el => getComputedStyle(el).display"),
+                            "none",
+                            f"{route}: {selector}"
+                        )
+                self.assertFalse(page.locator("html").get_attribute("data-theme") == "dark")
                 page.close()
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
@@ -1035,23 +1037,44 @@ class BrowserPageTests(unittest.TestCase):
         self.assertGreaterEqual(len(heights), 2)
         self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
 
-    def test_homepage_aurora_phase_one_mobile_layout(self):
+    def test_homepage_390px_drawer_and_responsive_search(self):
+        # P1-7: the current homepage has catalog-hero rather than prototype-hero.
         page = self.new_page()
         page.set_viewport_size({"width": 390, "height": 844})
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
-        page.wait_for_function("document.body.dataset.dataSource !== undefined")
+        page.wait_for_selector(".catalog-hero")
+        page.wait_for_selector("#fl-shared-site-menu")
 
         self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
         self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
-        for index in range(7):
-            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+        menu = page.locator(".fl-mobile-menu-button")
+        self.assertTrue(menu.is_visible())
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
+        self.assertFalse(page.locator(".fl-site-nav > a").first.is_visible())
+        menu.click()
+        self.assertEqual(menu.get_attribute("aria-expanded"), "true")
+        self.assertTrue(page.locator(".fl-site-nav > a").first.is_visible())
+        page.keyboard.press("Escape")
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
 
-        hero = page.locator(".prototype-hero").bounding_box()
-        search = page.locator(".ref-topbar .ref-search").bounding_box()
-        self.assertIsNotNone(hero)
+        search = page.locator("#catalog-search").bounding_box()
         self.assertIsNotNone(search)
-        self.assertLessEqual(search["x"] + search["width"], 390)
         self.assertGreaterEqual(search["x"], 0)
+        self.assertLessEqual(search["x"] + search["width"], 390)
+        page.close()
+
+    def test_models_directory_390px_opens_accessible_card_view(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.site.url}/models/all/")
+        page.wait_for_selector("#model-directory")
+        page.wait_for_function(
+            "() => document.querySelector('#model-directory')?.dataset.catalogView === 'cards'"
+        )
+        self.assertTrue(page.locator("#model-directory .catalog-row").first.is_visible())
+        self.assertEqual(page.locator("#model-directory").get_attribute("data-catalog-view"), "cards")
+        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        page.close()
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()

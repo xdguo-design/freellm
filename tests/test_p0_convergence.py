@@ -9,6 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class P0ConvergenceTests(unittest.TestCase):
+    def test_p1_6_retired_hotspot_strip_does_not_reintroduce_overlapping_badges(self):
+        home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        self.assertIn('class="weekly-scan-cards"', home)
+        self.assertIn('id="weekly-changes"', home)
+        self.assertNotIn('class="prototype-hot-grid"', home)
+        self.assertNotIn('class="prototype-original-note"', home)
+        self.assertNotIn('class="today-hotspot-card"', home)
+
     def test_p1_7_mobile_drawer_chips_and_native_catalog_cards(self):
         nav = (ROOT / "js/site-navigation.js").read_text(encoding="utf-8")
         css = (ROOT / "css/primary-menu.css").read_text(encoding="utf-8")
