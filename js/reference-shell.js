@@ -22,10 +22,10 @@
     topbar.setAttribute('role', 'search');
     const localeLabel = document.documentElement.lang === 'en' ? '中文' : 'EN';
 if (section === 'home' || section === 'models') {
-      topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg></span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></button><button class="prototype-login" type="button">登录</button><button class="prototype-register" type="button">注册</button></div>';
+      topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg></span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions"><button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></button><a class="ref-favorites-link" href="/favorites/">我的收藏（可 GitHub 同步）</a></div>';
     } else {
       const actions = ['skills', 'tools', 'workflow', 'logs', 'about'].includes(section)
-        ? '<button class="ref-bell" type="button" aria-label="更新提醒" data-reference-notifications>♧</button><button class="ref-auth-button" type="button" data-auth-action="login">登录</button><button class="ref-auth-button primary" type="button" data-auth-action="register">注册</button>'
+        ? '<button class="ref-bell" type="button" aria-label="更新提醒" data-reference-notifications>♧</button><a class="ref-favorites-link" href="/favorites/">我的收藏（可 GitHub 同步）</a>'
         : '<button class="ref-locale" type="button" data-reference-locale-toggle aria-label="切换语言">' + localeLabel + '</button><button class="ref-bell" type="button" aria-label="更新提醒">♧</button><a href="/about/">帮助</a><a class="primary" href="' + copy[2] + '">' + copy[1] + '</a>';
       topbar.innerHTML = '<label class="ref-search"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"></circle><path d="m16 16 4.2 4.2"></path></svg></span><input type="search" aria-label="全站搜索" placeholder="' + copy[0] + '"><kbd>⌘ K</kbd></label><div class="ref-top-actions">' + actions + '</div>';
       topbar.querySelectorAll('.ref-bell').forEach(button => { button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>'; });
@@ -42,14 +42,6 @@ if (section === 'home' || section === 'models') {
 
     if (section === 'skills') {
       topbar.querySelector('[data-reference-notifications]')?.addEventListener('click', () => { location.href = '/logs/'; });
-      topbar.querySelectorAll('[data-auth-action]').forEach(button => button.addEventListener('click', () => {
-        const message = document.getElementById('skills-account-notice');
-        if (message) {
-          message.textContent = button.dataset.authAction === 'login' ? '登录入口即将开放' : '注册入口即将开放';
-          message.hidden = false;
-          window.setTimeout(() => { message.hidden = true; }, 2200);
-        }
-      }));
       bootSkillsShowcase();
     }
 
@@ -64,16 +56,12 @@ if (section === 'home' || section === 'models') {
     };
     const sync = () => {
       const value = topInput.value.trim();
-      if (target) {
-        mirrorSearch();
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        target.focus({ preventScroll: true });
-      } else if (value) {
-        location.href = '/?q=' + encodeURIComponent(value);
-      }
+      location.href = '/search/?q=' + encodeURIComponent(value);
     };
     topInput.addEventListener('input', mirrorSearch);
-    topInput.addEventListener('keydown', event => { if (event.key === 'Enter') sync(); });
+    topInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); sync(); }
+    });
     if (!window.__freellmReferenceShortcutBound) {
       window.__freellmReferenceShortcutBound = true;
       document.addEventListener('keydown', event => {
