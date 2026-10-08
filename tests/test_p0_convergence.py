@@ -30,7 +30,7 @@ class P0ConvergenceTests(unittest.TestCase):
             "curatedEvents": [], "sourceHealth": {},
         }
         modules, _ = _render_update_reference_modules(
-            [log], [], [], {"models": 2, "offers": 0}
+            [log], [], [], {"models": 2, "offers": 0, "providers": 0}
         )
         feature = re.search(
             r'<section class="ref-update-feature"><h2>最近重点更新</h2>.*?</section>',
