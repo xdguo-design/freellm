@@ -5389,7 +5389,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         "sourceChecks": sum(v.get("status") == "ok" for v in (latest_daily_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
         "hasHistoricalBaseline": False,
     }
-    files[Path("data/scan-summary.json")] = json.dumps(scan_summary, ensure_ascii=False, indent=2) + "\\n"
+    files[Path("data/scan-summary.json")] = json.dumps(scan_summary, ensure_ascii=False, indent=2) + "\n"
 
     files[Path("daily-update-status.json")] = json.dumps({
         "latestDate": str(latest_daily_log.get("date") or ""),
