@@ -299,8 +299,14 @@ def score(case: dict, output: str, tool_calls: list[dict]) -> bool:
         nums = _nums(out)
         return bool(nums) and abs(nums[-1] - float(expected)) < 0.011
     if kind == "letter":
-        cleaned = re.sub(r"[\s。.：:*`\"'“”]", "", out)
-        return cleaned.upper() in {expected, f"答案{expected}", f"{expected}说的是真话"} or cleaned.upper().endswith(expected) and len(cleaned) <= 6
+        plain = re.sub(r"[*`#\s]", "", out)
+        m = re.match(r"^(?:答案[是为：:]?)?([ABC])(?![A-Za-z])", plain)
+        if not m:
+            hits = re.findall(r"答案[是为：:]*([ABC])|([ABC])(?:说的?是真话|说真话)", plain)
+            m_letter = (hits[-1][0] or hits[-1][1]) if hits else None
+        else:
+            m_letter = m.group(1)
+        return m_letter == expected
     if kind == "json":
         m = re.search(r"[\[{].*[\]}]", out, flags=re.S)
         try:
