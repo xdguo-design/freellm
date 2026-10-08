@@ -41,6 +41,19 @@ def build_featured_fixture_page():
     )
 
 
+def test_duplicate_models_are_single_cards_with_multiple_provider_routes(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    assert 'id="multi-route-models"' in page
+    for canonical in ("mimo-v2-6-flash", "dots-studio-dots3-note-preview"):
+        assert page.count(f'data-model-canonical="{canonical}"') == 1
+    assert "Puter.js" in page
+    assert "OpenCode Zen" in page
+    assert "Dots API（国内）" in page
+    assert "OpenRouter" in page
+    assert "生成能力与速度未实测" in page
+
+
 def test_featured_models_show_multiple_access_routes_without_duplicate_cards():
     primary = {
         "id": "xiaomi-mimo/mimo-v2-6-flash", "providerId": "xiaomi-mimo",
