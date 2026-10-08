@@ -52,15 +52,31 @@
     }
     document.querySelectorAll('.ref-update-metrics > article').forEach(article => {
       const label = article.querySelector('span')?.textContent.trim();
-      const value = {今日新增:current?scan.newCount:0,模型记录:scan.models,已收录资源:scan.offers,来源核验:scan.sourceChecks + '/2',最近变更:scan.newCount}[label];
+      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:scan.sourceChecks + '/2',最近变更:scan.newCount}[label];
       if (value !== undefined) set(article.querySelector('strong'),value);
-      if (label === '今日新增' && !current) set(article.querySelector('small'),latest);
+      if (label === '今日新增' && !current) {
+        set(article.querySelector('span'),'上次扫描新增');
+        set(article.querySelector('small'),latest);
+      }
     });
     document.querySelectorAll('.ref-update-snapshot .log-snapshot-card').forEach(card => {
       const label = card.querySelector('span')?.textContent || '';
       if (label.includes('模型')) set(card.querySelector('strong'),scan.models);
       if (label.includes('资源')) set(card.querySelector('strong'),scan.offers);
     });
+    if (!current) {
+      // Static HTML may be served after midnight without a new scan.
+      // Keep the last real snapshot, but do not represent it as today's scan.
+      set(document.querySelector('.log-hero h1 [lang="zh-CN"]'), '最近扫描，发现 AI 新可能');
+      set(document.querySelector('.log-hero h1 [lang="en"]'), 'What changed in the latest scan?');
+      const heroMeta = document.querySelectorAll('.log-hero-meta > div');
+      const status = heroMeta[1]?.querySelector('strong');
+      set(status?.querySelector('[lang="zh-CN"]'), '最近扫描完成');
+      set(status?.querySelector('[lang="en"]'), 'Latest scan complete');
+      const directory = heroMeta[2]?.querySelector('strong');
+      set(directory?.querySelector('[lang="zh-CN"]'), '最近扫描快照');
+      set(directory?.querySelector('[lang="en"]'), 'Latest scan snapshot');
+    }
     const shared = document.querySelectorAll('[data-scan-stat]');
     shared.forEach(node => set(node,scan[node.dataset.scanStat] ?? '—'));
     document.querySelectorAll('[data-scan-date]').forEach(node => set(node,current ? scan.date : latest));
