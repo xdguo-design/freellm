@@ -34,6 +34,16 @@ class AdsenseIntegrityTests(unittest.TestCase):
         for category in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
             self.assertRegex(html, rf'data-category-count="{category}">[0-9]+</b>')
 
+    def test_skill_evidence_is_deployable_and_nonindexable(self):
+        ignore_text = (ROOT / ".vercelignore").read_text(encoding="utf-8")
+        self.assertNotIn("skills/test-artifacts/\\n", ignore_text)
+        config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+        rule = [row for row in config["headers"] if row["source"] == "/skills/test-artifacts/:path*"]
+        self.assertEqual(len(rule), 1)
+        headers = {entry["key"]: entry["value"] for entry in rule[0]["headers"]}
+        self.assertIn("noindex", headers.get("X-Robots-Tag", ""))
+        self.assertNotIn("adsbygoogle.js", (ROOT / "skills/test-artifacts/sandbox-2026-09-20/index.html").read_text(encoding="utf-8"))
+
     def test_skill_evidence_targets_and_anchors_exist(self):
         html = (ROOT / "skills/index.html").read_text(encoding="utf-8")
         urls = set(re.findall(r'"url":"(/skills/test-artifacts/[^"]+)"', html))
