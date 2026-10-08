@@ -128,7 +128,7 @@
   }
 
   function currentPage() {
-    return document.body && document.body.dataset.flSection || '';
+    return document.body && (document.body.dataset.flNav || document.body.dataset.flSection) || '';
   }
 
   function documentUrl(url) {
