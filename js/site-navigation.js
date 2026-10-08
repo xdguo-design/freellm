@@ -81,7 +81,7 @@
     var labels = [
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
-      ['skills', '/skills/', '✦', 'Skills'],
+      ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
