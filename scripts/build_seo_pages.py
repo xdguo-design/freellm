@@ -3264,6 +3264,8 @@ def _catalog_source_label(model: dict) -> str:
     upstream lab and has to be visible as such.
     """
     kind = str(model.get("sourceKind") or "")
+    if kind == "third_party_aggregator" or str(model.get("providerId") or "") == "llm7-io":
+        return _locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official")
     if kind == "official":
         return _locale_pair("厂商官方来源", "Provider official source")
     if kind == "public_api":
@@ -3435,7 +3437,7 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
     for provider in providers:
         provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
         latest = _latest_date(provider_models, "lastSeenAt")
-        source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
+        source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
         cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p><a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
@@ -3470,7 +3472,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
     routes_markup = _access_routes_markup(provider_models)
     registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
-    source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
+    source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": (_absolute(site_url, model_aggregate_url(model)) if _safe_slug(model.get("model"), "model") in indexable_model_slugs(models) else (model.get("sourceUrl") or page_url))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
