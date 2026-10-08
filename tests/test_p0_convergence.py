@@ -9,6 +9,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class P0ConvergenceTests(unittest.TestCase):
+    def test_p1_7_mobile_drawer_chips_and_native_catalog_cards(self):
+        nav = (ROOT / "js/site-navigation.js").read_text(encoding="utf-8")
+        css = (ROOT / "css/primary-menu.css").read_text(encoding="utf-8")
+        models = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
+        self.assertIn('aria-controls="fl-primary-links"', nav)
+        self.assertIn('aria-expanded="false"', nav)
+        self.assertIn("event.key === 'Escape'", nav)
+        self.assertIn("fl-mobile-menu-open", nav)
+        self.assertIn("activateMobileModelCards();", nav)
+        self.assertIn("@media (max-width: 600px)", css)
+        self.assertIn(".mdir-chips", css)
+        self.assertIn("overflow-x: auto !important", css)
+        self.assertIn('#model-directory[data-catalog-view="cards"]', css)
+        self.assertIn('#model-directory tr[hidden] { display: none !important; }', css)
+        self.assertIn('data-catalog-view="cards"', models)
+        self.assertIn("if (cards) cell.setAttribute('aria-label'", models)
+
     def test_p1_5_unfinished_dark_mode_is_hidden_and_light_palette_is_accessible(self):
         nav = (ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8")
         menu = (ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8")

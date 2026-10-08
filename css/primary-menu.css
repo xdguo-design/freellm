@@ -407,3 +407,106 @@ body.fl-ui-v2[data-fl-section="models"] #model-directory .catalog-table-wrap {
 html body.fl-ui-v2[data-visual-style="aurora"] :is(.fl-site-theme-toggle,.prototype-theme-toggle,.ml-rail-theme,.theme-toggle) {
   display: none !important;
 }
+
+/* P1-7: phone layout, 390px reference width. The desktop rail stays unchanged. */
+#fl-shared-site-menu .fl-mobile-menu-button { display: none !important; }
+@media (max-width: 600px) {
+  html body[data-fl-section] #fl-shared-site-menu {
+    position: relative !important;
+    z-index: 210 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+  #fl-shared-site-menu .fl-mobile-menu-button {
+    display: inline-flex !important;
+    flex: 0 0 44px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 44px !important;
+    margin-left: auto !important;
+    border: 1px solid #36567c !important;
+    border-radius: 12px !important;
+    background: #102e53 !important;
+    color: #fff !important;
+    font-size: 22px !important;
+    cursor: pointer !important;
+  }
+  #fl-shared-site-menu .fl-mobile-menu-button:focus-visible {
+    outline: 3px solid #8fbcff !important;
+    outline-offset: 2px !important;
+  }
+  html body[data-fl-section] #fl-shared-site-menu > .fl-site-nav {
+    display: none !important;
+    position: absolute !important;
+    top: calc(100% + 3px) !important;
+    right: 8px !important;
+    bottom: auto !important;
+    left: 8px !important;
+    z-index: 215 !important;
+    box-sizing: border-box !important;
+    width: calc(100% - 16px) !important;
+    min-width: 0 !important;
+    max-height: min(70vh, 520px) !important;
+    padding: 10px !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    overflow-y: auto !important;
+    border: 1px solid #2a496e !important;
+    border-radius: 12px !important;
+    background: #071b37 !important;
+    box-shadow: 0 12px 35px rgba(4, 21, 44, .36) !important;
+  }
+  html body[data-fl-section] #fl-shared-site-menu.fl-mobile-menu-open > .fl-site-nav {
+    display: grid !important;
+  }
+  #fl-shared-site-menu .fl-site-nav > a {
+    display: flex !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+  }
+  #fl-shared-site-menu .fl-site-nav > a > span:last-child {
+    display: inline !important;
+    font-size: 14px !important;
+  }
+  /* Chip strips must scroll rather than wrap into a wall of tiny targets. */
+  body :is(.model-filter-chips, .mdir-chips, .hot-searches, .hero-intent-links) {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain !important;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  body :is(.model-filter-chips, .mdir-chips, .hot-searches, .hero-intent-links) > * {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+  /* Reuse the native 'cards' view on phones: meaningful headings, no 1260px table. */
+  #model-directory[data-catalog-view="cards"] .catalog-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: visible !important;
+  }
+  #model-directory[data-catalog-view="cards"] .catalog-table tbody {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  #model-directory[data-catalog-view="cards"] tr.catalog-row:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+  #model-directory tr[hidden] { display: none !important; }
+  #model-directory[data-catalog-view="cards"] .catalog-row > td {
+    min-width: 0 !important;
+  }
+}

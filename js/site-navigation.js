@@ -103,8 +103,35 @@
         '<span class="fl-site-brand-mark" aria-hidden="true"></span>' +
         '<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>' +
       '</a>' +
-      '<nav class="fl-site-nav" aria-label="主导航">' + links + '</nav>' +
+      '<button class="fl-mobile-menu-button" type="button" aria-controls="fl-primary-links" aria-expanded="false" aria-label="展开导航菜单"><span aria-hidden="true">☰</span></button>' +
+      '<nav id="fl-primary-links" class="fl-site-nav" aria-label="主导航">' + links + '</nav>' +
       '<div class="fl-site-rail-note" aria-hidden="true"></div>';
+
+    // P1-7: an accessible drawer for narrow phones, not seven compressed icons.
+    var mobileButton = rail.querySelector('.fl-mobile-menu-button');
+    var mobileLinks = rail.querySelector('#fl-primary-links');
+    function closeMobileMenu(restoreFocus) {
+      rail.classList.remove('fl-mobile-menu-open');
+      mobileButton.setAttribute('aria-expanded', 'false');
+      mobileButton.setAttribute('aria-label', '展开导航菜单');
+      if (restoreFocus) mobileButton.focus();
+    }
+    mobileButton.addEventListener('click', function () {
+      var open = !rail.classList.contains('fl-mobile-menu-open');
+      rail.classList.toggle('fl-mobile-menu-open', open);
+      mobileButton.setAttribute('aria-expanded', String(open));
+      mobileButton.setAttribute('aria-label', open ? '收起导航菜单' : '展开导航菜单');
+      if (open) mobileLinks.querySelector('a')?.focus();
+    });
+    mobileLinks.addEventListener('click', function (event) {
+      if (event.target.closest('a')) closeMobileMenu(false);
+    });
+    rail.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && rail.classList.contains('fl-mobile-menu-open')) {
+        event.preventDefault();
+        closeMobileMenu(true);
+      }
+    });
 
     // P1-5: the current page styles are light-only. Do not mount a nonworking
     // dark-mode toggle until every page surface has passed contrast review.
@@ -280,10 +307,20 @@
     });
   }
 
+  // The directory already has a full card renderer, localized field labels,
+  // and working filters. Select it on first paint at phone widths.
+  function activateMobileModelCards() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
+    var section = document.getElementById('model-directory');
+    var button = section && section.querySelector('.mdir-view-btn[data-catalog-view="cards"]');
+    if (button && section.dataset.catalogView !== 'cards') button.click();
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     ensureSharedNavigation();
     activateMenu(document);
     refreshUpdateIndicator();
+    activateMobileModelCards();
   });
 
   function findArgumentEnd(source, start) {
@@ -403,6 +440,7 @@
       if (!replacePageChrome(parsed)) throw new Error('Current page is missing the shared site shell');
       commitStyles();
       for (var index = 0; index < scripts.length; index += 1) await runScript(scripts[index], responseUrl);
+      activateMobileModelCards();
       event('freellm:page-mount', {
         from: fromPage,
         to: parsed.body.dataset.flSection || '',
