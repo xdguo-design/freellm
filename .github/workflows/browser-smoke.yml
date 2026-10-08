@@ -52,7 +52,7 @@ jobs:
           python -m unittest tests.test_adsense -v
 
       - name: Run SEO quality gate unit tests
-        run: python -m unittest tests.test_audit_seo_metadata -v
+        run: python -m unittest tests.test_audit_seo_metadata tests.test_english_locale -v
 
       - name: Run P0 convergence contracts
         run: python -m unittest tests.test_skills_page tests.test_p0_convergence tests.test_api_health_page -v
