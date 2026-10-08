@@ -62,6 +62,7 @@ EXEMPT_PAGES: Mapping[str, str] = {
     "/terms/": "条款与免责声明页：法律/政策信息页保持无广告",
     "/favorites/": "noindex 的个人收藏页：无独立正文，挂广告属「内容不足」风险",
     "/submit/": "纯功能表单页：正文极少，收益趋近于 0 但增加政策风险",
+    "/contact/": "联系方式与纠错通道：保留公开可信信息，不在功能页投放广告",
     "/offers/longcat-api/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
     "/offers/longcat-download/": "noindex 旧入口跳转页（已合并到 longcat-2-0）",
 }
