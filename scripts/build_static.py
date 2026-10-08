@@ -33,19 +33,18 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-disc
   <nav class="fl-site-nav">
     <a href="/" data-site-nav="home" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a>
     <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
-    <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a>
+    <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>技能</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
-  <div class="prototype-theme-toggle" aria-label="主题切换"><span class="active">☀</span><span>◔</span></div>
   <div class="fl-site-rail-note" aria-hidden="true"></div>
   <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2026 FreeLLM</small></div>
 </aside>
 <div class="fl-site-ribbon">
   <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
-  <span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">Skills 实测 ↗</a></span>
+  <span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">技能实测 ↗</a></span>
 </div>'''
 
 
