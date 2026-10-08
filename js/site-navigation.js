@@ -89,7 +89,7 @@
   function ensureSharedNavigation() {
     // Do not combine a saved dark preference with the light-only Aurora palette.
     // Keep the preference in storage so a future complete theme can restore it.
-    if (document.body && document.body.dataset.visualStyle === 'aurora') {
+    if (document.body && document.body.classList.contains('fl-ui-v2')) {
       document.documentElement.removeAttribute('data-theme');
     }
     ensureSharedNavigationStyles();
