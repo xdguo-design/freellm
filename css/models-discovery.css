@@ -680,3 +680,49 @@ body[data-reference-style="v1"][data-fl-section="models"] .featured-agent-mark.h
     min-width: 0 !important;
   }
 }
+
+/* P1-2: per-model multi-channel directory; not a team-tested carousel. */
+body[data-fl-section="models"] .multi-route-models {
+  max-width: 1400px;
+  margin: 0 auto 28px;
+  padding: 25px;
+  background: var(--aurora-surface, #fff);
+  border: 1px solid var(--aurora-line, #dfe7f3);
+  border-radius: 14px;
+}
+body[data-fl-section="models"] .multi-route-models .featured-model-heading {margin-bottom:18px}
+body[data-fl-section="models"] .multi-route-models h2 {margin:0 0 5px}
+body[data-fl-section="models"] .multi-route-models p {margin:0;color:#526a86;line-height:1.7}
+body[data-fl-section="models"] .model-route-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));
+  gap:16px;
+}
+body[data-fl-section="models"] .model-route-card {
+  min-width:0;
+  padding:22px;
+  border:1px solid #dfe7f3;
+  border-radius:12px;
+  background:#fff;
+}
+body[data-fl-section="models"] .model-route-card h3 {margin:0 0 10px;font-size:19px;line-height:1.4}
+body[data-fl-section="models"] .model-route-card h3 a {color:#1744e8;text-decoration:none}
+body[data-fl-section="models"] .model-route-card p {font-size:14px}
+body[data-fl-section="models"] .model-route-card strong {color:#102745}
+body[data-fl-section="models"] .model-route-links {display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+body[data-fl-section="models"] .model-route-links a {
+  display:inline-block;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  padding:7px 10px;
+  border-radius:8px;
+  border:1px solid #dfe7f3;
+  color:#1744e8;
+  background:#f5f9ff;
+  font-size:12px;
+  font-weight:600;
+}
+@media (max-width: 600px) {
+  body[data-fl-section="models"] .multi-route-models {padding:16px;margin-bottom:20px}
+  body[data-fl-section="models"] .model-route-card {padding:16px}
+}
