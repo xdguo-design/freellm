@@ -26,7 +26,7 @@ class DevFirstWorkflowTests(unittest.TestCase):
         path = ROOT / ".github/workflows/discovery-pr.yml"
         content = path.read_text(encoding="utf-8")
         self.assertIn("schedule:", content)
-        self.assertIn("- uses: actions/checkout@v4\\n        with:\\n          ref: dev\\n", content)
+        self.assertIn("- uses: actions/checkout@v4\n        with:\n          ref: dev\n", content)
         self.assertIn("BASE_BRANCH: dev", content)
         self.assertIn('gh pr create --base "$BASE_BRANCH"', content)
         self.assertNotIn("github.event.repository.default_branch", content)
