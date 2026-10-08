@@ -243,11 +243,22 @@ def test_category_page_marks_featured_offers():
 
 def test_homepage_exposes_the_featured_filter_and_explanation():
     page = HOMEPAGE_PATH.read_text(encoding="utf-8")
+    runtime = (ROOT / "js" / "homepage.js").read_text(encoding="utf-8")
     assert 'data-filter="featured"' in page
-    assert "data-featured=" in page
-    assert "'featured', 'free_quota'" in page or "'all', 'featured'" in page
-    assert "featuredPick" in page and "featuredNote" in page
-    assert ".flag-featured" in page
+    # Offer cards and their filter behavior are rendered from JSON by the runtime.
+    assert 'data-featured="${item.featured?.reason ? 1 : 0}"' in runtime
+    assert "'featured', 'free_quota'" in runtime or "'all', 'featured'" in runtime
+    assert "featuredPick" in runtime and "featuredNote" in runtime
+    assert ".flag-featured" in (ROOT / "css" / "homepage.css").read_text(encoding="utf-8")
+
+
+def test_mark_featured_offers_check_mode_ignores_json_formatting(tmp_path, monkeypatch):
+    import scripts.mark_featured_offers as module
+
+    formatted = tmp_path / "offers.json"
+    formatted.write_text(json.dumps(load_offers(), ensure_ascii=False, indent=2) + "\r\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["mark_featured_offers", "--data", str(formatted), "--check"])
+    assert module.main() == 0
 
 
 def test_mark_featured_offers_check_mode_is_clean(tmp_path, monkeypatch):

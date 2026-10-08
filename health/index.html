@@ -394,7 +394,7 @@
   function endpointVerdict(r){return String((r.endpointCheck&&r.endpointCheck.verdict)||(r.latency&&r.latency.verdict)||'').toUpperCase()}
   function endpointIsHealthy(r){
     var verdict=endpointVerdict(r);
-    return !verdict||['OK','NEEDS_KEY','ALIVE','RATE_LIMITED'].indexOf(verdict)>=0;
+    return !verdict||['OK','NEEDS_KEY','ALIVE','RATE_LIMITED','NOT_MEASURED'].indexOf(verdict)>=0;
   }
   function expiryDate(r){
     var match=String(r.validity||'').match(/\b(20\d{2}-\d{2}-\d{2})\b/);
@@ -485,6 +485,7 @@
     if(verdict==='OK'||verdict==='ALIVE')return '<span class="badge ok">公开可读</span>';
     if(verdict==='NEEDS_KEY')return '<span class="badge warn">需 Key · 网关在线</span>';
     if(verdict==='RATE_LIMITED')return '<span class="badge warn">限流 · 网关在线</span>';
+    if(verdict==='NOT_MEASURED')return '<span class="badge neutral">未检测</span>';
     if(r.endpointCheck||r.latency)return '<span class="badge bad">端点异常 · '+esc(verdict||'UNKNOWN')+'</span>';
     return '<span class="badge neutral">未检测</span>';
   }

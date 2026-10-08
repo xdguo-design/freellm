@@ -161,10 +161,8 @@ def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
     pages = [
         tmp_path / "models" / "index.html",
         tmp_path / "models" / "all" / "index.html",
-        tmp_path / "models" / "center" / "index.html",
         tmp_path / "providers" / "index.html",
         tmp_path / "skills" / "index.html",
-        tmp_path / "skills" / "lab" / "index.html",
         tmp_path / "logs" / "index.html",
     ]
     for path in pages:
@@ -174,6 +172,15 @@ def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
         canonical_url = canonical.split('href="', 1)[1].split('"', 1)[0]
         assert f'<meta name="twitter:url" content="{canonical_url}"' in page
 
+    for relative_path, destination in (
+        ("models/center/index.html", "/models/"),
+        ("skills/lab/index.html", "/workflow/"),
+    ):
+        page = (tmp_path / relative_path).read_text(encoding="utf-8")
+        assert '<meta name="robots" content="noindex,follow">' in page
+        assert f'http-equiv="refresh" content="0;url={destination}"' in page
+        assert f'window.location.replace("{destination}")' in page
+
     homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
     assert '<meta name="robots" content="index,follow,max-image-preview:large"' in homepage
     assert '<meta name="twitter:url" content="https://freellm.top/"' in homepage
@@ -181,11 +188,10 @@ def test_indexable_pages_emit_crawler_and_social_url_metadata(tmp_path):
 
 def test_skills_pages_expose_breadcrumb_structured_data(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
-    for relative_path in ("skills/index.html", "skills/lab/index.html"):
-        page = (tmp_path / relative_path).read_text(encoding="utf-8")
-        assert '"@type": "BreadcrumbList"' in page
-        assert "FreeLLM" in page
-        assert "https://freellm.top/skills/" in page
+    page = (tmp_path / "skills" / "index.html").read_text(encoding="utf-8")
+    assert '"@type": "BreadcrumbList"' in page
+    assert "FreeLLM" in page
+    assert "https://freellm.top/skills/" in page
 
 
 def test_legacy_offer_redirects_are_kept_but_not_indexed(tmp_path):
@@ -325,7 +331,7 @@ def test_longcat_page_renders_both_access_paths():
     assert page.count("LongCat-2.0") >= 3
     assert "API 调用" in page
     assert "下载权重" in page
-    assert "免费额度未确认" in page
+    assert "未确认长期免费额度" in page
     assert "权重免费，算力不免费" in page
 
 
@@ -496,6 +502,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/privacy/",
         "https://freellm.top/submit/",
         "https://freellm.top/terms/",
+        "https://freellm.top/health/",
     }
     locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
     assert len(locs) == len(set(locs)), "sitemaps must not advertise the same URL twice"
@@ -838,7 +845,8 @@ def test_multi_model_offers_expose_free_models_lists():
     stepfun_models = [entry["model"] for entry in offers["stepfun-limited-time-free"]["freeModels"]]
     assert stepfun_models == ["step-audio-r1.1", "step-1x-edit", "step-2x-large"]
     siliconflow_models = offers["siliconflow-free-models"]["freeModels"]
-    assert len(siliconflow_models) == 6
+    assert len(siliconflow_models) == 7
+    assert siliconflow_models[-1]["model"] == "Kwai-Kolors"
     assert all(entry["quota"].strip() for entry in siliconflow_models)
 
 
@@ -926,7 +934,7 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
 
     page = render_daily_log_page(logs, "https://freellm.top")
 
-    assert "今天的 AI 资源有什么变化？" in page
+    assert "今日更新" in page
     assert "Alpha free API" in page
     assert "monthly_quota" in page
     assert "100 requests/day" in page
@@ -963,13 +971,13 @@ def test_daily_log_dashboard_renders_baseline_snapshot_and_health():
 
     assert 'class="daily-log-dashboard"' in page
     assert 'class="log-hero"' in page
-    assert page.count('class="log-stat-card ') == 4
+    assert 'class="ref-update-metrics"' in page
     assert "首次基线" in page
     assert "297" in page
     assert "25" in page
     assert "37" in page
-    assert "模型源" in page and "正常" in page
-    assert "资源源" in page and "正常" in page
+    assert "模型来源" in page and "<span>ok</span>" in page
+    assert "资源来源" in page and "<span>ok</span>" in page
     assert "今日扫描完成" in page
     assert ".log-days::before" in page
     assert "class=\"log-registration\"" not in page
@@ -999,9 +1007,11 @@ def test_daily_log_dashboard_distinguishes_no_change_from_baseline_and_lists_dat
 
     page = render_daily_log_page(logs, "https://freellm.top")
 
-    assert "今日扫描完成，未发现变化" in page
+    assert "无变化" in page
     assert "首次建立基线" not in page
-    assert 'class="log-date-nav"' in page
+    assert 'class="ref-update-date"' in page
+    assert 'id="log-day-2026-09-10"' in page
+    assert 'id="log-day-2026-09-09"' in page
     assert "2026-09-10" in page
     assert "2026-09-09" in page
 

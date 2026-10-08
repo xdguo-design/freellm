@@ -262,7 +262,9 @@ def generate(
         if model["providerId"] == "github-models":
             model_cards[str(model["id"])] = _retired_card(model, as_of)
         else:
-            model_cards[str(model["id"])] = _model_card(model, as_of)
+            card = _model_card(model, as_of)
+            card["registrationProfileId"] = provider_cards[model["providerId"]]["profileId"]
+            model_cards[str(model["id"])] = card
     for card in existing_model_cards:
         model_id = str(card.get("modelId") or "")
         if model_id not in model_cards:
@@ -276,7 +278,7 @@ def generate(
             merged[key] = value
         source = catalog_by_id[model_id]
         merged["providerId"] = source["providerId"]
-        merged["registrationProfileId"] = f"{source['providerId']}-api"
+        merged["registrationProfileId"] = provider_cards[source["providerId"]]["profileId"]
         merged["modelSearchName"] = source["model"]
     unknown_providers = {
         card.get("providerId") for card in model_cards.values() if card.get("providerId") not in provider_cards

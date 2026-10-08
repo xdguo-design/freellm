@@ -3,7 +3,7 @@
     "modelId": "puter/mimo-v2-6-flash",
     "providerId": "puter",
     "registrationProfileId": "puter-ai",
-    "modelSearchName": "xiaomi/mimo-v2.6-flash",
+    "modelSearchName": "MiMo-V2.6-Flash",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": "Free Puter account includes an AI allowance; exact allowance is account-dependent and not hard-coded.",
@@ -21,7 +21,7 @@
     "modelId": "opencode/mimo-v2-6-flash-free",
     "providerId": "opencode",
     "registrationProfileId": "opencode-api",
-    "modelSearchName": "mimo-v2.6-flash-free",
+    "modelSearchName": "MiMo-V2.6-Flash Free",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -516,6 +516,74 @@
     "lastVerifiedAt": "2026-09-10",
     "verificationStatus": "partial",
     "notes": "国内 Dots API 路线；免费期限未在官方文档中公布。"
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-flash",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Live",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live-extended-thinking",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Live Extended Thinking",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "groq/qwen-qwen3-8-27b",
+    "providerId": "groq",
+    "registrationProfileId": "groq-api",
+    "modelSearchName": "Qwen 3.8 27B",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://console.groq.com/docs/model/qwen/qwen3.8-27b"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
   },
   {
     "modelId": "kilo/cohere-north-mini-code-free",
@@ -3818,57 +3886,6 @@
     "notes": "云知声 Token Hub 官方 API 路线；按量计费输入 0.6 元/百万 tokens、输出 1.2 元/百万 tokens（限时 6 折），注册促销赠 1 亿 Token，未见信用卡要求。"
   },
   {
-    "modelId": "github-models/ai21-jamba-1-5-large",
-    "providerId": "github-models",
-    "registrationProfileId": "github-models-api",
-    "modelSearchName": "AI21 Jamba 1.5 Large",
-    "extraRequirements": [],
-    "regionOverridePolicyId": "github-models-retired",
-    "quotaOverride": null,
-    "accessStatus": "retired",
-    "replacement": "Azure AI Foundry or GitHub Copilot",
-    "sourceUrls": [
-      "https://docs.github.com/en/github-models"
-    ],
-    "lastVerifiedAt": "2026-09-09",
-    "verificationStatus": "verified",
-    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
-  },
-  {
-    "modelId": "github-models/mistral-large-2411",
-    "providerId": "github-models",
-    "registrationProfileId": "github-models-api",
-    "modelSearchName": "Mistral Large (24.11)",
-    "extraRequirements": [],
-    "regionOverridePolicyId": "github-models-retired",
-    "quotaOverride": null,
-    "accessStatus": "retired",
-    "replacement": "Azure AI Foundry or GitHub Copilot",
-    "sourceUrls": [
-      "https://docs.github.com/en/github-models"
-    ],
-    "lastVerifiedAt": "2026-09-09",
-    "verificationStatus": "verified",
-    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
-  },
-  {
-    "modelId": "github-models/phi-4",
-    "providerId": "github-models",
-    "registrationProfileId": "github-models-api",
-    "modelSearchName": "Phi-4",
-    "extraRequirements": [],
-    "regionOverridePolicyId": "github-models-retired",
-    "quotaOverride": null,
-    "accessStatus": "retired",
-    "replacement": "Azure AI Foundry or GitHub Copilot",
-    "sourceUrls": [
-      "https://docs.github.com/en/github-models"
-    ],
-    "lastVerifiedAt": "2026-09-09",
-    "verificationStatus": "verified",
-    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
-  },
-  {
     "modelId": "amd-radeon-cloud/deepseek-v4-flash",
     "providerId": "amd-radeon-cloud",
     "registrationProfileId": "amd-radeon-cloud-api",
@@ -3998,7 +4015,7 @@
     "modelId": "siliconflow/xing4-0-29b",
     "providerId": "siliconflow",
     "registrationProfileId": "siliconflow-api",
-    "modelSearchName": "XingChenAGI/Xing4.0-29B",
+    "modelSearchName": "Xing4.0-29B",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": "SiliconFlow official price/model pages list input ¥0 / M Tokens and output ¥0 / M Tokens as of 2026-09-29; recheck before production use because hosted free pricing can change.",
@@ -4012,5 +4029,56 @@
     "lastVerifiedAt": "2026-09-29",
     "verificationStatus": "verified",
     "notes": "SiliconFlow 托管入口当前为 ¥0；模型由中国电信 XingChen-AGI 发布。模型权重与托管 API 是不同访问路径，本卡描述 SiliconFlow API 路径。"
+  },
+  {
+    "modelId": "github-models/ai21-jamba-1-5-large",
+    "providerId": "github-models",
+    "registrationProfileId": "github-models-api",
+    "modelSearchName": "AI21 Jamba 1.5 Large",
+    "extraRequirements": [],
+    "regionOverridePolicyId": "github-models-retired",
+    "quotaOverride": null,
+    "accessStatus": "retired",
+    "replacement": "Azure AI Foundry or GitHub Copilot",
+    "sourceUrls": [
+      "https://docs.github.com/en/github-models"
+    ],
+    "lastVerifiedAt": "2026-09-09",
+    "verificationStatus": "verified",
+    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
+  },
+  {
+    "modelId": "github-models/mistral-large-2411",
+    "providerId": "github-models",
+    "registrationProfileId": "github-models-api",
+    "modelSearchName": "Mistral Large (24.11)",
+    "extraRequirements": [],
+    "regionOverridePolicyId": "github-models-retired",
+    "quotaOverride": null,
+    "accessStatus": "retired",
+    "replacement": "Azure AI Foundry or GitHub Copilot",
+    "sourceUrls": [
+      "https://docs.github.com/en/github-models"
+    ],
+    "lastVerifiedAt": "2026-09-09",
+    "verificationStatus": "verified",
+    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
+  },
+  {
+    "modelId": "github-models/phi-4",
+    "providerId": "github-models",
+    "registrationProfileId": "github-models-api",
+    "modelSearchName": "Phi-4",
+    "extraRequirements": [],
+    "regionOverridePolicyId": "github-models-retired",
+    "quotaOverride": null,
+    "accessStatus": "retired",
+    "replacement": "Azure AI Foundry or GitHub Copilot",
+    "sourceUrls": [
+      "https://docs.github.com/en/github-models"
+    ],
+    "lastVerifiedAt": "2026-09-09",
+    "verificationStatus": "verified",
+    "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
   }
 ]
