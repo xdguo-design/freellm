@@ -18,6 +18,37 @@
   var requestController = null;
   var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
   var updateIndicatorReady = false;
+  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
+  function ensureEnglishEntryLink() {
+    var actions = document.querySelector('.fl-site-ribbon-actions');
+    if (!actions) return;
+    var path = window.location.pathname;
+    var english = Object.prototype.hasOwnProperty.call(englishLocalePaths, path)
+      ? englishLocalePaths[path] : '/en/';
+    var link = actions.querySelector('[data-english-route]');
+    if (!link) {
+      link = document.createElement('a');
+      link.setAttribute('data-english-route', 'true');
+      link.lang = 'en';
+      link.hreflang = 'en';
+      link.textContent = 'English';
+      actions.appendChild(link);
+    }
+    link.href = english;
+    link.title = english === '/en/' && path !== '/'
+      ? 'No English translation yet; open the English homepage'
+      : 'Open the English version of this page';
+  }
+  // Existing language buttons should open a distinct English document.
+  document.addEventListener('click', function(event) {
+    var button = event.target.closest('[data-locale-switch]');
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var path = window.location.pathname;
+    window.location.assign(button.dataset.localeSwitch === 'en'
+      ? (englishLocalePaths[path] || '/en/') : path);
+  }, true);
 
   function setUpdateIndicator(visible) {
     var link = document.querySelector('.fl-site-nav [data-site-nav="logs"]');
@@ -62,6 +93,7 @@
       document.documentElement.removeAttribute('data-theme');
     }
     ensureSharedNavigationStyles();
+    ensureEnglishEntryLink();
     var rail = document.body && document.body.querySelector('.fl-site-rail');
     if (!rail) return;
 
@@ -188,6 +220,10 @@
     if (canonical) canonical.remove();
     var nextCanonical = parsed.head.querySelector('link[rel="canonical"]');
     if (nextCanonical) document.head.appendChild(nextCanonical.cloneNode(true));
+    document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(node) { node.remove(); });
+    parsed.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(node) {
+      document.head.appendChild(node.cloneNode(true));
+    });
     // Keep inert page data available to scripts that initialize after mount.
     document.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) { node.remove(); });
     parsed.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) {

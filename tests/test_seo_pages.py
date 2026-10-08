@@ -558,13 +558,14 @@ def test_model_directory_intents_have_distinct_metadata(tmp_path):
     description = lambda page: page.split('<meta name="description" content="', 1)[1].split('">', 1)[0]
     assert title(resource_directory) != title(all_models)
     assert description(resource_directory) != description(all_models)
-    # locale 变体 URL 造成过 Search Console 重复收录；语言有独立可爬 URL 前不再输出 hreflang。
-    for page, canonical in (
-        (resource_directory, "https://freellm.top/models/"),
-        (all_models, "https://freellm.top/models/all/"),
+    # Real independent English pages now have reciprocal crawlable URLs.
+    for page, path in (
+        (resource_directory, "/models/"),
+        (all_models, "/models/all/"),
     ):
-        assert 'rel="alternate" hreflang=' not in page
-        assert f'<link rel="canonical" href="{canonical}"' in page
+        assert f'<link rel="canonical" href="https://freellm.top{path}"' in page
+        assert f'hreflang="zh-CN" href="https://freellm.top{path}"' in page
+        assert f'hreflang="en" href="https://freellm.top/en{path}"' in page
 
 
 def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
@@ -579,10 +580,14 @@ def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
         tmp_path / "providers" / "openrouter" / "index.html",
     ]
 
+    english = {"models/all/index.html": "/en/models/all/", "providers/index.html": "/en/providers/"}
     for page_path in pages:
         page = page_path.read_text(encoding="utf-8")
-        # 语言切换存 localStorage、canonical 保持无参数，直到有独立的可爬语言 URL。
-        assert 'rel="alternate" hreflang=' not in page
+        relative = page_path.relative_to(tmp_path).as_posix()
+        if relative in english:
+            assert f'hreflang="en" href="https://freellm.top{english[relative]}"' in page
+        else:
+            assert 'rel="alternate" hreflang=' not in page
         assert "?lang=" not in page
         assert '<link rel="canonical" href="' in page
         assert 'type="application/atom+xml"' in page

@@ -366,10 +366,11 @@ class StaticContractTests(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.document_html)), 1)
         self.assertIn('<h1 class="catalog-secondary-title">', self.document_html)
 
-    def test_homepage_omits_locale_hreflang_variants(self):
-        # Query-parameter hreflang variants caused duplicate Search Console
-        # URLs; they stay out until languages have distinct crawlable URLs.
-        self.assertNotIn('<link rel="alternate" hreflang=', self.html)
+    def test_homepage_uses_independent_language_alternates(self):
+        self.assertIn('hreflang="zh-CN" href="https://freellm.top/"', self.html)
+        self.assertIn('hreflang="en" href="https://freellm.top/en/"', self.html)
+        self.assertIn('hreflang="x-default" href="https://freellm.top/"', self.html)
+        self.assertNotIn('hreflang="en" href="https://freellm.top/?lang=en', self.html)
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
         self.assertIn('<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>', self.document_html)
