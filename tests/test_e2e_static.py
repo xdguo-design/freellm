@@ -660,6 +660,27 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         return page.locator(".offer:not(.hidden)").count()
 
+    def test_global_search_hero_and_three_common_queries(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/design/free-china-ai-index.html")
+        page.locator("#catalog-search").fill("Qwen")
+        page.locator("#catalog-search").press("Enter")
+        page.wait_for_url("**/search/?q=Qwen")
+        page.wait_for_function(
+            "() => document.querySelector('#search-status')?.textContent.includes('找到')"
+        )
+        self.assertGreater(page.locator("#search-results .search-result").count(), 0)
+
+        for keyword in ("免费 API", "豆包"):
+            page.locator("#site-search-input").fill(keyword)
+            page.wait_for_function(
+                """() => document.querySelector('#search-status')?.textContent.includes('找到')
+                && document.querySelector('#search-results .search-result')"""
+            )
+            self.assertGreater(page.locator("#search-results .search-result").count(), 0)
+            self.assertIn(keyword, page.url)
+
+
     def test_file_protocol_renders_embedded_data(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
