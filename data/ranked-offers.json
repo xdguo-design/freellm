@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "asOf": "2026-10-08",
+  "asOf": "2026-10-09",
   "weights": {
     "freshness": 0.35,
     "freeValue": 0.3,
@@ -31,6 +31,26 @@
     },
     {
       "rank": 2,
+      "id": "stepfun-step-5-preview-free-week",
+      "provider": "OpenCode Zen",
+      "sourceOrder": 74,
+      "effectiveEventAt": "2026-10-09",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 85,
+        "freeValueScore": 64,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 63.95
+    },
+    {
+      "rank": 3,
       "id": "unisound-u2-flash-free-month",
       "provider": "Unisound MaaS",
       "sourceOrder": 72,
@@ -50,7 +70,7 @@
       "rankingScore": 63.95
     },
     {
-      "rank": 3,
+      "rank": 4,
       "id": "baichuan-m3-plus-medical-free",
       "provider": "Baichuan AI",
       "sourceOrder": 67,
@@ -70,7 +90,7 @@
       "rankingScore": 63.56
     },
     {
-      "rank": 4,
+      "rank": 5,
       "id": "aliyun-decision-model-preview-free",
       "provider": "Alibaba Cloud Model Studio / 阿里云百炼",
       "sourceOrder": 58,
@@ -90,7 +110,7 @@
       "rankingScore": 63.21
     },
     {
-      "rank": 5,
+      "rank": 6,
       "id": "amd-radeon-cloud-free",
       "provider": "AMD Radeon Cloud",
       "sourceOrder": 48,
@@ -110,7 +130,7 @@
       "rankingScore": 61.61
     },
     {
-      "rank": 6,
+      "rank": 7,
       "id": "vercel-laya-free",
       "provider": "Vercel AI Gateway",
       "sourceOrder": 71,
@@ -130,7 +150,7 @@
       "rankingScore": 60.97
     },
     {
-      "rank": 7,
+      "rank": 8,
       "id": "ant-ling-3-1-flash-free",
       "provider": "Vercel AI Gateway",
       "sourceOrder": 70,
@@ -150,7 +170,7 @@
       "rankingScore": 60.97
     },
     {
-      "rank": 8,
+      "rank": 9,
       "id": "cnb-ai",
       "provider": "CNB",
       "sourceOrder": 42,
@@ -170,7 +190,7 @@
       "rankingScore": 58.51
     },
     {
-      "rank": 9,
+      "rank": 10,
       "id": "google-ai-studio-free",
       "provider": "Google AI Studio",
       "sourceOrder": 28,
@@ -188,26 +208,6 @@
         "specialOfferScore": 0
       },
       "rankingScore": 58.48
-    },
-    {
-      "rank": 10,
-      "id": "agnes-ai-free",
-      "provider": "Agnes AI",
-      "sourceOrder": 37,
-      "effectiveEventAt": "2026-09-08",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 89.5,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 58.21
     },
     {
       "rank": 11,
@@ -891,26 +891,6 @@
     },
     {
       "rank": 45,
-      "id": "stepfun-limited-time-free",
-      "provider": "StepFun",
-      "sourceOrder": 38,
-      "effectiveEventAt": "2026-09-08",
-      "studentOnly": false,
-      "pinned": false,
-      "manualBoost": 0,
-      "penaltyScore": 0,
-      "penalties": [],
-      "components": {
-        "freshnessScore": 46.75,
-        "freeValueScore": 66,
-        "popularityScore": 50,
-        "behaviorScore": 50,
-        "specialOfferScore": 0
-      },
-      "rankingScore": 51.16
-    },
-    {
-      "rank": 46,
       "id": "comate",
       "provider": "Baidu Comate",
       "sourceOrder": 4,
@@ -928,6 +908,26 @@
         "specialOfferScore": 0
       },
       "rankingScore": 51.07
+    },
+    {
+      "rank": 46,
+      "id": "agnes-ai-free",
+      "provider": "Agnes AI",
+      "sourceOrder": 37,
+      "effectiveEventAt": "2026-09-08",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 25.5,
+        "freeValueScore": 89.5,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 50.77
     },
     {
       "rank": 47,
@@ -1253,6 +1253,26 @@
     },
     {
       "rank": 63,
+      "id": "stepfun-limited-time-free",
+      "provider": "StepFun",
+      "sourceOrder": 38,
+      "effectiveEventAt": "2026-09-08",
+      "studentOnly": false,
+      "pinned": false,
+      "manualBoost": 0,
+      "penaltyScore": 0,
+      "penalties": [],
+      "components": {
+        "freshnessScore": 25.5,
+        "freeValueScore": 66,
+        "popularityScore": 50,
+        "behaviorScore": 50,
+        "specialOfferScore": 0
+      },
+      "rankingScore": 43.73
+    },
+    {
+      "rank": 64,
       "id": "doubao",
       "provider": "Doubao Seed Code",
       "sourceOrder": 5,
@@ -1272,7 +1292,7 @@
       "rankingScore": 42.38
     },
     {
-      "rank": 64,
+      "rank": 65,
       "id": "qoder",
       "provider": "Qoder",
       "sourceOrder": 2,
@@ -1292,7 +1312,7 @@
       "rankingScore": 41.32
     },
     {
-      "rank": 65,
+      "rank": 66,
       "id": "sensecore",
       "provider": "SenseNova",
       "sourceOrder": 11,
@@ -1312,7 +1332,7 @@
       "rankingScore": 41.32
     },
     {
-      "rank": 66,
+      "rank": 67,
       "id": "aliyun-qwen-free-quota",
       "provider": "Alibaba Cloud Model Studio CN / 阿里云百炼",
       "sourceOrder": 18,
@@ -1332,7 +1352,7 @@
       "rankingScore": 40.73
     },
     {
-      "rank": 67,
+      "rank": 68,
       "id": "cerebras-free",
       "provider": "Cerebras",
       "sourceOrder": 30,
@@ -1352,7 +1372,7 @@
       "rankingScore": 40.73
     },
     {
-      "rank": 68,
+      "rank": 69,
       "id": "cohere-trial-key",
       "provider": "Cohere",
       "sourceOrder": 33,
@@ -1372,7 +1392,7 @@
       "rankingScore": 40.73
     },
     {
-      "rank": 69,
+      "rank": 70,
       "id": "glm",
       "provider": "GLM Coding Plan",
       "sourceOrder": 6,
@@ -1392,7 +1412,7 @@
       "rankingScore": 36.67
     },
     {
-      "rank": 70,
+      "rank": 71,
       "id": "deepseek",
       "provider": "DeepSeek API",
       "sourceOrder": 12,
@@ -1414,7 +1434,7 @@
       "rankingScore": 18.22
     },
     {
-      "rank": 71,
+      "rank": 72,
       "id": "tinyfish-agent-browser-metered",
       "provider": "TinyFish",
       "sourceOrder": 21,
@@ -1437,7 +1457,7 @@
       "rankingScore": 6.42
     },
     {
-      "rank": 72,
+      "rank": 73,
       "id": "longcat-2-0",
       "provider": "LongCat",
       "sourceOrder": 7,
