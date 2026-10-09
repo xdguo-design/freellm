@@ -2,6 +2,12 @@ let offerIndex = {};
     let signalIndex = {};
     let rows = [];
     let loadedOffers = [];
+    // HOME-P1-4: keep only a page of offer cards attached to the live DOM.
+    // Full rows remain searchable/sortable as detached nodes.
+    const HOME_OFFERS_PAGE_SIZE = 24;
+    let visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+    let lastOfferFilterSignature = '';
+    let loadMoreOffersButton = null;
     const SUPPORTED_LOCALES = Object.freeze({ en: 'en', zh: 'zh-CN' });
     const LOCALE_STORAGE_KEY = 'free-ai-index-locale';
     const LOCALE_COPY = Object.freeze({
@@ -525,6 +531,17 @@ let offerIndex = {};
       loadedOffers = items;
       offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
       const container = document.getElementById('catalog-offer-rows');
+      if (!loadMoreOffersButton) {
+        loadMoreOffersButton = document.createElement('button');
+        loadMoreOffersButton.type = 'button';
+        loadMoreOffersButton.className = 'catalog-load-more';
+        loadMoreOffersButton.setAttribute('aria-controls', 'catalog-offer-rows');
+        loadMoreOffersButton.addEventListener('click', () => {
+          visibleOfferLimit += HOME_OFFERS_PAGE_SIZE;
+          applyFilters();
+        });
+        container.insertAdjacentElement('afterend', loadMoreOffersButton);
+      }
       container.innerHTML = [...items].sort((a,b) => Number(isExpiredOffer(a)) - Number(isExpiredOffer(b))).map(rowArticleMarkup).join('');
       container.querySelectorAll('.offer').forEach(card => {
         const item = offerIndex[card.dataset.detail];
@@ -770,7 +787,12 @@ let offerIndex = {};
     };
     const applyFilters = () => {
       const query = document.getElementById('catalog-search').value.trim().toLowerCase();
-      let visible = 0;
+      const signature = [activeFilter, activeMethod, activeCapability, activeFreshness, [...activeRegions].sort().join(','), query].join('|');
+      if (signature !== lastOfferFilterSignature) {
+        visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+        lastOfferFilterSignature = signature;
+      }
+      const matchedRows = [];
       rows.forEach(row => {
         const categories = row.dataset.category.split(' ').filter(Boolean);
         const matchesFilter = activeFilter === 'all'
@@ -784,8 +806,21 @@ let offerIndex = {};
         const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.dataset.search.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
         const show = matchesFilter && matchesMethod && matchesCapability && matchesRegion && matchesFreshness && matchesQuery
           && (activeFilter === 'expired' ? row.dataset.expired === '1' : (row.dataset.expired !== '1' || Boolean(query)));
-        row.classList.toggle('hidden', !show); if (show) visible++;
+        row.classList.toggle('hidden', !show);
+        if (show) matchedRows.push(row);
       });
+      const visible = matchedRows.length;
+      const visibleCards = matchedRows.slice(0, visibleOfferLimit);
+      const offerGrid = document.getElementById('catalog-offer-rows');
+      // Detach the remaining records: screen readers and layout only process
+      // visible cards, while filters still check every catalog record.
+      offerGrid.replaceChildren(...visibleCards);
+      if (loadMoreOffersButton) {
+        loadMoreOffersButton.hidden = visible <= visibleCards.length;
+        loadMoreOffersButton.textContent = currentLocale === SUPPORTED_LOCALES.zh
+          ? `加载更多资源 · 已显示 ${visibleCards.length} / ${visible}`
+          : `Load more · ${visibleCards.length} / ${visible} shown`;
+      }
       document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh
         ? `${visible} ${localeText('offer')}`
         : `${localeText('showing')} ${visible} ${visible === 1 ? localeText('offer') : localeText('offers')}`;
@@ -900,8 +935,9 @@ let offerIndex = {};
     document.getElementById('catalog-freshness-filter').value = activeFreshness;
     document.getElementById('catalog-sort').addEventListener('change', e => {
       const byName = row => `${row.dataset.provider || row.dataset.name}\n${row.dataset.name}`;
-      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : Number(a.dataset.expired) - Number(b.dataset.expired) || a.dataset.order - b.dataset.order);
-      const wrap = document.getElementById('catalog-offer-rows'); sorted.forEach(row => wrap.appendChild(row));
+      rows.sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : Number(a.dataset.expired) - Number(b.dataset.expired) || a.dataset.order - b.dataset.order);
+      visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+      applyFilters();
     });
     const clock = document.getElementById('catalog-clock');
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
