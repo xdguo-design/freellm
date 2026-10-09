@@ -4575,21 +4575,9 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
     latest_snapshot = _log_snapshot(latest)
-    # The hero snapshot describes the currently published directories, not a
-    # transient crawler observation. Keep it sourced from the same data that
-    # renders /models/ so the public model/provider counts cannot drift.
-    if models is not None:
-        published_models = [item for item in models if isinstance(item, dict)]
-        published_providers = {
-            str(item.get("providerId") or "").strip()
-            for item in published_models
-            if str(item.get("providerId") or "").strip()
-        }
-        latest_snapshot = {
-            "models": len(published_models),
-            "providers": len(published_providers),
-            "offers": len(offers or []),
-        }
+    # P0 trustworthy counts: the homepage, /logs/ and scan-summary must
+    # describe the SAME latest observed scan. Published catalogue rows have
+    # a different review/sync cadence and must not silently override it.
     latest_has_changes = any(latest_groups.values())
     latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
     latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
