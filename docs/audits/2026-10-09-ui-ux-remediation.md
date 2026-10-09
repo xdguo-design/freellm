@@ -54,3 +54,17 @@
 - `css/primary-menu.css`, `js/site-navigation.js`, `vercel.json`
 - `data/daily-log/2026-10-09.json`, `data/scan-summary.json`, `scripts/build_seo_pages.py`
 - `logs/index.html`, `tests/test_ux_20261009_regressions.py`
+
+
+## Production homepage direct audit
+
+**Production deployment verified via Vercel:** `freellm.top` is aliased to production commit `6160acf6d2e832e7dae1083e8e89f15c648e0062` on `main`. Branch `dev` deployments are disabled in `vercel.json` and are **not** the production webpage.
+
+- `main` `design/free-china-ai-index.html` had 92,795 chars vs 62,675 chars on `dev` at the start of this audit. The live-source variant includes `prototype-home` plus a second `catalog-hero` experience, with hardcoded “今日新增资源12”, four percentage-rise claims, “较上周 +35%”, and two home-page funnels. This is visible in the live HTML but requires screenshot confirmation before asserting both funnels occupy visible pixels (styles can hide DOM).
+- Production source also retains “© 2024 FreeLLM” despite the audit date being 2026, and prints hard-coded aspirational category totals that are not equivalent to scanned resource counts.
+- `dev` already removed `prototype-home` and the unverified percentage claims. Main must **not** be patched by blindly applying incremental CSS to these legacy sections; promote the corrected page architecture only after build and browser QA.
+- The `dev` homepage was further changed to progressively attach a maximum of 24 offer cards to the live DOM, with **Load more** using the existing 74-entry dataset. All search, region, category, freshness and sorting operations retain the full cached record list in memory.
+- A JavaScript-scope test of the new home filtering function checked: initial 24 cards, load-more 48, category selection resetting to 24, and finding an off-page record by search. **4/4 behavior cases passed**, but this does not replace real browser interaction tests.
+- Editorial discovery date (2026-10-09) is now clearly separated from last automatic scan date (2026-10-08) in `js/scan-trust.js`. The homepage labels the count as scanner records rather than as guaranteed quality/verification.
+
+**Release gate:** Check generator equivalence (`python scripts/build_static.py --check`, `python scripts/build_seo_pages.py --check`), JS syntax, regression tests, image layout at 1920/1440/390/320 px and click-through behavior. Only then merge and release `main`. None of these source fixes has been released to freellm.top at time of writing.
