@@ -194,30 +194,19 @@ class StaticContractTests(unittest.TestCase):
 
     def test_daily_log_dashboard_exposes_baseline_snapshot(self):
         log = LOG_PATH.read_text(encoding="utf-8")
-        for needle in (
-            'class="daily-log-dashboard"',
-            'class="log-hero"',
-            'class="ref-update-metrics"',
-            'class="ref-update-layout"',
-            'class="ref-update-history"',
-            'class="log-snapshot-card"',
-            'class="ref-update-change-stream"',
-            'class="ref-update-calendar-grid"',
-            'data-static-locale="true"',
-        ):
-            self.assertIn(needle, log)
-        # Snapshot counters must track the live data, not a frozen literal: the
-        # page renders today's directory totals and every historical day uses the
-        # totals captured in that day's log JSON.
-        models = len(json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8")))
-        latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
-        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
-        self.assertIn(latest_log_path.stem, log)
-        self.assertIn('<span lang="zh-CN">提供商</span>', log)
-        self.assertIn('<span lang="zh-CN">资源</span>', log)
-        self.assertNotIn("首次建立基线", log)
-        self.assertIn('class="ref-update-change-stream"', log)
-        self.assertIn('class="ref-update-history-table"', log)
+        for hook in ('class="daily-log-dashboard"', 'class="ref-update-metrics"',
+                     'class="ref-update-layout"', 'class="ref-update-history"',
+                     'class="log-snapshot-card"', 'class="ref-update-calendar-grid"'):
+            self.assertIn(hook, log)
+        latest = json.loads(sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1].read_text(encoding="utf-8"))
+        scan = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(scan["models"], len(latest["observed"]["models"]))
+        self.assertEqual(scan["offers"], len(latest["observed"]["offers"]))
+        self.assertIn(f'<strong>{scan["models"]}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
+        self.assertIn(f'<strong>{scan["offers"]}</strong>', log)
+        self.assertIn('phanthycode-free-trial', log)
+        self.assertIn('stepfun-step-5-preview-free-week', log)
+
 
     def test_daily_updates_story_is_visible_in_homepage_and_log(self):
         log = LOG_PATH.read_text(encoding="utf-8")
@@ -299,13 +288,12 @@ class StaticContractTests(unittest.TestCase):
         )
 
     def test_featured_resource_links_are_wired_to_catalog_filters(self):
-        self.assertIn('class="featured-resource-link"', self.html)
-        self.assertIn(
-            "document.querySelectorAll('.featured-resource-link').forEach",
-            self.html,
-        )
-        self.assertIn("const clearCatalogSearch = () =>", self.html)
-        self.assertIn("document.getElementById('catalog-search').value = ''", self.html)
+        self.assertIn('class="featured-resource-link"', self.document_html)
+        self.assertIn('data-filter="free_quota"', self.document_html)
+        self.assertIn("document.querySelectorAll('.featured-resource-link').forEach", self.homepage_js)
+        self.assertIn("const clearCatalogSearch = () =>", self.homepage_js)
+        self.assertIn("document.getElementById('catalog-search').value = ''", self.homepage_js)
+
 
     def test_offer_cards_load_company_icons_with_initial_fallback(self):
         for needle in (
@@ -359,22 +347,22 @@ class StaticContractTests(unittest.TestCase):
         self.assertEqual(len(re.findall(r'<h1(?:\s|>)', self.html)), 1)
 
     def test_homepage_omits_locale_hreflang_variants(self):
-        # Query-parameter hreflang variants caused duplicate Search Console
-        # URLs; they stay out until languages have distinct crawlable URLs.
-        self.assertNotIn('<link rel="alternate" hreflang=', self.html)
+        # Distinct / and /en/ URLs are valid; query-param locale variants are not.
+        self.assertIn('<link rel="alternate" hreflang="zh-CN" href="https://freellm.top/">', self.html)
+        self.assertIn('<link rel="alternate" hreflang="en" href="https://freellm.top/en/">', self.html)
+        self.assertNotRegex(self.html, r'<link rel="alternate" hreflang="[^"]+" href="[^"]*\\?lang=')
+
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
-        self.assertIn(
-            '<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>',
-            self.html,
-        )
-        self.assertIn('<div class="brand-name">FreeLLM</div>', self.html)
-        self.assertIn('<h1>今天发现，<br>更好的 <em>AI 资源</em></h1>', self.html)
-        self.assertIn("汇聚全球优质的 AI 模型、工具与应用", self.html)
-        self.assertIn('class="prototype-kicker">FreeLLM</span>', self.html)
-        self.assertIn('class="ref-feature-row"', self.html)
-        self.assertIn("Agent Skills", self.html)
-        self.assertIn("Workflow Recipes", self.html)
+        self.assertIn('<title>免费 AI 模型与 LLM API 大全（每日核验）｜FreeLLM</title>', self.html)
+        self.assertIn('FreeLLM', self.html)
+        self.assertIn('class="catalog-hero"', self.html)
+        self.assertIn('class="catalog-secondary-title"', self.html)
+        self.assertIn('id="catalog-search"', self.html)
+        self.assertIn('href="/guides/china-free-ai-api/"', self.html)
+        self.assertIn('id="home-latest-discovery"', self.html)
+        self.assertNotIn('class="prototype-home"', self.html)
+
 
     def test_homepage_includes_vercel_web_analytics(self):
         self.assertIn('window.va = window.va || function ()', self.html)
@@ -459,12 +447,14 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, self.html)
 
     def test_page_uses_free_method_categories(self):
-        for name in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
-            self.assertIn(f'data-filter="{name}"', self.html)
-        catalog_html = self.html.split('<div class="app legacy-app">', 1)[0]
-        self.assertIn('data-filter="agent"', catalog_html)
-        for name in ("search", "fetch", "extract", "crawl", "map", "browser"):
-            self.assertNotIn(f'data-filter="{name}"', catalog_html)
+        for key in ("free_quota", "model", "credits", "ide", "promo", "student", "web", "download_lowcost"):
+            self.assertIn(f'data-filter="{key}"', self.html)
+        # Outcome-first categories replace the earlier decorative "agent" tab.
+        self.assertIn('data-filter="free_quota"', self.document_html)
+        self.assertIn('data-filter="ide"', self.document_html)
+        for forbidden in ("search", "fetch", "extract", "crawl", "map", "browser"):
+            self.assertNotIn(f'data-filter="{forbidden}"', self.document_html)
+
 
     def test_page_has_adsense_site_verification_script(self):
         head = self.html.split("</head>", 1)[0]
