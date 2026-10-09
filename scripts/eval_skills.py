@@ -36,6 +36,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -46,7 +47,10 @@ DATA = ROOT / "data"
 TASKS_PATH = DATA / "skill-eval-tasks.json"
 REVIEW_PATH = DATA / "evaluations" / "skills-review.json"
 SUITE_VERSION = "freellm-skill-task-v1"
-TIMEOUT = 240
+TIMEOUT = 180  # socket read timeout
+CALL_MAX_SEC = 420  # hard wall-clock cap per streamed call
+MAX_TOKENS = 16384  # reasoning models exhausted 8192 on long tasks (empty content)
+DEADLINE = [float("inf")]  # set by main(); no retry is started after it
 MAX_SKILL_CHARS = 120_000
 EXCERPT_CHARS = 700
 RAW_CHARS = 12_000
@@ -59,14 +63,14 @@ MODELS = {
         "env": "MODELSCOPE_API_KEY",
         "base": "https://api-inference.modelscope.cn/v1",
         "model": "deepseek-ai/DeepSeek-V4.1-Flash",
-        "concurrency": 3,
+        "concurrency": 4,
     },
     "nvidia": {
         "provider": "NVIDIA NIM",
         "env": "NVIDIA_API_KEY",
         "base": "https://integrate.api.nvidia.com/v1",
         "model": "z-ai/glm-5.3",
-        "concurrency": 3,
+        "concurrency": 6,
     },
     "groq": {
         "provider": "Groq",
@@ -303,8 +307,12 @@ def _request(url: str, key: str, body: dict):
     return urllib.request.urlopen(req, timeout=TIMEOUT)
 
 
+class CallTooLong(Exception):
+    pass
+
+
 def stream_chat(cfg: dict, key: str, messages: list[dict]) -> dict:
-    body = {"model": cfg["model"], "messages": messages, "temperature": 0.2, "max_tokens": 8192,
+    body = {"model": cfg["model"], "messages": messages, "temperature": 0.2, "max_tokens": MAX_TOKENS,
             "stream": True, "stream_options": {"include_usage": True}}
     start = time.perf_counter()
     first = None
@@ -313,6 +321,8 @@ def stream_chat(cfg: dict, key: str, messages: list[dict]) -> dict:
     usage: dict = {}
     with _request(cfg["base"] + "/chat/completions", key, body) as resp:
         for raw in resp:
+            if time.perf_counter() - start > CALL_MAX_SEC:
+                raise CallTooLong(f"超过单次调用上限 {CALL_MAX_SEC}s 被中止")
             line = raw.decode("utf-8", "ignore").strip()
             if not line.startswith("data:"):
                 continue
@@ -346,13 +356,16 @@ def call_with_retry(cfg: dict, key: str, messages: list[dict], sleep=time.sleep)
         except urllib.error.HTTPError as exc:
             detail = scrub(exc.read().decode("utf-8", "ignore")[:300])
             last_error = f"HTTP {exc.code}: {detail}"
-            if exc.code in (429, 500, 502, 503, 504) and attempt == 0:
+            if exc.code in (429, 500, 502, 503, 504) and attempt == 0 and time.time() < DEADLINE[0]:
                 sleep(30 if exc.code == 429 else 8)
                 continue
             break
+        except CallTooLong as exc:
+            last_error = str(exc)
+            break
         except Exception as exc:  # noqa: BLE001
             last_error = scrub(f"{type(exc).__name__}: {exc}")[:300]
-            if attempt == 0:
+            if attempt == 0 and time.time() < DEADLINE[0]:
                 sleep(8)
                 continue
     return {"ok": False, "error": last_error}
@@ -376,7 +389,7 @@ def run_one(skill: dict, task: dict, mid: str, cfg: dict, key: str, caller=call_
         return {**base, "callOk": False, "verdict": "调用失败", "score": None,
                 "error": "模型返回空内容（可能思考耗尽 max_tokens）", "checks": [], "passedChecks": 0,
                 "totalChecks": len(task["checks"]), "output": "", "excerpt": "",
-                "totalMs": res.get("totalMs"), "ttftMs": res.get("ttftMs")}
+                "totalMs": res.get("totalMs"), "ttftMs": res.get("ttftMs"), "reasoningChars": res.get("reasoningChars", 0)}
     g = grade(task, output)
     return {**base, "callOk": True, **g, "judgedBy": "auto", "ttftMs": res["ttftMs"], "totalMs": res["totalMs"],
             "outputChars": len(output), "reasoningChars": res.get("reasoningChars", 0),
@@ -420,7 +433,7 @@ def summarize(runs: list[dict], tasks: dict, skills: list[dict], started: float,
         "runAt": run_at,
         "vantage": "GitHub Actions 托管运行器（美国）" if os.environ.get("GITHUB_ACTIONS") else "本地",
         "method": ("每个 Skill 配一个它本应处理的真实任务；把该 Skill 的 SKILL.md 全文注入 system prompt，"
-                   "通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens=8192，流式计时）；"
+                   f"通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens={MAX_TOKENS}，流式计时，单次上限 {CALL_MAX_SEC}s）；"
                    "按任务预设的确定性检查项自动判分（正则检查必需步骤/字段、Python 用 ast 解析、JS 用 node --check、HTML 解析、YAML 解析），"
                    "全部检查通过记为“通过”，≥60% 记为“部分通过”，否则“未通过”；接口报错或空输出记为“调用失败”。"
                    "judgedBy=manual 表示人工复核后改判，并附理由。模型不能执行 Skill 自带脚本/CLI，属于任务级测试，不等同原仓库端到端。"),
@@ -431,6 +444,8 @@ def summarize(runs: list[dict], tasks: dict, skills: list[dict], started: float,
     }
 
 
+RESULTS_URL = "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+RECORD = [lambda r: None]
 SITE_MODEL_LABEL = {"通过": "通过", "部分通过": "部分通过", "未通过": "未通过", "调用失败": "调用失败"}
 
 
@@ -455,7 +470,7 @@ def apply_to_site(latest: dict, tests_path: Path = DATA / "skill-tests.json") ->
                                                  "totalMs", "judgedBy", "reviewNote", "error") if r.get(k) not in (None, "")})
         entry["freeModelRun"] = {"suite": latest["suite"], "runAt": latest["runAt"], "task": skill["task"],
                                  "bestVerdict": skill["bestVerdict"], "runs": runs,
-                                 "examplesUrl": f"/skills/examples/#{skill['id']}"}
+                                 "resultsUrl": RESULTS_URL}
         if entry.get("status") == "待执行":
             answered = [r for r in skill["runs"] if r.get("callOk") and isinstance(r.get("score"), (int, float))]
             names = "、".join(f"{r['provider']} {r['model']}" for r in skill["runs"])
@@ -470,7 +485,7 @@ def apply_to_site(latest: dict, tests_path: Path = DATA / "skill-tests.json") ->
                     "evaluation": (f"把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 {best['provider']} {best['model']} "
                                    f"{best['passedChecks']}/{best['totalChecks']} 项检查通过（{best['verdict']}）。"
                                    "属于任务级执行，不等同原仓库程序 E2E。"),
-                    "evidence": [{"url": f"/skills/examples/#{skill['id']}", "label": "查看免费模型实测记录", "note": skill["bestVerdict"]}],
+                    "evidence": [{"url": RESULTS_URL, "label": "查看免费模型实测原始结果", "note": skill["bestVerdict"]}],
                 })
             else:
                 entry.update({"testedAt": date, "status": "调用失败",
@@ -478,6 +493,21 @@ def apply_to_site(latest: dict, tests_path: Path = DATA / "skill-tests.json") ->
         changed += 1
     tests_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return changed
+
+
+def not_executed(runs: list[dict], skills: list[dict], models: list[str], tasks: dict) -> list[dict]:
+    """(skill, model) pairs with no stored run (job killed mid-run) are recorded as 调用失败, never dropped."""
+    seen = {(r["skillId"], r["modelId"]) for r in runs}
+    out = []
+    for s in skills:
+        for mid in models:
+            if (s["id"], mid) not in seen and s["id"] in tasks and mid in MODELS:
+                out.append({"skillId": s["id"], "modelId": mid, "provider": MODELS[mid]["provider"],
+                            "model": MODELS[mid]["model"], "callOk": False, "verdict": "调用失败", "score": None,
+                            "error": "未执行：本轮任务被中止，未获得结果", "checks": [], "passedChecks": 0,
+                            "totalChecks": len(tasks[s["id"]]["checks"]), "output": "", "excerpt": "",
+                            "skillTruncated": False})
+    return out
 
 
 # ---------------------------------------------------------------- main
@@ -488,6 +518,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--models", default=os.environ.get("SKILL_EVAL_MODELS", ",".join(DEFAULT_MODELS)))
     ap.add_argument("--only", default=os.environ.get("SKILL_EVAL_ONLY", ""), help="comma-separated skill ids")
     ap.add_argument("--apply", action="store_true", help="apply review + merge skills-latest.json into data/skill-tests.json")
+    ap.add_argument("--budget-min", type=float, default=float(os.environ.get("SKILL_EVAL_BUDGET_MIN", "66")),
+                    help="wall-clock budget; calls not started in time are recorded as 调用失败 (未执行)")
     ap.add_argument("--regrade", action="store_true", help="re-grade stored raw outputs (no network) and rewrite latest")
     args = ap.parse_args(argv)
     out = Path(args.out)
@@ -497,7 +529,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.apply or args.regrade:
         raw = json.loads((out / "skills-raw.json").read_text(encoding="utf-8"))
-        runs = raw["runs"]
+        scope = set(raw.get("skillIds") or [s["id"] for s in skills])
+        skills = [s for s in skills if s["id"] in scope]
+        runs = raw["runs"] + not_executed(raw["runs"], skills, raw["models"], tasks)
         if args.regrade:
             for r in runs:
                 if r.get("callOk"):
@@ -525,6 +559,7 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("skills without a task: " + ", ".join(missing))
 
     started = time.time()
+    DEADLINE[0] = started + args.budget_min * 60
     run_at = dt.datetime.now(TZ).strftime("%Y-%m-%d %H:%M CST (UTC+08:00)")
     runs: list[dict] = []
 
@@ -538,26 +573,51 @@ def main(argv: list[str] | None = None) -> int:
                      "checks": [], "passedChecks": 0, "totalChecks": len(tasks[s["id"]]["checks"]),
                      "output": "", "excerpt": "", "skillTruncated": False} for s in todo]
         res = []
+        deadline = started + args.budget_min * 60
+
+        def guarded(s):
+            if time.time() > deadline:
+                return {"skillId": s["id"], "modelId": mid, "provider": cfg["provider"], "model": cfg["model"],
+                        "callOk": False, "verdict": "调用失败", "score": None, "error": "未执行：超出本轮时间预算",
+                        "checks": [], "passedChecks": 0, "totalChecks": len(tasks[s["id"]]["checks"]),
+                        "output": "", "excerpt": "", "skillTruncated": False}
+            return run_one(s, tasks[s["id"]], mid, cfg, key)
+
         with cf.ThreadPoolExecutor(cfg["concurrency"]) as pool:
-            futs = {pool.submit(run_one, s, tasks[s["id"]], mid, cfg, key): s for s in todo}
+            futs = {pool.submit(guarded, s): s for s in todo}
             for fut in cf.as_completed(futs):
                 r = fut.result()
                 print(f"[{mid}] {r['skillId']}: {r['verdict']} {r.get('passedChecks')}/{r.get('totalChecks')} "
                       f"{r.get('totalMs', '-')}ms {(r.get('error') or '')[:80]}", flush=True)
                 res.append(r)
+                RECORD[0](r)
         return res
 
+    out.mkdir(parents=True, exist_ok=True)
+    vantage = "GitHub Actions 托管运行器（美国）" if os.environ.get("GITHUB_ACTIONS") else "本地"
+
+    def write_raw(items: list[dict]) -> None:
+        raw = {"schemaVersion": 1, "suite": SUITE_VERSION, "runAt": run_at, "vantage": vantage, "models": models,
+               "skillIds": [s["id"] for s in todo],
+               "wallTimeSec": round(time.time() - started, 1),
+               "runs": sorted(items, key=lambda r: (r["skillId"], r["modelId"]))}
+        (out / "skills-raw.json").write_text(scrub(json.dumps(raw, ensure_ascii=False, indent=1) + "\n"), encoding="utf-8")
+
+    checkpoint = threading.Lock()
+    done: list[dict] = []
+
+    def record(r: dict) -> None:
+        with checkpoint:  # partial results survive a killed job
+            done.append(r)
+            write_raw(done)
+
+    RECORD[0] = record
     with cf.ThreadPoolExecutor(len(models)) as pool:
         for part in pool.map(provider_job, models):
             runs.extend(part)
 
     wall = round(time.time() - started, 1)
-    out.mkdir(parents=True, exist_ok=True)
-    vantage = "GitHub Actions 托管运行器（美国）" if os.environ.get("GITHUB_ACTIONS") else "本地"
-    raw = {"schemaVersion": 1, "suite": SUITE_VERSION, "runAt": run_at, "vantage": vantage, "models": models,
-           "wallTimeSec": wall, "runs": sorted(runs, key=lambda r: (r["skillId"], r["modelId"]))}
-    text = json.dumps(raw, ensure_ascii=False, indent=1) + "\n"
-    (out / "skills-raw.json").write_text(scrub(text), encoding="utf-8")
+    write_raw(runs)
     latest = summarize(apply_review(runs, review), tasks, skills if not only else todo, started, run_at, models)
     latest["totals"]["wallTimeSec"] = wall
     (out / "skills-latest.json").write_text(scrub(json.dumps(latest, ensure_ascii=False, indent=2)) + "\n", encoding="utf-8")

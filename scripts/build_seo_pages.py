@@ -4811,12 +4811,39 @@ def _skill_test_markup(skill: dict) -> str:
         f'<p><strong>评价：</strong>{_esc(evaluation)}</p>'
         f'{environment_markup}'
         f'<p><strong>测试时间：</strong>{_esc(tested_at)} · {_esc(level)}</p>'
+        f'{_skill_free_model_run_markup(test)}'
         f'{evidence_markup}</div></details>'
     )
     return (
         f'<div class="freellm-test-strip {state_class}"><strong>{_esc(lead)}</strong>'
         f'<span>{_esc(label)}</span><small>{_esc(level)}</small></div>' + detail
     )
+
+def _skill_free_model_run_markup(test: dict) -> str:
+    """One line per real free-model run (scripts/eval_skills.py); failures stay labeled 调用失败/未通过."""
+    run = test.get("freeModelRun") or {}
+    rows = []
+    for item in run.get("runs") or []:
+        verdict = str(item.get("verdict") or "")
+        detail = (
+            f'{item.get("passedChecks")}/{item.get("totalChecks")} 项检查'
+            if verdict != "调用失败" and item.get("totalChecks") else "未获得可评分输出"
+        )
+        seconds = f' · {item["totalMs"] / 1000:.1f}s' if isinstance(item.get("totalMs"), (int, float)) else ""
+        manual = " · 人工复核" if item.get("judgedBy") == "manual" else ""
+        rows.append(
+            f'<li><span class="free-run-verdict" data-verdict="{_esc(verdict)}">{_esc(verdict)}</span> '
+            f'{_esc(item.get("provider"))} · {_esc(item.get("model"))} · {_esc(detail)}{_esc(seconds)}{_esc(manual)}</li>'
+        )
+    if not rows:
+        return ""
+    link = run.get("examplesUrl") or run.get("resultsUrl") or ""
+    link_markup = f' <a href="{_esc(link)}">实测记录 ↗</a>' if link else ""
+    return (
+        f'<div class="freellm-free-model-run"><p><strong>免费模型实测（{_esc(str(run.get("runAt") or "")[:10])}）：</strong>'
+        f'{_esc(run.get("bestVerdict"))}{link_markup}</p><ul>{"".join(rows)}</ul></div>'
+    )
+
 
 def _skill_card(skill: dict) -> str:
     category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {})

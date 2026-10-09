@@ -114,6 +114,42 @@ class RunOneTests(unittest.TestCase):
         self.assertEqual(len(calls), 2)
         self.assertIn("429", r["error"])
 
+    def test_call_too_long_is_not_retried(self):
+        calls = []
+
+        def slow(cfg, key, msgs):
+            calls.append(1)
+            raise es.CallTooLong("超过单次调用上限 420s 被中止")
+
+        with mock.patch.object(es, "stream_chat", slow):
+            r = es.call_with_retry(self.cfg, "k", [], sleep=lambda s: None)
+        self.assertFalse(r["ok"])
+        self.assertEqual(len(calls), 1)
+        self.assertIn("上限", r["error"])
+
+    def test_no_retry_after_deadline(self):
+        calls = []
+
+        def boom(cfg, key, msgs):
+            calls.append(1)
+            raise urllib.error.HTTPError("u", 503, "down", {}, io.BytesIO(b"x"))
+
+        with mock.patch.object(es, "stream_chat", boom), mock.patch.object(es, "DEADLINE", [0.0]):
+            r = es.call_with_retry(self.cfg, "k", [], sleep=lambda s: None)
+        self.assertEqual(len(calls), 1)
+        self.assertIn("503", r["error"])
+
+    def test_not_executed_pairs_are_labeled_call_failed(self):
+        tasks = es.load_tasks()
+        skills = [{"id": sid} for sid in list(tasks)[:2]]
+        runs = [{"skillId": skills[0]["id"], "modelId": "modelscope"}]
+        missing = es.not_executed(runs, skills, ["modelscope", "nvidia"], tasks)
+        self.assertEqual(len(missing), 3)
+        for r in missing:
+            self.assertEqual(r["verdict"], "调用失败")
+            self.assertIsNone(r["score"])
+            self.assertIn("未执行", r["error"])
+
 
 class ReviewAndApplyTests(unittest.TestCase):
     def test_manual_review_override_is_marked(self):

@@ -40,6 +40,8 @@ jobs:
       - name: Install grader deps
         run: pip install pyyaml
       - name: Run real skill evaluation
+        timeout-minutes: 80
+        continue-on-error: true
         env:
           SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -53,15 +55,18 @@ jobs:
           [ -n "$SKILL_EVAL_MODELS" ] || unset SKILL_EVAL_MODELS
           python scripts/eval_skills.py --out data/evaluations | tee -a "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: skill-eval-results
           path: |
             data/evaluations/skills-latest.json
             data/evaluations/skills-raw.json
       - name: Commit results
+        if: always()
         run: |
           git config user.name "freellm-eval-bot"
           git config user.email "actions@users.noreply.github.com"
+          [ -f data/evaluations/skills-latest.json ] || python scripts/eval_skills.py --out data/evaluations --regrade
           git add data/evaluations/skills-latest.json data/evaluations/skills-raw.json
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -m "data(skill-eval): real skill task evaluation $(date -u +%F)"
