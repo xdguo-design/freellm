@@ -510,3 +510,72 @@ html body.fl-ui-v2 :is(.fl-site-theme-toggle,.prototype-theme-toggle,.ml-rail-th
     min-width: 0 !important;
   }
 }
+
+/* UX-20261009-P0: workflow topbar layering, clipped heading and decorative hero */
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .ref-topbar {
+  position: fixed !important;
+  z-index: 320 !important;
+  isolation: isolate !important;
+  background: rgba(255,255,255,.98) !important;
+  border-radius: 14px !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .ref-search {
+  position: relative !important;
+  z-index: 1 !important;
+  min-width: 0 !important;
+  background: #fff !important;
+  border: 1px solid #cbdcf2 !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .ref-search input {
+  min-width: 0 !important;
+  background: transparent !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero > div,
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero-actions {
+  position: relative !important;
+  z-index: 2 !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero::after {
+  pointer-events: none !important;
+  z-index: 0 !important;
+  right: 0 !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-eyebrow {
+  pointer-events: none !important;
+  opacity: .55 !important;
+}
+@media (max-width: 700px) {
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero {
+    box-sizing: border-box !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 26px 18px !important;
+    padding-right: 18px !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero > div {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1,
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1 .accent-text {
+    height: auto !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero h1 {
+    font-size: clamp(27px,7.6vw,34px) !important;
+    line-height: 1.2 !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-hero::after {
+    display: none !important;
+  }
+}
