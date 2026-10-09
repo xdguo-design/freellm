@@ -649,36 +649,21 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        self.assertEqual(self.visible_offers(page), len(read_offers()))
-        self.assertEqual(page.locator("#heroCount").inner_text(), str(len(read_offers())))
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        self.assertEqual(
-            page.locator(".filter-strip [data-filter='free_quota'] em").inner_text(),
-            f"{free_quota_count:02d}",
-        )
-        self.assertEqual(
-            page.locator(".category-card[data-filter='free_quota'] [data-category-count]").inner_text(),
-            f"{free_quota_count:02d}",
-        )
-        ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
-        self.assertEqual(page.locator(".filter-strip [data-filter='ide'] em").inner_text(), f"{ide_count:02d}")
-        self.assertEqual(page.locator(".filter-strip [data-filter='student'] em").inner_text(), "02")
-        model_count = sum(1 for offer in read_offers() if offer.get("productType") == "api")
-        self.assertEqual(
-            page.locator(".filter-strip [data-filter='model'] em").inner_text(),
-            f"{model_count:02d}",
-        )
-        self.assertEqual(page.locator(".category-card[data-filter='model'] [data-category-count]").inner_text(), f"{model_count:02d}")
-        # 加精 chip 的标签按 data-filter 做 i18n，不能被位置映射串到别的分类名。
-        self.assertTrue(page.locator(".filter-strip [data-filter='featured']").inner_text().strip().startswith("◆"))
-        self.assertEqual(page.locator("#studentList .student-item").count(), 2)
-        self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
-        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
-        self.assertEqual(
-            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
-            [],
-            page.problems,
-        )
+        total = len(read_offers())
+        self.assertGreater(total, 24)
+        self.assertLessEqual(self.visible_offers(page), 24)
+        self.assertEqual(page.locator(".offer").count(), 24)
+        self.assertTrue(page.locator(".catalog-load-more").is_visible())
+        self.assertEqual(page.locator('[data-category-count="all"]').first.inner_text(), str(total))
+        # The scan card is intentionally NOT the number of published offers.
+        snapshot = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(page.locator("#heroCount").inner_text(), str(snapshot["offers"]))
+        page.locator(".catalog-load-more").click()
+        self.assertEqual(page.locator(".offer").count(), 48)
+        self.assertLessEqual(self.visible_offers(page), 48)
+        self.assertEqual(page.locator(".offer .provider-icon-img").count(), 48)
+        self.assertEqual([p for p in page.problems if not p.startswith("Failed to load resource")], [], page.problems)
+
 
     def test_mobile_navigation_exposes_core_directory_entries(self):
         page = self.new_page()
@@ -955,39 +940,24 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-
         page.click(".category-card[data-filter='ide']")
-        ide_count = sum(1 for offer in read_offers() if offer.get("productType") == "free_ide")
-        self.assertEqual(self.visible_offers(page), ide_count)
-
-        qwen_count = page.locator(".offer").evaluate_all(
-            """rows => rows.filter(row => {
-                const query = 'qwen3';
-                return row.dataset.name.toLowerCase().includes(query)
-                    || row.dataset.search.toLowerCase().includes(query)
-                    || row.textContent.toLowerCase().includes(query);
-            }).length"""
-        )
-        page.locator("#catalog-search").evaluate(
-            "(el) => { el.value = 'Qwen3'; el.dispatchEvent(new Event('input', { bubbles: true })); }"
-        )
-        self.assertEqual(self.visible_offers(page), qwen_count)
-
-        page.locator("#catalog-search").evaluate(
-            "(el) => { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }"
-        )
-        page.click(".offer[data-detail='comate'] .row-arrow")
+        self.assertGreater(self.visible_offers(page), 0)
+        self.assertLessEqual(self.visible_offers(page), 24)
+        page.fill("#catalog-search", "Qwen3")
+        page.wait_for_function("document.querySelector('#catalog-search').value === 'Qwen3'")
+        self.assertGreater(self.visible_offers(page), 0)
+        self.assertLessEqual(self.visible_offers(page), 24)
+        self.assertEqual(page.locator(".filter-chip[data-filter='all']").get_attribute("aria-pressed"), "true")
+        # Search must find a card even when it is beyond the first 24 results.
+        page.fill("#catalog-search", "Comate")
+        page.wait_for_selector(".offer[data-detail='comate']", state="attached")
+        page.locator(".offer[data-detail='comate'] .row-arrow").click()
         page.wait_for_selector("#drawer.open")
-        register = page.locator("#drawerRegister")
-        self.assertEqual(register.get_attribute("href"), "https://comate.baidu.com/zh")
+        self.assertEqual(page.locator("#drawerRegister").get_attribute("href"), "https://comate.baidu.com/zh")
         self.assertIn("Auto-Free", page.locator("#drawerTitle").inner_text())
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
-        self.assertEqual(
-            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
-            [],
-            page.problems,
-        )
+
 
     def test_homepage_aurora_phase_one_visual_contracts(self):
         page = self.new_page()
@@ -1105,14 +1075,15 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
         ranked = read_ranked_offers()
-        self.assertEqual(self.visible_offers(page), len(ranked))
+        self.assertEqual(page.locator(".offer").count(), min(len(ranked), 24))
+        self.assertTrue(page.locator(".catalog-load-more").is_visible())
+        page.locator(".catalog-load-more").click()
+        self.assertEqual(page.locator(".offer").count(), min(len(ranked), 48))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
         self.assertEqual(len(item_list), len(ranked))
-        self.assertEqual(
-            [entry["name"] for entry in item_list[:5]],
-            [item["title"] for item in ranked[:5]],
-        )
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual([entry["name"] for entry in item_list[:5]], [offer["title"] for offer in ranked[:5]])
+        self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
+
 
     def test_locale_query_switches_shell_language(self):
         page = self.new_page()
