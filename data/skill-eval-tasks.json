@@ -1075,7 +1075,7 @@
       "checks": [
         {
           "type": "count_regex",
-          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(图|插图|illustration|image|配图)\\s*\\d|^\\s*\\d+[.)、]",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(图|插图|illustration|image|配图)\\s*\\d|^\\s*\\d+[.)、]|^\\|\\s*\\d+\\s*\\|",
           "label": "规划 ≥3 处配图",
           "min": 3
         },
@@ -2078,7 +2078,7 @@
         },
         {
           "type": "count_regex",
-          "pattern": "(?mi)(第\\s*\\d+\\s*页|slide\\s*\\d+|page\\s*\\d+)",
+          "pattern": "(?mi)(第\\s*\\d+\\s*页|slide\\s*\\d+|page\\s*\\d+|slide_number\"?\\s*:\\s*\\d+)",
           "label": "≥5 页",
           "min": 5
         }
@@ -2102,7 +2102,7 @@
         {
           "type": "regex_any",
           "patterns": [
-            "keydown|ArrowRight|keyup"
+            "keydown|ArrowRight|keyup|runtime\\.js"
           ],
           "label": "支持键盘翻页"
         }

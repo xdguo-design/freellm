@@ -155,6 +155,11 @@ class RunOneTests(unittest.TestCase):
         self.assertTrue(es.run_check({"type": "frontmatter", "keys": ["name", "description"], "label": "f"}, text)[0])
         self.assertFalse(es.run_check({"type": "frontmatter", "keys": ["name"], "label": "f"}, "---\nfoo: 1\n---")[0])
 
+    def test_scrub_keeps_json_valid(self):
+        text = json.dumps({"o": 'curl -H "Authorization: Bearer ${TOKEN}" -H "x"'})
+        cleaned = es.scrub(text)
+        self.assertNotIn("${TOKEN}", json.loads(cleaned)["o"])
+
     def test_merge_runs_replaces_only_rerun_pairs(self):
         old = [{"skillId": "a", "modelId": "modelscope", "verdict": "调用失败"},
                {"skillId": "b", "modelId": "modelscope", "verdict": "通过"}]

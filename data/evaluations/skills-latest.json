@@ -3,7 +3,7 @@
   "suite": "freellm-skill-task-v1",
   "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
   "vantage": "GitHub Actions 托管运行器（美国）",
-  "method": "每个 Skill 配一个它本应处理的真实任务；把该 Skill 的 SKILL.md 全文注入 system prompt，通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens=16384，流式计时，单次上限 420s）；按任务预设的确定性检查项自动判分（正则检查必需步骤/字段、Python 用 ast 解析、JS 用 node --check、HTML 解析、YAML 解析），全部检查通过记为“通过”，≥60% 记为“部分通过”，否则“未通过”；接口报错或空输出记为“调用失败”。judgedBy=manual 表示人工复核后改判，并附理由。模型不能执行 Skill 自带脚本/CLI，属于任务级测试，不等同原仓库端到端。",
+  "method": "每个 Skill 配一个它本应处理的真实任务；把该 Skill 的 SKILL.md 全文注入 system prompt，通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens=16384（智谱 glm-4-flash 为 4095），流式计时，单次上限 420s）；默认模型对某个 Skill 都没拿到可评分输出时，再用后备免费模型补测一轮，原失败记录保留；按任务预设的确定性检查项自动判分（正则检查必需步骤/字段、Python 用 ast 解析、JS 用 node --check、HTML 解析、YAML 解析），全部检查通过记为“通过”，≥60% 记为“部分通过”，否则“未通过”；接口报错或空输出记为“调用失败”。judgedBy=manual 表示人工复核后改判，并附理由。模型不能执行 Skill 自带脚本/CLI，属于任务级测试，不等同原仓库端到端。",
   "models": [
     {
       "id": "modelscope",
@@ -14,18 +14,28 @@
       "id": "nvidia",
       "provider": "NVIDIA NIM",
       "model": "z-ai/glm-5.3"
+    },
+    {
+      "id": "zhipu",
+      "provider": "智谱 BigModel",
+      "model": "glm-4-flash-250414"
+    },
+    {
+      "id": "nvidia_oss",
+      "provider": "NVIDIA NIM",
+      "model": "openai/gpt-oss-20b"
     }
   ],
   "totals": {
     "skills": 79,
-    "runs": 158,
+    "runs": 216,
     "verdicts": {
-      "通过": 53,
-      "调用失败": 98,
-      "部分通过": 5,
-      "未通过": 2
+      "调用失败": 109,
+      "通过": 97,
+      "部分通过": 7,
+      "未通过": 3
     },
-    "wallTimeSec": 3822.2
+    "wallTimeSec": 5035.7
   },
   "skills": [
     {
@@ -449,9 +459,99 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 7164 字符"
+            },
+            {
+              "label": "内联 CSS",
+              "pass": true
+            },
+            {
+              "label": "包含响应式断点",
+              "pass": true
+            },
+            {
+              "label": "包含订阅表单",
+              "pass": true
+            },
+            {
+              "label": "定义了字体",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1265,
+          "totalMs": 58858,
+          "outputChars": 7629,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 2083,
+            "completion_tokens": 2240
+          },
+          "excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>慢火咖啡烘焙店</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n        \n        body {\n            font-family: 'Noto Serif SC', serif;\n            background-color: #f9f3f0;\n            color: #4a423f;\n            line-height: 1.6;\n            max-width: 1200px;\n            margin: 0 auto;\n            padding: 20px;\n        }\n        \n        header {\n            text-align: center;\n            padding: 40px 0;\n            position: relative;\n        }…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 4250 字符"
+            },
+            {
+              "label": "内联 CSS",
+              "pass": true
+            },
+            {
+              "label": "包含响应式断点",
+              "pass": true
+            },
+            {
+              "label": "包含订阅表单",
+              "pass": true
+            },
+            {
+              "label": "定义了字体",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 394,
+          "totalMs": 66922,
+          "outputChars": 4261,
+          "reasoningChars": 2688,
+          "usage": {
+            "prompt_tokens": 2136,
+            "completion_tokens": 2190
+          },
+          "excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>慢火 – 独立咖啡烘焙店</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\n/* ===== 视觉方向 =====\n   颜色：深炭灰 (#2C2C2C) + 温暖琥珀 (#D4A373) + 淡米色 (#F5EBDD) + 静谧绿 (#A3B18A)\n   字体：Playfair Display（标题）+ Inter（正文）\n   布局：垂直滚动，Hero 背景图 + 细腻的斜切分割，单一动效（Hero 进入）\n   原则：以“慢火”品牌故事为核心，突出咖啡豆与烘焙过程的温度与时间感\n*/\n:root{\n  --c-bg:#F5EBDD;\n  --c-text:#2C2C2C;\n  --c-accent:#D4A373;\n  --c-muted:#A3B18A;\n  --c-white:#FFFFFF;\n  --ff-title:\"Playfair Display\", serif;\n  --ff-body:\"Inter\", sans-serif;\n  --radius:8px;\n  --transition:0.4s ease;\n}\nbody{\n  margin:0;\n  font-family:var(--ff-body);\n  color:var(--c-text);\n  background:…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "anthropics-canvas-design",
@@ -490,9 +590,93 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:35 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先写出设计哲学",
+              "pass": true
+            },
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "能输出 PNG",
+              "pass": true
+            },
+            {
+              "label": "输出不少于 800 字符",
+              "pass": true,
+              "note": "2071 字符"
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1420,
+          "totalMs": 20580,
+          "outputChars": 2071,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 2490,
+            "completion_tokens": 876
+          },
+          "excerpt": "### 设计哲学 (Design Philosophy)\n\n**名称 (Name):** \"霓虹都市夜语\" (Neon Urban Night Whisper)\n\n**哲学阐述 (Philosophy Statement):**\n\n在\"霓虹都市夜语\"中，我们探索城市夜晚的神秘与活力。空间与形式通过动态的线条和几何形状展现城市的轮廓，色彩以霓虹灯的鲜艳色调为主，如深蓝、亮粉和翠绿，反映夜晚都市的繁华。材质上，我们运用对比强烈的明暗效果，模拟都市夜景的光影交错。尺度与节奏上，通过重复的几何图案和流动的线条，营造出夜晚行走的韵律感。构图与平衡上，强调不对称的视觉张力，以突出都市夜晚的独特氛围。视觉层次上，通过前景、中景和远景的巧妙安排，引导观者仿佛置身于夜跑的路径中。整个设计强调手工制作的精细与深度，每一笔每一划都凝聚着艺术家的心血，仿佛是都市夜晚的无声诗篇，等待着跑者的脚步去解读。\n\n---\n\n### 生成海报的 Python 代码 (Python Code with Pillow)\n\n```python\nfrom PIL import Image, ImageDraw, ImageFont\nimport numpy as np\n\n# 创建图像\nwidth, height = 800, 1200\nimage = Image.new('RGB', (width, height), color = (10, 10, 20))\ndraw = ImageDraw.Draw(image)\n\n# 添加霓虹效果的颜色\nneon_colors = {\n    'blue': (0, 150, 25…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先写出设计哲学",
+              "pass": true
+            },
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "能输出 PNG",
+              "pass": true
+            },
+            {
+              "label": "输出不少于 800 字符",
+              "pass": true,
+              "note": "4111 字符"
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 529,
+          "totalMs": 169808,
+          "outputChars": 4111,
+          "reasoningChars": 11532,
+          "usage": {
+            "prompt_tokens": 2582,
+            "completion_tokens": 4556
+          },
+          "excerpt": "**设计哲学（`Neon Pulse.md`）**\n\n```markdown\n# Neon Pulse\n\nNeon Pulse 是一种捕捉城市夜晚动感的视觉语言，光线化为节奏，城市化为运动的舞台。它将街灯的短暂辉光转化为结构化的构图，仿佛城市本身在呼吸，充满活力。\n\n空间与形式通过一系列垂直线条构成的摩天大楼骨架与斜向路径相互交织，暗示运动轨迹。负空间被刻意留白，像午夜的城市一样呼吸。每一元素都以匠心独运的精准摆放，构图显得精雕细琢，体现出深厚的专业素养与细致入微的关注。\n\n色彩与材质选用深靛、炫蓝与暖琥珀，层叠透明度营造深度。霓虹边缘以柔和光晕呈现，仿佛灯管发光。此色彩系统是作品的脉搏，呈现方式与手工雕塑同样精细，体现出对细节的极致追求。\n\n尺度与节奏以宏大形式与重复几何图形定义，呼应脚步节拍。跑者剪影占据前景，比例宏大，主导视线；天际线则在远方渐隐。节奏通过形状的重复实现，每一次迭代都是对细致工艺的再现。\n\n最终作品是对专业工艺的致敬。每一像素都是精心选择，每一条线都是劳作的结晶。文字极简，仅一短语作为视觉锚点，融入构图而非叙事。作品仿佛由大师亲手锻造，细致对齐、色彩校准与视觉层级皆达到无可挑剔的水平，可在博物馆展出，彰显视觉表达与匠心的力量。\n```\n\n---\n\n**生成海报的完整 Python 代码（使用 Pillow）**\n\n```python\n# poster_generator.py\n# 运行此脚本将生成名为 poster.png 的城市夜跑主题海报\n# 依赖 Pillow 库，请确保已安装：pip install pillow\n\nfrom PIL import…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "anthropics-brand-guidelines",
@@ -709,9 +893,69 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 4867 字符"
+            },
+            {
+              "label": "引入 p5.js",
+              "pass": true
+            },
+            {
+              "label": "使用种子随机",
+              "pass": true
+            },
+            {
+              "label": "创建画布",
+              "pass": true
+            },
+            {
+              "label": "使用噪声/流场生成",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 372,
+          "totalMs": 118837,
+          "outputChars": 6439,
+          "reasoningChars": 7424,
+          "usage": {
+            "prompt_tokens": 4389,
+            "completion_tokens": 4106
+          },
+          "excerpt": "**Algorithmic Philosophy – “风中的稻田”**  \n*(Markdown file: `philosophy.md`)*\n\n```markdown\n# 风中的稻田\n\n## 1. 计算的田野\n\n“风中的稻田”是一种将自然的呼吸写进代码的生成艺术运动。它以计算机的离散步进为基础，却追求田野的连续流动。每一次噪声采样都被视为风的脉搏，稻穗的摆动被视为对风的回应。算法不是简单的绘图指令，而是一套自组织的规则，允许稻穗在风的驱动下产生层次分明的波纹。正是这种层层叠叠的噪声与物理约束，让画面在每一次渲染中都显得既熟悉又新奇。\n\n## 2. 噪声与风的对话\n\n核心是多尺度Perlin噪声，它在时间维度上不断演化，模拟风的连续变化。噪声的振幅被风力参数调节，形成从轻柔摇曳到狂风暴雨的幅度范围。每一根稻穗的摆动角度由噪声值与风力相乘得到，随后再通过三角函数映射到屏幕坐标。这样，稻穗的摆动既保持了整体的协同，又保留了局部的随机性。算法的每一次迭代都在细微的扰动中寻找新的平衡点，正如真实稻田在风中不断自我调节。\n\n## 3. 种子与可复现性\n\n种子随机化是“风中的稻田”的灵魂。通过 `randomSeed(seed)` 与 `noiseSeed(seed)` 的双重种子，算法保证了同一组参数与同一种子下的画面完全一致。每一次种子变动都相当于在同一片田野里开启一场新的风暴，观者可以通过种子导航器在不同的风暴之间自由切换。种子不仅是技术手段，更是艺术家与观者之间的桥梁，让每一次观看都成为一次可追溯的旅程。\n\n## 4. 工匠精神的体现\n\n这不是一次随意的噪声实验，而是一次**精…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "anthropics-internal-comms",
@@ -909,7 +1153,7 @@
           "checks": [
             {
               "label": "包含 YAML frontmatter（name/description）",
-              "pass": false
+              "pass": true
             },
             {
               "label": "name 为 weekly-report",
@@ -925,10 +1169,10 @@
               "note": "计数 27"
             }
           ],
-          "passedChecks": 3,
+          "passedChecks": 4,
           "totalChecks": 4,
-          "score": 7.5,
-          "verdict": "部分通过",
+          "score": 10.0,
+          "verdict": "通过",
           "judgedBy": "auto",
           "ttftMs": 2909,
           "totalMs": 121010,
@@ -1021,9 +1265,89 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:35 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 init-artifact 脚本初始化",
+              "pass": true
+            },
+            {
+              "label": "使用 bundle-artifact 打包",
+              "pass": true
+            },
+            {
+              "label": "包含 React 组件代码",
+              "pass": true
+            },
+            {
+              "label": "使用 Tailwind 类",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1043,
+          "totalMs": 33206,
+          "outputChars": 5358,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 866,
+            "completion_tokens": 1326
+          },
+          "excerpt": "好的，我将使用 Web Artifacts Builder Skill 创建一个『待办看板』artifact。以下是具体步骤和代码：\n\n### 初始化项目\n\n运行初始化脚本创建新项目：\n\n```bash\nbash scripts/init-artifact.sh todo-kanban\ncd todo-kanban\n```\n\n### 核心组件代码\n\n在 `src` 目录下创建以下组件：\n\n#### 1. `TodoBoard.tsx`\n\n```tsx\nimport React, { useState } from 'react';\nimport { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';\nimport { Button } from '@/components/ui/button';\nimport { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';\n\ninterface TodoItem {\n  id: string;\n  content: string;\n}\n\ninterface Column {\n  id: string;\n  title: string;\n  items: TodoItem[];\n}\n\nconst initialColumns: Record<string, Column> = {\n  todo: {\n    id: 'todo',\n    title: '待办',…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:35 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 init-artifact 脚本初始化",
+              "pass": true
+            },
+            {
+              "label": "使用 bundle-artifact 打包",
+              "pass": true
+            },
+            {
+              "label": "包含 React 组件代码",
+              "pass": true
+            },
+            {
+              "label": "使用 Tailwind 类",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 488,
+          "totalMs": 45074,
+          "outputChars": 6233,
+          "reasoningChars": 319,
+          "usage": {
+            "prompt_tokens": 943,
+            "completion_tokens": 1753
+          },
+          "excerpt": "下面给出完整的步骤与代码，按顺序执行即可得到一个可直接在 Claude 对话中分享的 **单文件 HTML** 待办看板 artifact。\n\n> ⚠️ **注意**：当前环境无法真正执行脚本或打包，只能给出你需要手动执行的命令与代码。请在本地终端里按顺序运行下面的命令，并把最终生成的 `bundle.html` 作为附件上传到对话中。\n\n---\n\n## 1️⃣ 初始化项目\n\n```bash\n# 1. 运行初始化脚本（会创建一个名为 todo-board 的 React+TS 项目）\nbash scripts/init-artifact.sh todo-board\n\n# 2. 进入项目目录\ncd todo-board\n```\n\n> 该脚本会自动安装 Vite、React、TypeScript、Tailwind、shadcn/ui 等依赖，并生成一份可直接使用的项目骨架。\n\n---\n\n## 2️⃣ 开发核心组件\n\n### 2.1 `src/App.tsx`\n\n```tsx\nimport { useState } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Card, CardHeader, CardTitle, CardContent } from \"@/components/ui/card\";\nimport { DragDropContext, Droppable, Draggable, DropResult } from \"react-beautiful-dnd\";\nimpor…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "anthropics-webapp-testing",
@@ -1251,7 +1575,7 @@
           "totalChecks": 4,
           "score": 0.0,
           "verdict": "未通过",
-          "judgedBy": "auto",
+          "judgedBy": "manual",
           "ttftMs": 3639,
           "totalMs": 219733,
           "outputChars": 744,
@@ -1260,7 +1584,9 @@
             "prompt_tokens": 1805,
             "completion_tokens": 18294
           },
-          "excerpt": "I'm using the writing-plans skill to create the implementation plan.\n\n由于当前环境无法执行命令/读写文件，我不会声称已保存文件。计划文件应保存到 `docs/superpowers/plans/<当天日期>-email-subscriptions.md`（例如 `2025-01-01-email-subscriptions.md`，用执行当天的日期替换）。下面是完整计划内容，以及我会执行的验证命令。\n\n````markdown\n# Email Subscriptions Implementation Plan\n\n> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.\n\n**Goal:** 为 Flask 应用增加双重重定向确认（double opt-in）的邮件订阅功能：订阅表单 → 确认邮件 → 点击确认链接激活 → 每封外发邮件都带退订链接。\n\n**Architecture:** 新增 `app/subscriptions/` 包（模型 / 令牌 / 邮件 / 表单 / 路由），通过 Flask blueprint 挂到…"
+          "excerpt": "I'm using the writing-plans skill to create the implementation plan.\n\n由于当前环境无法执行命令/读写文件，我不会声称已保存文件。计划文件应保存到 `docs/superpowers/plans/<当天日期>-email-subscriptions.md`（例如 `2025-01-01-email-subscriptions.md`，用执行当天的日期替换）。下面是完整计划内容，以及我会执行的验证命令。\n\n````markdown\n# Email Subscriptions Implementation Plan\n\n> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.\n\n**Goal:** 为 Flask 应用增加双重重定向确认（double opt-in）的邮件订阅功能：订阅表单 → 确认邮件 → 点击确认链接激活 → 每封外发邮件都带退订链接。\n\n**Architecture:** 新增 `app/subscriptions/` 包（模型 / 令牌 / 邮件 / 表单 / 路由），通过 Flask blueprint 挂到…",
+          "autoVerdict": "未通过",
+          "reviewNote": "输出在约 744 字处中断（计划只写到目标与架构说明），没有任务拆分与测试步骤；维持未通过。"
         },
         {
           "modelId": "nvidia",
@@ -1727,9 +2053,64 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "为每个任务派发子代理",
+              "pass": true
+            },
+            {
+              "label": "每个任务完成后审查",
+              "pass": true
+            },
+            {
+              "label": "包含规格符合性检查",
+              "pass": true
+            },
+            {
+              "label": "包含代码质量审查",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 349,
+          "totalMs": 128353,
+          "outputChars": 6991,
+          "reasoningChars": 3339,
+          "usage": {
+            "prompt_tokens": 7722,
+            "completion_tokens": 3707
+          },
+          "excerpt": "**执行流程概览**  \n（所有命令均按顺序列出，实际执行时请在终端逐行运行；本对话仅展示计划、命令与预期结果，未真正执行任何操作）\n\n---\n\n## 1️⃣ 预备工作\n\n| 步骤 | 说明 | 需要执行的命令 |\n|------|------|----------------|\n| 1 | **确认工作树** – 只在本仓库的工作树里执行，避免污染主分支 | `git rev-parse --show-toplevel` |\n| 2 | **创建/验证 SDD 工作区** – 每份计划都有自己的工作区，所有临时文件都放在这里 | `scripts/sdd-workspace docs/superpowers/plans/csv-export-plan.md` |\n| 3 | **读取计划** – 仅一次，获取任务列表与全局约束 | `cat docs/superpowers/plans/csv-export-plan.md` |\n| 4 | **检查冲突** – 任务相互独立，且不与全局约束冲突 → 记录空表 | `echo \"冲突检查表：无\" > <workspace>/conflict-table.md` |\n| 5 | **创建进度账本** – 记录任务完成状态 | `echo \"# SDD ledger — plan: docs/superpowers/plans/csv-export-plan.md\" > <workspace>/progress.md` |\n| 6 | **生成待办列表** – 任务 1‑3 | `echo \"Task 1: 新增 CSV 导出\"…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "obra-writing-skills",
@@ -1765,9 +2146,98 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 YAML frontmatter（name/description）",
+              "pass": false,
+              "note": "没有 frontmatter"
+            },
+            {
+              "label": "description 以 Use when 开头",
+              "pass": false
+            },
+            {
+              "label": "包含基线/压力测试方案",
+              "pass": true
+            },
+            {
+              "label": "包含 ruff",
+              "pass": true
+            },
+            {
+              "label": "包含 pytest",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 5,
+          "score": 6.0,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 1676,
+          "totalMs": 33108,
+          "outputChars": 3732,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 6054,
+            "completion_tokens": 1249
+          },
+          "excerpt": "# 提交代码前必须运行 ruff 和 pytest，失败就不许提交\n\n## Overview\n在提交代码到版本控制系统之前，必须先运行静态代码分析工具 ruff 和单元测试框架 pytest。如果任一工具运行失败，则不允许提交代码。此技能确保代码质量，防止引入有问题的代码。\n\n## When to Use\n- Use when implementing any feature or bugfix before committing code.\n- Use when maintaining code quality in a team environment.\n- Use when ensuring code adheres to style and functional requirements.\n\n## Core Pattern\n1. 在提交代码前，运行 `ruff` 进行静态代码分析。\n2. 运行 `pytest` 进行单元测试。\n3. 如果任一工具运行失败，则不允许提交代码。\n\n## Quick Reference\n| 工具 | 命令 | 失败处理 |\n|------|------|----------|\n| ruff | `ruff check .` | 不允许提交 |\n| pytest | `pytest` | 不允许提交 |\n\n## Implementation\n```markdown\n### 运行 ruff 进行静态代码分析\n在提交代码前，运行以下命令进行静态代码分析：\n```bash\nruff check .\n```\n如果 ruff 发现任何问题，请先修复这些问…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 YAML frontmatter（name/description）",
+              "pass": true
+            },
+            {
+              "label": "description 以 Use when 开头",
+              "pass": true
+            },
+            {
+              "label": "包含基线/压力测试方案",
+              "pass": true
+            },
+            {
+              "label": "包含 ruff",
+              "pass": true
+            },
+            {
+              "label": "包含 pytest",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 275,
+          "totalMs": 229715,
+          "outputChars": 6553,
+          "reasoningChars": 10300,
+          "usage": {
+            "prompt_tokens": 6067,
+            "completion_tokens": 3851
+          },
+          "excerpt": "```markdown\n---\nname: ruff-pytest-before-commit\ndescription: Use when attempting to commit Python code that may contain ruff lint errors or failing pytest tests. The skill enforces that both ruff and pytest must pass before allowing the commit; otherwise the commit is blocked.\n---\n\n# ruff‑pytest‑before‑commit\n\n## Overview\nA discipline‑enforcing skill that guarantees every commit of Python code is lint‑clean and test‑passing.  \nIt intercepts the commit action, runs `ruff` and `pytest`, and aborts the commit if either tool reports failures.\n\n## When to Use\n- **Trigger**: A `git commit` (or any VCS commit) is issued in a Python repository.  \n- **Symptoms**:  \n  - Lint warnings or errors that sh…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "vercel-labs-composition-patterns",
@@ -2071,8 +2541,8 @@
           "passedChecks": 3,
           "totalChecks": 4,
           "score": 7.5,
-          "verdict": "部分通过",
-          "judgedBy": "auto",
+          "verdict": "通过",
+          "judgedBy": "manual",
           "ttftMs": 553,
           "totalMs": 317653,
           "outputChars": 1098,
@@ -2081,10 +2551,12 @@
             "prompt_tokens": 6516,
             "completion_tokens": 11223
           },
-          "excerpt": "## 标记出的问题\n\n- **§1 not-X-but-Y**：\"isn't just a tool — it's a game-changer\"。否定半句没人主张过，纯加重量；顺带触发了 §8 的破折号和 §16 的 \"game-changer\"。\n- **§4 铺垫开场**：\"Let's delve into what makes it truly special\"，宣布要讲重点但不给任何信息（\"delve\" 同时是 §12 高频词）。\n- **§13 拔高意义**：\"a testament to our commitment to excellence\"，把一个数字说成卓越的证明。\n- **§16 销售语言**：\"In today's fast-paced digital landscape\"、\"truly special\"。\n- **§12 AI 高频词**：landscape（抽象）、delve、testament。\n- **§6 三项并列**：\"speed, reliability, and scalability\"（弱信号，但周围 tell 密集）。\n- **§18**：用 \"delivers\" 回避 is。\n\n必须保留的事实：我们的新 API；快；可靠；可扩展；2025 年延迟下降 37%。\n\n## 初稿\n\n> Our new API is fast and reliable, and it scales. Latency dropped 37% in 2025.\n\n## 检查\n\n- 五项复查：无 not-X-but-Y、无金句收尾、无破折号、无加粗标签。三项并…"
+          "excerpt": "## 标记出的问题\n\n- **§1 not-X-but-Y**：\"isn't just a tool — it's a game-changer\"。否定半句没人主张过，纯加重量；顺带触发了 §8 的破折号和 §16 的 \"game-changer\"。\n- **§4 铺垫开场**：\"Let's delve into what makes it truly special\"，宣布要讲重点但不给任何信息（\"delve\" 同时是 §12 高频词）。\n- **§13 拔高意义**：\"a testament to our commitment to excellence\"，把一个数字说成卓越的证明。\n- **§16 销售语言**：\"In today's fast-paced digital landscape\"、\"truly special\"。\n- **§12 AI 高频词**：landscape（抽象）、delve、testament。\n- **§6 三项并列**：\"speed, reliability, and scalability\"（弱信号，但周围 tell 密集）。\n- **§18**：用 \"delivers\" 回避 is。\n\n必须保留的事实：我们的新 API；快；可靠；可扩展；2025 年延迟下降 37%。\n\n## 初稿\n\n> Our new API is fast and reliable, and it scales. Latency dropped 37% in 2025.\n\n## 检查\n\n- 五项复查：无 not-X-but-Y、无金句收尾、无破折号、无加粗标签。三项并…",
+          "autoVerdict": "部分通过",
+          "reviewNote": "命中的 “isn't just” 只出现在“标记出的问题”里对原文的引用；最终改写版本无套话，且保留 37% 与 2025 两个事实。"
         }
       ],
-      "bestVerdict": "部分通过"
+      "bestVerdict": "通过"
     },
     {
       "id": "jimliu-baoyu-infographic",
@@ -2120,9 +2592,89 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择 Skill 内置 layout",
+              "pass": true
+            },
+            {
+              "label": "选择 Skill 内置 style",
+              "pass": true
+            },
+            {
+              "label": "给出图片生成 prompt",
+              "pass": true
+            },
+            {
+              "label": "保留原始数据",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1008,
+          "totalMs": 11835,
+          "outputChars": 1459,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 5077,
+            "completion_tokens": 487
+          },
+          "excerpt": "好的，根据您的要求，我将直接选择布局和风格，并生成信息图的结构化内容和图片生成 prompt。以下是所选的 layout 和 style：\n\n- **Layout**: `comparison-matrix`\n- **Style**: `corporate-memphis`\n\n### 结构化内容\n\n```markdown\n# 国内免费 LLM API 对比\n\n## 学习目标\n- 了解国内主要免费 LLM API 的使用限制和特点。\n- 对比不同 API 的免费额度和使用条款。\n\n## 内容结构\n\n### 1. 标题\n国内免费 LLM API 对比\n\n### 2. 数据点\n- **魔搭每日 2000 次**\n- **智谱 GLM-4-Flash 永久免费**\n- **硅基流动部分 9B 以下模型免费**\n- **Groq 有每分钟限额**\n- **OpenRouter 免费模型每天约 50 次**\n\n### 3. 设计指令\n- 使用清晰、简洁的图表展示对比。\n- 使用图标和颜色区分不同的 API。\n- 保持整体风格一致，便于阅读和理解。\n```\n\n### 图片生成 Prompt\n\n```markdown\n# Prompt for Infographic Generation\n\n## Layout: comparison-matrix\n- Description: A comparison matrix layout to display the features and limitations of different LLM APIs.\n\n## Style: corporate…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择 Skill 内置 layout",
+              "pass": true
+            },
+            {
+              "label": "选择 Skill 内置 style",
+              "pass": true
+            },
+            {
+              "label": "给出图片生成 prompt",
+              "pass": true
+            },
+            {
+              "label": "保留原始数据",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 324,
+          "totalMs": 30493,
+          "outputChars": 1514,
+          "reasoningChars": 1479,
+          "usage": {
+            "prompt_tokens": 5144,
+            "completion_tokens": 1032
+          },
+          "excerpt": "**所选布局与风格**  \n- **布局**：`bento-grid`（信息图默认布局）  \n- **风格**：`craft-handmade`（手绘、纸工风格）  \n\n---\n\n## 结构化内容（`structured-content.md`）\n\n```markdown\n# 国内免费 LLM API 对比\n\n## 学习目标\n- 了解国内主要免费 LLM API 的调用限制与可用模型  \n- 能快速判断哪款 API 更适合日常使用  \n\n## 1. 魔搭每日\n- **调用次数**：2000 次/日  \n- **可用模型**：多模型（含 9B 及以下）  \n- **备注**：每日限额，适合短期实验  \n\n## 2. 智谱 GLM-4-Flash\n- **调用次数**：永久免费  \n- **可用模型**：GLM‑4‑Flash（大模型）  \n- **备注**：无调用次数限制，适合持续使用  \n\n## 3. 硅基流动\n- **调用次数**：不限制  \n- **可用模型**：9B 以下模型免费  \n- **备注**：适合中小规模模型需求  \n\n## 4. Groq\n- **调用次数**：每分钟限额  \n- **可用模型**：多模型（含 9B 以上）  \n- **备注**：适合高并发场景  \n\n## 5. OpenRouter\n- **调用次数**：约 50 次/日  \n- **可用模型**：免费模型集合  \n- **备注**：每日调用次数有限，适合轻量使用  \n\n## 视觉元素建议\n- 每个 API 用一个卡片（矩形）展示  \n- 卡片内部使用简洁图标（如云、齿轮、时钟）  \n- 颜色…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "jimliu-baoyu-markdown-to-html",
@@ -2284,9 +2836,65 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "规划 ≥3 处配图",
+              "pass": true,
+              "note": "计数 4"
+            },
+            {
+              "label": "指定 Type",
+              "pass": true
+            },
+            {
+              "label": "指定 Style",
+              "pass": true
+            },
+            {
+              "label": "给出 prompt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 509,
+          "totalMs": 96139,
+          "outputChars": 2728,
+          "reasoningChars": 1789,
+          "usage": {
+            "prompt_tokens": 4323,
+            "completion_tokens": 1376
+          },
+          "excerpt": "**配图规划（已授权直接决定，无需确认）**\n\n| 序号 | 位置（文章段落/句子） | Type × Style | Prompt 文件名 | Prompt 内容（YAML + 说明） |\n|------|---------------------|--------------|---------------|---------------------------|\n| 1 | “一是限额随时变” | `infographic × minimal-flat` | `01-infographic-quota-variance.md` | ```yaml<br>---<br>type: infographic<br>style: minimal-flat<br>palette: default<br>aspect: 3:2<br>---<br>**Prompt**<br>Create a clean, minimal‑flat infographic that visualises the “quota variance” pit of free LLM APIs. Show a bar chart or gauge that fluctuates over time, with a red warning icon and a caption “限额随时变”. Use a simple colour palette (black, white, light grey, red accent). Add a small legend explaining “每日限额” and “…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "jimliu-baoyu-slide-deck",
@@ -2322,9 +2930,83 @@
           "passedChecks": 0,
           "totalChecks": 3,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "逐页大纲（≥5 页）",
+              "pass": true,
+              "note": "计数 13"
+            },
+            {
+              "label": "包含风格说明",
+              "pass": true
+            },
+            {
+              "label": "包含图片 prompt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1838,
+          "totalMs": 20023,
+          "outputChars": 1448,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 5702,
+            "completion_tokens": 801
+          },
+          "excerpt": "好的，根据您提供的内容和授权直接决定风格的要求，我将为您创建一个包含6页幻灯片的大纲，每页幻灯片将附带风格说明和对应的图片prompt。由于您无法生成图片，我将只提供文本内容。\n\n### 幻灯片大纲\n\n#### 幻灯片 1: 封面\n- **标题**: FreeLLM - 每日核验的免费 AI 模型目录\n- **副标题**: 探索80+模型和20+平台\n- **风格说明**: 简洁、现代、科技感\n- **图片prompt**: 现代科技风格的背景，中央放置FreeLLM的Logo，下方显示副标题\n\n#### 幻灯片 2: 目录介绍\n- **标题**: 目录概览\n- **内容**: FreeLLM收录80+模型、20+平台，提供实测分数、可用性探测和Skill实测\n- **风格说明**: 清晰、信息密集、专业\n- **图片prompt**: 网格布局展示80+模型和20+平台的图标，每个图标下方显示实测分数\n\n#### 幻灯片 3: 模型实测分数\n- **标题**: 模型实测分数\n- **内容**: 展示不同模型的实测分数，按分数高低排序\n- **风格说明**: 数据可视化、清晰、对比强烈\n- **图片prompt**: 柱状图展示不同模型的实测分数，每个柱状图上方显示模型名称\n\n#### 幻灯片 4: 平台可用性探测\n- **标题**: 平台可用性探测\n- **内容**: 展示不同平台的可用性探测结果\n- **风格说明**: 清晰、信息密集、专业\n- **图片prompt**: 表格形式展示不同平台的可用性探测结果，包括平台名称、可用性状态\n\n#### 幻灯片 5: Skill…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:41 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "逐页大纲（≥5 页）",
+              "pass": true,
+              "note": "计数 12"
+            },
+            {
+              "label": "包含风格说明",
+              "pass": true
+            },
+            {
+              "label": "包含图片 prompt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 785,
+          "totalMs": 204079,
+          "outputChars": 3456,
+          "reasoningChars": 13365,
+          "usage": {
+            "prompt_tokens": 5760,
+            "completion_tokens": 5067
+          },
+          "excerpt": "**已授权直接决定风格，无需确认。**  \n下面给出 6 页幻灯片的大纲（含标题、类型、布局）以及每页对应的图片 Prompt（已写入 `prompts/NN-slide-{slug}.md` 的内容）。  \n> **注意**：本技能无法直接生成图片，以下仅为 Prompt 记录，后续请使用您已配置的图像生成后端自行渲染。\n\n---\n\n## 6 页幻灯片大纲\n\n| # | 标题 | 类型 | 布局 |\n|---|------|------|------|\n| 1 | FreeLLM 目录 | 标题 | 标题页 |\n| 2 | FreeLLM 是什么？ | 内容 | 标题+正文 |\n| 3 | 目录范围 | 内容 | 标题+列表 |\n| 4 | 评估指标 | 内容 | 标题+列表 |\n| 5 | Skill 实测 | 内容 | 标题+步骤 |\n| 6 | 结语与行动呼吁 | 内容 | 标题+号召 |\n\n> **风格**：自动匹配 → `blueprint`（grid + cool + technical + balanced）  \n> **受众**：一般技术读者（`general`）  \n> **语言**：中文（`zh`）\n\n---\n\n## 每页图片 Prompt\n\n> **文件命名规则**：`NN-slide-{slug}.md`（`NN` 为两位序号，`slug` 为标题的 kebab‑case 形式）  \n> **前置元信息**：`style`, `audience`, `lang`, `slide_number`, `slug`  \n> **风格说明**：在 Prompt…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "jimliu-baoyu-post-to-wechat",
@@ -2677,9 +3359,99 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 20"
+            },
+            {
+              "label": "目标文件 contract.docx",
+              "pass": true
+            },
+            {
+              "label": "页脚",
+              "pass": true
+            },
+            {
+              "label": "页码",
+              "pass": true
+            },
+            {
+              "label": "签字栏表格",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2489,
+          "totalMs": 26599,
+          "outputChars": 2857,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 11755,
+            "completion_tokens": 996
+          },
+          "excerpt": "以下是使用 `officecli` 生成包含标题、甲乙双方信息段落、带编号的 5 条条款、签字栏表格、页脚页码的合同 `contract.docx` 的完整命令序列：\n\n```bash\n# 安装 officecli (如果尚未安装)\ncurl -fsSL https://d.officecli.ai/install.sh | bash\n\n# 打开终端并验证安装\nofficecli --version\n\n# 创建新文件\nFILE=\"contract.docx\"\nofficecli create \"$FILE\"\n\n# 打开文件\nofficecli open \"$FILE\"\n\n# 添加标题\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"合同\" --prop style=Title --prop size=20pt --prop bold=true --prop spaceAfter=12pt\n\n# 添加甲乙双方信息段落\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"甲方: [甲方名称]\" --prop style=Heading1 --prop size=14pt --prop bold=true --prop spaceAfter=6pt\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"乙方: [乙方名称]\" --prop style=Heading1 --prop size=…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 19"
+            },
+            {
+              "label": "目标文件 contract.docx",
+              "pass": true
+            },
+            {
+              "label": "页脚",
+              "pass": true
+            },
+            {
+              "label": "页码",
+              "pass": true
+            },
+            {
+              "label": "签字栏表格",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 611,
+          "totalMs": 105921,
+          "outputChars": 3046,
+          "reasoningChars": 1420,
+          "usage": {
+            "prompt_tokens": 11863,
+            "completion_tokens": 1628
+          },
+          "excerpt": "下面给出一整套 **officecli** 命令序列，按顺序执行即可在当前目录生成 `contract.docx`。  \n> **注意**  \n> - 所有路径和字符串都已用单引号或双引号正确转义，避免 shell 解释。  \n> - 先 `create` 再 `open`，最后 `save`。  \n> - 这里使用 `listStyle=number` 让 OfficeCLI 自动生成编号列表。  \n> - 页脚使用 `PAGE` 字段，居中显示。  \n\n```bash\n# 1️⃣ 设定文件名\nFILE=\"contract.docx\"\n\n# 2️⃣ 创建并打开文档\nofficecli create \"$FILE\"\nofficecli open \"$FILE\"\n\n# 3️⃣ 标题（Heading1）\nofficecli add \"$FILE\" /body \\\n  --type paragraph \\\n  --prop text=\"合同协议\" \\\n  --prop style=Heading1 \\\n  --prop size=20pt \\\n  --prop bold=true \\\n  --prop spaceAfter=12pt\n\n# 4️⃣ 甲乙双方信息段落（Normal）\nofficecli add \"$FILE\" /body \\\n  --type paragraph \\\n  --prop text=\"甲方：XXX有限公司（以下简称“甲方”）\" \\\n  --prop size=12pt \\\n  --prop spaceAfter=6pt\nofficecli add \"$FIL…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-officecli-academic-paper",
@@ -2715,9 +3487,107 @@
           "passedChecks": 0,
           "totalChecks": 6,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 28"
+            },
+            {
+              "label": "目标文件 paper.docx",
+              "pass": true
+            },
+            {
+              "label": "摘要",
+              "pass": true
+            },
+            {
+              "label": "公式",
+              "pass": true
+            },
+            {
+              "label": "参考文献/引用",
+              "pass": true
+            },
+            {
+              "label": "表格题注",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1954,
+          "totalMs": 31205,
+          "outputChars": 3926,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 12002,
+            "completion_tokens": 1231
+          },
+          "excerpt": "以下是使用 `officecli` 生成学术论文格式 `paper.docx` 的完整命令序列，包含标题、摘要、3 个章节、一个带编号的公式、一张带题注的表格和参考文献（至少 3 条，正文中引用）：\n\n```bash\n# 创建并打开文档\nFILE=\"paper.docx\"\nofficecli create \"$FILE\"\nofficecli open \"$FILE\"\n\n# 设置默认字体\nofficecli set \"$FILE\" / --prop defaultFont=\"Times New Roman\"\n\n# 添加标题\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"标题\" --prop align=center --prop size=20pt --prop bold=true --prop spaceAfter=24pt\n\n# 添加作者信息\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"作者姓名\" --prop align=center --prop size=12pt\nofficecli add \"$FILE\" /body --type paragraph --prop text=\"作者单位\" --prop align=center --prop size=11pt --prop spaceAfter=18pt\n\n# 添加摘要\nofficecli add \"$FILE\" /body --type paragraph --prop te…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:44 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 35"
+            },
+            {
+              "label": "目标文件 paper.docx",
+              "pass": true
+            },
+            {
+              "label": "摘要",
+              "pass": true
+            },
+            {
+              "label": "公式",
+              "pass": true
+            },
+            {
+              "label": "参考文献/引用",
+              "pass": true
+            },
+            {
+              "label": "表格题注",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 15844,
+          "totalMs": 328072,
+          "outputChars": 6337,
+          "reasoningChars": 25657,
+          "usage": {
+            "prompt_tokens": 12104,
+            "completion_tokens": 8218
+          },
+          "excerpt": "下面给出一套完整的 `officecli` 命令序列，按顺序执行即可得到一份符合 APA 7 规范、包含标题、摘要、3 个章节、编号公式、带题注表格以及 3 条参考文献（正文中已引用）的 `paper.docx`。  \n> **注意**：所有命令均在同一 shell 会话中执行，`$FILE` 变量在脚本开始时已定义。\n\n```bash\n# 1️⃣ 目标文件\nFILE=\"paper.docx\"\n\n# 2️⃣ 创建并打开文档\nofficecli create \"$FILE\"\nofficecli open \"$FILE\"\n\n# 3️⃣ 统一字体（Times New Roman 12pt）\nofficecli set \"$FILE\" / --prop defaultFont=\"Times New Roman\"\n\n# ------------------------------------------------------------------\n# 4️⃣ 标题块（单栏，居中）\nofficecli add \"$FILE\" /body --type paragraph \\\n  --prop text=\"The Impact of Remote Work on Team Cohesion\" \\\n  --prop align=center --prop size=20pt --prop bold=true --prop spaceAfter=24pt\n\nofficecli add \"$FILE\" /body --type paragraph \\\n  --prop text=\"Alice…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-officecli-word-form",
@@ -2753,9 +3623,73 @@
           "passedChecks": 0,
           "totalChecks": 6,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:40 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥3 条）",
+              "pass": true,
+              "note": "计数 15"
+            },
+            {
+              "label": "目标文件 leave-form.docx",
+              "pass": true
+            },
+            {
+              "label": "使用内容控件 SDT",
+              "pass": true
+            },
+            {
+              "label": "下拉控件",
+              "pass": true
+            },
+            {
+              "label": "日期控件",
+              "pass": true
+            },
+            {
+              "label": "复选框",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 701,
+          "totalMs": 68079,
+          "outputChars": 3003,
+          "reasoningChars": 1823,
+          "usage": {
+            "prompt_tokens": 12997,
+            "completion_tokens": 1528
+          },
+          "excerpt": "下面给出一套完整的 **officecli** 命令序列，按顺序执行即可得到一个可填写的请假申请表 `leave-form.docx`。  \n> **注意**：  \n> - 所有命令都使用 `FILE` 变量，方便复制粘贴。  \n> - 先 `create` 再 `open`，最后 `close`。  \n> - 保护模式 `forms` 必须放在 **最后**，否则后续的 `set`/`add` 会被拒绝。  \n> - 每个 SDT 都给 `alias` 与 `tag`，并在 `add` 时直接写好 `items`/`format`，不需要 `raw-set`。  \n> - 复选框使用 `formfield`，`name` 长度不超过 20。  \n\n```bash\n# 1️⃣ 预备工作：清理旧文件（可选）\nFILE=leave-form.docx\nofficecli close \"$FILE\" 2>/dev/null; rm -f \"$FILE\"\n\n# 2️⃣ 创建并打开文档\nofficecli create \"$FILE\"\nofficecli open \"$FILE\"\n\n# 3️⃣ 文档元数据（可选）\nofficecli set \"$FILE\" / \\\n  --prop title=\"请假申请表\" \\\n  --prop docDefaults.font=\"Calibri\" \\\n  --prop docDefaults.fontSize=\"12pt\"\n\n# 4️⃣ 标题\nofficecli add \"$FILE\" /body --type paragraph \\\n  --pro…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-morph-ppt",
@@ -2791,9 +3725,91 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 16"
+            },
+            {
+              "label": "目标文件 morph.pptx",
+              "pass": true
+            },
+            {
+              "label": "设置 Morph 过渡",
+              "pass": true
+            },
+            {
+              "label": "跨页形状同名匹配",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2326,
+          "totalMs": 28075,
+          "outputChars": 3224,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 13361,
+            "completion_tokens": 1075
+          },
+          "excerpt": "以下是使用 `officecli` 生成 4 页带 Morph 平滑过渡的 `morph.pptx` 的完整命令序列。这个演示文稿将展示一个圆形从第 1 页左侧移动并放大到第 2 页中央，以及第 3、4 页标题文字平滑切换。\n\n### 第 1 页\n```bash\nFILE=\"morph.pptx\"\nofficecli create \"$FILE\"; officecli open \"$FILE\"\n\n# Slide 1 — 圆形在左侧\nofficecli add \"$FILE\" / --type slide --prop layout=blank --prop background=1E2761\nofficecli add \"$FILE\" /slide[1] --type shape --prop 'name=!!scene-circle' \\\n  --prop preset=circle --prop fill=E94560 --prop opacity=0.3 --prop x=5cm --prop y=8cm --prop width=8cm --prop height=8cm\nofficecli add \"$FILE\" /slide[1] --type shape --prop 'name=#s1-title' \\\n  --prop text=\"The one idea\" --prop x=4cm --prop y=8cm --prop width=26cm --prop height=3cm \\\n  --prop font=Georgia --prop size=48 -…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:44 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 14"
+            },
+            {
+              "label": "目标文件 morph.pptx",
+              "pass": true
+            },
+            {
+              "label": "设置 Morph 过渡",
+              "pass": true
+            },
+            {
+              "label": "跨页形状同名匹配",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 552,
+          "totalMs": 288071,
+          "outputChars": 3960,
+          "reasoningChars": 30197,
+          "usage": {
+            "prompt_tokens": 13460,
+            "completion_tokens": 8509
+          },
+          "excerpt": "下面给出一份完整的 **officecli** 命令序列，用来生成一个 4 页、带有 Morph 平滑过渡的 `morph.pptx`。  \n> **注意**：  \n> - 这份脚本仅展示命令，**不执行**。  \n> - 运行前请确保已安装 `officecli` 并已在终端中 `source` 其环境。  \n> - 运行后请在 PowerPoint 365 / Keynote / WPS 中打开 `morph.pptx` 以查看 Morph 动画效果（LibreOffice 等其它查看器会显示为普通淡入淡出）。  \n\n```bash\n# 1️⃣ 设定文件名\nFILE=\"morph.pptx\"\n\n# 2️⃣ 创建空白演示文稿\nofficecli create \"$FILE\"\n\n# ------------------------------------------------------------------\n# 3️⃣ 第 1 页：圆形从左侧\n# ------------------------------------------------------------------\n# 3.1 新增空白幻灯片（默认背景）\nofficecli add \"$FILE\" / --type slide --prop layout=blank\n\n# 3.2 在第 1 页添加圆形（左侧）\nofficecli add \"$FILE\" /slide[1] --type shape \\\n  --prop 'name=!!scene-ring' \\\n  --prop preset=ellipse…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-officecli-pptx",
@@ -2829,9 +3845,65 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥5 条）",
+              "pass": true,
+              "note": "计数 17"
+            },
+            {
+              "label": "目标文件 product.pptx",
+              "pass": true
+            },
+            {
+              "label": "柱状图",
+              "pass": true
+            },
+            {
+              "label": "使用给定数据",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2500,
+          "totalMs": 33954,
+          "outputChars": 3705,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 12469,
+            "completion_tokens": 1308
+          },
+          "excerpt": "以下是使用 officecli 生成包含封面、痛点、方案、带柱状图的数据页（Q1 30、Q2 45、Q3 70）以及联系方式的 5 页产品介绍 `product.pptx` 的完整命令序列：\n\n```bash\n# 安装 officecli (如果尚未安装)\ncurl -fsSL https://d.officecli.ai/install.sh | bash\n\n# 验证 officecli 版本\nofficecli --version\n\n# 创建新的 PPTX 文件\nofficecli create \"product.pptx\"\n\n# 打开 PPTX 文件\nofficecli open \"product.pptx\"\n\n# 生成封面\nofficecli add \"product.pptx\" / --type slide --prop layout=blank --prop background=1E2761\nofficecli add \"product.pptx\" /slide[1] --type shape --prop text=\"产品介绍\" \\\n  --prop x=2cm --prop y=7cm --prop width=29.87cm --prop height=3cm \\\n  --prop font=Georgia --prop size=44 --prop bold=true --prop color=FFFFFF --prop align=center\nofficecli add \"product.pptx\" /slide[1] --type shape --p…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:47 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-officecli-pitch-deck",
@@ -2867,9 +3939,69 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:46 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥5 条）",
+              "pass": true,
+              "note": "计数 72"
+            },
+            {
+              "label": "目标文件 pitch.pptx",
+              "pass": true
+            },
+            {
+              "label": "市场规模页",
+              "pass": true
+            },
+            {
+              "label": "牵引力页",
+              "pass": true
+            },
+            {
+              "label": "融资需求金额",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 597,
+          "totalMs": 326171,
+          "outputChars": 22875,
+          "reasoningChars": 12456,
+          "usage": {
+            "prompt_tokens": 19746,
+            "completion_tokens": 10631
+          },
+          "excerpt": "**页面规划（10 页）**\n\n| 页码 | 主题 | 关键内容 |\n|------|------|----------|\n| 1 | Cover | 公司名、标语、种子轮、$3M、日期 |\n| 2 | Problem | 关键痛点 + 3 个数据卡 |\n| 3 | Solution | 产品名称 + 3 步流程图 |\n| 4 | Market | TAM / SAM / SOM + 来源 |\n| 5 | Product | 产品截图 + 3 条功能亮点 |\n| 6 | Business Model | LTV / CAC / Payback / GM 四卡片 |\n| 7 | Traction | ARR 曲线 + 关键指标 |\n| 8 | Competition | 对比表（3 竞争对手 + 你） |\n| 9 | Team | 3 人卡片（头像、姓名、角色、前公司） |\n|10 | Ask | $3M、Use‑of‑Funds 4 桶饼 + 18 个月跑道 |\n\n> **注意**  \n> - 所有包含 `$` 的文字必须用 **单引号** 包裹，避免 shell 变量展开。  \n> - 每页都要加 **speaker notes**，否则会被 Gate 5b 拒绝。  \n> - 下面给出完整的 `officecli` 命令序列，直接粘贴到终端即可生成 `pitch.pptx`。\n\n---\n\n```bash\n# 1️⃣ 先定义文件名\nFILE=\"pitch.pptx\"\n\n# ----------------------------------------------------…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "iofficeai-officecli-xlsx",
@@ -2973,9 +4105,99 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 19"
+            },
+            {
+              "label": "目标文件 dashboard.xlsx",
+              "pass": true
+            },
+            {
+              "label": "KPI 使用公式引用 Data",
+              "pass": true
+            },
+            {
+              "label": "折线图",
+              "pass": true
+            },
+            {
+              "label": "默认显示 Dashboard",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1937,
+          "totalMs": 26263,
+          "outputChars": 3115,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 8565,
+            "completion_tokens": 1017
+          },
+          "excerpt": "以下是使用 `officecli` 生成 `dashboard.xlsx` 的完整命令序列，其中包含一个 `Data` 表和一个 `Dashboard` 表。`Data` 表包含 12 个月的营收和成本数据，`Dashboard` 表包含 3 个公式驱动的 KPI（总营收、总成本、毛利率）和一个折线图。文件打开时默认显示 `Dashboard` 表。\n\n### Phase 1 — Data sheet: create, import, format\n\n```bash\nFILE=dashboard.xlsx\nofficecli create \"$FILE\"\nofficecli import \"$FILE\" /Sheet1 --file sales.csv --header\nofficecli set \"$FILE\" '/Sheet1/col[A]' --prop width=12\nofficecli set \"$FILE\" '/Sheet1/col[B]' --prop width=15\nofficecli set \"$FILE\" '/Sheet1/col[C]' --prop width=15\nofficecli set \"$FILE\" '/Sheet1/B2:B13' --prop numFmt='$#,##0'\nofficecli set \"$FILE\" '/Sheet1/C2:C13' --prop numFmt='$#,##0'\nofficecli set \"$FILE\" '/Sheet1/A1:C1' --prop fill=1F3864 --prop font.co…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:46 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥4 条）",
+              "pass": true,
+              "note": "计数 55"
+            },
+            {
+              "label": "目标文件 dashboard.xlsx",
+              "pass": true
+            },
+            {
+              "label": "KPI 使用公式引用 Data",
+              "pass": true
+            },
+            {
+              "label": "折线图",
+              "pass": true
+            },
+            {
+              "label": "默认显示 Dashboard",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 401,
+          "totalMs": 132886,
+          "outputChars": 6671,
+          "reasoningChars": 12466,
+          "usage": {
+            "prompt_tokens": 8594,
+            "completion_tokens": 5373
+          },
+          "excerpt": "下面给出一套完整的 **officecli** 命令序列，按顺序执行即可得到 `dashboard.xlsx`。  \n- **Data** 表：12 个月份 + 营收 + 成本  \n- **Dashboard** 表：3 个 KPI（总营收、总成本、毛利率）+ 1 条折线图  \n- 打开时默认显示 **Dashboard**。  \n\n> **前提**：已在终端中安装并可直接调用 `officecli`。  \n> 运行时请把所有命令粘贴到同一 shell 会话中，按顺序执行即可。  \n> 下面的 `FILE` 变量可以自行改成你想要的文件名。\n\n```bash\n# 1️⃣ 目标文件\nFILE=dashboard.xlsx\n\n# 2️⃣ 创建空文件\nofficecli create \"$FILE\"\n\n# ------------------------------------------------------------------\n# 3️⃣ Data 表：创建、导入、格式化\n# ------------------------------------------------------------------\n# 3.1 创建 Data 表（默认第一个工作表已存在，改名为 Data）\nofficecli set \"$FILE\" '/Sheet1' --prop name=Data\n\n# 3.2 设置列宽\nofficecli set \"$FILE\" '/Data/col[A]' --prop width=12\nofficecli set \"$FILE\" '/Data/col[B…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "composiohq-file-organizer",
@@ -3388,9 +4610,64 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:45 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "理想客户画像",
+              "pass": true
+            },
+            {
+              "label": "打分/优先级",
+              "pass": true
+            },
+            {
+              "label": "触达建议",
+              "pass": true
+            },
+            {
+              "label": "未编造联系方式",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 184,
+          "totalMs": 59172,
+          "outputChars": 3428,
+          "reasoningChars": 245,
+          "usage": {
+            "prompt_tokens": 1679,
+            "completion_tokens": 2109
+          },
+          "excerpt": "## 1️⃣ 理想客户画像（Ideal Customer Profile, ICP）\n\n| 维度 | 具体描述 | 说明 |\n|------|----------|------|\n| **行业** | 电子商务（B2C/B2B） | 主要面向中小型电商平台、独立站、跨境电商 |\n| **公司规模** | 10–200 名员工，年营收 1000 万–1 亿人民币 | 规模足够使用 SaaS，但仍需要成本控制 |\n| **技术栈** | 主要使用 Shopify、WooCommerce、Magento、BigCommerce、或自建前后端（React/Node、Vue/Node、Laravel 等） | 需要与现有系统无缝集成 |\n| **痛点** | 1. 客服响应时间长，导致转化率下降<br>2. 人力成本高，尤其是多语言支持<br>3. 订单/售后流程繁琐，缺乏自动化<br>4. 需要快速迭代客服策略 | AI 客服 SaaS 能解决上述痛点 |\n| **预算** | 预算 5–20 万人民币/年 | 适合中小企业的 SaaS 价格区间 |\n| **决策者** | 运营总监 / 客服经理 / 产品经理 / CTO | 负责客服系统选型与预算审批 |\n| **地理位置** | 主要聚焦一线城市（北京、上海、深圳、广州）及二线城市（成都、杭州、武汉、南京） | 这些城市电商企业活跃度高，预算相对充足 |\n| **技术需求** | 需要多语言、语音/文字混合客服、知识库自动生成、数据分析 | AI 方案可提供的功能 |\n\n---\n\n## 2️⃣ 筛选标准与打分方式\n\n| 维度 |…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "composiohq-twitter-algorithm-optimizer",
@@ -3426,9 +4703,83 @@
           "passedChecks": 0,
           "totalChecks": 3,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "给出多个改写版本",
+              "pass": true,
+              "note": "计数 3"
+            },
+            {
+              "label": "基于互动/算法信号说明",
+              "pass": true
+            },
+            {
+              "label": "讨论外链对推荐的影响",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 753,
+          "totalMs": 11821,
+          "outputChars": 882,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 2919,
+            "completion_tokens": 506
+          },
+          "excerpt": "### 原始推文\n『我们上线了新功能，欢迎大家来试试，链接在这里 https://freellm.top』\n\n### 问题分析\n- **缺乏具体价值主张**：没有说明新功能有什么特别之处或能为用户带来什么。\n- **被动语气**：使用“欢迎大家来试试”，不够主动，难以激发用户兴趣。\n- **无互动引导**：没有明确的互动引导，如提问或号召。\n\n### 改写版本\n\n#### 版本1\n『🚀 新功能上线！我们推出了[新功能名称]，它能帮你[具体好处，如：节省50%时间/提高效率]。立即体验：[链接]！你最喜欢哪个功能？评论区告诉我！#新功能 #效率提升』\n\n**依据**：\n- **明确价值主张**：直接说明新功能的具体好处，吸引用户兴趣。\n- **主动语气**：使用“立即体验”，激发用户行动。\n- **互动引导**：通过提问引导用户在评论区互动，增加回复率。\n\n#### 版本2\n『🔥 [新功能名称]来了！我们终于上线了期待已久的新功能，专为[目标用户群体，如：自由职业者]设计。它能帮你[具体好处，如：轻松管理项目]。点击体验：[链接]！你准备好升级了吗？🚀 #新功能 #自由职业 #项目管理』\n\n**依据**：\n- **明确目标用户**：针对特定用户群体，提高内容相关性。\n- **强调期待感**：使用“期待已久”，增加用户的好奇心。\n- **互动引导**：通过提问“你准备好升级了吗？”引导用户互动。\n\n#### 版本3\n『🌟 大更新！[新功能名称]正式上线，它能帮你[具体好处，如：自动化重复任务]。立即点击体验：[链接]！我们迫不及待想听听你的反馈。你用这个功能会做什么？评论区见！#新…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:46 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "给出多个改写版本",
+              "pass": true,
+              "note": "计数 5"
+            },
+            {
+              "label": "基于互动/算法信号说明",
+              "pass": true
+            },
+            {
+              "label": "讨论外链对推荐的影响",
+              "pass": false
+            }
+          ],
+          "passedChecks": 2,
+          "totalChecks": 3,
+          "score": 6.7,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 322,
+          "totalMs": 38997,
+          "outputChars": 1591,
+          "reasoningChars": 1480,
+          "usage": {
+            "prompt_tokens": 3005,
+            "completion_tokens": 1312
+          },
+          "excerpt": "**优化思路**  \n1. **明确价值** – 给出功能带来的具体好处（节省时间、提升效率等）。  \n2. **触发回复** – 直接提问或发起讨论，鼓励粉丝留言。  \n3. **社区定位** – 用与目标受众（AI/LLM 开发者、内容创作者等）相关的词汇或标签。  \n4. **保持权威** – 说明功能背后的技术或数据，让 Tweepcred 上升。  \n5. **避免“点赞”诱饵** – 只用自然的 CTA，避免 “Like if …” 这类低质量信号。  \n\n---\n\n### 1️⃣ 版本一  \n> 🚀 **新功能上线**：让 AI 文本生成 **速度提升 30%**，一次性生成多语言摘要。  \n> 立即体验 👉 https://freellm.top  \n> 你最想用它做什么？👇  \n\n**为什么有效**  \n- **Real‑graph**：直接提问“你最想用它做什么？”激发回复。  \n- **SimClusters**：使用“多语言摘要”与内容创作者、翻译社区产生共鸣。  \n- **TwHIN**：强调“AI 文本生成”，与个人品牌保持一致。  \n- **Tweepcred**：声称“速度提升 30%”，展示技术实力。  \n- **Engagement Signals**：可获得点赞（价值）、回复（讨论）、收藏（后续参考）。\n\n---\n\n### 2️⃣ 版本二  \n> 🔥 **Hot take**：我们刚发布的功能能在 **1 秒内** 生成 200 字摘要，省时又省力。  \n> 试试 👉 https://freellm.top  \n> 你最想改进的地方是？…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "composiohq-changelog-generator",
@@ -3479,8 +4830,8 @@
           "passedChecks": 3,
           "totalChecks": 4,
           "score": 7.5,
-          "verdict": "部分通过",
-          "judgedBy": "auto",
+          "verdict": "通过",
+          "judgedBy": "manual",
           "ttftMs": 1399,
           "totalMs": 28224,
           "outputChars": 788,
@@ -3489,10 +4840,12 @@
             "prompt_tokens": 842,
             "completion_tokens": 1590
           },
-          "excerpt": "以下是根据提交记录生成的面向用户的更新日志：\n\n---\n\n# 更新日志\n\n## ✨ 新功能\n\n- **Skill 实测页面**：新增在线实测页面，可以直接试用 Skill 并快速查看运行效果，无需自行搭建环境。\n\n- **模型响应速度参考**：模型页新增「首 token 延迟」指标，挑选模型时可以直观对比不同模型的响应快慢。\n\n## 🐛 问题修复\n\n- 修复了在搜索框使用中文输入法时，选词按回车会误触发搜索的问题。\n- 修复了暗色模式下部分按钮不可见的问题。\n\n---\n\n### 处理说明\n\n**已过滤的内部提交**（对用户无感知，按最佳实践不写入用户日志）：\n\n| 提交 | 过滤原因 |\n|------|----------|\n| `chore: bump deps` | 依赖版本升级，无用户可见变化 |\n| `refactor: 拆分 build_static.py` | 内部构建脚本重构，不影响功能 |\n\n**技术 → 用户语言的转换要点**：\n\n- 「中文输入法回车误提交」→ 转换为用户实际遇到的场景描述（“选词按回车会误触发搜索”），而非实现细节（如 `compositionstart`/`compositionend` 事件）\n- 「首 token 延迟」→ 保留术语但补充了用途说明（“对比响应快慢”），让非技术用户也能理解价值\n\n### 发布前建议\n\n1. **核对功能描述**：实测页面的具体能力（如是否需要登录、支持哪些 Skill）建议根据实际产品情况补充\n2. **保存归档**：确认无误后可直接追加到 `CHANGELOG.md` 或用于发布公告\n\n如果你有版…"
+          "excerpt": "以下是根据提交记录生成的面向用户的更新日志：\n\n---\n\n# 更新日志\n\n## ✨ 新功能\n\n- **Skill 实测页面**：新增在线实测页面，可以直接试用 Skill 并快速查看运行效果，无需自行搭建环境。\n\n- **模型响应速度参考**：模型页新增「首 token 延迟」指标，挑选模型时可以直观对比不同模型的响应快慢。\n\n## 🐛 问题修复\n\n- 修复了在搜索框使用中文输入法时，选词按回车会误触发搜索的问题。\n- 修复了暗色模式下部分按钮不可见的问题。\n\n---\n\n### 处理说明\n\n**已过滤的内部提交**（对用户无感知，按最佳实践不写入用户日志）：\n\n| 提交 | 过滤原因 |\n|------|----------|\n| `chore: bump deps` | 依赖版本升级，无用户可见变化 |\n| `refactor: 拆分 build_static.py` | 内部构建脚本重构，不影响功能 |\n\n**技术 → 用户语言的转换要点**：\n\n- 「中文输入法回车误提交」→ 转换为用户实际遇到的场景描述（“选词按回车会误触发搜索”），而非实现细节（如 `compositionstart`/`compositionend` 事件）\n- 「首 token 延迟」→ 保留术语但补充了用途说明（“对比响应快慢”），让非技术用户也能理解价值\n\n### 发布前建议\n\n1. **核对功能描述**：实测页面的具体能力（如是否需要登录、支持哪些 Skill）建议根据实际产品情况补充\n2. **保存归档**：确认无误后可直接追加到 `CHANGELOG.md` 或用于发布公告\n\n如果你有版…",
+          "autoVerdict": "部分通过",
+          "reviewNote": "“chore:” 只出现在“已过滤的内部提交”说明表中；更新日志正文已排除 chore/refactor 两条内部提交。"
         }
       ],
-      "bestVerdict": "部分通过"
+      "bestVerdict": "通过"
     },
     {
       "id": "michalparkola-article-extractor",
@@ -3706,9 +5059,81 @@
           "passedChecks": 0,
           "totalChecks": 3,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "按 rep（反复练习）组织",
+              "pass": true
+            },
+            {
+              "label": "包含交付/上线",
+              "pass": true
+            },
+            {
+              "label": "包含反思/下一步",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1216,
+          "totalMs": 33288,
+          "outputChars": 4281,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 2478,
+            "completion_tokens": 1231
+          },
+          "excerpt": "好的，让我们将这个教程转化为一个可执行的学习/实践计划。首先，我们需要明确一些关键信息：\n\n1. **教程内容**：用 FastAPI 构建 REST API\n2. **目标**：在 4-8 周内能够独立构建一个 REST API\n3. **成功标准**：能够创建一个功能完整的 REST API，并能够部署和测试\n\n基于这些信息，我们可以开始设计我们的 Ship-Learn-Next 计划。\n\n### Step 1: Read the Content\n\n假设我们已经阅读了教程的内容，接下来我们将提取核心教训。\n\n### Step 2: Extract Core Lessons\n\n从教程中，我们可以提取以下核心教训：\n- **Main advice/lessons**：使用 FastAPI 构建 REST API 的基本步骤和最佳实践\n- **Actionable principles**：如何设计 REST API 的端点、如何处理请求和响应、如何进行错误处理\n- **Skills being taught**：FastAPI 的基本使用、Python 的 RESTful 设计、API 测试和部署\n- **Examples/case studies**：教程中提供的示例代码和项目\n\n### Step 3: Define the Quest\n\n根据教程内容，我们的学习目标可以设定为：\n- **Goal**：在 4-8 周内构建一个功能完整的 REST API，并能够部署和测试\n\n### Step 4: Design Rep 1 (The First Iteration)\n\n我们将…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:47 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "按 rep（反复练习）组织",
+              "pass": true
+            },
+            {
+              "label": "包含交付/上线",
+              "pass": true
+            },
+            {
+              "label": "包含反思/下一步",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 508,
+          "totalMs": 47000,
+          "outputChars": 4446,
+          "reasoningChars": 819,
+          "usage": {
+            "prompt_tokens": 2547,
+            "completion_tokens": 1809
+          },
+          "excerpt": "好的，让我们把这段 FastAPI 教程变成一个可执行的学习/实践计划。  \n先帮你把目标具体化，然后再给出第一个可交付的“Rep 1”。\n\n---\n\n## 先问你几个问题\n\n1. **你想在 4–8 周内完成什么？**  \n   例如：  \n   - “构建一个完整的 CRUD API 并部署到 Render”  \n   - “实现用户认证并写单元测试”  \n   - “把 FastAPI 与数据库（PostgreSQL）集成”\n\n2. **成功的标志是什么？**  \n   - “API 能在本地 `localhost:8000` 正常工作并通过 Postman 访问”  \n   - “部署后能在公开域名访问并返回 200”  \n   - “单元测试覆盖率 ≥ 80%”\n\n3. **你想先交付什么？**  \n   - “一个最小可运行的 FastAPI 项目（包含一个 `/items` 路由）”  \n   - “一个 Dockerfile 并在本地容器化”  \n   - “一个 GitHub 仓库并推送代码”\n\n---\n\n## 先给你一个示例的 **Rep 1**（如果你想直接开始）\n\n> **注意**：这只是一个模板，真正的目标和细节请根据你自己的回答来调整。\n\n```markdown\n# Ship-Learn-Next Plan - FastAPI 基础 API\n\n## Quest Overview\n**Goal**: 在 4–8 周内构建并部署一个完整的 FastAPI REST API（含 CRUD、认证、测试）。  \n**Source**: 《用 FastAPI 构…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "michalparkola-unblock-action",
@@ -3803,9 +5228,89 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "分析速率/完成率",
+              "pass": true
+            },
+            {
+              "label": "指出中途插入需求问题",
+              "pass": true
+            },
+            {
+              "label": "处理站会超时",
+              "pass": true
+            },
+            {
+              "label": "给出改进建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 910,
+          "totalMs": 18636,
+          "outputChars": 1390,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 1517,
+            "completion_tokens": 679
+          },
+          "excerpt": "### Sprint 分析诊断\n\n#### 基本 Sprint 分析\n\n1. **交付健康**\n   - **计划点数**: 40/42/45\n   - **完成点数**: 28/30/26\n   - **完成率**: 70%/71%/58%\n   - **趋势**: 第三个 Sprint 完成率显著下降，需要特别关注。\n\n2. **Blockers**\n   - 每个 Sprint 都有 2-3 个需求中途插入，这可能是导致完成率下降的原因之一。\n\n3. **Velocity Pattern**\n   - 第一个 Sprint: 28/40 = 70%\n   - 第二个 Sprint: 30/42 = 71%\n   - 第三个 Sprint: 26/45 = 58%\n   - Velocity 有波动，尤其是第三个 Sprint 下降明显。\n\n4. **立即改进**\n   - 减少 Sprint 中途插入的需求。\n   - 优化站会时间。\n\n#### 专家 Sprint 分析\n\n1. **熵分析**\n   - Sprint 中途插入的需求增加了团队的熵，导致任务切换和重新规划，影响了效率。\n\n2. **认知负荷映射**\n   - 站会经常超过 30 分钟，增加了团队的认知负荷，影响了专注度和效率。\n\n3. **系统性瓶颈识别**\n   - 需求管理流程可能存在瓶颈，导致需求在中途插入。\n   - 站会流程可能存在瓶颈，导致时间超长。\n\n4. **Free Energy 风险信号**\n   - 中途插入的需求增加了不可预测性，需要采取措施减少这种风险。\n\n5. **Flow 效…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:47 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "分析速率/完成率",
+              "pass": true
+            },
+            {
+              "label": "指出中途插入需求问题",
+              "pass": true
+            },
+            {
+              "label": "处理站会超时",
+              "pass": true
+            },
+            {
+              "label": "给出改进建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 216,
+          "totalMs": 31743,
+          "outputChars": 3827,
+          "reasoningChars": 1228,
+          "usage": {
+            "prompt_tokens": 1569,
+            "completion_tokens": 1341
+          },
+          "excerpt": "**Sprint Health Snapshot (Basic)**  \n| Sprint | Planned | Completed | % Completed | Scope‑Creep Events | Stand‑up Avg. |\n|--------|---------|-----------|-------------|--------------------|---------------|\n| 1 | 40 | 28 | 70 % | 2 | >30 min |\n| 2 | 42 | 30 | 71 % | 3 | >30 min |\n| 3 | 45 | 26 | 58 % | 2 | >30 min |\n\n---\n\n## 1️⃣ Basic Sprint Analysis\n\n| Lens | Observation | Immediate Improvement |\n|------|------------|-----------------------|\n| **Delivery Health** | Velocity dropped from 70 % to 58 % in Sprint 3. | Re‑evaluate the 45‑point plan: were all stories truly “ready”? |\n| **Scope Creep** | 2–3 mid‑sprint insertions each sprint. | Adopt a *“no‑new‑stories‑in‑mid‑sprint”* rule or a very…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "hugohe3-ppt-master",
@@ -3841,9 +5346,61 @@
           "passedChecks": 0,
           "totalChecks": 3,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "给出 SVG 页面示例",
+              "pass": true
+            },
+            {
+              "label": "导出 PPTX",
+              "pass": true
+            },
+            {
+              "label": "6 页规划",
+              "pass": true,
+              "note": "计数 7"
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 393,
+          "totalMs": 71644,
+          "outputChars": 5066,
+          "reasoningChars": 2884,
+          "usage": {
+            "prompt_tokens": 2575,
+            "completion_tokens": 2903
+          },
+          "excerpt": "## 生成 6 页可编辑 PPTX 的工作流\n\n下面给出 **计划（Plan）**、**执行（Do）**、**检查（Check）**、**导出（Act）** 的完整步骤，供你直接在本地执行。  \n> ⚠️ 本回答仅提供命令与示例文件内容，**不**执行任何脚本。请在你自己的环境中按顺序运行。\n\n---\n\n### 1️⃣ 计划（Plan） – 步骤 1–5\n\n| 步骤 | 说明 | 需要的输入 |\n|------|------|------------|\n| 1 | 生成页面规划（JSON） | 你提供的产品简介文本 |\n| 2 | 生成页面内容（文本、图片、图表等） | 规划文件 |\n| 3 | 生成 SVG 视觉示例（可选） | 规划文件 |\n| 4 | 生成 PPTX 模板或引用已有模板 | 规划文件 |\n| 5 | 生成最终的 `plan.json`（包含所有页面的布局、文本、图形等） | 规划文件 |\n\n> **示例** `plan.json`（仅示例，实际内容请根据你的需求自行生成）：\n\n```json\n{\n  \"title\": \"FreeLLM 产品介绍\",\n  \"pages\": [\n    {\n      \"id\": \"page1\",\n      \"layout\": \"Title\",\n      \"title\": \"FreeLLM\",\n      \"subtitle\": \"每日核验的免费 AI 模型目录\"\n    },\n    {\n      \"id\": \"page2\",\n      \"layout\": \"Content\",\n      \"title\": \"目录概…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "op7418-nanobanana-ppt-skills",
@@ -3879,9 +5436,91 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "逐页 prompt",
+              "pass": true
+            },
+            {
+              "label": "说明 API Key 配置",
+              "pass": true
+            },
+            {
+              "label": "给出运行命令",
+              "pass": true
+            },
+            {
+              "label": "≥5 页",
+              "pass": true,
+              "note": "计数 10"
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 977,
+          "totalMs": 30952,
+          "outputChars": 2503,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 5107,
+            "completion_tokens": 1150
+          },
+          "excerpt": "### 逐页 Prompt\n\n#### 第 1 页 (封面页)\n```\n画面保持封面的静态构图，中心的3D玻璃环缓慢旋转，内部流动着代表 AI 的蓝色粒子。标题文字\"免费大模型 API 入门\"采用霓虹紫渐变字体，悬浮在玻璃环上方。副标题\"探索 AI 的无限可能\"使用电光蓝色，环绕玻璃环一周。背景为深空黑色，点缀着微小的星光粒子，营造科技感。\n```\n\n#### 第 2 页 (内容页)\n```\n画面从封面平滑过渡，玻璃环解构为透明碎片，散落在页面四周。左侧出现一个简洁的蓝色信息框，标题\"什么是大模型 API？\"使用黑色小字标注。框内文字\"大模型 API 是一种通过互联网访问先进 AI 模型的接口，无需本地部署，即可使用强大的自然语言处理能力。\"采用白色小字，分两行显示。右侧展示一个抽象的 AI 网络图，由蓝色和紫色线条组成，节点处有微光闪烁。\n```\n\n#### 第 3 页 (内容页)\n```\n画面继续从上一页过渡，信息框移动到页面中央，标题\"免费大模型 API 的优势\"使用黑色小字标注。框内文字\"1. 无需成本：免费提供基础 API 调用额度\\n2. 易于使用：简单的 API 调用方式\\n3. 高性能：支持实时响应和大规模数据处理\"采用白色小字，分三行显示。背景是一个动态的蓝色渐变，模拟数据流动的效果。\n```\n\n#### 第 4 页 (数据页)\n```\n画面从上一页过渡，信息框消失，取而代之的是一个数据可视化图表。图表展示一个上升的蓝色曲线，代表使用免费大模型 API 的用户增长趋势。图表下方标注\"用户增长趋势 (2026)\"，使用黑色小字。背景为深灰色，图表周围有白色网格线…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "逐页 prompt",
+              "pass": true
+            },
+            {
+              "label": "说明 API Key 配置",
+              "pass": true
+            },
+            {
+              "label": "给出运行命令",
+              "pass": true
+            },
+            {
+              "label": "≥5 页",
+              "pass": true,
+              "note": "计数 5"
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 271,
+          "totalMs": 63271,
+          "outputChars": 4311,
+          "reasoningChars": 580,
+          "usage": {
+            "prompt_tokens": 5240,
+            "completion_tokens": 1937
+          },
+          "excerpt": "下面给出完整的 **“免费大模型 API 入门”** 5 页 PPT 生成流程。  \n- **风格**：渐变毛玻璃卡片风格（`styles/gradient-glass.md`）  \n- **分辨率**：2K（2752×1536）  \n- **视频**：开启转场视频（可灵 AI + FFmpeg）  \n\n> ⚠️ 本环境无法直接执行脚本，以下内容仅为**示例命令**与**配置**，请在本地或服务器上按顺序执行。\n\n---\n\n## 1️⃣ 先准备环境变量（`.env`）\n\n在项目根目录（或 `~/.claude/skills/ppt-generator/`）创建 `.env` 文件，内容如下：\n\n```bash\n# Google Gemini API Key（必需）\nGEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE\n\n# 可灵 AI API Key（可选，用于视频功能）\nKLING_ACCESS_KEY=YOUR_KLING_ACCESS_KEY_HERE\nKLING_SECRET_KEY=YOUR_KLING_SECRET_KEY_HERE\n```\n\n> **提示**  \n> - `YOUR_GEMINI_API_KEY_HERE`：在 Google Cloud 控制台创建 Gemini API key。  \n> - `YOUR_KLING_ACCESS_KEY_HERE` 与 `YOUR_KLING_SECRET_KEY_HERE`：在可灵 AI 控制台获取。  \n> - 若只想生成图片，可省略可灵相关变量。\n\n---\n\n## 2️⃣ 生成 `s…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "lewislulu-html-ppt-skill",
@@ -3917,9 +5556,85 @@
           "passedChecks": 0,
           "totalChecks": 3,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:38 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 2862 字符"
+            },
+            {
+              "label": "≥5 页幻灯片",
+              "pass": true,
+              "note": "计数 10"
+            },
+            {
+              "label": "支持键盘翻页",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1727,
+          "totalMs": 25210,
+          "outputChars": 3208,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 5166,
+            "completion_tokens": 993
+          },
+          "excerpt": "以下是一个5页的静态HTML演示稿《FreeLLM 季度回顾》的完整HTML文件，支持键盘翻页：\n\n```html\n<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>FreeLLM 季度回顾</title>\n    <link rel=\"stylesheet\" href=\"assets/themes/minimal-white.css\">\n    <script src=\"assets/runtime.js\"></script>\n</head>\n<body data-logo=\"logo.svg\" data-logo-position=\"top-right\" data-logo-size=\"40px\">\n    <div class=\"deck\">\n        <section class=\"slide\">\n            <h1>FreeLLM 季度回顾</h1>\n            <p>2023年第四季度</p>\n        </section>\n        <section class=\"slide\">\n            <h2>数据概览</h2>\n            <div style=\"display: flex; justify-content: space-around…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 2238 字符"
+            },
+            {
+              "label": "≥5 页幻灯片",
+              "pass": true,
+              "note": "计数 12"
+            },
+            {
+              "label": "支持键盘翻页",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 585,
+          "totalMs": 75928,
+          "outputChars": 2560,
+          "reasoningChars": 4882,
+          "usage": {
+            "prompt_tokens": 5300,
+            "completion_tokens": 2159
+          },
+          "excerpt": "```html\n<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>FreeLLM 季度回顾</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\n<!-- 主题（可自行切换） -->\n<link rel=\"stylesheet\" href=\"./assets/themes/corporate-clean.css\">\n\n<!-- 基础样式、字体 -->\n<link rel=\"stylesheet\" href=\"./assets/base.css\">\n<link rel=\"stylesheet\" href=\"./assets/fonts.css\">\n\n<style>\n/* 你可以在这里添加自定义样式 */\n</style>\n</head>\n\n<body data-logo=\"logo.svg\" data-logo-position=\"bottom-right\" data-logo-size=\"40px\">\n\n<div class=\"deck\">\n\n  <!-- 头部（可选） -->\n  <header class=\"deck-header\">FreeLLM 季度回顾</header>\n\n  <!-- 页脚（可选） -->\n  <footer class=\"deck-footer\">© 2026 FreeLLM</footer>\n\n  <!-- 页码 -->\n  <div class=\"s…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "rendercv-rendercv",
@@ -4018,9 +5733,65 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": true,
+              "note": "HTML 2662 字符"
+            },
+            {
+              "label": "按 A4 页面排版",
+              "pass": true
+            },
+            {
+              "label": "保留 23% 成果数据",
+              "pass": true
+            },
+            {
+              "label": "支持打印",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 302,
+          "totalMs": 43555,
+          "outputChars": 4460,
+          "reasoningChars": 435,
+          "usage": {
+            "prompt_tokens": 1189,
+            "completion_tokens": 1796
+          },
+          "excerpt": "下面给出一份 **A4 版、隐私安全** 的 HTML 简历示例。  \n- 所有个人信息（姓名、电话、邮箱）已被占位符替换，避免泄露。  \n- 页面已自包含：所有 CSS、JS（包括 `html2canvas`）均以 `<script>` 或 `<style>` 直接嵌入，**不再依赖 CDN**，可在 `file://` 环境下正常导出 PNG/PDF。  \n- 你可以直接把下面的代码保存为 `resume.html`，用浏览器打开即可看到排版好的简历，并可使用页面顶部的导出按钮生成 PNG/PDF。  \n\n> **⚠️ 重要提示**  \n> 1. 由于当前环境无法执行脚本，下面的代码仅展示最终的 HTML 结构。  \n> 2. 若你想在自己的项目中使用 `scripts/build_resume_html.py` 自动生成，请确保已将 `html2canvas` 下载到本地并在脚本中嵌入。  \n\n---\n\n## 1. 生成 HTML 的命令（示例）\n\n```bash\n# 1. 先把简历内容写成 JSON（已在此示例中直接写入）\ncat > resume.json <<'EOF'\n{\n  \"name\": \"王芳\",\n  \"title\": \"产品经理\",\n  \"contact\": {\n    \"phone\": \"13812345678\",\n    \"email\": \"wangfang@example.com\"\n  },\n  \"experience\": [\n    {\n      \"start\": \"2021\",\n      \"end\": \"至今\",\n      \"company…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "alibaba-open-code-review",
@@ -4183,9 +5954,89 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "发现 SQL 注入",
+              "pass": true
+            },
+            {
+              "label": "发现越权/缺少授权",
+              "pass": true
+            },
+            {
+              "label": "给出严重度/置信度",
+              "pass": false
+            },
+            {
+              "label": "给出修复建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 1097,
+          "totalMs": 23872,
+          "outputChars": 2883,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 4614,
+            "completion_tokens": 968
+          },
+          "excerpt": "根据您提供的 Express 接口代码，我将进行安全审计。由于服务对公网开放且此路由未使用登录中间件，我们需要特别关注潜在的安全风险。\n\n### 1. SQL 注入\n在当前代码中，直接将 `req.params.id` 插入到 SQL 查询中，这可能导致 SQL 注入攻击。攻击者可以通过构造特殊的 `id` 参数来执行恶意的 SQL 命令。\n\n**建议修复**：\n使用参数化查询来防止 SQL 注入。\n\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  const orderId = req.params.id;\n  const order = await db.query('SELECT * FROM orders WHERE id = $1', [orderId]);\n  res.json(order);\n});\n```\n\n### 2. 未授权访问\n由于此路由未使用登录中间件，任何访问者都可以通过发送 GET 请求到 `/api/orders/:id` 来获取订单信息，即使他们没有权限查看这些订单。\n\n**建议修复**：\n在路由中添加权限检查，确保只有授权用户才能访问订单信息。\n\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  if (!req.user || !req.user.isAuthorized) {\n    return res.status(403).json({ error: 'Unauthorized' });\n  }\n\n  co…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "发现 SQL 注入",
+              "pass": true
+            },
+            {
+              "label": "发现越权/缺少授权",
+              "pass": true
+            },
+            {
+              "label": "给出严重度/置信度",
+              "pass": true
+            },
+            {
+              "label": "给出修复建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 419,
+          "totalMs": 54941,
+          "outputChars": 2308,
+          "reasoningChars": 1431,
+          "usage": {
+            "prompt_tokens": 4702,
+            "completion_tokens": 1399
+          },
+          "excerpt": "**安全审计报告 – Express 路由 `/api/orders/:id`**\n\n| 位置 | 代码片段 |\n|------|----------|\n| `app.get('/api/orders/:id', async (req, res) => { … })` | `const order = await db.query(`SELECT * FROM orders WHERE id = ${req.params.id}`);` |\n\n---\n\n## 1. 发现\n\n| # | 发现 | 说明 | 受影响的边界 | 结果 | 影响范围 | 影响级别 |\n|---|------|------|-------------|------|----------|----------|\n| 1 | **SQL 注入** | `req.params.id` 被直接拼接到 SQL 语句中，未做任何转义或参数化。 | 数据库 | 任意 SQL 语句被执行。 | 所有订单表数据，甚至其他表。 | **高** |\n| 2 | **缺失身份验证** | 路由未使用登录中间件，任何人都能访问。 | 访问控制 | 未经授权的读取。 | 所有订单数据。 | **高** |\n| 3 | **缺少错误处理** | 未捕获 `db.query` 可能抛出的异常，导致服务器崩溃或信息泄露。 | 稳定性 | 服务器错误信息泄露。 | 服务器。 | **低**（信息泄露） |\n\n> **核心安全边界**：  \n> - **身份验证**：谁可以访问此 API？  \n> - **授权**：用户是否只能读取自己的订单…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "leonxlnx-design-taste-frontend",
@@ -4221,9 +6072,69 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:40 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "输出完整 HTML 文档且可解析",
+              "pass": false,
+              "note": "没有完整 HTML 文档"
+            },
+            {
+              "label": "内联 CSS",
+              "pass": false
+            },
+            {
+              "label": "未使用 AI 紫色渐变套路",
+              "pass": true
+            },
+            {
+              "label": "响应式",
+              "pass": false
+            },
+            {
+              "label": "使用 CSS 变量定义设计 token",
+              "pass": false
+            }
+          ],
+          "passedChecks": 1,
+          "totalChecks": 5,
+          "score": 2.0,
+          "verdict": "未通过",
+          "judgedBy": "auto",
+          "ttftMs": 4410,
+          "totalMs": 100384,
+          "outputChars": 15276,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 22138,
+            "completion_tokens": 4095
+          },
+          "excerpt": "I'll create a clean, professional design for Ledgerly's SaaS landing page. The design will be consistent with the brand identity. Let's build it directly in HTML with inline CSS. I'll use Tailwind CSS classes for styling.\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\" class=\"font-sans antialiased text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 text-s…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:55 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "未通过"
     },
     {
       "id": "anthropics-claude-api",
@@ -4259,9 +6170,107 @@
           "passedChecks": 0,
           "totalChecks": 6,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "创建 Anthropic 客户端",
+              "pass": false
+            },
+            {
+              "label": "使用流式",
+              "pass": true
+            },
+            {
+              "label": "定义工具",
+              "pass": true
+            },
+            {
+              "label": "处理 tool_use",
+              "pass": true
+            },
+            {
+              "label": "使用 Claude 模型 id",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 6,
+          "score": 8.3,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 4822,
+          "totalMs": 17795,
+          "outputChars": 2617,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 26497,
+            "completion_tokens": 588
+          },
+          "excerpt": "```python\nfrom anthropic import Anthropic\n\nclient = Anthropic(api_key=\"YOUR_API_KEY\")\n\ndef get_weather(tool_use, content):\n    # Replace with your actual tool use logic\n    return {\"type\": \"tool_use\", \"name\": \"get_weather\", \"content\": content}\n\ndef main():\n    system_prompt = \"\"\"\n    You are a helpful assistant that can retrieve weather information for any location. Use the `get_weather` tool to fetch the latest weather data.\n    \"\"\"\n    \n    user_message = \"What's the weather in London?\"\n\n    response = client.beta.messages.stream(\n        model=\"claude-opus-5-5\", max_tokens=4096, tools=[{\"type\": \"get_weather\"}], system=system_prompt, user=user_message\n    )\n\n    for chunk in response:…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:50 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "创建 Anthropic 客户端",
+              "pass": true
+            },
+            {
+              "label": "使用流式",
+              "pass": true
+            },
+            {
+              "label": "定义工具",
+              "pass": true
+            },
+            {
+              "label": "处理 tool_use",
+              "pass": true
+            },
+            {
+              "label": "使用 Claude 模型 id",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 762,
+          "totalMs": 91828,
+          "outputChars": 5015,
+          "reasoningChars": 3939,
+          "usage": {
+            "prompt_tokens": 26398,
+            "completion_tokens": 2360
+          },
+          "excerpt": "下面给出一个完整的 **Python** 示例，演示如何：\n\n1. 通过 **Anthropic SDK** 调用 Claude Opus 5.5  \n2. 在请求中声明一个自定义工具 `get_weather`  \n3. 以 **流式** 的方式打印模型的回答  \n4. 当模型返回 `tool_use` 时，调用本地实现的 `get_weather` 并把结果返回给模型，完成一次完整的工具调用循环  \n\n> **注意**  \n> - 代码使用的是 **官方 Python SDK 1.x**（`anthropic` 包）。  \n> - 需要先在环境里安装 SDK：`pip install anthropic`。  \n> - 代码示例仅演示单轮对话；若需要多轮对话，只需把 `messages` 继续追加即可。  \n\n```python\n# -*- coding: utf-8 -*-\n\n\"\"\"\n示例：使用 Anthropic Python SDK 调用 Claude Opus 5.5，流式输出回答，\n并在模型需要时调用自定义工具 get_weather。\n\"\"\"\n\nimport json\nfrom typing import Dict\n\nimport anthropic\nfrom anthropic import Anthropic, MessageParam, ToolParam\nfrom anthropic.types import (\n    ContentBlockDeltaEvent,\n    ToolUseEvent,\n    ToolResultBlockParam,…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "obra-dispatching-parallel-agents",
@@ -4432,17 +6441,13 @@
             },
             {
               "label": "选项：保留分支",
-              "pass": false
-            },
-            {
-              "label": "选项：丢弃",
-              "pass": false
+              "pass": true
             }
           ],
-          "passedChecks": 3,
-          "totalChecks": 5,
-          "score": 6.0,
-          "verdict": "部分通过",
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
           "judgedBy": "auto",
           "ttftMs": 432,
           "totalMs": 95559,
@@ -4455,7 +6460,7 @@
           "excerpt": "我正在使用 finishing-a-development-branch skill 来完成这项收尾工作。\n\n当前环境无法直接执行命令，所以需要你在仓库里运行下面的命令并把输出贴给我，我会根据实际结果继续走流程。\n\n## 第 1 步：验证测试套件\n\n收尾的前提是全量测试通过。请运行本项目的完整测试套件（按项目类型选用，若是其他命令则以项目的为准）：\n\n```bash\nnpm test        # Node/JS\ncargo test      # Rust\npytest          # Python\ngo test ./...   # Go\n```\n\n- **如有失败**：把失败输出贴给我，我们先修复——选项菜单只会在测试全绿之后出现。\n- **如果全绿**：继续第 2 步。\n\n## 第 2 步：检测环境\n\n```bash\nGIT_DIR=$(cd \"$(git rev-parse --git-dir)\" 2>/dev/null && pwd -P)\nGIT_COMMON=$(cd \"$(git rev-parse --git-common-dir)\" 2>/dev/null && pwd -P)\nWORKTREE_PATH=$(git rev-parse --show-toplevel)\necho \"GIT_DIR=$GIT_DIR\"\necho \"GIT_COMMON=$GIT_COMMON\"\necho \"WORKTREE_PATH=$WORKTREE_PATH\"\ngit branch --show-current\n```\n\n请把全部输出贴给我。这些值决定后续走法…"
         }
       ],
-      "bestVerdict": "部分通过"
+      "bestVerdict": "通过"
     },
     {
       "id": "vercel-labs-react-view-transitions",
@@ -4491,9 +6496,64 @@
           "passedChecks": 0,
           "totalChecks": 4,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:52 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 <ViewTransition> 组件",
+              "pass": true
+            },
+            {
+              "label": "共享元素命名",
+              "pass": true
+            },
+            {
+              "label": "开启 Next.js 实验配置",
+              "pass": false
+            },
+            {
+              "label": "给出代码",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 411,
+          "totalMs": 264431,
+          "outputChars": 8865,
+          "reasoningChars": 10885,
+          "usage": {
+            "prompt_tokens": 3531,
+            "completion_tokens": 5440
+          },
+          "excerpt": "下面给出一个完整、可直接拷贝到 **Next App Router** 项目中的示例，演示如何让「商品列表 → 商品详情」之间的缩略图平滑过渡成大图。  \n（假设你已经在 `app/` 目录下使用了 App Router，React 18+ 已经内置，**不需要再手动安装** `react@canary`。）\n\n---\n\n## 1️⃣ 目录结构（仅示例）\n\n```\napp/\n├─ products/\n│  ├─ page.tsx          // 商品列表页\n│  └─ [id]/\n│     └─ page.tsx       // 商品详情页\n├─ globals.css\n└─ layout.tsx          // 需要时可在全局布局里包裹 <ViewTransition>\n```\n\n> **Tip**：如果你想让 *所有* 页面都使用同一套路由动画（例如“前进/后退”滑动），可以把 `<ViewTransition>` 放到 `layout.tsx`。下面的示例把动画写在每个页面里，方便演示。\n\n---\n\n## 2️⃣ 代码实现\n\n### 2.1 `app/products/page.tsx`（商品列表页）\n\n```tsx\n// app/products/page.tsx\nimport Link from 'next/link';\nimport { ViewTransition } from 'react';\nimport { useProducts } from '@/hooks/useProducts'; // 你自己的数据钩子\n\nexport defa…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "部分通过"
     },
     {
       "id": "mattpocock-diagnosing-bugs",
@@ -4529,9 +6589,97 @@
           "passedChecks": 0,
           "totalChecks": 5,
           "excerpt": ""
+        },
+        {
+          "modelId": "zhipu",
+          "provider": "智谱 BigModel",
+          "model": "glm-4-flash-250414",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先建立反馈循环",
+              "pass": true
+            },
+            {
+              "label": "复现并最小化",
+              "pass": true
+            },
+            {
+              "label": "提出可证伪假设",
+              "pass": true
+            },
+            {
+              "label": "加入观测/仪表",
+              "pass": true
+            },
+            {
+              "label": "修复后加回归测试",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 782,
+          "totalMs": 34324,
+          "outputChars": 3632,
+          "reasoningChars": 0,
+          "usage": {
+            "prompt_tokens": 2189,
+            "completion_tokens": 1333
+          },
+          "excerpt": "好的，我们将按照 `diagnosing-bugs` 技能的步骤来诊断这个问题。\n\n### Phase 1: Build a feedback loop\n\n#### 1. Failing test\n首先，检查是否有针对 `/api/orders` 列表接口的测试。如果有，运行这些测试并查看是否有失败的测试。\n\n```bash\n# 假设测试脚本路径为 test_api_orders.sh\n./test_api_orders.sh\n```\n\n#### 2. Curl / HTTP script\n如果没有测试，可以编写一个简单的 `curl` 脚本来调用接口并检查响应时间。\n\n```bash\n# 创建一个简单的 curl 脚本\ncat << 'EOF' > curl_api_orders.sh\ncurl -o /dev/null -s -w \"%{time_total}\\n\" http://localhost:3000/api/orders\nEOF\n\n# 运行脚本\n./curl_api_orders.sh\n```\n\n#### 3. CLI invocation\n如果有 CLI 工具可以调用该接口，可以使用一个固定的输入来调用它，并比较输出。\n\n```bash\n# 假设 CLI 工具为 order_cli\norder_cli --list > output.txt\ndiff output.txt known_good_output.txt\n```\n\n#### 4. Headless browser script\n如果接口是 UI 驱动的，可以使用 Playwright 或 Puppet…"
+        },
+        {
+          "modelId": "nvidia_oss",
+          "provider": "NVIDIA NIM",
+          "model": "openai/gpt-oss-20b",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:49 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先建立反馈循环",
+              "pass": true
+            },
+            {
+              "label": "复现并最小化",
+              "pass": true
+            },
+            {
+              "label": "提出可证伪假设",
+              "pass": false
+            },
+            {
+              "label": "加入观测/仪表",
+              "pass": true
+            },
+            {
+              "label": "修复后加回归测试",
+              "pass": false
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 5,
+          "score": 6.0,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 533,
+          "totalMs": 58736,
+          "outputChars": 2474,
+          "reasoningChars": 2129,
+          "usage": {
+            "prompt_tokens": 2257,
+            "completion_tokens": 1771
+          },
+          "excerpt": "## Phase 1 – 建立可复现、可判定的反馈循环\n\n下面给出一个 **单一可执行脚本**，它会：\n\n1. 发送 100 次 `/api/orders` 请求（可并发或顺序，取决于你想要的负载）。\n2. 记录每一次请求的总耗时（`time_total`）。\n3. 计算 **p95**（第 95 百分位）并与阈值做比较。\n4. 如果 p95 超过阈值（例如 500 ms）就退出码 1，输出 “RED”，否则退出码 0，输出 “GREEN”。\n\n> **为什么是“可判定”**  \n> 该脚本只关心你报告的症状（p95 变慢），并且只在满足该症状时返回红色。  \n> 这正是 Skill 里对 “tight loop” 的定义：  \n> *单一命令 → 触发 bug → 明确断言 → 可重复 → 快速*。\n\n---\n\n### 1. 脚本：`scripts/benchmark_orders.sh`\n\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\n\n# 读取环境变量（保持机密不泄露）\nAPI_URL=\"${API_URL:-http://localhost:3000/api/orders}\"\nAUTH_TOKEN=\"${AUTH_TOKEN:-<REDACTED>}\"\n# 你可以在 CI / 本地通过 env 传入这些变量\n\n# 发送 100 次请求，使用 curl 的 --write-out 记录耗时\n# 这里用 `parallel` 让请求并发 10 个，提升重现率\nREQ_COUNT=100\nPARALLEL=10\nTHRESHOLD…"
         }
       ],
-      "bestVerdict": "调用失败"
+      "bestVerdict": "通过"
     },
     {
       "id": "mattpocock-implement-spec",
@@ -4599,6 +6747,136 @@
         }
       ],
       "bestVerdict": "通过"
+    }
+  ],
+  "rounds": [
+    {
+      "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+      "models": [
+        "modelscope",
+        "nvidia"
+      ],
+      "skills": 79,
+      "skillIds": [
+        "alibaba-open-code-review",
+        "anthropics-algorithmic-art",
+        "anthropics-brand-guidelines",
+        "anthropics-canvas-design",
+        "anthropics-claude-api",
+        "anthropics-doc-coauthoring",
+        "anthropics-docx",
+        "anthropics-frontend-design",
+        "anthropics-internal-comms",
+        "anthropics-mcp-builder",
+        "anthropics-pdf",
+        "anthropics-pptx",
+        "anthropics-skill-creator",
+        "anthropics-theme-factory",
+        "anthropics-web-artifacts-builder",
+        "anthropics-webapp-testing",
+        "anthropics-xlsx",
+        "ayghri-i-have-adhd",
+        "blader-humanizer",
+        "cloudflare-security-audit",
+        "composiohq-changelog-generator",
+        "composiohq-competitive-ads-extractor",
+        "composiohq-content-research-writer",
+        "composiohq-file-organizer",
+        "composiohq-invoice-organizer",
+        "composiohq-lead-research-assistant",
+        "composiohq-meeting-insights-analyzer",
+        "composiohq-tailored-resume-generator",
+        "composiohq-twitter-algorithm-optimizer",
+        "hugohe3-ppt-master",
+        "iofficeai-morph-ppt",
+        "iofficeai-officecli",
+        "iofficeai-officecli-academic-paper",
+        "iofficeai-officecli-data-dashboard",
+        "iofficeai-officecli-docx",
+        "iofficeai-officecli-pitch-deck",
+        "iofficeai-officecli-pptx",
+        "iofficeai-officecli-word-form",
+        "iofficeai-officecli-xlsx",
+        "jimliu-baoyu-article-illustrator",
+        "jimliu-baoyu-cover-image",
+        "jimliu-baoyu-infographic",
+        "jimliu-baoyu-markdown-to-html",
+        "jimliu-baoyu-post-to-wechat",
+        "jimliu-baoyu-post-to-x",
+        "jimliu-baoyu-slide-deck",
+        "jimliu-baoyu-url-to-markdown",
+        "jimliu-baoyu-xhs-images",
+        "jzcreative-html-resume-beautifier",
+        "leonxlnx-design-taste-frontend",
+        "lewislulu-html-ppt-skill",
+        "mattpocock-diagnosing-bugs",
+        "mattpocock-implement-spec",
+        "michalparkola-article-extractor",
+        "michalparkola-learn-this",
+        "michalparkola-scrum-sage",
+        "michalparkola-ship-learn-next",
+        "michalparkola-unblock-action",
+        "michalparkola-youtube-transcript",
+        "obra-brainstorming",
+        "obra-dispatching-parallel-agents",
+        "obra-executing-plans",
+        "obra-finishing-a-development-branch",
+        "obra-receiving-code-review",
+        "obra-requesting-code-review",
+        "obra-subagent-driven-development",
+        "obra-systematic-debugging",
+        "obra-test-driven-development",
+        "obra-using-git-worktrees",
+        "obra-verification-before-completion",
+        "obra-writing-plans",
+        "obra-writing-skills",
+        "op7418-nanobanana-ppt-skills",
+        "rendercv-rendercv",
+        "vercel-labs-composition-patterns",
+        "vercel-labs-react-best-practices",
+        "vercel-labs-react-native-skills",
+        "vercel-labs-react-view-transitions",
+        "vercel-labs-web-design-guidelines"
+      ]
+    },
+    {
+      "runAt": "2026-10-09 17:35 CST (UTC+08:00)",
+      "models": [
+        "zhipu",
+        "nvidia_oss"
+      ],
+      "skills": 29,
+      "skillIds": [
+        "anthropics-algorithmic-art",
+        "anthropics-canvas-design",
+        "anthropics-claude-api",
+        "anthropics-frontend-design",
+        "anthropics-web-artifacts-builder",
+        "cloudflare-security-audit",
+        "composiohq-lead-research-assistant",
+        "composiohq-twitter-algorithm-optimizer",
+        "hugohe3-ppt-master",
+        "iofficeai-morph-ppt",
+        "iofficeai-officecli-academic-paper",
+        "iofficeai-officecli-data-dashboard",
+        "iofficeai-officecli-docx",
+        "iofficeai-officecli-pitch-deck",
+        "iofficeai-officecli-pptx",
+        "iofficeai-officecli-word-form",
+        "jimliu-baoyu-article-illustrator",
+        "jimliu-baoyu-infographic",
+        "jimliu-baoyu-slide-deck",
+        "jzcreative-html-resume-beautifier",
+        "leonxlnx-design-taste-frontend",
+        "lewislulu-html-ppt-skill",
+        "mattpocock-diagnosing-bugs",
+        "michalparkola-scrum-sage",
+        "michalparkola-ship-learn-next",
+        "obra-subagent-driven-development",
+        "obra-writing-skills",
+        "op7418-nanobanana-ppt-skills",
+        "vercel-labs-react-view-transitions"
+      ]
     }
   ]
 }

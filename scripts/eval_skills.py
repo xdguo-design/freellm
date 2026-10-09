@@ -127,7 +127,7 @@ def scrub(text: str) -> str:
         value = os.environ.get(name)
         if value and len(value) >= 6:
             text = text.replace(value, "[REDACTED]")
-    text = re.sub(r"(?i)(authorization\s*[:=]\s*)(bearer\s+)?[^\s\"',}]+", r"\1[REDACTED]", text)
+    text = re.sub(r"(?i)(authorization\s*[:=]\s*)(bearer\s+)?[^\s\"'\\,}]+", r"\1[REDACTED]", text)
     text = re.sub(r"(?i)bearer\s+[A-Za-z0-9._\-]{8,}", "Bearer [REDACTED]", text)
     text = re.sub(r"\b(sk|nvapi|gsk|ms)-[A-Za-z0-9_\-]{8,}", r"\1-[REDACTED]", text)
     return text
@@ -568,11 +568,16 @@ def main(argv: list[str] | None = None) -> int:
     skills = load_skills()
     review = json.loads(REVIEW_PATH.read_text(encoding="utf-8")).get("reviews", {}) if REVIEW_PATH.is_file() else {}
 
+    if args.apply:
+        args.regrade = True  # always grade stored outputs with the current rubric before touching site data
     if args.apply or args.regrade:
         raw = json.loads((out / "skills-raw.json").read_text(encoding="utf-8"))
         scope = set(raw.get("skillIds") or [s["id"] for s in skills])
         skills = [s for s in skills if s["id"] in scope]
-        runs = raw["runs"] + not_executed(raw["runs"], skills, raw["models"], tasks)
+        runs = raw["runs"]
+        for rnd in raw.get("rounds") or [{"models": raw["models"], "skillIds": [s["id"] for s in skills]}]:
+            ids = set(rnd.get("skillIds") or [s["id"] for s in skills])
+            runs = runs + not_executed(runs, [s for s in skills if s["id"] in ids], rnd.get("models") or raw["models"], tasks)
         if args.regrade:
             for r in runs:
                 # Stored output is trimmed to RAW_CHARS; a trimmed output keeps the grade it got on the full text.
@@ -675,7 +680,7 @@ def main(argv: list[str] | None = None) -> int:
         first_run_at = prior.get("runAt") or run_at
         rounds = list(prior.get("rounds") or [{"runAt": prior.get("runAt"), "models": prior.get("models"),
                                                    "skills": len(prior.get("skillIds") or [])}])
-        rounds.append({"runAt": run_at, "models": models, "skills": len(todo)})
+        rounds.append({"runAt": run_at, "models": models, "skills": len(todo), "skillIds": [s["id"] for s in todo]})
         merged = {"schemaVersion": 1, "suite": SUITE_VERSION, "runAt": first_run_at, "vantage": vantage,
                   "models": all_models, "skillIds": [s["id"] for s in scope], "rounds": rounds,
                   "wallTimeSec": round((prior.get("wallTimeSec") or 0) + wall, 1),
