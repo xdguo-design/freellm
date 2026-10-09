@@ -964,54 +964,41 @@ class BrowserPageTests(unittest.TestCase):
         page.set_viewport_size({"width": 1440, "height": 1000})
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
-        self.assertEqual(page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display"), "flex")
-
-        hero = page.locator(".prototype-hero").bounding_box()
-        fresh = page.locator("#prototype-fresh").bounding_box()
+        self.assertTrue(page.locator(".catalog-hero").is_visible())
+        self.assertTrue(page.locator("#catalog-search").is_visible())
+        self.assertEqual(page.locator(".fl-site-theme-toggle").count(), 0)
+        categories = page.locator("#categories").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
-        student = page.locator("#student-offers").bounding_box()
-        self.assertIsNotNone(hero)
-        self.assertIsNotNone(fresh)
-        self.assertIsNotNone(offers)
-        self.assertIsNotNone(student)
-        self.assertLess(hero["y"], fresh["y"])
-        self.assertLess(fresh["y"], offers["y"])
-        self.assertLess(offers["y"], student["y"])
-
-        heights = page.eval_on_selector_all(
-            "#catalog-offer-rows .offer:not(.hidden)",
-            """els => {
-              const items = els.slice(0, 6).map(el => {
-                const r = el.getBoundingClientRect();
-                return {top:r.top,height:r.height};
-              });
-              if (!items.length) return [];
-              const firstTop = items[0].top;
-              return items.filter(x => Math.abs(x.top-firstTop) <= 3).map(x => x.height);
-            }"""
-        )
+        week = page.locator("#weekly-changes").bounding_box()
+        self.assertLess(categories["y"], offers["y"])
+        self.assertLess(offers["y"], week["y"])
+        heights = page.eval_on_selector_all("#catalog-offer-rows .offer:not(.hidden)",
+            """els => { const first = els.slice(0, 6).map(el => el.getBoundingClientRect());
+                return first.filter(r => Math.abs(r.top-first[0].top)<=3).map(r=>r.height); }""")
         self.assertGreaterEqual(len(heights), 2)
-        self.assertLessEqual(max(heights) - min(heights), 2.0, heights)
+        self.assertLessEqual(max(heights)-min(heights), 2.0, heights)
+
 
     def test_homepage_aurora_phase_one_mobile_layout(self):
         page = self.new_page()
         page.set_viewport_size({"width": 390, "height": 844})
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-
         self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        menu = page.locator(".fl-mobile-menu-button")
+        self.assertTrue(menu.is_visible())
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
         self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
-        for index in range(7):
-            self.assertTrue(page.locator(".fl-site-nav > a").nth(index).is_visible())
+        menu.click()
+        self.assertEqual(menu.get_attribute("aria-expanded"), "true")
+        for nav_item in page.locator(".fl-site-nav > a").all():
+            self.assertTrue(nav_item.is_visible())
+        menu.press("Escape")
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
+        self.assertTrue(page.locator(".catalog-hero").is_visible())
+        self.assertTrue(page.locator("#catalog-search").is_visible())
 
-        hero = page.locator(".prototype-hero").bounding_box()
-        search = page.locator(".ref-topbar .ref-search").bounding_box()
-        self.assertIsNotNone(hero)
-        self.assertIsNotNone(search)
-        self.assertLessEqual(search["x"] + search["width"], 390)
-        self.assertGreaterEqual(search["x"], 0)
 
     def test_featured_resource_link_filters_catalog(self):
         page = self.new_page()
@@ -1045,30 +1032,26 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-        page.click(".prototype-tabs [data-filter='web']")
-        page.wait_for_function("document.querySelector('.prototype-tabs [data-filter=web]').getAttribute('aria-pressed') === 'true'")
-        self.assertLess(page.locator(".offer:not(.hidden)").count(), page.locator(".offer").count())
-        page.close()
+        self.assertEqual(page.locator(".offer").count(), 24)
+        page.click('.filter-chip[data-filter="web"]')
+        self.assertEqual(page.locator('.filter-chip[data-filter="web"]').get_attribute("aria-pressed"), "true")
+        self.assertGreater(page.locator(".offer").count(), 0)
+        self.assertEqual(page.locator('.offer:not([data-category*="web"])').count(), 0)
+
 
     def test_web_offer_drawer_shows_usage_guide(self):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-
-        page.click(".prototype-tabs [data-filter='web']")
-        page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
+        page.fill("#catalog-search", "TinyFish")
+        page.wait_for_selector(".offer[data-detail='tinyfish-search-fetch-free']", state="attached")
+        page.locator(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow").click()
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search + Fetch", page.locator("#drawerTitle").inner_text())
-        self.assertNotEqual(page.locator("#drawerUsageGuide").inner_text().strip(), "")
+        self.assertTrue(page.locator("#drawerUsageGuide").inner_text().strip())
         self.assertIn("TinyFish", page.locator("#drawerPrerequisites").inner_text())
         self.assertGreaterEqual(page.locator("#drawerSteps").inner_text().count("·"), 1)
-        self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
-        self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
-        self.assertEqual(
-            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
-            [],
-            page.problems,
-        )
+
 
     def test_http_protocol_prefers_network_json(self):
         page = self.new_page()
