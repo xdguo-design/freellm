@@ -1226,7 +1226,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-10-08 / official OpenCode Zen docs",
+    "checkedSummary": "2026-10-09 / official OpenCode Zen docs",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -1261,12 +1261,12 @@
       "https://opencode.ai/docs/en/zen/",
       "https://opencode.ai/zen/v1/models"
     ],
-    "evidence": "2026-10-08 复核 OpenCode Zen 官方文档（页面更新于 2026-10-08）：定价表将 Big Pickle、Space Bunny Free、LongCat 2.5 Preview Free、Exo Free、Fledge Alpha Free、MiMo-V2.6-Flash Free、MiMo-V2.5 Free、Ling 3.1 Flash Free、Ling 3.0 Flash Fin Free、Nemotron 3 Ultra Free、Nemotron 3.5 Lightning Free、Muse Spark 1.3 Contributor Free、Jev 1.13 Free 的输入/输出标为 Free，并逐一注明为限时免费；免费期间部分模型的请求数据可能用于改进模型。",
+    "evidence": "2026-10-09 复核 OpenCode Zen 官方文档（页面更新于 2026-10-08）：定价表将 Big Pickle、Space Bunny Free、LongCat 2.5 Preview Free、Step 5 Preview Free、Exo Free、MiMo-V2.6-Flash Free、MiMo-V2.5 Free、Ling 3.1 Flash Free、Ling 3.0 Flash Fin Free、Nemotron 3 Ultra Free、Nemotron 3.5 Lightning Free、Muse Spark 1.3 Contributor Free、Jev 1.13 Free 共 13 个模型的输入/输出标为 Free，并逐一注明为限时免费；10-08 版本中的 Fledge Alpha Free 已不在端点表与定价表中，新增阶跃星辰 Step 5 Preview Free（step-5-preview-free）。免费期间部分模型的请求数据可能用于改进模型。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-09",
     "checkedBy": "manual",
-    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 2026-10-09 复核：Fledge Alpha Free 已从官方免费列表移除；新增 Step 5 Preview Free（阶跃星辰官方宣布的一周免费活动之一）。",
     "endpointCheck": {
       "checkedAt": "2026-09-23",
       "verdict": "OK",
@@ -9121,19 +9121,19 @@
         "Vercel account",
         "Vercel AI Gateway API key"
       ],
-        "steps": [
-          "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
-          "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
-          "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
-          "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
-        ],
-        "stepsEn": [
-          "Open the Ling 3.1 Flash (Free) model page in Vercel AI Gateway and sign in.",
-          "Create an AI Gateway API key; never expose it in browser-side code.",
-          "Send requests with model ID inclusionai/ling-3.1-flash-free and check the actual provider and usage in the dashboard.",
-          "The promotion ends on 2026-10-13; check the model page and billing status before using it afterward."
-        ],
-        "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
+      "steps": [
+        "打开 Vercel AI Gateway 的 Ling 3.1 Flash (Free) 模型页并登录。",
+        "创建 AI Gateway API Key；不要在客户端网页代码中公开密钥。",
+        "使用模型 ID inclusionai/ling-3.1-flash-free 发起请求，并在控制台检查实际提供商与用量。",
+        "促销期截至 2026-10-13；过期后先检查模型页和计费状态再继续调用。"
+      ],
+      "stepsEn": [
+        "Open the Ling 3.1 Flash (Free) model page in Vercel AI Gateway and sign in.",
+        "Create an AI Gateway API key; never expose it in browser-side code.",
+        "Send requests with model ID inclusionai/ling-3.1-flash-free and check the actual provider and usage in the dashboard.",
+        "The promotion ends on 2026-10-13; check the model page and billing status before using it afterward."
+      ],
+      "endpoint": "https://ai-gateway.vercel.sh/v1/chat/completions",
       "method": "POST",
       "authentication": "Authorization: Bearer ${AI_GATEWAY_API_KEY}",
       "examples": {
@@ -9577,5 +9577,155 @@
         }
       ]
     }
+  },
+  {
+    "id": "stepfun-step-5-preview-free-week",
+    "order": 74,
+    "date": "2026-10-09",
+    "lastVerifiedAt": "2026-10-09",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check OpenCode Zen / partner tool terms and StepFun model terms before commercial use.",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "StepFun Step 5 Preview · one-week free access (OpenCode Zen and partner tools)",
+    "title": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
+    "titleZh": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
+    "titleEn": "StepFun Step 5 Preview · One-week free access",
+    "providerMark": "阶跃",
+    "provider": "OpenCode Zen",
+    "providerMeta": "OpenCode Zen · 阶跃星辰 StepFun",
+    "providerMetaEn": "OpenCode Zen · StepFun",
+    "model": "Step 5 Preview · 600B 总参数 / 27B 激活 · 1M 上下文",
+    "modelMeta": "600B total / 27B active MoE · 1M context · vision input",
+    "freeModels": [
+      {
+        "model": "opencode/step-5-preview-free",
+        "label": "文本 + 图像输入 · Agent / 编程",
+        "contextWindow": "1M tokens（阶跃星辰官方模型页）",
+        "quota": "OpenCode Zen 定价表输入/输出/缓存读取均为 Free；限时免费",
+        "note": "阶跃星辰官方 X 账号 2026-10-08 宣布：从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等工具提供一周免费访问。官方未给出精确结束时刻。",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      }
+    ],
+    "type": [
+      "api",
+      "free"
+    ],
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-10-08",
+      "unit": "promotion"
+    },
+    "freeSummary": "阶跃星辰旗舰 Step 5 Preview 自 2026-10-08 起在 OpenCode Zen（step-5-preview-free）等合作工具限时免费约一周",
+    "freeSummaryEn": "StepFun's flagship Step 5 Preview is free for about one week from 2026-10-08 via OpenCode Zen (step-5-preview-free) and partner tools",
+    "quota": "OpenCode Zen 免费模型，未公布固定额度；官方称免费期约一周",
+    "validitySummary": "官方公告：自 2026-10-08 起约一周 · 未公布精确结束时间",
+    "validitySummaryEn": "About one week from 2026-10-08 per StepFun; exact end time not published",
+    "accessSummary": "需要 OpenCode Zen 账号与 API Key（或在 Cline / Kilo Code / Nous Portal 等合作工具内选择免费模型）",
+    "accessSummaryEn": "OpenCode Zen account and API key, or select the free model inside partner tools such as Cline, Kilo Code or Nous Portal",
+    "kicker": "ONE-WEEK FREE FLAGSHIP",
+    "badges": [
+      "限时免费",
+      "1M 上下文",
+      "AGENT / CODING"
+    ],
+    "checkedSummary": "2026-10-09 / OpenCode Zen official docs + StepFun official announcement",
+    "why": "FreeLLM 评估：Step 5 Preview 是阶跃星辰 2026-10 发布的旗舰 Agent / 编程模型，官方称 600B 总参数、27B 激活、1M 上下文并支持图像输入，计划 10 月 15 日开放权重。一周免费窗口适合用来对比它在代码修复和长任务上的表现；窗口很短且无精确截止时间，不建议在生产中依赖免费 ID。",
+    "whyEn": "FreeLLM assessment: Step 5 Preview is StepFun's flagship agentic/coding model (600B total, 27B active, 1M context, vision input per StepFun; open weights planned for Oct 15). The one-week free window is good for side-by-side evaluation, not for production dependency.",
+    "mechanism": "StepFun announced a one-week free access window starting 2026-10-08 across OpenCode, Cline, Nous Research, Kilo Code and others. On OpenCode Zen the free variant uses the distinct model ID step-5-preview-free; the standard OpenRouter route is paid ($1.00 / $2.70 per 1M tokens).",
+    "validity": "About one week from 2026-10-08; the exact end time is not published.",
+    "access": "OpenCode Zen account and API key; network availability may vary.",
+    "command": "Call opencode/step-5-preview-free in OpenCode, or POST to the Zen chat completions endpoint with model step-5-preview-free.",
+    "register": "https://opencode.ai/auth",
+    "registerLabel": "OpenCode Zen 登录",
+    "registerLabelEn": "OpenCode Zen sign-in",
+    "links": [
+      [
+        "FreeLLM 二级详情页",
+        "https://freellm.top/offers/stepfun-step-5-preview-free-week/"
+      ],
+      [
+        "OpenCode Zen 官方文档（定价表）",
+        "https://opencode.ai/docs/en/zen/"
+      ],
+      [
+        "阶跃星辰官方公告（X）",
+        "https://x.com/StepFun_ai/status/2108182763002278158"
+      ],
+      [
+        "Step 5 Preview 官方介绍",
+        "https://www.stepfun.com/step-5-preview"
+      ]
+    ],
+    "sourceUrls": [
+      "https://opencode.ai/docs/en/zen/",
+      "https://x.com/StepFun_ai/status/2108182763002278158",
+      "https://www.stepfun.com/step-5-preview"
+    ],
+    "usageGuide": {
+      "summary": "登录 OpenCode Zen 获取 API Key，在 OpenCode 中选择 Step 5 Preview Free，或直接调用 Zen 的 OpenAI 兼容接口。",
+      "summaryEn": "Sign in to OpenCode Zen, get an API key, then select Step 5 Preview Free in OpenCode or call the Zen OpenAI-compatible endpoint.",
+      "prerequisites": [
+        "OpenCode Zen account",
+        "OpenCode Zen API key"
+      ],
+      "steps": [
+        "登录 OpenCode Zen 并复制 API Key。",
+        "在 OpenCode TUI 运行 /connect 选择 OpenCode Zen，然后用 /models 选择 Step 5 Preview Free（opencode/step-5-preview-free）。",
+        "或直接向 https://opencode.ai/zen/v1/chat/completions 发送 model=step-5-preview-free 的请求。",
+        "免费期约一周（自 2026-10-08 起）；继续使用前先确认官方定价表是否仍标为 Free。"
+      ],
+      "stepsEn": [
+        "Sign in to OpenCode Zen and copy your API key.",
+        "In the OpenCode TUI run /connect, choose OpenCode Zen, then pick Step 5 Preview Free (opencode/step-5-preview-free) via /models.",
+        "Or POST to https://opencode.ai/zen/v1/chat/completions with model step-5-preview-free.",
+        "The free window is about one week from 2026-10-08; recheck the official pricing table before continued use."
+      ],
+      "endpoint": "https://opencode.ai/zen/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${OPENCODE_API_KEY}",
+      "examples": {
+        "curl": "curl https://opencode.ai/zen/v1/chat/completions --header \"Authorization: Bearer ${OPENCODE_API_KEY}\" --header \"Content-Type: application/json\" --data '{\"model\":\"step-5-preview-free\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://opencode.ai/docs/en/zen/"
+    },
+    "availability": "OpenCode Zen (models hosted in US/EU); partner tools per their own access rules.",
+    "freeModelsSource": "OpenCode Zen",
+    "freeMechanismSource": "StepFun one-week free access announcement",
+    "confidence": "medium",
+    "notes": "本条目记录的是阶跃星辰联合 OpenCode、Cline、Kilo Code、Nous Portal 等工具的一周限免，不代表阶跃星辰开放平台 API 免费；OpenRouter 上的 stepfun/step-5-preview 为付费路由。OpenCode 文档注明该模型提供商遵循零保留策略、不用于训练。结束时间仅公布为“一周”，到期后应标记过期。",
+    "evidence": "OpenCode Zen 官方文档（2026-10-08 更新）端点表列出 Step 5 Preview Free（step-5-preview-free，/zen/v1/chat/completions），定价表输入/输出/缓存读取均为 Free，并说明“free on OpenCode for a limited time”。阶跃星辰官方 X 账号 2026-10-08 发帖：Step 5 Preview 已上线 OpenRouter，并从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等提供一周免费访问。官方模型页给出 600B 总参数、27B 激活、1M 上下文、图像输入，并称 10 月 15 日开放权重。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "blocked",
+      "testedAt": "2026-10-09",
+      "actualUsageVerified": false,
+      "task": "核验免费模型 ID、免费窗口与接入参数；待用有效 Zen Key 跑中文摘要、Python 修错、多步规划三个固定任务。",
+      "method": [
+        "读取 OpenCode Zen 官方文档端点表与定价表，确认 step-5-preview-free 标为 Free。",
+        "读取阶跃星辰官方 X 公告确认一周免费窗口起始日 2026-10-08。",
+        "当前没有 OpenCode Zen API Key，未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：免费模型 ID、免费标注与起始日均有官方来源。实测待执行（pending）：当前无 OpenCode Zen API Key，模型输出质量未测试，不打分。",
+      "limitations": "未实测调用；未验证速率限制、真实额度与精确结束时间。",
+      "evidence": [
+        {
+          "label": "OpenCode Zen 官方文档",
+          "url": "https://opencode.ai/docs/en/zen/"
+        },
+        {
+          "label": "阶跃星辰官方公告（X）",
+          "url": "https://x.com/StepFun_ai/status/2108182763002278158"
+        }
+      ]
+    },
+    "freeLLMTestNotes": "评测状态透明披露：仅完成官方资料预检，未获得模型输出，暂无成绩。"
   }
 ]

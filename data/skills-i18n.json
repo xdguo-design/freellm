@@ -75,5 +75,7 @@
   "obra-dispatching-parallel-agents": {"description_zh": "当有 2 个以上互不依赖的任务时，把它们拆给并行子 Agent 处理，并规定任务边界、上下文交接与结果汇总方式。"},
   "obra-using-git-worktrees": {"description_zh": "开始需要隔离的功能开发或执行实现计划前，先用原生工具或 git worktree 建立独立工作区，避免污染当前分支。"},
   "obra-finishing-a-development-branch": {"description_zh": "实现完成且测试通过后，引导选择合并、开 PR 或保留分支等收尾方式，并在清理前再次验证。"},
-  "vercel-labs-react-view-transitions": {"description_zh": "用 React View Transition API（<ViewTransition>、addTransitionType 与 CSS 伪元素）实现页面切换、共享元素、列表重排和前进/后退方向动画，含 Next.js 集成。"}
+  "vercel-labs-react-view-transitions": {"description_zh": "用 React View Transition API（<ViewTransition>、addTransitionType 与 CSS 伪元素）实现页面切换、共享元素、列表重排和前进/后退方向动画，含 Next.js 集成。"},
+  "mattpocock-diagnosing-bugs": {"description_zh": "针对疑难 Bug 和性能回退的诊断流程：先建立可复现的反馈回路，再逐步提出并验证假设，最后修复并防止回归；用户说“诊断/调试”或报告报错、失败、变慢时触发。"},
+  "mattpocock-implement-spec": {"description_zh": "在 /to-spec 与 /to-tickets 产出规格和工单后，把工单当作任务图一次性实现整个 spec；需用户手动调用。"}
 }
