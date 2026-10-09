@@ -9,6 +9,7 @@ import os
 import re
 import sys
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
@@ -5176,6 +5177,210 @@ def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
     </div>'''
 
 
+PROMPT_CATEGORY_LABELS = {
+    "work": ("工作与效率", "Work & productivity"),
+    "writing": ("写作与表达", "Writing & communication"),
+    "learning": ("学习与研究", "Learning & research"),
+    "coding": ("编程与创作", "Coding & building"),
+}
+PROMPT_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+PROMPT_VARIABLE_RE = re.compile(r"\{\{([a-z][a-z0-9_]*)\}\}")
+
+
+def _load_prompt_templates(data_dir: Path | None = None) -> list[dict]:
+    base_dir = Path(data_dir) if data_dir else ACCESS_DATA_DIR
+    path = base_dir / "prompt-templates.json"
+    try:
+        records = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot load prompt templates from {path}: {error}") from error
+    if not isinstance(records, list) or len(records) != 24:
+        raise ValueError("prompt templates must be a JSON array with exactly 24 records")
+
+    counts = {category: 0 for category in PROMPT_CATEGORY_LABELS}
+    seen_ids: set[str] = set()
+    for index, record in enumerate(records):
+        prefix = f"prompt template #{index + 1}"
+        if not isinstance(record, dict):
+            raise ValueError(f"{prefix} must be an object")
+        for field in ("id", "title", "titleEn", "category", "summary", "summaryEn", "prompt", "updatedAt"):
+            if not isinstance(record.get(field), str) or not record[field].strip():
+                raise ValueError(f"{prefix} requires non-empty string field {field}")
+        template_id = record["id"]
+        if not PROMPT_ID_RE.fullmatch(template_id) or template_id in seen_ids:
+            raise ValueError(f"{prefix} has invalid or duplicate id: {template_id}")
+        seen_ids.add(template_id)
+
+        category = record["category"]
+        if category not in counts:
+            raise ValueError(f"{template_id}: unknown prompt category {category}")
+        counts[category] += 1
+
+        try:
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", record["updatedAt"]):
+                raise ValueError("expected YYYY-MM-DD")
+            date.fromisoformat(record["updatedAt"])
+        except ValueError as error:
+            raise ValueError(f"{template_id}: updatedAt must be a real YYYY-MM-DD date") from error
+
+        variables = record.get("variables")
+        scenarios = record.get("scenarios")
+        scenarios_en = record.get("scenariosEn")
+        if not isinstance(variables, list) or not isinstance(scenarios, list) or not isinstance(scenarios_en, list):
+            raise ValueError(f"{template_id}: variables, scenarios, and scenariosEn must be arrays")
+        if (not all(isinstance(scenario, str) and scenario.strip() for scenario in scenarios)
+                or not all(isinstance(scenario, str) and scenario.strip() for scenario in scenarios_en)
+                or len(scenarios) != len(scenarios_en)):
+            raise ValueError(f"{template_id}: scenarios must have matching non-empty Chinese and English labels")
+
+        variable_names: set[str] = set()
+        for variable in variables:
+            if not isinstance(variable, dict):
+                raise ValueError(f"{template_id}: each variable must be an object")
+            for field in ("name", "label", "labelEn", "placeholder", "placeholderEn"):
+                if not isinstance(variable.get(field), str) or not variable[field].strip():
+                    raise ValueError(f"{template_id}: each variable requires non-empty {field}")
+            name = variable["name"]
+            if not re.fullmatch(r"[a-z][a-z0-9_]*", name) or name in variable_names:
+                raise ValueError(f"{template_id}: invalid or duplicate variable name {name}")
+            variable_names.add(name)
+
+        prompt_text = record["prompt"]
+        placeholders = PROMPT_VARIABLE_RE.findall(prompt_text)
+        if "{{" in PROMPT_VARIABLE_RE.sub("", prompt_text) or "}}" in PROMPT_VARIABLE_RE.sub("", prompt_text):
+            raise ValueError(f"{template_id}: malformed variable marker")
+        if set(placeholders) != variable_names:
+            missing = sorted(set(placeholders) - variable_names)
+            unused = sorted(variable_names - set(placeholders))
+            raise ValueError(f"{template_id}: variable mismatch; undefined={missing}, unused={unused}")
+
+        source = record.get("source")
+        if not isinstance(source, dict) or any(not isinstance(source.get(field), str) for field in ("type", "url", "note", "noteEn")):
+            raise ValueError(f"{template_id}: source must contain string type, url, note, and noteEn fields")
+        source_type, source_url = source["type"], source["url"].strip()
+        if source_type not in {"original", "adapted", "external"} or not source["note"].strip():
+            raise ValueError(f"{template_id}: source type and note are required")
+        if source_type in {"adapted", "external"} and not source_url:
+            raise ValueError(f"{template_id}: adapted/external sources require an HTTPS URL")
+        if source_url:
+            parsed = urlsplit(source_url)
+            if parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
+                raise ValueError(f"{template_id}: source URL must be absolute HTTPS without credentials")
+
+    if any(count != 6 for count in counts.values()):
+        raise ValueError(f"prompt template categories must contain exactly 6 records each: {counts}")
+    return records
+
+
+def render_prompt_library_page(templates: list[dict], site_url: str) -> str:
+    category_buttons = ['<button type="button" class="prompt-filter is-active" data-prompt-category="all" aria-pressed="true"><span lang="zh-CN">全部</span><span lang="en">All</span></button>']
+    for key, (zh_label, en_label) in PROMPT_CATEGORY_LABELS.items():
+        category_buttons.append(
+            f'<button type="button" class="prompt-filter" data-prompt-category="{key}" aria-pressed="false">'
+            f'{_locale_pair(zh_label, en_label)}</button>'
+        )
+
+    cards: list[str] = []
+    for template in templates:
+        category_zh, category_en = PROMPT_CATEGORY_LABELS[template["category"]]
+        variable_fields = "".join(
+            f'<label class="prompt-variable"><span>{_locale_pair(variable["label"], variable["labelEn"])}</span>'
+            f'<textarea rows="3" data-prompt-variable="{_esc(variable["name"])}" '
+            f'data-placeholder-zh="{_esc(variable["placeholder"])}" '
+            f'data-placeholder-en="{_esc(variable["placeholderEn"])}" '
+            f'placeholder="{_esc(variable["placeholder"])}"></textarea></label>'
+            for variable in template["variables"]
+        )
+        scenarios = " · ".join(
+            _locale_pair(scenario, scenario_en)
+            for scenario, scenario_en in zip(template["scenarios"], template["scenariosEn"])
+        )
+        source = template["source"]
+        source_link = (
+            f'<a href="{_esc(source["url"])}" target="_blank" rel="noopener noreferrer">'
+            f'<span lang="zh-CN">查看来源 ↗</span><span lang="en">View source ↗</span></a>'
+            if source["url"] else ""
+        )
+        cards.append(f'''<details class="prompt-card" data-prompt-card data-prompt-id="{_esc(template['id'])}" data-category="{_esc(template['category'])}">
+  <summary>
+    <span class="prompt-category">{_locale_pair(category_zh, category_en)}</span>
+    <span class="prompt-card-title">{_locale_pair(template['title'], template['titleEn'])}</span>
+    <span class="prompt-card-summary">{_locale_pair(template['summary'], template['summaryEn'])}</span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> {scenarios}</p>
+    <div class="prompt-variable-panel" hidden>
+      <h3>{_locale_pair('填写变量', 'Fill in variables')}</h3>
+      <div class="prompt-variable-grid">{variable_fields}</div>
+    </div>
+    <h3>{_locale_pair('模板正文', 'Template text')}</h3>
+    <pre class="prompt-template-text" data-prompt-original>{_esc(template['prompt'])}</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3>{_locale_pair('填充预览', 'Filled preview')}</h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>{_esc(template['prompt'])}</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original>{_locale_pair('复制原始模板', 'Copy template')}</button>
+      <button type="button" data-copy-preview>{_locale_pair('复制填充内容', 'Copy filled prompt')}</button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span>{_locale_pair(source['note'], source['noteEn'])}</span>{source_link}</p>
+  </div>
+</details>''')
+
+    payload = json.dumps(templates, ensure_ascii=False, separators=(",", ":"))
+    payload = payload.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+    payload = payload.replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+    canonical = _absolute(site_url, "/prompts/")
+    return f'''<!doctype html>
+<html lang="zh-CN" class="fl-pastel-ui">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt 模板库｜工作、写作、学习与编程提示词 - FreeLLM</title>
+  <meta name="description" content="FreeLLM Prompt 模板库：提供工作、写作、学习和编程场景的中文提示词。可搜索、填写变量并在浏览器本地预览复制，无需登录，也不会将输入内容发送到服务器。">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="{_esc(canonical)}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Prompt 模板库｜FreeLLM">
+  <meta property="og:description" content="按场景浏览中文 Prompt 模板，填写变量后在本地预览和复制。">
+  <meta property="og:url" content="{_esc(canonical)}">
+  <link rel="stylesheet" href="/css/prompt-library.css?v=20261009a">
+  {STATIC_LOCALE_STYLE}
+  {STATIC_LOCALE_SCRIPT}
+</head>
+<body data-fl-section="prompts" data-static-locale="true">
+  <main class="prompt-page">
+    <header class="prompt-hero">
+      <p class="prompt-eyebrow">FREELLM / PROMPTS</p>
+      <h1>{_locale_pair('Prompt 模板库', 'Prompt library')}</h1>
+      <p class="prompt-lead">{_locale_pair('按场景寻找可直接使用的中文提示词。填写变量后可在本地预览和复制，无需登录。', 'Browse practical Chinese prompts by use case. Fill in variables to preview and copy locally, without signing in.')}</p>
+      <p class="prompt-privacy">{_locale_pair('你填写的内容只在当前页面使用，不会发送到服务器或保存。', 'Your entries stay in this page and are neither sent to a server nor saved.')}</p>
+      {_static_locale_nav()}
+    </header>
+    <section class="prompt-controls" aria-label="Prompt filters">
+      <label class="prompt-search-label" for="prompt-search">{_locale_pair('搜索模板', 'Search prompts')}</label>
+      <div class="prompt-search-row">
+        <input id="prompt-search" type="search" autocomplete="off" spellcheck="false" placeholder="搜索标题、用途或模板内容" aria-describedby="prompt-count">
+        <button type="button" id="prompt-search-clear" hidden>{_locale_pair('清除', 'Clear')}</button>
+      </div>
+      <div class="prompt-filter-list" role="group" aria-label="Prompt categories">{''.join(category_buttons)}</div>
+      <p id="prompt-count" class="prompt-result-count" aria-live="polite">{_locale_pair('共 24 个模板', '24 prompts')}</p>
+    </section>
+    <p class="prompt-empty" id="prompt-empty" hidden>{_locale_pair('没有找到匹配模板，请尝试其他关键词或清除筛选。', 'No prompts match. Try another query or clear the filters.')}</p>
+    <section class="prompt-grid" id="prompt-grid" aria-label="Prompt templates">
+      {''.join(cards)}
+    </section>
+    <script type="application/json" id="prompt-template-data">{payload}</script>
+    <noscript><p class="prompt-noscript">{_locale_pair('已展开模板可直接选择并复制正文；搜索和变量预览需要启用 JavaScript。', 'Open a template to select and copy its text. Search and variable preview require JavaScript.')}</p></noscript>
+  </main>
+  <script src="/js/prompt-library.js?v=20261009a"></script>
+</body>
+</html>'''
+
+
+
 def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | None = None) -> str:
     page = _legacy_render_skills_page(skills, site_url)
     page = page.replace(
@@ -5456,6 +5661,7 @@ def sitemap_section_paths(
         CHANGE_LOG_PAGE_PATH,
         SKILLS_PAGE_PATH,
         WORKFLOW_PAGE_PATH,
+        "/prompts/",
     ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [
         category_url(category)
         for category in categories
@@ -5603,6 +5809,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         **render_sitemaps(offers, categories, site_url, model_catalog, providers),
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
+        Path("prompts") / "index.html": render_prompt_library_page(_load_prompt_templates(data_dir), site_url),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
         Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers), data_dir=data_dir),
@@ -6111,7 +6318,7 @@ def _read_manifest(output_root: Path) -> list[str]:
     return manifest["files"]
 
 
-MANAGED_PAGE_ROOTS = {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow"}
+MANAGED_PAGE_ROOTS = {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "prompts"}
 
 
 def _safe_manifest_page(output_root: Path, relative: str) -> Path | None:
@@ -6210,6 +6417,8 @@ def _visual_section_for_path(path: Path) -> str:
     first = parts[0] if parts else ""
     if first == "workflow":
         return "workflow"
+    if first == "prompts":
+        return "prompts"
     if first == "skills":
         return "workflow" if len(parts) > 1 and parts[1] == "lab" else "skills"
     if first == "tools":
@@ -6406,6 +6615,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/", "⌂", "首页", "home"),
         ("/models/", "▣", "模型", "models"),
         ("/skills/", "✦", "技能", "skills"),
+        ("/prompts/", "✧", "提示词", "prompts"),
         ("/tools/", "⌘", "工具", "tools"),
         ("/workflow/", "⌁", "工作流", "workflow"),
         ("/logs/", "◷", "今日发现", "logs"),
@@ -6414,7 +6624,9 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
     def render_link(item: tuple[str, str, str, str]) -> str:
         href, icon, label, key = item
         current = ' aria-current="page"' if key == section else ""
-        return f'<a href="{href}" data-site-nav="{key}"{current}><span class="fl-site-nav-icon" aria-hidden="true">{icon}</span><span>{label}</span></a>'
+        label_markup = '<span lang="zh-CN">提示词</span><span lang="en">Prompts</span>' if key == "prompts" else _esc(label)
+        accessible_label = ' aria-label="Prompt 模板库 / Prompt library"' if key == "prompts" else ""
+        return f'<a href="{href}" data-site-nav="{key}"{current}{accessible_label}><span class="fl-site-nav-icon" aria-hidden="true">{_esc(icon)}</span><span>{label_markup}</span></a>'
     links = "".join(render_link(item) for item in items)
     brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true">AI</span>'
     brand_subtitle = '让 AI 更自由地被使用'
@@ -6426,7 +6638,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261008-today-discovery"></script>'
+        '<script src="/js/site-navigation.js?v=20261009-prompt-library"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
@@ -6573,7 +6785,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         expected_managed = {
             path.as_posix()
             for path in files
-            if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "en"}
+            if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "prompts", "en"}
         }
         stale_manifest = sorted({
             relative
@@ -6603,7 +6815,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         print(f"current SEO output: {len(files)} files")
         return True
 
-    managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "en"}}
+    managed = {path.as_posix() for path in files if path.parts and path.parts[0] in {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "prompts", "en"}}
     # Write the new pages before deleting retired ones: a crash or an external
     # delete guard must never leave the output tree emptied.
     for relative, content in files.items():

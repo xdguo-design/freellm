@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="zh-CN" class="fl-pastel-ui">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt 模板库｜工作、写作、学习与编程提示词 - FreeLLM</title>
+  <meta name="description" content="FreeLLM Prompt 模板库：提供工作、写作、学习和编程场景的中文提示词。可搜索、填写变量并在浏览器本地预览复制，无需登录，也不会将输入内容发送到服务器。 FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://freellm.top/prompts/">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Prompt 模板库｜工作、写作、学习与编程提示词 - FreeLLM">
+  <meta property="og:description" content="FreeLLM Prompt 模板库：提供工作、写作、学习和编程场景的中文提示词。可搜索、填写变量并在浏览器本地预览复制，无需登录，也不会将输入内容发送到服务器。 FreeLLM 同时标注官方来源、免费条件、地区限制、最近核验日期与可用入口，便于在使用前核对当前规则。">
+  <meta property="og:url" content="https://freellm.top/prompts/">
+  <link rel="stylesheet" href="/css/prompt-library.css?v=20261009a">
+  <style id="static-locale-style">
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  </style>
+  <script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
+        });
+      });
+    })();
+  </script>
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a"></head>
+<body data-fl-section="prompts" data-static-locale="true" class="fl-ui-v2"><script src="/js/site-navigation.js?v=20261009-prompt-library"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>技能</span></a><a href="/prompts/" data-site-nav="prompts" aria-current="page" aria-label="Prompt 模板库 / Prompt library"><span class="fl-site-nav-icon" aria-hidden="true">✧</span><span><span lang="zh-CN">提示词</span><span lang="en">Prompts</span></span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div>
+  <main class="prompt-page">
+    <header class="prompt-hero">
+      <p class="prompt-eyebrow">FREELLM / PROMPTS</p>
+      <h1><span lang="zh-CN">Prompt 模板库</span><span lang="en">Prompt library</span></h1>
+      <p class="prompt-lead"><span lang="zh-CN">按场景寻找可直接使用的中文提示词。填写变量后可在本地预览和复制，无需登录。</span><span lang="en">Browse practical Chinese prompts by use case. Fill in variables to preview and copy locally, without signing in.</span></p>
+      <p class="prompt-privacy"><span lang="zh-CN">你填写的内容只在当前页面使用，不会发送到服务器或保存。</span><span lang="en">Your entries stay in this page and are neither sent to a server nor saved.</span></p>
+      <nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>
+    </header>
+    <section class="prompt-controls" aria-label="Prompt filters">
+      <label class="prompt-search-label" for="prompt-search"><span lang="zh-CN">搜索模板</span><span lang="en">Search prompts</span></label>
+      <div class="prompt-search-row">
+        <input id="prompt-search" type="search" autocomplete="off" spellcheck="false" placeholder="搜索标题、用途或模板内容" aria-describedby="prompt-count">
+        <button type="button" id="prompt-search-clear" hidden><span lang="zh-CN">清除</span><span lang="en">Clear</span></button>
+      </div>
+      <div class="prompt-filter-list" role="group" aria-label="Prompt categories"><button type="button" class="prompt-filter is-active" data-prompt-category="all" aria-pressed="true"><span lang="zh-CN">全部</span><span lang="en">All</span></button><button type="button" class="prompt-filter" data-prompt-category="work" aria-pressed="false"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></button><button type="button" class="prompt-filter" data-prompt-category="writing" aria-pressed="false"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></button><button type="button" class="prompt-filter" data-prompt-category="learning" aria-pressed="false"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></button><button type="button" class="prompt-filter" data-prompt-category="coding" aria-pressed="false"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></button></div>
+      <p id="prompt-count" class="prompt-result-count" aria-live="polite"><span lang="zh-CN">共 24 个模板</span><span lang="en">24 prompts</span></p>
+    </section>
+    <p class="prompt-empty" id="prompt-empty" hidden><span lang="zh-CN">没有找到匹配模板，请尝试其他关键词或清除筛选。</span><span lang="en">No prompts match. Try another query or clear the filters.</span></p>
+    <section class="prompt-grid" id="prompt-grid" aria-label="Prompt templates">
+      <details class="prompt-card" data-prompt-card data-prompt-id="weekly-work-plan" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">一周工作计划</span><span lang="en">Weekly work plan</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">把本周目标拆成可执行、有优先级的工作安排。</span><span lang="en">Turn weekly goals into a prioritized, actionable schedule.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">个人规划</span><span lang="en">Personal planning</span> · <span lang="zh-CN">团队排期</span><span lang="en">Team scheduling</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">本周目标</span><span lang="en">Goals</span></span><textarea rows="3" data-prompt-variable="goals" data-placeholder-zh="写下本周想完成的结果" data-placeholder-en="Enter goals" placeholder="写下本周想完成的结果"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">可投入时间</span><span lang="en">Available Time</span></span><textarea rows="3" data-prompt-variable="available_time" data-placeholder-zh="例如：周一至周五每天 6 小时" data-placeholder-en="Enter available time" placeholder="例如：周一至周五每天 6 小时"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">已有约束或会议</span><span lang="en">Constraints</span></span><textarea rows="3" data-prompt-variable="constraints" data-placeholder-zh="可选，写下不能调整的安排" data-placeholder-en="Enter constraints" placeholder="可选，写下不能调整的安排"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>你是务实的工作规划助手。请根据以下目标和可用时间，制定一周工作计划。
+
+本周目标：{{goals}}
+可投入时间：{{available_time}}
+已有约束或会议：{{constraints}}
+
+请按工作日列出重点任务、预计耗时、优先级和完成标准。标出依赖关系与风险；信息不足时先列出需要确认的问题，不要编造事项。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>你是务实的工作规划助手。请根据以下目标和可用时间，制定一周工作计划。
+
+本周目标：{{goals}}
+可投入时间：{{available_time}}
+已有约束或会议：{{constraints}}
+
+请按工作日列出重点任务、预计耗时、优先级和完成标准。标出依赖关系与风险；信息不足时先列出需要确认的问题，不要编造事项。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="meeting-notes" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">会议纪要整理</span><span lang="en">Organize meeting notes</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">从讨论记录整理决策、行动项和待确认事项。</span><span lang="en">Extract decisions, action items, and questions to resolve.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">会后整理</span><span lang="en">Meeting notes</span> · <span lang="zh-CN">行动项追踪</span><span lang="en">Action tracking</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">会议主题</span><span lang="en">Meeting Title</span></span><textarea rows="3" data-prompt-variable="meeting_title" data-placeholder-zh="填写会议主题" data-placeholder-en="Enter meeting title" placeholder="填写会议主题"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">参会角色</span><span lang="en">Participants</span></span><textarea rows="3" data-prompt-variable="participants" data-placeholder-zh="可选；可写姓名或岗位" data-placeholder-en="Enter participants" placeholder="可选；可写姓名或岗位"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">会议记录</span><span lang="en">Meeting Notes</span></span><textarea rows="3" data-prompt-variable="meeting_notes" data-placeholder-zh="粘贴需要整理的会议内容" data-placeholder-en="Enter meeting notes" placeholder="粘贴需要整理的会议内容"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请将以下会议记录整理为清晰、可追踪的纪要。
+
+会议主题：{{meeting_title}}
+参会角色（如有）：{{participants}}
+会议记录：{{meeting_notes}}
+
+按“结论与决策、行动项（负责人 / 截止时间 / 交付物）、待确认问题”分组。没有明确的信息标为“未说明”，不要推测负责人或日期；保留关键分歧。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请将以下会议记录整理为清晰、可追踪的纪要。
+
+会议主题：{{meeting_title}}
+参会角色（如有）：{{participants}}
+会议记录：{{meeting_notes}}
+
+按“结论与决策、行动项（负责人 / 截止时间 / 交付物）、待确认问题”分组。没有明确的信息标为“未说明”，不要推测负责人或日期；保留关键分歧。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="professional-email-draft" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">专业邮件草稿</span><span lang="en">Professional email draft</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">根据沟通目的生成简洁、礼貌且信息完整的邮件草稿。</span><span lang="en">Draft a concise and courteous email for a clear purpose.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">工作沟通</span><span lang="en">Work communication</span> · <span lang="zh-CN">合作联系</span><span lang="en">Partner outreach</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">收件人及关系</span><span lang="en">Recipient</span></span><textarea rows="3" data-prompt-variable="recipient" data-placeholder-zh="例如：合作方项目经理" data-placeholder-en="Enter recipient" placeholder="例如：合作方项目经理"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">邮件目的</span><span lang="en">Purpose</span></span><textarea rows="3" data-prompt-variable="purpose" data-placeholder-zh="说明这封邮件要解决什么" data-placeholder-en="Enter purpose" placeholder="说明这封邮件要解决什么"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">必须提到的信息</span><span lang="en">Key Points</span></span><textarea rows="3" data-prompt-variable="key_points" data-placeholder-zh="列出事实或背景" data-placeholder-en="Enter key points" placeholder="列出事实或背景"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">希望对方采取的行动</span><span lang="en">Next Action</span></span><textarea rows="3" data-prompt-variable="next_action" data-placeholder-zh="例如：确认时间并回复" data-placeholder-en="Enter next action" placeholder="例如：确认时间并回复"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">语气偏好</span><span lang="en">Tone</span></span><textarea rows="3" data-prompt-variable="tone" data-placeholder-zh="例如：简洁友好、正式" data-placeholder-en="Enter tone" placeholder="例如：简洁友好、正式"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请为我起草一封专业、直接、礼貌的邮件。
+
+收件人及关系：{{recipient}}
+邮件目的：{{purpose}}
+必须提到的信息：{{key_points}}
+希望对方采取的行动：{{next_action}}
+语气偏好：{{tone}}
+
+提供一个明确主题和正文。不要添加我未提供的承诺、事实或截止日期；缺少必要信息时用方括号标出待填写内容。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请为我起草一封专业、直接、礼貌的邮件。
+
+收件人及关系：{{recipient}}
+邮件目的：{{purpose}}
+必须提到的信息：{{key_points}}
+希望对方采取的行动：{{next_action}}
+语气偏好：{{tone}}
+
+提供一个明确主题和正文。不要添加我未提供的承诺、事实或截止日期；缺少必要信息时用方括号标出待填写内容。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="task-prioritization" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">任务优先级梳理</span><span lang="en">Prioritize tasks</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">按影响、紧急程度和投入识别先做事项与可延后事项。</span><span lang="en">Rank tasks by impact, urgency, and effort.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">每日安排</span><span lang="en">Daily planning</span> · <span lang="zh-CN">项目取舍</span><span lang="en">Project prioritization</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">任务清单</span><span lang="en">Tasks</span></span><textarea rows="3" data-prompt-variable="tasks" data-placeholder-zh="每行一项，并补充已知截止时间" data-placeholder-en="Enter tasks" placeholder="每行一项，并补充已知截止时间"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">可用时间</span><span lang="en">Time Budget</span></span><textarea rows="3" data-prompt-variable="time_budget" data-placeholder-zh="例如：今天剩余 3 小时" data-placeholder-en="Enter time budget" placeholder="例如：今天剩余 3 小时"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">当前目标</span><span lang="en">Current Goal</span></span><textarea rows="3" data-prompt-variable="current_goal" data-placeholder-zh="说明近期最重要的结果" data-placeholder-en="Enter current goal" placeholder="说明近期最重要的结果"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请帮助我梳理任务优先级，不要仅凭标题猜测业务价值。
+
+任务清单：{{tasks}}
+可用时间：{{time_budget}}
+当前目标：{{current_goal}}
+
+为每项标注紧急程度、预期影响、估计投入和不确定性；无法判断的维度标为“待确认”。给出建议顺序、可拆分项、可委托或延后的事项，并解释排序理由。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请帮助我梳理任务优先级，不要仅凭标题猜测业务价值。
+
+任务清单：{{tasks}}
+可用时间：{{time_budget}}
+当前目标：{{current_goal}}
+
+为每项标注紧急程度、预期影响、估计投入和不确定性；无法判断的维度标为“待确认”。给出建议顺序、可拆分项、可委托或延后的事项，并解释排序理由。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="process-checklist" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">流程转检查清单</span><span lang="en">Turn a process into a checklist</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">把重复性流程拆成可逐项确认的操作步骤。</span><span lang="en">Break a recurring process into steps that can be checked off.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">标准操作流程</span><span lang="en">Standard operating procedures</span> · <span lang="zh-CN">交接检查</span><span lang="en">Handoff checks</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">流程名称</span><span lang="en">Process Name</span></span><textarea rows="3" data-prompt-variable="process_name" data-placeholder-zh="填写流程名称" data-placeholder-en="Enter process name" placeholder="填写流程名称"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">流程描述</span><span lang="en">Process Description</span></span><textarea rows="3" data-prompt-variable="process_description" data-placeholder-zh="描述目前的处理步骤" data-placeholder-en="Enter process description" placeholder="描述目前的处理步骤"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">使用者</span><span lang="en">Operator</span></span><textarea rows="3" data-prompt-variable="operator" data-placeholder-zh="例如：新入职同事、值班人员" data-placeholder-en="Enter operator" placeholder="例如：新入职同事、值班人员"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请把下面的流程描述整理成一份可执行的检查清单。
+
+流程名称：{{process_name}}
+流程描述：{{process_description}}
+使用者：{{operator}}
+
+按执行顺序列出动作、完成判断和需要保留的记录。区分必做项与条件项；指出流程中缺少的输入、异常处理和交接点。不要自行添加未经描述的审批或系统操作。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请把下面的流程描述整理成一份可执行的检查清单。
+
+流程名称：{{process_name}}
+流程描述：{{process_description}}
+使用者：{{operator}}
+
+按执行顺序列出动作、完成判断和需要保留的记录。区分必做项与条件项；指出流程中缺少的输入、异常处理和交接点。不要自行添加未经描述的审批或系统操作。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="project-status-update" data-category="work">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">工作与效率</span><span lang="en">Work &amp; productivity</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">项目进度简报</span><span lang="en">Project status update</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">将零散进展整理成状态、风险和下一步行动。</span><span lang="en">Summarize progress, risks, and next actions.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">周报</span><span lang="en">Weekly report</span> · <span lang="zh-CN">项目同步</span><span lang="en">Project update</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">项目目标</span><span lang="en">Project Goal</span></span><textarea rows="3" data-prompt-variable="project_goal" data-placeholder-zh="用一两句话说明目标" data-placeholder-en="Enter project goal" placeholder="用一两句话说明目标"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">本期进展</span><span lang="en">Progress</span></span><textarea rows="3" data-prompt-variable="progress" data-placeholder-zh="列出已完成和进行中的事项" data-placeholder-en="Enter progress" placeholder="列出已完成和进行中的事项"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">阻塞或风险</span><span lang="en">Risks</span></span><textarea rows="3" data-prompt-variable="risks" data-placeholder-zh="没有则填写“暂无”" data-placeholder-en="Enter risks" placeholder="没有则填写“暂无”"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">下期计划</span><span lang="en">Next Steps</span></span><textarea rows="3" data-prompt-variable="next_steps" data-placeholder-zh="列出接下来的主要行动" data-placeholder-en="Enter next steps" placeholder="列出接下来的主要行动"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据已知信息写一份简洁的项目进度简报。
+
+项目目标：{{project_goal}}
+本期进展：{{progress}}
+当前阻塞或风险：{{risks}}
+下期计划：{{next_steps}}
+
+输出“整体状态、已完成、进行中、风险与需协助事项、下一步”。没有提供的比例、日期和责任人标注为“未提供”，不推测项目是否按期。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据已知信息写一份简洁的项目进度简报。
+
+项目目标：{{project_goal}}
+本期进展：{{progress}}
+当前阻塞或风险：{{risks}}
+下期计划：{{next_steps}}
+
+输出“整体状态、已完成、进行中、风险与需协助事项、下一步”。没有提供的比例、日期和责任人标注为“未提供”，不推测项目是否按期。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="article-outline" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">文章大纲设计</span><span lang="en">Build an article outline</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">围绕读者问题和核心观点搭建层次清楚的大纲。</span><span lang="en">Organize an outline around reader needs and a clear argument.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">博客写作</span><span lang="en">Blog writing</span> · <span lang="zh-CN">知识分享</span><span lang="en">Knowledge sharing</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">主题</span><span lang="en">Topic</span></span><textarea rows="3" data-prompt-variable="topic" data-placeholder-zh="填写文章主题" data-placeholder-en="Enter topic" placeholder="填写文章主题"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">目标读者</span><span lang="en">Audience</span></span><textarea rows="3" data-prompt-variable="audience" data-placeholder-zh="例如：刚入门的开发者" data-placeholder-en="Enter audience" placeholder="例如：刚入门的开发者"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">文章目的</span><span lang="en">Purpose</span></span><textarea rows="3" data-prompt-variable="purpose" data-placeholder-zh="例如：解释、比较、说服或记录" data-placeholder-en="Enter purpose" placeholder="例如：解释、比较、说服或记录"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">已有材料或观点</span><span lang="en">Materials</span></span><textarea rows="3" data-prompt-variable="materials" data-placeholder-zh="可粘贴笔记、来源或要点" data-placeholder-en="Enter materials" placeholder="可粘贴笔记、来源或要点"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">目标篇幅</span><span lang="en">Length</span></span><textarea rows="3" data-prompt-variable="length" data-placeholder-zh="例如：约 1500 字" data-placeholder-en="Enter length" placeholder="例如：约 1500 字"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请为一篇文章设计有逻辑的提纲，先明确读者要解决的问题，再安排论述顺序。
+
+主题：{{topic}}
+目标读者：{{audience}}
+文章目的：{{purpose}}
+已有材料或观点：{{materials}}
+目标篇幅：{{length}}
+
+输出标题备选、中心论点、分级大纲和每节要回答的问题。指出材料不足或需要核实的事实；不要把未经证实的观点写成事实。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请为一篇文章设计有逻辑的提纲，先明确读者要解决的问题，再安排论述顺序。
+
+主题：{{topic}}
+目标读者：{{audience}}
+文章目的：{{purpose}}
+已有材料或观点：{{materials}}
+目标篇幅：{{length}}
+
+输出标题备选、中心论点、分级大纲和每节要回答的问题。指出材料不足或需要核实的事实；不要把未经证实的观点写成事实。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="tone-rewrite" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">按指定语气改写</span><span lang="en">Rewrite in a chosen tone</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">保留原意并调整语气、受众和篇幅。</span><span lang="en">Keep the meaning while adjusting tone, audience, and length.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">润色</span><span lang="en">Editing</span> · <span lang="zh-CN">风格调整</span><span lang="en">Tone adjustment</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">目标读者</span><span lang="en">Audience</span></span><textarea rows="3" data-prompt-variable="audience" data-placeholder-zh="填写读者类型" data-placeholder-en="Enter audience" placeholder="填写读者类型"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">希望的语气</span><span lang="en">Tone</span></span><textarea rows="3" data-prompt-variable="tone" data-placeholder-zh="例如：平实、温暖、正式" data-placeholder-en="Enter tone" placeholder="例如：平实、温暖、正式"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">长度要求</span><span lang="en">Length</span></span><textarea rows="3" data-prompt-variable="length" data-placeholder-zh="例如：保留原长度或压缩到 100 字" data-placeholder-en="Enter length" placeholder="例如：保留原长度或压缩到 100 字"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">原文</span><span lang="en">Source Text</span></span><textarea rows="3" data-prompt-variable="source_text" data-placeholder-zh="粘贴要改写的文字" data-placeholder-en="Enter source text" placeholder="粘贴要改写的文字"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请改写下面的文字，保留事实、观点和关键信息，不增加原文没有的承诺。
+
+目标读者：{{audience}}
+语气：{{tone}}
+长度要求：{{length}}
+原文：{{source_text}}
+
+先给出改写稿，再用简短列表说明做了哪些表达调整。若原文存在歧义，请标出并询问，不要自行选择可能改变含义的解释。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请改写下面的文字，保留事实、观点和关键信息，不增加原文没有的承诺。
+
+目标读者：{{audience}}
+语气：{{tone}}
+长度要求：{{length}}
+原文：{{source_text}}
+
+先给出改写稿，再用简短列表说明做了哪些表达调整。若原文存在歧义，请标出并询问，不要自行选择可能改变含义的解释。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="social-post-variants" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">社交媒体文案变体</span><span lang="en">Social post variations</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">围绕同一事实生成不同角度的短文案。</span><span lang="en">Create short copy variations from the same verified facts.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">社交媒体</span><span lang="en">Social media</span> · <span lang="zh-CN">内容运营</span><span lang="en">Content operations</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">平台及受众</span><span lang="en">Platform Audience</span></span><textarea rows="3" data-prompt-variable="platform_audience" data-placeholder-zh="例如：面向独立开发者的公众号" data-placeholder-en="Enter platform audience" placeholder="例如：面向独立开发者的公众号"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">主题与事实</span><span lang="en">Facts</span></span><textarea rows="3" data-prompt-variable="facts" data-placeholder-zh="提供可确认的信息" data-placeholder-en="Enter facts" placeholder="提供可确认的信息"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">期望行动</span><span lang="en">Call To Action</span></span><textarea rows="3" data-prompt-variable="call_to_action" data-placeholder-zh="例如：收藏文章、查看链接" data-placeholder-en="Enter call to action" placeholder="例如：收藏文章、查看链接"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">字数限制</span><span lang="en">Limit</span></span><textarea rows="3" data-prompt-variable="limit" data-placeholder-zh="例如：每条不超过 120 字" data-placeholder-en="Enter limit" placeholder="例如：每条不超过 120 字"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据提供的信息，为指定平台写 3 个角度不同的短文案。
+
+平台及受众：{{platform_audience}}
+主题与事实：{{facts}}
+期望行动：{{call_to_action}}
+字数限制：{{limit}}
+
+三个角度分别为：问题切入、经验分享、清单提示。遵守字数限制，不编造数据、案例或个人经历；如信息不足，使用中性表达。每个版本附一行说明其角度。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据提供的信息，为指定平台写 3 个角度不同的短文案。
+
+平台及受众：{{platform_audience}}
+主题与事实：{{facts}}
+期望行动：{{call_to_action}}
+字数限制：{{limit}}
+
+三个角度分别为：问题切入、经验分享、清单提示。遵守字数限制，不编造数据、案例或个人经历；如信息不足，使用中性表达。每个版本附一行说明其角度。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="proofread-with-rules" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">按规则校对文本</span><span lang="en">Proofread with rules</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">检查错字、歧义和格式问题，避免擅自改写立场。</span><span lang="en">Check errors and ambiguity without changing the author’s position.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">文章校对</span><span lang="en">Proofreading</span> · <span lang="zh-CN">文档审阅</span><span lang="en">Document review</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">校对重点</span><span lang="en">Focus</span></span><textarea rows="3" data-prompt-variable="focus" data-placeholder-zh="例如：错别字、标点、逻辑衔接" data-placeholder-en="Enter focus" placeholder="例如：错别字、标点、逻辑衔接"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">格式或术语规则</span><span lang="en">Rules</span></span><textarea rows="3" data-prompt-variable="rules" data-placeholder-zh="例如：产品名称保持英文" data-placeholder-en="Enter rules" placeholder="例如：产品名称保持英文"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">原文</span><span lang="en">Source Text</span></span><textarea rows="3" data-prompt-variable="source_text" data-placeholder-zh="粘贴需要校对的内容" data-placeholder-en="Enter source text" placeholder="粘贴需要校对的内容"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请按指定规则校对文本。先列出问题位置、问题类型和修改建议，再给出修订稿。
+
+校对重点：{{focus}}
+格式或术语规则：{{rules}}
+原文：{{source_text}}
+
+保留原作者观点和语气；不确定的专有名词、数字或事实标为“需核对”，不要凭常识替换。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请按指定规则校对文本。先列出问题位置、问题类型和修改建议，再给出修订稿。
+
+校对重点：{{focus}}
+格式或术语规则：{{rules}}
+原文：{{source_text}}
+
+保留原作者观点和语气；不确定的专有名词、数字或事实标为“需核对”，不要凭常识替换。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="product-description" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">产品介绍文案</span><span lang="en">Product description</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">把产品特点改写为对目标用户有帮助的介绍。</span><span lang="en">Explain what a product does and who it helps.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">产品页面</span><span lang="en">Product pages</span> · <span lang="zh-CN">项目介绍</span><span lang="en">Project overview</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">产品名称与类型</span><span lang="en">Product</span></span><textarea rows="3" data-prompt-variable="product" data-placeholder-zh="填写产品名称和类别" data-placeholder-en="Enter product" placeholder="填写产品名称和类别"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">目标用户</span><span lang="en">Audience</span></span><textarea rows="3" data-prompt-variable="audience" data-placeholder-zh="说明主要使用者" data-placeholder-en="Enter audience" placeholder="说明主要使用者"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">已确认的功能与事实</span><span lang="en">Features</span></span><textarea rows="3" data-prompt-variable="features" data-placeholder-zh="列出可验证的特点" data-placeholder-en="Enter features" placeholder="列出可验证的特点"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">限制或不适用场景</span><span lang="en">Limits</span></span><textarea rows="3" data-prompt-variable="limits" data-placeholder-zh="可选，避免过度承诺" data-placeholder-en="Enter limits" placeholder="可选，避免过度承诺"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">文案位置和长度</span><span lang="en">Placement</span></span><textarea rows="3" data-prompt-variable="placement" data-placeholder-zh="例如：官网首屏，约 80 字" data-placeholder-en="Enter placement" placeholder="例如：官网首屏，约 80 字"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请为产品写一段清楚、可信的介绍，重点说明它解决什么问题及适合谁使用。
+
+产品名称与类型：{{product}}
+目标用户：{{audience}}
+已确认的功能与事实：{{features}}
+限制或不适用场景：{{limits}}
+文案位置和长度：{{placement}}
+
+输出标题、简介和 3 个要点。只使用已确认的信息；没有证据的性能、规模、免费条件或效果承诺不要写入。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请为产品写一段清楚、可信的介绍，重点说明它解决什么问题及适合谁使用。
+
+产品名称与类型：{{product}}
+目标用户：{{audience}}
+已确认的功能与事实：{{features}}
+限制或不适用场景：{{limits}}
+文案位置和长度：{{placement}}
+
+输出标题、简介和 3 个要点。只使用已确认的信息；没有证据的性能、规模、免费条件或效果承诺不要写入。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="faq-from-source" data-category="writing">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">写作与表达</span><span lang="en">Writing &amp; communication</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">根据资料生成 FAQ</span><span lang="en">Create an FAQ from source material</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">从已有资料提炼常见问题，并标注资料没有覆盖的内容。</span><span lang="en">Turn existing material into questions and evidence-based answers.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">帮助中心</span><span lang="en">Help center</span> · <span lang="zh-CN">产品说明</span><span lang="en">Product documentation</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">目标读者</span><span lang="en">Audience</span></span><textarea rows="3" data-prompt-variable="audience" data-placeholder-zh="例如：第一次使用该服务的人" data-placeholder-en="Enter audience" placeholder="例如：第一次使用该服务的人"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">资料</span><span lang="en">Source Material</span></span><textarea rows="3" data-prompt-variable="source_material" data-placeholder-zh="粘贴可作为依据的内容" data-placeholder-en="Enter source material" placeholder="粘贴可作为依据的内容"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">问题数量</span><span lang="en">Count</span></span><textarea rows="3" data-prompt-variable="count" data-placeholder-zh="例如：8 个" data-placeholder-en="Enter count" placeholder="例如：8 个"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请只根据下方资料，整理用户可能提出的常见问题。
+
+目标读者：{{audience}}
+资料：{{source_material}}
+希望的问题数量：{{count}}
+
+每个问题给出简洁回答，并在回答后注明对应资料依据或“资料未说明”。不得用外部常识补全未提供的价格、政策、日期和承诺；发现矛盾时单独列出。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请只根据下方资料，整理用户可能提出的常见问题。
+
+目标读者：{{audience}}
+资料：{{source_material}}
+希望的问题数量：{{count}}
+
+每个问题给出简洁回答，并在回答后注明对应资料依据或“资料未说明”。不得用外部常识补全未提供的价格、政策、日期和承诺；发现矛盾时单独列出。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="study-plan" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">个性化学习计划</span><span lang="en">Personalized study plan</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">结合目标、基础和可用时间安排可检查的学习步骤。</span><span lang="en">Plan learning steps around goals, current knowledge, and available time.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">技能学习</span><span lang="en">Skill development</span> · <span lang="zh-CN">课程安排</span><span lang="en">Course planning</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">学习目标</span><span lang="en">Goal</span></span><textarea rows="3" data-prompt-variable="goal" data-placeholder-zh="描述希望能做什么" data-placeholder-en="Enter goal" placeholder="描述希望能做什么"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">当前基础</span><span lang="en">Starting Point</span></span><textarea rows="3" data-prompt-variable="starting_point" data-placeholder-zh="说明已掌握内容或经验" data-placeholder-en="Enter starting point" placeholder="说明已掌握内容或经验"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">每周可用时间</span><span lang="en">Weekly Time</span></span><textarea rows="3" data-prompt-variable="weekly_time" data-placeholder-zh="例如：每周 5 小时" data-placeholder-en="Enter weekly time" placeholder="例如：每周 5 小时"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">计划周期</span><span lang="en">Duration</span></span><textarea rows="3" data-prompt-variable="duration" data-placeholder-zh="例如：6 周" data-placeholder-en="Enter duration" placeholder="例如：6 周"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据我的目标和当前基础，制定一个现实、可复盘的学习计划。
+
+学习目标：{{goal}}
+当前基础：{{starting_point}}
+每周可用时间：{{weekly_time}}
+计划周期：{{duration}}
+
+按阶段列出主题、练习、完成标准和复习安排。区分必须掌握与可选拓展；如目标超出时间预算，指出取舍并给出较小目标，不承诺固定学习效果。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据我的目标和当前基础，制定一个现实、可复盘的学习计划。
+
+学习目标：{{goal}}
+当前基础：{{starting_point}}
+每周可用时间：{{weekly_time}}
+计划周期：{{duration}}
+
+按阶段列出主题、练习、完成标准和复习安排。区分必须掌握与可选拓展；如目标超出时间预算，指出取舍并给出较小目标，不承诺固定学习效果。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="explain-a-concept" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">分层解释一个概念</span><span lang="en">Explain a concept in layers</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">从直观解释到专业定义逐层理解新概念。</span><span lang="en">Build understanding from an intuitive explanation to a precise definition.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">自学</span><span lang="en">Self-study</span> · <span lang="zh-CN">课堂复习</span><span lang="en">Class review</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">概念</span><span lang="en">Concept</span></span><textarea rows="3" data-prompt-variable="concept" data-placeholder-zh="填写想理解的概念" data-placeholder-en="Enter concept" placeholder="填写想理解的概念"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">我的背景</span><span lang="en">Background</span></span><textarea rows="3" data-prompt-variable="background" data-placeholder-zh="例如：学过基础统计" data-placeholder-en="Enter background" placeholder="例如：学过基础统计"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">卡住的地方</span><span lang="en">Confusion</span></span><textarea rows="3" data-prompt-variable="confusion" data-placeholder-zh="可选，指出具体困惑" data-placeholder-en="Enter confusion" placeholder="可选，指出具体困惑"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请用分层方式解释这个概念，帮助我理解而不只是记住定义。
+
+概念：{{concept}}
+我的背景：{{background}}
+我卡住的地方：{{confusion}}
+
+依次给出一句话直观解释、准确但易懂的定义、一个贴近生活的例子、一个反例或边界、与相近概念的区别，以及 3 道自测题。若概念有多种定义，请说明语境差异并提示查阅权威资料。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请用分层方式解释这个概念，帮助我理解而不只是记住定义。
+
+概念：{{concept}}
+我的背景：{{background}}
+我卡住的地方：{{confusion}}
+
+依次给出一句话直观解释、准确但易懂的定义、一个贴近生活的例子、一个反例或边界、与相近概念的区别，以及 3 道自测题。若概念有多种定义，请说明语境差异并提示查阅权威资料。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="active-recall-quiz" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">生成主动回忆测验</span><span lang="en">Active recall quiz</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">依据学习材料生成由浅到深的问题和答案解析。</span><span lang="en">Generate questions and explanations from supplied study material.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">考前复习</span><span lang="en">Exam preparation</span> · <span lang="zh-CN">阅读检验</span><span lang="en">Reading comprehension</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">学习材料</span><span lang="en">Material</span></span><textarea rows="3" data-prompt-variable="material" data-placeholder-zh="粘贴课程笔记或阅读材料" data-placeholder-en="Enter material" placeholder="粘贴课程笔记或阅读材料"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">题目数量</span><span lang="en">Question Count</span></span><textarea rows="3" data-prompt-variable="question_count" data-placeholder-zh="例如：8 题" data-placeholder-en="Enter question count" placeholder="例如：8 题"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">难度</span><span lang="en">Difficulty</span></span><textarea rows="3" data-prompt-variable="difficulty" data-placeholder-zh="例如：基础到中等" data-placeholder-en="Enter difficulty" placeholder="例如：基础到中等"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据学习材料设计一组主动回忆题，先只展示题目，等我回答后再提供答案和解析。
+
+学习材料：{{material}}
+题目数量：{{question_count}}
+难度：{{difficulty}}
+
+题型包含概念理解、应用和辨析。题目答案必须能从材料或其明确推论中得到；无法由材料支持的部分请标出。最后给出答案依据和容易混淆的点。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据学习材料设计一组主动回忆题，先只展示题目，等我回答后再提供答案和解析。
+
+学习材料：{{material}}
+题目数量：{{question_count}}
+难度：{{difficulty}}
+
+题型包含概念理解、应用和辨析。题目答案必须能从材料或其明确推论中得到；无法由材料支持的部分请标出。最后给出答案依据和容易混淆的点。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="lecture-note-structure" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">课堂笔记结构化</span><span lang="en">Structure lecture notes</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">提取课堂笔记中的概念、例子、疑问和待复习点。</span><span lang="en">Extract concepts, examples, questions, and review points.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">课程复习</span><span lang="en">Course review</span> · <span lang="zh-CN">知识整理</span><span lang="en">Knowledge organization</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">课程主题</span><span lang="en">Course Topic</span></span><textarea rows="3" data-prompt-variable="course_topic" data-placeholder-zh="填写课程或章节" data-placeholder-en="Enter course topic" placeholder="填写课程或章节"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">课堂笔记</span><span lang="en">Notes</span></span><textarea rows="3" data-prompt-variable="notes" data-placeholder-zh="粘贴课堂记录" data-placeholder-en="Enter notes" placeholder="粘贴课堂记录"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">复习重点</span><span lang="en">Focus</span></span><textarea rows="3" data-prompt-variable="focus" data-placeholder-zh="可选，写下考试或项目重点" data-placeholder-en="Enter focus" placeholder="可选，写下考试或项目重点"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请将课堂笔记整理成便于复习的结构，不补充笔记中不存在的课堂结论。
+
+课程主题：{{course_topic}}
+课堂笔记：{{notes}}
+复习重点：{{focus}}
+
+输出主题摘要、关键概念及其关系、例子、老师强调的内容、仍不清楚的问题和建议复习顺序。对缩写或残缺信息保留原文并标注“需核对”，不要猜测其含义。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请将课堂笔记整理成便于复习的结构，不补充笔记中不存在的课堂结论。
+
+课程主题：{{course_topic}}
+课堂笔记：{{notes}}
+复习重点：{{focus}}
+
+输出主题摘要、关键概念及其关系、例子、老师强调的内容、仍不清楚的问题和建议复习顺序。对缩写或残缺信息保留原文并标注“需核对”，不要猜测其含义。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="compare-two-concepts" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">比较两个相近概念</span><span lang="en">Compare related concepts</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">用共同维度和边界案例区分易混淆的概念。</span><span lang="en">Use shared dimensions and edge cases to distinguish similar ideas.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">概念辨析</span><span lang="en">Concept comparison</span> · <span lang="zh-CN">考试复习</span><span lang="en">Exam review</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">概念 A</span><span lang="en">Concept A</span></span><textarea rows="3" data-prompt-variable="concept_a" data-placeholder-zh="填写第一个概念" data-placeholder-en="Enter concept a" placeholder="填写第一个概念"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">概念 B</span><span lang="en">Concept B</span></span><textarea rows="3" data-prompt-variable="concept_b" data-placeholder-zh="填写第二个概念" data-placeholder-en="Enter concept b" placeholder="填写第二个概念"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">应用领域</span><span lang="en">Field</span></span><textarea rows="3" data-prompt-variable="field" data-placeholder-zh="例如：统计学、软件架构" data-placeholder-en="Enter field" placeholder="例如：统计学、软件架构"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">我的疑问</span><span lang="en">Question</span></span><textarea rows="3" data-prompt-variable="question" data-placeholder-zh="可选，说明最容易混淆的点" data-placeholder-en="Enter question" placeholder="可选，说明最容易混淆的点"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请比较两个容易混淆的概念，并优先说明它们在什么语境下使用。
+
+概念 A：{{concept_a}}
+概念 B：{{concept_b}}
+应用领域：{{field}}
+我的疑问：{{question}}
+
+先给出简短区别，再用表格比较定义、目标、适用条件、常见误解和边界案例。引用事实时说明可核查依据；不同学派定义不一致时并列说明，不强行给出唯一答案。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请比较两个容易混淆的概念，并优先说明它们在什么语境下使用。
+
+概念 A：{{concept_a}}
+概念 B：{{concept_b}}
+应用领域：{{field}}
+我的疑问：{{question}}
+
+先给出简短区别，再用表格比较定义、目标、适用条件、常见误解和边界案例。引用事实时说明可核查依据；不同学派定义不一致时并列说明，不强行给出唯一答案。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="research-paper-summary" data-category="learning">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">学习与研究</span><span lang="en">Learning &amp; research</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">论文内容摘要与质疑</span><span lang="en">Research paper reading notes</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">按研究问题、方法、发现和局限拆解论文内容。</span><span lang="en">Break down a paper by question, method, findings, and limitations.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">论文初读</span><span lang="en">Paper screening</span> · <span lang="zh-CN">文献整理</span><span lang="en">Literature review</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">论文标题或主题</span><span lang="en">Paper Title</span></span><textarea rows="3" data-prompt-variable="paper_title" data-placeholder-zh="填写标题或研究主题" data-placeholder-en="Enter paper title" placeholder="填写标题或研究主题"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">论文内容或摘要</span><span lang="en">Paper Text</span></span><textarea rows="3" data-prompt-variable="paper_text" data-placeholder-zh="粘贴摘要或相关段落" data-placeholder-en="Enter paper text" placeholder="粘贴摘要或相关段落"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">阅读目的</span><span lang="en">Reading Goal</span></span><textarea rows="3" data-prompt-variable="reading_goal" data-placeholder-zh="例如：理解方法、判断是否相关" data-placeholder-en="Enter reading goal" placeholder="例如：理解方法、判断是否相关"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请基于我提供的论文内容做结构化阅读笔记，不要把摘要中的主张当成已独立验证的事实。
+
+论文标题或主题：{{paper_title}}
+论文内容或摘要：{{paper_text}}
+阅读目的：{{reading_goal}}
+
+整理研究问题、研究方法、主要发现、作者明确承认的局限、结论适用范围和仍需核对的细节。区分作者陈述与可由材料直接支持的信息；不要虚构数据、引用或研究设计。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请基于我提供的论文内容做结构化阅读笔记，不要把摘要中的主张当成已独立验证的事实。
+
+论文标题或主题：{{paper_title}}
+论文内容或摘要：{{paper_text}}
+阅读目的：{{reading_goal}}
+
+整理研究问题、研究方法、主要发现、作者明确承认的局限、结论适用范围和仍需核对的细节。区分作者陈述与可由材料直接支持的信息；不要虚构数据、引用或研究设计。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="bug-report" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">可复现 Bug 报告</span><span lang="en">Reproducible bug report</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">把异常现象整理成环境、复现步骤和预期结果。</span><span lang="en">Organize an issue into environment, reproduction steps, and expected behavior.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">提交 Issue</span><span lang="en">Filing an issue</span> · <span lang="zh-CN">团队排障</span><span lang="en">Team troubleshooting</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">问题现象</span><span lang="en">Symptom</span></span><textarea rows="3" data-prompt-variable="symptom" data-placeholder-zh="描述发生了什么" data-placeholder-en="Enter symptom" placeholder="描述发生了什么"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">运行环境</span><span lang="en">Environment</span></span><textarea rows="3" data-prompt-variable="environment" data-placeholder-zh="系统、版本、浏览器或依赖版本" data-placeholder-en="Enter environment" placeholder="系统、版本、浏览器或依赖版本"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">复现步骤</span><span lang="en">Steps</span></span><textarea rows="3" data-prompt-variable="steps" data-placeholder-zh="逐步写出操作" data-placeholder-en="Enter steps" placeholder="逐步写出操作"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">预期结果</span><span lang="en">Expected</span></span><textarea rows="3" data-prompt-variable="expected" data-placeholder-zh="说明正确行为" data-placeholder-en="Enter expected" placeholder="说明正确行为"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">实际结果与错误信息</span><span lang="en">Actual</span></span><textarea rows="3" data-prompt-variable="actual" data-placeholder-zh="粘贴报错或日志片段，先移除密钥" data-placeholder-en="Enter actual" placeholder="粘贴报错或日志片段，先移除密钥"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请把问题描述整理成开发者可复现的 Bug 报告，不推测未提供的根因。
+
+问题现象：{{symptom}}
+运行环境：{{environment}}
+复现步骤：{{steps}}
+预期结果：{{expected}}
+实际结果和错误信息：{{actual}}
+
+按标题、环境、前置条件、复现步骤、预期/实际结果、日志和影响范围输出。缺失字段标为“待补充”，并给出最少需要补充的信息。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请把问题描述整理成开发者可复现的 Bug 报告，不推测未提供的根因。
+
+问题现象：{{symptom}}
+运行环境：{{environment}}
+复现步骤：{{steps}}
+预期结果：{{expected}}
+实际结果和错误信息：{{actual}}
+
+按标题、环境、前置条件、复现步骤、预期/实际结果、日志和影响范围输出。缺失字段标为“待补充”，并给出最少需要补充的信息。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="code-review-checklist" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">聚焦式代码审查</span><span lang="en">Focused code review</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">优先发现行为错误、安全风险和回归，不只做风格评论。</span><span lang="en">Look for behavioral defects, security risks, and regressions.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">代码审查</span><span lang="en">Code review</span> · <span lang="zh-CN">变更自检</span><span lang="en">Change review</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">变更目的</span><span lang="en">Change Goal</span></span><textarea rows="3" data-prompt-variable="change_goal" data-placeholder-zh="说明这次改动要实现什么" data-placeholder-en="Enter change goal" placeholder="说明这次改动要实现什么"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">相关约束</span><span lang="en">Constraints</span></span><textarea rows="3" data-prompt-variable="constraints" data-placeholder-zh="可选，列出兼容性或安全要求" data-placeholder-en="Enter constraints" placeholder="可选，列出兼容性或安全要求"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">代码或 diff</span><span lang="en">Code Diff</span></span><textarea rows="3" data-prompt-variable="code_diff" data-placeholder-zh="粘贴需要审查的变更" data-placeholder-en="Enter code diff" placeholder="粘贴需要审查的变更"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请审查下面的代码变更，聚焦真实缺陷，不为了提出建议而制造问题。
+
+变更目的：{{change_goal}}
+相关约束：{{constraints}}
+代码或 diff：{{code_diff}}
+
+只报告可由代码支持的问题，每条包含严重程度、文件/位置、触发条件、影响和修复方向。检查边界情况、错误处理、数据安全和兼容性；没有发现问题时明确写“未发现可确认的问题”，并说明审查范围限制。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请审查下面的代码变更，聚焦真实缺陷，不为了提出建议而制造问题。
+
+变更目的：{{change_goal}}
+相关约束：{{constraints}}
+代码或 diff：{{code_diff}}
+
+只报告可由代码支持的问题，每条包含严重程度、文件/位置、触发条件、影响和修复方向。检查边界情况、错误处理、数据安全和兼容性；没有发现问题时明确写“未发现可确认的问题”，并说明审查范围限制。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="refactor-plan" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">小步重构计划</span><span lang="en">Small-step refactoring plan</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">在行为保持不变的前提下规划可验证的小步重构。</span><span lang="en">Plan a low-risk refactor while preserving existing behavior.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">代码整理</span><span lang="en">Code cleanup</span> · <span lang="zh-CN">技术债处理</span><span lang="en">Technical debt</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">代码职责与当前问题</span><span lang="en">Problem</span></span><textarea rows="3" data-prompt-variable="problem" data-placeholder-zh="描述目前难以维护的地方" data-placeholder-en="Enter problem" placeholder="描述目前难以维护的地方"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">代码片段或结构</span><span lang="en">Code</span></span><textarea rows="3" data-prompt-variable="code" data-placeholder-zh="提供相关文件或简化代码" data-placeholder-en="Enter code" placeholder="提供相关文件或简化代码"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">语言与框架</span><span lang="en">Stack</span></span><textarea rows="3" data-prompt-variable="stack" data-placeholder-zh="例如：Python 3.12、FastAPI" data-placeholder-en="Enter stack" placeholder="例如：Python 3.12、FastAPI"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">行为约束</span><span lang="en">Constraints</span></span><textarea rows="3" data-prompt-variable="constraints" data-placeholder-zh="说明必须保持的接口或输出" data-placeholder-en="Enter constraints" placeholder="说明必须保持的接口或输出"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请为这段代码设计一个风险可控的小步重构方案。
+
+代码职责与当前问题：{{problem}}
+代码片段或结构：{{code}}
+语言与框架：{{stack}}
+行为约束：{{constraints}}
+
+先指出职责边界和需要保持的外部行为，再按小步骤列出重构顺序、每步影响范围、验证方式和回滚点。优先利用现有项目模式；不建议与问题无关的大规模重写，也不要假设不存在的测试。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请为这段代码设计一个风险可控的小步重构方案。
+
+代码职责与当前问题：{{problem}}
+代码片段或结构：{{code}}
+语言与框架：{{stack}}
+行为约束：{{constraints}}
+
+先指出职责边界和需要保持的外部行为，再按小步骤列出重构顺序、每步影响范围、验证方式和回滚点。优先利用现有项目模式；不建议与问题无关的大规模重写，也不要假设不存在的测试。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="unit-test-cases" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">补全边界测试场景</span><span lang="en">Boundary test scenarios</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">从函数契约推导正常、边界、异常和回归案例。</span><span lang="en">Derive normal, edge, error, and regression cases from a contract.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">测试设计</span><span lang="en">Test design</span> · <span lang="zh-CN">Bug 回归</span><span lang="en">Bug regression</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">语言与测试框架</span><span lang="en">Test Stack</span></span><textarea rows="3" data-prompt-variable="test_stack" data-placeholder-zh="例如：Python unittest" data-placeholder-en="Enter test stack" placeholder="例如：Python unittest"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">函数或接口</span><span lang="en">Function</span></span><textarea rows="3" data-prompt-variable="function" data-placeholder-zh="粘贴签名和相关实现" data-placeholder-en="Enter function" placeholder="粘贴签名和相关实现"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">已知行为约束</span><span lang="en">Contract</span></span><textarea rows="3" data-prompt-variable="contract" data-placeholder-zh="说明输入、输出与失败行为" data-placeholder-en="Enter contract" placeholder="说明输入、输出与失败行为"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">现有测试</span><span lang="en">Existing Tests</span></span><textarea rows="3" data-prompt-variable="existing_tests" data-placeholder-zh="可选，粘贴已有案例或写“暂无”" data-placeholder-en="Enter existing tests" placeholder="可选，粘贴已有案例或写“暂无”"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据函数的输入输出契约设计测试场景，不要假设未说明的业务规则。
+
+语言与测试框架：{{test_stack}}
+函数或接口：{{function}}
+已知行为约束：{{contract}}
+现有测试：{{existing_tests}}
+
+按正常路径、边界输入、错误输入、依赖失败和回归风险分类列出案例。每个案例说明输入、预期结果及其依据；如果契约不足以确定预期值，先列出需要确认的问题。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据函数的输入输出契约设计测试场景，不要假设未说明的业务规则。
+
+语言与测试框架：{{test_stack}}
+函数或接口：{{function}}
+已知行为约束：{{contract}}
+现有测试：{{existing_tests}}
+
+按正常路径、边界输入、错误输入、依赖失败和回归风险分类列出案例。每个案例说明输入、预期结果及其依据；如果契约不足以确定预期值，先列出需要确认的问题。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="api-documentation-draft" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">API 文档草稿</span><span lang="en">API documentation draft</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">依据真实接口定义整理参数、示例和错误说明。</span><span lang="en">Document parameters, examples, and errors from the actual interface.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">接口说明</span><span lang="en">API documentation</span> · <span lang="zh-CN">开发者文档</span><span lang="en">Developer docs</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">接口定义或代码</span><span lang="en">Api Definition</span></span><textarea rows="3" data-prompt-variable="api_definition" data-placeholder-zh="粘贴路由、schema 或 OpenAPI 片段" data-placeholder-en="Enter api definition" placeholder="粘贴路由、schema 或 OpenAPI 片段"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">认证方式</span><span lang="en">Auth</span></span><textarea rows="3" data-prompt-variable="auth" data-placeholder-zh="可选；不要粘贴真实凭证" data-placeholder-en="Enter auth" placeholder="可选；不要粘贴真实凭证"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">目标读者</span><span lang="en">Audience</span></span><textarea rows="3" data-prompt-variable="audience" data-placeholder-zh="例如：第三方开发者" data-placeholder-en="Enter audience" placeholder="例如：第三方开发者"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请根据提供的接口定义起草 API 文档。不要补写未定义的字段、权限或响应保证。
+
+接口定义或代码：{{api_definition}}
+认证方式（如已知）：{{auth}}
+目标读者：{{audience}}
+
+按用途、请求方法与路径、认证、参数表、请求示例、响应示例、错误情形和注意事项组织。每个示例使用虚构占位凭证；缺少的信息标为“需确认”，并列出文档发布前的核对项。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请根据提供的接口定义起草 API 文档。不要补写未定义的字段、权限或响应保证。
+
+接口定义或代码：{{api_definition}}
+认证方式（如已知）：{{auth}}
+目标读者：{{audience}}
+
+按用途、请求方法与路径、认证、参数表、请求示例、响应示例、错误情形和注意事项组织。每个示例使用虚构占位凭证；缺少的信息标为“需确认”，并列出文档发布前的核对项。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details><details class="prompt-card" data-prompt-card data-prompt-id="sql-query-debugging" data-category="coding">
+  <summary>
+    <span class="prompt-category"><span lang="zh-CN">编程与创作</span><span lang="en">Coding &amp; building</span></span>
+    <span class="prompt-card-title"><span lang="zh-CN">SQL 查询排查</span><span lang="en">Debug an SQL query</span></span>
+    <span class="prompt-card-summary"><span lang="zh-CN">根据查询、表结构和预期结果定位 SQL 问题。</span><span lang="en">Analyze a query using its schema and expected result.</span></span>
+    <span class="prompt-card-toggle" aria-hidden="true">＋</span>
+  </summary>
+  <div class="prompt-card-detail">
+    <p class="prompt-scenarios"><span lang="zh-CN">适用场景：</span><span lang="en">Use cases:</span> <span lang="zh-CN">查询调试</span><span lang="en">Query debugging</span> · <span lang="zh-CN">SQL 学习</span><span lang="en">SQL learning</span></p>
+    <div class="prompt-variable-panel" hidden>
+      <h3><span lang="zh-CN">填写变量</span><span lang="en">Fill in variables</span></h3>
+      <div class="prompt-variable-grid"><label class="prompt-variable"><span><span lang="zh-CN">数据库类型与版本</span><span lang="en">Database</span></span><textarea rows="3" data-prompt-variable="database" data-placeholder-zh="例如：PostgreSQL 16" data-placeholder-en="Enter database" placeholder="例如：PostgreSQL 16"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">表结构</span><span lang="en">Schema</span></span><textarea rows="3" data-prompt-variable="schema" data-placeholder-zh="粘贴已脱敏的表与字段定义" data-placeholder-en="Enter schema" placeholder="粘贴已脱敏的表与字段定义"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">SQL</span><span lang="en">Query</span></span><textarea rows="3" data-prompt-variable="query" data-placeholder-zh="粘贴查询语句，移除敏感值" data-placeholder-en="Enter query" placeholder="粘贴查询语句，移除敏感值"></textarea></label><label class="prompt-variable"><span><span lang="zh-CN">预期结果与实际问题</span><span lang="en">Issue</span></span><textarea rows="3" data-prompt-variable="issue" data-placeholder-zh="说明预期和观察到的结果" data-placeholder-en="Enter issue" placeholder="说明预期和观察到的结果"></textarea></label></div>
+    </div>
+    <h3><span lang="zh-CN">模板正文</span><span lang="en">Template text</span></h3>
+    <pre class="prompt-template-text" data-prompt-original>请帮助分析这条 SQL 的行为或错误，先解释推理依据，不要执行查询或假设真实数据库内容。
+
+数据库类型与版本：{{database}}
+表结构（脱敏）：{{schema}}
+SQL：{{query}}
+预期结果与实际问题：{{issue}}
+
+指出可能原因、需要确认的字段/关系和安全的修正方向。给出改写 SQL 时说明差异；不要建议删除或更新真实数据，除非明确要求并提供事务与备份提醒。</pre>
+    <section class="prompt-preview-panel" hidden>
+      <h3><span lang="zh-CN">填充预览</span><span lang="en">Filled preview</span></h3>
+      <pre class="prompt-template-text prompt-preview-text" data-prompt-preview>请帮助分析这条 SQL 的行为或错误，先解释推理依据，不要执行查询或假设真实数据库内容。
+
+数据库类型与版本：{{database}}
+表结构（脱敏）：{{schema}}
+SQL：{{query}}
+预期结果与实际问题：{{issue}}
+
+指出可能原因、需要确认的字段/关系和安全的修正方向。给出改写 SQL 时说明差异；不要建议删除或更新真实数据，除非明确要求并提供事务与备份提醒。</pre>
+    </section>
+    <div class="prompt-actions" hidden>
+      <button type="button" data-copy-original><span lang="zh-CN">复制原始模板</span><span lang="en">Copy template</span></button>
+      <button type="button" data-copy-preview><span lang="zh-CN">复制填充内容</span><span lang="en">Copy filled prompt</span></button>
+      <span class="prompt-copy-status" role="status" aria-live="polite"></span>
+    </div>
+    <p class="prompt-source"><span><span lang="zh-CN">FreeLLM 原创模板</span><span lang="en">Original FreeLLM template</span></span></p>
+  </div>
+</details>
+    </section>
+    <script type="application/json" id="prompt-template-data">[{"id":"weekly-work-plan","title":"一周工作计划","category":"work","summary":"把本周目标拆成可执行、有优先级的工作安排。","prompt":"你是务实的工作规划助手。请根据以下目标和可用时间，制定一周工作计划。\n\n本周目标：{{goals}}\n可投入时间：{{available_time}}\n已有约束或会议：{{constraints}}\n\n请按工作日列出重点任务、预计耗时、优先级和完成标准。标出依赖关系与风险；信息不足时先列出需要确认的问题，不要编造事项。","variables":[{"name":"goals","label":"本周目标","placeholder":"写下本周想完成的结果","labelEn":"Goals","placeholderEn":"Enter goals"},{"name":"available_time","label":"可投入时间","placeholder":"例如：周一至周五每天 6 小时","labelEn":"Available Time","placeholderEn":"Enter available time"},{"name":"constraints","label":"已有约束或会议","placeholder":"可选，写下不能调整的安排","labelEn":"Constraints","placeholderEn":"Enter constraints"}],"scenarios":["个人规划","团队排期"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Weekly work plan","summaryEn":"Turn weekly goals into a prioritized, actionable schedule.","scenariosEn":["Personal planning","Team scheduling"]},{"id":"meeting-notes","title":"会议纪要整理","category":"work","summary":"从讨论记录整理决策、行动项和待确认事项。","prompt":"请将以下会议记录整理为清晰、可追踪的纪要。\n\n会议主题：{{meeting_title}}\n参会角色（如有）：{{participants}}\n会议记录：{{meeting_notes}}\n\n按“结论与决策、行动项（负责人 / 截止时间 / 交付物）、待确认问题”分组。没有明确的信息标为“未说明”，不要推测负责人或日期；保留关键分歧。","variables":[{"name":"meeting_title","label":"会议主题","placeholder":"填写会议主题","labelEn":"Meeting Title","placeholderEn":"Enter meeting title"},{"name":"participants","label":"参会角色","placeholder":"可选；可写姓名或岗位","labelEn":"Participants","placeholderEn":"Enter participants"},{"name":"meeting_notes","label":"会议记录","placeholder":"粘贴需要整理的会议内容","labelEn":"Meeting Notes","placeholderEn":"Enter meeting notes"}],"scenarios":["会后整理","行动项追踪"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Organize meeting notes","summaryEn":"Extract decisions, action items, and questions to resolve.","scenariosEn":["Meeting notes","Action tracking"]},{"id":"professional-email-draft","title":"专业邮件草稿","category":"work","summary":"根据沟通目的生成简洁、礼貌且信息完整的邮件草稿。","prompt":"请为我起草一封专业、直接、礼貌的邮件。\n\n收件人及关系：{{recipient}}\n邮件目的：{{purpose}}\n必须提到的信息：{{key_points}}\n希望对方采取的行动：{{next_action}}\n语气偏好：{{tone}}\n\n提供一个明确主题和正文。不要添加我未提供的承诺、事实或截止日期；缺少必要信息时用方括号标出待填写内容。","variables":[{"name":"recipient","label":"收件人及关系","placeholder":"例如：合作方项目经理","labelEn":"Recipient","placeholderEn":"Enter recipient"},{"name":"purpose","label":"邮件目的","placeholder":"说明这封邮件要解决什么","labelEn":"Purpose","placeholderEn":"Enter purpose"},{"name":"key_points","label":"必须提到的信息","placeholder":"列出事实或背景","labelEn":"Key Points","placeholderEn":"Enter key points"},{"name":"next_action","label":"希望对方采取的行动","placeholder":"例如：确认时间并回复","labelEn":"Next Action","placeholderEn":"Enter next action"},{"name":"tone","label":"语气偏好","placeholder":"例如：简洁友好、正式","labelEn":"Tone","placeholderEn":"Enter tone"}],"scenarios":["工作沟通","合作联系"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Professional email draft","summaryEn":"Draft a concise and courteous email for a clear purpose.","scenariosEn":["Work communication","Partner outreach"]},{"id":"task-prioritization","title":"任务优先级梳理","category":"work","summary":"按影响、紧急程度和投入识别先做事项与可延后事项。","prompt":"请帮助我梳理任务优先级，不要仅凭标题猜测业务价值。\n\n任务清单：{{tasks}}\n可用时间：{{time_budget}}\n当前目标：{{current_goal}}\n\n为每项标注紧急程度、预期影响、估计投入和不确定性；无法判断的维度标为“待确认”。给出建议顺序、可拆分项、可委托或延后的事项，并解释排序理由。","variables":[{"name":"tasks","label":"任务清单","placeholder":"每行一项，并补充已知截止时间","labelEn":"Tasks","placeholderEn":"Enter tasks"},{"name":"time_budget","label":"可用时间","placeholder":"例如：今天剩余 3 小时","labelEn":"Time Budget","placeholderEn":"Enter time budget"},{"name":"current_goal","label":"当前目标","placeholder":"说明近期最重要的结果","labelEn":"Current Goal","placeholderEn":"Enter current goal"}],"scenarios":["每日安排","项目取舍"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Prioritize tasks","summaryEn":"Rank tasks by impact, urgency, and effort.","scenariosEn":["Daily planning","Project prioritization"]},{"id":"process-checklist","title":"流程转检查清单","category":"work","summary":"把重复性流程拆成可逐项确认的操作步骤。","prompt":"请把下面的流程描述整理成一份可执行的检查清单。\n\n流程名称：{{process_name}}\n流程描述：{{process_description}}\n使用者：{{operator}}\n\n按执行顺序列出动作、完成判断和需要保留的记录。区分必做项与条件项；指出流程中缺少的输入、异常处理和交接点。不要自行添加未经描述的审批或系统操作。","variables":[{"name":"process_name","label":"流程名称","placeholder":"填写流程名称","labelEn":"Process Name","placeholderEn":"Enter process name"},{"name":"process_description","label":"流程描述","placeholder":"描述目前的处理步骤","labelEn":"Process Description","placeholderEn":"Enter process description"},{"name":"operator","label":"使用者","placeholder":"例如：新入职同事、值班人员","labelEn":"Operator","placeholderEn":"Enter operator"}],"scenarios":["标准操作流程","交接检查"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Turn a process into a checklist","summaryEn":"Break a recurring process into steps that can be checked off.","scenariosEn":["Standard operating procedures","Handoff checks"]},{"id":"project-status-update","title":"项目进度简报","category":"work","summary":"将零散进展整理成状态、风险和下一步行动。","prompt":"请根据已知信息写一份简洁的项目进度简报。\n\n项目目标：{{project_goal}}\n本期进展：{{progress}}\n当前阻塞或风险：{{risks}}\n下期计划：{{next_steps}}\n\n输出“整体状态、已完成、进行中、风险与需协助事项、下一步”。没有提供的比例、日期和责任人标注为“未提供”，不推测项目是否按期。","variables":[{"name":"project_goal","label":"项目目标","placeholder":"用一两句话说明目标","labelEn":"Project Goal","placeholderEn":"Enter project goal"},{"name":"progress","label":"本期进展","placeholder":"列出已完成和进行中的事项","labelEn":"Progress","placeholderEn":"Enter progress"},{"name":"risks","label":"阻塞或风险","placeholder":"没有则填写“暂无”","labelEn":"Risks","placeholderEn":"Enter risks"},{"name":"next_steps","label":"下期计划","placeholder":"列出接下来的主要行动","labelEn":"Next Steps","placeholderEn":"Enter next steps"}],"scenarios":["周报","项目同步"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Project status update","summaryEn":"Summarize progress, risks, and next actions.","scenariosEn":["Weekly report","Project update"]},{"id":"article-outline","title":"文章大纲设计","category":"writing","summary":"围绕读者问题和核心观点搭建层次清楚的大纲。","prompt":"请为一篇文章设计有逻辑的提纲，先明确读者要解决的问题，再安排论述顺序。\n\n主题：{{topic}}\n目标读者：{{audience}}\n文章目的：{{purpose}}\n已有材料或观点：{{materials}}\n目标篇幅：{{length}}\n\n输出标题备选、中心论点、分级大纲和每节要回答的问题。指出材料不足或需要核实的事实；不要把未经证实的观点写成事实。","variables":[{"name":"topic","label":"主题","placeholder":"填写文章主题","labelEn":"Topic","placeholderEn":"Enter topic"},{"name":"audience","label":"目标读者","placeholder":"例如：刚入门的开发者","labelEn":"Audience","placeholderEn":"Enter audience"},{"name":"purpose","label":"文章目的","placeholder":"例如：解释、比较、说服或记录","labelEn":"Purpose","placeholderEn":"Enter purpose"},{"name":"materials","label":"已有材料或观点","placeholder":"可粘贴笔记、来源或要点","labelEn":"Materials","placeholderEn":"Enter materials"},{"name":"length","label":"目标篇幅","placeholder":"例如：约 1500 字","labelEn":"Length","placeholderEn":"Enter length"}],"scenarios":["博客写作","知识分享"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Build an article outline","summaryEn":"Organize an outline around reader needs and a clear argument.","scenariosEn":["Blog writing","Knowledge sharing"]},{"id":"tone-rewrite","title":"按指定语气改写","category":"writing","summary":"保留原意并调整语气、受众和篇幅。","prompt":"请改写下面的文字，保留事实、观点和关键信息，不增加原文没有的承诺。\n\n目标读者：{{audience}}\n语气：{{tone}}\n长度要求：{{length}}\n原文：{{source_text}}\n\n先给出改写稿，再用简短列表说明做了哪些表达调整。若原文存在歧义，请标出并询问，不要自行选择可能改变含义的解释。","variables":[{"name":"audience","label":"目标读者","placeholder":"填写读者类型","labelEn":"Audience","placeholderEn":"Enter audience"},{"name":"tone","label":"希望的语气","placeholder":"例如：平实、温暖、正式","labelEn":"Tone","placeholderEn":"Enter tone"},{"name":"length","label":"长度要求","placeholder":"例如：保留原长度或压缩到 100 字","labelEn":"Length","placeholderEn":"Enter length"},{"name":"source_text","label":"原文","placeholder":"粘贴要改写的文字","labelEn":"Source Text","placeholderEn":"Enter source text"}],"scenarios":["润色","风格调整"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Rewrite in a chosen tone","summaryEn":"Keep the meaning while adjusting tone, audience, and length.","scenariosEn":["Editing","Tone adjustment"]},{"id":"social-post-variants","title":"社交媒体文案变体","category":"writing","summary":"围绕同一事实生成不同角度的短文案。","prompt":"请根据提供的信息，为指定平台写 3 个角度不同的短文案。\n\n平台及受众：{{platform_audience}}\n主题与事实：{{facts}}\n期望行动：{{call_to_action}}\n字数限制：{{limit}}\n\n三个角度分别为：问题切入、经验分享、清单提示。遵守字数限制，不编造数据、案例或个人经历；如信息不足，使用中性表达。每个版本附一行说明其角度。","variables":[{"name":"platform_audience","label":"平台及受众","placeholder":"例如：面向独立开发者的公众号","labelEn":"Platform Audience","placeholderEn":"Enter platform audience"},{"name":"facts","label":"主题与事实","placeholder":"提供可确认的信息","labelEn":"Facts","placeholderEn":"Enter facts"},{"name":"call_to_action","label":"期望行动","placeholder":"例如：收藏文章、查看链接","labelEn":"Call To Action","placeholderEn":"Enter call to action"},{"name":"limit","label":"字数限制","placeholder":"例如：每条不超过 120 字","labelEn":"Limit","placeholderEn":"Enter limit"}],"scenarios":["社交媒体","内容运营"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Social post variations","summaryEn":"Create short copy variations from the same verified facts.","scenariosEn":["Social media","Content operations"]},{"id":"proofread-with-rules","title":"按规则校对文本","category":"writing","summary":"检查错字、歧义和格式问题，避免擅自改写立场。","prompt":"请按指定规则校对文本。先列出问题位置、问题类型和修改建议，再给出修订稿。\n\n校对重点：{{focus}}\n格式或术语规则：{{rules}}\n原文：{{source_text}}\n\n保留原作者观点和语气；不确定的专有名词、数字或事实标为“需核对”，不要凭常识替换。","variables":[{"name":"focus","label":"校对重点","placeholder":"例如：错别字、标点、逻辑衔接","labelEn":"Focus","placeholderEn":"Enter focus"},{"name":"rules","label":"格式或术语规则","placeholder":"例如：产品名称保持英文","labelEn":"Rules","placeholderEn":"Enter rules"},{"name":"source_text","label":"原文","placeholder":"粘贴需要校对的内容","labelEn":"Source Text","placeholderEn":"Enter source text"}],"scenarios":["文章校对","文档审阅"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Proofread with rules","summaryEn":"Check errors and ambiguity without changing the author’s position.","scenariosEn":["Proofreading","Document review"]},{"id":"product-description","title":"产品介绍文案","category":"writing","summary":"把产品特点改写为对目标用户有帮助的介绍。","prompt":"请为产品写一段清楚、可信的介绍，重点说明它解决什么问题及适合谁使用。\n\n产品名称与类型：{{product}}\n目标用户：{{audience}}\n已确认的功能与事实：{{features}}\n限制或不适用场景：{{limits}}\n文案位置和长度：{{placement}}\n\n输出标题、简介和 3 个要点。只使用已确认的信息；没有证据的性能、规模、免费条件或效果承诺不要写入。","variables":[{"name":"product","label":"产品名称与类型","placeholder":"填写产品名称和类别","labelEn":"Product","placeholderEn":"Enter product"},{"name":"audience","label":"目标用户","placeholder":"说明主要使用者","labelEn":"Audience","placeholderEn":"Enter audience"},{"name":"features","label":"已确认的功能与事实","placeholder":"列出可验证的特点","labelEn":"Features","placeholderEn":"Enter features"},{"name":"limits","label":"限制或不适用场景","placeholder":"可选，避免过度承诺","labelEn":"Limits","placeholderEn":"Enter limits"},{"name":"placement","label":"文案位置和长度","placeholder":"例如：官网首屏，约 80 字","labelEn":"Placement","placeholderEn":"Enter placement"}],"scenarios":["产品页面","项目介绍"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Product description","summaryEn":"Explain what a product does and who it helps.","scenariosEn":["Product pages","Project overview"]},{"id":"faq-from-source","title":"根据资料生成 FAQ","category":"writing","summary":"从已有资料提炼常见问题，并标注资料没有覆盖的内容。","prompt":"请只根据下方资料，整理用户可能提出的常见问题。\n\n目标读者：{{audience}}\n资料：{{source_material}}\n希望的问题数量：{{count}}\n\n每个问题给出简洁回答，并在回答后注明对应资料依据或“资料未说明”。不得用外部常识补全未提供的价格、政策、日期和承诺；发现矛盾时单独列出。","variables":[{"name":"audience","label":"目标读者","placeholder":"例如：第一次使用该服务的人","labelEn":"Audience","placeholderEn":"Enter audience"},{"name":"source_material","label":"资料","placeholder":"粘贴可作为依据的内容","labelEn":"Source Material","placeholderEn":"Enter source material"},{"name":"count","label":"问题数量","placeholder":"例如：8 个","labelEn":"Count","placeholderEn":"Enter count"}],"scenarios":["帮助中心","产品说明"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Create an FAQ from source material","summaryEn":"Turn existing material into questions and evidence-based answers.","scenariosEn":["Help center","Product documentation"]},{"id":"study-plan","title":"个性化学习计划","category":"learning","summary":"结合目标、基础和可用时间安排可检查的学习步骤。","prompt":"请根据我的目标和当前基础，制定一个现实、可复盘的学习计划。\n\n学习目标：{{goal}}\n当前基础：{{starting_point}}\n每周可用时间：{{weekly_time}}\n计划周期：{{duration}}\n\n按阶段列出主题、练习、完成标准和复习安排。区分必须掌握与可选拓展；如目标超出时间预算，指出取舍并给出较小目标，不承诺固定学习效果。","variables":[{"name":"goal","label":"学习目标","placeholder":"描述希望能做什么","labelEn":"Goal","placeholderEn":"Enter goal"},{"name":"starting_point","label":"当前基础","placeholder":"说明已掌握内容或经验","labelEn":"Starting Point","placeholderEn":"Enter starting point"},{"name":"weekly_time","label":"每周可用时间","placeholder":"例如：每周 5 小时","labelEn":"Weekly Time","placeholderEn":"Enter weekly time"},{"name":"duration","label":"计划周期","placeholder":"例如：6 周","labelEn":"Duration","placeholderEn":"Enter duration"}],"scenarios":["技能学习","课程安排"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Personalized study plan","summaryEn":"Plan learning steps around goals, current knowledge, and available time.","scenariosEn":["Skill development","Course planning"]},{"id":"explain-a-concept","title":"分层解释一个概念","category":"learning","summary":"从直观解释到专业定义逐层理解新概念。","prompt":"请用分层方式解释这个概念，帮助我理解而不只是记住定义。\n\n概念：{{concept}}\n我的背景：{{background}}\n我卡住的地方：{{confusion}}\n\n依次给出一句话直观解释、准确但易懂的定义、一个贴近生活的例子、一个反例或边界、与相近概念的区别，以及 3 道自测题。若概念有多种定义，请说明语境差异并提示查阅权威资料。","variables":[{"name":"concept","label":"概念","placeholder":"填写想理解的概念","labelEn":"Concept","placeholderEn":"Enter concept"},{"name":"background","label":"我的背景","placeholder":"例如：学过基础统计","labelEn":"Background","placeholderEn":"Enter background"},{"name":"confusion","label":"卡住的地方","placeholder":"可选，指出具体困惑","labelEn":"Confusion","placeholderEn":"Enter confusion"}],"scenarios":["自学","课堂复习"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Explain a concept in layers","summaryEn":"Build understanding from an intuitive explanation to a precise definition.","scenariosEn":["Self-study","Class review"]},{"id":"active-recall-quiz","title":"生成主动回忆测验","category":"learning","summary":"依据学习材料生成由浅到深的问题和答案解析。","prompt":"请根据学习材料设计一组主动回忆题，先只展示题目，等我回答后再提供答案和解析。\n\n学习材料：{{material}}\n题目数量：{{question_count}}\n难度：{{difficulty}}\n\n题型包含概念理解、应用和辨析。题目答案必须能从材料或其明确推论中得到；无法由材料支持的部分请标出。最后给出答案依据和容易混淆的点。","variables":[{"name":"material","label":"学习材料","placeholder":"粘贴课程笔记或阅读材料","labelEn":"Material","placeholderEn":"Enter material"},{"name":"question_count","label":"题目数量","placeholder":"例如：8 题","labelEn":"Question Count","placeholderEn":"Enter question count"},{"name":"difficulty","label":"难度","placeholder":"例如：基础到中等","labelEn":"Difficulty","placeholderEn":"Enter difficulty"}],"scenarios":["考前复习","阅读检验"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Active recall quiz","summaryEn":"Generate questions and explanations from supplied study material.","scenariosEn":["Exam preparation","Reading comprehension"]},{"id":"lecture-note-structure","title":"课堂笔记结构化","category":"learning","summary":"提取课堂笔记中的概念、例子、疑问和待复习点。","prompt":"请将课堂笔记整理成便于复习的结构，不补充笔记中不存在的课堂结论。\n\n课程主题：{{course_topic}}\n课堂笔记：{{notes}}\n复习重点：{{focus}}\n\n输出主题摘要、关键概念及其关系、例子、老师强调的内容、仍不清楚的问题和建议复习顺序。对缩写或残缺信息保留原文并标注“需核对”，不要猜测其含义。","variables":[{"name":"course_topic","label":"课程主题","placeholder":"填写课程或章节","labelEn":"Course Topic","placeholderEn":"Enter course topic"},{"name":"notes","label":"课堂笔记","placeholder":"粘贴课堂记录","labelEn":"Notes","placeholderEn":"Enter notes"},{"name":"focus","label":"复习重点","placeholder":"可选，写下考试或项目重点","labelEn":"Focus","placeholderEn":"Enter focus"}],"scenarios":["课程复习","知识整理"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Structure lecture notes","summaryEn":"Extract concepts, examples, questions, and review points.","scenariosEn":["Course review","Knowledge organization"]},{"id":"compare-two-concepts","title":"比较两个相近概念","category":"learning","summary":"用共同维度和边界案例区分易混淆的概念。","prompt":"请比较两个容易混淆的概念，并优先说明它们在什么语境下使用。\n\n概念 A：{{concept_a}}\n概念 B：{{concept_b}}\n应用领域：{{field}}\n我的疑问：{{question}}\n\n先给出简短区别，再用表格比较定义、目标、适用条件、常见误解和边界案例。引用事实时说明可核查依据；不同学派定义不一致时并列说明，不强行给出唯一答案。","variables":[{"name":"concept_a","label":"概念 A","placeholder":"填写第一个概念","labelEn":"Concept A","placeholderEn":"Enter concept a"},{"name":"concept_b","label":"概念 B","placeholder":"填写第二个概念","labelEn":"Concept B","placeholderEn":"Enter concept b"},{"name":"field","label":"应用领域","placeholder":"例如：统计学、软件架构","labelEn":"Field","placeholderEn":"Enter field"},{"name":"question","label":"我的疑问","placeholder":"可选，说明最容易混淆的点","labelEn":"Question","placeholderEn":"Enter question"}],"scenarios":["概念辨析","考试复习"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Compare related concepts","summaryEn":"Use shared dimensions and edge cases to distinguish similar ideas.","scenariosEn":["Concept comparison","Exam review"]},{"id":"research-paper-summary","title":"论文内容摘要与质疑","category":"learning","summary":"按研究问题、方法、发现和局限拆解论文内容。","prompt":"请基于我提供的论文内容做结构化阅读笔记，不要把摘要中的主张当成已独立验证的事实。\n\n论文标题或主题：{{paper_title}}\n论文内容或摘要：{{paper_text}}\n阅读目的：{{reading_goal}}\n\n整理研究问题、研究方法、主要发现、作者明确承认的局限、结论适用范围和仍需核对的细节。区分作者陈述与可由材料直接支持的信息；不要虚构数据、引用或研究设计。","variables":[{"name":"paper_title","label":"论文标题或主题","placeholder":"填写标题或研究主题","labelEn":"Paper Title","placeholderEn":"Enter paper title"},{"name":"paper_text","label":"论文内容或摘要","placeholder":"粘贴摘要或相关段落","labelEn":"Paper Text","placeholderEn":"Enter paper text"},{"name":"reading_goal","label":"阅读目的","placeholder":"例如：理解方法、判断是否相关","labelEn":"Reading Goal","placeholderEn":"Enter reading goal"}],"scenarios":["论文初读","文献整理"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Research paper reading notes","summaryEn":"Break down a paper by question, method, findings, and limitations.","scenariosEn":["Paper screening","Literature review"]},{"id":"bug-report","title":"可复现 Bug 报告","category":"coding","summary":"把异常现象整理成环境、复现步骤和预期结果。","prompt":"请把问题描述整理成开发者可复现的 Bug 报告，不推测未提供的根因。\n\n问题现象：{{symptom}}\n运行环境：{{environment}}\n复现步骤：{{steps}}\n预期结果：{{expected}}\n实际结果和错误信息：{{actual}}\n\n按标题、环境、前置条件、复现步骤、预期/实际结果、日志和影响范围输出。缺失字段标为“待补充”，并给出最少需要补充的信息。","variables":[{"name":"symptom","label":"问题现象","placeholder":"描述发生了什么","labelEn":"Symptom","placeholderEn":"Enter symptom"},{"name":"environment","label":"运行环境","placeholder":"系统、版本、浏览器或依赖版本","labelEn":"Environment","placeholderEn":"Enter environment"},{"name":"steps","label":"复现步骤","placeholder":"逐步写出操作","labelEn":"Steps","placeholderEn":"Enter steps"},{"name":"expected","label":"预期结果","placeholder":"说明正确行为","labelEn":"Expected","placeholderEn":"Enter expected"},{"name":"actual","label":"实际结果与错误信息","placeholder":"粘贴报错或日志片段，先移除密钥","labelEn":"Actual","placeholderEn":"Enter actual"}],"scenarios":["提交 Issue","团队排障"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Reproducible bug report","summaryEn":"Organize an issue into environment, reproduction steps, and expected behavior.","scenariosEn":["Filing an issue","Team troubleshooting"]},{"id":"code-review-checklist","title":"聚焦式代码审查","category":"coding","summary":"优先发现行为错误、安全风险和回归，不只做风格评论。","prompt":"请审查下面的代码变更，聚焦真实缺陷，不为了提出建议而制造问题。\n\n变更目的：{{change_goal}}\n相关约束：{{constraints}}\n代码或 diff：{{code_diff}}\n\n只报告可由代码支持的问题，每条包含严重程度、文件/位置、触发条件、影响和修复方向。检查边界情况、错误处理、数据安全和兼容性；没有发现问题时明确写“未发现可确认的问题”，并说明审查范围限制。","variables":[{"name":"change_goal","label":"变更目的","placeholder":"说明这次改动要实现什么","labelEn":"Change Goal","placeholderEn":"Enter change goal"},{"name":"constraints","label":"相关约束","placeholder":"可选，列出兼容性或安全要求","labelEn":"Constraints","placeholderEn":"Enter constraints"},{"name":"code_diff","label":"代码或 diff","placeholder":"粘贴需要审查的变更","labelEn":"Code Diff","placeholderEn":"Enter code diff"}],"scenarios":["代码审查","变更自检"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Focused code review","summaryEn":"Look for behavioral defects, security risks, and regressions.","scenariosEn":["Code review","Change review"]},{"id":"refactor-plan","title":"小步重构计划","category":"coding","summary":"在行为保持不变的前提下规划可验证的小步重构。","prompt":"请为这段代码设计一个风险可控的小步重构方案。\n\n代码职责与当前问题：{{problem}}\n代码片段或结构：{{code}}\n语言与框架：{{stack}}\n行为约束：{{constraints}}\n\n先指出职责边界和需要保持的外部行为，再按小步骤列出重构顺序、每步影响范围、验证方式和回滚点。优先利用现有项目模式；不建议与问题无关的大规模重写，也不要假设不存在的测试。","variables":[{"name":"problem","label":"代码职责与当前问题","placeholder":"描述目前难以维护的地方","labelEn":"Problem","placeholderEn":"Enter problem"},{"name":"code","label":"代码片段或结构","placeholder":"提供相关文件或简化代码","labelEn":"Code","placeholderEn":"Enter code"},{"name":"stack","label":"语言与框架","placeholder":"例如：Python 3.12、FastAPI","labelEn":"Stack","placeholderEn":"Enter stack"},{"name":"constraints","label":"行为约束","placeholder":"说明必须保持的接口或输出","labelEn":"Constraints","placeholderEn":"Enter constraints"}],"scenarios":["代码整理","技术债处理"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Small-step refactoring plan","summaryEn":"Plan a low-risk refactor while preserving existing behavior.","scenariosEn":["Code cleanup","Technical debt"]},{"id":"unit-test-cases","title":"补全边界测试场景","category":"coding","summary":"从函数契约推导正常、边界、异常和回归案例。","prompt":"请根据函数的输入输出契约设计测试场景，不要假设未说明的业务规则。\n\n语言与测试框架：{{test_stack}}\n函数或接口：{{function}}\n已知行为约束：{{contract}}\n现有测试：{{existing_tests}}\n\n按正常路径、边界输入、错误输入、依赖失败和回归风险分类列出案例。每个案例说明输入、预期结果及其依据；如果契约不足以确定预期值，先列出需要确认的问题。","variables":[{"name":"test_stack","label":"语言与测试框架","placeholder":"例如：Python unittest","labelEn":"Test Stack","placeholderEn":"Enter test stack"},{"name":"function","label":"函数或接口","placeholder":"粘贴签名和相关实现","labelEn":"Function","placeholderEn":"Enter function"},{"name":"contract","label":"已知行为约束","placeholder":"说明输入、输出与失败行为","labelEn":"Contract","placeholderEn":"Enter contract"},{"name":"existing_tests","label":"现有测试","placeholder":"可选，粘贴已有案例或写“暂无”","labelEn":"Existing Tests","placeholderEn":"Enter existing tests"}],"scenarios":["测试设计","Bug 回归"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Boundary test scenarios","summaryEn":"Derive normal, edge, error, and regression cases from a contract.","scenariosEn":["Test design","Bug regression"]},{"id":"api-documentation-draft","title":"API 文档草稿","category":"coding","summary":"依据真实接口定义整理参数、示例和错误说明。","prompt":"请根据提供的接口定义起草 API 文档。不要补写未定义的字段、权限或响应保证。\n\n接口定义或代码：{{api_definition}}\n认证方式（如已知）：{{auth}}\n目标读者：{{audience}}\n\n按用途、请求方法与路径、认证、参数表、请求示例、响应示例、错误情形和注意事项组织。每个示例使用虚构占位凭证；缺少的信息标为“需确认”，并列出文档发布前的核对项。","variables":[{"name":"api_definition","label":"接口定义或代码","placeholder":"粘贴路由、schema 或 OpenAPI 片段","labelEn":"Api Definition","placeholderEn":"Enter api definition"},{"name":"auth","label":"认证方式","placeholder":"可选；不要粘贴真实凭证","labelEn":"Auth","placeholderEn":"Enter auth"},{"name":"audience","label":"目标读者","placeholder":"例如：第三方开发者","labelEn":"Audience","placeholderEn":"Enter audience"}],"scenarios":["接口说明","开发者文档"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"API documentation draft","summaryEn":"Document parameters, examples, and errors from the actual interface.","scenariosEn":["API documentation","Developer docs"]},{"id":"sql-query-debugging","title":"SQL 查询排查","category":"coding","summary":"根据查询、表结构和预期结果定位 SQL 问题。","prompt":"请帮助分析这条 SQL 的行为或错误，先解释推理依据，不要执行查询或假设真实数据库内容。\n\n数据库类型与版本：{{database}}\n表结构（脱敏）：{{schema}}\nSQL：{{query}}\n预期结果与实际问题：{{issue}}\n\n指出可能原因、需要确认的字段/关系和安全的修正方向。给出改写 SQL 时说明差异；不要建议删除或更新真实数据，除非明确要求并提供事务与备份提醒。","variables":[{"name":"database","label":"数据库类型与版本","placeholder":"例如：PostgreSQL 16","labelEn":"Database","placeholderEn":"Enter database"},{"name":"schema","label":"表结构","placeholder":"粘贴已脱敏的表与字段定义","labelEn":"Schema","placeholderEn":"Enter schema"},{"name":"query","label":"SQL","placeholder":"粘贴查询语句，移除敏感值","labelEn":"Query","placeholderEn":"Enter query"},{"name":"issue","label":"预期结果与实际问题","placeholder":"说明预期和观察到的结果","labelEn":"Issue","placeholderEn":"Enter issue"}],"scenarios":["查询调试","SQL 学习"],"source":{"type":"original","url":"","note":"FreeLLM 原创模板","noteEn":"Original FreeLLM template"},"updatedAt":"2026-10-09","titleEn":"Debug an SQL query","summaryEn":"Analyze a query using its schema and expected result.","scenariosEn":["Query debugging","SQL learning"]}]</script>
+    <noscript><p class="prompt-noscript"><span lang="zh-CN">已展开模板可直接选择并复制正文；搜索和变量预览需要启用 JavaScript。</span><span lang="en">Open a template to select and copy its text. Search and variable preview require JavaScript.</span></p></noscript>
+  </main>
+  <script src="/js/prompt-library.js?v=20261009a"></script>
+<script src="/js/freellm-sync.js"></script></body>
+</html>

@@ -32,6 +32,7 @@ FreeLLM（[freellm.top](https://freellm.top/)）整理免费模型、免费额�
 - 重点入口附有逐步操作、可复制命令、验证动作和官方来源；操作型厂家（如 Freebuff、LongCat）即使暂时没有模型目录记录，也会单独保留操作页
 - **7 个**分类：[免费额度](https://freellm.top/category/free-quota/)、[学生优惠](https://freellm.top/category/student/)、[免费 IDE](https://freellm.top/category/free-ide/)、[AI API](https://freellm.top/category/api/)、[开放权重](https://freellm.top/category/open-weights/)、[试用与促销](https://freellm.top/category/promo/)、[Web 与浏览器 AI](https://freellm.top/category/web/)
 - **9 个**主题指南页，以及 [从零开始 API 调用入口](https://freellm.top/guides/getting-started/)和 8 家提供商教程（OpenRouter、Groq、Google AI Studio、SiliconFlow、阿里云百炼、智谱、DeepSeek、NVIDIA NIM）：[免费 LLM API 开放目录指南](https://freellm.top/guides/free-llm/)、[免费 OpenAI API 替代品](https://freellm.top/guides/free-openai-api-alternatives/)、[Claude Code 免费替代品](https://freellm.top/guides/claude-code-free-alternatives/)、[免费 OpenAI 兼容 API](https://freellm.top/guides/free-openai-compatible-apis/)、[免费 AI 编程工具](https://freellm.top/guides/free-ai-coding-tools/)、[免费 AI 搜索 API](https://freellm.top/guides/free-ai-search-apis/)、[开源权重模型](https://freellm.top/guides/open-weight-models/)、[模型上下文窗口](https://freellm.top/guides/model-context-windows/)、[国内免费 AI API](https://freellm.top/guides/china-free-ai-api/)
+- **Prompt 模板库**：[提示词](https://freellm.top/prompts/)提供 24 条中文模板，支持搜索、分类、变量预览和本地复制，无需登录。
 - 展示来自 GitHub、Hugging Face 等平台的公开外部信号（Stars、Likes、Downloads）
 - 外部信号只作为原始公开数据展示，不伪造本站评分，也不把不同平台的数据强行合并成一个分数
 
@@ -77,6 +78,7 @@ data/ranked-offers.json          排序评分审计结果
 data/offers-ranked.json          首页实际读取的排序后完整数据
 data/models.json                 第三方模型目录快照（含新鲜度状态）
 data/provider-catalog.json       厂家聚合目录
+data/prompt-templates.json      Prompt 模板库内容（24 条）
 data/operations/*.json           重点厂家 / 模型的详细操作路径
 data/providers.json              平台与提供商信息
 data/community-signals.json      外部公开信号快照
@@ -92,6 +94,7 @@ design/free-china-ai-index.html  网站页面
 offers/<id>/index.html            资源详情页（生成文件）
 category/<slug>/index.html        分类页（生成文件）
 guides/*/index.html               指南页（生成文件）
+prompts/index.html                Prompt 模板库（生成文件）
 logs/index.html                   每日变更日志（生成文件）
 tools/index.html                  在线工具合集（精选自 leowh.com/tools）
 docs/specs/                       设计与实施记录

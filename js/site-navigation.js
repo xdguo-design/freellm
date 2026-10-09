@@ -3,12 +3,13 @@
 
   if (window.FreeLLMNavigation) return;
 
-  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'about']);
+  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'prompts', 'tools', 'workflow', 'logs', 'about']);
   var navigationPaths = new Map([
     ['/', 'home'],
     ['/models/', 'models'],
     ['/health/', 'health'],
     ['/skills/', 'skills'],
+    ['/prompts/', 'prompts'],
     ['/tools/', 'tools'],
     ['/workflow/', 'workflow'],
     ['/logs/', 'logs'],
@@ -16,7 +17,7 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261009-prompt-library';
   var updateIndicatorReady = false;
   // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
   document.addEventListener('keydown', function(event) {
@@ -33,7 +34,7 @@
     }
   });
 
-  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
+  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/prompts/":"/prompts/?lang=en","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
   function ensureEnglishEntryLink() {
     var actions = document.querySelector('.fl-site-ribbon-actions');
     if (!actions) return;
@@ -61,6 +62,10 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     var path = window.location.pathname;
+    if (path === '/prompts/') {
+      window.location.assign(path + '?lang=' + encodeURIComponent(button.dataset.localeSwitch));
+      return;
+    }
     window.location.assign(button.dataset.localeSwitch === 'en'
       ? (englishLocalePaths[path] || '/en/') : path);
   }, true);
@@ -133,6 +138,7 @@
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
       ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
+      ['prompts', '/prompts/', '✧', english ? 'Prompts' : '提示词'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
@@ -142,7 +148,8 @@
     if (active === 'health') active = 'models';
     var links = labels.map(function (item) {
       var current = item[0] === active ? ' aria-current="page"' : '';
-      return '<a href="' + item[1] + '" data-site-nav="' + item[0] + '"' + current + '><span class="fl-site-nav-icon" aria-hidden="true">' + item[2] + '</span><span>' + item[3] + '</span></a>';
+      var accessibleLabel = item[0] === 'prompts' ? ' aria-label="Prompt 模板库 / Prompt library"' : '';
+      return '<a href="' + item[1] + '" data-site-nav="' + item[0] + '"' + current + accessibleLabel + '><span class="fl-site-nav-icon" aria-hidden="true">' + item[2] + '</span><span>' + item[3] + '</span></a>';
     }).join('');
 
     rail.innerHTML =
