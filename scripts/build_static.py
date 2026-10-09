@@ -406,6 +406,30 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
+def update_home_scan_snapshot(html: str, data_path: Path) -> str:
+    """Render the hero scan count from observed data, never the catalog size.
+
+    The number of curated offers and the most recently scanned inventory are
+    different concepts. The hero explicitly says 'scan records', so its initial
+    HTML must use the scanned offer count even before JavaScript hydrates.
+    """
+    directory = data_path.parent / "daily-log"
+    for path in reversed(sorted(directory.glob("*.json"))) if directory.is_dir() else []:
+        try:
+            log = json.loads(path.read_text(encoding="utf-8"))
+            observed = log.get("observed") or {}
+            offers = observed.get("offers")
+            if not isinstance(offers, list) or not (log.get("initialized") or {}).get("offers"):
+                continue
+            count = len([entry for entry in offers if isinstance(entry, dict)])
+            return re.sub(r'(<b id="heroCount">)[^<]*(</b>)',
+                          lambda match: match.group(1) + str(count) + match.group(2),
+                          html, count=1)
+        except (OSError, ValueError, TypeError):
+            continue
+    return html
+
+
 def update_home_latest_discovery(html: str, data_path: Path) -> str:
     """Expose the newest sourced discovery on the homepage, not just a numeric badge."""
     marker = '<div id="home-latest-discovery"'
@@ -650,6 +674,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
+    updated = update_home_scan_snapshot(updated, data_path)
     updated = update_home_latest_discovery(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
     updated = update_eval_leaderboard(updated)
