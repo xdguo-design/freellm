@@ -636,3 +636,35 @@ html body.fl-ui-v2 .catalog-load-more:focus-visible {
     width: 100%;
   }
 }
+
+/* UX-20261009-P1: protect shared fixed searches across the site */
+html body.fl-ui-v2[data-reference-style="v1"] .ref-topbar.ref-topbar.ref-topbar {
+  isolation: isolate !important;
+  z-index: 300 !important;
+  background: rgba(255,255,255,.98) !important;
+  border-radius: 12px !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"] .ref-search.ref-search.ref-search {
+  position: relative !important;
+  z-index: 1 !important;
+  min-width: 0 !important;
+  background: #fff !important;
+}
+html body.fl-ui-v2[data-reference-style="v1"] .ref-search.ref-search.ref-search input {
+  min-width: 0 !important;
+  background: transparent !important;
+}
+@media (max-width: 600px) {
+  html body.fl-ui-v2[data-reference-style="v1"] .ref-topbar.ref-topbar.ref-topbar {
+    max-width: calc(100% - 20px) !important;
+    gap: 6px !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"] .ref-search.ref-search.ref-search {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+  html body.fl-ui-v2[data-reference-style="v1"] .ref-top-actions .ref-favorites-link {
+    display: none !important;
+  }
+}
