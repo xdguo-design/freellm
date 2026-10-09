@@ -5726,6 +5726,13 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             about,
             count=1,
         )
+        # Update the unhydrated About statistics as well: runtime JS is not
+        # a substitute for accurate first-paint numbers.
+        about = re.sub(
+            r'(<strong data-scan-stat="(newCount|newModels|models|offers)">)[^<]*(</strong>)',
+            lambda m: m.group(1) + str(scan_summary[m.group(2)]) + m.group(3),
+            about,
+        )
         files[Path("about/index.html")] = about
     for path, page in list(files.items()):
         if path.suffix != ".html":

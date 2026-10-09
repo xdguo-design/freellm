@@ -162,9 +162,24 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertTrue(logs, "daily log data is required for public freshness metadata")
         latest = json.loads(logs[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["date"], latest["date"])
-        self.assertEqual(summary["source"], f'/data/daily-log/{latest["date"]}.json')
-        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
-        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
+        # Today's editorial discoveries can exist without an actual scan.
+        # Source / snapshotDate must refer to the latest *observed* scan.
+        observed_logs = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in logs
+        ]
+        snapshots = [
+            entry for entry in observed_logs
+            if isinstance((entry.get("observed") or {}).get("models"), list)
+            and isinstance((entry.get("observed") or {}).get("offers"), list)
+        ]
+        self.assertTrue(snapshots, "a real scan snapshot is required")
+        snapshot = snapshots[-1]
+        self.assertEqual(summary["source"], f'/data/daily-log/{snapshot["date"]}.json')
+        self.assertEqual(summary["snapshotDate"], snapshot["date"])
+        self.assertEqual(summary["scanRunToday"], latest["date"] == snapshot["date"])
+        self.assertEqual(summary["models"], len(snapshot["observed"]["models"]))
+        self.assertEqual(summary["offers"], len(snapshot["observed"]["offers"]))
         events = [*latest.get("events", []), *latest.get("curatedEvents", [])]
         fresh = [event for event in events if event.get("eventType") in {"new", "new_route"}]
         self.assertEqual(summary["newCount"], len(fresh))
@@ -237,7 +252,9 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertEqual(weekly.count("<article>"), 4)
         for key in ("newCount", "newModels", "models", "offers"):
             self.assertIn(f'data-scan-stat="{key}">{summary[key]}</strong>', weekly)
-        self.assertIn(f'<span data-scan-date>{summary["date"]}</span>', weekly)
+        scan_date = summary["snapshotDate"] or summary["date"]
+        scan_label = scan_date if summary["scanRunToday"] else f"最近扫描：{scan_date}"
+        self.assertIn(f'<span data-scan-date>{scan_label}</span>', weekly)
         self.assertIn('href="/logs/"', weekly)
         self.assertIn("未建立可比较的同口径历史基线", weekly)
         self.assertNotRegex(weekly, r"(?:↑|↓|环比\\s*[+\\-]?\\d+%|较上周\\s*[+\\-]?\\d+%)")

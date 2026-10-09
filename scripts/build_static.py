@@ -700,6 +700,32 @@ def normalize_home_section_priority(html: str) -> str:
     # Keep them immediately after the main resource catalog and before comparison/download/FAQ.
     return without_student[:compare_match.start()] + student + without_student[compare_match.start():]
 
+def sync_home_scan_snapshot(html: str, summary: dict) -> str:
+    """Keep static first-paint counters aligned with the canonical scan summary.
+
+    An editorial discovery date may be newer than the last actual automated
+    scan. Never label that editorial date as an observed scan.
+    """
+    for key in ("newCount", "newModels", "models", "offers"):
+        value = summary.get(key)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise ValueError(f"Invalid scan summary value: {key}")
+        html = re.sub(
+            rf'(<strong data-scan-stat="{key}">)[^<]*(</strong>)',
+            lambda m, value=value: m.group(1) + str(value) + m.group(2),
+            html,
+        )
+    snapshot_date = str(summary.get("snapshotDate") or summary.get("date") or "")
+    if snapshot_date:
+        label = snapshot_date if summary.get("scanRunToday") is True else f"最近扫描：{snapshot_date}"
+        html = re.sub(
+            r'(<span data-scan-date>)[^<]*(</span>)',
+            lambda m: m.group(1) + label + m.group(2),
+            html,
+        )
+    return html
+
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -729,6 +755,8 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_daily_log_summary(updated, data_path)
     updated = update_home_latest_discovery(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
+    if scan_path.exists():
+        updated = sync_home_scan_snapshot(updated, scan_summary)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',
