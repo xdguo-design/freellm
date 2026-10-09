@@ -61,6 +61,15 @@ jobs:
       - name: Run unified repository unit tests
         run: python -m unittest discover -s tests -v
 
+      - name: Check homepage and navigation JavaScript syntax
+        run: |
+          node --check js/homepage.js
+          node --check js/site-navigation.js
+          node --check js/scan-trust.js
+
+      - name: Verify UX remediation regression contracts
+        run: python -m unittest tests.test_ux_20261009_regressions -v
+
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v
 
