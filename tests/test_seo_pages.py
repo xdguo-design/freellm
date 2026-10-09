@@ -1282,7 +1282,7 @@ def test_category_pages_fit_the_shared_navigation_content_area(tmp_path):
     assert "width:100% !important" in page
     assert "max-width:none !important" in page
     assert "overflow-wrap:anywhere" in page
-    assert "/css/freellm-pastel-ui.css?v=20261003a" in page
+    assert "/css/freellm-pastel-ui.css?v=20261009-eval" in page
 
 
 def test_thin_category_pages_are_kept_out_of_the_sitemap_but_stay_reachable():

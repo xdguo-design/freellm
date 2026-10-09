@@ -26,6 +26,7 @@ from crawler.schema import (
 from scripts.generate_access_cards import _operation_hints
 from scripts.featured_models import comparable_benchmark, normalize_capabilities, normalize_region
 from scripts.eval_integration import LEADERBOARD_CSS, card_block as eval_card_block, leaderboard_html as eval_leaderboard_html
+from scripts import eval_pages  # noqa: E402  FreeLLM evaluation blocks for secondary pages
 
 
 SITE_URL = "https://freellm.top"
@@ -121,6 +122,9 @@ SKILLS_THEME_SCRIPT = '''<script id="skills-theme-script">
   </script>'''
 
 SKILLS_THEME_ASSETS = SKILLS_THEME_FONTS + SKILLS_THEME_SCRIPT
+
+# Bump whenever css/freellm-pastel-ui.css changes (20261009-eval: FreeLLM evaluation blocks on secondary pages).
+PASTEL_UI_CSS_VERSION = "20261009-eval"
 
 # Editorial design tokens (data-platform-editorial): warm paper canvas, Instrument Serif
 # display type, Manrope body, JetBrains Mono metadata, hairline borders, pastel semantics.
@@ -1859,7 +1863,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     </section>'''
     access_paths_markup = _access_paths_markup(offer)
     version_line = _offer_version_line(offer, offers)
-    freellm_test_markup = _offer_freellm_test_markup(offer)
+    freellm_test_markup = _offer_freellm_test_markup(offer) + eval_pages.offer_section(offer)
     featured = offer.get("featured")
     if isinstance(featured, dict) and featured.get("reason"):
         featured_reason_zh = f"◆ 加精理由：{featured['reason']}"
@@ -2135,9 +2139,11 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
           <h2><a href="{_esc(offer_url(offer))}">{_locale_pair(offer.get("titleZh") or offer.get("title") or offer.get("name"), offer.get("title") or offer.get("name"), "Offer details")}</a>{_featured_chip(offer)}</h2>
           <p>{_offer_locale_pair(offer, ("freeSummary", "mechanism"), "Free access details unavailable")}</p>
           <p class="muted">{_offer_locale_pair(offer, ("validitySummary", "validity"), "Validity follows provider terms")} · {_offer_locale_pair(offer, ("accessSummary", "access"), "Official account required")}</p>
+          <p class="fl-eval-chip-row">{eval_pages.offer_chip(offer)}</p>
         </article>'''
         for offer in matching
     )
+    eval_markup = eval_pages.category_section(matching, offer_url)
     schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
@@ -2199,6 +2205,7 @@ def render_category_page(category: str, offers: list[dict], site_url: str) -> st
   </header>
   <main>
     {guidance}
+    {eval_markup}
     <section class="verified-list">
       <div class="eyebrow">{_locale_pair("已核验目录", "Verified directory")}</div>
       <h2>{_locale_pair("当前可用资源", "Current verified resources")}</h2>
@@ -3301,12 +3308,13 @@ def _catalog_record_table(models: list[dict]) -> str:
           <td>{_esc(model.get("context") or "—")}</td>
           <td>{_esc(model.get("rateLimit") or "—")}</td>
           <td><span class="status status-{_esc(status)}">{status_label}</span><small>{_catalog_source_label(model)}</small></td>
+          <td class="fl-eval-cell">{eval_pages.status_cell(str(model.get("providerId") or ""), str(model.get("model") or ""))}</td>
           <td>{_esc(model.get("lastSeenAt") or "—")}</td>
           <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
         </tr>''')
     return '''<div class="catalog-table-wrap"><table class="catalog-table"><thead><tr>
       <th>厂商 <span lang="en">Provider</span></th><th>模型 <span lang="en">Model</span></th><th>上下文 <span lang="en">Context</span></th>
-      <th>速率 <span lang="en">Rate limit</span></th><th>状态 <span lang="en">Status</span></th><th>同步 <span lang="en">Synced</span></th><th>来源 <span lang="en">Source</span></th>
+      <th>速率 <span lang="en">Rate limit</span></th><th>状态 <span lang="en">Status</span></th><th>FreeLLM 实测 <span lang="en">FreeLLM test</span></th><th>同步 <span lang="en">Synced</span></th><th>来源 <span lang="en">Source</span></th>
     </tr></thead><tbody>''' + "".join(rows) + "</tbody></table></div>"
 
 
@@ -3434,7 +3442,7 @@ def render_model_aggregate_page(model_name: str, records: list[dict], offers: li
     <p class="lead">{_locale_pair(f'同一模型在 {len(records)} 个厂家或平台的目录记录。先比较限制，再进入对应的官方或本站详细入口。', f'{len(records)} provider or platform records for the same model. Compare limits first, then open the relevant official or FreeLLM access path.')}</p>
     <div class="stats"><span>{len(records)} {_locale_pair('个平台记录', 'platform records')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {latest}</span><span>{_locale_pair('来源级别', 'Source level')}: {_locale_pair('厂商官方目录', 'Provider catalogues')}</span></div>
   </header>
-  <main>{routes_markup}<section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
+  <main>{routes_markup}{eval_pages.model_section(model_name, records)}<section><h2>{_locale_pair('平台记录对比', 'Provider records')}</h2>{_catalog_record_table(records)}</section>
      {registration_markup}<section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2><p class="lead">{_locale_pair('这里才放注册、Endpoint、模型 ID、调用示例和验证步骤；没有关联记录时不会虚构操作。', 'Registration, endpoints, model IDs, examples and verification steps live here; no operation path is invented when no record is linked.')}</p>{_related_offer_links(offers, lambda offer: _model_offer_matches(model_name, offer))}</section>
   </main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p></footer>
 </body></html>'''
@@ -3450,7 +3458,7 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
         provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
         latest = _latest_date(provider_models, "lastSeenAt")
         source_label = _locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")
-        cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p><a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
+        cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p>{eval_pages.provider_directory_chip(str(provider.get("id") or ""))}<a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
@@ -3490,7 +3498,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
 <style>{EDITORIAL_BASE_CSS}</style>
 <style>h1 {{margin:10px 0;font-size:clamp(30px,5vw,48px);}}main section h2 {{font-size:clamp(22px,3.4vw,30px);}}.related-list {{padding-left:20px;}}footer {{color:var(--ink-secondary);font-size:13px;}}</style></head>
-<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, '/'))}">Free AI Index</a> / <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('按厂家浏览', 'Browse by provider')}</a></p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">PROVIDER DIRECTORY</div><h1>{_esc(name)}</h1><p class="lead">{_locale_pair(description, f'Browse {len(provider_models)} model records for {name}.')}</p><div class="stats"><span>{len(provider_models)} {_locale_pair('个模型', 'models')}</span><span>{_locale_pair('最近同步', 'Last synced')}: {_latest_date(provider_models, 'lastSeenAt')}</span><span>{_locale_pair('来源级别', 'Source level')}: {source_label}</span></div></header><main>{registration_markup}{eval_pages.provider_section(str(provider.get("id") or ""), name, provider_models)}<section><h2>{_locale_pair('全部模型记录', 'All model records')}</h2>{_catalog_record_table(provider_models)}</section><section><h2>{_locale_pair('本站详细接入资源', 'Detailed FreeLLM access records')}</h2>{related}</section>{operation_guides_markup}</main><footer><p><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('返回模型大列表', 'Back to model directory')}</a> · <a href="{_esc(_absolute(site_url, PROVIDERS_PAGE_PATH))}">{_locale_pair('返回厂家目录', 'Back to providers')}</a></p></footer></body></html>'''
 
 
 def _getting_started_entries(offers: list[dict], operations: list[dict]) -> list[tuple[dict, list[dict]]]:
@@ -6367,7 +6375,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
     }
-    theme_tag = '<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261003a">'
+    theme_tag = f'<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v={PASTEL_UI_CSS_VERSION}">'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-pastel-ui.css" in content or "</head>" not in content)
                    else content.replace("</head>", theme_tag + "</head>", 1))
