@@ -579,3 +579,32 @@ html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-e
     display: none !important;
   }
 }
+
+/* UX-20261009-P1-10: horizontal mobile tool categories */
+@media (max-width: 700px) {
+  html body.fl-ui-v2[data-visual-style="aurora"][data-reference-style="v1"][data-fl-section="tools"] .tool-category-tabs {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 8px 2px 12px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  html body.fl-ui-v2[data-visual-style="aurora"][data-reference-style="v1"][data-fl-section="tools"] .tool-category-tabs > .tool-category-tab {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 66px !important;
+    min-height: 40px !important;
+    height: auto !important;
+    padding: 0 12px !important;
+    scroll-snap-align: start;
+    font-size: 12px !important;
+  }
+}
