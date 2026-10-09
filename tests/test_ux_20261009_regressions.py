@@ -109,5 +109,14 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn('href="/models/all/page/2/"', html)
 
 
+    def test_mobile_scan_cards_use_compact_two_column_layout(self):
+        css = (ROOT / "css/primary-menu.css").read_text(encoding="utf-8")
+        patch = css.split("/* UX-20261009-P1-11: compact mobile scan statistics */", 1)[1]
+        self.assertIn("@media (max-width: 700px)", patch)
+        self.assertIn('grid-template-columns: repeat(2, minmax(0, 1fr)) !important', patch)
+        self.assertIn('.weekly-scan-cards > article', patch)
+        self.assertIn('overflow-wrap: anywhere', patch)
+        self.assertIn('font-variant-numeric: tabular-nums', patch)
+
 if __name__ == "__main__":
     unittest.main()
