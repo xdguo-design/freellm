@@ -517,6 +517,7 @@ let offerIndex = {};
     const OFFER_BODY_CLAMP = 236; // keep in sync with .offer-card-body.is-clamped max-height
     const applyOfferBodyClamps = container => {
       container.querySelectorAll('.offer').forEach(card => {
+        if (card.dataset.flClampDone === 'true') return;
         const body = card.querySelector('.offer-card-body');
         const toggle = card.querySelector('.offer-body-toggle');
         if (!body || !toggle) return;
@@ -525,6 +526,7 @@ let offerIndex = {};
         body.classList.toggle('is-clamped', overLimit);
         toggle.hidden = !overLimit;
         toggle.setAttribute('aria-expanded', 'false');
+        card.dataset.flClampDone = 'true';
       });
     };
     const renderOffers = items => {
@@ -561,7 +563,7 @@ let offerIndex = {};
       window.FreeLLM?.Sync?.bind(container);
       hydrateProviderIcons(container);
       rows = [...container.querySelectorAll('.offer')];
-      applyOfferBodyClamps(container);
+      // Wait until the first page is attached before measuring scroll heights.
 
       const activeItems = items.filter(item => !isExpiredOffer(item));
       const countCategory = category => activeItems.filter(item => offerCategories(item).includes(category)).length;
@@ -815,6 +817,7 @@ let offerIndex = {};
       // Detach the remaining records: screen readers and layout only process
       // visible cards, while filters still check every catalog record.
       offerGrid.replaceChildren(...visibleCards);
+      applyOfferBodyClamps(offerGrid);
       if (loadMoreOffersButton) {
         loadMoreOffersButton.hidden = visible <= visibleCards.length;
         loadMoreOffersButton.textContent = currentLocale === SUPPORTED_LOCALES.zh
