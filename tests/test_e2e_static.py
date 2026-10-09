@@ -1121,6 +1121,8 @@ class BrowserPageTests(unittest.TestCase):
             (js / "freellm-sync.js").write_text((ROOT / "js" / "freellm-sync.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "reference-shell.js").write_text((ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
+            for name in ("scan-trust.js", "offer-expiry-board.js"):
+                (js / name).write_text((ROOT / "js" / name).read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1132,6 +1134,7 @@ class BrowserPageTests(unittest.TestCase):
             (css / "home-prototype-critical.css").write_text((ROOT / "css" / "home-prototype-critical.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "home-trust.css").write_text((ROOT / "css" / "home-trust.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
@@ -1142,13 +1145,17 @@ class BrowserPageTests(unittest.TestCase):
             data = Path(directory) / "data"
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
-            self.assertEqual(self.visible_offers(page), len(read_ranked_offers()))
+            self.assertEqual(page.locator(".offer").count(), 24)
+            self.assertTrue(page.locator(".catalog-load-more").is_visible())
+            page.locator(".catalog-load-more").click()
+            self.assertEqual(page.locator(".offer").count(), 48)
             # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
                 sorted(url.rsplit("/", 1)[-1] for _, url in page.bad_responses),
