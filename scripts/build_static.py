@@ -93,7 +93,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261009-eval">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,
