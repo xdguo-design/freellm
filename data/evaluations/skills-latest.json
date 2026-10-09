@@ -1,0 +1,4604 @@
+{
+  "schemaVersion": 1,
+  "suite": "freellm-skill-task-v1",
+  "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+  "vantage": "GitHub Actions 托管运行器（美国）",
+  "method": "每个 Skill 配一个它本应处理的真实任务；把该 Skill 的 SKILL.md 全文注入 system prompt，通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens=16384，流式计时，单次上限 420s）；按任务预设的确定性检查项自动判分（正则检查必需步骤/字段、Python 用 ast 解析、JS 用 node --check、HTML 解析、YAML 解析），全部检查通过记为“通过”，≥60% 记为“部分通过”，否则“未通过”；接口报错或空输出记为“调用失败”。judgedBy=manual 表示人工复核后改判，并附理由。模型不能执行 Skill 自带脚本/CLI，属于任务级测试，不等同原仓库端到端。",
+  "models": [
+    {
+      "id": "modelscope",
+      "provider": "魔搭 ModelScope",
+      "model": "deepseek-ai/DeepSeek-V4.1-Flash"
+    },
+    {
+      "id": "nvidia",
+      "provider": "NVIDIA NIM",
+      "model": "z-ai/glm-5.3"
+    }
+  ],
+  "totals": {
+    "skills": 79,
+    "runs": 158,
+    "verdicts": {
+      "通过": 53,
+      "调用失败": 98,
+      "部分通过": 5,
+      "未通过": 2
+    },
+    "wallTimeSec": 3822.2
+  },
+  "skills": [
+    {
+      "id": "anthropics-docx",
+      "name": "docx",
+      "task": "为公司写一个脚本，生成 Word 文档《2026 年第三季度退款政策说明》：包含一级标题、两个二级标题、一个 3 列表格（渠道 / 退款时限 / 备注，至少 3 行数据）以及页脚页码。请按 Skill 推荐的工具链给出完整可运行代码和运行命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:28 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 js 代码块：通过"
+            },
+            {
+              "label": "使用 docx 库生成文档",
+              "pass": true
+            },
+            {
+              "label": "生成表格",
+              "pass": true
+            },
+            {
+              "label": "设置页脚",
+              "pass": true
+            },
+            {
+              "label": "页码字段",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 3317,
+          "totalMs": 59705,
+          "outputChars": 6102,
+          "reasoningChars": 6939,
+          "usage": {
+            "prompt_tokens": 2004,
+            "completion_tokens": 5225
+          },
+          "excerpt": "下面按 Skill 推荐的工具链（新建文档 → `docx` npm 包写脚本 → LibreOffice 渲染自查）给出完整方案。\n\n## 1. 技术选择说明\n\n- 任务类型是**新建**文档 → 用 docx-js 写脚本（不用 unzip 改 XML，那条路是给**编辑已有文档**用的）。\n- `docx` 是预装依赖，**不要先跑 `npm install`**；只有 `require('docx')` 报错时才装。\n- 标题用内置 `HeadingLevel`（一级 + 两个二级），页脚页码用 `Footer` + `PageNumber.CURRENT`。\n- 表格遵循“双宽度”规则：`Table.columnWidths` 和每个 `TableCell.width` 都用 `WidthType.DXA`，且列宽之和必须等于表宽。表头底纹用 `ShadingType.CLEAR`（绝不能用 `SOLID`，会渲染成黑色）。\n\n## 2. 完整脚本 `generate_q3_refund_policy.js`\n\n```js\n// generate_q3_refund_policy.js\n// 生成《2026 年第三季度退款政策说明》\nconst fs = require(\"fs\");\nconst {\n  Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,\n  Table, TableRow, TableCell, WidthType, ShadingType, VerticalAlign…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-pdf",
+      "name": "pdf",
+      "task": "用 Python 写一个脚本：把 a.pdf 和 b.pdf 合并为 merged.pdf，并把合并后文档的第 2 页顺时针旋转 90 度，再把全部文字抽取保存到 out.txt。给出完整代码。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:27 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 PDF 库合并",
+              "pass": true
+            },
+            {
+              "label": "执行页面旋转",
+              "pass": true
+            },
+            {
+              "label": "抽取文字",
+              "pass": true
+            },
+            {
+              "label": "写入 out.txt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 3153,
+          "totalMs": 22980,
+          "outputChars": 4307,
+          "reasoningChars": 1214,
+          "usage": {
+            "prompt_tokens": 2324,
+            "completion_tokens": 2057
+          },
+          "excerpt": "环境里我没法真的执行,下面给你**完整可直接运行的脚本**和运行命令,你本地跑一下即可。\n\n## 依赖安装\n\n```bash\npip install pypdf pdfplumber\n# 可选:命令行方式抽取文字\n# apt-get install poppler-utils   (提供 pdftotext)\n```\n\n## 完整脚本 `merge_rotate_extract.py`\n\n```python\n#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\"\"\"\n把 a.pdf 和 b.pdf 合并为 merged.pdf,\n将合并后文档的第 2 页顺时针旋转 90 度,\n再把全部文字抽取保存到 out.txt。\n\"\"\"\n\nfrom pathlib import Path\n\nfrom pypdf import PdfReader, PdfWriter\n\ntry:\n    import pdfplumber  # 抽取文字(带布局)\n    HAS_PDFPLUMBER = True\nexcept ImportError:\n    HAS_PDFPLUMBER = False\n\nINPUTS = [\"a.pdf\", \"b.pdf\"]\nMERGED = \"merged.pdf\"\nOUT_TXT = \"out.txt\"\nROTATE_PAGE_INDEX = 1          # 第 2 页(0-based)\nROTATE_DEGREES = 90            # 正数 = 顺时针\n\n\ndef merge_pdfs(inpu…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:29 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 PDF 库合并",
+              "pass": true
+            },
+            {
+              "label": "执行页面旋转",
+              "pass": true
+            },
+            {
+              "label": "抽取文字",
+              "pass": true
+            },
+            {
+              "label": "写入 out.txt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1537,
+          "totalMs": 133677,
+          "outputChars": 1734,
+          "reasoningChars": 7114,
+          "usage": {
+            "prompt_tokens": 2235,
+            "completion_tokens": 2507
+          },
+          "excerpt": "下面是完整方案，使用 `pypdf` 完成合并与旋转，用 `pdfplumber` 抽取文字（按 Skill 推荐的分工）。\n\n## 1. 安装依赖\n\n```bash\npip install pypdf pdfplumber\n```\n\n## 2. 完整代码（merge_rotate_extract.py）\n\n```python\nfrom pypdf import PdfReader, PdfWriter\nimport pdfplumber\n\n# ---------- 1. 合并 a.pdf 和 b.pdf ----------\nwriter = PdfWriter()\nfor pdf_file in [\"a.pdf\", \"b.pdf\"]:\n    reader = PdfReader(pdf_file)\n    for page in reader.pages:\n        writer.add_page(page)\n\n# ---------- 2. 将合并后文档的第 2 页顺时针旋转 90 度 ----------\n# 注意：先合并再旋转，这样无论第 2 页来自 a.pdf 还是 b.pdf 都能正确处理\nif len(writer.pages) >= 2:\n    writer.pages[1].rotate(90)  # pypdf 中正角度 = 顺时针\nelse:\n    print(\"警告：合并后不足 2 页，跳过旋转步骤。\")\n\nwith open(\"merged.pdf\", \"wb\") as f:\n    writer.write(f)\n\n# --------…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-doc-coauthoring",
+      "name": "doc-coauthoring",
+      "task": "我需要写一份《门诊候诊叫号屏》产品需求文档，读者是医院信息科和外包开发团队。请开始协作。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:27 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先提出澄清问题收集上下文（≥2 个问题）",
+              "pass": true,
+              "note": "计数 18"
+            },
+            {
+              "label": "关注文档背景/受众",
+              "pass": true
+            },
+            {
+              "label": "没有跳过上下文直接写完整文档",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2651,
+          "totalMs": 33459,
+          "outputChars": 2266,
+          "reasoningChars": 1676,
+          "usage": {
+            "prompt_tokens": 3442,
+            "completion_tokens": 1850
+          },
+          "excerpt": "好的。先说明一下我会怎么带你走，然后立刻进入第一阶段。\n\n## 工作流说明\n\n我建议用三阶段协作，而不是一次生成一大篇（一次性生成的长文档，通常在\"外包团队真能照着做\"这一点上会翻车）：\n\n1. **上下文收集**：你先把脑子里关于这个项目的所有信息倒出来，我追问澄清，直到我能和你讨论边界情况与取舍，而不需要你解释基础知识。\n2. **逐节精炼与结构化**：我们一节一节来。每节先问你要写什么 → 我头脑风暴 5–20 个可写点 → 你挑选保留/删除/合并 → 我起草 → 你指出修改点 → 迭代到满意。最不确定的章节先写（这份文档大概率是\"叫号业务逻辑与状态机\"或\"硬件与部署形态\"），概述类放最后。\n3. **读者测试**：用一份\"没有任何上下文的新鲜 Claude\"来读文档并回答问题，找出作者视角看不见的盲点（术语没解释、隐含假设、前后矛盾）。\n\n最终文档的合格标准不是\"我觉得写全了\"，而是**一个没见过这个项目的外包开发，读完之后能自己列出接口清单和数据流**。\n\n> 要不要走这个流程？如果你想自由发挥（比如\"我口述，你直接写一版\"），也完全可以，直接说。如果你接下来直接开始倒信息，我就默认你接受这个流程了。\n\n---\n\n## 阶段一 · 上下文收集\n\n### 先回答 5 个元问题\n\n可以用简写、列点、或者想到哪说到哪，怎么省事怎么来：\n\n1. **文档类型**：这份是偏\"需求说明书（PRD，含验收标准）\"，还是偏\"招标/立项用的功能清单\"，还是\"对外包的技术规格书（含接口约定）\"？三者详细程度差别很大。\n2. **主要读者**：医院信息科（懂 HIS，但可能不熟前端）和外包…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:28 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先提出澄清问题收集上下文（≥2 个问题）",
+              "pass": true,
+              "note": "计数 9"
+            },
+            {
+              "label": "关注文档背景/受众",
+              "pass": true
+            },
+            {
+              "label": "没有跳过上下文直接写完整文档",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2188,
+          "totalMs": 63719,
+          "outputChars": 1013,
+          "reasoningChars": 6200,
+          "usage": {
+            "prompt_tokens": 3429,
+            "completion_tokens": 2453
+          },
+          "excerpt": "好的，我们用结构化协作流程来完成这份 PRD。整个流程分三个阶段：\n\n1. **背景收集**：你提供所有相关背景信息，我通过提问补齐理解\n2. **打磨与结构化**：逐章节进行头脑风暴 → 筛选 → 起草 → 迭代修改\n3. **读者测试**：用“零上下文”的读者视角测试文档，发现作者意识不到的盲点\n\n这个流程能确保文档对信息科和外包开发团队都真正可读、可用——包括他们把文档贴给 AI 辅助开发时也能被正确理解。\n\n一点说明：当前环境无法直接创建文件，所以文档会在对话中以 Markdown 形式逐章节产出，你随时复制保存即可。\n\n---\n\n## 第一阶段：背景收集\n\n你已提供了两个关键信息：\n\n- **文档类型**：产品需求文档（PRD）\n- **读者**：医院信息科 + 外包开发团队\n\n还需要确认几个元问题：\n\n1. **期望效果**：读者读完这份 PRD 后，你希望发生什么？是外包团队可以直接开工，还是先要信息科评审签字？或者用于招标/比价？\n2. **模板要求**：医院或外包公司有没有指定的 PRD 模板或章节结构？如果有，请直接贴出来。\n3. **项目性质**：全新建设，还是替换现有叫号系统？如果是替换，现有系统的主要痛点是什么？\n4. **关键约束**：工期要求？硬件（显示屏、音箱、叫号器）是否已采购定型？HIS 是哪家厂商、能提供什么形式的接口？\n\n接下来请把你脑子里所有相关信息**一次性倒出来**，不用组织、想到哪写到哪，简写也行。比如：\n\n- **医院规模**：日门诊量、科室数、楼层/诊区分布、候诊区布局\n- **现有系统**：HIS 厂商、挂号/分诊/收费流程…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-xlsx",
+      "name": "xlsx",
+      "task": "用 Python（openpyxl）生成退款台账 refunds.xlsx：Sheet『明细』包含 订单号/金额/状态 三列和 10 行样例数据；Sheet『汇总』用 Excel 公式（SUMIF）按状态汇总金额，不要在 Python 里算好再写死数值；表头加粗、冻结首行、金额列格式为 ¥#,##0.00。给出完整代码。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:28 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 openpyxl",
+              "pass": true
+            },
+            {
+              "label": "汇总使用 SUMIF 公式",
+              "pass": true
+            },
+            {
+              "label": "冻结首行",
+              "pass": true
+            },
+            {
+              "label": "设置金额格式",
+              "pass": true
+            },
+            {
+              "label": "表头加粗",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2685,
+          "totalMs": 63674,
+          "outputChars": 5785,
+          "reasoningChars": 8173,
+          "usage": {
+            "prompt_tokens": 2423,
+            "completion_tokens": 6028
+          },
+          "excerpt": "下面是一份可直接运行的完整脚本。核心要点：**明细里的金额是硬编码输入（蓝色），汇总里的金额全部是 `SUMIF` 公式（黑色），Python 不做任何加总**；写完后必须跑 `recalc.py` 让公式有缓存值。\n\n## 1. 生成脚本 `make_refunds.py`\n\n```python\n# -*- coding: utf-8 -*-\n\"\"\"生成退款台账 refunds.xlsx：明细(10行样例) + 汇总(SUMIF 公式)\"\"\"\n\nfrom openpyxl import Workbook\nfrom openpyxl.styles import Font, PatternFill, Alignment, Border, Side\nfrom openpyxl.comments import Comment\n\nOUT = \"refunds.xlsx\"\nFONT = \"Arial\"\n\n# ---- 样式约定（财务模型：蓝=硬编码输入，黑=公式）----\nF_HDR     = Font(name=FONT, bold=True, color=\"FFFFFF\", size=11)\nF_INPUT   = Font(name=FONT, color=\"0000FF\")   # 蓝：手工输入\nF_FORMULA = Font(name=FONT, color=\"000000\")   # 黑：公式\nF_TOTAL   = Font(name=FONT, color=\"000000\", bold=True)\nFILL_HDR  = PatternFill(\"solid\", fg…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-pptx",
+      "name": "pptx",
+      "task": "为『2026 Q3 业务复盘』生成一个 5 页 PPTX 的脚本：封面、3 页内容（其中 1 页包含柱状图，数据：7 月 120、8 月 135、9 月 160）、结尾页。按 Skill 推荐的方式给出完整代码和运行命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:31 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 js 代码块：通过"
+            },
+            {
+              "label": "使用 PPTX 生成库",
+              "pass": true
+            },
+            {
+              "label": "包含柱状图",
+              "pass": true
+            },
+            {
+              "label": "图表使用给定数据",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2633,
+          "totalMs": 213155,
+          "outputChars": 10559,
+          "reasoningChars": 26328,
+          "usage": {
+            "prompt_tokens": 5583,
+            "completion_tokens": 19368
+          },
+          "excerpt": "下面按 Skill 推荐的方式给出：**新建 deck → 用 `pptxgenjs` 写生成脚本**（而不是手工拼 XML），并附上生成后的校验与 QA 命令。\n\n## 一、方案与内容结构\n\n| 页 | 内容 | 版式 | 视觉元素 |\n|---|---|---|---|\n| 1 | 封面 | 深色底 + 角落同心圆装饰 | 半透明圆（motif） |\n| 2 | Q3 关键成果 | 3 张并排数据卡 | 大字号指标 + 卡片 |\n| 3 | 月度营收趋势 | 左图表右洞察卡 | **原生柱状图**（120/135/160） |\n| 4 | Q4 重点举措 | 编号圆 + 文本行（换版式） | 彩色圆形序号 |\n| 5 | 结尾 | 深色底（与封面呼应） | 半透明圆 |\n\n调色板：**Teal Trust**（深青 `028090` 主色占据大部分视觉重量，海沫 `00A896` 辅助，薄荷 `02C39A` 点缀）——不用默认蓝，也不用米色底。\n\n## 二、生成脚本 `make-q3-deck.js`\n\n```js\n/**\n * 2026 Q3 业务复盘 —— 5 页 PPTX 生成脚本（pptxgenjs）\n * 运行：node make-q3-deck.js\n */\nconst pptxgen = require(\"pptxgenjs\");\n\nconst pres = new pptxgen();\npres.layout = \"LAYOUT_WIDE\";        // 13.3\" × 7.5\"，必须在 addSlide 之前设置\npres.title  = \"2…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-frontend-design",
+      "name": "frontend-design",
+      "task": "为一家叫『慢火』的独立咖啡烘焙店做一个单页落地页（介绍、本周豆单、到店地址、订阅表单）。直接输出一个完整的 HTML 文件（CSS 内联在 <style> 中），要有明确的视觉方向。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:31 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "模型返回空内容（可能思考耗尽 max_tokens）",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": "",
+          "totalMs": 208796,
+          "ttftMs": 2651,
+          "reasoningChars": 53329
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "anthropics-canvas-design",
+      "name": "canvas-design",
+      "task": "为主题『城市夜跑』创作一张海报：先写出你的设计哲学（design philosophy，一段说明），再给出能直接生成 poster.png 的完整代码（Python + Pillow 或 HTML canvas 均可）。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:30 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "模型返回空内容（可能思考耗尽 max_tokens）",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": "",
+          "totalMs": 122168,
+          "ttftMs": 3132,
+          "reasoningChars": 26132
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "anthropics-brand-guidelines",
+      "name": "brand-guidelines",
+      "task": "把下面这段季度汇报页面按 Anthropic 官方品牌规范改造，输出改造后的完整 CSS（含颜色变量与字体）并说明标题和正文分别用什么字体：\n<h1>Q3 汇报</h1><p>收入同比增长 18%。</p><button>查看详情</button>",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:29 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用品牌深色 #141413",
+              "pass": true
+            },
+            {
+              "label": "使用品牌浅色 #faf9f5",
+              "pass": true
+            },
+            {
+              "label": "使用品牌强调色 #d97757",
+              "pass": true
+            },
+            {
+              "label": "标题字体 Poppins",
+              "pass": true
+            },
+            {
+              "label": "正文字体 Lora",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2576,
+          "totalMs": 42364,
+          "outputChars": 6544,
+          "reasoningChars": 4673,
+          "usage": {
+            "prompt_tokens": 739,
+            "completion_tokens": 3988
+          },
+          "excerpt": "下面是按 Anthropic 官方品牌规范改造后的完整 CSS。核心结论先说：**标题用 Poppins（回退 Arial），正文用 Lora（回退 Georgia）**，按钮属于 UI 控件而非正文，标签文字同样用 Poppins。\n\n## 一、字体分配\n\n| 元素 | 字体 | 回退 | 说明 |\n|---|---|---|---|\n| `h1`（Q3 汇报） | **Poppins** | Arial, Helvetica, sans-serif | 40px ≫ 24pt(32px) 阈值，属标题层级 |\n| `p`（收入同比增长…） | **Lora** | Georgia, serif | 正文语义，用人文衬线 |\n| `button`（查看详情） | **Poppins** | Arial | 非正文，是控件标签，与标题同族更统一 |\n\n规范里 \"24pt 及以上标题用 Poppins、正文用 Lora\" 是按语义+字号双重判断；`24pt = 32px`（96dpi 下按 4/3 换算），本页 `h1` 设为 `2.5rem = 40px`，稳稳落在 Poppins 区间。\n\n## 二、完整 CSS\n\n```css\n/* ============================================================\n   Anthropic Brand Styling — Q3 汇报页\n   ============================================================ */\n\n:root {…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:30 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用品牌深色 #141413",
+              "pass": true
+            },
+            {
+              "label": "使用品牌浅色 #faf9f5",
+              "pass": true
+            },
+            {
+              "label": "使用品牌强调色 #d97757",
+              "pass": true
+            },
+            {
+              "label": "标题字体 Poppins",
+              "pass": true
+            },
+            {
+              "label": "正文字体 Lora",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 917,
+          "totalMs": 66025,
+          "outputChars": 2627,
+          "reasoningChars": 6899,
+          "usage": {
+            "prompt_tokens": 697,
+            "completion_tokens": 2971
+          },
+          "excerpt": "# Anthropic 品牌规范改造\n\n## 完整 CSS\n\n```css\n/* ============================================\n   Anthropic 品牌规范 · 季度汇报页面\n   ============================================ */\n\n/* ---------- 品牌颜色变量 ---------- */\n:root {\n  /* 主色 */\n  --anthropic-dark:       #141413;  /* 主文字 / 深色背景 */\n  --anthropic-light:      #faf9f5;  /* 浅色背景 / 深底上的文字 */\n  --anthropic-mid-gray:   #b0aea5;  /* 次要元素 */\n  --anthropic-light-gray: #e8e6dc;  /* 细腻背景 */\n\n  /* 强调色 */\n  --anthropic-orange:     #d97757;  /* 主强调色 */\n  --anthropic-blue:       #6a9bcc;  /* 次强调色 */\n  --anthropic-green:      #788c5d;  /* 第三强调色 */\n\n  /* 字体栈（含回退） */\n  --font-heading: \"Poppins\", Arial, sans-serif;\n  --font-body:    \"Lora\", Georgia, serif;\n}\n\n/* ---------…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-theme-factory",
+      "name": "theme-factory",
+      "task": "我要给一份『AI 编程工具发布会』幻灯片套主题。这次请直接从 Skill 提供的主题里选一个最合适的（我已看过 showcase，授权你直接选），说明主题名称、配色（hex）和标题/正文字体，并给出应用到幻灯片的样式规则。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:29 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择了 Skill 内置主题",
+              "pass": true
+            },
+            {
+              "label": "给出至少 3 个 hex 颜色",
+              "pass": true,
+              "note": "计数 22"
+            },
+            {
+              "label": "说明字体",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2352,
+          "totalMs": 35289,
+          "outputChars": 5650,
+          "reasoningChars": 3939,
+          "usage": {
+            "prompt_tokens": 854,
+            "completion_tokens": 3320
+          },
+          "excerpt": "## 一、主题选择\n\n已确认你已看过 `theme-showcase.pdf`，跳过展示步骤，直接进入选择。\n\n**选定主题：`Tech Innovation`（#8 — Bold and modern tech aesthetic）**\n\n理由：发布会主题是「AI 编程工具」，受众是开发者/技术决策者，内容会大量出现代码片段、架构图、性能对比数据。Tech Innovation 的高对比、暗底 + 冷色霓虹强调色视觉语言最契合「技术发布」场景；其他候选（Ocean Depths、Modern Minimalist）偏商务/中性，缺少发布会需要的「新品冲击力」。\n\n> 说明：Skill 里主题的**权威配色与字体定义在 `themes/` 目录下的主题文件里**。当前环境无法执行命令/读文件，所以下文的 hex 与字体名是我根据 Tech Innovation 的视觉定位给出的**建议值**，需用下面这条命令对权威文件做一次核对后再落地（尤其是字体名，各主题文件写法可能不同）。\n\n**核对命令（在 Skill 根目录执行）：**\n\n```bash\nls themes/\ncat themes/tech-innovation.md     # 若实际是 .json / .yaml，按 ls 结果替换文件名\n```\n\n**要验证的内容：**\n1. 输出的 palette 里各色名称与 hex 是否与下表一致（不一致以文件为准）；\n2. heading / body 字体名（以及是否有 mono 字体条目）；\n3. 若文件里给了「背景色 / 前景色 / 强调色 / 次要强调色」的角色命…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:33 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择了 Skill 内置主题",
+              "pass": true
+            },
+            {
+              "label": "给出至少 3 个 hex 颜色",
+              "pass": true,
+              "note": "计数 10"
+            },
+            {
+              "label": "说明字体",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1661,
+          "totalMs": 195709,
+          "outputChars": 1999,
+          "reasoningChars": 13169,
+          "usage": {
+            "prompt_tokens": 829,
+            "completion_tokens": 5289
+          },
+          "excerpt": "# 选定主题：Tech Innovation（科技革新）\n\n**选择理由**：SKILL.md 中对该主题的官方定位是 \"Bold and modern tech aesthetic\"（大胆、现代的科技美学），与 AI 编程工具发布会的受众（开发者、科技媒体）和产品调性完全吻合；深色底也适合发布会暗场投影，且对代码演示页极其友好。\n\n> 备选：若你想要更“暗场 Keynote”的戏剧感，**Midnight Galaxy** 是第二选择；但按“最合适”标准，我确定选 Tech Innovation。\n\n---\n\n## ⚠️ 先说明：官方规格的获取方式\n\nSkill 的完整主题规格（确切 hex 与字体）存放在 `themes/` 目录中，而当前环境无法读取文件，我不能凭空声称已看到官方数值。按 Skill 流程，选定主题后应执行：\n\n```bash\nls themes/                          # 确认文件名（可能是 tech-innovation.md / .json / .yaml）\ncat themes/tech-innovation.md       # 读取官方配色 hex、字体配对及使用说明\n```\n\n**需核对的内容**：官方 hex 值、字体名称及回退方案、文件内的使用备注。\n\n在核对之前，下面给出一套**基于该主题官方定位的提议规格**，可直接使用，待读取官方文件后逐项替换。\n\n---\n\n## 提议配色（待与官方文件核对）\n\n| 角色 | 提议 Hex | 用途 |\n|---|---|---|\n| 背景主色 | `#0D1117` |…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-algorithmic-art",
+      "name": "algorithmic-art",
+      "task": "创作算法艺术作品『风中的稻田』：输出一个完整可直接打开的 p5.js HTML 文件，使用种子随机（seed）保证可复现，并提供至少 2 个可调参数（例如风力、稻穗密度）。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:32 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "模型返回空内容（可能思考耗尽 max_tokens）",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": "",
+          "totalMs": 188818,
+          "ttftMs": 3505,
+          "reasoningChars": 52541
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "anthropics-internal-comms",
+      "name": "internal-comms",
+      "task": "帮我写本周给全组的 3P 周报（Progress / Plans / Problems）。素材：本周支付网关迁移完成 70%，新增 2 个对账报表；下周做压测和灰度 10%；问题：第三方回调平均超时 4.2 秒，需要对方排期。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:30 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 Progress",
+              "pass": true
+            },
+            {
+              "label": "包含 Plans",
+              "pass": true
+            },
+            {
+              "label": "包含 Problems",
+              "pass": true
+            },
+            {
+              "label": "保留 70% 数据",
+              "pass": true
+            },
+            {
+              "label": "保留 4.2 秒数据",
+              "pass": true
+            },
+            {
+              "label": "简洁（≤2000 字符）",
+              "pass": true,
+              "note": "1049 字符"
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2191,
+          "totalMs": 15601,
+          "outputChars": 1049,
+          "reasoningChars": 1278,
+          "usage": {
+            "prompt_tokens": 528,
+            "completion_tokens": 983
+          },
+          "excerpt": "按 skill 的流程，我会先加载 `examples/3p-updates.md` 这个格式指南再动笔。当前环境读不到文件，所以下面这版是按 3P 的通用规范（三段式、结论先行、每段带量化指标 + 负责人/时间）写的；如果你们组的模板有固定字段或字数要求，告诉我我再对齐。\n\n---\n\n# 3P 周报｜支付网关迁移项目\n\n**周期：** [本周一 – 本周五]　**团队：** [组名]　**汇报人：** [姓名]\n\n## Progress（本周进展）\n\n- **支付网关迁移整体完成度 70%**，按计划推进，本周无延期风险。\n  - 已完成：核心链路切换与配置下发、迁移脚本在预发环境验证通过。\n  - 剩余 30%：主要为 [存量商户批量切流] 与 [灰度策略落地]。\n- **新增 2 个对账报表**，均已上线 / 进入联调：分别覆盖 [渠道流水对账] 和 [商户维度差异明细]，便于迁移期间的日终核对与差异定位。\n\n## Plans（下周计划）\n\n1. **压测**：对迁移后的支付网关做全链路压测，目标 [TPS / P99 延迟] 达到 [指标]，产出压测报告并确认容量水位。\n2. **灰度 10%**：将 10% 流量切至新网关，重点观察成功率、回调时延与对账差异；达标后再按 [20% → 50% → 全量] 节奏推进。\n3. 视压测结果，确定剩余存量商户的切流批次与时间点。\n\n## Problems（问题与需要的支持）\n\n- **第三方回调平均超时 4.2 秒**，已超出我们 [目标时延] 的预期，会直接影响灰度期间的订单状态同步与用户体验。\n  - 现状：已定位为我方等…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 Progress",
+              "pass": true
+            },
+            {
+              "label": "包含 Plans",
+              "pass": true
+            },
+            {
+              "label": "包含 Problems",
+              "pass": true
+            },
+            {
+              "label": "保留 70% 数据",
+              "pass": true
+            },
+            {
+              "label": "保留 4.2 秒数据",
+              "pass": true
+            },
+            {
+              "label": "简洁（≤2000 字符）",
+              "pass": true,
+              "note": "772 字符"
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 989,
+          "totalMs": 65007,
+          "outputChars": 772,
+          "reasoningChars": 6254,
+          "usage": {
+            "prompt_tokens": 504,
+            "completion_tokens": 2366
+          },
+          "excerpt": "按照 Skill 流程，我会先读取 3P 规范文件确认格式要求（`cat examples/3p-updates.md`）。当前环境无法读取文件，以下按标准 3P 结构（Progress / Plans / Problems）撰写，可直接复制发送：\n\n---\n\n## 支付组 3P 周报（【日期区间，如 6/10–6/14】）\n\n### ✅ Progress · 本周进展\n- **支付网关迁移**：整体进度 **70%**，按计划推进中，无阻塞\n- **对账能力**：新增 **2 个对账报表**并上线【建议补充：报表名称、覆盖的业务/渠道范围】\n\n### 📅 Plans · 下周计划\n- **支付网关迁移**：\n  - 完成全链路压测，验证峰值流量下的性能与稳定性【建议补充：目标 QPS / RT 阈值】\n  - 启动灰度切量 **10%**，重点观察支付成功率、回调延迟、对账差异等核心指标\n\n### ⚠️ Problems · 问题与求助\n- **第三方回调超时**：平均超时 **4.2 秒**，明显高于正常水平，影响【对账时效 / 用户到账体验】\n  - 已确认问题在对方侧，需第三方排期修复\n  - **求助**：请【接口人/负责人】协助推动对方给出明确修复排期；排期确认前我方持续监控并留存超时数据作为跟进依据\n\n---\n\n**发送前建议补充的信息**（能让周报更有说服力）：\n- 各项的**负责人**姓名，Plans 里加**目标完成时间**\n- Problems 里写清**影响面**（影响多少笔交易/多少商户）和**已尝试的动作**（如是否已发工单、对方初步反馈）\n- Pr…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-mcp-builder",
+      "name": "mcp-builder",
+      "task": "用 Python 写一个 MCP server，提供工具 get_exchange_rate(base, target)，调用 https://api.frankfurter.app/latest 查询汇率；要求输入校验（ISO 4217 三位代码）、错误处理、清晰的工具描述。给出完整代码和本地运行/调试命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:32 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 MCP SDK",
+              "pass": true
+            },
+            {
+              "label": "注册工具",
+              "pass": true
+            },
+            {
+              "label": "调用指定 API",
+              "pass": true
+            },
+            {
+              "label": "包含错误处理",
+              "pass": true
+            },
+            {
+              "label": "校验三位货币代码",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2577,
+          "totalMs": 140319,
+          "outputChars": 23083,
+          "reasoningChars": 30249,
+          "usage": {
+            "prompt_tokens": 2152,
+            "completion_tokens": 15115
+          },
+          "excerpt": "下面按 Skill 的四个阶段来完成。**注意：当前环境不能联网、不能执行命令**，所以下面的所有命令与代码都是「我将会执行」的内容，请你在本地运行验证；我没有声称已经跑过或看到结果。\n\n---\n\n## Phase 1 · 调研与设计决策（建议你先加载的文档）\n\n| 目标 | 命令 |\n|---|---|\n| MCP 规范 | 先取 `https://modelcontextprotocol.io/sitemap.xml`，再取 `https://modelcontextprotocol.io/specification/draft.md` |\n| Python SDK README | `WebFetch https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md` |\n| 最佳实践 | 读 skill 里的 `reference/mcp_best_practices.md`、`reference/python_mcp_server.md` |\n| 上游 API | `curl -s 'https://api.frankfurter.app/latest?from=USD&to=JPY'` / `curl -s https://api.frankfurter.app/currencies` |\n\n依据最佳实践确定的设计要点：\n\n- **优先完整覆盖 + 少量工作流工具**：主干 `get_exchange_rate(base, target, date?)`，另附 `list…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "模型返回空内容（可能思考耗尽 max_tokens）",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": "",
+          "totalMs": 390213,
+          "ttftMs": 373,
+          "reasoningChars": 63641
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-skill-creator",
+      "name": "skill-creator",
+      "task": "帮我创建一个名为 weekly-report 的 Skill：它把最近 7 天的 git log 整理成中文周报（按 新功能/修复/其他 分组）。请输出完整的 SKILL.md 内容。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:33 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 YAML frontmatter（name/description）",
+              "pass": false
+            },
+            {
+              "label": "name 为 weekly-report",
+              "pass": true
+            },
+            {
+              "label": "包含 git log 步骤",
+              "pass": true
+            },
+            {
+              "label": "有清晰的章节结构（≥2 个标题）",
+              "pass": true,
+              "note": "计数 27"
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 2909,
+          "totalMs": 121010,
+          "outputChars": 6013,
+          "reasoningChars": 14562,
+          "usage": {
+            "prompt_tokens": 7637,
+            "completion_tokens": 7861
+          },
+          "excerpt": "下面是我按 `skill-creator` 的写法给 `weekly-report` 起草的完整 SKILL.md，以及它引用到的采集脚本。\n\n先说清楚：当前环境我**没有**运行任何命令，所以下面的命令、脚本都是\"待验证\"的状态，需要你在本地 git 仓库里跑一遍确认（尤其是脚本的转义和时间范围）。\n\n---\n\n## ⚠️ 我做的几个假设（如果不符，告诉我我改）\n\n1. **默认范围**：`--since=\"7 days ago\"`（滚动 7×24 小时），不是\"自然周一到周日\"。用户说\"上周\"\"本周\"时再换算成明确日期。\n2. **默认不过滤作者**：拉仓库全部提交。只有用户说\"我做的\"才加 `--author`。\n3. **默认只当前分支**，排除合并提交，不递归子模块。\n4. 输出**先打在对话里**，问过用户再落盘成文件。\n\n---\n\n## ✅ SKILL.md 全文\n\n```markdown\n---\nname: weekly-report\ndescription: 把最近 7 天的 git 提交整理成中文周报，按「新功能 / 修复 / 其他」分组。当用户提到周报、日报、工作总结、工作汇报、本周做了什么、这周提交了什么、总结一下最近的改动、给周会准备材料、写 changelog 或 release notes、或者想把 git log 和 commit 历史整理成人话时，都应该使用这个 skill。即使用户没有明说「周报」或「git log」这两个词，只要场景是回顾一段时间内的代码改动并产出一份可读的总结，也请用它。\n---\n\n# 周报生成（git log → 中文周…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "包含 YAML frontmatter（name/description）",
+              "pass": true
+            },
+            {
+              "label": "name 为 weekly-report",
+              "pass": true
+            },
+            {
+              "label": "包含 git log 步骤",
+              "pass": true
+            },
+            {
+              "label": "有清晰的章节结构（≥2 个标题）",
+              "pass": true,
+              "note": "计数 31"
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2053,
+          "totalMs": 201087,
+          "outputChars": 4244,
+          "reasoningChars": 19216,
+          "usage": {
+            "prompt_tokens": 7478,
+            "completion_tokens": 8705
+          },
+          "excerpt": "好的！在写之前，先说明我替你做的几个默认设计决定（都可以改）：\n\n1. **输出为 Markdown**，方便贴进邮件 / Wiki / 飞书钉钉\n2. **不只是罗列 git log**：会把简略的 commit message 改写成通顺的中文、合并同一件事的多个提交、每条附 commit hash 便于追溯\n3. **默认加一个「概览」段**（提交总数、参与人员），周报常见配置，不需要可以去掉\n4. **默认统计滚动的最近 7 天**，用户说\"上周\"或指定日期时自动调整\n5. **跳过 merge commit**，因为它们基本不含有效信息\n\n以下是完整的 SKILL.md：\n\n````markdown\n---\nname: weekly-report\ndescription: 把 git 仓库最近 7 天（或用户指定时间段）的提交记录整理成结构化中文周报，按「新功能 / 修复 / 其他」三组呈现，附提交统计。只要用户提到周报、weekly report、工作总结、汇报本周进展、梳理或总结最近的 git 提交、standup 汇报、给领导写进展汇报等场景，即使没有明说\"周报\"二字，也应使用此 skill。\ncompatibility: 需要系统安装 git，且目标目录是一个 git 仓库\n---\n\n# Weekly Report — Git 中文周报生成器\n\n把一堆零散的 git 提交记录变成一份能直接发给同事、上级的中文周报。这个 skill 的价值不在\"罗列提交\"，而在于三件事：**分类**（新功能/修复/其他）、**改写**（把简略的 commit message 变…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "anthropics-web-artifacts-builder",
+      "name": "web-artifacts-builder",
+      "task": "用这个 Skill 创建一个『待办看板』artifact（React + TypeScript + Tailwind + shadcn/ui，三列：待办/进行中/完成，可拖拽或按钮移动）。给出初始化命令、核心组件代码，以及打包成单个 HTML 的命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:32 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "模型返回空内容（可能思考耗尽 max_tokens）",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": "",
+          "totalMs": 32738,
+          "ttftMs": 2569,
+          "reasoningChars": 7948
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "anthropics-webapp-testing",
+      "name": "webapp-testing",
+      "task": "写一个 Playwright（Python）脚本测试本地 http://localhost:5173 的登录页：填写用户名和密码、点击登录、断言跳转到 /dashboard，最后截图保存 dashboard.png。开发服务器需要用 npm run dev 启动。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:33 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 Playwright",
+              "pass": true
+            },
+            {
+              "label": "等待页面加载完成",
+              "pass": true
+            },
+            {
+              "label": "断言跳转 /dashboard",
+              "pass": true
+            },
+            {
+              "label": "截图",
+              "pass": true
+            },
+            {
+              "label": "处理开发服务器启动",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 3198,
+          "totalMs": 52951,
+          "outputChars": 6992,
+          "reasoningChars": 9665,
+          "usage": {
+            "prompt_tokens": 1091,
+            "completion_tokens": 5005
+          },
+          "excerpt": "下面我不会声称已经执行——当前环境不能跑命令。以下是我会**实际执行**的步骤、脚本内容和验证点，你可以直接照做。\n\n整体思路（按 Skill 的决策树）：目标不是静态 HTML，而是 Vite 开发服务器渲染的动态应用，且服务器未启动 → **先用 `scripts/with_server.py` 起服务，再写原生 Playwright 脚本**。首次不要猜选择器，先做一次侦察。\n\n---\n\n## Step 1. 先看 helper 脚本用法（不要直接读源码）\n\n```bash\ncd <skill_dir>            # 即 SKILL.md 所在目录\npython scripts/with_server.py --help\n```\n\n确认它支持的参数（`--server` / `--port` 是否可重复、是否有超时参数）。下面的命令按 SKILL.md 给出的既有签名写，若 `--help` 显示不同，以 `--help` 为准。\n\n前置依赖（若未装）：\n\n```bash\npip install playwright && playwright install chromium\n```\n\n---\n\n## Step 2. 侦察脚本（Reconnaissance-Then-Action）\n\n因为选择器未知，先起服务跑一次侦察脚本，拿到真实 DOM/截图后再定选择器。保存为 `recon.py`：\n\n```python\n# recon.py —— 只做侦察：截图 + 列出 input/button/form\nfrom playwright.sync_api impo…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "使用 Playwright",
+              "pass": true
+            },
+            {
+              "label": "等待页面加载完成",
+              "pass": true
+            },
+            {
+              "label": "断言跳转 /dashboard",
+              "pass": true
+            },
+            {
+              "label": "截图",
+              "pass": true
+            },
+            {
+              "label": "处理开发服务器启动",
+              "pass": true
+            }
+          ],
+          "passedChecks": 6,
+          "totalChecks": 6,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 481,
+          "totalMs": 85935,
+          "outputChars": 3739,
+          "reasoningChars": 9800,
+          "usage": {
+            "prompt_tokens": 1049,
+            "completion_tokens": 3765
+          },
+          "excerpt": "按照 Skill 的流程，我会分三步完成：先查看 `with_server.py` 的用法，再编写只包含 Playwright 逻辑的自动化脚本，最后用 helper 启动服务器并执行测试。\n\n## 第 1 步：查看 helper 脚本用法\n\n按 Skill 要求，先以黑盒方式查看用法（不读源码）：\n\n```bash\npython scripts/with_server.py --help\n```\n\n需要确认输出中包含 `--server`、`--port` 以及 `--` 之后传自动化脚本的用法。\n\n## 第 2 步：编写自动化脚本 `login_test.py`\n\n脚本只包含 Playwright 逻辑，服务器生命周期由 `with_server.py` 管理。由于当前无法预先查看页面 DOM，脚本内置了候选选择器回退 + 登录页路径回退：\n\n```python\n\"\"\"login_test.py — 登录流程测试：填表单 → 点登录 → 断言跳转 /dashboard → 截图\"\"\"\nimport re\nfrom playwright.sync_api import sync_playwright\n\nBASE_URL = 'http://localhost:5173'\nUSERNAME = 'testuser'      # 按实际测试账号修改\nPASSWORD = 'password123'   # 按实际测试密码修改\n\n\ndef first_visible(page, selectors, desc):\n    \"\"\"依次尝试候选选择器，返回第一个可见元素\"\"\"…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-brainstorming",
+      "name": "brainstorming",
+      "task": "我想给我的免费 AI 模型目录网站加一个『模型对比』功能。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:33 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "向用户提问以澄清需求",
+              "pass": true,
+              "note": "计数 3"
+            },
+            {
+              "label": "一次只问少量问题（≤3 个问号）",
+              "pass": true,
+              "note": "计数 3"
+            },
+            {
+              "label": "未在设计确认前直接写实现代码",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2514,
+          "totalMs": 23335,
+          "outputChars": 787,
+          "reasoningChars": 5832,
+          "usage": {
+            "prompt_tokens": 3599,
+            "completion_tokens": 1676
+          },
+          "excerpt": "我先按流程来：这是一个新功能（创意性工作），所以我不会直接动手写代码——先和你一起把意图和设计搞清楚，等你点头后才进入实现。\n\n**先做路径分类。** 我倾向把「模型对比」判为 **architectural（架构级）**，理由是它更像一个**新增子系统**而不是对现有流程的小改：涉及新的对比视图/页面、选中状态管理、可对比字段的数据建模、可能还有可分享的对比 URL 等一整套新交互面。按 skill 的规则\"犹豫时走重的那条路\"，我不会草率地降级成 bounded。\n\n不过有两点会直接影响分类，而且**我在当前环境里无法读取你的仓库、跑命令或访问网络**，所以需要你补充信息，而不是我假装已经看过代码：\n\n- 如果网站里**已经存在**\"模型列表 → 模型详情/卡片\"这条流程，且对比只是复用它的数据加一个小视图，那它可以降为 **bounded**（我会在聊天里给一个简短设计，不写 spec 文档）。\n- 如果对比是**全新的一条用户流程**（bounded 的定义是\"要改的流程已经在仓库里能读到\"，而新流程不在），那它就是 **architectural**，我会走完整流程：澄清问题 → 2-3 个方案 → 分段设计 → 写 spec → 再进入写实现计划。\n\n**我的第一个问题（一次只问一个）：**\n\n能否先描述一下网站现状，让我把上下文补上——具体是：\n\n1. 技术栈是什么（比如 Next.js / Astro / 纯静态 HTML / 其他）？\n2. 模型数据从哪来（本地 JSON/Markdown 文件、CMS、还是某个 API）？\n3. 现有的\"模型列表/详情\"页大…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "向用户提问以澄清需求",
+              "pass": true,
+              "note": "计数 1"
+            },
+            {
+              "label": "一次只问少量问题（≤3 个问号）",
+              "pass": true,
+              "note": "计数 1"
+            },
+            {
+              "label": "未在设计确认前直接写实现代码",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1815,
+          "totalMs": 140610,
+          "outputChars": 845,
+          "reasoningChars": 17988,
+          "usage": {
+            "prompt_tokens": 3569,
+            "completion_tokens": 4798
+          },
+          "excerpt": "好的，先做分类并说出口：**这看起来是 architectural 路径**。理由：『模型对比』是一个全新的功能流程——你的网站上目前没有对比流程可以“改”，它需要新的交互（选中模型）、新的展示（对比视图）、可能还有新的路由和状态管理，这超出了“加个开关 / 改一个文件”的 bounded 范围。如果你觉得这个功能其实很小，可以直接推翻我，你来定。\n\n按 architectural 路径，我们会这样走：\n\n1. 了解项目现状\n2. 逐个澄清需求（一次只问一个问题）\n3. 提出 2-3 个方案及权衡，给出我的推荐\n4. 分段确认设计\n5. 写设计文档 → 你审阅通过 → 再进入实现计划\n\n（这个功能在 architectural 里算中等规模，后面的设计文档不会很长，别被流程吓到。）\n\n**第一步：了解项目现状。** 我在当前环境里无法直接读取你的仓库，正常流程下我会先跑这些命令来摸清结构：\n\n```bash\nls -la                            # 项目根目录结构\ncat package.json                  # 技术栈和依赖\ngit log --oneline -15             # 最近的开发方向\nfind src -type f | head -50       # 页面/组件的组织方式\ngrep -ril \"model\" src | head      # 模型数据的定义位置和来源\n```\n\n我重点想确认三件事：技术栈、每个模型的数据结构（有哪些字段）、列表页/详情页目前是怎么组织的。\n\n**第一个问题：*…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-writing-plans",
+      "name": "writing-plans",
+      "task": "需求已确认：为一个 Flask 应用新增『邮件订阅』功能（订阅表单、发送确认邮件、点击确认链接激活、每封邮件带退订链接）。请写出实现计划。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:36 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "拆分为 ≥3 个任务",
+              "pass": false,
+              "note": "计数 0"
+            },
+            {
+              "label": "写明具体文件路径（≥3 处）",
+              "pass": false,
+              "note": "计数 0"
+            },
+            {
+              "label": "每步包含测试",
+              "pass": false
+            },
+            {
+              "label": "包含提交步骤",
+              "pass": false
+            }
+          ],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "score": 0.0,
+          "verdict": "未通过",
+          "judgedBy": "auto",
+          "ttftMs": 3639,
+          "totalMs": 219733,
+          "outputChars": 744,
+          "reasoningChars": 71740,
+          "usage": {
+            "prompt_tokens": 1805,
+            "completion_tokens": 18294
+          },
+          "excerpt": "I'm using the writing-plans skill to create the implementation plan.\n\n由于当前环境无法执行命令/读写文件，我不会声称已保存文件。计划文件应保存到 `docs/superpowers/plans/<当天日期>-email-subscriptions.md`（例如 `2025-01-01-email-subscriptions.md`，用执行当天的日期替换）。下面是完整计划内容，以及我会执行的验证命令。\n\n````markdown\n# Email Subscriptions Implementation Plan\n\n> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.\n\n**Goal:** 为 Flask 应用增加双重重定向确认（double opt-in）的邮件订阅功能：订阅表单 → 确认邮件 → 点击确认链接激活 → 每封外发邮件都带退订链接。\n\n**Architecture:** 新增 `app/subscriptions/` 包（模型 / 令牌 / 邮件 / 表单 / 路由），通过 Flask blueprint 挂到…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "未通过"
+    },
+    {
+      "id": "obra-executing-plans",
+      "name": "executing-plans",
+      "task": "请执行下面这份计划：\nTask 1: 在 models.py 增加 Subscriber 模型（email 唯一）。\nTask 2: 删除并重建生产库的 users 表以添加 subscribed 字段。\nTask 3: 增加 /subscribe 接口和测试。\n（你无法真正运行命令，请按 Skill 的执行方式说明你会怎么做，并在开始前指出计划里的问题。）",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:33 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "识别出 Task 2 的风险",
+              "pass": true
+            },
+            {
+              "label": "提出顾虑/建议迁移而非删表",
+              "pass": true
+            },
+            {
+              "label": "在继续前请求确认",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2025,
+          "totalMs": 33911,
+          "outputChars": 4635,
+          "reasoningChars": 4102,
+          "usage": {
+            "prompt_tokens": 733,
+            "completion_tokens": 2768
+          },
+          "excerpt": "我在使用 executing-plans skill 来实现这份计划。\n\n**Announce（按 skill 要求）**：I'm using the executing-plans skill to implement this plan.\n\n**关于 subagents**：按 skill 的说明先提醒你——如果你有可用的 subagent（Claude Code / Codex CLI / Codex App / Copilot CLI / Gemini CLI 任一），那么这个计划更适合走 superpowers:subagent-driven-development，而不是本 skill。\n\n---\n\n## Step 1：加载并批判性审阅计划\n\n### 1.1 隔离工作区（我会执行的命令，当前环境无法执行）\n\n按 skill 要求，先确认不在 main/master 上裸改，且使用 superpowers:using-git-worktrees：\n\n```bash\ngit rev-parse --abbrev-ref HEAD\ngit status --porcelain\ngit worktree add ../wt-subscriber -b feat/subscriber-signup\ncd ../wt-subscriber\n```\n\n这里我已经需要停下来确认：**计划里没有说仓库、分支策略、plan 文件路径、测试命令、验收标准**，这些都属于 Step 1 需要的信息。\n\n### 1.2 批判性审阅结果 —— 发现阻塞性问题\n\n我**不会**开始执行，因为计划…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "识别出 Task 2 的风险",
+              "pass": true
+            },
+            {
+              "label": "提出顾虑/建议迁移而非删表",
+              "pass": true
+            },
+            {
+              "label": "在继续前请求确认",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 568,
+          "totalMs": 90869,
+          "outputChars": 4129,
+          "reasoningChars": 12126,
+          "usage": {
+            "prompt_tokens": 702,
+            "completion_tokens": 4474
+          },
+          "excerpt": "我正在使用 executing-plans skill 来执行这份计划。\n\n> 提示：如果你有子代理可用（Claude Code、Codex CLI、Copilot CLI、Gemini CLI 等），Superpowers 建议改用 superpowers:subagent-driven-development，执行效果会更好。\n\n---\n\n## Step 1：计划评审 —— 发现的问题\n\n按 Skill 要求，执行前必须先批判性审查计划。**这份计划有严重问题，我必须先暂停并向你提出，而不是硬着头皮执行**：\n\n### 🔴 问题 1（阻断级）：Task 2 要求删除并重建**生产库**的 users 表\n\n这是数据丢失级别的高危操作：\n- `DROP TABLE` 会永久丢失全部用户数据，除非有已验证的备份；\n- 添加一个字段根本不需要删表——正确的做法是**增量迁移**：`ALTER TABLE users ADD COLUMN subscribed ...`，这是非破坏性、秒级完成、可回滚的操作；\n- 计划中没有任何备份步骤、回滚方案、staging 预演，甚至没说明用什么迁移工具（Alembic？Flask-Migrate？手工 SQL？）。\n\n按 Skill 规则：\"Hit a blocker → STOP executing immediately, ask rather than guess\"。**我不会按原文执行 Task 2。**\n\n### 🔴 问题 2（逻辑矛盾）：Task 1 和 Task 2 是两套冲突的数据模型\n\n- Task 1：新建独立的 `Su…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-systematic-debugging",
+      "name": "systematic-debugging",
+      "task": "线上报错：Python 函数 average(nums) 在 nums 为空列表时抛 ZeroDivisionError。产品经理让你『直接加个 try/except 返回 0 就行』。代码：\n```python\ndef average(nums):\n    return sum(nums) / len(nums)\n```\n调用方是报表模块 report.py 的 daily_avg(orders)，orders 来自当天订单查询。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先追查根因",
+              "pass": true
+            },
+            {
+              "label": "先复现问题",
+              "pass": true
+            },
+            {
+              "label": "用测试固化修复",
+              "pass": true
+            },
+            {
+              "label": "追查空列表来源而不是只吞异常",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 3220,
+          "totalMs": 63857,
+          "outputChars": 5418,
+          "reasoningChars": 6468,
+          "usage": {
+            "prompt_tokens": 2444,
+            "completion_tokens": 4284
+          },
+          "excerpt": "# 结论先行\n\n**不能按产品经理说的直接 `try/except` 返回 0。** 这不是\"快\"，而是把根因埋进报表数据里。\n\n原因有三层，任何一层都足以否决这个方案：\n\n1. **它会吞掉根因，也会吞掉未来的真 bug。** `try` 包住整个 `return`，意味着以后任何来源的 `ZeroDivisionError`（甚至是 `average` 内部逻辑改动引入的）都会静默变成 0.00。\n2. **在报表里，0.00 是谎言。** \"当天没有订单\"和\"当天平均值为 0\"是两个语义完全不同的事实。报表下游可能拿它算环比、触发告警、做绩效考核——0 会污染这些。\n3. **修错了层。** `orders` 为空这件事，`average()` 这个通用数学函数根本没有资格决定怎么处理；知道\"空代表什么\"的是 `report.py` 的 `daily_avg`，甚至更上游的订单查询。\n\n而且 `average([])` 抛 `ZeroDivisionError` **本身是正确行为**——数学上没定义。真正的缺陷在于\"没人决定空集合的业务语义\"。所以按 Iron Law：**先做 Phase 1，拿到证据再谈修复。**\n\n（当前环境无法执行命令/访问网络，下面是**我将会执行的具体命令、插桩代码，以及每一步要验证什么**。在你或我在可执行环境里跑出证据之前，我不会给出最终修复。）\n\n---\n\n# Phase 1：根因调查\n\n## 1.1 完整读报错，不要只看最后一行\n\n```bash\n# 从应用日志 / Sentry / 告警里取完整 traceback\ngrep -n…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先追查根因",
+              "pass": true
+            },
+            {
+              "label": "先复现问题",
+              "pass": true
+            },
+            {
+              "label": "用测试固化修复",
+              "pass": true
+            },
+            {
+              "label": "追查空列表来源而不是只吞异常",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 697,
+          "totalMs": 100635,
+          "outputChars": 2690,
+          "reasoningChars": 12033,
+          "usage": {
+            "prompt_tokens": 2414,
+            "completion_tokens": 4687
+          },
+          "excerpt": "先说结论：**PM 的方案违反调试铁律（No fixes without root cause investigation）**。`try/except` 返回 0 是典型的症状修复——它不回答“为什么 orders 是空的”，而且会把问题掩盖成更危险的静默错误。下面按流程走。\n\n---\n\n## Phase 1：根因调查\n\n### 1. 读错误信息\n\n`ZeroDivisionError: division by zero` —— `len(nums) == 0`，错误本身很清楚。**不清楚的是：orders 为什么是空的。**\n\n### 2. 稳定复现\n\n```bash\npython -c \"from report import average; average([])\"\n# 预期：ZeroDivisionError: division by zero —— 可稳定复现，无需猜测\n```\n\n### 3. 分层取证（DB → 查询 → daily_avg → average）\n\n这是多组件链路，先插桩确认空列表产生在哪一层：\n\n```bash\n# 第 1 层：数据库里当天到底有没有订单\npsql -h $DB_HOST -U $DB_USER -d $DB_NAME -c \\\n  \"SELECT COUNT(*) AS cnt, MIN(created_at) AS first_order, MAX(created_at) AS last_order \\\n   FROM orders WHERE created_at >= CURRENT_DATE;\"\n# 验证点：cnt 是…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-test-driven-development",
+      "name": "test-driven-development",
+      "task": "用 TDD 实现 Python 函数 slugify(title)：转小写、空格转为连字符 -、去掉标点符号、合并连续连字符。展示完整的 TDD 过程和最终代码。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "代码块可通过语法检查",
+              "pass": true,
+              "note": "最长 python 代码块：通过"
+            },
+            {
+              "label": "先写测试再写实现",
+              "pass": true
+            },
+            {
+              "label": "说明先看到测试失败（RED）",
+              "pass": true
+            },
+            {
+              "label": "再让测试通过（GREEN）",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2167,
+          "totalMs": 91364,
+          "outputChars": 7346,
+          "reasoningChars": 21887,
+          "usage": {
+            "prompt_tokens": 2430,
+            "completion_tokens": 8353
+          },
+          "excerpt": "# 前提说明\n\n本环境无法执行命令，因此下面给出的是**我会执行的命令 + 预期看到的输出**，而不是\"已运行的结果\"。你在本地（项目根目录、已装 pytest）照抄即可复现每一步。\n\n项目结构（两个文件都放在根目录，避开 `import` 路径问题）：\n\n```\nslugify_project/\n├── slugify.py\n└── test_slugify.py\n```\n\n执行命令统一为：`python -m pytest -v`\n\n**核心纪律：先写测试 → 看它失败 → 只写让它通过的最小代码 → 看它通过 → 重构。** 全程不使用 mock，测试跑的是真实的 `slugify`。\n\n---\n\n## 行为拆解（每个循环只测一件事）\n\n1. 转小写\n2. 空格 → 连字符\n3. 去掉标点\n4. 合并连续连字符\n5. 去掉首尾多余连字符（\"去标点\"在标题首尾会留下悬挂连字符，属于同一需求的边界）\n6. 输入中已有的 `-` 是否保留 —— **规格有歧义，需要你拍板**（见最后）\n\n---\n\n## Cycle 1：转小写\n\n### RED\n\n`test_slugify.py`\n\n```python\nfrom slugify import slugify\n\n\ndef test_lowercases_title():\n    assert slugify(\"Hello\") == \"hello\"\n```\n\n```bash\npython -m pytest -v\n```\n\n预期输出：\n\n```\nE   ModuleNotFoundError: No module named 's…"
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:46 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-requesting-code-review",
+      "name": "requesting-code-review",
+      "task": "我刚完成『登录接口限流』功能，基线提交是 a1b2c3d，当前 HEAD 是 d4e5f6a，需求见 docs/specs/rate-limit.md。请按 Skill 发起代码审查。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"a44ea2f2-1c38-4725-b493-7da6de1c2afa\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用提交 SHA 界定审查范围",
+              "pass": true
+            },
+            {
+              "label": "派发审查代理/审查者",
+              "pass": true
+            },
+            {
+              "label": "按严重程度处理反馈",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 827,
+          "totalMs": 48155,
+          "outputChars": 1983,
+          "reasoningChars": 5956,
+          "usage": {
+            "prompt_tokens": 844,
+            "completion_tokens": 2495
+          },
+          "excerpt": "好的，按照 Skill 流程发起代码审查。由于当前环境无法执行命令、读取文件或真正派发子代理，下面给出我会执行的**具体命令**和**派发给 code reviewer 子代理的完整提示词**，供实际执行时使用。\n\n## 第 1 步：确认提交范围\n\n你已提供 SHA，我会先验证它们有效并查看变更范围：\n\n```bash\n# 验证两个提交存在\ngit rev-parse a1b2c3d d4e5f6a\n\n# 确认变更内容与\"登录接口限流\"相符\ngit log --oneline a1b2c3d..d4e5f6a\ngit diff --stat a1b2c3d d4e5f6a\n```\n\n## 第 2 步：派发 code reviewer 子代理\n\nSkill 要求使用 `code-reviewer.md` 模板并填入占位符。我无法在当前环境读取该模板文件，以下是基于 Skill 规定的占位符结构（`{DESCRIPTION}`、`{PLAN_OR_REQUIREMENTS}`、`{BASE_SHA}`、`{HEAD_SHA}`）构建的派发提示词——实际执行时应以模板文件为准填入相同内容：\n\n```\n[Dispatch general-purpose subagent]\n\nYou are a code reviewer. Evaluate the changes between two commits\nagainst their requirements. Do not assume any prior context.\n\n## What was built (DESCRIPTION…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-receiving-code-review",
+      "name": "receiving-code-review",
+      "task": "审查者给了我两条意见：1）『把 parse_date() 里的 try/except 全删掉，异常没必要处理』——这个函数解析用户上传 CSV 的日期列，经常有脏数据；2）『把变量名 d 改成 parsed_date』。请按 Skill 回应并决定怎么做。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"baf1820c-b7da-4a42-8dcb-d500c0195ea0\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "没有表演式附和",
+              "pass": true
+            },
+            {
+              "label": "对第 1 条有理有据地提出异议",
+              "pass": true
+            },
+            {
+              "label": "接受第 2 条重命名",
+              "pass": true
+            },
+            {
+              "label": "实施前先验证",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 793,
+          "totalMs": 207432,
+          "outputChars": 1465,
+          "reasoningChars": 19167,
+          "usage": {
+            "prompt_tokens": 1661,
+            "completion_tokens": 5833
+          },
+          "excerpt": "**两条意见的理解复述：**\n1. 删除 `parse_date()` 中的全部 try/except，不做异常处理\n2. 变量 `d` 重命名为 `parsed_date`\n\n两条的措辞都清楚，不存在需要澄清的歧义，所以不需要整体暂停。但意见 1 的前提对这个代码库不成立，按流程先做技术评估再决定。\n\n---\n\n## 意见 1 —— 不实施，需要反驳\n\n`parse_date()` 解析的是**用户上传的 CSV 日期列**，脏数据是常态而非例外。`datetime.strptime` / `pandas.to_datetime` 遇到格式错误的值会直接抛 `ValueError`。删掉 try/except 的后果是：第一格坏日期就让整个导入崩溃——用户上传一个只有一处日期写错的文件就全部失败。这大概率正是现有异常处理存在的原因，删除它属于破坏现有功能。\n\n反驳前我会先收集实证（本环境无法执行命令，以下是我会运行的具体命令和要验证的内容）：\n\n```bash\n# 确认调用方是否依赖\"坏日期不抛异常\"的行为（返回 None / 跳行 / 记录）\nrg -n 'parse_date' --type py\n\n# 找脏数据相关的测试用例——删除 try/except 后这些用例应当失败，即反驳的直接证据\nrg -n -i 'invalid|malformed|dirty|bad.?date' tests/\npytest -q -k 'date or csv'\n```\n\n拟回复审查者（若是 GitHub inline comment，在对应 comment thread 里回复，不发…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-verification-before-completion",
+      "name": "verification-before-completion",
+      "task": "我改完了登录 bug，跑了 tests/test_auth.py 的一半用例都通过了。帮我写一句提交说明，然后告诉团队『已修复、所有测试通过』。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:34 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"1f68db64-9d31-4176-a670-4fd7bd3e01d4\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "要求运行完整测试",
+              "pass": true
+            },
+            {
+              "label": "拒绝在无证据时宣布完成",
+              "pass": true
+            },
+            {
+              "label": "给出具体验证命令",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 511,
+          "totalMs": 132573,
+          "outputChars": 1105,
+          "reasoningChars": 7891,
+          "usage": {
+            "prompt_tokens": 1010,
+            "completion_tokens": 2865
+          },
+          "excerpt": "现在还不能发这句话。你手上的证据是「tests/test_auth.py 的一半用例通过」，而「已修复、所有测试通过」这个声明需要的是「全量测试输出 0 失败」。目前差了三块：\n\n- **一半 ≠ 全部**：剩下那一半还没跑，结果未知；\n- **单文件 ≠ 所有测试**：登录改动可能影响 session、权限、注册等其他模块，全量套件还没跑；\n- **用例通过 ≠ bug 已修复**：还需要确认原始症状本身被测到（最好有针对该 bug 的回归用例）。\n\n## 发声明前，请完整跑这几步\n\n```bash\n# 1. 跑完整个文件，不是一半\npytest tests/test_auth.py -v\n\n# 2. 跑全量测试套件，确认没有引入回归\npytest\n\n# 3.（如果有针对该 bug 的回归用例）验证红-绿循环，证明用例真能抓到这个 bug\ngit stash\npytest tests/test_auth.py -k login    # 期望：回归用例 FAIL（红）\ngit stash pop\npytest tests/test_auth.py -k login    # 期望：PASS（绿）\n```\n\n如果没有针对原 bug 的回归用例，建议先补一个再走第 3 步——否则「bug 已修复」缺少直接证据。\n\n**逐条核对判定标准：**\n- 每条命令退出码为 0；\n- 输出中 `failed=0`、`errors=0`，passed 数等于总用例数；\n- 第 3 步在旧代码上确实失败过（没失败过的回归用例没有证明力）。\n\n## 提交说明草稿（验证通过后再提交）\n\n```\nfi…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-subagent-driven-development",
+      "name": "subagent-driven-development",
+      "task": "我有一份已写好的实现计划，包含 3 个相互独立的任务：A) 新增 CSV 导出；B) 修复分页 off-by-one；C) 给设置页加暗色模式。请按 Skill 在当前会话里执行，说明你的流程。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9022edcf-9b16-460e-87cb-d7122e414fb6\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:47 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "obra-writing-skills",
+      "name": "writing-skills",
+      "task": "为团队写一个新 skill：『提交代码前必须运行 ruff 和 pytest，失败就不许提交』。请按 Skill 的方法（含如何测试这个 skill）给出完整 SKILL.md 和测试方案。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"330db51c-f5c5-4044-8842-304e1740fad7\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:48 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "vercel-labs-composition-patterns",
+      "name": "vercel-composition-patterns",
+      "task": "重构下面这个组件，它的布尔 props 越来越多：\n```tsx\n<Composer isThread isEditing={false} showAttachments showEmoji={!isDM} hideSendButton={isReadonly} onSubmit={send} />\n```\n请给出符合组合模式的 API 设计与 TSX 实现。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"26f42b09-ea6d-4e79-b814-79669d7a12ec\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:49 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用复合组件/组合模式",
+              "pass": true
+            },
+            {
+              "label": "通过 Context 共享状态",
+              "pass": true
+            },
+            {
+              "label": "提供 Composer.* 子组件",
+              "pass": true
+            },
+            {
+              "label": "给出 TSX 代码",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 509,
+          "totalMs": 408661,
+          "outputChars": 6451,
+          "reasoningChars": 61201,
+          "usage": {
+            "prompt_tokens": 799,
+            "completion_tokens": 16384
+          },
+          "excerpt": "# 重构方案：从布尔开关到组合式复合组件\n\n## 一、先诊断：这 5 个布尔其实是三类不同的问题\n\n```tsx\n<Composer isThread isEditing={false} showAttachments showEmoji={!isDM} hideSendButton={isReadonly} onSubmit={send} />\n```\n\n| 类型 | Props | 问题 |\n|---|---|---|\n| **模式开关** | `isThread`、`isEditing` | 一个布尔暗中改变组件的多处行为/布局，内部必然长满 `if` 分支 |\n| **存在性开关** | `showAttachments`、`showEmoji` | \"要不要渲染某个功能\"不该是 prop，而该是\"渲染不渲染那个子组件\" |\n| **否定开关** | `hideSendButton` | 双重否定（`hideSendButton={isReadonly}`），且 `showEmoji={!isDM}` 把调用方逻辑泄漏进 props |\n\n5 个布尔 = 32 种组合，绝大多数非法且组件无法约束；新增功能只能继续加布尔，所有调用点都要改。\n\n**对应策略**：模式开关 → 显式变体组件；存在性开关 → 组合（写不写该子组件）；否定开关 → 干脆不渲染。\n\n## 二、重构后的调用端 API（先看使用方式）\n\n```tsx\n// 场景 1：线程回复（原 isThread + showAttachments + showEmoji）\n<ThreadComposer paren…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "vercel-labs-react-best-practices",
+      "name": "vercel-react-best-practices",
+      "task": "审查并优化这段 Next.js App Router 页面：\n```tsx\nimport { format } from 'date-fns'\nimport _ from 'lodash'\nexport default async function Page() {\n  const user = await getUser()\n  const posts = await getPosts()\n  const stats = await getStats()\n  return <Dashboard user={user} posts={_.sortBy(posts,'date')} stats={stats} />\n}\n```",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"16b81785-3b20-415d-86d0-827a415302e5\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:46 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "用 Promise.all 消除请求瀑布",
+              "pass": true
+            },
+            {
+              "label": "指出瀑布问题",
+              "pass": true
+            },
+            {
+              "label": "指出整包导入/包体积问题",
+              "pass": true
+            },
+            {
+              "label": "建议 Suspense/流式渲染",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1222,
+          "totalMs": 186715,
+          "outputChars": 2894,
+          "reasoningChars": 14048,
+          "usage": {
+            "prompt_tokens": 1948,
+            "completion_tokens": 4664
+          },
+          "excerpt": "# 代码审查结果\n\n按 Vercel React 最佳实践的优先级排序，这段代码有 **2 个 CRITICAL 级问题**和若干建议项。\n\n## 🔴 CRITICAL 1：串行 await 造成请求瀑布流（`async-parallel`）\n\n三个**相互独立**的请求被串行执行：\n\n```\ngetUser() ──► getPosts() ──► getStats()    总耗时 = t₁ + t₂ + t₃\n```\n\n并行化后总耗时降为 `max(t₁, t₂, t₃)`，通常能减少 60% 以上的等待时间。\n\n## 🔴 CRITICAL 2：整包引入 lodash（`bundle-barrel-imports`）\n\n`import _ from 'lodash'` 会把整个 lodash（约 70KB+ min）打进 bundle。这里只用了 `sortBy`，而原生 `Array.prototype.toSorted()` 完全可以替代（`js-tosorted-immutable`），可**零成本移除整个依赖**。\n\n## 🟡 未使用的导入\n\n`format` 导入了但未使用，应删除。若后续需要，建议直接路径导入 `import format from 'date-fns/format'`，保证可静态分析、避免拉入 barrel 文件。\n\n---\n\n# 优化后代码\n\n```tsx\nexport default async function Page() {\n  // ✅ async-parallel：三个独立请求并行发起，消除瀑布流\n  const [user,…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "vercel-labs-react-native-skills",
+      "name": "vercel-react-native-skills",
+      "task": "优化这个 React Native 列表，滚动 1000 条时卡顿：\n```tsx\n<ScrollView>{items.map(item => <Row key={item.id} item={item} onPress={() => open(item.id)} />)}</ScrollView>\n```",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"b3a5ab86-053b-437c-97d5-2010a557a805\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:46 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "改用虚拟化列表",
+              "pass": true
+            },
+            {
+              "label": "避免每次渲染创建新回调/重渲染",
+              "pass": true
+            },
+            {
+              "label": "配置列表性能参数",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 457,
+          "totalMs": 149127,
+          "outputChars": 3291,
+          "reasoningChars": 14667,
+          "usage": {
+            "prompt_tokens": 1201,
+            "completion_tokens": 5055
+          },
+          "excerpt": "# 问题诊断\n\n这段代码同时踩中了列表性能规则里最严重的几条（优先级 1 – CRITICAL）：\n\n| 问题 | 违反规则 | 后果 |\n|---|---|---|\n| `ScrollView` + `map` 渲染全部 1000 条 | `list-performance-virtualize` | 一次性挂载 1000 个原生视图，内存暴涨、首屏极慢，滚动时全部参与布局计算 |\n| `onPress={() => open(item.id)}` 每行一个内联闭包 | `list-performance-callbacks` / `list-performance-function-references` | 父组件每次渲染都生成 1000 个新函数，`Row` 即使 memo 也全部失效 |\n| `Row` 未 memo 化 | `list-performance-item-memo` | 任何父组件状态变化都会重渲全部 1000 行 |\n\n# 优化后的代码\n\n```tsx\nimport { FlashList } from '@shopify/flash-list';\nimport { memo, useCallback } from 'react';\nimport { Pressable, StyleSheet, Text } from 'react-native';\n\ntype Item = { id: string; title: string };\n\n// ① memo 化行组件：props 引用不变就不重渲染\nconst Row = memo(function…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "vercel-labs-web-design-guidelines",
+      "name": "web-design-guidelines",
+      "task": "按 Web Interface Guidelines 审查 src/Login.tsx：\n```tsx\n1 <div className=\"btn\" onClick={submit}>登录</div>\n2 <img src=\"/logo.png\">\n3 <input placeholder=\"邮箱\" />\n4 <style>{`*:focus{outline:none}`}</style>\n```\n请按 Skill 要求的格式输出问题清单。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:35 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"f1fbc1d4-0121-4696-8367-310c403fd73b\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:47 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "按 file:line 格式输出",
+              "pass": true
+            },
+            {
+              "label": "指出图片缺少 alt",
+              "pass": true
+            },
+            {
+              "label": "指出输入缺少 label",
+              "pass": true
+            },
+            {
+              "label": "指出应使用 button",
+              "pass": true
+            },
+            {
+              "label": "指出焦点样式被移除",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1510,
+          "totalMs": 88559,
+          "outputChars": 1340,
+          "reasoningChars": 6002,
+          "usage": {
+            "prompt_tokens": 450,
+            "completion_tokens": 2230
+          },
+          "excerpt": "按 Skill 流程说明：第一步应先获取最新指南，我会执行：\n\n```\nWebFetch https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md\n```\n\n当前环境无法联网，无法实际拉取最新版本；以下审查基于该指南的已知规则集（语义化交互元素、焦点可见性、图片替代文本、表单标签等）进行。文件内容已由你提供，逐条检查结果如下。\n\n## 审查结果\n\n- `src/Login.tsx:1` — 可点击的 `<div>` 不是按钮：无法通过 Tab 聚焦、不支持 Enter/Space 激活、屏幕阅读器不会播报为按钮。应改用 `<button type=\"submit\">登录</button>`\n- `src/Login.tsx:1` — 缺少 `<form>` 包裹，`submit` 未绑定表单提交语义，输入框内按回车无法提交\n- `src/Login.tsx:1` — 触控目标需 ≥44×44px（需检查 `.btn` 的 CSS，此处无法验证）\n- `src/Login.tsx:2` — `<img>` 缺少 `alt` 属性；装饰性图片应显式写 `alt=\"\"`\n- `src/Login.tsx:2` — JSX 中 `<img>` 未自闭合，无法通过编译（语法问题，顺带指出）\n- `src/Login.tsx:3` — `placeholder` 不能替代 `<label>`；缺少关联的 `<label htmlFor=\"...\">`\n- `src/Login…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "blader-humanizer",
+      "name": "humanizer",
+      "task": "把下面这段 AI 味很重的英文改写得像真人写的，事实不变：\n\"In today's fast-paced digital landscape, our new API isn't just a tool — it's a game-changer. It delivers speed, reliability, and scalability. Latency dropped 37% in 2025, a testament to our commitment to excellence. Let's delve into what makes it truly special.\"",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:36 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"fb23ac3b-6d72-467f-8ebe-e1761dbe8b9e\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:51 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "去掉典型 AI 套话",
+              "pass": false,
+              "note": "命中：isn't just"
+            },
+            {
+              "label": "保留 37% 事实",
+              "pass": true
+            },
+            {
+              "label": "保留 2025 事实",
+              "pass": true
+            },
+            {
+              "label": "输出不少于 80 字符",
+              "pass": true,
+              "note": "1098 字符"
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 553,
+          "totalMs": 317653,
+          "outputChars": 1098,
+          "reasoningChars": 40855,
+          "usage": {
+            "prompt_tokens": 6516,
+            "completion_tokens": 11223
+          },
+          "excerpt": "## 标记出的问题\n\n- **§1 not-X-but-Y**：\"isn't just a tool — it's a game-changer\"。否定半句没人主张过，纯加重量；顺带触发了 §8 的破折号和 §16 的 \"game-changer\"。\n- **§4 铺垫开场**：\"Let's delve into what makes it truly special\"，宣布要讲重点但不给任何信息（\"delve\" 同时是 §12 高频词）。\n- **§13 拔高意义**：\"a testament to our commitment to excellence\"，把一个数字说成卓越的证明。\n- **§16 销售语言**：\"In today's fast-paced digital landscape\"、\"truly special\"。\n- **§12 AI 高频词**：landscape（抽象）、delve、testament。\n- **§6 三项并列**：\"speed, reliability, and scalability\"（弱信号，但周围 tell 密集）。\n- **§18**：用 \"delivers\" 回避 is。\n\n必须保留的事实：我们的新 API；快；可靠；可扩展；2025 年延迟下降 37%。\n\n## 初稿\n\n> Our new API is fast and reliable, and it scales. Latency dropped 37% in 2025.\n\n## 检查\n\n- 五项复查：无 not-X-but-Y、无金句收尾、无破折号、无加粗标签。三项并…"
+        }
+      ],
+      "bestVerdict": "部分通过"
+    },
+    {
+      "id": "jimliu-baoyu-infographic",
+      "name": "baoyu-infographic",
+      "task": "把下面的内容做成一张信息图（我授权你直接选择布局和风格，不必再确认）：『国内免费 LLM API 对比：魔搭每日 2000 次；智谱 GLM-4-Flash 永久免费；硅基流动部分 9B 以下模型免费；Groq 有每分钟限额；OpenRouter 免费模型每天约 50 次。』你无法生成图片，请输出所选 layout、style、结构化内容和完整的图片生成 prompt。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:36 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"66266065-b7df-4449-8831-b86ebf5a8839\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:53 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "jimliu-baoyu-markdown-to-html",
+      "name": "baoyu-markdown-to-html",
+      "task": "我有 article.md（含代码块和 LaTeX 公式），想转成微信公众号可用的 HTML，用 grace 主题，并把外链转为文末引用。给出具体命令和说明。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:36 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"24e63445-c3b9-4774-b34f-08064f2f7101\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:48 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 scripts/main.ts",
+              "pass": true
+            },
+            {
+              "label": "指定 grace 主题",
+              "pass": true
+            },
+            {
+              "label": "使用 --cite 生成文末引用",
+              "pass": true
+            },
+            {
+              "label": "以 article.md 为输入",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1057,
+          "totalMs": 61612,
+          "outputChars": 1532,
+          "reasoningChars": 5592,
+          "usage": {
+            "prompt_tokens": 2836,
+            "completion_tokens": 2171
+          },
+          "excerpt": "下面按该 Skill 的流程给出具体操作。由于当前环境无法执行命令，我给出你需要运行的命令和验证要点。\n\n## 前置确认\n\n- **主题**：你已明确指定 `grace`，无需再询问。\n- **引用模式**：你明确要求\"外链转文末引用\"，对应 `--cite` 参数（默认关闭，仅在明确要求时开启）。\n\n## 可选预处理（Step 0）\n\n你的文章面向微信公众号，大概率包含中文。如果存在以下情况，建议先用 `baoyu-format-markdown` 技能格式化一遍（可修复标点在 `**` 内导致的加粗解析失败、中英文间距等问题）：\n\n- 加粗标记内含标点（如 `**“引用”**`）解析异常\n- 中英文之间缺少空格\n\n如不需要，直接用原文件即可。\n\n## 转换命令\n\n`{baseDir}` 为本 Skill 的 `SKILL.md` 所在目录；运行时按以下规则解析 `${BUN_X}`：装了 `bun` 用 `bun`，否则用 `npx -y bun`。\n\n```bash\n# 方式一：已安装 bun\nbun {baseDir}/scripts/main.ts article.md --theme grace --cite\n\n# 方式二：仅有 npx\nnpx -y bun {baseDir}/scripts/main.ts article.md --theme grace --cite\n```\n\n## 参数说明\n\n| 参数 | 作用 |\n|------|------|\n| `--theme grace` | 优雅主题：文字阴影、圆角卡片、精致引用块样式 |\n| `--cite`…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jimliu-baoyu-url-to-markdown",
+      "name": "baoyu-url-to-markdown",
+      "task": "把 https://example.com/blog/post-1 抓取成 markdown 保存下来。给出具体命令、输出文件位置约定，以及遇到登录/验证码时怎么处理。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"dff6b0ad-a21a-4c5a-80c2-cc32b1661e78\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:50 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 baoyu-fetch",
+              "pass": true
+            },
+            {
+              "label": "目标 URL 正确",
+              "pass": true
+            },
+            {
+              "label": "输出 markdown 文件",
+              "pass": true
+            },
+            {
+              "label": "说明登录/验证码等待模式",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2115,
+          "totalMs": 137079,
+          "outputChars": 3244,
+          "reasoningChars": 16283,
+          "usage": {
+            "prompt_tokens": 2315,
+            "completion_tokens": 6081
+          },
+          "excerpt": "# 抓取 https://example.com/blog/post-1 的完整方案\n\n当前环境无法直接执行命令，以下是我会依次执行的具体命令和验证内容。`{baseDir}` 指 SKILL.md 所在目录。\n\n## 第 0 步：检查偏好配置(EXTEND.md)\n\n按优先级查找，找到第一个即用：\n\n```bash\nfor p in \\\n  \".baoyu-skills/baoyu-url-to-markdown/EXTEND.md\" \\\n  \"${XDG_CONFIG_HOME:-$HOME/.config}/baoyu-skills/baoyu-url-to-markdown/EXTEND.md\" \\\n  \"$HOME/.baoyu-skills/baoyu-url-to-markdown/EXTEND.md\"; do\n  [ -f \"$p\" ] && { echo \"FOUND: $p\"; cat \"$p\"; break; }\ndone\n```\n\n**若三个路径都没找到**，按 Skill 要求必须先完成首次配置(阻塞性，不允许静默使用默认值)。请一次性回答以下三题(回复编号即可)：\n\n1. **媒体处理**：页面中的图片/视频如何处理？\n   - 1. 每次询问(推荐)\n   - 2. 总是下载 — 保存到本地 `imgs/` 和 `videos/`\n   - 3. 从不下载 — 保留远程 URL\n2. **输出目录**：默认输出到哪？\n   - 1. `url-to-markdown`(推荐)— `./url-to-markdown/{domain}/{slug}.…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jimliu-baoyu-article-illustrator",
+      "name": "baoyu-article-illustrator",
+      "task": "为下面这篇文章规划配图（授权直接决定，无需确认）：『免费 LLM API 的三个坑：一是限额随时变；二是免费模型会突然下线；三是国内访问延迟不稳定。应对方法是多供应商兜底、每日探测、设置超时重试。』你无法生成图片，请输出需要配图的位置、每张图的 Type × Style 和完整 prompt。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"02922334-fbd6-44b8-9e63-fd3a1aef4637\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:55 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "jimliu-baoyu-slide-deck",
+      "name": "baoyu-slide-deck",
+      "task": "把下面内容做成 6 页幻灯片图片的大纲（授权直接决定风格，无需确认）：『FreeLLM 是一个每日核验的免费 AI 模型目录，收录 80+ 模型、20+ 平台，提供实测分数、可用性探测和 Skill 实测。』你无法生成图片，请输出带风格说明的逐页大纲和每页图片 prompt。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"569de98d-3418-414f-80e5-92a69096a912\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:55 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "jimliu-baoyu-post-to-wechat",
+      "name": "baoyu-post-to-wechat",
+      "task": "把 article.md 发布到我的微信公众号草稿箱，走 API 方式。给出需要准备的凭证/配置、具体命令和步骤。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"ae8e5f92-e387-4fb1-8bc4-9427340dae17\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:53 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 scripts/wechat-api.ts",
+              "pass": true
+            },
+            {
+              "label": "说明 AppID/AppSecret 凭证",
+              "pass": true
+            },
+            {
+              "label": "发布为草稿",
+              "pass": true
+            },
+            {
+              "label": "提醒 IP 白名单",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 359,
+          "totalMs": 206030,
+          "outputChars": 3338,
+          "reasoningChars": 11137,
+          "usage": {
+            "prompt_tokens": 3926,
+            "completion_tokens": 6226
+          },
+          "excerpt": "# 发布 article.md 到微信公众号草稿箱（API 方式）\n\nAPI 方式调用的是 `draft/add` 接口，**只存草稿、不会群发**，正好符合你的需求。以下是完整的准备清单和步骤（当前环境无法替你执行，请按命令实际运行；`{baseDir}` 指 SKILL.md 所在目录，请替换为实际路径）。\n\n---\n\n## 一、需要准备的凭证与配置\n\n### 1. Bun 运行时\n```bash\nbun --version\n```\n- 未安装：`brew install oven-sh/bun/bun`（macOS）或 `npm install -g bun`\n- 或用 `npx -y bun` 替代下文所有 `bun` 命令\n\n### 2. API 凭证（AppID / AppSecret）\n在公众号后台 **「设置与开发 → 基本配置 → 公众号开发信息」** 获取：\n- **AppID**\n- **AppSecret**（查看需管理员扫码验证）\n\n凭证写入项目根目录的 `.baoyu-skills/.env`（键名以 `references/api-setup.md` 引导为准，通常为）：\n```bash\nWECHAT_APP_ID=你的AppID\nWECHAT_APP_SECRET=你的AppSecret\n```\n\n### 3. IP 白名单（最容易卡住的一步）\n微信 API 只允许白名单内的 IP 调用：\n```bash\ncurl -s https://api.ipify.org   # 查本地公网 IP\n```\n将该 IP 添加到 **「基本配置 → IP 白…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jimliu-baoyu-post-to-x",
+      "name": "baoyu-post-to-x",
+      "task": "帮我在 X 上发一条带两张图片的帖子：文字『FreeLLM 今日更新：新增 2 个免费模型』，图片 ./a.png 和 ./b.png。给出具体命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9c0306f6-fcb7-466b-9cf7-b6f14d720468\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:53 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 x-browser.ts",
+              "pass": true
+            },
+            {
+              "label": "使用 --image 参数",
+              "pass": true
+            },
+            {
+              "label": "附带两张图片",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 2398,
+          "totalMs": 194382,
+          "outputChars": 1369,
+          "reasoningChars": 8546,
+          "usage": {
+            "prompt_tokens": 4303,
+            "completion_tokens": 2997
+          },
+          "excerpt": "当前环境无法直接执行命令，下面是我会执行的具体命令和验证要点。\n\n## 主命令（CDP 脚本模式）\n\n```bash\nbun {baseDir}/scripts/x-browser.ts \"FreeLLM 今日更新：新增 2 个免费模型\" --image ./a.png --image ./b.png\n```\n\n- `{baseDir}` 替换为本 Skill 目录（SKILL.md 所在目录），脚本在其 `scripts/` 子目录下\n- 运行时选择：已安装 `bun` → 用 `bun`；只有 `npx` → 用 `npx -y bun` 替换，即：\n\n```bash\nnpx -y bun {baseDir}/scripts/x-browser.ts \"FreeLLM 今日更新：新增 2 个免费模型\" --image ./a.png --image ./b.png\n```\n\n- `--image` 可重复传参，最多 4 张，这里 2 张没问题\n\n## 执行后验证\n\n- Chrome 打开了 `https://x.com/compose/post`，文字已填入编辑框\n- 两张图片的缩略图都已出现，且上传进度完成（无残留进度条）\n- 脚本默认只填充内容，**发布需要你人工审核后手动点击 Post**（未经你明确确认，不会使用 `--submit` 自动发布）\n\n## 若报 `Chrome debug port not ready`\n\n先清理已有 CDP 实例再重试原命令：\n\n```bash\npkill -f \"Chrome.*remote-debugging-port\" 2>/…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jimliu-baoyu-xhs-images",
+      "name": "baoyu-xhs-images",
+      "task": "把这段内容做成小红书图文卡片系列（授权直接选择，无需确认）：『新手免费用大模型 API 的 5 个步骤：注册魔搭、实名认证、获取 Token、在 Cherry Studio 填写 base_url、测试对话。』你无法生成图片，请输出所选 style、layout、每张卡片的文字与图片 prompt。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"f546a6c8-9b5f-4ab4-89cc-99f81af984f2\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:58 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择 Skill 内置 style",
+              "pass": true
+            },
+            {
+              "label": "选择 Skill 内置 layout",
+              "pass": true
+            },
+            {
+              "label": "≥3 张卡片",
+              "pass": true,
+              "note": "计数 7"
+            },
+            {
+              "label": "给出图片 prompt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 698,
+          "totalMs": 389149,
+          "outputChars": 7213,
+          "reasoningChars": 32835,
+          "usage": {
+            "prompt_tokens": 7567,
+            "completion_tokens": 14916
+          },
+          "excerpt": "收到。你已明确授权跳过确认（等效 `--yes`），且当前环境无法读写文件、无法生成图片——因此我不会声称已保存文件或已出图，以下以**内联形式**给出全部产物：方案声明、分析、大纲、7 张卡片的文字与完整 prompt，以及后续可执行的生成指引。\n\n> 说明：本环境无法读取 EXTEND.md，按 `--yes` 路径使用内置默认值（无水印、语言跟随内容=中文、风格自动匹配）。\n\n---\n\n## 🎨 采用方案（自动匹配，按授权直接选定）\n\n```\n策略：B 信息密度型（教程类内容，价值优先）\n风格：chalkboard（黑板粉笔手绘，教学感强）\n布局：flow（封面 sparse · 5 张步骤卡 balanced · 结尾 flow 回顾）\n配色：默认（深黑黑板 + 白/黄/粉/蓝/绿彩色粉笔）\n预设：tutorial（chalkboard + flow，匹配\"教程步骤、操作流程\"）\n图片：7 张 · 3:4 竖版 · 中文 · 无水印\n后端：当前环境无图片生成能力 → 按你的要求仅输出 prompt（可粘贴到任意出图后端）\n目录：image-cards/free-llm-api/\n```\n\n---\n\n## 📋 内容分析（analysis.md 内容）\n\n- **主题**：新手 5 步免费用大模型 API（魔搭社区 × Cherry Studio）\n- **类型**：教程 / 操作流程 ｜ **语言**：中文\n- **Hook 潜力**：高（“免费 + 大模型 + 新手”强需求组合）\n- **受众**：AI 新手、学生、想零成本体验大模型 API 的用户\n- **互动信号*…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jimliu-baoyu-cover-image",
+      "name": "baoyu-cover-image",
+      "task": "为文章《2026 年最值得用的 10 个免费大模型 API》设计封面（授权直接选择，无需确认）。你无法生成图片，请输出 5 个维度的选择（type、palette、rendering、text、mood）和完整的图片生成 prompt。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c10c07da-22e7-43c7-83b8-c07c1fe7c144\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:56 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "选择 type",
+              "pass": true
+            },
+            {
+              "label": "选择 palette",
+              "pass": true
+            },
+            {
+              "label": "选择 rendering",
+              "pass": true
+            },
+            {
+              "label": "选择 mood",
+              "pass": true
+            },
+            {
+              "label": "给出 prompt",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 427,
+          "totalMs": 220345,
+          "outputChars": 4072,
+          "reasoningChars": 24805,
+          "usage": {
+            "prompt_tokens": 4527,
+            "completion_tokens": 7662
+          },
+          "excerpt": "收到，已按你的授权跳过 Step 2 确认环节。按 Skill 要求，先声明本次假设项：\n\n- **Aspect**: 16:9（默认值，未指定）\n- **Language**: zh（标题为中文）\n- **Font**: clean（补充维度，现代无衬线，适合科技标题）\n- **Backend**: 生成时按可用性自动选择（运行时原生 imagegen/GenerateImage 优先，其次唯一已安装后端）；本环境无法出图，故只交付维度选择与 prompt\n- **偏好配置**：实际执行时会先检查 `EXTEND.md`（项目 > XDG > 用户目录三级路径），本环境无法读取文件，以下按默认偏好处理\n\n---\n\n## 内容分析\n\n- **主题**：2026 年免费大模型 API 推荐榜单（实用向科技测评）\n- **调性**：前瞻、专业、实用\n- **关键词**：2026、免费、大模型、API、Top 10\n- **视觉隐喻**：API = 节点与数据流的连接网络；“10” = 十个发光节点；免费/开放 = 通透的光感与留白\n\n## 五维度选择\n\n| 维度 | 选择 | 理由 |\n|------|------|------|\n| **Type** | `conceptual` | API 是抽象服务，用发光节点网络做概念化表达，比截图式 scene 更优雅，10 个节点暗合标题中的\"10\" |\n| **Palette** | `cool` | 深蓝/青色系是 AI 与开发者内容的经典语言，传达科技感与可信度，缩略图下辨识度高 |\n| **Rendering** | `digi…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "iofficeai-officecli",
+      "name": "officecli",
+      "task": "用 officecli 创建 report.docx：一级标题『月度运营报告』、一段正文、一个 3x3 表格，然后检查文档结构。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:37 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"3e6248c0-a08a-465b-a077-36384c476978\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:56 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 officecli create/add/set 命令（≥3 条）",
+              "pass": true,
+              "note": "计数 8"
+            },
+            {
+              "label": "目标文件 report.docx",
+              "pass": true
+            },
+            {
+              "label": "添加表格",
+              "pass": true
+            },
+            {
+              "label": "检查文档结构",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1431,
+          "totalMs": 183060,
+          "outputChars": 1997,
+          "reasoningChars": 26889,
+          "usage": {
+            "prompt_tokens": 7108,
+            "completion_tokens": 8246
+          },
+          "excerpt": "# 用 officecli 创建 report.docx 的完整命令序列\n\n## 0. 前置检查\n\n```bash\nofficecli --version        # 确认已安装；未安装先执行安装脚本\nofficecli load_skill word  # 报告类文档 → 按规则加载 word 技能，后续按其输出规则操作\n```\n\n## 1. 创建文档并写入内容\n\n```bash\n# 创建空白 docx\nofficecli create report.docx\n\n# 一级标题\nofficecli add report.docx /body --type paragraph \\\n  --prop text=\"月度运营报告\" --prop style=Heading1\n\n# 一段正文\nofficecli add report.docx /body --type paragraph \\\n  --prop text=\"本月整体运营平稳，各项核心指标均达成预期目标，详细数据见下表。\"\n\n# 3x3 表格\nofficecli add report.docx /body --type table --prop rows=3 --prop cols=3\n```\n\n三个 `add` 也可合并为一次原子提交（任一失败则整体回滚）：\n\n```bash\nofficecli batch report.docx --commands '[\n  {\"op\":\"add\",\"parent\":\"/body\",\"type\":\"paragraph\",\"props\":{\"text\":\"月度运营报告\",\"styl…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "iofficeai-officecli-docx",
+      "name": "officecli-docx",
+      "task": "用 officecli 生成一份合同 contract.docx：标题、甲乙双方信息段落、带编号的 5 条条款、签字栏表格、页脚页码。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"e067a594-9d5e-4bd0-ad0f-396fa3532e03\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:00 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-officecli-academic-paper",
+      "name": "officecli-academic-paper",
+      "task": "用 officecli 生成学术论文格式的 paper.docx：标题、摘要、3 个章节、一个带编号的公式、一张带题注的表格、参考文献（至少 3 条，正文中引用）。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"23a17f8b-450f-4dc2-9b36-43d760d2dc3f\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:02 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-officecli-word-form",
+      "name": "officecli-word-form",
+      "task": "用 officecli 生成可填写的请假申请表 leave-form.docx：姓名（文本框）、部门（下拉：研发/市场/行政）、请假日期（日期选择器）、是否带薪（复选框）。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4ed4d233-aea7-41a5-abe8-8d39d93e1f58\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:02 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-morph-ppt",
+      "name": "morph-ppt",
+      "task": "用 officecli 生成 4 页带 Morph 平滑过渡的 morph.pptx：一个圆形从第 1 页左侧移动并放大到第 2 页中央，第 3、4 页标题文字平滑切换。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c976e4b1-4234-4a95-9140-70e50ba98bbe\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:03 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-officecli-pptx",
+      "name": "officecli-pptx",
+      "task": "用 officecli 生成 5 页产品介绍 product.pptx：封面、痛点、方案、带柱状图的数据页（Q1 30、Q2 45、Q3 70）、联系方式。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"73f3c778-d66d-4861-8dd6-15657eaef5d7\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:03 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-officecli-pitch-deck",
+      "name": "officecli-pitch-deck",
+      "task": "用 officecli 为 AI 客服初创公司做种子轮融资路演 pitch.pptx（10 页左右：问题、方案、市场规模、产品、商业模式、牵引力、竞争、团队、融资需求 300 万美元）。给出页面规划和完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c454641d-8013-4248-b4b6-f3c713ea83a3\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:05 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "iofficeai-officecli-xlsx",
+      "name": "officecli-xlsx",
+      "task": "用 officecli 生成销售表 sales.xlsx：A 列月份（1-6 月）、B 列销售额、B8 用公式求和、C 列环比增长率公式、表头加粗并冻结首行。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"ff3bc9de-a190-498f-aa67-8c7ff2c5cae5\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:05 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "officecli 命令（≥3 条）",
+              "pass": true,
+              "note": "计数 31"
+            },
+            {
+              "label": "目标文件 sales.xlsx",
+              "pass": true
+            },
+            {
+              "label": "使用 SUM 公式",
+              "pass": true
+            },
+            {
+              "label": "表头加粗",
+              "pass": true
+            },
+            {
+              "label": "冻结首行",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 979,
+          "totalMs": 273652,
+          "outputChars": 4626,
+          "reasoningChars": 37857,
+          "usage": {
+            "prompt_tokens": 9328,
+            "completion_tokens": 12937
+          },
+          "excerpt": "下面是完整的构建方案与命令序列。当前环境无法实际执行，请按顺序运行并对照每步的预期结果验证。\n\n## 表结构设计\n\n| | A | B | C |\n|---|---|---|---|\n| **1** | 月份（表头，加粗） | 销售额（元）（表头，加粗） | 环比增长率（表头，加粗） |\n| 2-7 | 1月~6月 | 销售额（示例数据，蓝色=输入） | `IFERROR((本月-上月)/上月,\"-\")` |\n| **8** | 合计 | `SUM(B2:B7)` | —（留空） |\n\n设计要点：所有可计算的数都是公式而非硬编码；C 列分母用 `IFERROR` 兜底（保证零公式错误）；1 月无上月，C2 显示 `-`；货币单位放在表头；B2:B7 蓝色字体标记\"可替换的硬编码输入\"，公式保持黑色。\n\n## 命令序列\n\n```bash\n# 前置：确认 officecli 可用（缺失则先安装）\nofficecli --version\n# macOS/Linux 安装: curl -fsSL https://d.officecli.ai/install.sh | bash\n\nFILE=\"sales.xlsx\"\n\n# 1) 创建并打开工作簿\nofficecli create \"$FILE\"\nofficecli open \"$FILE\"\n\n# 2) 表头：加粗 + 深蓝底白字\nofficecli set \"$FILE\" /Sheet1/A1 --prop value='月份'        --prop bold=true --prop fill=1F4E79 --prop font.…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "iofficeai-officecli-data-dashboard",
+      "name": "officecli-data-dashboard",
+      "task": "用 officecli 生成 dashboard.xlsx：Data 表放 12 个月营收和成本，Dashboard 表放 3 个公式驱动的 KPI（总营收、总成本、毛利率）和一个折线图，打开时默认显示 Dashboard。给出完整命令序列。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:38 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9ac69c6a-49d0-40f3-95e0-0beae9b6c3c9\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:09 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "composiohq-file-organizer",
+      "name": "file-organizer",
+      "task": "我的 ~/Downloads 很乱，文件如下：invoice_2026_03.pdf、IMG_2041.JPG、IMG_2041 (1).JPG、setup.dmg、report-final.docx、report-final-v2.docx、song.mp3、data.csv。请给出整理方案和命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"97d3869f-17cc-4771-80fc-f7f329ef4100\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:04 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "创建分类目录",
+              "pass": true
+            },
+            {
+              "label": "移动文件命令",
+              "pass": true
+            },
+            {
+              "label": "识别重复文件",
+              "pass": true
+            },
+            {
+              "label": "执行前请求确认",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 485,
+          "totalMs": 82707,
+          "outputChars": 2165,
+          "reasoningChars": 13088,
+          "usage": {
+            "prompt_tokens": 2908,
+            "completion_tokens": 5051
+          },
+          "excerpt": "# ~/Downloads 整理方案\n\n## 现状分析\n\n共 8 个文件、无文件夹结构，按类型分布：\n\n| 类型 | 文件 | 数量 |\n|---|---|---|\n| 文档 | invoice_2026_03.pdf、report-final.docx、report-final-v2.docx | 3 |\n| 图片 | IMG_2041.JPG、IMG_2041 (1).JPG | 2 |\n| 安装包 | setup.dmg | 1 |\n| 音频 | song.mp3 | 1 |\n| 数据 | data.csv | 1 |\n\n发现的问题：\n\n1. **疑似重复文件**：`IMG_2041 (1).JPG` 的 \"(1)\" 后缀是浏览器重复下载的典型痕迹，很可能与 `IMG_2041.JPG` 完全相同\n2. **版本号残留**：`report-final-v2.docx` —— 建议保留最新版并去掉版本号，旧版归档\n3. **无任何结构**，所有类型混在根目录\n\n## 目标结构\n\n```\nDownloads/\n├── Documents/\n│   ├── invoice_2026_03.pdf\n│   └── report-final.docx      ← 由 report-final-v2.docx 重命名而来\n├── Images/\n│   └── IMG_2041.JPG\n├── Installers/\n│   └── setup.dmg\n├── Media/\n│   └── song.mp3\n├── Data/\n│   └── data.csv\n└── Archiv…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-invoice-organizer",
+      "name": "invoice-organizer",
+      "task": "整理这些发票文件以备报税：scan001.pdf（阿里云 2026-03-05 ¥1,280 云服务器）、IMG_88.jpg（滴滴 2026-03-11 ¥56 打车）、doc(3).pdf（Adobe 2026-02-28 $22.99 订阅）。请给出重命名结果、目录结构和汇总 CSV。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4838d345-a36d-4ef0-9a90-bb78c77675f1\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:05 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "按日期规范重命名（≥3 处日期）",
+              "pass": true,
+              "note": "计数 19"
+            },
+            {
+              "label": "保留供应商名",
+              "pass": true
+            },
+            {
+              "label": "输出 CSV 表头",
+              "pass": true
+            },
+            {
+              "label": "保留金额",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 731,
+          "totalMs": 101757,
+          "outputChars": 2505,
+          "reasoningChars": 12438,
+          "usage": {
+            "prompt_tokens": 3214,
+            "completion_tokens": 5056
+          },
+          "excerpt": "# 发票整理方案 📊\n\n共 3 个文件，信息已齐全（2026-02-28 ~ 2026-03-11）。由于你未指定组织方式，我采用默认结构 **年份/类别/供应商**，并保留原件。以下是完整方案和可直接执行的命令。\n\n## 一、重命名结果\n\n| 原文件名 | 新文件名 | 新位置 |\n|---|---|---|\n| `scan001.pdf` | `2026-03-05 阿里云 - Invoice - 云服务器.pdf` | `Invoices/2026/云服务/阿里云/` |\n| `IMG_88.jpg` | `2026-03-11 滴滴 - Receipt - 打车.jpg` | `Invoices/2026/交通/滴滴/` |\n| `doc(3).pdf` | `2026-02-28 Adobe - Invoice - 订阅.pdf` | `Invoices/2026/软件/Adobe/` |\n\n命名规则：`YYYY-MM-DD 供应商 - Invoice/Receipt - 描述.扩展名`，日期在前保证按时间排序，去除了原文件名中的括号等特殊字符，保留原始扩展名。\n\n## 二、目录结构\n\n```\nInvoices/\n├── 2026/\n│   ├── 软件/\n│   │   └── Adobe/\n│   │       └── 2026-02-28 Adobe - Invoice - 订阅.pdf\n│   ├── 云服务/\n│   │   └── 阿里云/\n│   │       └── 2026-03-05 阿里云 - Invoice - 云服务器.pdf\n│   └…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-content-research-writer",
+      "name": "content-research-writer",
+      "task": "帮我写一篇文章的开头和大纲：《为什么开发者应该关注免费 LLM API 的稳定性》，目标读者是独立开发者。要有吸引人的开头、带引用标注的论据。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"03e813a0-0ec7-426d-9a1d-c9c608184550\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:07 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "有大纲结构（≥3 个标题）",
+              "pass": true,
+              "note": "计数 15"
+            },
+            {
+              "label": "包含引用标注",
+              "pass": true
+            },
+            {
+              "label": "输出不少于 600 字符",
+              "pass": true,
+              "note": "3981 字符"
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 381,
+          "totalMs": 182367,
+          "outputChars": 3981,
+          "reasoningChars": 15732,
+          "usage": {
+            "prompt_tokens": 3548,
+            "completion_tokens": 7676
+          },
+          "excerpt": "收到。目标读者（独立开发者）、主题、交付物（开头 + 带引用标注的大纲）都清楚了，我直接交付第一版，末尾留几个迭代问题给你。\n\n先给你建议的写作环境命令（在你本地执行）：\n\n```bash\nmkdir -p ~/writing/free-llm-api-stability\ncd ~/writing/free-llm-api-stability\ntouch article-draft.md outline.md research.md\n```\n\n**重要说明**：我当前环境无法联网核实来源。下面引用的案例都是公开知名事件，但具体数字和条款细节我全部标注了 `[待核实]`，并附上了验证用的检索命令——请核实后再写入正文，避免引用翻车。\n\n---\n\n## 一、开头（Hook）\n\n三个方向供你选：\n\n**方向一：故障场景（推荐）**\n> 凌晨 1:47，手机弹出告警：你的 AI 应用错误率从 0.2% 飙到了 34%。\n\n*为什么有效：独立开发者对“半夜被告警叫醒”有肌肉记忆，“代码零改动、问题在上游”是他们的共同噩梦，代入感极强。*\n\n**方向二：历史事件开场**\n> 2023 年 6 月，Reddit 一夜之间调整 API 定价，两周后 Apollo——当时最流行的第三方客户端——宣布关闭。这不是 LLM 的故事，但它是所有依赖“别人家免费/低价 API”的开发者的预演。\n\n*为什么有效：真实、具体、有尸体（Apollo），暗示“下一个可能是你”。*\n\n**方向三：反直觉论断**\n> 免费 LLM API，是你技术栈里最贵的那一层。\n\n*为什么有效：制造认知冲突，逼读者往下读。*…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-meeting-insights-analyzer",
+      "name": "meeting-insights-analyzer",
+      "task": "分析这段会议记录中我（张三）的沟通模式：\n[00:01] 张三：嗯，那个，我觉得可能，也许我们可以考虑一下延期？\n[00:02] 李四：不行，客户已经定了日期。\n[00:03] 张三：哦好的好的，那就按原计划吧。\n[00:05] 王五：测试资源不够怎么办？\n[00:06] 张三：嗯……这个我们会后再说吧。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"afe9d698-3b8f-4088-b7de-6c0fa542326c\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:05 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "识别冲突回避",
+              "pass": true
+            },
+            {
+              "label": "识别填充词/模糊表达",
+              "pass": true
+            },
+            {
+              "label": "引用带时间戳的原话",
+              "pass": true
+            },
+            {
+              "label": "给出改进建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 522,
+          "totalMs": 105903,
+          "outputChars": 2142,
+          "reasoningChars": 4964,
+          "usage": {
+            "prompt_tokens": 2491,
+            "completion_tokens": 2765
+          },
+          "excerpt": "# 会议沟通模式分析：张三\n\n**分析对象**：张三\n**会议时长**：约 6 分钟（5 个发言轮次）\n**样本提示**：这是一段很短的记录，以下结论属于方向性判断，建议结合更多会议验证。\n\n---\n\n## 识别出的关键模式\n\n### 模式 1：提出关键议题时大量使用缓冲词（回避冲突信号）\n\n**发现**：你在提出延期这个重要议题时，一句话里堆叠了 5 个弱化词，并把建议包装成疑问句。\n\n**频率**：1 次提议中出现 5 处弱化表达（嗯、那个、我觉得、可能、也许）\n\n**示例**：**[00:01]**\n\n**原话**：\n> “嗯，那个，我觉得可能，也许我们可以考虑一下延期？”\n\n**为什么重要**：\n你显然察觉到了进度风险，但这句话传递的信号是“我不是很确定，你们可以忽略我”。弱化词 + 疑问句尾的组合，让对方很容易一句话否决——事实上李四正是这么做的。你的原始担忧（为什么需要延期）从头到尾没有被表达出来。\n\n**更好的说法**：\n> “我建议讨论延期一周。原因是 X 还没完成，如果按原日期交付，风险是 Y。我想听听大家对这两个选项的权衡。”\n\n要点：第一句就点明议题，用陈述句而非问句，附上理由。\n\n---\n\n### 模式 2：遭遇反驳后立即让步，未坚持探讨实质问题\n\n**发现**：李四一句话否决后，你在 1 秒内完全放弃立场，且没有追问任何细节。\n\n**频率**：1 次反驳 → 1 次即时让步（让步率 100%）\n\n**示例**：**[00:02] → [00:03]**\n\n**原话**：\n> 李四：“不行，客户已经定了日期。”\n> 张三：“哦好的好的，那就按原计划吧。”…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-tailored-resume-generator",
+      "name": "tailored-resume-generator",
+      "task": "根据这个 JD 改写我的简历要点。JD：『后端工程师，要求 Go、Kubernetes、高并发、可观测性（Prometheus）』。我的经历：3 年 Python 后端，1 年 Go 写过订单服务（QPS 5k），用过 Docker，搭过 Grafana 看板。不要编造经历。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"41727295-dacb-47f0-b770-87c4290c19c3\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:07 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "突出 Go 经验",
+              "pass": true
+            },
+            {
+              "label": "保留 QPS 5k 数据",
+              "pass": true
+            },
+            {
+              "label": "对齐可观测性要求",
+              "pass": true
+            },
+            {
+              "label": "不编造 Kubernetes 经验",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1249,
+          "totalMs": 137288,
+          "outputChars": 2387,
+          "reasoningChars": 13134,
+          "usage": {
+            "prompt_tokens": 2711,
+            "completion_tokens": 5466
+          },
+          "excerpt": "收到。先说结论：你的经历和这个 JD 的匹配度其实不低——**Go、高并发（QPS 5k）是硬匹配，可观测性是半匹配**，真正的缺口是 **Kubernetes** 和可能的 **Prometheus**。下面按“能写的坚决写实、不能写的一个字不编”的原则来改。\n\n---\n\n## 一、JD 需求优先级\n\n| 优先级 | 要求 | 你的匹配情况 |\n|---|---|---|\n| P0 | Go | ✅ 1 年生产经验（订单服务） |\n| P0 | 高并发 | ✅ QPS 5k 订单服务，直接证据 |\n| P1 | 可观测性（Prometheus） | ⚠️ 有 Grafana，Prometheus 待确认 |\n| P1 | Kubernetes | ❌ 只有 Docker，不能硬写 |\n\n---\n\n## 二、改写后的简历要点\n\n### 专业摘要\n\n> 后端工程师，4 年后端开发经验（Go 1 年 / Python 3 年）。开发并维护 Go 订单核心服务，线上稳定承载峰值 QPS 5,000+ 的订单流量；具备 Docker 容器化部署与 Grafana 监控看板搭建经验，熟悉高并发服务的开发、部署与可观测性实践。\n\n### 核心技能\n\n- **编程语言**：Go（1 年生产经验）、Python（3 年生产经验）\n- **高并发后端**：高 QPS 订单服务开发、API 设计、【数据库 / 缓存 / 消息队列——按你实际技术栈填】\n- **容器化**：Docker（镜像构建、容器化部署）\n- **可观测性**：Grafana（监控看板设计与搭建）【Prometheus 是否能写…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-competitive-ads-extractor",
+      "name": "competitive-ads-extractor",
+      "task": "分析这 4 条竞品广告文案（已从广告库复制）：1『10 秒接入 GPT，首月免费』 2『国内直连，无需魔法』 3『开发者都在用的 API 中转，99.9% 可用』 4『注册送 100 万 tokens』。总结他们打的痛点、信息模式和我们可以借鉴的方向。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"fe8028db-13bf-498f-bb66-776c060ab154\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:08 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "总结痛点",
+              "pass": true
+            },
+            {
+              "label": "识别免费/赠送钩子",
+              "pass": true
+            },
+            {
+              "label": "识别国内访问痛点",
+              "pass": true
+            },
+            {
+              "label": "给出借鉴建议",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 479,
+          "totalMs": 203887,
+          "outputChars": 2809,
+          "reasoningChars": 8523,
+          "usage": {
+            "prompt_tokens": 1995,
+            "completion_tokens": 3990
+          },
+          "excerpt": "# 竞品广告文案分析（4 条）\n\n## 概览\n\n- **广告数量**：4 条\n- **产品类型**：AI API 中转/代理服务（面向国内开发者）\n- **文案长度**：全部 ≤ 15 字，极简直接\n- **共同特征**：每条都含具体数字、全部面向开发者、全部是转化导向（无品牌向文案）\n- **主题分布**：接入便捷 / 访问无障碍 / 稳定性 / 免费激励，各占一席——说明这四类痛点在市场上被并行验证\n\n---\n\n## 逐条拆解\n\n### 广告 1：『10 秒接入 GPT，首月免费』\n\n- **打的痛点**：接入流程复杂、时间成本高——开发者对“又要看文档、又要配环境”有天然抵触\n- **信息模式**：`具体数字承诺（10 秒） + 零风险试用（首月免费）`\n- **为什么有效**：\n  - “10 秒”是可量化的承诺，比“快速接入”可信 10 倍\n  - “首月免费”把决策风险降为零，先上车再谈\n  - 前半句解决“怕麻烦”，后半句解决“怕吃亏”，一句话打掉两个顾虑\n\n### 广告 2：『国内直连，无需魔法』\n\n- **打的痛点**：网络访问障碍——目标用户最基础、最日常的摩擦点\n- **信息模式**：`圈层黑话（\"魔法\"）+ 直击场景`\n- **为什么有效**：\n  - “魔法”是圈内暗语，一眼筛出精准人群，同时传递“我们懂你”的信任感\n  - 不解释、不绕弯，痛点本身即卖点\n- **⚠️ 风险提示**：这类表述在多数正规广告平台（Meta、LinkedIn、国内渠道）有政策审核风险，容易被拒审或封号。竞品敢投说明他们可能在用小号矩阵或审核宽松的渠道——这本身就是一个竞争…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "composiohq-lead-research-assistant",
+      "name": "lead-research-assistant",
+      "task": "我们做『面向中小电商的 AI 客服 SaaS』。请帮我识别高质量潜在客户：给出理想客户画像、筛选标准与打分方式、去哪里找、以及首轮触达建议。你不能联网，不要编造具体公司名或联系方式。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4f8c8820-e2c3-4a20-9833-ffa42f7fe134\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:12 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "composiohq-twitter-algorithm-optimizer",
+      "name": "twitter-algorithm-optimizer",
+      "task": "优化这条推文的传播：『我们上线了新功能，欢迎大家来试试，链接在这里 https://freellm.top』。给出 2-3 个改写版本并说明依据。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:39 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c2421e03-4df9-4241-a637-4e711a90e085\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:12 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "composiohq-changelog-generator",
+      "name": "changelog-generator",
+      "task": "根据这些提交生成面向用户的更新日志：\nfeat: 新增 Skill 实测页面\nfix: 修复搜索框中文输入法回车误提交\nchore: bump deps\nrefactor: 拆分 build_static.py\nfeat(models): 模型页显示首 token 延迟\nfix: 修复暗色模式下按钮不可见",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"0fa32e8c-5d92-4b52-aea2-44d6748ec906\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:07 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "新功能分组",
+              "pass": true
+            },
+            {
+              "label": "修复分组",
+              "pass": true
+            },
+            {
+              "label": "过滤掉内部提交",
+              "pass": false,
+              "note": "命中：chore:"
+            },
+            {
+              "label": "包含用户可感知的改动",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 1399,
+          "totalMs": 28224,
+          "outputChars": 788,
+          "reasoningChars": 4091,
+          "usage": {
+            "prompt_tokens": 842,
+            "completion_tokens": 1590
+          },
+          "excerpt": "以下是根据提交记录生成的面向用户的更新日志：\n\n---\n\n# 更新日志\n\n## ✨ 新功能\n\n- **Skill 实测页面**：新增在线实测页面，可以直接试用 Skill 并快速查看运行效果，无需自行搭建环境。\n\n- **模型响应速度参考**：模型页新增「首 token 延迟」指标，挑选模型时可以直观对比不同模型的响应快慢。\n\n## 🐛 问题修复\n\n- 修复了在搜索框使用中文输入法时，选词按回车会误触发搜索的问题。\n- 修复了暗色模式下部分按钮不可见的问题。\n\n---\n\n### 处理说明\n\n**已过滤的内部提交**（对用户无感知，按最佳实践不写入用户日志）：\n\n| 提交 | 过滤原因 |\n|------|----------|\n| `chore: bump deps` | 依赖版本升级，无用户可见变化 |\n| `refactor: 拆分 build_static.py` | 内部构建脚本重构，不影响功能 |\n\n**技术 → 用户语言的转换要点**：\n\n- 「中文输入法回车误提交」→ 转换为用户实际遇到的场景描述（“选词按回车会误触发搜索”），而非实现细节（如 `compositionstart`/`compositionend` 事件）\n- 「首 token 延迟」→ 保留术语但补充了用途说明（“对比响应快慢”），让非技术用户也能理解价值\n\n### 发布前建议\n\n1. **核对功能描述**：实测页面的具体能力（如是否需要登录、支持哪些 Skill）建议根据实际产品情况补充\n2. **保存归档**：确认无误后可直接追加到 `CHANGELOG.md` 或用于发布公告\n\n如果你有版…"
+        }
+      ],
+      "bestVerdict": "部分通过"
+    },
+    {
+      "id": "michalparkola-article-extractor",
+      "name": "article-extractor",
+      "task": "把 https://example.com/posts/free-llm-guide 的正文提取成干净文本保存。给出具体命令和文件命名方式。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"08b18e1e-b15f-4ca7-89dd-2a9bb4b8c6e3\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:08 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用正文提取工具",
+              "pass": true
+            },
+            {
+              "label": "目标 URL 正确",
+              "pass": true
+            },
+            {
+              "label": "保存到文件",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 651,
+          "totalMs": 53760,
+          "outputChars": 3251,
+          "reasoningChars": 2836,
+          "usage": {
+            "prompt_tokens": 2585,
+            "completion_tokens": 1824
+          },
+          "excerpt": "当前环境无法实际执行命令或访问网络，下面给出可直接运行的完整命令流程（按 Skill 的优先级：reader → trafilatura → curl 兜底），以及文件命名规则和验证要点。\n\n## 第一步：检查提取工具是否已安装\n\n```bash\ncommand -v reader || command -v trafilatura\n```\n\n若都没有，可先安装（二选一即可）：\n\n```bash\n# 方案 1（推荐）：Mozilla Readability\nnpm install -g @mozilla/readability-cli\n\n# 方案 2：trafilatura\npip3 install trafilatura\n```\n\n## 第二步：提取正文并按标题命名保存（完整脚本）\n\n```bash\nARTICLE_URL=\"https://example.com/posts/free-llm-guide\"\n\n# ---- 选择工具 ----\nif command -v reader &> /dev/null; then\n    TOOL=\"reader\"\nelif command -v trafilatura &> /dev/null; then\n    TOOL=\"trafilatura\"\nelse\n    TOOL=\"fallback\"\nfi\necho \"使用工具: $TOOL\"\n\n# ---- 提取正文 + 标题 ----\ncase $TOOL in\n    reader)\n        reader \"$ARTICLE_URL\" > temp_article.tx…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "michalparkola-youtube-transcript",
+      "name": "youtube-transcript",
+      "task": "下载这个视频的字幕/转录文本：https://www.youtube.com/watch?v=dQw4w9WgXcQ 。给出具体命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"82dc2bb5-aae6-431e-a8a4-94f4022794bf\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:14 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 yt-dlp",
+              "pass": true
+            },
+            {
+              "label": "不下载视频本体",
+              "pass": true
+            },
+            {
+              "label": "下载字幕",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 455,
+          "totalMs": 411411,
+          "outputChars": 4197,
+          "reasoningChars": 6379,
+          "usage": {
+            "prompt_tokens": 3432,
+            "completion_tokens": 3411
+          },
+          "excerpt": "当前环境无法执行命令或联网，所以我无法实际运行并看到结果。下面是按照 Skill 流程整理的具体命令，你可以在本地终端依次执行；每一步都标注了需要验证的内容。\n\n## 第 0 步：检查 yt-dlp 是否已安装\n\n```bash\nwhich yt-dlp || command -v yt-dlp\n```\n\n- **有输出** → 已安装，继续下一步\n- **无输出** → 按系统安装：\n  ```bash\n  # macOS (Homebrew)\n  brew install yt-dlp\n  # Debian/Ubuntu\n  sudo apt update && sudo apt install -y yt-dlp\n  # 通用 (pip)\n  pip3 install yt-dlp\n  ```\n\n## 第 1 步：先查看该视频有哪些字幕（必做）\n\n```bash\nyt-dlp --list-subs \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\"\n```\n\n**验证点**：输出中确认是否有手动字幕（人工上传）和自动生成字幕（auto-generated），以及语言代码（如 `en`）。这决定了后续走哪条路径。\n\n## 第 2 步：获取视频标题（用于命名最终文件）\n\n```bash\nVIDEO_TITLE=$(yt-dlp --print \"%(title)s\" \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" | tr '/' '_' | tr ':' '-' | tr '?' '' |…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "michalparkola-learn-this",
+      "name": "learn-this",
+      "task": "learn this：下面是一篇文章的正文——『写好 prompt 的三个原则：1）给模型明确角色和目标；2）提供示例；3）要求结构化输出并给出校验标准。实践中，先用小样本迭代，再固化为模板。』请提取要点并给出行动计划。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9d334803-7800-4a18-bb75-98fe0a696c02\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:09 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "提取要点",
+              "pass": true
+            },
+            {
+              "label": "给出行动计划",
+              "pass": true
+            },
+            {
+              "label": "结构化列表（≥4 项）",
+              "pass": true,
+              "note": "计数 4"
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 3,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 474,
+          "totalMs": 71965,
+          "outputChars": 1971,
+          "reasoningChars": 4200,
+          "usage": {
+            "prompt_tokens": 3477,
+            "completion_tokens": 1999
+          },
+          "excerpt": "🧵 **Tapestry Workflow 启动**\n\n📍 **内容类型检测**：article（正文已直接提供，无需 URL 抓取）\n\n> 说明：由于你直接提供了文章正文，跳过了抓取步骤。若这是一个 URL，我会执行以下检测与抓取流程：\n> ```bash\n> # 检测逻辑\n> if [[ \"$URL\" =~ youtube\\.com/watch || \"$URL\" =~ youtu\\.be/ ]]; then CONTENT_TYPE=\"youtube\"\n> elif [[ \"$URL\" =~ \\.pdf$ ]]; then CONTENT_TYPE=\"pdf\"\n> else CONTENT_TYPE=\"article\"; fi\n> # article 抓取：trafilatura --URL \"$URL\" --output-format txt > temp_article.txt\n> ```\n\n---\n\n## 📥 要点提取（可执行的经验，而非摘要）\n\n| # | 原则 | 可操作的做法 |\n|---|------|-------------|\n| 1 | **明确角色和目标** | 在 prompt 开头指定模型身份（如“你是资深技术文档编辑”）+ 明确任务目标（要产出什么、给谁看、达到什么标准） |\n| 2 | **提供示例** | 给出 1-3 个输入→输出的配对示例，让模型模仿格式、语气和判断标准 |\n| 3 | **结构化输出 + 校验标准** | 明确要求输出格式（JSON / Markdown / 表格），并附上“什么样的输出算合格”的校验清单 |\n| 4…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "michalparkola-ship-learn-next",
+      "name": "ship-learn-next",
+      "task": "我刚看完一个讲『用 FastAPI 构建 REST API』的教程。请把它转成可执行的学习/实践计划。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"580ed028-0844-40b5-a98d-8c628772f145\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:15 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "michalparkola-unblock-action",
+      "name": "unblock-action",
+      "task": "我的待办里『写季度复盘』拖了两周了，一直不想动。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"d480e515-02aa-491e-9616-bc144a5e85b0\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:11 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "给出下一步具体动作",
+              "pass": false
+            },
+            {
+              "label": "限定时间",
+              "pass": false
+            },
+            {
+              "label": "缩小到今天的范围",
+              "pass": true
+            }
+          ],
+          "passedChecks": 1,
+          "totalChecks": 3,
+          "score": 3.3,
+          "verdict": "未通过",
+          "judgedBy": "auto",
+          "ttftMs": 2140,
+          "totalMs": 121789,
+          "outputChars": 127,
+          "reasoningChars": 2325,
+          "usage": {
+            "prompt_tokens": 1122,
+            "completion_tokens": 714
+          },
+          "excerpt": "拖了两周，多半不是懒，是这件事太模糊了。先搞清楚一件事：\n\n**这个复盘『写完』的时候，会多出一个什么具体的东西？**\n\n- 一份给自己看的文档？\n- 一封发给老板或团队的邮件/汇报？\n- 一页 PPT？\n\n它长什么样、给谁看——这决定了今天该切哪一块。"
+        }
+      ],
+      "bestVerdict": "未通过"
+    },
+    {
+      "id": "michalparkola-scrum-sage",
+      "name": "scrum-sage",
+      "task": "分析我们团队最近 3 个 Sprint：计划点数 40/42/45，完成 28/30/26；每个 Sprint 都有 2-3 个需求中途插入；站会经常超过 30 分钟。请给出诊断和改进建议。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:40 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4fc9acf7-b9e9-4bcd-9e12-a91b76ed523d\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:16 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "hugohe3-ppt-master",
+      "name": "ppt-master",
+      "task": "用这个工作流把下面的产品介绍做成 6 页可编辑 PPTX：『FreeLLM：每日核验的免费 AI 模型目录，80+ 模型实测、可用性探测、Skill 实测、国内可用标注。』给出页面规划、至少 1 页的 SVG 示例和导出 PPTX 的命令/步骤。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"213a2e0b-15b1-48e3-b85a-72bd1b42c2b3\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:18 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "op7418-nanobanana-ppt-skills",
+      "name": "NanoBanana-PPT-Skills",
+      "task": "用这个 Skill 把『免费大模型 API 入门』做成 5 页 PPT 图片并生成转场视频。给出逐页 prompt、需要的环境变量/API Key 配置和运行命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"15a1f765-a744-4056-8d6f-8d026a24880d\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:19 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "lewislulu-html-ppt-skill",
+      "name": "html-ppt",
+      "task": "做一个 5 页的静态 HTML 演示稿《FreeLLM 季度回顾》（标题页、数据页、路线图、团队、Q&A），支持键盘翻页。直接输出完整 HTML 文件。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"05555a61-ea13-4bfb-abdf-2cae196ea6a5\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:19 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 3,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "rendercv-rendercv",
+      "name": "rendercv",
+      "task": "用 RenderCV 给我写简历 YAML：姓名 李明，邮箱 liming@example.com，教育：浙江大学 计算机 2016-2020；经历：某电商公司 后端工程师 2020-至今，负责订单系统重构。使用 classic 主题，并给出渲染命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"0532aa36-0e44-4ccc-82f3-cfe6ceefc01b\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:17 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "YAML 可解析且含 cv 顶层键",
+              "pass": true
+            },
+            {
+              "label": "使用 classic 主题",
+              "pass": true
+            },
+            {
+              "label": "给出 rendercv render 命令",
+              "pass": true
+            },
+            {
+              "label": "包含 sections",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 4961,
+          "totalMs": 173228,
+          "outputChars": 1799,
+          "reasoningChars": 14025,
+          "usage": {
+            "prompt_tokens": 7213,
+            "completion_tokens": 4373
+          },
+          "excerpt": "下面是为你生成的简历 YAML 和渲染命令。\n\n## 1. 简历文件：`Li_Ming_CV.yaml`\n\n```yaml\n# yaml-language-server: $schema=https://raw.githubusercontent.com/rendercv/rendercv/refs/tags/v2.8/schema.json\n\ncv:\n  name: 李明\n  email: liming@example.com\n  sections:\n    教育经历:\n      - institution: 浙江大学\n        area: 计算机\n        start_date: 2016\n        end_date: 2020\n    工作经历:\n      - company: 某电商公司\n        position: 后端工程师\n        start_date: 2020\n        end_date: present\n        highlights:\n          - 负责订单系统重构\n\ndesign:\n  theme: classic\n\nlocale:\n  language: mandarin_chinese\n```\n\n几点说明：\n\n- **日期**：你只给了年份，所以 `start_date`/`end_date` 用 `2016`、`2020` 这种纯年份格式（符合严格格式要求）。如果知道月份，可改成 `2016-09` / `2020-06` 这样更精确。\n- **`locale: mandarin_chine…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "jzcreative-html-resume-beautifier",
+      "name": "resume-beautifier",
+      "task": "把下面的简历内容排成一页 A4 的精美 HTML 简历（隐私安全）：王芳，产品经理，电话 13812345678，邮箱 wangfang@example.com；经历：2021-至今 某 SaaS 公司 高级产品经理，主导计费系统改版，付费转化提升 23%；教育：复旦大学 2017-2021。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:41 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"45ce2b8e-06d2-4176-92a0-0786a8a6c93d\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:22 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "alibaba-open-code-review",
+      "name": "open-code-review",
+      "task": "审查这次改动（你无法运行 ocr CLI，请直接按 Skill 的报告格式输出审查结果）：\n```diff\n--- a/api/user.py\n+++ b/api/user.py\n@@ -10,3 +10,6 @@\n+def get_user(request):\n+    uid = request.args['id']\n+    row = db.execute(f\"SELECT * FROM users WHERE id = {uid}\").fetchone()\n+    return jsonify(dict(row))\n```",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"6f2b4f4a-cd04-434d-97b7-56662b46412e\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:19 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "按严重度分级",
+              "pass": true
+            },
+            {
+              "label": "发现 SQL 注入",
+              "pass": true
+            },
+            {
+              "label": "定位到行",
+              "pass": true
+            },
+            {
+              "label": "给出参数化修复",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1263,
+          "totalMs": 178650,
+          "outputChars": 2364,
+          "reasoningChars": 17007,
+          "usage": {
+            "prompt_tokens": 3178,
+            "completion_tokens": 5642
+          },
+          "excerpt": "按照 Skill 流程，正常情况下我会先提取业务上下文，然后执行以下命令（当前环境无法运行，仅列出以供参考）：\n\n```bash\nocr review --audience agent \\\n  --background \"新增用户查询接口 get_user：从 URL 参数 id 读取用户 ID，查询 users 表并以 JSON 返回该用户记录\" \\\n  --output /tmp/ocr_out.txt\n```\n\n以下为按 Skill 报告格式输出的人工审查结果。\n\n## Code Review Results\n\n**Files reviewed**: 1\n**Issues found**: 1 critical, 1 high, 3 medium\n\n### Critical\n\n- **`api/user.py:12`** [security] — SQL 注入漏洞：`uid` 直接来自用户可控的请求参数，未经任何校验就通过 f-string 拼接进 SQL。攻击者传入 `1 OR 1=1`、`1; DROP TABLE users--` 之类的值即可篡改查询逻辑、拖库，甚至执行多条语句（取决于后端驱动）。\n  > Recommendation: 使用参数化查询，禁止字符串拼接 SQL：\n  > ```python\n  > row = db.execute(\"SELECT * FROM users WHERE id = ?\", (uid,)).fetchone()\n  > ```\n  > 若使用 SQLAlchemy 2.x，需用 `text()` 包裹并绑定参数：`db.…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "ayghri-i-have-adhd",
+      "name": "i-have-adhd",
+      "task": "我想把一个 Next.js 项目部署到 Vercel，怎么做？",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"32fe2b84-8213-4f52-a9a8-223029af5c68\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:20 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "没有寒暄开场",
+              "pass": true
+            },
+            {
+              "label": "开头即给出下一步/第一步",
+              "pass": true
+            },
+            {
+              "label": "编号步骤数 ≤5（列表封顶）",
+              "pass": false,
+              "note": "计数 8"
+            },
+            {
+              "label": "给出具体时间估计",
+              "pass": true
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 4,
+          "score": 7.5,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 1625,
+          "totalMs": 175557,
+          "outputChars": 597,
+          "reasoningChars": 4743,
+          "usage": {
+            "prompt_tokens": 1872,
+            "completion_tokens": 1772
+          },
+          "excerpt": "最快路径：在项目根目录运行 `npx vercel`，约 5 分钟拿到线上地址。\n\n**方式一：CLI 部署（最快，约 5 分钟）**\n\n1. 项目根目录运行 `npx vercel`\n2. 首次会打开浏览器要求登录（免费账号），之后按提示一路回车，Vercel 自动识别 Next.js\n3. 部署完成后终端输出一个预览 URL，浏览器打开确认正常\n4. 运行 `npx vercel --prod` 正式上线\n\n**方式二：连接 Git（推荐长期用，首次约 10 分钟，之后每次 push 自动部署）**\n\n1. 代码推到 GitHub（已有仓库则跳过）\n2. 打开 vercel.com → Add New... → Project，导入该仓库\n3. 框架预设自动识别为 Next.js，直接点 Deploy\n4. 之后每次 `git push` 自动构建上线，每个 PR 还会生成独立预览地址\n\n**两个注意点**\n\n- 环境变量不会自动同步：Dashboard → 项目 → Settings → Environment Variables，手动添加 `.env.local` 里的内容\n- 构建失败时：Dashboard → Deployments → 点开失败记录 → 查看 Building Logs\n\n下一步：现在运行 `npx vercel`，把终端输出的 URL 贴给我。"
+        }
+      ],
+      "bestVerdict": "部分通过"
+    },
+    {
+      "id": "cloudflare-security-audit",
+      "name": "security-audit",
+      "task": "对下面这个 Express 接口做安全审计：\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  const order = await db.query(`SELECT * FROM orders WHERE id = ${req.params.id}`);\n  res.json(order);\n});\n```\n（服务对公网开放，已有登录中间件但此路由未使用。）",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"7f075dc0-0113-4c2a-8f9f-c34117863f88\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:25 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "leonxlnx-design-taste-frontend",
+      "name": "design-taste-frontend",
+      "task": "为一个叫 Ledgerly 的记账 SaaS 做落地页首屏 + 功能区 + 价格区。直接输出完整 HTML（内联 CSS），要有清晰的设计方向，避免千篇一律的 AI 模板感。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"3bae7fd1-673c-4354-90ee-e00602923c9e\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:26 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "anthropics-claude-api",
+      "name": "claude-api",
+      "task": "用 Python Anthropic SDK 写一个示例：流式输出回答，同时定义一个 get_weather 工具并处理 tool_use 回合。模型使用 Skill 中推荐的当前模型 id。给出完整代码。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"aeaf3824-f542-4146-a5f5-0905b35bb56b\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:26 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 6,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "obra-dispatching-parallel-agents",
+      "name": "dispatching-parallel-agents",
+      "task": "CI 里有 3 个失败：tests/test_billing.py（金额舍入）、tests/test_search.py（中文分词）、tests/test_export.py（CSV 编码）。三者互不相关。请按 Skill 组织处理。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"d05f3863-032d-464a-99e3-8a55cfbb1fbb\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:22 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "并行派发",
+              "pass": true
+            },
+            {
+              "label": "每个领域一个代理（覆盖 3 个文件）",
+              "pass": true,
+              "note": "计数 14"
+            },
+            {
+              "label": "给每个代理限定范围",
+              "pass": true
+            },
+            {
+              "label": "最后整合/检查冲突",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 1638,
+          "totalMs": 172337,
+          "outputChars": 2498,
+          "reasoningChars": 4887,
+          "usage": {
+            "prompt_tokens": 1528,
+            "completion_tokens": 3759
+          },
+          "excerpt": "## 判定：适合并行分发\n\n三个失败分属**计费（billing）**、**搜索（search）**、**导出（export）**三个独立子系统，无共享状态、无修复顺序依赖（修好一个不会影响另外两个），符合 Skill 中\"每个问题域一个 agent、并行分发\"的条件。不合并给单个 agent，也不串行处理。\n\n以下三个子代理任务在**同一响应中发出，并发执行**：\n\n---\n\n## Agent 1（general-purpose）：修复 tests/test_billing.py\n\n```text\n修复 tests/test_billing.py 中金额舍入相关的测试失败。\n\n背景：CI 显示该文件中金额舍入断言失败。属于计费子系统，与其他失败无关。\n\n你的任务：\n1. 先运行 pytest tests/test_billing.py -x -q，记录每个失败断言的期望值与实际值\n2. 阅读测试文件，确认每个失败测试期望的舍入规则（四舍五入？银行家舍入？保留几位小数？）\n3. 定位根因，优先排查：\n   - 用 float 做货币运算导致浮点误差（如 0.1 + 0.2 != 0.3）\n   - 使用 Python 内置 round()（银行家舍入，round(2.5)==2）而业务要求 ROUND_HALF_UP\n   - Decimal.quantize 的 rounding 参数配置错误\n4. 修复生产代码中的舍入逻辑；仅当测试期望本身与业务规则不符时才改测试，且必须说明理由\n\n约束：\n- 只允许修改 billing 模块代码和 tests/test_billing.p…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-using-git-worktrees",
+      "name": "using-git-worktrees",
+      "task": "我要开始做 feature/skill-examples 功能，想和当前工作区隔离。按 Skill 给出具体操作命令。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"218bc9e6-3a0f-49d5-ba6b-097c1c2e10eb\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:24 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "使用 git worktree add",
+              "pass": true
+            },
+            {
+              "label": "确认 worktree 目录被忽略",
+              "pass": true
+            },
+            {
+              "label": "建立测试基线",
+              "pass": true
+            },
+            {
+              "label": "使用指定分支名",
+              "pass": true
+            }
+          ],
+          "passedChecks": 4,
+          "totalChecks": 4,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 457,
+          "totalMs": 232025,
+          "outputChars": 2701,
+          "reasoningChars": 10321,
+          "usage": {
+            "prompt_tokens": 1751,
+            "completion_tokens": 4025
+          },
+          "excerpt": "我正在使用 **using-git-worktrees** skill 来搭建隔离工作区。\n\n当前环境无法直接执行命令，下面按 Skill 流程给出完整命令序列和每步验证要点，请按顺序执行并根据输出走对应分支。你已明确表示要与当前工作区隔离，视为已同意创建 worktree，无需再次询问。\n\n## Step 0：检测是否已在隔离工作区\n\n```bash\nGIT_DIR=$(cd \"$(git rev-parse --git-dir)\" 2>/dev/null && pwd -P)\nGIT_COMMON=$(cd \"$(git rev-parse --git-common-dir)\" 2>/dev/null && pwd -P)\nBRANCH=$(git branch --show-current)\necho \"GIT_DIR=$GIT_DIR\"\necho \"GIT_COMMON=$GIT_COMMON\"\necho \"BRANCH=$BRANCH\"\n```\n\n**验证要点：**\n- 若 `GIT_DIR != GIT_COMMON`：可能已在 linked worktree 中，但必须先排除 submodule：\n\n```bash\ngit rev-parse --show-superproject-working-tree 2>/dev/null\n```\n\n  - 输出为空 → 确认已在隔离 worktree 中，**不要再创建新 worktree**，直接跳到 Step 2\n  - 输出了一个路径 → 你在 submodule 里，按普通仓库处理，继续 Step 1\n- 若 `…"
+        }
+      ],
+      "bestVerdict": "通过"
+    },
+    {
+      "id": "obra-finishing-a-development-branch",
+      "name": "finishing-a-development-branch",
+      "task": "feature/csv-export 的实现写完了。按 Skill 帮我收尾。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:42 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"02f45f80-2a04-45cf-aa49-6a01549d0e2c\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:24 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "先验证测试",
+              "pass": true
+            },
+            {
+              "label": "选项：本地合并",
+              "pass": true
+            },
+            {
+              "label": "选项：创建 PR",
+              "pass": true
+            },
+            {
+              "label": "选项：保留分支",
+              "pass": false
+            },
+            {
+              "label": "选项：丢弃",
+              "pass": false
+            }
+          ],
+          "passedChecks": 3,
+          "totalChecks": 5,
+          "score": 6.0,
+          "verdict": "部分通过",
+          "judgedBy": "auto",
+          "ttftMs": 432,
+          "totalMs": 95559,
+          "outputChars": 1187,
+          "reasoningChars": 13553,
+          "usage": {
+            "prompt_tokens": 2043,
+            "completion_tokens": 3579
+          },
+          "excerpt": "我正在使用 finishing-a-development-branch skill 来完成这项收尾工作。\n\n当前环境无法直接执行命令，所以需要你在仓库里运行下面的命令并把输出贴给我，我会根据实际结果继续走流程。\n\n## 第 1 步：验证测试套件\n\n收尾的前提是全量测试通过。请运行本项目的完整测试套件（按项目类型选用，若是其他命令则以项目的为准）：\n\n```bash\nnpm test        # Node/JS\ncargo test      # Rust\npytest          # Python\ngo test ./...   # Go\n```\n\n- **如有失败**：把失败输出贴给我，我们先修复——选项菜单只会在测试全绿之后出现。\n- **如果全绿**：继续第 2 步。\n\n## 第 2 步：检测环境\n\n```bash\nGIT_DIR=$(cd \"$(git rev-parse --git-dir)\" 2>/dev/null && pwd -P)\nGIT_COMMON=$(cd \"$(git rev-parse --git-common-dir)\" 2>/dev/null && pwd -P)\nWORKTREE_PATH=$(git rev-parse --show-toplevel)\necho \"GIT_DIR=$GIT_DIR\"\necho \"GIT_COMMON=$GIT_COMMON\"\necho \"WORKTREE_PATH=$WORKTREE_PATH\"\ngit branch --show-current\n```\n\n请把全部输出贴给我。这些值决定后续走法…"
+        }
+      ],
+      "bestVerdict": "部分通过"
+    },
+    {
+      "id": "vercel-labs-react-view-transitions",
+      "name": "vercel-react-view-transitions",
+      "task": "在 Next.js App Router 中给『商品列表 → 商品详情』加共享元素过渡：列表缩略图平滑变成详情页大图。给出代码和必要配置。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4d88475e-7d56-42ac-902a-d54a572d3893\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:29 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 4,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "mattpocock-diagnosing-bugs",
+      "name": "diagnosing-bugs",
+      "task": "diagnose：升级到新版 ORM 后，/api/orders 列表接口 p95 从 120ms 涨到 900ms，本地偶尔能复现。请按 Skill 推进诊断。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9c8af349-6e74-457a-9b7f-76169198043e\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:31 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "超过单次调用上限 420s 被中止",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        }
+      ],
+      "bestVerdict": "调用失败"
+    },
+    {
+      "id": "mattpocock-implement-spec",
+      "name": "implement-spec",
+      "task": "这是 spec 和 tickets：spec『给博客加评论功能』；tickets：T1 评论数据表（无依赖）；T2 发表评论 API（依赖 T1）；T3 评论列表 API（依赖 T1）；T4 前端评论组件（依赖 T2、T3）。按 Skill 说明你的执行方式。",
+      "runs": [
+        {
+          "modelId": "modelscope",
+          "provider": "魔搭 ModelScope",
+          "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 16:43 CST",
+          "callOk": false,
+          "verdict": "调用失败",
+          "score": null,
+          "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"1716fbc9-8708-4891-8dae-aa38cdce7088\"}}",
+          "checks": [],
+          "passedChecks": 0,
+          "totalChecks": 5,
+          "excerpt": ""
+        },
+        {
+          "modelId": "nvidia",
+          "provider": "NVIDIA NIM",
+          "model": "z-ai/glm-5.3",
+          "skillTruncated": false,
+          "testedAt": "2026-10-09 17:26 CST",
+          "callOk": true,
+          "checks": [
+            {
+              "label": "创建集成分支",
+              "pass": true
+            },
+            {
+              "label": "按依赖前沿推进",
+              "pass": true
+            },
+            {
+              "label": "T2/T3 并行",
+              "pass": true
+            },
+            {
+              "label": "每个实现代理独立 worktree",
+              "pass": true
+            },
+            {
+              "label": "完成后代码审查",
+              "pass": true
+            }
+          ],
+          "passedChecks": 5,
+          "totalChecks": 5,
+          "score": 10.0,
+          "verdict": "通过",
+          "judgedBy": "auto",
+          "ttftMs": 775,
+          "totalMs": 110776,
+          "outputChars": 2990,
+          "reasoningChars": 14304,
+          "usage": {
+            "prompt_tokens": 770,
+            "completion_tokens": 5211
+          },
+          "excerpt": "# 执行方式：『给博客加评论功能』\n\n## 1. 任务图与 frontier 分析\n\n```\nT1 评论数据表 ──┬──> T2 发表评论 API ──┐\n                └──> T3 评论列表 API ──┴──> T4 前端评论组件\n```\n\n| 波次 | frontier（可并行抓取的票） | 并行 implementer 数 |\n|---|---|---|\n| 1 | T1 | 1 |\n| 2 | T2、T3 | 2（后台并行） |\n| 3 | T4 | 1 |\n| 4 | code-review 修复 | 1 |\n\ntickets 已随消息提供，任务图明确，可直接执行。（若这些票实际存在于 GitHub Issues 之类的 tracker，请告知；否则我按此文本任务图执行，最后直接报告分支。）\n\n## 2. 探索（可选，本例建议做）\n\n启动一个 **exploration subagent**，把笔记保存到仓库外、所有后续子代理可访问的目录，例如 `~/.agent-notes/blog-comments/notes/codebase.md`，内容涵盖：\n\n- 技术栈与 DB 迁移方式（如何建表、如何写迁移测试）\n- API 路由注册位置、现有类似端点（如文章 CRUD）的写法与测试范式\n- 前端组件/测试框架、现有列表+表单类组件的参照\n\n这样 implementer 只管实现，不用各自探索。\n\n## 3. 创建集成分支\n\n```bash\ngit checkout main && git pull --ff-only\ngit checkout…"
+        }
+      ],
+      "bestVerdict": "通过"
+    }
+  ]
+}
