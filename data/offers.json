@@ -9422,7 +9422,9 @@
       "promo"
     ],
     "productType": "desktop_ai_app",
-    "capabilities": ["desktop_app"],
+    "capabilities": [
+      "desktop_app"
+    ],
     "usageGuide": {
       "summary": "注册并登录 AutoClaw，确认新用户赠送与每日 Credits 后用于真实 Agent 任务测试",
       "prerequisites": [
@@ -9769,5 +9771,104 @@
         }
       ]
     }
+  },
+  {
+    "id": "vibex-runninghub-daily",
+    "order": 76,
+    "date": "2026-10-09",
+    "name": "VibeX · RunningHub AI 应用生成",
+    "providerMark": "VX",
+    "provider": "RunningHub",
+    "providerMeta": "RunningHub · 中国 · Vibe Coding / AI 应用",
+    "model": "自然语言生成网页、AI 工具与交互式应用",
+    "modelMeta": "Browser-based AI app builder; not a free model API",
+    "type": [
+      "web",
+      "coding",
+      "free"
+    ],
+    "productType": "coding_plan",
+    "capabilities": [
+      "coding_plan"
+    ],
+    "usageGuide": {
+      "summary": "在 VibeX 网页中用自然语言创建并调整一个示例应用；仅网页创作权益，不等于对外免费 API",
+      "prerequisites": [
+        "可访问 VibeX 官方网站",
+        "按平台要求登录 RunningHub 账号",
+        "先使用不包含私人数据和生产密钥的测试需求"
+      ],
+      "steps": [
+        "打开 VibeX 官网，选择网站或 AI 应用方向",
+        "输入具体需求（功能、页面结构、移动端适配），生成首版应用",
+        "在预览中验证交互及布局，通过对话继续修改",
+        "发布前检查账号内可用 Token、模型使用规则、发布/运行可能产生的费用和项目权限"
+      ],
+      "examples": {
+        "action": "打开 https://vibex.runninghub.cn/ ，输入：创建一个支持新增、完成和筛选任务的响应式待办清单页面，使用演示数据。"
+      },
+      "docsUrl": "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide"
+    },
+    "kicker": "AI APP BUILDER · QUOTA TO VERIFY",
+    "badges": [
+      "自然语言建站",
+      "每天 100 亿 Token（宣传）",
+      "待实测"
+    ],
+    "freeSummary": "平台宣传每天补贴 100 亿 Token；每账号实际可用量、适用模型、扣费倍率及是否长期有效均待登录实测",
+    "validitySummary": "宣传为按日发放，刷新时间、有效期与适用账号条件尚未独立验证",
+    "accessSummary": "VibeX 网页端；RunningHub 登录条件与发布成本以控制台为准",
+    "checkedSummary": "2026-10-09 / 官方主页与团队教程；宣传额度未登录实测",
+    "title": "VibeX · AI 应用生成 / 每日 Token 补贴（待核验）",
+    "titleZh": "VibeX · 自然语言生成 AI 应用",
+    "why": "RunningHub 官方 VibeX 网站和教程展示了使用自然语言创建网站、看板、AI 工具与交互式应用的能力。署名 RunningHUB 的转载推广文宣称每天免费补贴 100 亿 Token，但公开首页未明确每账号额度、计费倍率或模型适用范围，尚不能认定为每个账号独享的免费模型 API。",
+    "mechanism": "浏览器内 AI 应用生成；每日 Token 补贴数额来自宣传，具体生效规则待核验",
+    "validity": "免费补贴政策随时可能变动，具体以登录后的 VibeX 账户配额和使用记录为准",
+    "access": "网页端注册/登录 RunningHub；无法据此认定外部 API 免费，发布和运行资源计费需单独核实",
+    "command": "Visit https://vibex.runninghub.cn/ and create a small demo web app without production secrets.",
+    "register": "https://vibex.runninghub.cn/",
+    "registerLabel": "打开 VibeX 官方网站",
+    "links": [
+      [
+        "VibeX 官方网站",
+        "https://vibex.runninghub.cn/"
+      ],
+      [
+        "RunningHub 官方使用教程",
+        "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide"
+      ],
+      [
+        "RunningHub 官方创作者收益规则",
+        "https://www.runninghub.cn/creator-reward"
+      ],
+      [
+        "百亿 Token 宣传原文转载（非额度实测）",
+        "https://www.cnblogs.com/haibing1992/p/22481650"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆服务入口；具体注册和使用地区以平台当前规则为准",
+    "freeMechanism": "not_confirmed",
+    "pricingModel": "not_confirmed",
+    "quota": "宣传口径：每天 100 亿 Token；单个账号实际可用量、模型倍率与重置周期均 UNKNOWN",
+    "renewal": "宣传为每日刷新；尚未实测是否自动领取、当日余额是否结转",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check official RunningHub / VibeX terms",
+    "providerId": "runninghub",
+    "productId": "vibex-app-builder",
+    "offerVariant": "daily-token-subsidy-unverified",
+    "sourceUrls": [
+      "https://vibex.runninghub.cn/",
+      "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide",
+      "https://www.runninghub.cn/creator-reward",
+      "https://www.cnblogs.com/haibing1992/p/22481650"
+    ],
+    "evidence": "VibeX 官方主页和 RunningHub Team 于 2026-07-21 发布的教程确认自然语言生成网站/交互式应用；一篇标注“作者：RunningHUB / 来源：微信公众号文章”的 2026-08-15 转载宣称每日 100 亿 Token。尚无登录账号、个人额度截图、真实 Token 消耗或外部 API 免费调用的核验依据。",
+    "status": "needs_review",
+    "confidence": "low",
+    "lastVerifiedAt": "2026-10-09",
+    "checkedBy": "public_sources",
+    "notes": "事实：官方支持网页端以自然语言创建项目。宣传/未实测：每天 100 亿 Token。UNKNOWN：每账号额度、模型倍率、刷新时间、可用地区、是否需付费、部署/运行收费。禁止将其标成 100 亿免费 API Token、无限免费或收益保证。VibeX 不支持导入已有项目的限制来自文章描述，尚需官方文档复核。"
   }
 ]
