@@ -236,7 +236,7 @@ print(resp.choices[0].message.content)</code></pre>
         <li>结果分为 通过 / 部分通过 / 未通过 / 调用失败；“调用失败”说明没有拿到可评分的输出，不代表 Skill 本身不好用。</li>
         <li>这是任务级测试，不等同在原仓库里端到端跑通；原链路验收见各 Skill 卡片里的测试记录。</li>
       </ul>
-      <p>本轮实测没有出现调用失败。</p>
+      <p>本轮实测中真实出现过的调用失败类型：</p><ul class="link-list"><li>限流 HTTP 429：68 次</li><li>单次调用超时被中止：36 次</li><li>空输出（思考耗尽 max_tokens）：5 次</li></ul>
       <p><a class="button" href="/skills/examples/">查看全部实测例子 →</a></p>
     </section>
     <section>
