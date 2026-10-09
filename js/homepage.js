@@ -2,6 +2,12 @@ let offerIndex = {};
     let signalIndex = {};
     let rows = [];
     let loadedOffers = [];
+    // HOME-P1-4: keep only a page of offer cards attached to the live DOM.
+    // Full rows remain searchable/sortable as detached nodes.
+    const HOME_OFFERS_PAGE_SIZE = 24;
+    let visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+    let lastOfferFilterSignature = '';
+    let loadMoreOffersButton = null;
     const SUPPORTED_LOCALES = Object.freeze({ en: 'en', zh: 'zh-CN' });
     const LOCALE_STORAGE_KEY = 'free-ai-index-locale';
     const LOCALE_COPY = Object.freeze({
@@ -223,6 +229,18 @@ let offerIndex = {};
       if (!isFreshDate(value)) return localeText('dateStale');
       return value === localTodayIso() ? (currentLocale === SUPPORTED_LOCALES.zh ? '今天' : 'Today') : formatDate(value);
     };
+    // P0-3: an offer's promotional window is separate from its base product.
+    const isExpiredOffer = item => item.status === 'expired'
+      || (isValidIsoDate(item.expires_at) && item.expires_at < localTodayIso());
+    const needsRecheck = item => {
+      if (!isValidIsoDate(item.lastVerifiedAt)) return true;
+      return Math.floor((new Date(localTodayIso() + 'T00:00:00') - new Date(item.lastVerifiedAt + 'T00:00:00')) / 86400000) > 14;
+    };
+    const offerStateMarkup = item => isExpiredOffer(item)
+      ? '<span class="offer-lifecycle" style="display:inline-block;margin:8px 14px;padding:3px 9px;border-radius:100px;background:#e5e7eb;color:#374151;font-weight:700">已结束 · 活动权益失效</span>'
+      : needsRecheck(item)
+        ? '<span class="offer-lifecycle" style="display:inline-block;margin:8px 14px;padding:3px 9px;border-radius:100px;background:#fef3c7;color:#92400e;font-weight:700">待复核 · 超过 14 天</span>'
+        : '';
     const checkedMarkup = item => {
       const source = String(item.checkedSummary || '').split(' / ').slice(1).join(' / ');
       const label = checkedDateLabel(item.lastVerifiedAt || item.date);
@@ -477,7 +495,7 @@ let offerIndex = {};
       const validity = localizedOfferText(item, 'validitySummary', localizedOfferText(item, 'validity'));
       const access = localizedOfferText(item, 'accessSummary', localizedOfferText(item, 'access'));
       const modelMeta = localeValue(item.modelMeta || alternateLabels, 'Model details');
-      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-key="${item.key ? 1 : 0}" data-featured="${item.featured?.reason ? 1 : 0}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div>${offerFlagsMarkup(item)}<div class="offer-card-body">${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model">${renderOfferModels(item)}<small>${escapeHtml(modelMeta)}</small></div>${renderModelContext(item)}${renderOfferAccessPaths(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(localeValue(item.badges?.[0], 'OPEN'))}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div></div><button type="button" class="offer-models-toggle offer-body-toggle" hidden aria-expanded="false"><span class="more-label">展开全部 · Show more</span><span class="less-label">收起 · Collapse</span></button><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small>${renderOfferSource(item)}<a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
+      return `<article class=${JSON.stringify('offer')} data-type="${escapeHtml(tokens.join(' '))}" data-category="${escapeHtml(categories.join(' '))}" data-name="${escapeHtml(item.name)}" data-provider="${escapeHtml(provider)}" data-search="${escapeHtml(searchText)}" data-order="${escapeHtml(item.order)}" data-key="${item.key ? 1 : 0}" data-featured="${item.featured?.reason ? 1 : 0}" data-date="${escapeHtml(item.date)}" data-detail="${escapeHtml(item.id)}" data-expired="${isExpiredOffer(item) ? 1 : 0}"><div class="offer-card-top"><div class="provider"><div class="provider-mark" aria-label="${escapeHtml(provider)} icon">${providerIconMarkup(item)}</div><div class="provider-name">${escapeHtml(provider)}<small>${escapeHtml(providerMeta)}</small></div></div><button type="button" class="row-arrow" aria-label="${escapeHtml(localeText('openDetails'))}: ${escapeHtml(localizedOfferText(item, 'title', provider))}">→</button></div>${offerFlagsMarkup(item)}${offerStateMarkup(item)}<div class="offer-card-body">${renderSignalSummary(signalIndex[item.id])}<div class="offer-card-model">${renderOfferModels(item)}<small>${escapeHtml(modelMeta)}</small></div>${renderModelContext(item)}${renderOfferAccessPaths(item)}<div class="offer-card-metrics"><div class="offer-card-metric"><label>${escapeHtml(localeText('method'))}</label><p><span class="category-label category-${escapeHtml(primary)}">${escapeHtml(categoryLabel)}</span>${studentMarkup}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('amountPrice'))}</label><p><span class="badge ${rowBadgeClass(item.badges?.[0])}">${escapeHtml(localeValue(item.badges?.[0], 'OPEN'))}</span><br>${escapeHtml(amount)}</p></div><div class="offer-card-metric"><label>${escapeHtml(localeText('validity'))} / ${escapeHtml(localeText('region'))}</label><p>${summaryMarkup(validity)}<small>${escapeHtml(access)}</small></p></div></div></div><button type="button" class="offer-models-toggle offer-body-toggle" hidden aria-expanded="false"><span class="more-label">展开全部 · Show more</span><span class="less-label">收起 · Collapse</span></button><div class="offer-card-footer"><small>${checkedMarkup(item)}${capabilityLabel ? ` · ${escapeHtml(capabilityLabel)}` : ''}</small>${renderOfferSource(item)}<a class="offer-detail-link" href="${offerHref}">${escapeHtml(localeText('openDetails'))} ↗</a></div></article>`;
     };
     const formatDate = iso => new Date(`${iso}T00:00:00`).toLocaleDateString(currentLocale, { day: '2-digit', month: 'short', year: 'numeric' });
     const updateStructuredData = items => {
@@ -499,6 +517,7 @@ let offerIndex = {};
     const OFFER_BODY_CLAMP = 236; // keep in sync with .offer-card-body.is-clamped max-height
     const applyOfferBodyClamps = container => {
       container.querySelectorAll('.offer').forEach(card => {
+        if (card.dataset.flClampDone === 'true') return;
         const body = card.querySelector('.offer-card-body');
         const toggle = card.querySelector('.offer-body-toggle');
         if (!body || !toggle) return;
@@ -507,13 +526,25 @@ let offerIndex = {};
         body.classList.toggle('is-clamped', overLimit);
         toggle.hidden = !overLimit;
         toggle.setAttribute('aria-expanded', 'false');
+        card.dataset.flClampDone = 'true';
       });
     };
     const renderOffers = items => {
       loadedOffers = items;
       offerIndex = Object.fromEntries(items.map(item => [item.id, item]));
       const container = document.getElementById('catalog-offer-rows');
-      container.innerHTML = items.map(rowArticleMarkup).join('');
+      if (!loadMoreOffersButton) {
+        loadMoreOffersButton = document.createElement('button');
+        loadMoreOffersButton.type = 'button';
+        loadMoreOffersButton.className = 'catalog-load-more';
+        loadMoreOffersButton.setAttribute('aria-controls', 'catalog-offer-rows');
+        loadMoreOffersButton.addEventListener('click', () => {
+          visibleOfferLimit += HOME_OFFERS_PAGE_SIZE;
+          applyFilters();
+        });
+        container.insertAdjacentElement('afterend', loadMoreOffersButton);
+      }
+      container.innerHTML = [...items].sort((a,b) => Number(isExpiredOffer(a)) - Number(isExpiredOffer(b))).map(rowArticleMarkup).join('');
       container.querySelectorAll('.offer').forEach(card => {
         const item = offerIndex[card.dataset.detail];
         const detailLink = card.querySelector('.offer-detail-link');
@@ -532,24 +563,26 @@ let offerIndex = {};
       window.FreeLLM?.Sync?.bind(container);
       hydrateProviderIcons(container);
       rows = [...container.querySelectorAll('.offer')];
-      applyOfferBodyClamps(container);
+      // Wait until the first page is attached before measuring scroll heights.
 
-      const countCategory = category => items.filter(item => offerCategories(item).includes(category)).length;
+      const activeItems = items.filter(item => !isExpiredOffer(item));
+      const countCategory = category => activeItems.filter(item => offerCategories(item).includes(category)).length;
       const setCount = (filter, count) => {
         document.querySelectorAll(`.catalog-app [data-filter="${filter}"] em`).forEach(node => { node.textContent = pad(count); });
         document.querySelectorAll(`.catalog-app [data-category-count="${filter}"]`).forEach(node => { node.textContent = pad(count); });
       };
 
-      document.getElementById('heroCount').textContent = items.length;
-      setCount('all', items.length);
+      // P0-1: hero resource total is set by /data/scan-summary.json, not catalog item count.
+      setCount('all', activeItems.length);
+      setCount('expired', items.length - activeItems.length);
       ['free_quota', 'model', 'credits', 'ide', 'promo', 'student', 'web', 'download_lowcost'].forEach(category => setCount(category, countCategory(category)));
-      setCount('featured', items.filter(item => item.featured?.reason).length);
+      setCount('featured', activeItems.filter(item => item.featured?.reason).length);
       const setRegionCount = (region, count) => {
         const node = document.querySelector(`[data-region-chip="${region}"] em`);
         if (node) node.textContent = pad(count);
       };
-      setRegionCount('china', items.filter(item => regionBucket(item) === 'china').length);
-      setRegionCount('global', items.filter(item => regionBucket(item) === 'global').length);
+      setRegionCount('china', activeItems.filter(item => regionBucket(item) === 'china').length);
+      setRegionCount('global', activeItems.filter(item => regionBucket(item) === 'global').length);
       const featuredQuotaCount = document.getElementById('featuredQuotaCount');
       const featuredIdeCount = document.getElementById('featuredIdeCount');
       const featuredStudentCount = document.getElementById('featuredStudentCount');
@@ -756,11 +789,16 @@ let offerIndex = {};
     };
     const applyFilters = () => {
       const query = document.getElementById('catalog-search').value.trim().toLowerCase();
-      let visible = 0;
+      const signature = [activeFilter, activeMethod, activeCapability, activeFreshness, [...activeRegions].sort().join(','), query].join('|');
+      if (signature !== lastOfferFilterSignature) {
+        visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+        lastOfferFilterSignature = signature;
+      }
+      const matchedRows = [];
       rows.forEach(row => {
         const categories = row.dataset.category.split(' ').filter(Boolean);
         const matchesFilter = activeFilter === 'all'
-          || (activeFilter === 'featured' ? row.dataset.featured === '1' : categories.includes(activeFilter));
+          || (activeFilter === 'expired' ? row.dataset.expired === '1' : (activeFilter === 'featured' ? row.dataset.featured === '1' : categories.includes(activeFilter)));
         const capabilities = row.dataset.capability.split(' ').filter(Boolean);
         const matchesMethod = activeMethod === 'all' || row.dataset.method === activeMethod;
         const matchesCapability = activeCapability === 'all' || capabilities.includes(activeCapability);
@@ -768,9 +806,24 @@ let offerIndex = {};
         const fresh = isFreshDate(row.dataset.date);
         const matchesFreshness = activeFreshness === 'all' || (activeFreshness === 'fresh' ? fresh : !fresh);
         const matchesQuery = !query || row.dataset.name.toLowerCase().includes(query) || row.dataset.search.toLowerCase().includes(query) || row.textContent.toLowerCase().includes(query);
-        const show = matchesFilter && matchesMethod && matchesCapability && matchesRegion && matchesFreshness && matchesQuery;
-        row.classList.toggle('hidden', !show); if (show) visible++;
+        const show = matchesFilter && matchesMethod && matchesCapability && matchesRegion && matchesFreshness && matchesQuery
+          && (activeFilter === 'expired' ? row.dataset.expired === '1' : (row.dataset.expired !== '1' || Boolean(query)));
+        row.classList.toggle('hidden', !show);
+        if (show) matchedRows.push(row);
       });
+      const visible = matchedRows.length;
+      const visibleCards = matchedRows.slice(0, visibleOfferLimit);
+      const offerGrid = document.getElementById('catalog-offer-rows');
+      // Detach the remaining records: screen readers and layout only process
+      // visible cards, while filters still check every catalog record.
+      offerGrid.replaceChildren(...visibleCards);
+      applyOfferBodyClamps(offerGrid);
+      if (loadMoreOffersButton) {
+        loadMoreOffersButton.hidden = visible <= visibleCards.length;
+        loadMoreOffersButton.textContent = currentLocale === SUPPORTED_LOCALES.zh
+          ? `加载更多资源 · 已显示 ${visibleCards.length} / ${visible}`
+          : `Load more · ${visibleCards.length} / ${visible} shown`;
+      }
       document.getElementById('catalog-result-count').textContent = currentLocale === SUPPORTED_LOCALES.zh
         ? `${visible} ${localeText('offer')}`
         : `${localeText('showing')} ${visible} ${visible === 1 ? localeText('offer') : localeText('offers')}`;
@@ -849,8 +902,13 @@ let offerIndex = {};
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       input.focus();
     }));
-    document.querySelector('.hero-search button')?.addEventListener('click', () => {
-      document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const searchAll = () => {
+      const q = document.getElementById('catalog-search').value.trim();
+      location.href = '/search/?q=' + encodeURIComponent(q);
+    };
+    document.querySelector('.hero-search button')?.addEventListener('click', searchAll);
+    document.getElementById('catalog-search')?.addEventListener('keydown', event => {
+      if (event.key === 'Enter') { event.preventDefault(); searchAll(); }
     });
     document.getElementById('catalog-reset-filters').addEventListener('click', () => {
       document.getElementById('catalog-search').value = '';
@@ -858,7 +916,7 @@ let offerIndex = {};
       setFilter('all');
     });
     const initialParams = new URLSearchParams(location.search);
-    const validFilters = ['all', 'featured', 'free_quota', 'model', 'credits', 'ide', 'promo', 'student', 'web', 'download_lowcost'];
+    const validFilters = ['expired', 'all', 'featured', 'free_quota', 'model', 'credits', 'ide', 'promo', 'student', 'web', 'download_lowcost'];
     const validMethods = ['all', 'permanent', 'monthly_quota', 'daily_quota', 'weekly_quota', 'trial', 'limited_time_free', 'first_month_promo', 'open_weights'];
     const validCapabilities = ['all', 'model_api', 'free_ide', 'coding_plan', 'search', 'fetch', 'agent', 'browser', 'open_weights', 'desktop_app'];
     const validRegions = ['china', 'global'];
@@ -880,8 +938,9 @@ let offerIndex = {};
     document.getElementById('catalog-freshness-filter').value = activeFreshness;
     document.getElementById('catalog-sort').addEventListener('change', e => {
       const byName = row => `${row.dataset.provider || row.dataset.name}\n${row.dataset.name}`;
-      const sorted = [...rows].sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : a.dataset.order - b.dataset.order);
-      const wrap = document.getElementById('catalog-offer-rows'); sorted.forEach(row => wrap.appendChild(row));
+      rows.sort((a,b) => e.target.value === 'name' ? byName(a).localeCompare(byName(b), 'en', { sensitivity: 'base' }) : e.target.value === 'fresh' ? b.dataset.date.localeCompare(a.dataset.date) : Number(a.dataset.expired) - Number(b.dataset.expired) || a.dataset.order - b.dataset.order);
+      visibleOfferLimit = HOME_OFFERS_PAGE_SIZE;
+      applyFilters();
     });
     const clock = document.getElementById('catalog-clock');
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local timezone';
