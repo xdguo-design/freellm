@@ -46,6 +46,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 TASKS_PATH = DATA / "skill-eval-tasks.json"
 REVIEW_PATH = DATA / "evaluations" / "skills-review.json"
+# Optional, committed only on a skill-eval/** branch: {"only": [...], "models": [...], "merge": true}
+REQUEST_PATH = DATA / "skill-eval-request.json"
 SUITE_VERSION = "freellm-skill-task-v1"
 TIMEOUT = 180  # socket read timeout
 CALL_MAX_SEC = 420  # hard wall-clock cap per streamed call
@@ -71,6 +73,22 @@ MODELS = {
         "base": "https://integrate.api.nvidia.com/v1",
         "model": "z-ai/glm-5.3",
         "concurrency": 6,
+    },
+    # Follow-up models (non-default): fast free models used to retry skills where the default pair produced no answer.
+    "zhipu": {
+        "provider": "智谱 BigModel",
+        "env": "ZHIPU_API_KEY",
+        "base": "https://open.bigmodel.cn/api/paas/v4",
+        "model": "glm-4-flash-250414",
+        "concurrency": 3,
+        "max_tokens": 4095,
+    },
+    "nvidia_oss": {
+        "provider": "NVIDIA NIM",
+        "env": "NVIDIA_API_KEY",
+        "base": "https://integrate.api.nvidia.com/v1",
+        "model": "openai/gpt-oss-20b",
+        "concurrency": 4,
     },
     "groq": {
         "provider": "Groq",
@@ -312,7 +330,7 @@ class CallTooLong(Exception):
 
 
 def stream_chat(cfg: dict, key: str, messages: list[dict]) -> dict:
-    body = {"model": cfg["model"], "messages": messages, "temperature": 0.2, "max_tokens": MAX_TOKENS,
+    body = {"model": cfg["model"], "messages": messages, "temperature": 0.2, "max_tokens": cfg.get("max_tokens", MAX_TOKENS),
             "stream": True, "stream_options": {"include_usage": True}}
     start = time.perf_counter()
     first = None
@@ -433,7 +451,8 @@ def summarize(runs: list[dict], tasks: dict, skills: list[dict], started: float,
         "runAt": run_at,
         "vantage": "GitHub Actions 托管运行器（美国）" if os.environ.get("GITHUB_ACTIONS") else "本地",
         "method": ("每个 Skill 配一个它本应处理的真实任务；把该 Skill 的 SKILL.md 全文注入 system prompt，"
-                   f"通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens={MAX_TOKENS}，流式计时，单次上限 {CALL_MAX_SEC}s）；"
+                   f"通过 OpenAI 兼容接口调用免费模型各一次（temperature=0.2，max_tokens={MAX_TOKENS}（智谱 glm-4-flash 为 4095），流式计时，单次上限 {CALL_MAX_SEC}s）；"
+                   "默认模型对某个 Skill 都没拿到可评分输出时，再用后备免费模型补测一轮，原失败记录保留；"
                    "按任务预设的确定性检查项自动判分（正则检查必需步骤/字段、Python 用 ast 解析、JS 用 node --check、HTML 解析、YAML 解析），"
                    "全部检查通过记为“通过”，≥60% 记为“部分通过”，否则“未通过”；接口报错或空输出记为“调用失败”。"
                    "judgedBy=manual 表示人工复核后改判，并附理由。模型不能执行 Skill 自带脚本/CLI，属于任务级测试，不等同原仓库端到端。"),
@@ -495,6 +514,12 @@ def apply_to_site(latest: dict, tests_path: Path = DATA / "skill-tests.json") ->
     return changed
 
 
+def merge_runs(old: list[dict], new: list[dict]) -> list[dict]:
+    """Pairs re-run now replace the stored pair; every other stored run is kept unchanged."""
+    fresh = {(r["skillId"], r["modelId"]) for r in new}
+    return [r for r in old if (r["skillId"], r["modelId"]) not in fresh] + list(new)
+
+
 def not_executed(runs: list[dict], skills: list[dict], models: list[str], tasks: dict) -> list[dict]:
     """(skill, model) pairs with no stored run (job killed mid-run) are recorded as 调用失败, never dropped."""
     seen = {(r["skillId"], r["modelId"]) for r in runs}
@@ -520,8 +545,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--apply", action="store_true", help="apply review + merge skills-latest.json into data/skill-tests.json")
     ap.add_argument("--budget-min", type=float, default=float(os.environ.get("SKILL_EVAL_BUDGET_MIN", "66")),
                     help="wall-clock budget; calls not started in time are recorded as 调用失败 (未执行)")
+    ap.add_argument("--merge", action="store_true",
+                    help="keep stored runs in skills-raw.json and replace/add only the (skill, model) pairs run now")
     ap.add_argument("--regrade", action="store_true", help="re-grade stored raw outputs (no network) and rewrite latest")
     args = ap.parse_args(argv)
+    if REQUEST_PATH.is_file() and not (args.apply or args.regrade):
+        req = json.loads(REQUEST_PATH.read_text(encoding="utf-8"))
+        if req.get("only") and not args.only:
+            args.only = ",".join(req["only"])
+        if req.get("models") and "SKILL_EVAL_MODELS" not in os.environ and args.models == ",".join(DEFAULT_MODELS):
+            args.models = ",".join(req["models"])
+        args.merge = args.merge or bool(req.get("merge"))
+        print(f"[request] {REQUEST_PATH.name}: only={len(req.get('only') or [])} models={args.models} merge={args.merge}", flush=True)
     out = Path(args.out)
     tasks = load_tasks()
     skills = load_skills()
@@ -541,6 +576,8 @@ def main(argv: list[str] | None = None) -> int:
         latest = summarize(runs, tasks, skills, 0, raw["runAt"], raw["models"])
         latest["totals"]["wallTimeSec"] = raw.get("wallTimeSec")
         latest["vantage"] = raw.get("vantage", latest["vantage"])
+        if raw.get("rounds"):
+            latest["rounds"] = raw["rounds"]
         (out / "skills-latest.json").write_text(json.dumps(latest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         if args.apply:
             n = apply_to_site(latest)
@@ -594,11 +631,15 @@ def main(argv: list[str] | None = None) -> int:
         return res
 
     out.mkdir(parents=True, exist_ok=True)
+    prior_path = out / "skills-raw.json"
+    prior = json.loads(prior_path.read_text(encoding="utf-8")) if args.merge and prior_path.is_file() else None
     vantage = "GitHub Actions 托管运行器（美国）" if os.environ.get("GITHUB_ACTIONS") else "本地"
 
     def write_raw(items: list[dict]) -> None:
+        if prior:  # never clobber stored runs with a partial checkpoint
+            items = merge_runs(prior["runs"], items)
         raw = {"schemaVersion": 1, "suite": SUITE_VERSION, "runAt": run_at, "vantage": vantage, "models": models,
-               "skillIds": [s["id"] for s in todo],
+               "skillIds": sorted({s["id"] for s in todo} | set((prior or {}).get("skillIds") or [])),
                "wallTimeSec": round(time.time() - started, 1),
                "runs": sorted(items, key=lambda r: (r["skillId"], r["modelId"]))}
         (out / "skills-raw.json").write_text(scrub(json.dumps(raw, ensure_ascii=False, indent=1) + "\n"), encoding="utf-8")
@@ -618,7 +659,25 @@ def main(argv: list[str] | None = None) -> int:
 
     wall = round(time.time() - started, 1)
     write_raw(runs)
-    latest = summarize(apply_review(runs, review), tasks, skills if not only else todo, started, run_at, models)
+    scope, all_models, first_run_at = (skills if not only else todo), models, run_at
+    if args.merge and prior:
+        runs = merge_runs(prior["runs"], runs)
+        scope_ids = set(prior.get("skillIds") or []) | {s["id"] for s in todo}
+        scope = [s for s in skills if s["id"] in scope_ids]
+        all_models = list(dict.fromkeys(list(prior.get("models") or []) + models))
+        first_run_at = prior.get("runAt") or run_at
+        rounds = list(prior.get("rounds") or [{"runAt": prior.get("runAt"), "models": prior.get("models"),
+                                                   "skills": len(prior.get("skillIds") or [])}])
+        rounds.append({"runAt": run_at, "models": models, "skills": len(todo)})
+        merged = {"schemaVersion": 1, "suite": SUITE_VERSION, "runAt": first_run_at, "vantage": vantage,
+                  "models": all_models, "skillIds": [s["id"] for s in scope], "rounds": rounds,
+                  "wallTimeSec": round((prior.get("wallTimeSec") or 0) + wall, 1),
+                  "runs": sorted(runs, key=lambda r: (r["skillId"], r["modelId"]))}
+        (out / "skills-raw.json").write_text(scrub(json.dumps(merged, ensure_ascii=False, indent=1) + "\n"), encoding="utf-8")
+        wall = merged["wallTimeSec"]
+    latest = summarize(apply_review(runs, review), tasks, scope, started, first_run_at, all_models)
+    if args.merge and prior:
+        latest["rounds"] = rounds
     latest["totals"]["wallTimeSec"] = wall
     (out / "skills-latest.json").write_text(scrub(json.dumps(latest, ensure_ascii=False, indent=2)) + "\n", encoding="utf-8")
     print(json.dumps(latest["totals"], ensure_ascii=False))

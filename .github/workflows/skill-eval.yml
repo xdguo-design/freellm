@@ -16,6 +16,7 @@ on:
     paths:
       - "scripts/eval_skills.py"
       - "data/skill-eval-tasks.json"
+      - "data/skill-eval-request.json"
       - ".github/workflows/skill-eval.yml"
 
 permissions:
@@ -40,6 +41,7 @@ jobs:
       - name: Install grader deps
         run: pip install pyyaml
       - name: Run real skill evaluation
+        id: eval
         timeout-minutes: 80
         continue-on-error: true
         env:
@@ -66,7 +68,9 @@ jobs:
         run: |
           git config user.name "freellm-eval-bot"
           git config user.email "actions@users.noreply.github.com"
-          [ -f data/evaluations/skills-latest.json ] || python scripts/eval_skills.py --out data/evaluations --regrade
+          if [ "${{ steps.eval.outcome }}" != "success" ] || [ ! -f data/evaluations/skills-latest.json ]; then
+            python scripts/eval_skills.py --out data/evaluations --regrade
+          fi
           git add data/evaluations/skills-latest.json data/evaluations/skills-raw.json
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -m "data(skill-eval): real skill task evaluation $(date -u +%F)"

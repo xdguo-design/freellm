@@ -150,6 +150,20 @@ class RunOneTests(unittest.TestCase):
             self.assertIsNone(r["score"])
             self.assertIn("未执行", r["error"])
 
+    def test_merge_runs_replaces_only_rerun_pairs(self):
+        old = [{"skillId": "a", "modelId": "modelscope", "verdict": "调用失败"},
+               {"skillId": "b", "modelId": "modelscope", "verdict": "通过"}]
+        new = [{"skillId": "a", "modelId": "zhipu", "verdict": "通过"}]
+        merged = es.merge_runs(old, new)
+        self.assertEqual(len(merged), 3)  # failed attempt on a stays recorded
+        self.assertIn({"skillId": "a", "modelId": "modelscope", "verdict": "调用失败"}, merged)
+
+    def test_followup_models_registered_with_own_limits(self):
+        self.assertNotIn("zhipu", es.DEFAULT_MODELS)
+        self.assertEqual(es.MODELS["zhipu"]["env"], "ZHIPU_API_KEY")
+        self.assertEqual(es.MODELS["zhipu"]["max_tokens"], 4095)
+        self.assertEqual(es.MODELS["nvidia_oss"]["model"], "openai/gpt-oss-20b")
+
 
 class ReviewAndApplyTests(unittest.TestCase):
     def test_manual_review_override_is_marked(self):
