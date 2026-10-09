@@ -608,3 +608,31 @@ html body.fl-ui-v2[data-reference-style="v1"][data-fl-section="workflow"] .lab-e
     font-size: 12px !important;
   }
 }
+
+/* UX-20261009-P1-4: progressive homepage resource cards */
+html body.fl-ui-v2 .catalog-load-more {
+  display: block;
+  width: min(100%, 460px);
+  min-height: 46px;
+  margin: 22px auto 14px;
+  padding: 10px 24px;
+  border: 1px solid #2c6be8;
+  border-radius: 12px;
+  background: #f5f9ff;
+  color: #1744a3;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+html body.fl-ui-v2 .catalog-load-more[hidden] { display: none !important; }
+html body.fl-ui-v2 .catalog-load-more:hover { background: #e5efff; }
+html body.fl-ui-v2 .catalog-load-more:focus-visible {
+  outline: 3px solid #83b8ff;
+  outline-offset: 3px;
+}
+@media(max-width: 600px) {
+  html body.fl-ui-v2 .catalog-load-more {
+    min-height: 48px;
+    width: 100%;
+  }
+}
