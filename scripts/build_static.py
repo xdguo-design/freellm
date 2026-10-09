@@ -406,6 +406,43 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
+def update_home_latest_discovery(html: str, data_path: Path) -> str:
+    """Expose the newest sourced discovery on the homepage, not just a numeric badge."""
+    marker = '<div id="home-latest-discovery"'
+    if marker not in html:
+        return html
+    log_dir = data_path.parent / "daily-log"
+    log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
+    entry = None
+    log_date = ""
+    if log_paths:
+        try:
+            latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
+            log_date = str(latest.get("date") or "")
+            events = [event for field in ("curatedEvents", "events")
+                      for event in (latest.get(field) or [])
+                      if isinstance(event, dict) and event.get("eventType") in {"new", "new_route"}]
+            entry = events[0] if events else None
+        except (OSError, ValueError, TypeError):
+            pass
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
+        log_date = ""
+    if entry:
+        title = html_lib.escape(str(entry.get("title") or entry.get("id") or "资源动态"))
+        status = str((entry.get("details") or {}).get("status") or "").lower()
+        label = "待实测 · " if status in {"pending_verification", "draft", "unknown"} else ""
+        text = (f'<span>{label}今日发现</span><a href="/logs/#log-day-{log_date}"'
+                f' title="查看今日更新详情">{title} →</a>')
+    else:
+        text = '<span>最新动态</span><a href="/logs/">查看每日更新 →</a>'
+    replacement = f'<div id="home-latest-discovery" class="home-latest-discovery">{text}</div>'
+    return re.sub(
+        r'<div id="home-latest-discovery"[^>]*>.*?</div>',
+        lambda _match: replacement,
+        html, count=1, flags=re.S,
+    )
+
+
 def update_prototype_updates_table(html: str, data_path: Path) -> str:
     """Replace the placeholder rows of the homepage prototype-updates table
     with the latest events from the daily-log pipeline."""
@@ -613,6 +650,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
+    updated = update_home_latest_discovery(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
     updated = update_eval_leaderboard(updated)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
