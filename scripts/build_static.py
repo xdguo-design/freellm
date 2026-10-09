@@ -422,7 +422,7 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
             events = [event for field in ("curatedEvents", "events")
                       for event in (latest.get(field) or [])
                       if isinstance(event, dict) and event.get("eventType") in {"new", "new_route"}]
-            entry = events[0] if events else None
+            entry = events[-1] if events else None
         except (OSError, ValueError, TypeError):
             pass
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
