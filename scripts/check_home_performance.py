@@ -230,6 +230,7 @@ def median_profile(samples: list[dict]) -> dict:
         out[phase]["dataSource"] = rows[-1]["dataSource"]
         out[phase]["horizontalOverflow"] = any(row["horizontalOverflow"] for row in rows)
         out[phase]["important"] = rows[-1]["important"]
+        out[phase]["lcpElement"] = rows[-1].get("lcpElement", "")
     return out
 
 
