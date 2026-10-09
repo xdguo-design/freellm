@@ -31,7 +31,7 @@
 
 ## 数据流与边界
 
-- 中文主页的唯一编辑源是 `design/free-china-ai-index.html`；`scripts/build_static.py` 会从该页面生成根目录首页内容并维护资源计数、扫描数据和静态资源指纹。
+- 中文主页的唯一编辑源和生成目标是 `design/free-china-ai-index.html`；`scripts/build_static.py` 会更新该页面中的资源计数、扫描数据和静态资源指纹。Vercel 将 `/` 重写到该静态文件。
 - 英文首页是独立静态文件 `en/index.html`，不由中文首页生成器覆盖。
 - 不修改现有数据模型、资源内容、路由、菜单、条款正文或扫描行为。
 - 隐私、条款、About、社区、指南和 sitemap 入口沿用现状。
