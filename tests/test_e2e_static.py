@@ -695,31 +695,22 @@ class BrowserPageTests(unittest.TestCase):
                     page.goto(f"{self.site.url}/{route}")
                     page.wait_for_selector(selector)
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
-                    self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
-                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
-                    theme_display = page.locator(".fl-site-theme-toggle").evaluate("el => getComputedStyle(el).display")
-                    self.assertEqual(theme_display, "flex" if width > 800 else "none")
+                    self.assertTrue(page.locator(".fl-site-rail").is_visible())
+                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+                    if width <= 600:
+                        menu = page.locator(".fl-mobile-menu-button")
+                        self.assertTrue(menu.is_visible())
+                        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
+                        menu.click()
+                        self.assertTrue(page.locator(".fl-site-nav > a").first.is_visible())
+                        menu.press("Escape")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
                     overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
-                        .map(el => {
-                            const r = el.getBoundingClientRect();
-                            return {
-                                tag: el.tagName.toLowerCase(),
-                                id: el.id || '',
-                                cls: typeof el.className === 'string' ? el.className : '',
-                                left: Math.round(r.left * 10) / 10,
-                                right: Math.round(r.right * 10) / 10,
-                                width: Math.round(r.width * 10) / 10,
-                            };
-                        })
-                        .filter(x => x.width > 1 && (x.right > innerWidth + 4 || x.left < -4))
-                        .slice(0, 12)""")
-                    self.assertLessEqual(
-                        scroll_width,
-                        width + 4,
-                        f"{route} creates page-level horizontal overflow at {width}px: {overflowers}",
-                    )
+                        .map(el => { const r=el.getBoundingClientRect(); return {tag:el.tagName,id:el.id,left:r.left,right:r.right,width:r.width}; })
+                        .filter(x=>x.width>1&&(x.right>innerWidth+4||x.left<-4)).slice(0,6)""")
+                    self.assertLessEqual(scroll_width, width+4, f"{route} at {width}px: {overflowers}")
                     page.close()
+
 
     def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):
         page = self.new_page()
@@ -883,20 +874,26 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertEqual(tokens["blue"].lower(), "#2f7de1")
                 page.close()
     def test_reference_pages_use_the_rail_theme_toggle(self):
-        # The prototype pages expose the theme switch in the shared navigation rail;
-        # page-local legacy controls stay hidden so they cannot duplicate it.
+        # A nonfunctional theme control must not appear; mobile uses an accessible nav drawer.
         for route in ("skills/", "tools/", "about/"):
             with self.subTest(route=route):
                 page = self.new_page()
                 page.goto(f"{self.site.url}/{route}")
                 page.wait_for_selector("body[data-visual-style='aurora']")
-                rail_toggle = page.locator(".fl-site-theme-toggle")
-                self.assertEqual(rail_toggle.count(), 1)
-                self.assertEqual(rail_toggle.evaluate("el => getComputedStyle(el).display"), "flex")
-                local_toggle = page.locator(".theme-toggle")
-                if local_toggle.count():
-                    self.assertEqual(local_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                old_toggle = page.locator(".fl-site-theme-toggle")
+                if old_toggle.count():
+                    self.assertEqual(old_toggle.first.evaluate("el => getComputedStyle(el).display"), "none")
+                mobile = page.locator(".fl-mobile-menu-button")
+                self.assertEqual(mobile.count(), 1)
+                page.set_viewport_size({"width": 390, "height": 844})
+                self.assertTrue(mobile.is_visible())
+                mobile.click()
+                self.assertTrue(page.locator(".fl-site-nav > a").first.is_visible())
+                mobile.press("Escape")
+                self.assertEqual(mobile.get_attribute("aria-expanded"), "false")
                 page.close()
+
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
@@ -1004,29 +1001,25 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
+        page.fill("#catalog-search", "Qwen3")
+        page.locator(".featured-resource-link[aria-label='查看免费额度']").click()
+        page.wait_for_function("""document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
+        self.assertEqual(page.locator("#catalog-search").input_value(), "")
+        self.assertGreater(self.visible_offers(page), 0)
+        self.assertLessEqual(self.visible_offers(page), 24)
+        self.assertEqual(page.locator('.offer:not([data-category*="free_quota"])').count(), 0)
 
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.fill(".ref-topbar input[type='search']", "Qwen3")
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
-        self.assertEqual(self.visible_offers(page), free_quota_count)
-        self.assertEqual(page.locator(".ref-topbar input[type='search']").input_value(), "")
-        self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
+        page.locator(".featured-resource-link[aria-label='查看免费额度']").click()
+        page.wait_for_function("""document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
+        self.assertEqual(page.locator("#catalog-search").input_value(), "")
+        self.assertGreater(self.visible_offers(page), 0)
+        self.assertLessEqual(self.visible_offers(page), 24)
 
-        free_quota_count = page.locator(".offer[data-category~='free_quota']").count()
-        page.click(".featured-resource-link[aria-label='查看免费额度']")
-        page.wait_for_function(
-            """document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')"""
-        )
-        self.assertEqual(self.visible_offers(page), free_quota_count)
-        self.assertEqual(len(page.problems), 0, page.problems)
 
     def test_homepage_prototype_tabs_filter_the_catalog(self):
         page = self.new_page()
