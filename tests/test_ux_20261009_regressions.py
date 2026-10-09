@@ -66,6 +66,32 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn('"snapshotDate": str(latest_scanned_log.get("date") or "")', source)
         self.assertIn('snapshot = _log_snapshot(day_scan)', source)
 
+    def test_homepage_progressive_list_preserves_search(self):
+        script = (ROOT / "js/homepage.js").read_text(encoding="utf-8")
+        html = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", script)
+        self.assertIn("rows.forEach(row => {", script)
+        self.assertIn("matchedRows.slice(0, visibleOfferLimit)", script)
+        self.assertIn("offerGrid.replaceChildren(...visibleCards)", script)
+        self.assertIn("loadMoreOffersButton.addEventListener('click'", script)
+        self.assertIn("rows.sort((a,b) =>", script)
+        self.assertIn("applyFilters();", script)
+        self.assertNotIn("prototype-home", html)
+        self.assertNotIn("今日新增资源12", html)
+        self.assertNotIn("较上周 +35%", html)
+        self.assertIn("最近发现 · 扫描快照", html)
+
+    def test_editorial_date_cannot_masquerade_as_scan_date(self):
+        script = (ROOT / "js/scan-trust.js").read_text(encoding="utf-8")
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        self.assertIn("scan.snapshotDate || scan.date", script)
+        self.assertIn("scan.scanRunToday === true", script)
+        self.assertIn("editorialCurrent", script)
+        self.assertIn("scanCurrent ? scanDate : latest", script)
+        self.assertEqual(summary["date"], "2026-10-09")
+        self.assertEqual(summary["snapshotDate"], "2026-10-08")
+        self.assertFalse(summary["scanRunToday"])
+
     def test_model_catalog_is_already_paginated(self):
         html = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
         row_count = len(re.findall(r'<tr\s+class="catalog-row', html))
