@@ -654,7 +654,11 @@ class BrowserPageTests(unittest.TestCase):
         self.assertLessEqual(self.visible_offers(page), 24)
         self.assertEqual(page.locator(".offer").count(), 24)
         self.assertTrue(page.locator(".catalog-load-more").is_visible())
-        self.assertEqual(page.locator('[data-category-count="all"]').first.inner_text(), str(total))
+        valid_count = int(page.locator('[data-category-count="all"]').first.inner_text())
+        self.assertGreater(valid_count, 24)
+        self.assertLessEqual(valid_count, total)
+        # Valid/active entries exclude expired records; published catalog
+        # totals still include their archived detail pages.
         # The scan card is intentionally NOT the number of published offers.
         snapshot = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
         self.assertEqual(page.locator("#heroCount").inner_text(), str(snapshot["offers"]))
@@ -1122,6 +1126,9 @@ class BrowserPageTests(unittest.TestCase):
             data.mkdir()
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
+            # The expiry widget consumes canonical offers, not ranked-offers.json.
+            # Only the two explicitly mocked ranking/signals calls should 404.
+            (data / "offers.json").write_text(OFFERS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
