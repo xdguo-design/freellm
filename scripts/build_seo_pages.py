@@ -4484,6 +4484,21 @@ def _log_snapshot(log: dict) -> dict[str, int]:
     return {"models": len(models), "providers": len(providers), "offers": len(offers)}
 
 
+def _latest_scanned_log(sorted_logs: list[dict]) -> dict:
+    """Get the most recent actual scan, not a later curated-only update.
+
+    An editorial event must never silently reset observed model/offer counts
+    to zero, or pretend that an automatic scan took place on the update date.
+    """
+    for log in sorted_logs:
+        initialized = log.get("initialized") or {}
+        observed = log.get("observed") or {}
+        if (initialized.get("models") or initialized.get("offers")
+                or observed.get("models") or observed.get("offers")):
+            return log
+    return {}
+
+
 def _log_stat_cards(groups: dict[str, list[dict]]) -> str:
     cards = (
         ("new", "新增", "New", "发现的新资源或新路径", "Newly discovered resources or routes", "blue"),
@@ -4685,13 +4700,15 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     dates = [str(log.get("date") or "未知日期") for log in sorted_logs]
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
-    latest_snapshot = _log_snapshot(latest)
+    latest_scan = _latest_scanned_log(sorted_logs)
+    latest_snapshot = _log_snapshot(latest_scan)
     # P0-1: all public counters must be sourced from this same scan snapshot.
     # Current published model catalogs can include delayed and third-party paths;
     # they must never silently overwrite the scan totals.
     latest_has_changes = any(latest_groups.values())
-    latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else "今日扫描完成")
-    latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else "Scan complete")
+    is_curated_only = latest.get("date") != latest_scan.get("date")
+    latest_status = "首次基线" if latest.get("baseline") and not latest_has_changes else ("今日有更新" if latest_has_changes else ("最近扫描记录" if is_curated_only else "今日扫描完成"))
+    latest_status_en = "Baseline" if latest.get("baseline") and not latest_has_changes else ("Changes today" if latest_has_changes else ("Previous scan" if is_curated_only else "Scan complete"))
     date_nav = ""
     if len(dates) > 1:
         links = []
@@ -4704,7 +4721,12 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
         date = str(log.get("date") or "未知日期")
         events = list(log.get("events") or [])
         groups = _log_event_groups(events, list(log.get("curatedEvents") or []))
-        snapshot = _log_snapshot(log)
+        day_scan = _latest_scanned_log(sorted_logs[index:])
+        snapshot = _log_snapshot(day_scan)
+        snapshot_date = str(day_scan.get("date") or "")
+        snapshot_label = (_locale_pair("当日快照", "Daily snapshot")
+                          if snapshot_date == date else
+                          _locale_pair(f"最近扫描：{snapshot_date or '暂无'}", f"Last scan: {snapshot_date or 'N/A'}"))
         day_state = ("首次基线", "Baseline") if log.get("baseline") and not any(groups.values()) else (("有变更", "Changes") if any(groups.values()) else ("无变化", "No changes"))
         new_markup = "".join(_log_detail_card(event, offer_lookup) for event in groups["new"])
         event_panels = "".join((
@@ -4715,7 +4737,7 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
         ))
         empty_state = _log_empty_state(log, groups) if index == 0 else ""
         sections.append(
-            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("扫描日期", "Scan date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{_locale_pair("当日快照", "Daily snapshot")}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
+            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("记录日期", "Record date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{snapshot_label}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
         )
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     body = re.sub(r"(?m)^[ \t]+$", "", body)
@@ -5618,19 +5640,22 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     latest_daily_log = max(daily_logs or [], key=lambda item: str(item.get("date") or ""), default={})
     latest_groups = _log_event_groups(list(latest_daily_log.get("events") or []), list(latest_daily_log.get("curatedEvents") or []))
     # P0-1: materialize the same daily-log snapshot read by /logs/, home and /about/.
-    observed = latest_daily_log.get("observed") or {}
+    latest_scanned_log = _latest_scanned_log(sorted(daily_logs or [], key=lambda item: str(item.get("date") or ""), reverse=True))
+    observed = latest_scanned_log.get("observed") or {}
     scan_events = [*(latest_daily_log.get("events") or []), *(latest_daily_log.get("curatedEvents") or [])]
     new_events = [e for e in scan_events if e.get("eventType") in {"new", "new_route"}]
     scan_summary = {
         "schemaVersion": 1,
         "date": str(latest_daily_log.get("date") or ""),
-        "source": f"/data/daily-log/{latest_daily_log.get('date')}.json" if latest_daily_log.get("date") else "",
+        "source": f"/data/daily-log/{latest_scanned_log.get('date')}.json" if latest_scanned_log.get("date") else "",
+        "snapshotDate": str(latest_scanned_log.get("date") or ""),
         "models": len(observed.get("models") or []),
         "offers": len(observed.get("offers") or []),
         "newCount": len(new_events),
         "newModels": sum(e.get("kind") == "model" for e in new_events),
         "newOffers": sum(e.get("kind") == "offer" for e in new_events),
         "sourceChecks": sum(v.get("status") == "ok" for v in (latest_daily_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
+        "scanRunToday": latest_daily_log.get("date") == latest_scanned_log.get("date"),
         "hasHistoricalBaseline": False,
     }
     files[Path("data/scan-summary.json")] = json.dumps(scan_summary, ensure_ascii=False, indent=2) + "\n"
