@@ -34,6 +34,8 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn("PhanthyCode", homepage)
         self.assertIn('href="/logs/#log-day-2026-10-09"', homepage)
         self.assertIn("def update_home_latest_discovery(", build)
+        self.assertIn("def update_home_scan_snapshot(", build)
+        self.assertIn('<b id="heroCount">70</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
         self.assertIn("entry = events[-1] if events else None", build)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)
@@ -42,7 +44,7 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn("rows.sort((a,b) =>", js)
         self.assertIn("applyOfferBodyClamps(offerGrid)", js)
         self.assertLess(homepage.index('id="catalog-offers"'), homepage.index('id="weekly-changes"'))
-        asset = hashlib.sha1(b"blob " + str(len(js.encode())).encode() + b"\\0" + js.encode()).hexdigest()[:10]
+        asset = hashlib.sha1(b"blob " + str(len(js.encode())).encode() + b"\0" + js.encode()).hexdigest()[:10]
         self.assertIn(f"../js/homepage.{asset}.js", homepage)
         self.assertEqual((ROOT / f"js/homepage.{asset}.js").read_text(encoding="utf-8"), js)
 
