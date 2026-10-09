@@ -5193,6 +5193,374 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     return page
 
 
+SKILL_EXAMPLES_PAGE_PATH = "/skills/examples/"
+SKILL_LEARN_PAGE_PATH = "/skills/learn/"
+SKILL_EVAL_RESULTS_BLOB = "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+SKILL_EVAL_SCRIPT_BLOB = "https://github.com/xdguo-design/freellm/blob/main/scripts/eval_skills.py"
+SKILL_EVAL_WORKFLOW_BLOB = "https://github.com/xdguo-design/freellm/blob/main/.github/workflows/skill-eval.yml"
+SKILL_VERDICT_ORDER = ("通过", "部分通过", "未通过", "调用失败")
+SKILL_VERDICT_CLASS = {"通过": "status-online", "部分通过": "status-degraded", "未通过": "status-offline", "调用失败": "status-failed"}
+SKILL_VERDICT_SLUG = {"通过": "passed", "部分通过": "partial", "未通过": "failed", "调用失败": "call-failed"}
+SKILL_EXAMPLE_PAGE_CSS = '''
+    h1 { max-width: 860px; margin: 22px 0 8px; font-size: clamp(32px, 5.5vw, 54px); }
+    header p { max-width: 820px; margin: 8px 0; }
+    main { display: grid; gap: 28px; }
+    section + section { padding-top: 26px; border-top: 1px solid var(--line); }
+    h2 { font-size: clamp(22px, 3.6vw, 30px); }
+    h3 { font-size: 19px; margin: 0; }
+    .meta { color: var(--ink-secondary); font-size: 13px; }
+    .status-failed { color: var(--pale-stone-text); background: var(--pale-stone-bg); }
+    .skill-example-summary { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .skill-example-summary li { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .skill-example-summary strong { display: block; font: 600 22px/1.2 var(--font-mono); }
+    .skill-example-jump { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; }
+    .skill-example { padding: 18px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 14px 0; }
+    .skill-example-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+    .skill-example blockquote { margin: 12px 0; padding: 10px 14px; border-left: 3px solid var(--line); background: var(--canvas-warm); white-space: pre-wrap; font-size: 14px; }
+    .skill-run { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .skill-run-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; }
+    .skill-run pre { max-height: 360px; white-space: pre-wrap; word-break: break-word; }
+    .skill-run ul { margin: 6px 0 0; padding-left: 1.2em; font-size: 13px; }
+    .skill-run .check-pass::marker { content: "✓ "; }
+    .skill-run .check-fail::marker { content: "✗ "; }
+    .skill-run-error { color: var(--pale-red-text); font-size: 13px; }
+    .skill-repro code { font-size: 12.5px; }
+    footer { color: var(--ink-secondary); font-size: 13px; }
+'''
+
+
+def _load_skill_eval_results(data_dir: Path | None) -> dict:
+    base = Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR
+    path = base / "evaluations" / "skills-latest.json"
+    if not path.is_file():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def _skill_eval_model_ids(results: dict) -> dict[tuple[str, str], str]:
+    return {(m.get("provider"), m.get("model")): m.get("id") for m in results.get("models") or []}
+
+
+def _skill_run_seconds(run: dict) -> str:
+    total = run.get("totalMs")
+    if not isinstance(total, (int, float)):
+        return "未记录"
+    text = f"{total / 1000:.1f}s"
+    ttft = run.get("ttftMs")
+    if isinstance(ttft, (int, float)) and run.get("callOk"):
+        text += f"（首字 {ttft / 1000:.1f}s）"
+    return text
+
+
+def _render_skill_example_run(skill_id: str, run: dict, model_ids: dict[tuple[str, str], str]) -> str:
+    verdict = str(run.get("verdict") or "调用失败")
+    css = SKILL_VERDICT_CLASS.get(verdict, "status-failed")
+    call_ok = bool(run.get("callOk"))
+    checks = run.get("checks") or []
+    detail = (f'{run.get("passedChecks")}/{run.get("totalChecks")} 项检查通过' if call_ok
+              else "未获得可评分输出，不计分")
+    manual = (f'<span>人工复核：{_esc(run.get("reviewNote") or "已改判")}</span>' if run.get("judgedBy") == "manual" else "")
+    mid = model_ids.get((run.get("provider"), run.get("model"))) or "modelscope"
+    body = []
+    if call_ok:
+        body.append(f'<p class="meta">真实输出摘录（前 700 字）：</p><pre>{_esc(run.get("excerpt") or "")}</pre>')
+        if checks:
+            items = "".join(
+                f'<li class="{"check-pass" if c.get("pass") else "check-fail"}">{_esc(c.get("label"))}'
+                f'{(" · " + _esc(c.get("note"))) if c.get("note") else ""}</li>'
+                for c in checks
+            )
+            body.append(f'<details><summary>判定依据（检查项）</summary><ul>{items}</ul></details>')
+    else:
+        body.append(f'<p class="skill-run-error">调用失败原因：{_esc(run.get("error") or "未知错误")}</p>')
+    repro = f"python scripts/eval_skills.py --only {skill_id} --models {mid} --out /tmp/skill-eval"
+    return (
+        f'<div class="skill-run" data-verdict="{_esc(verdict)}"><div class="skill-run-meta">'
+        f'<span class="status {css}">{_esc(verdict)}</span>'
+        f'<strong>{_esc(run.get("provider"))}</strong><code>{_esc(run.get("model"))}</code>'
+        f'<span>{_esc(detail)}</span><span>耗时 {_esc(_skill_run_seconds(run))}</span>{manual}</div>'
+        + "".join(body)
+        + f'<p class="skill-repro meta">复现：<code>{_esc(repro)}</code></p></div>'
+    )
+
+
+def render_skill_examples_page(skills: list[dict], results: dict, site_url: str) -> str:
+    path = SKILL_EXAMPLES_PAGE_PATH
+    title = "Skill 实测例子：免费模型真实任务记录 · FreeLLM"
+    description = "FreeLLM 把每个 Agent Skill 的 SKILL.md 注入免费模型，用真实任务实测：任务输入、真实输出摘录、平台与模型、是否达成、耗时与复现方式。"
+    by_id = {s.get("id"): s for s in skills}
+    entries = list(results.get("skills") or [])
+    model_ids = _skill_eval_model_ids(results)
+    run_counts: dict[str, int] = {}
+    for entry in entries:
+        for run in entry.get("runs") or []:
+            run_counts[run.get("verdict") or "调用失败"] = run_counts.get(run.get("verdict") or "调用失败", 0) + 1
+    groups: dict[str, list[dict]] = {v: [] for v in SKILL_VERDICT_ORDER}
+    for entry in entries:
+        groups.setdefault(entry.get("bestVerdict") or "调用失败", []).append(entry)
+    summary = "".join(
+        f'<li><strong>{len(groups.get(v) or [])}</strong><span class="status {SKILL_VERDICT_CLASS[v]}">{v}</span> 个 Skill</li>'
+        for v in SKILL_VERDICT_ORDER
+    )
+    jump = "".join(
+        f'<a href="#{SKILL_VERDICT_SLUG[v]}">{v}（{len(groups.get(v) or [])}）</a>' for v in SKILL_VERDICT_ORDER if groups.get(v)
+    )
+    sections = []
+    for verdict in SKILL_VERDICT_ORDER:
+        items = groups.get(verdict) or []
+        if not items:
+            continue
+        cards = []
+        for entry in sorted(items, key=lambda e: str(e.get("name") or e.get("id"))):
+            skill = by_id.get(entry.get("id")) or {}
+            github = skill.get("githubUrl")
+            source = (f'<a href="{_esc(github)}" target="_blank" rel="nofollow noopener">GitHub 源 ↗</a>' if github else "")
+            runs = "".join(_render_skill_example_run(str(entry.get("id")), run, model_ids) for run in entry.get("runs") or [])
+            cards.append(
+                f'<article class="skill-example" id="{_esc(entry.get("id"))}"><div class="skill-example-head">'
+                f'<h3>{_esc(entry.get("name") or skill.get("name") or entry.get("id"))}</h3>'
+                f'<span class="status {SKILL_VERDICT_CLASS.get(verdict, "status-failed")}">达成情况：{_esc(verdict)}</span>'
+                f'<code>{_esc(entry.get("id"))}</code>{source}</div>'
+                f'<p class="meta">任务输入（user 消息；system prompt 为该 Skill 的 SKILL.md 全文）：</p>'
+                f'<blockquote>{_esc(entry.get("task"))}</blockquote>{runs}</article>'
+            )
+        sections.append(
+            f'<section id="{SKILL_VERDICT_SLUG[verdict]}"><div class="eyebrow">{SKILL_VERDICT_SLUG[verdict]}</div>'
+            f'<h2>{_esc(verdict)}（{len(items)}）</h2>{"".join(cards)}</section>'
+        )
+    if not sections:
+        sections.append('<section><h2>暂无实测结果</h2><p>尚未产生免费模型实测记录；运行 skill-eval 工作流后这里会显示真实结果。</p></section>')
+    models = "、".join(f'{_esc(m.get("provider"))} <code>{_esc(m.get("model"))}</code>' for m in results.get("models") or []) or "—"
+    run_at = _esc(results.get("runAt") or "—")
+    verdict_line = " · ".join(f"{v} {run_counts.get(v, 0)}" for v in SKILL_VERDICT_ORDER)
+    schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "CollectionPage", "name": title, "description": description, "url": _absolute(site_url, path), "inLanguage": "zh-CN"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "FreeLLM", "item": _absolute(site_url, "/")},
+                {"@type": "ListItem", "position": 2, "name": "Agent Skills", "item": _absolute(site_url, SKILLS_PAGE_PATH)},
+                {"@type": "ListItem", "position": 3, "name": "Skill 实测例子", "item": _absolute(site_url, path)},
+            ]},
+        ],
+    }
+    return f'''<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{_esc(title)}</title>
+  <meta name="description" content="{_esc(description)}">
+  <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
+  {_social_meta(site_url, path, title, description, 'website')}
+  {_analytics_script()}
+  {ADSENSE_SCRIPT}
+  <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
+  <style>
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>{SKILL_EXAMPLE_PAGE_CSS}</style>
+</head>
+<body>
+  <header>
+    <div class="crumb"><a href="/">FreeLLM</a> / <a href="{SKILLS_PAGE_PATH}">Skills</a> / 实测例子</div>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    <h1>Skill 实测例子</h1>
+    <p>每个 Skill 配一个它本应处理的真实任务：把 SKILL.md 全文作为 system prompt，交给免费模型完成，再按预设检查项判定是否达成。下面是真实输出摘录，失败的调用照实标注“调用失败”，不计分、不补造。</p>
+    <p class="meta">测试时间：{run_at} · 运行位置：{_esc(results.get("vantage") or "—")} · 模型：{models}</p>
+    <p class="meta">全部调用：{_esc(verdict_line)}</p>
+    <ul class="skill-example-summary">{summary}</ul>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">how to read</div>
+      <h2>怎么看这些结果</h2>
+      <ul class="link-list">
+        <li><strong>通过</strong>：所有检查项都满足；<strong>部分通过</strong>：满足 ≥60%；<strong>未通过</strong>：低于 60%；<strong>调用失败</strong>：接口报错、超时、空输出或本轮未执行，没有可评分的输出。</li>
+        <li>这是<strong>任务级</strong>测试：模型不能运行 Skill 自带的脚本 / CLI，只看它能否按 Skill 的说明给出正确的步骤、代码或文档，不等同原仓库端到端。</li>
+        <li>耗时是从发出请求到流式输出结束的总时间，括号内为首个 token 时间；思考型模型的推理时间包含在内。</li>
+      </ul>
+      <p class="skill-example-jump">{jump}<a href="{SKILL_LEARN_PAGE_PATH}">学习文档 →</a><a href="/evaluations/">免费模型实测榜 →</a><a href="{SKILL_EVAL_RESULTS_BLOB}" target="_blank" rel="noopener">原始数据 skills-latest.json ↗</a></p>
+    </section>
+    {"".join(sections)}
+  </main>
+  <footer>
+    <p>方法与脚本：<a href="{SKILL_EVAL_SCRIPT_BLOB}" target="_blank" rel="noopener">scripts/eval_skills.py</a> · 工作流：<a href="{SKILL_EVAL_WORKFLOW_BLOB}" target="_blank" rel="noopener">skill-eval.yml</a>。复现命令需要对应平台的 API Key（环境变量，如 <code>MODELSCOPE_API_KEY</code>、<code>NVIDIA_API_KEY</code>）。</p>
+    {_static_locale_nav()}
+  </footer>
+</body>
+</html>
+'''
+
+
+def render_skill_learn_page(skills: list[dict], results: dict, site_url: str) -> str:
+    path = SKILL_LEARN_PAGE_PATH
+    title = "Agent Skill 学习文档：安装、用免费模型调用与读懂实测 · FreeLLM"
+    description = "从零理解 Agent Skill：SKILL.md 的结构、如何安装到 Agent、没有 Agent 时如何用免费模型 API 直接使用 Skill，以及怎样读懂和复现 FreeLLM 的 Skill 实测。"
+    errors: dict[str, int] = {}
+    for entry in results.get("skills") or []:
+        for run in entry.get("runs") or []:
+            if run.get("verdict") == "调用失败":
+                message = str(run.get("error") or "未知错误")
+                key = ("空输出（思考耗尽 max_tokens）" if "空内容" in message else
+                       "单次调用超时被中止" if "上限" in message or "timed out" in message.lower() else
+                       "本轮未执行（时间预算用尽）" if "未执行" in message else
+                       "限流 HTTP 429" if "429" in message else
+                       "接口报错 " + (re.search(r"HTTP \d+", message).group(0) if re.search(r"HTTP \d+", message) else "其他"))
+                errors[key] = errors.get(key, 0) + 1
+    error_items = "".join(f"<li>{_esc(k)}：{v} 次</li>" for k, v in sorted(errors.items(), key=lambda kv: -kv[1]))
+    error_block = (f'<p>本轮实测中真实出现过的调用失败类型：</p><ul class="link-list">{error_items}</ul>' if error_items
+                   else '<p>本轮实测没有出现调用失败。</p>')
+    model = next(iter(results.get("models") or []), {"provider": "魔搭 ModelScope", "model": "deepseek-ai/DeepSeek-V4.1-Flash"})
+    base_url = {"魔搭 ModelScope": "https://api-inference.modelscope.cn/v1", "NVIDIA NIM": "https://integrate.api.nvidia.com/v1",
+                "Groq": "https://api.groq.com/openai/v1", "OpenRouter": "https://openrouter.ai/api/v1"}.get(model.get("provider"), "https://api-inference.modelscope.cn/v1")
+    env_name = {"魔搭 ModelScope": "MODELSCOPE_API_KEY", "NVIDIA NIM": "NVIDIA_API_KEY", "Groq": "GROQ_API_KEY",
+                "OpenRouter": "OPENROUTER_API_KEY"}.get(model.get("provider"), "MODELSCOPE_API_KEY")
+    sample_skill = next((s for s in skills if s.get("id") == "obra-brainstorming"), skills[0] if skills else {"id": "your-skill"})
+    python_example = f'''import os
+from pathlib import Path
+from openai import OpenAI
+
+client = OpenAI(base_url="{base_url}", api_key=os.environ["{env_name}"])
+skill_md = Path("SKILL.md").read_text(encoding="utf-8")  # 想用的 Skill 原文
+
+resp = client.chat.completions.create(
+    model="{model.get("model")}",
+    messages=[
+        {{"role": "system", "content": "请严格遵循下面的 Skill 完成任务。\\n\\n" + skill_md}},
+        {{"role": "user", "content": "你的真实任务……"}},
+    ],
+    temperature=0.2,
+)
+print(resp.choices[0].message.content)'''
+    frontmatter_example = '''---
+name: my-skill
+description: 什么时候该用这个 Skill（Agent 靠这一句决定是否加载）
+---
+
+# My Skill
+
+1. 先做什么
+2. 再做什么，必要时运行 scripts/xxx.py
+3. 交付前检查什么'''
+    repro = f'''export {env_name}=...   # 只放在本地环境变量里，不要写进代码或提交
+python scripts/eval_skills.py --only {sample_skill.get("id")} --models modelscope --out /tmp/skill-eval
+cat /tmp/skill-eval/skills-latest.json'''
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": title,
+        "description": description,
+        "url": _absolute(site_url, path),
+        "inLanguage": "zh-CN",
+        "publisher": {"@type": "Organization", "name": "FreeLLM", "url": _absolute(site_url, "/")},
+    }
+    return f'''<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{_esc(title)}</title>
+  <meta name="description" content="{_esc(description)}">
+  <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
+  {_social_meta(site_url, path, title, description, 'article')}
+  {_analytics_script()}
+  {ADSENSE_SCRIPT}
+  <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+  {SKILLS_THEME_ASSETS}
+  <style>
+    {EDITORIAL_BASE_CSS}
+  </style>
+  <style>{SKILL_EXAMPLE_PAGE_CSS}</style>
+</head>
+<body>
+  <header>
+    <div class="crumb"><a href="/">FreeLLM</a> / <a href="{SKILLS_PAGE_PATH}">Skills</a> / 学习文档</div>
+    <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    <h1>Agent Skill 学习文档</h1>
+    <p>Skill 是一份写给 AI Agent 的操作手册。这页讲清楚它长什么样、怎么装、没有 Agent 时怎么用免费模型直接调用，以及如何读懂、复现 FreeLLM 的实测结果。</p>
+  </header>
+  <main>
+    <section>
+      <div class="eyebrow">01 / what</div>
+      <h2>Skill 是什么</h2>
+      <p>一个 Skill 通常是一个文件夹，核心是 <code>SKILL.md</code>：开头的 YAML frontmatter 写名称和“什么时候该用”，正文写步骤、规范和可调用的脚本。Agent 先只读 frontmatter，判断任务相关时才加载正文。</p>
+      <pre><code>{_esc(frontmatter_example)}</code></pre>
+    </section>
+    <section>
+      <div class="eyebrow">02 / install</div>
+      <h2>安装到 Agent</h2>
+      <ol class="steps">
+        <li>在 <a href="{SKILLS_PAGE_PATH}">Skill 目录</a> 打开条目，复制安装命令或打开 GitHub 源。</li>
+        <li>把整个 Skill 文件夹（含 <code>SKILL.md</code> 和它引用的脚本）放进 Agent 的 skills 目录；例如 Claude Code 使用 <code>~/.claude/skills/&lt;skill 名&gt;/</code> 或项目内 <code>.claude/skills/</code>。其他工具的目录和触发方式不同，以其官方文档为准。</li>
+        <li>用一个它本应处理的任务试一下，确认 Agent 确实加载了 Skill（很多 Agent 会在回复里提到使用了哪个 Skill）。</li>
+      </ol>
+    </section>
+    <section>
+      <div class="eyebrow">03 / free models</div>
+      <h2>没有 Agent？用免费模型 API 直接用 Skill</h2>
+      <p>最简单的办法就是 FreeLLM 实测用的办法：把 <code>SKILL.md</code> 全文当作 system prompt，把任务当作 user 消息，调用任意 OpenAI 兼容的免费接口。这样拿到的是“按 Skill 说明给出的方案、代码和步骤”，但模型不会替你执行 Skill 里的脚本。</p>
+      <pre><code>{_esc(python_example)}</code></pre>
+      <p class="meta">示例使用本轮实测的第一个模型（{_esc(model.get("provider"))} <code>{_esc(model.get("model"))}</code>）；免费额度、速率与可用性会变化，请先看 <a href="/evaluations/">免费模型实测榜</a>。</p>
+    </section>
+    <section>
+      <div class="eyebrow">04 / read results</div>
+      <h2>读懂 Skill 实测</h2>
+      <ul class="link-list">
+        <li>每个 Skill 只配一个固定的真实任务，检查项是确定性的：必须出现的步骤或字段、Python 代码能否被 <code>ast</code> 解析、JS 能否通过 <code>node --check</code>、HTML / YAML 能否解析。</li>
+        <li>结果分为 通过 / 部分通过 / 未通过 / 调用失败；“调用失败”说明没有拿到可评分的输出，不代表 Skill 本身不好用。</li>
+        <li>这是任务级测试，不等同在原仓库里端到端跑通；原链路验收见各 Skill 卡片里的测试记录。</li>
+      </ul>
+      {error_block}
+      <p><a class="button" href="{SKILL_EXAMPLES_PAGE_PATH}">查看全部实测例子 →</a></p>
+    </section>
+    <section>
+      <div class="eyebrow">05 / reproduce</div>
+      <h2>自己复现一次</h2>
+      <pre><code>{_esc(repro)}</code></pre>
+      <p>仓库维护者也可以把改动推到 <code>skill-eval/**</code> 分支，由 GitHub Actions 使用仓库 Secrets 运行全部 Skill，结果会提交到 <a href="{SKILL_EVAL_RESULTS_BLOB}" target="_blank" rel="noopener">data/evaluations/skills-latest.json</a>，并作为 artifact 上传。</p>
+    </section>
+  </main>
+  <footer>
+    <p>相关：<a href="{SKILLS_PAGE_PATH}">Skill 目录</a> · <a href="{SKILL_EXAMPLES_PAGE_PATH}">实测例子</a> · <a href="/workflow/">工作流配方</a> · <a href="/evaluations/">免费模型实测榜</a></p>
+    {_static_locale_nav()}
+  </footer>
+</body>
+</html>
+'''
+
+
+def _ensure_skill_section_tabs(content: str, path: Path) -> str:
+    """Secondary directory inside the Skills section (global nav stays at 7 items)."""
+    if path.suffix != ".html" or 'class="model-section-tabs skill-section-tabs"' in content:
+        return content
+    route = "/" + "/".join(path.parts[:-1]) + "/" if path.parts and path.parts[-1] == "index.html" else ""
+    current = {SKILLS_PAGE_PATH: "catalog", SKILL_EXAMPLES_PAGE_PATH: "examples", SKILL_LEARN_PAGE_PATH: "learn"}.get(route)
+    if not current:
+        return content
+    items = [
+        ("catalog", SKILLS_PAGE_PATH, "Skill 目录"),
+        ("examples", SKILL_EXAMPLES_PAGE_PATH, "实测例子"),
+        ("learn", SKILL_LEARN_PAGE_PATH, "学习文档"),
+        ("evaluations", "/evaluations/", "免费模型实测榜"),
+    ]
+    current_attr = ' aria-current="page"'
+    links = "".join(
+        f'<a href="{href}"{current_attr if key == current else ""}>{label}</a>' for key, href, label in items
+    )
+    tabs = '<nav class="model-section-tabs skill-section-tabs" aria-label="Skills 二级目录">' + links + "</nav>"
+    ribbon_start = content.find('class="fl-site-ribbon"')
+    ribbon_end = content.find("</div>", ribbon_start) if ribbon_start >= 0 else -1
+    if ribbon_end >= 0:
+        ribbon_end += len("</div>")
+        return content[:ribbon_end] + tabs + content[ribbon_end:]
+    return re.sub(r'(<body[^>]*>)', lambda match: match.group(1) + tabs, content, count=1, flags=re.I)
+
+
 def _render_skill_lab_page(skills: list[dict], recipes: list[dict], site_url: str) -> str:
     """Render curated workflow recipes first; keep the full catalog behind a collapsed library."""
     if site_url is None:
@@ -5378,6 +5746,8 @@ def sitemap_section_paths(
         PROVIDERS_PAGE_PATH,
         CHANGE_LOG_PAGE_PATH,
         SKILLS_PAGE_PATH,
+        SKILL_EXAMPLES_PAGE_PATH,
+        SKILL_LEARN_PAGE_PATH,
         WORKFLOW_PAGE_PATH,
     ] + [f'/guides/{definition["slug"]}/' for definition in THEME_GUIDE_DEFINITIONS] + [
         category_url(category)
@@ -5525,6 +5895,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         **render_sitemaps(offers, categories, site_url, model_catalog, providers),
         Path(FEED_PATH): render_feed(offers, site_url),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
+        Path("skills") / "examples" / "index.html": render_skill_examples_page(skills or [], _load_skill_eval_results(data_dir), site_url),
+        Path("skills") / "learn" / "index.html": render_skill_learn_page(skills or [], _load_skill_eval_results(data_dir), site_url),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
         Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers), data_dir=data_dir),
@@ -6424,7 +6796,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         for relative, content in files.items()
     }
     files = {
-        relative: _ensure_model_section_tabs(content, relative)
+        relative: _ensure_skill_section_tabs(_ensure_model_section_tabs(content, relative), relative)
         for relative, content in files.items()
     }
     sync_tag = '<script src="/js/freellm-sync.js"></script>'
