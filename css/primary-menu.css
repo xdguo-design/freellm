@@ -668,3 +668,35 @@ html body.fl-ui-v2[data-reference-style="v1"] .ref-search.ref-search.ref-search 
     display: none !important;
   }
 }
+
+/* CONTENT-20261009: visible source-backed home discovery */
+html body[data-fl-section="home"] .home-latest-discovery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border: 1px solid #dce8fb;
+  border-radius: 10px;
+  background: rgba(248,251,255,.96);
+  font-size: 12px;
+  line-height: 1.5;
+}
+html body[data-fl-section="home"] .home-latest-discovery span {
+  color: #5b7191;
+  font-weight: 700;
+}
+html body[data-fl-section="home"] .home-latest-discovery a {
+  min-width: 0;
+  flex: 1 1 170px;
+  color: #1763d8;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+html body[data-fl-section="home"] .home-latest-discovery a:focus-visible {
+  outline: 3px solid #83b8ff;
+  outline-offset: 2px;
+}
