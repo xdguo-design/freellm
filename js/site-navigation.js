@@ -16,7 +16,7 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261009-ux-p0';
   var updateIndicatorReady = false;
   var lastUpdateDate = '';
   var readUpdateKey = 'freellm-last-read-update';
