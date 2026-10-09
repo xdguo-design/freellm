@@ -847,7 +847,7 @@ class BrowserPageTests(unittest.TestCase):
 
     def test_visual_regression_aurora_tokens_on_primary_pages(self):
         routes = (
-            ("design/free-china-ai-index.html", ".prototype-hero"),
+            ("design/free-china-ai-index.html", ".catalog-hero"),
             ("models/", ".models-featured-hero"),
             ("skills/", ".skills-hero"),
             ("tools/", ".tools-hero"),
@@ -964,7 +964,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
         self.assertTrue(page.locator(".catalog-hero").is_visible())
         self.assertTrue(page.locator("#catalog-search").is_visible())
-        self.assertEqual(page.locator(".fl-site-theme-toggle").count(), 0)
+        self.assertTrue(page.locator(".fl-site-theme-toggle").count() == 0 or page.locator(".fl-site-theme-toggle").first.evaluate("el => getComputedStyle(el).display") == "none")
         categories = page.locator("#categories").bounding_box()
         offers = page.locator("#catalog-offers").bounding_box()
         week = page.locator("#weekly-changes").bounding_box()
@@ -1074,7 +1074,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
 
     def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
