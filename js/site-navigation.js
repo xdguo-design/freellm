@@ -18,6 +18,23 @@
   var requestController = null;
   var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
   var updateIndicatorReady = false;
+  var lastUpdateDate = '';
+  var readUpdateKey = 'freellm-last-read-update';
+  function getLastReadUpdate() {
+    try { return window.localStorage.getItem(readUpdateKey) || ''; }
+    catch (error) { return ''; }
+  }
+  function markUpdateRead() {
+    if (!lastUpdateDate) return;
+    try { window.localStorage.setItem(readUpdateKey, lastUpdateDate); }
+    catch (error) { /* Storage can be disabled. */ }
+    setUpdateIndicator(false);
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest && event.target.closest('.fl-site-nav [data-site-nav="logs"]');
+    if (link) markUpdateRead();
+  });
+
   // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
   document.addEventListener('keydown', function(event) {
     if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== 'k') return;
@@ -83,7 +100,11 @@
         }).formatToParts(new Date());
         var today = Object.fromEntries(parts.filter(function (part) { return part.type !== 'literal'; }).map(function (part) { return [part.type, part.value]; }));
         var date = today.year + '-' + today.month + '-' + today.day;
-        setUpdateIndicator(status.latestDate === date && status.hasCatalogChanges === true);
+        lastUpdateDate = status.latestDate || '';
+        var onLogPage = /^\/(?:en\/)?logs\/?$/.test(window.location.pathname);
+        if (onLogPage) markUpdateRead();
+        setUpdateIndicator(lastUpdateDate === date && status.hasCatalogChanges === true &&
+          !onLogPage && getLastReadUpdate() !== lastUpdateDate);
       })
       .catch(function () { setUpdateIndicator(false); });
   }
