@@ -4473,8 +4473,8 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     metric_values = (
         ("▣", "今日新增", str(len(latest_groups["new"])), "新资源与新路径"),
         ("◆", "来源核验", str(sum(1 for item in (latest.get("sourceHealth") or {}).values() if isinstance(item, dict) and item.get("status") == "ok")) + "/2", "模型源与资源源"),
-        ("▦", "模型记录", str(latest_snapshot["models"]), "当前目录"),
-        ("⌁", "已收录资源", str(latest_snapshot["offers"]), "模型与工具入口"),
+        ("▦", "模型记录", str(latest_snapshot["models"]), "扫描观测记录"),
+        ("⌁", "已收录资源", str(latest_snapshot["offers"]), "扫描观测资源"),
         ("✣", "最近变更", str(len(current_events)), "最新日志日记录"),
     )
     metrics = "".join(f'<article><i>{icon}</i><span>{zh}</span><strong>{_esc(value)}</strong><small>{copy}</small></article>' for icon, zh, value, copy in metric_values)
@@ -4516,7 +4516,7 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     change_cards = "".join(f'<article><span>{event_labels[key][0]}</span><strong>{counts[key]}</strong><small>{event_labels[key][1]}</small></article>' for key in event_kinds)
     snapshot_cards = _log_snapshot_cards(latest_snapshot)
     stream_items = "".join(f'<li><time>{_esc(str(event.get("asOf") or latest.get("date") or "")[-5:])}</time><b>{_esc(display_title(event))}</b></li>' for event in current_events[:4]) or '<li>暂无变更记录</li>'
-    overview = f'<section class="ref-update-overview"><h2>今日变化</h2><div class="ref-update-change-cards">{change_cards}</div><div class="ref-update-detail-row"><div class="ref-update-snapshot"><h3>当前目录快照</h3><div class="log-snapshot-grid">{snapshot_cards}</div></div><section class="ref-update-change-stream"><h2>变更流 <small>CHANGE STREAM</small></h2><ol>{stream_items}</ol></section></div></section>'
+    overview = f'<section class="ref-update-overview"><h2>今日变化</h2><div class="ref-update-change-cards">{change_cards}</div><div class="ref-update-detail-row"><div class="ref-update-snapshot"><h3>最近扫描快照</h3><div class="log-snapshot-grid">{snapshot_cards}</div></div><section class="ref-update-change-stream"><h2>变更流 <small>CHANGE STREAM</small></h2><ol>{stream_items}</ol></section></div></section>'
 
     rows = []
     for key, event in [(key, event) for key in event_kinds for event in latest_groups[key]][:8]:
