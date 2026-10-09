@@ -1,0 +1,2560 @@
+{
+  "schemaVersion": 1,
+  "suite": "freellm-skill-task-v1",
+  "tasks": {
+    "anthropics-docx": {
+      "task": "为公司写一个脚本，生成 Word 文档《2026 年第三季度退款政策说明》：包含一级标题、两个二级标题、一个 3 列表格（渠道 / 退款时限 / 备注，至少 3 行数据）以及页脚页码。请按 Skill 推荐的工具链给出完整可运行代码和运行命令。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python",
+            "javascript"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "python-docx|from docx|import docx",
+            "require\\(['\\\"]docx['\\\"]\\)|from ['\\\"]docx['\\\"]"
+          ],
+          "label": "使用 docx 库生成文档"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "add_table|new Table\\(|Table\\(\\{|TableRow"
+          ],
+          "label": "生成表格"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "footer|Footer"
+          ],
+          "label": "设置页脚"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "PageNumber|PAGE|page_number|fldSimple|页码"
+          ],
+          "label": "页码字段"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-pdf": {
+      "task": "用 Python 写一个脚本：把 a.pdf 和 b.pdf 合并为 merged.pdf，并把合并后文档的第 2 页顺时针旋转 90 度，再把全部文字抽取保存到 out.txt。给出完整代码。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "PdfWriter|PdfMerger|fitz|pdfplumber"
+          ],
+          "label": "使用 PDF 库合并"
+        },
+        {
+          "type": "regex",
+          "pattern": "rotat",
+          "label": "执行页面旋转"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "extract_text|get_text|extract_words"
+          ],
+          "label": "抽取文字"
+        },
+        {
+          "type": "regex",
+          "pattern": "out\\.txt",
+          "label": "写入 out.txt"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-doc-coauthoring": {
+      "task": "我需要写一份《门诊候诊叫号屏》产品需求文档，读者是医院信息科和外包开发团队。请开始协作。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "[？?]",
+          "label": "先提出澄清问题收集上下文（≥2 个问题）",
+          "min": 2
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "背景|上下文|context|受众|读者|audience"
+          ],
+          "label": "关注文档背景/受众"
+        },
+        {
+          "type": "not_regex",
+          "pattern": "(?s)^.{0,200}#\\s*《?门诊候诊叫号屏》?产品需求文档\\s*\\n.*##.*##.*##.*##.*##",
+          "label": "没有跳过上下文直接写完整文档"
+        }
+      ],
+      "allowQuestions": true
+    },
+    "anthropics-xlsx": {
+      "task": "用 Python（openpyxl）生成退款台账 refunds.xlsx：Sheet『明细』包含 订单号/金额/状态 三列和 10 行样例数据；Sheet『汇总』用 Excel 公式（SUMIF）按状态汇总金额，不要在 Python 里算好再写死数值；表头加粗、冻结首行、金额列格式为 ¥#,##0.00。给出完整代码。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex",
+          "pattern": "openpyxl",
+          "label": "使用 openpyxl"
+        },
+        {
+          "type": "regex",
+          "pattern": "=SUMIF",
+          "label": "汇总使用 SUMIF 公式"
+        },
+        {
+          "type": "regex",
+          "pattern": "freeze_panes",
+          "label": "冻结首行"
+        },
+        {
+          "type": "regex",
+          "pattern": "number_format",
+          "label": "设置金额格式"
+        },
+        {
+          "type": "regex",
+          "pattern": "Font\\([^)]*bold\\s*=\\s*True",
+          "label": "表头加粗"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-pptx": {
+      "task": "为『2026 Q3 业务复盘』生成一个 5 页 PPTX 的脚本：封面、3 页内容（其中 1 页包含柱状图，数据：7 月 120、8 月 135、9 月 160）、结尾页。按 Skill 推荐的方式给出完整代码和运行命令。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python",
+            "javascript"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "python-pptx|from pptx|pptxgenjs|PptxGenJS|html2pptx"
+          ],
+          "label": "使用 PPTX 生成库"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "add_chart|addChart|CategoryChartData|ChartData|charts?\\.BAR|bar"
+          ],
+          "label": "包含柱状图"
+        },
+        {
+          "type": "regex",
+          "pattern": "120[\\s\\S]*135[\\s\\S]*160",
+          "label": "图表使用给定数据"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-frontend-design": {
+      "task": "为一家叫『慢火』的独立咖啡烘焙店做一个单页落地页（介绍、本周豆单、到店地址、订阅表单）。直接输出一个完整的 HTML 文件（CSS 内联在 <style> 中），要有明确的视觉方向。",
+      "checks": [
+        {
+          "type": "html_doc",
+          "label": "输出完整 HTML 文档且可解析",
+          "min_chars": 2500
+        },
+        {
+          "type": "regex",
+          "pattern": "<style",
+          "label": "内联 CSS"
+        },
+        {
+          "type": "regex",
+          "pattern": "@media",
+          "label": "包含响应式断点"
+        },
+        {
+          "type": "regex",
+          "pattern": "<form",
+          "label": "包含订阅表单"
+        },
+        {
+          "type": "regex",
+          "pattern": "font-family",
+          "label": "定义了字体"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-canvas-design": {
+      "task": "为主题『城市夜跑』创作一张海报：先写出你的设计哲学（design philosophy，一段说明），再给出能直接生成 poster.png 的完整代码（Python + Pillow 或 HTML canvas 均可）。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "哲学|philosophy"
+          ],
+          "label": "先写出设计哲学"
+        },
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python",
+            "javascript",
+            "html"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\.png|toDataURL|save\\("
+          ],
+          "label": "能输出 PNG"
+        },
+        {
+          "type": "min_chars",
+          "n": 800,
+          "label": "输出不少于 800 字符"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-brand-guidelines": {
+      "task": "把下面这段季度汇报页面按 Anthropic 官方品牌规范改造，输出改造后的完整 CSS（含颜色变量与字体）并说明标题和正文分别用什么字体：\n<h1>Q3 汇报</h1><p>收入同比增长 18%。</p><button>查看详情</button>",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "#141413",
+          "label": "使用品牌深色 #141413"
+        },
+        {
+          "type": "regex",
+          "pattern": "#faf9f5",
+          "label": "使用品牌浅色 #faf9f5"
+        },
+        {
+          "type": "regex",
+          "pattern": "#d97757",
+          "label": "使用品牌强调色 #d97757"
+        },
+        {
+          "type": "regex",
+          "pattern": "Poppins",
+          "label": "标题字体 Poppins"
+        },
+        {
+          "type": "regex",
+          "pattern": "Lora",
+          "label": "正文字体 Lora"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-theme-factory": {
+      "task": "我要给一份『AI 编程工具发布会』幻灯片套主题。这次请直接从 Skill 提供的主题里选一个最合适的（我已看过 showcase，授权你直接选），说明主题名称、配色（hex）和标题/正文字体，并给出应用到幻灯片的样式规则。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Ocean Depths|Sunset Boulevard|Forest Canopy|Modern Minimalist|Golden Hour|Arctic Frost|Desert Rose|Tech Innovation|Botanical Garden|Midnight Galaxy"
+          ],
+          "label": "选择了 Skill 内置主题"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "#[0-9a-fA-F]{6}\\b",
+          "label": "给出至少 3 个 hex 颜色",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "字体|font"
+          ],
+          "label": "说明字体"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-algorithmic-art": {
+      "task": "创作算法艺术作品『风中的稻田』：输出一个完整可直接打开的 p5.js HTML 文件，使用种子随机（seed）保证可复现，并提供至少 2 个可调参数（例如风力、稻穗密度）。",
+      "checks": [
+        {
+          "type": "html_doc",
+          "label": "输出完整 HTML 文档且可解析",
+          "min_chars": 0
+        },
+        {
+          "type": "regex",
+          "pattern": "p5(\\.min)?\\.js",
+          "label": "引入 p5.js"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "randomSeed|noiseSeed"
+          ],
+          "label": "使用种子随机"
+        },
+        {
+          "type": "regex",
+          "pattern": "createCanvas",
+          "label": "创建画布"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "noise\\("
+          ],
+          "label": "使用噪声/流场生成"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-internal-comms": {
+      "task": "帮我写本周给全组的 3P 周报（Progress / Plans / Problems）。素材：本周支付网关迁移完成 70%，新增 2 个对账报表；下周做压测和灰度 10%；问题：第三方回调平均超时 4.2 秒，需要对方排期。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Progress|进展"
+          ],
+          "label": "包含 Progress"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Plans|计划"
+          ],
+          "label": "包含 Plans"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Problems|问题"
+          ],
+          "label": "包含 Problems"
+        },
+        {
+          "type": "regex",
+          "pattern": "70\\s*%",
+          "label": "保留 70% 数据"
+        },
+        {
+          "type": "regex",
+          "pattern": "4\\.2",
+          "label": "保留 4.2 秒数据"
+        },
+        {
+          "type": "max_chars",
+          "n": 2000,
+          "label": "简洁（≤2000 字符）"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-mcp-builder": {
+      "task": "用 Python 写一个 MCP server，提供工具 get_exchange_rate(base, target)，调用 https://api.frankfurter.app/latest 查询汇率；要求输入校验（ISO 4217 三位代码）、错误处理、清晰的工具描述。给出完整代码和本地运行/调试命令。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "FastMCP|mcp\\.server|from mcp"
+          ],
+          "label": "使用 MCP SDK"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "@mcp\\.tool|\\.tool\\(|list_tools|call_tool"
+          ],
+          "label": "注册工具"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "frankfurter"
+          ],
+          "label": "调用指定 API"
+        },
+        {
+          "type": "regex",
+          "pattern": "except",
+          "label": "包含错误处理"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "[A-Z]\\{3\\}|len\\(.*\\)\\s*==\\s*3|isalpha|pattern|Field\\("
+          ],
+          "label": "校验三位货币代码"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-skill-creator": {
+      "task": "帮我创建一个名为 weekly-report 的 Skill：它把最近 7 天的 git log 整理成中文周报（按 新功能/修复/其他 分组）。请输出完整的 SKILL.md 内容。",
+      "checks": [
+        {
+          "type": "frontmatter",
+          "keys": [
+            "name",
+            "description"
+          ],
+          "label": "包含 YAML frontmatter（name/description）"
+        },
+        {
+          "type": "regex",
+          "pattern": "name:\\s*weekly-report",
+          "label": "name 为 weekly-report"
+        },
+        {
+          "type": "regex",
+          "pattern": "git log",
+          "label": "包含 git log 步骤"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?m)^#{1,3}\\s",
+          "label": "有清晰的章节结构（≥2 个标题）",
+          "min": 2
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-web-artifacts-builder": {
+      "task": "用这个 Skill 创建一个『待办看板』artifact（React + TypeScript + Tailwind + shadcn/ui，三列：待办/进行中/完成，可拖拽或按钮移动）。给出初始化命令、核心组件代码，以及打包成单个 HTML 的命令。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "init-artifact",
+          "label": "使用 init-artifact 脚本初始化"
+        },
+        {
+          "type": "regex",
+          "pattern": "bundle-artifact",
+          "label": "使用 bundle-artifact 打包"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "useState|React"
+          ],
+          "label": "包含 React 组件代码"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "className=\\\"[^\\\"]*(flex|grid|p-|bg-)"
+          ],
+          "label": "使用 Tailwind 类"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-webapp-testing": {
+      "task": "写一个 Playwright（Python）脚本测试本地 http://localhost:5173 的登录页：填写用户名和密码、点击登录、断言跳转到 /dashboard，最后截图保存 dashboard.png。开发服务器需要用 npm run dev 启动。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex",
+          "pattern": "sync_playwright|async_playwright",
+          "label": "使用 Playwright"
+        },
+        {
+          "type": "regex",
+          "pattern": "networkidle|wait_for_load_state|wait_for_url",
+          "label": "等待页面加载完成"
+        },
+        {
+          "type": "regex",
+          "pattern": "/dashboard",
+          "label": "断言跳转 /dashboard"
+        },
+        {
+          "type": "regex",
+          "pattern": "screenshot",
+          "label": "截图"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "with_server|npm run dev"
+          ],
+          "label": "处理开发服务器启动"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-brainstorming": {
+      "task": "我想给我的免费 AI 模型目录网站加一个『模型对比』功能。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "[？?]",
+          "label": "向用户提问以澄清需求",
+          "min": 1
+        },
+        {
+          "type": "count_regex",
+          "pattern": "[？?]",
+          "label": "一次只问少量问题（≤3 个问号）",
+          "max": 3
+        },
+        {
+          "type": "not_regex",
+          "pattern": "```(js|jsx|ts|tsx|python|html|css)",
+          "label": "未在设计确认前直接写实现代码"
+        }
+      ],
+      "allowQuestions": true
+    },
+    "obra-writing-plans": {
+      "task": "需求已确认：为一个 Flask 应用新增『邮件订阅』功能（订阅表单、发送确认邮件、点击确认链接激活、每封邮件带退订链接）。请写出实现计划。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "(?m)^#{1,4}\\s*(Task|任务)\\s*\\d+|^\\s*(Task|任务)\\s*\\d+",
+          "label": "拆分为 ≥3 个任务",
+          "min": 3
+        },
+        {
+          "type": "count_regex",
+          "pattern": "[\\w/]+\\.py",
+          "label": "写明具体文件路径（≥3 处）",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "pytest|test_\\w+"
+          ],
+          "label": "每步包含测试"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "git commit|commit"
+          ],
+          "label": "包含提交步骤"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-executing-plans": {
+      "task": "请执行下面这份计划：\nTask 1: 在 models.py 增加 Subscriber 模型（email 唯一）。\nTask 2: 删除并重建生产库的 users 表以添加 subscribed 字段。\nTask 3: 增加 /subscribe 接口和测试。\n（你无法真正运行命令，请按 Skill 的执行方式说明你会怎么做，并在开始前指出计划里的问题。）",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Task 2|任务 ?2|users 表|删除.*重建|drop"
+          ],
+          "label": "识别出 Task 2 的风险"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "风险|危险|数据丢失|concern|担心|不能直接|迁移|migration|备份"
+          ],
+          "label": "提出顾虑/建议迁移而非删表"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "确认|confirm|停下|stop|询问|ask"
+          ],
+          "label": "在继续前请求确认"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-systematic-debugging": {
+      "task": "线上报错：Python 函数 average(nums) 在 nums 为空列表时抛 ZeroDivisionError。产品经理让你『直接加个 try/except 返回 0 就行』。代码：\n```python\ndef average(nums):\n    return sum(nums) / len(nums)\n```\n调用方是报表模块 report.py 的 daily_avg(orders)，orders 来自当天订单查询。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "根因|根本原因|root cause"
+          ],
+          "label": "先追查根因"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "复现|reproduce|重现"
+          ],
+          "label": "先复现问题"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "测试|test"
+          ],
+          "label": "用测试固化修复"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "为什么.*空|为何.*空|空列表.*(来源|原因|上游)|orders.*空|upstream|上游"
+          ],
+          "label": "追查空列表来源而不是只吞异常"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-test-driven-development": {
+      "task": "用 TDD 实现 Python 函数 slugify(title)：转小写、空格转为连字符 -、去掉标点符号、合并连续连字符。展示完整的 TDD 过程和最终代码。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "order",
+          "first": "def test_",
+          "second": "def slugify",
+          "label": "先写测试再写实现"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "RED|红|失败|fail"
+          ],
+          "label": "说明先看到测试失败（RED）"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "GREEN|绿|通过|pass"
+          ],
+          "label": "再让测试通过（GREEN）"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-requesting-code-review": {
+      "task": "我刚完成『登录接口限流』功能，基线提交是 a1b2c3d，当前 HEAD 是 d4e5f6a，需求见 docs/specs/rate-limit.md。请按 Skill 发起代码审查。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "BASE_SHA|HEAD_SHA|a1b2c3d"
+          ],
+          "label": "使用提交 SHA 界定审查范围"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "code-reviewer|reviewer|审查(子)?代理|subagent"
+          ],
+          "label": "派发审查代理/审查者"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Critical|Important|Minor|严重|重要|次要"
+          ],
+          "label": "按严重程度处理反馈"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-receiving-code-review": {
+      "task": "审查者给了我两条意见：1）『把 parse_date() 里的 try/except 全删掉，异常没必要处理』——这个函数解析用户上传 CSV 的日期列，经常有脏数据；2）『把变量名 d 改成 parsed_date』。请按 Skill 回应并决定怎么做。",
+      "checks": [
+        {
+          "type": "not_regex",
+          "pattern": "You're absolutely right|完全正确|您说得太对|太棒了",
+          "label": "没有表演式附和"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "不建议|不同意|保留|但是|however|push ?back|会导致|脏数据"
+          ],
+          "label": "对第 1 条有理有据地提出异议"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "parsed_date"
+          ],
+          "label": "接受第 2 条重命名"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "验证|verify|测试|确认|检查"
+          ],
+          "label": "实施前先验证"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-verification-before-completion": {
+      "task": "我改完了登录 bug，跑了 tests/test_auth.py 的一半用例都通过了。帮我写一句提交说明，然后告诉团队『已修复、所有测试通过』。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "(运行|跑|run).{0,20}(全部|完整|所有|整个|full|entire|whole)",
+            "(全部|完整|所有|整个|full).{0,10}(测试|test)"
+          ],
+          "label": "要求运行完整测试"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "不能|不应|还不能|无法.{0,6}(声称|宣布|说)|cannot claim|evidence|证据"
+          ],
+          "label": "拒绝在无证据时宣布完成"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "pytest|npm test|test_auth"
+          ],
+          "label": "给出具体验证命令"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-subagent-driven-development": {
+      "task": "我有一份已写好的实现计划，包含 3 个相互独立的任务：A) 新增 CSV 导出；B) 修复分页 off-by-one；C) 给设置页加暗色模式。请按 Skill 在当前会话里执行，说明你的流程。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "subagent|子代理|子智能体"
+          ],
+          "label": "为每个任务派发子代理"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "review|审查|评审"
+          ],
+          "label": "每个任务完成后审查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "spec|规格|需求符合"
+          ],
+          "label": "包含规格符合性检查"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "代码质量|code quality|quality"
+          ],
+          "label": "包含代码质量审查"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-writing-skills": {
+      "task": "为团队写一个新 skill：『提交代码前必须运行 ruff 和 pytest，失败就不许提交』。请按 Skill 的方法（含如何测试这个 skill）给出完整 SKILL.md 和测试方案。",
+      "checks": [
+        {
+          "type": "frontmatter",
+          "keys": [
+            "name",
+            "description"
+          ],
+          "label": "包含 YAML frontmatter（name/description）"
+        },
+        {
+          "type": "regex",
+          "pattern": "description:\\s*[\\\"']?Use when",
+          "label": "description 以 Use when 开头"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "baseline|基线|RED|pressure|压力场景|不加载.*skill"
+          ],
+          "label": "包含基线/压力测试方案"
+        },
+        {
+          "type": "regex",
+          "pattern": "ruff",
+          "label": "包含 ruff"
+        },
+        {
+          "type": "regex",
+          "pattern": "pytest",
+          "label": "包含 pytest"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "vercel-labs-composition-patterns": {
+      "task": "重构下面这个组件，它的布尔 props 越来越多：\n```tsx\n<Composer isThread isEditing={false} showAttachments showEmoji={!isDM} hideSendButton={isReadonly} onSubmit={send} />\n```\n请给出符合组合模式的 API 设计与 TSX 实现。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "compound|复合组件|组合"
+          ],
+          "label": "使用复合组件/组合模式"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "createContext|Context|Provider"
+          ],
+          "label": "通过 Context 共享状态"
+        },
+        {
+          "type": "regex",
+          "pattern": "Composer\\.\\w+",
+          "label": "提供 Composer.* 子组件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "```tsx|```jsx|```ts"
+          ],
+          "label": "给出 TSX 代码"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "vercel-labs-react-best-practices": {
+      "task": "审查并优化这段 Next.js App Router 页面：\n```tsx\nimport { format } from 'date-fns'\nimport _ from 'lodash'\nexport default async function Page() {\n  const user = await getUser()\n  const posts = await getPosts()\n  const stats = await getStats()\n  return <Dashboard user={user} posts={_.sortBy(posts,'date')} stats={stats} />\n}\n```",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "Promise\\.all",
+          "label": "用 Promise.all 消除请求瀑布"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "waterfall|瀑布|串行|sequential"
+          ],
+          "label": "指出瀑布问题"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "lodash/|lodash-es|barrel|包体积|bundle"
+          ],
+          "label": "指出整包导入/包体积问题"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Suspense|streaming|流式"
+          ],
+          "label": "建议 Suspense/流式渲染"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "vercel-labs-react-native-skills": {
+      "task": "优化这个 React Native 列表，滚动 1000 条时卡顿：\n```tsx\n<ScrollView>{items.map(item => <Row key={item.id} item={item} onPress={() => open(item.id)} />)}</ScrollView>\n```",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "FlashList|FlatList|LegendList"
+          ],
+          "label": "改用虚拟化列表"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "memo|useCallback"
+          ],
+          "label": "避免每次渲染创建新回调/重渲染"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "keyExtractor|estimatedItemSize|getItemLayout|getItemType"
+          ],
+          "label": "配置列表性能参数"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "vercel-labs-web-design-guidelines": {
+      "task": "按 Web Interface Guidelines 审查 src/Login.tsx：\n```tsx\n1 <div className=\"btn\" onClick={submit}>登录</div>\n2 <img src=\"/logo.png\">\n3 <input placeholder=\"邮箱\" />\n4 <style>{`*:focus{outline:none}`}</style>\n```\n请按 Skill 要求的格式输出问题清单。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "Login\\.tsx:\\d",
+          "label": "按 file:line 格式输出"
+        },
+        {
+          "type": "regex",
+          "pattern": "alt",
+          "label": "指出图片缺少 alt"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "label|aria-label"
+          ],
+          "label": "指出输入缺少 label"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "<button|button"
+          ],
+          "label": "指出应使用 button"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "focus-visible|outline|焦点"
+          ],
+          "label": "指出焦点样式被移除"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "blader-humanizer": {
+      "task": "把下面这段 AI 味很重的英文改写得像真人写的，事实不变：\n\"In today's fast-paced digital landscape, our new API isn't just a tool — it's a game-changer. It delivers speed, reliability, and scalability. Latency dropped 37% in 2025, a testament to our commitment to excellence. Let's delve into what makes it truly special.\"",
+      "checks": [
+        {
+          "type": "not_regex",
+          "pattern": "fast-paced|game-changer|testament|delve|isn't just",
+          "label": "去掉典型 AI 套话"
+        },
+        {
+          "type": "regex",
+          "pattern": "37\\s*%",
+          "label": "保留 37% 事实"
+        },
+        {
+          "type": "regex",
+          "pattern": "2025",
+          "label": "保留 2025 事实"
+        },
+        {
+          "type": "min_chars",
+          "n": 80,
+          "label": "输出不少于 80 字符"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-infographic": {
+      "task": "把下面的内容做成一张信息图（我授权你直接选择布局和风格，不必再确认）：『国内免费 LLM API 对比：魔搭每日 2000 次；智谱 GLM-4-Flash 永久免费；硅基流动部分 9B 以下模型免费；Groq 有每分钟限额；OpenRouter 免费模型每天约 50 次。』你无法生成图片，请输出所选 layout、style、结构化内容和完整的图片生成 prompt。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "linear-progression|binary-comparison|comparison-matrix|hierarchical-layers|tree-branching|hub-spoke|structural-breakdown|bento-grid|iceberg|bridge|funnel|isometric-map|dashboard|periodic-table|comic-strip|story-mountain|jigsaw|venn-diagram|winding-roadmap|circular-flow|dense-modules"
+          ],
+          "label": "选择 Skill 内置 layout"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "craft-handmade|claymation|kawaii|storybook-watercolor|chalkboard|cyberpunk-neon|bold-graphic|aged-academia|corporate-memphis|technical-schematic|origami|pixel-art|ui-wireframe|subway-map|ikea-manual|knolling|lego-brick|pop-laboratory|morandi-journal|retro-pop-grid|hand-drawn-edu|retro-popup-pop"
+          ],
+          "label": "选择 Skill 内置 style"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "给出图片生成 prompt"
+        },
+        {
+          "type": "regex",
+          "pattern": "2000",
+          "label": "保留原始数据"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-markdown-to-html": {
+      "task": "我有 article.md（含代码块和 LaTeX 公式），想转成微信公众号可用的 HTML，用 grace 主题，并把外链转为文末引用。给出具体命令和说明。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "main\\.ts",
+          "label": "使用 scripts/main.ts"
+        },
+        {
+          "type": "regex",
+          "pattern": "--theme\\s+grace",
+          "label": "指定 grace 主题"
+        },
+        {
+          "type": "regex",
+          "pattern": "--cite",
+          "label": "使用 --cite 生成文末引用"
+        },
+        {
+          "type": "regex",
+          "pattern": "article\\.md",
+          "label": "以 article.md 为输入"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-url-to-markdown": {
+      "task": "把 https://example.com/blog/post-1 抓取成 markdown 保存下来。给出具体命令、输出文件位置约定，以及遇到登录/验证码时怎么处理。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "baoyu-fetch",
+          "label": "使用 baoyu-fetch"
+        },
+        {
+          "type": "regex",
+          "pattern": "example\\.com/blog/post-1",
+          "label": "目标 URL 正确"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\.md\\b"
+          ],
+          "label": "输出 markdown 文件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "wait|等待|登录|CAPTCHA|验证码"
+          ],
+          "label": "说明登录/验证码等待模式"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-article-illustrator": {
+      "task": "为下面这篇文章规划配图（授权直接决定，无需确认）：『免费 LLM API 的三个坑：一是限额随时变；二是免费模型会突然下线；三是国内访问延迟不稳定。应对方法是多供应商兜底、每日探测、设置超时重试。』你无法生成图片，请输出需要配图的位置、每张图的 Type × Style 和完整 prompt。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(图|插图|illustration|image|配图)\\s*\\d|^\\s*\\d+[.)、]",
+          "label": "规划 ≥3 处配图",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "type|类型"
+          ],
+          "label": "指定 Type"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "style|风格"
+          ],
+          "label": "指定 Style"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "给出 prompt"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-slide-deck": {
+      "task": "把下面内容做成 6 页幻灯片图片的大纲（授权直接决定风格，无需确认）：『FreeLLM 是一个每日核验的免费 AI 模型目录，收录 80+ 模型、20+ 平台，提供实测分数、可用性探测和 Skill 实测。』你无法生成图片，请输出带风格说明的逐页大纲和每页图片 prompt。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(slide|幻灯片|第\\s*\\d+\\s*[页张]|page)\\s*\\d*",
+          "label": "逐页大纲（≥5 页）",
+          "min": 5
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "style|风格"
+          ],
+          "label": "包含风格说明"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "包含图片 prompt"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-post-to-wechat": {
+      "task": "把 article.md 发布到我的微信公众号草稿箱，走 API 方式。给出需要准备的凭证/配置、具体命令和步骤。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "wechat-api\\.ts"
+          ],
+          "label": "使用 scripts/wechat-api.ts"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "APP_?ID|AppID|appid|APP_SECRET|AppSecret"
+          ],
+          "label": "说明 AppID/AppSecret 凭证"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "草稿|draft"
+          ],
+          "label": "发布为草稿"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "白名单|allowlist|IP"
+          ],
+          "label": "提醒 IP 白名单"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-post-to-x": {
+      "task": "帮我在 X 上发一条带两张图片的帖子：文字『FreeLLM 今日更新：新增 2 个免费模型』，图片 ./a.png 和 ./b.png。给出具体命令。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "x-browser\\.ts",
+          "label": "使用 x-browser.ts"
+        },
+        {
+          "type": "regex",
+          "pattern": "--image",
+          "label": "使用 --image 参数"
+        },
+        {
+          "type": "regex",
+          "pattern": "a\\.png[\\s\\S]*b\\.png",
+          "label": "附带两张图片"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-xhs-images": {
+      "task": "把这段内容做成小红书图文卡片系列（授权直接选择，无需确认）：『新手免费用大模型 API 的 5 个步骤：注册魔搭、实名认证、获取 Token、在 Cherry Studio 填写 base_url、测试对话。』你无法生成图片，请输出所选 style、layout、每张卡片的文字与图片 prompt。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\b(fresh|warm|bold|minimal|retro|pop|notion|chalkboard|study-notes|screen-print|sketch-notes)\\b"
+          ],
+          "label": "选择 Skill 内置 style"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\b(sparse|balanced|dense|list|comparison|flow|mindmap|quadrant)\\b"
+          ],
+          "label": "选择 Skill 内置 layout"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(卡片|card|图|第\\s*\\d+\\s*张|P)\\s*\\d",
+          "label": "≥3 张卡片",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "给出图片 prompt"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jimliu-baoyu-cover-image": {
+      "task": "为文章《2026 年最值得用的 10 个免费大模型 API》设计封面（授权直接选择，无需确认）。你无法生成图片，请输出 5 个维度的选择（type、palette、rendering、text、mood）和完整的图片生成 prompt。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\b(hero|conceptual|typography|metaphor|scene|minimal)\\b"
+          ],
+          "label": "选择 type"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\b(warm|elegant|cool|dark|earth|vivid|pastel|mono|retro|duotone|macaron)\\b"
+          ],
+          "label": "选择 palette"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "flat-vector|hand-drawn|painterly|digital|pixel|chalk|screen-print"
+          ],
+          "label": "选择 rendering"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\b(subtle|balanced|bold)\\b"
+          ],
+          "label": "选择 mood"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "给出 prompt"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli": {
+      "task": "用 officecli 创建 report.docx：一级标题『月度运营报告』、一段正文、一个 3x3 表格，然后检查文档结构。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "使用 officecli create/add/set 命令（≥3 条）",
+          "min": 3
+        },
+        {
+          "type": "regex",
+          "pattern": "report\\.docx",
+          "label": "目标文件 report.docx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "table|表格"
+          ],
+          "label": "添加表格"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "officecli\\s+(view|get|query|validate)"
+          ],
+          "label": "检查文档结构"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-docx": {
+      "task": "用 officecli 生成一份合同 contract.docx：标题、甲乙双方信息段落、带编号的 5 条条款、签字栏表格、页脚页码。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥4 条）",
+          "min": 4
+        },
+        {
+          "type": "regex",
+          "pattern": "contract\\.docx",
+          "label": "目标文件 contract.docx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "footer|页脚"
+          ],
+          "label": "页脚"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "page|页码|PAGE"
+          ],
+          "label": "页码"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "table|表格"
+          ],
+          "label": "签字栏表格"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-academic-paper": {
+      "task": "用 officecli 生成学术论文格式的 paper.docx：标题、摘要、3 个章节、一个带编号的公式、一张带题注的表格、参考文献（至少 3 条，正文中引用）。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥4 条）",
+          "min": 4
+        },
+        {
+          "type": "regex",
+          "pattern": "paper\\.docx",
+          "label": "目标文件 paper.docx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "abstract|摘要"
+          ],
+          "label": "摘要"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "equation|公式|math|omml"
+          ],
+          "label": "公式"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "reference|参考文献|bibliograph|citation"
+          ],
+          "label": "参考文献/引用"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "caption|题注"
+          ],
+          "label": "表格题注"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-word-form": {
+      "task": "用 officecli 生成可填写的请假申请表 leave-form.docx：姓名（文本框）、部门（下拉：研发/市场/行政）、请假日期（日期选择器）、是否带薪（复选框）。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥3 条）",
+          "min": 3
+        },
+        {
+          "type": "regex",
+          "pattern": "leave-form\\.docx",
+          "label": "目标文件 leave-form.docx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "sdt|content ?control|内容控件"
+          ],
+          "label": "使用内容控件 SDT"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "dropdown|下拉|combo"
+          ],
+          "label": "下拉控件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "date|日期"
+          ],
+          "label": "日期控件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "checkbox|复选"
+          ],
+          "label": "复选框"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-morph-ppt": {
+      "task": "用 officecli 生成 4 页带 Morph 平滑过渡的 morph.pptx：一个圆形从第 1 页左侧移动并放大到第 2 页中央，第 3、4 页标题文字平滑切换。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥4 条）",
+          "min": 4
+        },
+        {
+          "type": "regex",
+          "pattern": "morph\\.pptx",
+          "label": "目标文件 morph.pptx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "morph"
+          ],
+          "label": "设置 Morph 过渡"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "!!|name=|形状命名|same name|同名"
+          ],
+          "label": "跨页形状同名匹配"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-pptx": {
+      "task": "用 officecli 生成 5 页产品介绍 product.pptx：封面、痛点、方案、带柱状图的数据页（Q1 30、Q2 45、Q3 70）、联系方式。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥5 条）",
+          "min": 5
+        },
+        {
+          "type": "regex",
+          "pattern": "product\\.pptx",
+          "label": "目标文件 product.pptx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "chart|图表"
+          ],
+          "label": "柱状图"
+        },
+        {
+          "type": "regex",
+          "pattern": "30[\\s\\S]*45[\\s\\S]*70",
+          "label": "使用给定数据"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-pitch-deck": {
+      "task": "用 officecli 为 AI 客服初创公司做种子轮融资路演 pitch.pptx（10 页左右：问题、方案、市场规模、产品、商业模式、牵引力、竞争、团队、融资需求 300 万美元）。给出页面规划和完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥5 条）",
+          "min": 5
+        },
+        {
+          "type": "regex",
+          "pattern": "pitch\\.pptx",
+          "label": "目标文件 pitch.pptx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "TAM|SAM|市场规模"
+          ],
+          "label": "市场规模页"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "traction|牵引|增长数据"
+          ],
+          "label": "牵引力页"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "300\\s*万|\\$?3\\s*M|3,000,000"
+          ],
+          "label": "融资需求金额"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-xlsx": {
+      "task": "用 officecli 生成销售表 sales.xlsx：A 列月份（1-6 月）、B 列销售额、B8 用公式求和、C 列环比增长率公式、表头加粗并冻结首行。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥3 条）",
+          "min": 3
+        },
+        {
+          "type": "regex",
+          "pattern": "sales\\.xlsx",
+          "label": "目标文件 sales.xlsx"
+        },
+        {
+          "type": "regex",
+          "pattern": "=SUM\\(",
+          "label": "使用 SUM 公式"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "bold|加粗"
+          ],
+          "label": "表头加粗"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "freeze|冻结"
+          ],
+          "label": "冻结首行"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "iofficeai-officecli-data-dashboard": {
+      "task": "用 officecli 生成 dashboard.xlsx：Data 表放 12 个月营收和成本，Dashboard 表放 3 个公式驱动的 KPI（总营收、总成本、毛利率）和一个折线图，打开时默认显示 Dashboard。给出完整命令序列。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "officecli\\s+(create|add|set|batch)",
+          "label": "officecli 命令（≥4 条）",
+          "min": 4
+        },
+        {
+          "type": "regex",
+          "pattern": "dashboard\\.xlsx",
+          "label": "目标文件 dashboard.xlsx"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "=SUM\\(|=AVERAGE\\(|=\\w+\\(Data!"
+          ],
+          "label": "KPI 使用公式引用 Data"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "line|折线"
+          ],
+          "label": "折线图"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "active|activeTab|默认|first sheet|首个"
+          ],
+          "label": "默认显示 Dashboard"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-file-organizer": {
+      "task": "我的 ~/Downloads 很乱，文件如下：invoice_2026_03.pdf、IMG_2041.JPG、IMG_2041 (1).JPG、setup.dmg、report-final.docx、report-final-v2.docx、song.mp3、data.csv。请给出整理方案和命令。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "mkdir"
+          ],
+          "label": "创建分类目录"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\bmv\\b"
+          ],
+          "label": "移动文件命令"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "重复|duplicate|\\(1\\)"
+          ],
+          "label": "识别重复文件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "确认|confirm|批准|approval|先.*再"
+          ],
+          "label": "执行前请求确认"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-invoice-organizer": {
+      "task": "整理这些发票文件以备报税：scan001.pdf（阿里云 2026-03-05 ¥1,280 云服务器）、IMG_88.jpg（滴滴 2026-03-11 ¥56 打车）、doc(3).pdf（Adobe 2026-02-28 $22.99 订阅）。请给出重命名结果、目录结构和汇总 CSV。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "2026-0[23]-\\d\\d",
+          "label": "按日期规范重命名（≥3 处日期）",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "阿里云|Aliyun|Alibaba"
+          ],
+          "label": "保留供应商名"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "(?m)^.*(date|日期).*,.*(vendor|供应商|商家)"
+          ],
+          "label": "输出 CSV 表头"
+        },
+        {
+          "type": "regex",
+          "pattern": "1,?280",
+          "label": "保留金额"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-content-research-writer": {
+      "task": "帮我写一篇文章的开头和大纲：《为什么开发者应该关注免费 LLM API 的稳定性》，目标读者是独立开发者。要有吸引人的开头、带引用标注的论据。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "(?m)^#{1,3}\\s",
+          "label": "有大纲结构（≥3 个标题）",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\[\\d+\\]|\\[来源|来源：|Source|\\(https?://"
+          ],
+          "label": "包含引用标注"
+        },
+        {
+          "type": "min_chars",
+          "n": 600,
+          "label": "输出不少于 600 字符"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-meeting-insights-analyzer": {
+      "task": "分析这段会议记录中我（张三）的沟通模式：\n[00:01] 张三：嗯，那个，我觉得可能，也许我们可以考虑一下延期？\n[00:02] 李四：不行，客户已经定了日期。\n[00:03] 张三：哦好的好的，那就按原计划吧。\n[00:05] 王五：测试资源不够怎么办？\n[00:06] 张三：嗯……这个我们会后再说吧。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "回避|avoid|冲突"
+          ],
+          "label": "识别冲突回避"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "嗯|那个|填充词|filler|hedg|可能|也许"
+          ],
+          "label": "识别填充词/模糊表达"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\[?00:0\\d\\]?"
+          ],
+          "label": "引用带时间戳的原话"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "建议|recommend|改进"
+          ],
+          "label": "给出改进建议"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-tailored-resume-generator": {
+      "task": "根据这个 JD 改写我的简历要点。JD：『后端工程师，要求 Go、Kubernetes、高并发、可观测性（Prometheus）』。我的经历：3 年 Python 后端，1 年 Go 写过订单服务（QPS 5k），用过 Docker，搭过 Grafana 看板。不要编造经历。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\bGo\\b|Golang"
+          ],
+          "label": "突出 Go 经验"
+        },
+        {
+          "type": "regex",
+          "pattern": "5\\s*k|5000|5,000",
+          "label": "保留 QPS 5k 数据"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Grafana|Prometheus|可观测"
+          ],
+          "label": "对齐可观测性要求"
+        },
+        {
+          "type": "not_regex",
+          "pattern": "精通\\s*Kubernetes|Kubernetes 专家|多年 Kubernetes",
+          "label": "不编造 Kubernetes 经验"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-competitive-ads-extractor": {
+      "task": "分析这 4 条竞品广告文案（已从广告库复制）：1『10 秒接入 GPT，首月免费』 2『国内直连，无需魔法』 3『开发者都在用的 API 中转，99.9% 可用』 4『注册送 100 万 tokens』。总结他们打的痛点、信息模式和我们可以借鉴的方向。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "痛点|pain"
+          ],
+          "label": "总结痛点"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "免费|赠送|送"
+          ],
+          "label": "识别免费/赠送钩子"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "直连|访问|网络"
+          ],
+          "label": "识别国内访问痛点"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "建议|借鉴|recommend"
+          ],
+          "label": "给出借鉴建议"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-lead-research-assistant": {
+      "task": "我们做『面向中小电商的 AI 客服 SaaS』。请帮我识别高质量潜在客户：给出理想客户画像、筛选标准与打分方式、去哪里找、以及首轮触达建议。你不能联网，不要编造具体公司名或联系方式。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "画像|ICP|ideal customer"
+          ],
+          "label": "理想客户画像"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "打分|评分|score|优先级"
+          ],
+          "label": "打分/优先级"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "触达|outreach|开场|邮件"
+          ],
+          "label": "触达建议"
+        },
+        {
+          "type": "not_regex",
+          "pattern": "@\\w+\\.(com|cn)|1[3-9]\\d{9}",
+          "label": "未编造联系方式"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-twitter-algorithm-optimizer": {
+      "task": "优化这条推文的传播：『我们上线了新功能，欢迎大家来试试，链接在这里 https://freellm.top』。给出 2-3 个改写版本并说明依据。",
+      "checks": [
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(版本|version|v)\\s*\\d|^\\s*\\d+[.)、]",
+          "label": "给出多个改写版本",
+          "min": 2
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "回复|reply|互动|engagement|停留|dwell"
+          ],
+          "label": "基于互动/算法信号说明"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "链接|link|外链"
+          ],
+          "label": "讨论外链对推荐的影响"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "composiohq-changelog-generator": {
+      "task": "根据这些提交生成面向用户的更新日志：\nfeat: 新增 Skill 实测页面\nfix: 修复搜索框中文输入法回车误提交\nchore: bump deps\nrefactor: 拆分 build_static.py\nfeat(models): 模型页显示首 token 延迟\nfix: 修复暗色模式下按钮不可见",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "新功能|新增|Features?|New"
+          ],
+          "label": "新功能分组"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "修复|Fix"
+          ],
+          "label": "修复分组"
+        },
+        {
+          "type": "not_regex",
+          "pattern": "bump deps|refactor:|chore:",
+          "label": "过滤掉内部提交"
+        },
+        {
+          "type": "regex",
+          "pattern": "首 ?token|延迟",
+          "label": "包含用户可感知的改动"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "michalparkola-article-extractor": {
+      "task": "把 https://example.com/posts/free-llm-guide 的正文提取成干净文本保存。给出具体命令和文件命名方式。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "trafilatura|readability|reader|jina|defuddle"
+          ],
+          "label": "使用正文提取工具"
+        },
+        {
+          "type": "regex",
+          "pattern": "example\\.com/posts/free-llm-guide",
+          "label": "目标 URL 正确"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\.txt|\\.md"
+          ],
+          "label": "保存到文件"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "michalparkola-youtube-transcript": {
+      "task": "下载这个视频的字幕/转录文本：https://www.youtube.com/watch?v=dQw4w9WgXcQ 。给出具体命令。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "yt-dlp",
+          "label": "使用 yt-dlp"
+        },
+        {
+          "type": "regex",
+          "pattern": "--skip-download",
+          "label": "不下载视频本体"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "--write-(auto-)?subs?|--write-auto-sub"
+          ],
+          "label": "下载字幕"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "michalparkola-learn-this": {
+      "task": "learn this：下面是一篇文章的正文——『写好 prompt 的三个原则：1）给模型明确角色和目标；2）提供示例；3）要求结构化输出并给出校验标准。实践中，先用小样本迭代，再固化为模板。』请提取要点并给出行动计划。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "要点|key|insight|takeaway"
+          ],
+          "label": "提取要点"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "行动|action|计划|plan"
+          ],
+          "label": "给出行动计划"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?m)^\\s*(\\d+[.)、]|[-*]\\s)",
+          "label": "结构化列表（≥4 项）",
+          "min": 4
+        }
+      ],
+      "allowQuestions": false
+    },
+    "michalparkola-ship-learn-next": {
+      "task": "我刚看完一个讲『用 FastAPI 构建 REST API』的教程。请把它转成可执行的学习/实践计划。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "rep|练习|迭代|轮"
+          ],
+          "label": "按 rep（反复练习）组织"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "ship|上线|发布|交付|部署"
+          ],
+          "label": "包含交付/上线"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "反思|reflect|复盘|下一步|next"
+          ],
+          "label": "包含反思/下一步"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "michalparkola-unblock-action": {
+      "task": "我的待办里『写季度复盘』拖了两周了，一直不想动。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Unblocked|下一步|next action|第一步|物理动作|physical"
+          ],
+          "label": "给出下一步具体动作"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\d+\\s*(分钟|min)"
+          ],
+          "label": "限定时间"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "今天|today"
+          ],
+          "label": "缩小到今天的范围"
+        }
+      ],
+      "allowQuestions": true
+    },
+    "michalparkola-scrum-sage": {
+      "task": "分析我们团队最近 3 个 Sprint：计划点数 40/42/45，完成 28/30/26；每个 Sprint 都有 2-3 个需求中途插入；站会经常超过 30 分钟。请给出诊断和改进建议。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "velocity|速率|速度|完成率"
+          ],
+          "label": "分析速率/完成率"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "插入|scope|范围|中途"
+          ],
+          "label": "指出中途插入需求问题"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "站会|stand-?up|daily"
+          ],
+          "label": "处理站会超时"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "建议|recommend|行动"
+          ],
+          "label": "给出改进建议"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "hugohe3-ppt-master": {
+      "task": "用这个工作流把下面的产品介绍做成 6 页可编辑 PPTX：『FreeLLM：每日核验的免费 AI 模型目录，80+ 模型实测、可用性探测、Skill 实测、国内可用标注。』给出页面规划、至少 1 页的 SVG 示例和导出 PPTX 的命令/步骤。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "<svg"
+          ],
+          "label": "给出 SVG 页面示例"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "pptx"
+          ],
+          "label": "导出 PPTX"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)^\\s*(#{1,4}\\s*)?(第\\s*\\d+\\s*页|slide\\s*\\d+|page\\s*\\d+|P\\d+|\\d+[.)、])",
+          "label": "6 页规划",
+          "min": 6
+        }
+      ],
+      "allowQuestions": false
+    },
+    "op7418-nanobanana-ppt-skills": {
+      "task": "用这个 Skill 把『免费大模型 API 入门』做成 5 页 PPT 图片并生成转场视频。给出逐页 prompt、需要的环境变量/API Key 配置和运行命令。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "prompt"
+          ],
+          "label": "逐页 prompt"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "API[_ ]?KEY|GEMINI|环境变量|\\.env"
+          ],
+          "label": "说明 API Key 配置"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "python|\\.py|命令"
+          ],
+          "label": "给出运行命令"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?mi)(第\\s*\\d+\\s*页|slide\\s*\\d+|page\\s*\\d+)",
+          "label": "≥5 页",
+          "min": 5
+        }
+      ],
+      "allowQuestions": false
+    },
+    "lewislulu-html-ppt-skill": {
+      "task": "做一个 5 页的静态 HTML 演示稿《FreeLLM 季度回顾》（标题页、数据页、路线图、团队、Q&A），支持键盘翻页。直接输出完整 HTML 文件。",
+      "checks": [
+        {
+          "type": "html_doc",
+          "label": "输出完整 HTML 文档且可解析",
+          "min_chars": 0
+        },
+        {
+          "type": "count_regex",
+          "pattern": "<section|class=\\\"[^\\\"]*slide",
+          "label": "≥5 页幻灯片",
+          "min": 5
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "keydown|ArrowRight|keyup"
+          ],
+          "label": "支持键盘翻页"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "rendercv-rendercv": {
+      "task": "用 RenderCV 给我写简历 YAML：姓名 李明，邮箱 liming@example.com，教育：浙江大学 计算机 2016-2020；经历：某电商公司 后端工程师 2020-至今，负责订单系统重构。使用 classic 主题，并给出渲染命令。",
+      "checks": [
+        {
+          "type": "yaml_valid",
+          "keys": [
+            "cv"
+          ],
+          "label": "YAML 可解析且含 cv 顶层键"
+        },
+        {
+          "type": "regex",
+          "pattern": "theme:\\s*classic",
+          "label": "使用 classic 主题"
+        },
+        {
+          "type": "regex",
+          "pattern": "rendercv render",
+          "label": "给出 rendercv render 命令"
+        },
+        {
+          "type": "regex",
+          "pattern": "sections:",
+          "label": "包含 sections"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "jzcreative-html-resume-beautifier": {
+      "task": "把下面的简历内容排成一页 A4 的精美 HTML 简历（隐私安全）：王芳，产品经理，电话 13812345678，邮箱 wangfang@example.com；经历：2021-至今 某 SaaS 公司 高级产品经理，主导计费系统改版，付费转化提升 23%；教育：复旦大学 2017-2021。",
+      "checks": [
+        {
+          "type": "html_doc",
+          "label": "输出完整 HTML 文档且可解析",
+          "min_chars": 0
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "A4|210mm|@page"
+          ],
+          "label": "按 A4 页面排版"
+        },
+        {
+          "type": "regex",
+          "pattern": "23\\s*%",
+          "label": "保留 23% 成果数据"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "@media print|print"
+          ],
+          "label": "支持打印"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "alibaba-open-code-review": {
+      "task": "审查这次改动（你无法运行 ocr CLI，请直接按 Skill 的报告格式输出审查结果）：\n```diff\n--- a/api/user.py\n+++ b/api/user.py\n@@ -10,3 +10,6 @@\n+def get_user(request):\n+    uid = request.args['id']\n+    row = db.execute(f\"SELECT * FROM users WHERE id = {uid}\").fetchone()\n+    return jsonify(dict(row))\n```",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "Critical|High|严重|高危"
+          ],
+          "label": "按严重度分级"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "SQL ?注入|SQL injection"
+          ],
+          "label": "发现 SQL 注入"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "user\\.py:?\\s*\\d+|line\\s*\\d+|第\\s*\\d+\\s*行|L\\d+"
+          ],
+          "label": "定位到行"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "参数化|parameter|placeholder|\\?"
+          ],
+          "label": "给出参数化修复"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "ayghri-i-have-adhd": {
+      "task": "我想把一个 Next.js 项目部署到 Vercel，怎么做？",
+      "checks": [
+        {
+          "type": "not_regex",
+          "pattern": "^\\s*(好的|当然|没问题|Sure|Great|Of course|Certainly)",
+          "label": "没有寒暄开场"
+        },
+        {
+          "type": "regex",
+          "pattern": "^\\s*(\\*\\*)?(1[.)、]|第一步|Step 1|下一步|Next)",
+          "label": "开头即给出下一步/第一步"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "(?m)^\\s*\\d+[.)、]",
+          "label": "编号步骤数 ≤5（列表封顶）",
+          "min": 1,
+          "max": 5
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "分钟|min"
+          ],
+          "label": "给出具体时间估计"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "cloudflare-security-audit": {
+      "task": "对下面这个 Express 接口做安全审计：\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  const order = await db.query(`SELECT * FROM orders WHERE id = ${req.params.id}`);\n  res.json(order);\n});\n```\n（服务对公网开放，已有登录中间件但此路由未使用。）",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "SQL ?注入|SQL injection"
+          ],
+          "label": "发现 SQL 注入"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "IDOR|越权|授权|authorization|访问控制|access control"
+          ],
+          "label": "发现越权/缺少授权"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "severity|严重|高危|High|Critical|置信|confidence"
+          ],
+          "label": "给出严重度/置信度"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "参数化|parameter|\\$1|\\?"
+          ],
+          "label": "给出修复建议"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "leonxlnx-design-taste-frontend": {
+      "task": "为一个叫 Ledgerly 的记账 SaaS 做落地页首屏 + 功能区 + 价格区。直接输出完整 HTML（内联 CSS），要有清晰的设计方向，避免千篇一律的 AI 模板感。",
+      "checks": [
+        {
+          "type": "html_doc",
+          "label": "输出完整 HTML 文档且可解析",
+          "min_chars": 2500
+        },
+        {
+          "type": "regex",
+          "pattern": "<style",
+          "label": "内联 CSS"
+        },
+        {
+          "type": "not_regex",
+          "pattern": "linear-gradient\\([^)]*(#8b5cf6|#7c3aed|purple|#a855f7|#6366f1)",
+          "label": "未使用 AI 紫色渐变套路"
+        },
+        {
+          "type": "regex",
+          "pattern": "@media",
+          "label": "响应式"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "--[a-z-]+\\s*:"
+          ],
+          "label": "使用 CSS 变量定义设计 token"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "anthropics-claude-api": {
+      "task": "用 Python Anthropic SDK 写一个示例：流式输出回答，同时定义一个 get_weather 工具并处理 tool_use 回合。模型使用 Skill 中推荐的当前模型 id。给出完整代码。",
+      "checks": [
+        {
+          "type": "code_compiles",
+          "langs": [
+            "python"
+          ],
+          "label": "代码块可通过语法检查"
+        },
+        {
+          "type": "regex",
+          "pattern": "anthropic\\.Anthropic\\(|Anthropic\\(\\)",
+          "label": "创建 Anthropic 客户端"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "messages\\.stream|stream=True"
+          ],
+          "label": "使用流式"
+        },
+        {
+          "type": "regex",
+          "pattern": "tools\\s*=",
+          "label": "定义工具"
+        },
+        {
+          "type": "regex",
+          "pattern": "tool_use",
+          "label": "处理 tool_use"
+        },
+        {
+          "type": "regex",
+          "pattern": "claude-[a-z0-9-]+",
+          "label": "使用 Claude 模型 id"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-dispatching-parallel-agents": {
+      "task": "CI 里有 3 个失败：tests/test_billing.py（金额舍入）、tests/test_search.py（中文分词）、tests/test_export.py（CSV 编码）。三者互不相关。请按 Skill 组织处理。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "并行|parallel|同时"
+          ],
+          "label": "并行派发"
+        },
+        {
+          "type": "count_regex",
+          "pattern": "test_(billing|search|export)",
+          "label": "每个领域一个代理（覆盖 3 个文件）",
+          "min": 3
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "范围|scope|约束|constraint|不要修改|只"
+          ],
+          "label": "给每个代理限定范围"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "汇总|整合|integrat|review|冲突|conflict"
+          ],
+          "label": "最后整合/检查冲突"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-using-git-worktrees": {
+      "task": "我要开始做 feature/skill-examples 功能，想和当前工作区隔离。按 Skill 给出具体操作命令。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "git worktree add",
+          "label": "使用 git worktree add"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "\\.gitignore|check-ignore"
+          ],
+          "label": "确认 worktree 目录被忽略"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "test|测试"
+          ],
+          "label": "建立测试基线"
+        },
+        {
+          "type": "regex",
+          "pattern": "feature/skill-examples",
+          "label": "使用指定分支名"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "obra-finishing-a-development-branch": {
+      "task": "feature/csv-export 的实现写完了。按 Skill 帮我收尾。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "测试|test"
+          ],
+          "label": "先验证测试"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "合并|merge"
+          ],
+          "label": "选项：本地合并"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "PR|pull request"
+          ],
+          "label": "选项：创建 PR"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "保留|keep"
+          ],
+          "label": "选项：保留分支"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "丢弃|discard|删除"
+          ],
+          "label": "选项：丢弃"
+        }
+      ],
+      "allowQuestions": true
+    },
+    "vercel-labs-react-view-transitions": {
+      "task": "在 Next.js App Router 中给『商品列表 → 商品详情』加共享元素过渡：列表缩略图平滑变成详情页大图。给出代码和必要配置。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "<ViewTransition",
+          "label": "使用 <ViewTransition> 组件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "name=|viewTransitionName"
+          ],
+          "label": "共享元素命名"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "viewTransition\\s*:\\s*true|experimental"
+          ],
+          "label": "开启 Next.js 实验配置"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "```(tsx|jsx|ts|js)"
+          ],
+          "label": "给出代码"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "mattpocock-diagnosing-bugs": {
+      "task": "diagnose：升级到新版 ORM 后，/api/orders 列表接口 p95 从 120ms 涨到 900ms，本地偶尔能复现。请按 Skill 推进诊断。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "反馈循环|feedback loop|loop"
+          ],
+          "label": "先建立反馈循环"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "复现|reproduce|最小"
+          ],
+          "label": "复现并最小化"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "假设|hypothes"
+          ],
+          "label": "提出可证伪假设"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "埋点|日志|instrument|profil|EXPLAIN|N\\+1"
+          ],
+          "label": "加入观测/仪表"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "回归测试|regression"
+          ],
+          "label": "修复后加回归测试"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "mattpocock-implement-spec": {
+      "task": "这是 spec 和 tickets：spec『给博客加评论功能』；tickets：T1 评论数据表（无依赖）；T2 发表评论 API（依赖 T1）；T3 评论列表 API（依赖 T1）；T4 前端评论组件（依赖 T2、T3）。按 Skill 说明你的执行方式。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "integration branch|集成分支"
+          ],
+          "label": "创建集成分支"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "frontier|前沿|可并行|ready"
+          ],
+          "label": "按依赖前沿推进"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "T2[\\s\\S]{0,40}T3|T3[\\s\\S]{0,40}T2"
+          ],
+          "label": "T2/T3 并行"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "worktree"
+          ],
+          "label": "每个实现代理独立 worktree"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "code-review|代码审查|审查"
+          ],
+          "label": "完成后代码审查"
+        }
+      ],
+      "allowQuestions": false
+    }
+  }
+}
