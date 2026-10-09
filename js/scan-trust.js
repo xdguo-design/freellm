@@ -1,0 +1,102 @@
+(() => {
+  'use strict';
+  const ready = document.readyState === 'loading'
+    ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, {once:true}))
+    : Promise.resolve();
+  const set = (node, text) => { if (node) node.textContent = String(text); };
+  const onToday = date => {
+    const values = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+      timeZone:'Asia/Shanghai', year:'numeric', month:'2-digit', day:'2-digit'
+    }).formatToParts(new Date()).filter(part => ['year','month','day'].includes(part.type))
+      .map(part => [part.type, part.value]));
+    return date === [values.year,values.month,values.day].join('-');
+  };
+  const metric = (container, name, value, selector = 'strong') => {
+    if (!container) return;
+    [...container.querySelectorAll('article')].forEach(article => {
+      const label = article.querySelector('small, span');
+      if (label && label.textContent.trim() === name) set(article.querySelector(selector), value);
+    });
+  };
+  const render = scan => {
+    if (!scan || !/^\d{4}-\d{2}-\d{2}$/.test(scan.date)
+      || !Number.isInteger(scan.models) || !Number.isInteger(scan.offers)) return;
+    // A curated update can be newer than the last real scan; keep both dates separate.
+    const scanDate = scan.snapshotDate || scan.date;
+    const scanCurrent = scan.scanRunToday === true && onToday(scanDate);
+    const editorialCurrent = onToday(scan.date);
+    const latest = '最近扫描：' + scanDate;
+    const home = document.querySelector('.prototype-stats');
+    if (home) {
+      const cards = home.querySelectorAll('.prototype-stat');
+      const values = [scan.newCount,scan.models,scan.newOffers,scan.offers];
+      const labels = editorialCurrent
+        ? ['今日发现','模型记录','新资源动态','扫描资源数']
+        : [latest,'模型记录','新资源动态','扫描资源数'];
+      cards.forEach((card,i) => {
+        if (i >= values.length) return;
+        set(card.querySelector('small'), labels[i]);
+        set(card.querySelector('strong:not(.prototype-stat-icon strong)'),values[i]);
+      });
+      // Top 10 is an editorial label, not a scan-derived statistic.
+    }
+    const hero = document.getElementById('heroCount');
+    set(hero,scan.offers);
+    const badge = document.getElementById('daily-log-badge');
+    if (badge) {
+      set(badge,editorialCurrent ? '今日发现 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
+      badge.dataset.newCount = editorialCurrent ? String(scan.newCount) : '0';
+      badge.dataset.changeCount = editorialCurrent ? String(scan.newCount) : '0';
+    }
+    const intel = document.querySelector('.hero-intel-head > span');
+    if (intel) set(intel,latest);
+    if (!scan.hasHistoricalBaseline) {
+      document.querySelectorAll('.mini-chart').forEach(node => node.remove());
+    }
+    document.querySelectorAll('.ref-update-metrics > article').forEach(article => {
+      const label = article.querySelector('span')?.textContent.trim();
+      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks),最近变更:scan.newCount}[label];
+      if (value !== undefined) set(article.querySelector('strong'),value);
+      if (label === '今日新增' && !editorialCurrent) {
+        set(article.querySelector('span'),'上次扫描新增');
+        set(article.querySelector('small'),latest);
+      }
+    });
+    document.querySelectorAll('.ref-update-snapshot .log-snapshot-card').forEach(card => {
+      const label = card.querySelector('span')?.textContent || '';
+      if (label.includes('模型')) set(card.querySelector('strong'),scan.models);
+      if (label.includes('资源')) set(card.querySelector('strong'),scan.offers);
+    });
+    if (!editorialCurrent && !scanCurrent) {
+      // Do not obscure a new editorial discovery just because scanning lagged.
+      // Keep the last real snapshot, but do not represent it as today's scan.
+      set(document.querySelector('.log-hero h1 [lang="zh-CN"]'), '最近扫描，发现 AI 新可能');
+      set(document.querySelector('.log-hero h1 [lang="en"]'), 'What changed in the latest scan?');
+      const heroMeta = document.querySelectorAll('.log-hero-meta > div');
+      const status = heroMeta[1]?.querySelector('strong');
+      set(status?.querySelector('[lang="zh-CN"]'), '最近扫描完成');
+      set(status?.querySelector('[lang="en"]'), 'Latest scan complete');
+      const directory = heroMeta[2]?.querySelector('strong');
+      set(directory?.querySelector('[lang="zh-CN"]'), '最近扫描快照');
+      set(directory?.querySelector('[lang="en"]'), 'Latest scan snapshot');
+    }
+    const shared = document.querySelectorAll('[data-scan-stat]');
+    shared.forEach(node => set(node,scan[node.dataset.scanStat] ?? '—'));
+    document.querySelectorAll('[data-scan-date]').forEach(node => set(node,scanCurrent ? scanDate : latest));
+  };
+  ready.then(async () => {
+    try {
+      const response = await fetch('/data/scan-summary.json', {cache:'no-store'});
+      if (!response.ok) throw new Error('scan source unavailable');
+      render(await response.json());
+    } catch (error) {
+      // Fail closed: never leave server-rendered snapshot numbers presented as live scan data.
+      document.querySelectorAll('.prototype-stats .prototype-stat strong:not(.prototype-top10), [data-scan-stat], .ref-update-metrics > article strong, .ref-update-snapshot .log-snapshot-card strong').forEach(n => set(n,'—'));
+      set(document.getElementById('heroCount'),'—');
+      set(document.getElementById('daily-log-badge'),'最近扫描：暂无记录');
+      set(document.querySelector('.hero-intel-head > span'),'最近扫描：暂无记录');
+      document.querySelectorAll('[data-scan-date]').forEach(n => set(n,'最近扫描：暂无记录'));
+      document.querySelectorAll('.mini-chart').forEach(n=>n.remove());
+    }
+  });
+})();

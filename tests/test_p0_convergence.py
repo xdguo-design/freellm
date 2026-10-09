@@ -50,12 +50,16 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn('href="/models/all/"', models_page)
         self.assertIn(f"{len(models)}", all_models)
         self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
+        snapshot = latest.get("observed") or {}
+        scan_summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(scan_summary["models"], len(snapshot.get("models") or []))
+        self.assertEqual(scan_summary["offers"], len(snapshot.get("offers") or []))
         self.assertIn(
-            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{len(models)}</strong>',
+            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{scan_summary["models"]}</strong>',
             logs_page,
         )
         self.assertIn(
-            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{len(offers)}</strong>',
+            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{scan_summary["offers"]}</strong>',
             logs_page,
         )
 

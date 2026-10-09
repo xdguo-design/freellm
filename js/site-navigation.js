@@ -16,8 +16,71 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261004-model-directory-responsive';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261009-ux-p0';
   var updateIndicatorReady = false;
+  var lastUpdateDate = '';
+  var readUpdateKey = 'freellm-last-read-update';
+  function getLastReadUpdate() {
+    try { return window.localStorage.getItem(readUpdateKey) || ''; }
+    catch (error) { return ''; }
+  }
+  function markUpdateRead() {
+    if (!lastUpdateDate) return;
+    try { window.localStorage.setItem(readUpdateKey, lastUpdateDate); }
+    catch (error) { /* Storage can be disabled. */ }
+    setUpdateIndicator(false);
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest && event.target.closest('.fl-site-nav [data-site-nav="logs"]');
+    if (link) markUpdateRead();
+  });
+
+  // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
+  document.addEventListener('keydown', function(event) {
+    if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== 'k') return;
+    var target = event.target;
+    if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+    event.preventDefault();
+    var search = document.getElementById('catalog-search') || document.getElementById('site-search-input');
+    if (search) {
+      search.focus();
+      search.select();
+    } else {
+      window.location.assign('/search/');
+    }
+  });
+
+  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
+  function ensureEnglishEntryLink() {
+    var actions = document.querySelector('.fl-site-ribbon-actions');
+    if (!actions) return;
+    var path = window.location.pathname;
+    var english = Object.prototype.hasOwnProperty.call(englishLocalePaths, path)
+      ? englishLocalePaths[path] : '/en/';
+    var link = actions.querySelector('[data-english-route]');
+    if (!link) {
+      link = document.createElement('a');
+      link.setAttribute('data-english-route', 'true');
+      link.lang = 'en';
+      link.hreflang = 'en';
+      link.textContent = 'English';
+      actions.appendChild(link);
+    }
+    link.href = english;
+    link.title = english === '/en/' && path !== '/'
+      ? 'No English translation yet; open the English homepage'
+      : 'Open the English version of this page';
+  }
+  // Existing language buttons should open a distinct English document.
+  document.addEventListener('click', function(event) {
+    var button = event.target.closest('[data-locale-switch]');
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var path = window.location.pathname;
+    window.location.assign(button.dataset.localeSwitch === 'en'
+      ? (englishLocalePaths[path] || '/en/') : path);
+  }, true);
 
   function setUpdateIndicator(visible) {
     var link = document.querySelector('.fl-site-nav [data-site-nav="logs"]');
@@ -37,7 +100,11 @@
         }).formatToParts(new Date());
         var today = Object.fromEntries(parts.filter(function (part) { return part.type !== 'literal'; }).map(function (part) { return [part.type, part.value]; }));
         var date = today.year + '-' + today.month + '-' + today.day;
-        setUpdateIndicator(status.latestDate === date && status.hasCatalogChanges === true);
+        lastUpdateDate = status.latestDate || '';
+        var onLogPage = /^\/(?:en\/)?logs\/?$/.test(window.location.pathname);
+        if (onLogPage) markUpdateRead();
+        setUpdateIndicator(lastUpdateDate === date && status.hasCatalogChanges === true &&
+          !onLogPage && getLastReadUpdate() !== lastUpdateDate);
       })
       .catch(function () { setUpdateIndicator(false); });
   }
@@ -56,7 +123,13 @@
   }
 
   function ensureSharedNavigation() {
+    // Do not combine a saved dark preference with the light-only Aurora palette.
+    // Keep the preference in storage so a future complete theme can restore it.
+    if (document.body && document.body.classList.contains('fl-ui-v2')) {
+      document.documentElement.removeAttribute('data-theme');
+    }
     ensureSharedNavigationStyles();
+    ensureEnglishEntryLink();
     var rail = document.body && document.body.querySelector('.fl-site-rail');
     if (!rail) return;
 
@@ -76,12 +149,11 @@
       return;
     }
 
-    var themeButton = rail.querySelector('.fl-site-theme-toggle');
     var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     var labels = [
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
-      ['skills', '/skills/', '✦', 'Skills'],
+      ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
@@ -99,36 +171,45 @@
         '<span class="fl-site-brand-mark" aria-hidden="true"></span>' +
         '<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>' +
       '</a>' +
-      '<nav class="fl-site-nav" aria-label="主导航">' + links + '</nav>' +
+      '<button class="fl-mobile-menu-button" type="button" aria-controls="fl-primary-links" aria-expanded="false" aria-label="展开导航菜单"><span aria-hidden="true">☰</span></button>' +
+      '<nav id="fl-primary-links" class="fl-site-nav" aria-label="主导航">' + links + '</nav>' +
       '<div class="fl-site-rail-note" aria-hidden="true"></div>';
 
-    if (themeButton) rail.appendChild(themeButton);
-    else {
-      themeButton = document.createElement('button');
-      themeButton.type = 'button';
-      themeButton.className = 'fl-site-theme-toggle';
-      themeButton.setAttribute('aria-label', '切换主题');
-      themeButton.innerHTML = '<span class="fl-theme-moon" aria-hidden="true">☾</span><span class="fl-theme-sun" aria-hidden="true">☀</span><span class="fl-theme-label">深色</span>';
-      themeButton.addEventListener('click', function () {
-        var dark = document.documentElement.dataset.theme === 'dark';
-        if (dark) {
-          delete document.documentElement.dataset.theme;
-          try { localStorage.removeItem('freellm-theme'); } catch (error) { /* storage can be unavailable */ }
-        } else {
-          document.documentElement.dataset.theme = 'dark';
-          try { localStorage.setItem('freellm-theme', 'dark'); } catch (error) { /* storage can be unavailable */ }
-        }
-        themeButton.setAttribute('aria-pressed', dark ? 'false' : 'true');
-      });
-      rail.appendChild(themeButton);
+    // P1-7: an accessible drawer for narrow phones, not seven compressed icons.
+    var mobileButton = rail.querySelector('.fl-mobile-menu-button');
+    var mobileLinks = rail.querySelector('#fl-primary-links');
+    function closeMobileMenu(restoreFocus) {
+      rail.classList.remove('fl-mobile-menu-open');
+      mobileButton.setAttribute('aria-expanded', 'false');
+      mobileButton.setAttribute('aria-label', '展开导航菜单');
+      if (restoreFocus) mobileButton.focus();
     }
+    mobileButton.addEventListener('click', function () {
+      var open = !rail.classList.contains('fl-mobile-menu-open');
+      rail.classList.toggle('fl-mobile-menu-open', open);
+      mobileButton.setAttribute('aria-expanded', String(open));
+      mobileButton.setAttribute('aria-label', open ? '收起导航菜单' : '展开导航菜单');
+      if (open) mobileLinks.querySelector('a')?.focus();
+    });
+    mobileLinks.addEventListener('click', function (event) {
+      if (event.target.closest('a')) closeMobileMenu(false);
+    });
+    rail.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && rail.classList.contains('fl-mobile-menu-open')) {
+        event.preventDefault();
+        closeMobileMenu(true);
+      }
+    });
+
+    // P1-5: the current page styles are light-only. Do not mount a nonworking
+    // dark-mode toggle until every page surface has passed contrast review.
     rail.dataset.flSharedNavigation = 'true';
     updateCurrentItem();
     refreshUpdateIndicator();
   }
 
   function currentPage() {
-    return document.body && (document.body.dataset.flNav || document.body.dataset.flSection) || '';
+    return document.body && document.body.dataset.flSection || '';
   }
 
   function documentUrl(url) {
@@ -175,6 +256,10 @@
     if (canonical) canonical.remove();
     var nextCanonical = parsed.head.querySelector('link[rel="canonical"]');
     if (nextCanonical) document.head.appendChild(nextCanonical.cloneNode(true));
+    document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(node) { node.remove(); });
+    parsed.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(node) {
+      document.head.appendChild(node.cloneNode(true));
+    });
     // Keep inert page data available to scripts that initialize after mount.
     document.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) { node.remove(); });
     parsed.head.querySelectorAll('script[type="application/json"][id]').forEach(function (node) {
@@ -294,10 +379,20 @@
     });
   }
 
+  // The directory already has a full card renderer, localized field labels,
+  // and working filters. Select it on first paint at phone widths.
+  function activateMobileModelCards() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
+    var section = document.getElementById('model-directory');
+    var button = section && section.querySelector('.mdir-view-btn[data-catalog-view="cards"]');
+    if (button && section.dataset.catalogView !== 'cards') button.click();
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     ensureSharedNavigation();
     activateMenu(document);
     refreshUpdateIndicator();
+    activateMobileModelCards();
   });
 
   function findArgumentEnd(source, start) {
@@ -417,6 +512,7 @@
       if (!replacePageChrome(parsed)) throw new Error('Current page is missing the shared site shell');
       commitStyles();
       for (var index = 0; index < scripts.length; index += 1) await runScript(scripts[index], responseUrl);
+      activateMobileModelCards();
       event('freellm:page-mount', {
         from: fromPage,
         to: parsed.body.dataset.flSection || '',

@@ -122,23 +122,28 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        total = len(offers)
-        self.assertIn(f'<b id="heroCount">{total}</b>', page)
-        self.assertIn(f'<b data-category-count="all">{total}</b>', page)
-        self.assertIn(f'<p id="catalog-result-count">Showing {total} offers</p>', page)
+        snapshot = __import__("json").loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        # Published directory size and the most recent independent observation
+        # are intentionally different counters: don't present one as the other.
+        self.assertIn(f'<b data-category-count="all">{len(offers)}</b>', page)
+        self.assertIn(f'<b id="heroCount">{snapshot["offers"]}</b>', page)
+        self.assertIn('id="catalog-result-count"', page)
+        self.assertIn('role="status"', page)
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        today = page.index('class="today-latest"')
+        hero = page.index('class="catalog-hero"')
+        discovery = page.index('id="home-latest-discovery"')
+        categories = page.index('id="categories"')
         offers = page.index('id="catalog-offers"')
-        student = page.index('id="student-offers"')
-        self.assertLess(today, offers, "TODAY / LATEST must appear before the full resource catalog")
-        self.assertLess(offers, student, "student benefits must remain secondary to the resource catalog")
-
+        week = page.index('id="weekly-changes"')
+        self.assertLess(hero, discovery)
+        self.assertLess(discovery, categories)
+        self.assertLess(categories, offers)
+        self.assertLess(offers, week)
+        self.assertIn('href="/logs/#log-day-2026-10-09"', page)
         css = THEME.read_text(encoding="utf-8")
-        self.assertIn("grid-template-columns:repeat(3,minmax(0,1fr)) !important", css)
         self.assertIn("margin-top:auto !important", css)
-        self.assertIn("--fl-card-min:286px", css)
 
     def test_light_and_dark_themes_share_layout_but_have_distinct_tokens(self):
         css = THEME.read_text(encoding="utf-8")
