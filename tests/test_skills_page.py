@@ -88,7 +88,29 @@ class SkillBenchmarkDataTests(unittest.TestCase):
                 scored += 1
                 self.assertGreaterEqual(entry["score"], 0, skill_id)
                 self.assertLessEqual(entry["score"], 10, skill_id)
-        self.assertEqual(scored, 34)
+        # 34 sandbox-scored entries, plus never-executed entries that scripts/eval_skills.py promoted
+        # from a real free-model run (data/evaluations/skills-latest.json).
+        promoted = [sid for sid, e in self.entries.items() if str(e.get("status", "")).startswith("免费模型任务级")]
+        self.assertEqual(scored, 34 + len(promoted))
+
+    def test_free_model_runs_match_committed_results(self):
+        results_path = ROOT / "data" / "evaluations" / "skills-latest.json"
+        if not results_path.is_file():
+            self.skipTest("no skill eval results yet")
+        results = {s["id"]: s for s in json.loads(results_path.read_text(encoding="utf-8"))["skills"]}
+        for skill_id, entry in self.entries.items():
+            run = entry.get("freeModelRun")
+            if not run:
+                continue
+            real = results[skill_id]
+            self.assertEqual(run["bestVerdict"], real["bestVerdict"], skill_id)
+            self.assertEqual([r["verdict"] for r in run["runs"]], [r["verdict"] for r in real["runs"]], skill_id)
+            if str(entry.get("status", "")).startswith("免费模型任务级"):
+                answered = [r["score"] for r in real["runs"] if r.get("callOk")]
+                self.assertEqual(entry["score"], max(answered), skill_id)
+            for r in run["runs"]:
+                if r["verdict"] == "调用失败":
+                    self.assertNotIn("score", r, skill_id)
 
     def test_internal_evidence_targets_exist(self):
         for skill_id, entry in self.entries.items():

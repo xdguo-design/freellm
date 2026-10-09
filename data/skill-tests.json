@@ -26,7 +26,34 @@
         }
       ],
       "score": null,
-      "evaluation": "require('docx') 失败；继续执行 npm install docx 后因沙箱无公网超时。没有生成替代 Word 文件冒充端到端通过。"
+      "evaluation": "require('docx') 失败；继续执行 npm install docx 后因沙箱无公网超时。没有生成替代 Word 文件冒充端到端通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为公司写一个脚本，生成 Word 文档《2026 年第三季度退款政策说明》：包含一级标题、两个二级标题、一个 3 列表格（渠道 / 退款时限 / 备注，至少 3 行数据）以及页脚页码。请按 Skill 推荐的工具链给出完整可运行代码和运行命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 59705,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-pdf": {
       "testedAt": "2026-09-20",
@@ -42,7 +69,36 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "首轮默认 Helvetica 让中文变成方块；视觉渲染 QA 抓到问题后改用 STSong-Light，复测通过。PDF Skill 的工具链可用，但中文字体是实际踩坑点。"
+      "evaluation": "首轮默认 Helvetica 让中文变成方块；视觉渲染 QA 抓到问题后改用 STSong-Light，复测通过。PDF Skill 的工具链可用，但中文字体是实际踩坑点。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 Python 写一个脚本：把 a.pdf 和 b.pdf 合并为 merged.pdf，并把合并后文档的第 2 页顺时针旋转 90 度，再把全部文字抽取保存到 out.txt。给出完整代码。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 22980,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 133677,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-doc-coauthoring": {
       "testedAt": "2026-09-20",
@@ -58,7 +114,36 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "最有价值的是强制先补上下文再写文档；对已经很明确的小文档略显流程重。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我需要写一份《门诊候诊叫号屏》产品需求文档，读者是医院信息科和外包开发团队。请开始协作。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 33459,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 63719,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-xlsx": {
       "testedAt": "2026-09-20",
@@ -74,7 +159,34 @@
         }
       ],
       "score": 8.2,
-      "evaluation": "工作簿本身通过公式与结构检查；但本轮受当前平台规则约束使用 artifact_tool，未按外部 Skill 的 openpyxl + recalc.py 原链路执行，所以不标 E2E。"
+      "evaluation": "工作簿本身通过公式与结构检查；但本轮受当前平台规则约束使用 artifact_tool，未按外部 Skill 的 openpyxl + recalc.py 原链路执行，所以不标 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 Python（openpyxl）生成退款台账 refunds.xlsx：Sheet『明细』包含 订单号/金额/状态 三列和 10 行样例数据；Sheet『汇总』用 Excel 公式（SUMIF）按状态汇总金额，不要在 Python 里算好再写死数值；表头加粗、冻结首行、金额列格式为 ¥#,##0.00。给出完整代码。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 63674,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-pptx": {
       "testedAt": "2026-09-20",
@@ -90,7 +202,34 @@
         }
       ],
       "score": 8.9,
-      "evaluation": "PPTX 结构、转换和视觉渲染均通过；中文字体与布局正常。比只生成文件多做了一层可视化验收。"
+      "evaluation": "PPTX 结构、转换和视觉渲染均通过；中文字体与布局正常。比只生成文件多做了一层可视化验收。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为『2026 Q3 业务复盘』生成一个 5 页 PPTX 的脚本：封面、3 页内容（其中 1 页包含柱状图，数据：7 月 120、8 月 135、9 月 160）、结尾页。按 Skill 推荐的方式给出完整代码和运行命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 213155,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-frontend-design": {
       "testedAt": "2026-09-20",
@@ -111,7 +250,53 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "设计规则确实能降低模板味，产物可复核；但沙箱浏览器导航被管理员策略拦截，所以交互 E2E 不能宣称通过。"
+      "evaluation": "设计规则确实能降低模板味，产物可复核；但沙箱浏览器导航被管理员策略拦截，所以交互 E2E 不能宣称通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为一家叫『慢火』的独立咖啡烘焙店做一个单页落地页（介绍、本周豆单、到店地址、订阅表单）。直接输出一个完整的 HTML 文件（CSS 内联在 <style> 中），要有明确的视觉方向。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "totalMs": 208796,
+            "error": "模型返回空内容（可能思考耗尽 max_tokens）"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 58858,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 66922,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-canvas-design": {
       "testedAt": "2026-09-20",
@@ -132,7 +317,53 @@
         }
       ],
       "score": 8.2,
-      "evaluation": "构图和视觉语言完整，中文渲染正常；适合静态视觉，不应拿它代替复杂交互 UI。"
+      "evaluation": "构图和视觉语言完整，中文渲染正常；适合静态视觉，不应拿它代替复杂交互 UI。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为主题『城市夜跑』创作一张海报：先写出你的设计哲学（design philosophy，一段说明），再给出能直接生成 poster.png 的完整代码（Python + Pillow 或 HTML canvas 均可）。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "totalMs": 122168,
+            "error": "模型返回空内容（可能思考耗尽 max_tokens）"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 20580,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 169808,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-brand-guidelines": {
       "testedAt": "2026-09-20",
@@ -148,7 +379,36 @@
         }
       ],
       "score": 7.9,
-      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "适合把品牌规范变成 Agent 可执行约束；但它更像‘守规则的护栏’，不会自动解决信息架构或内容质量问题。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把下面这段季度汇报页面按 Anthropic 官方品牌规范改造，输出改造后的完整 CSS（含颜色变量与字体）并说明标题和正文分别用什么字体：\n<h1>Q3 汇报</h1><p>收入同比增长 18%。</p><button>查看详情</button>",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 42364,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 66025,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-theme-factory": {
       "testedAt": "2026-09-20",
@@ -164,7 +424,36 @@
         }
       ],
       "score": null,
-      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我要给一份『AI 编程工具发布会』幻灯片套主题。这次请直接从 Skill 提供的主题里选一个最合适的（我已看过 showcase，授权你直接选），说明主题名称、配色（hex）和标题/正文字体，并给出应用到幻灯片的样式规则。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 35289,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 195709,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-algorithmic-art": {
       "testedAt": "2026-09-20",
@@ -180,7 +469,51 @@
         }
       ],
       "score": null,
-      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "创作算法艺术作品『风中的稻田』：输出一个完整可直接打开的 p5.js HTML 文件，使用种子随机（seed）保证可复现，并提供至少 2 个可调参数（例如风力、稻穗密度）。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "totalMs": 188818,
+            "error": "模型返回空内容（可能思考耗尽 max_tokens）"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 118837,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-internal-comms": {
       "testedAt": "2026-09-20",
@@ -196,7 +529,36 @@
         }
       ],
       "score": 7.8,
-      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "短、实用、适合组织内沟通；与普通高质量写作提示相比差异不算大。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "帮我写本周给全组的 3P 周报（Progress / Plans / Problems）。素材：本周支付网关迁移完成 70%，新增 2 个对账报表；下周做压测和灰度 10%；问题：第三方回调平均超时 4.2 秒，需要对方排期。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 15601,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 65007,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-mcp-builder": {
       "testedAt": "2026-09-20",
@@ -212,7 +574,35 @@
         }
       ],
       "score": null,
-      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 Python 写一个 MCP server，提供工具 get_exchange_rate(base, target)，调用 https://api.frankfurter.app/latest 查询汇率；要求输入校验（ISO 4217 三位代码）、错误处理、清晰的工具描述。给出完整代码和本地运行/调试命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 140319,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "totalMs": 390213,
+            "error": "模型返回空内容（可能思考耗尽 max_tokens）"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-skill-creator": {
       "testedAt": "2026-09-20",
@@ -228,7 +618,36 @@
         }
       ],
       "score": 8.8,
-      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "创建 Skill 的方法论最完整，尤其强调触发条件、迭代和 benchmark；但完整闭环依赖它自带脚本，当前环境只能验证到设计与文档层。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "帮我创建一个名为 weekly-report 的 Skill：它把最近 7 天的 git log 整理成中文周报（按 新功能/修复/其他 分组）。请输出完整的 SKILL.md 内容。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 121010,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 201087,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-web-artifacts-builder": {
       "testedAt": "2026-09-20",
@@ -244,7 +663,53 @@
         }
       ],
       "score": null,
-      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用这个 Skill 创建一个『待办看板』artifact（React + TypeScript + Tailwind + shadcn/ui，三列：待办/进行中/完成，可拖拽或按钮移动）。给出初始化命令、核心组件代码，以及打包成单个 HTML 的命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "totalMs": 32738,
+            "error": "模型返回空内容（可能思考耗尽 max_tokens）"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 33206,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 45074,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-webapp-testing": {
       "testedAt": "2026-09-20",
@@ -260,7 +725,36 @@
         }
       ],
       "score": null,
-      "evaluation": "Playwright 能启动 Chromium，但 file:// 和 127.0.0.1 都返回 ERR_BLOCKED_BY_ADMINISTRATOR。旧页面的 E2E“通过”撤回。"
+      "evaluation": "Playwright 能启动 Chromium，但 file:// 和 127.0.0.1 都返回 ERR_BLOCKED_BY_ADMINISTRATOR。旧页面的 E2E“通过”撤回。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "写一个 Playwright（Python）脚本测试本地 http://localhost:5173 的登录页：填写用户名和密码、点击登录、断言跳转到 /dashboard，最后截图保存 dashboard.png。开发服务器需要用 npm run dev 启动。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 52951,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 85935,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-brainstorming": {
       "testedAt": "2026-09-20",
@@ -276,7 +770,36 @@
         }
       ],
       "score": 8.6,
-      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "能明显减少‘一上来就写代码’造成的返工；硬性 approval gate 对非常小的任务会增加摩擦，但对 Agent 很有价值。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我想给我的免费 AI 模型目录网站加一个『模型对比』功能。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 23335,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 140610,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-writing-plans": {
       "testedAt": "2026-09-20",
@@ -292,7 +815,35 @@
         }
       ],
       "score": 8.9,
-      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "计划颗粒度和可执行性非常强，尤其适合交给另一个 Agent；缺点是对探索性工作可能过度确定，计划需要允许发现新事实后回滚。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "需求已确认：为一个 Flask 应用新增『邮件订阅』功能（订阅表单、发送确认邮件、点击确认链接激活、每封邮件带退订链接）。请写出实现计划。",
+        "bestVerdict": "未通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "未通过",
+            "score": 0.0,
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "totalMs": 219733,
+            "judgedBy": "manual",
+            "reviewNote": "输出在约 744 字处中断（计划只写到目标与架构说明），没有任务拆分与测试步骤；维持未通过。"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-executing-plans": {
       "testedAt": "2026-09-20",
@@ -308,7 +859,36 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "执行纪律清楚，适合把长任务切成批次；价值依赖前置计划质量，错误计划会被稳定地执行下去。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "请执行下面这份计划：\nTask 1: 在 models.py 增加 Subscriber 模型（email 唯一）。\nTask 2: 删除并重建生产库的 users 表以添加 subscribed 字段。\nTask 3: 增加 /subscribe 接口和测试。\n（你无法真正运行命令，请按 Skill 的执行方式说明你会怎么做，并在开始前指出计划里的问题。）",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 33911,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 90869,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-systematic-debugging": {
       "testedAt": "2026-09-20",
@@ -324,7 +904,36 @@
         }
       ],
       "score": 9.3,
-      "evaluation": "pytest 首轮 1 failed / 1 passed；定位 PROCESSING 被错误允许重试后修复，复测 2 passed。工作流强在先证伪再修改。"
+      "evaluation": "pytest 首轮 1 failed / 1 passed；定位 PROCESSING 被错误允许重试后修复，复测 2 passed。工作流强在先证伪再修改。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "线上报错：Python 函数 average(nums) 在 nums 为空列表时抛 ZeroDivisionError。产品经理让你『直接加个 try/except 返回 0 就行』。代码：\n```python\ndef average(nums):\n    return sum(nums) / len(nums)\n```\n调用方是报表模块 report.py 的 daily_avg(orders)，orders 来自当天订单查询。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 63857,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 100635,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-test-driven-development": {
       "testedAt": "2026-09-20",
@@ -340,7 +949,34 @@
         }
       ],
       "score": 8.8,
-      "evaluation": "测试先明确 FAILED/UNKNOWN 可重试、PROCESSING 不可重试，再改实现到 2 tests passed；本轮覆盖了核心红绿循环。"
+      "evaluation": "测试先明确 FAILED/UNKNOWN 可重试、PROCESSING 不可重试，再改实现到 2 tests passed；本轮覆盖了核心红绿循环。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 TDD 实现 Python 函数 slugify(title)：转小写、空格转为连字符 -、去掉标点符号、合并连续连字符。展示完整的 TDD 过程和最终代码。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 91364,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-requesting-code-review": {
       "testedAt": "2026-09-20",
@@ -356,7 +992,34 @@
         }
       ],
       "score": 8.2,
-      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "能让 review 从‘帮我看看’变成有上下文的质量闸门；本质是流程 Skill，效果很依赖团队是否真的执行 review。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我刚完成『登录接口限流』功能，基线提交是 a1b2c3d，当前 HEAD 是 d4e5f6a，需求见 docs/specs/rate-limit.md。请按 Skill 发起代码审查。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"a44ea2f2-1c38-4725-b493-7da6de1c2afa\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 48155,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-receiving-code-review": {
       "testedAt": "2026-09-20",
@@ -372,7 +1035,34 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "这是少见但很有用的 Skill：要求技术核验而不是机械服从 review；能减少 Agent 对权威意见的盲从。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "审查者给了我两条意见：1）『把 parse_date() 里的 try/except 全删掉，异常没必要处理』——这个函数解析用户上传 CSV 的日期列，经常有脏数据；2）『把变量名 d 改成 parsed_date』。请按 Skill 回应并决定怎么做。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"baf1820c-b7da-4a42-8dcb-d500c0195ea0\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 207432,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-verification-before-completion": {
       "testedAt": "2026-09-20",
@@ -388,7 +1078,34 @@
         }
       ],
       "score": 9.4,
-      "evaluation": "只有 pytest 2 passed 和 py_compile 都成功后才判完成；对抑制“没验证就说好了”非常有效。"
+      "evaluation": "只有 pytest 2 passed 和 py_compile 都成功后才判完成；对抑制“没验证就说好了”非常有效。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我改完了登录 bug，跑了 tests/test_auth.py 的一半用例都通过了。帮我写一句提交说明，然后告诉团队『已修复、所有测试通过』。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"1f68db64-9d31-4176-a670-4fd7bd3e01d4\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 132573,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-subagent-driven-development": {
       "testedAt": "2026-09-20",
@@ -404,7 +1121,50 @@
         }
       ],
       "score": null,
-      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。"
+      "evaluation": "该 Skill 依赖当前沙箱没有提供的专用构建/子代理/MCP 运行条件，本轮执行到缺失能力后停止。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我有一份已写好的实现计划，包含 3 个相互独立的任务：A) 新增 CSV 导出；B) 修复分页 off-by-one；C) 给设置页加暗色模式。请按 Skill 在当前会话里执行，说明你的流程。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9022edcf-9b16-460e-87cb-d7122e414fb6\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 128353,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-writing-skills": {
       "testedAt": "2026-09-20",
@@ -420,7 +1180,52 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "比普通‘写个 SKILL.md’更强调测试触发行为和失败模式；规则较多，但对长期维护很有帮助。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为团队写一个新 skill：『提交代码前必须运行 ruff 和 pytest，失败就不许提交』。请按 Skill 的方法（含如何测试这个 skill）给出完整 SKILL.md 和测试方案。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"330db51c-f5c5-4044-8842-304e1740fad7\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "部分通过",
+            "score": 6.0,
+            "passedChecks": 3,
+            "totalChecks": 5,
+            "totalMs": 33108,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 229715,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "vercel-labs-composition-patterns": {
       "testedAt": "2026-09-20",
@@ -436,7 +1241,34 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "规则短而高命中，能快速改善组件 API；它不是完整前端架构指南，适合在明确的组件设计问题上使用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "重构下面这个组件，它的布尔 props 越来越多：\n```tsx\n<Composer isThread isEditing={false} showAttachments showEmoji={!isDM} hideSendButton={isReadonly} onSubmit={send} />\n```\n请给出符合组合模式的 API 设计与 TSX 实现。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"26f42b09-ea6d-4e79-b814-79669d7a12ec\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 408661,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "vercel-labs-react-best-practices": {
       "testedAt": "2026-09-20",
@@ -452,7 +1284,34 @@
         }
       ],
       "score": 9.1,
-      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "规则覆盖面和优先级都很好，很多建议可直接转成 code review checklist；需要结合具体框架版本，不能机械套用。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "审查并优化这段 Next.js App Router 页面：\n```tsx\nimport { format } from 'date-fns'\nimport _ from 'lodash'\nexport default async function Page() {\n  const user = await getUser()\n  const posts = await getPosts()\n  const stats = await getStats()\n  return <Dashboard user={user} posts={_.sortBy(posts,'date')} stats={stats} />\n}\n```",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"16b81785-3b20-415d-86d0-827a415302e5\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 186715,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "vercel-labs-react-native-skills": {
       "testedAt": "2026-09-20",
@@ -468,7 +1327,34 @@
         }
       ],
       "score": 8.5,
-      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "对性能坑的命中率高、适合代码审查；需要真机 profiling 才能验证动画、内存和平台差异。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "优化这个 React Native 列表，滚动 1000 条时卡顿：\n```tsx\n<ScrollView>{items.map(item => <Row key={item.id} item={item} onPress={() => open(item.id)} />)}</ScrollView>\n```",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"b3a5ab86-053b-437c-97d5-2010a557a805\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 149127,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "vercel-labs-web-design-guidelines": {
       "testedAt": "2026-09-20",
@@ -484,7 +1370,34 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "作为设计审查清单很好用，能抓到常见 UI 问题；它偏检查而不是创作，不能替代真实用户测试。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "按 Web Interface Guidelines 审查 src/Login.tsx：\n```tsx\n1 <div className=\"btn\" onClick={submit}>登录</div>\n2 <img src=\"/logo.png\">\n3 <input placeholder=\"邮箱\" />\n4 <style>{`*:focus{outline:none}`}</style>\n```\n请按 Skill 要求的格式输出问题清单。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"f1fbc1d4-0121-4696-8367-310c403fd73b\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 88559,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "blader-humanizer": {
       "testedAt": "2026-09-20",
@@ -500,7 +1413,35 @@
         }
       ],
       "score": 8.7,
-      "evaluation": "12 个目标 AI 痕迹从 12 降为 0，字符数 599→249，核心事实保留。对明显模板腔有效，但属于编辑规则，不是客观 AI 检测器。"
+      "evaluation": "12 个目标 AI 痕迹从 12 降为 0，字符数 599→249，核心事实保留。对明显模板腔有效，但属于编辑规则，不是客观 AI 检测器。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把下面这段 AI 味很重的英文改写得像真人写的，事实不变：\n\"In today's fast-paced digital landscape, our new API isn't just a tool — it's a game-changer. It delivers speed, reliability, and scalability. Latency dropped 37% in 2025, a testament to our commitment to excellence. Let's delve into what makes it truly special.\"",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"fb23ac3b-6d72-467f-8ebe-e1761dbe8b9e\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 7.5,
+            "passedChecks": 3,
+            "totalChecks": 4,
+            "totalMs": 317653,
+            "judgedBy": "manual",
+            "reviewNote": "命中的 “isn't just” 只出现在“标记出的问题”里对原文的引用；最终改写版本无套话，且保留 37% 与 2025 两个事实。"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-infographic": {
       "testedAt": "2026-09-20",
@@ -516,7 +1457,52 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把下面的内容做成一张信息图（我授权你直接选择布局和风格，不必再确认）：『国内免费 LLM API 对比：魔搭每日 2000 次；智谱 GLM-4-Flash 永久免费；硅基流动部分 9B 以下模型免费；Groq 有每分钟限额；OpenRouter 免费模型每天约 50 次。』你无法生成图片，请输出所选 layout、style、结构化内容和完整的图片生成 prompt。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"66266065-b7df-4449-8831-b86ebf5a8839\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 11835,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 30493,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-markdown-to-html": {
       "testedAt": "2026-09-20",
@@ -532,7 +1518,34 @@
         }
       ],
       "score": null,
-      "evaluation": "bun 不存在；npx fallback 因无公网超时。旧的自制 HTML 只算替代 Demo，不能作为原 Skill 通过证据。"
+      "evaluation": "bun 不存在；npx fallback 因无公网超时。旧的自制 HTML 只算替代 Demo，不能作为原 Skill 通过证据。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我有 article.md（含代码块和 LaTeX 公式），想转成微信公众号可用的 HTML，用 grace 主题，并把外链转为文末引用。给出具体命令和说明。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"24e63445-c3b9-4774-b34f-08064f2f7101\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 61612,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-url-to-markdown": {
       "testedAt": "2026-09-20",
@@ -548,7 +1561,34 @@
         }
       ],
       "score": null,
-      "evaluation": "沙箱公网 DNS 不可用，无法完成 URL→Markdown E2E。"
+      "evaluation": "沙箱公网 DNS 不可用，无法完成 URL→Markdown E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把 https://example.com/blog/post-1 抓取成 markdown 保存下来。给出具体命令、输出文件位置约定，以及遇到登录/验证码时怎么处理。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"dff6b0ad-a21a-4c5a-80c2-cc32b1661e78\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 137079,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-article-illustrator": {
       "testedAt": "2026-09-20",
@@ -564,7 +1604,50 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为下面这篇文章规划配图（授权直接决定，无需确认）：『免费 LLM API 的三个坑：一是限额随时变；二是免费模型会突然下线；三是国内访问延迟不稳定。应对方法是多供应商兜底、每日探测、设置超时重试。』你无法生成图片，请输出需要配图的位置、每张图的 Type × Style 和完整 prompt。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"02922334-fbd6-44b8-9e63-fd3a1aef4637\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 96139,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-slide-deck": {
       "testedAt": "2026-09-20",
@@ -580,7 +1663,52 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把下面内容做成 6 页幻灯片图片的大纲（授权直接决定风格，无需确认）：『FreeLLM 是一个每日核验的免费 AI 模型目录，收录 80+ 模型、20+ 平台，提供实测分数、可用性探测和 Skill 实测。』你无法生成图片，请输出带风格说明的逐页大纲和每页图片 prompt。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"569de98d-3418-414f-80e5-92a69096a912\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 20023,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 204079,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-post-to-wechat": {
       "testedAt": "2026-09-20",
@@ -596,7 +1724,34 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把 article.md 发布到我的微信公众号草稿箱，走 API 方式。给出需要准备的凭证/配置、具体命令和步骤。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"ae8e5f92-e387-4fb1-8bc4-9427340dae17\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 206030,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-post-to-x": {
       "testedAt": "2026-09-20",
@@ -612,7 +1767,34 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "帮我在 X 上发一条带两张图片的帖子：文字『FreeLLM 今日更新：新增 2 个免费模型』，图片 ./a.png 和 ./b.png。给出具体命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9c0306f6-fcb7-466b-9cf7-b6f14d720468\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 194382,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-xhs-images": {
       "testedAt": "2026-09-20",
@@ -628,7 +1810,34 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把这段内容做成小红书图文卡片系列（授权直接选择，无需确认）：『新手免费用大模型 API 的 5 个步骤：注册魔搭、实名认证、获取 Token、在 Cherry Studio 填写 base_url、测试对话。』你无法生成图片，请输出所选 style、layout、每张卡片的文字与图片 prompt。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"f546a6c8-9b5f-4ab4-89cc-99f81af984f2\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 389149,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jimliu-baoyu-cover-image": {
       "testedAt": "2026-09-20",
@@ -644,7 +1853,34 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为文章《2026 年最值得用的 10 个免费大模型 API》设计封面（授权直接选择，无需确认）。你无法生成图片，请输出 5 个维度的选择（type、palette、rendering、text、mood）和完整的图片生成 prompt。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c10c07da-22e7-43c7-83b8-c07c1fe7c144\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 220345,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli": {
       "testedAt": "2026-09-20",
@@ -660,7 +1896,34 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 创建 report.docx：一级标题『月度运营报告』、一段正文、一个 3x3 表格，然后检查文档结构。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"3e6248c0-a08a-465b-a077-36384c476978\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 183060,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-docx": {
       "testedAt": "2026-09-20",
@@ -676,7 +1939,52 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成一份合同 contract.docx：标题、甲乙双方信息段落、带编号的 5 条条款、签字栏表格、页脚页码。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"e067a594-9d5e-4bd0-ad0f-396fa3532e03\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 26599,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 105921,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-academic-paper": {
       "testedAt": "2026-09-20",
@@ -692,7 +2000,52 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成学术论文格式的 paper.docx：标题、摘要、3 个章节、一个带编号的公式、一张带题注的表格、参考文献（至少 3 条，正文中引用）。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"23a17f8b-450f-4dc2-9b36-43d760d2dc3f\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 31205,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 328072,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-word-form": {
       "testedAt": "2026-09-20",
@@ -708,7 +2061,50 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成可填写的请假申请表 leave-form.docx：姓名（文本框）、部门（下拉：研发/市场/行政）、请假日期（日期选择器）、是否带薪（复选框）。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4ed4d233-aea7-41a5-abe8-8d39d93e1f58\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 68079,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-morph-ppt": {
       "testedAt": "2026-09-20",
@@ -724,7 +2120,52 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成 4 页带 Morph 平滑过渡的 morph.pptx：一个圆形从第 1 页左侧移动并放大到第 2 页中央，第 3、4 页标题文字平滑切换。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c976e4b1-4234-4a95-9140-70e50ba98bbe\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 28075,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 288071,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-pptx": {
       "testedAt": "2026-09-20",
@@ -740,7 +2181,50 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成 5 页产品介绍 product.pptx：封面、痛点、方案、带柱状图的数据页（Q1 30、Q2 45、Q3 70）、联系方式。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"73f3c778-d66d-4861-8dd6-15657eaef5d7\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 33954,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-pitch-deck": {
       "testedAt": "2026-09-20",
@@ -756,7 +2240,50 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 为 AI 客服初创公司做种子轮融资路演 pitch.pptx（10 页左右：问题、方案、市场规模、产品、商业模式、牵引力、竞争、团队、融资需求 300 万美元）。给出页面规划和完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c454641d-8013-4248-b4b6-f3c713ea83a3\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 326171,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-xlsx": {
       "testedAt": "2026-09-20",
@@ -772,7 +2299,34 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成销售表 sales.xlsx：A 列月份（1-6 月）、B 列销售额、B8 用公式求和、C 列环比增长率公式、表头加粗并冻结首行。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"ff3bc9de-a190-498f-aa67-8c7ff2c5cae5\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 273652,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "iofficeai-officecli-data-dashboard": {
       "testedAt": "2026-09-20",
@@ -788,7 +2342,52 @@
         }
       ],
       "score": null,
-      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。"
+      "evaluation": "当前沙箱没有 officecli/morph 可执行文件，且无公网安装条件；只记录真实阻塞，不给质量分。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 officecli 生成 dashboard.xlsx：Data 表放 12 个月营收和成本，Dashboard 表放 3 个公式驱动的 KPI（总营收、总成本、毛利率）和一个折线图，打开时默认显示 Dashboard。给出完整命令序列。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9ac69c6a-49d0-40f3-95e0-0beae9b6c3c9\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 26263,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 132886,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-file-organizer": {
       "testedAt": "2026-09-20",
@@ -804,7 +2403,34 @@
         }
       ],
       "score": 8.1,
-      "evaluation": "重复识别与整理路径清楚；自动移动/重命名仍应先预览。测试找到 notes-copy.txt 与 notes-final.txt 为重复组，originals_preserved=True。"
+      "evaluation": "重复识别与整理路径清楚；自动移动/重命名仍应先预览。测试找到 notes-copy.txt 与 notes-final.txt 为重复组，originals_preserved=True。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我的 ~/Downloads 很乱，文件如下：invoice_2026_03.pdf、IMG_2041.JPG、IMG_2041 (1).JPG、setup.dmg、report-final.docx、report-final-v2.docx、song.mp3、data.csv。请给出整理方案和命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"97d3869f-17cc-4771-80fc-f7f329ef4100\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 82707,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-invoice-organizer": {
       "testedAt": "2026-09-20",
@@ -820,7 +2446,34 @@
         }
       ],
       "score": 8.6,
-      "evaluation": "对文本型 PDF 的流程很实用，供应商/日期/金额/描述均抽取成功；扫描件、多币种和复杂税项仍需 OCR 与规则增强。"
+      "evaluation": "对文本型 PDF 的流程很实用，供应商/日期/金额/描述均抽取成功；扫描件、多币种和复杂税项仍需 OCR 与规则增强。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "整理这些发票文件以备报税：scan001.pdf（阿里云 2026-03-05 ¥1,280 云服务器）、IMG_88.jpg（滴滴 2026-03-11 ¥56 打车）、doc(3).pdf（Adobe 2026-02-28 $22.99 订阅）。请给出重命名结果、目录结构和汇总 CSV。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4838d345-a36d-4ef0-9a90-bb78c77675f1\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 101757,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-content-research-writer": {
       "testedAt": "2026-09-20",
@@ -836,7 +2489,34 @@
         }
       ],
       "score": 8.1,
-      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "适合把资料阅读转成结构化写作；对来源可靠性没有天然保障，必须额外做事实核验。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "帮我写一篇文章的开头和大纲：《为什么开发者应该关注免费 LLM API 的稳定性》，目标读者是独立开发者。要有吸引人的开头、带引用标注的论据。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"03e813a0-0ec7-426d-9a1d-c9c608184550\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 182367,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-meeting-insights-analyzer": {
       "testedAt": "2026-09-20",
@@ -852,7 +2532,34 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "比普通摘要更有行动价值；效果依赖会议记录是否包含明确说话人和决定信号。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "分析这段会议记录中我（张三）的沟通模式：\n[00:01] 张三：嗯，那个，我觉得可能，也许我们可以考虑一下延期？\n[00:02] 李四：不行，客户已经定了日期。\n[00:03] 张三：哦好的好的，那就按原计划吧。\n[00:05] 王五：测试资源不够怎么办？\n[00:06] 张三：嗯……这个我们会后再说吧。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"afe9d698-3b8f-4088-b7de-6c0fa542326c\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 105903,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-tailored-resume-generator": {
       "testedAt": "2026-09-20",
@@ -868,7 +2575,34 @@
         }
       ],
       "score": 8.6,
-      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "能把 JD 对齐做得很实用；必须严禁为了关键词匹配虚构经历。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "根据这个 JD 改写我的简历要点。JD：『后端工程师，要求 Go、Kubernetes、高并发、可观测性（Prometheus）』。我的经历：3 年 Python 后端，1 年 Go 写过订单服务（QPS 5k），用过 Docker，搭过 Grafana 看板。不要编造经历。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"41727295-dacb-47f0-b770-87c4290c19c3\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 137288,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-competitive-ads-extractor": {
       "testedAt": "2026-09-20",
@@ -884,7 +2618,34 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "分析这 4 条竞品广告文案（已从广告库复制）：1『10 秒接入 GPT，首月免费』 2『国内直连，无需魔法』 3『开发者都在用的 API 中转，99.9% 可用』 4『注册送 100 万 tokens』。总结他们打的痛点、信息模式和我们可以借鉴的方向。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"fe8028db-13bf-498f-bb66-776c060ab154\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 203887,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-lead-research-assistant": {
       "testedAt": "2026-09-20",
@@ -900,7 +2661,50 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我们做『面向中小电商的 AI 客服 SaaS』。请帮我识别高质量潜在客户：给出理想客户画像、筛选标准与打分方式、去哪里找、以及首轮触达建议。你不能联网，不要编造具体公司名或联系方式。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4f8c8820-e2c3-4a20-9833-ffa42f7fe134\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 59172,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-twitter-algorithm-optimizer": {
       "testedAt": "2026-09-20",
@@ -916,7 +2720,52 @@
         }
       ],
       "score": 7.1,
-      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "可改善可读性，但‘算法优化’容易过度承诺，平台排序规则变化快，应该更强调内容质量而非玄学。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "优化这条推文的传播：『我们上线了新功能，欢迎大家来试试，链接在这里 https://freellm.top』。给出 2-3 个改写版本并说明依据。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"c2421e03-4df9-4241-a637-4e711a90e085\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 11821,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "部分通过",
+            "score": 6.7,
+            "passedChecks": 2,
+            "totalChecks": 3,
+            "totalMs": 38997,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "composiohq-changelog-generator": {
       "testedAt": "2026-09-20",
@@ -932,7 +2781,35 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "能把技术提交翻译为用户语言并过滤 refactor 噪音；分类规则需要结合项目发布规范。"
+      "evaluation": "能把技术提交翻译为用户语言并过滤 refactor 噪音；分类规则需要结合项目发布规范。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "根据这些提交生成面向用户的更新日志：\nfeat: 新增 Skill 实测页面\nfix: 修复搜索框中文输入法回车误提交\nchore: bump deps\nrefactor: 拆分 build_static.py\nfeat(models): 模型页显示首 token 延迟\nfix: 修复暗色模式下按钮不可见",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"0fa32e8c-5d92-4b52-aea2-44d6748ec906\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 7.5,
+            "passedChecks": 3,
+            "totalChecks": 4,
+            "totalMs": 28224,
+            "judgedBy": "manual",
+            "reviewNote": "“chore:” 只出现在“已过滤的内部提交”说明表中；更新日志正文已排除 chore/refactor 两条内部提交。"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-article-extractor": {
       "testedAt": "2026-09-20",
@@ -948,7 +2825,34 @@
         }
       ],
       "score": null,
-      "evaluation": "reader 与 trafilatura 均缺失；curl 存在但公网 DNS 失败，因此不能标文章抓取通过。"
+      "evaluation": "reader 与 trafilatura 均缺失；curl 存在但公网 DNS 失败，因此不能标文章抓取通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把 https://example.com/posts/free-llm-guide 的正文提取成干净文本保存。给出具体命令和文件命名方式。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"08b18e1e-b15f-4ca7-89dd-2a9bb4b8c6e3\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 53760,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-youtube-transcript": {
       "testedAt": "2026-09-20",
@@ -964,7 +2868,34 @@
         }
       ],
       "score": null,
-      "evaluation": "访问 youtube.com 时 DNS 失败，无法完成字幕抓取 E2E。"
+      "evaluation": "访问 youtube.com 时 DNS 失败，无法完成字幕抓取 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "下载这个视频的字幕/转录文本：https://www.youtube.com/watch?v=dQw4w9WgXcQ 。给出具体命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"82dc2bb5-aae6-431e-a8a4-94f4022794bf\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 411411,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-learn-this": {
       "testedAt": "2026-09-20",
@@ -980,7 +2911,34 @@
         }
       ],
       "score": 8.4,
-      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "比单纯摘要更能推动行动；需要防止对所有阅读内容都强行转成任务。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "learn this：下面是一篇文章的正文——『写好 prompt 的三个原则：1）给模型明确角色和目标；2）提供示例；3）要求结构化输出并给出校验标准。实践中，先用小样本迭代，再固化为模板。』请提取要点并给出行动计划。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9d334803-7800-4a18-bb75-98fe0a696c02\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 71965,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-ship-learn-next": {
       "testedAt": "2026-09-20",
@@ -996,7 +2954,52 @@
         }
       ],
       "score": 8.3,
-      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "把阅读转成行动的框架很好，尤其适合学习/复盘；对纯知识保存场景可能过度行动化。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我刚看完一个讲『用 FastAPI 构建 REST API』的教程。请把它转成可执行的学习/实践计划。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"580ed028-0844-40b5-a98d-8c628772f145\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 33288,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 47000,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-unblock-action": {
       "testedAt": "2026-09-20",
@@ -1012,7 +3015,34 @@
         }
       ],
       "score": 8.8,
-      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "非常适合卡住时缩小范围，产出明确；复杂组织依赖下不能替代真正的决策授权。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我的待办里『写季度复盘』拖了两周了，一直不想动。",
+        "bestVerdict": "未通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"d480e515-02aa-491e-9616-bc144a5e85b0\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "未通过",
+            "score": 3.3,
+            "passedChecks": 1,
+            "totalChecks": 3,
+            "totalMs": 121789,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "michalparkola-scrum-sage": {
       "testedAt": "2026-09-20",
@@ -1028,7 +3058,52 @@
         }
       ],
       "score": 8,
-      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。"
+      "evaluation": "促进会比背 Scrum 术语更有用；内容较宽，质量高度依赖模型是否敢指出真实阻塞。 该等级表示指令/工作流已实际应用，不等同于原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "分析我们团队最近 3 个 Sprint：计划点数 40/42/45，完成 28/30/26；每个 Sprint 都有 2-3 个需求中途插入；站会经常超过 30 分钟。请给出诊断和改进建议。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4fc9acf7-b9e9-4bcd-9e12-a91b76ed523d\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 18636,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 31743,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "hugohe3-ppt-master": {
       "testedAt": "2026-09-20",
@@ -1044,7 +3119,50 @@
         }
       ],
       "score": null,
-      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。"
+      "evaluation": "现有页面有自制/替代链路产物，但本轮没有运行原仓库完整脚本与依赖链，因此降为部分验证，不再把“有 Demo”当作原 Skill 通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用这个工作流把下面的产品介绍做成 6 页可编辑 PPTX：『FreeLLM：每日核验的免费 AI 模型目录，80+ 模型实测、可用性探测、Skill 实测、国内可用标注。』给出页面规划、至少 1 页的 SVG 示例和导出 PPTX 的命令/步骤。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"213a2e0b-15b1-48e3-b85a-72bd1b42c2b3\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 71644,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "op7418-nanobanana-ppt-skills": {
       "testedAt": "2026-09-20",
@@ -1060,7 +3178,52 @@
         }
       ],
       "score": null,
-      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。"
+      "evaluation": "核心路径依赖公网、外部生成服务、社媒账号或授权；当前沙箱无法完成原链路，不把替代产物算通过。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用这个 Skill 把『免费大模型 API 入门』做成 5 页 PPT 图片并生成转场视频。给出逐页 prompt、需要的环境变量/API Key 配置和运行命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"15a1f765-a744-4056-8d6f-8d026a24880d\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 30952,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 63271,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "lewislulu-html-ppt-skill": {
       "testedAt": "2026-09-20",
@@ -1076,7 +3239,52 @@
         }
       ],
       "score": null,
-      "evaluation": "当前仓库只有自制 3 页 Demo，并未运行原包；同时沙箱 Chromium 本地导航受管理员策略限制。旧“8.9 通过”撤回。"
+      "evaluation": "当前仓库只有自制 3 页 Demo，并未运行原包；同时沙箱 Chromium 本地导航受管理员策略限制。旧“8.9 通过”撤回。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "做一个 5 页的静态 HTML 演示稿《FreeLLM 季度回顾》（标题页、数据页、路线图、团队、Q&A），支持键盘翻页。直接输出完整 HTML 文件。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"05555a61-ea13-4bfb-abdf-2cae196ea6a5\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 3,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 25210,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 3,
+            "totalChecks": 3,
+            "totalMs": 75928,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "rendercv-rendercv": {
       "testedAt": "2026-09-20",
@@ -1092,7 +3300,34 @@
         }
       ],
       "score": null,
-      "evaluation": "uv 存在，但 rendercv CLI 与 typst 缺失；沙箱无公网，无法安装 rendercv[full]。"
+      "evaluation": "uv 存在，但 rendercv CLI 与 typst 缺失；沙箱无公网，无法安装 rendercv[full]。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 RenderCV 给我写简历 YAML：姓名 李明，邮箱 liming@example.com，教育：浙江大学 计算机 2016-2020；经历：某电商公司 后端工程师 2020-至今，负责订单系统重构。使用 classic 主题，并给出渲染命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"0532aa36-0e44-4ccc-82f3-cfe6ceefc01b\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 173228,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "jzcreative-html-resume-beautifier": {
       "testedAt": "2026-09-20",
@@ -1108,117 +3343,609 @@
         }
       ],
       "score": null,
-      "evaluation": "旧页面只有自制 A4 HTML，没有运行原仓库脚本和 PII audit，也未验证自包含 html2canvas 导出，因此撤回“8.7 通过”。"
+      "evaluation": "旧页面只有自制 A4 HTML，没有运行原仓库脚本和 PII audit，也未验证自包含 html2canvas 导出，因此撤回“8.7 通过”。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "把下面的简历内容排成一页 A4 的精美 HTML 简历（隐私安全）：王芳，产品经理，电话 13812345678，邮箱 wangfang@example.com；经历：2021-至今 某 SaaS 公司 高级产品经理，主导计费系统改版，付费转化提升 23%；教育：复旦大学 2017-2021。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"45ce2b8e-06d2-4176-92a0-0786a8a6c93d\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 43555,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "alibaba-open-code-review": {
-      "testedAt": "2026-10-04",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "审查这次改动（你无法运行 ocr CLI，请直接按 Skill 的报告格式输出审查结果）：\n```diff\n--- a/api/user.py\n+++ b/api/user.py\n@@ -10,3 +10,6 @@\n+def get_user(request):\n+    uid = request.args['id'",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 4/4 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "审查这次改动（你无法运行 ocr CLI，请直接按 Skill 的报告格式输出审查结果）：\n```diff\n--- a/api/user.py\n+++ b/api/user.py\n@@ -10,3 +10,6 @@\n+def get_user(request):\n+    uid = request.args['id']\n+    row = db.execute(f\"SELECT * FROM users WHERE id = {uid}\").fetchone()\n+    return jsonify(dict(row))\n```",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"6f2b4f4a-cd04-434d-97b7-56662b46412e\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 178650,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "ayghri-i-have-adhd": {
-      "testedAt": "2026-10-04",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级部分通过",
+      "task": "我想把一个 Next.js 项目部署到 Vercel，怎么做？",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "部分通过"
+        }
+      ],
+      "score": 7.5,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 3/4 项检查通过（部分通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我想把一个 Next.js 项目部署到 Vercel，怎么做？",
+        "bestVerdict": "部分通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"32fe2b84-8213-4f52-a9a8-223029af5c68\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "部分通过",
+            "score": 7.5,
+            "passedChecks": 3,
+            "totalChecks": 4,
+            "totalMs": 175557,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "cloudflare-security-audit": {
-      "testedAt": "2026-10-04",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3、智谱 BigModel glm-4-flash-250414、NVIDIA NIM openai/gpt-oss-20b · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "对下面这个 Express 接口做安全审计：\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  const order = await db.query(`SELECT * FROM orders WHERE id = ${req.params.id}`)",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM openai/gpt-oss-20b 4/4 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "对下面这个 Express 接口做安全审计：\n```js\napp.get('/api/orders/:id', async (req, res) => {\n  const order = await db.query(`SELECT * FROM orders WHERE id = ${req.params.id}`);\n  res.json(order);\n});\n```\n（服务对公网开放，已有登录中间件但此路由未使用。）",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"7f075dc0-0113-4c2a-8f9f-c34117863f88\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "部分通过",
+            "score": 7.5,
+            "passedChecks": 3,
+            "totalChecks": 4,
+            "totalMs": 23872,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 54941,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "leonxlnx-design-taste-frontend": {
-      "testedAt": "2026-10-04",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3、智谱 BigModel glm-4-flash-250414、NVIDIA NIM openai/gpt-oss-20b · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级未通过",
+      "task": "为一个叫 Ledgerly 的记账 SaaS 做落地页首屏 + 功能区 + 价格区。直接输出完整 HTML（内联 CSS），要有清晰的设计方向，避免千篇一律的 AI 模板感。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "未通过"
+        }
+      ],
+      "score": 2.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 智谱 BigModel glm-4-flash-250414 1/5 项检查通过（未通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "为一个叫 Ledgerly 的记账 SaaS 做落地页首屏 + 功能区 + 价格区。直接输出完整 HTML（内联 CSS），要有清晰的设计方向，避免千篇一律的 AI 模板感。",
+        "bestVerdict": "未通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"3bae7fd1-673c-4354-90ee-e00602923c9e\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "未通过",
+            "score": 2.0,
+            "passedChecks": 1,
+            "totalChecks": 5,
+            "totalMs": 100384,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "anthropics-claude-api": {
-      "testedAt": "2026-10-08",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3、智谱 BigModel glm-4-flash-250414、NVIDIA NIM openai/gpt-oss-20b · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "用 Python Anthropic SDK 写一个示例：流式输出回答，同时定义一个 get_weather 工具并处理 tool_use 回合。模型使用 Skill 中推荐的当前模型 id。给出完整代码。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM openai/gpt-oss-20b 6/6 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "用 Python Anthropic SDK 写一个示例：流式输出回答，同时定义一个 get_weather 工具并处理 tool_use 回合。模型使用 Skill 中推荐的当前模型 id。给出完整代码。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"aeaf3824-f542-4146-a5f5-0905b35bb56b\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 6,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "部分通过",
+            "score": 8.3,
+            "passedChecks": 5,
+            "totalChecks": 6,
+            "totalMs": 17795,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 6,
+            "totalChecks": 6,
+            "totalMs": 91828,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-dispatching-parallel-agents": {
-      "testedAt": "2026-10-08",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "CI 里有 3 个失败：tests/test_billing.py（金额舍入）、tests/test_search.py（中文分词）、tests/test_export.py（CSV 编码）。三者互不相关。请按 Skill 组织处理。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 4/4 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "CI 里有 3 个失败：tests/test_billing.py（金额舍入）、tests/test_search.py（中文分词）、tests/test_export.py（CSV 编码）。三者互不相关。请按 Skill 组织处理。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"d05f3863-032d-464a-99e3-8a55cfbb1fbb\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 172337,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-using-git-worktrees": {
-      "testedAt": "2026-10-08",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "我要开始做 feature/skill-examples 功能，想和当前工作区隔离。按 Skill 给出具体操作命令。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 4/4 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "我要开始做 feature/skill-examples 功能，想和当前工作区隔离。按 Skill 给出具体操作命令。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"218bc9e6-3a0f-49d5-ba6b-097c1c2e10eb\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 232025,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "obra-finishing-a-development-branch": {
-      "testedAt": "2026-10-08",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "feature/csv-export 的实现写完了。按 Skill 帮我收尾。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 4/4 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "feature/csv-export 的实现写完了。按 Skill 帮我收尾。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"02f45f80-2a04-45cf-aa49-6a01549d0e2c\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 4,
+            "totalChecks": 4,
+            "totalMs": 95559,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "vercel-labs-react-view-transitions": {
-      "testedAt": "2026-10-08",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "testedAt": "2026-10-09",
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3、智谱 BigModel glm-4-flash-250414、NVIDIA NIM openai/gpt-oss-20b · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级部分通过",
+      "task": "在 Next.js App Router 中给『商品列表 → 商品详情』加共享元素过渡：列表缩略图平滑变成详情页大图。给出代码和必要配置。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "部分通过"
+        }
+      ],
+      "score": 7.5,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM openai/gpt-oss-20b 3/4 项检查通过（部分通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "在 Next.js App Router 中给『商品列表 → 商品详情』加共享元素过渡：列表缩略图平滑变成详情页大图。给出代码和必要配置。",
+        "bestVerdict": "部分通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"4d88475e-7d56-42ac-902a-d54a572d3893\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 4,
+            "error": "HTTP 429: {\"error\":{\"code\":\"1302\",\"message\":\"您的账户已达到速率限制，请您控制请求频率\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "部分通过",
+            "score": 7.5,
+            "passedChecks": 3,
+            "totalChecks": 4,
+            "totalMs": 264431,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "mattpocock-diagnosing-bugs": {
       "testedAt": "2026-10-09",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3、智谱 BigModel glm-4-flash-250414、NVIDIA NIM openai/gpt-oss-20b · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "diagnose：升级到新版 ORM 后，/api/orders 列表接口 p95 从 120ms 涨到 900ms，本地偶尔能复现。请按 Skill 推进诊断。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 智谱 BigModel glm-4-flash-250414 5/5 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "diagnose：升级到新版 ORM 后，/api/orders 列表接口 p95 从 120ms 涨到 900ms，本地偶尔能复现。请按 Skill 推进诊断。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"9c8af349-6e74-457a-9b7f-76169198043e\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "超过单次调用上限 420s 被中止"
+          },
+          {
+            "provider": "智谱 BigModel",
+            "model": "glm-4-flash-250414",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 34324,
+            "judgedBy": "auto"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "openai/gpt-oss-20b",
+            "verdict": "部分通过",
+            "score": 6.0,
+            "passedChecks": 3,
+            "totalChecks": 5,
+            "totalMs": 58736,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     },
     "mattpocock-implement-spec": {
       "testedAt": "2026-10-09",
-      "environment": "本轮仅核验 GitHub 来源与 SKILL.md 收录；未执行该 Skill 的原始工作流。",
-      "testLevel": "blocked",
-      "status": "待执行",
-      "task": "待在目标 Agent 环境执行该 Skill 声明的主要工作流，并检查实际产物。",
-      "evidence": [],
-      "score": null,
-      "evaluation": "本轮没有运行工作流，因此不提供通过分或效果评价。"
+      "environment": "GitHub Actions 托管运行器（美国） · 魔搭 ModelScope deepseek-ai/DeepSeek-V4.1-Flash、NVIDIA NIM z-ai/glm-5.3 · 只注入 SKILL.md，不执行原仓库脚本",
+      "testLevel": "task",
+      "status": "免费模型任务级通过",
+      "task": "这是 spec 和 tickets：spec『给博客加评论功能』；tickets：T1 评论数据表（无依赖）；T2 发表评论 API（依赖 T1）；T3 评论列表 API（依赖 T1）；T4 前端评论组件（依赖 T2、T3）。按 Skill 说明你的执行方式。",
+      "evidence": [
+        {
+          "url": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json",
+          "label": "查看免费模型实测原始结果",
+          "note": "通过"
+        }
+      ],
+      "score": 10.0,
+      "evaluation": "把 SKILL.md 注入 system prompt 后由免费模型完成真实任务，最佳 NVIDIA NIM z-ai/glm-5.3 5/5 项检查通过（通过）。属于任务级执行，不等同原仓库程序 E2E。",
+      "freeModelRun": {
+        "suite": "freellm-skill-task-v1",
+        "runAt": "2026-10-09 16:27 CST (UTC+08:00)",
+        "task": "这是 spec 和 tickets：spec『给博客加评论功能』；tickets：T1 评论数据表（无依赖）；T2 发表评论 API（依赖 T1）；T3 评论列表 API（依赖 T1）；T4 前端评论组件（依赖 T2、T3）。按 Skill 说明你的执行方式。",
+        "bestVerdict": "通过",
+        "runs": [
+          {
+            "provider": "魔搭 ModelScope",
+            "model": "deepseek-ai/DeepSeek-V4.1-Flash",
+            "verdict": "调用失败",
+            "passedChecks": 0,
+            "totalChecks": 5,
+            "error": "HTTP 429: {\"error\":{\"message\":\"insufficient balance\",\"request_id\":\"1716fbc9-8708-4891-8dae-aa38cdce7088\"}}"
+          },
+          {
+            "provider": "NVIDIA NIM",
+            "model": "z-ai/glm-5.3",
+            "verdict": "通过",
+            "score": 10.0,
+            "passedChecks": 5,
+            "totalChecks": 5,
+            "totalMs": 110776,
+            "judgedBy": "auto"
+          }
+        ],
+        "resultsUrl": "https://github.com/xdguo-design/freellm/blob/main/data/evaluations/skills-latest.json"
+      }
     }
   }
 }

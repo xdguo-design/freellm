@@ -4811,12 +4811,36 @@ def _skill_test_markup(skill: dict) -> str:
         f'<p><strong>评价：</strong>{_esc(evaluation)}</p>'
         f'{environment_markup}'
         f'<p><strong>测试时间：</strong>{_esc(tested_at)} · {_esc(level)}</p>'
+        f'{_skill_free_model_run_markup(test)}'
         f'{evidence_markup}</div></details>'
     )
     return (
         f'<div class="freellm-test-strip {state_class}"><strong>{_esc(lead)}</strong>'
         f'<span>{_esc(label)}</span><small>{_esc(level)}</small></div>' + detail
     )
+
+def _skill_free_model_run_markup(test: dict) -> str:
+    """Compact summary of real free-model runs (scripts/eval_skills.py); failures stay labeled 调用失败/未通过."""
+    run = test.get("freeModelRun") or {}
+    runs = run.get("runs") or []
+    if not runs:
+        return ""
+    answered = [r for r in runs if r.get("verdict") != "调用失败" and isinstance(r.get("score"), (int, float))]
+    failed = len(runs) - len(answered)
+    if answered:
+        best = max(answered, key=lambda r: r["score"])
+        seconds = f' · {best["totalMs"] / 1000:.1f}s' if isinstance(best.get("totalMs"), (int, float)) else ""
+        manual = " · 人工复核" if best.get("judgedBy") == "manual" else ""
+        detail = (f'{best.get("verdict")}：{best.get("provider")} {best.get("model")} '
+                  f'{best.get("passedChecks")}/{best.get("totalChecks")} 项检查{seconds}{manual}')
+    else:
+        detail = "调用失败：未获得可评分输出，不计分"
+    extra = f"；共 {len(runs)} 次调用，{failed} 次调用失败" if failed else f"；共 {len(runs)} 次调用"
+    link = run.get("examplesUrl") or run.get("resultsUrl") or ""
+    link_markup = f' <a href="{_esc(link)}">实测记录 ↗</a>' if link else ""
+    return (f'<p class="freellm-free-model-run"><strong>免费模型实测（{_esc(str(run.get("runAt") or "")[:10])}）：</strong>'
+            f'{_esc(detail)}{_esc(extra)}{link_markup}</p>')
+
 
 def _skill_card(skill: dict) -> str:
     category = SKILL_CATEGORY_DEFINITIONS.get(skill.get("category"), {})
@@ -4866,7 +4890,13 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
             for index, skill in enumerate(skills, start=1)
         ]},
     }
-    serialized = json.dumps(skills, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    # freeModelRun is rendered server-side on each card; keep it out of the client JSON to hold page weight.
+    client_skills = [
+        {**skill, "freeLLMTest": {k: v for k, v in skill["freeLLMTest"].items() if k != "freeModelRun"}}
+        if isinstance(skill.get("freeLLMTest"), dict) and "freeModelRun" in skill["freeLLMTest"] else skill
+        for skill in skills
+    ]
+    serialized = json.dumps(client_skills, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     cards = "".join(_skill_card(skill) for skill in skills)
     category_buttons = "".join(
         f'<button class="skill-category-tab" type="button" data-category="{_esc(key)}"><span>{_esc(value["name_zh"])}</span><small>{sum(item.get("category") == key for item in skills):02d}</small></button>'
