@@ -508,7 +508,7 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
             entry = events[0] if events else None
         except (OSError, ValueError, TypeError):
             pass
-    if not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", log_date):
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
         log_date = ""
     if entry:
         title = html_lib.escape(str(entry.get("title") or entry.get("id") or "资源动态"))
