@@ -80,6 +80,11 @@ class AuditRegressions(unittest.TestCase):
         self.assertNotIn("今日新增资源12", html)
         self.assertNotIn("较上周 +35%", html)
         self.assertIn("最近发现 · 扫描快照", html)
+        self.assertIn('id="home-latest-discovery"', html)
+        self.assertIn('href="/logs/#log-day-2026-10-09"', html)
+        generator = (ROOT / "scripts/build_static.py").read_text(encoding="utf-8")
+        self.assertIn("def update_home_latest_discovery(", generator)
+        self.assertIn("updated = update_home_latest_discovery(updated, data_path)", generator)
 
     def test_editorial_date_cannot_masquerade_as_scan_date(self):
         script = (ROOT / "js/scan-trust.js").read_text(encoding="utf-8")
