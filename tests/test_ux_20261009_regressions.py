@@ -68,7 +68,7 @@ class AuditRegressions(unittest.TestCase):
 
     def test_model_catalog_is_already_paginated(self):
         html = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
-        row_count = len(re.findall(r'<tr\\s+class="catalog-row', html))
+        row_count = len(re.findall(r'<tr\s+class="catalog-row', html))
         self.assertGreater(row_count, 0)
         self.assertLessEqual(row_count, 26)
         self.assertIn('class="catalog-pagination"', html)
