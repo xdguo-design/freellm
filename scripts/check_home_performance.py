@@ -31,11 +31,16 @@ RUNS = 2
 
 INIT_SCRIPT = r"""
 (() => {
-  window.__perfProbe = { lcp: 0, cls: 0, longTasks: [] };
+  window.__perfProbe = { lcp: 0, lcpElement: '', cls: 0, longTasks: [] };
   try {
     new PerformanceObserver(list => {
       for (const e of list.getEntries()) {
-        window.__perfProbe.lcp = Math.max(window.__perfProbe.lcp, e.startTime || e.renderTime || e.loadTime || 0);
+        const time = e.startTime || e.renderTime || e.loadTime || 0;
+        if (time >= window.__perfProbe.lcp) {
+          window.__perfProbe.lcp = time;
+          const el = e.element;
+          window.__perfProbe.lcpElement = el ? [el.tagName, el.id, typeof el.className === 'string' ? el.className : ''].join('#').slice(0, 150) : '';
+        }
       }
     }).observe({ type: 'largest-contentful-paint', buffered: true });
   } catch (_) {}
@@ -134,6 +139,7 @@ def read_metrics(page) -> dict:
           return {
             fcp: Math.round(paint['first-contentful-paint'] || 0),
             lcp: Math.round(p.lcp || 0),
+            lcpElement: p.lcpElement || '',
             cls: Number((p.cls || 0).toFixed(4)),
             ttfb: Math.round(nav?.responseStart || 0),
             domContentLoaded: Math.round(nav?.domContentLoadedEventEnd || 0),
