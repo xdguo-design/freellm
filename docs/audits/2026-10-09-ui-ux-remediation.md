@@ -21,12 +21,12 @@
 | P0-2 | Mobile workflow hero clipping | Code fixed; browser QA outstanding | Entire heading visible at 320, 375, 390 and 750 px without horizontal overflow |
 | P0-3 | /updates/ dead link | Redirects committed; deployed QA outstanding | /updates and /updates/ permanently redirect to /logs/; English routes also covered |
 | DATA-10-09 | PhanthyCode not in web updates | Dev source + rendered HTML available; not on production | /logs/ displays dated, official-source-backed pending-verification item with no API claim |
-| P1-4 | Slow long lists / oversized homepage | OPEN; model pagination existed already | Home initial DOM and JSON footprint reduced; no loss of filter/search functionality |
-| P1-5 | Home first-screen overload | OPEN | One clear search CTA; other modules follow without losing useful stats |
-| P1-6 | Inconsistent headers and side rails | OPEN | Shared responsive shell across home, models, category, tools, skills, workflow, logs, about |
+| P1-4 | Slow long lists / oversized homepage | Dev progressive 24-card mount; browser QA pending; model pagination already existed | Home initial DOM and JSON footprint reduced; no loss of filter/search functionality |
+| P1-5 | Home first-screen overload | Dev reorganized to hero → categories → catalog → secondary dashboards; browser QA pending | One clear search CTA; other modules follow without losing useful stats |
+| P1-6 | Inconsistent headers and side rails | Shared fixed search protected; shell consolidation still OPEN | Shared responsive shell across home, models, category, tools, skills, workflow, logs, about |
 | P1-7 | Card/grid inconsistencies | OPEN | Common tokens, summary clamp, maximum visible tags, aligned actions |
 | P1-8 | Decorative hero collision | Workflow guarded; other pages OPEN | Decorations never obstruct interactive content or clip essential text |
-| P1-9 | Mobile topbar crowding | OPEN | Primary actions touch-accessible, secondary actions consolidated |
+| P1-9 | Mobile topbar crowding | Shared search can flex; mobile screenshot verification still OPEN | Primary actions touch-accessible, secondary actions consolidated |
 | P1-10 | Mobile tools category chip wall | CSS fix on dev; browser QA outstanding | Single horizontally scrolling row, no massive first-screen wrap |
 | P1-11 | Mobile stats density | OPEN | 2×2 or horizontal compact stats with legible numerals |
 | P2-12 | Chinese/English visual noise | OPEN | Decorative copy de-emphasized in Chinese locale |
@@ -67,4 +67,4 @@
 - A JavaScript-scope test of the new home filtering function checked: initial 24 cards, load-more 48, category selection resetting to 24, and finding an off-page record by search. **4/4 behavior cases passed**, but this does not replace real browser interaction tests.
 - Editorial discovery date (2026-10-09) is now clearly separated from last automatic scan date (2026-10-08) in `js/scan-trust.js`. The homepage labels the count as scanner records rather than as guaranteed quality/verification.
 
-**Release gate:** Check generator equivalence (`python scripts/build_static.py --check`, `python scripts/build_seo_pages.py --check`), JS syntax, regression tests, image layout at 1920/1440/390/320 px and click-through behavior. Only then merge and release `main`. None of these source fixes has been released to freellm.top at time of writing.
+The home hero's latest-item link is generated from today's curated log event and leads to the matching dated /logs/ entry, currently PhanthyCode (pending independent testing). The latest scan snapshot remains 2026-10-08.\n\n**Release gate:** Check generator equivalence (`python scripts/build_static.py --check`, `python scripts/build_seo_pages.py --check`), JS syntax, regression tests, image layout at 1920/1440/390/320 px and click-through behavior. Only then merge and release `main`. None of these source fixes has been released to freellm.top at time of writing.
