@@ -150,6 +150,11 @@ class RunOneTests(unittest.TestCase):
             self.assertIsNone(r["score"])
             self.assertIn("未执行", r["error"])
 
+    def test_frontmatter_after_markdown_rule(self):
+        text = "说明\n\n---\n\n## 全文\n\n```markdown\n---\nname: weekly-report\ndescription: x\n---\n# T\n```"
+        self.assertTrue(es.run_check({"type": "frontmatter", "keys": ["name", "description"], "label": "f"}, text)[0])
+        self.assertFalse(es.run_check({"type": "frontmatter", "keys": ["name"], "label": "f"}, "---\nfoo: 1\n---")[0])
+
     def test_merge_runs_replaces_only_rerun_pairs(self):
         old = [{"skillId": "a", "modelId": "modelscope", "verdict": "调用失败"},
                {"skillId": "b", "modelId": "modelscope", "verdict": "通过"}]

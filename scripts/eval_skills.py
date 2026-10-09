@@ -286,10 +286,16 @@ def run_check(check: dict, text: str) -> tuple[bool, str]:
             return False, f"YAML 解析失败: {str(exc)[:120]}"
         return isinstance(data, dict) and all(k in data for k in check["keys"]), ""
     if kind == "frontmatter":
-        m = re.search(r"(?m)^---\s*\n(.*?)\n---", text, re.S)
-        if not m:
+        # Any block between two consecutive `---` lines counts (Markdown rules may precede the real frontmatter).
+        fences = [m.end() for m in re.finditer(r"(?m)^---\s*$", text)]
+        starts = [m.start() for m in re.finditer(r"(?m)^---\s*$", text)]
+        if len(fences) < 2:
             return False, "没有 frontmatter"
-        return all(re.search(rf"(?m)^{k}\s*:", m.group(1)) for k in check["keys"]), ""
+        for i in range(len(fences) - 1):
+            block = text[fences[i]:starts[i + 1]]
+            if all(re.search(rf"(?m)^{k}\s*:", block) for k in check["keys"]):
+                return True, ""
+        return False, "frontmatter 缺少必需键"
     raise ValueError(f"unknown check type {kind}")
 
 
@@ -569,7 +575,8 @@ def main(argv: list[str] | None = None) -> int:
         runs = raw["runs"] + not_executed(raw["runs"], skills, raw["models"], tasks)
         if args.regrade:
             for r in runs:
-                if r.get("callOk"):
+                # Stored output is trimmed to RAW_CHARS; a trimmed output keeps the grade it got on the full text.
+                if r.get("callOk") and len(r.get("output") or "") < RAW_CHARS and r.get("outputChars", 0) <= RAW_CHARS:
                     r.update(grade(tasks[r["skillId"]], r["output"]), judgedBy="auto")
                     r.pop("autoVerdict", None); r.pop("reviewNote", None)
         runs = apply_review(runs, review)
