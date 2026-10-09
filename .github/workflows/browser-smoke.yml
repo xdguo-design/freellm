@@ -32,6 +32,7 @@ jobs:
 
       - name: Rebuild deterministic static artifacts in CI workspace
         run: |
+          node scripts/generate_ranking.ts
           python scripts/build_tools_index.py
           python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
           python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
