@@ -9,7 +9,7 @@
     }).formatToParts(new Date()).filter(x=>['year','month','day'].includes(x.type)).map(x=>[x.type,x.value]));
     return parts.year+'-'+parts.month+'-'+parts.day;
   };
-  fetch('/data/offers.json').then(response=>{
+  const loadOffers = () => fetch('/data/offers.json').then(response=>{
     if(!response.ok)throw new Error('offers unavailable');
     return response.json();
   }).then(offers=>{
@@ -20,4 +20,16 @@
       .filter(x=>x.days<=30).sort((a,b)=>a.days-b.days).slice(0,6);
     grid.innerHTML=items.length?items.map(({o,days})=>'<article class="expiry-card"><strong>'+esc(o.titleZh||o.title||o.name)+'</strong><small>活动到期：'+esc(o.expires_at)+' · '+days+' 天内</small><a href="/offers/'+encodeURIComponent(o.id)+'/">查看官方条件与详情 →</a></article>').join(''):'<p>暂无已核实、30 天内到期的活动。未公布日期的活动不会假定到期日。</p>';
   }).catch(()=>{grid.textContent='活动数据暂时不可用，请前往每日更新查看核验记录。';});
+  // The expiry board is below the resource catalogue. Do not download the
+  // entire 400KB+ offers dataset on the first mobile paint for offscreen data.
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      observer.disconnect();
+      loadOffers();
+    }, {rootMargin: '300px'});
+    observer.observe(grid);
+  } else {
+    window.addEventListener('load', loadOffers, {once: true});
+  }
 })();
