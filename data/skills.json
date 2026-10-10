@@ -2941,5 +2941,194 @@
       "stars": 92377,
       "forks": 6272
     }
+  },
+  {
+    "id": "anthropics-claude-api",
+    "name": "claude-api",
+    "category": "development",
+    "description": "Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIGGER — read BEFORE opening the target file; don't skip because it \"looks like a one-liner\" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens). SKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/claude-api",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 180114,
+      "forks": 21308,
+      "pushedAt": "Mon 2026-10-05 9:46 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/anthropics-claude-api.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/claude-api/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 103457,
+    "reviews": []
+  },
+  {
+    "id": "obra-dispatching-parallel-agents",
+    "name": "dispatching-parallel-agents",
+    "category": "development",
+    "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/dispatching-parallel-agents",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-dispatching-parallel-agents.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/dispatching-parallel-agents/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 6078,
+    "reviews": []
+  },
+  {
+    "id": "obra-using-git-worktrees",
+    "name": "using-git-worktrees",
+    "category": "development",
+    "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/using-git-worktrees",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-using-git-worktrees.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/using-git-worktrees/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 6813,
+    "reviews": []
+  },
+  {
+    "id": "obra-finishing-a-development-branch",
+    "name": "finishing-a-development-branch",
+    "category": "development",
+    "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/finishing-a-development-branch",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-finishing-a-development-branch.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/finishing-a-development-branch/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 7781,
+    "reviews": []
+  },
+  {
+    "id": "vercel-labs-react-view-transitions",
+    "name": "vercel-react-view-transitions",
+    "category": "development",
+    "description": "Guide for implementing smooth, native-feeling animations using React's View Transition API (`<ViewTransition>` component, `addTransitionType`, and CSS view transition pseudo-elements). Use this skill whenever the user wants to add page transitions, animate route changes, create shared element animations, animate enter/exit of components, animate list reorder, implement directional (forward/back) navigation animations, or integrate view transitions in Next.js. Also use when the user mentions view transitions, `startViewTransition`, `ViewTransition`, transition types, or asks about animating between UI states in React without third-party animation libraries.",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 32073,
+      "forks": 2812,
+      "pushedAt": "Fri 2026-08-28 9:36 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/vercel-labs-react-view-transitions.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/react-view-transitions/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 14407,
+    "reviews": []
+  },
+  {
+    "id": "mattpocock-diagnosing-bugs",
+    "name": "diagnosing-bugs",
+    "category": "development",
+    "description": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+    "githubUrl": "https://github.com/mattpocock/skills/tree/main/skills/engineering/diagnosing-bugs",
+    "cloneCommand": "git clone https://github.com/mattpocock/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "GitHub Copilot"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-09",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 281414,
+      "forks": 23584,
+      "pushedAt": "Thu 2026-10-08 4:49 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/mattpocock-diagnosing-bugs.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/mattpocock/skills@main/skills/engineering/diagnosing-bugs/SKILL.md",
+    "contentFetchedAt": "2026-10-09",
+    "contentBytes": 8664,
+    "reviews": []
+  },
+  {
+    "id": "mattpocock-implement-spec",
+    "name": "implement-spec",
+    "category": "development",
+    "description": "Implement the result of /to-spec and /to-tickets in code.",
+    "githubUrl": "https://github.com/mattpocock/skills/tree/main/skills/engineering/implement-spec",
+    "cloneCommand": "git clone https://github.com/mattpocock/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "GitHub Copilot"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-09",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 281414,
+      "forks": 23584,
+      "pushedAt": "Thu 2026-10-08 4:49 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/mattpocock-implement-spec.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/mattpocock/skills@main/skills/engineering/implement-spec/SKILL.md",
+    "contentFetchedAt": "2026-10-09",
+    "contentBytes": 2780,
+    "reviews": []
   }
 ]

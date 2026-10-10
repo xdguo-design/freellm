@@ -249,7 +249,12 @@ def test_stepfun_offer_covers_official_limited_free_models_and_api():
     assert stepfun["productType"] == "api"
     assert stepfun["freeMechanism"] == "limited_time_free"
     assert set(("api", "free")) <= set(stepfun["type"])
-    for model_id in ("step-audio-r1.1", "step-1x-edit", "step-2x-large"):
+    for model_id in (
+        "stepaudio-3-realtime-preview",
+        "stepaudio-3-chat-preview",
+        "stepaudio-3-gen-preview",
+        "stepaudio-3-music-preview",
+    ):
         assert model_id in stepfun["model"]
     assert stepfun["usageGuide"]["endpoint"] == "https://api.stepfun.com/v1/chat/completions"
     assert stepfun["usageGuide"]["docsUrl"] == "https://platform.stepfun.com/docs/zh/quickstart/overview"
@@ -848,7 +853,12 @@ def test_multi_model_offers_expose_free_models_lists():
     offers = {offer["id"]: offer for offer in read_offers()}
 
     stepfun_models = [entry["model"] for entry in offers["stepfun-limited-time-free"]["freeModels"]]
-    assert stepfun_models == ["step-audio-r1.1", "step-1x-edit", "step-2x-large"]
+    assert stepfun_models == [
+        "stepaudio-3-realtime-preview",
+        "stepaudio-3-chat-preview",
+        "stepaudio-3-gen-preview",
+        "stepaudio-3-music-preview",
+    ]
     siliconflow_models = offers["siliconflow-free-models"]["freeModels"]
     assert len(siliconflow_models) == 7
     assert siliconflow_models[-1]["model"] == "Kwai-Kolors"
@@ -1277,7 +1287,7 @@ def test_category_pages_fit_the_shared_navigation_content_area(tmp_path):
     assert "width:100% !important" in page
     assert "max-width:none !important" in page
     assert "overflow-wrap:anywhere" in page
-    assert "/css/freellm-pastel-ui.css?v=20261003a" in page
+    assert "/css/freellm-pastel-ui.css?v=20261009-eval" in page
 
 
 def test_thin_category_pages_are_kept_out_of_the_sitemap_but_stay_reachable():

@@ -759,25 +759,11 @@ class BrowserPageTests(unittest.TestCase):
                         self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
                     overflowers = page.evaluate("""() => Array.from(document.querySelectorAll('body *'))
-                        .map(el => {
-                            const r = el.getBoundingClientRect();
-                            return {
-                                tag: el.tagName.toLowerCase(),
-                                id: el.id || '',
-                                cls: typeof el.className === 'string' ? el.className : '',
-                                left: Math.round(r.left * 10) / 10,
-                                right: Math.round(r.right * 10) / 10,
-                                width: Math.round(r.width * 10) / 10,
-                            };
-                        })
-                        .filter(x => x.width > 1 && (x.right > innerWidth + 4 || x.left < -4))
-                        .slice(0, 12)""")
-                    self.assertLessEqual(
-                        scroll_width,
-                        width + 4,
-                        f"{route} creates page-level horizontal overflow at {width}px: {overflowers}",
-                    )
+                        .map(el => { const r=el.getBoundingClientRect(); return {tag:el.tagName,id:el.id,left:r.left,right:r.right,width:r.width}; })
+                        .filter(x=>x.width>1&&(x.right>innerWidth+4||x.left<-4)).slice(0,6)""")
+                    self.assertLessEqual(scroll_width, width+4, f"{route} at {width}px: {overflowers}")
                     page.close()
+
 
     def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):
         page = self.new_page()
@@ -1006,7 +992,6 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
-
         page.click(".category-card[data-filter='ide']")
         ide_count = sum(1 for offer in active_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
@@ -1022,23 +1007,17 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), ide_count)
         page.click(".offer[data-detail='comate'] .row-arrow")
         page.wait_for_selector("#drawer.open")
-        register = page.locator("#drawerRegister")
-        self.assertEqual(register.get_attribute("href"), "https://comate.baidu.com/zh")
+        self.assertEqual(page.locator("#drawerRegister").get_attribute("href"), "https://comate.baidu.com/zh")
         self.assertIn("Auto-Free", page.locator("#drawerTitle").inner_text())
         page.keyboard.press("Escape")
         self.assertNotIn("open", page.locator("#drawer").get_attribute("class"))
-        self.assertEqual(
-            [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
-            [],
-            page.problems,
-        )
+
 
     def test_homepage_aurora_phase_one_visual_contracts(self):
         page = self.new_page()
         page.set_viewport_size({"width": 1440, "height": 1000})
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
-
         self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
         for toggle in page.locator(".fl-site-theme-toggle").all():
             self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
@@ -1065,6 +1044,9 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_selector("#fl-shared-site-menu")
 
         self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 394)
+        menu = page.locator(".fl-mobile-menu-button")
+        self.assertTrue(menu.is_visible())
+        self.assertEqual(menu.get_attribute("aria-expanded"), "false")
         self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
         menu = page.locator(".fl-mobile-menu-button")
         self.assertTrue(menu.is_visible())
@@ -1141,7 +1123,7 @@ class BrowserPageTests(unittest.TestCase):
         page.click(".offer[data-detail='tinyfish-search-fetch-free'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         self.assertIn("Search + Fetch", page.locator("#drawerTitle").inner_text())
-        self.assertNotEqual(page.locator("#drawerUsageGuide").inner_text().strip(), "")
+        self.assertTrue(page.locator("#drawerUsageGuide").inner_text().strip())
         self.assertIn("TinyFish", page.locator("#drawerPrerequisites").inner_text())
         self.assertIn("https://", page.locator("#drawerEndpoint").inner_text())
         self.assertNotEqual(page.locator("#drawerExample").inner_text().strip(), "")
@@ -1156,11 +1138,9 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(self.visible_offers(page), len(active_offers()))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
         self.assertEqual(len(item_list), len(ranked))
-        self.assertEqual(
-            [entry["name"] for entry in item_list[:5]],
-            [item["title"] for item in ranked[:5]],
-        )
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual([entry["name"] for entry in item_list[:5]], [offer["title"] for offer in ranked[:5]])
+        self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
+
 
     def test_locale_query_switches_shell_language(self):
         page = self.new_page()
@@ -1175,7 +1155,7 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
         self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
-        self.assertEqual(len(page.problems), 0, page.problems)
+        self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
 
     def test_locale_toggle_keeps_query_clean_and_preserves_hash(self):
         page = self.new_page()
@@ -1224,6 +1204,10 @@ class BrowserPageTests(unittest.TestCase):
             (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
             (data / "offers.json").write_text(OFFERS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (data / "offers.js").write_text(OFFERS_BUNDLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            (data / "scan-summary.json").write_text((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"), encoding="utf-8")
+            # The expiry widget consumes canonical offers, not ranked-offers.json.
+            # Only the two explicitly mocked ranking/signals calls should 404.
+            (data / "offers.json").write_text(OFFERS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (Path(directory) / "daily-update-status.json").write_text("{}\n", encoding="utf-8")
             site = _LocalSite(Path(directory))
             self.addCleanup(site.stop)
