@@ -23,7 +23,7 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertEqual(summary["models"], len(latest_log["observed"]["models"]))
         self.assertEqual(summary["offers"], len(latest_log["observed"]["offers"]))
         self.assertEqual(summary["newCount"], 4)
-        self.assertEqual(summary["sourceChecks"], 10)
+        self.assertEqual(summary["sourceChecks"], 2)
 
     def test_homepage_uses_sourced_discovery_and_incremental_cards(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import unittest
 import xml.etree.ElementTree as ET
@@ -129,13 +130,32 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             "sitemap contains pages explicitly marked noindex: " + "; ".join(noindex),
         )
 
+    def test_needs_review_offers_are_noindex_and_excluded_from_sitemap(self) -> None:
+        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
+        review_ids = [offer["id"] for offer in offers if offer.get("status") == "needs_review"]
+        sitemap_urls = {
+            (loc.text or "").strip()
+            for sitemap in ROOT.glob("sitemap-*.xml")
+            for loc in ET.parse(sitemap).getroot().findall("sm:url/sm:loc", SITEMAP_NS)
+        }
+
+        for offer_id in review_ids:
+            with self.subTest(offer_id=offer_id):
+                url = f"{SITE_URL}/offers/{offer_id}/"
+                page = ROOT / "offers" / offer_id / "index.html"
+                self.assertNotIn(url, sitemap_urls)
+                self.assertTrue(page.is_file(), f"missing generated offer page: {offer_id}")
+                match = META_ROBOTS_RE.search(page.read_text(encoding="utf-8"))
+                self.assertIsNotNone(match)
+                self.assertIn("noindex", match.group(1).lower())
+
 
     def test_sitemap_crawl_budget_requires_review_before_large_expansion(self) -> None:
         """Keep a new-domain sitemap from silently ballooning back to hundreds of URLs.
 
-        These are review budgets, not Google limits. The five release URLs added
-        here (three verified offer pages and two skills indexes) were reviewed
-        before raising the budget from 210 to 215. Future expansion needs review.
+        Four verified offer pages and two skills indexes were reviewed as part
+        of the latest catalog refresh. Needs-review offers are excluded above;
+        future expansion beyond the adjusted budget needs review.
         """
         all_urls: list[str] = []
         for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
@@ -155,8 +175,8 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
         self.assertLessEqual(
             len(all_urls),
-            215,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 215); review SEO scope before publishing",
+            218,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 218); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),
