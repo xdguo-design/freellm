@@ -77,11 +77,16 @@ def expected_assets() -> list[str]:
     )))
     if len(assets) != 4:
         raise SystemExit(f"expected four fingerprinted homepage assets, found {assets}")
+
+    return assets
+
+
+def expected_data_asset() -> str:
+    html = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
     try:
-        data_asset = homepage_data_asset(html, PUBLIC_URL)
+        return homepage_data_asset(html, PUBLIC_URL)
     except ValueError as error:
         raise SystemExit(str(error)) from error
-    return [*assets, data_asset]
 
 
 def wait_for_live_release(assets: list[str]) -> dict:
@@ -243,14 +248,15 @@ def main() -> int:
     from playwright.sync_api import sync_playwright
 
     assets = expected_assets()
-    home = wait_for_live_release(assets)
-    cache = cache_probe(home, assets)
+    data_asset = expected_data_asset()
+    all_assets = [*assets, data_asset]
+    home = wait_for_live_release(all_assets)
+    cache = cache_probe(home, all_assets)
 
     for path in assets:
         policy = cache["assets"][path]["cacheControl"] or ""
         if "max-age=31536000" not in policy or "immutable" not in policy:
             raise SystemExit(f"immutable cache policy missing on production asset {path}: {policy}")
-    data_asset = homepage_data_asset(home["body"].decode("utf-8", errors="replace"), PUBLIC_URL)
     data_policy = cache["assets"][data_asset]["cacheControl"] or ""
     if "max-age=300" not in data_policy:
         raise SystemExit(f"homepage data asset short cache policy missing for {data_asset}: {data_policy}")
