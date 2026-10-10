@@ -28,13 +28,13 @@
         {
           "title": "发送 OpenAI 兼容请求",
           "detail": "广州地域使用 tokenhub.tencentmaas.com；新加坡地域使用 tokenhub-intl.tencentmaas.com。免费额度耗尽且未开启后付费时服务自动停止。",
-          "command": "curl https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://tokenhub.tencentmaas.com/v1/chat/completions -H \"Authorization: Bearer $TOKENHUB_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 choices[0].message.content；若免费额度耗尽且未开启后付费，应停止服务而不是继续扣费。"
         }
       ],
       "endpoint": "https://tokenhub.tencentmaas.com/v1",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://tokenhub.tencentmaas.com/v1/models -H 'Authorization: Bearer ${TOKENHUB_API_KEY}'",
+      "example": "curl https://tokenhub.tencentmaas.com/v1/models -H \"Authorization: Bearer $TOKENHUB_API_KEY\"",
       "validation": "GET /v1/models 返回 HTTP 200；同时在 TokenHub 控制台确认目标模型免费体验包剩余额度与到期时间。",
       "sourceUrls": [
         "https://cloud.tencent.com/document/product/1823/130053",

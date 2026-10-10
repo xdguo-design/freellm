@@ -27,7 +27,7 @@
         {
           "title": "发送最小请求",
           "detail": "调用北京地域 v3 OpenAI 兼容 ChatCompletions endpoint；模型 ID 以控制台当前支持列表为准。",
-          "command": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 chat completion；开通管理页免费额度减少。"
         },
         {
@@ -37,7 +37,7 @@
       ],
       "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "example": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
       "validation": "请求成功；免费推理额度扣减；额度耗尽时安心体验自动暂停模型服务。附加插件/知识库费用需另行检查。",
       "sourceUrls": [
         "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh",

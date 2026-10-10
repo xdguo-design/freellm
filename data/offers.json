@@ -620,7 +620,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header \"Authorization: Bearer $LONGCAT_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
         "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
       "docsUrl": "https://longcat.chat/platform/docs/zh/"
@@ -977,7 +977,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SENSENOVA_API_KEY}",
       "examples": {
-        "curl": "curl https://token.sensenova.cn/v1/chat/completions --header 'Authorization: Bearer ${SENSENOVA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://token.sensenova.cn/v1/chat/completions --header \"Authorization: Bearer $SENSENOVA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://www.sensenova.cn/token-plan"
     },
@@ -1110,7 +1110,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DEEPSEEK_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header \"Authorization: Bearer $DEEPSEEK_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
     },
@@ -1219,7 +1219,7 @@
       "method": "POST",
       "authentication": "OpenCode Zen API key",
       "examples": {
-        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header \"Authorization: Bearer $OPENCODE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://opencode.ai/docs/en/zen/"
     },
@@ -1764,7 +1764,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions --header 'Authorization: Bearer ${DASHSCOPE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions --header \"Authorization: Bearer $DASHSCOPE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://help.aliyun.com/zh/model-studio/new-free-quota"
     },
@@ -2115,7 +2115,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tinyfish.io/search --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+        "curl": "curl --request POST https://api.tinyfish.io/search --header \"Authorization: Bearer $TINYFISH_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
       },
       "quotaGuard": [
         "Search 控制在 30 requests/minute 和 500/hour",
@@ -2244,7 +2244,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tinyfish.io/agent --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"task\":\"Open the official homepage\"}'"
+        "curl": "curl --request POST https://api.tinyfish.io/agent --header \"Authorization: Bearer $TINYFISH_API_KEY\" --header 'Content-Type: application/json' --data '{\"task\":\"Open the official homepage\"}'"
       },
       "quotaGuard": [
         "Agent 按 step 计费",
@@ -2383,7 +2383,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TAVILY_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tavily.com/search --header 'Content-Type: application/json' --header 'Authorization: Bearer ${TAVILY_API_KEY}' --data '{\"query\":\"latest AI news\",\"search_depth\":\"basic\",\"max_results\":5}'"
+        "curl": "curl --request POST https://api.tavily.com/search --header 'Content-Type: application/json' --header \"Authorization: Bearer $TAVILY_API_KEY\" --data '{\"query\":\"latest AI news\",\"search_depth\":\"basic\",\"max_results\":5}'"
       },
       "quotaGuard": [
         "basic Search 每次 1 credit",
@@ -2522,7 +2522,7 @@
       "method": "POST",
       "authentication": "x-api-key: ${EXA_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.exa.ai/search --header 'x-api-key: ${EXA_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"type\":\"auto\",\"numResults\":5}'"
+        "curl": "curl --request POST https://api.exa.ai/search --header \"x-api-key: $EXA_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"type\":\"auto\",\"numResults\":5}'"
       },
       "quotaGuard": [
         "按美元 credits 而不是请求次数扣减",
@@ -2664,7 +2664,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${YOU_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.you.com/v1/search --header 'Authorization: Bearer ${YOU_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+        "curl": "curl --request POST https://api.you.com/v1/search --header \"Authorization: Bearer $YOU_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
       },
       "quotaGuard": [
         "keyless Search 控制在 100 queries/day",
@@ -2805,7 +2805,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${FIRECRAWL_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.firecrawl.dev/v2/search --header 'Authorization: Bearer ${FIRECRAWL_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"limit\":5}'"
+        "curl": "curl --request POST https://api.firecrawl.dev/v2/search --header \"Authorization: Bearer $FIRECRAWL_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"limit\":5}'"
       },
       "quotaGuard": [
         "Search 每 10 个结果消耗 2 credits",
@@ -2935,7 +2935,7 @@
       "method": "GET",
       "authentication": "X-Subscription-Token: ${BRAVE_API_KEY}",
       "examples": {
-        "curl": "curl --request GET 'https://api.search.brave.com/res/v1/web/search?q=latest%20AI%20news' --header 'Accept: application/json' --header 'X-Subscription-Token: ${BRAVE_API_KEY}'"
+        "curl": "curl --request GET 'https://api.search.brave.com/res/v1/web/search?q=latest%20AI%20news' --header 'Accept: application/json' --header \"X-Subscription-Token: $BRAVE_API_KEY\""
       },
       "quotaGuard": [
         "按 50 QPS 以内调用",
@@ -3068,7 +3068,7 @@
       "method": "POST",
       "authentication": "x-bb-api-key: ${BROWSERBASE_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.browserbase.com/v1/sessions --header 'x-bb-api-key: ${BROWSERBASE_API_KEY}' --header 'Content-Type: application/json' --data '{\"projectId\":\"${BROWSERBASE_PROJECT_ID}\"}'"
+        "curl": "curl --request POST https://api.browserbase.com/v1/sessions --header \"x-bb-api-key: $BROWSERBASE_API_KEY\" --header 'Content-Type: application/json' --data \"{\\\"projectId\\\":\\\"$BROWSERBASE_PROJECT_ID\\\"}\""
       },
       "quotaGuard": [
         "免费层只有 1 browser hour 和 15-minute session cap",
@@ -3135,7 +3135,7 @@
       "method": "POST",
       "authentication": "API key via x-goog-api-key header",
       "examples": {
-        "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
+        "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
       },
       "docsUrl": "https://ai.google.dev/gemini-api/docs/quickstart"
     },
@@ -3153,7 +3153,7 @@
     "mechanism": "Rate-limited free tier on the Gemini API",
     "validity": "Ongoing, but limits and model coverage can change; recheck the official pricing page",
     "access": "Google account and API key from AI Studio; free tier availability may vary by region",
-    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
+    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
     "register": "https://aistudio.google.com/",
     "registerLabel": "Google AI Studio",
     "links": [
@@ -3318,7 +3318,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://console.groq.com/docs/rate-limits"
     },
@@ -3336,7 +3336,7 @@
     "mechanism": "Free plan with per-model rate limits on the OpenAI-compatible API",
     "validity": "Ongoing free plan; the published limits table can change at any time",
     "access": "Groq account; limits apply per organization, not per user",
-    "command": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.groq.com/",
     "registerLabel": "Groq Console",
     "links": [
@@ -3430,7 +3430,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://inference-docs.cerebras.ai/quickstart"
     },
@@ -3447,7 +3447,7 @@
     "mechanism": "One-time $5 free credits granted after account creation",
     "validity": "Credits are consumed by usage; check the official pricing page for current terms",
     "access": "Cerebras account required",
-    "command": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.cerebras.ai/",
     "registerLabel": "Cerebras cloud console",
     "links": [
@@ -3531,7 +3531,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://openrouter.ai/docs/api_reference/limits"
     },
@@ -3549,7 +3549,7 @@
     "mechanism": "Platform-level free usage limits applied to :free model variants",
     "validity": "Ongoing; the limits table is subject to change by OpenRouter",
     "access": "OpenRouter account and API key; free daily cap scales with lifetime credits purchased",
-    "command": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://openrouter.ai/",
     "registerLabel": "OpenRouter",
     "links": [
@@ -3633,7 +3633,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them"
     },
@@ -3651,7 +3651,7 @@
     "mechanism": "Default free mode of the developer API with limited rate limits (RPS, tokens per minute, tokens per month)",
     "validity": "Ongoing default tier; Mistral can change the limits",
     "access": "Mistral account; per-organization limits",
-    "command": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.mistral.ai/",
     "registerLabel": "Mistral console",
     "links": [
@@ -3734,7 +3734,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://docs.cohere.com/reference/chat"
     },
@@ -3752,7 +3752,7 @@
     "mechanism": "Free rate-limited Trial API key for evaluation",
     "validity": "Ongoing while the trial program exists; non-production only",
     "access": "Cohere personal account; production keys require an application",
-    "command": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://dashboard.cohere.com/",
     "registerLabel": "Cohere dashboard",
     "links": [
@@ -3837,7 +3837,7 @@
       "method": "POST",
       "authentication": "Hugging Face token via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://huggingface.co/docs/inference-providers/index"
     },
@@ -3855,7 +3855,7 @@
     "mechanism": "Platform free tier with included credits on a single OpenAI-compatible router API across providers",
     "validity": "Ongoing free tier; credit amounts can change",
     "access": "Hugging Face account and access token",
-    "command": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://huggingface.co/",
     "registerLabel": "Hugging Face",
     "links": [
@@ -3940,7 +3940,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://docs.siliconflow.cn/cn/userguide/quickstart"
     },
@@ -3958,7 +3958,7 @@
     "mechanism": "Selected models permanently listed at ¥0 on the official price list",
     "validity": "Ongoing while listed; the ¥0 list can change at any time",
     "access": "SiliconFlow account; registration via the China platform",
-    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.siliconflow.cn/",
     "registerLabel": "SiliconFlow 云平台",
     "links": [
@@ -4099,7 +4099,7 @@
       "method": "POST",
       "authentication": "ModelScope access token via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://modelscope.cn/docs/model-service/API-Inference/intro"
     },
@@ -4120,7 +4120,7 @@
     "mechanismEn": "Free OpenAI-compatible inference endpoint for registered users, funded by Alibaba Cloud, with dynamic rate limits and MoLi point deduction",
     "validity": "Ongoing service; individual models may be delisted as newer models release",
     "access": "Requires ModelScope account bound to a real-name verified Aliyun (China) account; non-commercial use",
-    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://modelscope.cn/my/myaccesstoken",
     "registerLabel": "ModelScope 访问令牌",
     "registerLabelEn": "Open ModelScope access token",
@@ -4254,7 +4254,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.agnes-ai.cn/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.agnes-ai.cn/v1/chat/completions --header \"Authorization: Bearer $AGNES_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://agnes-ai.cn/zh-Hans/docs/overview"
     },
@@ -4279,7 +4279,7 @@
     "mechanismEn": "Free/default access with endpoint- and model-specific rate limits",
     "validity": "Ongoing while the official program remains available; current limits and model availability may change",
     "access": "Agnes AI 账号 + API Key；中国大陆建议用国内站入口（platform.agnes-ai.cn / api.agnes-ai.cn），其他地区用国际站（platform.agnes-ai.com / apihub.agnes-ai.com）；官方称两站 Key 通用，原国际站用户无需重新注册",
-    "command": "curl https://api.agnes-ai.cn/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.agnes-ai.cn/v1/chat/completions --header \"Authorization: Bearer $AGNES_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.agnes-ai.cn",
     "registerLabel": "Agnes AI 国内控制台",
     "registerLabelEn": "Agnes AI console (CN)",
@@ -4444,7 +4444,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.stepfun.com/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/quickstart/overview"
     },
@@ -4467,7 +4467,7 @@
     "mechanismEn": "Selected models temporarily marked limited free on the official API pricing page",
     "validity": "Limited-time status; recheck the official pricing page before relying on it",
     "access": "StepFun Open Platform account and API key; China and international platform availability may differ",
-    "command": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.stepfun.com/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/",
     "registerLabel": "StepFun 开放平台",
     "registerLabelEn": "Open StepFun Platform",
@@ -4581,7 +4581,7 @@
       "method": "POST",
       "authentication": "API key according to the official Dots documentation",
       "examples": {
-        "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
+        "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header \"Authorization: Bearer $DOTS_API_KEY\" --header 'Content-Type: application/json'"
       },
       "docsUrl": "https://dots.ai/platform/docs"
     },
@@ -4601,7 +4601,7 @@
     "mechanism": "限时免费模型 API，按官方 RPM/TPM 限制使用",
     "validity": "限时免费；使用前重新核对官方平台状态",
     "access": "国内 Dots 平台；小红书账号或手机号登录后创建 API Key",
-    "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'",
+    "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header \"Authorization: Bearer $DOTS_API_KEY\" --header 'Content-Type: application/json'",
     "register": "https://dots.ai/platform",
     "registerLabel": "Dots 国内平台",
     "links": [
@@ -5481,7 +5481,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header \"Authorization: Bearer $ATRIA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://api.atria-asi.ai/docs"
     },
@@ -5500,7 +5500,7 @@
     "mechanism": "新用户注册赠送 100,000,000 Token；当前控制台档位 Atria-Dawn-Preview 按 $0/M tokens 计价（限时免费档位）",
     "validity": "额度条款以控制台 Token Plan 页为准，官方未公示到期日；Preview 阶段定价未发布，额度用完后计费规则未定",
     "access": "api.atria-asi.ai/console 注册（Google 账号）；国内入口 discovery.intern-ai.org.cn；无需信用卡",
-    "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header \"Authorization: Bearer $ATRIA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://api.atria-asi.ai/console",
     "registerLabel": "Atria 控制台（国际）",
     "links": [
@@ -5817,7 +5817,7 @@
       "method": "POST",
       "authentication": "Radeon Cloud API key via Authorization: Bearer; Anthropic Messages also accepts x-api-key",
       "examples": {
-        "curl": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header \"Authorization: Bearer $RADEON_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
     },
@@ -5838,7 +5838,7 @@
     "mechanism": "Always-on shared public model endpoints at zero cost; AMD controls the live catalog and applies rate-limit plus rolling spend-cap gates",
     "validity": "Ongoing shared free tier; model availability and limits can change, so GET /v1/models remains the runtime source of truth",
     "access": "China-facing Radeon Cloud developer console; platform account verification and rc- API key required; no dedicated instance required",
-    "command": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "command": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header \"Authorization: Bearer $RADEON_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://developer.amd.com.cn/radeon/tokenfactory",
     "registerLabel": "AMD Radeon Cloud Token Factory",
     "registerLabelEn": "Open AMD Radeon Cloud Token Factory",
@@ -5977,7 +5977,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/step-plan/quick-start"
     },
@@ -5999,7 +5999,7 @@
     "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
     "validity": "New free-trial claims closed no later than 2026-09-22; Step Plan is now a paid Credit monthly-pool subscription (Flash Mini ¥49/month and up)",
     "access": "StepFun Open Platform account and API key; Step Plan must be active",
-    "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/step-plan",
     "registerLabel": "打开 Step Plan 官方页面",
     "registerLabelEn": "Open official Step Plan page",
@@ -6130,7 +6130,7 @@
       "authentication": "Browser Puter.js handles user auth automatically; OpenAI-compatible server/CLI uses Authorization: Bearer ${PUTER_AUTH_TOKEN} and currently requires a paid Puter plan",
       "examples": {
         "javascript": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
-        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
+        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header \"Authorization: Bearer $PUTER_AUTH_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
       },
       "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
     },
@@ -6287,7 +6287,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TOKENHUB_API_KEY}",
       "examples": {
-        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H \"Authorization: Bearer $TOKENHUB_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://cloud.tencent.com/document/product/1823/130058"
     },
@@ -6430,7 +6430,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${QIANFAN_API_KEY}",
       "examples": {
-        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header 'Authorization: Bearer ${QIANFAN_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header \"Authorization: Bearer $QIANFAN_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
     },
@@ -6567,7 +6567,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${WQ_API_KEY}",
       "examples": {
-        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header 'Authorization: Bearer ${WQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header \"Authorization: Bearer $WQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
     },
@@ -6721,7 +6721,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${CTYUN_APP_KEY}",
       "examples": {
-        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header 'Authorization: Bearer ${CTYUN_APP_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header \"Authorization: Bearer $CTYUN_APP_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://www.ctyun.cn/document/11061839/11062271"
     },
@@ -6866,7 +6866,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ZHIPU_API_KEY}",
       "examples": {
-        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header 'Authorization: Bearer ${ZHIPU_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header \"Authorization: Bearer $ZHIPU_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://docs.bigmodel.cn/"
     },
@@ -7002,7 +7002,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${MIMO_API_KEY}",
       "examples": {
-        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header 'Authorization: Bearer ${MIMO_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
+        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header \"Authorization: Bearer $MIMO_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
       },
       "docsUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
     },
@@ -7485,7 +7485,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ARK_API_KEY}",
       "examples": {
-        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
     },
@@ -7632,7 +7632,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
       "examples": {
-        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
     },
@@ -7763,7 +7763,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SPARK_API_PASSWORD}",
       "examples": {
-        "curl": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H \"Authorization: Bearer $SPARK_API_PASSWORD\" -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://www.xfyun.cn/doc/spark/HTTP调用文档.html"
     },
@@ -7890,7 +7890,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}",
       "examples": {
-        "curl": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H 'Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H \"Authorization: Bearer $AISTUDIO_ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns"
     },
@@ -8019,7 +8019,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${MAAS_API_KEY}",
       "examples": {
-        "curl": "curl https://api.modelarts-maas.com/v1/chat/completions -H 'Authorization: Bearer ${MAAS_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://api.modelarts-maas.com/v1/chat/completions -H \"Authorization: Bearer $MAAS_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
     },
@@ -8153,7 +8153,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TELEAI_API_KEY}",
       "examples": {
-        "curl": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H 'Authorization: Bearer ${TELEAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好，一句话介绍一下你自己\",\"stream\":false}'"
+        "curl": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H \"Authorization: Bearer $TELEAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好，一句话介绍一下你自己\",\"stream\":false}'"
       },
       "docsUrl": "https://www.teleai.com.cn/doc/Z0NYbElFeHijOtnPenj6/jBs54Z3VaFXvQ5jr2oXh"
     },
@@ -8288,7 +8288,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SCNET_API_KEY}",
       "examples": {
-        "curl": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'"
+        "curl": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H \"Authorization: Bearer $SCNET_API_KEY\" -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'"
       },
       "docsUrl": "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/ocrdoc.html"
     },
@@ -8434,7 +8434,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ACCESS_TOKEN}",
       "examples": {
-        "curl": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://maas.ai-yuanjing.com/doc/pages/216556925/"
     },
@@ -8610,7 +8610,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${BAICHUAN_API_KEY}",
       "examples": {
-        "curl": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"请总结以下临床教育材料的关键点\"}]}'"
+        "curl": "curl https://api.baichuan-ai.com/v1/chat/completions -H \"Authorization: Bearer $BAICHUAN_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"请总结以下临床教育材料的关键点\"}]}'"
       },
       "docsUrl": "https://platform.baichuan-ai.com/docs-v2/api"
     },
@@ -8751,7 +8751,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${PPIO_API_KEY}",
       "examples": {
-        "curl": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://api.ppio.com/openai/v1/chat/completions -H \"Authorization: Bearer $PPIO_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://ppio.com/ai-computing/llm-api"
     },
@@ -8897,7 +8897,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${INFINIAI_API_KEY}",
       "examples": {
-        "curl": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'"
+        "curl": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H \"Authorization: Bearer $INFINIAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'"
       },
       "docsUrl": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
     },

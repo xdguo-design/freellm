@@ -32,7 +32,7 @@
         {
           "title": "发送最小请求",
           "detail": "使用北京地域 OpenAI 兼容 Base URL 调用目标模型。",
-          "command": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "HTTP 200；免费额度页面出现对应消耗，且没有现金账单。"
         },
         {
@@ -50,7 +50,7 @@
       ],
       "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "example": "curl https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
       "validation": "请求成功，并在免费额度页确认扣减来自目标模型的新人免费额度；已实名账号确认用完即停已开启。",
       "limits": "通常每模型 100 万 Tokens，90 天有效；OAuth 认证另有每日 2000 次独立免费额度；具体模型额度与 RPM/TPM 以模型页为准。",
       "commonIssues": [

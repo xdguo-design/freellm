@@ -259,7 +259,7 @@ def test_stepfun_offer_covers_official_limited_free_models_and_api():
     assert stepfun["usageGuide"]["endpoint"] == "https://api.stepfun.com/v1/chat/completions"
     assert stepfun["usageGuide"]["docsUrl"] == "https://platform.stepfun.com/docs/zh/quickstart/overview"
     assert "https://platform.stepfun.com/docs/zh/guides/pricing/details" in stepfun["sourceUrls"]
-    assert "${STEP_API_KEY}" in stepfun["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $STEP_API_KEY"' in stepfun["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(stepfun)
 
 
@@ -280,7 +280,7 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     assert agnes["usageGuide"]["endpoint"] == "https://api.agnes-ai.cn/v1/chat/completions"
     assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.cn/zh-Hans/docs/overview"
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
-    assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $AGNES_API_KEY"' in agnes["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(agnes)
     # 官方同时运营国内站与国际站两套入口，两套地址都必须留在数据里。
     blob = json.dumps(agnes, ensure_ascii=False)
