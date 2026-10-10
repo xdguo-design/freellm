@@ -145,9 +145,8 @@ class SearchConsoleRegressionTests(unittest.TestCase):
                 page = ROOT / "offers" / offer_id / "index.html"
                 self.assertNotIn(url, sitemap_urls)
                 self.assertTrue(page.is_file(), f"missing generated offer page: {offer_id}")
-                match = META_ROBOTS_RE.search(page.read_text(encoding="utf-8"))
-                self.assertIsNotNone(match)
-                self.assertIn("noindex", match.group(1).lower())
+                robots = META_ROBOTS_RE.findall(page.read_text(encoding="utf-8"))
+                self.assertEqual(robots, ["noindex,follow"])
 
 
     def test_sitemap_crawl_budget_requires_review_before_large_expansion(self) -> None:

@@ -1843,8 +1843,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
     indexable = offer.get("status") != "needs_review"
-    robots = "index,follow,max-image-preview:large" if indexable else "noindex,follow"
-    social_meta = _social_meta(site_url, path, page_title, description, "article")
+    social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
     category_links = "".join(
@@ -1967,7 +1966,6 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{_esc(page_title)}</title>
   <meta name="description" content="{_esc(description)}">
-  <meta name="robots" content="{robots}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {_hreflang_links(site_url, path)}
   {social_meta}
