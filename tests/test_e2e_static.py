@@ -218,12 +218,12 @@ class StaticContractTests(unittest.TestCase):
         # Snapshot counters must track the live data, not a frozen literal: the
         # page renders today's directory totals and every historical day uses the
         # totals captured in that day's log JSON.
-        models = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))["models"]
+        models = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))["scannedModels"]
         latest_log_path = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1]
-        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当前观测到的模型记录</span>', log)
+        self.assertIn(f'<strong>{models}</strong><small><span lang="zh-CN">当次自动扫描覆盖，不是目录总数</span>', log)
         self.assertIn(latest_log_path.stem, log)
-        self.assertIn('<span lang="zh-CN">提供商</span>', log)
-        self.assertIn('<span lang="zh-CN">资源</span>', log)
+        self.assertIn('<span lang="zh-CN">扫描观测提供商</span>', log)
+        self.assertIn('<span lang="zh-CN">扫描观测资源</span>', log)
         self.assertNotIn("首次建立基线", log)
         self.assertIn('class="ref-update-change-stream"', log)
         self.assertIn('class="ref-update-history-table"', log)
