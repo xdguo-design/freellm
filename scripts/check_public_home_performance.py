@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_URL = "https://freellm.top/"
 VIEWPORT = {"width": 390, "height": 844}
 RUNS = 2
+FETCH_ATTEMPTS = 3
+FETCH_TIMEOUT_SECONDS = 20
 
 INIT_SCRIPT = r"""
 (() => {
@@ -54,19 +56,26 @@ def fetch(url: str) -> dict:
             "Accept-Encoding": "identity",
         },
     )
-    try:
-        with urllib.request.urlopen(request, timeout=20) as response:
+    for attempt in range(FETCH_ATTEMPTS):
+        try:
+            with urllib.request.urlopen(request, timeout=FETCH_TIMEOUT_SECONDS) as response:
+                return {
+                    "status": response.status,
+                    "body": response.read(),
+                    "headers": {key.lower(): value for key, value in response.headers.items()},
+                }
+        except urllib.error.HTTPError as error:
             return {
-                "status": response.status,
-                "body": response.read(),
-                "headers": {key.lower(): value for key, value in response.headers.items()},
+                "status": error.code,
+                "body": error.read(),
+                "headers": {key.lower(): value for key, value in error.headers.items()},
             }
-    except urllib.error.HTTPError as error:
-        return {
-            "status": error.code,
-            "body": error.read(),
-            "headers": {key.lower(): value for key, value in error.headers.items()},
-        }
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            if attempt + 1 == FETCH_ATTEMPTS:
+                raise RuntimeError(
+                    f"request failed after {FETCH_ATTEMPTS} attempts for {url}: {error}"
+                ) from error
+            time.sleep(2 ** attempt)
 
 
 def expected_assets() -> list[str]:
