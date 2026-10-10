@@ -96,6 +96,8 @@ def validate_source_registry(sources: object) -> list[str]:
             errors.append(f"{prefix}: freeOnly must be boolean")
         if "maxBytes" in source and not isinstance(source["maxBytes"], int):
             errors.append(f"{prefix}: maxBytes must be an integer")
+        if "rowDefaults" in source and not isinstance(source["rowDefaults"], dict):
+            errors.append(f"{prefix}: rowDefaults must be an object")
     return errors
 
 
@@ -176,6 +178,11 @@ def parse_openrouter_models(payload: object, source: dict) -> list[dict]:
             continue
         pricing = row.get("pricing") if isinstance(row.get("pricing"), dict) else {}
         is_free = _is_zero_price(pricing.get("prompt")) and _is_zero_price(pricing.get("completion"))
+        # Some OpenRouter-compatible gateways (e.g. Kilo) also publish an
+        # explicit ``isFree`` flag. When the source says a row is not free we
+        # believe it, even if the per-token price fields read zero.
+        if row.get("isFree") is False:
+            is_free = False
         if free_only and not is_free:
             continue
         architecture = row.get("architecture") if isinstance(row.get("architecture"), dict) else {}
@@ -345,6 +352,12 @@ def discover_official_model_sources(
             source_results.append({"id": source_id, "url": str(source["url"]), "status": "failed", "reason": reason, "rowCount": 0, "truncated": False})
             continue
         parsed_rows = parser(payload, source)
+        defaults = source.get("rowDefaults") or {}
+        if defaults:
+            for row in parsed_rows:
+                for field, value in defaults.items():
+                    if row.get(field) in (None, "", [], ["unknown"]):
+                        row[field] = value
         appended = 0
         for row in parsed_rows:
             if len(models) >= max_models:

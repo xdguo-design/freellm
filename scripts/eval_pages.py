@@ -180,7 +180,7 @@ def unavailable_reason(m: dict) -> tuple[str, str]:
     elif code == "403":
         zh, en = ("返回 403，仅限指定 Agent 应用", "HTTP 403, agent apps only") if "agentic" in detail else ("返回 403", "HTTP 403")
     elif code == "400" and "no provider" in detail:
-        zh, en = "返回「没有可用服务商」", "no serving provider"
+        zh, en = "无可用服务商", "no serving provider"
     elif code:
         zh, en = f"返回 {code}", f"HTTP {code}"
     elif errors:

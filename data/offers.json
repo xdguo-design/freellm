@@ -1195,7 +1195,7 @@
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · Step 5 Preview Free · Ling 3.1 Flash Free · Ling 3.0 Flash Fin Free · LongCat 2.5 Preview Free · Nemotron · Muse Spark",
     "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
@@ -1232,7 +1232,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-10-10 / OpenCode Zen 官方定价表：13 个免费模型与 10-09 一致",
+    "checkedSummary": "2026-10-10 / OpenCode Zen /zen/v1/models + 官方定价表：mimo-v2.5-free 已不在实时模型列表（文档页仍列出，待复核，已从本条移除）；新增 step-5-preview-free、ling-3.1-flash-free、longcat-2.5-preview-free（定价表均标 Free，限时）",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -4422,8 +4422,8 @@
     "provider": "StepFun",
     "providerMeta": "StepFun 阶跃星辰 · China",
     "providerMetaEn": "StepFun · China",
-    "model": "step-audio-r1.1 · step-1x-edit · step-2x-large",
-    "modelMeta": "Official API models marked limited free",
+    "model": "stepaudio-3-realtime-preview · stepaudio-3-chat-preview · stepaudio-3-gen-preview · stepaudio-3-music-preview",
+    "modelMeta": "Official StepAudio 3 preview models marked 限时免费",
     "type": [
       "api",
       "free"
@@ -4438,13 +4438,14 @@
       "steps": [
         "Create a StepFun Open Platform account and API key",
         "Use the OpenAI-compatible chat endpoint with a currently limited-free model ID",
-        "Recheck the official pricing page before use because the limited-free label may change"
+        "Recheck the official pricing page before use because the limited-free label may change",
+        "The curl example uses stepaudio-3-chat-preview and has not been tested by FreeLLM (未实测); realtime / gen / music preview models may need their own endpoints — follow the official model docs"
       ],
       "endpoint": "https://api.stepfun.com/v1/chat/completions",
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"stepaudio-3-chat-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/quickstart/overview"
     },
@@ -4455,19 +4456,19 @@
       "RECHECK PRICING"
     ],
     "freeSummary": "StepFun 官方定价页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标注为限免中",
-    "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
+    "freeSummaryEn": "StepFun's official pricing page currently marks stepaudio-3-realtime-preview, stepaudio-3-chat-preview, stepaudio-3-gen-preview and stepaudio-3-music-preview as limited-time free",
     "validitySummary": "Limited-time offer; model availability and free status can change",
     "accessSummary": "StepFun Open Platform account and API key",
-    "checkedSummary": "2026-10-10 / 阶跃星辰官方价格页：4 个 stepaudio-3 预览模型仍为限时免费",
+    "checkedSummary": "2026-10-10 / 阶跃星辰官方价格页：4 个 stepaudio-3 预览模型为限时免费",
     "title": "StepFun · Limited-time free API models",
     "titleZh": "StepFun · 限时免费 API 模型",
-    "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
-    "whyEn": "StepFun's official pricing page marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free, while its API docs provide an OpenAI-compatible chat endpoint. This entry covers only those limited-free models, not Step Plan subscriptions or other paid models.",
+    "why": "StepFun 官方定价与限速页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview（按 Token 计费表）和 stepaudio-3-gen-preview、stepaudio-3-music-preview（音频/音乐生成表）标注为“限时免费”。step-audio-r1.1 已不在价目表（现为按量计费的 step-audio-r1.5），step-2x-large 官方公告 2026-10-10 下线。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
+    "whyEn": "StepFun's official pricing page currently marks stepaudio-3-realtime-preview, stepaudio-3-chat-preview, stepaudio-3-gen-preview and stepaudio-3-music-preview as limited-time free. step-audio-r1.1 is no longer listed (step-audio-r1.5 is pay-as-you-go) and step-2x-large is announced offline on 2026-10-10. This entry covers only the limited-free models, not Step Plan subscriptions or other paid models.",
     "mechanism": "Selected models temporarily marked limited free on the official API pricing page",
     "mechanismEn": "Selected models temporarily marked limited free on the official API pricing page",
     "validity": "Limited-time status; recheck the official pricing page before relying on it",
     "access": "StepFun Open Platform account and API key; China and international platform availability may differ",
-    "command": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"stepaudio-3-chat-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/",
     "registerLabel": "StepFun 开放平台",
     "registerLabelEn": "Open StepFun Platform",
@@ -4502,27 +4503,33 @@
       "https://platform.stepfun.com/docs/zh/quickstart/overview",
       "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
     ],
-    "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
+    "evidence": "StepFun 官方定价与限速页面（2026-10-10 核对）将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标为“限时免费”；step-audio-r1.1 已不在价目表，step-2x-large 官方公告 2026-10-10 下线。官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
     "confidence": "high",
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
-    "notes": "2026-09-17 复验：原先记录的 step-audio-r1.1、step-1x-edit、step-2x-large 已不是当前限免模型。官方页面显示 step-2x-large 已于 2026-06-12 结束限免、改为 0.1 元/张计费，step-1x-edit 未在页面列出。当前限免为 stepaudio-3-* 系列四个模型，已更正。",
+    "notes": "2026-10-10 复验（官方定价页）：限免仅剩 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview；已删除 step-audio-r1.1（不在价目表）、step-1x-edit（未列出）、step-2x-large（2026-10-10 下线）。",
     "freeModels": [
       {
-        "model": "step-audio-r1.1",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-realtime-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-1x-edit",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-chat-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-2x-large",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-gen-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-music-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       }
     ],
@@ -5946,7 +5953,7 @@
     ],
     "id": "stepfun-step-plan-promo",
     "order": 49,
-    "name": "StepFun Step Plan free experience",
+    "name": "StepFun Step Plan free experience (ended)",
     "providerMark": "ST",
     "provider": "StepFun",
     "providerMeta": "StepFun 阶跃星辰 · China",
@@ -5987,16 +5994,16 @@
       "PAID PLAN"
     ],
     "freeSummary": "已结束：Step Plan 官网已挂出“关于免费体验及 Plan 购买名额调整的通知”，新增免费体验领取通道已关闭；“最高 75 天”攻略不再适用。",
-    "freeSummaryEn": "Current Step Plan promotion can stack up to 75 days; login, first-call and referral rewards follow the live campaign rules",
+    "freeSummaryEn": "Ended: the official Step Plan page posted a notice adjusting the free experience and plan quotas; new free-experience claims are closed (no later than 2026-09-22) and the \"up to 75 days\" guide no longer applies. Step Plan is now a paid subscription.",
     "validitySummary": "新增免费体验通道已关闭（不晚于 2026-09-22）· 现为付费月池套餐",
     "accessSummary": "StepFun account + Step API Key; Step Plan entitlement required",
     "checkedSummary": "2026-10-08 / official Step Plan page + Step Plan overview",
-    "title": "StepFun · Step Plan 最高 75 天免费体验",
-    "titleZh": "阶跃星辰 Step Plan · 最高 75 天免费体验",
+    "title": "StepFun · Step Plan 免费体验（已结束）",
+    "titleZh": "阶跃星辰 Step Plan · 免费体验已结束",
     "why": "StepFun 官方 Step Plan 页面常见问题已列出“关于免费体验及 Plan 购买名额调整的通知”，同期多家报道记录该通知关闭了新增免费体验领取通道。官方 Step Plan 概述当前只列 Flash Mini ¥49/月、Flash Plus ¥99/月、Flash Pro ¥199/月、Flash Max ¥699/月四档付费套餐，没有免费档。已领取用户的剩余权益以账户页为准。",
-    "whyEn": "StepFun's official Step Plan page confirms flagship-model access, while the official quick start documents dedicated OpenAI- and Anthropic-compatible endpoints and recommends step-5-preview. Current promotion reports show the free experience can stack through login, first API call and referral rewards up to 75 days; exact referral limits, trial tier and expiry should be confirmed in the logged-in campaign page.",
+    "whyEn": "Historical entry. StepFun's Step Plan free experience is closed to new claims (no later than 2026-09-22); the official Step Plan page now sells it as a paid subscription. The earlier \"stack up to 75 days\" promotion no longer applies. The endpoints below are kept for reference only.",
     "mechanism": "Former Step Plan free-trial promotion (login / first call / referral stacking). New claims are closed; Step Plan is a paid Credit monthly pool (1M Credit = ¥1).",
-    "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
+    "mechanismEn": "Former Step Plan free-trial promotion (login / first call / referral stacking). New claims are closed; Step Plan is now a paid Credit monthly-pool subscription.",
     "validity": "New free-trial claims closed no later than 2026-09-22; Step Plan is now a paid Credit monthly-pool subscription (Flash Mini ¥49/month and up)",
     "access": "StepFun Open Platform account and API key; Step Plan must be active",
     "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
@@ -6091,7 +6098,9 @@
         }
       ]
     },
-    "expires_at": "2026-09-22"
+    "expires_at": "2026-09-22",
+    "titleEn": "StepFun Step Plan · Free experience ended",
+    "validitySummaryEn": "New free-experience claims closed (no later than 2026-09-22) · now a paid monthly plan"
   },
   {
     "id": "puter-mimo-v2-6-flash-free",
@@ -9633,13 +9642,15 @@
     "freePolicy": {
       "type": "limited_time_free",
       "startDate": "2026-10-08",
-      "unit": "promotion"
+      "unit": "promotion",
+      "endDate": "2026-10-15",
+      "endDateEstimated": true
     },
     "freeSummary": "阶跃星辰旗舰 Step 5 Preview 自 2026-10-08 起在 OpenCode Zen（step-5-preview-free）等合作工具限时免费约一周",
     "freeSummaryEn": "StepFun's flagship Step 5 Preview is free for about one week from 2026-10-08 via OpenCode Zen (step-5-preview-free) and partner tools",
     "quota": "OpenCode Zen 免费模型，未公布固定额度；官方称免费期约一周",
-    "validitySummary": "官方公告：自 2026-10-08 起约一周 · 未公布精确结束时间",
-    "validitySummaryEn": "About one week from 2026-10-08 per StepFun; exact end time not published",
+    "validitySummary": "官方公告：自 2026-10-08 起约一周 · 未公布精确结束时间；到期日 2026-10-15 为按“一周”推算",
+    "validitySummaryEn": "About one week from 2026-10-08 per StepFun; exact end time not published — 2026-10-15 is an estimate",
     "accessSummary": "需要 OpenCode Zen 账号与 API Key（或在 Cline / Kilo Code / Nous Portal 等合作工具内选择免费模型）",
     "accessSummaryEn": "OpenCode Zen account and API key, or select the free model inside partner tools such as Cline, Kilo Code or Nous Portal",
     "kicker": "ONE-WEEK FREE FLAGSHIP",
@@ -9738,7 +9749,10 @@
         }
       ]
     },
-    "freeLLMTestNotes": "评测状态透明披露：仅完成官方资料预检，未获得模型输出，暂无成绩。"
+    "freeLLMTestNotes": "评测状态透明披露：仅完成官方资料预检，未获得模型输出，暂无成绩。",
+    "expires_at": "2026-10-15",
+    "expires_at_estimated": true,
+    "expired_scope": "promotion"
   },
   {
     "id": "intern-s2-free-api",
@@ -9898,7 +9912,7 @@
     "freeSummary": "AutoClaw 首页当前展示新用户注册登录送 200M Tokens；10 月 4–11 日 UTC 另有每日登录 Credits 活动。",
     "validitySummary": "Daily Credits event ends 2026-10-11 16:00 UTC (2026-10-12 00:00 UTC+8)",
     "accessSummary": "AutoClaw / Z.ai account",
-    "checkedSummary": "2026-10-08 / official AutoClaw",
+    "checkedSummary": "2026-10-10 / official AutoClaw event page: Oct 4 16:00 UTC – Oct 11 16:00 UTC",
     "title": "AutoClaw + GLM-5.3-Flash · 2 亿 Token + 每日 Credits",
     "why": "官方 AutoClaw 活动页给出 2026-10-04 16:00 UTC 至 2026-10-11 16:00 UTC 的每日 Credits 活动，并按 GLM-5.3-Flash 折算为 100M+ Tokens；AutoClaw 首页同时展示新用户注册登录送 200M Tokens。",
     "mechanism": "Limited-time daily Credits plus a separate new-user token grant; not a permanent free API.",
@@ -9939,7 +9953,7 @@
     "evidence": "AutoClaw 官方活动页明确活动窗口、每日 Credits 和 24 小时过期规则，并说明按 GLM-5.3-Flash 折算可达 100M+ Tokens；首页当前展示新用户 200M Tokens。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "限时 Credits / 新用户赠送，不标为永久免费 API。",
     "freeLLMTest": {
@@ -9965,7 +9979,9 @@
           "url": "https://autoclaw.z.ai/"
         }
       ]
-    }
+    },
+    "expires_at": "2026-10-11",
+    "expired_scope": "promotion"
   },
   {
     "id": "zhipu-glm-4-7-flash-free-api",

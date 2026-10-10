@@ -256,13 +256,17 @@ def render_network_chips(offer: dict) -> list[str]:
 
 def render_offer_flags(offer: dict) -> str:
     chips = []
+    # Expired offers never carry positive verification chips (实测通过 / 加精 /
+    # 实测好用 / 接口已验证): past tests must not read as current availability.
+    expired = offer.get("status") == "expired"
     featured = offer.get("featured")
-    if isinstance(featured, dict) and featured.get("reason"):
+    if not expired and isinstance(featured, dict) and featured.get("reason"):
         title = html_lib.escape(f"加精｜{featured['reason']}")
         chips.append(f'<span class="flag-chip flag-featured" title="{title}">◆ 加精</span>')
-    if offer.get("key"):
+    if offer.get("key") and not expired:
         chips.append('<span class="flag-chip flag-key">★ 重点</span>')
-    chips.extend(render_network_chips(offer))
+    if not expired:
+        chips.extend(render_network_chips(offer))
     edition_of = offer.get("editionOf")
     editions = offer.get("editions") or []
     if edition_of == "cn":
@@ -279,7 +283,9 @@ def render_offer_flags(offer: dict) -> str:
     if sibling:
         label = "也有国内版" if edition_of == "intl" else "也有国际版"
         chips.append(f'<a class="flag-chip flag-sibling" href="/offers/{quote(str(sibling), safe="")}/">{label} ↗</a>')
-    if offer.get("handsOn"):
+    if expired:
+        pass
+    elif offer.get("handsOn"):
         chips.append('<span class="flag-chip flag-hands-on">✓ 实测好用</span>')
     elif offer.get("endpointCheck") and offer["endpointCheck"].get("verdict") != "NETWORK_ERROR":
         check = offer["endpointCheck"]
