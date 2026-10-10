@@ -1842,7 +1842,8 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     title = offer.get("title") or offer.get("name")
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
-    social_meta = _social_meta(site_url, path, page_title, description, "article")
+    indexable = offer.get("status") != "needs_review"
+    social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
     category_links = "".join(
@@ -1969,7 +1970,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   {_hreflang_links(site_url, path)}
   {social_meta}
   {_analytics_script()}
-  {ADSENSE_SCRIPT}
+{("  " + ADSENSE_SCRIPT) if indexable else ""}
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
@@ -2061,7 +2062,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
   </style>
 </head>
 <body data-offer-id="{_esc(offer.get('id'))}" data-static-locale="true">
-{_adsense_slot_markup()}
+{_adsense_slot_markup() if indexable else ""}
   <header>
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
@@ -5994,7 +5995,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
-        "offers": [offer_url(offer) for offer in offers],
+        "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review"],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
     }
