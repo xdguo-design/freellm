@@ -57,7 +57,7 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn('rel="stylesheet"', navigation.group(0))
         self.assertNotIn('media="print"', navigation.group(0))
         self.assertIn('data-fl-shared-navigation-styles="1"', navigation.group(0))
-        self.assertRegex(homepage, r'<aside\s+id="fl-shared-site-menu"\b')
+        self.assertIn('<aside id="fl-shared-site-menu"', homepage)
         self.assertIn('home-prototype-critical.css?v=20261005a', homepage)
 
     def test_logs_keep_both_discoveries_visible(self):
