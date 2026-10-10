@@ -1685,7 +1685,9 @@ def _offer_freellm_test_markup(offer: dict) -> str:
     level = str(test.get("testLevel") or "")
     status = str(test.get("status") or "")
     actual = test.get("actualUsageVerified") is True
-    if actual and status == "passed":
+    if offer_is_expired(offer):
+        state_zh, state_en, state_class = "历史测试记录 · 活动已结束", "Historical test · offer ended", "partial"
+    elif actual and status == "passed":
         state_zh, state_en, state_class = "登录态实测通过", "Hands-on test passed", "verified"
     elif level == "preflight" and status in {"passed", "partial"}:
         state_zh, state_en, state_class = "预检通过 · 登录态实测待补", "Preflight passed · signed-in test pending", "partial"
@@ -1776,18 +1778,51 @@ def _offer_freellm_test_chip(offer: dict) -> str:
     return f'<span class="flag-chip {cls}" title="{_esc(str(test.get("testedAt")))}">{label}</span>'
 
 
+def offer_is_expired(offer: dict) -> bool:
+    """Single lifecycle predicate for offer detail pages.
+
+    Driven by the data's ``status`` field (not the build date) so generated
+    pages stay byte-stable for ``--check``. When ``expires_at`` passes, the
+    daily review flips ``status`` to ``expired``.
+    """
+    return str(offer.get("status") or "").strip().lower() == "expired"
+
+
+def _offer_expired_banner(offer: dict) -> str:
+    """醒目的「已过期」横幅：任何 status=expired 的资源详情页都必须渲染。"""
+    if not offer_is_expired(offer):
+        return ""
+    expires = str(offer.get("expires_at") or "").strip()
+    scope = str(offer.get("expired_scope") or "").strip()
+    when_zh = f"（截止 {expires}）" if expires else ""
+    when_en = f" (ended {expires})" if expires else ""
+    what_zh = "该活动/优惠已结束" if scope == "promotion" or not scope else "该资源已下线"
+    what_en = "This promotion has ended" if scope == "promotion" or not scope else "This offer is no longer available"
+    return (
+        '<div class="offer-expired-banner" role="status" data-offer-lifecycle="expired">'
+        f'<strong>{_locale_pair("⚠ 已过期", "⚠ Expired")}</strong> '
+        f'<span>{_locale_pair(f"{what_zh}{when_zh}。本页仅作历史记录保留，下方权益、额度与过往实测结果都不代表当前状态；请以官方页面为准。", f"{what_en}{when_en}. This page is kept as a historical record; the benefits, quota and past test results below do not describe the current state. Check the official page.")}</span>'
+        "</div>"
+    )
+
+
 def _offer_version_line(offer: dict, offers: list[dict]) -> str:
-    """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
+    """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。
+
+    已过期资源不显示任何「实测通过 / 加精 / 实测好用 / 接口已验证」类正向徽章，
+    只保留版本与互链信息，避免把历史实测误读为当前可用。
+    """
     chips = []
-    featured_chip = _featured_chip(offer)
+    expired = offer_is_expired(offer)
+    featured_chip = "" if expired else _featured_chip(offer)
     if featured_chip:
         chips.append(featured_chip)
-    if offer.get("key"):
+    if offer.get("key") and not expired:
         chips.append(f'<span class="flag-chip flag-key">{_locale_pair("★ 重点", "★ Key pick")}</span>')
-    freellm_test_chip = _offer_freellm_test_chip(offer)
+    freellm_test_chip = "" if expired else _offer_freellm_test_chip(offer)
     if freellm_test_chip:
         chips.append(freellm_test_chip)
-    network_chip = _network_chips(offer)
+    network_chip = "" if expired else _network_chips(offer)
     if network_chip:
         chips.append(network_chip)
     _, _, edition_chip = _edition_chip(offer)
@@ -1804,7 +1839,9 @@ def _offer_version_line(offer: dict, offers: list[dict]) -> str:
             )
             chips.append(f'<a class="flag-chip flag-sibling" href="{_esc(offer_url(sibling))}">{label} ↗</a>')
     hands_on = offer.get("handsOn")
-    if isinstance(hands_on, dict) and hands_on.get("testedAt"):
+    if expired:
+        pass
+    elif isinstance(hands_on, dict) and hands_on.get("testedAt"):
         note = str(hands_on.get("note") or "").strip()
         title_markup = f' title="{_esc(hands_on["testedAt"] + (" · " + note if note else ""))}"' if note else ""
         chips.append(
@@ -1883,8 +1920,11 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     access_paths_markup = _access_paths_markup(offer)
     version_line = _offer_version_line(offer, offers)
     freellm_test_markup = _offer_freellm_test_markup(offer) + eval_pages.offer_section(offer)
+    expired_banner_markup = _offer_expired_banner(offer)
     featured = offer.get("featured")
-    if isinstance(featured, dict) and featured.get("reason"):
+    if expired_banner_markup:
+        featured_note_markup = ""
+    elif isinstance(featured, dict) and featured.get("reason"):
         featured_reason_zh = f"◆ 加精理由：{featured['reason']}"
         featured_reason_en = f"◆ Why featured: {featured.get('reasonEn') or featured['reason']}"
         featured_note_markup = f'<p class="featured-note">{_locale_pair(featured_reason_zh, featured_reason_en)}</p>'
@@ -2019,6 +2059,8 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .offer-version-line {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }}
     .flag-chip {{ display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }}
     .flag-key {{ color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }}
+    .offer-expired-banner {{ margin: 14px 0 6px; padding: 12px 16px; border: 1px solid var(--pale-red-text); border-left-width: 4px; border-radius: 6px; background: var(--pale-red-bg); color: var(--pale-red-text); font-size: 14px; line-height: 1.6; }}
+    .offer-expired-banner strong {{ font-weight: 700; margin-right: 6px; }}
     .featured-note {{ margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--pale-yellow-text); border-radius: 0 6px 6px 0; background: var(--pale-yellow-bg); color: var(--pale-yellow-text); font-size: 13.5px; }}
     .flag-edition {{ color: var(--accent); background: var(--accent-soft); }}
     .flag-sibling {{ color: var(--accent); background: var(--surface); border: 1px solid var(--line); }}
@@ -2067,6 +2109,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    {expired_banner_markup}
     <h1>{_locale_pair(offer.get("titleZh") or title, offer.get("titleEn") or title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
@@ -2864,11 +2907,7 @@ def _model_catalog_row(
         if str(item).lower() != "unknown"
     )
     modality_key = ",".join(sorted(str(item) for item in (model.get("modality") or [])))
-    status = str(model.get("status") or "unknown")
-    status_label = _locale_pair(
-        {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
-        {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
-    )
+    status, status_label, status_title = model_status_display(model)
     freshness = str(model.get("freshnessStatus") or "").lower()
     freshness_label = {
         "new": _locale_pair("新", "New"),
@@ -2898,7 +2937,7 @@ def _model_catalog_row(
       <td>{_esc(model.get("rateLimit") or "—")}</td>
       {latency_cell}
       <td>{_esc(model.get("released") or "—")}</td>
-      <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
+      <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}"{(' title="' + _esc(status_title) + '"') if status_title else ""}>{status_label}</span>{freshness_markup}</td>
       <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
       <td class="source-cell"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_catalog_source_label(model)} ↗</a></td>
     </tr>'''
@@ -3305,6 +3344,33 @@ def _latest_date(items: list[dict], field: str) -> str:
     return max(dates) if dates else "—"
 
 
+def model_status_display(model: dict) -> tuple[str, str, str]:
+    """Return (css_status, label_markup, title) for a catalog row's status cell.
+
+    One rule for the model directory and provider pages so neither can claim
+    「在线」 for a row that the data or our own evaluation says is not usable:
+    - ``status=offline`` (delisted upstream, kept as a record) → 已下线
+    - our evaluation could not call it on this provider → 本账号实测不可用，待复核
+      (same verdict /evaluations/ shows)
+    - ``freshnessStatus=stale`` (missing from the latest snapshot) → 待复核
+    """
+    status = str(model.get("status") or "unknown").lower()
+    if status == "offline":
+        when = str(model.get("offlineAt") or "").strip()
+        title = " · ".join(part for part in (when, str(model.get("offlineReason") or "").strip()) if part)
+        return "offline", _locale_pair(f"已下线{(' · ' + when) if when else ''}", f"Delisted{(' · ' + when) if when else ''}"), title
+    kind, _result = eval_pages.lookup(str(model.get("providerId") or ""), str(model.get("model") or ""))
+    if kind == "unavailable":
+        return "offline", _locale_pair("本账号实测不可用，待复核", "Unavailable on our account · pending recheck"), "FreeLLM evaluation could not call this model on this provider"
+    if str(model.get("freshnessStatus") or "").lower() == "stale" and status == "online":
+        since = str(model.get("staleSince") or "").strip()
+        return "degraded", _locale_pair("未在最新快照中 · 待复核", "Missing from latest snapshot · pending recheck"), (f"stale since {since}" if since else "")
+    return status, _locale_pair(
+        {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
+        {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
+    ), ""
+
+
 def _catalog_source_label(model: dict) -> str:
     """Label a row by the kind of source it was read from.
 
@@ -3327,17 +3393,13 @@ def _catalog_record_table(models: list[dict]) -> str:
         return '<p class="muted">暂未同步模型目录记录；请查看下方详细操作指南。 / No catalog model records are synced yet; see the detailed operation guide below.</p>'
     rows = []
     for model in models:
-        status = str(model.get("status") or "unknown").lower()
-        status_label = _locale_pair(
-            {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
-            {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
-        )
+        status, status_label, status_title = model_status_display(model)
         rows.append(f'''<tr>
           <td><a href="{_esc(provider_url(str(model.get("providerId") or "provider")))}">{_esc(model.get("provider"))}</a></td>
           <td class="model-cell"><strong class="model-name" title="{_esc(model.get("model"))}">{_esc(model.get("model"))}</strong><small class="model-id" title="{_esc(model.get("id"))}">{_esc(model.get("id"))}</small></td>
           <td>{_esc(model.get("context") or "—")}</td>
           <td>{_esc(model.get("rateLimit") or "—")}</td>
-          <td><span class="status status-{_esc(status)}">{status_label}</span><small>{_catalog_source_label(model)}</small></td>
+          <td><span class="status status-{_esc(status)}"{(' title="' + _esc(status_title) + '"') if status_title else ""}>{status_label}</span><small>{_catalog_source_label(model)}</small></td>
           <td class="fl-eval-cell">{eval_pages.status_cell(str(model.get("providerId") or ""), str(model.get("model") or ""))}</td>
           <td>{_esc(model.get("lastSeenAt") or "—")}</td>
           <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>

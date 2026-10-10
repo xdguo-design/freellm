@@ -31,6 +31,27 @@
     "notes": "Labelled public_api, not official: OpenRouter is a routing service, so a row here states what OpenRouter serves, not what the upstream lab serves. freeOnly keeps only entries whose own payload prices prompt and completion at zero. Probed 2026-09-17: HTTP 200, 735,231 bytes, 444 rows, of which 24 are free."
   },
   {
+    "id": "kilo-gateway-free-models",
+    "providerId": "kilo",
+    "provider": "Kilo Gateway",
+    "kind": "public_api",
+    "type": "openrouter_models",
+    "url": "https://api.kilo.ai/api/openrouter/models",
+    "allowedDomains": [
+      "api.kilo.ai"
+    ],
+    "modelPageTemplate": "https://kilo.ai/models",
+    "freeOnly": true,
+    "maxBytes": 2000000,
+    "enabled": true,
+    "rowDefaults": {
+      "rateLimit": "Shared upstream free pool; 429 at peak; quota unpublished",
+      "accessRegion": "international",
+      "accessEndpoint": "https://api.kilo.ai/api/gateway/v1"
+    },
+    "notes": "Kilo's own OpenRouter-compatible model list. Replaces the hand-curated Kilo rows (frozen 2026-09-18 snapshot) that kept re-publishing models as current after they left Kilo's catalogue. freeOnly keeps rows priced 0/0 that are not flagged isFree=false. Probed 2026-10-10: HTTP 200, ~486 KB, 390 rows."
+  },
+  {
     "id": "llm7-io-models",
     "providerId": "llm7-io",
     "provider": "LLM7",

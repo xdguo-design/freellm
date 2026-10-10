@@ -452,20 +452,24 @@ let offerIndex = {};
     };
     const offerFlagsMarkup = item => {
       const chips = [];
-      if (item.featured?.reason) {
+      // Expired offers never show positive verification chips (实测通过 / 加精 / 实测好用 / 接口已验证).
+      const expired = isExpiredOffer(item);
+      if (!expired && item.featured?.reason) {
         const reason = currentLocale === SUPPORTED_LOCALES.zh ? item.featured.reason : (item.featured.reasonEn || item.featured.reason);
         const title = [reason, `${localeText('featuredPick')} ${item.featured.since}`].filter(Boolean).join(' · ');
         chips.push(`<span class="flag-chip flag-featured" title="${escapeHtml(title)}">◆ ${escapeHtml(localeText('featuredPick'))}</span>`);
       }
-      if (item.key) chips.push(`<span class="flag-chip flag-key">★ ${escapeHtml(localeText('keyPick'))}</span>`);
-      chips.push(...offerNetworkFlags(item));
+      if (item.key && !expired) chips.push(`<span class="flag-chip flag-key">★ ${escapeHtml(localeText('keyPick'))}</span>`);
+      if (!expired) chips.push(...offerNetworkFlags(item));
       const editionLabel = offerEditionLabel(item);
       if (editionLabel) chips.push(`<span class="flag-chip flag-edition">${escapeHtml(editionLabel)}</span>`);
       if (item.siblingEditionId && offerIndex[item.siblingEditionId]) {
         const label = item.editionOf === 'intl' ? localeText('alsoCn') : localeText('alsoIntl');
         chips.push(`<a class="flag-chip flag-sibling" href="/offers/${encodeURIComponent(item.siblingEditionId)}/">${escapeHtml(label)} ↗</a>`);
       }
-      if (item.handsOn?.testedAt) {
+      if (expired) {
+        // lifecycle chip comes from offerStateMarkup
+      } else if (item.handsOn?.testedAt) {
         const note = localeValue(item.handsOn.note, '');
         chips.push(`<span class="flag-chip flag-hands-on" title="${escapeHtml(String(item.handsOn.testedAt))}${note ? ` · ${escapeHtml(note)}` : ''}">✓ ${escapeHtml(localeText('handsOn'))}</span>`);
       } else if (item.endpointCheck?.checkedAt && item.endpointCheck.verdict !== 'NETWORK_ERROR') {
