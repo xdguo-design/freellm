@@ -25,7 +25,7 @@ SITE_URL = "https://freellm.top"
 
 
 SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-discovery"></script>
-<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+<aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
     <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>
@@ -104,14 +104,14 @@ def ensure_pastel_shell(html: str) -> str:
 
     # Always normalize the shell. Older generated HTML may already contain
     # a ten-item rail, so "only inject if missing" would preserve stale navigation.
-    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    shell_pattern = r'<aside\b(?=[^>]*\bclass="[^"]*\bfl-site-rail\b)[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
     matches = list(re.finditer(shell_pattern, updated, flags=re.I | re.S))
     if matches:
         first = matches[0]
         rebuilt = updated[: first.start()] + SITE_CHROME + updated[first.end() :]
         tail_start = first.start() + len(SITE_CHROME)
         tail = re.sub(
-            r'\s*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
+            r'\s*<aside\b(?=[^>]*\bclass="[^"]*\bfl-site-rail\b)[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
             "",
             rebuilt[tail_start:],
             flags=re.I | re.S,
