@@ -304,7 +304,7 @@ class ReadmeFactsTests(unittest.TestCase):
 
     def test_about_and_generated_model_page_counts_match_current_data(self):
         # About reports the canonical daily scan, not the catalog's separate
-        # raw 74 offers / 236 model records (including expired/retired rows).
+        # 78 offers / 258 model records (including expired/retired rows).
         scan = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
         about = (ROOT / "about" / "index.html").read_text(encoding="utf-8")
         self.assertIn(f'data-scan-stat="offers">{scan["offers"]}</strong>', about)
