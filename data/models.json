@@ -1,89 +1,5 @@
 [
   {
-    "id": "puter/mimo-v2-6-flash",
-    "providerId": "puter",
-    "provider": "Puter.js",
-    "model": "MiMo-V2.6-Flash",
-    "context": "1000000",
-    "maxOutput": "131072",
-    "modality": [
-      "text",
-      "image",
-      "video",
-      "audio",
-      "reasoning"
-    ],
-    "rateLimit": "",
-    "released": "2026-09-22",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
-    "sourceKind": "official",
-    "canonicalModelId": "mimo-v2.6-flash",
-    "accessRegion": "global",
-    "accessEndpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
-    "manualNote": "Puter 官方页面提供浏览器 Playground，并说明免费账户含 AI allowance；Puter.js 使用 User-Pays 模式，开发者无需自备模型 API Key。免费额度并非无限制永久免费推理。",
-    "lastSeenAt": "2026-09-23",
-    "lastVerifiedAt": "2026-09-23",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "opencode/mimo-v2-6-flash-free",
-    "providerId": "opencode",
-    "provider": "OpenCode Zen",
-    "model": "MiMo-V2.6-Flash Free",
-    "context": "1000000",
-    "maxOutput": "131072",
-    "modality": [
-      "text",
-      "image",
-      "video",
-      "audio",
-      "reasoning"
-    ],
-    "rateLimit": "",
-    "released": "2026-09-22",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://opencode.ai/docs/en/zen/",
-    "sourceKind": "official",
-    "canonicalModelId": "mimo-v2.6-flash-free",
-    "accessRegion": "international",
-    "accessEndpoint": "https://opencode.ai/zen/v1/chat/completions",
-    "manualNote": "OpenCode Zen 官方定价表将 input/output/cached read 标为 Free；官方说明为限时免费，免费期数据可能用于改进模型（2026-09-23 核验）",
-    "lastSeenAt": "2026-09-23",
-    "lastVerifiedAt": "2026-09-23",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "xiaomi-mimo/mimo-v2-6-flash",
-    "providerId": "xiaomi-mimo",
-    "provider": "Xiaomi MiMo",
-    "model": "MiMo-V2.6-Flash",
-    "context": "1000000",
-    "maxOutput": "131072",
-    "modality": [
-      "text",
-      "image",
-      "video",
-      "audio",
-      "reasoning"
-    ],
-    "rateLimit": "100 RPM · 10M TPM",
-    "released": "2026-09-22",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
-    "sourceKind": "official",
-    "canonicalModelId": "mimo-v2.6-flash",
-    "accessRegion": "global",
-    "accessEndpoint": "https://api.xiaomimimo.com/v1",
-    "manualNote": "官方 API 为付费 Pay-As-You-Go；OpenCode Zen 另提供 mimo-v2.6-flash-free 限时免费托管版本（2026-09-23 核验）",
-    "lastSeenAt": "2026-09-23",
-    "lastVerifiedAt": "2026-09-23",
-    "freshnessStatus": "new"
-  },
-  {
     "id": "agnes-ai/agnes-2-5-flash",
     "providerId": "agnes-ai",
     "provider": "Agnes AI",
@@ -105,9 +21,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-2-5-pro",
@@ -131,9 +47,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-2-5-pro-beta",
@@ -157,9 +73,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-3-0-flash",
@@ -182,9 +98,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-image-2-0-flash",
@@ -207,9 +123,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-image-2-1-flash",
@@ -232,9 +148,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-image-2-5-flash",
@@ -257,9 +173,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-video-2-5",
@@ -283,9 +199,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页列为付费模型（现价非 ¥0，2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-video-2-5-flash",
@@ -309,9 +225,9 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页列为限时免费（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "agnes-ai/agnes-video-v2-0",
@@ -335,9 +251,168 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.agnes-ai.cn/v1",
     "manualNote": "官方中国站定价页现价 ¥0（2026-09-19 核验）",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-19",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/deepseek-v4-1-flash",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "DeepSeek-V4.1-Flash",
+    "context": "1048576",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "image",
+      "reasoning"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "DeepSeek-V4.1-Flash",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4.1-Flash in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/deepseek-v4-flash",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "DeepSeek-V4-Flash",
+    "context": "1048576",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "reasoning"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "DeepSeek-V4-Flash",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4-Flash in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/deepseek-v4-flash-vision-exp",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "DeepSeek-V4-Flash-Vision-Exp",
+    "context": "1048576",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "image",
+      "reasoning"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "DeepSeek-V4-Flash-Vision-Exp",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4-Flash-Vision-Exp in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/minicpm5-2b",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "MiniCPM5-2B",
+    "context": "131072",
+    "maxOutput": "",
+    "modality": [
+      "text"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "MiniCPM5-2B",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists MiniCPM5-2B in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/qwen3-8-27b",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "Qwen3.8-27B",
+    "context": "131072",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "image",
+      "reasoning"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "Qwen3.8-27B",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists Qwen3.8-27B in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "amd-radeon-cloud/qwen3-8-flash-next",
+    "providerId": "amd-radeon-cloud",
+    "provider": "AMD Radeon Cloud",
+    "model": "Qwen3.8-Flash-Next",
+    "context": "262144",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "image",
+      "reasoning"
+    ],
+    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+    "sourceKind": "official",
+    "freePricingConfirmed": true,
+    "canonicalModelId": "Qwen3.8-Flash-Next",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
+    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists Qwen3.8-Flash-Next in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-22",
+    "freshnessStatus": "current"
   },
   {
     "id": "atria-asi/atria-dawn-preview",
@@ -359,7 +434,7 @@
     "canonicalModelId": "Atria-Dawn-Preview",
     "accessRegion": "international",
     "accessEndpoint": "https://api.atria-asi.ai",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-17",
     "freshnessStatus": "current"
   },
@@ -380,7 +455,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/deepseek-v3-2-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -400,7 +475,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/deepseek-v4-flash-0731-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -420,7 +495,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/gemma-4-31b-turbo-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -440,7 +515,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/glm-5-1-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -460,7 +535,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/glm-5-2-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -480,7 +555,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/kimi-k2-6-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -500,7 +575,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/kimi-k3-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -520,7 +595,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/mistral-nemo-instruct-2407-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -540,7 +615,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/nemotron-3-nano-omni-30b-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -560,7 +635,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/qwen3-235b-a22b-thinking-2507-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -580,7 +655,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/qwen3-32b-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -600,7 +675,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/qwen3-5-397b-a17b-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -620,7 +695,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/qwen3-6-27b-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -640,7 +715,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://llm.chutes.ai/v1/models",
     "id": "chutes-ai/qwen3-8-27b-tee",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -666,7 +741,7 @@
     "canonicalModelId": "dots3-note-preview",
     "accessRegion": "domestic",
     "accessEndpoint": "https://note3-prev-api.askdiandian.com",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-17",
     "freshnessStatus": "current"
   },
@@ -695,9 +770,9 @@
     "accessRegion": "international",
     "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
     "manualNote": "Google Gemini API official pricing lists input/output/context caching as Free of charge on the Free Tier. Free-tier data may be used to improve Google products. Verified 2026-09-21.",
-    "lastSeenAt": "2026-09-21",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-21",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "google-gemini/gemini-3-8-live",
@@ -723,9 +798,9 @@
     "accessRegion": "international",
     "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
     "manualNote": "Google Gemini API official pricing lists Gemini 3.8 Live input/output as Free of charge on the Free Tier. Live API model; output supports text and audio. Verified 2026-09-21.",
-    "lastSeenAt": "2026-09-21",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-21",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "google-gemini/gemini-3-8-live-extended-thinking",
@@ -751,9 +826,9 @@
     "accessRegion": "international",
     "accessEndpoint": "https://generativelanguage.googleapis.com/v1beta",
     "manualNote": "Google Gemini API official pricing lists Gemini 3.8 Live Extended Thinking input/output as Free of charge on the Free Tier. Live API background-reasoning model. Verified 2026-09-21.",
-    "lastSeenAt": "2026-09-21",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-21",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "groq/qwen-qwen3-8-27b",
@@ -777,9 +852,9 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.groq.com/openai/v1",
     "manualNote": "Groq official Free Plan Limits lists qwen/qwen3.8-27b at 30 RPM, 1K RPD, 8K TPM, 200K TPD. It replaces qwen/qwen3.6-27b, retired 2026-09-14. Verified 2026-09-21.",
-    "lastSeenAt": "2026-09-21",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-21",
-    "freshnessStatus": "new"
+    "freshnessStatus": "current"
   },
   {
     "id": "kilo/cohere-north-mini-code-free",
@@ -804,7 +879,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -831,7 +906,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -859,7 +934,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -886,7 +961,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -913,7 +988,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -942,7 +1017,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -969,7 +1044,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -997,7 +1072,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1025,7 +1100,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1053,7 +1128,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1080,7 +1155,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1110,7 +1185,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1137,7 +1212,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1164,7 +1239,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1191,7 +1266,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1218,7 +1293,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1247,7 +1322,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1276,7 +1351,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1303,7 +1378,7 @@
     "accessRegion": "international",
     "accessEndpoint": "https://api.kilo.ai/api/gateway/v1",
     "manualNote": "Kilo (kilo.ai) is an OpenRouter white-label: same upstream free pool, anonymous access with a dummy key, no signup required. Verified 2026-09-18 by probing the official gateway (api.kilo.ai/api/gateway/v1) for each model. Free routes may become paid and free-tier prompts may be used for upstream training.",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "lastVerifiedAt": "2026-09-18",
     "freshnessStatus": "current"
   },
@@ -1324,7 +1399,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/chroma-v-46-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1344,7 +1419,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-fable-5",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1364,7 +1439,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-fable-5-1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1385,7 +1460,48 @@
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-haiku-4-5",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "claude-opus-4-6",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/claude-opus-4-6",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "claude-opus-4-7",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/claude-opus-4-7",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1404,7 +1520,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-opus-4-8",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1424,8 +1540,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-opus-5",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "claude-opus-5-5",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/claude-opus-5-5",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1444,7 +1580,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-sonnet-4-6",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1464,7 +1600,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/claude-sonnet-5",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1484,7 +1620,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/codestral-latest",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1504,7 +1640,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/dark-beast-krea2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1524,7 +1660,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/deepseek-v4-1-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1544,7 +1680,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/deepseek-v4-flash-0731",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1564,7 +1700,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/deepseek-v4-pro",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1584,8 +1720,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemini-3-1-flash-lite",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "gemini-3.6-flash-high",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/gemini-3-6-flash-high",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1604,7 +1760,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemini-3-7-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1624,7 +1780,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemini-3-8-flash-high",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1644,7 +1800,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemini-3-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1664,7 +1820,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemini-omni-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1684,8 +1840,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gemma4-31b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "glm-5.2",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/glm-5-2",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1704,7 +1880,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/glm-5-3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1724,7 +1900,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/glm-5-3-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1745,7 +1921,8 @@
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-5-5",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "llm7-io",
@@ -1764,7 +1941,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-5-6-luna",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1784,7 +1961,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-5-6-sol",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1804,8 +1981,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-5-6-terra",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "gpt-6.1-sol",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/gpt-6-1-sol",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1824,8 +2021,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-6-astra",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "gpt-6-sol",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/gpt-6-sol",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1844,7 +2061,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-image-2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1864,8 +2081,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/gpt-image-2-5",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "gpt-oss:20b",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/gpt-oss-20b",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1884,7 +2121,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/grok-4-5",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1904,7 +2141,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/grok-4-6",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1924,7 +2161,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/inkling",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1944,8 +2181,68 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/inkling-small",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "jev-latest",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/jev-latest",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "kimi-k2.6",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/kimi-k2-6",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "kimi-k2.7-code",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/kimi-k2-7-code",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -1964,7 +2261,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/kimi-k3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -1984,7 +2281,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/kling-v3-0-pro",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2004,7 +2301,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/kling-v3-0-turbo",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2024,7 +2321,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/l3-8b-lunaris-v1-turbo",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2044,7 +2341,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/llama-4-maverick",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2065,7 +2362,8 @@
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/mimo-v2-5",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "llm7-io",
@@ -2085,7 +2383,8 @@
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/mimo-v2-5-pro",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "llm7-io",
@@ -2105,7 +2404,48 @@
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/minimax-m2-7",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "minimax-m3",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/minimax-m3",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "mistral-large-3:675b",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/mistral-large-3-675b",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -2124,7 +2464,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/mistral-nemo-instruct-2407",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2144,8 +2484,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/mistral-small-24b-instruct-2501",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "nemotron-3-nano:30b",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/nemotron-3-nano-30b",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "llm7-io",
@@ -2164,7 +2524,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/seed-2-0-mini",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2184,7 +2544,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/seedance-2-0",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2204,7 +2564,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/seedance-2-0-fast",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2224,8 +2584,88 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://api.llm7.io/v1/models",
     "id": "llm7-io/seedance-2-0-mini",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "Voxtral-Mini-3B-2507",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/voxtral-mini-3b-2507",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "Voxtral-Small-24B-2507",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/voxtral-small-24b-2507",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "whisper-large-v3",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/whisper-large-v3",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
+  },
+  {
+    "providerId": "llm7-io",
+    "provider": "LLM7",
+    "model": "whisper-large-v3-turbo",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://llm7.io/models",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://api.llm7.io/v1/models",
+    "id": "llm7-io/whisper-large-v3-turbo",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "nvidia-nim",
@@ -2244,7 +2684,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/ai-synthetic-video-detector",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2264,7 +2704,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/arctic-embed-l",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2284,7 +2724,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/codegemma-1-1-7b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2304,7 +2744,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/codegemma-7b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2319,12 +2759,12 @@
     "rateLimit": "",
     "released": "",
     "usageActivity": "",
-    "status": "offline",
+    "status": "online",
     "sourceUrl": "https://build.nvidia.com/meta/codellama-70b",
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/codellama-70b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2344,7 +2784,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/codestral-22b-instruct-v0-1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2364,7 +2804,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/cosmos-reason2-8b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2384,7 +2824,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/dbrx-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2404,8 +2844,28 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/deepseek-coder-6-7b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "nvidia-nim",
+    "provider": "NVIDIA NIM",
+    "model": "deepseek-v4.1-flash",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
+    "id": "nvidia-nim/deepseek-v4-1-flash",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "nvidia-nim",
@@ -2425,7 +2885,8 @@
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/deepseek-v4-flash-0731",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "nvidia-nim",
@@ -2444,7 +2905,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/deplot",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2464,7 +2925,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/diffusiongemma-26b-a4b-it",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2484,7 +2945,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/embed-qa-4",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2504,7 +2965,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/fuyu-8b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2524,7 +2985,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/gemma-2b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2544,7 +3005,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/gemma-3-12b-it",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2564,7 +3025,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/gemma-3-4b-it",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2584,7 +3045,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/gemma-4-31b-it",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2604,7 +3065,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/glm-5-3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2624,7 +3085,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/glm-5-3-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2644,7 +3105,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/gpt-oss-20b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2664,7 +3125,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/granite-3-0-3b-a800m-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2684,7 +3145,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/granite-3-0-8b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2704,7 +3165,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/granite-34b-code-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2724,7 +3185,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/granite-8b-code-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2744,7 +3205,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/ising-calibration-1-5-31b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2764,7 +3225,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/jamba-1-5-large-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2784,7 +3245,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/kimi-k2-6",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2804,7 +3265,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/kimi-k3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2824,7 +3285,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/kosmos-2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2844,7 +3305,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/laguna-xs-2-1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2864,7 +3325,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemoguard-8b-content-safety",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2884,7 +3345,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemoguard-8b-topic-control",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2904,7 +3365,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemotron-51b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2924,7 +3385,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemotron-70b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2944,7 +3405,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemotron-safety-guard-8b-v3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2964,7 +3425,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-1-nemotron-ultra-253b-v1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -2984,7 +3445,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-2-11b-vision-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3004,7 +3465,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-2-90b-vision-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3024,7 +3485,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-2-nemoretriever-1b-vlm-embed-v1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3044,7 +3505,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-3-2-nv-embedqa-1b-v1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3064,7 +3525,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-guard-4-12b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3084,7 +3545,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama-nemotron-embed-vl-1b-v2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3104,7 +3565,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama2-70b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3124,7 +3585,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/llama3-chatqa-1-5-70b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3144,7 +3605,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-7b-instruct-v0-3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3164,7 +3625,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-large",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3184,7 +3645,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-large-2-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3204,7 +3665,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-nemo-12b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3224,7 +3685,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-nemo-minitron-8b-8k-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3245,7 +3706,8 @@
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mistral-nemotron",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "nvidia-nim",
@@ -3264,7 +3726,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/mixtral-8x22b-v0-1",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3284,7 +3746,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/muse-glimmer-30b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3304,7 +3766,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-5-content-safety",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3324,7 +3786,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-5-lightning-30b-a3b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3344,7 +3806,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-embed-1b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3364,7 +3826,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-nano-omni-30b-a3b-reasoning",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3384,7 +3846,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-super-120b-a12b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3404,7 +3866,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-3-ultra-550b-a55b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3424,7 +3886,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-4-340b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3444,7 +3906,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-4-340b-reward",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3464,7 +3926,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-nano-3-30b-a3b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3484,7 +3946,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-parse",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3504,7 +3966,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nemotron-parse-2-0",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3524,7 +3986,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/neva-22b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3544,7 +4006,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nv-embedqa-mistral-7b-v2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3564,7 +4026,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/nvclip",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3584,7 +4046,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/palmyra-creative-122b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3604,7 +4066,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/palmyra-fin-70b-32k",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3624,7 +4086,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/palmyra-med-70b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3644,7 +4106,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/palmyra-med-70b-32k",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3664,7 +4126,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/phi-3-5-moe-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3684,7 +4146,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/phi-3-vision-128k-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3704,7 +4166,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/recurrentgemma-2b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3724,7 +4186,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/riva-translate-4b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3745,7 +4207,8 @@
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/riva-translate-4b-instruct-v1-1",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "nvidia-nim",
@@ -3764,7 +4227,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/riva-translate-4b-instruct-v2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3784,7 +4247,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/sea-lion-7b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3804,7 +4267,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/starcoder2-15b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3824,7 +4287,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/vila",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3844,7 +4307,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/yi-large",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3864,7 +4327,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://integrate.api.nvidia.com/v1/models",
     "id": "nvidia-nim/zamba2-7b-instruct",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3884,7 +4347,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/deepseek-v4-1-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3905,7 +4368,8 @@
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/deepseek-v4-flash-0731",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "ollama-cloud",
@@ -3920,11 +4384,11 @@
     "released": "",
     "usageActivity": "",
     "status": "online",
-    "sourceUrl": "https://ollama.com/library/deepseek-v4-pro",
+    "sourceUrl": "https://ollama.com/library/deepseek-v4-pro:0813",
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/deepseek-v4-pro-0813",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3944,7 +4408,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/gemma4-31b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -3965,7 +4429,8 @@
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/glm-5-1",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "ollama-cloud",
@@ -3984,7 +4449,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/glm-5-2",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4004,7 +4469,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/glm-5-3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4024,7 +4489,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/glm-5-3-flash",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4044,7 +4509,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/gpt-oss-120b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4064,7 +4529,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/gpt-oss-20b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4084,7 +4549,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/kimi-k2-6",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4104,7 +4569,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/kimi-k2-7-code",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4124,7 +4589,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/kimi-k3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4144,7 +4609,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/minimax-m2-7",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4164,7 +4629,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/minimax-m3",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4180,12 +4645,32 @@
     "released": "",
     "usageActivity": "",
     "status": "online",
-    "sourceUrl": "https://ollama.com/library/mistral-large-3",
+    "sourceUrl": "https://ollama.com/library/mistral-large-3:675b",
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/mistral-large-3-675b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "ollama-cloud",
+    "provider": "Ollama",
+    "model": "mistral-large-4",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "unknown"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://ollama.com/library/mistral-large-4",
+    "sourceKind": "official",
+    "sourceEndpoint": "https://ollama.com/api/tags",
+    "id": "ollama-cloud/mistral-large-4",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "ollama-cloud",
@@ -4204,7 +4689,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/nemotron-3-nano-30b",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4224,7 +4709,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/nemotron-3-super",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4244,7 +4729,7 @@
     "sourceKind": "official",
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/nemotron-3-ultra",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4265,7 +4750,58 @@
     "sourceEndpoint": "https://ollama.com/api/tags",
     "id": "ollama-cloud/qwen3-5-397b",
     "lastSeenAt": "2026-09-19",
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
+  },
+  {
+    "id": "opencode/mimo-v2-6-flash-free",
+    "providerId": "opencode",
+    "provider": "OpenCode Zen",
+    "model": "MiMo-V2.6-Flash Free",
+    "context": "1000000",
+    "maxOutput": "131072",
+    "modality": [
+      "text",
+      "image",
+      "video",
+      "audio",
+      "reasoning"
+    ],
+    "rateLimit": "",
+    "released": "2026-09-22",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://opencode.ai/docs/en/zen/",
+    "sourceKind": "official",
+    "canonicalModelId": "mimo-v2.6-flash-free",
+    "accessRegion": "international",
+    "accessEndpoint": "https://opencode.ai/zen/v1/chat/completions",
+    "manualNote": "OpenCode Zen 官方定价表将 input/output/cached read 标为 Free；官方说明为限时免费，免费期数据可能用于改进模型（2026-09-23 核验）",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-23",
     "freshnessStatus": "current"
+  },
+  {
+    "providerId": "openrouter",
+    "provider": "OpenRouter",
+    "model": "Apodex: Apodex 1.1 Mini (free)",
+    "context": "262144",
+    "maxOutput": "235929",
+    "modality": [
+      "reasoning",
+      "text"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://openrouter.ai/apodex/apodex-1.1-mini:free",
+    "sourceKind": "public_api",
+    "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+    "freePricingConfirmed": true,
+    "id": "openrouter/apodex-apodex-1-1-mini-free",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "openrouter",
@@ -4286,7 +4822,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/cohere-north-mini-code-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4309,7 +4845,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/deepseek-deepseek-v4-flash-0731-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4331,10 +4868,10 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/dots-studio-dots-3-note-preview-free",
-    "lastSeenAt": "2026-09-19",
-    "accessEndpoint": "https://openrouter.ai/api/v1",
+    "lastSeenAt": "2026-10-10",
     "accessRegion": "international",
     "canonicalModelId": "dots3-note-preview",
+    "accessEndpoint": "https://openrouter.ai/api/v1",
     "freshnessStatus": "current"
   },
   {
@@ -4358,7 +4895,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/google-gemma-4-26b-a4b-it-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4382,7 +4919,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/google-gemma-4-31b-it-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4405,7 +4942,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/google-lyria-3-clip-preview",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4428,7 +4965,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/google-lyria-3-pro-preview",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4451,7 +4988,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/inclusionai-ling-3-0-flash-fin-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4473,7 +5011,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/inclusionai-ling-3-0-flash-sante-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4497,7 +5036,30 @@
     "freePricingConfirmed": true,
     "id": "openrouter/inclusionai-ling-3-0-flash-vl-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
+  },
+  {
+    "providerId": "openrouter",
+    "provider": "OpenRouter",
+    "model": "inclusionAI: Ling 3.1 Flash",
+    "context": "262144",
+    "maxOutput": "32768",
+    "modality": [
+      "reasoning",
+      "text"
+    ],
+    "rateLimit": "",
+    "released": "",
+    "usageActivity": "",
+    "status": "online",
+    "sourceUrl": "https://openrouter.ai/inclusionai/ling-3.1-flash",
+    "sourceKind": "public_api",
+    "sourceEndpoint": "https://openrouter.ai/api/v1/models",
+    "freePricingConfirmed": true,
+    "id": "openrouter/inclusionai-ling-3-1-flash",
+    "lastSeenAt": "2026-10-10",
+    "freshnessStatus": "new"
   },
   {
     "providerId": "openrouter",
@@ -4518,7 +5080,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/liquid-lfm-2-5-2-6b-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4542,7 +5104,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/nex-agi-nex-n2-5-mini-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4565,7 +5128,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/nex-agi-nex-n2-5-pro-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4587,7 +5151,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/nvidia-nemotron-3-5-content-safety-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4609,7 +5173,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/nvidia-nemotron-3-5-lightning-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4634,7 +5198,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4656,7 +5220,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/nvidia-nemotron-3-super-120b-a12b-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4678,7 +5242,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/nvidia-nemotron-3-ultra-550b-a55b-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4701,7 +5265,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/openrouter-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4723,7 +5287,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/poolside-laguna-s-2-1-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4745,7 +5309,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/poolside-laguna-xs-2-1-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4770,7 +5334,8 @@
     "freePricingConfirmed": true,
     "id": "openrouter/qwen-qwen3-8-27b-free",
     "lastSeenAt": "2026-09-19",
-    "freshnessStatus": "current"
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
   },
   {
     "providerId": "openrouter",
@@ -4816,7 +5381,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/thinkingmachines-inkling-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4840,7 +5405,7 @@
     "sourceEndpoint": "https://openrouter.ai/api/v1/models",
     "freePricingConfirmed": true,
     "id": "openrouter/thinkingmachines-inkling-small-free",
-    "lastSeenAt": "2026-09-19",
+    "lastSeenAt": "2026-10-10",
     "freshnessStatus": "current"
   },
   {
@@ -4863,190 +5428,36 @@
     "freePricingConfirmed": true,
     "id": "openrouter/z-ai-glm-5-2-free",
     "lastSeenAt": "2026-09-19",
+    "freshnessStatus": "stale",
+    "staleSince": "2026-10-10"
+  },
+  {
+    "id": "puter/mimo-v2-6-flash",
+    "providerId": "puter",
+    "provider": "Puter.js",
+    "model": "MiMo-V2.6-Flash",
+    "context": "1000000",
+    "maxOutput": "131072",
+    "modality": [
+      "text",
+      "image",
+      "video",
+      "audio",
+      "reasoning"
+    ],
+    "rateLimit": "",
+    "released": "2026-09-22",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+    "sourceKind": "official",
+    "canonicalModelId": "mimo-v2.6-flash",
+    "accessRegion": "global",
+    "accessEndpoint": "https://api.puter.com/puterai/openai/v1/chat/completions",
+    "manualNote": "Puter 官方页面提供浏览器 Playground，并说明免费账户含 AI allowance；Puter.js 使用 User-Pays 模式，开发者无需自备模型 API Key。免费额度并非无限制永久免费推理。",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-23",
     "freshnessStatus": "current"
-  },
-  {
-    "id": "unisound/u2-flash",
-    "providerId": "unisound",
-    "provider": "Unisound Token Hub",
-    "model": "Unisound U2 Flash",
-    "context": "",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "reasoning"
-    ],
-    "rateLimit": "See provider page",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://maas.unisound.com/models/u2-flash",
-    "sourceKind": "official",
-    "canonicalModelId": "u2-flash",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://maas-api.unisound.com",
-    "lastSeenAt": "2026-09-19",
-    "lastVerifiedAt": "2026-09-17",
-    "freshnessStatus": "current"
-  },
-  {
-    "id": "amd-radeon-cloud/deepseek-v4-flash",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "DeepSeek-V4-Flash",
-    "context": "1048576",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "reasoning"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "DeepSeek-V4-Flash",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4-Flash in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "amd-radeon-cloud/deepseek-v4-flash-vision-exp",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "DeepSeek-V4-Flash-Vision-Exp",
-    "context": "1048576",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "image",
-      "reasoning"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "DeepSeek-V4-Flash-Vision-Exp",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4-Flash-Vision-Exp in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "amd-radeon-cloud/deepseek-v4-1-flash",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "DeepSeek-V4.1-Flash",
-    "context": "1048576",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "image",
-      "reasoning"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "DeepSeek-V4.1-Flash",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists DeepSeek-V4.1-Flash in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "amd-radeon-cloud/qwen3-8-flash-next",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "Qwen3.8-Flash-Next",
-    "context": "262144",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "image",
-      "reasoning"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "Qwen3.8-Flash-Next",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists Qwen3.8-Flash-Next in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "amd-radeon-cloud/qwen3-8-27b",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "Qwen3.8-27B",
-    "context": "131072",
-    "maxOutput": "",
-    "modality": [
-      "text",
-      "image",
-      "reasoning"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "Qwen3.8-27B",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists Qwen3.8-27B in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
-  },
-  {
-    "id": "amd-radeon-cloud/minicpm5-2b",
-    "providerId": "amd-radeon-cloud",
-    "provider": "AMD Radeon Cloud",
-    "model": "MiniCPM5-2B",
-    "context": "131072",
-    "maxOutput": "",
-    "modality": [
-      "text"
-    ],
-    "rateLimit": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "released": "",
-    "usageActivity": "—",
-    "status": "online",
-    "sourceUrl": "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-    "sourceKind": "official",
-    "freePricingConfirmed": true,
-    "canonicalModelId": "MiniCPM5-2B",
-    "accessRegion": "domestic",
-    "accessEndpoint": "https://developer.amd.com.cn/radeon/api/v1",
-    "manualNote": "AMD Radeon Cloud Public Free Model API. Official model overview lists MiniCPM5-2B in the current shared catalog; verified 2026-09-22. MiniCPM5-1B is explicitly retired from the current published list.",
-    "lastSeenAt": "2026-09-22",
-    "lastVerifiedAt": "2026-09-22",
-    "freshnessStatus": "new"
   },
   {
     "id": "siliconflow/xing4-0-29b",
@@ -5070,7 +5481,60 @@
     "accessRegion": "domestic",
     "accessEndpoint": "https://api.siliconflow.cn/v1",
     "manualNote": "中国电信 XingChenAGI/Xing4.0-29B-A4B；SiliconFlow 官方价目表 2026-09-29 核验为输入 ¥0 / M Tokens、输出 ¥0 / M Tokens。官方 XingChen-AGI 仓库说明模型 29B 总参数、4B 激活、原生 256K 上下文并可扩展至 512K。",
-    "lastSeenAt": "2026-09-29",
-    "lastVerifiedAt": "2026-09-29"
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-29",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "unisound/u2-flash",
+    "providerId": "unisound",
+    "provider": "Unisound Token Hub",
+    "model": "Unisound U2 Flash",
+    "context": "",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "reasoning"
+    ],
+    "rateLimit": "See provider page",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://maas.unisound.com/models/u2-flash",
+    "sourceKind": "official",
+    "canonicalModelId": "u2-flash",
+    "accessRegion": "domestic",
+    "accessEndpoint": "https://maas-api.unisound.com",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-17",
+    "freshnessStatus": "current"
+  },
+  {
+    "id": "xiaomi-mimo/mimo-v2-6-flash",
+    "providerId": "xiaomi-mimo",
+    "provider": "Xiaomi MiMo",
+    "model": "MiMo-V2.6-Flash",
+    "context": "1000000",
+    "maxOutput": "131072",
+    "modality": [
+      "text",
+      "image",
+      "video",
+      "audio",
+      "reasoning"
+    ],
+    "rateLimit": "100 RPM · 10M TPM",
+    "released": "2026-09-22",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+    "sourceKind": "official",
+    "canonicalModelId": "mimo-v2.6-flash",
+    "accessRegion": "global",
+    "accessEndpoint": "https://api.xiaomimimo.com/v1",
+    "manualNote": "官方 API 为付费 Pay-As-You-Go；OpenCode Zen 另提供 mimo-v2.6-flash-free 限时免费托管版本（2026-09-23 核验）",
+    "lastSeenAt": "2026-10-10",
+    "lastVerifiedAt": "2026-09-23",
+    "freshnessStatus": "current"
   }
 ]
