@@ -28,7 +28,7 @@
         {
           "title": "调用 MaaS API",
           "detail": "使用 Region API Key 调用标准 Chat API；模型参数以控制台为准。",
-          "command": "curl https://api.modelarts-maas.com/v1/chat/completions -H 'Authorization: Bearer ${MAAS_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://api.modelarts-maas.com/v1/chat/completions -H \"Authorization: Bearer $MAAS_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "HTTP 200；若 429 则说明触发严格流控。"
         }
       ],

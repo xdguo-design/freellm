@@ -28,13 +28,13 @@
         {
           "title": "发送 TTS 请求",
           "detail": "通过 OpenAI 兼容 Chat Completions API 请求音频并解码返回的 base64 音频数据。",
-          "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H 'Authorization: Bearer ${MIMO_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+          "command": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer $MIMO_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
           "expected": "返回包含音频数据的 completion；费用页不产生 TTS 调用费用。"
         }
       ],
       "endpoint": "https://api.xiaomimimo.com/v1/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.xiaomimimo.com/v1/chat/completions -H 'Authorization: Bearer ${MIMO_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
+      "example": "curl https://api.xiaomimimo.com/v1/chat/completions -H \"Authorization: Bearer $MIMO_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请朗读：你好\"}],\"audio\":{\"format\":\"wav\"}}'",
       "validation": "请求成功且当前费用页没有 TTS 调用费用；若价格页不再显示限时免费，应立即把 Offer 标记 changed/expired。",
       "limits": "官方模型页当前列出 RPM 100、TPM 10M；免费结束日期未公开。",
       "commonIssues": [

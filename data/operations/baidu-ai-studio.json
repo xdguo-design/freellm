@@ -27,13 +27,13 @@
         {
           "title": "调用星河 API",
           "detail": "使用 OpenAI-compatible base_url 调用当前模型列表中的模型。",
-          "command": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H 'Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H \"Authorization: Bearer $AISTUDIO_ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 chat completion；Token 使用明细出现相应扣减。"
         }
       ],
       "endpoint": "https://aistudio.baidu.com/llm/lmapi/v3/chat/completions",
       "auth": "Authorization: Bearer Access Token",
-      "example": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H 'Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "example": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H \"Authorization: Bearer $AISTUDIO_ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
       "validation": "请求成功，并确认消耗来自 AI Studio 免费 Tokens 共享池。",
       "sourceUrls": [
         "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns",

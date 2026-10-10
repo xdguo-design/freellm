@@ -27,13 +27,13 @@
         {
           "title": "调用并核对账单",
           "detail": "发起最小 OpenAI 兼容请求，并在费用中心确认当前请求被免费价格或活动减免覆盖。",
-          "command": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H 'Authorization: Bearer ${WQ_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+          "command": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H \"Authorization: Bearer $WQ_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
           "expected": "返回 chat completion；费用中心本次调用实际扣费为 0。"
         }
       ],
       "endpoint": "https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H 'Authorization: Bearer ${WQ_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+      "example": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions -H \"Authorization: Bearer $WQ_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
       "validation": "请求成功且费用中心显示当前调用未产生实际扣费；若价格页不再标免费，应停止按免费入口宣传。",
       "sourceUrls": [
         "https://streamlake.com/document/WANQING/mdsorb4ejjptsmfyrn",

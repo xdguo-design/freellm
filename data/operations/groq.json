@@ -28,7 +28,7 @@
         {
           "title": "发送测试请求",
           "detail": "使用官方支持的模型 ID 发起一次短请求。",
-          "command": "curl https://api.groq.com/openai/v1/chat/completions -H 'Authorization: Bearer ${GROQ_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://api.groq.com/openai/v1/chat/completions -H \"Authorization: Bearer $GROQ_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "返回 choices，并在超限时得到明确的 rate-limit 响应。"
         },
         {
@@ -46,7 +46,7 @@
       ],
       "endpoint": "https://api.groq.com/openai/v1",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.groq.com/openai/v1/models -H 'Authorization: Bearer ${GROQ_API_KEY}'",
+      "example": "curl https://api.groq.com/openai/v1/models -H \"Authorization: Bearer $GROQ_API_KEY\"",
       "validation": "GET /openai/v1/models 返回 HTTP 200，并确认目标模型仍在官方模型列表。",
       "sourceUrls": [
         "https://console.groq.com/docs/quickstart",

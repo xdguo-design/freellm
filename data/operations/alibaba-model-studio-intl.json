@@ -27,13 +27,13 @@
         {
           "title": "发送最小请求",
           "detail": "使用新加坡地域 OpenAI 兼容 endpoint 与普通 Model Studio API Key 调用支持模型。",
-          "command": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "HTTP 200；控制台显示对应模型新人免费额度扣减。"
         }
       ],
       "endpoint": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "example": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
       "validation": "请求成功，并确认扣减来自新加坡地域新人免费额度；Free Quota Only 已按需要开启。",
       "sourceUrls": [
         "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota",

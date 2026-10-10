@@ -27,13 +27,13 @@
         {
           "title": "调用免费模型",
           "detail": "使用 OpenAI 兼容 endpoint 调用当前 Free 档支持模型，并观察 5 小时积分窗口。",
-          "command": "curl https://token.sensenova.cn/v1/chat/completions -H 'Authorization: Bearer ${SENSENOVA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://token.sensenova.cn/v1/chat/completions -H \"Authorization: Bearer $SENSENOVA_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "返回 chat completion；Token Plan 用量页显示积分扣减。"
         }
       ],
       "endpoint": "https://token.sensenova.cn/v1/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://token.sensenova.cn/v1/chat/completions -H 'Authorization: Bearer ${SENSENOVA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "example": "curl https://token.sensenova.cn/v1/chat/completions -H \"Authorization: Bearer $SENSENOVA_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
       "validation": "请求成功，并在 Token Plan 用量页确认请求消耗 Free 公测积分；特殊模型若不在 Free 档应停止标记为免费。",
       "sourceUrls": [
         "https://www.sensenova.cn/token-plan",

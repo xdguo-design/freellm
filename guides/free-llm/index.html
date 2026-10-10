@@ -197,15 +197,16 @@ pre code { padding:0; background:none; color:inherit; }
       <h2>Quick Start — 30 秒接入免费 API</h2>
       <p>大多数提供商提供 OpenAI 兼容接口。接受 <code>baseURL</code> 与 <code>apiKey</code> 的工具通常只需要替换这两项。</p>
       <h3>Python（OpenAI SDK）</h3>
-      <pre><code>from openai import OpenAI
+      <pre><code>import os
+from openai import OpenAI
 
 client = OpenAI(
     base_url=&quot;https://api.groq.com/openai/v1&quot;,
-    api_key=&quot;GROQ_API_KEY&quot;,  # 在官方控制台获取
+    api_key=os.environ[&quot;GROQ_API_KEY&quot;],  # 先 export GROQ_API_KEY=&quot;你的 Key&quot;
 )
 
 response = client.chat.completions.create(
-    model=&quot;llama-3.3-70b-versatile&quot;,
+    model=&quot;openai/gpt-oss-20b&quot;,
     messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}],
 )
 print(response.choices[0].message.content)</code></pre>

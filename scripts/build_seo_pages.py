@@ -27,6 +27,7 @@ from scripts.generate_access_cards import _operation_hints
 from scripts.featured_models import comparable_benchmark, normalize_capabilities, normalize_region
 from scripts.eval_integration import LEADERBOARD_CSS, card_block as eval_card_block, leaderboard_html as eval_leaderboard_html
 from scripts import eval_pages  # noqa: E402  FreeLLM evaluation blocks for secondary pages
+from scripts.shell_examples import with_env_exports  # noqa: E402  curl quoting / export preamble
 
 
 SITE_URL = "https://freellm.top"
@@ -1284,6 +1285,8 @@ def _quick_start_markup(offer: dict) -> str:
     def command_body(value: str | None) -> tuple[str, bool]:
         if not value:
             return guidance_body("见下方操作步骤", "See the operation steps below"), False
+        # curl 头部里的 $VAR 必须在双引号内才会展开；同时补上 export 行，复制即可运行。
+        value = with_env_exports(value)
         return (
             '<div class="qs-code">'
             f'<div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span>'
@@ -1515,6 +1518,7 @@ def _operation_guides_markup(guides: list[dict], reference_command: str = "") ->
                     # 快速上手已展示同一 endpoint 的可复制命令，这里只留指引避免整页重复。
                     command_markup = f'<p class="muted">{_locale_pair("命令已在上方「快速上手」给出。", "The copyable command already appears in Quick start above.")}</p>'
                 elif command:
+                    command = with_env_exports(command)
                     command_index += 1
                     command_id = f"operation-command-{command_index}"
                     command_markup = f'''<div class="operation-command"><div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span><button type="button" class="copy-command" data-copy-target="{command_id}">{_locale_pair("复制命令", "Copy command")}</button></div><pre id="{command_id}"><code>{_esc(command)}</code></pre></div>'''
@@ -2254,22 +2258,43 @@ def _guide_table(headers: list[str], rows: list[list[object]]) -> str:
     return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
-def render_guide_page(site_url: str) -> str:
+def _reference_sdk_example(offers: list[dict] | None, offer_id: str = "groq-free", comment: str = "") -> str:
+    """OpenAI-SDK quick-start built from an offer's verified data (endpoint + model id).
+
+    The key is read from the environment, never written as a literal placeholder
+    string, and base URL / model id come from data/offers.json + data/operations so
+    the example cannot drift from the offer page.
+    """
+    offer = next((item for item in offers or [] if item.get("id") == offer_id), {}) or {}
+    guide = offer.get("usageGuide") or {}
+    endpoint = str(guide.get("endpoint") or "").strip()
+    base_url = re.sub(r"/chat/completions/?$", "", endpoint) or "https://api.groq.com/openai/v1"
+    curl = str((guide.get("examples") or {}).get("curl") or offer.get("command") or "")
+    model_match = re.search(r'"model"\s*:\s*"([^"]+)"', curl)
+    model = model_match.group(1) if model_match else "openai/gpt-oss-20b"
+    env_match = re.search(r"\$\{?([A-Z][A-Z0-9_]*_(?:API_KEY|TOKEN|KEY))\}?", curl)
+    env_name = env_match.group(1) if env_match else "GROQ_API_KEY"
+    note = f"  # {comment}" if comment else ""
+    return (
+        "import os\n"
+        "from openai import OpenAI\n\n"
+        "client = OpenAI(\n"
+        f'    base_url="{base_url}",\n'
+        f'    api_key=os.environ["{env_name}"],{note}\n'
+        ")\n\n"
+        "response = client.chat.completions.create(\n"
+        f'    model="{model}",\n'
+        '    messages=[{"role": "user", "content": "Hello!"}],\n'
+        ")\n"
+        "print(response.choices[0].message.content)"
+    )
+
+
+def render_guide_page(site_url: str, offers: list[dict] | None = None) -> str:
     path = guide_url()
     title = "Free-LLM — 免费 AI 与 LLM API 开放目录"
     description = "参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。"
-    python_example = '''from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key="GROQ_API_KEY",  # 在官方控制台获取
-)
-
-response = client.chat.completions.create(
-    model="llama-3.3-70b-versatile",
-    messages=[{"role": "user", "content": "Hello!"}],
-)
-print(response.choices[0].message.content)'''
+    python_example = _reference_sdk_example(offers, comment="先 export GROQ_API_KEY=\"你的 Key\"")
     schema = {
         "@context": "https://schema.org",
         "@type": "TechArticle",
@@ -2573,17 +2598,7 @@ def render_openai_alternatives_page(offers: list[dict], site_url: str) -> str:
         OPENAI_ALTERNATIVE_ROWS,
         "Quick start with an OpenAI-compatible SDK",
         '''<p>Most compatible providers use the OpenAI SDK shape. Replace the base URL and API key, then use the model ID listed in the provider documentation.</p>
-      <pre><code>from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key="YOUR_PROVIDER_KEY",
-)
-
-response = client.chat.completions.create(
-    model="openai/gpt-oss-20b",
-    messages=[{"role": "user", "content": "Hello"}],
-)</code></pre>
+      <pre><code>''' + _esc(_reference_sdk_example(offers, comment='export GROQ_API_KEY="your key" first')) + '''</code></pre>
       <p>Do not copy a model ID or quota from a different provider. The official source link in each row is the authority.</p>''',
         '''<ul class="link-list">
         <li><a href="/guides/free-llm/">Free LLM and API quick-start guide</a></li>
@@ -6140,7 +6155,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
         Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json"), site_url, offers, model_catalog),
-        Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
+        Path("guides") / "free-llm" / "index.html": render_guide_page(site_url, offers),
         Path("guides") / "getting-started" / "index.html": render_getting_started_index(offers, operations or [], site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),

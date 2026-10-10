@@ -27,13 +27,13 @@
         {
           "title": "调用 API",
           "detail": "创建服务组与 APP Key 后，使用大陆 OpenAI 兼容端点发送最小请求。",
-          "command": "curl https://ai.ctaigw.cn/v1/chat/completions -H 'Authorization: Bearer ${CTYUN_APP_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://ai.ctaigw.cn/v1/chat/completions -H \"Authorization: Bearer $CTYUN_APP_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 chat completion；控制台免费额度减少，且费用保护保持开启。"
         }
       ],
       "endpoint": "https://ai.ctaigw.cn/v1/chat/completions",
       "auth": "Authorization: Bearer APP Key",
-      "example": "curl https://ai.ctaigw.cn/v1/chat/completions -H 'Authorization: Bearer ${CTYUN_APP_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "example": "curl https://ai.ctaigw.cn/v1/chat/completions -H \"Authorization: Bearer $CTYUN_APP_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
       "validation": "请求成功，并在控制台确认目标模型的免费额度仍有效且“额度耗尽自动关闭”已开启。",
       "sourceUrls": [
         "https://www.ctyun.cn/document/11061839/11097250",
