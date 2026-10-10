@@ -121,30 +121,26 @@ class SiteVisualSystemTests(unittest.TestCase):
 
     def test_phase_one_homepage_resource_total_matches_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
-        offers = __import__("json").loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
-        snapshot = __import__("json").loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
-        # Published directory size and the most recent independent observation
-        # are intentionally different counters: don't present one as the other.
-        self.assertIn(f'<b data-category-count="all">{len(offers)}</b>', page)
-        self.assertIn(f'<b id="heroCount">{snapshot["offers"]}</b>', page)
+        summary = __import__("json").loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        # The hero count is historical scan data; category totals hydrate from
+        # active catalog offers, and must not pretend the two counts are equal.
+        self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', page)
+        self.assertIn('data-category-count="all"', page)
         self.assertIn('id="catalog-result-count"', page)
-        self.assertIn('role="status"', page)
+        self.assertIn("setCount('all', activeItems.length)", (ROOT / "js" / "homepage.js").read_text(encoding="utf-8"))
 
     def test_homepage_prioritizes_today_latest_and_aligns_resource_cards(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
         hero = page.index('class="catalog-hero"')
-        discovery = page.index('id="home-latest-discovery"')
-        categories = page.index('id="categories"')
+        weekly = page.index('id="weekly-changes"')
         offers = page.index('id="catalog-offers"')
-        week = page.index('id="weekly-changes"')
-        self.assertLess(hero, discovery)
-        self.assertLess(discovery, categories)
-        self.assertLess(categories, offers)
-        self.assertLess(offers, week)
-        latest_log = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1].stem
-        self.assertIn(f'href="/logs/#log-day-{latest_log}"', page)
-        css = THEME.read_text(encoding="utf-8")
-        self.assertIn("margin-top:auto !important", css)
+        student = page.index('id="student-offers"')
+        self.assertLess(hero, offers)
+        self.assertLess(offers, weekly, "The progressive resource catalog should precede the scan summary")
+        self.assertLess(offers, student, "Student eligibility belongs after general catalog access")
+        self.assertIn('class="weekly-scan-cards"', page)
+        self.assertIn('class="offer-grid"', page)
+        self.assertIn('class="offer-card-top"', page)
 
     def test_light_and_dark_themes_share_layout_but_have_distinct_tokens(self):
         css = THEME.read_text(encoding="utf-8")

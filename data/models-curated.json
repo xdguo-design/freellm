@@ -1,5 +1,53 @@
 [
   {
+    "id": "intern-ai/intern-s2",
+    "providerId": "intern-ai",
+    "provider": "Shanghai AI Laboratory · Intern AI",
+    "model": "Intern-S2",
+    "context": "256000",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "reasoning"
+    ],
+    "rateLimit": "30 RPM default",
+    "released": "",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://internlm.intern-ai.org.cn/doc/docs/%E6%A8%A1%E5%9E%8B%E5%88%97%E8%A1%A8/",
+    "sourceKind": "official",
+    "canonicalModelId": "intern-s2",
+    "accessRegion": "china",
+    "accessEndpoint": "https://chat.intern-ai.org.cn/api/v1/chat/completions",
+    "manualNote": "2026-10-08 官方核验：Intern-S2 为正式 397B 模型，256K 上下文；书生大模型面向所有用户开放一定额度免费 API。公开页面未固定承诺具体 Token 数；Chat API 文档标注默认约 30 RPM。",
+    "lastSeenAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-08"
+  },
+  {
+    "id": "zhipu-glm/glm-4-7-flash",
+    "providerId": "zhipu-glm",
+    "provider": "Zhipu BigModel",
+    "model": "GLM-4.7-Flash",
+    "context": "202752",
+    "maxOutput": "",
+    "modality": [
+      "text",
+      "reasoning"
+    ],
+    "rateLimit": "",
+    "released": "2026-01-19",
+    "usageActivity": "—",
+    "status": "online",
+    "sourceUrl": "https://www.zhipuai.cn/zh/news/148",
+    "sourceKind": "official",
+    "canonicalModelId": "glm-4.7-flash",
+    "accessRegion": "china",
+    "accessEndpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "manualNote": "2026-10-08 官方核验：智谱发布页明确 GLM-4.7-Flash 在 BigModel.cn 供免费调用；官方模型配置 max_position_embeddings=202752。免费调用不等于无限额度，账号限制以 BigModel 当前规则为准。",
+    "lastSeenAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-08"
+  },
+  {
     "id": "puter/mimo-v2-6-flash",
     "providerId": "puter",
     "provider": "Puter.js",

@@ -127,5 +127,33 @@
       "https://ai.360.com/open/zh/terms"
     ],
     "reviewNote": "Official terms now say platform marketing vouchers can be used for 360 LLM API calls unless an activity rule says otherwise, and separate official API docs confirm new API-platform users receive a ¥50 trial credit for translation/embedding services. Exact scope of that specific ¥50 grant for standard chat-model billing is still not stated explicitly, so keep unpublished until an authenticated account/billing page confirms it."
+  },
+  {
+    "id": "phanthycode-free-trial",
+    "providerId": "phanthy",
+    "provider": "PhanthyCode / PhanthyWork",
+    "model": "Phanthy-fast / Phanthy-pro / Phanthy-ultra / third-party model catalog",
+    "name": "PhanthyCode · 免费 AI 编程 Agent 体验",
+    "productType": "free_ide",
+    "capabilities": [
+      "coding_agent",
+      "multi_agent",
+      "cli",
+      "desktop"
+    ],
+    "register": "https://code.phanthy.com/work",
+    "docsUrl": "https://code.phanthy.com/token-plan",
+    "apiEndpoint": null,
+    "freeSummary": "官网展示体验版 ¥0/月、2,000 积分/月、30 天体验期，限时可选全部模型；官网称 Phanthy-fast 可免费体验。需要中国大陆手机号完成注册和短信验证，具体额度规则以账户实际显示为准。",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-10-09",
+    "discoveredAt": "2026-10-09",
+    "sourceUrls": [
+      "https://code.phanthy.com/token-plan",
+      "https://code.phanthy.com/work",
+      "https://code.phanthy.com/changelog",
+      "https://code.phanthy.com/code/download"
+    ],
+    "reviewNote": "2026-10-09 今日发现与官方网页核对。非 10 月 9 日首次发布：最新稳定版 v2.34.0 日期为 2026-09-24；v2.35.0 为 2026-10-08 的 Coming Soon 预告，尚非正式发布。属于 AI 编程/Agent 客户端免费体验，不能视为免费大模型 API；账号实际到账、模型映射/倍率、独立 API Key、地域可用性和条款仍需实测。暂不发布为已实测资源，也不计入 API 免费额度统计。"
   }
 ]

@@ -1,7 +1,7 @@
 name: Update Tools Data
 
 # 每日刷新工具站数据：汇率；节假日/农历在数据源更新时手动触发或按年 cron。
-# 数据写入 tools/data/ 并直接提交到当前分支，前端从同源静态文件读取。
+# 数据写入 tools/data/ 仅提交到 dev；通过验证后再发布到 main，前端从同源静态文件读取。
 
 on:
   schedule:
@@ -20,6 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
 
       - name: Fetch exchange rates
         run: |
@@ -46,5 +49,5 @@ jobs:
             echo "No changes"
           else
             git commit -m "chore(tools): daily exchange rates update"
-            git push
+            git push origin HEAD:dev
           fi

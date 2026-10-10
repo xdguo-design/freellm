@@ -8,11 +8,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-discovery-log-dev
+  cancel-in-progress: false
+
 jobs:
   log:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -115,7 +122,7 @@ jobs:
         run: python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
 
       - name: Validate homepage, models and logs snapshot consistency
-        run: python -m unittest tests.test_p0_convergence.P0ConvergenceTests.test_home_models_and_logs_share_latest_snapshot -v
+        run: python -m unittest tests.test_p0_convergence.P0ConvergenceTests.test_home_models_logs_and_about_share_canonical_daily_scan -v
 
       - name: Validate generated internal links and sitemaps
         run: python scripts/check_internal_links.py
@@ -131,6 +138,8 @@ jobs:
             data/ai-radar-baseline.json \
             data/models.json \
             data/offers.json \
+            data/scan-summary.json \
+            daily-update-status.json \
             design/free-china-ai-index.html \
             offers category guides models providers logs skills \
             sitemap.xml sitemap-pages.xml sitemap-offers.xml sitemap-providers.xml sitemap-models.xml \
@@ -140,4 +149,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: update daily discovery log"
-          git push origin HEAD:${{ github.ref_name }}
+          git push origin HEAD:dev

@@ -700,3 +700,28 @@ html body[data-fl-section="home"] .home-latest-discovery a:focus-visible {
   outline: 3px solid #83b8ff;
   outline-offset: 2px;
 }
+
+
+/* UX-20261009-P1-11: compact mobile scan statistics */
+@media (max-width: 700px) {
+  html body.fl-ui-v2[data-fl-section="home"] .weekly-scan-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  html body.fl-ui-v2[data-fl-section="home"] .weekly-scan-cards > article {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding: 14px 12px !important;
+    overflow-wrap: anywhere;
+  }
+  html body.fl-ui-v2[data-fl-section="home"] .weekly-scan-cards > article > strong {
+    display: block;
+    font-size: clamp(24px, 6vw, 32px) !important;
+    line-height: 1.15 !important;
+    font-variant-numeric: tabular-nums;
+  }
+}

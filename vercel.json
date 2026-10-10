@@ -112,6 +112,19 @@
           "value": "public, max-age=60"
         }
       ]
+    },
+    {
+      "source": "/skills/test-artifacts/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=600"
+        }
+      ]
     }
   ],
   "redirects": [

@@ -21,3 +21,24 @@ body[data-visual-style="aurora"][data-fl-section="tools"] .tool-card:hover{trans
 body[data-visual-style="aurora"][data-fl-section="tools"] .tool-card p{margin-bottom:0!important;}
 @media(max-width:900px){body[data-visual-style="aurora"][data-fl-section="tools"] .tools-hero{grid-template-columns:1fr;}}
 @media(max-width:700px){body[data-visual-style="aurora"][data-fl-section="tools"] .tools-hero{padding:24px 18px!important;border-radius:22px!important;}body[data-visual-style="aurora"][data-fl-section="tools"] .tool-card{min-height:0;}}
+
+/* P1-3: deep-linkable use-case categories, including mobile touch targets. */
+body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links{
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:12px 0 17px;
+}
+body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-caption{
+  margin-right:5px;color:var(--aurora-ink-2);font-size:12px;font-weight:700;
+}
+body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links a{
+  display:inline-flex;align-items:center;min-height:38px;padding:8px 14px;
+  border:1px solid var(--aurora-line);border-radius:999px;
+  background:#fff;color:var(--aurora-ink);font-size:13px;font-weight:600;text-decoration:none;
+}
+body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links a:hover,
+body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links a.is-active{
+  border-color:var(--aurora-blue);background:#e7f1ff;color:var(--aurora-blue);
+}
+@media(max-width:700px){
+  body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links{gap:7px}
+  body[data-visual-style="aurora"][data-fl-section="tools"] .tool-usecase-links a{min-height:44px;padding:10px 12px}
+}

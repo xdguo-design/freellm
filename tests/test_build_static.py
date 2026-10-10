@@ -3,10 +3,20 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.build_static import build, update_trust_copy
+from scripts.build_static import build, normalize_home_section_priority, update_trust_copy
 
 
 class BuildStaticTests(unittest.TestCase):
+    def test_home_scan_summary_follows_resource_catalog(self):
+        html = (
+            '<section id="weekly-changes">Scan summary</section>'
+            '<section id="catalog-offers">Resource catalog</section>'
+        )
+
+        rendered = normalize_home_section_priority(html)
+
+        self.assertLess(rendered.index('id="catalog-offers"'), rendered.index('id="weekly-changes"'))
+
     def test_trust_copy_distinguishes_source_and_verification_status(self):
         rendered = update_trust_copy("每日核验 · 真实免费 / 通过人工核验，确认可免费使用")
         self.assertIn("官方来源 · 条件透明", rendered)
@@ -32,6 +42,15 @@ class BuildStaticTests(unittest.TestCase):
                 "lastVerifiedAt": "2026-09-06",
             }
             data_path.write_text(json.dumps([offer]), encoding="utf-8")
+            (root / "scan-summary.json").write_text(json.dumps({
+                "schemaVersion": 1,
+                "date": "2026-10-09",
+                "snapshotDate": "2026-10-08",
+                "newCount": 1,
+                "newModels": 0,
+                "models": 3,
+                "offers": 9,
+            }), encoding="utf-8")
             html_path.write_text(
                 '<b id="heroCount">27</b>'
                 '<b data-category-count="all">27</b>'
@@ -45,7 +64,7 @@ class BuildStaticTests(unittest.TestCase):
             self.assertTrue(build(data_path, html_path))
             rendered = html_path.read_text(encoding="utf-8")
 
-            self.assertIn('<b id="heroCount">1</b>', rendered)
+            self.assertIn('<b id="heroCount">9</b>', rendered)
             self.assertIn('<b data-category-count="all">1</b>', rendered)
             self.assertIn('href="/offers/x/"', rendered)
             self.assertIn('"url": "https://freellm.top/offers/x/"', rendered)

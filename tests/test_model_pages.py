@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.featured_models import comparable_benchmark
 from scripts.build_seo_pages import (
     MODELS_PER_PAGE,
     _exclude_retired_models,
@@ -14,6 +15,7 @@ from scripts.build_seo_pages import (
     _load_model_access,
     _cn_status_for_model,
     _model_catalog_row,
+    _format_context_window,
     build_site,
     model_record_groups,
     render_models_landing_page,
@@ -37,6 +39,56 @@ def build_featured_fixture_page():
         offers=[], models=[model], vendor_directory=[],
         site_url="https://freellm.top", curated_models=[model],
     )
+
+
+def test_duplicate_models_are_single_cards_with_multiple_provider_routes(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
+    assert 'id="multi-route-models"' in page
+    for canonical in ("mimo-v2-6-flash", "dots-studio-dots3-note-preview"):
+        assert page.count(f'data-model-canonical="{canonical}"') == 1
+    assert "Puter.js" in page
+    assert "OpenCode Zen" in page
+    assert "Dots API（国内）" in page
+    assert "OpenRouter" in page
+    assert "生成能力与速度未实测" in page
+
+
+def test_featured_models_show_multiple_access_routes_without_duplicate_cards():
+    primary = {
+        "id": "xiaomi-mimo/mimo-v2-6-flash", "providerId": "xiaomi-mimo",
+        "provider": "Xiaomi MiMo", "model": "MiMo-V2.6-Flash",
+        "sourceKind": "official", "sourceUrl": "https://mimo.mi.com/models",
+    }
+    alternative = {
+        "id": "opencode/mimo-v2-6-flash-free", "providerId": "opencode",
+        "provider": "OpenCode Zen", "model": "MiMo-V2.6-Flash Free",
+        "sourceKind": "public_api", "sourceUrl": "https://opencode.ai/docs/en/zen/",
+    }
+    page = render_models_landing_page(
+        offers=[], models=[primary, alternative], vendor_directory=[],
+        site_url="https://freellm.top", curated_models=[primary],
+    )
+    assert page.count('class="featured-model-card"') == 1
+    assert "接入渠道 / Access routes (2)" in page
+    assert "Xiaomi MiMo" in page
+    assert "OpenCode Zen" in page
+
+
+def test_rounded_megatoken_context_is_readable_and_exact():
+    assert _format_context_window("1.04858M") == "1M (1,048,576)"
+    assert _format_context_window("1048576") == "1M (1,048,576)"
+
+
+def test_model_directory_distinguishes_third_party_sources():
+    row = _model_catalog_row({
+        "id": "llm7-io/example", "providerId": "llm7-io",
+        "provider": "LLM7", "model": "Example",
+        "sourceKind": "third_party_aggregator",
+        "sourceUrl": "https://llm7.io/models",
+    })
+    assert "第三方聚合 · 非官方" in row
+    assert "厂商官方来源" not in row
 
 
 def test_featured_cards_show_unknown_and_untested_states():
@@ -200,11 +252,10 @@ def test_model_rows_link_only_to_indexable_aggregation_pages(tmp_path):
     thin = next(slug for slug, records in groups.items() if len(records) == 1)
     all_pages = _all_catalog_pages(tmp_path)
 
-    # Rich aggregate pages are crawlable destinations; thin single-record pages
-    # stay reachable by direct URL but are noindex and therefore not promoted
-    # by the model directory.
+    # Human navigation links to every detail page; only multi-source model
+    # aggregates may appear in the sitemap / search index.
     assert f'href="/models/{rich}/"' in all_pages
-    assert f'href="/models/{thin}/"' not in all_pages
+    assert f'href="/models/{thin}/"' in all_pages
     last_provider_href = f'href="/providers/{model_slug(models[-1].get("providerId"))}/"'
     assert last_provider_href in all_pages
 
@@ -217,7 +268,7 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     offers = json.loads(OFFERS_PATH.read_text(encoding="utf-8"))
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
     provider_pages = list((tmp_path / "providers").glob("*/index.html"))
-    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
+    curated = [m for m in json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8")) if comparable_benchmark(m)]
 
     assert "精选模型与 AI Agent" in overview
     assert "精选模型" in overview
@@ -234,7 +285,7 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
 def test_models_landing_shows_curated_models_and_links_to_the_complete_directory(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
-    curated = json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8"))
+    curated = [m for m in json.loads((ROOT / "data" / "models-curated.json").read_text(encoding="utf-8")) if comparable_benchmark(m)]
     models = json.loads(MODELS_PATH.read_text(encoding="utf-8"))
 
     assert "精选模型" in page
@@ -242,9 +293,12 @@ def test_models_landing_shows_curated_models_and_links_to_the_complete_directory
     assert 'id="featured-models"' in page
     assert f'href="/models/all/"' in page
     assert page.count('class="featured-model-card"') == len(curated)
-    assert page.count("团队精选") == len(curated)
-    assert f'data-model-id="{curated[0]["id"]}"' in page
-    assert curated[0]["model"] in page
+    assert page.count('class="featured-model-badge"') == len(curated)
+    if curated:
+        assert f'data-model-id="{curated[0]["id"]}"' in page
+        assert curated[0]["model"] in page
+    else:
+        assert "当前尚无达到可复现推理实测标准" in page
     assert "可用的免费模型入口" not in page
 
 
@@ -316,7 +370,7 @@ def test_model_directory_shows_activity_column_and_clear_result_count(tmp_path):
     assert "中国大陆可用性" in page
     assert "显示" in page
     assert "共" in page
-    assert "Catalog source" in page
+    assert "Provider official source" in page or "Third-party aggregator · not official" in page
     assert "Showing ${visible.length} / ${pairs.length}" in page
 
 

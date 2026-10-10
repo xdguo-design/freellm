@@ -41,12 +41,31 @@
   if (!Tools) return;
   totalEl.textContent = Tools.total;
 
+  // Editorial use-case groups reference only actual registered local tools.
+  // Keep native registry categories intact for tool metadata and static generation.
+  var useCaseGroups = {
+    productivity: { label: '生产力', cats: ['text', 'datetime', 'util'] },
+    analytics: { label: '数据分析', ids: ['csv-json', 'csv-format', 'excel-convert', 'jsonpath', 'jmespath', 'table2csv', 'text2table', 'csv2md', 'json-schema', 'data-transfer'] },
+    media: { label: '语音视频', ids: ['tts', 'audio-record', 'video2gif', 'spectrum', 'whitenoise'] },
+    design: { label: '设计创作', cats: ['css', 'image'] }
+  };
+  function matchesCategory(tool, category) {
+    if (category === 'all') return true;
+    var group = useCaseGroups[category];
+    if (group) return (group.cats || []).includes(tool.cat) || (group.ids || []).includes(tool.id);
+    return tool.cat === category;
+  }
+  function useCaseCount(category) {
+    return Tools.all.filter(function (tool) { return matchesCategory(tool, category); }).length;
+  }
+
   // Allow category cards elsewhere on the site to open this page pre-filtered.
   (function selectCategoryFromQuery() {
     var requestedCategory = new URLSearchParams(location.search).get('category');
-    if (requestedCategory && Tools.cats.some(function (category) {
-      return category.id === requestedCategory && category.count;
-    })) {
+    if (requestedCategory && (
+      Tools.cats.some(function (category) { return category.id === requestedCategory && category.count; }) ||
+      (Object.prototype.hasOwnProperty.call(useCaseGroups, requestedCategory) && useCaseCount(requestedCategory) > 0)
+    )) {
       activeCat = requestedCategory;
     }
   })();
@@ -125,6 +144,21 @@
       btn.onclick = function () { setCat(c.id); };
       tabsEl.appendChild(btn);
     });
+    Object.keys(useCaseGroups).forEach(function (id) {
+      var count = useCaseCount(id);
+      if (!count) return;
+      var btn = document.createElement('button');
+      btn.className = 'tool-category-tab' + (activeCat === id ? ' is-active' : '');
+      btn.type = 'button';
+      btn.innerHTML = '<span>' + useCaseGroups[id].label + '</span><small>' + count + '</small>';
+      btn.onclick = function () { setCat(id); };
+      tabsEl.appendChild(btn);
+    });
+    document.querySelectorAll('[data-use-case-cat]').forEach(function (link) {
+      link.classList.toggle('is-active', link.dataset.useCaseCat === activeCat);
+      if (link.dataset.useCaseCat === activeCat) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
   }
 
   function setCat(id) {
@@ -142,7 +176,7 @@
   function getFiltered() {
     var q = (searchEl.value || '').trim().toLowerCase();
     return Tools.all.filter(function (t) {
-      if (activeCat !== 'all' && t.cat !== activeCat) return false;
+      if (!matchesCategory(t, activeCat)) return false;
       if (q) {
         var hay = (t.name + ' ' + t.desc + ' ' + t.id).toLowerCase();
         if (!hay.includes(q)) return false;
@@ -194,7 +228,7 @@
 
   function clearSearch() {
     searchEl.value = '';
-    renderGrid();
+    setCat('all');
   }
   searchEl.addEventListener('input', U.debounce(function () { showAll = false; renderGrid(); }, 120));
   var searchSubmit = document.getElementById('tool-search-submit');

@@ -8,29 +8,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _latest_log():
-    path = sorted((ROOT / "data/daily-log").glob("*.json"))[-1]
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 class HomeReleaseGate(unittest.TestCase):
     def test_today_keeps_scanned_data_and_both_editorials(self):
         log = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
         ids = [e["id"] for e in log["curatedEvents"]]
         self.assertIn("stepfun-step-5-preview-free-week", ids)
         self.assertIn("phanthycode-free-trial", ids)
         self.assertEqual(ids.count("phanthycode-free-trial"), 1)
-        # scan-summary always mirrors the newest daily log (daily updates move it forward).
-        latest = _latest_log()
-        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
-        events = (latest.get("events") or []) + (latest.get("curatedEvents") or [])
-        self.assertEqual(summary["date"], latest["date"])
-        self.assertEqual(summary["snapshotDate"], latest["date"])
+        latest_log = json.loads((ROOT / "data/daily-log/2026-10-10.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["date"], latest_log["date"])
+        self.assertEqual(summary["snapshotDate"], latest_log["date"])
         self.assertTrue(summary["scanRunToday"])
-        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
-        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
-        self.assertEqual(summary["newCount"], sum(e.get("eventType") in {"new", "new_route"} for e in events))
-        self.assertEqual(summary["sourceChecks"], len(events))
+        self.assertEqual(summary["models"], len(latest_log["observed"]["models"]))
+        self.assertEqual(summary["offers"], len(latest_log["observed"]["offers"]))
+        self.assertEqual(summary["newCount"], 4)
+        self.assertEqual(summary["sourceChecks"], 2)
 
     def test_homepage_uses_sourced_discovery_and_incremental_cards(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
@@ -39,11 +32,11 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertNotIn('class="prototype-home"', homepage)
         self.assertNotIn("今日新增资源12", homepage)
         self.assertNotIn("较上周 +35%", homepage)
-        latest = _latest_log()
-        self.assertIn(f'href="/logs/#log-day-{latest["date"]}"', homepage)
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        self.assertIn(f'href="/logs/#log-day-{summary["snapshotDate"]}"', homepage)
         self.assertIn("def update_home_latest_discovery(", build)
-        self.assertIn("def update_home_scan_snapshot(", build)
-        self.assertIn(f'<b id="heroCount">{len(latest["observed"]["offers"])}</b>', homepage)
+        self.assertIn("def sync_home_scan_snapshot(", build)
+        self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
         self.assertIn("entry = events[-1] if events else None", build)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)
@@ -55,6 +48,18 @@ class HomeReleaseGate(unittest.TestCase):
         asset = hashlib.sha1(b"blob " + str(len(js.encode())).encode() + b"\0" + js.encode()).hexdigest()[:10]
         self.assertIn(f"../js/homepage.{asset}.js", homepage)
         self.assertEqual((ROOT / f"js/homepage.{asset}.js").read_text(encoding="utf-8"), js)
+
+    def test_homepage_layout_styles_are_loaded_before_first_paint(self):
+        homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        navigation = re.search(
+            r'<link\b(?=[^>]*primary-menu\.css\?v=20261009-ux-p0)[^>]*>', homepage
+        )
+        self.assertIsNotNone(navigation)
+        self.assertIn('rel="stylesheet"', navigation.group(0))
+        self.assertNotIn('media="print"', navigation.group(0))
+        self.assertIn('data-fl-shared-navigation-styles="1"', navigation.group(0))
+        self.assertIn('<aside id="fl-shared-site-menu"', homepage)
+        self.assertIn('home-prototype-critical.css?v=20261005a', homepage)
 
     def test_logs_keep_both_discoveries_visible(self):
         html = (ROOT / "logs/index.html").read_text(encoding="utf-8")

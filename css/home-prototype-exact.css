@@ -725,7 +725,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-meta{font-siz
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags{gap:3px!important;margin-top:5px!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags span{font-size:8px!important;padding:2px 5px!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card>a{margin-top:auto!important;height:24px!important;min-height:24px!important;font-size:9px!important}
-@media(max-width:1100px){
+@media(max-width:1240px){
  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity;padding:0 0 8px!important;gap:9px!important;overscroll-behavior-inline:contain}
  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{flex:0 0 230px!important;width:230px!important;scroll-snap-align:start}
 }
@@ -735,34 +735,3 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card>a{ma
  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-title p{white-space:normal!important;max-width:none!important}
 }
 
-
-/* 2026-10-08: normalize featured hotspot card to the same single-column size. */
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured{
-  grid-column:auto!important;
-  grid-row:auto!important;
-  height:236px!important;
-  min-height:236px!important;
-  padding:0 8px 7px!important;
-  border-color:#dfe8f5!important;
-  background:#fff!important;
-  box-shadow:0 6px 18px rgba(39,91,160,.06)!important;
-}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover{
-  height:82px!important;
-  margin:0 -8px 7px!important;
-  padding:0!important;
-}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-heat{
-  left:8px!important;
-  top:8px!important;
-  height:20px!important;
-  padding:0 7px!important;
-  font-size:8px!important;
-}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured h3{
-  min-height:35px!important;
-  margin:0 0 6px!important;
-  font-size:12.5px!important;
-  line-height:1.38!important;
-  -webkit-line-clamp:2!important;
-}

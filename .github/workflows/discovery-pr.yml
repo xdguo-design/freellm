@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -49,7 +52,7 @@ jobs:
       - name: Open one batch review PR when the queue changes
         env:
           GH_TOKEN: ${{ github.token }}
-          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+          BASE_BRANCH: dev
           BRANCH: automation/discovery-${{ github.run_id }}
         run: |
           git config user.name "github-actions[bot]"

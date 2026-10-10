@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>搜索免费 AI 模型、API、工具与技能 · FreeLLM</title>
+<meta name="description" content="使用 FreeLLM 全站搜索快速查找免费 AI 模型、API 额度、浏览器工具和 Agent Skills。支持按资源类型筛选结果，点击查看免费条件、地区限制、官方证据与最近核验情况，避免把限时试用误当永久免费服务。">
+<link rel="canonical" href="https://freellm.top/search/">
+<link rel="stylesheet" href="/css/aurora-core.css"><link rel="stylesheet" href="/css/primary-menu.css">
+<style>
+:root{color-scheme:light;--text:#16253d;--muted:#65738a;--line:#dfe7f3;--blue:#1744e8}
+*{box-sizing:border-box}body{margin:0;background:#f5f8ff;color:var(--text);font:16px/1.65 system-ui,-apple-system,"Microsoft YaHei",sans-serif}
+.search-shell{max-width:1100px;margin:auto;padding:36px 24px 90px}.search-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.search-header a{text-decoration:none;color:var(--blue);font-weight:700}.search-header strong{font-size:22px}.search-intro{margin:44px 0 23px}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.2;margin:0 0 12px}.sub{color:var(--muted);margin:0 0 24px}
+#site-search-form{display:flex;align-items:center;gap:10px;border:2px solid var(--blue);background:#fff;border-radius:14px;padding:8px;box-shadow:0 14px 35px #1744e814}
+#site-search-input{flex:1;min-width:0;border:0;outline:0;padding:12px;font:inherit;color:var(--text)}#site-search-form button{background:var(--blue);color:#fff;border:0;border-radius:9px;padding:12px 19px;font:inherit;font-weight:700;cursor:pointer}
+.search-tags{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 28px}.search-tags button,.type-filters button{background:#fff;border:1px solid var(--line);border-radius:100px;padding:7px 14px;color:var(--text);cursor:pointer;font:inherit}
+.type-filters{display:flex;gap:8px;overflow:auto;padding:0 0 16px}.type-filters button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+#search-status{color:var(--muted);margin:10px 0 14px}#search-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
+.search-result{background:#fff;padding:20px;border:1px solid var(--line);border-radius:15px;overflow-wrap:anywhere;min-width:0}
+.search-result small{color:var(--muted)}.search-result h2{font-size:18px;line-height:1.4;margin:9px 0 6px}.search-result h2 a{color:var(--blue);text-decoration:none}.search-result p{margin:0 0 12px;color:#44516c}
+.search-help{margin-top:30px;padding:22px 24px;background:#fff;border:1px solid var(--line);border-radius:14px}.search-help h2{font-size:20px;margin:0 0 12px}.search-help h3{font-size:16px;margin:16px 0 5px}.search-help p{margin:4px 0 12px;color:#44516c}
+#search-empty{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:34px;color:var(--muted)}
+@media(max-width:390px){.search-shell{padding:18px 12px 54px}.search-intro{margin-top:28px}#site-search-form button{padding:10px 12px}#site-search-input{padding:9px}}
+</style></head><body>
+<main class="search-shell"><nav class="search-header" aria-label="页面导航"><a href="/">← 返回 FreeLLM</a><strong>FreeLLM 全站搜索</strong><a href="/favorites/">我的收藏</a></nav>
+<section class="search-intro"><h1>找到真正能用的 AI 资源</h1><p class="sub">同时搜索 Offers、模型、在线工具和 Agent Skills；结果直接指向站内资源详情。</p>
+<form id="site-search-form" role="search" action="/search/" method="get"><label for="site-search-input" class="sr-only">全站搜索关键词</label><input id="site-search-input" name="q" type="search" placeholder="例如：Qwen、免费 API、豆包" autocomplete="off" aria-label="全站搜索" autofocus><button type="submit">搜索</button></form>
+<div class="search-tags" aria-label="热门搜索"><button type="button" data-search-example="Qwen">Qwen</button><button type="button" data-search-example="免费 API">免费 API</button><button type="button" data-search-example="豆包">豆包</button></div>
+<div class="type-filters" role="group" aria-label="资源类型"><button type="button" data-search-type="all" aria-pressed="true">全部</button><button type="button" data-search-type="offer" aria-pressed="false">免费资源</button><button type="button" data-search-type="model" aria-pressed="false">模型</button><button type="button" data-search-type="tool" aria-pressed="false">工具</button><button type="button" data-search-type="skill" aria-pressed="false">技能</button></div>
+<p id="search-status" role="status" aria-live="polite">正在加载索引…</p>
+<div id="search-results" aria-live="polite"></div><div id="search-empty" hidden>没有找到相关资源。试试更短的关键词，例如“Qwen”、“豆包”，或<a href="/submit/">提交待收录资源</a>。</div>
+<section class="search-help" aria-labelledby="search-help-title">
+<h2 id="search-help-title">如何更准确地寻找免费 AI 资源？</h2>
+<p>FreeLLM 的全站搜索把不同类型的内容集中在一个入口，但“免费模型”和“免费调用接口”不是同一回事。模型记录说明名称、能力与服务商；免费资源条目则需要进一步核对账号资格、额度周期、速率限制、地区和有效期。建议先搜索模型名称，再切换到“免费资源”筛选，确认究竟由哪个平台提供可用入口。</p>
+<h3>按用途缩小搜索范围</h3>
+<p>开发者寻找 API 时可尝试搜索“Qwen”或“免费 API”，再查看服务商的官方文档和是否支持兼容接口；编程辅助、内容处理和日常任务可以先筛选“工具”或“技能”，分别查看浏览器工具及 Agent Skills 的具体用途。结果卡片会指向相应的详情页，帮助你继续检查前置条件。</p>
+<h3>免费条件与验证记录应分别阅读</h3>
+<p>限时赠送、首次注册额度、每日刷新与长期免费层的使用规则不同。看到“已核验”时，也要检查核验日期和来源类型；官方活动公告能证明活动条款，但不等于我们已经完成真实推理请求、到账测试或各地区网络测试。对无法实测的额度和访问条件，我们会保留未验证标记。</p>
+<h3>找不到结果怎么办？</h3>
+<p>尝试缩短关键词，改用模型英文名或厂商名，再切换“全部”类型重新检索。仍没有匹配时，可前往<a href="/models/all/">全部模型目录</a>、<a href="/providers/">服务商目录</a>或<a href="/submit/">提交资源</a>。如需英文概览，可访问<a href="/en/">English FreeLLM</a>。</p>
+</section>
+</section></main><script defer src="/tools/js/tools.js"></script><script defer src="https://cdn.jsdelivr.net/npm/fuse.js@7.1.0/dist/fuse.min.js"></script><script defer src="/js/site-search.js?v=20261008-p0-7"></script></body></html>
