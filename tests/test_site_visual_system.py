@@ -63,7 +63,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn("freellm-pastel-ui.css?v=20261003a", page)
+        self.assertIn("freellm-pastel-ui.css?v=20261009-eval", page)
 
     def test_phase_one_homepage_isolated_aurora_style(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")

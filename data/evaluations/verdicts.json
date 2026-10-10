@@ -1,0 +1,98 @@
+{
+ "lead": "我们用自己的账号和 API Key，对 6 家平台上标称免费的 32 个模型发起了 431 次真实调用：同一套 22 道题、同一参数、全部自动评分，每个分数都能在原始数据里找到对应的模型原话。10 月 9 日补测了 OpenRouter 的 4 个免费模型，2 个可用；另外 2 个分别被上游限流和「仅限 Agent 应用」挡在门外，属于免费额度与接入限制，不代表模型能力。同日修正了一道防编造题的判分规则，并按已存的原始输出重评。",
+ "headlines": [
+  "唯一满分：魔搭上的 DeepSeek-V4.1-Flash 22 题全对，连三道防编造题都没上当；代价是首字要等约 2.2 秒，适合不赶时间的批量任务。",
+  "OpenRouter 补测最亮眼的是 Cohere 的 north-mini-code:free：95 分，前六个维度全满分，唯一失分是编造了《红楼梦》第 121 回；同平台 NVIDIA nemotron-3.5-lightning:free 82 分，但常用英文作答，一题输出陷入「Here is」无限重复。",
+  "要速度就选 Groq：gpt-oss-120b 拿到 95 分，首字约 0.2 秒、每秒约 480 token；同平台 gpt-oss-20b 每秒约 880 token。",
+  "免费档真正的门槛是额度和限流：OpenRouter 上的 gemma-4-31b-it:free 22 题全部被上游限流（429）；智谱 GLM-4.7-Flash 22 题里 14 题返回「访问量过大」；魔搭 GLM-5.2 答了 6 题就额度用尽；Groq 免费档每分钟 8K token，长文本题直接被拒。",
+  "最容易翻车的是编造：问《红楼梦》第 121 回（通行本只有 120 回），至少 8 个模型当场编出回目或情节，其中包括 95 分的 gpt-oss-120b 和 north-mini-code:free。",
+  "「能列出来」不等于「能调用」：NVIDIA 模型列表里的 12 个模型对本账号返回 404（本账号/本端点不可用，待复核）；魔搭的 MiniMax-M3 返回「没有可用服务商」；OpenRouter 的 inkling-small:free 返回 403，称只能在其列出的 Agent 应用里使用。"
+ ],
+ "models": {
+  "deepseek-ai/DeepSeek-V4.1-Flash": {
+   "tagline": "本轮唯一满分，中文、代码、工具调用、长文本和三道防编造题全过。",
+   "bestFor": "需要准确度的中文问答、代码生成、Agent 工具调用",
+   "avoid": "对首字延迟敏感的实时对话"
+  },
+  "openai/gpt-oss-120b": {
+   "tagline": "又快又准的全能选手，唯一失分是编造了《红楼梦》第 121 回。",
+   "bestFor": "实时对话、代码、工具调用",
+   "avoid": "涉及冷门事实、需要严格不编造的场景"
+  },
+  "z-ai/glm-5.3": {
+   "tagline": "经 NVIDIA 免费调用的智谱旗舰，推理和工具调用稳，偶尔只思考不给答案。",
+   "bestFor": "中文推理、长文档问答、工具调用",
+   "avoid": "要求每次都有正文输出的流水线（需调高输出上限）"
+  },
+  "moonshotai/kimi-k3": {
+   "tagline": "答对时质量高、从不编造，但首字中位数近 13 秒，部分回答混入乱码。",
+   "bestFor": "离线批量、对准确性要求高且不赶时间的任务",
+   "avoid": "实时交互、代码生成"
+  },
+  "qwen/qwen3.8-27b": {
+   "tagline": "首字最快的一档（约 0.14 秒），代码和工具调用满分，但数学陷阱题（9.11 vs 9.9）答错。",
+   "bestFor": "低延迟聊天、代码、工具调用",
+   "avoid": "数值比较、逻辑题"
+  },
+  "glm-4-flash-250414": {
+   "tagline": "智谱官方永久免费款里最稳的一个，代码满分，但会编造冷门事实。",
+   "bestFor": "国内直连的日常问答、代码小工具",
+   "avoid": "严格格式约束、冷门事实"
+  },
+  "XingChenAGI/Xing4.0-29B": {
+   "tagline": "硅基流动 ¥0 模型，中文、推理、长文本和工具调用全对，但三道防编造题全部编了答案。",
+   "bestFor": "国内直连的中文长文本整理、工具调用",
+   "avoid": "事实核查、学术引用"
+  },
+  "mistralai/Mistral-Large-Instruct-2407": {
+   "tagline": "工具调用三题全对，但长文本两题全错、格式要求常违反，还编造了《红楼梦》第 121 回情节，速度也慢（约 12 tok/s）。",
+   "bestFor": "中文常识问答、简单工具调用",
+   "avoid": "长文档问答、严格格式输出、冷门事实"
+  },
+  "XGenerationLab/XiYanSQL-QwenCoder-32B-2504": {
+   "tagline": "专精 SQL 的代码模型：代码题全对，但不会调用工具，推理题大面积失分。",
+   "bestFor": "SQL 和代码生成",
+   "avoid": "通用问答、Agent"
+  },
+  "tencent/Hunyuan-MT-7B": {
+   "tagline": "翻译专用模型，不支持工具调用，通用题不建议使用。",
+   "bestFor": "中外互译",
+   "avoid": "通用问答、代码、Agent"
+  },
+  "glm-4.7-flash": {
+   "tagline": "官方标称永久免费，但高峰期频繁返回「访问量过大」，本轮 22 题只成功 8 题。",
+   "bestFor": "低频、可重试的个人项目",
+   "avoid": "任何需要稳定可用的场景"
+  },
+  "ZhipuAI/GLM-5.2": {
+   "tagline": "魔搭免费额度很快耗尽，答了 6 题就被限额。",
+   "bestFor": "偶尔试用",
+   "avoid": "批量调用"
+  },
+  "allam-2-7b": {
+   "tagline": "阿拉伯语模型，中文基本不可用，上下文太短，长文本题直接报错。",
+   "bestFor": "阿拉伯语任务",
+   "avoid": "中文场景"
+  },
+  "cohere/north-mini-code:free": {
+   "tagline": "OpenRouter 免费档最强：中文、推理、代码、格式、长文本、工具调用全满分，但编造了《红楼梦》第 121 回的整回情节。",
+   "bestFor": "代码生成、Agent 工具调用、长文档检索",
+   "avoid": "冷门事实、需要严格不编造的场景；默认先思考，慢的一题首字约 8 秒"
+  },
+  "nvidia/nemotron-3.5-lightning:free": {
+   "tagline": "推理、代码、长文本全对，但常用英文作答（城市名答成 Nanchang、JSON 输出英文），一题输出陷入「Here is」无限重复。",
+   "bestFor": "英文或中英混合的推理与代码任务",
+   "avoid": "要求纯中文输出的产品、实时交互（最慢一题首字约 28 秒）"
+  },
+  "google/gemma-4-31b-it:free": {
+   "tagline": "本轮 22 题全部被 OpenRouter 上游限流（429），是免费额度限制，不代表模型能力，待下一轮复测。",
+   "bestFor": "暂无实测结论",
+   "avoid": "依赖 OpenRouter 免费档稳定调用的场景"
+  },
+  "thinkingmachines/inkling-small:free": {
+   "tagline": "OpenRouter 返回 403：该免费模型只开放给其列出的 Agent 应用，直接调用 API 不可用，属接入限制，不代表模型能力。",
+   "bestFor": "通过 OpenRouter 列出的 Agent 应用使用",
+   "avoid": "自己写代码直接调用 API"
+  }
+ }
+}

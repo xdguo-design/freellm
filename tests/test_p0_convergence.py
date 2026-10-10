@@ -212,6 +212,20 @@ class P0ConvergenceTests(unittest.TestCase):
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="/models/all/"', models_page)
         self.assertIn(f"{len(models)}", all_models)
+        latest_date = summary["snapshotDate"]
+        self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
+        snapshot = latest.get("observed") or {}
+        scan_summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(scan_summary["models"], len(snapshot.get("models") or []))
+        self.assertEqual(scan_summary["offers"], len(snapshot.get("offers") or []))
+        self.assertIn(
+            f'<span lang="zh-CN">模型</span><span lang="en">Models</span></span><strong>{scan_summary["models"]}</strong>',
+            logs_page,
+        )
+        self.assertIn(
+            f'<span lang="zh-CN">资源</span><span lang="en">Offers</span></span><strong>{scan_summary["offers"]}</strong>',
+            logs_page,
+        )
 
     def test_home_surfaces_high_intent_seo_guides_above_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")

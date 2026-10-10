@@ -92,7 +92,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261009-eval">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,
@@ -505,7 +505,7 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
             events = [event for field in ("curatedEvents", "events")
                       for event in (latest.get(field) or [])
                       if isinstance(event, dict) and event.get("eventType") in {"new", "new_route"}]
-            entry = events[0] if events else None
+            entry = events[-1] if events else None
         except (OSError, ValueError, TypeError):
             pass
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
@@ -639,7 +639,10 @@ def _home_asset_manifest(html_path: Path) -> dict[str, tuple[Path, Path, str]]:
         if not source.is_file():
             return {}
         data = source.read_bytes()
-        fingerprint = _git_blob_fingerprint(data)
+        # Git stores text assets with LF endings. Normalize Windows checkouts
+        # before deriving the fingerprint so the generated URL is identical
+        # on Windows and Linux CI.
+        fingerprint = _git_blob_fingerprint(data.replace(b"\r\n", b"\n"))
         target = source.with_name(f"{source.stem}.{fingerprint}{source.suffix}")
         web_ref = "../" + target.relative_to(root).as_posix()
         manifest[relative] = (source, target, web_ref)
@@ -746,6 +749,18 @@ def sync_home_scan_snapshot(html: str, summary: dict) -> str:
         )
     return html
 
+def update_eval_leaderboard(html: str) -> str:
+    """Insert the real-evaluation leaderboard (data/evaluations/latest.json) into the homepage."""
+    from scripts.eval_integration import LEADERBOARD_CSS, leaderboard_html
+
+    html = re.sub(r"<!--fl-evalboard-->.*?<!--/fl-evalboard-->", "", html, flags=re.S)
+    board = leaderboard_html(6)
+    anchor = '<section class="prototype-hot"'
+    if not board or anchor not in html:
+        return html
+    block = f"<!--fl-evalboard--><style>{LEADERBOARD_CSS}</style>{board}<!--/fl-evalboard-->"
+    return html.replace(anchor, block + anchor, 1)
+
 
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
@@ -776,6 +791,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_daily_log_summary(updated, data_path)
     updated = update_home_latest_discovery(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
+    updated = update_eval_leaderboard(updated)
     if scan_path.exists():
         updated = sync_home_scan_snapshot(updated, scan_summary)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))

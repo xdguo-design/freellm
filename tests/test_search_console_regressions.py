@@ -133,9 +133,9 @@ class SearchConsoleRegressionTests(unittest.TestCase):
     def test_sitemap_crawl_budget_requires_review_before_large_expansion(self) -> None:
         """Keep a new-domain sitemap from silently ballooning back to hundreds of URLs.
 
-        These are review budgets, not Google limits. Crossing either number should
-        trigger an explicit SEO review before a catalog import publishes more
-        crawl targets.
+        These are review budgets, not Google limits. The five release URLs added
+        here (three verified offer pages and two skills indexes) were reviewed
+        before raising the budget from 210 to 215. Future expansion needs review.
         """
         all_urls: list[str] = []
         for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
@@ -155,8 +155,8 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
         self.assertLessEqual(
             len(all_urls),
-            210,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 210); review SEO scope before publishing",
+            215,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 215); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),

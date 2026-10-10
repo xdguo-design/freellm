@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="zh-CN" class="fl-pastel-ui"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>免费大模型 API 实测报告 · FreeLLM</title><meta name="description" content="FreeLLM 用同一套 22 道固定题，对 32 个免费大模型做真实 API 调用评测：中文、推理、代码、工具调用、长文本、防幻觉、首字延迟与生成速度。原始数据公开可复现。"><link rel="canonical" href="https://freellm.top/evaluations/">
+  <link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="https://freellm.top/feed.xml"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:title" content="免费大模型 API 实测报告 · FreeLLM"><meta property="og:description" content="FreeLLM 用同一套 22 道固定题，对 32 个免费大模型做真实 API 调用评测：中文、推理、代码、工具调用、长文本、防幻觉、首字延迟与生成速度。原始数据公开可复现。"><meta property="og:url" content="https://freellm.top/evaluations/"><meta property="og:image" content="https://freellm.top/freellm-06-faq.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://freellm.top/evaluations/"><meta name="twitter:title" content="免费大模型 API 实测报告 · FreeLLM"><meta name="twitter:description" content="FreeLLM 用同一套 22 道固定题，对 32 个免费大模型做真实 API 调用评测：中文、推理、代码、工具调用、长文本、防幻觉、首字延迟与生成速度。原始数据公开可复现。"><meta name="twitter:image" content="https://freellm.top/freellm-06-faq.png"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2461062743308239"
+          crossorigin="anonymous"></script><script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script><!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JMK4R9519M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JMK4R9519M');
+  </script><style id="static-locale-style">
+    html:not([data-locale]) [lang="en"], html[data-locale="en"] [lang="zh-CN"], html[data-locale="zh-CN"] [lang="en"] { display: none !important; }
+    .static-locale-nav { display: flex; gap: 8px; align-items: center; font-size: .85rem; }
+    .static-locale-nav button { border: 0; padding: 0; background: none; color: var(--accent, currentColor); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  </style><link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261009-eval"><link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
+<link rel="stylesheet" href="/css/aurora-logs.css?v=20260924a"><link rel="stylesheet" href="/css/prototype-pages.css?v=20261002a">
+<link rel="stylesheet" href="/css/reference-ui.css?v=20261001f">
+</head><body data-static-locale="true" class="fl-ui-v2" data-fl-section="logs" data-fl-nav="models" data-visual-style="aurora" data-reference-style="v1"><script src="/js/site-navigation.js?v=20261004-model-directory-responsive"></script><aside class="fl-site-rail" aria-label="FreeLLM 主导航"><a class="fl-site-brand" href="/"><span class="fl-site-brand-mark" aria-hidden="true">AI</span><span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>让 AI 更自由地被使用</small></span></a><nav class="fl-site-nav"><a href="/" data-site-nav="home"><span class="fl-site-nav-icon" aria-hidden="true">⌂</span><span>首页</span></a><a href="/models/" data-site-nav="models" aria-current="page"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a><a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>Skills</span></a><a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a><a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a><a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a><a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a></nav><div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div></aside><div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 统一产品界面</span><span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/submit/">提交资源 ↗</a></span></div><main class="daily-log-dashboard"><nav class="model-section-tabs" aria-label="模型页面"><a href="/models/">精选模型</a><a href="/models/all/">全部模型</a><a href="/providers/">按厂家</a><a href="/category/api/">免费 API / Offer</a><a href="/evaluations/" aria-current="page">实测榜</a></nav><style>
+.fl-eval{--ink:#0c1230;--t2:#4a5878;--t3:#6a7896;--line:#e3e9f4;--blue:#1744E8;max-width:1180px}
+.fl-eval a{color:var(--blue)}
+.fl-eval .wrap{padding:0}
+.fl-eval .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.fl-eval .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-width:130px}
+.fl-eval .stat b{display:block;font-size:24px}
+.fl-eval .stat span{font-size:12px;color:var(--t3)}
+.fl-eval section{padding:30px 0}
+.fl-eval h2{font-size:22px;margin-bottom:6px}
+.fl-eval .sub{color:var(--t3);font-size:14px;margin-bottom:16px}
+.fl-eval .findings{display:grid;gap:10px}
+.fl-eval .finding{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:10px;padding:12px 16px;font-size:15px}
+.fl-eval .awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.fl-eval .award{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.fl-eval .award small{color:var(--t3);font-size:12px}
+.fl-eval .award b{display:block;font-size:15px;margin:4px 0;word-break:break-all}
+.fl-eval .award em{font-style:normal;color:var(--blue);font-weight:700}
+.fl-eval .tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px}
+.fl-eval table{border-collapse:collapse;width:100%;font-size:13.5px;white-space:nowrap}
+.fl-eval th,.fl-eval td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:center}
+.fl-eval th{background:#f3f7fd;font-weight:600;color:var(--t2);position:sticky;top:0}
+.fl-eval td.l,.fl-eval th.l{text-align:left}
+.fl-eval td.m{font-weight:600}
+.fl-eval td .p{display:block;font-size:11.5px;color:var(--t3);font-weight:400}
+.fl-eval .s5{background:#d8f3e3}
+.fl-eval .s4{background:#e9f7d9}
+.fl-eval .s3{background:#fff3d1}
+.fl-eval .s2{background:#ffe2cc}
+.fl-eval .s1{background:#fdd5d5}
+.fl-eval .na{color:#aab}
+.fl-eval .total{font-weight:700;font-size:15px}
+.fl-eval .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.fl-eval .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.fl-eval .card h3{font-size:16px;word-break:break-all}
+.fl-eval .card .prov{font-size:12.5px;color:var(--t3)}
+.fl-eval .card .score{float:right;font-size:26px;font-weight:800;color:var(--blue);line-height:1}
+.fl-eval .card .tagline{margin:10px 0;font-size:14.5px}
+.fl-eval .tags{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.fl-eval .tag{font-size:12px;border-radius:999px;padding:2px 9px}
+.fl-eval .tag.g{background:#e3f6ec;color:#11713f}
+.fl-eval .tag.b{background:#fde8e8;color:#a32121}
+.fl-eval .bars{margin:10px 0;display:grid;gap:4px}
+.fl-eval .bar{display:grid;grid-template-columns:64px 1fr 34px;align-items:center;gap:8px;font-size:12px;color:var(--t2)}
+.fl-eval .bar i{display:block;height:7px;border-radius:4px;background:#e8eef8;overflow:hidden}
+.fl-eval .bar i u{display:block;height:100%;background:var(--blue)}
+.fl-eval .meta{font-size:12.5px;color:var(--t2);display:flex;gap:14px;flex-wrap:wrap}
+.fl-eval .use{font-size:13px;margin-top:8px}
+.fl-eval .use b{color:var(--t2)}
+.fl-eval details{margin-top:8px;font-size:12.5px}
+.fl-eval summary{cursor:pointer;color:var(--blue)}
+.fl-eval details pre{white-space:pre-wrap;word-break:break-all;background:#f6f8fc;border-radius:8px;padding:8px;margin-top:6px;max-height:200px;overflow:auto;font-size:12px}
+.fl-eval .method{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;font-size:14px;color:var(--t2)}
+.fl-eval .method li{margin-left:18px;margin-top:4px}
+@media(max-width:640px){}
+</style><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">FREELLM 实测 / freellm-text-v2</div><h1><span lang="zh-CN">免费大模型 API 实测报告</span><span lang="en">Free LLM API test report</span></h1><p class="lead">我们用自己的账号和 API Key，对 6 家平台上标称免费的 32 个模型发起了 431 次真实调用：同一套 22 道题、同一参数、全部自动评分，每个分数都能在原始数据里找到对应的模型原话。10 月 9 日补测了 OpenRouter 的 4 个免费模型，2 个可用；另外 2 个分别被上游限流和「仅限 Agent 应用」挡在门外，属于免费额度与接入限制，不代表模型能力。同日修正了一道防编造题的判分规则，并按已存的原始输出重评。</p></div><div class="log-hero-meta"><div><span>测试日期</span><strong>2026-10-09</strong></div><div><span>测试模型 / 可用</span><strong>32 / 17</strong></div><div><span>真实请求</span><strong>431</strong></div></div></div><div class="log-hero-actions"><a href="/models/">查看精选模型</a><a href="https://github.com/xdguo-design/freellm/blob/main/data/evaluations/latest.json">下载原始数据</a></div></header>
+<div class="fl-eval"><section class="fl-eval-sec"><div class="wrap"><h2>核心结论</h2><p class="sub">基于本轮实测数据，由 FreeLLM 编辑整理</p><div class="findings"><div class="finding">唯一满分：魔搭上的 DeepSeek-V4.1-Flash 22 题全对，连三道防编造题都没上当；代价是首字要等约 2.2 秒，适合不赶时间的批量任务。</div><div class="finding">OpenRouter 补测最亮眼的是 Cohere 的 north-mini-code:free：95 分，前六个维度全满分，唯一失分是编造了《红楼梦》第 121 回；同平台 NVIDIA nemotron-3.5-lightning:free 82 分，但常用英文作答，一题输出陷入「Here is」无限重复。</div><div class="finding">要速度就选 Groq：gpt-oss-120b 拿到 95 分，首字约 0.2 秒、每秒约 480 token；同平台 gpt-oss-20b 每秒约 880 token。</div><div class="finding">免费档真正的门槛是额度和限流：OpenRouter 上的 gemma-4-31b-it:free 22 题全部被上游限流（429）；智谱 GLM-4.7-Flash 22 题里 14 题返回「访问量过大」；魔搭 GLM-5.2 答了 6 题就额度用尽；Groq 免费档每分钟 8K token，长文本题直接被拒。</div><div class="finding">最容易翻车的是编造：问《红楼梦》第 121 回（通行本只有 120 回），至少 8 个模型当场编出回目或情节，其中包括 95 分的 gpt-oss-120b 和 north-mini-code:free。</div><div class="finding">「能列出来」不等于「能调用」：NVIDIA 模型列表里的 12 个模型对本账号返回 404（本账号/本端点不可用，待复核）；魔搭的 MiniMax-M3 返回「没有可用服务商」；OpenRouter 的 inkling-small:free 返回 403，称只能在其列出的 Agent 应用里使用。</div></div></div></section><section class="fl-eval-sec"><div class="wrap"><h2>单项之最</h2><p class="sub">仅统计请求成功率 ≥ 80% 的模型</p><div class="awards"><div class="award"><small>综合第一</small><b>DeepSeek-V4.1-Flash</b><small>魔搭 ModelScope</small> · <em>100 分</em></div><div class="award"><small>首字最快</small><b>qwen3.8-27b</b><small>Groq</small> · <em>143 ms</em></div><div class="award"><small>吞吐最高</small><b>gpt-oss-20b</b><small>Groq</small> · <em>881 tok/s</em></div><div class="award"><small>代码最稳</small><b>DeepSeek-V4.1-Flash</b><small>魔搭 ModelScope</small> · <em>100 分</em></div><div class="award"><small>工具调用最佳</small><b>DeepSeek-V4.1-Flash</b><small>魔搭 ModelScope</small> · <em>100 分</em></div><div class="award"><small>最不爱编造</small><b>DeepSeek-V4.1-Flash</b><small>魔搭 ModelScope</small> · <em>100 分</em></div></div></div></section><section class="fl-eval-sec"><div class="wrap"><h2>总榜</h2><p class="sub">总分 = 22 道题通过率；各维度为该维度题目通过率。首字延迟为 p50，速度为输出 token/秒中位数。</p><div class="tbl"><table><thead><tr><th>#</th><th class="l">模型</th><th>总分</th><th>中文知识</th><th>推理数学</th><th>代码</th><th>指令格式</th><th>长文本</th><th>工具调用</th><th>防幻觉</th><th>首字 p50</th><th>速度</th><th>成功率</th></tr></thead><tbody><tr><td>1</td><td class="l m">DeepSeek-V4.1-Flash<span class="p">魔搭 ModelScope</span></td><td class="total">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td>2212 ms</td><td>101</td><td>100%</td></tr><tr><td>2</td><td class="l m">gpt-oss-120b<span class="p">Groq</span></td><td class="total">95</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td>204 ms</td><td>483</td><td>100%</td></tr><tr><td>3</td><td class="l m">north-mini-code:free<span class="p">OpenRouter</span></td><td class="total">95</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td>423 ms</td><td>46</td><td>100%</td></tr><tr><td>4</td><td class="l m">glm-5.3<span class="p">NVIDIA NIM</span></td><td class="total">91</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td>271 ms</td><td>71</td><td>100%</td></tr><tr><td>5</td><td class="l m">gpt-oss-20b<span class="p">NVIDIA NIM</span></td><td class="total">86</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s2">33</td><td>229 ms</td><td>52</td><td>100%</td></tr><tr><td>6</td><td class="l m">kimi-k3<span class="p">NVIDIA NIM</span></td><td class="total">86</td><td class="s5">100</td><td class="s5">100</td><td class="s2">33</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td>12981 ms</td><td>39</td><td>100%</td></tr><tr><td>7</td><td class="l m">qwen3.8-27b<span class="p">Groq</span></td><td class="total">82</td><td class="s5">100</td><td class="s2">40</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td>143 ms</td><td>477</td><td>95%</td></tr><tr><td>8</td><td class="l m">nemotron-3.5-lightning:free<span class="p">OpenRouter</span></td><td class="total">82</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td class="s5">100</td><td class="s3">67</td><td class="s3">67</td><td>565 ms</td><td>38</td><td>100%</td></tr><tr><td>9</td><td class="l m">glm-4-flash-250414<span class="p">智谱 BigModel</span></td><td class="total">82</td><td class="s5">100</td><td class="s3">60</td><td class="s5">100</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td>599 ms</td><td>46</td><td>100%</td></tr><tr><td>10</td><td class="l m">gpt-oss-20b<span class="p">Groq</span></td><td class="total">77</td><td class="s2">33</td><td class="s4">80</td><td class="s5">100</td><td class="s5">100</td><td class="s3">50</td><td class="s5">100</td><td class="s3">67</td><td>198 ms</td><td>881</td><td>95%</td></tr><tr><td>11</td><td class="l m">Xing4.0-29B<span class="p">硅基流动 SiliconFlow</span></td><td class="total">77</td><td class="s5">100</td><td class="s5">100</td><td class="s3">67</td><td class="s3">67</td><td class="s5">100</td><td class="s5">100</td><td class="s1">0</td><td>1133 ms</td><td>42</td><td>100%</td></tr><tr><td>12</td><td class="l m">XiYanSQL-QwenCoder-32B-2504<span class="p">魔搭 ModelScope</span></td><td class="total">59</td><td class="s5">100</td><td class="s1">20</td><td class="s5">100</td><td class="s3">67</td><td class="s5">100</td><td class="s2">33</td><td class="s2">33</td><td>1172 ms</td><td>2</td><td>100%</td></tr><tr><td>13</td><td class="l m">Mistral-Large-Instruct-2407<span class="p">魔搭 ModelScope</span></td><td class="total">59</td><td class="s5">100</td><td class="s2">40</td><td class="s3">67</td><td class="s2">33</td><td class="s1">0</td><td class="s5">100</td><td class="s3">67</td><td>1590 ms</td><td>12</td><td>100%</td></tr><tr><td>14</td><td class="l m">Hunyuan-MT-7B<span class="p">硅基流动 SiliconFlow</span></td><td class="total">36</td><td class="s5">100</td><td class="s1">20</td><td class="s1">0</td><td class="s3">67</td><td class="s5">100</td><td class="s1">0</td><td class="s1">0</td><td>1001 ms</td><td>54</td><td>86%</td></tr><tr><td>15</td><td class="l m">GLM-5.2<span class="p">魔搭 ModelScope</span></td><td class="total">27</td><td class="s5">100</td><td class="s1">0</td><td class="s1">0</td><td class="s1">0</td><td class="s1">0</td><td class="s3">67</td><td class="s2">33</td><td>1524 ms</td><td>66</td><td>27%</td></tr><tr><td>16</td><td class="l m">glm-4.7-flash<span class="p">智谱 BigModel</span></td><td class="total">27</td><td class="s1">0</td><td class="s1">20</td><td class="s3">67</td><td class="s2">33</td><td class="s1">0</td><td class="s2">33</td><td class="s2">33</td><td>17138 ms</td><td>70</td><td>36%</td></tr><tr><td>17</td><td class="l m">allam-2-7b<span class="p">Groq</span></td><td class="total">9</td><td class="s1">0</td><td class="s1">20</td><td class="s1">0</td><td class="s2">33</td><td class="s1">0</td><td class="s1">0</td><td class="s1">0</td><td>258 ms</td><td>1172</td><td>77%</td></tr></tbody></table></div></div></section><section class="fl-eval-sec"><div class="wrap"><h2>逐个模型画像</h2><p class="sub">强项、短板和适用场景；展开可看答错的题和模型原始输出</p><div class="cards"><div class="card" id="m-modelscope-deepseek-ai-deepseek-v4-1-flash"><span class="score">100</span><h3>deepseek-ai/DeepSeek-V4.1-Flash</h3><div class="prov">魔搭 ModelScope · 默认思考模式</div>
+<p class="tagline">本轮唯一满分，中文、代码、工具调用、长文本和三道防编造题全过。</p>
+<div class="tags"><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">不编造满分</span><span class="tag g">中文知识满分</span><span class="tag b">默认长思考，响应慢</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:100%"></u></i>100</div></div>
+<div class="meta"><span>首字 p50 2212 ms</span><span>p95 3238 ms</span><span>速度 101 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>需要准确度的中文问答、代码生成、Agent 工具调用</div><div class="use"><b>不适合：</b>对首字延迟敏感的实时对话</div>
+</div><div class="card" id="m-groq-openai-gpt-oss-120b"><span class="score">95</span><h3>openai/gpt-oss-120b</h3><div class="prov">Groq · 默认思考模式</div>
+<p class="tagline">又快又准的全能选手，唯一失分是编造了《红楼梦》第 121 回。</p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">高吞吐</span><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag b">默认长思考，响应慢</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 204 ms</span><span>p95 500 ms</span><span>速度 483 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>实时对话、代码、工具调用</div><div class="use"><b>不适合：</b>涉及冷门事实、需要严格不编造的场景</div>
+<details><summary>答错/失败 1 题</summary><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ **《红楼梦》第一百二十一回（标题：《金陵十二钗正册》）内容概述**
+
+本回主要是对全书中出现的“金陵十二钗”进行系统的整理、评点和归类，兼顾对人物性格、命运及其象征意义的概括。具体情节如下：
+
+1. **贾母召集众人**  
+   贾母在大观园里召集众亲友，决定把全书中出现的主要女性人物编成《金陵十二钗正册》，以便后人记取。
+
+2. **王熙凤主持编排**  
+   王熙凤因其精明能干，被委以整理《正册》的任务。她先后召集了宝玉、黛玉、宝钗、探春、迎春、惜春、尤氏、王夫人等人，逐一询问她们对各位姐妹的看法与评价。
+
+3. **逐一列出十二钗**  
+   在王熙凤的主持下，众人依次列出并简要评述了以下十二位主要女性（顺序略有差异，常见的版本包括）：
+
+   - **林黛玉**：才情横溢、体弱多病，情感细腻，最为宝玉所钟爱。  
+   - **薛宝钗**：端庄稳重、温柔贤淑，才德兼备，是宝</pre></details></div><div class="card" id="m-openrouter-cohere-north-mini-code-free"><span class="score">95</span><h3>cohere/north-mini-code:free</h3><div class="prov">OpenRouter · 默认思考模式</div>
+<p class="tagline">OpenRouter 免费档最强：中文、推理、代码、格式、长文本、工具调用全满分，但编造了《红楼梦》第 121 回的整回情节。</p>
+<div class="tags"><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 423 ms</span><span>p95 8404 ms</span><span>速度 46 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>代码生成、Agent 工具调用、长文档检索</div><div class="use"><b>不适合：</b>冷门事实、需要严格不编造的场景；默认先思考，慢的一题首字约 8 秒</div>
+<details><summary>答错/失败 1 题</summary><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ **《红楼梦》第一百二十一回（各本略有不同，但内容大同小异）**
+
+| 要素 | 回内容概要 |
+|------|------------|
+| **整体基调** | 这是全书的收尾章节，讲述了贾府覆灭后的一系列后果，以及贾宝玉出家、故事以佛教哲学告终的结局。 |
+| **主要情节** | 1. **贾府被抄** – 官府正式抄没了贾府的财产，许多仆人或逃亡或被卖，贾母、凤姐、宝钗等重要人物的命运在此时开始显现。  &lt;br&gt;2. **林黛玉病逝** – 黛玉在抄家过程中病情恶化，她在绝望中写下“秋窗风雨夕”，不久后去世。她的死进一步加剧了宝玉的痛苦和对世俗名利的厌倦。 &lt;br&gt;3. **宝玉出家** – 在经历了家族覆灭、亲人离世、爱情破灭的打击后，宝玉在僧侣的劝说下剃度为僧，法名“慧可”。他放弃了功名利禄，遁入空门。 &lt;br&gt;4. **薛宝钗的结局** – 宝钗在抄家后被发配到外地，她一</pre></details></div><div class="card" id="m-nvidia-z-ai-glm-5-3"><span class="score">91</span><h3>z-ai/glm-5.3</h3><div class="prov">NVIDIA NIM · 默认思考模式</div>
+<p class="tagline">经 NVIDIA 免费调用的智谱旗舰，推理和工具调用稳，偶尔只思考不给答案。</p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:67%"></u></i>67</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 271 ms</span><span>p95 771 ms</span><span>速度 71 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>中文推理、长文档问答、工具调用</div><div class="use"><b>不适合：</b>要求每次都有正文输出的流水线（需调高输出上限）</div>
+<details><summary>答错/失败 2 题</summary><pre><b>code-3</b> 用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。
+→ [无正文输出]</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ [无正文输出]</pre></details></div><div class="card" id="m-nvidia-openai-gpt-oss-20b"><span class="score">86</span><h3>openai/gpt-oss-20b</h3><div class="prov">NVIDIA NIM · 默认思考模式</div>
+<p class="tagline"></p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span><span class="tag b">容易编造</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:67%"></u></i>67</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:33%"></u></i>33</div></div>
+<div class="meta"><span>首字 p50 229 ms</span><span>p95 383 ms</span><span>速度 52 tok/s</span><span>成功率 100%</span></div>
+
+<details><summary>答错/失败 3 题</summary><pre><b>zh-2</b> 王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。
+→ 南京</pre><pre><b>hal-1</b> 请介绍 2025 年诺贝尔数学奖得主及其主要贡献。
+→ [无正文输出]</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ [无正文输出]</pre></details></div><div class="card" id="m-nvidia-moonshotai-kimi-k3"><span class="score">86</span><h3>moonshotai/kimi-k3</h3><div class="prov">NVIDIA NIM · 默认思考模式</div>
+<p class="tagline">答对时质量高、从不编造，但首字中位数近 13 秒，部分回答混入乱码。</p>
+<div class="tags"><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">不编造满分</span><span class="tag g">中文知识满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span><span class="tag b">代码弱</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:33%"></u></i>33</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:100%"></u></i>100</div></div>
+<div class="meta"><span>首字 p50 12981 ms</span><span>p95 40799 ms</span><span>速度 39 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>离线批量、对准确性要求高且不赶时间的任务</div><div class="use"><b>不适合：</b>实时交互、代码生成</div>
+<details><summary>答错/失败 3 题</summary><pre><b>code-1</b> 用 Python 实现函数 merge_intervals(intervals)：输入形如 [[1,3],[2,6]] 的区间列表（可能无序、可能为空），返回合并重叠区间后按起点排序的列表，端点相接也要合并。只输出代码。
+→ &lt;|close|&gt;end. 用户, low, 端&lt;|close|&gt;
+.&lt;|close|&gt;
+The user
+..The 元
+Thethinking
+Interval..&lt;|close|&gt;
+.interval
+.The user
+The
+Interval
+Interval
+.&lt;|close|&gt;
+The
+The
+The 端
+ the 端end
+The.Only
+The
+The.&lt;|close|&gt;（端
+, ，
+The
+The.&lt;|close|&gt;
+.The
+The
+The
+Theures
+The
+,interval
+The user wants
+=&quot;A
+  ,
+The
+The user
+,.end
+  The userThe.&lt;|close|&gt;
+,A
+The.The
+The user
+The
+The user
+The
+The user
+The
+ .The
+The user
+The user
+,Th</pre><pre><b>code-3</b> 用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。
+→ ```python
+import re
+
+def parse_duration(text):
+    total = 0
+    for value, unit in re.findall(r&#x27;(\d+)([hms])&#x27;, text):
+        if unit == &#x27;h&#x27;:
+            total += value
+        elif unit == &#x27;m&#x27;:
+            total += value
+        elif unit == &#x27;s&#x27;:
+            total += value
+    return total
+```</pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→ &lt;|close|&gt;,  For =&quot;&lt;|close|&gt;&lt;|close|&gt;
+
+[.md
+, answer结论? for.urg.回答., for. the ability
+You to answerS The, answer
+A API., the further. letsycling V.+&lt;|close|&gt;,,,�.&lt;|close|&gt;.&lt;|close|&gt;+ the.py&lt;|close|&gt; the App the meaning to,&lt;|close|&gt;., ou, the API. &lt;|close|&gt;, .,&lt;|close|&gt;+ ()
+ the the working of&lt;|close|&gt;, the API.&lt;|close|&gt;,., Y. Not working the of, a.&lt;|close|&gt;,,&lt;|close|&gt;m
+. A.
+.py. The the state.&lt;|clo</pre></details></div><div class="card" id="m-groq-qwen-qwen3-8-27b"><span class="score">82</span><h3>qwen/qwen3.8-27b</h3><div class="prov">Groq</div>
+<p class="tagline">首字最快的一档（约 0.14 秒），代码和工具调用满分，但数学陷阱题（9.11 vs 9.9）答错。</p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">高吞吐</span><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:40%"></u></i>40</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 143 ms</span><span>p95 465 ms</span><span>速度 477 tok/s</span><span>成功率 95%</span></div>
+<div class="use"><b>适合：</b>低延迟聊天、代码、工具调用</div><div class="use"><b>不适合：</b>数值比较、逻辑题</div>
+<details><summary>答错/失败 4 题</summary><pre><b>rm-4</b> 9.11 和 9.9 哪个更大？只输出更大的那个数。
+→ 9.11</pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→ C</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ 《红楼梦》第一百二十一回（通常指高鹗续书版本，前八十回为曹雪芹原著）的标题是**《破毒香阴谋计 泄疑心贾母病》**（不同版本回目名称可能略有差异，如“破毒香阴谋计 泄疑心贾母病”或“破毒香阴谋计 泄疑心贾母病”等，核心情节一致）。
+
+这一回主要围绕**贾府内部矛盾激化、贾母病情加重以及贾宝玉与林黛玉婚事受阻**展开，具体情节如下：
+
+### 1. 贾母病重，疑心宝玉婚事
+- 贾母因听闻宝玉与黛玉之事，加上府中琐事纷扰，身体每况愈下，病情加重。
+- 贾母心中对宝玉的婚事极为关切，但担心若直接提亲会引发家族内部矛盾（尤其是王熙凤与贾琏、贾政与贾赦之间的利益纠葛），因此犹豫不决。
+- 贾母对王夫人和贾政表达了自己的担忧，希望他们能妥善安排宝玉的终身大事，但又怕操之过急。
+
+### 2. 王熙凤与贾琏的矛盾加剧
+- 王熙凤因管家权力被削弱、经济状况恶化，内心焦虑不安。
+- 贾琏因在外欠债、生活拮据</pre><pre><b>rm-2</b> 请求失败：限流或免费额度用尽</pre></details></div><div class="card" id="m-openrouter-nvidia-nemotron-3-5-lightning-free"><span class="score">82</span><h3>nvidia/nemotron-3.5-lightning:free</h3><div class="prov">OpenRouter · 默认思考模式</div>
+<p class="tagline">推理、代码、长文本全对，但常用英文作答（城市名答成 Nanchang、JSON 输出英文），一题输出陷入「Here is」无限重复。</p>
+<div class="tags"><span class="tag g">代码满分</span><span class="tag g">长文本满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:67%"></u></i>67</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:67%"></u></i>67</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 565 ms</span><span>p95 27653 ms</span><span>速度 38 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>英文或中英混合的推理与代码任务</div><div class="use"><b>不适合：</b>要求纯中文输出的产品、实时交互（最慢一题首字约 28 秒）</div>
+<details><summary>答错/失败 4 题</summary><pre><b>zh-2</b> 王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。
+→ Nanchang</pre><pre><b>fmt-1</b> 把下列城市及其所属省份输出为 JSON 数组，每个元素形如 {&quot;city&quot;:&quot;…&quot;,&quot;province&quot;:&quot;…&quot;}，省份不要带“省”字，按给出顺序：杭州、成都、苏州。只输出 JSON。
+→ [
+  {&quot;city&quot;:&quot;Hangzhou&quot;,&quot;province&quot;:&quot;Zhejiang&quot;},
+  {&quot;city&quot;:&quot;Chengdu&quot;,&quot;province&quot;:&quot;Sichuan&quot;},
+  {&quot;city&quot;:&quot;Suzhou&quot;,&quot;province&quot;:&quot;Jiangsu&quot;}
+]</pre><pre><b>tool-1</b> 帮我查一下北京明天的天气，用摄氏度。
+→ [调用工具] [{&quot;name&quot;: &quot;get_weather&quot;, &quot;arguments&quot;: &quot;{\&quot;city\&quot;:\&quot;Beijing\&quot;,\&quot;date\&quot;:\&quot;tomorrow\&quot;,\&quot;unit\&quot;:\&quot;celsius\&quot;}&quot;}]</pre><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ Here is aHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere&#x27;sHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere isHere is</pre></details></div><div class="card" id="m-zhipu-glm-4-flash-250414"><span class="score">82</span><h3>glm-4-flash-250414</h3><div class="prov">智谱 BigModel</div>
+<p class="tagline">智谱官方永久免费款里最稳的一个，代码满分，但会编造冷门事实。</p>
+<div class="tags"><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:60%"></u></i>60</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 599 ms</span><span>p95 1412 ms</span><span>速度 46 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>国内直连的日常问答、代码小工具</div><div class="use"><b>不适合：</b>严格格式约束、冷门事实</div>
+<details><summary>答错/失败 4 题</summary><pre><b>rm-2</b> 水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。
+→ 0.96</pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→ C</pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→ 结论：API是应用程序接口，让不同软件能互相通信和交换数据。</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ 《红楼梦》第一百二十一回主要讲述了**贾府彻底败落后的主要人物的结局**，是全书的重要收尾章节之一。
+
+这一回主要包含以下几个关键情节：
+
+1.  **妙玉的结局**：妙玉在贾府被抄家后，被贼人掳走。后经人解救，她选择离开尘世，随一僧一道飘然而去，回归了她的本源。这体现了她的超凡脱俗和宗教信仰。
+
+2.  **巧姐的结局**：这是本回重点描写的部分。王熙凤死后，巧姐的处境非常危险，几乎被狠舅奸兄（王仁、王善保家的儿子）卖掉。幸亏刘姥姥再次出现，用计谋救下了巧姐，并把她带往青埂峰下的村落抚养。刘姥姥将巧姐视为己出，给她取了个新的名字叫“板儿”（取自刘姥姥的外孙板儿，有传承之意），预示着巧姐将在乡间过上平凡但安稳的生活，获得了新的“福”气。
+
+3.  **其他人物的最终安排**：回目中提到“元妃省亲”，但实际上元妃（贾元春）早已去世。这里可能是指她去世的消息，或者是一种反讽，暗示曾经煊赫的贵妃</pre></details></div><div class="card" id="m-groq-openai-gpt-oss-20b"><span class="score">77</span><h3>openai/gpt-oss-20b</h3><div class="prov">Groq · 默认思考模式</div>
+<p class="tagline"></p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">高吞吐</span><span class="tag g">代码满分</span><span class="tag g">工具调用满分</span><span class="tag g">格式遵循满分</span><span class="tag b">默认长思考，响应慢</span><span class="tag b">中文知识弱</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:33%"></u></i>33</div><div class="bar">推理数学<i><u style="width:80%"></u></i>80</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:100%"></u></i>100</div><div class="bar">长文本<i><u style="width:50%"></u></i>50</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 198 ms</span><span>p95 640 ms</span><span>速度 881 tok/s</span><span>成功率 95%</span></div>
+
+<details><summary>答错/失败 5 题</summary><pre><b>zh-1</b> “落霞与孤鹜齐飞”的下一句是什么？只输出这一句。
+→ [无正文输出]</pre><pre><b>zh-2</b> 王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。
+→ 南京</pre><pre><b>rm-1</b> 一个正整数除以 3 余 2，除以 5 余 3，除以 7 余 2。满足条件的最小正整数是多少？只输出最终数字。
+→ [无正文输出]</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ [无正文输出]</pre><pre><b>long-2</b> 请求失败：HTTP 413</pre></details></div><div class="card" id="m-siliconflow-xingchenagi-xing4-0-29b"><span class="score">77</span><h3>XingChenAGI/Xing4.0-29B</h3><div class="prov">硅基流动 SiliconFlow · 默认思考模式</div>
+<p class="tagline">硅基流动 ¥0 模型，中文、推理、长文本和工具调用全对，但三道防编造题全部编了答案。</p>
+<div class="tags"><span class="tag g">工具调用满分</span><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span><span class="tag g">推理数学满分</span><span class="tag b">默认长思考，响应慢</span><span class="tag b">容易编造</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:100%"></u></i>100</div><div class="bar">代码<i><u style="width:67%"></u></i>67</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:0%"></u></i>0</div></div>
+<div class="meta"><span>首字 p50 1133 ms</span><span>p95 1606 ms</span><span>速度 42 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>国内直连的中文长文本整理、工具调用</div><div class="use"><b>不适合：</b>事实核查、学术引用</div>
+<details><summary>答错/失败 5 题</summary><pre><b>code-2</b> 用 Python 实现函数 longest_palindrome(s)，返回字符串 s 中最长的回文子串。只输出代码。
+→ [无正文输出]</pre><pre><b>fmt-2</b> 写一首主题为秋天的五言绝句：恰好 4 句，每句恰好 5 个汉字，每句一行，不要标题、作者和任何解释。
+→ [无正文输出]</pre><pre><b>hal-1</b> 请介绍 2025 年诺贝尔数学奖得主及其主要贡献。
+→ [无正文输出]</pre><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ 1. **分析请求：**
+    *   作者：张伟明
+    *   期刊：Nature
+    *   年份：2019
+    *   论文标题：基于量子蚁群算法的长江鲟鱼迁徙预测
+    *   任务：总结该论文的主要结论。
+
+2. **初步知识检索与事实核查：**
+    *   等等，张伟明在 Nature 上发表过这篇论文吗？
+    *   让我在内部知识库中搜索“张伟明”、“2019”、“Nature”、“Quantum Ant Colony”、“长江鲟鱼迁徙预测”。
+    *   实际上，张伟明是一位著名的鱼类生物学家，主要以其在鲟鱼（特别是长江鲟鱼/中华鲟）研究方面的工作而闻名，特别是在重庆自然博物馆/中国水产科学研究院长江水产研究所。
+    *   *Nature* 是一本多学科顶级期刊。发表一篇关于鲟鱼迁徙的论文*是可能的*，但通常这类论文会发表在《Nature</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ 《红楼梦》第一百二十回是全书的高潮之一，主要讲述了**“抄检大观园”**的经过。这是大观园建园以来，一次彻底的搜查和清理行动，标志着大观园作为少女们诗意栖居的彻底终结，也预示着美好生命的消逝和家族衰败的不可逆转。
+
+以下是该回的主要情节细节：
+
+**1. 起因：宁国府的丑闻**
+宁国府出了事。秦可卿的远亲秦显家的妇人，原本想通过讨好王熙凤来攀附。结果她趁乱偷了秦可卿的陪嫁物品，还嫁祸给王夫人。王熙凤大怒，查清事实后，为了维护自己的权威和整顿宁国府的混乱，决定对大观园进行彻底的搜查。
+
+**2. 过程：大抄与冲突**
+王熙凤把大观园里的丫鬟们召集起来，宣布进行大抄检。
+*   **司棋一派被拿获**：司棋的丫鬟入画竟然偷了东西，还带人偷偷溜进大观园。入画被当场拿获，司棋拿弩箭威胁搜查者，也被锁起来。
+*   **晴雯受委屈**：抄检时，晴雯已经病入膏肓，躺在床上。抄检的阵势和搜检人员的态度，</pre></details></div><div class="card" id="m-modelscope-xgenerationlab-xiyansql-qwencoder-32b-2504"><span class="score">59</span><h3>XGenerationLab/XiYanSQL-QwenCoder-32B-2504</h3><div class="prov">魔搭 ModelScope</div>
+<p class="tagline">专精 SQL 的代码模型：代码题全对，但不会调用工具，推理题大面积失分。</p>
+<div class="tags"><span class="tag g">代码满分</span><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span><span class="tag b">工具调用弱</span><span class="tag b">容易编造</span><span class="tag b">推理数学弱</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:20%"></u></i>20</div><div class="bar">代码<i><u style="width:100%"></u></i>100</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:33%"></u></i>33</div><div class="bar">防幻觉<i><u style="width:33%"></u></i>33</div></div>
+<div class="meta"><span>首字 p50 1172 ms</span><span>p95 2056 ms</span><span>速度 2 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>SQL 和代码生成</div><div class="use"><b>不适合：</b>通用问答、Agent</div>
+<details><summary>答错/失败 9 题</summary><pre><b>rm-2</b> 水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。
+→ 10.80</pre><pre><b>rm-3</b> 英文单词 strawberry 中一共有几个字母 r？只输出数字。
+→ 1</pre><pre><b>rm-4</b> 9.11 和 9.9 哪个更大？只输出更大的那个数。
+→ 9.11</pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→ C</pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→ 结论：API 是应用程序接口，允许不同软件系统之间进行通信和数据交换。</pre><pre><b>tool-1</b> 帮我查一下北京明天的天气，用摄氏度。
+→ 抱歉，我无法实时获取最新的天气信息。不过，你可以通过访问天气预报网站如中国天气网、使用天气预报应用程序如天气通、墨迹天气，或者通过智能助手如小爱同学、Siri来查询北京明天的天气情况。</pre><pre><b>tool-2</b> 100 美元现在能换多少人民币？
+→ 汇率会根据市场波动而变化，因此无法给出一个确切的数值。建议您查看最新的汇率信息。</pre><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ 张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》提出了一种创新的量子蚁群算法，用于预测长江鲟鱼的迁徙路径和时间。研究发现，该算法能够有效模拟长江鲟鱼的迁徙行为，预测其在不同环境条件下的移动模式，为保护这一濒危物种提供了科学依据。研究还指出，量子蚁群算法在处理复杂生物迁徙模式时展现出比传统算法更高的准确性和效率。</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ 《红楼梦》第一百二十一回的标题是“尤氏答泪叹前缘”，这一回主要描述了尤氏在得知贾府衰败、家族成员相继离世后，内心的悲痛和对往昔美好时光的怀念。尤氏是贾母的陪房，也是尤氏家族的代表人物之一，在这一回中，她的悲叹不仅反映了个人命运的起伏，也象征着整个贾府乃至整个封建社会的兴衰更替。</pre></details></div><div class="card" id="m-modelscope-mistralai-mistral-large-instruct-2407"><span class="score">59</span><h3>mistralai/Mistral-Large-Instruct-2407</h3><div class="prov">魔搭 ModelScope</div>
+<p class="tagline">工具调用三题全对，但长文本两题全错、格式要求常违反，还编造了《红楼梦》第 121 回情节，速度也慢（约 12 tok/s）。</p>
+<div class="tags"><span class="tag g">工具调用满分</span><span class="tag g">中文知识满分</span><span class="tag b">长文本弱</span><span class="tag b">格式遵循弱</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:40%"></u></i>40</div><div class="bar">代码<i><u style="width:67%"></u></i>67</div><div class="bar">指令格式<i><u style="width:33%"></u></i>33</div><div class="bar">长文本<i><u style="width:0%"></u></i>0</div><div class="bar">工具调用<i><u style="width:100%"></u></i>100</div><div class="bar">防幻觉<i><u style="width:67%"></u></i>67</div></div>
+<div class="meta"><span>首字 p50 1590 ms</span><span>p95 9050 ms</span><span>速度 12 tok/s</span><span>成功率 100%</span></div>
+<div class="use"><b>适合：</b>中文常识问答、简单工具调用</div><div class="use"><b>不适合：</b>长文档问答、严格格式输出、冷门事实</div>
+<details><summary>答错/失败 9 题</summary><pre><b>rm-2</b> 水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。
+→  7.50</pre><pre><b>rm-4</b> 9.11 和 9.9 哪个更大？只输出更大的那个数。
+→  9.11</pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→  C</pre><pre><b>code-3</b> 用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。
+→  ```python
+def parse_duration(text):
+    total_seconds = 0
+    current_number = &#x27;&#x27;
+    for char in text:
+        if char.isdigit():
+            current_number += char
+        else:
+            if current_number:
+                number = int(current_number)
+                if &#x27;h&#x27; in text:
+                    total_seconds += number * 3600
+                elif &#x27;m&#x27; in text:
+                    total_</pre><pre><b>fmt-2</b> 写一首主题为秋天的五言绝句：恰好 4 句，每句恰好 5 个汉字，每句一行，不要标题、作者和任何解释。
+→  秋风瑟瑟叶飘零，
+金黄满地景如画。
+寒意渐深夜未央，
+明月高悬照九霄。</pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→  结论：API 是一种协议或工具集，允许不同软件系统之间进行通信和数据交换。</pre><pre><b>long-1</b> [约 8000 字干扰文本]
+问题：上文中新项目的代号是什么？首期预算是多少万元？按“代号，预算”格式回答，例如：某某-1，100。
+→  青鸟-1，300</pre><pre><b>long-2</b> [约 8000 字干扰文本]
+问题：上文中由哪个分公司牵头实施新项目？资金何时拨付？一句话回答。
+→  上文中没有提到具体的分公司牵头实施新项目，但资金将在明年3月拨付。</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→  《红楼梦》是中国古典文学名著，原作者曹雪芹创作的部分共有八十回。后四十回（即从第八十一回到第一百二十回）通常被认为是高鹗所续写的。
+
+在《红楼梦》的第一百二十一回中，主要讲述了以下几个情节：
+
+1. **贾宝玉与史湘云成婚**：这一回描写了贾宝玉和史湘云的婚礼。虽然贾宝玉心中始终念着林黛玉，但在家族的安排下，他最终与史湘云成亲。
+
+2. **薛宝钗病重**：薛宝钗因为思虑过多和身体虚弱，病情加重。她对自己的命运感到无奈和绝望。
+
+3. **王夫人与贾母的对话**：王夫人和贾母讨论了家族的未来和宝玉的婚事，表达了对家族前途的担忧。
+
+4. **袭人的处境**：袭人在贾府中的地位变得更加微妙，她既要照顾宝玉，又要应对复杂的家庭关系。
+
+这一回通过描写宝玉和湘云的婚礼以及其他人物的反应，进一步展示了贾府的衰败和家族成员之间的矛盾与无奈。</pre></details></div><div class="card" id="m-siliconflow-tencent-hunyuan-mt-7b"><span class="score">36</span><h3>tencent/Hunyuan-MT-7B</h3><div class="prov">硅基流动 SiliconFlow</div>
+<p class="tagline">翻译专用模型，不支持工具调用，通用题不建议使用。</p>
+<div class="tags"><span class="tag g">长文本满分</span><span class="tag g">中文知识满分</span><span class="tag b">代码弱</span><span class="tag b">工具调用弱</span><span class="tag b">容易编造</span><span class="tag b">推理数学弱</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:20%"></u></i>20</div><div class="bar">代码<i><u style="width:0%"></u></i>0</div><div class="bar">指令格式<i><u style="width:67%"></u></i>67</div><div class="bar">长文本<i><u style="width:100%"></u></i>100</div><div class="bar">工具调用<i><u style="width:0%"></u></i>0</div><div class="bar">防幻觉<i><u style="width:0%"></u></i>0</div></div>
+<div class="meta"><span>首字 p50 1001 ms</span><span>p95 1624 ms</span><span>速度 54 tok/s</span><span>成功率 86%</span></div>
+<div class="use"><b>适合：</b>中外互译</div><div class="use"><b>不适合：</b>通用问答、代码、Agent</div>
+<details><summary>答错/失败 14 题</summary><pre><b>rm-1</b> 一个正整数除以 3 余 2，除以 5 余 3，除以 7 余 2。满足条件的最小正整数是多少？只输出最终数字。
+→ 答案：41</pre><pre><b>rm-2</b> 水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。
+→ 答案：2.43</pre><pre><b>rm-3</b> 英文单词 strawberry 中一共有几个字母 r？只输出数字。
+→ The word &quot;strawberry&quot; contains 2 letters &quot;r&quot;.</pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→ 我们可以通过分析每个人的陈述来找出谁在说真话。
+
+1. 如果A说的是真话，那么B在说谎。这意味着C也在说谎，因为C声称A和B都在说谎。但这与A的陈述矛盾，因为A声称B在说谎，而C也声称B在说谎。所以A不能说真话。
+
+2. 如果B说的是真话，那么C在说谎。这意味着A和B都没有说谎。这与A的陈述相符，因为A声称B在说谎，而B声称C在说谎。但这与C的陈述矛盾，因为C声称A和B都在说谎。所以B不能说真话。
+
+3. 如果C说的是真话，那么A和B都在说谎。这意味着A的陈述（B在说谎）是假的，B的陈述（C在说谎）也是假的。这与C的陈述相符，因为C声称A和B都在说谎。所以C可能说真话。
+
+综上所述，只有C可能说真话。答案是C。</pre><pre><b>code-1</b> 用 Python 实现函数 merge_intervals(intervals)：输入形如 [[1,3],[2,6]] 的区间列表（可能无序、可能为空），返回合并重叠区间后按起点排序的列表，端点相接也要合并。只输出代码。
+→ ```python
+def merge_intervals(intervals):
+    if not intervals:
+        return []
+
+    result = []
+    for interval in intervals:
+        left, right = interval
+
+        # Find the first interval with a left value greater than the current interval&#x27;s right value
+        while left &lt;= 0 and intervals and intervals[0][left] &gt; right:
+            left = intervals[0][left]
+
+        # Merge the current i</pre><pre><b>code-2</b> 用 Python 实现函数 longest_palindrome(s)，返回字符串 s 中最长的回文子串。只输出代码。
+→ ```python
+def longest_palindrome(s):
+    if not s:
+        return &quot;&quot;
+
+    max_length = 1
+    start = 0
+
+    for i in range(1, len(s)):
+        for j in range(i, len(s) - 1, -1):
+            if s[i] == s[j]:
+                length = j - i + 1
+                if length &gt; max_length:
+                    max_length = length
+                    start = i
+
+    return s[start:start + max_length]
+
+# 测试
+s </pre><pre><b>code-3</b> 用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。
+→ ```python
+def parse_duration(text):
+    # 将字符串按照时间单位分割成列表
+    time_parts = text.split(&#x27; &#x27;)
+
+    # 初始化总秒数为0
+    total_seconds = 0
+
+    # 遍历时间单位列表
+    for part in time_parts:
+        # 如果是小时，将其乘以3600
+        if part == &#x27;h&#x27;:
+            total_seconds += part * 3600
+        # 如果是分钟，将其乘以60
+        elif part == &#x27;m&#x27;:
+            total_seconds += part * 60
+        # 如果是秒，直接累加
+        else:
+            tot</pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→ API（应用程序编程接口）是一种允许不同软件或服务之间进行通信的技术。它定义了一组规则和标准，使得开发者可以轻松地将一个系统的功能集成到另一个系统中，从而提高效率和用户体验。结论：API是实现软件间互联互通的关键。</pre><pre><b>hal-1</b> 请介绍 2025 年诺贝尔数学奖得主及其主要贡献。
+→ 很抱歉，我无法预测2025年的诺贝尔数学奖得主及其主要贡献。诺贝尔奖的评选结果通常在每年的10月公布，而我的知识更新是实时的，但并不能预测未来的事件。如果您对数学领域有特别的兴趣，我可以提供一些关于当前数学研究的热点和趋势的信息，或者帮助您了解数学奖项的历史和意义。</pre><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ 张伟明在2019年发表在Nature上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》主要探讨了利用量子蚁群算法（QCA）来预测长江鲟鱼的迁徙路径。量子蚁群算法是一种结合了量子计算和蚁群优化算法的混合智能方法，旨在提高搜索效率和准确性。论文的主要结论如下：
+
+1. 量子蚁群算法在预测长江鲟鱼迁徙路径方面表现出较好的性能。与传统的蚁群算法相比，量子蚁群算法在解决复杂问题时具有更快的收敛速度和更高的搜索精度。
+
+2. 通过实验验证，量子蚁群算法能够有效地捕捉到长江鲟鱼迁徙的规律和模式，为长江鲟鱼的保护和管理提供科学依据。
+
+3. 该研究为利用量子计算和机器学习方法预测生物迁徙行为提供了新的思路和方法，有助于深入了解生物系统的复杂性和适应性。
+
+4. 量子蚁群算法在生态学、渔业和保护生物学等领域具有广泛的应用前景，有助于保护濒危物种和生态系统。
+
+总之，张伟明的论文展示了量子蚁群算法在预测长江鲟鱼迁</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ 《红楼梦》第一百二十一回的标题是“凤姐试才”，主要讲述了以下内容：
+
+1. 贾宝玉在贾母的安排下，与薛宝钗、林黛玉一起前往荣府的梨香院赏花。在赏花的过程中，贾宝玉对林黛玉的才华和美貌产生了浓厚的兴趣，而薛宝钗则表现得非常得体和优雅。
+2. 贾宝玉在梨香院里遇到了一位名叫莺莺的丫鬟，她向贾宝玉讲述了自己的一些遭遇和心事。莺莺的遭遇引起了贾宝玉的同情和关心，他决定帮助她。
+3. 贾宝玉回到荣府后，与薛宝钗、林黛玉一起讨论了莺莺的遭遇。薛宝钗提出了一个建议，即让莺莺去贾母那里寻求帮助。贾宝玉同意了这个建议，并决定亲自去贾母那里向贾母请示。
+4. 贾宝玉去找贾母时，遇到了王熙凤。王熙凤得知了莺莺的遭遇后，决定帮助莺莺。她让莺莺去她的房间等待，然后亲自去贾母那里请示。
+5. 贾母得知了莺莺的遭遇后，非常同情她，并决定帮助她。她让莺莺去荣府的学堂学习，以便她能够获得更好的教育和发展。
+6. 贾宝玉、薛</pre><pre><b>tool-1</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>tool-2</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>tool-3</b> 请求失败：请求被拒绝（参数不支持）</pre></details></div><div class="card" id="m-modelscope-zhipuai-glm-5-2"><span class="score">27</span><h3>ZhipuAI/GLM-5.2</h3><div class="prov">魔搭 ModelScope · 默认思考模式</div>
+<p class="tagline">魔搭免费额度很快耗尽，答了 6 题就被限额。</p>
+<div class="tags"><span class="tag g">中文知识满分</span><span class="tag b">默认长思考，响应慢</span><span class="tag b">代码弱</span><span class="tag b">长文本弱</span><span class="tag b">容易编造</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:100%"></u></i>100</div><div class="bar">推理数学<i><u style="width:0%"></u></i>0</div><div class="bar">代码<i><u style="width:0%"></u></i>0</div><div class="bar">指令格式<i><u style="width:0%"></u></i>0</div><div class="bar">长文本<i><u style="width:0%"></u></i>0</div><div class="bar">工具调用<i><u style="width:67%"></u></i>67</div><div class="bar">防幻觉<i><u style="width:33%"></u></i>33</div></div>
+<div class="meta"><span>首字 p50 1524 ms</span><span>p95 6861 ms</span><span>速度 66 tok/s</span><span>成功率 27%</span></div>
+<div class="use"><b>适合：</b>偶尔试用</div><div class="use"><b>不适合：</b>批量调用</div>
+<details><summary>答错/失败 16 题</summary><pre><b>rm-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-3</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-4</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-5</b> 请求失败：限流或免费额度用尽</pre><pre><b>code-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>code-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>code-3</b> 请求失败：限流或免费额度用尽</pre><pre><b>fmt-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>fmt-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>fmt-3</b> 请求失败：限流或免费额度用尽</pre><pre><b>long-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>long-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>tool-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>hal-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>hal-3</b> 请求失败：限流或免费额度用尽</pre></details></div><div class="card" id="m-zhipu-glm-4-7-flash"><span class="score">27</span><h3>glm-4.7-flash</h3><div class="prov">智谱 BigModel · 默认思考模式</div>
+<p class="tagline">官方标称永久免费，但高峰期频繁返回「访问量过大」，本轮 22 题只成功 8 题。</p>
+<div class="tags"><span class="tag b">默认长思考，响应慢</span><span class="tag b">工具调用弱</span><span class="tag b">长文本弱</span><span class="tag b">容易编造</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:0%"></u></i>0</div><div class="bar">推理数学<i><u style="width:20%"></u></i>20</div><div class="bar">代码<i><u style="width:67%"></u></i>67</div><div class="bar">指令格式<i><u style="width:33%"></u></i>33</div><div class="bar">长文本<i><u style="width:0%"></u></i>0</div><div class="bar">工具调用<i><u style="width:33%"></u></i>33</div><div class="bar">防幻觉<i><u style="width:33%"></u></i>33</div></div>
+<div class="meta"><span>首字 p50 17138 ms</span><span>p95 55453 ms</span><span>速度 70 tok/s</span><span>成功率 36%</span></div>
+<div class="use"><b>适合：</b>低频、可重试的个人项目</div><div class="use"><b>不适合：</b>任何需要稳定可用的场景</div>
+<details><summary>答错/失败 16 题</summary><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ [无正文输出]</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ [无正文输出]</pre><pre><b>zh-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>zh-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>zh-3</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-4</b> 请求失败：限流或免费额度用尽</pre><pre><b>rm-5</b> 请求失败：限流或免费额度用尽</pre><pre><b>code-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>fmt-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>fmt-3</b> 请求失败：限流或免费额度用尽</pre><pre><b>long-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>long-2</b> 请求失败：限流或免费额度用尽</pre><pre><b>tool-1</b> 请求失败：限流或免费额度用尽</pre><pre><b>tool-3</b> 请求失败：限流或免费额度用尽</pre></details></div><div class="card" id="m-groq-allam-2-7b"><span class="score">9</span><h3>allam-2-7b</h3><div class="prov">Groq</div>
+<p class="tagline">阿拉伯语模型，中文基本不可用，上下文太短，长文本题直接报错。</p>
+<div class="tags"><span class="tag g">首字极快</span><span class="tag g">高吞吐</span><span class="tag b">代码弱</span><span class="tag b">工具调用弱</span><span class="tag b">长文本弱</span><span class="tag b">容易编造</span></div>
+<div class="bars"><div class="bar">中文知识<i><u style="width:0%"></u></i>0</div><div class="bar">推理数学<i><u style="width:20%"></u></i>20</div><div class="bar">代码<i><u style="width:0%"></u></i>0</div><div class="bar">指令格式<i><u style="width:33%"></u></i>33</div><div class="bar">长文本<i><u style="width:0%"></u></i>0</div><div class="bar">工具调用<i><u style="width:0%"></u></i>0</div><div class="bar">防幻觉<i><u style="width:0%"></u></i>0</div></div>
+<div class="meta"><span>首字 p50 258 ms</span><span>p95 318 ms</span><span>速度 1172 tok/s</span><span>成功率 77%</span></div>
+<div class="use"><b>适合：</b>阿拉伯语任务</div><div class="use"><b>不适合：</b>中文场景</div>
+<details><summary>答错/失败 20 题</summary><pre><b>zh-1</b> “落霞与孤鹜齐飞”的下一句是什么？只输出这一句。
+→ “鸳鸯怀抱，翠峰隐觞。” </pre><pre><b>zh-2</b> 王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。
+→ 滕王阁是一座古老的宫殿，历史上与天津相关。因此，在王勃《滕王阁序》中提到的滕王阁位于天津。 </pre><pre><b>zh-3</b> 鲁迅和周树人之间是什么关系？用一句话回答。
+→ 鲁迅和周树人是中国20世纪的小说家和政治家，他们之间的关系可以简单地说成是一种对话或同代人之间的关系，他们在文学和政治领域中发挥过重要作用。 </pre><pre><b>rm-1</b> 一个正整数除以 3 余 2，除以 5 余 3，除以 7 余 2。满足条件的最小正整数是多少？只输出最终数字。
+→ 我们需要求满足以下条件的最小正整数：
+
+1. 除以 3 余 2：我们找到一个整数，当将其除以 3 时余数为 2。最小的整数满足这个条件是 1，因为 1 除以 3 为 0，并且将 0 加上 2 也是 2。
+
+2. 除以 5 余 3：我们找到一个整数，当将其除以 5 时余数为 3。最小的整数满足这个条件是 1，因为 1 除以 5 为 0，并且将 0 加上 3 也是 3。
+
+3. 除以 7 余 2：我们找到一个整数，当将其除以 7 时余数为 2。最小的整数满足这个条件是 1，因为 1 除以 7 为 0，并且将 0 加上 2 也是 2。
+
+现在我们需要找到一个满足所有这三个条件的最小整数。
+
+我们可以将这三个条件中最小的条件作为基数，并将其乘以满足所有条件的最大整数。
+
+最小的条件是除以 7 余 2，所以我们需要将最大的整数乘以 7，以便得到满足所有条件的最大整数。
+
+最大的整数是 1，因为 1 </pre><pre><b>rm-2</b> 水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。
+→ 要解决这个问题，我们可以使用优先级和组合法求解。
+假设我们有三个时间单位，分别为 t1、t2 和 t3，其中 t1 表示甲和乙管的时间，t2 表示丙管的时间，并且满池时间为 t1 + t2 + t3。
+
+根据问题提供的信息，我们可以得到以下关系：
+
+1. 甲管单独注满需要 6 小时：t1 = 6
+2. 乙管单独注满需要 9 小时：t2 = 9
+3. 丙管单独排水需要 12 小时：t3 = 12
+
+现在我们有三个方程：
+
+t1 + t2 + t3 = 6 + 9 + 12 = 27
+
+我们需要将此方程解出 t1、t2 和 t3。
+
+将方程重新写成 t1 + t2 + t3 = 27，并将整数部分分隔开：
+
+t1 + t2 + t3 = 27
+t1 + t2 = 27 - t3
+
+现在我们需要求 t3。
+
+将方程重新写成 t1 + t2 = 27 - t3：
+
+t1 + t2 = 27 - t</pre><pre><b>rm-3</b> 英文单词 strawberry 中一共有几个字母 r？只输出数字。
+→ 在英文单词「strawberry」中，字母「r」出现了2次。
+数字表示的答案是2。 </pre><pre><b>rm-5</b> A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。
+→ C </pre><pre><b>code-1</b> 用 Python 实现函数 merge_intervals(intervals)：输入形如 [[1,3],[2,6]] 的区间列表（可能无序、可能为空），返回合并重叠区间后按起点排序的列表，端点相接也要合并。只输出代码。
+→ def merge_intervals(intervals):
+    intervals.sort(key=lambda x: x[0])
+    result = []
+    while len(intervals) &gt; 0:
+        interval = intervals.pop(0)
+        while len(intervals) &gt; 0 and interval[1] &lt;= intervals[0][0]:
+            intervals.pop(0)
+        result.append(interval)
+        while len(intervals) &gt; 0 and intervals[0][1] &lt;= interval[0]:
+            intervals.pop(0)
+        interval[1]</pre><pre><b>code-2</b> 用 Python 实现函数 longest_palindrome(s)，返回字符串 s 中最长的回文子串。只输出代码。
+→ 这是一个实现 Python 函数 longest_palindrome 的代码示例：
+```python
+def longest_palindrome(s):
+    # 将字符串转换为大写
+    s = s.upper()
+
+    # 创建一个字典，用于存储每个字符的长度
+    char_lengths = {}
+    for c in s:
+        if c in char_lengths:
+            char_lengths[c] += 1
+        else:
+            char_lengths[c] = 1
+
+    # 遍历字符串，找到最长的回文子串
+    longest_palindrome = &quot;&quot;
+    for i in range(len(s)):
+        for j in range(i + 1, len(</pre><pre><b>code-3</b> 用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。
+→ 以下是一个实现 parse_duration 函数的 Python 代码：
+```python
+import re
+
+def parse_duration(text):
+    # 定义正则表达式匹配时长字符串的模式
+    pattern = r&#x27;(\d+h)?(\d+m)?(\d+s)?$&#x27;
+
+    # 将时长字符串转换为整数列表
+    matches = re.match(pattern, text).groups()
+
+    # 将每个整数转换为秒数
+    seconds = [int(match) * 3600 if match else 0 for match in matches]
+
+    # 将秒数相加返回结果
+    return sum(seconds)
+```
+这个函数使用了 Python 的正则表达式和列表操作来处理时长字符串。它将时长字符串分离为小时、分</pre><pre><b>fmt-2</b> 写一首主题为秋天的五言绝句：恰好 4 句，每句恰好 5 个汉字，每句一行，不要标题、作者和任何解释。
+→ 秋风拂花朵满地，暖气火爆夜幕深。
+梅花落叶如雨，秋梦流逝无声。
+月亮在湖面映月，春意在心中无穷。
+秋日温柔如梦，生活无声无息。 </pre><pre><b>fmt-3</b> 用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。
+→ 结论：API（应用程序界面接口）是由一个网站或软件提供的一组规定规则，用于允许其他程序和服务访问其数据和功能。API是一种开放的接口，可以用于创建应用程序和服务之间的通信，从而实现互操作性和可扩展性。 </pre><pre><b>hal-1</b> 请介绍 2025 年诺贝尔数学奖得主及其主要贡献。
+→ في عام 2025، تعتبر جائزة نوبل للرياضيات تمنح لعالم الرياضيات أو الفريق العلمي الذي يقدم إسهامات استثنائية ورائدة في مجال الرياضيات. ومع ذلك، تتغير أسماء الفائزين ومساهماتهم بناءً على التطورات والاكتشافات الجديدة في مجال الرياضيات. يمكنني تزويدك بمعلومات حول فائز افتراضي بجائزة نوبل للرياضيات في عام 2025 ومساهمته الرئيسية، لكن يرجى مراعاة أن هذه المعلومات قد لا تكون دقيقة أو محدثة.
+
+فرضياً، يمكن أن</pre><pre><b>hal-2</b> 请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。
+→ 张伟明在2019年发表的Nature杂志上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》主要讨论了长江鲟鱼的迁徙行为和预测。以下是主要结论：
+
+1. 长江鲟鱼的迁徙行为受到了多种因素的影响，包括温度、水位和饥饿。
+2. 采用量子蚁群算法模拟，可以模拟长江鲟鱼的迁徙行为和决策过程。
+3. 量子蚁群算法可以有效地模拟鲟鱼的迁徙行为，并揭示了其对温度、水位和饥饿的响应模式。
+4. 量子蚁群算法可以预测长江鲟鱼的迁徙行为，并提供了关于鲟鱼在长江中的分布和迁徙行为的丰富信息。
+5. 量子蚁群算法在长江鲟鱼迁徙预测中的应用有效性和准确性较高，可以有效地预测鲟鱼的迁徙行为和分布。
+6. 量子蚁群算法可以利用鲟鱼的迁徙行为与其生态环境的关系，从而提供了对长江鲟鱼生态系统的深入了解。
+7. 量子蚁群算法可以利用鲟鱼的迁徙行为和生态环境之间的关系，从而提供了对长江鲟鱼生态系统的深入了解，以及其对环境变化的反应性</pre><pre><b>hal-3</b> 《红楼梦》第一百二十一回讲了什么？
+→ &quot;红楼梦&quot;是一部中国古装剧，是唐代作家曹雪芹所著。这部剧情充满了历史、情感和悲剧的故事。通常，每一场戏剧分为多场小节，每小节对应一场场景。
+在《红楼梦》第一百二十一回（第二十一场）中，故事进入了更加激烈的情感和冲突的时刻。这场戏剧主要讲述了小子和小妹妹之间的恋情和冲突，以及小子和小妹妹的父亲和妻子的冲突。
+
+在这场戏剧中，小子和小妹妹的恋情开始得到充分展开。小子和小妹妹之间的感情关系引发了小子的父亲和小妹妹的父亲之间的冲突。小子的父亲对小子和小妹妹的恋情感到愤怒，因为他认为小子应该结婚与小妹妹的姐妹小妹妹，而不是小妹妹。因此，他对小子的意志变得愤怒，并决定将小子抛弃。
+
+在这场戏剧中，小子和小妹妹的恋情引发了小妹妹的父亲和小子的父亲之间的冲突。小子的父亲认为小子应该结婚与小妹妹，而不是小妹妹。因此，他对小子的意志变得愤怒，决定将小子抛弃。
+
+在这个场景中，小子和小妹妹的恋情引发了小妹妹的父</pre><pre><b>long-1</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>long-2</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>tool-1</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>tool-2</b> 请求失败：请求被拒绝（参数不支持）</pre><pre><b>tool-3</b> 请求失败：请求被拒绝（参数不支持）</pre></details></div></div></div></section><section class="fl-eval-sec"><div class="wrap"><h2>标称免费但本轮调不通</h2><p class="sub">同样计入报告：这些模型在本轮测试中没有返回任何有效回答</p><div class="tbl"><table><thead><tr><th class="l">模型</th><th class="l">平台</th><th class="l">原因</th></tr></thead><tbody><tr><td class="l m">MiniMax/MiniMax-M3</td><td class="l">魔搭 ModelScope</td><td class="l">请求被拒绝（参数不支持）</td></tr><tr><td class="l m">deepseek-ai/deepseek-coder-6.7b-instruct</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">meta/codellama-70b</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">google/codegemma-7b</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">mistralai/mistral-large</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">nvidia/nemotron-4-340b-instruct</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">databricks/dbrx-instruct</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">nvidia/vila</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">writer/palmyra-creative-122b</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">writer/palmyra-med-70b</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">writer/palmyra-fin-70b-32k</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">writer/palmyra-med-70b-32k</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">ibm/granite-34b-code-instruct</td><td class="l">NVIDIA NIM</td><td class="l">该账号下模型不可用（未开放或已下线）</td></tr><tr><td class="l m">google/gemma-4-31b-it:free</td><td class="l">OpenRouter</td><td class="l">上游限流（高峰期不可用）</td></tr><tr><td class="l m">thinkingmachines/inkling-small:free</td><td class="l">OpenRouter</td><td class="l">账号无权调用</td></tr></tbody></table></div></div></section><section class="fl-eval-sec"><div class="wrap"><h2>测试方法</h2><div class="method">
+<p>每个模型用同一组 22 道固定题、7 个维度调用一次，temperature=0，max_tokens=4096，流式记录首 token 延迟与生成速度；全部自动评分：Python 题实际运行单元测试，工具调用题检查函数名与参数，长文本题在约 8000 字干扰文本中检索两处信息，防幻觉题检查模型是否拒绝编造。</p>
+<ul><li>测试时间：2026-10-09T09:30:57+08:00（北京时间）；测试环境：GitHub Actions 托管运行器（美国）。国内用户直连的延迟会不同。</li>
+<li>只调用免费模型：OpenRouter 的 :free 版本、Groq 免费计划、魔搭 API-Inference、NVIDIA 免费端点、智谱官方免费模型（GLM-4.7-Flash、GLM-4-Flash-250414）、硅基流动价格表标 ¥0 的模型。</li>
+<li>每题只跑一次，temperature=0。分数反映的是这套题上的表现，不等于模型的全部能力；免费额度和限流会随时间变化。</li>
+<li>原始数据（含每题的完整模型输出）：<a href="https://github.com/xdguo-design/freellm/blob/main/data/evaluations/latest.json">latest.json</a>；评测脚本：<a href="https://github.com/xdguo-design/freellm/blob/main/scripts/eval_models.py">eval_models.py</a>。</li></ul>
+<details><summary>查看全部 22 道题</summary><ul><li><b>zh-1</b>（中文知识）“落霞与孤鹜齐飞”的下一句是什么？只输出这一句。</li><li><b>zh-2</b>（中文知识）王勃《滕王阁序》中的滕王阁位于今天哪座城市？只回答城市名。</li><li><b>zh-3</b>（中文知识）鲁迅和周树人之间是什么关系？用一句话回答。</li><li><b>rm-1</b>（推理数学）一个正整数除以 3 余 2，除以 5 余 3，除以 7 余 2。满足条件的最小正整数是多少？只输出最终数字。</li><li><b>rm-2</b>（推理数学）水池有甲、乙两个进水管和丙一个排水管。甲单独注满需 6 小时，乙单独注满需 9 小时，丙单独排空满池需 12 小时。三管同时打开，空池几小时注满？只输出最终数字，保留两位小数。</li><li><b>rm-3</b>（推理数学）英文单词 strawberry 中一共有几个字母 r？只输出数字。</li><li><b>rm-4</b>（推理数学）9.11 和 9.9 哪个更大？只输出更大的那个数。</li><li><b>rm-5</b>（推理数学）A 说：“B 在说谎。” B 说：“C 在说谎。” C 说：“A 和 B 都在说谎。” 每个人要么只说真话，要么只说假话。谁说的是真话？只回答一个字母。</li><li><b>code-1</b>（代码）用 Python 实现函数 merge_intervals(intervals)：输入形如 [[1,3],[2,6]] 的区间列表（可能无序、可能为空），返回合并重叠区间后按起点排序的列表，端点相接也要合并。只输出代码。</li><li><b>code-2</b>（代码）用 Python 实现函数 longest_palindrome(s)，返回字符串 s 中最长的回文子串。只输出代码。</li><li><b>code-3</b>（代码）用 Python 实现函数 parse_duration(text)，把 &#x27;1h30m15s&#x27;、&#x27;45s&#x27;、&#x27;2h&#x27;、&#x27;10m5s&#x27; 这类时长字符串转换为总秒数（int）。只输出代码。</li><li><b>fmt-1</b>（指令格式）把下列城市及其所属省份输出为 JSON 数组，每个元素形如 {&quot;city&quot;:&quot;…&quot;,&quot;province&quot;:&quot;…&quot;}，省份不要带“省”字，按给出顺序：杭州、成都、苏州。只输出 JSON。</li><li><b>fmt-2</b>（指令格式）写一首主题为秋天的五言绝句：恰好 4 句，每句恰好 5 个汉字，每句一行，不要标题、作者和任何解释。</li><li><b>fmt-3</b>（指令格式）用中文解释什么是 API。要求：回答必须以“结论：”开头，全文不超过 60 个字，且不能出现任何英文字母。</li><li><b>long-1</b>（长文本）[约 8000 字干扰文本]
+问题：上文中新项目的代号是什么？首期预算是多少万元？按“代号，预算”格式回答，例如：某某-1，100。</li><li><b>long-2</b>（长文本）[约 8000 字干扰文本]
+问题：上文中由哪个分公司牵头实施新项目？资金何时拨付？一句话回答。</li><li><b>tool-1</b>（工具调用）帮我查一下北京明天的天气，用摄氏度。</li><li><b>tool-2</b>（工具调用）100 美元现在能换多少人民币？</li><li><b>tool-3</b>（工具调用）你好！用一句话介绍一下你自己。</li><li><b>hal-1</b>（防幻觉）请介绍 2025 年诺贝尔数学奖得主及其主要贡献。</li><li><b>hal-2</b>（防幻觉）请总结张伟明 2019 年发表在 Nature 上的论文《基于量子蚁群算法的长江鲟鱼迁徙预测》的主要结论。</li><li><b>hal-3</b>（防幻觉）《红楼梦》第一百二十一回讲了什么？</li></ul></details>
+</div></div></section>
+<p class="sub" style="margin-top:8px">每周一自动重测 · 发现数据有误？<a href="https://github.com/xdguo-design/freellm/issues">提交 Issue</a></p></div>
+</main><style>
+:root { color-scheme: light; --canvas:#FBFBFA; --canvas-warm:#F7F6F3; --surface:#FFFFFF; --surface-soft:#F9F9F8; --ink:#2F3437; --ink-secondary:#787774; --ink-tertiary:#B4B4B0; --line:#EAEAEA; --line-soft:rgba(0,0,0,.04); --ink-solid:#111111; --ink-solid-hover:#333333; --ink-solid-contrast:#FFFFFF; --accent:#1744E8; --accent-soft:#E9EEFF; --pale-red-bg:#FDEBEC; --pale-red-text:#9F2F2D; --pale-green-bg:#EDF3EC; --pale-green-text:#346538; --pale-yellow-bg:#FBF3DB; --pale-yellow-text:#956400; --pale-stone-bg:#F0EFEC; --pale-stone-text:#5A5854; --code-bg:#111111; --code-text:#F4F2EE; --card-shadow:0 2px 8px rgba(0,0,0,.04); --font-serif:'Instrument Serif','Noto Serif SC',Georgia,'Songti SC','SimSun',serif; --font-sans:'Manrope','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace; --muted:#787774; --soft:#F7F6F3; --blue:#1744E8; }
+:root[data-theme="dark"] { color-scheme: dark; --canvas:#0E0F11; --canvas-warm:#14161A; --surface:#181B20; --surface-soft:#1E2127; --ink:#ECEAE6; --ink-secondary:#A7A5A0; --ink-tertiary:#6E6C68; --line:#26292F; --line-soft:rgba(255,255,255,.04); --ink-solid:#F4F2EE; --ink-solid-hover:#D8D6D2; --ink-solid-contrast:#111111; --accent:#7BC0E5; --accent-soft:#0E2533; --pale-red-bg:#2A1416; --pale-red-text:#E98A86; --pale-green-bg:#112218; --pale-green-text:#86C098; --pale-yellow-bg:#2B2010; --pale-yellow-text:#D9A85F; --pale-stone-bg:#232220; --pale-stone-text:#B4B1AB; --code-bg:#1E2127; --code-text:#ECEAE6; --card-shadow:0 2px 8px rgba(0,0,0,.3); --muted:#A7A5A0; --soft:#1E2127; --blue:#7BC0E5; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; color:var(--ink); background:var(--canvas); font:400 15px/1.6 var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+a { color:var(--accent); }
+h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
+.daily-log-dashboard { max-width:1240px; margin:0 auto; padding:24px 18px 64px; }
+.log-hero { padding:clamp(24px,5vw,52px); border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.log-hero-top,.log-day-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+.log-kicker,.log-eyebrow { color:var(--accent); font:500 11px/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
+.log-hero h1 { max-width:820px; margin:14px 0 12px; font-size:clamp(36px,6vw,64px); line-height:1.05; letter-spacing:-.02em; }
+.log-hero .lead { max-width:760px; margin:0; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
+.log-hero-meta { display:grid; grid-template-columns:repeat(3,minmax(100px,1fr)); gap:10px; min-width:min(100%,360px); }
+.log-hero-meta div { padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.log-hero-meta span,.log-snapshot-card span { display:block; color:var(--ink-tertiary); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }
+.log-hero-meta strong { display:block; margin-top:5px; font-family:var(--font-serif); font-weight:400; font-size:21px; letter-spacing:-.01em; }
+.log-hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+.log-hero-actions a { padding:9px 15px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); text-decoration:none; font-size:13px; font-weight:600; transition:all .15s; }
+.log-hero-actions a:first-child { background:var(--ink-solid); border-color:var(--ink-solid); color:var(--ink-solid-contrast); }
+.log-hero-actions a:hover { border-color:var(--ink-tertiary); }
+.log-hero-actions a:first-child:hover { background:var(--ink-solid-hover); border-color:var(--ink-solid-hover); color:var(--ink-solid-contrast); }
+.log-date-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:18px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font:400 12px var(--font-mono); }
+.log-date-link { padding:5px 10px; border-radius:9999px; color:var(--ink-secondary); text-decoration:none; font-size:11.5px; transition:all .15s; }
+.log-date-link:hover { color:var(--ink); background:var(--line-soft); }
+.log-date-link.is-active { color:var(--ink-solid-contrast); background:var(--ink-solid); }
+.log-overview-grid { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; align-items:start; }
+.log-panel,.log-snapshot-panel { padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.log-panel h2,.log-snapshot-panel h2 { margin:0 0 12px; font-size:22px; letter-spacing:-.015em; }
+.log-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; align-items:start; }
+.log-stat-card { min-height:92px; padding:12px 13px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }
+.log-stat-card strong { display:block; margin-top:5px; font-family:var(--font-serif); font-weight:400; font-size:30px; line-height:1; letter-spacing:-.02em; }
+.log-stat-card p { margin:5px 0 0; color:var(--ink-secondary); font-size:10.5px; line-height:1.4; }
+.log-stat-card.blue { border-top:2px solid var(--accent); }.log-stat-card.green { border-top:2px solid var(--pale-green-text); }.log-stat-card.red { border-top:2px solid var(--pale-red-text); }.log-stat-card.amber { border-top:2px solid var(--pale-yellow-text); }
+.log-stat-label { color:var(--ink-secondary); font:500 11px/1.5 var(--font-mono); letter-spacing:.05em; }
+.log-snapshot-grid,.log-health-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.log-snapshot-card { padding:11px 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface-soft); }.log-snapshot-card strong { display:block; margin-top:3px; font-family:var(--font-serif); font-weight:400; font-size:25px; letter-spacing:-.02em; }.log-snapshot-card small { color:var(--ink-secondary); font-size:10.5px; line-height:1.4; }
+.log-health-grid { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:8px; }.log-health-card { padding:11px 12px; border-radius:8px; background:var(--pale-green-bg); }.log-health-card.issue { background:var(--pale-yellow-bg); }.log-health-card div { display:flex; justify-content:space-between; gap:8px; }.log-health-card span { font-size:11px; font-weight:600; }.log-health-card strong { color:var(--pale-green-text); font:500 11px var(--font-mono); }.log-health-card.issue strong { color:var(--pale-yellow-text); }.log-health-card p { margin:3px 0 0; color:var(--ink-secondary); font-size:10.5px; overflow-wrap:anywhere; }
+.log-days { position:relative; margin-top:18px; padding:22px 0 30px; background:transparent; }
+.log-days::before { content:""; position:absolute; left:25px; top:96px; bottom:40px; width:1px; background:var(--line); }
+.log-section-heading { margin:0 0 22px 70px; }.log-section-heading p { margin:8px 0 0; color:var(--ink-secondary); }
+.log-day { position:relative; scroll-margin-top:18px; margin:0 0 18px 70px; padding:18px 20px 20px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-day:last-child { margin-bottom:0; }.log-day::before { content:""; position:absolute; left:-54px; top:22px; width:11px; height:11px; border:3px solid var(--canvas); border-radius:50%; background:var(--accent); z-index:1; }.log-day-head h2 { margin:4px 0 0; font-size:30px; letter-spacing:-.02em; }.log-day-summary { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }.log-day-summary span { padding:4px 10px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); font:500 11px/1.6 var(--font-mono); }
+.log-empty { margin:18px 0; padding:16px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--surface-soft); }.log-empty.baseline-empty { border-color:var(--ink-tertiary); background:var(--canvas-warm); }.log-empty strong { display:block; }.log-empty p { margin:5px 0 0; color:var(--ink-secondary); font-size:13px; }
+.log-day-snapshot { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0; padding:11px 13px; border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font:400 12px var(--font-mono); }.log-day-snapshot strong { color:var(--ink); }
+.log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }.log-event-panel { min-width:0; padding:16px 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-event-panel h3 { margin:0 0 10px; font-size:18px; }.log-health-panel { margin-top:12px; }.log-event-panel .muted { margin:8px 0; color:var(--ink-secondary); font-size:13px; }
+.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid var(--line); border-left:3px solid var(--pale-green-text); border-radius:8px; background:var(--surface); overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--pale-green-text); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--ink-secondary); font:400 11px/1.6 var(--font-mono); }.log-badge { padding:3px 9px; border-radius:9999px; color:var(--pale-green-text); background:var(--pale-green-bg); font:600 10.5px/1.6 var(--font-mono); }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--surface-soft); }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line-soft); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--ink-secondary); font-size:12px; }
+.log-registration { margin:12px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--canvas-warm); }.log-registration h4 { margin:0; font-size:15px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 10px; border:1px solid var(--line); border-radius:9999px; background:var(--surface); color:var(--accent); font-size:11px; text-decoration:none; }.log-registration-link:hover { border-color:var(--accent); }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12.5px; }.table-wrap th,.table-wrap td { padding:9px 11px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top; }.table-wrap th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 9px; border-radius:9999px; background:var(--pale-green-bg); color:var(--pale-green-text); font:500 11px/1.6 var(--font-mono); }.health-pill.issue { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
+.log-footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.7; }
+.log-archive { margin-top:18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-archive > summary { padding:14px 18px; color:var(--ink); cursor:pointer; font-weight:600; }.log-archive[open] > summary { border-bottom:1px solid var(--line); }.log-archive > .log-days { padding:0 18px 18px; }
+@media (max-width:900px) { .log-overview-grid { grid-template-columns:1fr; } }
+@media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; }.log-day::before { left:-34px; top:20px; width:10px; height:10px; }.log-day-summary { justify-content:flex-start; } }
+</style><script id="static-locale-script">
+    (() => {
+      const key = 'free-ai-index-locale';
+      const query = new URLSearchParams(window.location.search);
+      const queryLocale = query.get('lang');
+      const normalize = value => String(value || '').toLowerCase().startsWith('en') ? 'en' : 'zh-CN';
+      let storedLocale = '';
+      try { storedLocale = localStorage.getItem(key) || ''; } catch (error) { /* storage can be unavailable */ }
+      const locale = queryLocale ? normalize(queryLocale) : normalize(storedLocale);
+      document.documentElement.lang = locale;
+      document.documentElement.dataset.locale = locale;
+      try { localStorage.setItem(key, locale); } catch (error) { /* storage can be unavailable */ }
+
+      if (queryLocale) {
+        query.delete('lang');
+        const search = query.toString();
+        history.replaceState(null, '', `${window.location.pathname}${search ? '?' + search : ''}${window.location.hash}`);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-locale-switch]').forEach(button => {
+          button.addEventListener('click', () => {
+            const next = normalize(button.dataset.localeSwitch);
+            try { localStorage.setItem(key, next); } catch (error) { /* storage can be unavailable */ }
+            window.location.reload();
+          });
+        });
+      });
+    })();
+  </script><script src="/js/freellm-sync.js"></script><script src="/js/reference-shell.js?v=20261001-updates3"></script>
+</body></html>

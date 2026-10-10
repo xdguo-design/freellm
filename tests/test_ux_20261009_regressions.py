@@ -49,9 +49,13 @@ class AuditRegressions(unittest.TestCase):
     def test_manual_discovery_preserves_scan_provenance(self):
         discovery = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
         self.assertEqual(discovery["date"], "2026-10-09")
-        self.assertFalse(discovery["initialized"]["models"])
-        self.assertFalse(discovery["initialized"]["offers"])
-        self.assertFalse(discovery.get("observed"))
+        # This merged release contains both the actual Oct 9 scan and manually
+        # curated discoveries. Keep them distinct while retaining both sources.
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(discovery["initialized"]["models"], summary["scanRunToday"])
+        self.assertEqual(discovery["initialized"]["offers"], summary["scanRunToday"])
+        self.assertEqual(len(discovery["observed"]["models"]), summary["models"])
+        self.assertEqual(len(discovery["observed"]["offers"]), summary["offers"])
         entries = [event for event in discovery["curatedEvents"] if event["id"] == "phanthycode-free-trial"]
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0]["eventType"], "new")
@@ -97,8 +101,10 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn("editorialCurrent", script)
         self.assertIn("scanCurrent ? scanDate : latest", script)
         self.assertEqual(summary["date"], "2026-10-09")
-        self.assertEqual(summary["snapshotDate"], "2026-10-08")
-        self.assertFalse(summary["scanRunToday"])
+        self.assertEqual(summary["snapshotDate"], "2026-10-09")
+        self.assertTrue(summary["scanRunToday"])
+        latest_log = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["snapshotDate"], latest_log["date"])
 
     def test_model_catalog_is_already_paginated(self):
         html = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
