@@ -24,6 +24,8 @@ from crawler.schema import (
     validate_operation_guides,
 )
 from scripts.generate_access_cards import _operation_hints
+from crawler.change_log import atom_timestamp, listing_date, public_listing_dates
+from crawler.source_tiers import THIRD_PARTY_LABEL_EN, THIRD_PARTY_LABEL_ZH, THIRD_PARTY_SHORT_ZH, is_third_party_relay
 from scripts.featured_models import comparable_benchmark, normalize_capabilities, normalize_region
 from scripts.eval_integration import LEADERBOARD_CSS, card_block as eval_card_block, leaderboard_html as eval_leaderboard_html
 from scripts import eval_pages  # noqa: E402  FreeLLM evaluation blocks for secondary pages
@@ -3395,8 +3397,8 @@ def _catalog_source_label(model: dict) -> str:
     upstream lab and has to be visible as such.
     """
     kind = str(model.get("sourceKind") or "")
-    if kind == "third_party_aggregator" or str(model.get("providerId") or "") == "llm7-io":
-        return _locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official")
+    if is_third_party_relay(model):
+        return _locale_pair(THIRD_PARTY_LABEL_ZH, THIRD_PARTY_LABEL_EN)
     if kind == "official":
         return _locale_pair("厂商官方来源", "Provider official source")
     if kind == "public_api":
@@ -3565,7 +3567,7 @@ def render_providers_page(providers: list[dict], models: list[dict], site_url: s
     for provider in providers:
         provider_models = [model for model in models if model.get("providerId") == provider.get("id")]
         latest = _latest_date(provider_models, "lastSeenAt")
-        source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
+        source_label = (_locale_pair(THIRD_PARTY_LABEL_ZH, THIRD_PARTY_LABEL_EN) if is_third_party_relay(provider, str(provider.get("id") or "")) else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
         cards.append(f'''<article class="provider-card"><div class="eyebrow">{_esc(provider.get("id"))}</div><h2><a href="{_esc(provider_url(provider))}">{_esc(provider.get("name"))}</a></h2><p>{len(provider_models)} {_locale_pair('个模型', 'models')} · {source_label}</p><p class="muted">{_locale_pair('最近同步', 'Last synced')}: {latest}</p>{eval_pages.provider_directory_chip(str(provider.get("id") or ""))}<a class="button" href="{_esc(provider_url(provider))}">{_locale_pair('查看厂家模型', 'View provider models')} →</a></article>''')
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "mainEntity": {"@type": "ItemList", "numberOfItems": len(providers), "itemListElement": [{"@type": "ListItem", "position": index, "name": provider.get("name"), "url": _absolute(site_url, provider_url(provider))} for index, provider in enumerate(providers, start=1)]}}
     return f'''<!doctype html>
@@ -3600,7 +3602,7 @@ def render_provider_page(provider: dict, models: list[dict], offers: list[dict],
     operation_guides_markup = _operation_guides_markup(_operation_guides_for_provider(str(provider.get("id") or ""), operations or []))
     routes_markup = _access_routes_markup(provider_models)
     registration_markup = routes_markup + _registration_requirements_markup((provider_access or {}).get(str(provider.get("id") or "")))
-    source_label = (_locale_pair("第三方聚合 · 非官方", "Third-party aggregator · not official") if str(provider.get("id") or "") == "llm7-io" else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
+    source_label = (_locale_pair(THIRD_PARTY_LABEL_ZH, THIRD_PARTY_LABEL_EN) if is_third_party_relay(provider, str(provider.get("id") or "")) else (_locale_pair("操作指南", "Operation guide") if provider.get("sourceKind") == "operation" else _locale_pair("厂商来源", "Provider source")))
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": title, "description": description, "url": page_url, "inLanguage": ["zh-CN", "en"], "dateModified": _latest_date(provider_models, "lastSeenAt"), "mainEntity": {"@type": "ItemList", "numberOfItems": len(provider_models), "itemListElement": [{"@type": "ListItem", "position": index, "name": f'{name} · {model.get("model")}', "url": (_absolute(site_url, model_aggregate_url(model)) if _safe_slug(model.get("model"), "model") in indexable_model_slugs(models) else (model.get("sourceUrl") or page_url))} for index, model in enumerate(provider_models, start=1)]}}
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "article")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
@@ -4592,13 +4594,21 @@ def _log_detail_card(event: dict, offer_lookup: dict[str, dict] | None = None) -
     badge_labels = {
         "new": ("新增", "New"),
         "new_route": ("新增路径", "New route"),
+        "changed": ("变更/更正", "Changed"),
         "recovered": ("恢复", "Recovered"),
         "offline": ("下线", "Offline"),
         "source_unavailable": ("来源异常", "Source issue"),
     }
     badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(*badge_labels.get(event.get("eventType"), (event.get("eventType"), event.get("eventType"))))
     test_markup = _offer_freellm_test_markup(details)
-    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}{test_markup}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
+    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}{_log_third_party_pill(event)}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}{test_markup}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
+
+
+def _log_third_party_pill(event: dict) -> str:
+    """Visible marker so relay rows never read as a lab's official free tier."""
+    if not is_third_party_relay(event):
+        return ""
+    return f' <span class="log-third-party" title="{_esc(THIRD_PARTY_LABEL_ZH)}">{_locale_pair(THIRD_PARTY_SHORT_ZH, "Third-party")}</span>'
 
 
 def _log_event_table(events: list[dict]) -> str:
@@ -4607,6 +4617,8 @@ def _log_event_table(events: list[dict]) -> str:
         details = event.get("details") or {}
         related_links = details.get("relatedLinks") or []
         reference_markup = ""
+        if not related_links and str(details.get("sourceUrl") or "").startswith("https://"):
+            reference_markup = f'<ul class="log-links"><li><a href="{_esc(details.get("sourceUrl"))}" target="_blank" rel="nofollow noopener">官方来源 ↗</a></li></ul>'
         if related_links:
             references = []
             source_url = str(details.get("sourceUrl") or "").strip()
@@ -4624,7 +4636,7 @@ def _log_event_table(events: list[dict]) -> str:
                     for label, url in references
                 ) + "</ul>"
         rows.append(
-            f'<tr><td><strong>{_esc(event.get("title"))}</strong><small>{_esc(event.get("id"))}</small>{reference_markup}</td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
+            f'<tr><td><strong>{_esc(event.get("title"))}</strong>{_log_third_party_pill(event)}<small>{_esc(event.get("id"))}</small>{reference_markup}</td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
         )
     if not rows:
         return f'<p class="muted">{_locale_pair("当天没有此类记录", "No records for this category.")}</p>'
@@ -4648,6 +4660,9 @@ def _log_event_groups(events: list[dict], curated_events: list[dict] | None = No
         "new": [event for event in all_events if event.get("eventType") in {"new", "new_route"}],
         "recovered": [event for event in all_events if event.get("eventType") == "recovered"],
         "offline": [event for event in all_events if event.get("eventType") == "offline"],
+        # Editorial corrections and terms changes (e.g. a promotion extended,
+        # a free credit now requiring a card) are news too, not "new" entries.
+        "changed": [event for event in all_events if event.get("eventType") == "changed"],
         "unavailable": [
             event
             for event in all_events
@@ -4747,8 +4762,8 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     site_counts = compute_site_counts(offers, models, reference_date_for((sorted_logs[0] if sorted_logs else {}).get("date")))
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
-    event_kinds = ("new", "recovered", "offline", "unavailable")
-    event_labels = {"new": ("新增", "New"), "recovered": ("恢复", "Recovered"), "offline": ("下线", "Offline"), "unavailable": ("来源异常", "Source issue")}
+    event_kinds = ("new", "changed", "recovered", "offline", "unavailable")
+    event_labels = {"new": ("新增", "New"), "changed": ("变更/更正", "Changed"), "recovered": ("恢复", "Recovered"), "offline": ("下线", "Offline"), "unavailable": ("来源异常", "Source issue")}
     current_events = [event for key in event_kinds for event in latest_groups[key]]
     flat_events = []
     for log in sorted_logs:
@@ -4786,10 +4801,7 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     # but the prominent highlights must not imply that a reseller is a
     # manufacturer's official new release.
     def eligible_highlight(event: dict) -> bool:
-        details = event.get("details") or {}
-        provider_id = str(details.get("providerId") or event.get("providerId") or "").lower()
-        source_kind = str(details.get("sourceKind") or event.get("sourceKind") or "").lower()
-        return provider_id != "llm7-io" and source_kind != "third_party_aggregator"
+        return not is_third_party_relay(event)
 
     feature_entries = [
         (latest, key, event)
@@ -4916,6 +4928,7 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
         new_markup = "".join(_log_detail_card(event, offer_lookup) for event in groups["new"])
         event_panels = "".join((
             _log_event_panel("新增详情", "New entries", new_markup, groups["new"]),
+            _log_event_panel("变更 / 更正", "Changes & corrections", _log_event_table(groups["changed"]), groups["changed"]),
             _log_event_panel("恢复", "Recovered", _log_event_table(groups["recovered"]), groups["recovered"]),
             _log_event_panel("下线", "Offline", _log_event_table(groups["offline"]), groups["offline"]),
             _log_event_panel("来源异常", "Source issues", _log_event_table(groups["unavailable"]), groups["unavailable"]),
@@ -4980,7 +4993,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 .log-empty { margin:18px 0; padding:16px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--surface-soft); }.log-empty.baseline-empty { border-color:var(--ink-tertiary); background:var(--canvas-warm); }.log-empty strong { display:block; }.log-empty p { margin:5px 0 0; color:var(--ink-secondary); font-size:13px; }
 .log-day-snapshot { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0; padding:11px 13px; border-radius:8px; background:var(--surface-soft); color:var(--ink-secondary); font:400 12px var(--font-mono); }.log-day-snapshot strong { color:var(--ink); }
 .log-event-grid { display:grid; grid-template-columns:1fr; gap:12px; }.log-event-panel { min-width:0; padding:16px 18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-event-panel h3 { margin:0 0 10px; font-size:18px; }.log-health-panel { margin-top:12px; }.log-event-panel .muted { margin:8px 0; color:var(--ink-secondary); font-size:13px; }
-.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid var(--line); border-left:3px solid var(--pale-green-text); border-radius:8px; background:var(--surface); overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--pale-green-text); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--ink-secondary); font:400 11px/1.6 var(--font-mono); }.log-badge { padding:3px 9px; border-radius:9999px; color:var(--pale-green-text); background:var(--pale-green-bg); font:600 10.5px/1.6 var(--font-mono); }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--surface-soft); }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line-soft); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--ink-secondary); font-size:12px; }
+.log-new-card { display:block; margin:10px 0 0; padding:0; border:1px solid var(--line); border-left:3px solid var(--pale-green-text); border-radius:8px; background:var(--surface); overflow:hidden; }.log-new-card[open] { padding-bottom:16px; }.log-card-summary { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 16px; cursor:pointer; list-style:none; }.log-card-summary::-webkit-details-marker { display:none; }.log-card-summary::after { content:"＋"; margin-left:auto; color:var(--pale-green-text); font-size:18px; line-height:1; }.log-new-card[open] > .log-card-summary::after { content:"－"; }.log-card-summary h3 { margin:0; font-size:17px; }.log-card-summary code,.log-facts dt,small { color:var(--ink-secondary); font:400 11px/1.6 var(--font-mono); }.log-badge { padding:3px 9px; border-radius:9999px; color:var(--pale-green-text); background:var(--pale-green-bg); font:600 10.5px/1.6 var(--font-mono); }.log-third-party { display:inline-block; margin-left:6px; padding:1px 7px; border:1px solid var(--line); border-radius:9999px; color:var(--ink-secondary); background:var(--surface-soft); font:600 10.5px/1.6 var(--font-mono); vertical-align:middle; }.log-card-body { padding:0 16px; }.log-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin:0 0 13px; }.log-facts div { padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--surface-soft); }.log-facts dd { margin:3px 0 0; overflow-wrap:anywhere; font-size:12px; }.log-source { padding-top:10px; border-top:1px solid var(--line-soft); font-size:12px; }.log-links { margin:5px 0; padding-left:17px; overflow-wrap:anywhere; }.log-reason { margin:10px 0 0; color:var(--ink-secondary); font-size:12px; }
 .log-registration { margin:12px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--canvas-warm); }.log-registration h4 { margin:0; font-size:15px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 10px; border:1px solid var(--line); border-radius:9999px; background:var(--surface); color:var(--accent); font-size:11px; text-decoration:none; }.log-registration-link:hover { border-color:var(--accent); }
 .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12.5px; }.table-wrap th,.table-wrap td { padding:9px 11px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top; }.table-wrap th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 9px; border-radius:9999px; background:var(--pale-green-bg); color:var(--pale-green-text); font:500 11px/1.6 var(--font-mono); }.health-pill.issue { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
 .log-footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.7; }
@@ -6214,34 +6227,83 @@ FEED_PATH = "feed.xml"
 FEED_ENTRY_LIMIT = 50
 
 
-def render_feed(offers: list[dict], site_url: str) -> str:
-    """Render an Atom feed of the newest catalog entries for feed readers and aggregators."""
+FEED_NEWS_EVENT_TYPES = {"changed"}
+
+
+def _feed_news_items(daily_logs: list[dict] | None, site_url: str) -> list[dict]:
+    """Curated news from /logs/ (corrections, terms changes) as feed items.
+
+    Listing entries come from offers; a curated ``changed`` event is news that
+    has no offer of its own (e.g. a promotion extended, a free tier narrowed).
+    Both use the same Asia/Shanghai date: the daily-log date it was filed on.
+    """
+    items = []
+    for log in daily_logs or []:
+        day = str(log.get("date") or "")
+        if not listing_date({"date": day}):
+            continue
+        for event in log.get("curatedEvents") or []:
+            if not isinstance(event, dict):
+                continue
+            event_type = event.get("eventType")
+            # Offer listings come from offers.json; curated news, corrections and
+            # non-offer additions (a free model route, a skill) come from the log.
+            if event_type not in FEED_NEWS_EVENT_TYPES and not (
+                event.get("kind") != "offer" and event_type in {"new", "new_route"}
+            ):
+                continue
+            details = event.get("details") or {}
+            anchor = f"/logs/#log-day-{day}"
+            items.append({
+                "date": day,
+                "sortKey": f"{event.get('kind')}/{event.get('id')}",
+                "title": str(event.get("title") or event.get("id") or "更新"),
+                "link": _absolute(site_url, anchor),
+                "id": _absolute(site_url, anchor) + f"/{event_type}/{event.get('id')}",
+                "summary": str(event.get("reason") or details.get("freeSummary") or ""),
+            })
+    return items
+
+
+def render_feed(offers: list[dict], site_url: str, daily_logs: list[dict] | None = None) -> str:
+    """Render an Atom feed of the newest catalog entries and curated news.
+
+    One date convention with /logs/: every entry is dated by its Asia/Shanghai
+    public listing date -- the first daily log that records it, else
+    offer["date"] (crawler.change_log.listing_date) -- stamped +08:00.
+    """
     feed_url = _absolute(site_url, "/" + FEED_PATH)
     site_root = _absolute(site_url, "/")
 
-    def added_on(offer: dict) -> str:
-        return str(offer.get("date") or "")
-
-    ordered = sorted(
-        (offer for offer in offers if offer.get("id")),
-        key=added_on,
-        reverse=True,
-    )[:FEED_ENTRY_LIMIT]
-
-    feed_updated = added_on(ordered[0]) if ordered else "1970-01-01"
-    entries = []
-    for offer in ordered:
+    first_logged = public_listing_dates(daily_logs or [])
+    items = []
+    for offer in offers:
+        day = listing_date(offer, first_logged)
+        if not offer.get("id") or not day:
+            continue
         link = _absolute(site_url, offer_url(offer))
-        title = offer.get("titleZh") or offer.get("title") or offer.get("id")
-        summary = offer.get("freeSummary") or offer.get("why") or ""
-        entry_date = added_on(offer) or feed_updated
+        items.append({
+            "date": day,
+            "sortKey": f"offer/{offer.get('id')}",
+            "title": str(offer.get("titleZh") or offer.get("title") or offer.get("id")),
+            "link": link,
+            "id": link,
+            "summary": str(offer.get("freeSummary") or offer.get("why") or ""),
+        })
+    offer_titles = {item["title"].strip() for item in items}
+    items.extend(item for item in _feed_news_items(daily_logs, site_url) if item["title"].strip() not in offer_titles)
+    ordered = sorted(items, key=lambda item: (item["date"], item["sortKey"]), reverse=True)[:FEED_ENTRY_LIMIT]
+
+    feed_updated = ordered[0]["date"] if ordered else "1970-01-01"
+    entries = []
+    for item in ordered:
         entries.append(
             "  <entry>\n"
-            f"    <title>{_esc(title)}</title>\n"
-            f'    <link href="{_esc(link)}"/>\n'
-            f"    <id>{_esc(link)}</id>\n"
-            f"    <updated>{_esc(entry_date)}T00:00:00Z</updated>\n"
-            f"    <summary>{_esc(summary)}</summary>\n"
+            f"    <title>{_esc(item['title'])}</title>\n"
+            f'    <link href="{_esc(item["link"])}"/>\n'
+            f"    <id>{_esc(item['id'])}</id>\n"
+            f"    <updated>{_esc(atom_timestamp(item['date']))}</updated>\n"
+            f"    <summary>{_esc(item['summary'])}</summary>\n"
             "  </entry>"
         )
 
@@ -6249,12 +6311,12 @@ def render_feed(offers: list[dict], site_url: str) -> str:
     return (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">\n'
-        "  <title>FreeLLM · 免费 AI 资源新增</title>\n"
-        "  <subtitle>逐条记录免费额度、地区限制与官方入口的 AI 资源目录</subtitle>\n"
+        "  <title>FreeLLM · 免费 AI 资源新增与更正</title>\n"
+        "  <subtitle>逐条记录免费额度、地区限制与官方入口的 AI 资源目录；日期均为北京时间（Asia/Shanghai）</subtitle>\n"
         f'  <link href="{_esc(feed_url)}" rel="self"/>\n'
         f'  <link href="{_esc(site_root)}"/>\n'
         f"  <id>{_esc(site_root)}</id>\n"
-        f"  <updated>{_esc(feed_updated)}T00:00:00Z</updated>\n"
+        f"  <updated>{_esc(atom_timestamp(feed_updated))}</updated>\n"
         f"  <author><name>FreeLLM</name><uri>{_esc(site_root)}</uri></author>\n"
         f"{body}\n"
         "</feed>\n"
@@ -6298,7 +6360,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     provider_access, _, model_access = _load_access_context(data_dir)
     files: dict[Path, str] = {
         **render_sitemaps(offers, categories, site_url, model_catalog, providers),
-        Path(FEED_PATH): render_feed(offers, site_url),
+        Path(FEED_PATH): render_feed(offers, site_url, daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json")),
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("skills") / "examples" / "index.html": render_skill_examples_page(skills or [], _load_skill_eval_results(data_dir), site_url),
         Path("skills") / "learn" / "index.html": render_skill_learn_page(skills or [], _load_skill_eval_results(data_dir), site_url),

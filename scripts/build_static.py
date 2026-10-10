@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from crawler.schema import validate_offers
 from scripts.site_counts import compute_site_counts, is_active_offer as _shared_is_active_offer, reference_date_for
+from crawler.source_tiers import THIRD_PARTY_SHORT_ZH, is_third_party_relay
 
 START = '<script type="application/json" id="offer-data">'
 END = "</script>"
@@ -537,7 +538,11 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
             events = [event for field in ("curatedEvents", "events")
                       for event in (latest.get(field) or [])
                       if isinstance(event, dict) and event.get("eventType") in {"new", "new_route"}]
-            entry = events[-1] if events else None
+            # A third-party relay row must not headline the homepage as "today's discovery".
+            official = [event for event in events if not is_third_party_relay(event)]
+            curated = [event for event in official if event in (latest.get("curatedEvents") or [])]
+            # Prefer a human-verified addition; otherwise the newest scanned one.
+            entry = curated[0] if curated else (official[-1] if official else None)
         except (OSError, ValueError, TypeError):
             pass
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
@@ -594,6 +599,8 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
     for event in events:
         details = event.get("details") if isinstance(event.get("details"), dict) else {}
         provider = str(details.get("provider") or event.get("id") or "?")
+        if is_third_party_relay(event):
+            provider = f"{provider}（{THIRD_PARTY_SHORT_ZH}）"
         title = str(event.get("title") or event.get("id") or "?")
         label, state = state_labels.get(str(event.get("eventType")), (str(event.get("eventType")), "state-off"))
         try:

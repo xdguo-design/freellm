@@ -150,3 +150,11 @@ jobs:
           fi
           git commit -m "chore: update daily discovery log"
           git push origin HEAD:dev
+
+      # The 2026-10-03..10-09 scans produced an identical snapshot every day
+      # while sourceHealth said "ok". This gate runs last (after the commit, so
+      # the log that shows the source issue is still published) and turns the
+      # run red when today's scan is missing, unhealthy or unchanged.
+      - name: Scan health gate (fail on stale or missing daily scan)
+        if: always()
+        run: python -m crawler.cli scan-health --dir data/daily-log --as-of "${{ steps.date.outputs.as_of }}"

@@ -2,14 +2,28 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
+
+from .source_tiers import THIRD_PARTY_RELAY_TIER, is_third_party_relay
 
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 OFFLINE_STATES = {"offline", "expired", "retired", "unavailable", "removed"}
 KINDS = ("models", "offers")
+# One date convention for the daily log, the Atom feed and the homepage.
+# Every public date is a calendar date in Asia/Shanghai (Beijing time):
+# * daily-log/<date>.json is the Beijing date the scan or curation ran;
+# * an offer's public listing date is the date of the first daily log that
+#   records it as "new" (curated or scanned) -- see public_listing_dates();
+# * only offers that never appeared in a log fall back to offer["date"].
+# The feed uses exactly this, so /logs/, the homepage badge and feed.xml can
+# never show two different days for the same entry.
+LISTING_TIMEZONE = "Asia/Shanghai"
+LISTING_UTC_OFFSET = "+08:00"
+HEALTHY_STATES = {"ok", "success", "healthy"}
 
 
 def _validate_date(value: str) -> str:
@@ -38,7 +52,42 @@ def _is_offline(record: dict) -> bool:
 
 def _healthy(source_health: dict, kind: str) -> bool:
     status = str((source_health.get(kind) or {}).get("status") or "ok").lower()
-    return status in {"ok", "success", "healthy"}
+    return status in HEALTHY_STATES
+
+
+def listing_date(offer: dict, first_logged: dict[str, str] | None = None) -> str:
+    """The single public listing date of an offer (Asia/Shanghai, YYYY-MM-DD).
+
+    ``first_logged`` comes from public_listing_dates(daily_logs); when the
+    offer appears there, that daily-log date wins over offer["date"].
+    """
+    offer_id = str((offer or {}).get("id") or "")
+    if first_logged and offer_id in first_logged:
+        return first_logged[offer_id]
+    value = str((offer or {}).get("date") or "")
+    return value if DATE_RE.fullmatch(value) else ""
+
+
+def public_listing_dates(logs: list[dict]) -> dict[str, str]:
+    """Offer id -> Beijing date of the first daily log announcing it as new."""
+    first: dict[str, str] = {}
+    for log in logs or []:
+        day = str((log or {}).get("date") or "")
+        if not DATE_RE.fullmatch(day):
+            continue
+        for key in ("curatedEvents", "events"):
+            for event in log.get(key) or []:
+                if not isinstance(event, dict) or event.get("kind") != "offer" or event.get("eventType") != "new":
+                    continue
+                offer_id = str(event.get("id") or "").strip()
+                if offer_id and (offer_id not in first or day < first[offer_id]):
+                    first[offer_id] = day
+    return first
+
+
+def atom_timestamp(day: str) -> str:
+    """Atom timestamp for a Beijing calendar date (midnight, explicit +08:00)."""
+    return f"{_validate_date(day)}T00:00:00{LISTING_UTC_OFFSET}"
 
 
 def _records(value: object) -> list[dict]:
@@ -55,13 +104,16 @@ def _maps(previous_log: dict | None, key: str) -> tuple[dict[str, dict], dict[st
 
 
 def _event(kind: str, event_type: str, record: dict, as_of: str, reason: str = "") -> dict:
+    details = dict(record)
+    if kind == "model" and is_third_party_relay({"kind": kind, "id": _record_id(record), "details": details}):
+        details["sourceTier"] = THIRD_PARTY_RELAY_TIER
     value = {
         "kind": kind,
         "eventType": event_type,
         "id": _record_id(record),
         "title": _record_title(record, kind),
         "asOf": as_of,
-        "details": dict(record),
+        "details": details,
     }
     if reason:
         value["reason"] = reason
@@ -85,12 +137,95 @@ def _snapshot_record(record: dict, kind: str) -> dict:
     return {field: record[field] for field in fields if field in record and record[field] not in (None, "", [])}
 
 
+def snapshot_fingerprint(records: list[dict], kind: str = "model") -> str:
+    """Stable hash of the active snapshot records a log would store."""
+    rows = sorted(
+        (_snapshot_record(item, kind) for item in _records(records) if not _is_offline(item)),
+        key=lambda item: _record_id(item),
+    )
+    return hashlib.sha256(json.dumps(rows, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def _observed_fingerprint(log: dict | None, plural: str = "models") -> str:
+    records = ((log or {}).get("observed") or {}).get(plural) or []
+    return snapshot_fingerprint(records, plural[:-1])
+
+
+def detect_stalled_scan(previous_log: dict | None, current_models: list[dict], as_of: str) -> str:
+    """Return a reason when today's model scan is byte-identical to an earlier day.
+
+    The 2026-10-03..10-09 incident: the scanner kept producing the same 244-row
+    snapshot every day while sourceHealth said ``ok``. A real scan of ~240
+    upstream catalogues changes daily, so an identical snapshot on a later
+    date means the scan did not really run (cache, stale artefact or copy).
+    Returns "" when the scan looks fresh or there is nothing to compare.
+    """
+    as_of = _validate_date(as_of)
+    if not previous_log or not _records(current_models):
+        return ""
+    previous_date = str(previous_log.get("date") or "")
+    if not DATE_RE.fullmatch(previous_date) or previous_date >= as_of:
+        return ""
+    if not _records((previous_log.get("observed") or {}).get("models")):
+        return ""
+    if snapshot_fingerprint(current_models, "model") != _observed_fingerprint(previous_log, "models"):
+        return ""
+    return f"model scan snapshot identical to {previous_date}; scan likely stalled (cached or not re-run)"
+
+
+def scan_health_errors(today_log: dict | None, previous_log: dict | None, as_of: str) -> list[str]:
+    """Health gate for the daily scan: fail loudly instead of reporting ``ok``.
+
+    Errors when today's log is missing / not dated today, when any source is
+    not healthy, or when the observed model snapshot did not change since the
+    previous log (the scan was not really updated).
+    """
+    as_of = _validate_date(as_of)
+    if not today_log:
+        return [f"daily log for {as_of} is missing: today's scan did not run or was not committed"]
+    errors: list[str] = []
+    if str(today_log.get("date") or "") != as_of:
+        errors.append(f"latest daily log is dated {today_log.get('date')!r}, expected {as_of}")
+    for plural, item in sorted((today_log.get("sourceHealth") or {}).items()):
+        status = str((item or {}).get("status") or "unknown").lower()
+        if status not in HEALTHY_STATES:
+            reason = (item or {}).get("reason") or "no reason given"
+            errors.append(f"{plural} source health is {status!r}: {reason}")
+    if previous_log and _records((today_log.get("observed") or {}).get("models")):
+        previous_date = str(previous_log.get("date") or "")
+        if previous_date < as_of and _observed_fingerprint(today_log) == _observed_fingerprint(previous_log):
+            message = f"observed model snapshot is identical to {previous_date}; the scan result was not updated"
+            if not any(message in error for error in errors):
+                errors.append(message)
+    return errors
+
+
+def announced_offer_ids(logs: list[dict]) -> set[str]:
+    """Offer ids already announced as curated new events in any of ``logs``."""
+    found: set[str] = set()
+    for log in logs:
+        found.update(_curated_offer_ids(log))
+    return found
+
+
+def _curated_offer_ids(log: dict | None) -> dict[str, dict]:
+    """Offers a human already announced in that log as new (curatedEvents)."""
+    found: dict[str, dict] = {}
+    for event in (log or {}).get("curatedEvents") or []:
+        if isinstance(event, dict) and event.get("kind") == "offer" and event.get("eventType") in {"new", "new_route", "recovered"}:
+            event_id = str(event.get("id") or "").strip()
+            if event_id:
+                found[event_id] = dict(event.get("details") or {"id": event_id})
+    return found
+
+
 def build_daily_log(
     previous_log: dict | None,
     current_models: list[dict],
     current_offers: list[dict],
     as_of: str,
     source_health: dict | None = None,
+    announced_offer_ids: set[str] | None = None,
 ) -> dict:
     """Compare successful snapshots and return one deterministic daily log.
 
@@ -114,6 +249,8 @@ def build_daily_log(
         )
         current_all = {item_id: item for item_id, item in ((_record_id(item), item) for item in current_by_kind[plural]) if item_id}
         source_ok = _healthy(health, plural)
+        # An offer announced yesterday as a curated "new" event is not new again today.
+        announced = (set(_curated_offer_ids(previous_log)) | set(announced_offer_ids or ())) if plural == "offers" else set()
 
         if not source_ok:
             status = dict(health.get(plural) or {"status": "failed"})
@@ -124,7 +261,7 @@ def build_daily_log(
 
             if previous_initialized:
                 for item_id, item in sorted(active_now.items()):
-                    if item_id in previous_active:
+                    if item_id in previous_active or item_id in announced:
                         continue
                     if item_id in previous_known:
                         events.append(_event(kind, "recovered", item, as_of, "previously absent or offline and observed again"))

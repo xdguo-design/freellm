@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .diff import build_review_queue, compare_offers
 from .community_signals import merge_signals, validate_signals
-from .change_log import build_daily_log, merge_daily_log, write_daily_log
+from .change_log import announced_offer_ids, build_daily_log, detect_stalled_scan, merge_daily_log, scan_health_errors, write_daily_log
 from .discovery import build_candidates, build_coverage_report, merge_candidates, scan_provider_sources, validate_provider_registry
 from .fetch import fetch_public_page, fetch_public_text_resource
 from .freellm_net_discovery import discover_freellm_net_sources, validate_source_registry
@@ -95,6 +95,9 @@ def main(argv: list[str] | None = None) -> int:
     log.add_argument("--offers-status", default="ok")
     log.add_argument("--offers-reason", default="")
     log.add_argument("--merge", action="store_true", help="fold the rebuilt log into an existing same-day log instead of overwriting it")
+    scan_health = commands.add_parser("scan-health", help="fail when today's daily scan is missing, unhealthy or identical to the previous day")
+    scan_health.add_argument("--dir", default="data/daily-log")
+    scan_health.add_argument("--as-of", required=True, help="Asia/Shanghai date of today's scan (YYYY-MM-DD)")
 
     args = parser.parse_args(argv)
     if args.command == "validate":
@@ -256,18 +259,44 @@ def main(argv: list[str] | None = None) -> int:
             "models": {"status": args.models_status, "reason": args.models_reason},
             "offers": {"status": args.offers_status, "reason": args.offers_reason},
         }
+        current_models = _read_json(args.models)
+        if str(args.models_status).lower() == "ok":
+            stalled = detect_stalled_scan(previous, current_models, args.as_of)
+            if stalled:
+                # Never report "ok" for a snapshot that did not change: mark the
+                # source stale so the log shows a source issue instead.
+                source_health["models"] = {"status": "stale", "reason": stalled}
+                print(f"::warning::{stalled}")
+        log_dir = Path(args.out).parent
+        announced = announced_offer_ids([
+            _read_json(path) for path in sorted(log_dir.glob("*.json")) if path.stem <= args.as_of
+        ]) if log_dir.is_dir() else set()
         result = build_daily_log(
             previous,
-            _read_json(args.models),
+            current_models,
             _read_json(args.offers),
             args.as_of,
             source_health,
+            announced,
         )
         if args.merge and Path(args.out).is_file():
             result = merge_daily_log(_read_json(args.out), result)
         write_daily_log(args.out, result)
         counts = {event_type: sum(event.get("eventType") == event_type for event in result["events"]) for event_type in ("new", "new_route", "recovered", "offline", "source_unavailable")}
         print(f"daily log: {args.as_of} ({counts['new']} new, {counts['new_route']} new routes, {counts['recovered']} recovered, {counts['offline']} offline)")
+        return 0
+    if args.command == "scan-health":
+        log_dir = Path(args.dir)
+        today_path = log_dir / f"{args.as_of}.json"
+        today = _read_json(today_path) if today_path.is_file() else None
+        earlier = sorted(path for path in log_dir.glob("*.json") if path.stem < args.as_of)
+        previous = _read_json(earlier[-1]) if earlier else None
+        errors = scan_health_errors(today, previous, args.as_of)
+        if errors:
+            for error in errors:
+                print(f"::error::scan health: {error}")
+            return 1
+        print(f"scan health: {args.as_of} ok (snapshot changed since {previous.get('date') if previous else 'n/a'})")
         return 0
     return 2
 
