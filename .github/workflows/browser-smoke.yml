@@ -66,6 +66,7 @@ jobs:
           node --check js/homepage.js
           node --check js/site-navigation.js
           node --check js/scan-trust.js
+          node --check js/site-search.js
 
       - name: Verify UX remediation regression contracts
         run: python -m unittest tests.test_ux_20261009_regressions -v

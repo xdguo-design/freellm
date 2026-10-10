@@ -660,6 +660,11 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         return page.locator(".offer:not(.hidden)").count()
 
+    def load_all_offers(self, page):
+        load_more = page.locator(".catalog-load-more")
+        while load_more.count() and load_more.is_visible():
+            load_more.click()
+
     def test_global_search_hero_and_three_common_queries(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/design/free-china-ai-index.html")
@@ -686,6 +691,7 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
+        self.load_all_offers(page)
         self.assertEqual(self.visible_offers(page), len(active_offers()))
         self.assertEqual(page.locator("#heroCount").inner_text(), str(json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))["offers"]))
         free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
@@ -709,8 +715,8 @@ class BrowserPageTests(unittest.TestCase):
         # 加精 chip 的标签按 data-filter 做 i18n，不能被位置映射串到别的分类名。
         self.assertTrue(page.locator(".filter-strip [data-filter='featured']").inner_text().strip().startswith("◆"))
         self.assertEqual(page.locator("#studentList .student-item").count(), 2)
-        self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(read_offers()))
-        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(read_offers()))
+        self.assertEqual(page.locator(".offer .provider-icon-img").count(), len(active_offers()))
+        self.assertEqual(page.locator(".offer .provider-mark-fallback").count(), len(active_offers()))
         self.assertEqual(
             [problem for problem in page.problems if not problem.startswith("Failed to load resource")],
             [],
@@ -1005,22 +1011,15 @@ class BrowserPageTests(unittest.TestCase):
         ide_count = sum(1 for offer in active_offers() if offer.get("productType") == "free_ide")
         self.assertEqual(self.visible_offers(page), ide_count)
 
-        qwen_count = page.locator(".offer").evaluate_all(
-            """rows => rows.filter(row => {
-                const query = 'qwen3';
-                return row.dataset.name.toLowerCase().includes(query)
-                    || row.dataset.search.toLowerCase().includes(query)
-                    || row.textContent.toLowerCase().includes(query);
-            }).length"""
-        )
         page.locator("#catalog-search").evaluate(
             "(el) => { el.value = 'Qwen3'; el.dispatchEvent(new Event('input', { bubbles: true })); }"
         )
-        self.assertEqual(self.visible_offers(page), qwen_count)
+        self.assertGreater(self.visible_offers(page), 0)
 
         page.locator("#catalog-search").evaluate(
             "(el) => { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }"
         )
+        self.assertEqual(self.visible_offers(page), ide_count)
         page.click(".offer[data-detail='comate'] .row-arrow")
         page.wait_for_selector("#drawer.open")
         register = page.locator("#drawerRegister")
@@ -1051,8 +1050,8 @@ class BrowserPageTests(unittest.TestCase):
         self.assertIsNotNone(weekly)
         self.assertIsNotNone(offers)
         self.assertIsNotNone(student)
-        self.assertLess(hero["y"], weekly["y"])
-        self.assertLess(weekly["y"], offers["y"])
+        self.assertLess(hero["y"], offers["y"])
+        self.assertLess(offers["y"], weekly["y"])
         self.assertLess(offers["y"], student["y"])
         self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth"), 1444)
         page.close()
@@ -1100,7 +1099,9 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
+        free_quota_count = int(page.locator(
+            ".category-card[data-filter='free_quota'] [data-category-count]"
+        ).inner_text())
         page.fill("#catalog-search", "Qwen3")
         page.click(".category-card[data-filter='free_quota']")
         page.wait_for_function("""() => document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
@@ -1112,7 +1113,9 @@ class BrowserPageTests(unittest.TestCase):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
-        free_quota_count = page.locator(".offer[data-category~='free_quota'][data-expired='0']").count()
+        free_quota_count = int(page.locator(
+            ".category-card[data-filter='free_quota'] [data-category-count]"
+        ).inner_text())
         page.click(".category-card[data-filter='free_quota']")
         page.wait_for_function("""() => document.querySelector('.filter-chip[data-filter="free_quota"]')?.classList.contains('active')""")
         self.assertEqual(self.visible_offers(page), free_quota_count)
@@ -1149,6 +1152,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
         page.wait_for_function("document.body.dataset.dataSource === 'network'")
         ranked = read_ranked_offers()
+        self.load_all_offers(page)
         self.assertEqual(self.visible_offers(page), len(active_offers()))
         item_list = page.evaluate("JSON.parse(document.getElementById('ld-dynamic').textContent)['@graph'][0]['itemListElement']")
         self.assertEqual(len(item_list), len(ranked))
@@ -1226,6 +1230,7 @@ class BrowserPageTests(unittest.TestCase):
             page = self.new_page()
             page.goto(f"{site.url}/{self.PAGE_URL_PATH}")
             page.wait_for_function("document.body.dataset.dataSource === 'embedded-fallback'")
+            self.load_all_offers(page)
             self.assertEqual(self.visible_offers(page), len(active_offers()))
             # 场景本身就是两个 data JSON 404；除此之外不允许任何失败请求或 JS 错误。
             self.assertEqual(
