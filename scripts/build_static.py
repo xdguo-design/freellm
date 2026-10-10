@@ -679,7 +679,28 @@ def sync_home_asset_fingerprints(manifest: dict[str, tuple[Path, Path, str]], ch
 
 
 def normalize_home_section_priority(html: str) -> str:
-    """Keep fresh/verified discovery first and place student benefits right after offers."""
+    """Keep the full catalog before scan details and student benefits."""
+    weekly_match = re.search(
+        r'<section\b[^>]*\bid=["\']weekly-changes["\'][^>]*>.*?</section>\s*',
+        html,
+        flags=re.I | re.S,
+    )
+    offers_match = re.search(
+        r'<section\b[^>]*\bid=["\']catalog-offers["\'][^>]*>.*?</section>\s*',
+        html,
+        flags=re.I | re.S,
+    )
+    if weekly_match and offers_match and weekly_match.start() < offers_match.start():
+        weekly = weekly_match.group(0)
+        html = html[:weekly_match.start()] + html[weekly_match.end():]
+        offers_match = re.search(
+            r'<section\b[^>]*\bid=["\']catalog-offers["\'][^>]*>.*?</section>\s*',
+            html,
+            flags=re.I | re.S,
+        )
+        if offers_match:
+            html = html[:offers_match.end()] + weekly + html[offers_match.end():]
+
     student_match = re.search(
         r'<section\b[^>]*\bid=["\']student-offers["\'][^>]*>.*?</section>\s*',
         html,

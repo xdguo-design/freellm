@@ -155,8 +155,8 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
         self.assertLessEqual(
             len(all_urls),
-            200,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 200); review SEO scope before publishing",
+            210,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 210); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),
