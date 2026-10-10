@@ -54,8 +54,14 @@ class AuditRegressions(unittest.TestCase):
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
         self.assertEqual(discovery["initialized"]["models"], summary["scanRunToday"])
         self.assertEqual(discovery["initialized"]["offers"], summary["scanRunToday"])
-        self.assertEqual(len(discovery["observed"]["models"]), summary["models"])
-        self.assertEqual(len(discovery["observed"]["offers"]), summary["offers"])
+        # The Oct 9 record is historical; compare its observations to that
+        # dated snapshot instead of today's rolling summary.
+        self.assertEqual(len(discovery["observed"]["models"]), 244)
+        self.assertEqual(len(discovery["observed"]["offers"]), 70)
+        latest_scan = json.loads((ROOT / "data/daily-log/2026-10-10.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["snapshotDate"], latest_scan["date"])
+        self.assertEqual(len(latest_scan["observed"]["models"]), summary["models"])
+        self.assertEqual(len(latest_scan["observed"]["offers"]), summary["offers"])
         entries = [event for event in discovery["curatedEvents"] if event["id"] == "phanthycode-free-trial"]
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0]["eventType"], "new")
@@ -88,7 +94,8 @@ class AuditRegressions(unittest.TestCase):
         self.assertLess(html.index('id="catalog-offers"'), html.index('id="weekly-changes"'))
         self.assertLess(html.index('id="weekly-changes"'), html.index('id="expiring-soon"'))
         self.assertIn('id="home-latest-discovery"', html)
-        self.assertIn('href="/logs/#log-day-2026-10-09"', html)
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        self.assertIn(f'href="/logs/#log-day-{summary["snapshotDate"]}"', html)
         generator = (ROOT / "scripts/build_static.py").read_text(encoding="utf-8")
         self.assertIn("def update_home_latest_discovery(", generator)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", generator)
@@ -100,10 +107,10 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn("scan.scanRunToday === true", script)
         self.assertIn("editorialCurrent", script)
         self.assertIn("scanCurrent ? scanDate : latest", script)
-        self.assertEqual(summary["date"], "2026-10-09")
-        self.assertEqual(summary["snapshotDate"], "2026-10-09")
+        self.assertEqual(summary["date"], "2026-10-10")
+        self.assertEqual(summary["snapshotDate"], "2026-10-10")
         self.assertTrue(summary["scanRunToday"])
-        latest_log = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
+        latest_log = json.loads((ROOT / "data/daily-log/2026-10-10.json").read_text(encoding="utf-8"))
         self.assertEqual(summary["snapshotDate"], latest_log["date"])
 
     def test_model_catalog_is_already_paginated(self):
