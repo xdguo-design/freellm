@@ -141,7 +141,8 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertLess(discovery, categories)
         self.assertLess(categories, offers)
         self.assertLess(offers, week)
-        self.assertIn('href="/logs/#log-day-2026-10-09"', page)
+        latest_log = sorted((ROOT / "data" / "daily-log").glob("*.json"))[-1].stem
+        self.assertIn(f'href="/logs/#log-day-{latest_log}"', page)
         css = THEME.read_text(encoding="utf-8")
         self.assertIn("margin-top:auto !important", css)
 

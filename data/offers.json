@@ -129,7 +129,7 @@
     "freeSummary": "Qwen3.8-Flash 限时 0× Credits 已延长：原定 9 月 30 日结束，10 月 1 日起继续免费，结束时间将在官方活动页提前公告；另可每日在桌面端手动领取 100 通用 Credits（30 天有效）。",
     "validitySummary": "Qwen3.8-Flash 免费期已延长 · 结束日待官方公告 · 每日奖励 30 天有效",
     "accessSummary": "International",
-    "checkedSummary": "2026-10-08 / official Qoder pricing + event pages",
+    "checkedSummary": "2026-10-10 / Qoder 官方活动页：Qwen3.8-Flash 免费期已延长，结束时间将提前公告",
     "title": "Qoder · Experience plan",
     "why": "Qoder 官方活动页说明：自 2026-09-18 10:00（UTC+8）起，Qoder 国际版个人用户（含免费体验版和 Credits 余额为 0 的账号）调用 Qwen3.8-Flash 不消耗 Credits；原定 9 月 30 日结束的免费期已延长，10 月 1 日起继续免费，结束时间将提前在该页公告。个人用户还可每天在 Qoder 桌面端手动领取 100 通用 Credits，每笔自领取起 30 天有效。团队版与企业版不适用。",
     "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
@@ -168,7 +168,7 @@
     "evidence": "2026-10-08 复核 Qoder 官方活动页：Qwen3.8-Flash 计费系数由 0.1× 降至 0.0×，原定 9 月 30 日结束，现已延长，10 月 1 日起继续免费，结束时间将提前公告；每日领取 100 Credits 活动结束时间“另行公告”，每笔奖励 30 天有效，仅限桌面端领取。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "Qwen3.8-Flash 免费期已延长但仍是限时活动，结束日以官方活动页公告为准；仅限国际版个人用户，团队版/企业版不适用。每日 100 Credits 需手动领取，错过不补。",
     "endpointCheck": {
@@ -233,7 +233,7 @@
     "freeSummary": "免费版每月 500 积分，所有功能均可免费使用",
     "validitySummary": "Ongoing / subject to limits",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official pricing",
+    "checkedSummary": "2026-10-10 / TRAE 官方定价页：Free ¥0，每月 500 积分",
     "title": "TraeCode CN · Personal plan",
     "why": "The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.",
     "mechanism": "500 credits / month; all features usable free; 2 concurrent cloud tasks",
@@ -266,7 +266,7 @@
     "evidence": "Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.",
     "status": "verified",
     "confidence": "medium",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "2026-09-17 复验：官方定价页显示免费 Free 计划为 ¥0，含「每月 500 积分 / 所有功能均可免费使用 / 支持 2 个云端任务同时执行」。此前的 'mode-dependent quota' 描述与官方页面不符，已更正。",
     "key": true,
@@ -1226,7 +1226,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-10-09 / official OpenCode Zen docs",
+    "checkedSummary": "2026-10-10 / OpenCode Zen 官方定价表：13 个免费模型与 10-09 一致",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -1264,7 +1264,7 @@
     "evidence": "2026-10-09 复核 OpenCode Zen 官方文档（页面更新于 2026-10-08）：定价表将 Big Pickle、Space Bunny Free、LongCat 2.5 Preview Free、Step 5 Preview Free、Exo Free、MiMo-V2.6-Flash Free、MiMo-V2.5 Free、Ling 3.1 Flash Free、Ling 3.0 Flash Fin Free、Nemotron 3 Ultra Free、Nemotron 3.5 Lightning Free、Muse Spark 1.3 Contributor Free、Jev 1.13 Free 共 13 个模型的输入/输出标为 Free，并逐一注明为限时免费；10-08 版本中的 Fledge Alpha Free 已不在端点表与定价表中，新增阶跃星辰 Step 5 Preview Free（step-5-preview-free）。免费期间部分模型的请求数据可能用于改进模型。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-09",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 2026-10-09 复核：Fledge Alpha Free 已从官方免费列表移除；新增 Step 5 Preview Free（阶跃星辰官方宣布的一周免费活动之一）。",
     "endpointCheck": {
@@ -4384,7 +4384,7 @@
   },
   {
     "date": "2026-09-08",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4437,7 +4437,7 @@
     "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
     "validitySummary": "Limited-time offer; model availability and free status can change",
     "accessSummary": "StepFun Open Platform account and API key",
-    "checkedSummary": "2026-10-08 / official StepFun pricing page",
+    "checkedSummary": "2026-10-10 / 阶跃星辰官方价格页：4 个 stepaudio-3 预览模型仍为限时免费",
     "title": "StepFun · Limited-time free API models",
     "titleZh": "StepFun · 限时免费 API 模型",
     "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
@@ -7015,7 +7015,7 @@
     "freeSummary": "MiMo 官方定价与模型页当前将 V2.5-TTS、VoiceDesign、VoiceClone 三款 API 标为限时免费。",
     "validitySummary": "限时免费 · 官方未公布统一结束日期",
     "accessSummary": "MiMo account + API Key · China / overseas pricing pages both mark TTS free",
-    "checkedSummary": "2026-09-29 / official Xiaomi MiMo release + pricing + model pages",
+    "checkedSummary": "2026-10-10 / Xiaomi MiMo 官方价格页：TTS 系列仍限时免费",
     "title": "Xiaomi MiMo · V2.5 TTS 三款 API 当前限时免费",
     "why": "Xiaomi MiMo 官方 V2.5-TTS 发布公告、按量定价页和模型详情页都明确写明三款 TTS API 当前“限时免费”。官方模型页同时给出 OpenAI 兼容接入、Base URL、RPM 100 与 TPM 10M。免费没有公布固定结束时间，因此必须按限时活动处理，不能标为永久免费。",
     "mechanism": "Three MiMo V2.5 TTS APIs are temporarily priced at zero on the official Open Platform",
@@ -7081,7 +7081,7 @@
     "evidence": "Xiaomi MiMo 官方 V2.5-TTS 发布页明确三款 TTS 模型均在开放平台限时免费；官方按量定价页在国内与海外价格表中均将三款 TTS 标为“限时免费”；官方模型页给出 API Key、OpenAI 兼容 Base URL、RPM 100 和 TPM 10M。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "VoiceClone 涉及声音权利与授权风险，使用前需确认自己拥有相应声音素材的合法授权。免费结束时间未公开，必须在调用前重新核官方价格页。",
     "freeModels": [
@@ -7498,7 +7498,7 @@
     "freeSummary": "火山方舟官方安心体验模式：新用户可使用平台赠送的 500,000 Tokens 免费推理额度；额度接近/耗尽后服务自动暂停，避免继续产生模型推理费用。",
     "validitySummary": "新用户体验额度；安心体验模式关闭后无法重新开启",
     "accessSummary": "Ark account + API Key · Beijing v3 OpenAI-compatible API",
-    "checkedSummary": "2026-09-29 / official Ark safe-experience + API docs",
+    "checkedSummary": "2026-10-10 / 火山方舟安心体验模式文档：50w token 免费额度",
     "title": "火山方舟 · 新用户 50 万 Tokens + 安心体验模式",
     "why": "火山方舟官方安心体验模式文档明确：平台为新用户提供 50 万 Tokens 免费推理额度，安心体验模式开启时只消耗这部分免费额度，达到边界后服务自动暂停；关闭安心体验模式后无法重新开启。免费额度仅抵扣模型推理 Token，不抵扣联网插件、知识库等附加费用。",
     "mechanism": "New-user platform gift of 500,000 inference tokens with optional Safe Experience Mode that pauses model service at the free-quota boundary",
@@ -7563,7 +7563,7 @@
     "evidence": "火山方舟官方安心体验文档（最近更新 2026-08-13）明确平台赠送 50 万 Token 免费推理额度，并在安心体验模式下于额度耗尽时自动暂停服务；API Key 文档与 v3 文档确认 Bearer API Key 和 https://ark.cn-beijing.volces.com/api/v3/chat/completions OpenAI 兼容调用。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "安心体验只保护模型推理 Token 费用，联网插件、知识库等附加能力仍可能产生费用。安心体验模式关闭后无法重新开启。实际可用模型以控制台开通管理页为准。",
     "freeLLMTest": {
@@ -7645,7 +7645,7 @@
     "freeSummary": "国际站：首次开通 Model Studio 新加坡地域后，平台自动发放各模型新人免费额度；仅新加坡地域享该免费额度，其他国际地域无此新人额度。",
     "validitySummary": "Singapore region · 90 days",
     "accessSummary": "Alibaba Cloud International account + required account information + Singapore API Key",
-    "checkedSummary": "2026-09-29 / official Alibaba Cloud International free-quota docs",
+    "checkedSummary": "2026-10-10 / 阿里云国际站新人免费额度文档：新加坡地域，90 天有效",
     "title": "Alibaba Cloud Model Studio 国际站 · 新加坡新人免费额度",
     "why": "Alibaba Cloud 国际站官方文档 2026-09-22 更新明确：首次开通 Model Studio 新加坡地域时，平台自动发放各模型新人免费额度；仅新加坡地域模型享免费额度；自 9 月 8 日起新开通用户额度有效期为 90 天。9 月 15 日起需先完善账户信息，且 Free Quota Only 默认关闭，若不手动开启，额度耗尽后会自动转 PAYG。",
     "mechanism": "Singapore-region new-user per-model free quota on Alibaba Cloud International",
@@ -7700,7 +7700,7 @@
     "evidence": "Alibaba Cloud International official docs updated Sep 2026 state that only Singapore-region models receive the new-user free quota, valid for 90 days for newly activated users; Free Quota Only is disabled by default and can be enabled to prevent automatic PAYG after exhaustion.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "Do not merge this policy with the China-site Beijing quota. They are different editions/accounts/regions. Exact per-model quota amounts must be read from the international pricing/console.",
     "freeLLMTest": {
@@ -9027,7 +9027,7 @@
     "id": "ant-ling-3-1-flash-free",
     "order": 70,
     "date": "2026-10-02",
-    "lastVerifiedAt": "2026-10-02",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9081,7 +9081,7 @@
       "262K 上下文",
       "API"
     ],
-    "checkedSummary": "2026-10-02 / Vercel AI Gateway official sources",
+    "checkedSummary": "2026-10-10 / Vercel AI Gateway + OpenRouter official model pages",
     "why": "FreeLLM 评估：这条 Vercel 路由适合在免费窗口内验证中文摘要、代码修复和多步工具任务。560B 总参数、25B 激活参数说明了模型规模，但不能单独证明速度或输出质量；当前可核对的服务上下文是 262K，不能把 1M 写成这条免费 API 的能力。免费入口有明确截止日期，适合试用和原型验证，不建议直接依赖在生产服务中。",
     "whyEn": "FreeLLM assessment: this Vercel route is worth testing for Chinese summarization, code repair, and multi-step tool tasks during the free window. Its 560B total and 25B active parameter counts describe model scale, not speed or output quality. The verifiable context for this route is 262K, so do not treat 1M as the free API limit. The dated promotion suits evaluation and prototypes, not production dependency.",
     "mechanism": "Vercel AI Gateway lists a promotional free route for Ling-3.1-flash. Use the distinct -free model ID to avoid the standard model ID that may become billable after the promotion.",
@@ -9107,12 +9107,17 @@
       [
         "蚂蚁百灵模型文档",
         "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+      ],
+      [
+        "OpenRouter 免费模型页",
+        "https://openrouter.ai/inclusionai/ling-3.1-flash:free"
       ]
     ],
     "sourceUrls": [
       "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway",
       "https://vercel.com/ai-gateway/models/ling-3.1-flash-free",
-      "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+      "https://developer.ant-ling.com/zh-CN/docs/models/ling/",
+      "https://openrouter.ai/inclusionai/ling-3.1-flash:free"
     ],
     "usageGuide": {
       "summary": "在 Vercel AI Gateway 创建 API Key，使用限时免费模型 ID 调用 Ling-3.1-flash。",
@@ -9145,7 +9150,7 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
+    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。 2026-10-10 复核：Vercel 模型页仍写明 Promotional pricing ends on October 13, 2026；OpenRouter 也上线 inclusionai/ling-3.1-flash:free（页面标 Free、262K 上下文，免费端点受 OpenRouter 免费限流约束）。已写入 expires_at=2026-10-13，到期后自动下架。",
     "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
     "freeLLMTest": {
       "testLevel": "preflight",
@@ -9176,13 +9181,14 @@
       ]
     },
     "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
-    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API",
+    "expires_at": "2026-10-13"
   },
   {
     "id": "vercel-laya-free",
     "order": 71,
     "date": "2026-10-03",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9236,7 +9242,7 @@
       "结构化判定",
       "8K 上下文"
     ],
-    "checkedSummary": "2026-10-08 / Vercel AI Gateway model page + changelog",
+    "checkedSummary": "2026-10-10 / Vercel AI Gateway model page + changelog",
     "why": "Laya 是面向分类、路由、守护规则与评分的结构化判定模型，可对一次输入回答多个选择题、评分题或是非题。它不生成自由文本，适合验证工作流中的判断步骤。Vercel AI Gateway 目前将其标为免费，促销截至 2026-10-31；未公开的请求额度不作推测。",
     "whyEn": "Laya is a structured evaluation model for classification, routing, guardrails, and scoring. It answers choice, score, or boolean questions about shared state rather than generating free-form text. Vercel AI Gateway lists it as free through 2026-10-31; unpublished request limits are not inferred.",
     "mechanism": "Vercel AI Gateway lists the Laya free route with promotional pricing through 2026-10-31. Call it with the AI SDK experimental_evaluate interface; standard chat-completion clients are not the documented integration.",
@@ -9286,7 +9292,7 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。",
+    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。 2026-10-10 复核：Vercel 官方 changelog 仍写明 free through October 31, 2026；已写入 expires_at=2026-10-31，到期后自动下架。",
     "evidence": "Vercel 官方发布说明（2026-10-01）：Laya 通过 Boundless 在 AI Gateway 免费 1 个月至 2026-10-31，convaiinnovations/laya 与 convaiinnovations/laya-free 两个 ID 在此期间均免费；-free ID 在促销结束后停止服务，标准 ID 开始计费。官方模型页显示 8K 上下文、价格 Free，并注明 Promotional pricing ends on October 31, 2026。",
     "titleZh": "Laya 结构化判定模型 · 限时免费 API",
     "freeLLMTest": {
@@ -9312,7 +9318,8 @@
           "url": "https://vercel.com/changelog/laya-decision-model-now-available-on-ai-gateway-free-through-october-31"
         }
       ]
-    }
+    },
+    "expires_at": "2026-10-31"
   },
   {
     "id": "unisound-u2-flash-free-month",
@@ -9360,7 +9367,7 @@
     "freeSummary": "云知声官方价格页：U2 Flash 活动时间 2026-09-30 至 2026-10-31，输入、缓存命中、输出价格均为 0 元/百万 Tokens；官网横幅写明“限时免费无限量调用”。",
     "validitySummary": "限时免费至 2026-10-31",
     "accessSummary": "云知声 MaaS 账号 + API Key",
-    "checkedSummary": "2026-10-08 / official Unisound MaaS pricing + API docs",
+    "checkedSummary": "2026-10-10 / 云知声官方价格页：U2 Flash 限时免费 2026.09.30-2026.10.31",
     "title": "云知声 U2 Flash · 国庆免费月 API",
     "why": "云知声 MaaS 官方价格页在 U2 Flash 下标注“限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”，官网顶部横幅写明“限时免费无限量调用”。U2 Flash 面向 Agent 与 Coding 场景，官方文档给出 OpenAI 兼容 base_url https://maas-api.unisound.com/v1 与模型 ID u2-flash。官方未公布活动期内的具体速率限制，FreeLLM 不作推测。",
     "mechanism": "Limited-time ¥0 pricing for U2 Flash input, cached input and output on the official Unisound MaaS API",
@@ -9421,7 +9428,7 @@
     "evidence": "2026-10-08 读取云知声 MaaS 官方价格页：U2 Flash “限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”；官网横幅“U2 Flash 全新上线！限时免费无限量调用（2026.09.30-2026.10.31）”；官方平台介绍给出 base_url https://maas-api.unisound.com/v1 与 model=u2-flash 示例。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "限时活动，10 月 31 日后按官方价格表计费；未实测调用，未验证速率限制。U2 Decision 在价格页也标为限时免费，但未标注结束日期，本条不纳入。",
     "freeLLMTest": {
@@ -9582,7 +9589,7 @@
     "id": "stepfun-step-5-preview-free-week",
     "order": 74,
     "date": "2026-10-09",
-    "lastVerifiedAt": "2026-10-09",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9636,7 +9643,7 @@
       "1M 上下文",
       "AGENT / CODING"
     ],
-    "checkedSummary": "2026-10-09 / OpenCode Zen official docs + StepFun official announcement",
+    "checkedSummary": "2026-10-10 / OpenCode Zen 定价表仍列 Step 5 Preview Free",
     "why": "FreeLLM 评估：Step 5 Preview 是阶跃星辰 2026-10 发布的旗舰 Agent / 编程模型，官方称 600B 总参数、27B 激活、1M 上下文并支持图像输入，计划 10 月 15 日开放权重。一周免费窗口适合用来对比它在代码修复和长任务上的表现；窗口很短且无精确截止时间，不建议在生产中依赖免费 ID。",
     "whyEn": "FreeLLM assessment: Step 5 Preview is StepFun's flagship agentic/coding model (600B total, 27B active, 1M context, vision input per StepFun; open weights planned for Oct 15). The one-week free window is good for side-by-side evaluation, not for production dependency.",
     "mechanism": "StepFun announced a one-week free access window starting 2026-10-08 across OpenCode, Cline, Nous Research, Kilo Code and others. On OpenCode Zen the free variant uses the distinct model ID step-5-preview-free; the standard OpenRouter route is paid ($1.00 / $2.70 per 1M tokens).",

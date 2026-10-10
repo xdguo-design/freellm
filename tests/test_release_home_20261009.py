@@ -8,21 +8,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _latest_log():
+    path = sorted((ROOT / "data/daily-log").glob("*.json"))[-1]
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 class HomeReleaseGate(unittest.TestCase):
     def test_today_keeps_scanned_data_and_both_editorials(self):
         log = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
-        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
         ids = [e["id"] for e in log["curatedEvents"]]
         self.assertIn("stepfun-step-5-preview-free-week", ids)
         self.assertIn("phanthycode-free-trial", ids)
         self.assertEqual(ids.count("phanthycode-free-trial"), 1)
-        self.assertEqual(summary["date"], "2026-10-09")
-        self.assertEqual(summary["snapshotDate"], "2026-10-09")
+        # scan-summary always mirrors the newest daily log (daily updates move it forward).
+        latest = _latest_log()
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        events = (latest.get("events") or []) + (latest.get("curatedEvents") or [])
+        self.assertEqual(summary["date"], latest["date"])
+        self.assertEqual(summary["snapshotDate"], latest["date"])
         self.assertTrue(summary["scanRunToday"])
-        self.assertEqual(summary["models"], len(log["observed"]["models"]))
-        self.assertEqual(summary["offers"], len(log["observed"]["offers"]))
-        self.assertEqual(summary["newCount"], 2)
-        self.assertEqual(summary["sourceChecks"], 2)
+        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
+        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
+        self.assertEqual(summary["newCount"], sum(e.get("eventType") in {"new", "new_route"} for e in events))
+        self.assertEqual(summary["sourceChecks"], len(events))
 
     def test_homepage_uses_sourced_discovery_and_incremental_cards(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
@@ -31,11 +39,11 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertNotIn('class="prototype-home"', homepage)
         self.assertNotIn("今日新增资源12", homepage)
         self.assertNotIn("较上周 +35%", homepage)
-        self.assertIn("PhanthyCode", homepage)
-        self.assertIn('href="/logs/#log-day-2026-10-09"', homepage)
+        latest = _latest_log()
+        self.assertIn(f'href="/logs/#log-day-{latest["date"]}"', homepage)
         self.assertIn("def update_home_latest_discovery(", build)
         self.assertIn("def update_home_scan_snapshot(", build)
-        self.assertIn('<b id="heroCount">70</b>', homepage)
+        self.assertIn(f'<b id="heroCount">{len(latest["observed"]["offers"])}</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
         self.assertIn("entry = events[-1] if events else None", build)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)

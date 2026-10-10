@@ -85,3 +85,16 @@ def test_model_directory_exposes_catalog_freshness_status():
     ))
     assert "Stale" in row
     assert "freshness-stale" in row
+
+
+def test_sync_collapses_moved_directory_url_for_same_model_id():
+    # 2026-10-10: ollama.com moved library URLs to tagged paths; the same model id
+    # must not survive twice (once stale, once new) or SEO page builds fail.
+    previous = [_record("ollama", "m-0813", "https://directory.example/m", lastSeenAt="2026-09-19", score=80)]
+    discovered = [_record("ollama", "m-0813", "https://directory.example/m:0813")]
+
+    synced = sync_model_catalog(discovered, previous, "2026-10-10")
+
+    assert [item["id"] for item in synced] == ["ollama/m-0813"]
+    assert synced[0]["freshnessStatus"] == "current"
+    assert synced[0]["sourceUrl"] == "https://directory.example/m:0813"
