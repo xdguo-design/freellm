@@ -131,11 +131,14 @@ html body .fl-sync-star.fl-sync-star-inline { position: static !important; displ
 
 /* ---------- /evaluations/ ---------- */
 html body[data-fl-nav="models"][data-fl-section="logs"] .log-hero {
+  /* Grow with the text instead of clipping the lead; keep overflow hidden so the
+     decorative pseudo-elements stay inside the card (they caused page overflow). */
   height: auto !important;
   min-height: 0 !important;
-  overflow: visible !important;
+  max-height: none !important;
 }
 html body[data-fl-nav="models"][data-fl-section="logs"] .log-hero h1 {
+  max-width: min(46vw, 560px) !important;
   word-break: keep-all;
   overflow-wrap: normal;
   text-wrap: balance;
@@ -145,12 +148,14 @@ html body[data-fl-nav="models"][data-fl-section="logs"] .log-hero .lead {
   max-height: none !important;
   overflow: visible !important;
   -webkit-line-clamp: unset !important;
+  max-width: min(46vw, 560px) !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
 }
 html body[data-fl-nav="models"][data-fl-section="logs"] > .fl-site-rail::after {
   background-image: none !important;
 }
 html body[data-fl-nav="models"] .fl-eval {
-  max-width: none !important;
   min-width: 0;
 }
 html body[data-fl-nav="models"] .daily-log-dashboard,
