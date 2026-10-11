@@ -364,10 +364,14 @@ def test_offer_page_marks_hands_on_verified_entries_with_test_evidence():
     assert "国内+国际双入口" in atria_page
     assert "2026-09-15" in atria_page
 
-    plain_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    # glm is now an expired record, and expired pages drop every verification
+    # chip (see tests/test_expired_lifecycle.py); use an active site-only entry.
+    plain_page = render_offer_page(by_id["trae"], offers, "https://freellm.top")
     assert "实测好用" not in plain_page
     assert "接口已验证" not in plain_page or "官网已验证" in plain_page
     assert "官网已验证" in plain_page
+    expired_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    assert "官网已验证" not in expired_page and "实测通过" not in expired_page
 
     untested_page = render_offer_page(by_id["tinyfish-search-fetch-free"], offers, "https://freellm.top")
     assert "接口已验证" not in untested_page
