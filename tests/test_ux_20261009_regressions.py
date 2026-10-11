@@ -60,8 +60,8 @@ class AuditRegressions(unittest.TestCase):
         self.assertEqual(len(discovery["observed"]["offers"]), 70)
         latest_scan = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["snapshotDate"], latest_scan["date"])
-        self.assertEqual(len(latest_scan["observed"]["models"]), summary["models"])
-        self.assertEqual(len(latest_scan["observed"]["offers"]), summary["offers"])
+        self.assertEqual(len(latest_scan["observed"]["models"]), summary["scannedModels"])
+        self.assertEqual(len(latest_scan["observed"]["offers"]), summary["scannedOffers"])
         entries = [event for event in discovery["curatedEvents"] if event["id"] == "phanthycode-free-trial"]
         self.assertEqual(len(entries), 1)
         self.assertEqual(entries[0]["eventType"], "new")

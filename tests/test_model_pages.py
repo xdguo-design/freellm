@@ -273,8 +273,9 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     assert "精选模型与 AI Agent" in overview
     assert "精选模型" in overview
     assert "AI Agent 精选" in overview
-    assert f"完整目录含 {len(models)}+ 个模型" in overview
-    assert f"当前收录 {len(curated)} 个模型" in overview
+    assert f"完整目录共 {len(models)} 条模型记录" in overview
+    assert f"达到实测标准的团队精选 {len(curated)} 个" in overview
+    assert f"{len(models)}+" not in overview
     assert provider_pages
     assert 'href="/models/all/"' in overview
     assert 'href="/providers/"' in overview
