@@ -297,6 +297,104 @@
         "notes": "事实：官方支持网页端以自然语言创建项目。宣传/未实测：每天 100 亿 Token。UNKNOWN：每账号额度、模型倍率、刷新时间、可用地区、是否需付费、部署/运行收费。禁止将其标成 100 亿免费 API Token、无限免费或收益保证。VibeX 不支持导入已有项目的限制来自文章描述，尚需官方文档复核。"
       },
       "reason": "not present in the previous successful snapshot"
+    },
+    {
+      "kind": "offer",
+      "eventType": "new",
+      "id": "joycode",
+      "title": "京东云 JoyCode 限时免费 AI 编程工具",
+      "asOf": "2026-10-11",
+      "details": {
+        "id": "joycode",
+        "order": 80,
+        "date": "2026-10-11",
+        "name": "京东云 JoyCode AI 编程工具",
+        "providerMark": "JD",
+        "provider": "京东云 JoyCode",
+        "providerMeta": "JD Cloud · China",
+        "model": "团队版限时免费",
+        "modelMeta": "AI 编程 IDE / Agent",
+        "type": [
+          "ide",
+          "free"
+        ],
+        "productType": "free_ide",
+        "capabilities": [
+          "free_ide"
+        ],
+        "usageGuide": {
+          "summary": "注册或登录 JoyCode 账号并安装客户端，在编辑器中选择模型开始使用。",
+          "prerequisites": [
+            "JoyCode 账号",
+            "支持的桌面环境（以官网安装包为准）"
+          ],
+          "steps": [
+            "打开 JoyCode 官方网站，下载并安装客户端",
+            "注册或登录账号，按向导完成初始化",
+            "进入模型选择界面；如需固定模型，关闭 Auto 后手动选择",
+            "在账号或用量页面核对积分余额、有效期与当前计划"
+          ],
+          "examples": {
+            "action": "打开 https://joycode.jd.com/ 并下载 JoyCode 客户端"
+          },
+          "docsUrl": "https://joycode.jd.com/pricing/"
+        },
+        "kicker": "FREE AI CODING",
+        "badges": [
+          "限时免费",
+          "10,000 积分/席位"
+        ],
+        "freeSummary": "官方定价页显示团队版限时免费，10,000 积分/席位；积分刷新周期和具体消耗规则待核验。",
+        "validitySummary": "限时免费；活动结束时间待官方确认",
+        "accessSummary": "注册并登录 JoyCode；具体地区、账号及团队资格待核验",
+        "checkedSummary": "2026-10-11 / 京东 JoyCode 官方定价页",
+        "title": "京东云 JoyCode · 限时免费 AI 编程工具",
+        "titleZh": "京东云 JoyCode · 限时免费 AI 编程工具",
+        "titleEn": "JD Cloud JoyCode · Free AI Coding Tool",
+        "why": "JoyCode 是京东云推出的 AI 编程工具，提供 IDE 内的智能编码与智能体辅助开发能力。官方定价页显示团队版限时免费，席位额度为 10,000 积分；这属于编程工具权益，不是可直接调用的通用免费 API。",
+        "mechanism": "团队版限时免费；每个席位显示 10,000 积分，积分消耗与刷新周期需登录后核实",
+        "validity": "限时活动，结束日期未确认",
+        "access": "需要注册/登录 JoyCode 账号；账号、地区和企业团队资格等具体限制待核验",
+        "command": "打开 JoyCode 官网下载客户端，登录后选择模型并在账户页面查看积分额度。",
+        "register": "https://joycode.jd.com/",
+        "registerLabel": "访问 JoyCode 官网",
+        "links": [
+          [
+            "JoyCode 官方网站",
+            "https://joycode.jd.com/"
+          ],
+          [
+            "JoyCode 官方定价页",
+            "https://joycode.jd.com/pricing/"
+          ]
+        ],
+        "originCountry": "China",
+        "availability": "中国地区优先；具体地区及账号限制待核验",
+        "freeMechanism": "limited_time_free",
+        "pricingModel": "limited_time_free",
+        "freePolicy": {
+          "type": "limited_time_free",
+          "amount": 10000,
+          "unit": "credits per seat",
+          "period": "unknown"
+        },
+        "quota": "10,000 积分/席位（官方定价页显示）；刷新周期、有效期和各模型消耗规则待核验",
+        "renewal": "活动结束时间与续费机制待核验",
+        "phoneRequired": "unknown",
+        "cardRequired": "unknown",
+        "commercialUse": "check provider terms",
+        "sourceUrls": [
+          "https://joycode.jd.com/",
+          "https://joycode.jd.com/pricing/"
+        ],
+        "evidence": "京东 JoyCode 官方定价页显示团队版限时免费，10,000 积分/席位。积分刷新周期、有效期、适用账户范围和具体消耗规则尚待进一步核对。",
+        "status": "verified",
+        "confidence": "medium",
+        "lastVerifiedAt": "2026-10-11",
+        "checkedBy": "manual",
+        "notes": "按官方定价页记录团队版限时免费与10,000积分/席位；不把积分写成API token，也不推断为永久免费。用户文章中的联网搜索、数学推理与小游戏生成表现属于个人体验，FreeLLM 尚未独立复测。"
+      },
+      "reason": "新增官方限时免费 AI 编程工具记录；10,000 积分/席位，刷新周期和适用条件仍待核验。"
     }
   ],
   "observed": {
