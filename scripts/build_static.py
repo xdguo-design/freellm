@@ -24,7 +24,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-discovery"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261011-s5"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -43,7 +43,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-disc
   <div class="prototype-rail-footer"><strong>FreeLLM</strong><span>让优质的 AI 资源<br>触手可及。</span><small>© 2026 FreeLLM</small></div>
 </aside>
 <div class="fl-site-ribbon">
-  <span class="fl-site-ribbon-title">FREE AI INDEX / 免费 AI 资源导航</span>
+  <span class="fl-site-ribbon-title">FreeLLM / 免费 AI 资源导航</span>
   <span class="fl-site-ribbon-actions"><a href="/favorites/">我的收藏</a><a href="/skills/">技能实测 ↗</a></span>
 </div>'''
 

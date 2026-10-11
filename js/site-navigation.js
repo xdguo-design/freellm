@@ -17,6 +17,7 @@
   var navigationInProgress = false;
   var requestController = null;
   var sharedNavigationCss = '/css/primary-menu.css?v=20261009-ux-p0';
+  var s5VisualFixesCss = '/css/s5-visual-fixes.css?v=20261011-s5';
   var updateIndicatorReady = false;
   var lastUpdateDate = '';
   var readUpdateKey = 'freellm-last-read-update';
@@ -119,6 +120,15 @@
       document.head.appendChild(link);
     }
     document.head.appendChild(link);
+    // S5 visual-audit fixes must win over every page stylesheet, so keep them last.
+    var fixes = document.head.querySelector('link[data-fl-s5-visual-fixes]');
+    if (!fixes) {
+      fixes = document.createElement('link');
+      fixes.rel = 'stylesheet';
+      fixes.href = s5VisualFixesCss;
+      fixes.dataset.flS5VisualFixes = '1';
+    }
+    document.head.appendChild(fixes);
     return link;
   }
 
