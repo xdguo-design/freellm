@@ -222,21 +222,14 @@ if (section === 'home' || section === 'models') {
     if (!page || !grid || !data || page.dataset.skillsShowcaseReady === '1') return;
     page.dataset.skillsShowcaseReady = '1';
     const skills = JSON.parse(data.textContent || '[]');
-    const showcase = {
-      'anthropics-docx': { title:'论文写作助手', description:'从选题到初稿，助你高效完成学术论文写作。', category:'写作', tags:['写作','学术','研究'], icon:'paper', owner:'FreeLLM 官方', usage:'12.4k', rating:'4.9', reviews:'(1.2k 评价)' },
-      'vercel-labs-react-best-practices': { title:'代码生成专家', description:'根据需求快速生成高质量、可维护的代码。', category:'编程', tags:['编程','开发','自动化'], icon:'code', owner:'Open Source', usage:'9.8k', rating:'4.8', reviews:'(980 评价)' },
-      'anthropics-xlsx': { title:'数据分析助手', description:'帮你清洗、分析和可视化数据，洞察业务趋势。', category:'研究', tags:['数据分析','可视化','Excel'], icon:'data', owner:'DataGuru', usage:'8.6k', rating:'4.8', reviews:'(860 评价)' },
-      'anthropics-pdf': { title:'长文档总结', description:'快速提炼长文档要点，生成结构化总结。', category:'办公', tags:['阅读','总结','生产力'], icon:'summary', owner:'MindFlow', usage:'7.1k', rating:'4.7', reviews:'(710 评价)' },
-      'anthropics-algorithmic-art': { title:'图像生成大师', description:'将创意转化为惊艳的图像作品，支持多种风格。', category:'图像', tags:['图像','设计','创意'], icon:'image', owner:'VisionLab', usage:'15.2k', rating:'4.9', reviews:'(1.5k 评价)' },
-      'obra-executing-plans': { title:'自动化工作流设计', description:'设计和搭建自动化工作流，串联多个工具提高效率。', category:'自动化', tags:['自动化','工作流','效率'], icon:'automation', owner:'FlowMaster', usage:'6.8k', rating:'4.8', reviews:'(680 评价)' },
-      'composiohq-twitter-algorithm-optimizer': { title:'内容营销专家', description:'生成高质量的营销文案、社媒内容与传播策略。', category:'运营', tags:['营销','运营','写作'], icon:'marketing', owner:'GrowthAI', usage:'5.9k', rating:'4.7', reviews:'(590 评价)' },
-      'hugohe3-ppt-master': { title:'PPT 智能生成', description:'一键生成精美专业的演示文稿，让表达更出色。', category:'办公', tags:['演示','汇报','办公'], icon:'ppt', owner:'SlidePro', usage:'6.1k', rating:'4.8', reviews:'(610 评价)' }
-    };
+    // Only real repo data: no invented titles, owners, usage, ratings or review counts.
+    const formatStars = value => typeof value === 'number' && value >= 0 ? (value >= 1000 ? `${(value / 1000).toFixed(1)}k`.replace('.0k', 'k') : String(value)) : '';
+    const repoSlug = skill => { const url = String(skill.githubUrl || ''); const parts = url.includes('github.com/') ? url.split('github.com/')[1].split('/').filter(Boolean) : []; return parts.length >= 2 ? `${parts[0]}/${parts[1]}` : ''; };
+    const verdictOf = skill => { const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {}; return ['通过','部分通过','未通过','调用失败'].includes(run.bestVerdict) ? run.bestVerdict : ''; };
     const showcaseOrder = ['anthropics-docx','vercel-labs-react-best-practices','anthropics-xlsx','anthropics-pdf','anthropics-algorithmic-art','obra-executing-plans','composiohq-twitter-algorithm-optimizer','hugohe3-ppt-master'];
     const showcaseRank = new Map(showcaseOrder.map((id,index)=>[id,index]));
     skills.sort((a,b)=>(showcaseRank.get(a.id) ?? showcaseOrder.length)-(showcaseRank.get(b.id) ?? showcaseOrder.length));
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-    const counts = Object.fromEntries(skills.map(item => [item.id, showcase[item.id] || null]));
     const workspace = page.querySelector('.skills-workspace');
     const detailPanel = document.getElementById('selected-skill-panel');
     let selectedId = skills[0]?.id || '';
@@ -253,8 +246,7 @@ if (section === 'home' || section === 'models') {
         operations:['ecommerce','seo-content'], automation:['development','planning-office']
       };
       let list = skills.filter(skill => {
-        const sample = counts[skill.id];
-        const values = [skill.name, skill.description, skill.description_zh, skill.githubUrl, ...(skill.compatibility || []), sample?.title, sample?.description, ...(sample?.tags || [])].join(' ').toLowerCase();
+        const values = [skill.name, skill.description, skill.description_zh, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase();
         const categoryMatch = category === 'all' || (groups[category] || []).includes(skill.category);
         return categoryMatch && (status === 'all' || status === skill.status) && (!query || values.includes(query));
       });
@@ -264,36 +256,40 @@ if (section === 'home' || section === 'models') {
       return list;
     };
     const card = skill => {
-      const item = counts[skill.id];
-      const title = item?.title || skill.name;
-      const description = item?.description || skill.description_zh || skill.description || '';
-      const tags = item?.tags || (skill.compatibility || []).slice(0,3);
-      const usage = item?.usage || '—';
-      const rating = item?.rating || (skill.freeLLMTest?.score ? Number(skill.freeLLMTest.score).toFixed(1) : '4.8');
-      const owner = item?.owner || (skill.repoStats?.owner || 'Open Source');
-      const icon = item?.icon || 'default';
+      const title = skill.name;
+      const description = skill.description_zh || skill.description || '';
+      const tags = (skill.compatibility || []).slice(0,3);
+      const stars = formatStars(skill.repoStats?.stars);
+      const verdict = verdictOf(skill);
+      const owner = repoSlug(skill) || '来源仓库待补充';
+      const icon = 'default';
       const active = panelOpen && selectedId === skill.id;
-      return `<article class="skill-card showcase-card${active?' is-selected':''}" data-skill-id="${copy(skill.id)}" data-category="${copy(skill.category)}" data-status="${copy(skill.status)}" tabindex="0" aria-label="${copy(title)}：${copy(description)}"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="${icon}" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="${copy(skill.id)}" aria-label="选择 ${copy(title)}">${active?'✓':'＋'}</button></div><h3>${copy(title)}</h3><p>${copy(description)}</p><div class="skill-card-tags">${tags.map(tag=>`<span>${copy(tag)}</span>`).join('')}</div><div class="skill-card-metrics"><span>♨ ${copy(usage)}</span><span>★ ${copy(rating)}</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-${icon}" aria-hidden="true"></span><span>${copy(owner)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${copy(skill.id)}" aria-label="查看 ${copy(title)} 详情">⋮</button></div></article>`;
+      return `<article class="skill-card showcase-card${active?' is-selected':''}" data-skill-id="${copy(skill.id)}" data-category="${copy(skill.category)}" data-status="${copy(skill.status)}" tabindex="0" aria-label="${copy(title)}：${copy(description)}"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="${icon}" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="${copy(skill.id)}" aria-label="选择 ${copy(title)}">${active?'✓':'＋'}</button></div><h3>${copy(title)}</h3><p>${copy(description)}</p><div class="skill-card-tags">${tags.map(tag=>`<span>${copy(tag)}</span>`).join('')}</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ ${copy(stars || '—')}</span><span>${verdict ? `实测 ${copy(verdict)}` : '未实测'}</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-${icon}" aria-hidden="true"></span><span>${copy(owner)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${copy(skill.id)}" aria-label="查看 ${copy(title)} 详情">⋮</button></div></article>`;
     };
+    const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     const updatePanel = skill => {
       if (!skill) return;
-      const item = counts[skill.id] || {};
-      const title = item.title || skill.name;
-      const description = item.description || skill.description_zh || skill.description || '';
+      const title = skill.name;
+      const description = skill.description_zh || skill.description || '';
       selectedId = skill.id;
-      document.getElementById('detail-title').textContent = title;
-      document.getElementById('detail-summary').textContent = description;
-      document.getElementById('detail-description').textContent = skill.description_zh || description;
-      document.getElementById('detail-icon').dataset.icon = item.icon || 'default';
-      document.getElementById('detail-rating').textContent = item.rating || (skill.freeLLMTest?.score ? Number(skill.freeLLMTest.score).toFixed(1) : '4.8');
-      document.getElementById('detail-reviews').textContent = item.reviews || `(${(skill.reviews || []).length} 条评价)`;
-      document.getElementById('detail-usage').textContent = item.usage || '—';
-      const tags = item.tags || (skill.compatibility || []).slice(0,6);
-      document.getElementById('detail-tags').innerHTML = tags.map(tag=>`<span>${copy(tag)}</span>`).join('');
+      setText('detail-title', title);
+      setText('detail-summary', description);
+      setText('detail-description', description);
+      const owner = document.getElementById('detail-owner');
+      if (owner) owner.innerHTML = `<i aria-hidden="true">◆</i> ${copy(repoSlug(skill) || '来源仓库待补充')}`;
+      document.getElementById('detail-icon').dataset.icon = 'default';
+      setText('detail-rating', verdictOf(skill) || '未实测');
+      setText('detail-reviews', '免费模型任务实测');
+      setText('detail-usage', formatStars(skill.repoStats?.stars) || '—');
+      setText('detail-usage-label', '仓库 Star（整个仓库）');
+      const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {};
+      setText('detail-test-task', run.task || '暂无免费模型任务实测记录。');
+      const tags = (skill.compatibility || []).slice(0,6);
+      document.getElementById('detail-tags').innerHTML = tags.length ? tags.map(tag=>`<span>${copy(tag)}</span>`).join('') : '<span>未标注</span>';
       document.getElementById('detail-use').dataset.skillId = skill.id;
       document.getElementById('detail-favorite').dataset.skillId = skill.id;
       const models = (skill.compatibility || []).slice(0,3);
-      if (models.length) document.getElementById('detail-models').innerHTML = models.map((model,index)=>`<span>${['◉','▣','✦'][index%3]} ${copy(model)}</span>`).join('');
+      document.getElementById('detail-models').innerHTML = models.length ? models.map(model=>`<span>${copy(model)}</span>`).join('') : '<span>未标注</span>';
       grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', panelOpen && node.dataset.skillId === skill.id));
       grid.querySelectorAll('.skill-card-select').forEach(node => { const active=panelOpen && node.dataset.selectSkill===skill.id; node.textContent=active?'✓':'＋'; node.setAttribute('aria-pressed',String(active)); });
     };

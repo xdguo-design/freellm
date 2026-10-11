@@ -434,6 +434,8 @@ body[data-reference-style="v1"][data-fl-section="skills"] .skill-dialog{border-r
 @media(max-width:900px){
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-workspace{grid-template-columns:1fr!important}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+  body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat>div{min-width:0}
+  body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat small{white-space:normal;overflow-wrap:anywhere}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-detail-panel{position:relative;top:auto;min-height:0;margin:0 0 20px}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-hero::after{left:38%;opacity:.52}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-hero h1>strong{white-space:normal}
@@ -458,6 +460,10 @@ body[data-reference-style="v1"][data-fl-section="skills"] .skill-dialog{border-r
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-main-column{width:100%}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 8px;justify-items:start;max-width:none;margin-bottom:22px}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat-icon{width:36px;height:36px}
+  /* S1 2026-10-11: trust-count labels are longer (sourced counts); let them wrap instead of overflowing 390px viewports */
+  body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat{width:100%;align-items:flex-start}
+  body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat>div{min-width:0}
+  body[data-reference-style="v1"][data-fl-section="skills"] .skills-stat small{white-space:normal;overflow-wrap:anywhere}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-collection-grid{grid-template-columns:1fr 1fr!important}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-directory-controls{display:block}
   body[data-reference-style="v1"][data-fl-section="skills"] .skills-view-controls{margin-top:9px;justify-content:flex-end}
