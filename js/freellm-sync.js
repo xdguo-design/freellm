@@ -61,7 +61,8 @@
 
     function sectionFor(path) {
       if (path === '/' || path.indexOf('/design/free-china-ai-index') === 0) return 'home';
-      if (path.indexOf('/workflow') === 0 || path.indexOf('/skills/lab') === 0) return 'workflow';
+      if (path.indexOf('/evaluations') === 0) return 'evaluations';
+      if (path.indexOf('/workflow') === 0 || path.indexOf('/skills/lab') === 0) return 'skills';
       if (path.indexOf('/skills') === 0) return 'skills';
       if (path.indexOf('/tools') === 0) return 'tools';
       if (path.indexOf('/health') === 0) return 'models';
@@ -104,7 +105,7 @@
             railLink('/models/', '▣', '模型', 'models', current) +
             railLink('/skills/', '✦', '技能', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
-            railLink('/workflow/', '⌁', '工作流', 'workflow', current) +
+            railLink('/evaluations/', '◎', '实测榜', 'evaluations', current) +
             railLink('/logs/', '◷', '更新', 'logs', current) +
             railLink('/about/', 'ⓘ', '关于', 'about', current) +
           '</nav>' +
@@ -217,8 +218,8 @@
      fl-pastel-ui and intentionally skip runtime shell creation. */
   (function installSiteChromeLocale() {
     var labels = {
-      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '更新', about: '关于' },
-      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Updates', about: 'About' }
+      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', evaluations: '实测榜', workflow: '工作流', logs: '更新', about: '关于' },
+      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', evaluations: 'Benchmarks', workflow: 'Workflows', logs: 'Updates', about: 'About' }
     };
     function applySiteChromeLocale() {
       var locale = String(document.documentElement.lang || '').toLowerCase().indexOf('en') === 0 ? 'en' : 'zh-CN';

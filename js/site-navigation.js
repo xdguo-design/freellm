@@ -3,14 +3,14 @@
 
   if (window.FreeLLMNavigation) return;
 
-  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'about']);
+  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'evaluations', 'logs', 'about']);
   var navigationPaths = new Map([
     ['/', 'home'],
     ['/models/', 'models'],
     ['/health/', 'health'],
     ['/skills/', 'skills'],
     ['/tools/', 'tools'],
-    ['/workflow/', 'workflow'],
+    ['/evaluations/', 'evaluations'],
     ['/logs/', 'logs'],
     ['/about/', 'about']
   ]);
@@ -155,7 +155,7 @@
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
       ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
-      ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
+      ['evaluations', '/evaluations/', '◎', english ? 'Benchmarks' : '实测榜'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
@@ -208,8 +208,16 @@
     refreshUpdateIndicator();
   }
 
+  function sectionKey(body) {
+    if (!body) return '';
+    // data-fl-nav overrides the visual section (e.g. /evaluations/ reuses the logs layout).
+    var key = body.dataset.flNav || body.dataset.flSection || '';
+    if (key === 'workflow') key = 'skills';
+    return key;
+  }
+
   function currentPage() {
-    return document.body && document.body.dataset.flSection || '';
+    return sectionKey(document.body);
   }
 
   function documentUrl(url) {
@@ -371,7 +379,7 @@
   }
 
   function activateMenu(parsed) {
-    var active = parsed.body.dataset.flSection || '';
+    var active = sectionKey(parsed.body);
     if (active === 'health') active = 'models';
     document.querySelectorAll('.fl-site-nav [data-site-nav]').forEach(function (link) {
       if (link.dataset.siteNav === active && navigationKeys.has(link.dataset.siteNav)) link.setAttribute('aria-current', 'page');

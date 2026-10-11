@@ -7,6 +7,7 @@ import html as html_lib
 import hashlib
 import json
 import re
+from html import escape as html_escape
 import sys
 from datetime import date
 from pathlib import Path
@@ -37,7 +38,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-disc
     <a href="/models/" data-site-nav="models"><span class="fl-site-nav-icon" aria-hidden="true">▣</span><span>模型</span></a>
     <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>技能</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
-    <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
+    <a href="/evaluations/" data-site-nav="evaluations"><span class="fl-site-nav-icon" aria-hidden="true">◎</span><span>实测榜</span></a>
     <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
@@ -801,6 +802,55 @@ def update_eval_leaderboard(html: str) -> str:
     return html.replace(anchor, block + anchor, 1)
 
 
+EXPIRY_WINDOW_DAYS = 14
+_EXPIRY_SECTION_RE = re.compile(r'<section id="expiring-soon"[^>]*>.*?</section>', re.S)
+
+
+def render_expiry_board(data: list[dict], today: str) -> str:
+    """Server-render 「即将到期」 from offers whose verified expires_at falls in the
+    next EXPIRY_WINDOW_DAYS days (dates are Asia/Shanghai calendar days).
+
+    ``today`` is the canonical scan date from data/scan-summary.json so the
+    output is deterministic for --check. With no qualifying offer the block is
+    rendered hidden instead of showing placeholder copy.
+    """
+    from datetime import date
+
+    start = date.fromisoformat(today)
+    items = []
+    for offer in data:
+        expires = str(offer.get("expires_at") or "")
+        if offer.get("status") != "verified" or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", expires):
+            continue
+        days = (date.fromisoformat(expires) - start).days
+        if 0 <= days <= EXPIRY_WINDOW_DAYS:
+            items.append((days, str(offer.get("id")), offer))
+    items.sort(key=lambda item: (item[0], item[1]))
+    attrs = f'id="expiring-soon" class="expiry-board" aria-labelledby="expiry-title" data-expiry-window-days="{EXPIRY_WINDOW_DAYS}" data-expiry-as-of="{html_escape(today)}"'
+    if not items:
+        return f'<section {attrs} hidden></section>'
+    cards = "".join(
+        '<article class="expiry-card">'
+        f'<strong>{html_escape(offer.get("titleZh") or offer.get("title") or offer.get("name"))}</strong>'
+        f'<small>活动到期：{html_escape(offer.get("expires_at"))} · {"今天到期" if days == 0 else f"{days} 天后到期"}</small>'
+        f'<a href="/offers/{html_escape(offer_id)}/">查看官方条件与详情 →</a>'
+        '</article>'
+        for days, offer_id, offer in items[:6]
+    )
+    return (
+        f'<section {attrs}>\n'
+        f'  <div class="weekly-scan-header"><h2 id="expiry-title">即将到期</h2><a href="/offers/">查看全部优惠 →</a></div>\n'
+        f'  <div class="expiry-card-grid" id="expiring-cards" aria-live="polite">{cards}</div>\n'
+        '</section>'
+    )
+
+
+def update_expiry_board(html: str, data: list[dict], today: str) -> str:
+    if not today or not _EXPIRY_SECTION_RE.search(html):
+        return html
+    return _EXPIRY_SECTION_RE.sub(lambda _match: render_expiry_board(data, today), html, count=1)
+
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -835,6 +885,7 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = update_eval_leaderboard(updated)
     if scan_path.exists():
         updated = sync_home_scan_snapshot(updated, scan_summary)
+        updated = update_expiry_board(updated, source_data, str(scan_summary.get("date") or ""))
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',

@@ -68,12 +68,15 @@ class ApiHealthPageTests(unittest.TestCase):
         self.assertIn('class="fl-site-ribbon"', page)
         self.assertIn('href="/models/" data-site-nav="models" aria-current="page"', page)
 
-    def test_shared_navigation_and_sitemap_include_health_page(self):
+    def test_shared_navigation_maps_health_page_and_keeps_it_out_of_sitemap(self):
         sync = SYNC.read_text(encoding="utf-8")
         sitemap = SITEMAP.read_text(encoding="utf-8")
         self.assertIn("if (path.indexOf('/health') === 0) return 'models';", sync)
         self.assertIn("railLink('/models/', '▣', '模型', 'models', current)", sync)
-        self.assertIn("https://freellm.top/health/", sitemap)
+        # The static HTML is placeholder-only (values are computed client side):
+        # noindex and absent from the sitemap until it is server-rendered.
+        self.assertNotIn("https://freellm.top/health/", sitemap)
+        self.assertIn('<meta name="robots" content="noindex,follow">', PAGE.read_text(encoding="utf-8"))
 
 
     def test_limited_semantics_are_shared_by_filter_and_action_queue(self):

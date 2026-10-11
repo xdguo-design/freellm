@@ -459,17 +459,16 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         path.name: path.read_text(encoding="utf-8")
         for path in sorted(tmp_path.glob("sitemap*.xml"))
     }
-    # sitemap-english.xml was added on purpose for the independent English hubs (P1-4, PR #62).
+    # sitemap-english.xml (P1-4, PR #62) was dropped in 1010-S6: the /en/ placeholders are noindex.
     assert set(sitemap_texts) == {
         "sitemap.xml",
         "sitemap-pages.xml",
         "sitemap-offers.xml",
         "sitemap-providers.xml",
         "sitemap-models.xml",
-        "sitemap-english.xml",
     }
     assert "<sitemapindex" in sitemap_texts["sitemap.xml"]
-    for section in ("pages", "offers", "providers", "models", "english"):
+    for section in ("pages", "offers", "providers", "models"):
         assert f"https://freellm.top/sitemap-{section}.xml" in sitemap_texts["sitemap.xml"]
     sitemap = "".join(
         text for name, text in sitemap_texts.items() if name != "sitemap.xml"
@@ -513,10 +512,12 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/privacy/",
         "https://freellm.top/submit/",
         "https://freellm.top/terms/",
-        "https://freellm.top/health/",
         # Hand-maintained contact page added for AdSense trust pages (ADSENSE-8, commit 13c89622).
         "https://freellm.top/contact/",
+        "https://freellm.top/evaluations/",
     }
+    from scripts.build_seo_pages import _authored_insight_paths
+    static_urls |= {f"https://freellm.top{path}" for path in _authored_insight_paths()}
     locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
     assert len(locs) == len(set(locs)), "sitemaps must not advertise the same URL twice"
     assert set(locs) == (generated_urls - redirect_urls - noindex_urls) | static_urls
@@ -584,8 +585,8 @@ def test_model_directory_intents_have_distinct_metadata(tmp_path):
         (all_models, "/models/all/"),
     ):
         assert f'<link rel="canonical" href="https://freellm.top{path}"' in page
-        assert f'hreflang="zh-CN" href="https://freellm.top{path}"' in page
-        assert f'hreflang="en" href="https://freellm.top/en{path}"' in page
+        # /en/ pages are noindex placeholders: no hreflang to them.
+        assert f'hreflang="en" href="https://freellm.top/en{path}"' not in page
 
 
 def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
@@ -600,7 +601,7 @@ def test_all_bilingual_html_pages_emit_hreflang_links(tmp_path):
         tmp_path / "providers" / "openrouter" / "index.html",
     ]
 
-    english = {"models/all/index.html": "/en/models/all/", "providers/index.html": "/en/providers/"}
+    english = {}  # /en/ placeholders are noindex, so no page emits hreflang to them
     for page_path in pages:
         page = page_path.read_text(encoding="utf-8")
         relative = page_path.relative_to(tmp_path).as_posix()
@@ -918,8 +919,9 @@ def test_offer_page_renders_per_model_free_quota_table():
     assert "131,072 tokens" in groq_html
     assert "512 tokens" in groq_html
     assert groq_html.count("<tr>") >= len(by_id["groq-free"]["freeModels"]) + 1
-    assert '<code><span lang="zh-CN">openai/gpt-oss-120b</span><span lang="en">openai/gpt-oss-120b</span></code>' in groq_html
-    assert '<code><span lang="zh-CN">qwen/qwen3.8-27b</span><span lang="en">qwen/qwen3.8-27b</span></code>' in groq_html
+    # Language-neutral source text is rendered once, not duplicated per locale.
+    assert '<code><span class="locale-shared">openai/gpt-oss-120b</span></code>' in groq_html
+    assert '<code><span class="locale-shared">qwen/qwen3.8-27b</span></code>' in groq_html
 
     plain = render_offer_page(by_id["doubao"], offers, "https://freellm.top")
     assert "免费模型逐个看" not in plain
