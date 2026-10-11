@@ -42,7 +42,8 @@
         "provider": "LLM7",
         "model": "claude-haiku-4-5",
         "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "status": "online",
+        "sourceTier": "third_party_relay"
       },
       "reason": "missing from the successful snapshot"
     },
@@ -58,7 +59,8 @@
         "provider": "LLM7",
         "model": "claude-opus-4-5",
         "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "status": "online",
+        "sourceTier": "third_party_relay"
       },
       "reason": "missing from the successful snapshot"
     },
@@ -74,7 +76,8 @@
         "provider": "LLM7",
         "model": "claude-sonnet-4-5",
         "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "status": "online",
+        "sourceTier": "third_party_relay"
       },
       "reason": "missing from the successful snapshot"
     },
@@ -90,7 +93,8 @@
         "provider": "LLM7",
         "model": "gpt-5.5",
         "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "status": "online",
+        "sourceTier": "third_party_relay"
       },
       "reason": "missing from the successful snapshot"
     },
@@ -106,7 +110,8 @@
         "provider": "LLM7",
         "model": "minimax-m2.7",
         "sourceUrl": "https://llm7.io/models",
-        "status": "online"
+        "status": "online",
+        "sourceTier": "third_party_relay"
       },
       "reason": "missing from the successful snapshot"
     },
@@ -173,444 +178,6 @@
         "status": "online"
       },
       "reason": "missing from the successful snapshot"
-    },
-    {
-      "kind": "offer",
-      "eventType": "new",
-      "id": "intern-inkstone-token-plan-free",
-      "title": "书生·端砚 墨点计划 · 测试期每月免费 Token",
-      "asOf": "2026-10-10",
-      "details": {
-        "id": "intern-inkstone-token-plan-free",
-        "order": 73,
-        "date": "2026-10-08",
-        "name": "Intern InkStone Token Plan monthly free quota",
-        "providerMark": "书",
-        "provider": "Intern InkStone",
-        "providerMeta": "上海人工智能实验室 · 书生·端砚 · China",
-        "model": "书生 Intern-S2 / Atria-Dawn-Preview / Agents-A1 + 第三方模型（按墨点计费）",
-        "modelMeta": "Research model API · OpenAI & Anthropic compatible",
-        "type": [
-          "api",
-          "free"
-        ],
-        "productType": "api",
-        "capabilities": [
-          "model_api"
-        ],
-        "usageGuide": {
-          "summary": "登录书生·端砚，进入“科研模型（Token Plan）”查看测试期免费墨点并创建 API Key",
-          "prerequisites": [
-            "书生·端砚账号",
-            "Token Plan 页 API Key"
-          ],
-          "steps": [
-            "打开 https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0 并登录，查看墨点余额与使用限额。",
-            "在 API Key 页创建密钥；OpenAI 协议 base_url 为 https://discovery-api.intern-ai.org.cn/v1，Anthropic 协议为 https://discovery-api.intern-ai.org.cn。",
-            "先调用 /v1/models 查看当前账号可用模型 ID，再按模型列表与计费页选择模型；不同模型按不同单价扣墨点。"
-          ],
-          "endpoint": "https://discovery-api.intern-ai.org.cn/v1/models",
-          "method": "GET",
-          "authentication": "Authorization: Bearer ${INTERN_API_KEY}",
-          "examples": {
-            "curl": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\""
-          },
-          "docsUrl": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
-        },
-        "kicker": "MONTHLY FREE TOKENS (BETA)",
-        "badges": [
-          "测试期每月免费",
-          "OPENAI / ANTHROPIC 兼容",
-          "科研模型"
-        ],
-        "freeSummary": "上海 AI 实验室官方公告：书生·端砚“墨点计划”（Token Plan）测试期间，每位用户每月可获免费 Token，用于调用多元模型与科研服务。",
-        "validitySummary": "测试期按月发放 · 结束时间未公布",
-        "accessSummary": "书生·端砚账号 + Token Plan API Key",
-        "checkedSummary": "2026-10-08 / 上海 AI 实验室官方公告 + Token Plan 控制台页",
-        "title": "书生·端砚 墨点计划 · 测试期每月免费 Token",
-        "why": "上海人工智能实验室 2026-09-13 官方新闻写明：书生·端砚推出科研模型“墨点计划”（Token Plan），测试期间每位用户每月可获免费 Token。官方 Token Plan 控制台页给出 OpenAI 协议 base_url https://discovery-api.intern-ai.org.cn/v1 与 Anthropic 协议地址，并注明 1 墨点最多可抵扣 5,000 万 tokens（以 DeepSeek-V4-Flash 为例）。社区普遍反馈注册后每月约 10 墨点，但官方公开页面未写明具体数量，FreeLLM 不把它写成承诺额度。",
-        "mechanism": "Beta-period monthly free 墨点 (credits) on the Intern InkStone Token Plan; different models deduct credits at different rates",
-        "validity": "Monthly free allocation during the beta test period; no public end date",
-        "access": "Sign in to Intern InkStone, open 科研模型 / Token Plan, create an API key",
-        "command": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\"",
-        "register": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0",
-        "registerLabel": "打开书生·端砚 Token Plan",
-        "links": [
-          [
-            "官方公告",
-            "https://www.shlab.org.cn/news/5444294"
-          ],
-          [
-            "Token Plan 控制台",
-            "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
-          ]
-        ],
-        "originCountry": "China",
-        "availability": "中国大陆书生·端砚平台；账号与测试期规则以控制台为准",
-        "freeMechanism": "monthly_quota",
-        "pricingModel": "monthly_quota",
-        "freePolicy": {
-          "type": "beta_monthly_credits",
-          "amount": null,
-          "unit": "墨点",
-          "period": "month"
-        },
-        "quota": "Monthly free 墨点 during beta (exact amount shown in the account; 1 墨点 deducts up to 50M tokens for DeepSeek-V4-Flash per the console); shared RPM/TPM limits across API keys",
-        "renewal": "Monthly allocation during the beta test period",
-        "phoneRequired": "unknown",
-        "cardRequired": "no",
-        "commercialUse": "Check Intern InkStone terms; positioned for research use",
-        "limits": {
-          "requestsPerMinute": null,
-          "requestsPerHour": null,
-          "requestsPerMonth": null,
-          "urlsPerMinute": null,
-          "concurrency": null
-        },
-        "billing": {
-          "walletRequired": false,
-          "cardRequired": "no",
-          "autoReload": "no",
-          "overageBehavior": "stop",
-          "prices": []
-        },
-        "sourceUrls": [
-          "https://www.shlab.org.cn/news/5444294",
-          "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
-        ],
-        "evidence": "上海人工智能实验室官方新闻（2026-09-13）：“书生·端砚现已推出本地客户端及科研模型‘墨点计划’（Token Plan）。测试期间，每位用户每月可获免费Token”。官方 Token Plan 页显示 OpenAI 协议 https://discovery-api.intern-ai.org.cn/v1、Anthropic 协议 https://discovery-api.intern-ai.org.cn，以及“1 墨点最多可抵扣 5000,0000 tokens，以 DeepSeek-V4-Flash 为例”。",
-        "status": "verified",
-        "confidence": "medium",
-        "lastVerifiedAt": "2026-10-08",
-        "checkedBy": "manual",
-        "notes": "具体每月墨点数量（社区称 10 墨点）、哪些自有模型限时不扣墨点，均来自社区与登录后页面，官方公开公告未写明，FreeLLM 未登录核验。测试期结束时间未公布。与 atria-dawn-preview 条目（api.atria-asi.ai）是不同入口。",
-        "freeLLMTest": {
-          "testLevel": "preflight",
-          "status": "partial",
-          "testedAt": "2026-10-08",
-          "actualUsageVerified": false,
-          "task": "核验书生·端砚墨点计划测试期免费 Token 与 API 接入地址。",
-          "method": [
-            "读取上海人工智能实验室 2026-09-13 官方新闻，确认测试期间每位用户每月可获免费 Token。",
-            "读取 Token Plan 控制台公开页，确认 OpenAI / Anthropic 协议 base_url 与“1 墨点最多可抵扣 5000 万 tokens（以 DeepSeek-V4-Flash 为例）”。",
-            "未登录账号，未核验每月实际墨点数量，也未发起真实调用。"
-          ],
-          "result": "官方公开预检通过：测试期按月免费与接口地址有官方来源。",
-          "limitations": "每月具体墨点数、自有模型是否限时不扣墨点、RPM/TPM 数值与测试期结束时间均未经 FreeLLM 登录核验。",
-          "evidence": [
-            {
-              "label": "上海 AI 实验室官方新闻",
-              "url": "https://www.shlab.org.cn/news/5444294"
-            },
-            {
-              "label": "Token Plan 控制台",
-              "url": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
-            }
-          ]
-        }
-      },
-      "reason": "not present in the previous successful snapshot"
-    },
-    {
-      "kind": "offer",
-      "eventType": "new",
-      "id": "stepfun-step-5-preview-free-week",
-      "title": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
-      "asOf": "2026-10-10",
-      "details": {
-        "id": "stepfun-step-5-preview-free-week",
-        "order": 74,
-        "date": "2026-10-09",
-        "lastVerifiedAt": "2026-10-10",
-        "checkedBy": "manual",
-        "status": "verified",
-        "phoneRequired": "unknown",
-        "cardRequired": "unknown",
-        "commercialUse": "Check OpenCode Zen / partner tool terms and StepFun model terms before commercial use.",
-        "productType": "api",
-        "capabilities": [
-          "model_api"
-        ],
-        "name": "StepFun Step 5 Preview · one-week free access (OpenCode Zen and partner tools)",
-        "title": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
-        "titleZh": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
-        "titleEn": "StepFun Step 5 Preview · One-week free access",
-        "providerMark": "阶跃",
-        "provider": "OpenCode Zen",
-        "providerMeta": "OpenCode Zen · 阶跃星辰 StepFun",
-        "providerMetaEn": "OpenCode Zen · StepFun",
-        "model": "Step 5 Preview · 600B 总参数 / 27B 激活 · 1M 上下文",
-        "modelMeta": "600B total / 27B active MoE · 1M context · vision input",
-        "freeModels": [
-          {
-            "model": "opencode/step-5-preview-free",
-            "label": "文本 + 图像输入 · Agent / 编程",
-            "contextWindow": "1M tokens（阶跃星辰官方模型页）",
-            "quota": "OpenCode Zen 定价表输入/输出/缓存读取均为 Free；限时免费",
-            "note": "阶跃星辰官方 X 账号 2026-10-08 宣布：从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等工具提供一周免费访问。官方未给出精确结束时刻。",
-            "sourceUrl": "https://opencode.ai/docs/en/zen/"
-          }
-        ],
-        "type": [
-          "api",
-          "free"
-        ],
-        "freeMechanism": "limited_time_free",
-        "pricingModel": "limited_time_free",
-        "freePolicy": {
-          "type": "limited_time_free",
-          "startDate": "2026-10-08",
-          "unit": "promotion"
-        },
-        "freeSummary": "阶跃星辰旗舰 Step 5 Preview 自 2026-10-08 起在 OpenCode Zen（step-5-preview-free）等合作工具限时免费约一周",
-        "freeSummaryEn": "StepFun's flagship Step 5 Preview is free for about one week from 2026-10-08 via OpenCode Zen (step-5-preview-free) and partner tools",
-        "quota": "OpenCode Zen 免费模型，未公布固定额度；官方称免费期约一周",
-        "validitySummary": "官方公告：自 2026-10-08 起约一周 · 未公布精确结束时间",
-        "validitySummaryEn": "About one week from 2026-10-08 per StepFun; exact end time not published",
-        "accessSummary": "需要 OpenCode Zen 账号与 API Key（或在 Cline / Kilo Code / Nous Portal 等合作工具内选择免费模型）",
-        "accessSummaryEn": "OpenCode Zen account and API key, or select the free model inside partner tools such as Cline, Kilo Code or Nous Portal",
-        "kicker": "ONE-WEEK FREE FLAGSHIP",
-        "badges": [
-          "限时免费",
-          "1M 上下文",
-          "AGENT / CODING"
-        ],
-        "checkedSummary": "2026-10-10 / OpenCode Zen 定价表仍列 Step 5 Preview Free",
-        "why": "FreeLLM 评估：Step 5 Preview 是阶跃星辰 2026-10 发布的旗舰 Agent / 编程模型，官方称 600B 总参数、27B 激活、1M 上下文并支持图像输入，计划 10 月 15 日开放权重。一周免费窗口适合用来对比它在代码修复和长任务上的表现；窗口很短且无精确截止时间，不建议在生产中依赖免费 ID。",
-        "whyEn": "FreeLLM assessment: Step 5 Preview is StepFun's flagship agentic/coding model (600B total, 27B active, 1M context, vision input per StepFun; open weights planned for Oct 15). The one-week free window is good for side-by-side evaluation, not for production dependency.",
-        "mechanism": "StepFun announced a one-week free access window starting 2026-10-08 across OpenCode, Cline, Nous Research, Kilo Code and others. On OpenCode Zen the free variant uses the distinct model ID step-5-preview-free; the standard OpenRouter route is paid ($1.00 / $2.70 per 1M tokens).",
-        "validity": "About one week from 2026-10-08; the exact end time is not published.",
-        "access": "OpenCode Zen account and API key; network availability may vary.",
-        "command": "Call opencode/step-5-preview-free in OpenCode, or POST to the Zen chat completions endpoint with model step-5-preview-free.",
-        "register": "https://opencode.ai/auth",
-        "registerLabel": "OpenCode Zen 登录",
-        "registerLabelEn": "OpenCode Zen sign-in",
-        "links": [
-          [
-            "FreeLLM 二级详情页",
-            "https://freellm.top/offers/stepfun-step-5-preview-free-week/"
-          ],
-          [
-            "OpenCode Zen 官方文档（定价表）",
-            "https://opencode.ai/docs/en/zen/"
-          ],
-          [
-            "阶跃星辰官方公告（X）",
-            "https://x.com/StepFun_ai/status/2108182763002278158"
-          ],
-          [
-            "Step 5 Preview 官方介绍",
-            "https://www.stepfun.com/step-5-preview"
-          ]
-        ],
-        "sourceUrls": [
-          "https://opencode.ai/docs/en/zen/",
-          "https://x.com/StepFun_ai/status/2108182763002278158",
-          "https://www.stepfun.com/step-5-preview"
-        ],
-        "usageGuide": {
-          "summary": "登录 OpenCode Zen 获取 API Key，在 OpenCode 中选择 Step 5 Preview Free，或直接调用 Zen 的 OpenAI 兼容接口。",
-          "summaryEn": "Sign in to OpenCode Zen, get an API key, then select Step 5 Preview Free in OpenCode or call the Zen OpenAI-compatible endpoint.",
-          "prerequisites": [
-            "OpenCode Zen account",
-            "OpenCode Zen API key"
-          ],
-          "steps": [
-            "登录 OpenCode Zen 并复制 API Key。",
-            "在 OpenCode TUI 运行 /connect 选择 OpenCode Zen，然后用 /models 选择 Step 5 Preview Free（opencode/step-5-preview-free）。",
-            "或直接向 https://opencode.ai/zen/v1/chat/completions 发送 model=step-5-preview-free 的请求。",
-            "免费期约一周（自 2026-10-08 起）；继续使用前先确认官方定价表是否仍标为 Free。"
-          ],
-          "stepsEn": [
-            "Sign in to OpenCode Zen and copy your API key.",
-            "In the OpenCode TUI run /connect, choose OpenCode Zen, then pick Step 5 Preview Free (opencode/step-5-preview-free) via /models.",
-            "Or POST to https://opencode.ai/zen/v1/chat/completions with model step-5-preview-free.",
-            "The free window is about one week from 2026-10-08; recheck the official pricing table before continued use."
-          ],
-          "endpoint": "https://opencode.ai/zen/v1/chat/completions",
-          "method": "POST",
-          "authentication": "Authorization: Bearer ${OPENCODE_API_KEY}",
-          "examples": {
-            "curl": "curl https://opencode.ai/zen/v1/chat/completions --header \"Authorization: Bearer ${OPENCODE_API_KEY}\" --header \"Content-Type: application/json\" --data '{\"model\":\"step-5-preview-free\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
-          },
-          "docsUrl": "https://opencode.ai/docs/en/zen/"
-        },
-        "availability": "OpenCode Zen (models hosted in US/EU); partner tools per their own access rules.",
-        "freeModelsSource": "OpenCode Zen",
-        "freeMechanismSource": "StepFun one-week free access announcement",
-        "confidence": "medium",
-        "notes": "本条目记录的是阶跃星辰联合 OpenCode、Cline、Kilo Code、Nous Portal 等工具的一周限免，不代表阶跃星辰开放平台 API 免费；OpenRouter 上的 stepfun/step-5-preview 为付费路由。OpenCode 文档注明该模型提供商遵循零保留策略、不用于训练。结束时间仅公布为“一周”，到期后应标记过期。",
-        "evidence": "OpenCode Zen 官方文档（2026-10-08 更新）端点表列出 Step 5 Preview Free（step-5-preview-free，/zen/v1/chat/completions），定价表输入/输出/缓存读取均为 Free，并说明“free on OpenCode for a limited time”。阶跃星辰官方 X 账号 2026-10-08 发帖：Step 5 Preview 已上线 OpenRouter，并从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等提供一周免费访问。官方模型页给出 600B 总参数、27B 激活、1M 上下文、图像输入，并称 10 月 15 日开放权重。",
-        "freeLLMTest": {
-          "testLevel": "preflight",
-          "status": "blocked",
-          "testedAt": "2026-10-09",
-          "actualUsageVerified": false,
-          "task": "核验免费模型 ID、免费窗口与接入参数；待用有效 Zen Key 跑中文摘要、Python 修错、多步规划三个固定任务。",
-          "method": [
-            "读取 OpenCode Zen 官方文档端点表与定价表，确认 step-5-preview-free 标为 Free。",
-            "读取阶跃星辰官方 X 公告确认一周免费窗口起始日 2026-10-08。",
-            "当前没有 OpenCode Zen API Key，未发起真实调用。"
-          ],
-          "result": "官方公开预检通过：免费模型 ID、免费标注与起始日均有官方来源。实测待执行（pending）：当前无 OpenCode Zen API Key，模型输出质量未测试，不打分。",
-          "limitations": "未实测调用；未验证速率限制、真实额度与精确结束时间。",
-          "evidence": [
-            {
-              "label": "OpenCode Zen 官方文档",
-              "url": "https://opencode.ai/docs/en/zen/"
-            },
-            {
-              "label": "阶跃星辰官方公告（X）",
-              "url": "https://x.com/StepFun_ai/status/2108182763002278158"
-            }
-          ]
-        },
-        "freeLLMTestNotes": "评测状态透明披露：仅完成官方资料预检，未获得模型输出，暂无成绩。"
-      },
-      "reason": "not present in the previous successful snapshot"
-    },
-    {
-      "kind": "offer",
-      "eventType": "new",
-      "id": "unisound-u2-flash-free-month",
-      "title": "云知声 U2 Flash · 国庆免费月 API",
-      "asOf": "2026-10-10",
-      "details": {
-        "id": "unisound-u2-flash-free-month",
-        "order": 72,
-        "date": "2026-10-08",
-        "name": "Unisound U2 Flash free month",
-        "providerMark": "云",
-        "provider": "Unisound MaaS",
-        "providerMeta": "云知声 MaaS 平台 · China",
-        "model": "U2 Flash (u2-flash)",
-        "modelMeta": "Agent / Coding LLM · OpenAI & Anthropic compatible",
-        "type": [
-          "api",
-          "free"
-        ],
-        "productType": "api",
-        "capabilities": [
-          "model_api"
-        ],
-        "usageGuide": {
-          "summary": "在云知声 MaaS 创建 API Key，活动期内以 0 元调用 u2-flash（OpenAI 兼容 Chat Completions）",
-          "prerequisites": [
-            "云知声 MaaS 账号",
-            "API Key（按量计费&资源包 > API Key 管理）"
-          ],
-          "steps": [
-            "登录 https://maas.unisound.com/ ，在“按量计费&资源包 > API Key 管理”创建 API Key。",
-            "使用 https://maas-api.unisound.com/v1 作为 OpenAI 兼容 base_url，模型 ID 填 u2-flash。",
-            "活动期 2026-09-30 至 2026-10-31 内输入、缓存命中、输出均为 0 元；活动结束后按官方价格表计费，长期使用前复核。"
-          ],
-          "endpoint": "https://maas-api.unisound.com/v1/chat/completions",
-          "method": "POST",
-          "authentication": "Authorization: Bearer ${UNISOUND_API_KEY}",
-          "examples": {
-            "curl": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
-          },
-          "docsUrl": "https://maas.unisound.com/docs/api/text/openai-compatible"
-        },
-        "kicker": "FREE UNTIL OCT 31",
-        "badges": [
-          "限时免费",
-          "不限 Token",
-          "OPENAI 兼容"
-        ],
-        "freeSummary": "云知声官方价格页：U2 Flash 活动时间 2026-09-30 至 2026-10-31，输入、缓存命中、输出价格均为 0 元/百万 Tokens；官网横幅写明“限时免费无限量调用”。",
-        "validitySummary": "限时免费至 2026-10-31",
-        "accessSummary": "云知声 MaaS 账号 + API Key",
-        "checkedSummary": "2026-10-10 / 云知声官方价格页：U2 Flash 限时免费 2026.09.30-2026.10.31",
-        "title": "云知声 U2 Flash · 国庆免费月 API",
-        "why": "云知声 MaaS 官方价格页在 U2 Flash 下标注“限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”，官网顶部横幅写明“限时免费无限量调用”。U2 Flash 面向 Agent 与 Coding 场景，官方文档给出 OpenAI 兼容 base_url https://maas-api.unisound.com/v1 与模型 ID u2-flash。官方未公布活动期内的具体速率限制，FreeLLM 不作推测。",
-        "mechanism": "Limited-time ¥0 pricing for U2 Flash input, cached input and output on the official Unisound MaaS API",
-        "validity": "Free from 2026-09-30 through 2026-10-31 per the official pricing page; standard pricing applies afterwards",
-        "access": "Register on Unisound MaaS, create an API key, call model u2-flash",
-        "command": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
-        "register": "https://maas.unisound.com/",
-        "registerLabel": "打开云知声 MaaS",
-        "links": [
-          [
-            "官方价格页",
-            "https://maas.unisound.com/docs/price/overview"
-          ],
-          [
-            "U2 Flash 模型页",
-            "https://maas.unisound.com/models/u2-flash"
-          ],
-          [
-            "OpenAI 兼容接口",
-            "https://maas.unisound.com/docs/api/text/openai-compatible"
-          ]
-        ],
-        "originCountry": "China",
-        "availability": "中国大陆云知声 MaaS 平台；账号与网络可用性以官方为准",
-        "freeMechanism": "limited_time_free",
-        "pricingModel": "limited_time_free",
-        "freePolicy": {
-          "type": "limited_time_free",
-          "startDate": "2026-09-30",
-          "endDate": "2026-10-31",
-          "unit": "promotion"
-        },
-        "expires_at": "2026-10-31",
-        "quota": "Input, cached input and output priced at ¥0 during the promotion; official banner says unlimited calls; rate limits not published for the promotion",
-        "renewal": "One-off promotion; standard U2 Flash pricing after 2026-10-31",
-        "phoneRequired": "unknown",
-        "cardRequired": "unknown",
-        "commercialUse": "Check Unisound MaaS user agreement",
-        "limits": {
-          "requestsPerMinute": null,
-          "requestsPerHour": null,
-          "requestsPerMonth": null,
-          "urlsPerMinute": null,
-          "concurrency": null
-        },
-        "billing": {
-          "walletRequired": false,
-          "cardRequired": "unknown",
-          "autoReload": "unknown",
-          "overageBehavior": "unknown",
-          "prices": []
-        },
-        "sourceUrls": [
-          "https://maas.unisound.com/docs/price/overview",
-          "https://maas.unisound.com/models/u2-flash",
-          "https://maas.unisound.com/docs/api/text/openai-compatible"
-        ],
-        "evidence": "2026-10-08 读取云知声 MaaS 官方价格页：U2 Flash “限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”；官网横幅“U2 Flash 全新上线！限时免费无限量调用（2026.09.30-2026.10.31）”；官方平台介绍给出 base_url https://maas-api.unisound.com/v1 与 model=u2-flash 示例。",
-        "status": "verified",
-        "confidence": "high",
-        "lastVerifiedAt": "2026-10-10",
-        "checkedBy": "manual",
-        "notes": "限时活动，10 月 31 日后按官方价格表计费；未实测调用，未验证速率限制。U2 Decision 在价格页也标为限时免费，但未标注结束日期，本条不纳入。",
-        "freeLLMTest": {
-          "testLevel": "preflight",
-          "status": "partial",
-          "testedAt": "2026-10-08",
-          "actualUsageVerified": false,
-          "task": "核验 U2 Flash 限时免费期、价格与 OpenAI 兼容接入参数。",
-          "method": [
-            "读取云知声 MaaS 官方价格页，确认 U2 Flash 活动期 2026-09-30 至 2026-10-31 输入/缓存命中/输出均为 0 元。",
-            "读取官方平台介绍与 OpenAI 兼容 Chat 文档，确认 base_url https://maas-api.unisound.com/v1 与 model=u2-flash。",
-            "当前没有云知声 API Key，未发起真实调用。"
-          ],
-          "result": "官方公开预检通过：免费期、价格与接口参数均有官方页面支持。",
-          "limitations": "未实测调用，未验证注册门槛、速率限制、“无限量”在实际账号中的表现与输出质量。",
-          "evidence": [
-            {
-              "label": "云知声 MaaS 价格页",
-              "url": "https://maas.unisound.com/docs/price/overview"
-            },
-            {
-              "label": "OpenAI 兼容接口",
-              "url": "https://maas.unisound.com/docs/api/text/openai-compatible"
-            }
-          ]
-        }
-      },
-      "reason": "not present in the previous successful snapshot"
     },
     {
       "kind": "offer",
@@ -7626,5 +7193,165 @@
       "status": "ok",
       "reason": ""
     }
-  }
+  },
+  "curatedEvents": [
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "opencode/exo-free",
+      "title": "OpenCode Zen 新增 Exo Free（限时免费）",
+      "asOf": "2026-10-10",
+      "reason": "OpenCode Zen 官方文档（Last updated 2026-10-08）：exo-free 输入 / 输出 / 缓存读取均为 Free，限时免费；免费期收集的数据可能用于改进模型。OpenCode Zen 平台路由，上线日期官方未写。",
+      "details": {
+        "id": "opencode/exo-free",
+        "provider": "OpenCode Zen",
+        "sourceKind": "official",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/",
+        "status": "verified",
+        "providerId": "opencode",
+        "model": "exo-free"
+      }
+    },
+    {
+      "kind": "model",
+      "eventType": "new_route",
+      "id": "opencode/longcat-2.5-preview-free",
+      "title": "OpenCode Zen：LongCat 2.5 Preview Free 限时免费",
+      "asOf": "2026-10-10",
+      "reason": "OpenCode Zen 官方文档（Last updated 2026-10-08）：longcat-2.5-preview-free 限时免费，提供方零留存、不用于训练。这是 OpenCode Zen 平台路由，不代表美团 LongCat 官方 API 免费；上线日期官方未写。",
+      "details": {
+        "id": "opencode/longcat-2.5-preview-free",
+        "provider": "OpenCode Zen · 美团 LongCat",
+        "sourceKind": "official",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/",
+        "status": "verified",
+        "providerId": "opencode",
+        "model": "longcat-2.5-preview-free"
+      }
+    },
+    {
+      "kind": "news",
+      "eventType": "changed",
+      "id": "claude-startups-program-paused",
+      "title": "Claude for Startups：免费一年 Team + $1,000 API 额度已暂停（超额）",
+      "asOf": "2026-10-10",
+      "reason": "Claude Startups 官方页 FAQ（2026-10-10 核对）：因申请量远超预期，Claude Team 与 $1,000 API 额度两项优惠目前 over capacity 已暂停发放；已领取者不受影响，并将重新审核申请。Startup Stack 合作方优惠、Applied AI office hours 仍对成员开放。不作为可领取资源收录。",
+      "details": {
+        "id": "claude-startups-program-paused",
+        "provider": "Anthropic",
+        "sourceKind": "official",
+        "sourceUrl": "https://claude.com/programs/startups",
+        "status": "verified"
+      }
+    },
+    {
+      "kind": "news",
+      "eventType": "changed",
+      "id": "google-gemini-app-free-tier-2026-10",
+      "title": "Gemini 应用免费档收窄：10-09 起无订阅默认 Auto，多数请求走 Flash-Lite",
+      "asOf": "2026-10-10",
+      "reason": "Gemini Apps 帮助中心：个人账号无 AI 订阅用户自 2026-10-09 起默认 Auto（多数请求由 Flash-Lite 处理，需要更深推理时才可能用 Flash 或 Pro）；关闭智能模型选择则全部使用 Flash-Lite；变更后 AI Plus 档不含 Pro（AI Plus 生效时间以官方邮件为准）。针对 Gemini 应用（个人账号），不是 API。",
+      "details": {
+        "id": "google-gemini-app-free-tier-2026-10",
+        "provider": "Google Gemini Apps",
+        "sourceKind": "official",
+        "sourceUrl": "https://support.google.com/gemini/answer/17004136",
+        "status": "verified"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "changed",
+      "id": "cerebras-free",
+      "title": "更正：Cerebras $5 赠金需绑卡、激活后 30 天过期",
+      "asOf": "2026-10-10",
+      "reason": "Cerebras 官方定价页：添加有效付款方式后才发放一次性 $5 促销额度，激活后 30 天过期；用完或过期后 API 与 Playground 暂停，不会自动扣费。站上原写「注册即送」，已更正（官方未公布变更日期）。",
+      "details": {
+        "id": "cerebras-free",
+        "provider": "Cerebras",
+        "sourceKind": "official",
+        "sourceUrl": "https://www.cerebras.ai/pricing",
+        "status": "verified"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "changed",
+      "id": "google-ai-studio-free",
+      "title": "Google AI Studio Playground 新增每模型每日用量上限",
+      "asOf": "2026-10-10",
+      "reason": "Google 官方论坛公告（2026-09-29）：AI Studio Playground 起对每个模型设每日用量上限，Pro / Ultra 订阅上限更高；大量使用建议改用 Gemini API + 自有 API Key。影响网页 Playground，不是 Gemini API 免费档速率表。",
+      "details": {
+        "id": "google-ai-studio-free",
+        "provider": "Google AI Studio",
+        "sourceKind": "official",
+        "sourceUrl": "https://discuss.ai.google.dev/t/daily-usage-limits-for-models-in-ai-studio/185935",
+        "status": "verified"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "changed",
+      "id": "qoder",
+      "title": "更正：Qoder Qwen3.8-Flash 限时免费已延期（未结束）",
+      "asOf": "2026-10-10",
+      "reason": "Qoder 官方活动页 2026-09-29 公告：原定 9-30 结束的 Qwen3.8-Flash 0 Credits 免费期已延长，10 月 1 日起继续免费，结束时间将提前在活动页公告。此前站上误标为已结束，已更正。",
+      "details": {
+        "id": "qoder",
+        "provider": "Qoder",
+        "sourceKind": "official",
+        "sourceUrl": "https://docs.qoder.com/zh/events/flashoffer",
+        "status": "verified",
+        "validitySummary": "原定 2026-09-30，已延期；结束时间待官方公告"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "new",
+      "id": "claude-max-team-api-credits",
+      "title": "Claude 订阅附送 API 额度 · Max / Team 每月 $100–$500",
+      "asOf": "2026-10-10",
+      "reason": "Claude Platform 官方文档：Max / Team 订阅每月附送 Claude API 额度（审核报告记为 2026-10-07 宣布，官方页未写日期）。属于付费订阅附送，不是免费档；不能用于 Claude Code。",
+      "details": {
+        "id": "claude-max-team-api-credits",
+        "provider": "Anthropic",
+        "productType": "api",
+        "status": "verified",
+        "sourceKind": "official",
+        "sourceUrl": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
+        "freeSummary": "付费 Claude Max / Team 订阅每月附送 Claude API 额度：Max 5x $100、Max 20x $200、Team 按席位汇总（Standard $20 / Premium $100 每席）上限 $500；不能用于 Claude Code，不结转",
+        "validitySummary": "每个账单周期发放、周期末过期，不结转；新订阅满 7 天后可领取"
+      }
+    },
+    {
+      "kind": "skill",
+      "eventType": "changed",
+      "id": "mattpocock-skills-v1.3",
+      "title": "mattpocock/skills 发布 v1.3.0 / v1.3.1",
+      "asOf": "2026-10-10",
+      "reason": "GitHub Releases（2026-10-04）：v1.3.0 / v1.3.1 将 implement-spec 升入 Engineering 分组（随 Claude Code 插件发布、有文档页）。目录已收录的 diagnosing-bugs、implement-spec 均来自该仓库。",
+      "details": {
+        "id": "mattpocock-skills-v1.3",
+        "provider": "GitHub · mattpocock",
+        "sourceKind": "official",
+        "sourceUrl": "https://github.com/mattpocock/skills/releases/tag/v1.3.1",
+        "status": "verified"
+      }
+    },
+    {
+      "kind": "skill",
+      "eventType": "new",
+      "id": "addyosmani-code-review-and-quality",
+      "title": "热门 Skill 库 addyosmani/agent-skills 收录（code-review-and-quality）",
+      "asOf": "2026-10-10",
+      "reason": "GitHub 官方仓库 addyosmani/agent-skills（MIT，约 10.4 万 star，最近推送 2026-10-04）：Production-grade engineering skills for AI coding agents。目录收录其中的 code-review-and-quality。",
+      "details": {
+        "id": "addyosmani-code-review-and-quality",
+        "provider": "GitHub · addyosmani",
+        "sourceKind": "official",
+        "sourceUrl": "https://github.com/addyosmani/agent-skills",
+        "status": "verified"
+      }
+    }
+  ]
 }

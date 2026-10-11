@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from crawler.github_discovery import extract_peer_document_evidence
 
 
@@ -24,15 +26,19 @@ def test_agent_router_is_registered_for_bounded_discovery():
 
 
 def test_agent_router_candidate_is_review_only_and_not_a_public_offer():
+    offers = _read("offers.json")
+    assert not any(item["id"] == "agent-router-free" for item in offers)
+
+    # data/candidates.json is a gitignored artifact written by live discovery runs in CI
+    # (daily-check.yml / discovery-pr.yml) and has never been committed, so a clean checkout lacks it.
+    if not (ROOT / "data" / "candidates.json").is_file():
+        pytest.skip("data/candidates.json not present (gitignored live-discovery artifact)")
     candidates = _read("candidates.json")
     candidate = next(item for item in candidates if item.get("providerId") == "agent-router")
     assert candidate["status"] == "needs_review"
     assert candidate["sourceKind"] == "github_peer"
     assert candidate["repository"] == "justbiar/agent-router"
     assert {"claude-opus-5", "claude-opus-4-8", "gpt-5.6-sol"}.issubset(set(candidate["mentionedModels"]))
-
-    offers = _read("offers.json")
-    assert not any(item["id"] == "agent-router-free" for item in offers)
 
 
 def test_peer_evidence_extracts_agent_router_model_ids():

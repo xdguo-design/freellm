@@ -38,8 +38,13 @@ def test_every_catalog_provider_has_a_registration_card():
         json.loads(path.read_text(encoding="utf-8"))["providerId"]
         for path in (ROOT / "data" / "operations").glob("*.json")
     }
-    card_ids = {card["providerId"] for card in _load(PROVIDER_ACCESS_PATH)}
-    assert card_ids == catalog_ids | operation_ids
+    cards = _load(PROVIDER_ACCESS_PATH)
+    # Retired-provider tombstones (e.g. tencent-legacy-llm, officially shut down 2026-09-30) are kept
+    # on purpose like retired model cards; every other card must map to a live catalog/operation provider.
+    tombstones = {card["providerId"] for card in cards if card["registrationStatus"] == "unavailable"}
+    card_ids = {card["providerId"] for card in cards}
+    assert catalog_ids | operation_ids <= card_ids
+    assert card_ids - (catalog_ids | operation_ids) <= tombstones
 
 
 def test_every_catalog_model_has_exactly_one_access_card():

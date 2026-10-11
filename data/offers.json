@@ -124,17 +124,17 @@
     },
     "kicker": "FREE IDE",
     "badges": [
-      "QWEN3.8 PROMO ENDED",
-      "BASE FREE/TRIAL CHECK"
+      "QWEN3.8-FLASH 0 CREDITS",
+      "延期 · 结束时间待官方公告"
     ],
-    "freeSummary": "Qwen3.8-Flash 0-Credit 活动于 2026-09-30 结束；基础免费/试用与每日 Credits 以 Qoder 当前官方页面为准。",
-    "validitySummary": "9 月 30 日 0-Credit 活动已结束；基础额度请按官方现行条款核实",
+    "freeSummary": "Qwen3.8-Flash 限时免费已延期：10 月 1 日起继续 0 Credits（计费系数 0.0×），结束时间官方将提前公告；免费账号、Credits 余额为 0 的国际版个人账号也可用。",
+    "validitySummary": "原定 2026-09-30 结束，官方已延长；新的结束日期尚未公布（以官方活动页公告为准）",
     "accessSummary": "International",
     "checkedSummary": "2026-10-10 / Qoder 官方活动页：Qwen3.8-Flash 免费期已延长，结束时间将提前公告",
     "title": "Qoder · Experience plan",
-    "why": "Qoder's official announcements state that Qwen3.8-Flash runs at 0.0× Credits from Sep 18 through Sep 30, 2026 (UTC+8), and individual users can manually claim 100 Credits per day. The daily reward expires 30 days after each claim.",
-    "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
-    "validity": "Qwen3.8-Flash 0× Credits through 2026-09-30 23:59:59 UTC+8; each claimed daily 100-Credit reward expires after 30 days",
+    "why": "Qoder's official event page (docs.qoder.com/zh/events/flashoffer) says Qwen3.8-Flash runs at 0.0x Credits for international individual users since 2026-09-18 10:00 (UTC+8). The free period originally ending 2026-09-30 has been extended: it continues from October 1, and the end time will be announced on that page in advance. Free accounts and accounts with 0 Credits can use it; Teams/Enterprise plans are excluded.",
+    "mechanism": "Temporary Qwen3.8-Flash 0x Credits promotion (extended, end date TBA) on top of the baseline free/trial plan and daily 100-Credit claims",
+    "validity": "Qwen3.8-Flash 0x Credits since 2026-09-18; extended beyond 2026-09-30 with no announced end date yet; each claimed daily 100-Credit reward expires after 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -147,26 +147,31 @@
       [
         "Download",
         "https://qoder.com/"
+      ],
+      [
+        "Qwen3.8-Flash 限时免费活动页（已延期）",
+        "https://docs.qoder.com/zh/events/flashoffer"
       ]
     ],
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "Qwen3.8-Flash at 0× Credits during the promotion; 100 Credits/day claim window for eligible individual users; baseline trial rules still apply",
+    "quota": "Qwen3.8-Flash at 0x Credits (no Credits consumed) during the extended promotion; 100 Credits/day claim window for eligible individual users",
     "renewal": "Trial terms may change; check the official account page",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
+      "https://docs.qoder.com/zh/events/flashoffer",
       "https://docs.qoder.com/zh/account/pricing",
       "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
     ],
-    "evidence": "Official Qoder announcement: Qwen3.8-Flash consumes no Credits from 2026-09-18 10:00 through 2026-09-30 23:59:59 (UTC+8); a new 100-Credit claim window opens daily at 10:00, and each reward is valid for 30 days.",
-    "status": "expired",
+    "evidence": "Official Qoder event page (checked 2026-10-10): 「活动延期：原定 9 月 30 日结束的免费期现已延长，10 月 1 日起继续免费。…结束时间将提前在本页公告。」 Applies to Qoder international individual users (free, Pro trial, Pro, Pro+, Ultra); Teams and Enterprise are excluded.",
+    "status": "verified",
     "confidence": "high",
     "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
-    "notes": "The Qwen3.8-Flash 0× promotion is time-limited. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
+    "notes": "The Qwen3.8-Flash 0x promotion is time-limited but was extended on 2026-09-29 (originally ending 2026-09-30); no end date has been announced yet, so do not mark it expired until Qoder posts one. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -183,13 +188,11 @@
     "freeModels": [
       {
         "model": "Qwen3.8-Flash",
-        "quota": "0× Credits through 2026-09-30 23:59:59 UTC+8",
-        "note": "Temporary Qoder promotion; no claim required for model usage.",
-        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+        "quota": "0x Credits since 2026-09-18 10:00 UTC+8; extended past 2026-09-30, end date to be announced",
+        "note": "Temporary Qoder promotion for international individual users; no claim required. Teams/Enterprise excluded.",
+        "sourceUrl": "https://docs.qoder.com/zh/events/flashoffer"
       }
     ],
-    "expires_at": "2026-09-30",
-    "expired_scope": "promotion",
     "lastObservedAt": "2026-10-11"
   },
   {
@@ -704,6 +707,10 @@
       [
         "Hugging Face (2.0 weights)",
         "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      ],
+      [
+        "OpenCode Zen：LongCat 2.5 Preview Free（限时）",
+        "https://opencode.ai/docs/en/zen/"
       ]
     ],
     "originCountry": "China",
@@ -720,14 +727,15 @@
       "https://longcat.chat/platform/docs/zh/FAQ.html",
       "https://longcat.chat/platform/docs/zh/ChangeLog.html",
       "https://github.com/meituan-longcat/LongCat-2.0",
-      "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      "https://huggingface.co/meituan-longcat/LongCat-2.0",
+      "https://opencode.ai/docs/en/zen/"
     ],
     "evidence": "Official LongCat docs list LongCat-2.5-Preview and LongCat-2.0, 1M context and OpenAI/Anthropic-compatible APIs. The official FAQ tells users to ensure the account has sufficient balance and states Token Resource Packs support both models; no durable free API quota is documented.",
     "status": "needs_review",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not.",
+    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not. 2026-10-10：OpenCode Zen 官方文档列出 longcat-2.5-preview-free 限时免费（零留存、不用于训练）。这是 OpenCode Zen 平台的限时免费路由，不代表美团 LongCat 官方 API 免费。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -1195,7 +1203,7 @@
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "MiMo-V2.6-Flash Free · Big Pickle · Step 5 Preview Free · Ling 3.1 Flash Free · Ling 3.0 Flash Fin Free · LongCat 2.5 Preview Free · Nemotron · Muse Spark",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · Step 5 Preview Free · Ling 3.1 Flash Free · Ling 3.0 Flash Fin Free · LongCat 2.5 Preview Free · Exo Free · Nemotron · Muse Spark",
     "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
@@ -1272,7 +1280,7 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
-    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 2026-10-09 复核：Fledge Alpha Free 已从官方免费列表移除；新增 Step 5 Preview Free（阶跃星辰官方宣布的一周免费活动之一）。",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 2026-10-09 复核：Fledge Alpha Free 已从官方免费列表移除；新增 Step 5 Preview Free（阶跃星辰官方宣布的一周免费活动之一）。 2026-10-10 复核：官方 Zen 文档（Last updated 2026-10-08）新增 Exo Free（免费期数据可能用于改进模型）与 LongCat 2.5 Preview Free（零留存），均为限时免费。",
     "endpointCheck": {
       "checkedAt": "2026-09-23",
       "verdict": "OK",
@@ -1324,7 +1332,23 @@
         }
       ]
     },
-    "lastObservedAt": "2026-10-11"
+    "lastObservedAt": "2026-10-11",
+    "freeModels": [
+      {
+        "model": "exo-free",
+        "label": "Exo Free",
+        "quota": "输入 / 输出 / 缓存读取均为 Free（限时）",
+        "note": "限时免费；免费期请求数据可能被用于改进模型（官方 Privacy 段）",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      },
+      {
+        "model": "longcat-2.5-preview-free",
+        "label": "LongCat 2.5 Preview Free",
+        "quota": "输入 / 输出 / 缓存读取均为 Free（限时）",
+        "note": "限时免费；提供方零留存，不用于训练",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      }
+    ]
   },
   {
     "id": "github-copilot-free",
@@ -3164,6 +3188,10 @@
       [
         "Quickstart",
         "https://ai.google.dev/gemini-api/docs/quickstart"
+      ],
+      [
+        "AI Studio 每模型每日用量上限公告（2026-09-29）",
+        "https://discuss.ai.google.dev/t/daily-usage-limits-for-models-in-ai-studio/185935"
       ]
     ],
     "originCountry": "International",
@@ -3180,11 +3208,12 @@
     "renewal": "No renewal; the free tier is the default no-cost tier of the API",
     "sourceUrls": [
       "https://ai.google.dev/gemini-api/docs/pricing",
-      "https://ai.google.dev/gemini-api/docs/quickstart"
+      "https://ai.google.dev/gemini-api/docs/quickstart",
+      "https://discuss.ai.google.dev/t/daily-usage-limits-for-models-in-ai-studio/185935"
     ],
     "evidence": "Official pricing page: 'Gemini 3.8 Flash ... Free Tier ... Input price Free of charge ... Output price (including thinking tokens) Free of charge ... Context caching price Free of charge', and free tier 'Used to improve our products: Yes'.",
     "confidence": "high",
-    "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier.",
+    "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier. 2026-09-29 Google 官方论坛公告：AI Studio Playground 起对每个模型设每日用量上限，Google AI Pro / Ultra 订阅上限更高；官方建议大量或持续使用改用 Gemini API + 自有 API Key。此变更针对网页 Playground，不是 Gemini API 免费档的速率表（API 免费档请以 rate-limits 页为准）。",
     "endpointCheck": {
       "checkedAt": "2026-09-18",
       "verdict": "NEEDS_KEY",
@@ -3394,11 +3423,11 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
-    "cardRequired": "unknown",
+    "cardRequired": "yes",
     "commercialUse": "Check the provider's official terms",
     "productType": "api",
     "capabilities": [
@@ -3417,14 +3446,15 @@
       "free"
     ],
     "usageGuide": {
-      "summary": "Use the free credits granted after creating a Cerebras account",
+      "summary": "Add a payment method in the Cerebras console to activate the one-time $5 promotional credit (expires 30 days after activation)",
       "prerequisites": [
         "Cerebras account",
+        "Valid payment method on file (not charged automatically)",
         "API key generated in the Cerebras console"
       ],
       "steps": [
-        "Create a Cerebras account to receive the free credits",
-        "Generate an API key and send an OpenAI-compatible chat completion request"
+        "Create a Cerebras account and add a valid payment method to receive the one-time $5 promotional credit",
+        "Generate an API key and send an OpenAI-compatible chat completion request; the credit expires 30 days after activation"
       ],
       "endpoint": "https://api.cerebras.ai/v1/chat/completions",
       "method": "POST",
@@ -3436,17 +3466,19 @@
     },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
-      "FREE CREDITS"
+      "$5 PROMO CREDIT",
+      "需绑卡",
+      "30 天过期"
     ],
-    "freeSummary": "Free trial: $5 in free credits after account creation",
-    "validitySummary": "One-time credits; consumed by usage",
-    "accessSummary": "Cerebras account",
-    "checkedSummary": "Today / official Cerebras pricing page",
+    "freeSummary": "需绑卡：添加有效付款方式后发放一次性 $5 促销额度，激活后 30 天过期；用完或过期后 API 与 Playground 暂停（不会自动扣费）",
+    "validitySummary": "一次性 $5，激活后 30 天过期；不自动续发",
+    "accessSummary": "Cerebras 账号 + 有效付款方式（不会自动扣费）",
+    "checkedSummary": "2026-10-10 / Cerebras 官方定价页脚注",
     "title": "Cerebras · free inference credits",
-    "why": "The official Cerebras pricing page lists an 'Inference API access / Free Trial' tier: 'Get started with $5 in free credits after making an account. Access to all Cerebras powered models'. The docs also note free accounts have lower per-minute limits than paid accounts.",
-    "mechanism": "One-time $5 free credits granted after account creation",
-    "validity": "Credits are consumed by usage; check the official pricing page for current terms",
-    "access": "Cerebras account required",
+    "why": "Cerebras' official pricing page now states: 'Add a valid payment method to receive a one-time $5 promotional credit. The credit expires 30 days after activation. You will not be charged or automatically enrolled in paid usage. API and Playground access will pause when the credit expires or is exhausted unless you separately purchase PayGo credits.'",
+    "mechanism": "One-time $5 promotional credit granted after adding a valid payment method",
+    "validity": "Expires 30 days after activation, or earlier when exhausted; access pauses afterwards unless PayGo credits are purchased",
+    "access": "Cerebras account plus a valid payment method on file (no automatic charge)",
     "command": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.cerebras.ai/",
     "registerLabel": "Cerebras cloud console",
@@ -3468,17 +3500,18 @@
       "type": "one_time_credits",
       "amount": 5,
       "unit": "USD credits",
-      "period": null
+      "period": "30 days after activation",
+      "cardRequired": true
     },
-    "quota": "$5 in one-time free credits",
-    "renewal": "No automatic renewal of the free credits",
+    "quota": "$5 one-time promotional credit (card required, 30-day expiry)",
+    "renewal": "No automatic renewal; not charged or auto-enrolled in paid usage",
     "sourceUrls": [
       "https://www.cerebras.ai/pricing",
       "https://inference-docs.cerebras.ai/quickstart"
     ],
-    "evidence": "Official pricing page: 'Free Trial Get started with $5 in free credits after making an account Access to all Cerebras powered models'; docs: 'Free accounts have lower per-minute limits than paid accounts'.",
+    "evidence": "Official pricing page (checked 2026-10-10): 'Add a valid payment method to receive a one-time $5 promotional credit. The credit expires 30 days after activation. You will not be charged or automatically enrolled in paid usage. API and Playground access will pause when the credit expires or is exhausted unless you separately purchase PayGo credits.'",
     "confidence": "high",
-    "notes": "International option included in the China-first global directory. Credits are a one-time trial, not a permanent free tier.",
+    "notes": "International option included in the China-first global directory. Since the current pricing-page wording (change date not published), the $5 is a card-gated one-time promo that expires 30 days after activation; it is not a permanent free tier and not granted on signup alone.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -9301,34 +9334,25 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。 2026-10-10 复核：Vercel 官方 changelog 仍写明 free through October 31, 2026；已写入 expires_at=2026-10-31，到期后自动下架。",
-    "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
-    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API",
+    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。 2026-10-10 复核：Vercel 官方 changelog 仍写明 free through October 31, 2026；已写入 expires_at=2026-10-31，到期后自动下架。 2026-10-10 修正：titleZh 与 evidence 曾误写为蚂蚁百灵 Ling-3.1-flash，误挂的 Ling 实测记录已移除。",
+    "evidence": "Vercel AI Gateway 模型页 https://vercel.com/ai-gateway/models/laya-free 将 convaiinnovations/laya-free 标为 Free，上下文 8,192 tokens；Vercel changelog 写明免费至 2026-10-31。Laya 返回结构化判定（布尔 / 评分 / 选择题），通过 AI SDK experimental_evaluate 调用，不生成自由文本。",
+    "titleZh": "Laya 结构化判定模型 · 限时免费 API",
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "blocked",
-      "testedAt": "2026-10-02",
+      "testedAt": "2026-10-10",
       "actualUsageVerified": false,
-      "task": "检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。",
+      "task": "核对 convaiinnovations/laya-free 在 Vercel AI Gateway 的免费状态、上下文与促销截止日。",
       "method": [
-        "核对 Vercel AI Gateway 官方公告与当前免费模型页。",
-        "使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。",
-        "三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。"
+        "打开 Vercel AI Gateway 官方模型页 /ai-gateway/models/laya-free，核对价格（Free）、上下文（8K）、提供方（Boundless）与促销截止说明。",
+        "本次没有 Vercel AI Gateway API Key，未发起调用，没有模型输出。"
       ],
-      "result": "FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。",
-      "limitations": "HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。",
+      "result": "官方模型页标注 Price: Free、8K 上下文，并写明 Promotional pricing ends on October 31, 2026。未做真实调用，判定质量与延迟未测。",
+      "limitations": "仅为页面核对（preflight），未验证真实额度、限流或稳定性；官方示例代码目前使用 AI SDK 的 experimental_decide。",
       "evidence": [
         {
-          "label": "Vercel 发布说明",
-          "url": "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
-        },
-        {
-          "label": "Vercel 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
-        },
-        {
-          "label": "Vercel Chat Completions API 文档",
-          "url": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
+          "label": "Vercel Laya (Free) 模型页",
+          "url": "https://vercel.com/ai-gateway/models/laya-free"
         }
       ]
     },
@@ -9757,7 +9781,7 @@
   {
     "id": "intern-s2-free-api",
     "order": 72,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Intern-S2 official free API quota",
     "providerMark": "书",
     "provider": "Shanghai AI Laboratory · Intern AI",
@@ -9873,7 +9897,7 @@
   {
     "id": "autoclaw-glm-5-3-flash-oct-2026",
     "order": 73,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "AutoClaw GLM-5.3-Flash October free-token event",
     "providerMark": "A",
     "provider": "Z.ai · AutoClaw",
@@ -9986,7 +10010,7 @@
   {
     "id": "zhipu-glm-4-7-flash-free-api",
     "order": 74,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Zhipu GLM-4.7-Flash free BigModel API",
     "providerMark": "GLM",
     "provider": "Zhipu BigModel",
@@ -10102,7 +10126,7 @@
   {
     "id": "xiaomi-mimo-new-user-10cny-credit",
     "order": 75,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Xiaomi MiMo new-user ¥10 API credit",
     "providerMark": "米",
     "provider": "Xiaomi MiMo",
@@ -10336,5 +10360,224 @@
     "lastVerifiedAt": "2026-10-09",
     "checkedBy": "public_sources",
     "notes": "事实：官方支持网页端以自然语言创建项目。宣传/未实测：每天 100 亿 Token。UNKNOWN：每账号额度、模型倍率、刷新时间、可用地区、是否需付费、部署/运行收费。禁止将其标成 100 亿免费 API Token、无限免费或收益保证。VibeX 不支持导入已有项目的限制来自文章描述，尚需官方文档复核。"
+  },
+  {
+    "id": "claude-max-team-api-credits",
+    "order": 77,
+    "date": "2026-10-10",
+    "lastVerifiedAt": "2026-10-10",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "yes",
+    "commercialUse": "Anthropic program terms apply (https://www.anthropic.com/legal/credit-terms)",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "Claude Max / Team subscriber API credits",
+    "title": "Claude 订阅附送 API 额度 · Max / Team 每月 $100–$500",
+    "titleEn": "Claude subscriber API credits · Max / Team $100–$500 per month",
+    "providerMark": "CL",
+    "provider": "Anthropic",
+    "providerMeta": "Anthropic · Claude Platform",
+    "model": "Claude API models on Claude Platform (Console)",
+    "modelMeta": "Subscriber bonus credits, not a free tier",
+    "type": [
+      "api"
+    ],
+    "usageGuide": {
+      "summary": "在 claude.ai 账单设置里把一个 Claude Console 组织关联到 Max / Team 订阅，额度每个账单周期进入该组织",
+      "summaryEn": "Link a Claude Console organization to your Max / Team plan in claude.ai billing settings; credits arrive there each billing cycle",
+      "prerequisites": [
+        "有效的 Claude Max 5x / Max 20x / Team 付费订阅（新订阅满 7 天）",
+        "Claude Console 组织的 Owner / Admin / Billing 角色"
+      ],
+      "steps": [
+        "claude.ai → Settings > Billing（Max）或 Organization settings > Billing（Team）→ API credits",
+        "选择要接收额度的 Console 组织并接受计划条款完成关联（关联后不能自行更换）",
+        "在 Console → Settings > Billing 的 Promotional credits 查看额度，创建 API Key 调用 Claude API"
+      ],
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "method": "POST",
+      "authentication": "x-api-key header (Claude Console API key)",
+      "docsUrl": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
+      "examples": {
+        "action": "打开 https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers 按步骤在 claude.ai 账单设置中关联 Console 组织"
+      }
+    },
+    "kicker": "SUBSCRIBER BONUS · NOT A FREE TIER",
+    "badges": [
+      "订阅附送",
+      "需付费 Max / Team",
+      "每月刷新 · 不结转"
+    ],
+    "freeMechanism": "monthly_quota",
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "subscriber_monthly_credits",
+      "unit": "USD credits",
+      "period": "billing cycle"
+    },
+    "freeSummary": "付费 Claude Max / Team 订阅每月附送 Claude API 额度：Max 5x $100、Max 20x $200、Team 按席位汇总（Standard $20 / Premium $100 每席）上限 $500；不能用于 Claude Code，不结转",
+    "freeSummaryEn": "Paid Claude Max / Team plans include monthly Claude API credits: Max 5x $100, Max 20x $200, Team pooled per seat (Standard $20 / Premium $100) capped at $500; not usable for Claude Code, no rollover",
+    "validitySummary": "每个账单周期发放、周期末过期，不结转；新订阅满 7 天后可领取",
+    "accessSummary": "需要付费 Max 5x / Max 20x / Team 订阅，并把一个 Claude Console 组织关联到订阅（Platform 无需另绑付款方式）",
+    "checkedSummary": "2026-10-10 / Claude Platform 官方文档 API credits for subscribers",
+    "why": "Claude Platform docs: Claude Max and Team plans include monthly credits for the Claude API — $100 (Max 5x), $200 (Max 20x), up to $500 pooled for Team. Credits cover the Claude API, Managed Agents, the Agent SDK and the playground, but not Claude Code or extra usage in the Claude apps. They expire at the end of each billing cycle with no rollover. Free, Pro and Enterprise plans are not eligible. This is a bonus for paying subscribers, not a free tier.",
+    "mechanism": "Monthly API credits bundled with paid Claude Max / Team subscriptions, claimed by linking a Claude Console organization",
+    "validity": "Refreshes each billing cycle (monthly for annual plans); unused credits expire at cycle end, no rollover",
+    "access": "Active Max 5x, Max 20x or Team plan (incl. discounted Team plans); new subscribers can claim after 7 days; Free / Pro / Enterprise not eligible",
+    "quota": "Max 5x $100 / Max 20x $200 / Team $20 per Standard seat + $100 per Premium seat, pooled and capped at $500 per month",
+    "renewal": "Each billing cycle while the eligible plan is active",
+    "command": "claude.ai → Settings > Billing (Max) or Organization settings > Billing (Team) → API credits → link a Console organization",
+    "register": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
+    "registerLabel": "查看官方领取说明",
+    "links": [
+      [
+        "Claude Platform：API credits for Max and Team plans",
+        "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+      ]
+    ],
+    "sourceUrls": [
+      "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+    ],
+    "evidence": "Official docs (checked 2026-10-10): 'Monthly amount: $100 USD (Max 5x), $200 USD (Max 20x), up to $500 USD (Team, pooled)'; 'Doesn't cover: Claude Code, extra usage in the Claude apps'; 'Expiry: End of each billing cycle ... with no rollover'; 'Free, Pro, and Enterprise plans aren't eligible.'",
+    "confidence": "high",
+    "originCountry": "International",
+    "availability": "Claude Platform (Console) only; not usable on Bedrock, Vertex AI, Microsoft Foundry or Claude Platform on AWS",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "blocked",
+      "testedAt": "2026-10-10",
+      "actualUsageVerified": false,
+      "task": "核对 Claude Max / Team 订阅附送 API 额度的金额、适用范围、有效期与资格。",
+      "method": [
+        "打开 Claude Platform 官方文档 API credits for Max and Team plans，逐项核对金额表、覆盖范围、过期规则与资格条件。",
+        "FreeLLM 没有付费 Max / Team 订阅，无法实际领取额度或发起调用。"
+      ],
+      "result": "官方文档写明 Max 5x $100、Max 20x $200、Team 按席位汇总上限 $500；覆盖 Claude API / Managed Agents / Agent SDK / playground，不含 Claude Code；每个账单周期过期不结转。领取与调用未实测。",
+      "limitations": "未实测领取流程与调用；属于付费订阅附送额度，不是免费档。",
+      "evidence": [
+        {
+          "label": "Claude Platform：API credits for Max and Team plans",
+          "url": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+        }
+      ]
+    },
+    "notes": "收录日期 2026-10-10。宣布日期 2026-10-07 来自 10-10 新闻缺口审核，官方文档页本身未写日期。这是付费订阅附送的 API 额度，不是免费档；FreeLLM 未实测领取流程。"
+  },
+  {
+    "id": "joycode",
+    "order": 80,
+    "date": "2026-10-11",
+    "name": "京东云 JoyCode AI 编程工具",
+    "providerMark": "JD",
+    "provider": "京东云 JoyCode",
+    "providerMeta": "JD Cloud · China",
+    "model": "团队版限时免费",
+    "modelMeta": "AI 编程 IDE / Agent",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "注册或登录 JoyCode 账号并安装客户端，在编辑器中选择模型开始使用。",
+      "prerequisites": [
+        "JoyCode 账号",
+        "支持的桌面环境（以官网安装包为准）"
+      ],
+      "steps": [
+        "打开 JoyCode 官方网站，下载并安装客户端",
+        "注册或登录账号，按向导完成初始化",
+        "进入模型选择界面；如需固定模型，关闭 Auto 后手动选择",
+        "在账号或用量页面核对积分余额、有效期与当前计划"
+      ],
+      "examples": {
+        "action": "打开 https://joycode.jd.com/ 并下载 JoyCode 客户端"
+      },
+      "docsUrl": "https://joycode.jd.com/pricing/"
+    },
+    "kicker": "FREE AI CODING",
+    "badges": [
+      "限时免费",
+      "10,000 积分/席位"
+    ],
+    "freeSummary": "官方定价页显示团队版限时免费，10,000 积分/席位；积分刷新周期和具体消耗规则待核验。",
+    "validitySummary": "限时免费；活动结束时间待官方确认",
+    "accessSummary": "注册并登录 JoyCode；具体地区、账号及团队资格待核验",
+    "checkedSummary": "2026-10-11 / 京东 JoyCode 官方定价页",
+    "title": "京东云 JoyCode · 限时免费 AI 编程工具",
+    "titleZh": "京东云 JoyCode · 限时免费 AI 编程工具",
+    "titleEn": "JD Cloud JoyCode · Free AI Coding Tool",
+    "why": "JoyCode 是京东云推出的 AI 编程工具，提供 IDE 内的智能编码与智能体辅助开发能力。官方定价页显示团队版限时免费，席位额度为 10,000 积分；这属于编程工具权益，不是可直接调用的通用免费 API。",
+    "mechanism": "团队版限时免费；每个席位显示 10,000 积分，积分消耗与刷新周期需登录后核实",
+    "validity": "限时活动，结束日期未确认",
+    "access": "需要注册/登录 JoyCode 账号；账号、地区和企业团队资格等具体限制待核验",
+    "command": "打开 JoyCode 官网下载客户端，登录后选择模型并在账户页面查看积分额度。",
+    "register": "https://joycode.jd.com/",
+    "registerLabel": "访问 JoyCode 官网",
+    "links": [
+      [
+        "JoyCode 官方网站",
+        "https://joycode.jd.com/"
+      ],
+      [
+        "JoyCode 官方定价页",
+        "https://joycode.jd.com/pricing/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国地区优先；具体地区及账号限制待核验",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": 10000,
+      "unit": "credits per seat",
+      "period": "unknown"
+    },
+    "quota": "10,000 积分/席位（官方定价页显示）；刷新周期、有效期和各模型消耗规则待核验",
+    "renewal": "活动结束时间与续费机制待核验",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://joycode.jd.com/",
+      "https://joycode.jd.com/pricing/"
+    ],
+    "evidence": "京东 JoyCode 官方定价页显示团队版限时免费，10,000 积分/席位。积分刷新周期、有效期、适用账户范围和具体消耗规则尚待进一步核对。",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-10-11",
+    "checkedBy": "manual",
+    "notes": "按官方定价页记录团队版限时免费与10,000积分/席位；不把积分写成API token，也不推断为永久免费。用户文章中的联网搜索、数学推理与小游戏生成表现属于个人体验，FreeLLM 尚未独立复测。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-11",
+      "actualUsageVerified": false,
+      "task": "核验京东云 JoyCode 团队版限时免费与每席位 10,000 积分的官方说明，并区分 IDE 权益和 API 服务。",
+      "method": [
+        "核对 JoyCode 官方产品页和官方定价页中的产品定位、团队版限时免费说明与席位积分额度。",
+        "记录客户端安装、登录和模型选择的投稿者体验；FreeLLM 未独立运行客户端或验证账号内积分扣减。"
+      ],
+      "result": "官方定价页记录显示团队版限时免费、10,000 积分/席位；作为 AI 编程工具收录，不作为免费 API。",
+      "limitations": "未使用新账号实际注册登录、未独立安装运行客户端、未验证积分到账/刷新/消耗、活动截止日期、团队资格或商用限制。",
+      "evidence": [
+        {
+          "label": "JoyCode 官方网站",
+          "url": "https://joycode.jd.com/"
+        },
+        {
+          "label": "JoyCode 官方定价页",
+          "url": "https://joycode.jd.com/pricing/"
+        }
+      ]
+    }
   }
 ]

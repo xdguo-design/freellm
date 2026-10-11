@@ -155,6 +155,9 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         Four verified offer pages and two skills indexes were reviewed as part
         of the latest catalog refresh. Needs-review offers are excluded above;
         future expansion beyond the adjusted budget needs review.
+        2026-10-10 (series 4): +2 reviewed — /offers/qoder/ is active again
+        (Qwen3.8-Flash promotion officially extended) and the new verified
+        /offers/claude-max-team-api-credits/ page.
         """
         all_urls: list[str] = []
         for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
@@ -174,8 +177,8 @@ class SearchConsoleRegressionTests(unittest.TestCase):
 
         self.assertLessEqual(
             len(all_urls),
-            218,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 218); review SEO scope before publishing",
+            220,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 220); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),

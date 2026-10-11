@@ -2548,6 +2548,47 @@
         }
       ],
       "allowQuestions": false
+    },
+    "addyosmani-code-review-and-quality": {
+      "task": "请按 Skill 评审下面这个改动并给出是否批准的结论：PR 把 getUser(id) 改为直接拼接 SQL：db.query(\"SELECT * FROM users WHERE id = \" + id)，并删掉了原有的单元测试。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "正确性|correctness"
+          ],
+          "label": "覆盖正确性维度"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "安全|security|注入|injection"
+          ],
+          "label": "指出 SQL 注入安全问题"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "参数化|parameteri[sz]ed|占位符|prepared"
+          ],
+          "label": "建议参数化查询"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "测试|test"
+          ],
+          "label": "要求补回测试"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "不批准|拒绝|request changes|changes requested|不能合并|block"
+          ],
+          "label": "给出不批准结论"
+        }
+      ],
+      "allowQuestions": false
     }
   }
 }

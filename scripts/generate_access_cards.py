@@ -145,7 +145,8 @@ def _operation_hints(operations_dir: str | Path) -> dict[str, dict]:
             "apiKeyRequired": "yes" if key_positive and not key_negative else None,
             "gpuRequired": "yes" if any(any(hint in item for hint in _GPU_HINTS) for item in prerequisites) else None,
             "sourceUrls": list(dict.fromkeys(sources)),
-            "lastVerifiedAt": guide.get("lastVerifiedAt"),
+            # Newer guides record the official-docs review date instead of lastVerifiedAt.
+            "lastVerifiedAt": guide.get("lastVerifiedAt") or guide.get("officialDocsReviewedAt"),
         }
     return hints
 
@@ -176,7 +177,8 @@ def _provider_card(provider_id: str, hints: dict, as_of: str) -> dict:
         "replacement": GITHUB_MODELS_REPLACEMENT if retired else None,
         "sourceUrls": hint.get("sourceUrls") or DIRECTORY_SOURCES,
         "lastVerifiedAt": hint.get("lastVerifiedAt"),
-        "verificationStatus": "partial" if hint else "unverified",
+        # "partial" needs a review date (schema rule); undated hints stay unverified.
+        "verificationStatus": "partial" if hint and hint.get("lastVerifiedAt") else "unverified",
         "confidence": "high" if retired else ("medium" if hint else "low"),
         "notes": (
             "GitHub Models 已于 2026-07-30 完全退役，官方建议替代为 Azure AI Foundry 或 GitHub Copilot。"
@@ -248,6 +250,8 @@ def generate(
         provider_id = str(card.get("providerId") or "")
         if provider_id in provider_cards:
             provider_cards[provider_id] = card
+        elif card.get("registrationStatus") == "unavailable":
+            provider_cards[provider_id] = card  # retired-provider tombstone survives catalog removal
     missing_policies = {
         card.get("regionPolicyId")
         for card in provider_cards.values()
@@ -279,7 +283,8 @@ def generate(
         source = catalog_by_id[model_id]
         merged["providerId"] = source["providerId"]
         merged["registrationProfileId"] = provider_cards[source["providerId"]]["profileId"]
-        merged["modelSearchName"] = source["model"]
+        # Hand-curated search names (e.g. the exact API model id) win over the display name.
+        merged["modelSearchName"] = card.get("modelSearchName") or source["model"]
     unknown_providers = {
         card.get("providerId") for card in model_cards.values() if card.get("providerId") not in provider_cards
     }
