@@ -22,8 +22,10 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertTrue(summary["scanRunToday"])
         self.assertEqual(summary["scannedModels"], len(latest_log["observed"]["models"]))
         self.assertEqual(summary["scannedOffers"], len(latest_log["observed"]["offers"]))
-        self.assertIsInstance(summary["newCount"], int)
-        self.assertGreaterEqual(summary["newCount"], 0)
+        # 2026-10-10 series 4: the duplicate Step 5 / back-dated scan events were
+        # removed and officially verified additions curated; count from the log.
+        new_events = [e for key in ("events", "curatedEvents") for e in latest_log.get(key) or [] if e.get("eventType") in {"new", "new_route"}]
+        self.assertEqual(summary["newCount"], len(new_events))
         self.assertEqual(summary["sourceChecks"], 2)
 
     def test_homepage_uses_sourced_discovery_and_incremental_cards(self):
@@ -39,7 +41,8 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn("def sync_home_scan_snapshot(", build)
         self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
-        self.assertIn("entry = events[-1] if events else None", build)
+        # newest official (non third-party relay) discovery, curated first
+        self.assertIn("entry = curated[0] if curated else (official[-1] if official else None)", build)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)
         self.assertIn("matchedRows.slice(0, visibleOfferLimit)", js)
         self.assertIn("offerGrid.replaceChildren(...visibleCards)", js)

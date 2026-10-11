@@ -21,6 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from crawler.fetch import fetch_public_text_resource
+from crawler.source_tiers import THIRD_PARTY_RELAY_TIER, is_third_party_relay
 from crawler.official_model_discovery import (
     discover_official_model_sources,
     to_catalog_rows,
@@ -119,6 +120,8 @@ def build_provider_catalog(models: list[dict], last_seen_at: str, operation_guid
             "sourceKind": "catalog",
             "lastSeenAt": last_seen_at,
         })
+        if is_third_party_relay(provider_id=provider_id):
+            provider["sourceTier"] = THIRD_PARTY_RELAY_TIER
         provider["modelCount"] += 1
         provider["modelIds"].append(model["id"])
     for guide in operation_guides or []:
