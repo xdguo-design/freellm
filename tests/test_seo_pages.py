@@ -459,17 +459,16 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         path.name: path.read_text(encoding="utf-8")
         for path in sorted(tmp_path.glob("sitemap*.xml"))
     }
-    # sitemap-english.xml was added on purpose for the independent English hubs (P1-4, PR #62).
+    # sitemap-english.xml (P1-4, PR #62) was dropped in 1010-S6: the /en/ placeholders are noindex.
     assert set(sitemap_texts) == {
         "sitemap.xml",
         "sitemap-pages.xml",
         "sitemap-offers.xml",
         "sitemap-providers.xml",
         "sitemap-models.xml",
-        "sitemap-english.xml",
     }
     assert "<sitemapindex" in sitemap_texts["sitemap.xml"]
-    for section in ("pages", "offers", "providers", "models", "english"):
+    for section in ("pages", "offers", "providers", "models"):
         assert f"https://freellm.top/sitemap-{section}.xml" in sitemap_texts["sitemap.xml"]
     sitemap = "".join(
         text for name, text in sitemap_texts.items() if name != "sitemap.xml"
@@ -513,7 +512,6 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/privacy/",
         "https://freellm.top/submit/",
         "https://freellm.top/terms/",
-        "https://freellm.top/health/",
         # Hand-maintained contact page added for AdSense trust pages (ADSENSE-8, commit 13c89622).
         "https://freellm.top/contact/",
         "https://freellm.top/evaluations/",
