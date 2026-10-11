@@ -117,7 +117,7 @@
         ribbon.className = 'fl-site-ribbon';
         var pageTitle = (document.title || 'FreeLLM').split('·')[0].split('|')[0].trim();
         ribbon.innerHTML =
-          '<span class="fl-site-ribbon-title">FREE AI INDEX / ' + escapeText(pageTitle) + '</span>' +
+          '<span class="fl-site-ribbon-title">FreeLLM / ' + escapeText(pageTitle) + '</span>' +
           '<span class="fl-site-ribbon-actions">' +
             '<a href="/favorites/">我的收藏</a>' +
             '<a href="/">资源首页 ↗</a>' +
@@ -588,6 +588,8 @@
       'font-size:14px;line-height:1;padding:0;z-index:5;transition:color .15s,transform .15s;}',
       '.fl-sync-star:hover{color:var(--accent,#1744E8);transform:scale(1.15);}',
       '.fl-sync-star.is-fav{color:#F5A623;}',
+      '.fl-sync-star.fl-sync-star-inline{position:static;display:inline-grid;vertical-align:middle;margin-left:4px;width:22px;height:22px;}',
+      '.fl-has-sync-star :is(h2,h3,h4,strong,b):first-of-type{padding-right:26px;}',
       '.fl-auth-mask{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;}',
       '.fl-auth-modal{width:min(92vw,420px);background:var(--surface,#fff);color:var(--ink,#2F3437);border-radius:12px;padding:24px;',
       'box-shadow:0 20px 60px rgba(0,0,0,.2);font-family:var(--font-sans,system-ui,sans-serif);}',
@@ -775,8 +777,27 @@
       var type = DETAIL_TYPE[m[1]];
       var item = { type: type, id: href.replace(/^\/|\/$/g, '').split('/').pop(), name: autoName(a), url: href };
       a.addEventListener('click', function () { track(item); });
+      // S5: icon-only arrows ("→") and short inline text links are not cards; an absolutely
+      // positioned star inside them covered the link text or the arrow itself.
+      var label = (a.textContent || '').replace(/\s+/g, '').trim();
+      if (label.length <= 2) return;
+      var display = '';
+      try { display = window.getComputedStyle(a).display; } catch (e) { display = ''; }
+      var hidden = a.offsetParent === null;
+      var cardLike = hidden || (/^(block|flex|grid|inline-block|inline-flex|inline-grid|list-item)$/.test(display) && a.offsetHeight >= 56 && a.offsetWidth >= 160);
+      var parentDisplay = '';
+      try { parentDisplay = a.parentElement ? window.getComputedStyle(a.parentElement).display : ''; } catch (e) { parentDisplay = ''; }
+      // An extra sibling would take a grid cell of its own; leave such small links without a star.
+      if (!cardLike && /grid/.test(parentDisplay)) return;
+      var star = starButton(item);
+      if (!cardLike) {
+        star.classList.add('fl-sync-star-inline');
+        a.insertAdjacentElement('afterend', star);
+        return;
+      }
+      a.classList.add('fl-has-sync-star');
       a.style.position = a.style.position || 'relative';
-      a.appendChild(starButton(item));
+      a.appendChild(star);
     });
   }
 
