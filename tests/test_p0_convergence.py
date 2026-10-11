@@ -281,7 +281,7 @@ class P0ConvergenceTests(unittest.TestCase):
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
         self.assertIsNotNone(match)
         self.assertEqual(match.group(1).count("<a "), 7)
-        for label in ("首页", "模型", "技能", "工具", "工作流", "今日发现", "关于"):
+        for label in ("首页", "模型", "技能", "工具", "实测榜", "今日发现", "关于"):
             self.assertIn(f"<span>{label}</span>", match.group(1))
 
     def test_no_duplicate_global_top_nav_on_key_pages(self):
@@ -309,7 +309,7 @@ class P0ConvergenceTests(unittest.TestCase):
         ):
             page = (ROOT / relative).read_text(encoding="utf-8")
             self.assertIn('class="model-section-tabs', page, relative)
-            for href in ("/models/", "/models/all/", "/providers/", "/category/api/"):
+            for href in ("/models/", "/models/all/", "/providers/", "/offers/"):
                 self.assertIn(f'href="{href}"', page, relative)
 
     def test_model_center_legacy_route_redirects_to_featured_models(self):

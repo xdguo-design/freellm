@@ -737,6 +737,11 @@ def _english_text(value: object, fallback: str = "See official terms") -> str:
 def _locale_pair(zh: object, en: object, fallback_en: str = "See official terms") -> str:
     zh_text = str(zh or en or fallback_en)
     en_text = _english_text(en or zh, fallback_en)
+    if zh_text == en_text and not re.search(r"[\u3400-\u9fff]", zh_text):
+        # No Chinese text exists in the data for this slot. Render the source
+        # text once (shown in both locales) instead of back-filling the Chinese
+        # slot with a duplicate English copy.
+        return f'<span class="locale-shared">{_esc(zh_text)}</span>'
     return f'<span lang="zh-CN">{_esc(zh_text)}</span><span lang="en">{_esc(en_text)}</span>'
 
 
@@ -766,10 +771,17 @@ ENGLISH_LOCALE_PATHS: dict[str, str] = {
 }
 
 
+# The /en/ routes are short editorial placeholders (≈800–1,200 chars, counts
+# filled by JS). Until they carry real English content they are noindex, out of
+# every sitemap, and Chinese pages do not announce them via hreflang (hreflang
+# to a noindex page is ignored by Google and reported as an error in GSC).
+ENGLISH_LOCALE_INDEXABLE = False
+
+
 def _hreflang_links(site_url: str, path: str) -> str:
     feed = _absolute(site_url, "/" + FEED_PATH)
     links = [f'<link rel="alternate" type="application/atom+xml" title="FreeLLM 免费 AI 资源新增" href="{_esc(feed)}">']
-    english = ENGLISH_LOCALE_PATHS.get(path)
+    english = ENGLISH_LOCALE_PATHS.get(path) if ENGLISH_LOCALE_INDEXABLE else None
     if english:
         for lang, alternate in (("zh-CN", path), ("en", english), ("x-default", path)):
             links.append(f'<link rel="alternate" hreflang="{lang}" href="{_esc(_absolute(site_url, alternate))}">')
@@ -1332,8 +1344,10 @@ def _quick_start_markup(offer: dict) -> str:
                 '</div>'
             )
             steps = specific_guide + step(4, "发送第一条请求", "Send first request", "使用下方命令开始调用。", "Use the command below to make your first request.", body3, wide=True)
-            qs_desc_zh = str(guide.get("summary") or "按模型专属步骤完成注册、创建密钥并接入模型。")
-            qs_desc_en = str(guide.get("summaryEn") or "Follow the model-specific steps to register, create a key and connect the model.")
+            # Only a real, data-backed summary is shown; no generic placeholder
+            # sentence (the old English fallback appeared on ~49 offer pages).
+            qs_desc_zh = str(guide.get("summary") or "").strip() or None
+            qs_desc_en = str(guide.get("summaryEn") or "").strip() or None
         else:
             steps = "".join(
                 (
@@ -1426,11 +1440,19 @@ def _quick_start_markup(offer: dict) -> str:
     return (
         '<section class="quick-start">\n'
         '      <h2>' + _locale_pair("快速上手", "Quick start") + '</h2>\n'
-        '      <p class="muted">' + _locale_pair(qs_desc_zh, qs_desc_en) + '</p>\n'
+        + _quick_start_description(qs_desc_zh, qs_desc_en) +
         '      <div class="qs-grid">' + steps + '</div>\n'
         '      ' + copy_script + '\n'
         '    </section>'
     )
+
+
+def _quick_start_description(zh: str | None, en: str | None) -> str:
+    if not zh and not en:
+        return ""
+    if zh and not en:
+        return f'      <p class="muted"><span lang="zh-CN">{_esc(zh)}</span></p>\n'
+    return '      <p class="muted">' + _locale_pair(zh, en) + '</p>\n'
 
 
 def _source_links(offer: dict) -> str:
@@ -3797,6 +3819,179 @@ def render_getting_started_provider_page(guide: dict, related_offers: list[dict]
 <body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, "/"))}">Free AI Index</a> / <a href="{_esc(hub_link)}">{_locale_pair("从零开始", "Getting started")}</a> / {_esc(name)}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">FIRST API CALL / {_esc(provider_id)}</div><h1>{_locale_pair(f"{_esc(display_name)}：跑通第一次 API 调用", f"Make your first {_esc(display_name)} API call")}</h1><p class="lead">{_locale_pair("先确认注册与免费条件，再按步骤获取密钥、安装依赖并验证返回结果。教程只使用环境变量读取密钥。", "Check signup and free terms first, then create a key, install dependencies and validate the response. Examples read credentials from environment variables.")}</p><div class="stats"><span>{_locale_pair("官方文档复核", "Official docs reviewed")}: {_esc(guide.get("officialDocsReviewedAt") or "未标注")}</span><span>{_locale_pair("独立 API 实测", "Independent API test")}: {_locale_pair("尚未记录", "Not recorded")}</span></div></header><main><section><h2>{_locale_pair("注册与网络前提", "Signup and network requirements")}</h2><dl class="requirement-grid">{requirement_cards}</dl><p class="verification-note">{_locale_pair("这些条件会因账号、地区和产品计划而变化。标注“待核验”表示 FreeLLM 尚未从当前链接的官方资料确认；不要据此推断为不需要。", "These requirements can vary by account, region and plan. “Unverified” means FreeLLM has not confirmed the condition from the linked official sources; it does not mean the requirement is absent.")}</p></section><section><h2>{_locale_pair("获取并安全设置 API Key", "Get and safely set your API key")}</h2>{env_markup}</section><section><h2>{_locale_pair("FreeLLM 资源记录", "FreeLLM resource records")}</h2><ul class="offer-links">{offer_markup}</ul></section>{operation_markup}<footer><p><a href="{_esc(hub_link)}">← {_locale_pair("返回提供商教程列表", "Back to provider guides")}</a> · <a href="{_esc(provider_link)}">{_locale_pair("查看模型 / 提供商详情", "View provider and model details")}</a></p></footer></main></body></html>'''
 
 
+OFFERS_HUB_PATH = "/offers/"
+CATEGORY_HUB_PATH = "/category/"
+GUIDES_HUB_PATH = "/guides/"
+HUB_STATUS_LABELS = {"verified": "已核验", "expired": "已结束"}
+HUB_CSS = (
+    "body {max-width:1180px}h1 {font-size:clamp(30px,5vw,48px)}"
+    ".hub-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}"
+    ".hub-card {display:flex;flex-direction:column;gap:6px;padding:18px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}"
+    ".hub-card h3 {margin:0;font-size:18px}.hub-card p {margin:0;color:var(--ink-secondary);font-size:14px}"
+    ".hub-meta {font-size:12px;color:var(--ink-secondary)}.hub-section {margin:28px 0}"
+    ".hub-list {display:grid;gap:4px;margin:6px 0 0;padding-left:18px;font-size:14px}"
+    ".hub-jump {display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.hub-jump a {padding:4px 10px;border:1px solid var(--line);border-radius:999px;font-size:13px}"
+)
+
+
+def _hub_offer_name(offer: dict) -> str:
+    return str(offer.get("titleZh") or offer.get("title") or offer.get("name") or offer.get("id"))
+
+
+def _hub_public_offers(offers: list[dict]) -> list[dict]:
+    """Offers that have a public, indexable detail page (same rule as sitemap-offers)."""
+    return [offer for offer in offers if offer.get("status") != "needs_review"]
+
+
+def _render_hub_page(site_url: str, path: str, title: str, description: str, eyebrow: str, h1: str, lead: str, body: str, items: list[tuple[str, str]]) -> str:
+    page_url = _absolute(site_url, path)
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": title,
+        "description": description,
+        "url": page_url,
+        "inLanguage": "zh-CN",
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": len(items),
+            "itemListElement": [
+                {"@type": "ListItem", "position": index, "name": name, "url": _absolute(site_url, url)}
+                for index, (name, url) in enumerate(items, start=1)
+            ],
+        },
+    }
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)}</title><meta name="description" content="{_esc(description)}"><link rel="canonical" href="{_esc(page_url)}">{_social_meta(site_url, path, title, description, "website")}{_analytics_script()}{ADSENSE_SCRIPT}{STATIC_LOCALE_STYLE}{STATIC_LOCALE_SCRIPT}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{SKILLS_THEME_ASSETS}
+<style>{EDITORIAL_BASE_CSS}</style><style>{HUB_CSS}</style></head>
+<body data-static-locale="true"><header><p><a href="{_esc(_absolute(site_url, "/"))}">Free AI Index</a> / {_esc(h1)}</p>{_static_locale_nav()}<button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button><div class="eyebrow">{_esc(eyebrow)}</div><h1>{_esc(h1)}</h1><p class="lead">{lead}</p><nav class="hub-jump" aria-label="目录入口"><a href="{_esc(_absolute(site_url, OFFERS_HUB_PATH))}">全部优惠</a><a href="{_esc(_absolute(site_url, CATEGORY_HUB_PATH))}">分类总览</a><a href="{_esc(_absolute(site_url, GUIDES_HUB_PATH))}">全部教程</a><a href="{_esc(_absolute(site_url, GETTING_STARTED_GUIDE_PATH))}">从零开始</a><a href="{_esc(_absolute(site_url, "/evaluations/"))}">免费模型实测榜</a></nav></header><main>{body}</main><footer><p>数据来自 FreeLLM 资源记录（data/offers.json），每次构建自动生成；免费条件以各提供方官方页面为准，未确认的信息标注为“未核实”。</p></footer></body></html>'''
+
+
+def _hub_offer_card(offer: dict, site_url: str) -> str:
+    status = HUB_STATUS_LABELS.get(str(offer.get("status") or ""), "未核实")
+    summary = str(offer.get("freeSummary") or "").strip() or "免费条件未核实，请查看详情页与官方来源。"
+    checked = str(offer.get("lastVerifiedAt") or "").strip() or "未核实"
+    return (
+        f'<article class="hub-card"><h3><a href="{_esc(_absolute(site_url, offer_url(offer)))}">{_esc(_hub_offer_name(offer))}</a></h3>'
+        f'<p>{_esc(summary)}</p>'
+        f'<span class="hub-meta">{_esc(offer.get("provider") or "未核实")} · {_esc(status)} · 最后核验 {_esc(checked)}</span></article>'
+    )
+
+
+def render_offers_hub(offers: list[dict], site_url: str) -> str:
+    public = _hub_public_offers(offers)
+    active = [offer for offer in public if offer.get("status") == "verified"]
+    ended = [offer for offer in public if offer.get("status") == "expired"]
+    groups: list[tuple[str, str, list[dict]]] = []
+    seen: set[str] = set()
+    for slug, definition in CATEGORY_DEFINITIONS.items():
+        members = [offer for offer in active if categorize_offer(offer) and categorize_offer(offer)[0] == slug]
+        if members:
+            groups.append((slug, definition["name_zh"], sorted(members, key=lambda item: _hub_offer_name(item).lower())))
+            seen.update(str(offer.get("id")) for offer in members)
+    others = [offer for offer in active if str(offer.get("id")) not in seen]
+    if others:
+        groups.append(("other", "其他", sorted(others, key=lambda item: _hub_offer_name(item).lower())))
+    sections = []
+    for slug, label, members in groups:
+        more = (
+            f' · <a href="{_esc(_absolute(site_url, category_url(slug)))}">查看「{_esc(label)}」分类页</a>'
+            if slug in CATEGORY_DEFINITIONS else ""
+        )
+        sections.append(
+            f'<section class="hub-section" id="{_esc(slug)}"><h2>{_esc(label)}（{len(members)}）</h2>'
+            f'<p class="hub-meta">按主分类归档{more}</p>'
+            f'<div class="hub-grid">{"".join(_hub_offer_card(offer, site_url) for offer in members)}</div></section>'
+        )
+    if ended:
+        sections.append(
+            f'<section class="hub-section" id="ended"><h2>已结束（{len(ended)}）</h2>'
+            '<p class="hub-meta">活动已结束或免费条件已下线，保留详情页供核对历史条件。</p>'
+            f'<div class="hub-grid">{"".join(_hub_offer_card(offer, site_url) for offer in sorted(ended, key=lambda item: _hub_offer_name(item).lower()))}</div></section>'
+        )
+    lead = _esc(f"共 {len(public)} 条公开资源记录：{len(active)} 条已核验有效，{len(ended)} 条已结束。每条都链接到详情页，注明免费方式、提供方和最后核验日期。")
+    items = [(_hub_offer_name(offer), offer_url(offer)) for _, _, members in groups for offer in members]
+    return _render_hub_page(
+        site_url, OFFERS_HUB_PATH,
+        f"全部免费 AI 优惠与额度（{len(active)} 条有效） · FreeLLM",
+        f"FreeLLM 收录的 {len(public)} 条免费 AI API、IDE、试用与额度记录，按分类列出免费方式、提供方和最后核验日期。",
+        "FREE AI OFFERS / 全部优惠", "全部免费 AI 优惠", lead, "".join(sections), items,
+    )
+
+
+def render_category_hub(offers: list[dict], site_url: str, categories: list[str]) -> str:
+    public = [offer for offer in _hub_public_offers(offers) if offer.get("status") == "verified"]
+    counts = category_offer_counts(public)
+    cards = []
+    items = []
+    for slug in categories:
+        definition = CATEGORY_DEFINITIONS[slug]
+        members = sorted((offer for offer in public if slug in categorize_offer(offer)), key=lambda item: _hub_offer_name(item).lower())
+        sample = "".join(
+            f'<li><a href="{_esc(_absolute(site_url, offer_url(offer)))}">{_esc(_hub_offer_name(offer))}</a></li>'
+            for offer in members
+        )
+        url = category_url(slug)
+        items.append((definition["name_zh"], url))
+        cards.append(
+            f'<article class="hub-card"><h3><a href="{_esc(_absolute(site_url, url))}">{_esc(definition["name_zh"])}</a></h3>'
+            f'<p>{_esc(definition["description_zh"])}</p><span class="hub-meta">已核验有效 {counts.get(slug, 0)} 条</span>'
+            f'<ul class="hub-list">{sample}</ul>'
+            f'<a href="{_esc(_absolute(site_url, url))}">查看全部 {counts.get(slug, 0)} 条 →</a></article>'
+        )
+    lead = _esc(f"{len(categories)} 个分类，按免费方式归档 {len(public)} 条已核验有效的资源；同一资源可能同时属于多个分类。")
+    return _render_hub_page(
+        site_url, CATEGORY_HUB_PATH,
+        "免费 AI 资源分类总览：免费额度、AI IDE、API、试用优惠 · FreeLLM",
+        f"按免费额度、免费 AI IDE、AI API 服务、试用与优惠等 {len(categories)} 个分类浏览 FreeLLM 已核验的免费 AI 资源。",
+        "CATEGORIES / 分类总览", "免费 AI 资源分类总览", lead,
+        f'<section class="hub-section"><h2>全部分类</h2><div class="hub-grid">{"".join(cards)}</div></section>', items,
+    )
+
+
+def render_guides_hub(offers: list[dict], operations: list[dict], site_url: str) -> str:
+    entries = _getting_started_entries(offers, operations)
+    start_cards = [
+        f'<article class="hub-card"><h3><a href="{_esc(_absolute(site_url, GETTING_STARTED_GUIDE_PATH + str(guide.get("providerId") or "") + "/"))}">{_esc(guide.get("provider") or guide.get("providerId"))}：第一次 API 调用</a></h3>'
+        f'<p>注册、获取 API Key、发送第一条请求与常见错误排查。</p>'
+        f'<span class="hub-meta">官方文档复核 {_esc(guide.get("officialDocsReviewedAt") or "未核实")} · 关联资源 {len(related)} 条</span></article>'
+        for guide, related in entries
+    ]
+    items = [("从零开始：第一次 API 调用", GETTING_STARTED_GUIDE_PATH)] + [
+        (f'{guide.get("provider") or guide.get("providerId")} 第一次调用教程', GETTING_STARTED_GUIDE_PATH + str(guide.get("providerId") or "") + "/")
+        for guide, _ in entries
+    ]
+    theme_cards = []
+    for definition in THEME_GUIDE_DEFINITIONS:
+        url = f'/guides/{definition["slug"]}/'
+        items.append((definition["title_zh"], url))
+        theme_cards.append(
+            f'<article class="hub-card"><h3><a href="{_esc(_absolute(site_url, url))}">{_esc(definition["title_zh"])}</a></h3><p>{_esc(definition["description_zh"])}</p></article>'
+        )
+    other = [
+        (guide_url(), "免费 LLM API 开放目录", "免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入的总览。"),
+        (OPENAI_ALTERNATIVES_GUIDE_PATH, "OpenAI API 免费替代方案", "OpenAI 兼容的免费或试用接口对比（页面以英文为主）。"),
+        (CLAUDE_CODE_ALTERNATIVES_GUIDE_PATH, "Claude Code 免费替代方案", "可用于编码 Agent 的免费模型与工具（页面以英文为主）。"),
+    ]
+    other_cards = []
+    for url, label, desc in other:
+        items.append((label, url))
+        other_cards.append(f'<article class="hub-card"><h3><a href="{_esc(_absolute(site_url, url))}">{_esc(label)}</a></h3><p>{_esc(desc)}</p></article>')
+    body = (
+        f'<section class="hub-section" id="getting-started"><h2>从零开始：{len(entries)} 家提供商第一次调用教程</h2>'
+        f'<p class="hub-meta"><a href="{_esc(_absolute(site_url, GETTING_STARTED_GUIDE_PATH))}">打开教程索引 →</a></p>'
+        f'<div class="hub-grid">{"".join(start_cards)}</div></section>'
+        f'<section class="hub-section" id="topics"><h2>专题指南（{len(theme_cards)}）</h2><div class="hub-grid">{"".join(theme_cards)}</div></section>'
+        f'<section class="hub-section" id="more"><h2>其他指南（{len(other_cards)}）</h2><div class="hub-grid">{"".join(other_cards)}</div></section>'
+    )
+    lead = _esc(f"共 {len(items)} 篇教程与指南：先用 {len(entries)} 篇“从零开始”教程跑通第一次 API 调用，再按场景查看专题对比。")
+    return _render_hub_page(
+        site_url, GUIDES_HUB_PATH,
+        "免费 AI API 教程与指南总索引 · FreeLLM",
+        f"FreeLLM 全部 {len(items)} 篇教程：{len(entries)} 家提供商第一次 API 调用教程，以及免费 LLM API、AI 编程工具、搜索 API、国内免费 API 等专题指南。",
+        "GUIDES / 全部教程", "免费 AI 教程与指南", lead, body, items,
+    )
+
+
 def _model_api_offer_entries(offers: list[dict]) -> list[tuple[dict, dict]]:
     eligible = [
         offer for offer in offers
@@ -4128,7 +4323,7 @@ def render_models_landing_page(offers: list[dict], models: list[dict], vendor_di
       <a class="is-current" href="#featured-models"><span class="quick-icon icon-star">★</span><span><b>{_locale_pair("精选模型", "Featured models")}</b><small>{_locale_pair("团队人工精选", "Team curated")}</small></span><i>›</i></a>
       <a href="{ALL_MODELS_PAGE_PATH}"><span class="quick-icon icon-grid">▦</span><span><b>{_locale_pair("全部模型", "All models")}</b><small>{_locale_pair(f"完整模型目录（{model_record_count} 条）", f"Full catalog ({model_record_count} records)" )}</small></span><i>›</i></a>
       <a href="{PROVIDERS_PAGE_PATH}"><span class="quick-icon icon-city">▤</span><span><b>{_locale_pair("厂家目录", "Providers")}</b><small>{_locale_pair("按厂商浏览", "Browse by provider")}</small></span><i>›</i></a>
-      <a href="/category/api/"><span class="quick-icon icon-gift">✦</span><span><b>Free API / Offer</b><small>{_locale_pair(f"已核验资源（{offer_count}+）", f"Verified offers ({offer_count}+)" )}</small></span><i>›</i></a>
+      <a href="{OFFERS_HUB_PATH}"><span class="quick-icon icon-gift">✦</span><span><b>{_locale_pair("全部优惠", "All offers")}</b><small>{_locale_pair(f"已核验资源（{offer_count}+）", f"Verified offers ({offer_count}+)" )}</small></span><i>›</i></a>
       <a href="/evaluations/"><span class="quick-icon icon-star">◎</span><span><b>{_locale_pair("实测榜", "Benchmarks")}</b><small>{_locale_pair("真实 API 调用评测", "Real API tests")}</small></span><i>›</i></a>
       <a href="#agent-picks"><span class="quick-icon icon-agent">▣</span><span><b>AI Agent</b><small>{_locale_pair("实用的 AI 助手与智能体", "Useful AI agents")}</small></span><i>›</i></a>
     </nav>'''.replace("\n+", "\n")
@@ -5955,13 +6150,14 @@ def _ensure_skill_section_tabs(content: str, path: Path) -> str:
     if path.suffix != ".html" or 'class="model-section-tabs skill-section-tabs"' in content:
         return content
     route = "/" + "/".join(path.parts[:-1]) + "/" if path.parts and path.parts[-1] == "index.html" else ""
-    current = {SKILLS_PAGE_PATH: "catalog", SKILL_EXAMPLES_PAGE_PATH: "examples", SKILL_LEARN_PAGE_PATH: "learn"}.get(route)
+    current = {SKILLS_PAGE_PATH: "catalog", SKILL_EXAMPLES_PAGE_PATH: "examples", SKILL_LEARN_PAGE_PATH: "learn", WORKFLOW_PAGE_PATH: "workflow"}.get(route)
     if not current:
         return content
     items = [
         ("catalog", SKILLS_PAGE_PATH, "Skill 目录"),
         ("examples", SKILL_EXAMPLES_PAGE_PATH, "实测例子"),
         ("learn", SKILL_LEARN_PAGE_PATH, "学习文档"),
+        ("workflow", WORKFLOW_PAGE_PATH, "工作流"),
         ("evaluations", "/evaluations/", "免费模型实测榜"),
     ]
     current_attr = ' aria-current="page"'
@@ -6131,6 +6327,25 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
 SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models", "english")
 
 
+def _authored_insight_paths() -> list[str]:
+    """Hand-authored /insights/ articles (not generated here), in hub order.
+
+    Keeps sitemap-pages.xml reproducible after insight pages were added to it
+    by hand: only existing, indexable pages linked from insights/index.html.
+    """
+    root = Path(__file__).resolve().parents[1] / "insights"
+    hub = root / "index.html"
+    if not hub.is_file():
+        return []
+    def indexable(page: Path) -> bool:
+        return page.is_file() and "noindex" not in page.read_text(encoding="utf-8")[:4000]
+    paths = ["/insights/"] if indexable(hub) else []
+    for slug in dict.fromkeys(re.findall(r'href="(?:https://freellm\.top)?/insights/([a-z0-9-]+)/"', hub.read_text(encoding="utf-8"))):
+        if indexable(root / slug / "index.html"):
+            paths.append(f"/insights/{slug}/")
+    return paths
+
+
 def sitemap_section_paths(
     offers: list[dict],
     categories: list[str],
@@ -6152,7 +6367,12 @@ def sitemap_section_paths(
         "/privacy/",
         "/submit/",
         "/tools/",
-        "/health/",
+        # /health/ is a JS-computed ops dashboard (static HTML shows only
+        # "正在计算…" placeholders), so it is noindex and kept out of the sitemap.
+        "/evaluations/",
+        OFFERS_HUB_PATH,
+        CATEGORY_HUB_PATH,
+        GUIDES_HUB_PATH,
         guide_url(),
         GETTING_STARTED_GUIDE_PATH,
         *[GETTING_STARTED_GUIDE_PATH + provider_id + "/" for provider_id in GETTING_STARTED_PROVIDER_IDS],
@@ -6174,6 +6394,7 @@ def sitemap_section_paths(
     if models:
         total_pages = (len(models) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE
         page_paths += [f"{ALL_MODELS_PAGE_PATH}page/{page_num}/" for page_num in range(2, total_pages + 1)]
+    page_paths += _authored_insight_paths()
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
@@ -6214,7 +6435,8 @@ def render_sitemaps(
     providers: list[dict] | None = None,
 ) -> dict[Path, str]:
     sections = sitemap_section_paths(offers, categories, models, providers)
-    sections["english"] = list(ENGLISH_LOCALE_PATHS.values())
+    if ENGLISH_LOCALE_INDEXABLE:
+        sections["english"] = list(ENGLISH_LOCALE_PATHS.values())
     files = {
         Path(f"sitemap-{section}.xml"): render_url_sitemap(paths, site_url)
         for section, paths in sections.items()
@@ -6375,6 +6597,9 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("guides") / "getting-started" / "index.html": render_getting_started_index(offers, operations or [], site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),
+        Path("guides") / "index.html": render_guides_hub(offers, operations or [], site_url),
+        Path("offers") / "index.html": render_offers_hub(offers, site_url),
+        Path("category") / "index.html": render_category_hub(offers, site_url, categories),
     }
     latest_daily_log = max(daily_logs or [], key=lambda item: str(item.get("date") or ""), default={})
     latest_groups = _log_event_groups(list(latest_daily_log.get("events") or []), list(latest_daily_log.get("curatedEvents") or []))
@@ -7000,10 +7225,12 @@ def _append_legal_links(content: str) -> str:
 def _visual_section_for_path(path: Path) -> str:
     parts = path.parts
     first = parts[0] if parts else ""
-    if first == "workflow":
-        return "workflow"
-    if first == "skills":
-        return "workflow" if len(parts) > 1 and parts[1] == "lab" else "skills"
+    # Workflows live in the Skills secondary tabs; the global rail slot
+    # belongs to /evaluations/ (original benchmark content).
+    if first in {"workflow", "skills"}:
+        return "skills"
+    if first == "evaluations":
+        return "evaluations"
     if first == "tools":
         return "tools"
     if first == "logs":
@@ -7199,7 +7426,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/models/", "▣", "模型", "models"),
         ("/skills/", "✦", "技能", "skills"),
         ("/tools/", "⌘", "工具", "tools"),
-        ("/workflow/", "⌁", "工作流", "workflow"),
+        ("/evaluations/", "◎", "实测榜", "evaluations"),
         ("/logs/", "◷", "今日发现", "logs"),
         ("/about/", "ⓘ", "关于", "about"),
     ]
@@ -7258,7 +7485,7 @@ def _ensure_model_section_tabs(content: str, path: Path) -> str:
         ("featured", MODELS_PAGE_PATH, "精选模型"),
         ("all", ALL_MODELS_PAGE_PATH, "全部模型"),
         ("providers", PROVIDERS_PAGE_PATH, "按厂家"),
-        ("offers", "/category/api/", "免费 API / Offer"),
+        ("offers", OFFERS_HUB_PATH, "全部优惠"),
         ("evaluations", "/evaluations/", "实测榜"),
     ]
     links = []

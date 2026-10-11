@@ -146,11 +146,12 @@ class StaticContractTests(unittest.TestCase):
         self.assertNotIn('<div class="app legacy-app">', self.html)
 
     def test_seo_guides_are_linked_from_the_homepage(self):
-        for href in (
-            '/guides/free-openai-api-alternatives/',
-            '/guides/claude-code-free-alternatives/',
-        ):
-            self.assertIn(f'href="{href}"', self.html)
+        self.assertIn('href="/guides/free-openai-api-alternatives/"', self.html)
+        # The English-only Claude Code guide left the homepage menu (2026-10-10
+        # audit); it is reached from the /guides/ hub linked on the homepage.
+        self.assertIn('href="/guides/"', self.html)
+        hub = (ROOT / "guides" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="https://freellm.top/guides/claude-code-free-alternatives/"', hub)
 
     def test_high_value_seo_pages_explain_decision_context(self):
         category_api = (ROOT / "category" / "api" / "index.html").read_text(encoding="utf-8")
@@ -187,7 +188,7 @@ class StaticContractTests(unittest.TestCase):
             ("models", "/models/"),
             ("skills", "/skills/"),
             ("tools", "/tools/"),
-            ("workflow", "/workflow/"),
+            ("evaluations", "/evaluations/"),
             ("logs", "/logs/"),
             ("about", "/about/"),
         ):
@@ -248,11 +249,12 @@ class StaticContractTests(unittest.TestCase):
             "free-openai-compatible-apis",
             "free-ai-coding-tools",
             "free-ai-search-apis",
-            "open-weight-models",
             "model-context-windows",
             "china-free-ai-api",
         ):
             self.assertIn(f'href="/guides/{slug}/"', self.html)
+        # open-weight-models (2 records) moved from the homepage menu to the hub.
+        self.assertIn('href="https://freellm.top/guides/open-weight-models/"', (ROOT / "guides" / "index.html").read_text(encoding="utf-8"))
 
         self.assertIn("免费 LLM API / OpenAI 兼容", self.html)
         llm_api_guide = (ROOT / "guides" / "free-openai-compatible-apis" / "index.html").read_text(encoding="utf-8")
@@ -367,9 +369,10 @@ class StaticContractTests(unittest.TestCase):
         self.assertIn('<h1 class="catalog-secondary-title">', self.document_html)
 
     def test_homepage_uses_independent_language_alternates(self):
-        self.assertIn('hreflang="zh-CN" href="https://freellm.top/"', self.html)
-        self.assertIn('hreflang="en" href="https://freellm.top/en/"', self.html)
-        self.assertIn('hreflang="x-default" href="https://freellm.top/"', self.html)
+        # /en/ is a noindex placeholder (2026-10-10 audit), so the homepage does
+        # not announce it via hreflang; the visible English link stays.
+        self.assertIn('rel="canonical" href="https://freellm.top/"', self.html)
+        self.assertNotIn('hreflang="en" href="https://freellm.top/en/"', self.html)
         self.assertNotIn('hreflang="en" href="https://freellm.top/?lang=en', self.html)
 
     def test_homepage_makes_freellm_brand_explicit_in_search_and_first_view(self):
@@ -730,7 +733,7 @@ class BrowserPageTests(unittest.TestCase):
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
         self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
-        for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
+        for key in ("home", "models", "skills", "tools", "evaluations", "logs", "about"):
             link = page.locator(f'.fl-site-nav a[data-site-nav="{key}"]')
             self.assertEqual(link.count(), 1)
             self.assertTrue(link.is_visible(), f"mobile nav item {key} must be visible without opening another menu")

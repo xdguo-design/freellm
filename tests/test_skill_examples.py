@@ -103,7 +103,7 @@ class SkillSectionTabsTests(unittest.TestCase):
             tabs = re.search(r'<nav class="model-section-tabs skill-section-tabs"[^>]*>(.*?)</nav>', html, re.S)
             self.assertIsNotNone(tabs, rel)
             links = re.findall(r'<a href="([^"]+)"', tabs.group(1))
-            self.assertEqual(links, ["/skills/", "/skills/examples/", "/skills/learn/", "/evaluations/"], rel)
+            self.assertEqual(links, ["/skills/", "/skills/examples/", "/skills/learn/", "/workflow/", "/evaluations/"], rel)
             self.assertIn(f'aria-current="page">{current}</a>', tabs.group(1), rel)
             rail = re.search(r'<aside class="fl-site-rail".*?</aside>', html, re.S).group(0)
             self.assertEqual(len(re.findall(r'data-site-nav="', rail)), 7, rel)
@@ -111,7 +111,12 @@ class SkillSectionTabsTests(unittest.TestCase):
 
     def test_tabs_only_in_skills_section(self):
         self.assertNotIn("skill-section-tabs", (ROOT / "models" / "index.html").read_text(encoding="utf-8"))
-        self.assertNotIn("skill-section-tabs", (ROOT / "workflow" / "index.html").read_text(encoding="utf-8"))
+        # /workflow/ left the 7-item global rail (its slot went to /evaluations/),
+        # so it is reached through the Skills secondary tabs instead.
+        workflow = (ROOT / "workflow" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('class="model-section-tabs skill-section-tabs"', workflow)
+        self.assertIn('href="/workflow/" aria-current="page">工作流</a>', workflow)
+        self.assertIn('data-site-nav="evaluations"', workflow)
 
     def test_sitemap_lists_new_pages(self):
         sitemap = (ROOT / "sitemap-pages.xml").read_text(encoding="utf-8")

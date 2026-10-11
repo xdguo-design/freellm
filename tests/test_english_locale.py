@@ -23,19 +23,22 @@ def page_for(path):
 
 
 class EnglishLocaleTests(unittest.TestCase):
-    def test_nine_pairs_are_indexable_and_reciprocal(self):
+    def test_placeholder_english_pairs_are_noindex_without_hreflang(self):
+        """2026-10-10 audit: /en/ pages are ~1k-char placeholders, so they stay
+        reachable but noindex, and no page announces them via hreflang."""
         for zh, en in PAIRS.items():
             chinese = page_for(zh).read_text(encoding="utf-8")
             english = page_for(en).read_text(encoding="utf-8")
-            for page, path in ((chinese, zh), (english, en)):
-                with self.subTest(path=path):
-                    self.assertIn('rel="canonical" href="' + BASE + path + '"', page)
-                    for lang, alternate in (("zh-CN", zh), ("en", en), ("x-default", zh)):
-                        self.assertIn('hreflang="' + lang + '" href="' + BASE + alternate + '"', page)
-                    self.assertNotIn('href="' + BASE + path + '?lang=', page)
-                    self.assertNotIn('content="noindex', page)
-            self.assertIn('<html lang="en">', english)
-            self.assertIn('href="' + zh + '" hreflang="zh-CN"', english)
+            with self.subTest(path=en):
+                self.assertIn('rel="canonical" href="' + BASE + en + '"', english)
+                self.assertIn('<meta name="robots" content="noindex,follow">', english)
+                self.assertNotIn('hreflang="en" href=', english)
+                self.assertIn('<html lang="en">', english)
+                self.assertIn('href="' + zh + '" hreflang="zh-CN"', english)
+            with self.subTest(path=zh):
+                self.assertIn('rel="canonical" href="' + BASE + zh + '"', chinese)
+                self.assertNotIn('hreflang="en" href="' + BASE + en + '"', chinese)
+                self.assertNotIn('content="noindex', chinese)
 
     def test_english_routes_have_original_content_and_navigation(self):
         for zh, en in PAIRS.items():
@@ -48,14 +51,12 @@ class EnglishLocaleTests(unittest.TestCase):
                 for path in ("/en/", "/en/models/", "/en/skills/", "/en/tools/", "/en/logs/", "/en/about/"):
                     self.assertIn('href="' + path + '"', page)
 
-    def test_sitemap_contains_exactly_the_authored_english_urls(self):
+    def test_sitemap_excludes_placeholder_english_urls(self):
         index = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
-        self.assertIn(BASE + "/sitemap-english.xml", index)
-        root = ET.parse(ROOT / "sitemap-english.xml").getroot()
-        namespace = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-        urls = [node.text for node in root.findall("s:url/s:loc", namespace)]
-        self.assertCountEqual(urls, [BASE + path for path in PAIRS.values()])
-        self.assertEqual(len(urls), len(set(urls)))
+        self.assertNotIn(BASE + "/sitemap-english.xml", index)
+        self.assertFalse((ROOT / "sitemap-english.xml").exists())
+        for name in ("sitemap-pages.xml", "sitemap-offers.xml", "sitemap-providers.xml", "sitemap-models.xml"):
+            self.assertNotIn(BASE + "/en/", (ROOT / name).read_text(encoding="utf-8"))
 
     def test_untranslated_details_do_not_claim_nonexistent_english_pages(self):
         for path in ("/offers/codebuddy/", "/category/free-ide/", "/providers/openrouter/"):
