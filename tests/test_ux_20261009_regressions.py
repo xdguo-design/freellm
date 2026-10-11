@@ -58,7 +58,7 @@ class AuditRegressions(unittest.TestCase):
         # dated snapshot instead of today's rolling summary.
         self.assertEqual(len(discovery["observed"]["models"]), 244)
         self.assertEqual(len(discovery["observed"]["offers"]), 70)
-        latest_scan = json.loads((ROOT / "data/daily-log/2026-10-10.json").read_text(encoding="utf-8"))
+        latest_scan = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["snapshotDate"], latest_scan["date"])
         self.assertEqual(len(latest_scan["observed"]["models"]), summary["models"])
         self.assertEqual(len(latest_scan["observed"]["offers"]), summary["offers"])
@@ -107,10 +107,10 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn("scan.scanRunToday === true", script)
         self.assertIn("editorialCurrent", script)
         self.assertIn("scanCurrent ? scanDate : latest", script)
-        self.assertEqual(summary["date"], "2026-10-10")
-        self.assertEqual(summary["snapshotDate"], "2026-10-10")
+        latest_log = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
+        self.assertEqual(summary["date"], latest_log["date"])
+        self.assertEqual(summary["snapshotDate"], latest_log["date"])
         self.assertTrue(summary["scanRunToday"])
-        latest_log = json.loads((ROOT / "data/daily-log/2026-10-10.json").read_text(encoding="utf-8"))
         self.assertEqual(summary["snapshotDate"], latest_log["date"])
 
     def test_model_catalog_is_already_paginated(self):

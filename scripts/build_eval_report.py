@@ -64,6 +64,11 @@ def reason_zh(m: dict) -> str:
     if "访问量过大" in detail or "rate-limited" in detail:
         return "上游限流（高峰期不可用）"
     errs = m.get("errors") or []
+    if "HTTP 400" in errs and "no provider" in detail.lower():
+        # e.g. ModelScope "… has no provider supported": the model has no serving
+        # provider, it is not a parameter problem. Keep in sync with
+        # eval_pages.unavailable_reason.
+        return "；".join("无可用服务商" if x == "HTTP 400" else ERROR_ZH.get(x, x) for x in errs)
     return "；".join(ERROR_ZH.get(x, x) for x in errs) or "无响应"
 
 

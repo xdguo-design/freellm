@@ -198,17 +198,19 @@ pre code { padding:0; background:none; color:inherit; }
       <div class="eyebrow">02 / setup</div>
       <h2>Quick start with an OpenAI-compatible SDK</h2>
       <p>Most compatible providers use the OpenAI SDK shape. Replace the base URL and API key, then use the model ID listed in the provider documentation.</p>
-      <pre><code>from openai import OpenAI
+      <pre><code>import os
+from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key="YOUR_PROVIDER_KEY",
+    base_url=&quot;https://api.groq.com/openai/v1&quot;,
+    api_key=os.environ[&quot;GROQ_API_KEY&quot;],  # export GROQ_API_KEY=&quot;your key&quot; first
 )
 
 response = client.chat.completions.create(
-    model="openai/gpt-oss-20b",
-    messages=[{"role": "user", "content": "Hello"}],
-)</code></pre>
+    model=&quot;openai/gpt-oss-20b&quot;,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}],
+)
+print(response.choices[0].message.content)</code></pre>
       <p>Do not copy a model ID or quota from a different provider. The official source link in each row is the authority.</p>
     </section>
     <section>

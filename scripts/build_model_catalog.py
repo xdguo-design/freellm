@@ -160,6 +160,24 @@ def load_curated(path: str | Path) -> list[dict]:
     return data
 
 
+def assert_curated_does_not_mask_sources(curated: list[dict], sources: list[dict]) -> None:
+    """Fail loudly when a hand-curated row shadows a live scanner source.
+
+    Curated rows are prepended to every scan and win on ``id`` collisions, so a
+    curated copy of a provider that also has an enabled scanner source freezes
+    that provider at the day it was curated: models that disappeared upstream
+    keep being re-published as ``current`` every day (the 2026-10 Kilo bug).
+    """
+    scanned = {str(source.get("providerId") or "") for source in sources if source.get("enabled", True)}
+    masked = sorted({str(row.get("providerId") or "") for row in curated} & scanned - {""})
+    if masked:
+        raise ValueError(
+            "curated model rows shadow live scanner sources for provider(s): "
+            + ", ".join(masked)
+            + " — remove them from data/models-curated.json so the scan reflects the live catalogue"
+        )
+
+
 def discover_rows(sources_path: str | Path, max_models: int = 1000, timeout: int = 20, curated_path: str | Path | None = None) -> dict:
     """Fetch every enabled source; return ``{"models": [...], "failures": [...]}``.
 
@@ -167,6 +185,8 @@ def discover_rows(sources_path: str | Path, max_models: int = 1000, timeout: int
     ``id``, our own verified record wins.
     """
     sources = load_source_registry(sources_path)
+    curated = load_curated(curated_path) if curated_path else []
+    assert_curated_does_not_mask_sources(curated, sources)
     result = discover_official_model_sources(
         sources,
         fetcher=lambda url, domains, source_timeout, max_bytes: fetch_public_text_resource(
@@ -175,7 +195,7 @@ def discover_rows(sources_path: str | Path, max_models: int = 1000, timeout: int
         max_models=max_models,
     )
     if curated_path:
-        result["models"] = load_curated(curated_path) + result["models"]
+        result["models"] = curated + result["models"]
     return result
 
 

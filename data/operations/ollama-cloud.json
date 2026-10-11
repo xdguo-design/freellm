@@ -24,12 +24,12 @@
       "prerequisites": ["已注册 ollama.com 账号", "已在官方账户设置中创建 API key", "已将密钥保存到 OLLAMA_API_KEY 环境变量"],
       "steps": [
         {"title": "创建密钥", "detail": "打开 Ollama 官方账户设置，创建 API key；只把它保存到本机密钥管理器或环境变量。"},
-        {"title": "列出可用模型", "detail": "先调用模型列表接口，确认账户可访问的模型 ID。", "command": "curl https://ollama.com/api/tags -H 'Authorization: Bearer ${OLLAMA_API_KEY}'", "expected": "返回 HTTP 200 和 models 列表。"},
-        {"title": "发送聊天请求", "detail": "把模型 ID 替换为列表中实际可用的值，使用非流式请求便于第一次验证。", "command": "curl https://ollama.com/api/chat -H 'Authorization: Bearer ${OLLAMA_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"gpt-oss:120b-cloud\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":false}'", "expected": "响应包含 message.content。"}
+        {"title": "列出可用模型", "detail": "先调用模型列表接口，确认账户可访问的模型 ID。", "command": "curl https://ollama.com/api/tags -H \"Authorization: Bearer $OLLAMA_API_KEY\"", "expected": "返回 HTTP 200 和 models 列表。"},
+        {"title": "发送聊天请求", "detail": "把模型 ID 替换为列表中实际可用的值，使用非流式请求便于第一次验证。", "command": "curl https://ollama.com/api/chat -H \"Authorization: Bearer $OLLAMA_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"gpt-oss:120b-cloud\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":false}'", "expected": "响应包含 message.content。"}
       ],
       "endpoint": "https://ollama.com/api",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://ollama.com/api/tags -H 'Authorization: Bearer ${OLLAMA_API_KEY}'",
+      "example": "curl https://ollama.com/api/tags -H \"Authorization: Bearer $OLLAMA_API_KEY\"",
       "validation": "GET /api/tags 返回 HTTP 200，并能在返回列表中找到要调用的模型。",
       "sourceUrls": ["https://docs.ollama.com/cloud", "https://docs.ollama.com/api"]
     }

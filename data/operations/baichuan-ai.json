@@ -27,13 +27,13 @@
         {
           "title": "调用模型",
           "detail": "使用标准 chat/completions endpoint 与 Baichuan-M3-Plus 模型 ID 发起请求。",
-          "command": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://api.baichuan-ai.com/v1/chat/completions -H \"Authorization: Bearer $BAICHUAN_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "获批账号返回 chat completion；普通未获批账号不能据此假定免费。"
         }
       ],
       "endpoint": "https://api.baichuan-ai.com/v1/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "example": "curl https://api.baichuan-ai.com/v1/chat/completions -H \"Authorization: Bearer $BAICHUAN_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
       "validation": "确认账号已获批海纳百川计划，并在实际账单/资源页验证计划内 Baichuan-M3 Plus 调用不收费。",
       "sourceUrls": [
         "https://www.baichuan-ai.com/",

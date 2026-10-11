@@ -27,7 +27,7 @@
         {
           "title": "调用 Chat Completions",
           "detail": "使用平台统一 OpenAI 兼容 endpoint 调用目标模型。",
-          "command": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+          "command": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
           "expected": "返回 chat completion；保持在每分钟 5 次以内。"
         },
         {
@@ -37,7 +37,7 @@
       ],
       "endpoint": "https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions",
       "auth": "Authorization: Bearer access token",
-      "example": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
+      "example": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'",
       "validation": "HTTP 请求成功；试用账号调用频率保持 <= 5/min；目标模型仍显示为试用可体验。",
       "limits": "Trial account: 5 calls/min. Paid accounts may remove/raise the rate limit.",
       "commonIssues": [

@@ -259,7 +259,7 @@ def test_stepfun_offer_covers_official_limited_free_models_and_api():
     assert stepfun["usageGuide"]["endpoint"] == "https://api.stepfun.com/v1/chat/completions"
     assert stepfun["usageGuide"]["docsUrl"] == "https://platform.stepfun.com/docs/zh/quickstart/overview"
     assert "https://platform.stepfun.com/docs/zh/guides/pricing/details" in stepfun["sourceUrls"]
-    assert "${STEP_API_KEY}" in stepfun["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $STEP_API_KEY"' in stepfun["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(stepfun)
 
 
@@ -280,7 +280,7 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     assert agnes["usageGuide"]["endpoint"] == "https://api.agnes-ai.cn/v1/chat/completions"
     assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.cn/zh-Hans/docs/overview"
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
-    assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $AGNES_API_KEY"' in agnes["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(agnes)
     # 官方同时运营国内站与国际站两套入口，两套地址都必须留在数据里。
     blob = json.dumps(agnes, ensure_ascii=False)
@@ -364,10 +364,14 @@ def test_offer_page_marks_hands_on_verified_entries_with_test_evidence():
     assert "国内+国际双入口" in atria_page
     assert "2026-09-15" in atria_page
 
-    plain_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    # glm is now an expired record, and expired pages drop every verification
+    # chip (see tests/test_expired_lifecycle.py); use an active site-only entry.
+    plain_page = render_offer_page(by_id["trae"], offers, "https://freellm.top")
     assert "实测好用" not in plain_page
     assert "接口已验证" not in plain_page or "官网已验证" in plain_page
     assert "官网已验证" in plain_page
+    expired_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    assert "官网已验证" not in expired_page and "实测通过" not in expired_page
 
     untested_page = render_offer_page(by_id["tinyfish-search-fetch-free"], offers, "https://freellm.top")
     assert "接口已验证" not in untested_page

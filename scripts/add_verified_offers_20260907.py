@@ -137,7 +137,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via x-goog-api-key header",
         "examples": {
-            "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
+            "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
         },
         "docsUrl": "https://ai.google.dev/gemini-api/docs/quickstart",
     },
@@ -152,7 +152,7 @@ o.update({
     "mechanism": "Rate-limited free tier on the Gemini API",
     "validity": "Ongoing, but limits and model coverage can change; recheck the official pricing page",
     "access": "Google account and API key from AI Studio; free tier availability may vary by region",
-    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
+    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
     "register": "https://aistudio.google.com/",
     "registerLabel": "Google AI Studio",
     "links": [
@@ -199,7 +199,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://console.groq.com/docs/rate-limits",
     },
@@ -214,7 +214,7 @@ o.update({
     "mechanism": "Free plan with per-model rate limits on the OpenAI-compatible API",
     "validity": "Ongoing free plan; the published limits table can change at any time",
     "access": "Groq account; limits apply per organization, not per user",
-    "command": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.groq.com/",
     "registerLabel": "Groq Console",
     "links": [
@@ -261,7 +261,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://inference-docs.cerebras.ai/quickstart",
     },
@@ -276,7 +276,7 @@ o.update({
     "mechanism": "One-time $5 free credits granted after account creation",
     "validity": "Credits are consumed by usage; check the official pricing page for current terms",
     "access": "Cerebras account required",
-    "command": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.cerebras.ai/",
     "registerLabel": "Cerebras cloud console",
     "links": [
@@ -323,7 +323,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://openrouter.ai/docs/api_reference/limits",
     },
@@ -338,7 +338,7 @@ o.update({
     "mechanism": "Platform-level free usage limits applied to :free model variants",
     "validity": "Ongoing; the limits table is subject to change by OpenRouter",
     "access": "OpenRouter account and API key; free daily cap scales with lifetime credits purchased",
-    "command": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://openrouter.ai/",
     "registerLabel": "OpenRouter",
     "links": [
@@ -385,7 +385,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them",
     },
@@ -400,7 +400,7 @@ o.update({
     "mechanism": "Default free mode of the developer API with limited rate limits (RPS, tokens per minute, tokens per month)",
     "validity": "Ongoing default tier; Mistral can change the limits",
     "access": "Mistral account; per-organization limits",
-    "command": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.mistral.ai/",
     "registerLabel": "Mistral console",
     "links": [
@@ -448,7 +448,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://docs.cohere.com/reference/chat",
     },
@@ -463,7 +463,7 @@ o.update({
     "mechanism": "Free rate-limited Trial API key for evaluation",
     "validity": "Ongoing while the trial program exists; non-production only",
     "access": "Cohere personal account; production keys require an application",
-    "command": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://dashboard.cohere.com/",
     "registerLabel": "Cohere dashboard",
     "links": [
@@ -511,7 +511,7 @@ o.update({
         "method": "POST",
         "authentication": "Hugging Face token via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://huggingface.co/docs/inference-providers/index",
     },
@@ -526,7 +526,7 @@ o.update({
     "mechanism": "Platform free tier with included credits on a single OpenAI-compatible router API across providers",
     "validity": "Ongoing free tier; credit amounts can change",
     "access": "Hugging Face account and access token",
-    "command": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://huggingface.co/",
     "registerLabel": "Hugging Face",
     "links": [
@@ -574,7 +574,7 @@ o.update({
         "method": "POST",
         "authentication": "API key via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://docs.siliconflow.cn/cn/userguide/quickstart",
     },
@@ -589,7 +589,7 @@ o.update({
     "mechanism": "Selected models permanently listed at ¥0 on the official price list",
     "validity": "Ongoing while listed; the ¥0 list can change at any time",
     "access": "SiliconFlow account; registration via the China platform",
-    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.siliconflow.cn/",
     "registerLabel": "SiliconFlow 云平台",
     "links": [
@@ -639,7 +639,7 @@ o.update({
         "method": "POST",
         "authentication": "ModelScope access token via Authorization: Bearer header",
         "examples": {
-            "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+            "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
         },
         "docsUrl": "https://modelscope.cn/docs/model-service/API-Inference/intro",
     },
@@ -654,7 +654,7 @@ o.update({
     "mechanism": "Free OpenAI-compatible inference endpoint for registered users, funded by Aliyun, with dynamic rate limits and 魔粒 points deduction",
     "validity": "Ongoing service; individual models may be delisted as newer models release",
     "access": "Requires ModelScope account bound to a real-name verified Aliyun (China) account; non-commercial use",
-    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://modelscope.cn/my/myaccesstoken",
     "registerLabel": "ModelScope 访问令牌",
     "links": [

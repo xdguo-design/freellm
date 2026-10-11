@@ -27,13 +27,13 @@
         {
           "title": "调用 API",
           "detail": "创建 API Key 后，通过 OpenAI-compatible Base URL 发起最小请求。",
-          "command": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://api.ppio.com/openai/v1/chat/completions -H \"Authorization: Bearer $PPIO_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 chat completion；账户赠送额度发生扣减。"
         }
       ],
       "endpoint": "https://api.ppio.com/openai/v1/chat/completions",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+      "example": "curl https://api.ppio.com/openai/v1/chat/completions -H \"Authorization: Bearer $PPIO_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
       "validation": "请求成功并确认扣减来自邀请新用户赠送额度；券失效或余额耗尽后停止按免费入口宣传。",
       "sourceUrls": [
         "https://ppio.com/user/register",

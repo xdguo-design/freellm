@@ -27,6 +27,7 @@ from scripts.generate_access_cards import _operation_hints
 from scripts.featured_models import comparable_benchmark, normalize_capabilities, normalize_region
 from scripts.eval_integration import LEADERBOARD_CSS, card_block as eval_card_block, leaderboard_html as eval_leaderboard_html
 from scripts import eval_pages  # noqa: E402  FreeLLM evaluation blocks for secondary pages
+from scripts.shell_examples import with_env_exports  # noqa: E402  curl quoting / export preamble
 
 
 SITE_URL = "https://freellm.top"
@@ -1284,6 +1285,8 @@ def _quick_start_markup(offer: dict) -> str:
     def command_body(value: str | None) -> tuple[str, bool]:
         if not value:
             return guidance_body("见下方操作步骤", "See the operation steps below"), False
+        # curl 头部里的 $VAR 必须在双引号内才会展开；同时补上 export 行，复制即可运行。
+        value = with_env_exports(value)
         return (
             '<div class="qs-code">'
             f'<div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span>'
@@ -1515,6 +1518,7 @@ def _operation_guides_markup(guides: list[dict], reference_command: str = "") ->
                     # 快速上手已展示同一 endpoint 的可复制命令，这里只留指引避免整页重复。
                     command_markup = f'<p class="muted">{_locale_pair("命令已在上方「快速上手」给出。", "The copyable command already appears in Quick start above.")}</p>'
                 elif command:
+                    command = with_env_exports(command)
                     command_index += 1
                     command_id = f"operation-command-{command_index}"
                     command_markup = f'''<div class="operation-command"><div class="operation-command-head"><span>{_locale_pair("可复制命令", "Copyable command")}</span><button type="button" class="copy-command" data-copy-target="{command_id}">{_locale_pair("复制命令", "Copy command")}</button></div><pre id="{command_id}"><code>{_esc(command)}</code></pre></div>'''
@@ -1685,7 +1689,9 @@ def _offer_freellm_test_markup(offer: dict) -> str:
     level = str(test.get("testLevel") or "")
     status = str(test.get("status") or "")
     actual = test.get("actualUsageVerified") is True
-    if actual and status == "passed":
+    if offer_is_expired(offer):
+        state_zh, state_en, state_class = "历史测试记录 · 活动已结束", "Historical test · offer ended", "partial"
+    elif actual and status == "passed":
         state_zh, state_en, state_class = "登录态实测通过", "Hands-on test passed", "verified"
     elif level == "preflight" and status in {"passed", "partial"}:
         state_zh, state_en, state_class = "预检通过 · 登录态实测待补", "Preflight passed · signed-in test pending", "partial"
@@ -1776,18 +1782,51 @@ def _offer_freellm_test_chip(offer: dict) -> str:
     return f'<span class="flag-chip {cls}" title="{_esc(str(test.get("testedAt")))}">{label}</span>'
 
 
+def offer_is_expired(offer: dict) -> bool:
+    """Single lifecycle predicate for offer detail pages.
+
+    Driven by the data's ``status`` field (not the build date) so generated
+    pages stay byte-stable for ``--check``. When ``expires_at`` passes, the
+    daily review flips ``status`` to ``expired``.
+    """
+    return str(offer.get("status") or "").strip().lower() == "expired"
+
+
+def _offer_expired_banner(offer: dict) -> str:
+    """醒目的「已过期」横幅：任何 status=expired 的资源详情页都必须渲染。"""
+    if not offer_is_expired(offer):
+        return ""
+    expires = str(offer.get("expires_at") or "").strip()
+    scope = str(offer.get("expired_scope") or "").strip()
+    when_zh = f"（截止 {expires}）" if expires else ""
+    when_en = f" (ended {expires})" if expires else ""
+    what_zh = "该活动/优惠已结束" if scope == "promotion" or not scope else "该资源已下线"
+    what_en = "This promotion has ended" if scope == "promotion" or not scope else "This offer is no longer available"
+    return (
+        '<div class="offer-expired-banner" role="status" data-offer-lifecycle="expired">'
+        f'<strong>{_locale_pair("⚠ 已过期", "⚠ Expired")}</strong> '
+        f'<span>{_locale_pair(f"{what_zh}{when_zh}。本页仅作历史记录保留，下方权益、额度与过往实测结果都不代表当前状态；请以官方页面为准。", f"{what_en}{when_en}. This page is kept as a historical record; the benefits, quota and past test results below do not describe the current state. Check the official page.")}</span>'
+        "</div>"
+    )
+
+
 def _offer_version_line(offer: dict, offers: list[dict]) -> str:
-    """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。"""
+    """版本标记行：加精 / 重点 / 网络实测 / 国内或国际版本 / 双版本互链 / 实测好用。
+
+    已过期资源不显示任何「实测通过 / 加精 / 实测好用 / 接口已验证」类正向徽章，
+    只保留版本与互链信息，避免把历史实测误读为当前可用。
+    """
     chips = []
-    featured_chip = _featured_chip(offer)
+    expired = offer_is_expired(offer)
+    featured_chip = "" if expired else _featured_chip(offer)
     if featured_chip:
         chips.append(featured_chip)
-    if offer.get("key"):
+    if offer.get("key") and not expired:
         chips.append(f'<span class="flag-chip flag-key">{_locale_pair("★ 重点", "★ Key pick")}</span>')
-    freellm_test_chip = _offer_freellm_test_chip(offer)
+    freellm_test_chip = "" if expired else _offer_freellm_test_chip(offer)
     if freellm_test_chip:
         chips.append(freellm_test_chip)
-    network_chip = _network_chips(offer)
+    network_chip = "" if expired else _network_chips(offer)
     if network_chip:
         chips.append(network_chip)
     _, _, edition_chip = _edition_chip(offer)
@@ -1804,7 +1843,9 @@ def _offer_version_line(offer: dict, offers: list[dict]) -> str:
             )
             chips.append(f'<a class="flag-chip flag-sibling" href="{_esc(offer_url(sibling))}">{label} ↗</a>')
     hands_on = offer.get("handsOn")
-    if isinstance(hands_on, dict) and hands_on.get("testedAt"):
+    if expired:
+        pass
+    elif isinstance(hands_on, dict) and hands_on.get("testedAt"):
         note = str(hands_on.get("note") or "").strip()
         title_markup = f' title="{_esc(hands_on["testedAt"] + (" · " + note if note else ""))}"' if note else ""
         chips.append(
@@ -1883,8 +1924,11 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     access_paths_markup = _access_paths_markup(offer)
     version_line = _offer_version_line(offer, offers)
     freellm_test_markup = _offer_freellm_test_markup(offer) + eval_pages.offer_section(offer)
+    expired_banner_markup = _offer_expired_banner(offer)
     featured = offer.get("featured")
-    if isinstance(featured, dict) and featured.get("reason"):
+    if expired_banner_markup:
+        featured_note_markup = ""
+    elif isinstance(featured, dict) and featured.get("reason"):
         featured_reason_zh = f"◆ 加精理由：{featured['reason']}"
         featured_reason_en = f"◆ Why featured: {featured.get('reasonEn') or featured['reason']}"
         featured_note_markup = f'<p class="featured-note">{_locale_pair(featured_reason_zh, featured_reason_en)}</p>'
@@ -2019,6 +2063,8 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     .offer-version-line {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }}
     .flag-chip {{ display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 9999px; font: 500 11px/1.6 var(--font-mono); letter-spacing: .04em; text-decoration: none; }}
     .flag-key {{ color: var(--ink); background: var(--surface-soft); border: 1px solid var(--line); }}
+    .offer-expired-banner {{ margin: 14px 0 6px; padding: 12px 16px; border: 1px solid var(--pale-red-text); border-left-width: 4px; border-radius: 6px; background: var(--pale-red-bg); color: var(--pale-red-text); font-size: 14px; line-height: 1.6; }}
+    .offer-expired-banner strong {{ font-weight: 700; margin-right: 6px; }}
     .featured-note {{ margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--pale-yellow-text); border-radius: 0 6px 6px 0; background: var(--pale-yellow-bg); color: var(--pale-yellow-text); font-size: 13.5px; }}
     .flag-edition {{ color: var(--accent); background: var(--accent-soft); }}
     .flag-sibling {{ color: var(--accent); background: var(--surface); border: 1px solid var(--line); }}
@@ -2067,6 +2113,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     <p><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair("FreeLLM 免费 AI 资源索引", "FreeLLM Free AI Index")}</a> / {_locale_pair("资源详情", "Offer details")}</p>
     {_static_locale_nav()}
     <button class="theme-toggle" type="button" aria-label="切换深色模式"><span class="icon-moon">☾</span><span class="icon-sun">☀</span></button>
+    {expired_banner_markup}
     <h1>{_locale_pair(offer.get("titleZh") or title, offer.get("titleEn") or title, "Offer details")}</h1>
     <p>{_locale_pair(offer.get("providerMeta") or offer.get("provider"), offer.get("providerMetaEn") or offer.get("provider"), "Official provider")}</p>
     {version_line}
@@ -2254,22 +2301,43 @@ def _guide_table(headers: list[str], rows: list[list[object]]) -> str:
     return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
-def render_guide_page(site_url: str) -> str:
+def _reference_sdk_example(offers: list[dict] | None, offer_id: str = "groq-free", comment: str = "") -> str:
+    """OpenAI-SDK quick-start built from an offer's verified data (endpoint + model id).
+
+    The key is read from the environment, never written as a literal placeholder
+    string, and base URL / model id come from data/offers.json + data/operations so
+    the example cannot drift from the offer page.
+    """
+    offer = next((item for item in offers or [] if item.get("id") == offer_id), {}) or {}
+    guide = offer.get("usageGuide") or {}
+    endpoint = str(guide.get("endpoint") or "").strip()
+    base_url = re.sub(r"/chat/completions/?$", "", endpoint) or "https://api.groq.com/openai/v1"
+    curl = str((guide.get("examples") or {}).get("curl") or offer.get("command") or "")
+    model_match = re.search(r'"model"\s*:\s*"([^"]+)"', curl)
+    model = model_match.group(1) if model_match else "openai/gpt-oss-20b"
+    env_match = re.search(r"\$\{?([A-Z][A-Z0-9_]*_(?:API_KEY|TOKEN|KEY))\}?", curl)
+    env_name = env_match.group(1) if env_match else "GROQ_API_KEY"
+    note = f"  # {comment}" if comment else ""
+    return (
+        "import os\n"
+        "from openai import OpenAI\n\n"
+        "client = OpenAI(\n"
+        f'    base_url="{base_url}",\n'
+        f'    api_key=os.environ["{env_name}"],{note}\n'
+        ")\n\n"
+        "response = client.chat.completions.create(\n"
+        f'    model="{model}",\n'
+        '    messages=[{"role": "user", "content": "Hello!"}],\n'
+        ")\n"
+        "print(response.choices[0].message.content)"
+    )
+
+
+def render_guide_page(site_url: str, offers: list[dict] | None = None) -> str:
     path = guide_url()
     title = "Free-LLM — 免费 AI 与 LLM API 开放目录"
     description = "参考 Free-LLM 中文 README 整理的免费 LLM API、免费额度、本地模型和 OpenAI 兼容接入指南。"
-    python_example = '''from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key="GROQ_API_KEY",  # 在官方控制台获取
-)
-
-response = client.chat.completions.create(
-    model="llama-3.3-70b-versatile",
-    messages=[{"role": "user", "content": "Hello!"}],
-)
-print(response.choices[0].message.content)'''
+    python_example = _reference_sdk_example(offers, comment="先 export GROQ_API_KEY=\"你的 Key\"")
     schema = {
         "@context": "https://schema.org",
         "@type": "TechArticle",
@@ -2573,17 +2641,7 @@ def render_openai_alternatives_page(offers: list[dict], site_url: str) -> str:
         OPENAI_ALTERNATIVE_ROWS,
         "Quick start with an OpenAI-compatible SDK",
         '''<p>Most compatible providers use the OpenAI SDK shape. Replace the base URL and API key, then use the model ID listed in the provider documentation.</p>
-      <pre><code>from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key="YOUR_PROVIDER_KEY",
-)
-
-response = client.chat.completions.create(
-    model="openai/gpt-oss-20b",
-    messages=[{"role": "user", "content": "Hello"}],
-)</code></pre>
+      <pre><code>''' + _esc(_reference_sdk_example(offers, comment='export GROQ_API_KEY="your key" first')) + '''</code></pre>
       <p>Do not copy a model ID or quota from a different provider. The official source link in each row is the authority.</p>''',
         '''<ul class="link-list">
         <li><a href="/guides/free-llm/">Free LLM and API quick-start guide</a></li>
@@ -2864,11 +2922,7 @@ def _model_catalog_row(
         if str(item).lower() != "unknown"
     )
     modality_key = ",".join(sorted(str(item) for item in (model.get("modality") or [])))
-    status = str(model.get("status") or "unknown")
-    status_label = _locale_pair(
-        {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
-        {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
-    )
+    status, status_label, status_title = model_status_display(model)
     freshness = str(model.get("freshnessStatus") or "").lower()
     freshness_label = {
         "new": _locale_pair("新", "New"),
@@ -2898,7 +2952,7 @@ def _model_catalog_row(
       <td>{_esc(model.get("rateLimit") or "—")}</td>
       {latency_cell}
       <td>{_esc(model.get("released") or "—")}</td>
-      <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}">{status_label}</span>{freshness_markup}</td>
+      <td><span class="status-dot status-dot-{_esc(status)}"></span><span class="status status-{_esc(status)}"{(' title="' + _esc(status_title) + '"') if status_title else ""}>{status_label}</span>{freshness_markup}</td>
       <td><span class="status cn-region cn-region-{_esc(cn["code"])}"><span lang="zh-CN">{_esc(cn["zh"])}</span><span lang="en">{_esc(cn["en"])}</span></span></td>
       <td class="source-cell"><a class="source-link" href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_catalog_source_label(model)} ↗</a></td>
     </tr>'''
@@ -3305,6 +3359,33 @@ def _latest_date(items: list[dict], field: str) -> str:
     return max(dates) if dates else "—"
 
 
+def model_status_display(model: dict) -> tuple[str, str, str]:
+    """Return (css_status, label_markup, title) for a catalog row's status cell.
+
+    One rule for the model directory and provider pages so neither can claim
+    「在线」 for a row that the data or our own evaluation says is not usable:
+    - ``status=offline`` (delisted upstream, kept as a record) → 已下线
+    - our evaluation could not call it on this provider → 本账号实测不可用，待复核
+      (same verdict /evaluations/ shows)
+    - ``freshnessStatus=stale`` (missing from the latest snapshot) → 待复核
+    """
+    status = str(model.get("status") or "unknown").lower()
+    if status == "offline":
+        when = str(model.get("offlineAt") or "").strip()
+        title = " · ".join(part for part in (when, str(model.get("offlineReason") or "").strip()) if part)
+        return "offline", _locale_pair(f"已下线{(' · ' + when) if when else ''}", f"Delisted{(' · ' + when) if when else ''}"), title
+    kind, _result = eval_pages.lookup(str(model.get("providerId") or ""), str(model.get("model") or ""))
+    if kind == "unavailable":
+        return "offline", _locale_pair("本账号实测不可用，待复核", "Unavailable on our account · pending recheck"), "FreeLLM evaluation could not call this model on this provider"
+    if str(model.get("freshnessStatus") or "").lower() == "stale" and status == "online":
+        since = str(model.get("staleSince") or "").strip()
+        return "degraded", _locale_pair("未在最新快照中 · 待复核", "Missing from latest snapshot · pending recheck"), (f"stale since {since}" if since else "")
+    return status, _locale_pair(
+        {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
+        {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
+    ), ""
+
+
 def _catalog_source_label(model: dict) -> str:
     """Label a row by the kind of source it was read from.
 
@@ -3327,17 +3408,13 @@ def _catalog_record_table(models: list[dict]) -> str:
         return '<p class="muted">暂未同步模型目录记录；请查看下方详细操作指南。 / No catalog model records are synced yet; see the detailed operation guide below.</p>'
     rows = []
     for model in models:
-        status = str(model.get("status") or "unknown").lower()
-        status_label = _locale_pair(
-            {"online": "在线", "offline": "离线", "degraded": "降级"}.get(status, "未知"),
-            {"online": "Online", "offline": "Offline", "degraded": "Degraded"}.get(status, "Unknown"),
-        )
+        status, status_label, status_title = model_status_display(model)
         rows.append(f'''<tr>
           <td><a href="{_esc(provider_url(str(model.get("providerId") or "provider")))}">{_esc(model.get("provider"))}</a></td>
           <td class="model-cell"><strong class="model-name" title="{_esc(model.get("model"))}">{_esc(model.get("model"))}</strong><small class="model-id" title="{_esc(model.get("id"))}">{_esc(model.get("id"))}</small></td>
           <td>{_esc(model.get("context") or "—")}</td>
           <td>{_esc(model.get("rateLimit") or "—")}</td>
-          <td><span class="status status-{_esc(status)}">{status_label}</span><small>{_catalog_source_label(model)}</small></td>
+          <td><span class="status status-{_esc(status)}"{(' title="' + _esc(status_title) + '"') if status_title else ""}>{status_label}</span><small>{_catalog_source_label(model)}</small></td>
           <td class="fl-eval-cell">{eval_pages.status_cell(str(model.get("providerId") or ""), str(model.get("model") or ""))}</td>
           <td>{_esc(model.get("lastSeenAt") or "—")}</td>
           <td><a href="{_esc(model.get("sourceUrl") or "#")}" target="_blank" rel="noopener noreferrer">{_locale_pair("目录来源", "Catalog source")} ↗</a></td>
@@ -6140,7 +6217,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("models") / "center" / "index.html": render_model_center_page(offers, site_url, model_catalog),
         Path("providers") / "index.html": render_providers_page(providers, model_catalog, site_url),
         Path("logs") / "index.html": render_daily_log_page(daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json"), site_url, offers, model_catalog),
-        Path("guides") / "free-llm" / "index.html": render_guide_page(site_url),
+        Path("guides") / "free-llm" / "index.html": render_guide_page(site_url, offers),
         Path("guides") / "getting-started" / "index.html": render_getting_started_index(offers, operations or [], site_url),
         Path("guides") / "free-openai-api-alternatives" / "index.html": render_openai_alternatives_page(offers, site_url),
         Path("guides") / "claude-code-free-alternatives" / "index.html": render_claude_code_alternatives_page(offers, site_url),

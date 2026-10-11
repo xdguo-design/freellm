@@ -28,7 +28,7 @@
         {
           "title": "发送兼容请求",
           "detail": "使用模型广场展示的完整模型 ID。",
-          "command": "curl https://api.siliconflow.cn/v1/chat/completions -H 'Authorization: Bearer ${SILICONFLOW_API_KEY}' -H 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3-8B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "command": "curl https://api.siliconflow.cn/v1/chat/completions -H \"Authorization: Bearer $SILICONFLOW_API_KEY\" -H 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3-8B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
           "expected": "返回 choices[0].message.content；余额不足时停止重试并查看控制台。"
         },
         {
@@ -46,7 +46,7 @@
       ],
       "endpoint": "https://api.siliconflow.cn/v1",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.siliconflow.cn/v1/models -H 'Authorization: Bearer ${SILICONFLOW_API_KEY}'",
+      "example": "curl https://api.siliconflow.cn/v1/models -H \"Authorization: Bearer $SILICONFLOW_API_KEY\"",
       "validation": "GET /v1/models 返回 HTTP 200，并在控制台确认请求消耗与免费政策一致。",
       "sourceUrls": [
         "https://docs.siliconflow.cn/",

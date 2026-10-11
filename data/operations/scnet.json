@@ -23,7 +23,7 @@
         {
           "title": "提交文档",
           "detail": "调用 ocrdoc/submit 提交本地文件或 file_url。",
-          "command": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
+          "command": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H \"Authorization: Bearer $SCNET_API_KEY\" -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
           "expected": "返回 task_id。"
         },
         {
@@ -37,7 +37,7 @@
       ],
       "endpoint": "https://api.scnet.cn/api/llm/v1/ocrdoc/submit",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
+      "example": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H \"Authorization: Bearer $SCNET_API_KEY\" -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'",
       "validation": "任务可提交并返回 task_id；当前服务页/活动页仍为免费；如免费标记消失则立即停止免费宣传。",
       "sourceUrls": [
         "https://www1.scnet.cn/home/news/133595.html",
