@@ -1,59 +1,5 @@
 [
   {
-    "modelId": "puter/mimo-v2-6-flash",
-    "providerId": "puter",
-    "registrationProfileId": "puter-ai",
-    "modelSearchName": "xiaomi/mimo-v2.6-flash",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Free Puter account includes an AI allowance; exact allowance is account-dependent and not hard-coded.",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
-      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
-    ],
-    "lastVerifiedAt": "2026-09-23",
-    "verificationStatus": "partial",
-    "notes": "官方页面确认可在浏览器 Playground 免费试用，且 Puter.js 无需开发者自备 API Key；真实登录态生成仍待补测。"
-  },
-  {
-    "modelId": "opencode/mimo-v2-6-flash-free",
-    "providerId": "opencode",
-    "registrationProfileId": "opencode-api",
-    "modelSearchName": "mimo-v2.6-flash-free",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://opencode.ai/docs/en/zen/",
-      "https://opencode.ai/zen/v1/models"
-    ],
-    "lastVerifiedAt": "2026-09-23",
-    "verificationStatus": "verified",
-    "notes": "2026-09-23 已从公开 /v1/models 目录确认 mimo-v2.6-flash-free 存在；Zen 定价表将其 input/output/cache 标为 Free，并注明限时免费。"
-  },
-  {
-    "modelId": "xiaomi-mimo/mimo-v2-6-flash",
-    "providerId": "xiaomi-mimo",
-    "registrationProfileId": "xiaomi-mimo-api",
-    "modelSearchName": "MiMo-V2.6-Flash",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
-      "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
-    ],
-    "lastVerifiedAt": "2026-09-23",
-    "verificationStatus": "verified",
-    "notes": "官方 API：1M context、128K max output、100 RPM、10M TPM；API 为付费。OpenCode Zen 另有有限期免费托管版本。"
-  },
-  {
     "modelId": "agnes-ai/agnes-2-5-flash",
     "providerId": "agnes-ai",
     "registrationProfileId": "agnes-ai-api",
@@ -242,6 +188,132 @@
     "lastVerifiedAt": "2026-09-19",
     "verificationStatus": "partial",
     "notes": "国内站路线：模型名称、上下文与模态取自官方中国站模型文档页，现价取自官方定价页。"
+  },
+  {
+    "modelId": "amd-radeon-cloud/deepseek-v4-1-flash",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "DeepSeek-V4.1-Flash",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "amd-radeon-cloud/deepseek-v4-flash",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "DeepSeek-V4-Flash",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "amd-radeon-cloud/deepseek-v4-flash-vision-exp",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "DeepSeek-V4-Flash-Vision-Exp",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "amd-radeon-cloud/minicpm5-2b",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "MiniCPM5-2B",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "amd-radeon-cloud/qwen3-8-27b",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "Qwen3.8-27B",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
+  },
+  {
+    "modelId": "amd-radeon-cloud/qwen3-8-flash-next",
+    "providerId": "amd-radeon-cloud",
+    "registrationProfileId": "amd-radeon-cloud-api",
+    "modelSearchName": "Qwen3.8-Flash-Next",
+    "extraRequirements": [
+      "Radeon Cloud account must pass platform verification before API use"
+    ],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
+      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
+    ],
+    "lastVerifiedAt": "2026-09-22",
+    "verificationStatus": "verified",
+    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
   },
   {
     "modelId": "atria-asi/atria-dawn-preview",
@@ -516,6 +588,92 @@
     "lastVerifiedAt": "2026-09-10",
     "verificationStatus": "partial",
     "notes": "国内 Dots API 路线；免费期限未在官方文档中公布。"
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-flash",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Live",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "google-gemini/gemini-3-8-live-extended-thinking",
+    "providerId": "google-gemini",
+    "registrationProfileId": "google-gemini-api",
+    "modelSearchName": "Gemini 3.8 Live Extended Thinking",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "groq/qwen-qwen3-8-27b",
+    "providerId": "groq",
+    "registrationProfileId": "groq-api",
+    "modelSearchName": "Qwen 3.8 27B",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://console.groq.com/docs/model/qwen/qwen3.8-27b"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "intern-ai/intern-s2",
+    "providerId": "intern-ai",
+    "registrationProfileId": "intern-ai-api",
+    "modelSearchName": "Intern-S2",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "官方确认一定额度免费 API；具体 Token 数登录后查看；默认约 30 RPM",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444298",
+      "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
+    ],
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "公开资料预检通过；尚未用登录态 API Token 做真实推理与账单验证。"
   },
   {
     "modelId": "kilo/cohere-north-mini-code-free",
@@ -909,6 +1067,40 @@
     "notes": ""
   },
   {
+    "modelId": "llm7-io/claude-opus-4-6",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "claude-opus-4-6",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/claude-opus-4-7",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "claude-opus-4-7",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
     "modelId": "llm7-io/claude-opus-4-8",
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
@@ -930,6 +1122,23 @@
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "claude-opus-5",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/claude-opus-5-5",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "claude-opus-5-5",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1079,6 +1288,23 @@
     "notes": ""
   },
   {
+    "modelId": "llm7-io/gemini-3-6-flash-high",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "gemini-3.6-flash-high",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
     "modelId": "llm7-io/gemini-3-7-flash",
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
@@ -1158,6 +1384,23 @@
     "replacement": null,
     "sourceUrls": [
       "https://freellm.net/models/llm7-io/gemma4-31b"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/glm-5-2",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "glm-5.2",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
     ],
     "lastVerifiedAt": null,
     "verificationStatus": "unverified",
@@ -1266,10 +1509,44 @@
     "notes": ""
   },
   {
+    "modelId": "llm7-io/gpt-6-1-sol",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "gpt-6.1-sol",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
     "modelId": "llm7-io/gpt-6-astra",
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "gpt-6-astra",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/gpt-6-sol",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "gpt-6-sol",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1304,6 +1581,23 @@
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "gpt-image-2.5",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/gpt-oss-20b",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "gpt-oss:20b",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1372,6 +1666,57 @@
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "Inkling-Small",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/jev-latest",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "jev-latest",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/kimi-k2-6",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "kimi-k2.6",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/kimi-k2-7-code",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "kimi-k2.7-code",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1521,6 +1866,40 @@
     "notes": ""
   },
   {
+    "modelId": "llm7-io/minimax-m3",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "minimax-m3",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/mistral-large-3-675b",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "mistral-large-3:675b",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
     "modelId": "llm7-io/mistral-nemo-instruct-2407",
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
@@ -1542,6 +1921,23 @@
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "mistral-Small-24B-Instruct-2501",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/nemotron-3-nano-30b",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "nemotron-3-nano:30b",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1610,6 +2006,74 @@
     "providerId": "llm7-io",
     "registrationProfileId": "llm7-io-api",
     "modelSearchName": "seedance-2.0-mini",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/voxtral-mini-3b-2507",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "Voxtral-Mini-3B-2507",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/voxtral-small-24b-2507",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "Voxtral-Small-24B-2507",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/whisper-large-v3",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "whisper-large-v3",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://llm7.io/models"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "llm7-io/whisper-large-v3-turbo",
+    "providerId": "llm7-io",
+    "registrationProfileId": "llm7-io-api",
+    "modelSearchName": "whisper-large-v3-turbo",
     "extraRequirements": [],
     "regionOverridePolicyId": null,
     "quotaOverride": null,
@@ -1770,6 +2234,23 @@
     "replacement": null,
     "sourceUrls": [
       "https://build.nvidia.com/deepseek-ai/deepseek-coder-6.7b-instruct"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "nvidia-nim/deepseek-v4-1-flash",
+    "providerId": "nvidia-nim",
+    "registrationProfileId": "nvidia-nim-api",
+    "modelSearchName": "deepseek-v4.1-flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash"
     ],
     "lastVerifiedAt": null,
     "verificationStatus": "unverified",
@@ -3289,6 +3770,23 @@
     "notes": ""
   },
   {
+    "modelId": "ollama-cloud/mistral-large-4",
+    "providerId": "ollama-cloud",
+    "registrationProfileId": "ollama-cloud-api",
+    "modelSearchName": "mistral-large-4",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://ollama.com/library/mistral-large-4"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
     "modelId": "ollama-cloud/nemotron-3-nano-30b",
     "providerId": "ollama-cloud",
     "registrationProfileId": "ollama-cloud-api",
@@ -3351,6 +3849,41 @@
     "replacement": null,
     "sourceUrls": [
       "https://ollama.com/library/qwen3.5"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "opencode/mimo-v2-6-flash-free",
+    "providerId": "opencode",
+    "registrationProfileId": "opencode-api",
+    "modelSearchName": "mimo-v2.6-flash-free",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://opencode.ai/docs/en/zen/",
+      "https://opencode.ai/zen/v1/models"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "verified",
+    "notes": "2026-09-23 已从公开 /v1/models 目录确认 mimo-v2.6-flash-free 存在；Zen 定价表将其 input/output/cache 标为 Free，并注明限时免费。"
+  },
+  {
+    "modelId": "openrouter/apodex-apodex-1-1-mini-free",
+    "providerId": "openrouter",
+    "registrationProfileId": "openrouter-api",
+    "modelSearchName": "Apodex: Apodex 1.1 Mini (free)",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://openrouter.ai/apodex/apodex-1.1-mini:free"
     ],
     "lastVerifiedAt": null,
     "verificationStatus": "unverified",
@@ -3521,6 +4054,23 @@
     "replacement": null,
     "sourceUrls": [
       "https://openrouter.ai/inclusionai/ling-3.0-flash-vl:free"
+    ],
+    "lastVerifiedAt": null,
+    "verificationStatus": "unverified",
+    "notes": ""
+  },
+  {
+    "modelId": "openrouter/inclusionai-ling-3-1-flash",
+    "providerId": "openrouter",
+    "registrationProfileId": "openrouter-api",
+    "modelSearchName": "inclusionAI: Ling 3.1 Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "needs_review",
+    "replacement": null,
+    "sourceUrls": [
+      "https://openrouter.ai/inclusionai/ling-3.1-flash"
     ],
     "lastVerifiedAt": null,
     "verificationStatus": "unverified",
@@ -3799,6 +4349,43 @@
     "notes": ""
   },
   {
+    "modelId": "puter/mimo-v2-6-flash",
+    "providerId": "puter",
+    "registrationProfileId": "puter-ai",
+    "modelSearchName": "xiaomi/mimo-v2.6-flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "Free Puter account includes an AI allowance; exact allowance is account-dependent and not hard-coded.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/",
+      "https://developer.puter.com/tutorials/free-unlimited-xiaomi-mimo-api/"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "partial",
+    "notes": "官方页面确认可在浏览器 Playground 免费试用，且 Puter.js 无需开发者自备 API Key；真实登录态生成仍待补测。"
+  },
+  {
+    "modelId": "siliconflow/xing4-0-29b",
+    "providerId": "siliconflow",
+    "registrationProfileId": "siliconflow-api",
+    "modelSearchName": "XingChenAGI/Xing4.0-29B",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "SiliconFlow official price/model pages list input ¥0 / M Tokens and output ¥0 / M Tokens as of 2026-09-29; recheck before production use because hosted free pricing can change.",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://siliconflow.cn/pricing",
+      "https://cloud.siliconflow.cn/models",
+      "https://github.com/XingChen-AGI/Xing4.0-29B-A4B"
+    ],
+    "lastVerifiedAt": "2026-09-29",
+    "verificationStatus": "verified",
+    "notes": "SiliconFlow 托管入口当前为 ¥0；模型由中国电信 XingChen-AGI 发布。模型权重与托管 API 是不同访问路径，本卡描述 SiliconFlow API 路径。"
+  },
+  {
     "modelId": "unisound/u2-flash",
     "providerId": "unisound",
     "registrationProfileId": "unisound-api",
@@ -3816,6 +4403,42 @@
     "lastVerifiedAt": "2026-09-17",
     "verificationStatus": "partial",
     "notes": "云知声 Token Hub 官方 API 路线；按量计费输入 0.6 元/百万 tokens、输出 1.2 元/百万 tokens（限时 6 折），注册促销赠 1 亿 Token，未见信用卡要求。"
+  },
+  {
+    "modelId": "xiaomi-mimo/mimo-v2-6-flash",
+    "providerId": "xiaomi-mimo",
+    "registrationProfileId": "xiaomi-mimo-api",
+    "modelSearchName": "MiMo-V2.6-Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": null,
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://mimo.mi.com/models/en-US/mimo-v2.6-flash",
+      "https://mimo.mi.com/docs/en-US/news/latest/v2-6"
+    ],
+    "lastVerifiedAt": "2026-09-23",
+    "verificationStatus": "verified",
+    "notes": "官方 API：1M context、128K max output、100 RPM、10M TPM；API 为付费。OpenCode Zen 另有有限期免费托管版本。"
+  },
+  {
+    "modelId": "zhipu-glm/glm-4-7-flash",
+    "providerId": "zhipu-glm",
+    "registrationProfileId": "zhipu-glm-api",
+    "modelSearchName": "GLM-4.7-Flash",
+    "extraRequirements": [],
+    "regionOverridePolicyId": null,
+    "quotaOverride": "智谱官方宣布 BigModel.cn 免费调用；公开页未给固定 Token 配额",
+    "accessStatus": "current",
+    "replacement": null,
+    "sourceUrls": [
+      "https://www.zhipuai.cn/zh/news/148",
+      "https://docs.bigmodel.cn/"
+    ],
+    "lastVerifiedAt": "2026-10-08",
+    "verificationStatus": "partial",
+    "notes": "免费调用声明与约 200K 上下文已由官方来源核验；尚未用登录态 API Key 做真实调用与账号级限流验证。"
   },
   {
     "modelId": "github-models/ai21-jamba-1-5-large",
@@ -3867,254 +4490,5 @@
     "lastVerifiedAt": "2026-09-09",
     "verificationStatus": "verified",
     "notes": "GitHub Models 已于 2026-07-30 完全退役，不能再注册或调用。"
-  },
-  {
-    "modelId": "amd-radeon-cloud/deepseek-v4-flash",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "DeepSeek-V4-Flash",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "amd-radeon-cloud/deepseek-v4-flash-vision-exp",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "DeepSeek-V4-Flash-Vision-Exp",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "amd-radeon-cloud/deepseek-v4-1-flash",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "DeepSeek-V4.1-Flash",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "amd-radeon-cloud/qwen3-8-flash-next",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "Qwen3.8-Flash-Next",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "amd-radeon-cloud/qwen3-8-27b",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "Qwen3.8-27B",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "amd-radeon-cloud/minicpm5-2b",
-    "providerId": "amd-radeon-cloud",
-    "registrationProfileId": "amd-radeon-cloud-api",
-    "modelSearchName": "MiniCPM5-2B",
-    "extraRequirements": [
-      "Radeon Cloud account must pass platform verification before API use"
-    ],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "Typical public-free limits: 30 RPM/key · 120 RPM/IP · 8 concurrent/key; gateway 20 RPM/account plus rolling spend cap",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://amd-aim.github.io/radeon-cloud-docs/models/overview/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/models/",
-      "https://amd-aim.github.io/radeon-cloud-docs/api/rate-limits/"
-    ],
-    "lastVerifiedAt": "2026-09-22",
-    "verificationStatus": "verified",
-    "notes": "Use the exact API model ID shown here. GET /v1/models is the runtime source of truth because AMD may add or retire shared models."
-  },
-  {
-    "modelId": "siliconflow/xing4-0-29b",
-    "providerId": "siliconflow",
-    "registrationProfileId": "siliconflow-api",
-    "modelSearchName": "XingChenAGI/Xing4.0-29B",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "SiliconFlow official price/model pages list input ¥0 / M Tokens and output ¥0 / M Tokens as of 2026-09-29; recheck before production use because hosted free pricing can change.",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://siliconflow.cn/pricing",
-      "https://cloud.siliconflow.cn/models",
-      "https://github.com/XingChen-AGI/Xing4.0-29B-A4B"
-    ],
-    "lastVerifiedAt": "2026-09-29",
-    "verificationStatus": "verified",
-    "notes": "SiliconFlow 托管入口当前为 ¥0；模型由中国电信 XingChen-AGI 发布。模型权重与托管 API 是不同访问路径，本卡描述 SiliconFlow API 路径。"
-  },
-  {
-    "modelId": "intern-ai/intern-s2",
-    "providerId": "intern-ai",
-    "registrationProfileId": "intern-ai-api",
-    "modelSearchName": "Intern-S2",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "官方确认一定额度免费 API；具体 Token 数登录后查看；默认约 30 RPM",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://www.shlab.org.cn/news/5444298",
-      "https://internlm.intern-ai.org.cn/doc/docs/Chat/"
-    ],
-    "lastVerifiedAt": "2026-10-08",
-    "verificationStatus": "partial",
-    "notes": "公开资料预检通过；尚未用登录态 API Token 做真实推理与账单验证。"
-  },
-  {
-    "modelId": "zhipu-glm/glm-4-7-flash",
-    "providerId": "zhipu-glm",
-    "registrationProfileId": "zhipu-glm-api",
-    "modelSearchName": "GLM-4.7-Flash",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": "智谱官方宣布 BigModel.cn 免费调用；公开页未给固定 Token 配额",
-    "accessStatus": "current",
-    "replacement": null,
-    "sourceUrls": [
-      "https://www.zhipuai.cn/zh/news/148",
-      "https://docs.bigmodel.cn/"
-    ],
-    "lastVerifiedAt": "2026-10-08",
-    "verificationStatus": "partial",
-    "notes": "免费调用声明与约 200K 上下文已由官方来源核验；尚未用登录态 API Key 做真实调用与账号级限流验证。"
-  },
-  {
-    "modelId": "google-gemini/gemini-3-8-flash",
-    "providerId": "google-gemini",
-    "registrationProfileId": "google-gemini-api",
-    "modelSearchName": "Gemini 3.8 Flash",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "needs_review",
-    "replacement": null,
-    "sourceUrls": [
-      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash"
-    ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
-  },
-  {
-    "modelId": "google-gemini/gemini-3-8-live",
-    "providerId": "google-gemini",
-    "registrationProfileId": "google-gemini-api",
-    "modelSearchName": "Gemini 3.8 Live",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "needs_review",
-    "replacement": null,
-    "sourceUrls": [
-      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live"
-    ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
-  },
-  {
-    "modelId": "google-gemini/gemini-3-8-live-extended-thinking",
-    "providerId": "google-gemini",
-    "registrationProfileId": "google-gemini-api",
-    "modelSearchName": "Gemini 3.8 Live Extended Thinking",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "needs_review",
-    "replacement": null,
-    "sourceUrls": [
-      "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live-extended-thinking"
-    ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
-  },
-  {
-    "modelId": "groq/qwen-qwen3-8-27b",
-    "providerId": "groq",
-    "registrationProfileId": "groq-api",
-    "modelSearchName": "Qwen 3.8 27B",
-    "extraRequirements": [],
-    "regionOverridePolicyId": null,
-    "quotaOverride": null,
-    "accessStatus": "needs_review",
-    "replacement": null,
-    "sourceUrls": [
-      "https://console.groq.com/docs/model/qwen/qwen3.8-27b"
-    ],
-    "lastVerifiedAt": null,
-    "verificationStatus": "unverified",
-    "notes": ""
   }
 ]

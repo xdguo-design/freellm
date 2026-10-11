@@ -459,15 +459,17 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         path.name: path.read_text(encoding="utf-8")
         for path in sorted(tmp_path.glob("sitemap*.xml"))
     }
+    # sitemap-english.xml was added on purpose for the independent English hubs (P1-4, PR #62).
     assert set(sitemap_texts) == {
         "sitemap.xml",
         "sitemap-pages.xml",
         "sitemap-offers.xml",
         "sitemap-providers.xml",
         "sitemap-models.xml",
+        "sitemap-english.xml",
     }
     assert "<sitemapindex" in sitemap_texts["sitemap.xml"]
-    for section in ("pages", "offers", "providers", "models"):
+    for section in ("pages", "offers", "providers", "models", "english"):
         assert f"https://freellm.top/sitemap-{section}.xml" in sitemap_texts["sitemap.xml"]
     sitemap = "".join(
         text for name, text in sitemap_texts.items() if name != "sitemap.xml"
@@ -512,6 +514,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/submit/",
         "https://freellm.top/terms/",
         "https://freellm.top/health/",
+        # Hand-maintained contact page added for AdSense trust pages (ADSENSE-8, commit 13c89622).
+        "https://freellm.top/contact/",
     }
     locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
     assert len(locs) == len(set(locs)), "sitemaps must not advertise the same URL twice"
@@ -643,7 +647,10 @@ def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     assert 'Ollama' in all_pages
     assert 'deepseek-v4-pro-0813' in all_pages
     assert 'Score' in page
-    assert '目录来源' in page
+    # Rows now label provenance (official / public API / third-party) instead of a generic
+    # "目录来源" link since P0-5 (commit 93099d80, _catalog_source_label).
+    assert 'class="source-link"' in page
+    assert '厂商官方来源' in page
 
 
 def test_static_seo_pages_can_follow_the_saved_locale_without_mixed_visible_copy(tmp_path):
