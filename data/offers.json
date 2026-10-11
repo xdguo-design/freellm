@@ -10507,17 +10507,17 @@
       "限时免费",
       "10,000 积分/席位"
     ],
-    "freeSummary": "官方定价页显示团队版限时免费，10,000 积分/席位；积分刷新周期和具体消耗规则待核验。",
-    "validitySummary": "限时免费；活动结束时间待官方确认",
-    "accessSummary": "注册并登录 JoyCode；具体地区、账号及团队资格待核验",
-    "checkedSummary": "2026-10-11 / 京东 JoyCode 官方定价页",
+    "freeSummary": "团队版限时免费，1 个席位，10,000 积分/席位；积分周期为 1 个月，未用额度到期清零。",
+    "validitySummary": "限时免费；每个席位积分周期 1 个月，到期未用清零",
+    "accessSummary": "注册并登录 JoyCode；团队版限 1 个席位，其他账号/地区条件以官方说明为准",
+    "checkedSummary": "2026-10-11 / JoyCode 官方计费文档：团队版限时免费、10,000 积分/席位、1 个月周期",
     "title": "京东云 JoyCode · 限时免费 AI 编程工具",
     "titleZh": "京东云 JoyCode · 限时免费 AI 编程工具",
     "titleEn": "JD Cloud JoyCode · Free AI Coding Tool",
-    "why": "JoyCode 是京东云推出的 AI 编程工具，提供 IDE 内的智能编码与智能体辅助开发能力。官方定价页显示团队版限时免费，席位额度为 10,000 积分；这属于编程工具权益，不是可直接调用的通用免费 API。",
-    "mechanism": "团队版限时免费；每个席位显示 10,000 积分，积分消耗与刷新周期需登录后核实",
-    "validity": "限时活动，结束日期未确认",
-    "access": "需要注册/登录 JoyCode 账号；账号、地区和企业团队资格等具体限制待核验",
+    "why": "JoyCode 是京东云推出的 AI 编程工具，提供 IDE 内智能编码与智能体辅助开发能力。官方计费文档显示团队版限时免费，团队版限 1 个席位，席位额度为 10,000 积分，积分周期为 1 个月且到期清零。这属于编程工具权益，不是可直接调用的通用免费 API。",
+    "mechanism": "团队版限时免费；仅 1 个席位；10,000 积分/席位，积分周期 1 个月，到期清零",
+    "validity": "限时免费；席位积分按 1 个月周期计算，到期未用清零；活动结束日期未公布",
+    "access": "注册/登录 JoyCode；团队版限 1 个席位，其他资格条件以官方说明为准",
     "command": "打开 JoyCode 官网下载客户端，登录后选择模型并在账户页面查看积分额度。",
     "register": "https://joycode.jd.com/",
     "registerLabel": "访问 JoyCode 官网",
@@ -10529,6 +10529,14 @@
       [
         "JoyCode 官方定价页",
         "https://joycode.jd.com/pricing/"
+      ],
+      [
+        "官方计费与积分规则",
+        "https://joycode.jd.com/docs/account/pricing/"
+      ],
+      [
+        "官方快速入门",
+        "https://joycode.jd.com/docs/start/getting-started/"
       ]
     ],
     "originCountry": "China",
@@ -10539,35 +10547,39 @@
       "type": "limited_time_free",
       "amount": 10000,
       "unit": "credits per seat",
-      "period": "unknown"
+      "period": "1 month; unused credits expire at period end"
     },
-    "quota": "10,000 积分/席位（官方定价页显示）；刷新周期、有效期和各模型消耗规则待核验",
-    "renewal": "活动结束时间与续费机制待核验",
+    "quota": "10,000 积分/席位；团队版限 1 个席位。官方计费文档说明积分周期为 1 个月，到期清零；活动结束日期未公布。",
+    "renewal": "限时免费活动的结束时间未公布；席位积分每 1 个月周期到期清零，具体周期起点以账号套餐页面为准。",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
       "https://joycode.jd.com/",
-      "https://joycode.jd.com/pricing/"
+      "https://joycode.jd.com/pricing/",
+      "https://joycode.jd.com/docs/account/pricing/",
+      "https://joycode.jd.com/docs/start/intro/",
+      "https://joycode.jd.com/docs/start/getting-started/"
     ],
-    "evidence": "京东 JoyCode 官方定价页显示团队版限时免费，10,000 积分/席位。积分刷新周期、有效期、适用账户范围和具体消耗规则尚待进一步核对。",
+    "evidence": "JoyCode 官方计费文档确认团队版限时免费、席位额度 10,000 积分、有效期 1 个月且到期清零；团队版仅限 1 个席位。具体账号积分消耗和活动结束时间仍需在官方页面/账号内核对。",
     "status": "verified",
-    "confidence": "medium",
+    "confidence": "high",
     "lastVerifiedAt": "2026-10-11",
     "checkedBy": "manual",
-    "notes": "按官方定价页记录团队版限时免费与10,000积分/席位；不把积分写成API token，也不推断为永久免费。用户文章中的联网搜索、数学推理与小游戏生成表现属于个人体验，FreeLLM 尚未独立复测。",
+    "notes": "官方计费文档已确认：团队版限时免费、仅 1 个席位、10,000 积分/席位、积分有效期 1 个月且到期清零。积分并非 API Token；FreeLLM 尚未独立安装客户端、登录新账号或验证实际扣分、地区资格及商用限制。用户文章中的搜索、数学推理与小游戏表现属于投稿者体验，尚未由 FreeLLM 复测。",
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "partial",
       "testedAt": "2026-10-11",
       "actualUsageVerified": false,
-      "task": "核验京东云 JoyCode 团队版限时免费与每席位 10,000 积分的官方说明，并区分 IDE 权益和 API 服务。",
+      "task": "核验京东云 JoyCode 团队版免费条件、席位积分额度及周期，并区分 IDE 权益与 API 服务。",
       "method": [
-        "核对 JoyCode 官方产品页和官方定价页中的产品定位、团队版限时免费说明与席位积分额度。",
-        "记录客户端安装、登录和模型选择的投稿者体验；FreeLLM 未独立运行客户端或验证账号内积分扣减。"
+        "核对 JoyCode 官方产品页与定价页，确认团队版限时免费和 10,000 积分/席位。",
+        "核对官方计费文档，确认团队版仅 1 个席位、积分周期为 1 个月且到期清零。",
+        "将投稿者的安装、搜索、推理和小游戏体验标为投稿者体验，未作为 FreeLLM 实测结果。"
       ],
-      "result": "官方定价页记录显示团队版限时免费、10,000 积分/席位；作为 AI 编程工具收录，不作为免费 API。",
-      "limitations": "未使用新账号实际注册登录、未独立安装运行客户端、未验证积分到账/刷新/消耗、活动截止日期、团队资格或商用限制。",
+      "result": "官方文档可确认团队版限时免费、1 个席位、10,000 积分/席位、1 个月周期到期清零；按 AI 编程工具收录，不作为免费 API。",
+      "limitations": "未独立注册登录、安装运行客户端或实测积分到账/消耗；活动截止日期、账号/地区资格、模型具体计费与商用限制仍需核验。",
       "evidence": [
         {
           "label": "JoyCode 官方网站",
@@ -10576,6 +10588,14 @@
         {
           "label": "JoyCode 官方定价页",
           "url": "https://joycode.jd.com/pricing/"
+        },
+        {
+          "label": "官方计费与积分规则",
+          "url": "https://joycode.jd.com/docs/account/pricing/"
+        },
+        {
+          "label": "官方快速入门",
+          "url": "https://joycode.jd.com/docs/start/getting-started/"
         }
       ]
     }
