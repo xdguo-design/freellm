@@ -855,6 +855,7 @@ let offerIndex = {};
       event.preventDefault();
       clearCatalogSearch();
       setFilter(link.dataset.filter || 'all');
+      document.body.classList.add('catalog-expanded');
       document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {

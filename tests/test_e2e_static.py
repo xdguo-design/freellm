@@ -1056,6 +1056,17 @@ class BrowserPageTests(unittest.TestCase):
         self.assertTrue(page.locator("#catalog-offers").is_visible())
         page.close()
 
+    def test_student_filter_reveals_catalog_without_promoting_noindex_route(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
+        tab = page.locator(".prototype-tabs button[data-filter='student']")
+        tab.click()
+        self.assertTrue(page.locator("#catalog-offers").is_visible())
+        self.assertTrue(page.locator(".filter-chip[data-filter='student'].active").count())
+        for link in page.locator(".featured-resource-link[data-filter='student']").all():
+            self.assertEqual(link.get_attribute("href"), "#catalog-offers")
+        page.close()
+
     def test_featured_resource_link_filters_catalog_without_stale_query(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}")
