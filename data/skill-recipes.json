@@ -7,12 +7,37 @@
     "input": "一句想法、目标用户和已知约束",
     "output": "带验收标准、风险边界和执行步骤的实施计划",
     "why": "先澄清问题，再写计划，最后把讨论变成下一步动作。",
-    "tags": ["产品设计", "工程计划"],
+    "tags": [
+      "产品设计",
+      "工程计划"
+    ],
+    "category": "product-design",
+    "categoryLabel": "产品设计",
     "steps": [
-      {"skillId":"obra-brainstorming","label":"把想法聊透","detail":"在动手前系统性地探索需求、方案和取舍。"},
-      {"skillId":"obra-writing-plans","label":"写成实施计划","detail":"把已确认的方案拆成有验收标准的任务清单。"},
-      {"skillId":"obra-executing-plans","label":"按计划逐项执行","detail":"按任务逐个实现，保持每步都可验证。"},
-      {"skillId":"obra-verification-before-completion","label":"交付前验证","detail":"在宣布完成前逐条核对证据，拒绝“应该没问题”。"}
+      {
+        "skillId": "obra-brainstorming",
+        "label": "把想法聊透",
+        "detail": "在动手前系统性地探索需求、方案和取舍。",
+        "demo": "✓ 澄清问题与约束\n  · 目标用户：内部产品团队\n  · 方案候选：3 个，已排除 1 个\n  → 产出：对齐后的问题定义与取舍记录"
+      },
+      {
+        "skillId": "obra-writing-plans",
+        "label": "写成实施计划",
+        "detail": "把已确认的方案拆成有验收标准的任务清单。",
+        "demo": "✓ 生成实施计划草案\n  · 任务 8 项 · 含验收标准与依赖\n  · 风险边界：2 条已标注\n  → 产出：可评审的计划文档"
+      },
+      {
+        "skillId": "obra-executing-plans",
+        "label": "按计划逐项执行",
+        "detail": "按任务逐个实现，保持每步都可验证。",
+        "demo": "✓ 按清单推进\n  · 已完成 5/8 · 当前可验证节点已通过\n  → 产出：带进度的执行记录"
+      },
+      {
+        "skillId": "obra-verification-before-completion",
+        "label": "交付前验证",
+        "detail": "在宣布完成前逐条核对证据，拒绝“应该没问题”。",
+        "demo": "✓ 验收核对完成\n  · 8/8 验收项有证据\n  · 无“大概好了”项\n  → 产出：可交付的验证清单"
+      }
     ]
   },
   {
@@ -23,12 +48,37 @@
     "input": "CSV、Excel 或一组业务指标",
     "output": "数据结论、图表看板和正式 PPTX 演示文稿",
     "why": "先回答业务问题，再决定图表和页面，不让 PPT 变成数据搬运。",
-    "tags": ["数据分析", "经营汇报"],
+    "tags": [
+      "数据分析",
+      "经营汇报"
+    ],
+    "category": "office-data",
+    "categoryLabel": "办公数据",
     "steps": [
-      {"skillId":"anthropics-xlsx","label":"读懂数据表","detail":"用公式、透视和图表把原始表格整理成可分析的口径。"},
-      {"skillId":"iofficeai-officecli-xlsx","label":"核对与汇总","detail":"用 CLI 批量读写 Excel，输出合并后的关键指标。"},
-      {"skillId":"iofficeai-officecli-data-dashboard","label":"生成数据看板","detail":"把关键指标排布成多元素 Excel 仪表板。"},
-      {"skillId":"anthropics-pptx","label":"组织汇报叙事","detail":"将结论、证据和下一步动作生成正式的 PPTX 文件。"}
+      {
+        "skillId": "anthropics-xlsx",
+        "label": "读懂数据表",
+        "detail": "用公式、透视和图表把原始表格整理成可分析的口径。",
+        "demo": "✓ 原始表已规范化\n  · 透视：按渠道 × 周\n  · 异常行：已标记 3 处\n  → 产出：可分析口径表"
+      },
+      {
+        "skillId": "iofficeai-officecli-xlsx",
+        "label": "核对与汇总",
+        "detail": "用 CLI 批量读写 Excel，输出合并后的关键指标。",
+        "demo": "✓ 关键指标汇总\n  · GMV / 转化率 / 退款率\n  · 环比已计算\n  → 产出：指标汇总表"
+      },
+      {
+        "skillId": "iofficeai-officecli-data-dashboard",
+        "label": "生成数据看板",
+        "detail": "把关键指标排布成多元素 Excel 仪表板。",
+        "demo": "✓ Dashboard 已生成\n  · 4 张图 + 1 张结论表\n  → 产出：Excel 数据看板"
+      },
+      {
+        "skillId": "anthropics-pptx",
+        "label": "组织汇报叙事",
+        "detail": "将结论、证据和下一步动作生成正式的 PPTX 文件。",
+        "demo": "✓ 汇报 Deck 已导出\n  · 结论 → 证据 → 下一步\n  · Q3-review.pptx（12 页）\n  → 产出：可上台的 PPTX"
+      }
     ]
   },
   {
@@ -39,11 +89,31 @@
     "input": "初稿、背景说明和格式要求",
     "output": "逐段润色后的 Word 文档和 PDF 版本",
     "why": "协作润色、原生排版、PDF 定稿各司其职，一步到位。",
-    "tags": ["办公文档", "协作润色"],
+    "tags": [
+      "办公文档",
+      "协作润色"
+    ],
+    "category": "office-data",
+    "categoryLabel": "办公数据",
     "steps": [
-      {"skillId":"anthropics-doc-coauthoring","label":"逐段审阅润色","detail":"按段落给出修改建议并协同定稿。"},
-      {"skillId":"anthropics-docx","label":"排版成 Word","detail":"用修订、批注和模板填充生成正式 .docx。"},
-      {"skillId":"anthropics-pdf","label":"输出 PDF 定稿","detail":"生成、合并 PDF 并处理表单与提取。"}
+      {
+        "skillId": "anthropics-doc-coauthoring",
+        "label": "逐段审阅润色",
+        "detail": "按段落给出修改建议并协同定稿。",
+        "demo": "✓ 完成 4 段协同修订\n  · 语气更正式 · 补全验收表述\n  · 删除空话 2 处\n  → 产出：可排版的定稿正文"
+      },
+      {
+        "skillId": "anthropics-docx",
+        "label": "排版成 Word",
+        "detail": "用修订、批注和模板填充生成正式 .docx。",
+        "demo": "✓ 已生成正式 Word\n  · 标题层级 / 表格 / 页脚页码\n  · policy-refund-v1.docx\n  → 产出：可对外发送的 .docx"
+      },
+      {
+        "skillId": "anthropics-pdf",
+        "label": "输出 PDF 定稿",
+        "detail": "生成、合并 PDF 并处理表单与提取。",
+        "demo": "✓ 已导出定稿 PDF\n  · 3 页 · 字体已嵌入\n  · policy-refund-v1.pdf\n  → 产出：可归档的 PDF"
+      }
     ]
   },
   {
@@ -54,12 +124,37 @@
     "input": "主题、目标读者和参考资料链接",
     "output": "调研整理后的图文、公众号排版 HTML 和发布",
     "why": "调研、配图、排版、发布放进同一条流水线，内容生产不再断档。",
-    "tags": ["内容创作", "公众号运营"],
+    "tags": [
+      "内容创作",
+      "公众号运营"
+    ],
+    "category": "growth-content",
+    "categoryLabel": "内容增长",
     "steps": [
-      {"skillId":"composiohq-content-research-writer","label":"选题调研与写作","detail":"围绕主题做资料调研，产出高质量初稿。"},
-      {"skillId":"jimliu-baoyu-cover-image","label":"生成文章封面","detail":"从类型、情绪等五个维度生成匹配的封面图。"},
-      {"skillId":"jimliu-baoyu-markdown-to-html","label":"排版成公众号 HTML","detail":"把 Markdown 转成微信兼容的排版格式。"},
-      {"skillId":"jimliu-baoyu-post-to-wechat","label":"发布到公众号","detail":"通过公众号 API 直接发布草稿或正式内容。"}
+      {
+        "skillId": "composiohq-content-research-writer",
+        "label": "选题调研与写作",
+        "detail": "围绕主题做资料调研，产出高质量初稿。",
+        "demo": "✓ 初稿完成\n  · 引用 5 条 · 结构：痛点→方法→案例\n  → 产出：可配图的 Markdown 正文"
+      },
+      {
+        "skillId": "jimliu-baoyu-cover-image",
+        "label": "生成文章封面",
+        "detail": "从类型、情绪等五个维度生成匹配的封面图。",
+        "demo": "✓ 封面已生成\n  · 风格：编辑向 · 主色：深蓝\n  · cover-wechat-01.png\n  → 产出：文章封面图"
+      },
+      {
+        "skillId": "jimliu-baoyu-markdown-to-html",
+        "label": "排版成公众号 HTML",
+        "detail": "把 Markdown 转成微信兼容的排版格式。",
+        "demo": "✓ 公众号 HTML 已就绪\n  · 代码高亮 / 引用块 / 图片位\n  → 产出：可粘贴发布的排版稿"
+      },
+      {
+        "skillId": "jimliu-baoyu-post-to-wechat",
+        "label": "发布到公众号",
+        "detail": "通过公众号 API 直接发布草稿或正式内容。",
+        "demo": "✓ 已写入公众号草稿箱\n  · 状态：待群发\n  → 产出：可群发的公众号草稿"
+      }
     ]
   },
   {
@@ -70,12 +165,37 @@
     "input": "工作经历、目标岗位 JD",
     "output": "定制化的专业简历（PDF / HTML）",
     "why": "结构化排版保证专业观感，按 JD 定制保证命中率，去 AI 味保证真实感。",
-    "tags": ["简历", "求职"],
+    "tags": [
+      "简历",
+      "求职"
+    ],
+    "category": "career-sales",
+    "categoryLabel": "求职销售",
     "steps": [
-      {"skillId":"rendercv-rendercv","label":"用 YAML 生成专业简历","detail":"结构化内容一键渲染成排版级 PDF。"},
-      {"skillId":"composiohq-tailored-resume-generator","label":"按 JD 定制内容","detail":"分析岗位描述，针对性地调整简历重点。"},
-      {"skillId":"jzcreative-html-resume-beautifier","label":"美化并导出","detail":"转成 HTML 精排版本，可导出 PNG 或 PDF。"},
-      {"skillId":"blader-humanizer","label":"去掉 AI 腔调","detail":"改写机械表达，让简历读起来像真人写的。"}
+      {
+        "skillId": "rendercv-rendercv",
+        "label": "用 YAML 生成专业简历",
+        "detail": "结构化内容一键渲染成排版级 PDF。",
+        "demo": "✓ 基础简历排版完成\n  · 版式：经典单栏\n  · resume-base.pdf\n  → 产出：专业排版 PDF"
+      },
+      {
+        "skillId": "composiohq-tailored-resume-generator",
+        "label": "按 JD 定制内容",
+        "detail": "分析岗位描述，针对性地调整简历重点。",
+        "demo": "✓ 已按 JD 重排重点\n  · 命中关键词：React / 系统设计\n  · 弱相关经历已压缩\n  → 产出：岗位定制版正文"
+      },
+      {
+        "skillId": "jzcreative-html-resume-beautifier",
+        "label": "美化 HTML 简历",
+        "detail": "生成隐私安全的 A4 精美简历设计。",
+        "demo": "✓ HTML 简历美化完成\n  · A4 · 隐私字段已处理\n  → 产出：精美 HTML 简历"
+      },
+      {
+        "skillId": "blader-humanizer",
+        "label": "去掉 AI 腔",
+        "detail": "把生成文本改写成更像真人写的表达。",
+        "demo": "✓ 去 AI 腔完成\n  · 删除套话 6 处 · 保留事实密度\n  → 产出：可投递的最终简历"
+      }
     ]
   },
   {
@@ -83,15 +203,40 @@
     "title": "从需求到 React 功能交付",
     "kicker": "DEV / 06",
     "description": "把一个前端需求，按 Vercel 官方最佳实践实现、构建并测试通过。",
-    "input": "产品需求、现有 React / Next.js 代码库",
-    "output": "符合规范的组件实现和通过测试的页面",
-    "why": "大厂最佳实践打底，AI 生成的组件才不会偏离工程规范。",
-    "tags": ["React", "前端工程"],
+    "input": "功能需求、设计稿或交互说明",
+    "output": "可构建、可测试、符合性能规范的 React 功能",
+    "why": "最佳实践、组合模式、产物构建、端到端测试串成一条交付链。",
+    "tags": [
+      "React",
+      "前端工程"
+    ],
+    "category": "engineering",
+    "categoryLabel": "工程开发",
     "steps": [
-      {"skillId":"vercel-labs-react-best-practices","label":"对齐最佳实践","detail":"加载 Vercel 官方的 React / Next.js 性能与规范准则。"},
-      {"skillId":"vercel-labs-composition-patterns","label":"设计组件组合","detail":"用可扩展的组合模式组织组件结构。"},
-      {"skillId":"anthropics-web-artifacts-builder","label":"构建多组件应用","detail":"按规范搭建复杂的多组件前端应用。"},
-      {"skillId":"anthropics-webapp-testing","label":"本地端到端测试","detail":"驱动浏览器验证页面交互和渲染结果。"}
+      {
+        "skillId": "vercel-labs-react-best-practices",
+        "label": "对齐性能与工程规范",
+        "detail": "按 Vercel 工程指南约束组件与数据获取方式。",
+        "demo": "✓ 规范检查通过\n  · 数据获取 / 包体积 / 渲染路径已对齐\n  → 产出：实现约束清单"
+      },
+      {
+        "skillId": "vercel-labs-composition-patterns",
+        "label": "用组合模式组织组件",
+        "detail": "用可扩展的 composition 模式重构复杂 UI。",
+        "demo": "✓ 组件结构重组完成\n  · 复合组件 3 个 · props 钻取已消除\n  → 产出：可扩展组件树"
+      },
+      {
+        "skillId": "anthropics-web-artifacts-builder",
+        "label": "构建可交互产物",
+        "detail": "产出多组件 HTML artifact，便于快速验证。",
+        "demo": "✓ 交互产物已构建\n  · 本地预览通过\n  → 产出：可点的功能原型"
+      },
+      {
+        "skillId": "anthropics-webapp-testing",
+        "label": "Playwright 端到端测试",
+        "detail": "对本地 Web 应用做交互与回归测试。",
+        "demo": "✓ E2E 全部通过\n  · 12 passed · 0 failed\n  → 产出：可合并的测试报告"
+      }
     ]
   }
 ]
