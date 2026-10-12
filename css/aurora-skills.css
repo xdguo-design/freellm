@@ -1008,3 +1008,6 @@ html.fl-pastel-ui[data-theme="dark"] body[data-fl-section="skills"] .skill-card.
  body[data-reference-style="v1"][data-fl-section="skills"] .skill-card.skill-featured{min-height:0!important}
  body[data-reference-style="v1"][data-fl-section="skills"] .skill-card.skill-compact{min-height:0!important;max-height:none}
 }
+
+/* Respect the native hidden attribute even if the showcase has custom layout styles. */
+body[data-fl-section="skills"] .fl-growth-kit[hidden]{display:none!important}
