@@ -163,6 +163,7 @@ if (section === 'home' || section === 'models') {
       if (section === 'logs') {
         const archive = body.querySelector('#log-archive');
         const archiveLink = body.querySelector('.ref-update-history-head a[href="#log-archive"]');
+        const history = body.querySelector('.ref-update-history');
         archiveLink?.addEventListener('click', event => {
           event.preventDefault();
           if (archive) {
@@ -170,6 +171,63 @@ if (section === 'home' || section === 'models') {
             archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
+        if (history && history.dataset.historyReady !== '1') {
+          history.dataset.historyReady = '1';
+          const filters = [...history.querySelectorAll('[data-history-filter]')];
+          const table = history.querySelector('.ref-update-history-table');
+          const rows = [...history.querySelectorAll('[data-history-row]')];
+          const placeholder = history.querySelector('[data-history-placeholder]');
+          const empty = history.querySelector('[data-history-empty]');
+          const visibleCount = history.querySelector('[data-history-visible-count]');
+          const resultCount = history.querySelector('[data-history-result-count]');
+          const sortButton = history.querySelector('[data-history-sort]');
+          const total = rows.length;
+          let activeFilter = 'all';
+
+          const sortRows = direction => {
+            const ordered = rows.slice().sort((a, b) => {
+              const left = Date.parse(a.querySelector('time')?.dateTime || '') || 0;
+              const right = Date.parse(b.querySelector('time')?.dateTime || '') || 0;
+              return direction === 'asc' ? left - right : right - left;
+            });
+            ordered.forEach(row => table?.appendChild(row));
+          };
+
+          const applyFilter = () => {
+            const matching = rows.filter(row => {
+              const category = row.dataset.category || 'other';
+              const change = row.dataset.change || '';
+              const matches = activeFilter === 'all' || category === activeFilter || change === activeFilter;
+              row.style.setProperty('display', matches ? '' : 'none', 'important');
+              return matches;
+            });
+            if (placeholder) placeholder.style.setProperty('display', total === 0 && activeFilter === 'all' ? '' : 'none', 'important');
+            if (visibleCount) visibleCount.textContent = String(matching.length);
+            if (resultCount) resultCount.textContent = `显示${activeFilter === 'all' ? '全部' : '筛选后'} ${matching.length} / ${total} 条记录`;
+            if (empty) empty.hidden = matching.length > 0 || total === 0;
+          };
+
+          filters.forEach(button => button.addEventListener('click', () => {
+            activeFilter = button.dataset.historyFilter || 'all';
+            filters.forEach(item => {
+              const selected = item === button;
+              item.classList.toggle('is-active', selected);
+              item.setAttribute('aria-pressed', String(selected));
+            });
+            applyFilter();
+          }));
+
+          sortButton?.addEventListener('click', () => {
+            const direction = sortButton.dataset.historySort === 'desc' ? 'asc' : 'desc';
+            sortButton.dataset.historySort = direction;
+            sortButton.setAttribute('aria-pressed', String(direction === 'asc'));
+            sortButton.textContent = direction === 'asc' ? '日期：旧 → 新' : '日期：新 → 旧';
+            sortRows(direction);
+          });
+
+          sortRows('desc');
+          applyFilter();
+        }
       }
     }
     if (section === 'about' && body.dataset.aboutStatic === 'true') {

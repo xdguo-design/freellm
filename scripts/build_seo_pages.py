@@ -4808,6 +4808,16 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         for key in event_kinds for event in latest_groups[key]
         if eligible_highlight(event)
     ][:3]
+    latest_verified_offer = next((
+        (latest, key, event)
+        for key in event_kinds
+        for event in reversed(latest_groups[key])
+        if eligible_highlight(event)
+        and str(event.get("kind") or "").lower() == "offer"
+        and str((event.get("details") or {}).get("status") or "").lower() == "verified"
+    ), None)
+    if latest_verified_offer and all(event is not latest_verified_offer[2] for _, _, event in feature_entries):
+        feature_entries = [*feature_entries[:2], latest_verified_offer]
     if not feature_entries:
         feature_cards = '<article><b>FreeLLM</b><strong>今日暂无可推荐的官方目录变更</strong><p>第三方聚合记录仍保留在完整日志中。</p><small>当前日志日期：' + _esc(dates[0] if dates else "—") + '</small></article>'
     else:
@@ -4846,11 +4856,17 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         log = latest
         details = event.get("details") or {}
         kind = str(event.get("kind") or "更新")
+        category = kind.strip().lower()
+        if category not in {"model", "tool", "offer"}:
+            product_type = str(details.get("productType") or "").strip().lower()
+            category = "tool" if product_type in {"tool", "software"} else "offer" if product_type else "other"
         status = str(details.get("status") or ("已核验" if key != "unavailable" else "待复核"))
-        rows.append(f'<div class="row"><b>{_esc(display_title(event))}</b><span>{_esc(kind)}</span><span>{_esc(provider_name(event))}</span><strong>{event_labels[key][0]}</strong><time>{_esc(str(event.get("asOf") or log.get("date") or ""))}</time><span>{_esc(status)}</span>{source_link(event)}</div>')
+        event_date = str(event.get("asOf") or log.get("date") or "")
+        rows.append(f'<div class="row" data-history-row data-category="{_esc(category)}" data-change="{_esc(key)}"><b>{_esc(display_title(event))}</b><span>{_esc(kind)}</span><span>{_esc(provider_name(event))}</span><strong>{event_labels[key][0]}</strong><time datetime="{_esc(event_date)}">{_esc(event_date)}</time><span>{_esc(status)}</span>{source_link(event)}</div>')
     if not rows:
-        rows.append('<div class="row"><b>暂无目录事件</b><span>—</span><span>—</span><strong>无变化</strong><time>' + _esc(dates[0] if dates else "—") + '</time><span>已扫描</span><span>待新记录</span></div>')
-    history = f'<section class="ref-update-history"><div class="ref-update-history-head"><div><h2>{_esc(dates[0] if dates else "每日更新")} 更新详情（{len(current_events)}）</h2><p>来自自动扫描及人工核验的更新记录</p></div><a href="#log-archive">查看全部日期 →</a></div><div class="ref-update-history-filters"><button class="is-active" type="button">全部</button><button type="button">模型</button><button type="button">工具</button><button type="button">Offers</button><button type="button">恢复</button><button type="button">下线</button><button class="sort" type="button">按日期排序⌄</button></div><div class="ref-update-history-table"><div class="row head"><span>资源名称</span><span>类型</span><span>Provider</span><span>变化</span><span>更新时间</span><span>状态</span><span>来源</span></div>{"".join(rows)}</div></section>'
+        rows.append('<div class="row" data-history-placeholder><b>暂无目录事件</b><span>—</span><span>—</span><strong>无变化</strong><time>' + _esc(dates[0] if dates else "—") + '</time><span>已扫描</span><span>待新记录</span></div>')
+    total_events = len(current_events)
+    history = f'<section class="ref-update-history"><div class="ref-update-history-head"><div><h2>{_esc(dates[0] if dates else "每日更新")} 更新详情（<span data-history-visible-count>{total_events}</span>）</h2><p data-history-result-count aria-live="polite">显示全部 {total_events} 条记录</p></div><a href="#log-archive">查看全部日期 →</a></div><div class="ref-update-history-filters" role="group" aria-label="筛选更新记录"><button class="is-active" type="button" data-history-filter="all" aria-pressed="true">全部</button><button type="button" data-history-filter="model" aria-pressed="false">模型</button><button type="button" data-history-filter="tool" aria-pressed="false">工具</button><button type="button" data-history-filter="offer" aria-pressed="false">Offers</button><button type="button" data-history-filter="recovered" aria-pressed="false">恢复</button><button type="button" data-history-filter="offline" aria-pressed="false">下线</button><button class="sort" type="button" data-history-sort="desc" aria-pressed="false">按日期排序⌄</button></div><div class="ref-update-history-table"><div class="row head"><span>资源名称</span><span>类型</span><span>Provider</span><span>变化</span><span>更新时间</span><span>状态</span><span>来源</span></div>{"".join(rows)}<p class="ref-update-history-empty" data-history-empty role="status" hidden>没有符合条件的更新记录。</p></div></section>'
 
     month_days = []
     month_prefix = dates[0][:7] if dates and len(dates[0]) >= 7 else ""
@@ -7125,15 +7141,16 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
         if rail_tag not in updated and "</head>" in updated:
             updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
-    script_version = "20261010-trust" if path == Path("skills/index.html") else "20261001-updates3" if path == Path("logs/index.html") else "20260924a"
+    script_version = "20261010-trust" if path == Path("skills/index.html") else "20261011-history-filters" if path == Path("logs/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
     old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
     if path == Path("skills/index.html") and old_script_tag in updated:
         updated = updated.replace(old_script_tag, script_tag, 1)
     if path == Path("logs/index.html"):
-        old_logs_script = '<script src="/js/reference-shell.js?v=20261001-rail-align"></script>'
-        if old_logs_script in updated:
-            updated = updated.replace(old_logs_script, script_tag, 1)
+        for old_version in ("20261001-rail-align", "20261001-updates3", "20260924a"):
+            old_logs_script = f'<script src="/js/reference-shell.js?v={old_version}"></script>'
+            if old_logs_script in updated:
+                updated = updated.replace(old_logs_script, script_tag, 1)
     if script_tag not in updated and "</body>" in updated:
         updated = updated.replace("</body>", script_tag + "\n</body>", 1)
 
@@ -7154,6 +7171,11 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
             '用工作流串联模型、工具与 Skills，把复杂任务变成可复制的流程，让好的方法被更多人直接使用。',
             1,
         )
+    if path == Path("logs/index.html"):
+        # /logs/ and a local logs/index.html both resolve ../css and ../js
+        # correctly. Root-absolute asset URLs break styling in file previews.
+        updated = updated.replace('href="/css/', 'href="../css/')
+        updated = updated.replace('src="/js/', 'src="../js/')
     return updated
 
 

@@ -26,7 +26,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261008-today-discovery"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261011-approved-home-nav-final"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -566,6 +566,15 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
 def update_prototype_updates_table(html: str, data_path: Path) -> str:
     """Replace the placeholder rows of the homepage prototype-updates table
     with the latest events from the daily-log pipeline."""
+    try:
+        catalog = json.loads(data_path.read_text(encoding="utf-8"))
+        offer_ids = {
+            str(item.get("id"))
+            for item in catalog
+            if isinstance(item, dict) and item.get("id")
+        }
+    except (OSError, json.JSONDecodeError, TypeError):
+        offer_ids = set()
     log_dir = data_path.parent / "daily-log"
     log_paths = sorted(log_dir.glob("*.json"))[-7:]
     events: list[dict] = []
@@ -609,6 +618,13 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
             delta = -1
         when = "今天" if delta == 0 else "昨天" if delta == 1 else f"{delta} 天前" if delta >= 0 else str(event["asOf"])
         kind = kind_labels.get(str(event.get("kind")), "AI 模型")
+        offer_id = str(details.get("id") or event.get("id") or "")
+        if event.get("kind") == "offer" and offer_id in offer_ids:
+            action_href = offer_href({"id": offer_id})
+            action_label = "查看详情 ↗"
+        else:
+            action_href = "/models/"
+            action_label = "浏览模型库 →"
         initial = (provider[:1] or "?").upper()
         rows.append(
             f'<tr><td><b class="prototype-update-logo">{html_lib.escape(initial)}</b>'
@@ -616,7 +632,7 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
             f"<td>{html_lib.escape(kind)}</td><td>{when}</td>"
             f'<td><i class="{state}">{html_lib.escape(label)}</i></td>'
             f"<td>{html_lib.escape(provider)}</td>"
-            f'<td><a href="/models/">浏览模型库 →</a></td></tr>'
+            f'<td><a href="{html_lib.escape(action_href)}">{action_label}</a></td></tr>'
         )
     updated, replaced = re.subn(
         r'(<table class="prototype-update-table">.*?<tbody>).*?(</tbody>)',
