@@ -253,7 +253,13 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("测试任务", page)
         self.assertIn("查看真实测试任务、限制与评价", page)
         levels = {entry.get("testLevel") for entry in tests.values()}
-        self.assertEqual(levels, {"e2e", "artifact", "task", "partial", "blocked"})
+        historical_levels = {"e2e", "artifact", "task", "partial", "blocked"}
+        self.assertTrue(historical_levels.issubset(levels))
+        self.assertTrue(levels.issubset(historical_levels | {"unknown"}))
+        for entry in tests.values():
+            if entry.get("testLevel") == "unknown":
+                self.assertIsNone(entry.get("score"))
+                self.assertFalse(str(entry.get("testedAt") or "").strip())
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 

@@ -73,15 +73,19 @@ class SkillBenchmarkDataTests(unittest.TestCase):
 
     def test_test_records_never_fake_unexecuted_scores(self):
         scored = 0
-        allowed = {"e2e", "task", "artifact", "partial", "blocked"}
+        allowed = {"e2e", "task", "artifact", "partial", "blocked", "unknown"}
         for skill_id, entry in self.entries.items():
             level = entry.get("testLevel")
             self.assertIn(level, allowed, skill_id)
-            self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
+            if level == "unknown":
+                self.assertFalse(str(entry.get("testedAt") or "").strip(), skill_id)
+                self.assertEqual(entry.get("status"), "未实测", skill_id)
+            else:
+                self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("environment") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("task") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("evaluation") or "").strip(), skill_id)
-            if level in {"blocked", "partial"}:
+            if level in {"blocked", "partial", "unknown"}:
                 self.assertIsNone(entry.get("score"), skill_id)
             else:
                 self.assertIsInstance(entry.get("score"), (int, float), skill_id)
@@ -345,3 +349,42 @@ class SkillsBuildTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MarketingSkillsEditorialTests(unittest.TestCase):
+    """Marketing Skills collection must remain truthful, accessible and easy to navigate."""
+
+    def setUp(self):
+        self.skills = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
+
+    def test_marketing_collection_source_and_evidence(self):
+        items = [item for item in self.skills if item["id"].startswith("coreyhaines31-")]
+        self.assertEqual(len(items), 7)
+        self.assertEqual({item["name"] for item in items}, {
+            "seo-audit", "ai-seo", "programmatic-seo",
+            "site-architecture", "competitors", "schema", "product-marketing",
+        })
+        for item in items:
+            self.assertEqual(item.get("license"), "MIT")
+            self.assertEqual(item["freeLLMTest"]["testLevel"], "unknown")
+            self.assertEqual(item["freeLLMTest"]["status"], "未实测")
+            self.assertIsNone(item["freeLLMTest"]["score"])
+            self.assertTrue((CONTENT_DIR / f'{item["id"]}.md').is_file())
+
+    def test_marketing_editorial_links_to_real_skills(self):
+        from scripts.build_seo_pages import build_site
+
+        with tempfile.TemporaryDirectory() as directory:
+            output_root = Path(directory)
+            build_site(ROOT / "data" / "offers.json", output_root, site_url="https://example.test")
+            page = (output_root / "skills" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('class="fl-growth-kit"', page)
+        self.assertEqual(page.count('class="fl-growth-card"'), 6)
+        for slug in ("seo-audit", "ai-seo", "programmatic-seo",
+                     "site-architecture", "competitors", "schema"):
+            self.assertIn("skill=coreyhaines31-" + slug, page)
+        self.assertIn("skill=coreyhaines31-product-marketing", page)
+        self.assertIn('data-growth-copy', page)
+        self.assertIn('未做效果实测', page)
+        self.assertIn('rel="nofollow noopener"', page)

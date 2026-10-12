@@ -287,14 +287,14 @@ if (section === 'home' || section === 'models') {
     // FLSKILLS-CURATION-20261012: curated two-row category directory, independent deep links.
     const topicOrder = ['development','planning-office','documents','data-office','presentations','product-design','writing','seo-content','resume','file-office','ecommerce','email-office'];
     const topics = {
-      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['vercel-labs-react-best-practices','anthropics-skill-creator','mattpocock-diagnosing-bugs','alibaba-open-code-review','anthropics-mcp-builder','cloudflare-security-audit']},
+      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['dietrichgebert-ponytail','mattpocock-diagnosing-bugs','vercel-labs-react-best-practices','anthropics-skill-creator','alibaba-open-code-review','anthropics-mcp-builder']},
       'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans']},
       'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form']},
       'data-office': {title:'表格与数据',intro:'区分能产出工作簿的验证记录，与尚需 Office CLI 的数据仪表盘链路。',picks:['anthropics-xlsx','iofficeai-officecli-data-dashboard','iofficeai-officecli-xlsx']},
       'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt']},
-      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['anthropics-frontend-design','vercel-labs-web-design-guidelines','anthropics-canvas-design','anthropics-brand-guidelines','anthropics-theme-factory','anthropics-algorithmic-art']},
-      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['blader-humanizer','composiohq-content-research-writer','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html','jimliu-baoyu-infographic','jimliu-baoyu-url-to-markdown']},
-      'seo-content': {title:'新媒体与内容运营',intro:'区分公众号发布、小红书图文、封面制作与增长策略，不承诺未经验证的流量收益。',picks:['jimliu-baoyu-post-to-wechat','jimliu-baoyu-xhs-images','jimliu-baoyu-cover-image','composiohq-twitter-algorithm-optimizer','jimliu-baoyu-post-to-x','michalparkola-article-extractor']},
+      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design']},
+      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html']},
+      'seo-content': {title:'SEO · GEO 与内容增长',intro:'六个 Marketing Skills 拆解抓取、AI 搜索、程序化页面、站点架构、竞品和结构化数据；均已核验源码但尚未实测，公众号技能可在完整资料库查找。',picks:['coreyhaines31-seo-audit','coreyhaines31-ai-seo','coreyhaines31-programmatic-seo','coreyhaines31-site-architecture','coreyhaines31-competitors','coreyhaines31-schema']},
       'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
       'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
       'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
@@ -302,6 +302,15 @@ if (section === 'home' || section === 'models') {
     };
     // These are editorial judgments tied to source descriptions and FreeLLM test notes, not user ratings.
     const insights = {
+      'coreyhaines31-seo-audit':['特点：覆盖 robots、sitemap、索引、canonical 和多语言信号。','适合：给 FreeLLM 建立可复核的技术 SEO 整改清单。','限制：只核验了上游原文，未完成本地或真实网站的运行验收。'],
+      'coreyhaines31-ai-seo':['特点：检查 AI 抓取、答案块与品牌引用线索。','适合：GEO / AEO 可见性初筛和内容结构优化。','限制：不保证被 AI 搜索引用或推荐；本站尚未实测效果。'],
+      'coreyhaines31-programmatic-seo':['特点：以可验证数据设计规模化页面与索引门禁。','适合：模型、供应商、免费额度等差异化资源页。','限制：批量模板可能造成薄内容，需事实来源和人工抽检。'],
+      'dietrichgebert-ponytail':["特点：编码前检查已有实现，减少不必要依赖、抽象和代码。","适合：小功能实现、重构与代码审查。","限制：高保真和复杂需求必须先列明验收范围；节省比例未经本站实测。"],
+      'pbakaus-impeccable':["特点：将界面视觉规范、响应式与常见设计反模式汇成一套流程。","适合：网站改版、设计 QA 与前端交付。","限制：部分命令依赖额外工具；本站尚未运行浏览器验收。"],
+      'tt-a1i-archify':["特点：从代码库或业务流程生成可分享、可交互的图表。","适合：系统架构、产品领域关系与 Agent 流程解释。","限制：图中结构须回查原始项目，不能代替事实核验。"],
+      'hyacehila-humanizer-zh-next':["特点：通用中文润色加商务、学术写作专用参考。","适合：已有稿件审稿、去模板化和正式文本语气调整。","限制：不识别作者身份、不保证通过任何 AI 检测；须人工审阅。"],
+      'imraywang-wewrite':["特点：先查来源再写稿，审稿后可单独加配图与排版。","适合：公众号定期更新和编辑团队。","限制：发布需额外配置并授权；本站未做真实账号验收。"],
+
       'vercel-labs-react-best-practices':['特点：按优先级检查 React/Next.js 的请求瀑布、渲染与打包问题。','适合：实际前端性能优化与代码审查。','限制：任务级验证，需结合框架版本及真实性能测量。'],
       'anthropics-skill-creator':['特点：覆盖 Skill 触发条件、迭代和基准检查。','适合：创建可复用 Agent 技能库。','限制：完整评测脚本链路在当前沙箱未打通。'],
       'mattpocock-diagnosing-bugs':['特点：先建立复现反馈，再逐个验证原因。','适合：疑难 Bug 和性能回退。','限制：任务级检查通过不等于任何仓库自动修复成功。'],
@@ -339,22 +348,26 @@ if (section === 'home' || section === 'models') {
       const n = String(skill.name || '').toLowerCase();
       if (/ppt|slide|deck|presentation|morph/.test(n)) return 'ppt';
       if (/xlsx|excel|dashboard|data|spreadsheet/.test(n)) return 'data';
-      if (/image|art|canvas|visual|brand|theme|design|infographic|cover|xhs/.test(n)) return 'image';
+      if (/image|art|canvas|visual|brand|theme|design|impeccable|archify|cad|infographic|cover|xhs/.test(n)) return 'image';
       if (/wechat|twitter|post-to|seo|ads|lead|marketing/.test(n)) return 'marketing';
       if (/autom|agent|mcp|skill-creator|worktree|executing|parallel/.test(n)) return 'automation';
-      if (/react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
+      if (/ponytail|react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
       if (/resume|meeting|plan|brainstorm|verify|verification|research|extract|transcript/.test(n)) return 'summary';
       if (/doc|pdf|paper|write|human|content|article|file|invoice|office/.test(n)) return 'paper';
       return ({'development':'code','planning-office':'summary','documents':'paper','data-office':'data','presentations':'ppt','product-design':'image','writing':'paper','seo-content':'marketing','resume':'summary','file-office':'paper','ecommerce':'marketing','email-office':'summary'})[skill.category] || 'summary';
     };
-    const urlTopic = new URLSearchParams(window.location.search).get('category');
-    const initialTopic = topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development';
+    const searchParams = new URLSearchParams(window.location.search);
+    const deepLinkedSkill = skills.find(item => item.id === searchParams.get('skill'));
+    const urlTopic = searchParams.get('category');
+    const initialTopic = deepLinkedSkill && !topicOrder.includes(urlTopic) && urlTopic !== 'all'
+      ? deepLinkedSkill.category
+      : (topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development');
     page.dataset.skillCategory = initialTopic;
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const workspace = page.querySelector('.skills-workspace');
     const detailPanel = document.getElementById('selected-skill-panel');
-    let selectedId = skills[0]?.id || '';
-    let panelOpen = false;
+    let selectedId = deepLinkedSkill?.id || skills[0]?.id || '';
+    let panelOpen = Boolean(deepLinkedSkill);
     let view = 'grid';
     let showAllSkills = false;
     const filtered = () => {
@@ -365,6 +378,7 @@ if (section === 'home' || section === 'models') {
       const chosen = category === 'all' ? skills : (isSearch
         ? skills.filter(skill => skill.category === category)
         : topics[category].picks.map(id => skills.find(skill => skill.id === id)).filter(Boolean));
+      if (deepLinkedSkill && deepLinkedSkill.category === category && !chosen.some(skill => skill.id === deepLinkedSkill.id)) chosen.unshift(deepLinkedSkill);
       let list = chosen.filter(skill => {
         const values = [skill.name,skill.description,skill.description_zh,skill.githubUrl,...(skill.compatibility || [])].join(' ').toLowerCase();
         return (status === 'all' || status === skill.status) && (!query || values.includes(query));
@@ -389,7 +403,7 @@ if (section === 'home' || section === 'models') {
       const notes = featured ? insights[skill.id] : null;
       const evidence = skill.freeLLMTest || {};
       const testLevel = evidence.testLevel || 'unknown';
-      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞'})[testLevel] || '未验证';
+      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞',unknown:'未实测'})[testLevel] || '未实测';
       const commentary = notes ? '<div class="skill-editorial"><strong>FreeLLM 重点解析</strong><p>'+notes.map(note => copy(note)).join('<br>')+'</p><small>证据级别：'+copy(testLabel)+'</small></div>' : '';
       const rank = featured ? '<span class="skill-pick-label">TOP 0'+(index+1)+' · 精选分析</span>' : '';
       const active = panelOpen && selectedId === skill.id;
@@ -441,6 +455,7 @@ if (section === 'home' || section === 'models') {
       if (addHistory) {
         const url = new URL(window.location.href);
         url.searchParams.set('category', next);
+        url.searchParams.delete('skill');
         history.pushState(null, '', url.pathname + url.search + url.hash);
       }
       render();
@@ -548,6 +563,18 @@ if (section === 'home' || section === 'models') {
     document.querySelector('[data-close-skills-intro]')?.addEventListener('click',()=>document.getElementById('skills-intro-notice')?.close());
     // Topic reset is handled by the clear button above.
     const accountNotice=document.createElement('div'); accountNotice.id='skills-account-notice'; accountNotice.className='skills-toast'; accountNotice.setAttribute('role','status'); accountNotice.hidden=true; page.append(accountNotice);
+    if (panelOpen) { workspace?.classList.add('has-detail'); detailPanel?.classList.remove('is-collapsed'); }
+    document.querySelector('[data-growth-copy]')?.addEventListener('click', async event => {
+      const button = event.currentTarget;
+      const command = document.getElementById('fl-growth-install-code')?.textContent?.trim();
+      if (!command) return;
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = '已复制 ✓';
+      } catch {
+        button.textContent = '请手动复制';
+      }
+    });
     render();
   };
   window.FreeLLMReferenceShell = { mount: boot };
