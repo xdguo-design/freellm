@@ -284,9 +284,72 @@ if (section === 'home' || section === 'models') {
     const formatStars = value => typeof value === 'number' && value >= 0 ? (value >= 1000 ? `${(value / 1000).toFixed(1)}k`.replace('.0k', 'k') : String(value)) : '';
     const repoSlug = skill => { const url = String(skill.githubUrl || ''); const parts = url.includes('github.com/') ? url.split('github.com/')[1].split('/').filter(Boolean) : []; return parts.length >= 2 ? `${parts[0]}/${parts[1]}` : ''; };
     const verdictOf = skill => { const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {}; return ['通过','部分通过','未通过','调用失败'].includes(run.bestVerdict) ? run.bestVerdict : ''; };
-    const showcaseOrder = ['anthropics-docx','vercel-labs-react-best-practices','anthropics-xlsx','anthropics-pdf','anthropics-algorithmic-art','obra-executing-plans','composiohq-twitter-algorithm-optimizer','hugohe3-ppt-master'];
-    const showcaseRank = new Map(showcaseOrder.map((id,index)=>[id,index]));
-    skills.sort((a,b)=>(showcaseRank.get(a.id) ?? showcaseOrder.length)-(showcaseRank.get(b.id) ?? showcaseOrder.length));
+    // FLSKILLS-CURATION-20261012: curated two-row category directory, independent deep links.
+    const topicOrder = ['development','planning-office','documents','data-office','presentations','product-design','writing','seo-content','resume','file-office','ecommerce','email-office'];
+    const topics = {
+      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['vercel-labs-react-best-practices','anthropics-skill-creator','mattpocock-diagnosing-bugs','alibaba-open-code-review','anthropics-mcp-builder','cloudflare-security-audit']},
+      'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans']},
+      'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form']},
+      'data-office': {title:'表格与数据',intro:'区分能产出工作簿的验证记录，与尚需 Office CLI 的数据仪表盘链路。',picks:['anthropics-xlsx','iofficeai-officecli-data-dashboard','iofficeai-officecli-xlsx']},
+      'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt']},
+      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['anthropics-frontend-design','vercel-labs-web-design-guidelines','anthropics-canvas-design','anthropics-brand-guidelines','anthropics-theme-factory','anthropics-algorithmic-art']},
+      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['blader-humanizer','composiohq-content-research-writer','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html','jimliu-baoyu-infographic','jimliu-baoyu-url-to-markdown']},
+      'seo-content': {title:'新媒体与内容运营',intro:'区分公众号发布、小红书图文、封面制作与增长策略，不承诺未经验证的流量收益。',picks:['jimliu-baoyu-post-to-wechat','jimliu-baoyu-xhs-images','jimliu-baoyu-cover-image','composiohq-twitter-algorithm-optimizer','jimliu-baoyu-post-to-x','michalparkola-article-extractor']},
+      'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
+      'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
+      'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
+      'email-office': {title:'团队沟通',intro:'适合内部状态同步、管理汇报与团队信息表达；目前仅有一个符合分类的条目，不补凑数。',picks:['anthropics-internal-comms']}
+    };
+    // These are editorial judgments tied to source descriptions and FreeLLM test notes, not user ratings.
+    const insights = {
+      'vercel-labs-react-best-practices':['特点：按优先级检查 React/Next.js 的请求瀑布、渲染与打包问题。','适合：实际前端性能优化与代码审查。','限制：任务级验证，需结合框架版本及真实性能测量。'],
+      'anthropics-skill-creator':['特点：覆盖 Skill 触发条件、迭代和基准检查。','适合：创建可复用 Agent 技能库。','限制：完整评测脚本链路在当前沙箱未打通。'],
+      'mattpocock-diagnosing-bugs':['特点：先建立复现反馈，再逐个验证原因。','适合：疑难 Bug 和性能回退。','限制：任务级检查通过不等于任何仓库自动修复成功。'],
+      'obra-systematic-debugging':['特点：先定位再改动，保留失败到通过的测试证据。','适合：有稳定复现的程序错误。','限制：需要能运行测试的工程环境。'],
+      'obra-verification-before-completion':['特点：先跑验证命令，再宣布完成。','适合：提交、修复和发布前的验收。','限制：只证明被测范围，不保证覆盖所有风险。'],
+      'obra-test-driven-development':['特点：RED—GREEN—REFACTOR 流程已在夹具中执行。','适合：需求边界明确的功能与缺陷修复。','限制：测试设计错误仍可能带来虚假的安全感。'],
+      'anthropics-pdf':['特点：真实完成 PDF 生成、拆分、旋转及渲染检查。','适合：表单、报告与 PDF 自动化。','限制：中文字体和扫描件 OCR 需额外检查。'],
+      'anthropics-doc-coauthoring':['特点：通过补上下文、迭代与读者校验协作写规格。','适合：长文档、PRD 与技术决策记录。','限制：轻量文档使用时流程偏重，非程序 E2E。'],
+      'anthropics-docx':['特点：覆盖 Word 编辑、批注、修订及排版。','适合：正式 Word 文档工作。','限制：沙箱依赖安装失败，不能标成端到端通过。'],
+      'anthropics-xlsx':['特点：工作簿公式、结构和数据校验有真实产物。','适合：Excel 分析、清洗与报表。','限制：验证采用替代工具链，不等于原 Skill E2E。'],
+      'iofficeai-officecli-data-dashboard':['特点：面向 KPI、图表和条件格式的 Excel 仪表盘。','适合：需要复用模板的经营看板。','限制：officecli 缺失，原链路未执行。'],
+      'iofficeai-officecli-xlsx':['特点：强调模板、公式与透视表的办公链路。','适合：复杂工作簿操作。','限制：依赖 officecli 安装和验证。'],
+      'anthropics-pptx':['特点：PPTX 生成后做了 PDF 转换与逐页渲染检查。','适合：可编辑演示与正式汇报。','限制：复杂模板和跨版本效果仍需复核。'],
+      'hugohe3-ppt-master':['特点：聚焦可编辑演示、模板填充和视觉还原。','适合：需要强版式控制的 PPT 制作。','限制：当前仅部分验证，未完成原脚本全流程。'],
+      'jimliu-baoyu-slide-deck':['特点：按内容结构规划幻灯片并生成页面图像。','适合：讲解型和视觉型演示。','限制：外部生成服务未接通，不能当作已实测通过。'],
+      'anthropics-frontend-design':['特点：强调有辨识度的视觉方向和响应式页面。','适合：原型设计及已有界面重塑。','限制：产物已验证，但浏览器交互 E2E 被环境阻塞。'],
+      'vercel-labs-web-design-guidelines':['特点：从可访问性、布局与交互审查 Web UI。','适合：上线前设计 QA。','限制：它是审查清单，不能替代真实用户测试。'],
+      'anthropics-canvas-design':['特点：强调原创静态视觉构图和可交付图稿。','适合：海报、封面与单页视觉。','限制：不适合代替复杂交互产品设计。'],
+      'blader-humanizer':['特点：减少套路化语句，保留核心事实与原意。','适合：已有草稿的语言打磨。','限制：不是客观 AI 文本检测器，需人工审稿。'],
+      'composiohq-content-research-writer':['特点：把研究、提纲、引用与逐段写作串联。','适合：长文、报告及内容策划。','限制：引用和事实可靠性需要单独核验。'],
+      'jimliu-baoyu-article-illustrator':['特点：根据文章逻辑决定插图位置和视觉风格。','适合：图文长文与公众号排版。','限制：实际生成依赖外部服务，本轮沙箱阻塞。'],
+      'jimliu-baoyu-post-to-wechat':['特点：衔接 HTML/Markdown 文章到公众号发布。','适合：公众号内容生产流水线。','限制：需要账户授权与真实发布复核，沙箱未验证。'],
+      'jimliu-baoyu-xhs-images':['特点：把主题拆分成社媒图文卡片。','适合：小红书多图内容制作。','限制：外部图像能力未接通，本轮未跑通。'],
+      'jimliu-baoyu-cover-image':['特点：按版式、配色和传播场景设计封面。','适合：文章头图及跨平台适配。','限制：实际图像生成链路待验收。'],
+      'composiohq-tailored-resume-generator':['特点：把岗位要求与已有经历一一对齐。','适合：针对目标岗位改写简历。','限制：不能为匹配关键词而杜撰经历。'],
+      'jzcreative-html-resume-beautifier':['特点：用 HTML 模板排版 A4 简历，强调隐私。','适合：网页版与 PDF 风格统一。','限制：原脚本与隐私审计未完成验证。'],
+      'rendercv-rendercv':['特点：YAML 内容与排版分离，便于版本维护。','适合：技术岗位简历的持续迭代。','限制：RenderCV/Typst 依赖尚未安装验证。'],
+      'composiohq-invoice-organizer':['特点：从发票抽取日期、金额和主体后归档。','适合：费用票据整理。','限制：扫描件、多币种和复杂税项需额外规则。'],
+      'composiohq-file-organizer':['特点：查重、命名和文件夹结构梳理。','适合：混乱文件夹的定期整理。','限制：任何批量移动都应先预览和备份。'],
+      'composiohq-lead-research-assistant':['特点：按目标客户画像寻找潜在线索。','适合：销售名单初筛和研究。','限制：需要外部数据访问，且须核实信息来源。'],
+      'composiohq-competitive-ads-extractor':['特点：从公开广告素材归纳竞品表达和创意。','适合：市场定位与投放内容研究。','限制：广告库可访问性和数据新鲜度未实测。'],
+      'anthropics-internal-comms':['特点：提供状态报告、组织公告与领导简报结构。','适合：团队内部信息同步。','限制：与普通写作提示存在重叠，需人工核对事实。']
+    };
+    const iconFor = skill => {
+      const n = String(skill.name || '').toLowerCase();
+      if (/ppt|slide|deck|presentation|morph/.test(n)) return 'ppt';
+      if (/xlsx|excel|dashboard|data|spreadsheet/.test(n)) return 'data';
+      if (/image|art|canvas|visual|brand|theme|design|infographic|cover|xhs/.test(n)) return 'image';
+      if (/wechat|twitter|post-to|seo|ads|lead|marketing/.test(n)) return 'marketing';
+      if (/autom|agent|mcp|skill-creator|worktree|executing|parallel/.test(n)) return 'automation';
+      if (/react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
+      if (/resume|meeting|plan|brainstorm|verify|verification|research|extract|transcript/.test(n)) return 'summary';
+      if (/doc|pdf|paper|write|human|content|article|file|invoice|office/.test(n)) return 'paper';
+      return ({'development':'code','planning-office':'summary','documents':'paper','data-office':'data','presentations':'ppt','product-design':'image','writing':'paper','seo-content':'marketing','resume':'summary','file-office':'paper','ecommerce':'marketing','email-office':'summary'})[skill.category] || 'summary';
+    };
+    const urlTopic = new URLSearchParams(window.location.search).get('category');
+    const initialTopic = topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development';
+    page.dataset.skillCategory = initialTopic;
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const workspace = page.querySelector('.skills-workspace');
     const detailPanel = document.getElementById('selected-skill-panel');
@@ -297,20 +360,18 @@ if (section === 'home' || section === 'models') {
     const filtered = () => {
       const query = document.getElementById('skill-search').value.trim().toLowerCase();
       const status = document.getElementById('skill-status').value;
-      const category = page.dataset.skillCategory || 'all';
-      const groups = {
-        writing:['writing','seo-content','email-office'], development:['development'], research:['planning-office','data-office'],
-        office:['documents','presentations','file-office','resume','email-office'], image:['product-design'], data:['data-office'],
-        operations:['ecommerce','seo-content'], automation:['development','planning-office']
-      };
-      let list = skills.filter(skill => {
-        const values = [skill.name, skill.description, skill.description_zh, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase();
-        const categoryMatch = category === 'all' || (groups[category] || []).includes(skill.category);
-        return categoryMatch && (status === 'all' || status === skill.status) && (!query || values.includes(query));
+      const category = page.dataset.skillCategory || 'development';
+      const isSearch = Boolean(query);
+      const chosen = category === 'all' ? skills : (isSearch
+        ? skills.filter(skill => skill.category === category)
+        : topics[category].picks.map(id => skills.find(skill => skill.id === id)).filter(Boolean));
+      let list = chosen.filter(skill => {
+        const values = [skill.name,skill.description,skill.description_zh,skill.githubUrl,...(skill.compatibility || [])].join(' ').toLowerCase();
+        return (status === 'all' || status === skill.status) && (!query || values.includes(query));
       });
       const sort = document.getElementById('skill-sort')?.value || 'recommended';
-      if (sort === 'popular') list.sort((a,b) => (b.repoStats?.stars || 0) - (a.repoStats?.stars || 0));
-      if (sort === 'rating') list.sort((a,b) => (Number(b.freeLLMTest?.score) || 0) - (Number(a.freeLLMTest?.score) || 0));
+      if (sort === 'popular') list = list.slice().sort((a,b) => (b.repoStats?.stars || 0) - (a.repoStats?.stars || 0));
+      if (sort === 'rating') list = list.slice().sort((a,b) => (Number(b.freeLLMTest?.score) || 0) - (Number(a.freeLLMTest?.score) || 0));
       return list;
     };
     const card = skill => {
@@ -320,9 +381,18 @@ if (section === 'home' || section === 'models') {
       const stars = formatStars(skill.repoStats?.stars);
       const verdict = verdictOf(skill);
       const owner = repoSlug(skill) || '来源仓库待补充';
-      const icon = 'default';
+      const icon = iconFor(skill);
+      const topic = topics[page.dataset.skillCategory];
+      const index = topic ? topic.picks.indexOf(skill.id) : -1;
+      const featured = index >= 0 && index < 3 && (document.getElementById('skill-sort')?.value || 'recommended') === 'recommended';
+      const notes = featured ? insights[skill.id] : null;
+      const evidence = skill.freeLLMTest || {};
+      const testLevel = evidence.testLevel || 'unknown';
+      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞'})[testLevel] || '未验证';
+      const commentary = notes ? '<div class="skill-editorial"><strong>FreeLLM 重点解析</strong><p>'+notes.map(note => copy(note)).join('<br>')+'</p><small>证据级别：'+copy(testLabel)+'</small></div>' : '';
+      const rank = featured ? '<span class="skill-pick-label">TOP 0'+(index+1)+' · 精选分析</span>' : '';
       const active = panelOpen && selectedId === skill.id;
-      return `<article class="skill-card showcase-card${active?' is-selected':''}" data-skill-id="${copy(skill.id)}" data-category="${copy(skill.category)}" data-status="${copy(skill.status)}" tabindex="0" aria-label="${copy(title)}：${copy(description)}"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="${icon}" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="${copy(skill.id)}" aria-label="选择 ${copy(title)}">${active?'✓':'＋'}</button></div><h3>${copy(title)}</h3><p>${copy(description)}</p><div class="skill-card-tags">${tags.map(tag=>`<span>${copy(tag)}</span>`).join('')}</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ ${copy(stars || '—')}</span><span>${verdict ? `实测 ${copy(verdict)}` : '未实测'}</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-${icon}" aria-hidden="true"></span><span>${copy(owner)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${copy(skill.id)}" aria-label="查看 ${copy(title)} 详情">⋮</button></div></article>`;
+      return '<article class="skill-card showcase-card'+(featured?' skill-featured':'')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
     };
     const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     const updatePanel = skill => {
@@ -335,7 +405,7 @@ if (section === 'home' || section === 'models') {
       setText('detail-description', description);
       const owner = document.getElementById('detail-owner');
       if (owner) owner.innerHTML = `<i aria-hidden="true">◆</i> ${copy(repoSlug(skill) || '来源仓库待补充')}`;
-      document.getElementById('detail-icon').dataset.icon = 'default';
+      document.getElementById('detail-icon').dataset.icon = iconFor(skill);
       setText('detail-rating', verdictOf(skill) || '未实测');
       setText('detail-reviews', '免费模型任务实测');
       setText('detail-usage', formatStars(skill.repoStats?.stars) || '—');
