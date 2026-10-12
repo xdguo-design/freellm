@@ -471,6 +471,10 @@ if (section === 'home' || section === 'models') {
       const category = page.dataset.skillCategory || 'development';
       const matches = filtered();
       const isArchive = category === 'all';
+      // The independent SEO growth showcase belongs to the complete archive only.
+      // Never double-count its six cards on a named category's eight-pick page.
+      const growthKit = page.querySelector('.fl-growth-kit');
+      if (growthKit) growthKit.hidden = !isArchive;
       const searching = Boolean(document.getElementById('skill-search').value.trim());
       const visible = isArchive && showAllSkills ? matches : matches.slice(0, MAX_CATEGORY_PICKS);
       grid.innerHTML = visible.map((skill,i)=>card(skill,i,isArchive)).join('');
