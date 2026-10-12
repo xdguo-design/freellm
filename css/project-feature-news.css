@@ -1,0 +1,122 @@
+/* P1-N1: featured project news on the FreeLLM homepage.
+   Scope styles to the component so catalog and navigation layouts stay unchanged. */
+#project-feature-news {
+  margin: 18px 0 24px;
+  padding: 18px 24px 20px;
+  border: 1px solid #a9bdf4;
+  border-left: 4px solid #2953d7;
+  border-radius: 16px;
+  background: linear-gradient(110deg, #f0f5ff 0%, #fcfdff 68%, #eef7ff 100%);
+  color: #213557;
+  box-shadow: 0 8px 24px rgba(27, 65, 128, .06);
+}
+#project-feature-news .fl-project-news-topline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #63769b;
+}
+#project-feature-news .fl-project-news-status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #234bc0;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+#project-feature-news .fl-project-news-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+#project-feature-news .fl-project-news-copy {
+  min-width: 0;
+}
+#project-feature-news h2 {
+  margin: 0 0 7px;
+  color: #1c345e;
+  font: 700 clamp(17px, 2vw, 21px)/1.45 "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+#project-feature-news .fl-project-news-summary {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #536784;
+}
+#project-feature-news .fl-project-news-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 42px;
+  padding: 10px 15px;
+  border-radius: 11px;
+  background: #244cc6;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+#project-feature-news .fl-project-news-link:hover,
+#project-feature-news .fl-project-news-link:focus-visible {
+  background: #173caa;
+  color: #fff;
+  outline-offset: 3px;
+}
+#project-feature-news .fl-project-news-meta {
+  margin: 12px 0 0;
+  font-size: 11px;
+  color: #7786a4;
+}
+#project-feature-news.fl-project-news--archive {
+  padding: 12px 17px;
+  margin: 14px 0 20px;
+  border-left-width: 2px;
+  border-color: #e2e8f4;
+  background: #fbfcff;
+  box-shadow: none;
+}
+#project-feature-news.fl-project-news--archive .fl-project-news-topline {
+  margin-bottom: 5px;
+}
+#project-feature-news.fl-project-news--archive .fl-project-news-status {
+  background: #e9eef8;
+  color: #5a6b88;
+}
+#project-feature-news.fl-project-news--archive h2 {
+  margin: 0;
+  font-size: 14px;
+}
+#project-feature-news.fl-project-news--archive .fl-project-news-summary,
+#project-feature-news.fl-project-news--archive .fl-project-news-meta {
+  display: none;
+}
+#project-feature-news.fl-project-news--archive .fl-project-news-link {
+  min-height: 34px;
+  padding: 6px 11px;
+  background: #edf2ff;
+  color: #244cc6;
+}
+@media (max-width: 700px) {
+  #project-feature-news { padding: 16px; border-radius: 12px; }
+  #project-feature-news .fl-project-news-body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  #project-feature-news .fl-project-news-link { width: 100%; }
+  #project-feature-news.fl-project-news--archive .fl-project-news-body {
+    align-items: stretch;
+  }
+  #project-feature-news.fl-project-news--archive .fl-project-news-link {
+    width: 100%;
+  }
+}
