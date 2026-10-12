@@ -132,7 +132,7 @@ class StaticContractTests(unittest.TestCase):
         for needle in (
             'href="/submit/"',
             "window.addEventListener('DOMContentLoaded'",
-            "sync.src = '/js/freellm-sync.js?v=20261012-today-discovery'",
+            "sync.src = '/js/freellm-sync.js?v=20261012-fast-navigation'",
             "sync.async = true",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
@@ -1116,13 +1116,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=en#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
-        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Discoveries")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
-        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "今日发现")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
 

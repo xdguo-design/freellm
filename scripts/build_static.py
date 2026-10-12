@@ -26,7 +26,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-today-discovery"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-fast-navigation"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -38,7 +38,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-today-disc
     <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>技能</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a>
+    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note" aria-hidden="true"></div>
@@ -564,15 +564,15 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
         new_count = len(unique_new_events)
         count_text = f"新增 {new_count} 项"
         href = f"/logs/#log-day-{log_date}"
-        link_title = f"查看 {log_date} 的全部发现"
-        link_text = "查看全部发现 →"
+        link_title = f"查看 {log_date} 的更新详情"
+        link_text = "查看更新详情 →"
     else:
         count_text = "暂无日志"
         href = "/logs/"
         link_title = "打开每日更新记录"
         link_text = "查看每日更新 →"
     text = (
-        '<span class="home-latest-discovery-label">今日发现</span>'
+        '<span class="home-latest-discovery-label">最新更新</span>'
         f'<strong class="home-latest-discovery-count">{count_text}</strong>'
         f'<a href="{href}" title="{link_title}">{link_text}</a>'
     )

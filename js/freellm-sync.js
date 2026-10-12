@@ -35,9 +35,9 @@
   /* Load the primary-navigation controller only when the page does not already
      declare it. Wait for parsing to finish so a script in the body is visible. */
   function ensurePrimaryNavigation() {
-    if (global.FreeLLMNavigation || document.querySelector('script[data-freellm-site-navigation], script[src*="/js/site-navigation.js"]')) return;
+    if (document.querySelector('script[data-freellm-site-navigation], script[src*="/js/site-navigation.js"]')) return;
     var navigationScript = document.createElement('script');
-    navigationScript.src = '/js/site-navigation.js?v=20261012-today-discovery';
+    navigationScript.src = '/js/site-navigation.js?v=20261012-fast-navigation';
     navigationScript.async = false;
     navigationScript.dataset.freellmSiteNavigation = '1';
     document.head.appendChild(navigationScript);
@@ -217,8 +217,8 @@
      fl-pastel-ui and intentionally skip runtime shell creation. */
   (function installSiteChromeLocale() {
     var labels = {
-      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '今日发现', about: '关于' },
-      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Discoveries', about: 'About' }
+      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '更新', about: '关于' },
+      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Updates', about: 'About' }
     };
     function applySiteChromeLocale() {
       var locale = String(document.documentElement.lang || '').toLowerCase().indexOf('en') === 0 ? 'en' : 'zh-CN';
