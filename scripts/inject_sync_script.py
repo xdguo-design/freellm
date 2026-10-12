@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 ROOT = Path(__file__).resolve().parent.parent
-TAG = '<script src="/js/freellm-sync.js?v=20261012-fast-navigation"></script>'
-SITE_NAVIGATION_VERSION = '20261012-fast-navigation'
+TAG = '<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>'
+SITE_NAVIGATION_VERSION = '20261012-daily-discovery'
 SKIP_DIRS = {'.git', '.vercel', 'data', 'docs', 'node_modules', '.venv', 'tests', 'venv'}
 
 changed = skipped = 0
@@ -23,7 +23,7 @@ for p in ROOT.rglob('*.html'):
     )
     html, sync_replaced = re.subn(
         r'(<script\b[^>]*\bsrc="/js/freellm-sync\.js)(?:\?[^\"]*)?(")',
-        r'\g<1>?v=20261012-fast-navigation\g<2>',
+        r'\g<1>?v=20261012-daily-discovery\g<2>',
         html,
     )
     if nav_replaced or sync_replaced:

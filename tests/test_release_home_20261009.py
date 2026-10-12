@@ -78,7 +78,10 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertEqual(summary["scannedOffers"], len(latest_log["observed"]["offers"]))
         # 2026-10-10 series 4: the duplicate Step 5 / back-dated scan events were
         # removed and officially verified additions curated; count from the log.
-        new_events = [e for key in ("events", "curatedEvents") for e in latest_log.get(key) or [] if e.get("eventType") in {"new", "new_route"}]
+        # 2026-10-12: 「每日发现」 counts an id only on the first date it was logged.
+        from scripts.daily_discoveries import first_seen_discoveries
+        logs = [json.loads(path.read_text(encoding="utf-8")) for path in sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))]
+        new_events = first_seen_discoveries(logs).get(latest_log["date"], [])
         self.assertEqual(summary["newCount"], len(new_events))
         self.assertEqual(summary["sourceChecks"], 2)
 
@@ -90,14 +93,16 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertNotIn("今日新增资源12", homepage)
         self.assertNotIn("较上周 +35%", homepage)
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
-        self.assertIn(f'href="/logs/#log-day-{summary["snapshotDate"]}"', homepage)
+        self.assertIn(f'href="/logs/#discovery-day-{summary["date"]}"', homepage)
         self.assertIn("def update_home_latest_discovery(", build)
         self.assertIn("def sync_home_scan_snapshot(", build)
         self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
-        self.assertIn("新增 1 项", homepage)
-        self.assertIn("查看更新详情 →", homepage)
-        self.assertIn('href="/logs/#log-day-2026-10-12"', homepage)
+        # Read the latest log instead of hard-coding a date, so the daily job's
+        # generated logs keep this test meaningful.
+        self.assertIn(f"新增 {summary['newCount']} 项", homepage)
+        self.assertIn('<span class="home-latest-discovery-label">每日发现</span>', homepage)
+        self.assertIn("查看今日发现 →", homepage)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)
         self.assertIn("matchedRows.slice(0, visibleOfferLimit)", js)
         self.assertIn("offerGrid.replaceChildren(...visibleCards)", js)
@@ -124,11 +129,12 @@ class HomeReleaseGate(unittest.TestCase):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         navigation = (ROOT / "js/site-navigation.js").read_text(encoding="utf-8")
         sync = (ROOT / "js/freellm-sync.js").read_text(encoding="utf-8")
-        self.assertIn("updatesLabel.textContent = english ? 'Updates' : '更新';", navigation)
-        self.assertIn("logs: '更新'", sync)
-        self.assertIn("logs: 'Updates'", sync)
-        self.assertIn("freellm-sync.js?v=20261012-fast-navigation", homepage)
-        self.assertIn("site-navigation.js?v=20261012-fast-navigation", homepage)
+        self.assertIn("discoveriesLabel.textContent = english ? 'Discoveries' : '每日发现';", navigation)
+        self.assertIn("logs: '每日发现'", sync)
+        self.assertIn("logs: 'Discoveries'", sync)
+        self.assertNotIn("'Updates'", navigation + sync)
+        self.assertIn("freellm-sync.js?v=20261012-daily-discovery", homepage)
+        self.assertIn("site-navigation.js?v=20261012-daily-discovery", homepage)
 
     def test_home_stat_rows_expand_for_date_metadata(self):
         styles = (ROOT / "css/home-prototype-exact.css").read_text(encoding="utf-8")

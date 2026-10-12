@@ -95,7 +95,7 @@ class AuditRegressions(unittest.TestCase):
         self.assertLess(html.index('id="weekly-changes"'), html.index('id="expiring-soon"'))
         self.assertIn('id="home-latest-discovery"', html)
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
-        self.assertIn(f'href="/logs/#log-day-{summary["snapshotDate"]}"', html)
+        self.assertIn(f'href="/logs/#discovery-day-{summary["date"]}"', html)
         generator = (ROOT / "scripts/build_static.py").read_text(encoding="utf-8")
         self.assertIn("def update_home_latest_discovery(", generator)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", generator)

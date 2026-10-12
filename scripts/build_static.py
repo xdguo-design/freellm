@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from crawler.schema import validate_offers
 from scripts.site_counts import compute_site_counts, is_active_offer as _shared_is_active_offer, reference_date_for
 from crawler.source_tiers import THIRD_PARTY_SHORT_ZH, is_third_party_relay
+from scripts import daily_discoveries as discoveries
 
 START = '<script type="application/json" id="offer-data">'
 END = "</script>"
@@ -26,7 +27,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-fast-navigation"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-daily-discovery"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -38,7 +39,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-fast-navig
     <a href="/skills/" data-site-nav="skills"><span class="fl-site-nav-icon" aria-hidden="true">✦</span><span>技能</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>更新</span></a>
+    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>每日发现</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note" aria-hidden="true"></div>
@@ -529,50 +530,30 @@ def update_home_latest_discovery(html: str, data_path: Path) -> str:
         return html
     log_dir = data_path.parent / "daily-log"
     log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
-    latest = None
-    log_date = ""
-    for path in reversed(log_paths):
+    logs = []
+    for path in log_paths:
         try:
             candidate = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError, TypeError):
             continue
-        if not isinstance(candidate, dict):
-            continue
-        candidate_date = str(candidate.get("date") or "")
-        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", candidate_date):
-            continue
-        latest = candidate
-        log_date = candidate_date
-        break
+        if isinstance(candidate, dict) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(candidate.get("date") or "")):
+            logs.append(candidate)
+    log_date = discoveries.latest_log_date(logs)
 
-    if latest:
-        unique_new_events = {}
-        for field in ("events", "curatedEvents"):
-            events = latest.get(field)
-            if not isinstance(events, list):
-                continue
-            for event in events:
-                if not isinstance(event, dict) or event.get("eventType") not in {"new", "new_route"}:
-                    continue
-                event_id = str(event.get("id") or "").strip()
-                fallback = "|".join((
-                    str(event.get("kind") or "").strip(),
-                    str(event.get("title") or "").strip(),
-                ))
-                identity = (str(event.get("eventType")), event_id or fallback)
-                unique_new_events.setdefault(identity, event)
-        new_count = len(unique_new_events)
+    if log_date:
+        # Same rule as /logs/: an id is a discovery only on its first logged date.
+        new_count = len(discoveries.first_seen_discoveries(logs).get(log_date, []))
         count_text = f"新增 {new_count} 项"
-        href = f"/logs/#log-day-{log_date}"
-        link_title = f"查看 {log_date} 的更新详情"
-        link_text = "查看更新详情 →"
+        href = f"/logs/#discovery-day-{log_date}"
+        link_title = f"查看 {log_date} 的每日发现"
+        link_text = "查看今日发现 →"
     else:
         count_text = "暂无日志"
         href = "/logs/"
-        link_title = "打开每日更新记录"
-        link_text = "查看每日更新 →"
+        link_title = "打开每日发现"
+        link_text = "查看每日发现 →"
     text = (
-        '<span class="home-latest-discovery-label">最新更新</span>'
+        '<span class="home-latest-discovery-label">每日发现</span>'
         f'<strong class="home-latest-discovery-count">{count_text}</strong>'
         f'<a href="{href}" title="{link_title}">{link_text}</a>'
     )
@@ -597,27 +578,42 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
     except (OSError, json.JSONDecodeError, TypeError):
         offer_ids = set()
     log_dir = data_path.parent / "daily-log"
-    log_paths = sorted(log_dir.glob("*.json"))[-7:]
-    events: list[dict] = []
-    for path in reversed(log_paths):
+    all_logs = []
+    for path in sorted(log_dir.glob("*.json")):
         try:
             log = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        events.extend(
-            event
-            for event in (log.get("events") or [])
-            if isinstance(event, dict) and event.get("eventType") and event.get("asOf")
-        )
+        if isinstance(log, dict):
+            all_logs.append(log)
+    # A new/new_route row is shown only on the first date its id was logged
+    # (the 「每日发现」 rule), so scanner re-detections never repeat here.
+    first_seen = {
+        (day, discoveries.event_identity(event))
+        for day, items in discoveries.first_seen_discoveries(all_logs).items()
+        for event in items
+    }
+    events: list[dict] = []
+    for log in reversed(all_logs[-7:]):
+        day = str(log.get("date") or "")
+        for field in ("events", "curatedEvents"):
+            for event in log.get(field) or []:
+                if not (isinstance(event, dict) and event.get("eventType") and event.get("asOf")):
+                    continue
+                if event.get("eventType") in discoveries.DISCOVERY_EVENT_TYPES:
+                    if (day, discoveries.event_identity(event)) not in first_seen:
+                        continue
+                    first_seen.discard((day, discoveries.event_identity(event)))
+                events.append(event)
     if not events:
         return html
     events.sort(key=lambda event: str(event["asOf"]), reverse=True)
     events = events[:8]
 
-    kind_labels = {"model": "AI 模型", "offer": "免费接入"}
+    kind_labels = {"model": "AI 模型", "offer": "免费接入", "tool": "开发工具", "agent": "AI Agent", "skill": "Skill"}
     state_labels = {
-        "new": ("最新上线", "state-new"),
-        "new_route": ("API 更新", "state-api"),
+        "new": ("新发现", "state-new"),
+        "new_route": ("新渠道", "state-api"),
         "recovered": ("已恢复", "state-updated"),
         "offline": ("暂时下线", "state-off"),
         "source_unavailable": ("源不可用", "state-off"),
