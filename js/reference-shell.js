@@ -286,15 +286,17 @@ if (section === 'home' || section === 'models') {
     const verdictOf = skill => { const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {}; return ['通过','部分通过','未通过','调用失败'].includes(run.bestVerdict) ? run.bestVerdict : ''; };
     // FLSKILLS-CURATION-20261012: curated two-row category directory, independent deep links.
     const topicOrder = ['development','planning-office','documents','data-office','presentations','product-design','writing','seo-content','resume','file-office','ecommerce','email-office'];
+    const MAX_CATEGORY_PICKS = 8;
+    const DETAIL_PICK_COUNT = 3;
     const topics = {
-      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['dietrichgebert-ponytail','mattpocock-diagnosing-bugs','vercel-labs-react-best-practices','anthropics-skill-creator','alibaba-open-code-review','anthropics-mcp-builder']},
-      'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans']},
-      'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form']},
+      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['dietrichgebert-ponytail','mattpocock-diagnosing-bugs','vercel-labs-react-best-practices','anthropics-skill-creator','alibaba-open-code-review','anthropics-mcp-builder','vercel-labs-find-skills','vercel-labs-agent-browser']},
+      'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans','coreyhaines31-product-marketing','composiohq-meeting-insights-analyzer']},
+      'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form','iofficeai-officecli']},
       'data-office': {title:'表格与数据',intro:'区分能产出工作簿的验证记录，与尚需 Office CLI 的数据仪表盘链路。',picks:['anthropics-xlsx','iofficeai-officecli-data-dashboard','iofficeai-officecli-xlsx']},
-      'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt']},
-      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design']},
-      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html']},
-      'seo-content': {title:'SEO · GEO 与内容增长',intro:'六个 Marketing Skills 拆解抓取、AI 搜索、程序化页面、站点架构、竞品和结构化数据；均已核验源码但尚未实测，公众号技能可在完整资料库查找。',picks:['coreyhaines31-seo-audit','coreyhaines31-ai-seo','coreyhaines31-programmatic-seo','coreyhaines31-site-architecture','coreyhaines31-competitors','coreyhaines31-schema']},
+      'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt','op7418-nanobanana-ppt-skills','lewislulu-html-ppt-skill']},
+      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design','anthropics-theme-factory','leonxlnx-design-taste-frontend']},
+      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html','jimliu-baoyu-infographic','jimliu-baoyu-url-to-markdown']},
+      'seo-content': {title:'SEO · GEO 与内容增长',intro:'六个 Marketing Skills 拆解抓取、AI 搜索、程序化页面、站点架构、竞品和结构化数据；均已核验源码但尚未实测，公众号技能可在完整资料库查找。',picks:['coreyhaines31-seo-audit','coreyhaines31-ai-seo','coreyhaines31-programmatic-seo','coreyhaines31-site-architecture','coreyhaines31-competitors','coreyhaines31-schema','imraywang-wewrite','steipete-summarize']},
       'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
       'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
       'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
@@ -375,7 +377,7 @@ if (section === 'home' || section === 'models') {
       const status = document.getElementById('skill-status').value;
       const category = page.dataset.skillCategory || 'development';
       const isSearch = Boolean(query);
-      const chosen = category === 'all' ? skills : (isSearch
+      const chosen = category === 'all' ? skills.slice() : (isSearch
         ? skills.filter(skill => skill.category === category)
         : topics[category].picks.map(id => skills.find(skill => skill.id === id)).filter(Boolean));
       if (deepLinkedSkill && deepLinkedSkill.category === category && !chosen.some(skill => skill.id === deepLinkedSkill.id)) chosen.unshift(deepLinkedSkill);
@@ -386,9 +388,10 @@ if (section === 'home' || section === 'models') {
       const sort = document.getElementById('skill-sort')?.value || 'recommended';
       if (sort === 'popular') list = list.slice().sort((a,b) => (b.repoStats?.stars || 0) - (a.repoStats?.stars || 0));
       if (sort === 'rating') list = list.slice().sort((a,b) => (Number(b.freeLLMTest?.score) || 0) - (Number(a.freeLLMTest?.score) || 0));
-      return list;
+      // The full archive is separate; every named category displays at most eight.
+      return category === 'all' ? list : list.slice(0, MAX_CATEGORY_PICKS);
     };
-    const card = skill => {
+    const card = (skill, visibleIndex, isArchive) => {
       const title = skill.name;
       const description = skill.description_zh || skill.description || '';
       const tags = (skill.compatibility || []).slice(0,3);
@@ -397,17 +400,21 @@ if (section === 'home' || section === 'models') {
       const owner = repoSlug(skill) || '来源仓库待补充';
       const icon = iconFor(skill);
       const letters = String(skill.name || '').replace(/[^a-z0-9]/gi,'').slice(0,2).toUpperCase() || 'SK';
-      const topic = topics[page.dataset.skillCategory];
-      const index = topic ? topic.picks.indexOf(skill.id) : -1;
-      const featured = index >= 0 && index < 3 && (document.getElementById('skill-sort')?.value || 'recommended') === 'recommended';
+      const featured = !isArchive && visibleIndex < DETAIL_PICK_COUNT;
       const notes = featured ? insights[skill.id] : null;
       const evidence = skill.freeLLMTest || {};
       const testLevel = evidence.testLevel || 'unknown';
       const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞',unknown:'未实测'})[testLevel] || '未实测';
-      const commentary = notes ? '<div class="skill-editorial"><strong>FreeLLM 重点解析</strong><p>'+notes.map(note => copy(note)).join('<br>')+'</p><small>证据级别：'+copy(testLabel)+'</small></div>' : '';
-      const rank = featured ? '<span class="skill-pick-label">TOP 0'+(index+1)+' · 精选分析</span>' : '';
+      const detailedPoints = featured ? (notes || [
+        '特点：' + description,
+        '适合：' + (evidence.task || '先用典型小任务检查是否符合需要。'),
+        '限制：' + (evidence.evaluation || '依赖、输入和实际效果需要独立核验。')
+      ]) : [];
+      const detailLabels = ['核心能力','适合场景','限制与边界'];
+      const commentary = featured ? '<section class="skill-editorial" aria-label="TOP '+(visibleIndex+1)+' 详细介绍"><strong>精选深度解读</strong><dl class="skill-editorial-details">'+detailedPoints.slice(0,3).map((note,i)=>'<div><dt>'+detailLabels[i]+'</dt><dd>'+copy(String(note).replace(/^(特点|适合|限制)[:：]\s*/,''))+'</dd></div>').join('')+'</dl><small>核验证据：'+copy(testLabel)+' · 仓库 Star 非技能评分</small></section>' : '';
+      const rank = featured ? '<span class="skill-pick-label">TOP 0'+(visibleIndex+1)+' · 详细介绍</span>' : '';
       const active = panelOpen && selectedId === skill.id;
-      return '<article class="skill-card showcase-card'+(featured?' skill-featured':'')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"><small class="skill-icon-letters">'+copy(letters)+'</small></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
+      return '<article class="skill-card showcase-card'+(featured?' skill-featured':' skill-compact')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"><small class="skill-icon-letters">'+copy(letters)+'</small></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
     };
     const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     const updatePanel = skill => {
@@ -441,8 +448,8 @@ if (section === 'home' || section === 'models') {
     const topicMenu = page.querySelector('.skills-topic-nav') || document.createElement('nav');
     topicMenu.className = 'skills-topic-nav';
     topicMenu.setAttribute('aria-label', 'Skills 分类二级导航');
-    topicMenu.innerHTML = '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多两排 · 前三重点分析</span></div><div class="skills-topic-links">' +
-      topicOrder.map(id => '<a data-skill-topic="'+id+'" href="/skills/?category='+encodeURIComponent(id)+'">'+copy(topics[id].title)+' <small>'+skills.filter(s=>s.category===id).length+'</small></a>').join('') +
+    topicMenu.innerHTML = '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多 8 个精选 · 前 3 个详细解析</span></div><div class="skills-topic-links">' +
+      topicOrder.map(id => '<a data-skill-topic="'+id+'" href="/skills/?category='+encodeURIComponent(id)+'">'+copy(topics[id].title)+' <small>'+Math.min(MAX_CATEGORY_PICKS, topics[id].picks.length)+'</small></a>').join('') +
       '<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>'+skills.length+'</small></a></div>';
     if (!topicMenu.parentNode) headingSection.before(topicMenu);
     const topicDescription = document.createElement('p');
@@ -464,17 +471,21 @@ if (section === 'home' || section === 'models') {
       const category = page.dataset.skillCategory || 'development';
       const matches = filtered();
       const isArchive = category === 'all';
+      // The independent SEO growth showcase belongs to the complete archive only.
+      // Never double-count its six cards on a named category's eight-pick page.
+      const growthKit = page.querySelector('.fl-growth-kit');
+      if (growthKit) growthKit.hidden = !isArchive;
       const searching = Boolean(document.getElementById('skill-search').value.trim());
-      const visible = isArchive && showAllSkills ? matches : matches.slice(0,6);
-      grid.innerHTML = visible.map(card).join('');
+      const visible = isArchive && showAllSkills ? matches : matches.slice(0, MAX_CATEGORY_PICKS);
+      grid.innerHTML = visible.map((skill,i)=>card(skill,i,isArchive)).join('');
       document.getElementById('skill-empty').hidden = matches.length > 0;
       const categoryTotal = isArchive ? skills.length : skills.filter(s=>s.category===category).length;
       document.getElementById('skill-count').textContent = searching
-        ? '搜索结果 '+visible.length+' / '+matches.length
-        : (isArchive ? '显示 '+visible.length+' / '+categoryTotal : '精选 '+visible.length+' / 本类收录 '+categoryTotal);
+        ? (isArchive ? '搜索结果 '+visible.length+' / '+matches.length : '筛选展示 '+visible.length+' / 最多 8 项')
+        : (isArchive ? '显示 '+visible.length+' / '+categoryTotal : '精选 '+visible.length+' / 最多 8 项 · 资料库 '+categoryTotal+' 项');
       if (heading) heading.textContent = isArchive ? '全部 Skill 资料库' : '分类精选 · '+topics[category].title;
       topicDescription.textContent = isArchive
-        ? '保留全部已收录条目；默认只展示前六项，按需展开。完整资料不等于全部推荐。'
+        ? '保留全部已收录条目；默认只展示前八项，按需展开。完整资料不等于全部推荐。'
         : topics[category].intro;
       topicMenu.querySelectorAll('[data-skill-topic]').forEach(a => {
         const active = a.dataset.skillTopic===category;

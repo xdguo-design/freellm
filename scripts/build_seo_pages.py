@@ -5650,13 +5650,13 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     ]
     curated_topic_links = "".join(
         f'<a data-skill-topic="{_esc(key)}" href="/skills/?category={_esc(key)}">{_esc(label)} '
-        f'<small>{sum(item.get("category") == key for item in skills)}</small></a>'
+        f'<small>{min(8, sum(item.get("category") == key for item in skills))}</small></a>'
         for key, label in curated_topic_order
         if any(item.get("category") == key for item in skills)
     )
     curated_topic_nav = (
         '<nav class="skills-topic-nav" aria-label="Skills 分类二级导航">'
-        '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多两排 · 前三重点分析</span></div>'
+        '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多 8 个精选 · 前 3 个详细解析</span></div>'
         '<div class="skills-topic-links">' + curated_topic_links +
         f'<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>{len(skills)}</small></a>'
         '</div></nav>'

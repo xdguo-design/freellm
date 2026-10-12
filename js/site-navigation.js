@@ -217,3 +217,17 @@
   });
 
 })();
+
+/* Load workflow recipe simulation on workflow pages */
+(function () {
+  try {
+    var p = location.pathname || '';
+    if (p.indexOf('/workflow') === -1 && p.indexOf('/skills/lab') === -1) return;
+    if (document.querySelector('script[data-workflow-sim]')) return;
+    var s = document.createElement('script');
+    s.src = '/js/workflow-recipe-sim.js?v=20261012-sim';
+    s.defer = true;
+    s.setAttribute('data-workflow-sim', '1');
+    document.head.appendChild(s);
+  } catch (e) {}
+})();

@@ -167,8 +167,8 @@ class RecipeDataTests(unittest.TestCase):
         recipes = json.loads(RECIPES_PATH.read_text(encoding="utf-8"))
         skill_ids = {item["id"] for item in json.loads(SKILLS_PATH.read_text(encoding="utf-8"))}
 
-        self.assertEqual(len(recipes), 6)
-        self.assertEqual(len({recipe["id"] for recipe in recipes}), 6)
+        self.assertEqual(len(recipes), 15)
+        self.assertEqual(len({recipe["id"] for recipe in recipes}), 15)
         for recipe in recipes:
             self.assertTrue(
                 {"id", "title", "description", "input", "output", "steps"}
@@ -345,6 +345,58 @@ class SkillsBuildTests(unittest.TestCase):
         homepage = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
 
         self.assertIn('href="/skills/"', homepage)
+
+
+
+class SkillsCuratedEightTests(unittest.TestCase):
+    """Keep complete Skill source records while showing only a curated eight-card shortlist."""
+
+    def test_all_twelve_categories_have_at_most_eight_real_unique_picks(self):
+        import re
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        topics = re.findall(
+            r"'([^']+)': \{title:'[^']+',intro:'[^']+',picks:\[([^\]]+)\]\}",
+            script,
+        )
+        catalog = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
+        by_id = {item["id"]: item for item in catalog}
+        self.assertEqual(len(topics), 12)
+        for category, payload in topics:
+            ids = re.findall(r"'([^']+)'", payload)
+            self.assertLessEqual(len(ids), 8, category)
+            self.assertEqual(len(ids), len(set(ids)), category)
+            count = sum(item["category"] == category for item in catalog)
+            self.assertEqual(len(ids), min(8, count), category)
+            for skill_id in ids:
+                self.assertIn(skill_id, by_id, category)
+                self.assertEqual(by_id[skill_id]["category"], category, skill_id)
+
+    def test_first_three_get_evidence_and_three_sections(self):
+        import re
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        topics = re.findall(
+            r"'([^']+)': \{title:'[^']+',intro:'[^']+',picks:\[([^\]]+)\]\}",
+            script,
+        )
+        notes = script.split("    const insights = {", 1)[1].split("    };", 1)[0]
+        for category, payload in topics:
+            top = re.findall(r"'([^']+)'", payload)[:3]
+            for skill_id in top:
+                self.assertIn(f"'{skill_id}':", notes, (category, skill_id))
+        for label in ("核心能力", "适合场景", "限制与边界"):
+            self.assertIn(label, script)
+        self.assertIn('class="skill-editorial-details"', script)
+        self.assertIn("const DETAIL_PICK_COUNT = 3;", script)
+
+    def test_archive_and_category_limits_are_separate(self):
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        self.assertIn("const MAX_CATEGORY_PICKS = 8;", script)
+        self.assertIn("list.slice(0, MAX_CATEGORY_PICKS)", script)
+        self.assertIn("matches.slice(0, MAX_CATEGORY_PICKS)", script)
+        self.assertIn("growthKit.hidden = !isArchive", script)
+        generator = (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
+        self.assertIn("每类最多 8 个精选 · 前 3 个详细解析", generator)
+        self.assertIn('min(8, sum(item.get("category") == key for item in skills))', generator)
 
 
 if __name__ == "__main__":
