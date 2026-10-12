@@ -3364,5 +3364,240 @@
     "contentFetchedAt": "2026-10-12",
     "reviews": [],
     "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "vercel-labs-find-skills",
+    "name": "find-skills",
+    "category": "development",
+    "description": "Discovers installable Agent Skills by user task or keyword and provides guidance for evaluating and installing them with the Skills CLI. Discovery results require independent review before inclusion.",
+    "githubUrl": "https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md",
+    "cloneCommand": "git clone https://github.com/vercel-labs/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "按自然语言场景检索可安装 Agent Skills，并提供安装线索；发现结果必须再检查上游源码、许可与依赖，不代表自动通过审核。",
+    "styles": {
+      "format": "技能检索结果 / 安装命令",
+      "summary": "按场景发现与安装 Agent Skills；不提供视觉风格。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 MIT；CLI 安装及搜索功能未在本站执行。"
+    },
+    "license": "MIT",
+    "contentPath": "skill-content/vercel-labs-find-skills.md",
+    "contentUrl": "https://raw.githubusercontent.com/vercel-labs/skills/main/skills/find-skills/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 5456
+  },
+  {
+    "id": "vercel-labs-agent-browser",
+    "name": "agent-browser",
+    "category": "development",
+    "description": "Browser automation skill using the agent-browser CLI to navigate websites, interact with forms, capture screenshots, inspect page content, and test web applications. Requires browser runtime setup.",
+    "githubUrl": "https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-browser.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "通过 agent-browser CLI 控制浏览器，实现页面操作、表单填写、截图、网页检查及前端自动化测试；需要安装 CLI 和浏览器运行时。",
+    "styles": {
+      "format": "浏览器自动化操作 / QA 截图",
+      "summary": "基于浏览器 CLI 的测试和操作流程；不提供视觉主题。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 Apache-2.0；本站未安装浏览器或跑端到端测试。"
+    },
+    "license": "Apache-2.0",
+    "contentPath": "skill-content/vercel-labs-agent-browser.md",
+    "contentUrl": "https://raw.githubusercontent.com/vercel-labs/agent-browser/main/skills/agent-browser/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 3455
+  },
+  {
+    "id": "op7418-guizang-ppt-skill",
+    "name": "guizang-ppt-skill",
+    "category": "presentations",
+    "description": "Generates a single-file HTML horizontal-slide presentation with editorial-magazine or Swiss-style layouts, presenter tools, notes and visual effects. It does not primarily output an editable PPTX.",
+    "githubUrl": "https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md",
+    "cloneCommand": "git clone https://github.com/op7418/guizang-ppt-skill.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "candidate",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "生成单文件横向翻页 HTML 演示，可选电子杂志风与瑞士网格风，含讲者模式、备注与视觉效果；不等同原生可编辑 PPTX。",
+    "styles": {
+      "format": "单文件 HTML 网页 PPT",
+      "summary": "两种上游明示视觉方向：电子杂志 × 电子墨水、瑞士国际主义；包含讲者工具。",
+      "items": [
+        "电子杂志 × 电子墨水",
+        "瑞士国际主义"
+      ],
+      "total": 2,
+      "hasStyles": true
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 AGPL-3.0，本轮仅链接原文，不镜像整份技能；运行效果未验证。"
+    },
+    "license": "AGPL-3.0",
+    "contentUrl": "https://raw.githubusercontent.com/op7418/guizang-ppt-skill/main/SKILL.md",
+    "copyrightNote": "Only upstream link is listed; source content is not mirrored."
+  },
+  {
+    "id": "steipete-summarize",
+    "name": "summarize",
+    "category": "seo-content",
+    "description": "Summarize CLI skill for webpage and local document summaries, YouTube transcripts, audio and media inputs, with optional model provider setup and structured output.",
+    "githubUrl": "https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md",
+    "cloneCommand": "git clone https://github.com/steipete/summarize.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "统一摘要网页、文档、YouTube 与音视频内容，支持 CLI 和结构化输出；模型能力依赖已配置的提供商或可用 CLI。",
+    "styles": {
+      "format": "Markdown / JSON 摘要",
+      "summary": "长文与媒体内容提取、摘要输出；非排版或视觉样式技能。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 MIT；摘要工具本体未在本站运行，不保证无模型配置可直接使用。"
+    },
+    "license": "MIT",
+    "contentPath": "skill-content/steipete-summarize.md",
+    "contentUrl": "https://raw.githubusercontent.com/steipete/summarize/main/.agents/skills/summarize/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 5436
+  },
+  {
+    "id": "infometa-aihot",
+    "name": "aihot",
+    "category": "seo-content",
+    "description": "Retrieves Chinese AI model, product, research and industry headlines from the third-party AIHOT public API and drafts digest summaries. Source accuracy and access policy need independent checks.",
+    "githubUrl": "https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md",
+    "cloneCommand": "git clone https://github.com/infometa/workbuddyskills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "OpenCode"
+    ],
+    "status": "candidate",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "通过 AIHOT 第三方公开接口整理模型、产品、行业与论文动态，输出中文资讯简报；来源事实需二次核验，接口可用性未实测。",
+    "styles": {
+      "format": "中文 AI 资讯 Markdown 简报",
+      "summary": "第三方资讯 API 抓取与汇总；无视觉主题。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "SKILL.md 已核对，但未找到明确的仓库许可证，本轮仅做外链索引；第三方新闻仍需事实核查。"
+    },
+    "license": "UNKNOWN",
+    "contentUrl": "https://raw.githubusercontent.com/infometa/workbuddyskills/main/skills/aihot/SKILL.md",
+    "copyrightNote": "Only upstream link is listed; source content is not mirrored."
   }
 ]
