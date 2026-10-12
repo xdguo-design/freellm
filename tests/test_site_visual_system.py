@@ -91,7 +91,7 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_all_primary_pages_have_isolated_aurora_assets(self):
         pages = {
             "models/index.html": ("aurora-models.css", "20260929b"),
-            "skills/index.html": ("aurora-skills.css", "20260930o"),
+            "skills/index.html": ("aurora-skills.css", "20261012-curated"),
             "tools/index.html": ("aurora-tools.css", "20260924a"),
             "workflow/index.html": ("aurora-workflow.css", "20260924a"),
             "logs/index.html": ("aurora-logs.css", "20260924a"),
