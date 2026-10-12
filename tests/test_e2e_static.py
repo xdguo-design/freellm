@@ -1183,6 +1183,7 @@ class BrowserPageTests(unittest.TestCase):
             (js / "site-navigation.js").write_text((ROOT / "js" / "site-navigation.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "scan-trust.js").write_text((ROOT / "js" / "scan-trust.js").read_text(encoding="utf-8"), encoding="utf-8")
             (js / "offer-expiry-board.js").write_text((ROOT / "js" / "offer-expiry-board.js").read_text(encoding="utf-8"), encoding="utf-8")
+            (js / "project-feature-news.js").write_text((ROOT / "js" / "project-feature-news.js").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "js").glob("homepage*.js"):
                 (js / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             css = Path(directory) / "css"
@@ -1195,6 +1196,7 @@ class BrowserPageTests(unittest.TestCase):
             (css / "reference-rail.css").write_text((ROOT / "css" / "reference-rail.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "primary-menu.css").write_text((ROOT / "css" / "primary-menu.css").read_text(encoding="utf-8"), encoding="utf-8")
             (css / "home-trust.css").write_text((ROOT / "css" / "home-trust.css").read_text(encoding="utf-8"), encoding="utf-8")
+            (css / "project-feature-news.css").write_text((ROOT / "css" / "project-feature-news.css").read_text(encoding="utf-8"), encoding="utf-8")
             for source in (ROOT / "css").glob("homepage*.css"):
                 (css / source.name).write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
             assets = Path(directory) / "assets" / "reference"
