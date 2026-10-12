@@ -967,6 +967,72 @@ class BrowserPageTests(unittest.TestCase):
         self.assertTrue(page.locator('.fl-growth-kit').is_visible())
         page.close()
 
+    def test_skills_editorial_blocks_use_card_width_in_both_views(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/skills/?category=development")
+        page.wait_for_selector('#skill-grid .skill-editorial')
+        for width in (1366, 889, 390):
+            page.set_viewport_size({"width": width, "height": 900})
+            for view, button in (("grid", "网格视图"), ("list", "列表视图")):
+                with self.subTest(width=width, view=view):
+                    page.get_by_role("button", name=button, exact=True).click()
+                    for card in page.locator('#skill-grid .skill-featured').all():
+                        card_box = card.bounding_box()
+                        editorial = card.locator('.skill-editorial').bounding_box()
+                        description = card.locator(':scope > p').bounding_box()
+                        self.assertGreater(editorial["width"], card_box["width"] * .75)
+                        self.assertGreater(description["width"], card_box["width"] * .5)
+                        self.assertLessEqual(editorial["x"] + editorial["width"],
+                                             card_box["x"] + card_box["width"])
+                        self.assertLess(card.locator('.skill-pick-label').bounding_box()["height"], 40)
+                        self.assertLess(card_box["height"], 900)
+                    if view == "list":
+                        grid = page.locator('#skill-grid').bounding_box()
+                        card = page.locator('#skill-grid .skill-card').first.bounding_box()
+                        self.assertAlmostEqual(card["width"], grid["width"], delta=2)
+                    self.assertTrue(page.evaluate(
+                        'document.documentElement.scrollWidth <= window.innerWidth + 1'
+                    ))
+        page.close()
+
+    def test_skills_have_distinct_local_icons_and_matching_detail_icon(self):
+        page = self.new_page()
+        page.goto(f"{self.site.url}/skills/?category=development")
+        page.wait_for_selector('#skill-grid .skill-card')
+        icons = page.locator('#skill-grid .skill-card-icon')
+        self.assertEqual(icons.count(), 8)
+        shapes = icons.locator('svg').evaluate_all('items => items.map(item => item.innerHTML)')
+        self.assertGreaterEqual(len(set(shapes)), 6)
+        first_id = page.locator('#skill-grid .skill-card').first.get_attribute('data-skill-id')
+        page.locator(f'[data-select-skill="{first_id}"]').click()
+        detail = page.locator('#detail-icon')
+        self.assertEqual(detail.locator('svg').inner_html(), shapes[0])
+        self.assertEqual(detail.evaluate('el => getComputedStyle(el).color'),
+                         icons.first.evaluate('el => getComputedStyle(el).color'))
+
+        page.goto(f"{self.site.url}/skills/?category=all")
+        total = len(json.loads((ROOT / 'data/skills.json').read_text(encoding='utf-8')))
+        page.locator('#skills-browse-all').click()
+        page.wait_for_function(
+            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            arg=total,
+        )
+        signatures = page.locator('#skill-grid .skill-card-icon').evaluate_all(
+            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
+        )
+        self.assertEqual(len(set(signatures)), total)
+        page.reload()
+        page.wait_for_selector('#skill-grid .skill-card-icon svg')
+        page.locator('#skills-browse-all').click()
+        page.wait_for_function(
+            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            arg=total,
+        )
+        self.assertEqual(page.locator('#skill-grid .skill-card-icon').evaluate_all(
+            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
+        ), signatures)
+        page.close()
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})

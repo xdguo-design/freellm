@@ -7229,7 +7229,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
-    Path("skills/index.html"): "20261012-curated",
+    Path("skills/index.html"): "20261012-icons1",
 }
 
 
@@ -7290,7 +7290,7 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
         if rail_tag not in updated and "</head>" in updated:
             updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
-    script_version = "20261012-curated" if path == Path("skills/index.html") else "20261011-history-filters" if path == Path("logs/index.html") else "20260924a"
+    script_version = "20261012-icons1" if path == Path("skills/index.html") else "20261011-history-filters" if path == Path("logs/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
     old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
     if path == Path("skills/index.html") and old_script_tag in updated:
