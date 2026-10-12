@@ -26,7 +26,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261011-approved-home-nav-final"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261012-today-discovery"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
@@ -523,38 +523,59 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
 
 
 def update_home_latest_discovery(html: str, data_path: Path) -> str:
-    """Expose the newest sourced discovery on the homepage, not just a numeric badge."""
+    """Show the latest daily-log additions count and link to the full discovery list."""
     marker = '<div id="home-latest-discovery"'
     if marker not in html:
         return html
     log_dir = data_path.parent / "daily-log"
     log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
-    entry = None
+    latest = None
     log_date = ""
-    if log_paths:
+    for path in reversed(log_paths):
         try:
-            latest = json.loads(log_paths[-1].read_text(encoding="utf-8"))
-            log_date = str(latest.get("date") or "")
-            events = [event for field in ("curatedEvents", "events")
-                      for event in (latest.get(field) or [])
-                      if isinstance(event, dict) and event.get("eventType") in {"new", "new_route"}]
-            # A third-party relay row must not headline the homepage as "today's discovery".
-            official = [event for event in events if not is_third_party_relay(event)]
-            curated = [event for event in official if event in (latest.get("curatedEvents") or [])]
-            # Prefer a human-verified addition; otherwise the newest scanned one.
-            entry = curated[0] if curated else (official[-1] if official else None)
+            candidate = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError, TypeError):
-            pass
-    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", log_date):
-        log_date = ""
-    if entry:
-        title = html_lib.escape(str(entry.get("title") or entry.get("id") or "资源动态"))
-        status = str((entry.get("details") or {}).get("status") or "").lower()
-        label = "待实测 · " if status in {"pending_verification", "draft", "unknown"} else ""
-        text = (f'<span>{label}今日发现</span><a href="/logs/#log-day-{log_date}"'
-                f' title="查看今日更新详情">{title} →</a>')
+            continue
+        if not isinstance(candidate, dict):
+            continue
+        candidate_date = str(candidate.get("date") or "")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", candidate_date):
+            continue
+        latest = candidate
+        log_date = candidate_date
+        break
+
+    if latest:
+        unique_new_events = {}
+        for field in ("events", "curatedEvents"):
+            events = latest.get(field)
+            if not isinstance(events, list):
+                continue
+            for event in events:
+                if not isinstance(event, dict) or event.get("eventType") not in {"new", "new_route"}:
+                    continue
+                event_id = str(event.get("id") or "").strip()
+                fallback = "|".join((
+                    str(event.get("kind") or "").strip(),
+                    str(event.get("title") or "").strip(),
+                ))
+                identity = (str(event.get("eventType")), event_id or fallback)
+                unique_new_events.setdefault(identity, event)
+        new_count = len(unique_new_events)
+        count_text = f"新增 {new_count} 项"
+        href = f"/logs/#log-day-{log_date}"
+        link_title = f"查看 {log_date} 的全部发现"
+        link_text = "查看全部发现 →"
     else:
-        text = '<span>最新动态</span><a href="/logs/">查看每日更新 →</a>'
+        count_text = "暂无日志"
+        href = "/logs/"
+        link_title = "打开每日更新记录"
+        link_text = "查看每日更新 →"
+    text = (
+        '<span class="home-latest-discovery-label">今日发现</span>'
+        f'<strong class="home-latest-discovery-count">{count_text}</strong>'
+        f'<a href="{href}" title="{link_title}">{link_text}</a>'
+    )
     replacement = f'<div id="home-latest-discovery" class="home-latest-discovery">{text}</div>'
     return re.sub(
         r'<div id="home-latest-discovery"[^>]*>.*?</div>',

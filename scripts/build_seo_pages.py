@@ -7240,7 +7240,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261008-today-discovery"></script>'
+        '<script src="/js/site-navigation.js?v=20261012-today-discovery"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
@@ -7371,7 +7371,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: _ensure_skill_section_tabs(_ensure_model_section_tabs(content, relative), relative)
         for relative, content in files.items()
     }
-    sync_tag = '<script src="/js/freellm-sync.js"></script>'
+    sync_tag = '<script src="/js/freellm-sync.js?v=20261012-today-discovery"></script>'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-sync.js" in content or "</body>" not in content)
                    else content.replace("</body>", sync_tag + "</body>", 1))

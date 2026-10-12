@@ -16,7 +16,7 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261009-ux-p0';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261012-today-discovery';
   var updateIndicatorReady = false;
   var lastUpdateDate = '';
   var readUpdateKey = 'freellm-last-read-update';
@@ -118,6 +118,7 @@
       link.dataset.flSharedNavigationStyles = '1';
       document.head.appendChild(link);
     }
+    link.href = sharedNavigationCss;
     document.head.appendChild(link);
     return link;
   }
@@ -135,6 +136,9 @@
 
     rail.id = 'fl-shared-site-menu';
     rail.setAttribute('aria-label', 'FreeLLM 主导航');
+    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
+    var discoveryLabel = rail.querySelector('.fl-site-nav [data-site-nav="logs"] span:last-child');
+    if (discoveryLabel) discoveryLabel.textContent = english ? 'Discoveries' : '今日发现';
     function updateCurrentItem() {
       var active = currentPage();
       if (active === 'health') active = 'models';
@@ -149,7 +153,6 @@
       return;
     }
 
-    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     var labels = [
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],

@@ -95,8 +95,9 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn("def sync_home_scan_snapshot(", build)
         self.assertIn(f'<b id="heroCount">{summary["offers"]}</b>', homepage)
         self.assertIn("updated = update_home_latest_discovery(updated, data_path)", build)
-        # newest official (non third-party relay) discovery, curated first
-        self.assertIn("entry = curated[0] if curated else (official[-1] if official else None)", build)
+        self.assertIn("新增 5 项", homepage)
+        self.assertIn("查看全部发现 →", homepage)
+        self.assertIn('href="/logs/#log-day-2026-10-11"', homepage)
         self.assertIn("HOME_OFFERS_PAGE_SIZE = 24", js)
         self.assertIn("matchedRows.slice(0, visibleOfferLimit)", js)
         self.assertIn("offerGrid.replaceChildren(...visibleCards)", js)
@@ -110,7 +111,7 @@ class HomeReleaseGate(unittest.TestCase):
     def test_homepage_layout_styles_are_loaded_before_first_paint(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         navigation = re.search(
-            r'<link\b(?=[^>]*primary-menu\.css\?v=20261009-ux-p0)[^>]*>', homepage
+            r'<link\b(?=[^>]*primary-menu\.css\?v=20261012-today-discovery)[^>]*>', homepage
         )
         self.assertIsNotNone(navigation)
         self.assertIn('rel="stylesheet"', navigation.group(0))
@@ -118,6 +119,20 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn('data-fl-shared-navigation-styles="1"', navigation.group(0))
         self.assertIn('<aside id="fl-shared-site-menu"', homepage)
         self.assertIn('home-prototype-critical.css?v=20261011-approved-homepage', homepage)
+
+    def test_discovery_navigation_repairs_legacy_label_and_refreshes_script(self):
+        homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        navigation = (ROOT / "js/site-navigation.js").read_text(encoding="utf-8")
+        sync = (ROOT / "js/freellm-sync.js").read_text(encoding="utf-8")
+        self.assertIn("discoveryLabel.textContent = english ? 'Discoveries' : '今日发现';", navigation)
+        self.assertIn("logs: '今日发现'", sync)
+        self.assertIn("logs: 'Discoveries'", sync)
+        self.assertIn("freellm-sync.js?v=20261012-today-discovery", homepage)
+        self.assertIn("site-navigation.js?v=20261012-today-discovery", homepage)
+
+    def test_home_stat_rows_expand_for_date_metadata(self):
+        styles = (ROOT / "css/home-prototype-exact.css").read_text(encoding="utf-8")
+        self.assertIn("grid-auto-rows:minmax(clamp(70px,8.1vw,120px),auto)", styles)
 
     def test_logs_keep_both_discoveries_visible(self):
         html = (ROOT / "logs/index.html").read_text(encoding="utf-8")
