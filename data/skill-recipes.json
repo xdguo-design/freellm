@@ -1,1 +1,20 @@
-see-file
+[
+  {
+    "id": "idea-to-plan",
+    "title": "从一句想法到可执行计划",
+    "kicker": "PRODUCT / 01",
+    "description": "把模糊想法压成团队能评审、能排期、能验收的实施计划。",
+    "input": "一句想法、目标用户和已知约束",
+    "output": "带验收标准、风险边界和执行步骤的实施计划",
+    "why": "先澄清问题，再写计划，最后把讨论变成下一步动作。",
+    "tags": ["产品设计", "工程计划"],
+    "category": "product-design",
+    "categoryLabel": "产品设计",
+    "steps": [
+      {"skillId": "obra-brainstorming", "label": "把想法聊透", "detail": "在动手前系统性地探索需求、方案和取舍。", "demo": "✓ 澄清问题与约束\n  · 目标用户：内部产品团队\n  · 方案候选：3 个，已排除 1 个\n  → 产出：对齐后的问题定义与取舍记录"},
+      {"skillId": "obra-writing-plans", "label": "写成实施计划", "detail": "把已确认的方案拆成有验收标准的任务清单。", "demo": "✓ 生成实施计划草案\n  · 任务 8 项 · 含验收标准与依赖\n  · 风险边界：2 条已标注\n  → 产出：可评审的计划文档"},
+      {"skillId": "obra-executing-plans", "label": "按计划逐项执行", "detail": "按任务逐个实现，保持每步都可验证。", "demo": "✓ 按清单推进\n  · 已完成 5/8 · 当前可验证节点已通过\n  → 产出：带进度的执行记录"},
+      {"skillId": "obra-verification-before-completion", "label": "交付前验证", "detail": "在宣布完成前逐条核对证据，拒绝“应该没问题”。", "demo": "✓ 验收核对完成\n  · 8/8 验收项有证据\n  · 无“大概好了”项\n  → 产出：可交付的验证清单"}
+    ]
+  }
+]
