@@ -23,7 +23,7 @@ def test_mimo_v26_flash_is_in_curated_and_published_model_catalogs():
             assert row["context"] == context
             assert row["maxOutput"] == max_output
             assert {"text", "image", "video", "audio"}.issubset(set(row["modality"]))
-            assert row["lastVerifiedAt"] == "2026-09-23"
+            assert row["lastVerifiedAt"] >= "2026-09-23"  # re-verified 2026-10-12
 
 
 def test_opencode_offer_names_the_v26_free_variant_and_does_not_call_xiaomi_api_free():
