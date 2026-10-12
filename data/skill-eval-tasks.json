@@ -2989,6 +2989,351 @@
         }
       ],
       "allowQuestions": false
+    },
+    "coreyhaines31-seo-audit": {
+      "task": "请针对 freellm.top 的公开页面拟定可执行的技术 SEO 审计流程，列出如何核对 robots.txt、sitemap、canonical、hreflang 和索引状态，给出 P0/P1 优先级，并明确哪些结论尚未实际访问验证。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "robots\\.txt",
+            "Robots"
+          ],
+          "label": "核对机器人抓取规则"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "sitemap",
+            "站点地图"
+          ],
+          "label": "核对站点地图"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "canonical",
+            "规范链接"
+          ],
+          "label": "核对 canonical 规范路径"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "hreflang",
+            "多语言"
+          ],
+          "label": "核对国际化链接"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "P0|P1",
+            "优先级"
+          ],
+          "label": "分级整改"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "未验证",
+            "待核验",
+            "未知",
+            "证据",
+            "UNKNOWN"
+          ],
+          "label": "未把未访问的现场情况当事实"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-ai-seo": {
+      "task": "请针对 freellm.top 制定 AI 搜索/GEO 可见性自查表：包含 AI 抓取可达性、原始数据来源、可引用内容、实体/品牌描述、测量引用与实际推荐的区分，且不宣称能保证 ChatGPT 或 Google AI 推荐。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "GEO",
+            "AI 搜索",
+            "AEO"
+          ],
+          "label": "针对 AI 搜索优化"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "robots\\.txt",
+            "抓取",
+            "crawler",
+            "可达"
+          ],
+          "label": "核对 AI 抓取条件"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "引用",
+            "citation",
+            "cite"
+          ],
+          "label": "讨论可验证的引用证据"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "不保证",
+            "不能保证",
+            "无法保证",
+            "不等于",
+            "未实测"
+          ],
+          "label": "区分引用与承诺/排名"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-programmatic-seo": {
+      "task": "为 freellm.top 设计以已验证 API 模型和免费额度为数据源的 30 个程序化 SEO 页面方案。请给出 URL 模板、每页必填的真实差异化字段、质量/薄内容阻断、canonical、sitemap/indexation 和更新触发规则；不要虚构免费额度。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "URL",
+            "路径",
+            "slug"
+          ],
+          "label": "提供 URL 模板"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "来源",
+            "核验",
+            "真实",
+            "数据"
+          ],
+          "label": "页面使用有来源的独特数据"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "薄内容",
+            "重复",
+            "差异化",
+            "唯一"
+          ],
+          "label": "提出避免模板薄内容的措施"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "canonical",
+            "noindex",
+            "索引"
+          ],
+          "label": "提出规范索引/规范页策略"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "sitemap",
+            "内链"
+          ],
+          "label": "站点发现与内部链接"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "更新",
+            "到期",
+            "重扫",
+            "失效"
+          ],
+          "label": "提出内容更新与失效处理"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-site-architecture": {
+      "task": "请为 freellm.top 的模型、供应商、Skills、每日发现与文档设计站点信息架构。输出 Mermaid 站点树、URL 层级示例、至少两种内链或面包屑规则；不建议删除既有可索引 URL 而不做迁移。",
+      "checks": [
+        {
+          "type": "regex_any",
+          "patterns": [
+            "mermaid",
+            "graph TD",
+            "flowchart"
+          ],
+          "label": "输出站点图"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "/models/",
+            "/skills/"
+          ],
+          "label": "保留核心栏目"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "面包屑",
+            "breadcrumb",
+            "内链"
+          ],
+          "label": "说明内部链接"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "301",
+            "重定向",
+            "canonical",
+            "迁移"
+          ],
+          "label": "考虑 URL 迁移与 SEO 保持"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-competitors": {
+      "task": "规划一篇 freellm.top 与 OpenRouter 的免费模型发现体验对比页大纲。仅围绕可核对的额度/条件、模型来源、更新时间、费用展示和用户群差异，不要编造定价与功能；列出证据来源及尚待核验的事项。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "freellm\\.top",
+          "label": "明确本站"
+        },
+        {
+          "type": "regex",
+          "pattern": "OpenRouter",
+          "label": "明确用户指定的竞品"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "对比",
+            "比较",
+            "VS",
+            "vs"
+          ],
+          "label": "产出对照框架"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "来源",
+            "引用",
+            "证据",
+            "链接"
+          ],
+          "label": "要求来源证据"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "待核验",
+            "未确认",
+            "UNKNOWN",
+            "不确定"
+          ],
+          "label": "披露未确认功能或定价"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-schema": {
+      "task": "为 freellm.top 的免费模型列表页设计一份来源一致的 JSON-LD 结构化数据方案，需说明 @context、@type、ItemList、URL、如何防止与页面可见数据不一致，以及富结果资格不保证；可先展示示例代码，不得编造评分。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "@context",
+          "label": "使用 JSON-LD context"
+        },
+        {
+          "type": "regex",
+          "pattern": "@type",
+          "label": "说明结构化数据类型"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "ItemList",
+            "ListItem"
+          ],
+          "label": "匹配资源列表"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "可见",
+            "一致",
+            "同步",
+            "真实"
+          ],
+          "label": "坚持页面内容一致性"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "富结果",
+            "Rich Results",
+            "不保证",
+            "资格"
+          ],
+          "label": "避免把合法 schema 误说成 Google 富结果保证"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "coreyhaines31-product-marketing": {
+      "task": "为 freellm.top 草拟可审阅的 .agents/product-marketing.md 产品背景，涵盖目标受众、产品价值、SEO 目标和事实/推断/待确认三层；附版本记录，不要编造访问量或商业收入。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "\\.agents/product-marketing\\.md",
+          "label": "使用上游约定的共享文件路径"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "目标受众",
+            "用户群",
+            "受众",
+            "ICP"
+          ],
+          "label": "记录产品受众"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "价值",
+            "定位",
+            "主张"
+          ],
+          "label": "记录产品定位"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "UNKNOWN",
+            "待确认",
+            "待核验",
+            "推断"
+          ],
+          "label": "未知事项诚实标注"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "版本",
+            "Changelog",
+            "变更记录"
+          ],
+          "label": "包含可持续更新记录"
+        }
+      ],
+      "allowQuestions": false
     }
   }
 }

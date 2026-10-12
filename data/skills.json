@@ -3523,5 +3523,405 @@
       "capturedAt": "2026-10-12",
       "starsSource": "https://github.com/steipete/summarize"
     }
+  },
+  {
+    "id": "coreyhaines31-seo-audit",
+    "name": "seo-audit",
+    "category": "seo-content",
+    "description": "Audits technical and on-page SEO with checks for crawlability, indexability, metadata, canonicals, international URLs, performance and prioritized fixes. Findings require evidence.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/seo-audit/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill seo-audit",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-seo-audit.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/seo-audit/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 17665,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "技术 SEO 与站内 SEO 诊断：按证据核对抓取、索引、canonical、hreflang、性能和页面内容，输出按优先级排序的整改清单；不把推断当成搜索引擎实测。",
+    "styles": {
+      "format": "SEO 审计报告 / P0-P3 清单",
+      "summary": "技术 SEO、页面元信息、抓取/索引和证据分级审计，不定义视觉模板。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 seo-audit 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/seo-audit/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-ai-seo",
+    "name": "ai-seo",
+    "category": "seo-content",
+    "description": "AI search/GEO/AEO visibility audit, including crawl access, entity clarity, extractable answer blocks and citation opportunities; no guaranteed LLM recommendation or ranking.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/ai-seo/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill ai-seo",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-ai-seo.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/ai-seo/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 33670,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "AI 搜索可见性（GEO/AEO）：检查模型抓取与引用条件、可提取内容、品牌实体及答案结构；不能保证 ChatGPT、Google AI 或其他模型实际推荐。",
+    "styles": {
+      "format": "AI / GEO 可见性诊断",
+      "summary": "AI 搜索抓取、可引用内容与品牌实体可见性审核，不宣称排名保证。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 ai-seo 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/ai-seo/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-programmatic-seo",
+    "name": "programmatic-seo",
+    "category": "seo-content",
+    "description": "Plans data-backed programmatic SEO pages at scale, with unique per-page value, internal linking, structured templates, canonicals and indexation safeguards.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/programmatic-seo/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill programmatic-seo",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-programmatic-seo.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/programmatic-seo/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 7525,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "程序化 SEO 页面规划：用真实数据和模板批量组织目录/对比页面，核对每页独特价值、内链、canonical、索引和内容质量，避免薄内容批量铺页。",
+    "styles": {
+      "format": "数据驱动落地页 / 模板",
+      "summary": "从真实差异化数据批量生成页面；有质量与索引防护而不是关键词替换。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 programmatic-seo 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/programmatic-seo/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-site-architecture",
+    "name": "site-architecture",
+    "category": "seo-content",
+    "description": "Plans website information architecture, URL hierarchy, navigation, breadcrumbs, site maps, internal linking and migration-aware redirects.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/site-architecture/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill site-architecture",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-site-architecture.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/site-architecture/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 14073,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "站点信息架构与导航规划：设计 URL 层级、分类、面包屑和内部链接，可输出 Mermaid 站点关系图；适合梳理模型、服务商与 Skill 目录。",
+    "styles": {
+      "format": "站点结构图 / URL 规划表",
+      "summary": "Mermaid 站点树与内部链接建议；XML sitemap 技术审计应交给 seo-audit。",
+      "items": [
+        "站点树 / Mermaid",
+        "URL 路由规划",
+        "面包屑与内链"
+      ],
+      "hasStyles": true
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 site-architecture 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/site-architecture/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-competitors",
+    "name": "competitors",
+    "category": "seo-content",
+    "description": "Creates honest competitor comparison, VS and alternatives pages for SEO, with verifiable feature/pricing claims and explicit unknowns; not a substitute for verified competitor research.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/competitors/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill competitors",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-competitors.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/competitors/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 12075,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "竞品对比与替代页：生成来源可核对的 VS/Alternatives 页面框架，标注功能、价格和限制的证据与更新时间，禁止杜撰竞品优缺点。",
+    "styles": {
+      "format": "竞品对比 / VS / Alternatives",
+      "summary": "单竞品替代、多竞品清单、对照页面与过期声明复核。",
+      "items": [
+        "竞品 VS",
+        "替代方案页",
+        "证据对照表"
+      ],
+      "hasStyles": true
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 competitors 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/competitors/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-schema",
+    "name": "schema",
+    "category": "seo-content",
+    "description": "Implements source-consistent Schema.org JSON-LD for actual on-page content, tests markup validity and distinguishes valid schema from Google rich result eligibility.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/schema/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill schema",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-schema.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/schema/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 7124,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "Schema.org / JSON-LD 结构化数据：根据可见页面事实生成并核查组织、网站、面包屑或列表等数据；须验证 Google 当前支持的富结果类型。",
+    "styles": {
+      "format": "Schema.org / JSON-LD",
+      "summary": "页面事实一致的结构化数据与验证清单；富结果资格需单独查询官方支持类型。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 schema 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/schema/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-product-marketing",
+    "name": "product-marketing",
+    "category": "planning-office",
+    "description": "Builds and maintains a shared .agents/product-marketing.md context for product positioning, audience, goals and changelog, reused across marketing skills.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/product-marketing/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill product-marketing",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-product-marketing.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/product-marketing/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 9433,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "增长技能共享产品背景：生成和维护 .agents/product-marketing.md，集中记录受众、定位、价值主张与事实/未确认事项，供 SEO 和营销技能复用。",
+    "styles": {
+      "format": "产品营销背景文档",
+      "summary": "作为 SEO 技能的共享上下文前置项；记录来源、假设、版本与变更日志。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 product-marketing 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/product-marketing/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
   }
 ]
