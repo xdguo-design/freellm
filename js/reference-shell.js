@@ -395,7 +395,7 @@ if (section === 'home' || section === 'models') {
       const notes = featured ? insights[skill.id] : null;
       const evidence = skill.freeLLMTest || {};
       const testLevel = evidence.testLevel || 'unknown';
-      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞'})[testLevel] || '未验证';
+      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞',unknown:'未实测'})[testLevel] || '未实测';
       const commentary = notes ? '<div class="skill-editorial"><strong>FreeLLM 重点解析</strong><p>'+notes.map(note => copy(note)).join('<br>')+'</p><small>证据级别：'+copy(testLabel)+'</small></div>' : '';
       const rank = featured ? '<span class="skill-pick-label">TOP 0'+(index+1)+' · 精选分析</span>' : '';
       const active = panelOpen && selectedId === skill.id;

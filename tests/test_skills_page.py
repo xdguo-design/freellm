@@ -73,15 +73,19 @@ class SkillBenchmarkDataTests(unittest.TestCase):
 
     def test_test_records_never_fake_unexecuted_scores(self):
         scored = 0
-        allowed = {"e2e", "task", "artifact", "partial", "blocked"}
+        allowed = {"e2e", "task", "artifact", "partial", "blocked", "unknown"}
         for skill_id, entry in self.entries.items():
             level = entry.get("testLevel")
             self.assertIn(level, allowed, skill_id)
-            self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
+            if level == "unknown":
+                self.assertFalse(str(entry.get("testedAt") or "").strip(), skill_id)
+                self.assertEqual(entry.get("status"), "未实测", skill_id)
+            else:
+                self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("environment") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("task") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("evaluation") or "").strip(), skill_id)
-            if level in {"blocked", "partial"}:
+            if level in {"blocked", "partial", "unknown"}:
                 self.assertIsNone(entry.get("score"), skill_id)
             else:
                 self.assertIsInstance(entry.get("score"), (int, float), skill_id)
