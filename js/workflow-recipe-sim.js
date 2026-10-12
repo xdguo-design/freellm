@@ -4,6 +4,7 @@
  */
 (function () {
   'use strict';
+  var FALLBACK_DEMOS = {"idea-to-plan":["✓ 澄清问题与约束\n  · 目标用户：内部产品团队\n  · 方案候选：3 个，已排除 1 个\n  → 产出：对齐后的问题定义与取舍记录","✓ 生成实施计划草案\n  · 任务 8 项 · 含验收标准与依赖\n  · 风险边界：2 条已标注\n  → 产出：可评审的计划文档","✓ 按清单推进\n  · 已完成 5/8 · 当前可验证节点已通过\n  → 产出：带进度的执行记录","✓ 验收核对完成\n  · 8/8 验收项有证据\n  · 无“大概好了”项\n  → 产出：可交付的验证清单"],"从一句想法到可执行计划":["✓ 澄清问题与约束\n  · 目标用户：内部产品团队\n  · 方案候选：3 个，已排除 1 个\n  → 产出：对齐后的问题定义与取舍记录","✓ 生成实施计划草案\n  · 任务 8 项 · 含验收标准与依赖\n  · 风险边界：2 条已标注\n  → 产出：可评审的计划文档","✓ 按清单推进\n  · 已完成 5/8 · 当前可验证节点已通过\n  → 产出：带进度的执行记录","✓ 验收核对完成\n  · 8/8 验收项有证据\n  · 无“大概好了”项\n  → 产出：可交付的验证清单"],"data-to-deck":["✓ 原始表已规范化\n  · 透视：按渠道 × 周\n  · 异常行：已标记 3 处\n  → 产出：可分析口径表","✓ 关键指标汇总\n  · GMV / 转化率 / 退款率\n  · 环比已计算\n  → 产出：指标汇总表","✓ Dashboard 已生成\n  · 4 张图 + 1 张结论表\n  → 产出：Excel 数据看板","✓ 汇报 Deck 已导出\n  · 结论 → 证据 → 下一步\n  · Q3-review.pptx（12 页）\n  → 产出：可上台的 PPTX"],"从数据表到汇报演示":["✓ 原始表已规范化\n  · 透视：按渠道 × 周\n  · 异常行：已标记 3 处\n  → 产出：可分析口径表","✓ 关键指标汇总\n  · GMV / 转化率 / 退款率\n  · 环比已计算\n  → 产出：指标汇总表","✓ Dashboard 已生成\n  · 4 张图 + 1 张结论表\n  → 产出：Excel 数据看板","✓ 汇报 Deck 已导出\n  · 结论 → 证据 → 下一步\n  · Q3-review.pptx（12 页）\n  → 产出：可上台的 PPTX"],"document-polish":["✓ 完成 4 段协同修订\n  · 语气更正式 · 补全验收表述\n  · 删除空话 2 处\n  → 产出：可排版的定稿正文","✓ 已生成正式 Word\n  · 标题层级 / 表格 / 页脚页码\n  · policy-refund-v1.docx\n  → 产出：可对外发送的 .docx","✓ 已导出定稿 PDF\n  · 3 页 · 字体已嵌入\n  · policy-refund-v1.pdf\n  → 产出：可归档的 PDF"],"从草稿到正式文档":["✓ 完成 4 段协同修订\n  · 语气更正式 · 补全验收表述\n  · 删除空话 2 处\n  → 产出：可排版的定稿正文","✓ 已生成正式 Word\n  · 标题层级 / 表格 / 页脚页码\n  · policy-refund-v1.docx\n  → 产出：可对外发送的 .docx","✓ 已导出定稿 PDF\n  · 3 页 · 字体已嵌入\n  · policy-refund-v1.pdf\n  → 产出：可归档的 PDF"],"content-to-wechat":["✓ 初稿完成\n  · 引用 5 条 · 结构：痛点→方法→案例\n  → 产出：可配图的 Markdown 正文","✓ 封面已生成\n  · 风格：编辑向 · 主色：深蓝\n  · cover-wechat-01.png\n  → 产出：文章封面图","✓ 公众号 HTML 已就绪\n  · 代码高亮 / 引用块 / 图片位\n  → 产出：可粘贴发布的排版稿","✓ 已写入公众号草稿箱\n  · 状态：待群发\n  → 产出：可群发的公众号草稿"],"从选题到公众号发布":["✓ 初稿完成\n  · 引用 5 条 · 结构：痛点→方法→案例\n  → 产出：可配图的 Markdown 正文","✓ 封面已生成\n  · 风格：编辑向 · 主色：深蓝\n  · cover-wechat-01.png\n  → 产出：文章封面图","✓ 公众号 HTML 已就绪\n  · 代码高亮 / 引用块 / 图片位\n  → 产出：可粘贴发布的排版稿","✓ 已写入公众号草稿箱\n  · 状态：待群发\n  → 产出：可群发的公众号草稿"],"resume-to-offer":["✓ 基础简历排版完成\n  · 版式：经典单栏\n  · resume-base.pdf\n  → 产出：专业排版 PDF","✓ 已按 JD 重排重点\n  · 命中关键词：React / 系统设计\n  · 弱相关经历已压缩\n  → 产出：岗位定制版正文","✓ HTML 简历美化完成\n  · A4 · 隐私字段已处理\n  → 产出：精美 HTML 简历","✓ 去 AI 腔完成\n  · 删除套话 6 处 · 保留事实密度\n  → 产出：可投递的最终简历"],"从经历到定制简历":["✓ 基础简历排版完成\n  · 版式：经典单栏\n  · resume-base.pdf\n  → 产出：专业排版 PDF","✓ 已按 JD 重排重点\n  · 命中关键词：React / 系统设计\n  · 弱相关经历已压缩\n  → 产出：岗位定制版正文","✓ HTML 简历美化完成\n  · A4 · 隐私字段已处理\n  → 产出：精美 HTML 简历","✓ 去 AI 腔完成\n  · 删除套话 6 处 · 保留事实密度\n  → 产出：可投递的最终简历"],"react-feature-delivery":["✓ 规范检查通过\n  · 数据获取 / 包体积 / 渲染路径已对齐\n  → 产出：实现约束清单","✓ 组件结构重组完成\n  · 复合组件 3 个 · props 钻取已消除\n  → 产出：可扩展组件树","✓ 交互产物已构建\n  · 本地预览通过\n  → 产出：可点的功能原型","✓ E2E 全部通过\n  · 12 passed · 0 failed\n  → 产出：可合并的测试报告"],"从需求到 React 功能交付":["✓ 规范检查通过\n  · 数据获取 / 包体积 / 渲染路径已对齐\n  → 产出：实现约束清单","✓ 组件结构重组完成\n  · 复合组件 3 个 · props 钻取已消除\n  → 产出：可扩展组件树","✓ 交互产物已构建\n  · 本地预览通过\n  → 产出：可点的功能原型","✓ E2E 全部通过\n  · 12 passed · 0 failed\n  → 产出：可合并的测试报告"]};
   if (typeof window === 'undefined') return;
   var path = (location.pathname || '');
   if (path.indexOf('/workflow') === -1 && path.indexOf('/skills/lab') === -1) return;
@@ -62,8 +63,8 @@
 
   function esc(s) {
     return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+      .replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>')
+      .replace(/"/g, '"');
   }
 
   function formatDemo(demo) {
@@ -109,6 +110,19 @@
     var stepsRoot = document.getElementById('recipe-steps');
     if (!stepsRoot || !recipe) return;
     var steps = recipe.steps || [];
+    var key = recipe.id || recipe.title || '';
+    var fb = FALLBACK_DEMOS[key];
+    if (fb) {
+      steps = steps.map(function (s, i) {
+        if (s && !s.demo && fb[i]) {
+          var copy = {};
+          for (var k in s) copy[k] = s[k];
+          copy.demo = fb[i];
+          return copy;
+        }
+        return s;
+      });
+    }
     var hasDemo = steps.some(function (s) { return s && s.demo; });
     if (!hasDemo) return;
 
