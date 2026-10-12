@@ -382,6 +382,7 @@ if (section === 'home' || section === 'models') {
       const verdict = verdictOf(skill);
       const owner = repoSlug(skill) || '来源仓库待补充';
       const icon = iconFor(skill);
+      const letters = String(skill.name || '').replace(/[^a-z0-9]/gi,'').slice(0,2).toUpperCase() || 'SK';
       const topic = topics[page.dataset.skillCategory];
       const index = topic ? topic.picks.indexOf(skill.id) : -1;
       const featured = index >= 0 && index < 3 && (document.getElementById('skill-sort')?.value || 'recommended') === 'recommended';
@@ -392,7 +393,7 @@ if (section === 'home' || section === 'models') {
       const commentary = notes ? '<div class="skill-editorial"><strong>FreeLLM 重点解析</strong><p>'+notes.map(note => copy(note)).join('<br>')+'</p><small>证据级别：'+copy(testLabel)+'</small></div>' : '';
       const rank = featured ? '<span class="skill-pick-label">TOP 0'+(index+1)+' · 精选分析</span>' : '';
       const active = panelOpen && selectedId === skill.id;
-      return '<article class="skill-card showcase-card'+(featured?' skill-featured':'')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
+      return '<article class="skill-card showcase-card'+(featured?' skill-featured':'')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"><small class="skill-icon-letters">'+copy(letters)+'</small></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
     };
     const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     const updatePanel = skill => {
@@ -423,13 +424,13 @@ if (section === 'home' || section === 'models') {
     };
     const heading = page.querySelector('.skills-directory-heading > h2');
     const headingSection = page.querySelector('.skills-directory-heading');
-    const topicMenu = document.createElement('nav');
+    const topicMenu = page.querySelector('.skills-topic-nav') || document.createElement('nav');
     topicMenu.className = 'skills-topic-nav';
     topicMenu.setAttribute('aria-label', 'Skills 分类二级导航');
     topicMenu.innerHTML = '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多两排 · 前三重点分析</span></div><div class="skills-topic-links">' +
       topicOrder.map(id => '<a data-skill-topic="'+id+'" href="/skills/?category='+encodeURIComponent(id)+'">'+copy(topics[id].title)+' <small>'+skills.filter(s=>s.category===id).length+'</small></a>').join('') +
       '<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>'+skills.length+'</small></a></div>';
-    headingSection.before(topicMenu);
+    if (!topicMenu.parentNode) headingSection.before(topicMenu);
     const topicDescription = document.createElement('p');
     topicDescription.className = 'skills-topic-description';
     heading?.after(topicDescription);
