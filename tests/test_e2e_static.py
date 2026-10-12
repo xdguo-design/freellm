@@ -923,10 +923,35 @@ class BrowserPageTests(unittest.TestCase):
                 self.assertFalse(page.locator("html").get_attribute("data-theme") == "dark")
                 page.close()
 
+    def test_skills_curated_topics_and_icon_diversity(self):
+        page = self.new_page()
+        page.set_viewport_size({"width": 1366, "height": 900})
+        page.goto(f"{self.site.url}/skills/?category=development")
+        page.wait_for_selector('.skills-topic-nav [data-skill-topic="development"]')
+        page.wait_for_selector('#skill-grid .skill-card')
+        self.assertEqual(page.locator('.skills-topic-nav a[data-skill-topic]').count(), 13)
+        self.assertEqual(page.locator('#skill-grid .skill-card').count(), 6)
+        self.assertEqual(page.locator('#skill-grid .skill-featured').count(), 3)
+        self.assertEqual(page.locator('#skill-grid .skill-editorial').count(), 3)
+        icons = page.locator('#skill-grid .skill-card-icon').evaluate_all(
+            'items => items.map(item => item.dataset.icon)'
+        )
+        self.assertGreater(len(set(icons)), 1)
+        self.assertNotIn('default', icons)
+        page.click('.skills-topic-nav [data-skill-topic="documents"]')
+        self.assertEqual(page.locator('#skill-grid .skill-card').count(), 6)
+        self.assertEqual(page.locator('#skill-grid .skill-featured').count(), 3)
+        self.assertEqual(page.locator('.skills-topic-nav [aria-current="page"]').count(), 1)
+        self.assertIn('category=documents', page.url)
+        page.click('.skills-topic-nav [data-skill-topic="email-office"]')
+        self.assertEqual(page.locator('#skill-grid .skill-card').count(), 1)
+        self.assertEqual(page.locator('#skill-grid .skill-featured').count(), 1)
+        page.close()
+
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
         page = self.new_page()
         page.set_viewport_size({"width": 720, "height": 700})
-        page.goto(f"{self.site.url}/skills/")
+        page.goto(f"{self.site.url}/skills/?category=documents")
         page.click('.skill-details[data-skill-id="anthropics-docx"]')
         page.wait_for_selector("#skill-dialog[open]")
         self.assertTrue(page.locator("#dialog-skill-test").is_visible())
