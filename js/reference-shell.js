@@ -294,7 +294,7 @@ if (section === 'home' || section === 'models') {
       'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt']},
       'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design']},
       'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html']},
-      'seo-content': {title:'新媒体与内容运营',intro:'区分公众号发布、小红书图文、封面制作与增长策略，不承诺未经验证的流量收益。',picks:['imraywang-wewrite','jimliu-baoyu-post-to-wechat','jimliu-baoyu-xhs-images','aiworkskills-wechat-article-main','jimliu-baoyu-cover-image','jimliu-baoyu-post-to-x']},
+      'seo-content': {title:'SEO · GEO 与内容增长',intro:'六个 Marketing Skills 拆解抓取、AI 搜索、程序化页面、站点架构、竞品和结构化数据；均已核验源码但尚未实测，公众号技能可在完整资料库查找。',picks:['coreyhaines31-seo-audit','coreyhaines31-ai-seo','coreyhaines31-programmatic-seo','coreyhaines31-site-architecture','coreyhaines31-competitors','coreyhaines31-schema']},
       'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
       'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
       'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
@@ -302,6 +302,9 @@ if (section === 'home' || section === 'models') {
     };
     // These are editorial judgments tied to source descriptions and FreeLLM test notes, not user ratings.
     const insights = {
+      'coreyhaines31-seo-audit':['特点：覆盖 robots、sitemap、索引、canonical 和多语言信号。','适合：给 FreeLLM 建立可复核的技术 SEO 整改清单。','限制：只核验了上游原文，未完成本地或真实网站的运行验收。'],
+      'coreyhaines31-ai-seo':['特点：检查 AI 抓取、答案块与品牌引用线索。','适合：GEO / AEO 可见性初筛和内容结构优化。','限制：不保证被 AI 搜索引用或推荐；本站尚未实测效果。'],
+      'coreyhaines31-programmatic-seo':['特点：以可验证数据设计规模化页面与索引门禁。','适合：模型、供应商、免费额度等差异化资源页。','限制：批量模板可能造成薄内容，需事实来源和人工抽检。'],
       'dietrichgebert-ponytail':["特点：编码前检查已有实现，减少不必要依赖、抽象和代码。","适合：小功能实现、重构与代码审查。","限制：高保真和复杂需求必须先列明验收范围；节省比例未经本站实测。"],
       'pbakaus-impeccable':["特点：将界面视觉规范、响应式与常见设计反模式汇成一套流程。","适合：网站改版、设计 QA 与前端交付。","限制：部分命令依赖额外工具；本站尚未运行浏览器验收。"],
       'tt-a1i-archify':["特点：从代码库或业务流程生成可分享、可交互的图表。","适合：系统架构、产品领域关系与 Agent 流程解释。","限制：图中结构须回查原始项目，不能代替事实核验。"],
@@ -353,14 +356,18 @@ if (section === 'home' || section === 'models') {
       if (/doc|pdf|paper|write|human|content|article|file|invoice|office/.test(n)) return 'paper';
       return ({'development':'code','planning-office':'summary','documents':'paper','data-office':'data','presentations':'ppt','product-design':'image','writing':'paper','seo-content':'marketing','resume':'summary','file-office':'paper','ecommerce':'marketing','email-office':'summary'})[skill.category] || 'summary';
     };
-    const urlTopic = new URLSearchParams(window.location.search).get('category');
-    const initialTopic = topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development';
+    const searchParams = new URLSearchParams(window.location.search);
+    const deepLinkedSkill = skills.find(item => item.id === searchParams.get('skill'));
+    const urlTopic = searchParams.get('category');
+    const initialTopic = deepLinkedSkill && !topicOrder.includes(urlTopic) && urlTopic !== 'all'
+      ? deepLinkedSkill.category
+      : (topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development');
     page.dataset.skillCategory = initialTopic;
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
     const workspace = page.querySelector('.skills-workspace');
     const detailPanel = document.getElementById('selected-skill-panel');
-    let selectedId = skills[0]?.id || '';
-    let panelOpen = false;
+    let selectedId = deepLinkedSkill?.id || skills[0]?.id || '';
+    let panelOpen = Boolean(deepLinkedSkill);
     let view = 'grid';
     let showAllSkills = false;
     const filtered = () => {
@@ -371,6 +378,7 @@ if (section === 'home' || section === 'models') {
       const chosen = category === 'all' ? skills : (isSearch
         ? skills.filter(skill => skill.category === category)
         : topics[category].picks.map(id => skills.find(skill => skill.id === id)).filter(Boolean));
+      if (deepLinkedSkill && deepLinkedSkill.category === category && !chosen.some(skill => skill.id === deepLinkedSkill.id)) chosen.unshift(deepLinkedSkill);
       let list = chosen.filter(skill => {
         const values = [skill.name,skill.description,skill.description_zh,skill.githubUrl,...(skill.compatibility || [])].join(' ').toLowerCase();
         return (status === 'all' || status === skill.status) && (!query || values.includes(query));
@@ -447,6 +455,7 @@ if (section === 'home' || section === 'models') {
       if (addHistory) {
         const url = new URL(window.location.href);
         url.searchParams.set('category', next);
+        url.searchParams.delete('skill');
         history.pushState(null, '', url.pathname + url.search + url.hash);
       }
       render();
@@ -554,6 +563,18 @@ if (section === 'home' || section === 'models') {
     document.querySelector('[data-close-skills-intro]')?.addEventListener('click',()=>document.getElementById('skills-intro-notice')?.close());
     // Topic reset is handled by the clear button above.
     const accountNotice=document.createElement('div'); accountNotice.id='skills-account-notice'; accountNotice.className='skills-toast'; accountNotice.setAttribute('role','status'); accountNotice.hidden=true; page.append(accountNotice);
+    if (panelOpen) { workspace?.classList.add('has-detail'); detailPanel?.classList.remove('is-collapsed'); }
+    document.querySelector('[data-growth-copy]')?.addEventListener('click', async event => {
+      const button = event.currentTarget;
+      const command = document.getElementById('fl-growth-install-code')?.textContent?.trim();
+      if (!command) return;
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = '已复制 ✓';
+      } catch {
+        button.textContent = '请手动复制';
+      }
+    });
     render();
   };
   window.FreeLLMReferenceShell = { mount: boot };

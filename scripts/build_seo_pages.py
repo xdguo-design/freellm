@@ -5678,6 +5678,54 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
       <div class="skills-directory-wrap">{curated_topic_nav}'''
     page = page.replace(filter_markup, workspace_open + filter_markup, 1)
 
+    # SEO collection is editorially distinct from the general directory.
+    # Only source-verified items are promoted; an installation test is never implied.
+    marketing_items = (
+        ("seo-audit", "01", "技术体检", "诊断索引、抓取、速度与站内 SEO 问题。", "先排查问题"),
+        ("ai-seo", "02", "AI 搜索可见性", "审查 AI 抓取、品牌实体与引用条件。", "GEO · AEO"),
+        ("programmatic-seo", "03", "程序化 SEO", "用真实模型与额度数据规划差异化页面。", "数据驱动增长"),
+        ("site-architecture", "04", "站点架构", "梳理 URL 层级、导航、内链与面包屑。", "信息架构"),
+        ("competitors", "05", "竞品对比", "制作有证据的 VS 与替代方案页面。", "对比与定位"),
+        ("schema", "06", "结构化数据", "验证 JSON-LD 与页面事实、搜索展示资格。", "Schema.org"),
+    )
+    marketing_source = {skill["id"]: skill for skill in skills if str(skill.get("id", "")).startswith("coreyhaines31-")}
+    marketing_html = ""
+    if all("coreyhaines31-" + key in marketing_source for key, *_ in marketing_items) and "coreyhaines31-product-marketing" in marketing_source:
+        marketing_cards = "".join(
+            '<a class="fl-growth-card" href="/skills/?category=seo-content&amp;skill=coreyhaines31-' + _esc(key) + '#skill-grid"'
+            ' aria-label="查看 ' + _esc(key) + ' 的来源与核验详情">'
+            '<div class="fl-growth-card-top"><span class="fl-growth-card-index">' + _esc(number) + '</span>'
+            '<span class="fl-growth-card-kind">' + _esc(kind) + '</span></div>'
+            '<h3>' + _esc(key) + '</h3><p>' + _esc(description) + '</p>'
+            '<div class="fl-growth-card-bottom"><span>' + _esc(task) + '</span><b aria-hidden="true">↗</b></div></a>'
+            for key, number, kind, description, task in marketing_items
+        )
+        marketing_html = '''<section class="fl-growth-kit" aria-labelledby="fl-growth-title">
+          <div class="fl-growth-top">
+            <div class="fl-growth-lead">
+              <p class="fl-growth-eyebrow"><span class="fl-growth-dot" aria-hidden="true"></span> NEW COLLECTION <span class="fl-growth-separator">/</span> SEO · GEO · GROWTH</p>
+              <h2 id="fl-growth-title">让增长有方法，<span>让数据有证据。</span></h2>
+              <p class="fl-growth-intro">从技术 SEO、程序化页面到 AI 搜索可见性，精选 6 个增长工作流。每个 Skill 都可以查看原版定义；来源已核对，真实运行效果仍需测试。</p>
+              <div class="fl-growth-trust"><span>✓ MIT 开源</span><span>✓ Claude Code / Codex</span><span>◷ 未做效果实测</span></div>
+            </div>
+            <div class="fl-growth-command">
+              <span class="fl-growth-command-label">INSTALL / 一次安装</span>
+              <code id="fl-growth-install-code">npx skills add coreyhaines31/marketingskills</code>
+              <button type="button" data-growth-copy aria-label="复制 Marketing Skills 安装命令">复制命令 <span aria-hidden="true">↗</span></button>
+              <small>上游：Corey Haines / Marketing Skills · 许可证 MIT</small>
+            </div>
+          </div>
+          <div class="fl-growth-grid">''' + marketing_cards + '''</div>
+          <footer class="fl-growth-foot">
+            <div><span class="fl-growth-foundation">FOUNDATION / 基础能力</span><strong>product-marketing</strong><p>先明确网站的目标用户、定位与事实边界，再执行六种增长任务。</p></div>
+            <a class="fl-growth-foundation-link" href="/skills/?category=planning-office&amp;skill=coreyhaines31-product-marketing#skill-grid">查看基础 Skill <span aria-hidden="true">↗</span></a>
+            <a class="fl-growth-source" href="https://github.com/coreyhaines31/marketingskills" target="_blank" rel="nofollow noopener">查看上游仓库 ↗</a>
+          </footer>
+        </section>'''
+    if marketing_html:
+        page = page.replace('<div class="skills-directory-wrap">', marketing_html + '<div class="skills-directory-wrap">', 1)
+
+
     intro_dialog = '''<dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
       <h2 id="skills-intro-title">FreeLLM Skills</h2>
       <p>探索社区创建的 AI 技能，查看来源、安装方式和验证记录，再将适合的 Skill 用于你的工作流。</p>
