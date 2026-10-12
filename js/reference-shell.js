@@ -287,14 +287,14 @@ if (section === 'home' || section === 'models') {
     // FLSKILLS-CURATION-20261012: curated two-row category directory, independent deep links.
     const topicOrder = ['development','planning-office','documents','data-office','presentations','product-design','writing','seo-content','resume','file-office','ecommerce','email-office'];
     const topics = {
-      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['vercel-labs-react-best-practices','anthropics-skill-creator','mattpocock-diagnosing-bugs','alibaba-open-code-review','anthropics-mcp-builder','cloudflare-security-audit']},
+      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['dietrichgebert-ponytail','mattpocock-diagnosing-bugs','vercel-labs-react-best-practices','anthropics-skill-creator','alibaba-open-code-review','anthropics-mcp-builder']},
       'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans']},
       'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form']},
       'data-office': {title:'表格与数据',intro:'区分能产出工作簿的验证记录，与尚需 Office CLI 的数据仪表盘链路。',picks:['anthropics-xlsx','iofficeai-officecli-data-dashboard','iofficeai-officecli-xlsx']},
       'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt']},
-      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['anthropics-frontend-design','vercel-labs-web-design-guidelines','anthropics-canvas-design','anthropics-brand-guidelines','anthropics-theme-factory','anthropics-algorithmic-art']},
-      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['blader-humanizer','composiohq-content-research-writer','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html','jimliu-baoyu-infographic','jimliu-baoyu-url-to-markdown']},
-      'seo-content': {title:'新媒体与内容运营',intro:'区分公众号发布、小红书图文、封面制作与增长策略，不承诺未经验证的流量收益。',picks:['jimliu-baoyu-post-to-wechat','jimliu-baoyu-xhs-images','jimliu-baoyu-cover-image','composiohq-twitter-algorithm-optimizer','jimliu-baoyu-post-to-x','michalparkola-article-extractor']},
+      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design']},
+      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html']},
+      'seo-content': {title:'新媒体与内容运营',intro:'区分公众号发布、小红书图文、封面制作与增长策略，不承诺未经验证的流量收益。',picks:['imraywang-wewrite','jimliu-baoyu-post-to-wechat','jimliu-baoyu-xhs-images','aiworkskills-wechat-article-main','jimliu-baoyu-cover-image','jimliu-baoyu-post-to-x']},
       'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
       'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
       'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
@@ -302,6 +302,12 @@ if (section === 'home' || section === 'models') {
     };
     // These are editorial judgments tied to source descriptions and FreeLLM test notes, not user ratings.
     const insights = {
+      'dietrichgebert-ponytail':["特点：编码前检查已有实现，减少不必要依赖、抽象和代码。","适合：小功能实现、重构与代码审查。","限制：高保真和复杂需求必须先列明验收范围；节省比例未经本站实测。"],
+      'pbakaus-impeccable':["特点：将界面视觉规范、响应式与常见设计反模式汇成一套流程。","适合：网站改版、设计 QA 与前端交付。","限制：部分命令依赖额外工具；本站尚未运行浏览器验收。"],
+      'tt-a1i-archify':["特点：从代码库或业务流程生成可分享、可交互的图表。","适合：系统架构、产品领域关系与 Agent 流程解释。","限制：图中结构须回查原始项目，不能代替事实核验。"],
+      'hyacehila-humanizer-zh-next':["特点：通用中文润色加商务、学术写作专用参考。","适合：已有稿件审稿、去模板化和正式文本语气调整。","限制：不识别作者身份、不保证通过任何 AI 检测；须人工审阅。"],
+      'imraywang-wewrite':["特点：先查来源再写稿，审稿后可单独加配图与排版。","适合：公众号定期更新和编辑团队。","限制：发布需额外配置并授权；本站未做真实账号验收。"],
+
       'vercel-labs-react-best-practices':['特点：按优先级检查 React/Next.js 的请求瀑布、渲染与打包问题。','适合：实际前端性能优化与代码审查。','限制：任务级验证，需结合框架版本及真实性能测量。'],
       'anthropics-skill-creator':['特点：覆盖 Skill 触发条件、迭代和基准检查。','适合：创建可复用 Agent 技能库。','限制：完整评测脚本链路在当前沙箱未打通。'],
       'mattpocock-diagnosing-bugs':['特点：先建立复现反馈，再逐个验证原因。','适合：疑难 Bug 和性能回退。','限制：任务级检查通过不等于任何仓库自动修复成功。'],
@@ -339,10 +345,10 @@ if (section === 'home' || section === 'models') {
       const n = String(skill.name || '').toLowerCase();
       if (/ppt|slide|deck|presentation|morph/.test(n)) return 'ppt';
       if (/xlsx|excel|dashboard|data|spreadsheet/.test(n)) return 'data';
-      if (/image|art|canvas|visual|brand|theme|design|infographic|cover|xhs/.test(n)) return 'image';
+      if (/image|art|canvas|visual|brand|theme|design|impeccable|archify|cad|infographic|cover|xhs/.test(n)) return 'image';
       if (/wechat|twitter|post-to|seo|ads|lead|marketing/.test(n)) return 'marketing';
       if (/autom|agent|mcp|skill-creator|worktree|executing|parallel/.test(n)) return 'automation';
-      if (/react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
+      if (/ponytail|react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
       if (/resume|meeting|plan|brainstorm|verify|verification|research|extract|transcript/.test(n)) return 'summary';
       if (/doc|pdf|paper|write|human|content|article|file|invoice|office/.test(n)) return 'paper';
       return ({'development':'code','planning-office':'summary','documents':'paper','data-office':'data','presentations':'ppt','product-design':'image','writing':'paper','seo-content':'marketing','resume':'summary','file-office':'paper','ecommerce':'marketing','email-office':'summary'})[skill.category] || 'summary';
