@@ -37,42 +37,47 @@
 3. 公众号文章仅用于发现线索，不凭二手营销稿抄写功能和数据。
 
 
+
 ---
 
-## WorkBuddy 截图二次收录（2026-10-12：88 → 93）
+## WorkBuddy 截图二次收录（2026-10-12：88 → 91）
 
-**结论**：新增 5 个已定位源码的 Skill 记录；其中 3 个完成源码路径与许可证核对并缓存原文，2 个仅链接上游。全部 **未进行 CLI 安装或端到端运行测试**；不得在站点声称运行通过。状态 `verified` 仅代表 GitHub 上游源文件核验，`candidate` 代表仍有许可或使用条件待核实。
+**最终收录门禁**：`data/skills.json` 正式目录从 88 条增至 **91 条**；另外 2 个仓库只在本审计文档列为候选，没有计入正式发布目录。所有新增记录仅完成上游 SKILL.md 来源核验，测试级别均为 `unknown`（**未安装、未实测**），不计入历史免费模型通过率。
 
-| 新记录 ID / 名称 | 类别 | 可信状态 | 上游 SKILL.md / 许可证 | 是否镜像原文 |
-| --- | --- | --- | --- | --- |
-| `vercel-labs-find-skills` / find-skills | development | 来源核验（未实测） | [源码](https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md) · MIT | 是 |
-| `vercel-labs-agent-browser` / agent-browser | development | 来源核验（未实测） | [源码](https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md) · Apache-2.0 | 是 |
-| `op7418-guizang-ppt-skill` / guizang-ppt-skill | presentations | 社区候选（未实测） | [源码](https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md) · AGPL-3.0 | 否，链接原文 |
-| `steipete-summarize` / summarize | seo-content | 来源核验（未实测） | [源码](https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md) · MIT | 是 |
-| `infometa-aihot` / aihot | seo-content | 社区候选（未实测） | [源码](https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md) · LICENSE 未查明 | 否，链接原文 |
+### 正式收录（3 项）
 
-### 其余截图项目的处理
+| Skill | 分类 | 源文件 | 许可与缓存 | 统计口径 |
+|---|---|---|---|---|
+| **find-skills** | development | [vercel-labs/skills](https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md) | MIT；本地原文镜像 | GitHub 33.9k Stars（网页四舍五入快照） |
+| **agent-browser** | development | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md) | Apache-2.0；本地原文镜像 | GitHub 43.6k Stars（网页四舍五入快照） |
+| **summarize** | seo-content | [steipete/summarize](https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md) | MIT；本地原文镜像 | GitHub 6.7k Stars（网页四舍五入快照） |
 
-- `PPT Generator` 和 `PPT 演示文稿` 均高度吻合 [ggq-eng/pptx-generator](https://github.com/ggq-eng/pptx-generator/blob/main/SKILL.md) 的技术描述和显示名；先按**疑似同一技能/功能重叠**去重，不直接追加两个条目。现有 presentations 分类已覆盖 PPTX 生成，后续统一做质量对比，胜出者再收录。
-- `热点话题追踪` 暂未定位到能明确对应截图的独立 SKILL.md；暂缓收录，不凭截图反推源仓库。
-- 先前已收录的 `ponytail`（马尾辫）保留原记录，不重复计数。
+上述 Star 是来源仓库**整体**的约数，按公开 GitHub 页面显示的近似值记录（例如 33.9k 对应整数 33900）。不是技能评分，也不是精确到个位的 GitHub API 计数；元数据中已附 `starsPrecision`、`starsSource` 与 `capturedAt`。
 
-### 可复核的站点静态检查
+### 候选清单（暂未进公开目录）
 
-本轮对 `dev` 的 `data/skills.json`、`data/skills-i18n.json`、`data/skill-tests.json`、`data/skill-styles.json` 和 `skills/index.html` 做了交叉核查：
+| 条目 | 源文件 | 暂缓原因 |
+|---|---|---|
+| guizang-ppt-skill | [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md) | 上游 AGPL-3.0；需确定镜像/再发布许可义务并完成 HTML 演示功能对比测试 |
+| AIHOT | [infometa/workbuddyskills](https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md) | 市场归档有二次分发版权提醒，尚无明确再分发许可；第三方资讯 API 的使用条件与准确性待核验 |
 
-- 原始数据、页面内嵌数据、静态卡片、Schema.org 列表均为 **93**；ID 均不重复；旧 88 项的中文描述、评价、统计和既有测试字段已完整保留。
-- 二级分类计数：development **22**、presentations **9**、seo-content **11**；总计 **32 个来源仓库**，GitHub Star 未采集者不显示伪数值。
-- 5 个新条目的 FreeLLM 测试等级都是 `unknown`；网页显示“未实测”，不计入此前免费模型通过率的分母。
-- 检查了 5 段页面内联 JavaScript 的**语法可编译性**、URL 分类过滤初始化、上游原文外链、3 份镜像文档与许可标签。**这不是浏览器运行截图、安装测试或生产 CI 成功证明。**
-- `dev` 与 `main` 起始已分叉；为避免覆盖并行变更，**本轮只写 `dev`，不合并 `main`**。
+- 截图中的 **PPT Generator** 与 **PPT 演示文稿** 可能共同指向 [ggq-eng/pptx-generator](https://github.com/ggq-eng/pptx-generator/blob/main/SKILL.md) 的描述名与功能定义。不把一个技能拆成两个，且目前已有多个可编辑 PPTX 生成工具，待同一基准任务对比后择优。
+- “热点话题追踪”尚未确认独立 SKILL.md 来源，暂缓；`ponytail` 已在 88 项基线中，未重复添加。
 
-### 后续运行验收任务
+### 一致性与测试状态
 
-1. **find-skills**：真实执行 `npx skills find <关键词>`，比对搜索结果与官方路径；检查无请求真实密钥。
-2. **agent-browser**：在隔离浏览器中完成打开测试页、读取页面快照、点击和截图，保存失败/成功证据；禁止用生产 Cookie。
-3. **guizang-ppt-skill**：生成单文件 HTML，检查横屏/移动端、演讲者模式与导出条件；确认 AGPL-3.0 下的转载规范。
-4. **summarize**：检查 `summarize --version` 和 `summarize status`；用受控网页和本地 PDF 执行摘要，声明模型费用/依赖。
-5. **AIHOT**：先查服务条款、公开接口响应和限流，再测试中英文新闻混杂、来源归属和日期；不能把聚合摘要当成第一手事实。
+- 正式目录 **91** 条：development **22**、presentations **8**、seo-content **10**，来源仓库 **30** 家；中文显示名、来源、测试状态和缓存原文数据均有记录。
+- 3 条新增的 `freeLLMTest.testLevel = "unknown"`、`status = "未实测"`、`score = null`、`testedAt = ""`；这是来源审核，**不是性能/安装/端到端通过证明**。
+- 数据页曾做 93 条候选静态自检，后根据远端 CI 现有正式目录门禁（每项需缓存原文与来源 Star）纠偏为 91 正式项，2 条保留候选。旧 CI 执行中出现两项失败：缺少未授权候选的缓存原文，以及新来源 Star 字段为空；已按原门禁调整目录，不修改或削弱测试断言。
+- `scripts/build_seo_pages.py` 补充技能分类深链参数读取及已核验状态样式，以免静态页面重新生成时丢失修复。静态 JSON/JS 自检通过不能替代完整浏览器测试与远端 CI 成功。
+- 起始 `main`、`dev` 已分叉；本次**仅在 `dev` 工作，未更新 `main`**。
 
-正式发布门禁：CI/脚本复测通过、浏览器关键路径验收、与 `main` 先同步并解决分叉后再发布。
+### 后续验收计划
+
+1. find-skills：隔离环境下真实执行 `npx skills find`，检查结果、路径、安装提示与失败场景。
+2. agent-browser：隔离浏览器中执行 `agent-browser install` 和受控测试页操作，保存截图、页面快照与执行日志，不使用生产登录状态。
+3. summarize：先检查 `summarize status`，再用本地文件/已授权测试网址执行摘要，披露模型连接依赖与费用。
+4. guizang-ppt-skill：核验 AGPL-3.0 再分发义务及演示输出与现有 PPT 生成 Skill 的差异。
+5. AIHOT：核验来源许可、API 服务条款、接口限流及资讯溯源，不直接转发聚合内容作为官方事实。
+
+发布门禁：远端 CI 全绿、Skill 目录浏览器交互检查和 `main` 分叉处理完成后，再决定是否发布。
