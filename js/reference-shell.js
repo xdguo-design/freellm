@@ -346,17 +346,67 @@ if (section === 'home' || section === 'models') {
       'composiohq-competitive-ads-extractor':['特点：从公开广告素材归纳竞品表达和创意。','适合：市场定位与投放内容研究。','限制：广告库可访问性和数据新鲜度未实测。'],
       'anthropics-internal-comms':['特点：提供状态报告、组织公告与领导简报结构。','适合：团队内部信息同步。','限制：与普通写作提示存在重叠，需人工核对事实。']
     };
-    const iconFor = skill => {
-      const n = String(skill.name || '').toLowerCase();
-      if (/ppt|slide|deck|presentation|morph/.test(n)) return 'ppt';
-      if (/xlsx|excel|dashboard|data|spreadsheet/.test(n)) return 'data';
-      if (/image|art|canvas|visual|brand|theme|design|impeccable|archify|cad|infographic|cover|xhs/.test(n)) return 'image';
-      if (/wechat|twitter|post-to|seo|ads|lead|marketing/.test(n)) return 'marketing';
-      if (/autom|agent|mcp|skill-creator|worktree|executing|parallel/.test(n)) return 'automation';
-      if (/ponytail|react|code|debug|testing|test-driven|security|webapp|frontend|implement|vercel/.test(n)) return 'code';
-      if (/resume|meeting|plan|brainstorm|verify|verification|research|extract|transcript/.test(n)) return 'summary';
-      if (/doc|pdf|paper|write|human|content|article|file|invoice|office/.test(n)) return 'paper';
-      return ({'development':'code','planning-office':'summary','documents':'paper','data-office':'data','presentations':'ppt','product-design':'image','writing':'paper','seo-content':'marketing','resume':'summary','file-office':'paper','ecommerce':'marketing','email-office':'summary'})[skill.category] || 'summary';
+    const iconPaths = {
+      feather:'<path d="M20 4c-4-3-10 1-12 7l-1 6 6-1C19 14 23 8 20 4ZM4 21l12-12M7 17h6"/>',
+      bug:'<rect x="7" y="8" width="10" height="12" rx="5"/><path d="M9 8V5h6v3M12 9v11M3 11h4m10 0h4M3 16h4m10 0h4M5 4l3 4m8 0 3-4"/>',
+      atom:'<circle cx="12" cy="12" r="1" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+      sparkles:'<path d="m4 20 11-11 3 3L7 23ZM15 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1ZM6 3v5M3.5 5.5h5M21 15v5m-2.5-2.5h5"/>',
+      review:'<path d="M9 4H6v17h14V4h-3M9 2h8v4H9ZM9 11l2 2 4-4M9 17h7"/>',
+      plug:'<path d="M8 2v5m8-5v5M6 7h12v3a6 6 0 0 1-12 0ZM12 16v6M3 10h3m12 0h3"/>',
+      shield:'<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6ZM8 12l3 3 5-6"/>',
+      branch:'<circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M6 7v10m12-10v2c0 4-12 2-12 6"/>',
+      rocket:'<path d="M13 3c4-1 8-1 8-1s0 4-1 8l-6 6-6-6ZM8 10H4l-2 6h6m6 0v4l-6 2v-6M6 18l-3 3"/><circle cx="16" cy="7" r="2"/>',
+      layers:'<path d="m12 3 10 5-10 5L2 8ZM2 12l10 5 10-5M2 16l10 5 10-5"/>',
+      browser:'<rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 8h20M6 5.5h1m3 0h1M8 12l-3 3 3 3m8-6 3 3-3 3"/>',
+      flask:'<path d="M9 3h6M10 3v7l-6 9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l-6-9V3M7 15h10"/>',
+      check:'<circle cx="12" cy="12" r="9"/><path d="m7 12 3 3 7-7"/>',
+      bulb:'<path d="M8 15a7 7 0 1 1 8 0l-1 3H9ZM9 21h6M12 6v5m-2-3 2 3 2-3"/>',
+      play:'<circle cx="12" cy="12" r="9"/><path d="m10 7 7 5-7 5Z"/>',
+      users:'<circle cx="9" cy="7" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M17 4a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2"/>',
+      pen:'<path d="m4 20 4-.8L20 7a2.8 2.8 0 0 0-4-4L4 15ZM14 5l5 5M4 20h16"/>',
+      pdf:'<path d="M5 2h9l5 5v15H5zM14 2v6h5M8 17h2a2 2 0 0 0 0-4H8v7m7-7h2v7h-2a3 3 0 0 1 0-7"/>',
+      form:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',
+      book:'<path d="M3 5a3 3 0 0 1 3-3h14v18H6a3 3 0 0 0-3 2ZM3 5v15a3 3 0 0 1 3-3h14M8 6h7"/>',
+      chart:'<path d="M3 3v18h18M7 14l4-4 3 3 6-7M16 6h4v4"/>',
+      calculator:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8v4H8Zm0 8h1m3 0h1m3 0h1m-9 4h1m3 0h1m3 0h1"/>',
+      trophy:'<path d="M8 21h8m-4-4v4M7 3h10v6a5 5 0 0 1-10 0ZM7 6H3v2a5 5 0 0 0 5 5m9-7h4v2a5 5 0 0 1-5 5"/>',
+      diamond:'<path d="m12 2 9 8-9 12-9-12Zm-9 8h18M8 10l4 12 4-12M8 10l4-8 4 8"/>',
+      building:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+      brush:'<path d="m14 4 6 6M3 21c4 0 6-2 6-5l10-10a2.8 2.8 0 0 0-4-4L5 12c-3 0-4 5-2 9Z"/>',
+      leaf:'<path d="M20 4C9 3 4 8 4 15a5 5 0 0 0 5 5c7 0 12-5 11-16ZM3 22l11-11"/>',
+      search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M8 10h5m-2.5-2.5v5"/>',
+      grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+      tree:'<path d="M12 22V8m0 5-5-4m5 1 5-4M12 3 9 7h6zM7 9l-3 4h6zm10-3-3 4h6z"/>',
+      code:'<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 14"/>',
+      target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+      briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12h18m-11 0v3h4v-3"/>',
+      folder:'<path d="M3 5h7l2 3h9v11H3zM3 8h18"/>',
+      envelope:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="m3 7 9 7 9-7"/>'
+    };
+    const iconGroups = {
+      development:['feather','bug','atom','shield','branch','rocket','layers','browser','flask','check','bulb','play','code','grid','plug'],
+      'planning-office':['users','target','branch','check','bulb','tree','briefcase','layers'],
+      documents:['pen','pdf','form','book','search','feather','check'],
+      'data-office':['chart','calculator','grid','atom'],
+      presentations:['trophy','play','layers','chart','diamond','brush'],
+      'product-design':['diamond','building','grid','layers','brush','target'],
+      writing:['leaf','feather','book','pen','search','users'],
+      'seo-content':['search','tree','grid','target','chart','code','branch'],
+      resume:['briefcase','pen','users'],
+      'file-office':['form','folder','search'],
+      ecommerce:['target','chart','briefcase','grid'],
+      'email-office':['envelope','pen','users']
+    };
+    const skillIcons = {
+      ponytail:'feather','diagnosing-bugs':'bug','vercel-react-best-practices':'atom',
+      'skill-creator':'sparkles','open-code-review':'review','mcp-builder':'plug'
+    };
+    const skillHash = skill => Array.from(String(skill.id || skill.name || '')).reduce((value,char)=>(value*31+char.charCodeAt(0))>>>0,0);
+    const iconFor = skill => skillIcons[skill.name] || (iconGroups[skill.category] || iconGroups.development)[skillHash(skill) % (iconGroups[skill.category] || iconGroups.development).length];
+    const iconSvg = skill => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+iconPaths[iconFor(skill)]+'</svg>';
+    const iconTone = skill => {
+      const hash = skillHash(skill);
+      return '--skill-hue:'+((hash%36000)/100)+';--skill-saturation:'+(60+(hash>>>8)%16)+'%;--skill-lightness:'+(36+(hash>>>16)%10)+'%';
     };
     const searchParams = new URLSearchParams(window.location.search);
     const deepLinkedSkill = skills.find(item => item.id === searchParams.get('skill'));
@@ -399,7 +449,6 @@ if (section === 'home' || section === 'models') {
       const verdict = verdictOf(skill);
       const owner = repoSlug(skill) || '来源仓库待补充';
       const icon = iconFor(skill);
-      const letters = String(skill.name || '').replace(/[^a-z0-9]/gi,'').slice(0,2).toUpperCase() || 'SK';
       const featured = !isArchive && visibleIndex < DETAIL_PICK_COUNT;
       const notes = featured ? insights[skill.id] : null;
       const evidence = skill.freeLLMTest || {};
@@ -414,7 +463,7 @@ if (section === 'home' || section === 'models') {
       const commentary = featured ? '<section class="skill-editorial" aria-label="TOP '+(visibleIndex+1)+' 详细介绍"><strong>精选深度解读</strong><dl class="skill-editorial-details">'+detailedPoints.slice(0,3).map((note,i)=>'<div><dt>'+detailLabels[i]+'</dt><dd>'+copy(String(note).replace(/^(特点|适合|限制)[:：]\s*/,''))+'</dd></div>').join('')+'</dl><small>核验证据：'+copy(testLabel)+' · 仓库 Star 非技能评分</small></section>' : '';
       const rank = featured ? '<span class="skill-pick-label">TOP 0'+(visibleIndex+1)+' · 详细介绍</span>' : '';
       const active = panelOpen && selectedId === skill.id;
-      return '<article class="skill-card showcase-card'+(featured?' skill-featured':' skill-compact')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" aria-hidden="true"><small class="skill-icon-letters">'+copy(letters)+'</small></span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" data-icon="avatar-'+icon+'" aria-hidden="true"></span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
+      return '<article class="skill-card showcase-card'+(featured?' skill-featured':' skill-compact')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" style="'+iconTone(skill)+'" aria-hidden="true">'+iconSvg(skill)+'</span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" aria-hidden="true">◈</span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
     };
     const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     const updatePanel = skill => {
@@ -427,7 +476,10 @@ if (section === 'home' || section === 'models') {
       setText('detail-description', description);
       const owner = document.getElementById('detail-owner');
       if (owner) owner.innerHTML = `<i aria-hidden="true">◆</i> ${copy(repoSlug(skill) || '来源仓库待补充')}`;
-      document.getElementById('detail-icon').dataset.icon = iconFor(skill);
+      const detailIcon = document.getElementById('detail-icon');
+      detailIcon.dataset.icon = iconFor(skill);
+      detailIcon.setAttribute('style', iconTone(skill));
+      detailIcon.innerHTML = iconSvg(skill);
       setText('detail-rating', verdictOf(skill) || '未实测');
       setText('detail-reviews', '免费模型任务实测');
       setText('detail-usage', formatStars(skill.repoStats?.stars) || '—');
