@@ -855,6 +855,7 @@ let offerIndex = {};
       event.preventDefault();
       clearCatalogSearch();
       setFilter(link.dataset.filter || 'all');
+      document.body.classList.add('catalog-expanded');
       document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     document.querySelectorAll('.catalog-app [data-filter]').forEach(el => el.addEventListener('click', () => {
@@ -864,6 +865,7 @@ let offerIndex = {};
     document.querySelectorAll('.prototype-tabs [data-filter]').forEach(el => el.addEventListener('click', () => {
       clearCatalogSearch();
       setFilter(el.dataset.filter);
+      document.body.classList.add('catalog-expanded');
       document.getElementById('catalog-offers').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
     document.querySelectorAll('.catalog-app [data-region-chip]').forEach(el => el.addEventListener('click', () => {

@@ -9,6 +9,60 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class HomeReleaseGate(unittest.TestCase):
+    def test_approved_homepage_has_exactly_the_four_selected_hot_articles(self):
+        homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        hotspot = re.search(r'<section class="prototype-hot"[^>]*>.*?</section>', homepage, re.S)
+        self.assertIsNotNone(hotspot, "the approved homepage hotspot section must be present")
+        links = re.findall(
+            r'<a\b[^>]*href="(https://mp\.weixin\.qq\.com/s/[^\"]+)"',
+            hotspot.group(0),
+        )
+        self.assertEqual(
+            links,
+            [
+                "https://mp.weixin.qq.com/s/O8U-o7VMSCOmlWWzCd_8VA",
+                "https://mp.weixin.qq.com/s/0wpj7RwonsMLfYKYcogVLA",
+                "https://mp.weixin.qq.com/s/ulrLlqKxFyw6sXyAodUo7g",
+                "https://mp.weixin.qq.com/s/N5xBX4TgvzlzBrkNTA7kRw",
+            ],
+        )
+        self.assertEqual(len(re.findall(r'<article class="prototype-hot-card(?: is-featured)?"', hotspot.group(0))), 4)
+        self.assertNotIn('id="project-feature-news"', homepage)
+
+    def test_four_hot_articles_keep_equal_desktop_grid_cells(self):
+        css = (ROOT / "css/home-prototype-exact.css").read_text(encoding="utf-8")
+        self.assertIn(".prototype-hot-grid{grid-template-columns:repeat(4,minmax(0,1fr))", css)
+        self.assertRegex(
+            css,
+            r"\.prototype-hot-card\.is-featured\{[^}]*grid-column:auto!important;grid-row:auto!important",
+        )
+        self.assertRegex(
+            css,
+            r"\.prototype-hot-card\.is-featured\{[^}]*height:236px!important",
+        )
+
+    def test_prototype_counters_match_the_canonical_scan_summary(self):
+        homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
+        summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
+        for key in ("newCount", "newModels", "offers", "models"):
+            self.assertRegex(
+                homepage,
+                rf'<strong data-scan-stat="{key}">{summary[key]}</strong>',
+            )
+        self.assertNotRegex(homepage, r"↑\s*\+\d+%")
+        self.assertIn('data-scan-date>', homepage)
+
+    def test_updates_page_renders_accessible_filters_and_sort_control(self):
+        updates = (ROOT / "logs/index.html").read_text(encoding="utf-8")
+        script = (ROOT / "js/reference-shell.js").read_text(encoding="utf-8")
+        for category in ("all", "model", "tool", "offer", "recovered", "offline"):
+            self.assertIn(f'data-history-filter="{category}"', updates)
+        self.assertIn('data-history-sort="desc"', updates)
+        self.assertIn('data-history-row', updates)
+        self.assertIn('aria-live="polite"', updates)
+        self.assertIn("data-history-filter", script)
+        self.assertIn("data-history-sort", script)
+
     def test_today_keeps_scanned_data_and_both_editorials(self):
         log = json.loads((ROOT / "data/daily-log/2026-10-09.json").read_text(encoding="utf-8"))
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
@@ -32,7 +86,7 @@ class HomeReleaseGate(unittest.TestCase):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         js = (ROOT / "js/homepage.js").read_text(encoding="utf-8")
         build = (ROOT / "scripts/build_static.py").read_text(encoding="utf-8")
-        self.assertNotIn('class="prototype-home"', homepage)
+        self.assertIn('class="prototype-home"', homepage)
         self.assertNotIn("今日新增资源12", homepage)
         self.assertNotIn("较上周 +35%", homepage)
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
@@ -63,7 +117,7 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertNotIn('media="print"', navigation.group(0))
         self.assertIn('data-fl-shared-navigation-styles="1"', navigation.group(0))
         self.assertIn('<aside id="fl-shared-site-menu"', homepage)
-        self.assertIn('home-prototype-critical.css?v=20261005a', homepage)
+        self.assertIn('home-prototype-critical.css?v=20261011-approved-homepage', homepage)
 
     def test_logs_keep_both_discoveries_visible(self):
         html = (ROOT / "logs/index.html").read_text(encoding="utf-8")

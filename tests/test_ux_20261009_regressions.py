@@ -86,7 +86,7 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn("loadMoreOffersButton.addEventListener('click'", script)
         self.assertIn("rows.sort((a,b) =>", script)
         self.assertIn("applyFilters();", script)
-        self.assertNotIn("prototype-home", html)
+        self.assertIn('class="prototype-home"', html)
         self.assertNotIn("今日新增资源12", html)
         self.assertNotIn("较上周 +35%", html)
         self.assertIn("最近发现 · 扫描快照", html)

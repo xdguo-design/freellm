@@ -178,8 +178,28 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banne
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-hero,
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.ref-feature-row,
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.today-latest{display:none!important}
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-home .prototype-footer{display:none!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-filter-bar,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.category-section,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.featured-section,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.offers-section,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.weekly-scan-summary,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.expiry-board,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.utility-grid,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-faq,
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.footer{display:none!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog-filter-bar{margin-top:28px}
+/* Keep the approved board as the initial view. Opening one of its category
+   controls reveals the full searchable directory underneath it. */
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.catalog-filter-bar,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.catalog-hero,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.category-section,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.featured-section,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.offers-section,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.weekly-scan-summary,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.expiry-board,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.utility-grid,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.catalog-faq,
+body[data-reference-style="v1"][data-fl-section="home"].catalog-expanded .prototype-home~.footer{display:revert!important}
 
 /* hero */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{
@@ -713,9 +733,9 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-resource-card
 }
 
 
-/* 2026-10-08: five-item "今日 AI 热点" visual strip.
-   Desktop keeps all five cards in one row; narrower screens stay a horizontal rail. */
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;align-items:stretch}
+/* 2026-10-11: four-item "今日 AI 热点" visual strip.
+   Desktop keeps all four cards in one row; narrower screens stay a horizontal rail. */
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;align-items:stretch}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{height:236px!important;min-height:236px!important;padding:0 8px 7px!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover{height:82px!important;margin:0 -8px 7px!important;background:#0b1f3d}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-cover svg{width:100%!important;height:100%!important;object-fit:cover!important}
@@ -725,6 +745,16 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-meta{font-siz
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags{gap:3px!important;margin-top:5px!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-tags span{font-size:8px!important;padding:2px 5px!important}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card>a{margin-top:auto!important;height:24px!important;min-height:24px!important;font-size:9px!important}
+/* The first item used to be a two-column editorial feature. The approved
+   four-link strip requires every article to occupy one equal grid cell. */
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured{grid-column:auto!important;grid-row:auto!important;min-height:236px!important;height:236px!important;padding:0 8px 7px!important;background:#fff!important;box-shadow:0 5px 16px rgba(28,55,91,.06)!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover{height:82px!important;margin:0 -8px 7px!important;padding:0 10px 9px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-hot-cover strong{font-size:14px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-heat{left:5px!important;top:5px!important;height:16px!important;padding:0 6px!important;font-size:8px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured h3{min-height:35px!important;margin:0 0 6px!important;font-size:12.5px!important;line-height:1.38!important;-webkit-line-clamp:2!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-meta{margin-bottom:6px!important;font-size:9px!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured>p{min-height:28px!important;font-size:9.5px!important;line-height:1.45!important;-webkit-line-clamp:2!important}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card.is-featured .prototype-tags{margin-top:5px!important}
 @media(max-width:1240px){
  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-grid{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity;padding:0 0 8px!important;gap:9px!important;overscroll-behavior-inline:contain}
  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hot-card{flex:0 0 230px!important;width:230px!important;scroll-snap-align:start}

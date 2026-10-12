@@ -41,11 +41,11 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertNotIn("Aggregator listing", feature.group(0))
 
 
-    def test_p1_6_retired_hotspot_strip_does_not_reintroduce_overlapping_badges(self):
+    def test_p1_6_approved_hotspot_has_four_cards_without_legacy_badges(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         self.assertIn('class="weekly-scan-cards"', home)
         self.assertIn('id="weekly-changes"', home)
-        self.assertNotIn('class="prototype-hot-grid"', home)
+        self.assertEqual(home.count('class="prototype-hot-card'), 4)
         self.assertNotIn('class="prototype-original-note"', home)
         self.assertNotIn('class="today-hotspot-card"', home)
 
