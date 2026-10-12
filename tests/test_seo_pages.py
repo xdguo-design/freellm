@@ -961,7 +961,7 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
 
     page = render_daily_log_page(logs, "https://freellm.top")
 
-    assert "今日更新" in page
+    assert "每日发现" in page
     assert "Alpha free API" in page
     assert "monthly_quota" in page
     assert "100 requests/day" in page
@@ -1003,9 +1003,9 @@ def test_daily_log_dashboard_renders_baseline_snapshot_and_health():
     assert "297" in page
     assert "25" in page
     assert "37" in page
-    assert "模型来源" in page and "<span>ok</span>" in page
-    assert "资源来源" in page and "<span>ok</span>" in page
-    assert "今日扫描完成" in page
+    assert "模型来源" in page and "<span>正常</span>" in page
+    assert "资源来源" in page and "<span>正常</span>" in page
+    assert "近 7 天发现" in page
     assert ".log-days::before" in page
     assert "class=\"log-registration\"" not in page
     assert "首次建立基线" not in page

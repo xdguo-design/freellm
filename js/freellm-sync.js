@@ -37,7 +37,7 @@
   function ensurePrimaryNavigation() {
     if (document.querySelector('script[data-freellm-site-navigation], script[src*="/js/site-navigation.js"]')) return;
     var navigationScript = document.createElement('script');
-    navigationScript.src = '/js/site-navigation.js?v=20261012-fast-navigation';
+    navigationScript.src = '/js/site-navigation.js?v=20261012-daily-discovery';
     navigationScript.async = false;
     navigationScript.dataset.freellmSiteNavigation = '1';
     document.head.appendChild(navigationScript);
@@ -105,7 +105,7 @@
             railLink('/skills/', '✦', '技能', 'skills', current) +
             railLink('/tools/', '⌘', '工具', 'tools', current) +
             railLink('/workflow/', '⌁', '工作流', 'workflow', current) +
-            railLink('/logs/', '◷', '更新', 'logs', current) +
+            railLink('/logs/', '◷', '每日发现', 'logs', current) +
             railLink('/about/', 'ⓘ', '关于', 'about', current) +
           '</nav>' +
           '<div class="fl-site-rail-note"><span>好的 AI 资源</span><br>让更多人真正受益 ♡</div>';
@@ -217,8 +217,8 @@
      fl-pastel-ui and intentionally skip runtime shell creation. */
   (function installSiteChromeLocale() {
     var labels = {
-      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '更新', about: '关于' },
-      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Updates', about: 'About' }
+      'zh-CN': { home: '首页', models: '模型', skills: 'Skills', tools: '工具', workflow: '工作流', logs: '每日发现', about: '关于' },
+      en: { home: 'Home', models: 'Models', skills: 'Skills', tools: 'Tools', workflow: 'Workflows', logs: 'Discoveries', about: 'About' }
     };
     function applySiteChromeLocale() {
       var locale = String(document.documentElement.lang || '').toLowerCase().indexOf('en') === 0 ? 'en' : 'zh-CN';

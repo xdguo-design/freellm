@@ -31,7 +31,7 @@
       const cards = home.querySelectorAll('.prototype-stat');
       const values = [scan.newCount,scan.models,scan.newOffers,scan.offers];
       const labels = editorialCurrent
-        ? ['最新更新','模型记录','新资源动态','扫描资源数']
+        ? ['每日发现','模型记录','新资源动态','扫描资源数']
         : [latest,'模型记录','新资源动态','扫描资源数'];
       cards.forEach((card,i) => {
         if (i >= values.length) return;
@@ -44,7 +44,7 @@
     set(hero,scan.offers);
     const badge = document.getElementById('daily-log-badge');
     if (badge) {
-      set(badge,editorialCurrent ? '最新更新 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
+      set(badge,editorialCurrent ? '每日发现 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
       badge.dataset.newCount = editorialCurrent ? String(scan.newCount) : '0';
       badge.dataset.changeCount = editorialCurrent ? String(scan.newCount) : '0';
     }
@@ -55,10 +55,10 @@
     }
     document.querySelectorAll('.ref-update-metrics > article').forEach(article => {
       const label = article.querySelector('span')?.textContent.trim();
-      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks),最近变更:scan.newCount}[label];
+      const value = {今日发现:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks)}[label];
       if (value !== undefined) set(article.querySelector('strong'),value);
-      if (label === '今日新增' && !editorialCurrent) {
-        set(article.querySelector('span'),'上次扫描新增');
+      if (label === '今日发现' && !editorialCurrent) {
+        set(article.querySelector('span'),'最近一次发现');
         set(article.querySelector('small'),latest);
       }
     });
@@ -70,12 +70,9 @@
     if (!editorialCurrent && !scanCurrent) {
       // Do not obscure a new editorial discovery just because scanning lagged.
       // Keep the last real snapshot, but do not represent it as today's scan.
-      set(document.querySelector('.log-hero h1 [lang="zh-CN"]'), '最近扫描，发现 AI 新可能');
-      set(document.querySelector('.log-hero h1 [lang="en"]'), 'What changed in the latest scan?');
+      // The headline and the 7-day total are date-agnostic; only the
+      // directory state must not claim that today's scan already ran.
       const heroMeta = document.querySelectorAll('.log-hero-meta > div');
-      const status = heroMeta[1]?.querySelector('strong');
-      set(status?.querySelector('[lang="zh-CN"]'), '最近扫描完成');
-      set(status?.querySelector('[lang="en"]'), 'Latest scan complete');
       const directory = heroMeta[2]?.querySelector('strong');
       set(directory?.querySelector('[lang="zh-CN"]'), '最近扫描快照');
       set(directory?.querySelector('[lang="en"]'), 'Latest scan snapshot');
