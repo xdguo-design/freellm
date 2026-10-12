@@ -421,37 +421,81 @@ if (section === 'home' || section === 'models') {
       grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', panelOpen && node.dataset.skillId === skill.id));
       grid.querySelectorAll('.skill-card-select').forEach(node => { const active=panelOpen && node.dataset.selectSkill===skill.id; node.textContent=active?'✓':'＋'; node.setAttribute('aria-pressed',String(active)); });
     };
+    const heading = page.querySelector('.skills-directory-heading > h2');
+    const headingSection = page.querySelector('.skills-directory-heading');
+    const topicMenu = document.createElement('nav');
+    topicMenu.className = 'skills-topic-nav';
+    topicMenu.setAttribute('aria-label', 'Skills 分类二级导航');
+    topicMenu.innerHTML = '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多两排 · 前三重点分析</span></div><div class="skills-topic-links">' +
+      topicOrder.map(id => '<a data-skill-topic="'+id+'" href="/skills/?category='+encodeURIComponent(id)+'">'+copy(topics[id].title)+' <small>'+skills.filter(s=>s.category===id).length+'</small></a>').join('') +
+      '<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>'+skills.length+'</small></a></div>';
+    headingSection.before(topicMenu);
+    const topicDescription = document.createElement('p');
+    topicDescription.className = 'skills-topic-description';
+    heading?.after(topicDescription);
+    const setTopic = (id, addHistory) => {
+      const next = topicOrder.includes(id) || id === 'all' ? id : 'development';
+      page.dataset.skillCategory = next;
+      showAllSkills = false;
+      if (addHistory) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', next);
+        history.pushState(null, '', url.pathname + url.search + url.hash);
+      }
+      render();
+    };
     const render = () => {
+      const category = page.dataset.skillCategory || 'development';
       const matches = filtered();
-      const hasFilters = document.getElementById('skill-search').value.trim() !== '' ||
-        document.getElementById('skill-status').value !== 'all' ||
-        (page.dataset.skillCategory || 'all') !== 'all' ||
-        (document.getElementById('skill-sort')?.value || 'recommended') !== 'recommended' ||
-        view === 'list';
-      const visible = !showAllSkills && !hasFilters ? matches.slice(0, 8) : matches;
+      const isArchive = category === 'all';
+      const searching = Boolean(document.getElementById('skill-search').value.trim());
+      const visible = isArchive && showAllSkills ? matches : matches.slice(0,6);
       grid.innerHTML = visible.map(card).join('');
       document.getElementById('skill-empty').hidden = matches.length > 0;
-      document.getElementById('skill-count').textContent = `显示 ${visible.length} / ${matches.length}`;
+      const categoryTotal = isArchive ? skills.length : skills.filter(s=>s.category===category).length;
+      document.getElementById('skill-count').textContent = searching
+        ? '搜索结果 '+visible.length+' / '+matches.length
+        : (isArchive ? '显示 '+visible.length+' / '+categoryTotal : '精选 '+visible.length+' / 本类收录 '+categoryTotal);
+      if (heading) heading.textContent = isArchive ? '全部 Skill 资料库' : '分类精选 · '+topics[category].title;
+      topicDescription.textContent = isArchive
+        ? '保留全部已收录条目；默认只展示前六项，按需展开。完整资料不等于全部推荐。'
+        : topics[category].intro;
+      topicMenu.querySelectorAll('[data-skill-topic]').forEach(a => {
+        const active = a.dataset.skillTopic===category;
+        if(active) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+      });
       const browseButton = document.getElementById('skills-browse-all');
       if (browseButton) {
-        browseButton.setAttribute('aria-expanded', String(showAllSkills));
-        browseButton.innerHTML = showAllSkills
-          ? '收起完整目录 <span aria-hidden="true">↑</span>'
-          : '探索全部 Skills <span aria-hidden="true">→</span>';
+        browseButton.setAttribute('aria-expanded',String(isArchive && showAllSkills));
+        browseButton.innerHTML = isArchive
+          ? (showAllSkills ? '收起完整列表 <span aria-hidden="true">↑</span>' : '展开全部 '+skills.length+' 项 <span aria-hidden="true">→</span>')
+          : '查看完整资源库 <span aria-hidden="true">→</span>';
       }
-      const selected = visible.find(skill=>skill.id===selectedId) || matches.find(skill=>skill.id===selectedId) || visible[0];
+      const selected = visible.find(skill=>skill.id===selectedId) || visible[0];
       if (selected) updatePanel(selected);
+      const hidden = page.querySelector('.skills-hidden-filters');
+      if (hidden) hidden.setAttribute('aria-hidden','false');
     };
-    document.getElementById('skills-browse-all')?.addEventListener('click', () => {
-      showAllSkills = !showAllSkills;
-      render();
+    topicMenu.addEventListener('click', event => {
+      const link = event.target.closest('a[data-skill-topic]');
+      if (!link) return;
+      event.preventDefault();
+      setTopic(link.dataset.skillTopic, true);
+    });
+    window.addEventListener('popstate', () => {
+      const found = new URLSearchParams(window.location.search).get('category');
+      setTopic(found, false);
+    });
+    document.getElementById('skills-browse-all')?.addEventListener('click', event => {
+      event.preventDefault();
+      if (page.dataset.skillCategory !== 'all') setTopic('all', true);
+      else { showAllSkills = !showAllSkills; render(); }
+      document.getElementById('skill-grid')?.scrollIntoView({behavior:'smooth',block:'start'});
     });
     document.querySelectorAll('.skill-category-tab').forEach(button => button.addEventListener('click', event => {
       event.stopImmediatePropagation();
-      page.dataset.skillCategory = button.dataset.category;
-      document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item === button));
-      render();
-    }, { capture: true }));
+      setTopic(button.dataset.category, true);
+    }, {capture:true}));
     document.getElementById('skill-search').addEventListener('input', render);
     document.getElementById('skill-status').addEventListener('change', render);
     document.getElementById('skill-sort')?.addEventListener('change', render);
@@ -476,7 +520,7 @@ if (section === 'home' || section === 'models') {
       if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.skill-card')) { event.preventDefault(); updatePanel(skills.find(item=>item.id===event.target.dataset.skillId)); }
     });
     document.getElementById('skill-clear').addEventListener('click', () => {
-      document.getElementById('skill-search').value=''; document.getElementById('skill-status').value='all'; page.dataset.skillCategory='all'; render();
+      document.getElementById('skill-search').value=''; document.getElementById('skill-status').value='all'; setTopic('development',true);
     });
     document.getElementById('detail-use').addEventListener('click', () => {
       const skill = skills.find(item=>item.id===document.getElementById('detail-use').dataset.skillId);
@@ -501,7 +545,7 @@ if (section === 'home' || section === 'models') {
       document.getElementById('skills-intro-notice')?.showModal();
     });
     document.querySelector('[data-close-skills-intro]')?.addEventListener('click',()=>document.getElementById('skills-intro-notice')?.close());
-    document.querySelector('#skill-clear')?.addEventListener('click',()=>{ page.dataset.skillCategory='all'; });
+    // Topic reset is handled by the clear button above.
     const accountNotice=document.createElement('div'); accountNotice.id='skills-account-notice'; accountNotice.className='skills-toast'; accountNotice.setAttribute('role','status'); accountNotice.hidden=true; page.append(accountNotice);
     render();
   };
