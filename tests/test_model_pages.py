@@ -105,8 +105,8 @@ def test_featured_agent_registry_drives_models_page(tmp_path):
     agent_cards = re.findall(r'<article class="featured-agent-card"', page)
 
     assert len(agent_cards) == 16  # 2026-10-12: + momo-code
-    assert "当前收录 15 个 AI Agent" in page
-    assert "15 个 Agent" in page
+    assert "当前收录 16 个 AI Agent" in page
+    assert "16 个 Agent" in page
     assert 'href="/offers/manus-free-agent/"' in page
     assert 'href="/offers/workbuddy/"' in page
     assert 'href="https://grok.com/" target="_blank" rel="noopener noreferrer"' in page

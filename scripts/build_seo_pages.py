@@ -4796,8 +4796,8 @@ def _render_discovery_week(sorted_logs: list[dict], offers: list[dict] | None = 
                 '</li>'
             )
         if not day["logged"]:
-            body = f'<p class="discovery-empty">{discoveries.NOT_SCANNED_LABEL}</p>'
-            count = discoveries.NOT_SCANNED_LABEL
+            body = f'<p class="discovery-empty">{discoveries.NOT_SCANNED_LABEL}，这一天没有记录文件，不补写内容。</p>'
+            count = "无记录"
         elif not items:
             body = f'<p class="discovery-empty">{discoveries.NO_DISCOVERY_LABEL}</p>'
             count = "0 项"

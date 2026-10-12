@@ -35,7 +35,7 @@ _END_DATE = re.compile(r"(?:至|到|截止(?:到)?|until)\s*(20\d\d)-(\d\d)-(\d\
 
 KIND_LABELS = {
     "model": "模型",
-    "offer": "免费资源",
+    "offer": "额度与活动",
     "tool": "开发工具",
     "agent": "AI Agent",
     "skill": "Skill",
