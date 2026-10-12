@@ -5560,6 +5560,28 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
         "office": collection_count({"documents", "data-office", "file-office", "email-office"}),
         "create": collection_count({"writing", "seo-content", "presentations"}),
     }
+    # Actual anchor links, not only JS buttons: crawlers and no-JS clients can discover topics.
+    curated_topic_order = [
+        ("development", "编程与工程"), ("planning-office", "任务与协作"),
+        ("documents", "文档处理"), ("data-office", "表格与数据"),
+        ("presentations", "PPT 与演示"), ("product-design", "产品与视觉设计"),
+        ("writing", "内容写作"), ("seo-content", "新媒体与内容运营"),
+        ("resume", "简历与求职"), ("file-office", "文件与归档"),
+        ("ecommerce", "商业与客户研究"), ("email-office", "团队沟通"),
+    ]
+    curated_topic_links = "".join(
+        f'<a data-skill-topic="{_esc(key)}" href="/skills/?category={_esc(key)}">{_esc(label)} '
+        f'<small>{sum(item.get("category") == key for item in skills)}</small></a>'
+        for key, label in curated_topic_order
+        if any(item.get("category") == key for item in skills)
+    )
+    curated_topic_nav = (
+        '<nav class="skills-topic-nav" aria-label="Skills 分类二级导航">'
+        '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多两排 · 前三重点分析</span></div>'
+        '<div class="skills-topic-links">' + curated_topic_links +
+        f'<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>{len(skills)}</small></a>'
+        '</div></nav>'
+    )
     workspace_open = f'''<div class="skills-workspace"><div class="skills-main-column">
       <section class="skills-stats" aria-label="Skills 收录与实测数据（来自本站仓库数据）">
         <div class="skills-stat"><span class="skills-stat-icon blue">▧</span><div><strong data-skill-stat="skills">{stats["skills"]}</strong><small>收录 Skill（来自 {stats["repos"]} 个来源仓库）</small></div></div>
@@ -5574,7 +5596,7 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
         <a class="skills-collection collection-office" href="#skill-grid"><strong>办公提效合集</strong><span>{collection_counts["office"]} 个 Skills</span><small>从想法到结果</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
         <a class="skills-collection collection-create" href="#skill-grid"><strong>内容创作合集</strong><span>{collection_counts["create"]} 个 Skills</span><small>激发无限创意</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
       </div></section>
-      <div class="skills-directory-wrap">'''
+      <div class="skills-directory-wrap">{curated_topic_nav}'''
     page = page.replace(filter_markup, workspace_open + filter_markup, 1)
 
     intro_dialog = '''<dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
@@ -7080,7 +7102,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
-    Path("skills/index.html"): "20260930o",
+    Path("skills/index.html"): "20261012-curated",
 }
 
 
@@ -7141,7 +7163,7 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
         if rail_tag not in updated and "</head>" in updated:
             updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
-    script_version = "20261010-trust" if path == Path("skills/index.html") else "20261011-history-filters" if path == Path("logs/index.html") else "20260924a"
+    script_version = "20261012-curated" if path == Path("skills/index.html") else "20261011-history-filters" if path == Path("logs/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
     old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
     if path == Path("skills/index.html") and old_script_tag in updated:
