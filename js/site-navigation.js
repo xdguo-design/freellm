@@ -123,8 +123,8 @@
     rail.id = 'fl-shared-site-menu';
     rail.setAttribute('aria-label', 'FreeLLM 主导航');
     var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
-    var updatesLabel = rail.querySelector('.fl-site-nav [data-site-nav="logs"] span:last-child');
-    if (updatesLabel) updatesLabel.textContent = english ? 'Updates' : '更新';
+    var discoveriesLabel = rail.querySelector('.fl-site-nav [data-site-nav="logs"] span:last-child');
+    if (discoveriesLabel) discoveriesLabel.textContent = english ? 'Discoveries' : '每日发现';
     function updateCurrentItem() {
       var active = currentPage();
       if (active === 'health') active = 'models';
@@ -145,7 +145,7 @@
       ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
-      ['logs', '/logs/', '◷', english ? 'Updates' : '更新'],
+      ['logs', '/logs/', '◷', english ? 'Discoveries' : '每日发现'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
     var active = currentPage();

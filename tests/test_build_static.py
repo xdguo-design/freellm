@@ -34,8 +34,9 @@ class BuildStaticTests(unittest.TestCase):
             rendered = update_home_latest_discovery(source, data_path)
 
             self.assertIn("新增 2 项", rendered)
-            self.assertIn('href="/logs/#log-day-2026-10-11"', rendered)
-            self.assertIn("查看更新详情", rendered)
+            self.assertIn('href="/logs/#discovery-day-2026-10-11"', rendered)
+            self.assertIn("查看今日发现", rendered)
+            self.assertIn("每日发现", rendered)
             self.assertNotIn("Model A", rendered)
             self.assertNotIn("Offer B", rendered)
 
@@ -53,7 +54,7 @@ class BuildStaticTests(unittest.TestCase):
             rendered = update_home_latest_discovery(source, root / "offers.json")
 
             self.assertIn("新增 0 项", rendered)
-            self.assertIn('href="/logs/#log-day-2026-10-12"', rendered)
+            self.assertIn('href="/logs/#discovery-day-2026-10-12"', rendered)
 
     def test_home_discovery_uses_generic_link_when_no_valid_log_exists(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -67,7 +68,7 @@ class BuildStaticTests(unittest.TestCase):
 
             self.assertIn("暂无日志", rendered)
             self.assertIn('href="/logs/"', rendered)
-            self.assertIn("查看每日更新", rendered)
+            self.assertIn("查看每日发现", rendered)
 
     def test_home_scan_summary_follows_resource_catalog(self):
         html = (

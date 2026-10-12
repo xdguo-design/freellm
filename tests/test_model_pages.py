@@ -104,7 +104,7 @@ def test_featured_agent_registry_drives_models_page(tmp_path):
     page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
     agent_cards = re.findall(r'<article class="featured-agent-card"', page)
 
-    assert len(agent_cards) == 15
+    assert len(agent_cards) == 16  # 2026-10-12: + momo-code
     assert "当前收录 15 个 AI Agent" in page
     assert "15 个 Agent" in page
     assert 'href="/offers/manus-free-agent/"' in page
@@ -122,7 +122,7 @@ def test_featured_agent_registry_drives_models_page(tmp_path):
 def test_featured_agent_registry_is_validated(tmp_path):
     agents = _load_featured_agents(ROOT / "data")
 
-    assert len(agents) == 15
+    assert len(agents) == 16
     assert len({agent["id"] for agent in agents}) == len(agents)
     assert all(agent["url"].startswith("https://") for agent in agents)
 

@@ -33,7 +33,7 @@ class P0ConvergenceTests(unittest.TestCase):
             [log], [], [], {"models": 2, "offers": 0, "providers": 0}
         )
         feature = re.search(
-            r'<section class="ref-update-feature"><h2>最近重点更新</h2>.*?</section>',
+            r'<section class="ref-update-feature"><h2>今日重点发现</h2>.*?</section>',
             modules, re.S,
         )
         self.assertIsNotNone(feature)
@@ -199,7 +199,7 @@ class P0ConvergenceTests(unittest.TestCase):
                 about,
             )
         self.assertNotIn("已验证的免费资源</span>", about)
-        for label, key in (("今日新增", "newCount"), ("模型目录", "models"), ("当前有效资源", "offers")):
+        for label, key in (("今日发现", "newCount"), ("模型目录", "models"), ("当前有效资源", "offers")):
             self.assertRegex(
                 logs_page,
                 rf"<span>{label}</span><strong>{summary[key]}</strong>",
@@ -281,7 +281,7 @@ class P0ConvergenceTests(unittest.TestCase):
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
         self.assertIsNotNone(match)
         self.assertEqual(match.group(1).count("<a "), 7)
-        for label in ("首页", "模型", "技能", "工具", "工作流", "更新", "关于"):
+        for label in ("首页", "模型", "技能", "工具", "工作流", "每日发现", "关于"):
             self.assertIn(f"<span>{label}</span>", match.group(1))
 
     def test_no_duplicate_global_top_nav_on_key_pages(self):

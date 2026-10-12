@@ -31,6 +31,7 @@ from scripts.eval_integration import LEADERBOARD_CSS, card_block as eval_card_bl
 from scripts import eval_pages  # noqa: E402  FreeLLM evaluation blocks for secondary pages
 from scripts.shell_examples import with_env_exports  # noqa: E402  curl quoting / export preamble
 from scripts.site_counts import COUNT_DEFINITIONS, compute_site_counts, reference_date_for
+from scripts import daily_discoveries as discoveries
 
 
 SITE_URL = "https://freellm.top"
@@ -4601,7 +4602,7 @@ def _log_detail_card(event: dict, offer_lookup: dict[str, dict] | None = None) -
     }
     badge = _locale_pair("人工确认新增", "Curated new") if event.get("curated") else _locale_pair(*badge_labels.get(event.get("eventType"), (event.get("eventType"), event.get("eventType"))))
     test_markup = _offer_freellm_test_markup(details)
-    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}{_log_third_party_pill(event)}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}{test_markup}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>新增依据 / Why new:</strong> {_esc(event.get("reason"))}</p></div></details>'''
+    return f'''<details class="log-new-card"><summary class="log-card-summary"><span class="log-badge">{badge}</span><h3>{_esc(event.get("title"))}{_log_third_party_pill(event)}</h3><code>{_esc(event.get("id"))}</code></summary><div class="log-card-body"><dl class="log-facts">{facts or '<div><dt>details</dt><dd>未提供</dd></div>'}</dl>{_log_registration_docs(details)}{test_markup}<div class="log-source"><strong>官方来源 / Official sources</strong>{_log_links(details)}</div><p class="log-reason"><strong>{_locale_pair("为什么算新发现", "Why it is new")}：</strong> {_esc(discoveries.human_reason(event))}</p></div></details>'''
 
 
 def _log_third_party_pill(event: dict) -> str:
@@ -4636,11 +4637,11 @@ def _log_event_table(events: list[dict]) -> str:
                     for label, url in references
                 ) + "</ul>"
         rows.append(
-            f'<tr><td><strong>{_esc(event.get("title"))}</strong>{_log_third_party_pill(event)}<small>{_esc(event.get("id"))}</small>{reference_markup}</td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(event.get("reason"))}</td></tr>'
+            f'<tr><td><strong>{_esc(event.get("title"))}</strong>{_log_third_party_pill(event)}<small>{_esc(event.get("id"))}</small>{reference_markup}</td><td>{_esc(details.get("provider") or details.get("productType") or "未提供")}</td><td>{_esc(discoveries.human_reason(event))}</td></tr>'
         )
     if not rows:
         return f'<p class="muted">{_locale_pair("当天没有此类记录", "No records for this category.")}</p>'
-    return f'<div class="table-wrap"><table><thead><tr><th>{_locale_pair("项目", "Item")}</th><th>{_locale_pair("提供商或类型", "Provider or type")}</th><th>{_locale_pair("依据", "Reason")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+    return f'<div class="table-wrap"><table><thead><tr><th>{_locale_pair("项目", "Item")}</th><th>{_locale_pair("提供商或类型", "Provider or type")}</th><th>{_locale_pair("说明", "Note")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
 
 
 def _log_event_panel(title_zh: str, title_en: str, content: str, events: list[dict]) -> str:
@@ -4757,11 +4758,76 @@ def _log_empty_state(log: dict, groups: dict[str, list[dict]]) -> str:
     return ""
 
 
+def _source_status_label(status: str) -> str:
+    """Plain-word source health; the raw scanner status stays in the archive."""
+    status = str(status or "").strip().lower()
+    return {"ok": "正常", "stale": "未按时完成", "failed": "读取失败", "unknown": "未知"}.get(status, "异常")
+
+
+def _render_discovery_week(sorted_logs: list[dict], offers: list[dict] | None = None) -> str:
+    """「每日发现」 top section: first-seen discoveries for the last 7 calendar days."""
+    week = discoveries.discovery_week(sorted_logs)
+    offer_lookup = {str(offer.get("id") or ""): offer for offer in offers or [] if isinstance(offer, dict) and offer.get("id")}
+    total = sum(len(day["events"]) for day in week)
+    if not week:
+        return ('<section class="discovery-week" id="discovery-week" aria-labelledby="discovery-week-title">'
+                '<div class="discovery-week-head"><h2 id="discovery-week-title">近 7 天发现</h2>'
+                '<p>还没有可展示的每日记录。</p></div></section>')
+    days = []
+    for day in week:
+        items = []
+        for event in day["events"]:
+            provider = discoveries.provider_label(event)
+            meta = [part for part in (provider, discoveries.kind_label(event), discoveries.status_label(event)) if part]
+            third_party = f' <span class="discovery-third-party">{_esc(THIRD_PARTY_SHORT_ZH)}</span>' if is_third_party_relay(event) else ""
+            links = []
+            offer = offer_lookup.get(str(event.get("id") or ""))
+            if str(event.get("kind") or "") == "offer" and offer:
+                links.append(f'<a href="{_esc(offer_url(offer))}">查看详情 →</a>')
+            source = discoveries.source_url(event)
+            if source:
+                links.append(f'<a href="{_esc(source)}" target="_blank" rel="nofollow noopener">官方来源 ↗</a>')
+            blurb = discoveries.summary(event)
+            items.append(
+                '<li class="discovery-item">'
+                f'<p class="discovery-headline">{_esc(discoveries.headline(event))}{third_party}</p>'
+                + (f'<p class="discovery-summary">{_esc(blurb)}</p>' if blurb else '')
+                + f'<p class="discovery-meta"><span>{"</span><span>".join(_esc(part) for part in meta)}</span>{"".join(links)}</p>'
+                '</li>'
+            )
+        if not day["logged"]:
+            body = f'<p class="discovery-empty">{discoveries.NOT_SCANNED_LABEL}</p>'
+            count = discoveries.NOT_SCANNED_LABEL
+        elif not items:
+            body = f'<p class="discovery-empty">{discoveries.NO_DISCOVERY_LABEL}</p>'
+            count = "0 项"
+        else:
+            body = '<ol class="discovery-list">' + "".join(items) + '</ol>'
+            count = f'{len(items)} 项'
+        state = "logged" if day["logged"] else "not-scanned"
+        days.append(
+            f'<section class="discovery-day" id="discovery-day-{_esc(day["date"])}" data-discovery-day="{_esc(day["date"])}" data-discovery-state="{state}" data-discovery-count="{len(day["events"])}">'
+            f'<h3><time datetime="{_esc(day["date"])}">{_esc(discoveries.day_label(day["date"]))}</time><span>{_esc(count)}</span></h3>{body}</section>'
+        )
+    start, end = week[-1]["date"], week[0]["date"]
+    return (
+        '<section class="discovery-week" id="discovery-week" aria-labelledby="discovery-week-title">'
+        '<div class="discovery-week-head">'
+        f'<h2 id="discovery-week-title">近 7 天发现 · 共 <strong data-discovery-week-total>{total}</strong> 项</h2>'
+        f'<p>{_esc(start)} 至 {_esc(end)}，按日期从新到旧。同一个项目只在第一次出现的那天记一次；没有记录的日子如实标为「{discoveries.NOT_SCANNED_LABEL}」。</p>'
+        '</div>' + "".join(days) + '</section>'
+    )
+
+
 def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict], models: list[dict], latest_snapshot: dict[str, int]) -> tuple[str, str]:
     """Render the compact reference-board layout from published log facts."""
     site_counts = compute_site_counts(offers, models, reference_date_for((sorted_logs[0] if sorted_logs else {}).get("date")))
     latest = sorted_logs[0] if sorted_logs else {}
     latest_groups = _log_event_groups(list(latest.get("events") or []), list(latest.get("curatedEvents") or []))
+    # 「每日发现」: an id is new only on the first date it was ever logged, so a
+    # scanner re-detection never shows up as today's discovery again.
+    first_seen = discoveries.first_seen_discoveries(sorted_logs)
+    latest_groups["new"] = list(first_seen.get(str(latest.get("date") or ""), []))
     event_kinds = ("new", "changed", "recovered", "offline", "unavailable")
     event_labels = {"new": ("新增", "New"), "changed": ("变更/更正", "Changed"), "recovered": ("恢复", "Recovered"), "offline": ("下线", "Offline"), "unavailable": ("来源异常", "Source issue")}
     current_events = [event for key in event_kinds for event in latest_groups[key]]
@@ -4771,8 +4837,7 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         flat_events.extend((log, key, event) for key in event_kinds for event in groups[key])
 
     def display_title(event: dict) -> str:
-        details = event.get("details") or {}
-        return str(event.get("title") or details.get("model") or details.get("name") or event.get("id") or "更新记录")
+        return discoveries.display_title(event)
 
     def provider_name(event: dict) -> str:
         details = event.get("details") or {}
@@ -4784,15 +4849,15 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         return f'<a href="{_esc(url)}" target="_blank" rel="noopener">查看详情 →</a>' if url.startswith(("https://", "http://")) else '<span>已记录</span>'
 
     metric_values = (
-        ("▣", "今日新增", str(len(latest_groups["new"])), "新资源与新路径"),
+        ("▣", "今日发现", str(len(latest_groups["new"])), "当天第一次出现的项目"),
         ("◆", "来源核验", str(sum(1 for item in (latest.get("sourceHealth") or {}).values() if isinstance(item, dict) and item.get("status") == "ok")) + "/2", "模型源与资源源"),
         ("▦", "模型目录", str(site_counts["models"]), "与 /models/all/ 同一口径"),
         ("⌁", "当前有效资源", str(site_counts["offers"]), "不含已结束，与首页“全部”一致"),
-        ("✣", "最近变更", str(len(current_events)), "最新日志日记录"),
+        ("✣", "当日变化", str(len(current_events)), "含恢复、下线与更正"),
     )
     metrics = "".join(f'<article><i>{icon}</i><span>{zh}</span><strong>{_esc(value)}</strong><small>{copy}</small></article>' for icon, zh, value, copy in metric_values)
     dates = [str(log.get("date") or "") for log in sorted_logs]
-    filters = '<div class="ref-update-filter-tabs"><button class="is-active" type="button">全部更新 <small>' + str(len(current_events)) + '</small></button>' + ''.join(
+    filters = '<div class="ref-update-filter-tabs"><button class="is-active" type="button">全部变化 <small>' + str(len(current_events)) + '</small></button>' + ''.join(
         f'<button type="button">{event_labels[key][0]} <small>{len(latest_groups[key])}</small></button>' for key in event_kinds
     ) + '</div>'
     date_picker = f'<a class="ref-update-date" href="#log-day-{_esc(dates[0]) if dates else ""}">▣　{_esc(dates[0] if dates else "暂无日志")}　⌄</a>'
@@ -4819,19 +4884,22 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
     if latest_verified_offer and all(event is not latest_verified_offer[2] for _, _, event in feature_entries):
         feature_entries = [*feature_entries[:2], latest_verified_offer]
     if not feature_entries:
-        feature_cards = '<article><b>FreeLLM</b><strong>今日暂无可推荐的官方目录变更</strong><p>第三方聚合记录仍保留在完整日志中。</p><small>当前日志日期：' + _esc(dates[0] if dates else "—") + '</small></article>'
+        feature_cards = '<article><b>FreeLLM</b><strong>今天还没有值得推荐的官方新发现</strong><p>第三方聚合渠道的记录仍保留在下方完整记录中。</p><small>最新记录日期：' + _esc(dates[0] if dates else "—") + '</small></article>'
     else:
         cards = []
         for log, key, event in feature_entries:
-            cards.append(f'<article><div class="ref-update-company"><b>{_esc(provider_name(event))}</b><span>{event_labels[key][0]}</span></div><strong>{_esc(display_title(event))}</strong><p>{_esc(str(event.get("reason") or "官方来源记录到目录变化。"))}</p><div class="ref-update-feature-tags"><span>{_esc(str(event.get("kind") or "目录"))}</span><span>{_esc(str(event.get("eventType") or key))}</span></div><small>{_esc(str(log.get("date") or ""))}　{_esc(str((event.get("details") or {}).get("sourceKind") or "来源记录"))}</small></article>')
+            blurb = (discoveries.summary(event) if key == "new" else "") or discoveries.human_reason(event)
+            source_note = "第三方渠道" if is_third_party_relay(event) else ("官方来源" if str((event.get("details") or {}).get("sourceKind") or "") == "official" else "来源记录")
+            cards.append(f'<article><div class="ref-update-company"><b>{_esc(provider_name(event))}</b><span>{event_labels[key][0]}</span></div><strong>{_esc(discoveries.headline(event) if key == "new" else display_title(event))}</strong><p>{_esc(blurb)}</p><div class="ref-update-feature-tags"><span>{_esc(discoveries.kind_label(event))}</span><span>{_esc(discoveries.status_label(event))}</span></div><small>{_esc(str(log.get("date") or ""))}　{source_note}</small></article>')
         feature_cards = "".join(cards)
     bars = []
-    recent_logs = list(reversed(sorted_logs[:7]))
-    peak = max([sum(len(_log_event_groups(list(day.get("events") or []), list(day.get("curatedEvents") or []))[key]) for key in event_kinds) for day in recent_logs] or [0])
-    for log in recent_logs:
-        count = sum(len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))[key]) for key in event_kinds)
+    week = list(reversed(discoveries.discovery_week(sorted_logs)))
+    peak = max([len(day["events"]) for day in week] or [0])
+    for day in week:
+        count = len(day["events"])
         height = 8 + (42 * count / peak if peak else 0)
-        bars.append(f'<i style="height:{height:.0f}px" title="{_esc(str(log.get("date") or ""))}: {count}"></i>')
+        label = f'{count} 项新发现' if day["logged"] else discoveries.NOT_SCANNED_LABEL
+        bars.append(f'<i style="height:{height:.0f}px" title="{_esc(day["date"])}：{label}"></i>')
     trend = ''.join(bars) or '<i style="height:8px"></i>'
     latest_health = latest.get("sourceHealth") or {}
     source_rows = []
@@ -4839,17 +4907,18 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         item = latest_health.get(key) or {}
         status = str(item.get("status") or "unknown")
         reason = str(item.get("reason") or ("扫描完成" if status == "ok" else "原因未提供"))
-        source_rows.append(f'<p><b>{label}</b><span>{_esc(status)}</span><em>{_esc(reason)}</em></p>')
-    highlight = f'<section class="ref-update-feature"><h2>最近重点更新</h2><div>{feature_cards}</div></section>'
-    week_event_count = sum(sum(len(_log_event_groups(list(day.get("events") or []), list(day.get("curatedEvents") or []))[key]) for key in event_kinds) for day in recent_logs)
-    credibility = f'<section class="ref-update-credibility"><h2>本周更新概览</h2><div class="ref-update-bars">{trend}</div><p>{week_event_count} 条目录记录 · 最近 {len(recent_logs)} 个日志日</p></section>'
-    source_trust = f'<section class="ref-update-source-trust"><h2>来源可见状态</h2>{"".join(source_rows)}<small>状态来自当前更新记录；人工补录不代表自动扫描已完成。</small></section>'
+        source_rows.append(f'<p><b>{label}</b><span>{_source_status_label(status)}</span><em>{_esc(reason)}</em></p>')
+    highlight = f'<section class="ref-update-feature"><h2>今日重点发现</h2><div>{feature_cards}</div></section>'
+    week_event_count = sum(len(day["events"]) for day in week)
+    logged_days = sum(1 for day in week if day["logged"])
+    credibility = f'<section class="ref-update-credibility"><h2>近 7 天发现</h2><div class="ref-update-bars">{trend}</div><p>{week_event_count} 项新发现 · {logged_days}/{len(week)} 天有记录</p></section>'
+    source_trust = f'<section class="ref-update-source-trust"><h2>扫描来源状态</h2>{"".join(source_rows)}<small>人工收录的发现不代表当天的自动扫描已经完成。</small></section>'
 
     counts = {key: len(latest_groups[key]) for key in event_kinds}
     change_cards = "".join(f'<article><span>{event_labels[key][0]}</span><strong>{counts[key]}</strong><small>{event_labels[key][1]}</small></article>' for key in event_kinds)
     snapshot_cards = _log_snapshot_cards(latest_snapshot)
-    stream_items = "".join(f'<li><time>{_esc(str(event.get("asOf") or latest.get("date") or "")[-5:])}</time><b>{_esc(display_title(event))}</b></li>' for event in current_events[:4]) or '<li>暂无变更记录</li>'
-    overview = f'<section class="ref-update-overview"><h2>今日变化</h2><div class="ref-update-change-cards">{change_cards}</div><div class="ref-update-detail-row"><div class="ref-update-snapshot"><h3>最近扫描快照</h3><div class="log-snapshot-grid">{snapshot_cards}</div></div><section class="ref-update-change-stream"><h2>变更流 <small>CHANGE STREAM</small></h2><ol>{stream_items}</ol></section></div></section>'
+    stream_items = "".join(f'<li><time>{_esc(str(event.get("asOf") or latest.get("date") or "")[-5:])}</time><b>{_esc(display_title(event))}</b></li>' for event in current_events[:4]) or '<li>当天没有变化记录</li>'
+    overview = f'<section class="ref-update-overview"><h2>当日全部变化</h2><div class="ref-update-change-cards">{change_cards}</div><div class="ref-update-detail-row"><div class="ref-update-snapshot"><h3>最近一次扫描覆盖</h3><div class="log-snapshot-grid">{snapshot_cards}</div></div><section class="ref-update-change-stream"><h2>当日时间线</h2><ol>{stream_items}</ol></section></div></section>'
 
     rows = []
     for key, event in [(key, event) for key in event_kinds for event in latest_groups[key]][:8]:
@@ -4860,13 +4929,13 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         if category not in {"model", "tool", "offer"}:
             product_type = str(details.get("productType") or "").strip().lower()
             category = "tool" if product_type in {"tool", "software"} else "offer" if product_type else "other"
-        status = str(details.get("status") or ("已核验" if key != "unavailable" else "待复核"))
+        status = discoveries.status_label(event) if details.get("status") else ("已核验" if key != "unavailable" else "待复核")
         event_date = str(event.get("asOf") or log.get("date") or "")
-        rows.append(f'<div class="row" data-history-row data-category="{_esc(category)}" data-change="{_esc(key)}"><b>{_esc(display_title(event))}</b><span>{_esc(kind)}</span><span>{_esc(provider_name(event))}</span><strong>{event_labels[key][0]}</strong><time datetime="{_esc(event_date)}">{_esc(event_date)}</time><span>{_esc(status)}</span>{source_link(event)}</div>')
+        rows.append(f'<div class="row" data-history-row data-category="{_esc(category)}" data-change="{_esc(key)}"><b>{_esc(display_title(event))}</b><span>{_esc(discoveries.kind_label(event))}</span><span>{_esc(provider_name(event))}</span><strong>{event_labels[key][0]}</strong><time datetime="{_esc(event_date)}">{_esc(event_date)}</time><span>{_esc(status)}</span>{source_link(event)}</div>')
     if not rows:
-        rows.append('<div class="row" data-history-placeholder><b>暂无目录事件</b><span>—</span><span>—</span><strong>无变化</strong><time>' + _esc(dates[0] if dates else "—") + '</time><span>已扫描</span><span>待新记录</span></div>')
+        rows.append('<div class="row" data-history-placeholder><b>当天没有变化记录</b><span>—</span><span>—</span><strong>无变化</strong><time>' + _esc(dates[0] if dates else "—") + '</time><span>已扫描</span><span>待新记录</span></div>')
     total_events = len(current_events)
-    history = f'<section class="ref-update-history"><div class="ref-update-history-head"><div><h2>{_esc(dates[0] if dates else "每日更新")} 更新详情（<span data-history-visible-count>{total_events}</span>）</h2><p data-history-result-count aria-live="polite">显示全部 {total_events} 条记录</p></div><a href="#log-archive">查看全部日期 →</a></div><div class="ref-update-history-filters" role="group" aria-label="筛选更新记录"><button class="is-active" type="button" data-history-filter="all" aria-pressed="true">全部</button><button type="button" data-history-filter="model" aria-pressed="false">模型</button><button type="button" data-history-filter="tool" aria-pressed="false">工具</button><button type="button" data-history-filter="offer" aria-pressed="false">Offers</button><button type="button" data-history-filter="recovered" aria-pressed="false">恢复</button><button type="button" data-history-filter="offline" aria-pressed="false">下线</button><button class="sort" type="button" data-history-sort="desc" aria-pressed="false">按日期排序⌄</button></div><div class="ref-update-history-table"><div class="row head"><span>资源名称</span><span>类型</span><span>Provider</span><span>变化</span><span>更新时间</span><span>状态</span><span>来源</span></div>{"".join(rows)}<p class="ref-update-history-empty" data-history-empty role="status" hidden>没有符合条件的更新记录。</p></div></section>'
+    history = f'<section class="ref-update-history"><div class="ref-update-history-head"><div><h2>{_esc(dates[0] if dates else "每日发现")} 全部变化记录（<span data-history-visible-count>{total_events}</span>）</h2><p data-history-result-count aria-live="polite">显示全部 {total_events} 条记录</p></div><a href="#log-archive">查看全部日期 →</a></div><div class="ref-update-history-filters" role="group" aria-label="筛选变化记录"><button class="is-active" type="button" data-history-filter="all" aria-pressed="true">全部</button><button type="button" data-history-filter="model" aria-pressed="false">模型</button><button type="button" data-history-filter="tool" aria-pressed="false">工具</button><button type="button" data-history-filter="offer" aria-pressed="false">Offers</button><button type="button" data-history-filter="recovered" aria-pressed="false">恢复</button><button type="button" data-history-filter="offline" aria-pressed="false">下线</button><button class="sort" type="button" data-history-sort="desc" aria-pressed="false">按日期排序⌄</button></div><div class="ref-update-history-table"><div class="row head"><span>资源名称</span><span>类型</span><span>Provider</span><span>变化</span><span>更新时间</span><span>状态</span><span>来源</span></div>{"".join(rows)}<p class="ref-update-history-empty" data-history-empty role="status" hidden>没有符合条件的记录。</p></div></section>'
 
     month_days = []
     month_prefix = dates[0][:7] if dates and len(dates[0]) >= 7 else ""
@@ -4879,10 +4948,10 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
         month_days.extend(f'<span class="{"has-update" if f"{day:02d}" in update_days else ""}">{day}</span>' for day in range(1, day_count + 1))
     except (ValueError, TypeError):
         month_days.append('<span>暂无日期</span>')
-    health_summary = "".join(f'<p><b>{label}</b><em>{_esc(str((latest_health.get(key) or {}).get("status") or "unknown"))} · {_esc(str((latest_health.get(key) or {}).get("reason") or ("扫描完成" if (latest_health.get(key) or {}).get("status") == "ok" else "原因未提供")))}</em></p>' for key, label in (("models", "模型源"), ("offers", "资源源")))
-    bottom = f'<section class="ref-update-bottom"><article><h2>来源健康状态</h2>{health_summary}<small>状态来自最近一次扫描记录，不推算可用率。</small></article><article><h2>FreeLLM 自测 / Test</h2><p>当前更新页提供目录变更与来源状态查询。</p><p>模型推理可用性请查看各模型官方入口。</p><a class="ref-update-action" href="/models/">打开模型目录 →</a></article><article><h2>历史更新　{_esc(month_prefix or "—")}</h2><div class="ref-update-calendar-head"><span>日志日期</span></div><div class="ref-update-calendar-weeks"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div><div class="ref-update-calendar-grid">{"".join(month_days)}</div><small>标记日期有每日扫描记录</small></article></section>'
-    extras = '<section class="ref-update-extras"><article><h2>更新机制说明</h2><p>我们每日扫描公开官方来源，核对模型、工具与资源目录；记录事实与来源链接，区分新增、恢复、下线及来源异常。</p><ul><li>自动扫描公开来源</li><li>保留来源与更新时间</li><li>异常状态单独记录</li><li>下线需成功快照确认</li></ul></article><article><h2>订阅每日更新</h2><p>通过 Atom 阅读器订阅最新变更记录。</p><a class="ref-update-feed" href="/feed.xml">打开 Atom Feed ↗</a></article></section>'
-    archive = '<details class="log-archive" id="log-archive"><summary>查看完整历史与来源详情　（' + str(len(sorted_logs)) + ' 天）</summary><section class="log-days">' + ''.join(
+    health_summary = "".join(f'<p><b>{label}</b><em>{_source_status_label(str((latest_health.get(key) or {}).get("status") or "unknown"))} · {_esc(str((latest_health.get(key) or {}).get("reason") or ("扫描完成" if (latest_health.get(key) or {}).get("status") == "ok" else "原因未提供")))}</em></p>' for key, label in (("models", "模型源"), ("offers", "资源源")))
+    bottom = f'<section class="ref-update-bottom"><article><h2>来源健康状态</h2>{health_summary}<small>状态来自最近一次扫描记录，不推算可用率。</small></article><article><h2>FreeLLM 自测 / Test</h2><p>这里记录的是目录里新出现和变化的项目，以及来源状态。</p><p>模型推理可用性请查看各模型官方入口。</p><a class="ref-update-action" href="/models/">打开模型目录 →</a></article><article><h2>历史记录　{_esc(month_prefix or "—")}</h2><div class="ref-update-calendar-head"><span>日志日期</span></div><div class="ref-update-calendar-weeks"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div><div class="ref-update-calendar-grid">{"".join(month_days)}</div><small>标记的日期有当天的记录</small></article></section>'
+    extras = '<section class="ref-update-extras"><article><h2>这些发现从哪里来</h2><p>我们每天自动检查各家官方模型列表和活动页面，再由编辑核对免费条款，写清楚能免费用多少、用到什么时候、有哪些限制。同一个项目只在第一次出现的那天算作发现。</p><ul><li>只看公开的官方来源</li><li>每条都附来源链接</li><li>同一项目只记一次</li><li>来源读取失败不当作下线</li></ul></article><article><h2>订阅每日发现</h2><p>用 Atom 阅读器订阅，每天的新发现会自动推送。</p><a class="ref-update-feed" href="/feed.xml">打开 Atom Feed ↗</a></article></section>'
+    archive = '<details class="log-archive" id="log-archive"><summary>查看全部日期的原始记录与来源详情　（' + str(len(sorted_logs)) + ' 天）</summary><section class="log-days">' + ''.join(
         f'<section class="log-day" id="log-day-{_esc(str(log.get("date") or "unknown"))}"><div class="log-day-head"><div><span class="log-eyebrow">扫描日期</span><h2>{_esc(str(log.get("date") or "未知日期"))}</h2></div><div class="log-day-summary"><span>新增 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["new"])}</span><span>恢复 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["recovered"])}</span><span>下线 {len(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))["offline"])}</span></div></div><div class="log-event-grid">' + ''.join(_log_event_panel(label, en, _log_event_table(_log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))[key]), _log_event_groups(list(log.get("events") or []), list(log.get("curatedEvents") or []))[key]) for key, label, en in (("new", "新增详情", "New entries"), ("recovered", "恢复", "Recovered"), ("offline", "下线", "Offline"), ("unavailable", "来源异常", "Source issues"))) + '</div><section class="log-event-panel log-health-panel"><h3>来源健康</h3>' + _log_health_table(log) + '</section></section>'
         for log in sorted_logs
     ) + '</section></details>'
@@ -4901,7 +4970,7 @@ def _render_update_reference_modules(sorted_logs: list[dict], offers: list[dict]
             f'<p><a href="{_esc(detail_url)}">查看 FreeLLM 评估、使用步骤与官方来源 →</a></p>'
             '</article></div></section>'
         )
-    modules = f'{editorial}<section class="ref-update-metrics">{metrics}</section><nav class="ref-update-filters" aria-label="更新分类">{filters}{date_picker}</nav><div class="ref-update-layout"><div class="ref-update-layout-main">{highlight}{overview}</div><aside class="ref-update-layout-side">{credibility}{source_trust}</aside></div>{history}{bottom}{extras}'
+    modules = f'<section class="ref-update-metrics">{metrics}</section><nav class="ref-update-filters" aria-label="变化分类">{filters}{date_picker}</nav><div class="ref-update-layout"><div class="ref-update-layout-main">{highlight}{overview}</div><aside class="ref-update-layout-side">{credibility}{source_trust}</aside></div>{editorial}{history}{bottom}{extras}'
     return modules, archive
 
 
@@ -4956,6 +5025,8 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     body = re.sub(r"(?m)^[ \t]+$", "", body)
     reference_modules, _ = _render_update_reference_modules(sorted_logs, offers or [], models or [], latest_snapshot)
+    week_total = sum(len(day["events"]) for day in discoveries.discovery_week(sorted_logs))
+    discovery_week = _render_discovery_week(sorted_logs, offers)
     history_archive = (
         '<details class="log-archive" id="log-archive"><summary>查看完整历史与来源详情　（'
         + str(len(sorted_logs))
@@ -5013,18 +5084,26 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 .log-registration { margin:12px 0; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--canvas-warm); }.log-registration h4 { margin:0; font-size:15px; }.log-registration ol { margin:7px 0 0; padding-left:20px; }.log-registration li { margin:3px 0; font-size:12px; }.log-registration .muted { margin:7px 0 0; }.log-registration-links { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }.log-registration-link { padding:5px 10px; border:1px solid var(--line); border-radius:9999px; background:var(--surface); color:var(--accent); font-size:11px; text-decoration:none; }.log-registration-link:hover { border-color:var(--accent); }
 .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.table-wrap table { width:100%; min-width:520px; border-collapse:collapse; font-size:12.5px; }.table-wrap th,.table-wrap td { padding:9px 11px; border-bottom:1px solid var(--line-soft); text-align:left; vertical-align:top; }.table-wrap th { color:var(--ink-tertiary); background:var(--surface-soft); font:500 10.5px/1.5 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; }.table-wrap tr:last-child td { border-bottom:0; }.table-wrap td small { display:block; margin-top:3px; }.health-pill { display:inline-block; padding:3px 9px; border-radius:9999px; background:var(--pale-green-bg); color:var(--pale-green-text); font:500 11px/1.6 var(--font-mono); }.health-pill.issue { background:var(--pale-yellow-bg); color:var(--pale-yellow-text); }
 .log-footer { margin-top:36px; padding-top:20px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.7; }
+.discovery-week { margin-top:18px; padding:clamp(18px,3vw,28px); border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.discovery-week-head h2 { margin:0; font-size:clamp(24px,3.4vw,32px); letter-spacing:-.015em; }.discovery-week-head h2 strong { font-weight:400; color:var(--accent); }.discovery-week-head p { margin:6px 0 0; color:var(--ink-secondary); font-size:13px; }
+.discovery-day { margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft); }.discovery-day h3 { display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin:0 0 8px; font-size:18px; }.discovery-day h3 span { color:var(--ink-secondary); font:500 12px/1.5 var(--font-mono); white-space:nowrap; }
+.discovery-day[data-discovery-state="not-scanned"] h3 span,.discovery-empty { color:var(--ink-tertiary); }.discovery-empty { margin:0; font-size:13px; }
+.discovery-list { margin:0; padding:0; list-style:none; }.discovery-item { min-width:0; padding:10px 0; border-bottom:1px dashed var(--line-soft); }.discovery-item:last-child { border-bottom:0; }
+.discovery-headline { margin:0; color:var(--ink); font-size:15.5px; font-weight:600; line-height:1.5; overflow-wrap:anywhere; }.discovery-summary { margin:3px 0 0; color:var(--ink-secondary); font-size:13px; line-height:1.6; overflow-wrap:anywhere; }
+.discovery-meta { display:flex; flex-wrap:wrap; gap:6px 12px; margin:5px 0 0; color:var(--ink-tertiary); font-size:12px; }.discovery-meta span + span::before { content:"· "; }.discovery-meta a { color:var(--accent); text-decoration:none; }.discovery-meta a:hover { text-decoration:underline; }
+.discovery-third-party { display:inline-block; margin-left:6px; padding:1px 7px; border:1px solid var(--line); border-radius:9999px; color:var(--ink-secondary); font:600 10.5px/1.6 var(--font-mono); vertical-align:middle; }
 .log-archive { margin-top:18px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }.log-archive > summary { padding:14px 18px; color:var(--ink); cursor:pointer; font-weight:600; }.log-archive[open] > summary { border-bottom:1px solid var(--line); }.log-archive > .log-days { padding:0 18px 18px; }
 @media (max-width:900px) { .log-overview-grid { grid-template-columns:1fr; } }
 @media (max-width:720px) { .daily-log-dashboard { padding:12px 8px 42px; }.log-hero { padding:22px 18px; }.log-hero-meta { grid-template-columns:1fr; }.log-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.log-snapshot-grid,.log-health-grid,.log-event-grid { grid-template-columns:1fr; }.log-days { padding:16px 0; }.log-days::before { left:17px; top:92px; bottom:34px; }.log-section-heading { margin-left:42px; }.log-day { margin-left:42px; padding:16px 14px; }.log-day::before { left:-34px; top:20px; width:10px; height:10px; }.log-day-summary { justify-content:flex-start; } }
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     page = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日更新 · FreeLLM</title><meta name="description" content="FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY UPDATES / 每日更新</div><h1><span lang="zh-CN">今日更新，<br>发现 AI 新可能</span><span lang="en">What changed in AI today?</span></h1><p class="lead"><span lang="zh-CN">我们持续追踪全球 AI 生态的最新动态，为你筛选真正有价值的更新，让先进的 AI 触手可及。</span><span lang="en">We check official sources daily and record new, recovered, offline and source issues.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('扫描状态', 'Scan status')}</span><strong>{_locale_pair('今日扫描完成', 'Scan complete')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{reference_modules}{history_archive}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日发现 · FreeLLM</title><meta name="description" content="FreeLLM 每日发现：近 7 天新出现的免费模型、限免活动和开发工具，逐条附官方来源；恢复、下线和来源异常也如实记录。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY DISCOVERIES / 每日发现</div><h1><span lang="zh-CN">每日发现，<br>这一周的 AI 新可能</span><span lang="en">Daily discoveries: what is new this week</span></h1><p class="lead"><span lang="zh-CN">每天从官方来源找出新出现的免费模型、限免活动和开发工具，写清楚能免费用多少、用到什么时候。同一个项目只在第一次出现的那天记一次。</span><span lang="en">Every day we look through official sources for newly free models, limited-time offers and developer tools, and note how much is free and for how long.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('近 7 天发现', 'Last 7 days')}</span><strong>{_locale_pair(f'{week_total} 项', f'{week_total} items')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{discovery_week}{reference_modules}{history_archive}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
-    share_title = "每日更新 · FreeLLM"
-    share_description = "FreeLLM 每日检查官方来源，记录 AI 资源的新增、恢复、下线和异常，并保留可核对的官方证据。"
+    share_title = "每日发现 · FreeLLM"
+    share_description = "FreeLLM 每日发现：近 7 天新出现的免费模型、限免活动和开发工具，逐条附官方来源；恢复、下线和来源异常也如实记录。"
     share_image = _absolute(site_url, SHARE_IMAGE_PATH)
     social = (
         '<meta name="robots" content="index,follow,max-image-preview:large">'
@@ -5043,7 +5122,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
     # The checked-in HTML alone is not authoritative: CI regenerates this route.
     page = page.replace(
         "</body>",
-        '<script defer src="/js/scan-trust.js?v=p0-1-20261008"></script></body>',
+        '<script defer src="/js/scan-trust.js?v=20261012-daily-discovery"></script></body>',
         1,
     )
     return page.replace(canonical, canonical + social, 1)
@@ -5502,7 +5581,7 @@ def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
       <footer class="skills-site-footer">
         <div class="skills-footer-brand"><a href="/" class="skills-footer-logo"><span aria-hidden="true">◈</span><span><strong>FreeLLM</strong><small>AI for Everyone</small></span></a><p>让优质的 AI 资源，触手可及。</p></div>
         <nav aria-label="产品"><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具集</a><a href="/skills/">技能</a><a href="/workflow/">工作流</a></nav>
-        <nav aria-label="资源"><strong>资源</strong><a href="/logs/">最新更新</a><a href="/guides/free-llm/">热门资源</a><a href="/workflow/">使用教程</a><a href="/about/">关于 FreeLLM</a></nav>
+        <nav aria-label="资源"><strong>资源</strong><a href="/logs/">每日发现</a><a href="/guides/free-llm/">热门资源</a><a href="/workflow/">使用教程</a><a href="/about/">关于 FreeLLM</a></nav>
         <nav aria-label="社区"><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/workflow/">加入社区</a><a href="/submit/">反馈建议</a></nav>
         <a class="skills-footer-slogan" href="/">Better AI<br> A Brighter Tomorrow</a>
       </footer>
@@ -6419,8 +6498,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     # P0-1: materialize the same daily-log snapshot read by /logs/, home and /about/.
     latest_scanned_log = _latest_scanned_log(sorted(daily_logs or [], key=lambda item: str(item.get("date") or ""), reverse=True))
     observed = latest_scanned_log.get("observed") or {}
-    scan_events = [*(latest_daily_log.get("events") or []), *(latest_daily_log.get("curatedEvents") or [])]
-    new_events = [e for e in scan_events if e.get("eventType") in {"new", "new_route"}]
+    # 「每日发现」 rule: an id counts as new only on the first date it was logged.
+    new_events = list(discoveries.first_seen_discoveries(daily_logs or []).get(str(latest_daily_log.get("date") or ""), []))
     # One count helper for every page (scripts/site_counts.py). "models" /
     # "offers" are catalog counts; the scan's own coverage is kept separately
     # as scannedModels / scannedOffers and never shown as a catalog total.
@@ -6516,7 +6595,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         about_scan = (
             '<section aria-label="FreeLLM 数据口径" id="about-scan-summary" style="max-width:1120px;margin:24px auto;padding:16px;border:1px solid #dce3ec;border-radius:12px">'
             '<h2 style="margin:0 0 8px">FreeLLM 数据口径</h2>'
-            f'<p>数据日期：<time data-scan-date>{_esc(scan_label)}</time> · 今日新增 <strong data-scan-stat="newCount">{scan_summary["newCount"]}</strong>'
+            f'<p>数据日期：<time data-scan-date>{_esc(scan_label)}</time> · 今日发现 <strong data-scan-stat="newCount">{scan_summary["newCount"]}</strong>'
             f' · 模型目录 <strong data-scan-stat="models">{scan_summary["models"]}</strong> 条'
             f' · 当前有效资源 <strong data-scan-stat="offers">{scan_summary["offers"]}</strong> 条'
             f'（存档共 <strong data-scan-stat="offersTotal">{scan_summary["offersTotal"]}</strong> 条，其中 <strong data-scan-stat="offersExpired">{scan_summary["offersExpired"]}</strong> 条已结束；<a href="/logs/">查看每日更新</a>）</p>'
@@ -7244,7 +7323,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/skills/", "✦", "技能", "skills"),
         ("/tools/", "⌘", "工具", "tools"),
         ("/workflow/", "⌁", "工作流", "workflow"),
-        ("/logs/", "◷", "更新", "logs"),
+        ("/logs/", "◷", "每日发现", "logs"),
         ("/about/", "ⓘ", "关于", "about"),
     ]
     def render_link(item: tuple[str, str, str, str]) -> str:
@@ -7262,7 +7341,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261012-fast-navigation"></script>'
+        '<script src="/js/site-navigation.js?v=20261012-daily-discovery"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
@@ -7393,7 +7472,7 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
         relative: _ensure_skill_section_tabs(_ensure_model_section_tabs(content, relative), relative)
         for relative, content in files.items()
     }
-    sync_tag = '<script src="/js/freellm-sync.js?v=20261012-fast-navigation"></script>'
+    sync_tag = '<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>'
     files = {
         relative: (content if (relative.suffix != ".html" or "freellm-sync.js" in content or "</body>" not in content)
                    else content.replace("</body>", sync_tag + "</body>", 1))

@@ -132,7 +132,7 @@ class StaticContractTests(unittest.TestCase):
         for needle in (
             'href="/submit/"',
             "window.addEventListener('DOMContentLoaded'",
-            "sync.src = '/js/freellm-sync.js?v=20261012-fast-navigation'",
+            "sync.src = '/js/freellm-sync.js?v=20261012-daily-discovery'",
             "sync.async = true",
             'id="catalog-method-filter"',
             'id="catalog-capability-filter"',
@@ -239,8 +239,8 @@ class StaticContractTests(unittest.TestCase):
         ):
             self.assertIn(needle, self.html)
         self.assertIn('每日更新', self.html)
-        self.assertIn('今日更新，', log)
-        self.assertIn('我们持续追踪全球 AI 生态的最新动态', log)
+        self.assertIn('每日发现，', log)
+        self.assertIn('近 7 天发现', log)
         self.assertIn('查看今日变化', self.html)
 
     def test_homepage_links_to_theme_guides(self):
@@ -1141,13 +1141,13 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=en#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "en")
-        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Updates")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "Discoveries")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "中文")
 
         page.goto(f"{self.site.url}/{self.PAGE_URL_PATH}?lang=zh-CN#catalog-offers")
         page.wait_for_function("document.body.dataset.dataSource !== undefined")
         self.assertEqual(page.evaluate("document.documentElement.lang"), "zh-CN")
-        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "更新")
+        self.assertEqual(page.locator('[data-site-nav="logs"] span:last-child').inner_text(), "每日发现")
         self.assertEqual(page.locator("[data-reference-locale-toggle]").inner_text(), "EN")
         self.assertEqual(len(page.problems), 0, (page.problems, page.bad_responses))
 
