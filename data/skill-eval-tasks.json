@@ -2868,6 +2868,127 @@
         }
       ],
       "allowQuestions": false
+    },
+    "vercel-labs-find-skills": {
+      "task": "我希望给 Codex 添加自动测试网页的 Agent Skill。请按 find-skills 工作流说明如何检索现有 Skill，给出可执行的查找和安装命令、上游来源验证方法，并明确你是否真的执行了安装或运行测试。禁止捏造运行成功。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "npx\\s+skills\\s+find",
+          "label": "使用 Skills CLI 搜索命令"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "npx\\s+skills\\s+add",
+            "skills\\s+add"
+          ],
+          "label": "给出发现后的可审核安装命令"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "github\\.com/",
+            "skills\\.sh/"
+          ],
+          "label": "给出上游来源核验入口"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "未执行",
+            "未安装",
+            "未实测",
+            "需验证",
+            "尚未安装",
+            "权限",
+            "风险"
+          ],
+          "label": "不将候选发现冒充实际执行成功"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "vercel-labs-agent-browser": {
+      "task": "你需要在隔离测试环境对 https://example.com 做一次浏览器自动化冒烟验证：先检查 agent-browser CLI 安装/运行依赖，再提供打开网页、读取页面快照和截图的命令，说明如何核对结果。不得使用真实账号 Cookie，也不要声称未执行的命令已经通过。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "agent-browser",
+          "label": "使用 agent-browser CLI"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "agent-browser\\s+install",
+            "npm\\s+(?:install|i)\\s+-g\\s+agent-browser"
+          ],
+          "label": "说明安装 CLI 或浏览器环境准备"
+        },
+        {
+          "type": "regex",
+          "pattern": "https://example\\.com",
+          "label": "保留受控测试站点 URL"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "snapshot",
+            "screenshot"
+          ],
+          "label": "包含网页快照或截图操作"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "验证",
+            "核对",
+            "未执行",
+            "预期结果",
+            "检查"
+          ],
+          "label": "提供复核方式而非虚假通过声明"
+        }
+      ],
+      "allowQuestions": false
+    },
+    "steipete-summarize": {
+      "task": "你需要用 summarize CLI 读取 https://example.com/about，并给出中文摘要。请先检查模型/CLI 是否就绪，示范抽取正文和摘要命令，说明模型连接条件或失败路径，不显示任何真实 API Key。",
+      "checks": [
+        {
+          "type": "regex",
+          "pattern": "summarize\\s+status",
+          "label": "执行前检查模型或 CLI 就绪状态"
+        },
+        {
+          "type": "regex",
+          "pattern": "summarize\\s+[\"']?https://example\\.com",
+          "label": "使用 summarize CLI 读取目标网页"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "--extract",
+            "--plain",
+            "--length",
+            "--language"
+          ],
+          "label": "体现 CLI 提取或摘要参数"
+        },
+        {
+          "type": "regex_any",
+          "patterns": [
+            "模型",
+            "provider",
+            "CLI",
+            "API",
+            "配置",
+            "未配置"
+          ],
+          "label": "披露依赖与配置条件"
+        }
+      ],
+      "allowQuestions": false
     }
   }
 }
