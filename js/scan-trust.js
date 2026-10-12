@@ -31,7 +31,7 @@
       const cards = home.querySelectorAll('.prototype-stat');
       const values = [scan.newCount,scan.models,scan.newOffers,scan.offers];
       const labels = editorialCurrent
-        ? ['今日发现','模型记录','新资源动态','扫描资源数']
+        ? ['最新更新','模型记录','新资源动态','扫描资源数']
         : [latest,'模型记录','新资源动态','扫描资源数'];
       cards.forEach((card,i) => {
         if (i >= values.length) return;
@@ -44,7 +44,7 @@
     set(hero,scan.offers);
     const badge = document.getElementById('daily-log-badge');
     if (badge) {
-      set(badge,editorialCurrent ? '今日发现 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
+      set(badge,editorialCurrent ? '最新更新 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
       badge.dataset.newCount = editorialCurrent ? String(scan.newCount) : '0';
       badge.dataset.changeCount = editorialCurrent ? String(scan.newCount) : '0';
     }

@@ -35,7 +35,7 @@ class BuildStaticTests(unittest.TestCase):
 
             self.assertIn("新增 2 项", rendered)
             self.assertIn('href="/logs/#log-day-2026-10-11"', rendered)
-            self.assertIn("查看全部发现", rendered)
+            self.assertIn("查看更新详情", rendered)
             self.assertNotIn("Model A", rendered)
             self.assertNotIn("Offer B", rendered)
 
