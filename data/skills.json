@@ -3410,7 +3410,13 @@
     "contentPath": "skill-content/vercel-labs-find-skills.md",
     "contentUrl": "https://raw.githubusercontent.com/vercel-labs/skills/main/skills/find-skills/SKILL.md",
     "contentFetchedAt": "2026-10-12",
-    "contentBytes": 5456
+    "contentBytes": 5456,
+    "repoStats": {
+      "stars": 33900,
+      "starsPrecision": "GitHub public page rounded 33.9k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/vercel-labs/skills"
+    }
   },
   {
     "id": "vercel-labs-agent-browser",
@@ -3457,56 +3463,13 @@
     "contentPath": "skill-content/vercel-labs-agent-browser.md",
     "contentUrl": "https://raw.githubusercontent.com/vercel-labs/agent-browser/main/skills/agent-browser/SKILL.md",
     "contentFetchedAt": "2026-10-12",
-    "contentBytes": 3455
-  },
-  {
-    "id": "op7418-guizang-ppt-skill",
-    "name": "guizang-ppt-skill",
-    "category": "presentations",
-    "description": "Generates a single-file HTML horizontal-slide presentation with editorial-magazine or Swiss-style layouts, presenter tools, notes and visual effects. It does not primarily output an editable PPTX.",
-    "githubUrl": "https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md",
-    "cloneCommand": "git clone https://github.com/op7418/guizang-ppt-skill.git",
-    "compatibility": [
-      "Claude Code",
-      "Codex",
-      "Cursor"
-    ],
-    "status": "candidate",
-    "source": "github-verified",
-    "lastCheckedAt": "2026-10-12",
-    "linkCheck": "ok",
-    "reviews": [],
-    "firstListedAt": "2026-10-12",
-    "description_zh": "生成单文件横向翻页 HTML 演示，可选电子杂志风与瑞士网格风，含讲者模式、备注与视觉效果；不等同原生可编辑 PPTX。",
-    "styles": {
-      "format": "单文件 HTML 网页 PPT",
-      "summary": "两种上游明示视觉方向：电子杂志 × 电子墨水、瑞士国际主义；包含讲者工具。",
-      "items": [
-        "电子杂志 × 电子墨水",
-        "瑞士国际主义"
-      ],
-      "total": 2,
-      "hasStyles": true
-    },
-    "freeLLMTest": {
-      "testedAt": "",
-      "environment": "Source/repository review only (2026-10-12); not installed or executed",
-      "testLevel": "unknown",
-      "status": "未实测",
-      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
-      "evidence": [
-        {
-          "url": "https://github.com/op7418/guizang-ppt-skill/blob/main/SKILL.md",
-          "label": "上游 SKILL.md",
-          "note": "来源核验，不是执行通过的证据"
-        }
-      ],
-      "score": null,
-      "evaluation": "上游 AGPL-3.0，本轮仅链接原文，不镜像整份技能；运行效果未验证。"
-    },
-    "license": "AGPL-3.0",
-    "contentUrl": "https://raw.githubusercontent.com/op7418/guizang-ppt-skill/main/SKILL.md",
-    "copyrightNote": "Only upstream link is listed; source content is not mirrored."
+    "contentBytes": 3455,
+    "repoStats": {
+      "stars": 43600,
+      "starsPrecision": "GitHub public page rounded 43.6k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/vercel-labs/agent-browser"
+    }
   },
   {
     "id": "steipete-summarize",
@@ -3553,51 +3516,12 @@
     "contentPath": "skill-content/steipete-summarize.md",
     "contentUrl": "https://raw.githubusercontent.com/steipete/summarize/main/.agents/skills/summarize/SKILL.md",
     "contentFetchedAt": "2026-10-12",
-    "contentBytes": 5436
-  },
-  {
-    "id": "infometa-aihot",
-    "name": "aihot",
-    "category": "seo-content",
-    "description": "Retrieves Chinese AI model, product, research and industry headlines from the third-party AIHOT public API and drafts digest summaries. Source accuracy and access policy need independent checks.",
-    "githubUrl": "https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md",
-    "cloneCommand": "git clone https://github.com/infometa/workbuddyskills.git",
-    "compatibility": [
-      "Claude Code",
-      "Codex",
-      "OpenCode"
-    ],
-    "status": "candidate",
-    "source": "github-verified",
-    "lastCheckedAt": "2026-10-12",
-    "linkCheck": "ok",
-    "reviews": [],
-    "firstListedAt": "2026-10-12",
-    "description_zh": "通过 AIHOT 第三方公开接口整理模型、产品、行业与论文动态，输出中文资讯简报；来源事实需二次核验，接口可用性未实测。",
-    "styles": {
-      "format": "中文 AI 资讯 Markdown 简报",
-      "summary": "第三方资讯 API 抓取与汇总；无视觉主题。",
-      "items": [],
-      "hasStyles": false
-    },
-    "freeLLMTest": {
-      "testedAt": "",
-      "environment": "Source/repository review only (2026-10-12); not installed or executed",
-      "testLevel": "unknown",
-      "status": "未实测",
-      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
-      "evidence": [
-        {
-          "url": "https://github.com/infometa/workbuddyskills/blob/main/skills/aihot/SKILL.md",
-          "label": "上游 SKILL.md",
-          "note": "来源核验，不是执行通过的证据"
-        }
-      ],
-      "score": null,
-      "evaluation": "SKILL.md 已核对，但未找到明确的仓库许可证，本轮仅做外链索引；第三方新闻仍需事实核查。"
-    },
-    "license": "UNKNOWN",
-    "contentUrl": "https://raw.githubusercontent.com/infometa/workbuddyskills/main/skills/aihot/SKILL.md",
-    "copyrightNote": "Only upstream link is listed; source content is not mirrored."
+    "contentBytes": 5436,
+    "repoStats": {
+      "stars": 6700,
+      "starsPrecision": "GitHub public page rounded 6.7k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/steipete/summarize"
+    }
   }
 ]
