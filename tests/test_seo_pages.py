@@ -274,9 +274,11 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     for model_id in (
         "agnes-2.5-flash",
         "agnes-image-2.1-flash",
-        "agnes-video-v2.0",
+        "agnes-video-2.5-flash",
     ):
         assert model_id in agnes["model"]
+    # agnes-video-v2.0 was retired upstream on 2026-09-25 (re-checked 2026-10-12).
+    assert "agnes-video-v2.0" not in agnes["model"]
     assert agnes["usageGuide"]["endpoint"] == "https://api.agnes-ai.cn/v1/chat/completions"
     assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.cn/zh-Hans/docs/overview"
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
@@ -314,12 +316,11 @@ def test_agnes_free_models_match_the_official_cn_pricing_page():
         "agnes-image-2.5-flash",
         "agnes-image-2.1-flash",
         "agnes-image-2.0-flash",
-        "agnes-video-v2.0",
         "agnes-video-2.5-flash",
     }
     assert {part.strip() for part in agnes["model"].split("·")} == free_ids
 
-    for paid in ("agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5"):
+    for paid in ("agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5", "agnes-video-v2.0"):
         assert paid not in free_ids
     for entry in agnes["freeModels"]:
         assert entry["sourceUrl"].startswith("https://agnes-ai.cn/")

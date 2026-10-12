@@ -259,6 +259,14 @@ AGNES_MODELS = {
 }
 
 
+AGNES_DELISTED = {
+    "agnes-ai/agnes-video-v2-0",
+    "agnes-ai/agnes-2-5-pro-beta",
+    "agnes-ai/agnes-2-5-pro",
+    "agnes-ai/agnes-video-2-5",
+}
+
+
 def _agnes_rows(path: str) -> dict[str, dict]:
     rows = json.loads(Path(path).read_text(encoding="utf-8"))
     return {row["id"]: row for row in rows if row.get("providerId") == "agnes-ai"}
@@ -274,8 +282,14 @@ def test_curated_overlay_carries_every_official_agnes_model():
         assert row["maxOutput"] == max_output
         assert row["modality"] == modality
         assert row["sourceKind"] == "official"
-        assert row["status"] == "online"
-        assert row["lastVerifiedAt"] == "2026-09-19"
+        # 2026-10-12 official re-check: video-v2.0 retired 2026-09-25, 2.5-pro-beta
+        # docs taken down; 2.5-pro / video-2.5 are paid and removed from the free directory.
+        if model_id in AGNES_DELISTED:
+            assert row["status"] == "offline"
+            assert row["offlineAt"] and row["offlineReason"]
+        else:
+            assert row["status"] == "online"
+        assert row["lastVerifiedAt"] == "2026-10-12"
         # The mainland route is the primary entry point for this provider.
         assert row["accessRegion"] == "domestic"
         assert row["accessEndpoint"] == "https://api.agnes-ai.cn/v1"
@@ -290,7 +304,10 @@ def test_published_catalog_contains_the_verified_agnes_rows():
         assert published[model_id]["providerId"] == "agnes-ai"
         assert published[model_id]["canonicalModelId"] == canonical
         assert published[model_id]["sourceKind"] == "official"
-        assert published[model_id]["freshnessStatus"] in {"new", "current"}
+        if model_id in AGNES_DELISTED:
+            assert published[model_id]["status"] == "offline"
+        else:
+            assert published[model_id]["freshnessStatus"] in {"new", "current"}
 
 
 def test_catalog_excludes_agnes_models_the_cn_docs_no_longer_publish():
@@ -303,19 +320,22 @@ def test_catalog_excludes_agnes_models_the_cn_docs_no_longer_publish():
 
 
 def test_agnes_free_models_match_the_official_cn_pricing_page():
-    # Official CN pricing page, 2026-09-19: these are billed at ¥0 today. The
+    # Official CN pricing page, re-checked 2026-10-12: these are billed at ¥0 today. The
     # paid siblings stay in the catalog (it is a model directory, not a free-only
     # list) but must never be presented as free.
     free = {"agnes-2.5-flash", "agnes-3.0-flash", "agnes-image-2.0-flash",
-            "agnes-image-2.1-flash", "agnes-image-2.5-flash", "agnes-video-v2.0"}
+            "agnes-image-2.1-flash", "agnes-image-2.5-flash"}
     promo = {"agnes-video-2.5-flash"}
-    paid = {"agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5"}
+    paid = {"agnes-2.5-pro", "agnes-video-2.5"}
+    retired = {"agnes-video-v2.0", "agnes-2.5-pro-beta"}
     rows = _agnes_rows("data/models-curated.json")
     notes = {row["canonicalModelId"]: row.get("manualNote", "") for row in rows.values()}
-    assert set(notes) == free | promo | paid
+    assert set(notes) == free | promo | paid | retired
     for model in free:
         assert "¥0" in notes[model], model
     for model in promo:
         assert "限时免费" in notes[model], model
     for model in paid:
         assert "付费" in notes[model], model
+    for model in retired:
+        assert "下线" in notes[model], model
