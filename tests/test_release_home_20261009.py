@@ -116,7 +116,7 @@ class HomeReleaseGate(unittest.TestCase):
     def test_homepage_layout_styles_are_loaded_before_first_paint(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         navigation = re.search(
-            r'<link\b(?=[^>]*primary-menu\.css\?v=20261012-today-discovery)[^>]*>', homepage
+            r'<link\b(?=[^>]*primary-menu\.css\?v=20261013-overflow)[^>]*>', homepage
         )
         self.assertIsNotNone(navigation)
         self.assertIn('rel="stylesheet"', navigation.group(0))
@@ -134,7 +134,7 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertIn("logs: 'Discoveries'", sync)
         self.assertNotIn("'Updates'", navigation + sync)
         self.assertIn("freellm-sync.js?v=20261012-daily-discovery", homepage)
-        self.assertIn("site-navigation.js?v=20261012-daily-discovery", homepage)
+        self.assertIn("site-navigation.js?v=20261013-overflow", homepage)
 
     def test_home_stat_rows_expand_for_date_metadata(self):
         styles = (ROOT / "css/home-prototype-exact.css").read_text(encoding="utf-8")

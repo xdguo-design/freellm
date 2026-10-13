@@ -2,7 +2,7 @@
   'use strict';
 
   var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'about']);
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261012-today-discovery';
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261013-overflow';
   var updateIndicatorReady = false;
   var lastUpdateDate = '';
   var readUpdateKey = 'freellm-last-read-update';

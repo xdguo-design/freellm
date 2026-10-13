@@ -13,6 +13,8 @@ import unittest
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import xml.etree.ElementTree as ET
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML_PATH = ROOT / "design" / "free-china-ai-index.html"
@@ -746,6 +748,37 @@ class BrowserPageTests(unittest.TestCase):
                         .filter(x=>x.width>1&&(x.right>innerWidth+4||x.left<-4)).slice(0,6)""")
                     self.assertLessEqual(scroll_width, width+4, f"{route} at {width}px: {overflowers}")
                     page.close()
+
+    def test_all_sitemap_pages_fit_mobile_and_desktop_viewports(self):
+        namespace = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+        page_paths = set()
+        for filename in (
+            "sitemap-english.xml",
+            "sitemap-models.xml",
+            "sitemap-offers.xml",
+            "sitemap-pages.xml",
+            "sitemap-providers.xml",
+        ):
+            root = ET.parse(ROOT / filename).getroot()
+            for node in root.findall(f"{namespace}url/{namespace}loc"):
+                page_paths.add(urlsplit(node.text or "/").path or "/")
+
+        page = self.new_page()
+        origin = self.site.url
+        page.route("**/*", lambda route: route.continue_() if route.request.url.startswith(origin) else route.abort())
+        for width in (390, 1280):
+            page.set_viewport_size({"width": width, "height": 900})
+            for path in sorted(page_paths):
+                with self.subTest(path=path, width=width):
+                    response = page.goto(f"{origin}{path}", wait_until="domcontentloaded")
+                    self.assertIsNotNone(response, path)
+                    self.assertLess(response.status, 400, path)
+                    page.wait_for_timeout(20)
+                    dimensions = page.evaluate(
+                        """() => ({document: document.documentElement.scrollWidth, body: document.body.scrollWidth})"""
+                    )
+                    self.assertLessEqual(dimensions["document"], width + 1, f"{path} at {width}px: {dimensions}")
+                    self.assertLessEqual(dimensions["body"], width + 1, f"{path} at {width}px: {dimensions}")
 
 
     def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):

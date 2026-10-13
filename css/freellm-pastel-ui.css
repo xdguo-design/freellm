@@ -2430,6 +2430,7 @@ body.fl-ui-v2[data-fl-section="about"] > header{
 body.fl-ui-v2[data-fl-section="about"] > main{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
+  min-width:0;
   gap:14px;
   padding:0 !important;
   border:0 !important;
@@ -2526,7 +2527,7 @@ html.fl-pastel-ui[data-theme="dark"] .notice{
 /* Responsive cross-page checks ----------------------------------------- */
 @media(max-width:980px){
   body.fl-ui-v2[data-fl-section="about"] > main{
-    grid-template-columns:1fr;
+    grid-template-columns:minmax(0,1fr);
   }
   body.fl-ui-v2[data-fl-section="about"] > main > section:first-child{
     grid-column:auto;

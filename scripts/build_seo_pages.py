@@ -128,8 +128,8 @@ SKILLS_THEME_SCRIPT = '''<script id="skills-theme-script">
 
 SKILLS_THEME_ASSETS = SKILLS_THEME_FONTS + SKILLS_THEME_SCRIPT
 
-# Bump whenever css/freellm-pastel-ui.css changes (20261009-eval: FreeLLM evaluation blocks on secondary pages).
-PASTEL_UI_CSS_VERSION = "20261009-eval"
+# Bump whenever css/freellm-pastel-ui.css changes (20261013-overflow: mobile about grid min sizing).
+PASTEL_UI_CSS_VERSION = "20261013-overflow"
 
 # Editorial design tokens (data-platform-editorial): warm paper canvas, Instrument Serif
 # display type, Manrope body, JetBrains Mono metadata, hairline borders, pastel semantics.
@@ -151,7 +151,7 @@ header a { color:var(--accent); }
 h1 { margin:18px 0 10px; line-height:1.08; letter-spacing:-.02em; }
 h2 { margin:0 0 8px; line-height:1.2; letter-spacing:-.015em; }
 h3 { margin:22px 0 6px; }
-p { max-width:880px; }
+p { max-width:880px; overflow-wrap:anywhere; }
 .lead { max-width:840px; color:var(--ink-secondary); font-size:16px; line-height:1.7; }
 .muted { color:var(--ink-secondary); }
 .crumb, .eyebrow { font:500 11px/1.5 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; }
@@ -7389,7 +7389,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261012-daily-discovery"></script>'
+        '<script src="/js/site-navigation.js?v=20261013-overflow"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'

@@ -257,7 +257,15 @@ body[data-fl-section="skills"] .ref-topbar { left: var(--fl-menu-rail-width) !im
     max-width: none !important;
     margin: 0 0 0 var(--fl-menu-rail-width) !important;
   }
-  body[data-fl-section="about"] > main,
+  body[data-fl-section="about"] > main {
+    position: relative !important;
+    left: 0 !important;
+    box-sizing: border-box !important;
+    width: calc(100% - var(--fl-menu-rail-width) - 36px) !important;
+    max-width: none !important;
+    margin-left: calc(var(--fl-menu-rail-width) + 18px) !important;
+    margin-right: 18px !important;
+  }
   body[data-fl-section="about"] > .prototype-footer {
     width: calc(100% - var(--fl-menu-rail-width)) !important;
     max-width: none !important;
@@ -276,7 +284,7 @@ body[data-fl-section="skills"] .ref-topbar { left: var(--fl-menu-rail-width) !im
     margin-right: 18px !important;
   }
 }
-body[data-fl-section="about"] > main { left: var(--fl-menu-rail-width) !important; width: calc(100% - var(--fl-menu-rail-width)) !important; }
+body[data-fl-section="about"] > main { left: 0 !important; box-sizing: border-box !important; width: calc(100% - var(--fl-menu-rail-width) - 36px) !important; margin-left: calc(var(--fl-menu-rail-width) + 18px) !important; margin-right: 18px !important; }
 body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-width) !important; width: calc(100% - var(--fl-menu-rail-width)) !important; }
 
 @media (max-width: 600px) {
@@ -291,7 +299,7 @@ body[data-fl-section="about"] > .prototype-footer { left: var(--fl-menu-rail-wid
   #fl-shared-site-menu .fl-site-nav > a[aria-current="page"]::after { display: none !important; }
   body[data-fl-section="skills"] .skills-page { width: 100% !important; margin-left: 0 !important; }
   body[data-fl-section="skills"] .ref-topbar { left: 0 !important; }
-  body[data-fl-section="about"] > main, body[data-fl-section="about"] > .prototype-footer { left: 0 !important; width: 100% !important; }
+  body[data-fl-section="about"] > main, body[data-fl-section="about"] > .prototype-footer { left: 0 !important; box-sizing: border-box !important; width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
   body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-grid { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
   body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-card { min-width: 0 !important; }
   body[data-reference-style="v1"][data-fl-section="workflow"] .workflow-template-cover { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; }
@@ -363,6 +371,38 @@ body[data-offer-id] .qs-grid,
 body[data-offer-id] .qs-step,
 body[data-offer-id] .qs-code,
 body[data-offer-id] .qs-code .operation-command-head { min-width: 0 !important; }
+
+/* Keep fixed-rail content within the viewport and let long source links wrap. */
+html body.fl-ui-v2 main,
+html body.fl-ui-v2 main > * { min-width: 0 !important; }
+html body.fl-ui-v2 main a,
+html body[data-offer-id] main a,
+html body[data-provider-directory] main a {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+html body.fl-ui-v2 main p,
+html body.fl-ui-v2 main li {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+html body.fl-ui-v2 main pre {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+body[data-offer-id] .quick-start .qs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+body[data-offer-id] .qs-step > * { box-sizing: border-box; min-width: 0 !important; max-width: 100%; }
+body[data-offer-id] .qs-step pre { width: 100%; max-width: 100%; }
+body[data-offer-id] .registration-requirements .btn,
+body[data-provider-directory] .registration-requirements .btn {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 680px) {
+  body[data-offer-id] .quick-start .qs-grid { grid-template-columns: minmax(0, 1fr); }
+}
 body[data-offer-id] .qs-code { width: 100% !important; max-width: 100% !important; }
 body[data-offer-id] .qs-step pre { box-sizing: border-box !important; width: 100% !important; min-width: 0 !important; max-width: 100% !important; }
 body[data-offer-id] .qs-desc,
