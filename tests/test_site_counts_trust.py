@@ -98,12 +98,31 @@ def test_about_logs_models_and_english_hubs_agree(summary):
 
 def test_models_page_does_not_show_empty_featured_filter_as_all_models():
     page = _read("models/index.html")
-    featured = int(re.search(r'id="featured-model-title">.*?<small>\((\d+)\)</small>', page, re.S).group(1))
+    featured_match = re.search(r'id="featured-model-title">.*?<small>\((\d+)\)</small>', page, re.S)
+    featured = int(featured_match.group(1)) if featured_match else 0
     chip = re.search(r'data-model-filter="all"[^>]*>(.*?)</button>', page, re.S).group(1)
     assert "全部模型" not in chip and "全部精选" in chip
     if featured == 0:
+        assert "团队复核精选模型" in page
         assert '<div class="model-filter-toolbar" hidden>' in page
         assert '<div class="featured-evidence-filters" hidden>' in page
+
+
+def test_models_navigation_uses_active_offer_count_and_no_empty_pick_count(summary):
+    page = _read("models/index.html")
+    assert f"当前有效资源（{summary['offers']}）" in page
+    assert f"Active offers ({summary['offers']})" in page
+    assert "已核验资源（80+）" not in page
+    assert "Verified offers (80+)" not in page
+    if 'id="featured-model-title">' in page:
+        assert '(0)</small>' not in re.search(r'id="featured-model-title">(.*?)</h2>', page, re.S).group(1)
+    assert 'href="#real-evaluation"' in page
+
+
+def test_homepage_uses_current_footer_year():
+    home = _read("design/free-china-ai-index.html")
+    assert "© 2026 FreeLLM. All rights reserved." in home
+    assert "© 2024 FreeLLM" not in home
 
 
 FORBIDDEN_MARKETING = (

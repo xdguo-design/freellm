@@ -150,7 +150,11 @@ class P0ConvergenceTests(unittest.TestCase):
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         curated_count = page.count('class="featured-model-card"')
         self.assertIn("精选模型", page)
-        self.assertIn(f"({curated_count})", page)
+        if curated_count:
+            self.assertIn(f"({curated_count})", page)
+        else:
+            self.assertIn("团队复核精选模型", page)
+            self.assertNotIn("(0)</small>", page)
         self.assertIn('href="/models/all/"', page)
         self.assertGreaterEqual(len(models), curated_count)
         self.assertIn(f"完整目录共 {len(models)} 条模型记录", page)
