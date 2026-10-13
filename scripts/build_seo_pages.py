@@ -5020,7 +5020,7 @@ def render_daily_log_page(logs: list[dict], site_url: str, offers: list[dict] | 
         ))
         empty_state = _log_empty_state(log, groups) if index == 0 else ""
         sections.append(
-            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("记录日期", "Record date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{snapshot_label}</span><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
+            f'''<section class="log-day" id="log-day-{_esc(date)}"><div class="log-day-head"><div><span class="log-eyebrow">{_locale_pair("记录日期", "Record date")}</span><h2>{_esc(date)}</h2></div><div class="log-day-summary"><span>{_locale_pair(*day_state)}</span><span>{_locale_pair("新增", "New")} {len(groups["new"])}</span><span>{_locale_pair("恢复", "Recovered")} {len(groups["recovered"])}</span><span>{_locale_pair("下线", "Offline")} {len(groups["offline"])}</span><span>{_locale_pair("来源异常", "Source issues")} {len(groups["unavailable"])}</span></div></div>{empty_state}<div class="log-day-snapshot"><span>{snapshot_label}</span><strong>{_esc(snapshot_date or "—")}</strong><strong>{snapshot["models"]} {_locale_pair("模型", "models")}</strong><strong>{snapshot["providers"]} {_locale_pair("提供商", "providers")}</strong><strong>{snapshot["offers"]} {_locale_pair("资源", "offers")}</strong></div><div class="log-event-grid">{event_panels}</div><section class="log-event-panel log-health-panel"><h3>{_locale_pair("来源健康", "Source health")}</h3>{_log_health_table(log)}</section></section>'''
         )
     body = "".join(sections) or '<section class="log-day"><div class="log-empty"><strong>日志即将开始记录 / The daily log has not started yet.</strong></div></section>'
     body = re.sub(r"(?m)^[ \t]+$", "", body)
@@ -6566,7 +6566,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         "newCount": len(new_events),
         "newModels": sum(e.get("kind") == "model" for e in new_events),
         "newOffers": sum(e.get("kind") == "offer" for e in new_events),
-        "sourceChecks": sum(v.get("status") == "ok" for v in (latest_daily_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
+        "sourceChecks": sum(v.get("status") == "ok" for v in (latest_scanned_log.get("sourceHealth") or {}).values() if isinstance(v, dict)),
         "scanRunToday": latest_daily_log.get("date") == latest_scanned_log.get("date"),
         "hasHistoricalBaseline": False,
         "countDefinitions": COUNT_DEFINITIONS,
@@ -6627,7 +6627,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             count=1,
             flags=re.S,
         )
-        latest_data_date = scan_summary["date"]
+        latest_data_date = scan_summary["snapshotDate"] or scan_summary["date"]
         date_copy = (
             f'<span lang="zh-CN">数据快照截至 {latest_data_date}</span><span lang="en">Data snapshot as of {latest_data_date}</span>'
             if latest_data_date

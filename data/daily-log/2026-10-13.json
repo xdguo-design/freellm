@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "baseline": false,
+  "events": [],
+  "curatedEvents": [
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "aliyun-bailian/qwen-image-2-1-pro",
+      "title": "Qwen-Image-2.1-Pro · 图像生成与编辑 API 上线",
+      "asOf": "2026-10-13",
+      "reason": "Qwen 官方仓库记录 Pro API 于 2026-10-09 正式开放；阿里云百炼模型页和价格页确认现可调用。官方提供 10 张免费生成额度，耗尽后按 ¥0.25/张计费。周报将 Pro 模型列为 2026-10-02 上架，故这里记录 API 开放日期，不混淆模型发布与 API 开放。",
+      "details": {
+        "id": "aliyun-bailian/qwen-image-2-1-pro",
+        "providerId": "aliyun-bailian",
+        "provider": "阿里云百炼",
+        "model": "Qwen-Image-2.1-Pro",
+        "status": "online",
+        "sourceKind": "official",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/qwen-image-2-1-pro",
+        "sourceUrls": [
+          "https://help.aliyun.com/zh/model-studio/model-pricing",
+          "https://github.com/QwenLM/Qwen-Image-2.1"
+        ],
+        "freeSummary": "10 张免费生成额度；额度耗尽后按 ¥0.25/张计费。免费额度有效期按百炼官方价格页说明计算。",
+        "validitySummary": "额度有效期 90 天；起算日期与适用条件以百炼价格页注释为准。",
+        "productType": "api",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "released": "2026-10-09"
+      }
+    },
+    {
+      "kind": "model",
+      "eventType": "new",
+      "id": "aliyun-bailian/qwen-image-2-1-turbo",
+      "title": "Qwen-Image-2.1-Turbo · 8 步图像生成与编辑 API",
+      "asOf": "2026-10-13",
+      "reason": "Qwen 官方仓库记录 Turbo API 于 2026-10-09 正式开放；阿里云百炼模型页确认该模型可调用。官方提供 10 张免费生成额度，耗尽后按 ¥0.10/张计费。",
+      "details": {
+        "id": "aliyun-bailian/qwen-image-2-1-turbo",
+        "providerId": "aliyun-bailian",
+        "provider": "阿里云百炼",
+        "model": "Qwen-Image-2.1-Turbo",
+        "status": "online",
+        "sourceKind": "official",
+        "sourceUrl": "https://help.aliyun.com/zh/model-studio/qwen-image-2-1-turbo",
+        "sourceUrls": [
+          "https://help.aliyun.com/zh/model-studio/model-pricing",
+          "https://github.com/QwenLM/Qwen-Image-2.1"
+        ],
+        "freeSummary": "10 张免费生成额度；额度耗尽后按 ¥0.10/张计费。免费额度有效期按百炼官方价格页说明计算。",
+        "validitySummary": "额度有效期 90 天；起算日期与适用条件以百炼价格页注释为准。",
+        "productType": "api",
+        "modality": [
+          "text",
+          "image"
+        ],
+        "released": "2026-10-09"
+      }
+    },
+    {
+      "kind": "skill",
+      "eventType": "new",
+      "id": "qwen-mm-plugins/omni-skill-creator",
+      "title": "Qwen Omni Skill Creator · 从演示视频生成可复用 Agent Skill",
+      "asOf": "2026-10-13",
+      "reason": "Qwen 官方于 2026-09-18 发布 Omni Skill Creator；今天核对其官方技能页仍可获取。它分析教学视频、提取流程并生成可验证的 Skill。不是今天刚发布，作为本次公众号/模型动态核查中补录的近期项目。",
+      "details": {
+        "id": "qwen-mm-plugins/omni-skill-creator",
+        "providerId": "qwenlm",
+        "provider": "QwenLM",
+        "skill": "Omni Skill Creator",
+        "status": "online",
+        "sourceKind": "official",
+        "sourceUrl": "https://qwenlm.github.io/qwen-mm-plugins-hub/plugins/omni-skill-creator/",
+        "sourceUrls": [
+          "https://qwen.ai/blog?id=qwen3.8-omni-flash",
+          "https://github.com/QwenLM/Qwen-MM-Plugins"
+        ],
+        "freeSummary": "开源 Agent Skill；运行需要 DashScope API Key 与 ffmpeg。",
+        "productType": "agent_skill",
+        "released": "2026-09-18"
+      }
+    },
+    {
+      "kind": "skill",
+      "eventType": "changed",
+      "id": "volcengine-agentkit-skill-workbench-2026-10",
+      "title": "火山引擎 AgentKit 新增技能工作台",
+      "asOf": "2026-10-13",
+      "reason": "火山引擎官方发布记录标注 2026-10-10 上线技能工作台，用于聚合近期访问的技能及质量、安全、评测待办；这是 Skills 管理功能更新，不是新技能包。",
+      "details": {
+        "id": "volcengine-agentkit-skill-workbench-2026-10",
+        "providerId": "volcengine",
+        "provider": "火山引擎",
+        "productType": "agent_skill",
+        "status": "verified",
+        "sourceKind": "official",
+        "sourceUrl": "https://docs.volcengine.com/docs/86681/2085679?lang=zh"
+      }
+    },
+    {
+      "kind": "offer",
+      "eventType": "changed",
+      "id": "aliyun-bailian-wan3-video-discount-extension-2026-10",
+      "title": "Wan3.0-Video 七折优惠据周报延期至 10 月 31 日",
+      "asOf": "2026-10-13",
+      "reason": "阿里云开发者社区 2026-10-12 周报称 Wan3.0-Video 后付费七折活动延期至 2026-10-31；该文标注为用户投稿，百炼官方控制台当前无法从公开页面独立读取截止日，因此此条作为待复核线索记录，不据此改写产品目录中的核验日期。",
+      "details": {
+        "id": "aliyun-bailian-wan3-video-discount-extension-2026-10",
+        "providerId": "aliyun-bailian",
+        "provider": "阿里云百炼",
+        "model": "wan3.0-video",
+        "productType": "api",
+        "status": "needs_review",
+        "sourceKind": "community_report",
+        "sourceUrl": "https://bailian.console.aliyun.com/cn-beijing/model/experience/vision/videoGenerate?modelId=wan3.0-video",
+        "validitySummary": "用户投稿周报称后付费七折优惠延期至 2026-10-31；请以百炼控制台实际展示为准。",
+        "relatedLinks": [
+          {
+            "label": "延期信息出处：阿里云开发者社区用户投稿周报",
+            "url": "https://developer.aliyun.com/article/1769869"
+          },
+          {
+            "label": "Wan3.0-Video 官方发布页（原始活动信息）",
+            "url": "https://bailian.console.aliyun.com/model-releases/wan3.0-video"
+          }
+        ]
+      }
+    }
+  ]
+}

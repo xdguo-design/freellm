@@ -72,10 +72,18 @@ class HomeReleaseGate(unittest.TestCase):
         self.assertEqual(ids.count("phanthycode-free-trial"), 1)
         latest_log = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["date"], latest_log["date"])
-        self.assertEqual(summary["snapshotDate"], latest_log["date"])
-        self.assertTrue(summary["scanRunToday"])
-        self.assertEqual(summary["scannedModels"], len(latest_log["observed"]["models"]))
-        self.assertEqual(summary["scannedOffers"], len(latest_log["observed"]["offers"]))
+        latest_scanned_log = next(
+            entry for entry in reversed([
+                json.loads(path.read_text(encoding="utf-8"))
+                for path in sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))
+            ])
+            if isinstance((entry.get("observed") or {}).get("models"), list)
+            and isinstance((entry.get("observed") or {}).get("offers"), list)
+        )
+        self.assertEqual(summary["snapshotDate"], latest_scanned_log["date"])
+        self.assertEqual(summary["scanRunToday"], latest_log["date"] == latest_scanned_log["date"])
+        self.assertEqual(summary["scannedModels"], len(latest_scanned_log["observed"]["models"]))
+        self.assertEqual(summary["scannedOffers"], len(latest_scanned_log["observed"]["offers"]))
         # 2026-10-10 series 4: the duplicate Step 5 / back-dated scan events were
         # removed and officially verified additions curated; count from the log.
         # 2026-10-12: 「每日发现」 counts an id only on the first date it was logged.
@@ -83,7 +91,14 @@ class HomeReleaseGate(unittest.TestCase):
         logs = [json.loads(path.read_text(encoding="utf-8")) for path in sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))]
         new_events = first_seen_discoveries(logs).get(latest_log["date"], [])
         self.assertEqual(summary["newCount"], len(new_events))
-        self.assertEqual(summary["sourceChecks"], 2)
+        self.assertEqual(
+            summary["sourceChecks"],
+            sum(
+                health.get("status") == "ok"
+                for health in latest_scanned_log.get("sourceHealth", {}).values()
+                if isinstance(health, dict)
+            ),
+        )
 
     def test_homepage_uses_sourced_discovery_and_incremental_cards(self):
         homepage = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")

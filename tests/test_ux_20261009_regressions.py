@@ -52,13 +52,20 @@ class AuditRegressions(unittest.TestCase):
         # This merged release contains both the actual Oct 9 scan and manually
         # curated discoveries. Keep them distinct while retaining both sources.
         summary = json.loads((ROOT / "data/scan-summary.json").read_text(encoding="utf-8"))
-        self.assertEqual(discovery["initialized"]["models"], summary["scanRunToday"])
-        self.assertEqual(discovery["initialized"]["offers"], summary["scanRunToday"])
+        self.assertTrue(discovery["initialized"]["models"])
+        self.assertTrue(discovery["initialized"]["offers"])
         # The Oct 9 record is historical; compare its observations to that
         # dated snapshot instead of today's rolling summary.
         self.assertEqual(len(discovery["observed"]["models"]), 244)
         self.assertEqual(len(discovery["observed"]["offers"]), 70)
-        latest_scan = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
+        latest_scan = next(
+            entry for entry in reversed([
+                json.loads(path.read_text(encoding="utf-8"))
+                for path in sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))
+            ])
+            if isinstance((entry.get("observed") or {}).get("models"), list)
+            and isinstance((entry.get("observed") or {}).get("offers"), list)
+        )
         self.assertEqual(summary["snapshotDate"], latest_scan["date"])
         self.assertEqual(len(latest_scan["observed"]["models"]), summary["scannedModels"])
         self.assertEqual(len(latest_scan["observed"]["offers"]), summary["scannedOffers"])
@@ -109,9 +116,17 @@ class AuditRegressions(unittest.TestCase):
         self.assertIn("scanCurrent ? scanDate : latest", script)
         latest_log = json.loads(sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["date"], latest_log["date"])
-        self.assertEqual(summary["snapshotDate"], latest_log["date"])
-        self.assertTrue(summary["scanRunToday"])
-        self.assertEqual(summary["snapshotDate"], latest_log["date"])
+        scanned_logs = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in sorted((ROOT / "data/daily-log").glob("20??-??-??.json"))
+        ]
+        latest_scan = next(
+            entry for entry in reversed(scanned_logs)
+            if isinstance((entry.get("observed") or {}).get("models"), list)
+            and isinstance((entry.get("observed") or {}).get("offers"), list)
+        )
+        self.assertEqual(summary["snapshotDate"], latest_scan["date"])
+        self.assertEqual(summary["scanRunToday"], latest_log["date"] == latest_scan["date"])
 
     def test_model_catalog_is_already_paginated(self):
         html = (ROOT / "models/all/index.html").read_text(encoding="utf-8")
