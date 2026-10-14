@@ -44,6 +44,7 @@ def test_all_skills_have_unique_indexable_detail_card():
         assert f'<link rel="canonical" href="{expected_url}">' in content
         assert "<h1>" in content and "</h1>" in content
         assert "<title>" in content and "</title>" in content
+        assert "adsbygoogle.js?client=ca-pub-2461062743308239" in content
         assert 'class="detail-grid"' in content
         assert "本站核验与实测记录" in content
         assert "来源、兼容环境与原始说明" in content
@@ -54,6 +55,7 @@ def test_all_skills_have_unique_indexable_detail_card():
 def test_catalog_cards_cover_every_skill():
     catalog = (GUIDES / "catalog" / "index.html").read_text(encoding="utf-8")
     assert 'id="skill-search"' in catalog
+    assert "adsbygoogle.js?client=ca-pub-2461062743308239" in catalog
     for skill in _skills():
         assert f'href="/skills/{quote(skill["id"])}/"' in catalog
     assert catalog.count('class="card skill"') == 98
