@@ -1,235 +1,150 @@
 #!/usr/bin/env python3
-"""
-AI Reference Checker - 查询ChatGPT、Perplexity、Gemini是否引用官网内容
-使用requests + BeautifulSoup实现多引擎搜索分析
-"""
+"""Evidence-based AI search citation audit.
 
-import requests
-from bs4 import BeautifulSoup
-import time
+This does NOT scrape chatbot answers, query DuckDuckGo for shared conversations,
+or infer citations from brand mentions. Each checked answer is recorded manually
+with a source link or screenshot reference. Missing observations stay UNKNOWN.
+
+Usage:
+  python seo/ai-reference-checker.py
+  python seo/ai-reference-checker.py --input private/geo-observations.csv --output private/geo-report.json
+"""
+from __future__ import annotations
+
+import argparse
+import csv
 import json
-import re
-from datetime import datetime
-from urllib.parse import quote, urlparse, unquote
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.parse import urlsplit
+
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_KEYWORDS = ROOT / "seo" / "geo-keywords.json"
+DEFAULT_OBSERVATIONS = ROOT / "seo" / "geo-observations.example.csv"
+ENGINES = ("chatgpt_search", "perplexity", "gemini", "google_ai_mode")
+REQUIRED_FIELDS = ("checked_at", "engine", "query", "result", "cited_url", "evidence_url", "evidence_path", "notes")
+VALID_RESULTS = {"cited", "not_cited"}
 
 
-class AIReferenceChecker:
-    """AI引用检测器"""
-
-    def __init__(self, target_urls):
-        """
-        初始化
-        :param target_urls: 目标官网URL列表
-        """
-        self.target_urls = target_urls
-        self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        self.headers = {
-            "User-Agent": self.user_agent,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8"
-        }
-
-    def search_on_ai_engine(self, engine, query, retries=3):
-        """
-        在指定AI引擎上搜索（经由DuckDuckGo HTML版检索该引擎域名下的页面）
-        DuckDuckGo对连续GET会限流，改用POST表单并做指数退避重试
-        :param engine: 引擎名称 ('chatgpt', 'perplexity', 'gemini')
-        :param query: 搜索关键词
-        :return: 搜索结果HTML
-        """
-        site_domains = {
-            "chatgpt": "chatgpt.com",
-            "perplexity": "perplexity.ai",
-            "gemini": "gemini.google.com"
-        }
-
-        if engine not in site_domains:
+def site_path(url: str, host: str = "freellm.top") -> str | None:
+    """Only count a direct, HTTPS link to the target host (not a lookalike)."""
+    try:
+        parsed = urlsplit(url.strip())
+        hostname = (parsed.hostname or "").lower().rstrip(".")
+        if parsed.scheme.lower() != "https" or parsed.username or parsed.password:
             return None
-
-        full_query = f"{query} site:{site_domains[engine]}"
-
-        for attempt in range(retries):
-            try:
-                response = requests.post(
-                    "https://html.duckduckgo.com/html/",
-                    data={"q": full_query, "b": ""},
-                    headers=self.headers,
-                    timeout=15
-                )
-                response.raise_for_status()
-                # 限流时返回的异常页远小于正常结果页（约30KB+）
-                if len(response.text) > 20000 or 'result__a' in response.text:
-                    return response.text
-                print(f"  ⧗ {engine.upper()} 第{attempt + 1}次被限流，退避重试...")
-            except Exception as e:
-                print(f"  ✗ {engine.upper()} 搜索失败: {e}")
-            time.sleep(2 ** attempt + 1)
-
-        print(f"  ✗ {engine.upper()} 重试{retries}次后仍失败，跳过")
+        if hostname not in {host, "www." + host} or parsed.port not in {None, 443}:
+            return None
+        path = parsed.path or "/"
+        return "/" if path == "/" else "/" + path.strip("/") + "/"
+    except ValueError:
         return None
 
-    def extract_snippets(self, html, target_urls):
-        """
-        从搜索结果中提取与目标URL相关的片段
-        :param html: 搜索结果HTML
-        :param target_urls: 目标URL列表
-        :return: 相关片段列表
-        """
-        snippets = []
-        soup = BeautifulSoup(html, 'html.parser')
 
-        # DuckDuckGo HTML版结果链接在 a.result__a，跳转链接需解码uddg参数
-        result_links = soup.select('a.result__a') or soup.find_all('a')
+def load_keywords(path: Path) -> list[dict]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list) or not data:
+        raise ValueError("keyword configuration must be a nonempty JSON list")
+    seen = set()
+    for item in data:
+        if not isinstance(item, dict) or not all(item.get(k) for k in ("query", "page", "group")):
+            raise ValueError("each keyword needs query, page and group")
+        if item["query"] in seen or item["group"] not in {"treatment", "control"}:
+            raise ValueError("duplicate keyword or invalid experiment group")
+        if site_path(item["page"]) is None:
+            raise ValueError("keyword page must be an HTTPS URL on freellm.top")
+        seen.add(item["query"])
+    return data
 
-        for element in result_links:
-            text = element.get_text(strip=True)
-            href = str(element.get('href', ''))
 
-            # 解码 DuckDuckGo 重定向链接
-            if 'duckduckgo.com/l/' in href and 'uddg=' in href:
-                match = re.search(r'uddg=([^&]+)', href)
-                if match:
-                    href = unquote(match.group(1))
+def load_observations(path: Path, queries: set[str]) -> list[dict]:
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    records = []
+    with path.open(encoding="utf-8-sig", newline="") as fh:
+        reader = csv.DictReader(fh)
+        if not reader.fieldnames or any(field not in reader.fieldnames for field in REQUIRED_FIELDS):
+            raise ValueError("CSV is missing required columns: " + ", ".join(REQUIRED_FIELDS))
+        for row_number, row in enumerate(reader, start=2):
+            row = {field: (row.get(field) or "").strip() for field in REQUIRED_FIELDS}
+            if not any(row.values()):
+                continue
+            if row["query"] not in queries or row["engine"] not in ENGINES or row["result"] not in VALID_RESULTS:
+                raise ValueError(f"invalid query, engine or result at CSV row {row_number}")
+            try:
+                checked_at = datetime.fromisoformat(row["checked_at"].replace("Z", "+00:00"))
+                if checked_at.tzinfo is None or checked_at.utcoffset() is None:
+                    raise ValueError("timezone required")
+            except ValueError as exc:
+                raise ValueError(f"invalid checked_at at CSV row {row_number}: {exc}") from exc
+            if row["result"] == "cited":
+                if site_path(row["cited_url"]) is None:
+                    raise ValueError(f"cited link is not a direct freellm.top HTTPS URL at row {row_number}")
+                if not row["evidence_url"] and not row["evidence_path"]:
+                    raise ValueError(f"a citation needs answer URL or screenshot evidence at row {row_number}")
+            elif row["cited_url"]:
+                raise ValueError(f"not_cited must not contain cited_url at row {row_number}")
+            if row["evidence_url"] and urlsplit(row["evidence_url"]).scheme not in {"http", "https"}:
+                raise ValueError(f"invalid evidence_url at row {row_number}")
+            row["_checked_at"] = checked_at.astimezone(timezone.utc)
+            records.append(row)
+    return records
 
-            # 检查是否包含目标URL或相关域名
-            if any(url in href for url in target_urls) or any(domain in href for domain in ['freellm.top', 'freellm.net', 'github.com']):
-                snippets.append({
-                    'title': text,
-                    'url': href,
-                    'extraction_time': datetime.now().isoformat()
-                })
 
-        return snippets
-
-    def check_reference_count(self, engine, query, target_url):
-        """
-        检查某个关键词在某个引擎上的引用次数
-        :param engine: 引擎名称
-        :param query: 关键词
-        :param target_url: 目标URL
-        :return: 引用结果
-        """
-        html = self.search_on_ai_engine(engine, query)
-        if not html:
-            return None
-
-        snippets = self.extract_snippets(html, target_url)
-        return {
-            'engine': engine,
-            'query': query,
-            'reference_count': len(snippets),
-            'references': snippets,
-            'first_seen': datetime.now().isoformat()
-        }
-
-    def analyze_all_keywords(self, keywords):
-        """
-        分析所有关键词在所有AI引擎上的引用情况
-        :param keywords: 关键词列表
-        :return: 分析结果汇总
-        """
-        results = {
-            'summary': {},
-            'details': {}
-        }
-
-        for keyword in keywords:
-            print(f"\n🔍 搜索关键词: {keyword}")
-
-            engine_results = {
-                'chatgpt': None,
-                'perplexity': None,
-                'gemini': None
+def build_report(keywords: list[dict], records: list[dict]) -> dict:
+    report = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "method": "human-observed answers with answer URL or screenshot evidence; not automated citation verification",
+        "warning": "not_checked is UNKNOWN, not zero; cited means manually observed, not verified by provider API or Google ranking",
+        "keywords": [],
+        "summary": {engine: {"cited": 0, "not_cited": 0, "not_checked": 0} for engine in ENGINES},
+    }
+    for keyword in keywords:
+        checks = {}
+        for engine in ENGINES:
+            matches = [r for r in records if r["query"] == keyword["query"] and r["engine"] == engine]
+            if not matches:
+                checks[engine] = {"status": "not_checked", "checked_at": None, "cited_pages": [], "evidence": []}
+                report["summary"][engine]["not_checked"] += 1
+                continue
+            latest = max(r["_checked_at"] for r in matches)
+            latest_rows = [r for r in matches if r["_checked_at"] == latest]
+            results = {r["result"] for r in latest_rows}
+            if len(results) > 1:
+                raise ValueError(f"contradictory evidence for {keyword['query']} / {engine} at {latest.isoformat()}")
+            result = results.pop()
+            pages = sorted({site_path(r["cited_url"]) for r in latest_rows if r["result"] == "cited"})
+            evidence = sorted({r["evidence_url"] or r["evidence_path"] for r in latest_rows if r["evidence_url"] or r["evidence_path"]})
+            checks[engine] = {
+                "status": result, "checked_at": latest.isoformat(), "cited_pages": pages,
+                "evidence": evidence, "observations": len(latest_rows),
             }
-
-            for engine in ['chatgpt', 'perplexity', 'gemini']:
-                print(f"  检查 {engine.upper()}...", end=" ")
-                result = self.check_reference_count(engine, keyword, self.target_urls)
-                if result:
-                    engine_results[engine] = result
-                    print(f"✓ 找到 {result['reference_count']} 条引用")
-                else:
-                    print("✗ 未找到引用")
-                time.sleep(1)  # 避免请求过快
-
-            results['details'][keyword] = engine_results
-            results['summary'][keyword] = {
-                'total_references': sum(
-                    r['reference_count'] if r else 0
-                    for r in engine_results.values()
-                ),
-                'engages_with_you': any(r is not None and r['reference_count'] > 0 for r in engine_results.values()),
-                'engines_mentioned': [e for e, r in engine_results.items() if r and r['reference_count'] > 0]
-            }
-
-        return results
-
-    def save_results(self, results, filename=None):
-        """
-        保存结果到JSON文件
-        :param results: 分析结果
-        :param filename: 输出文件名（默认: ai-reference-check-{timestamp}.json）
-        """
-        if filename is None:
-            timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
-            filename = f'ai-reference-check-{timestamp}.json'
-
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
-
-        print(f"\n✓ 结果已保存到: {filename}")
-        return filename
+            report["summary"][engine][result] += 1
+        report["keywords"].append({**keyword, "checks": checks})
+    return report
 
 
-def main():
-    """主函数"""
-    # 目标官网URL
-    target_urls = [
-        'https://freellm.top/',
-        'https://freellm.net/',
-        'https://github.com/xdguo-design/freellm'
-    ]
-
-    # 关键词列表
-    keywords = [
-        "free llm api",
-        "free gpt-4",
-        "open source ai models",
-        "no credit card ai",
-        "free ai tools",
-        "Agnes AI agnes-2.0-flash",
-        "Agnes AI agnes-video-v2.0"
-    ]
-
-    print("=" * 60)
-    print("AI Reference Checker - AI引用检测工具")
-    print("=" * 60)
-    print(f"\n目标官网: {', '.join(target_urls)}")
-    print(f"关键词数量: {len(keywords)}\n")
-
-    # 创建检测器实例
-    checker = AIReferenceChecker(target_urls)
-
-    # 执行分析
-    start_time = time.time()
-    results = checker.analyze_all_keywords(keywords)
-    elapsed_time = time.time() - start_time
-
-    # 打印汇总
-    print("\n" + "=" * 60)
-    print("分析汇总")
-    print("=" * 60)
-    for keyword, summary in results['summary'].items():
-        print(f"\n关键词: {keyword}")
-        print(f"  总引用数: {summary['total_references']}")
-        print(f"  是否被AI引用: {'✓ 是' if summary['engages_with_you'] else '✗ 否'}")
-        print(f"  涉及引擎: {', '.join(summary['engines_mentioned'])}")
-
-    # 保存结果
-    print(f"\n总耗时: {elapsed_time:.2f} 秒")
-    output_file = checker.save_results(results)
-    print(f"📊 完整结果: {output_file}")
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--keywords", type=Path, default=DEFAULT_KEYWORDS)
+    parser.add_argument("--input", type=Path, default=DEFAULT_OBSERVATIONS)
+    parser.add_argument("--output", type=Path, help="optional output JSON path; otherwise print to stdout")
+    args = parser.parse_args()
+    try:
+        keywords = load_keywords(args.keywords)
+        observations = load_observations(args.input, {item["query"] for item in keywords})
+        report = build_report(keywords, observations)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        parser.error(str(exc))
+    result = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(result, encoding="utf-8")
+        print(f"Wrote {args.output}: manual observations only; unknown checks remain not_checked")
+    else:
+        print(result, end="")
+    return 0
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    raise SystemExit(main())

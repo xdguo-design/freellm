@@ -1,71 +1,50 @@
-# GEO 工具集
+# FreeLLM GEO / SEO 审核工具
 
-四件套：结构化数据生成、Q&A 页面重构模板、AI 引用监测、hreflang 生成。
+这里的目标是 **真实、可审计、可重复** 的内容可见度测量，而不是“刷 AI 引用获得 Google 权重”。
 
-## 1. Schema 标记（第1步）
+## 事实边界
 
-```bash
-python scripts/generate_schema.py          # 输出到 seo/schema/
-python scripts/generate_schema.py --out /custom/path
-```
+- Google AI Overviews / AI Mode 没有“先被别的 AI 引用即可获得权重翻倍”的机制说明。仍应优先保证可索引、内容实用、内链可发现以及页面结构清晰。官方说明：https://developers.google.com/search/docs/appearance/ai-features
+- `llms.txt` 是可选目录，不是 Google AI 功能收录的技术前提。
+- Reddit 发言、品牌提及、DuckDuckGo 对 AI 分享页的检索结果，都 **不能** 当作 ChatGPT / Perplexity / Gemini 对某次查询实际引用 freellm.top 的证据。
+- 不编造引用、评分、免费额度，也不以 48 小时、3 天或某个排名为保证。
 
-从 `data/offers.json` 的 40 个已核验产品批量生成合规 JSON-LD：
+## 基线实验（10 查询 × 4 引擎）
 
-- `products.schema.html` — 40 个节点（29 Product + 11 SoftwareApplication），含 Offer 价格、库存状态、品牌
-- `faq.schema.html` — 站点级 FAQPage（4 个问答）
-- `manifest.json` — 生成元信息
-
-**接入方式**：把文件内容（`<script type="application/ld+json">...</script>`）粘到对应页面的 `<head>` 里；建议在 `scripts/build_static.py` 构建流程末尾追加注入步骤，实现全自动。
-
-**刻意不生成 aggregateRating/review**：目录没有真实用户评分数据，编造评分违反 Google 结构化数据垃圾政策（会吃 manual action），也违背本站"不伪造评分"原则。等有真实评论数据后在 `build_product_node` 里补上即可。
-
-## 2. Q&A 页面重构（第2步）
-
-模板：`about-qna-structure.html`
-
-以 about 页内容为样本，把长段落重构为 `H2问题 + <section>答案` 结构（10 个问答）。
-
-**接入建议**：站点页面是双语结构（`lang="zh-CN"` / `lang="en"` 切换），自动改写容易破坏双语切换，因此采用手工模板方式。新页面直接按此结构写；存量页面迁移时保持 `lang` span 结构，每个 `<section>` 对应一个问答。配套的 FAQPage schema 已由第1步的 `faq.schema.html` 提供，两者内容保持一致。
-
-## 3. AI 引用监测爬虫（第3步）
+`seo/geo-keywords.json` 是 5 组重点 / 5 组对照的预注册查询与对应落地页。两组均只代表观察设计，不代表已获得自然排名或曝光数据。
 
 ```bash
-python seo/ai-reference-checker.py         # 全量关键词 × 3引擎
+python seo/ai-reference-checker.py
+python seo/ai-reference-checker.py --input path/to/observations.csv --output path/to/report.json
+python -m unittest tests.test_geo_reference_checker -v
 ```
 
-纯 `requests + BeautifulSoup`，输出 JSON 报告（每个关键词下各引擎是否引用、引用位置、引用次数）。
+`geo-observations.example.csv` **仅有表头，没有任何虚构的基线数据**。使用前复制为本地观察记录 CSV：
 
-**实现要点**（已实测验证）：
+| 列 | 说明 |
+|---|---|
+| checked_at | 带时区的 ISO8601 时间，如 `2026-10-14T08:00:00+08:00` |
+| engine | `chatgpt_search`, `perplexity`, `gemini`, `google_ai_mode` |
+| query | 必须匹配 `geo-keywords.json` 中的完整问题 |
+| result | `cited` 表示人工看到来源链接；`not_cited` 表示人工执行查询但未看到链接 |
+| cited_url | 仅 `cited` 必填；必须是指向 freellm.top 的 HTTPS 直接来源链接 |
+| evidence_url | 可供核对的公开答案链接（无则留空） |
+| evidence_path | 无公开答案链接时，保存截图或证据文件的本地相对路径 |
+| notes | 地区、登录状态、语言、个性化设置、特殊情况等 |
 
-- 检索通道用 DuckDuckGo HTML 版（`html.duckduckgo.com`）——直接爬 Google 在无 JS 环境下拿不到结果（返回降级页，0 个结果标签，已实测确认）
-- DDG 对连续请求限流：脚本内置指数退避重试（最多 3 次）；实测第 3 次退避后成功
-- 重定向链接自动解码（`uddg=` 参数还原真实 URL）
-- 解析器已通过对照组验证：`site:perplexity.ai` 检索返回 10/10 条正确解码结果
+- 脚本 **不会主动向 AI 服务发送查询**，不会自动核对截图真假；`cited` 代表人工观察，不能标成 API 验证结果。
+- 没有记录时输出 `not_checked`（UNKNOWN），而不是 0 引用。记录未引用时才用 `not_cited`。
+- 同一个引擎 + 查询只比较最新检查时间；同一时间不可同时记录正反结论。可以同一轮记录多个不同引用 URL。
+- 不在 Git 中提交私人聊天记录、含身份信息的截图、令牌或 Search Console 导出。
 
-**当前基线**：freellm.top 在三个引擎域名内引用数为 0（新站正常，先建立基线再追踪增长）。
+## 与 Search Console 分开看
 
-**已知局限与升级路径**：
+Search Console 数据由用户授权的真实账号导出；本脚本不连接 Search Console，不能声称抓取了 Google 排名、自然点击或“AI 权重”。流量、曝光与索引状态需要与这个人工引用观察表 **分表** 追踪。
 
-- `site:chatgpt.com` 等只能覆盖公开索引的分享页，ChatGPT 对话内容本身不可索引
-- 更可靠的方案是官方 API：Perplexity 的 `search` 端点、OpenAI 的 web-search 工具都返回 citations 字段，需要 API key；本脚本定位为零成本批量监测
-- 全量跑（7 关键词 × 3 引擎）受限于限流约需 3-5 分钟，建议 cron 夜间执行并在两次请求间保持 ≥3 秒间隔
+Google 说明 AI 功能的表现主要包含在 Search Console 的网页搜索表现中，不能拿手工 ChatGPT 输出替代 GSC 统计。参见 [实验执行文档](../docs/marketing/geo-experiment-2026-10-14.md)。
 
-## 4. hreflang 生成器（第4步）
+## 其他存量工具
 
-```bash
-python seo/hreflang-generator.py
-```
-
-输入 URL 列表（在 `main()` 里配置），输出四种产物：HTML `<head>` 标签块（含 x-default）、XHTML 格式、sitemap.xml 条目、JSON 配置。
-
-**注意**：本站现有双语方案是单 URL + `?lang=` 查询参数 + JS 切换（见 `about/index.html`），hreflang 已在存量页面上配置。若未来迁移到独立路径方案（如 `/en/about/`），用此生成器批量产出标签。
-
-## 文件清单
-
-| 文件 | 用途 | 状态 |
-|------|------|------|
-| `scripts/generate_schema.py` | Schema 批量生成（数据驱动） | ✅ 已验证 |
-| `seo/schema/*.html` | 可嵌入 `<head>` 的 JSON-LD | ✅ 已生成 |
-| `seo/about-qna-structure.html` | Q&A 重构模板 | ✅ 模板 |
-| `seo/ai-reference-checker.py` | AI 引用监测爬虫 | ✅ 已验证 |
-| `seo/hreflang-generator.py` | hreflang 批量生成 | ✅ 已验证 |
+- `scripts/generate_schema.py` 生成实验用 JSON-LD 片段，**不是已自动全站注入**，不能把试用、限时优惠都宣称为永久价格 $0；上线之前逐项核对显示文本与 JSON-LD。
+- `seo/about-qna-structure.html` 是可读性重构模板，FAQPage 不应当作 Google 排名捷径。
+- `seo/hreflang-generator.py` 生成语言标记候选，须与站点实际独立 URL / canonical 匹配后才能接入。
