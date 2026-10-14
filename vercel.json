@@ -129,6 +129,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.freellm.top"
+        }
+      ],
+      "destination": "https://freellm.top/:path*",
+      "permanent": true
+    },
+    {
       "source": "/updates/",
       "destination": "/logs/",
       "permanent": true
