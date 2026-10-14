@@ -17,6 +17,12 @@ class ReadmeCountsSyncTests(unittest.TestCase):
         self.assertIn("**267** third-party", output)
         self.assertEqual(render(output, scan, [{}] * 80, [{}] * 267, [{}] * 57), output)
 
+    def test_missing_bilingual_count_anchor_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "anchors changed"):
+            render("README without numeric catalog summary", {
+                "offers": 0, "offersExpired": 0, "scannedOffers": 0
+            }, [], [], [])
+
     def test_rejects_conflicting_source_counts(self):
         text = (
             "- **80 个**资源目录记录（77 条当前有效、3 条已结束；最近一次扫描观测到 78 条资源），另有 **265 条**第三方模型目录记录和 **57 家**厂家目录\n"
