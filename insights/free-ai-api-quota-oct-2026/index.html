@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN" class="fl-pastel-ui">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026年10月免费AI API盘点：AMD、GLM Flash、腾讯 TokenHub｜FreeLLM</title>
+<meta name="description" content="2026年10月免费AI API官方资料核验：AMD共享模型端点，GLM-4.7-Flash与GLM-4.6V-Flash免费，腾讯TokenHub新人百万Token体验包；GLM-5.3-Flash五折仍待复核。">
+<meta name="robots" content="noindex,follow"><link rel="canonical" href="https://freellm.top/insights/free-ai-api-quota-oct-2026/">
+<meta property="og:type" content="article"><meta property="og:title" content="2026年10月免费AI API：两个免费入口，一项新人体验包">
+<meta property="og:description" content="哪些真正可用？哪些历史五折已不宜照搬？FreeLLM按官方文档拆解免费AI API。">
+<meta property="og:url" content="https://freellm.top/insights/free-ai-api-quota-oct-2026/">
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">
+<link rel="stylesheet" href="/css/shared-navigation.css?v=20261001b">
+<link rel="stylesheet" href="/css/about-linked-pages.css?v=20261001a">
+<script src="/js/site-navigation.js?v=20261013-overflow"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026年10月免费AI API：AMD共享端点、智谱双Flash与腾讯TokenHub新人额度","datePublished":"2026-10-14","dateModified":"2026-10-14","inLanguage":"zh-CN","author":{"@type":"Organization","name":"FreeLLM"},"publisher":{"@type":"Organization","name":"FreeLLM","url":"https://freellm.top"},"mainEntityOfPage":"https://freellm.top/insights/free-ai-api-quota-oct-2026/"}</script>
+</head>
+<body class="fl-ui-v2" data-fl-section="about">
+<aside class="fl-site-rail" aria-label="FreeLLM 主导航"></aside>
+<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / AI 实用观察</span><span class="fl-site-ribbon-actions"><a href="/insights/">实用观察总览</a><a href="/submit/">提交资源 ↗</a></span></div>
+<header class="info-page-header">
+<p class="info-eyebrow">FREELLM / FREE API / 2026-10-14</p>
+<h1>2026年10月，还有哪些 AI API 可以零成本试用？</h1>
+<p class="info-lead">AMD 共享端点、智谱两款免费 Flash、腾讯 TokenHub 新人包：优先核对官方资料；对流传的 GLM-5.3-Flash 五折不做过期促销宣传。</p>
+<div class="info-links"><a href="/insights/">AI 实用观察 →</a><a href="/category/free-quota/">免费额度目录 →</a><a href="/guides/china-free-ai-api/">国内免费 API 指南 →</a></div>
+<div style="margin:22px 0;padding:8px;border:1px solid #d0e6e2;border-radius:18px;background:#102d41;overflow:hidden;">
+<svg viewBox="0 0 1200 330" role="img" aria-label="免费AI API资源与风险示意图" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto">
+<defs><linearGradient id="api-bg" x1="0" x2="1"><stop stop-color="#0c2d43"/><stop offset="1" stop-color="#185962"/></linearGradient></defs>
+<rect width="1200" height="330" rx="18" fill="url(#api-bg)"/><g fill="none" stroke="#4ce0c1" stroke-width="3" opacity=".6"><path d="M110 130C240 30 250 250 390 150S600 60 690 155S890 260 1020 120"/><circle cx="1030" cy="135" r="105"/><circle cx="1030" cy="135" r="62"/></g>
+<g font-family="Arial,'Noto Sans CJK SC',sans-serif" font-weight="700"><text x="64" y="77" fill="#4ce0c1" font-size="26">FREELLM / API QUOTA WATCH</text><text x="64" y="163" fill="#ffffff" font-size="51">免费端点  ≠  生产可用</text><text x="64" y="228" fill="#ffc69f" font-size="37">AMD · GLM Flash · TokenHub</text><text x="64" y="282" fill="#bfe9e5" font-size="24">有出处 / 可复核 / 不冒充实测</text></g></svg></div>
+<div style="padding:15px 19px;border-left:4px solid #0d9488;background:#f2fbf8;border-radius:0 12px 12px 0;line-height:1.9;">
+<strong>核验摘要（2026-10-14）</strong><ul>
+<li><strong>AMD：</strong>免费共享 API 可用于学习、评测和 Demo；官方禁止生产负载及转售/第三方代理共享。</li>
+<li><strong>Z.ai：</strong>GLM-4.7-Flash、GLM-4.6V-Flash 价格表中的输入、缓存输入、缓存存储与输出均为 Free。</li>
+<li><strong>腾讯 TokenHub：</strong>官方新人体验包文档列语言模型、多模态理解模型各模型 100 万 Tokens；以领取资格及控制台为准。</li>
+<li><strong>GLM-5.3-Flash：</strong>历史人民币五折价无法确认本周仍有效，不建议据此充值。</li>
+</ul></div>
+</header>
+<main class="info-page-main"><article style="max-width:880px;">
+<p>给自己的 AI 小工具选模型时，最容易多花的钱往往出现在第一步：还没验证返回格式、限流和质量，就先充值。与其只搜“永久免费大模型”，不如把免费共享端点、零单价模型和新用户赠额分清，再按用途选择。</p>
+<h2>01 / AMD Radeon Cloud：不启 GPU 实例的共享免费端点</h2>
+<p>AMD 的 <strong>Public Free Model APIs</strong> 是免费的共享模型服务。开发者登录 Token Factory，在模型列表选择可用端点，详情弹窗给出 Base URL、模型 ID、密钥及请求示例。模型名单由平台调整，不宜把某一天看到的十款模型写成永久固定。当前账号真正可用的模型应通过控制台或 <code>GET /v1/models</code> 核对。</p>
+<ol><li>打开 <a href="https://developer.amd.com.cn/radeon/modelapis" target="_blank" rel="noopener noreferrer">AMD Token Factory</a> 并登录。</li><li>查看 Public Free Model APIs，选择要测的模型并按页面指引获取 API Key。</li><li>先用无敏感内容的小请求验证，再记录模型 ID、返回状态与限流。</li></ol>
+<pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#0f2536;color:#d6fbf2;border-radius:12px;padding:18px;font-size:13px;line-height:1.7"><code>curl https://developer.amd.com.cn/radeon/api/v1/models \
+  -H "Authorization: Bearer $RADEON_API_KEY"</code></pre>
+<div style="padding:15px 18px;background:#fff6ee;border-left:4px solid #eaa16f;border-radius:8px;line-height:1.85;"><strong>不能忽略的条款：</strong>AMD 明确把免费接口定位为实验、学习和 Demo，禁止生产业务依赖；不允许通过代理、API 网关或其他方式转供第三方，也没有服务 SLA。不要在免费试验端点提交私有代码、密钥、客户数据。</div>
+<h2>02 / Z.ai：GLM-4.7-Flash 与 GLM-4.6V-Flash 的 Free 价格</h2>
+<p>截至核对日，Z.ai <a href="https://docs.z.ai/guides/overview/pricing" target="_blank" rel="noopener noreferrer">官方定价表</a> 对 <strong>GLM-4.7-Flash</strong> 和 <strong>GLM-4.6V-Flash</strong> 两款模型，列出的输入、缓存输入、缓存存储及输出均为 Free。前者可用于文本处理和对话原型，后者可在图片理解方向做试验。</p>
+<p>这里的“免费”严格指这些计费项目的价格标签，不应自动推导无限并发、无条件商用或相关工具服务全部免费。跨地区和跨平台核价时，更不能把同一家模型厂商的不同 API 站点混为一个价格口径。</p>
+<h2>03 / 腾讯 TokenHub：新人体验包比“旧混元百万 Tokens”更值得先看</h2>
+<p>腾讯官方已说明原混元平台相关功能逐步迁移至 <strong>TokenHub</strong>。目前 TokenHub 的 <a href="https://cloud.tencent.com/document/product/1823/130053" target="_blank" rel="noopener noreferrer">新人免费体验包文档</a> 写明：语言模型及多模态理解模型提供 <strong>每模型 100 万 Tokens</strong> 体验额度，通常自领取起一年有效，每主账号每模型限领一次。该期活动文档标注至 <strong>2026-12-31</strong>，实际能否领取以控制台为准。</p>
+<ol><li>注册腾讯云账号并完成实名认证。</li><li>进入 TokenHub 控制台的模型广场，打开“新用户福利免费体验”。</li><li>只勾选近期需要的模型；部分支持的模型也会在首次调用时自动领取。</li><li>创建对应地域 API Key，再按当地接口地址调用；广州和新加坡接入地址不可跨地域混用。</li></ol>
+<p>旧版腾讯混元计费文档另有“若干模型共享 100 万 Tokens，Embedding 单独 100 万”的一次性包规则。这是另一套产品和规则，<strong>不能与 TokenHub 新人包相加计算</strong>。TokenHub 免费额度耗尽且未开启后付费时，按官方说明服务会停止。</p>
+<h2>04 / GLM-5.3-Flash：历史五折不等于今天仍在五折</h2>
+<p>互联网流传的人民币活动报价为每百万 Tokens 输入 0.4 元、缓存命中 0.115 元、输出 1.4 元，标准报价则分别为 0.8、0.23、2.8 元。但此前的人民币五折信息没有得到 2026 年 10 月 14 日的官方账号价确认，因此不能直接标为“这周仍有效”。</p>
+<p>可独立核对的 <a href="https://docs.z.ai/guides/overview/pricing" target="_blank" rel="noopener noreferrer">Z.ai 国际站美元定价</a>是输入 $0.15、缓存输入 $0.03、输出 $0.50／百万 Tokens。它属于不同站点与货币价格，不构成国内人民币五折仍生效的证据。真正要付费时，先打开自己所用站点的控制台核价。</p>
+<h2>05 / 免费 API 的最小验证流程</h2>
+<ol><li><strong>来源：</strong>只从官方文档进入账号与模型目录，明确站点、地域、资格和有效期。</li><li><strong>调用：</strong>使用最小请求，不带个人数据或公司保密资料；记录状态码与模型 ID。</li><li><strong>对账：</strong>到控制台核对用量、缓存费用和赠额扣减顺序。</li><li><strong>决策：</strong>比较成功率、延迟、限流和返工成本；生产项目再选择带服务保障的渠道。</li></ol>
+<p>FreeLLM 会持续记录资源的免费条件、核验日期、官方链接和风险备注。<strong>公开价格核对不是账号调用实测</strong>；本文未登录你的账户领取额度，也未对这些端点进行真实调用。</p>
+<section style="padding:17px;border:1px solid #d8e6e3;background:#f4fbf9;border-radius:12px;margin:24px 0;"><h2 style="margin-top:0">继续查找免费资源</h2><div class="info-links"><a href="/category/free-quota/">免费额度分类 →</a><a href="/guides/china-free-ai-api/">国内 API 指南 →</a><a href="/models/">模型目录 →</a><a href="/logs/">核验日志 →</a></div></section>
+<section><h2>官方资料及核验边界</h2><ul>
+<li><a href="https://amd-aim.github.io/radeon-cloud-docs/zh-cn/guides/model-apis/" target="_blank" rel="noopener noreferrer">AMD 模型 API 文档</a></li>
+<li><a href="https://amd-aim.github.io/radeon-cloud-docs/api/terms/" target="_blank" rel="noopener noreferrer">AMD 免费模型 API 使用条款</a></li>
+<li><a href="https://docs.z.ai/guides/overview/pricing" target="_blank" rel="noopener noreferrer">Z.ai 模型价格表</a></li>
+<li><a href="https://cloud.tencent.com/document/product/1823/130053" target="_blank" rel="noopener noreferrer">腾讯 TokenHub 新人免费体验包</a></li>
+<li><a href="https://cloud.tencent.com/document/product/1823/130058" target="_blank" rel="noopener noreferrer">腾讯 TokenHub 快速入门</a></li>
+<li><a href="https://cloud.tencent.com/document/product/1729/97731" target="_blank" rel="noopener noreferrer">腾讯混元旧版计费概述（用于区分）</a></li>
+</ul><p style="font-size:13px;color:#64748b">整理日期：2026-10-14。官方条款、可用性、价格及领用资格可能更新，使用前请到对应平台复核。本文由 AI 辅助整理并经过公开资料交叉核对，无账号级 API 调用实测。</p></section>
+</article></main>
+<footer class="info-page-footer"><a href="/">FreeLLM 首页</a><a href="/about/">关于 FreeLLM</a><a href="/guide/">使用教程</a><a href="/terms/">使用条款</a></footer>
+<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>
+</body></html>
