@@ -175,10 +175,13 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             if (loc.text or "").strip()
         ]
 
+        # 2026-10-14 review: 222 unique URLs across 5 sitemap sections
+        # (pages=50, offers=78, providers=50, models=35, english=9).
+        # Only three more additions are allowed without another scope review.
         self.assertLessEqual(
             len(all_urls),
-            220,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 220); review SEO scope before publishing",
+            225,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 225); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),
