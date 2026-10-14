@@ -47,6 +47,9 @@ jobs:
           python scripts/validate_evaluation_framework.py data/evaluation-framework.json
           python -m unittest tests.test_audit_all_pages tests.test_evaluation_framework -v
 
+      - name: Audit indexed editorial pages for AdSense content risks
+        run: python scripts/audit_adsense_content.py --report .tmp/adsense-editorial-inventory.json
+
       - name: Check AdSense readiness
         run: |
           python scripts/check_adsense.py --report .tmp/adsense-readiness.json
