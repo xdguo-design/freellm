@@ -175,12 +175,15 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             if (loc.text or "").strip()
         ]
 
-        # 2026-10-14 review: 222 unique URLs across 5 sitemap sections
-        # (pages=50, offers=78, providers=50, models=35, english=9).
-        # Only three more additions are allowed without another scope review.
+        # 2026-10-15 reviewed expansion: eight authored /public-api/ URLs
+        # (the hub plus seven evidence-led reviews) have distinct content,
+        # self-canonicals and explicit indexing. No generated model/offer
+        # landing-page expansion is approved by this change.
+        # Approved sitemap counts: pages=58, offers=78, providers=50,
+        # models=35, english=9; total=230. Further growth requires review.
         self.assertLessEqual(
             len(all_urls),
-            225,
+            230,
             f"sitemap crawl target budget exceeded ({len(all_urls)} > 225); review SEO scope before publishing",
         )
         self.assertLessEqual(
