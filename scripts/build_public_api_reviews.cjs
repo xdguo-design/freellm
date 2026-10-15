@@ -16,12 +16,13 @@ const renderReview=function renderReview(r) {
  const userFeedback = r.id === "hcnsec-gateway" ? '<section class="pub-feedback" aria-label="用户确认可用"><strong>1 条用户确认已调用成功</strong><p>用户提供的真实使用反馈；尚未提供模型、日志或发生日期，不计入平台自动探针成功率，也不能推导全站稳定性。</p></section>' : "";
  const sources=v.sources.map((s,i)=>`<li><div><span class="pub-proof-index">0${i+1}</span><strong>${esc(s.type)}</strong>：${link(s.url,s.title)}</div><p>${esc(s.note)}</p></li>`).join("");
  const result=score(v);
+ const metaDescription = `${r.name}：${v.verdict}。FreeLLM 根据公开证据评估免费条件、API 接入门槛与隐私风险，提供评分依据、官方来源、使用建议及仍待实测的事实清单，帮助读者避免将宣传当作可用性保证。`;
  return `<!doctype html>
 <html lang="zh-CN" class="fl-pastel-ui">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(r.name)} 评测与免费条件｜FreeLLM 编辑审查</title>
-<meta name="description" content="${esc(r.name)} 的 FreeLLM 独立编辑资料评估：评分依据、免费条件、官方证据、注意事项和未完成的 API 实测清单。">
+<meta name="description" content="${esc(metaDescription)}">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://freellm.top/public-api/reviews/${esc(r.id)}/">
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20261013-overflow">
