@@ -30,6 +30,12 @@ jobs:
       - name: Install browser test dependencies
         run: python -m pip install playwright pytest && python -m playwright install --with-deps chromium
 
+      - name: Exercise no-reload sidebar navigation in Chromium
+        run: python -m unittest tests.test_site_navigation_browser -v
+
+      - name: Verify JavaScript navigation unit tests
+        run: node --test js/site-navigation.test.cjs
+
       - name: Rebuild deterministic static artifacts in CI workspace
         run: |
           node scripts/generate_ranking.ts
