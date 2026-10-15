@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   gateway-evidence:
@@ -31,6 +32,11 @@ jobs:
         if: ${{ env.HCNSEC_API_KEY != '' }}
         run: |
           python scripts/probe_public_api.py --mode authenticated_chat --timeout 15 --output .tmp/public-api/reports/auth.json
+      - name: Restore recent sanitized GitHub Actions artifacts
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/restore_public_api_history.py --output-dir .tmp/public-api/reports --limit 40
       - name: Evaluate evidence without promoting review scores
         if: always()
         run: |

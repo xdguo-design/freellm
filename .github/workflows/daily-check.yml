@@ -26,6 +26,12 @@ on:
       - "data/ai-radar-sources.json"
       - "data/evaluation-framework.json"
       - "tests/**"
+      - "scripts/build_public_api_reviews.cjs"
+      - "scripts/probe_public_api.py"
+      - "scripts/evaluate_public_api.py"
+      - "scripts/restore_public_api_history.py"
+      - "data/public-api-directory.json"
+      - "data/public-api-observations.json"
   schedule:
     - cron: "0 1 * * *" # 01:00 UTC = 09:00 UTC+8, daily
   workflow_dispatch:
@@ -55,6 +61,10 @@ jobs:
 
       - name: Unit tests
         run: python -m unittest discover -s tests -v
+
+      - name: Public API review pages reflect curated evidence
+        if: always()
+        run: node scripts/build_public_api_reviews.cjs --check
 
       - name: Ranking engine tests
         if: always()

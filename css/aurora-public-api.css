@@ -152,3 +152,12 @@ body.public-api-page :focus-visible{outline:3px solid #5c9aef;outline-offset:3px
 .pub-gateway-fields b{color:#315776;font-size:11px}
 .pub-gateway-guide .pub-footnote a{color:#1c6ec2}
 @media(max-width:520px){.pub-gateway-fields{grid-template-columns:1fr}}
+
+/* User-confirmed gateway evidence never shares the official-provider badge. */
+.pub-status-user{color:#116953;background:#e4f6f0}
+.pub-feedback{margin:0 0 16px;padding:15px 18px;border-radius:13px;border:1px solid #bee8d7;background:#eefaf5}
+.pub-feedback strong{display:block;color:#106a52;font-size:15px}
+.pub-feedback p{margin:5px 0 0;color:#336e61;font-size:12px;line-height:1.8}
+.pub-gateway-guide pre{white-space:pre;overflow:auto;max-width:100%;background:#102443;color:#e4f3ff;border-radius:11px;padding:17px;line-height:1.6}
+.pub-gateway-guide pre code{display:block;padding:0;background:none;color:inherit;font-size:12px}
+.pub-gateway-guide a{color:#206db7;font-weight:750}

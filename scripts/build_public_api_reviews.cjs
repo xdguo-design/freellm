@@ -58,7 +58,7 @@ ${r.id === "hcnsec-gateway" ? "<section class=\"pub-detail-section pub-gateway-g
 };
 const renderCard=function renderCard(r,i) {
  const v=r.review,kind=r.kind;return `<article class="pub-card" data-kind="${esc(kind)}" data-score="${score(v)}" data-search="${esc([r.name,r.label,r.description,r.free,v.verdict,v.opinion].join(" ").toLowerCase())}">
-<div class="pub-card-head"><span class="pub-num">${String(i+1).padStart(2,"0")} / RESOURCE</span><span class="pub-status ${kind==="directory"?"pub-status-review":"pub-status-official"}">${esc(r.status)}</span></div>
+<div class="pub-card-head"><span class="pub-num">${String(i+1).padStart(2,"0")} / RESOURCE</span><span class="pub-status ${kind==="directory"?"pub-status-review":kind==="gateway"?"pub-status-user":"pub-status-official"}">${esc(r.status)}</span></div>
 <div class="pub-type">${esc(r.label)}</div><h3>${esc(r.name)}</h3>
 <p class="pub-summary">${esc(r.description)}</p>
 <div class="pub-editorial"><strong>${score(v)}<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>${esc(v.verdict)}</span></div></div>

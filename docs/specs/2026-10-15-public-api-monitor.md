@@ -33,3 +33,8 @@ python scripts/probe_public_api.py --mode authenticated_chat --output .tmp/publi
 ## 待提升
 - 未来从 90 天 artifact 历史合并连续样本，并建立地理节点间隔、滑动窗口与状态降级提示。
 - 站点公开数据升级必须人工审核，不允许有一个成功样本就刷新“稳定可用”标记。
+
+## 90 天运行证据留存与近况复评
+- GitHub Actions 以 `public-api-evidence-<run id>` 留存 90 天产物，不写入 dev/main。最近最多 40 份 artifact 的脱敏鉴权结果通过 `scripts/restore_public_api_history.py` 读取后交由 evaluator 合并。
+- GitHub REST 访问令牌只发送给 api.github.com；归档重定向会切换为无 Authorization 的独立 HTTPS 请求。归档中只提取 reports/auth.json 的白名单字段，不写原始 ZIP 和其他文件。
+- 定时 workflow 仅在合并到 GitHub 仓库默认分支后自动按计划运行；目前 dev 上新配置不等于定时任务已经启用。
