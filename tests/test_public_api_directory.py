@@ -30,6 +30,7 @@ class PublicApiDirectoryTests(unittest.TestCase):
         self.assertEqual(len({item["id"] for item in sources["resources"]}), len(sources["resources"]))
         self.assertEqual(sum(c["data-kind"] == "directory" for c in parser.cards), 2)
         self.assertEqual(sum(c["data-kind"] == "official" for c in parser.cards), 4)
+        self.assertEqual(sum(c["data-kind"] == "gateway" for c in parser.cards), 1)
         self.assertIn('href="https://freellm.top/public-api/"', page)
         for item in sources["resources"]:
             self.assertIn(item["url"], parser.hrefs)
@@ -87,6 +88,18 @@ class PublicApiDirectoryTests(unittest.TestCase):
         self.assertIn("401", page)
         self.assertIn("403", page)
         self.assertIn("429", page)
+
+    def test_user_report_does_not_claim_machine_measured_success(self):
+        feedback = json.loads((ROOT / "data/public-api-observations.json").read_text(encoding="utf-8"))
+        report = feedback["observations"][0]
+        self.assertEqual(report["providerId"], "hcnsec-gateway")
+        self.assertEqual(report["outcome"], "reported_success")
+        self.assertFalse(report["countedForAvailabilityMetrics"])
+        self.assertIsNone(report["observedOn"])
+        content = (ROOT / "public-api/reviews/hcnsec-gateway/index.html").read_text(encoding="utf-8")
+        self.assertIn("1 条用户确认已调用成功", content)
+        self.assertIn("DeepSeek-V4-Pro", content)
+        self.assertIn("HCNSEC_API_KEY", content)
 
     def test_page_is_linked_and_css_and_scripts_exist(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")

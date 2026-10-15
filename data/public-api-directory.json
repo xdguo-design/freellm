@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "reviewedOn": "2026-10-15",
-  "reviewScope": "页面公开资料检查，不等于注册、API调用或服务可用性验证",
+  "reviewScope": "公开资料编辑评分与用户报告分开；用户已确认 HCNSEC 网关调用成功，但未提供可统计的请求日志，本站尚未持 Key 独立复测。",
   "notice": "Third-party submissions are discovery candidates only; never automatically publish or present quotas as verified.",
   "resources": [
     {
@@ -63,6 +63,85 @@
           }
         ],
         "score": 52,
+        "reviewType": "desk_review",
+        "reviewedOn": "2026-10-15",
+        "liveProbe": "not_performed"
+      }
+    },
+    {
+      "id": "hcnsec-gateway",
+      "name": "新疆幻城网安公益大模型安全网关",
+      "kind": "gateway",
+      "status": "用户反馈调用成功 · 待独立复测",
+      "label": "第三方公益 AI API 网关",
+      "description": "OpenAI 兼容的第三方大模型 API 中转网关，用户明确反馈已成功调用。官网介绍注册赠额和每日签到，但额度、上游真实性与持续可用性尚未由 FreeLLM 独立实测。",
+      "free": "注册赠额 + 每日签到（站方自述）；部分模型仅 SVIP",
+      "requirement": "注册、创建 sk- 令牌；免费模型、分组和余额需登录核对",
+      "url": "https://api.hcnsec.cn/dashboard/overview",
+      "source": "https://api.hcnsec.cn/free-api/",
+      "sourceLabel": "运营方公开文档",
+      "signal": "用户反馈 + 站方文档",
+      "authority": "third-party-api-gateway",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "operator_documented",
+      "review": {
+        "axes": {
+          "evidence": 4,
+          "terms": 3,
+          "access": 4,
+          "privacy": 2
+        },
+        "confidence": "中（用户反馈 + 运营方文档）",
+        "verdict": "已获用户成功调用反馈，推荐低敏感原型试用；仍不具备稳定性证明",
+        "audience": "熟悉 OpenAI 兼容协议、希望试用国产模型的开发者",
+        "avoid": "处理敏感数据、生产 SLA、未经授权的批量抓取和持续高并发场景",
+        "opinion": "这是比社区导航更具可操作性的资源：你已经确认成功调用，运营方也公开了 Base URL、密钥和模型分层。FreeLLM 认可它具有实际试用价值，但一次用户反馈不等于跨地域、跨模型、跨时段的稳定性证明；运营方对上游冗余与数据处理的声明仍待独立核查。",
+        "reason": "公开接入文档比较完整，有真实用户成功调用的积极信号；免费额度具体数值、上游模型身份、第三方数据处理与长期可用率证据不足。评分只衡量资料透明与使用条件，不评价 API 成功率。",
+        "known": [
+          "用户明确反馈本人已完成成功调用；目前未提供模型、HTTP 日志或发生时间，不计入可计算成功率。",
+          "运营方文档给出 OpenAI 兼容入口 https://api.hcnsec.cn/v1，支持 /v1/chat/completions。",
+          "官方模型目录明确区分免费层与 svip 订阅层；前者列出 DeepSeek-V4-Pro、kimi-k3 等别名。",
+          "站方称注册送额度、每日签到可继续获得额度，但网页未提供经独立复核的个人账户实时余额。"
+        ],
+        "unknown": [
+          "不同日期、不同地区的请求成功率与 P50/P95 延迟。",
+          "实际扣费、赠额数量、签到规则与免费模型的实时变化。",
+          "网关所标示模型别名对应的真实上游实现和模型版本。",
+          "上游处理链、敏感文本保留政策及是否有第三方审计。"
+        ],
+        "steps": [
+          "仅使用官网控制台注册，在密钥页创建令牌，确认分组和余额；不要把密钥交给 FreeLLM。",
+          "在平台当前模型列表中选免费层模型，将 Base URL 配置为 https://api.hcnsec.cn/v1。",
+          "以无敏感信息的最小对话请求测试，再观察状态码、响应耗时、模型 ID 与余额变化。",
+          "如 401 核对令牌，403 核对模型和分组，429 核对限流；具体以网关响应为准。"
+        ],
+        "sources": [
+          {
+            "type": "站方公开文档",
+            "title": "HCNSEC 免费 API 接入文档",
+            "url": "https://api.hcnsec.cn/free-api/",
+            "note": "接入地址、密钥分组、注册送额度；属于运营方自述"
+          },
+          {
+            "type": "站方模型目录",
+            "title": "HCNSEC 免费和 SVIP 模型列表",
+            "url": "https://api.hcnsec.cn/free-api/models/",
+            "note": "区分免费层和付费层，名称以登录后的实际可用列表为准"
+          },
+          {
+            "type": "站方示例",
+            "title": "curl 接入说明",
+            "url": "https://api.hcnsec.cn/free-api/tutorials/curl/",
+            "note": "官方示例使用 OpenAI 兼容 chat/completions"
+          },
+          {
+            "type": "站方 FAQ",
+            "title": "数据与限流声明",
+            "url": "https://api.hcnsec.cn/free-api/faq/",
+            "note": "仅陈列运营方对流控与数据处理的自述，不代表独立审计"
+          }
+        ],
+        "score": 68,
         "reviewType": "desk_review",
         "reviewedOn": "2026-10-15",
         "liveProbe": "not_performed"

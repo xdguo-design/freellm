@@ -42,10 +42,10 @@
     </header>
 
     <section class="pub-summary-strip" aria-label="收录概况">
-      <div><strong>06</strong><span>本期整理入口</span></div>
+      <div><strong>07</strong><span>本期整理入口</span></div>
       <div><strong>02</strong><span>第三方发现导航</span></div>
       <div><strong>04</strong><span>官方平台入口</span></div>
-      <div><strong>03</strong><span>观察中的候选名</span></div>
+      <div><strong>01</strong><span>用户确认网关</span></div>
     </section>
 
     <section class="pub-intro" aria-labelledby="intro-title">
@@ -57,9 +57,9 @@
       <div class="pub-section-title"><div><p class="pub-kicker">02 / DISCOVER</p><h2 id="directory-title">公益与免费 API 资源</h2><p>公开来源的精选起点。平台身份、免费条件和实际可用性需要分别判断。</p></div><a href="/guides/getting-started/">API 入门指南 ↗</a></div>
       <div class="pub-toolbar">
         <label class="pub-search-wrap"><span class="pub-search-icon" aria-hidden="true">⌕</span><span class="pub-visually-hidden">搜索站点或说明</span><input id="pub-search" type="search" placeholder="搜索站点 / 模型 / 免费方式" autocomplete="off"></label>
-        <div class="pub-filters" role="group" aria-label="筛选资源类型"><button type="button" class="is-active" data-filter="all" aria-pressed="true">全部 <span>6</span></button><button type="button" data-filter="directory" aria-pressed="false">公益导航 <span>2</span></button><button type="button" data-filter="official" aria-pressed="false">官方入口 <span>4</span></button></div>
+        <div class="pub-filters" role="group" aria-label="筛选资源类型"><button type="button" class="is-active" data-filter="all" aria-pressed="true">全部 <span>7</span></button><button type="button" data-filter="directory" aria-pressed="false">公益导航 <span>2</span></button><button type="button" data-filter="official" aria-pressed="false">官方入口 <span>4</span></button><button type="button" data-filter="gateway" aria-pressed="false">公益网关 <span>1</span></button></div>
       </div>
-      <p class="pub-result-status" id="pub-result-status" role="status" aria-live="polite">当前展示 6 个入口；未进行实时可用性探测。</p>
+      <p class="pub-result-status" id="pub-result-status" role="status" aria-live="polite">当前展示 7 个入口；未进行实时可用性探测。</p>
       <div class="pub-grid" id="pub-grid">
 <!-- PUBLIC_API_CARDS_START -->
 <article class="pub-card" data-kind="directory" data-score="52" data-search="hcnsec 公益 api 导航 公益站 / 中转站发现 汇集大厂、普通中转和公益 api 入口，包含投稿、评分与部分运行状态。适合发现候选，不代表 freellm 已核实每一家站点。 免费 / 试用 / 签到 / 邀请混合 值得发现，不建议直接按榜单选择中转 它的价值是集合大量活跃的社区线索，而不是证明这些站点可靠。公开列表混合厂商、新用户赠额、签到、邀请及部分付费推广，社区 5 分样本有时只有 1–4 票。没有独立的 api 成功率、模型保真或额度审计证据，故不按榜单排名直接推荐。">
@@ -70,8 +70,16 @@
 <dl><div><dt>免费方式</dt><dd>免费 / 试用 / 签到 / 邀请混合</dd></div><div><dt>使用前确认</dt><dd>各目标站点要求不同；注意实名与充值条件</dd></div></dl>
 <div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/hcnsec/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://link.hcnsec.cn/" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
 </article>
+<article class="pub-card" data-kind="gateway" data-score="68" data-search="新疆幻城网安公益大模型安全网关 第三方公益 ai api 网关 openai 兼容的第三方大模型 api 中转网关，用户明确反馈已成功调用。官网介绍注册赠额和每日签到，但额度、上游真实性与持续可用性尚未由 freellm 独立实测。 注册赠额 + 每日签到（站方自述）；部分模型仅 svip 已获用户成功调用反馈，推荐低敏感原型试用；仍不具备稳定性证明 这是比社区导航更具可操作性的资源：你已经确认成功调用，运营方也公开了 base url、密钥和模型分层。freellm 认可它具有实际试用价值，但一次用户反馈不等于跨地域、跨模型、跨时段的稳定性证明；运营方对上游冗余与数据处理的声明仍待独立核查。">
+<div class="pub-card-head"><span class="pub-num">02 / RESOURCE</span><span class="pub-status pub-status-official">用户反馈调用成功 · 待独立复测</span></div>
+<div class="pub-type">第三方公益 AI API 网关</div><h3>新疆幻城网安公益大模型安全网关</h3>
+<p class="pub-summary">OpenAI 兼容的第三方大模型 API 中转网关，用户明确反馈已成功调用。官网介绍注册赠额和每日签到，但额度、上游真实性与持续可用性尚未由 FreeLLM 独立实测。</p>
+<div class="pub-editorial"><strong>68<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>已获用户成功调用反馈，推荐低敏感原型试用；仍不具备稳定性证明</span></div></div>
+<dl><div><dt>免费方式</dt><dd>注册赠额 + 每日签到（站方自述）；部分模型仅 SVIP</dd></div><div><dt>使用前确认</dt><dd>注册、创建 sk- 令牌；免费模型、分组和余额需登录核对</dd></div></dl>
+<div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/hcnsec-gateway/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://api.hcnsec.cn/dashboard/overview" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
+</article>
 <article class="pub-card" data-kind="directory" data-score="31" data-search="俏亮拆除公益 api 导航 社区公益站导航 另一处社区流传的公益 api 站点导航入口；仅作为进一步调查线索，不自动接受其中的免费、稳定或模型真实性描述。 按具体收录站点核实 暂时只作发现入口 首页明确写出兼收公益、免费与付费 api，并提供类别筛选；但当前能读取的公开页面没有可独立审查的具体站点列表，无法据此判断质量、免费条件或评分可信度。不给任何『稳』『纯公益』结论。">
-<div class="pub-card-head"><span class="pub-num">02 / RESOURCE</span><span class="pub-status pub-status-review">第三方导航 · 待核验</span></div>
+<div class="pub-card-head"><span class="pub-num">03 / RESOURCE</span><span class="pub-status pub-status-review">第三方导航 · 待核验</span></div>
 <div class="pub-type">社区公益站导航</div><h3>俏亮拆除公益 API 导航</h3>
 <p class="pub-summary">另一处社区流传的公益 API 站点导航入口；仅作为进一步调查线索，不自动接受其中的免费、稳定或模型真实性描述。</p>
 <div class="pub-editorial"><strong>31<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>暂时只作发现入口</span></div></div>
@@ -79,7 +87,7 @@
 <div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/qiaoliang/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://link.qiaoliangchaichu.top/" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
 </article>
 <article class="pub-card" data-kind="official" data-score="84" data-search="openrouter 免费模型集合 官方 api 入口 官方提供免费模型集合与模型级价格信息。可从免费模型开始探索，但仍须遵守不同模型的速率及使用限制。 官方标注 free 的模型；额度随政策变动 适合初学者的首选免费试验入口 官方免费模型集合、定价与速率政策可查，适合快速试错。要纠正导航常见的『每个模型每天 50 次』表述：官方定价页给出的是免费账户每日 50 次请求，不应拆成每模型 50 次。免费模型可更替；部分免费模型提示输入输出可能用于训练，使用前必须看具体模型的数据政策。">
-<div class="pub-card-head"><span class="pub-num">03 / RESOURCE</span><span class="pub-status pub-status-official">官方目录 · 免费模型</span></div>
+<div class="pub-card-head"><span class="pub-num">04 / RESOURCE</span><span class="pub-status pub-status-official">官方目录 · 免费模型</span></div>
 <div class="pub-type">官方 API 入口</div><h3>OpenRouter 免费模型集合</h3>
 <p class="pub-summary">官方提供免费模型集合与模型级价格信息。可从免费模型开始探索，但仍须遵守不同模型的速率及使用限制。</p>
 <div class="pub-editorial"><strong>84<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>适合初学者的首选免费试验入口</span></div></div>
@@ -87,7 +95,7 @@
 <div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/openrouter/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://openrouter.ai/collections/free-models" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
 </article>
 <article class="pub-card" data-kind="official" data-score="89" data-search="cloudflare workers ai 开发者 api 官方定价文档列出每日 10,000 neurons 免费配额；部分高性能模型另需付费计划。它不是按固定 token 数免费的套餐。 10,000 neurons / 日；以当前官方文档为准 额度口径最清晰，适合工程化免费试验 规则文档清楚，免费额度是每自然日 10,000 neurons，并于 utc 00:00 重置；不是每天免费 10,000 token 或固定几百次请求。特定旗舰模型需要 paid 或预付积分，不能看到 workers ai 就认为所有模型都在免费层。">
-<div class="pub-card-head"><span class="pub-num">04 / RESOURCE</span><span class="pub-status pub-status-official">官方文档 · 每日免费量</span></div>
+<div class="pub-card-head"><span class="pub-num">05 / RESOURCE</span><span class="pub-status pub-status-official">官方文档 · 每日免费量</span></div>
 <div class="pub-type">开发者 API</div><h3>Cloudflare Workers AI</h3>
 <p class="pub-summary">官方定价文档列出每日 10,000 Neurons 免费配额；部分高性能模型另需付费计划。它不是按固定 token 数免费的套餐。</p>
 <div class="pub-editorial"><strong>89<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>额度口径最清晰，适合工程化免费试验</span></div></div>
@@ -95,7 +103,7 @@
 <div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/cloudflare/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://developers.cloudflare.com/workers-ai/" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
 </article>
 <article class="pub-card" data-kind="official" data-score="67" data-search="modelscope 魔搭社区 模型与推理平台 可浏览模型、推理体验与相关工具；不同服务可能分别计费或限量，不能把平台整体理解为永久免费 api。 按模型与具体服务核实 国内开源模型探索值得尝试，但额度需重验 modelscope 有明确的开源模型服务生态，官方在 2024 年公告每日 2000 次免费推理，但那是历史政策，不能把数字原样当成 2026 年现行保证。平台社区 2026 年文章提到绑定阿里云及实名要求；这是用户经验，不等于官方统一条款。">
-<div class="pub-card-head"><span class="pub-num">05 / RESOURCE</span><span class="pub-status pub-status-official">官方入口 · 条件待复核</span></div>
+<div class="pub-card-head"><span class="pub-num">06 / RESOURCE</span><span class="pub-status pub-status-official">官方入口 · 条件待复核</span></div>
 <div class="pub-type">模型与推理平台</div><h3>ModelScope 魔搭社区</h3>
 <p class="pub-summary">可浏览模型、推理体验与相关工具；不同服务可能分别计费或限量，不能把平台整体理解为永久免费 API。</p>
 <div class="pub-editorial"><strong>67<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>国内开源模型探索值得尝试，但额度需重验</span></div></div>
@@ -103,7 +111,7 @@
 <div class="pub-card-actions"><a class="pub-action" href="/public-api/reviews/modelscope/">看我们的评测 <span aria-hidden="true">→</span></a><a class="pub-evidence" href="https://modelscope.cn/" target="_blank" rel="noopener noreferrer">官方/原站 ↗</a></div>
 </article>
 <article class="pub-card" data-kind="official" data-score="50" data-search="硅基流动 siliconflow 模型 api 平台 提供多模型 api 接入。免费模型、赠额、实名认证和调用限制应以平台当前官方页面及控制台为准。 免费模型和赠额需独立确认 可留作官方平台候选，免费力度暂不打包票 这是实际运营的多模型 api 平台，但可公开读取的入口以注册/登录为主，无法在本轮独立确认当前每个免费模型的限额、赠额与实名要求。因此我们不重复第三方目录中的『1000 rpm』『新人多少金额』说法。">
-<div class="pub-card-head"><span class="pub-num">06 / RESOURCE</span><span class="pub-status pub-status-official">官方入口 · 条件待复核</span></div>
+<div class="pub-card-head"><span class="pub-num">07 / RESOURCE</span><span class="pub-status pub-status-official">官方入口 · 条件待复核</span></div>
 <div class="pub-type">模型 API 平台</div><h3>硅基流动 SiliconFlow</h3>
 <p class="pub-summary">提供多模型 API 接入。免费模型、赠额、实名认证和调用限制应以平台当前官方页面及控制台为准。</p>
 <div class="pub-editorial"><strong>50<small>/100</small></strong><div><b>FreeLLM 编辑资料评分</b><span>可留作官方平台候选，免费力度暂不打包票</span></div></div>
