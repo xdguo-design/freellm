@@ -48,6 +48,8 @@ class PublicApiDirectoryTests(unittest.TestCase):
         self.assertTrue((ROOT / "css/aurora-public-api.css").is_file())
         self.assertTrue((ROOT / "js/public-api-directory.js").is_file())
         self.assertIn('"public-api",', (ROOT / "scripts/check_internal_links.py").read_text(encoding="utf-8"))
+        discovered = json.loads((ROOT / "data/third-party-discovery-sources.json").read_text(encoding="utf-8"))
+        self.assertTrue(any(item["id"] == "hcnsec-public-api" and item["enabled"] is False for item in discovered))
 
 
 if __name__ == "__main__":

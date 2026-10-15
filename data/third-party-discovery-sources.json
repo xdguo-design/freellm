@@ -11,5 +11,17 @@
     ],
     "enabled": false,
     "disabledReason": "freellm.net is a competing directory, not a neutral source. Its rows supplied 301 of 304 published model records, which meant the catalog both depended on a competitor and sent it outbound link equity. Disabled on 2026-09-17 in favour of collecting model data from each provider's own sources (see data/official-model-sources.json). Re-enabling this would put the catalog back on a competitor's data."
+  },
+  {
+    "id": "hcnsec-public-api",
+    "name": "HCNSEC Public API Directory",
+    "allowedDomains": [
+      "link.hcnsec.cn"
+    ],
+    "urls": [
+      "https://link.hcnsec.cn/"
+    ],
+    "enabled": false,
+    "disabledReason": "Registered on 2026-10-15 as a discovery-only community directory. Its user submissions and quota claims are not official provider evidence. Keep automated model-catalog ingestion disabled; maintain candidates through data/public-api-directory.json with manual verification before publication."
   }
 ]
