@@ -27,7 +27,7 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261013-overflow"></script>
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261015-spa2"></script>
 <aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
