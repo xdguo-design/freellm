@@ -562,6 +562,7 @@ if (section === 'home' || section === 'models') {
       setTopic(link.dataset.skillTopic, true);
     });
     window.addEventListener('popstate', () => {
+      if (!page.isConnected) return;
       const found = new URLSearchParams(window.location.search).get('category');
       setTopic(found, false);
     });
