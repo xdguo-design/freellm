@@ -355,7 +355,7 @@
 
     var pageNodes = Array.from(targetBody.childNodes).filter(function (node) {
       if (node.nodeType !== Node.ELEMENT_NODE) return true;
-      if (node.matches('.fl-site-rail, .fl-site-ribbon')) return false;
+      if (node.matches('.fl-site-rail, .fl-site-ribbon, .fl-skip-link')) return false;
       // JSON scripts are page data, not executable code. Skills needs its
       // #skill-data node before the shared page-mount handler renders cards.
       return !node.matches('script') || /^(?:application\/json|application\/ld\+json)$/i.test((node.type || '').trim());
@@ -393,7 +393,10 @@
     function track(target, original, type, callback, options) {
       if ((type === 'DOMContentLoaded' || (type === 'load' && target === window)) &&
           typeof callback === 'function') {
-        Promise.resolve().then(function () { callback.call(target, new Event(type)); });
+        var boundEpoch = navigationEpoch;
+        Promise.resolve().then(function () {
+          if (boundEpoch === navigationEpoch) callback.call(target, new Event(type));
+        });
         return;
       }
       pageScriptBindings.push({ target: target, type: type, callback: callback, options: options });
