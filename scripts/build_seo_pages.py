@@ -6314,6 +6314,7 @@ def sitemap_section_paths(
         "/about/",
         "/contact/",
         "/links/",
+        "/public-api/",
         "/terms/",
         "/privacy/",
         "/submit/",
