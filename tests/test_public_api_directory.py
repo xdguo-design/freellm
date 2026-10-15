@@ -39,6 +39,27 @@ class PublicApiDirectoryTests(unittest.TestCase):
         self.assertIn('id="pub-no-results"', page)
         self.assertIn("未进行实时可用性探测", page)
 
+    def test_independent_review_math_and_pages(self):
+        data = json.loads((ROOT / "data/public-api-directory.json").read_text(encoding="utf-8"))
+        for resource in data["resources"]:
+            review = resource["review"]
+            axes = review["axes"]
+            expected = axes["evidence"] * 7 + axes["terms"] * 6 + axes["access"] * 4 + axes["privacy"] * 3
+            self.assertEqual(review["score"], expected)
+            for value in axes.values():
+                self.assertIn(value, range(6))
+            self.assertEqual(review["liveProbe"], "not_performed")
+            self.assertTrue(review["sources"])
+            path = ROOT / "public-api" / "reviews" / resource["id"] / "index.html"
+            self.assertTrue(path.is_file(), str(path))
+            page = path.read_text(encoding="utf-8")
+            self.assertIn(f"https://freellm.top/public-api/reviews/{resource['id']}/", page)
+            self.assertIn(f"{review['score']}<small>/100</small>", page)
+            self.assertIn("UNKNOWN", page)
+            self.assertIn("未执行", page)
+            for source in review["sources"]:
+                self.assertIn(source["url"], page)
+
     def test_page_is_linked_and_css_and_scripts_exist(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         links = (ROOT / "links/index.html").read_text(encoding="utf-8")

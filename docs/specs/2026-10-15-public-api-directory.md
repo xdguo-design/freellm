@@ -33,3 +33,12 @@
 - 通过受控人工审核单建立候选升级流程；自动采集只入审核队列，不自动公开。
 - 在具备可用授权、地区节点、最小成本控制和安全审计后，加入真正的 API 探针。
 - 后续英文版上线之前不设置虚假的 /en/public-api/ hreflang。
+
+## 2026-10-15 第二轮：自主编辑评价
+- 自有资料评分：公开证据 35%、免费条款 30%、接入便利 20%、隐私控制 15%，每项 0–5 整数；score = evidence×7 + terms×6 + access×4 + privacy×3。评分为编辑判断，不是 uptime、模型真实性或业务安全认证。
+- 六份评测数据维护于 `data/public-api-directory.json` 的 `review` 字段。对应 `/public-api/reviews/<id>/` 可索引的静态详情页，并提供原始证据、已知事实、未知事项、验证步骤、适用场景、扣分原因。
+- 2026 年 10 月 15 日核对官方价格页：OpenRouter Free 每日 50 requests（不能写成每模型 50 次）；Cloudflare Workers AI 每日 10,000 Neurons，00:00 UTC 重置，部分模型需要 Paid 或预付积分。
+- ModelScope 社区 2024-12 提到每日 2000 请求，属于历史政策，不作为当前保证；SiliconFlow 当前可读入口是登录页，具体免费额度仍 UNKNOWN。
+- HCNSEC 和 qiaoliang 两家导航站的编辑分仅反映可公开核对的资料质量，不能等同于被收录每家中转的可靠性。社区星级仅为外部信号，不进入 FreeLLM 分数。
+- 单个用户真实密钥不能发给本站或提交到 GitHub。没有执行带密钥的 API 探针；未测数据必须保留 UNKNOWN。
+- 更新数据后运行 `node scripts/build_public_api_reviews.cjs`，再运行 `node scripts/build_public_api_reviews.cjs --check`，保证卡片和详情页同步。最后跑 `python scripts/check_internal_links.py` 和 `pytest -q tests/test_public_api_directory.py`。
