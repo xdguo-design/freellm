@@ -27,6 +27,7 @@ SITEMAPS = (
 SCAN_ROOTS = (
     "about",
     "links",
+    "public-api",
     "terms",
     "privacy",
     "submit",

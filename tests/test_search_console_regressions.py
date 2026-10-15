@@ -159,14 +159,31 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         (Qwen3.8-Flash promotion officially extended) and the new verified
         /offers/claude-max-team-api-credits/ page.
         """
+        # The production sitemap index, not filesystem glob, is the canonical
+        # list of published sections. The unsubmitted Skill snapshot holds 99
+        # separate URLs and must not inflate this crawl budget.
+        sitemap_index = ET.parse(ROOT / "sitemap.xml").getroot()
+        published_sections = [
+            (loc.text or "").strip().rsplit("/", 1)[-1]
+            for loc in sitemap_index.findall("sm:sitemap/sm:loc", SITEMAP_NS)
+            if (loc.text or "").strip()
+        ]
+        self.assertEqual(
+            set(published_sections),
+            {"sitemap-pages.xml", "sitemap-offers.xml",
+             "sitemap-providers.xml", "sitemap-models.xml", "sitemap-english.xml"},
+        )
         all_urls: list[str] = []
-        for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
-            root = ET.parse(sitemap).getroot()
-            all_urls.extend(
+        section_counts: dict[str, int] = {}
+        for section in published_sections:
+            root = ET.parse(ROOT / section).getroot()
+            section_urls = [
                 (loc.text or "").strip()
                 for loc in root.findall("sm:url/sm:loc", SITEMAP_NS)
                 if (loc.text or "").strip()
-            )
+            ]
+            section_counts[section] = len(section_urls)
+            all_urls.extend(section_urls)
 
         model_root = ET.parse(ROOT / "sitemap-models.xml").getroot()
         model_urls = [
@@ -175,13 +192,16 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             if (loc.text or "").strip()
         ]
 
-        # 2026-10-14 review: 222 unique URLs across 5 sitemap sections
-        # (pages=50, offers=78, providers=50, models=35, english=9).
-        # Only three more additions are allowed without another scope review.
+        # 2026-10-15 reviewed expansion: eight authored /public-api/ URLs
+        # (the hub plus seven evidence-led reviews) have distinct content,
+        # self-canonicals and explicit indexing. No generated model/offer
+        # landing-page expansion is approved by this change.
+        # Approved sitemap counts: pages=58, offers=78, providers=50,
+        # models=35, english=9; total=230. Further growth requires review.
         self.assertLessEqual(
             len(all_urls),
-            225,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 225); review SEO scope before publishing",
+            230,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230): {section_counts}; inspect generator output before release",
         )
         self.assertLessEqual(
             len(model_urls),

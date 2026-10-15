@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "policy": "用户反馈与自动探针分开保存，不能直接写入成功率；不保存密钥、原始请求、账户信息或敏感回复。",
+  "observations": [
+    {
+      "id": "hcnsec-user-confirmed-20261015",
+      "providerId": "hcnsec-gateway",
+      "sourceType": "first_party_user_report",
+      "receivedOn": "2026-10-15",
+      "observedOn": null,
+      "statement": "用户确认在新疆幻城网安科技公益大模型安全网关上完成了成功调用，表示好用。",
+      "outcome": "reported_success",
+      "method": "not_disclosed",
+      "modelId": null,
+      "httpStatus": null,
+      "latencyMs": null,
+      "validity": "USER_CONFIRMED_UNVERIFIED_BY_FREELLM",
+      "countedForAvailabilityMetrics": false
+    }
+  ]
+}
