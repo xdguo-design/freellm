@@ -161,3 +161,18 @@ body.public-api-page :focus-visible{outline:3px solid #5c9aef;outline-offset:3px
 .pub-gateway-guide pre{white-space:pre;overflow:auto;max-width:100%;background:#102443;color:#e4f3ff;border-radius:11px;padding:17px;line-height:1.6}
 .pub-gateway-guide pre code{display:block;padding:0;background:none;color:inherit;font-size:12px}
 .pub-gateway-guide a{color:#206db7;font-weight:750}
+
+/* Release gate: shared shell sets width:100%!important and mobile padding on
+   direct main/footer with content-box sizing; keep each surface inside viewport. */
+html.fl-pastel-ui body.public-api-page > main.pub-layout,
+html.fl-pastel-ui body.public-api-page > footer.pub-footer{
+  box-sizing:border-box !important;
+  width:min(100%,1190px) !important;
+  min-width:0 !important;
+  max-width:1190px;
+}
+@media(max-width:700px){
+  html.fl-pastel-ui body.public-api-page > main.pub-layout,
+  html.fl-pastel-ui body.public-api-page > footer.pub-footer{width:100% !important}
+  body.public-api-page .pub-breadcrumb{min-width:0;flex-wrap:wrap;overflow-wrap:anywhere}
+}

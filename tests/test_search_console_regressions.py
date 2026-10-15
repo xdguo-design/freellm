@@ -174,13 +174,16 @@ class SearchConsoleRegressionTests(unittest.TestCase):
              "sitemap-providers.xml", "sitemap-models.xml", "sitemap-english.xml"},
         )
         all_urls: list[str] = []
+        section_counts: dict[str, int] = {}
         for section in published_sections:
             root = ET.parse(ROOT / section).getroot()
-            all_urls.extend(
+            section_urls = [
                 (loc.text or "").strip()
                 for loc in root.findall("sm:url/sm:loc", SITEMAP_NS)
                 if (loc.text or "").strip()
-            )
+            ]
+            section_counts[section] = len(section_urls)
+            all_urls.extend(section_urls)
 
         model_root = ET.parse(ROOT / "sitemap-models.xml").getroot()
         model_urls = [
@@ -198,7 +201,7 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         self.assertLessEqual(
             len(all_urls),
             230,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230); review SEO scope before publishing",
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230): {section_counts}; inspect generator output before release",
         )
         self.assertLessEqual(
             len(model_urls),
