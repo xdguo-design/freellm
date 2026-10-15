@@ -7409,7 +7409,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261013-overflow"></script>'
+        '<script src="/js/site-navigation.js?v=20261015-spa2"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
