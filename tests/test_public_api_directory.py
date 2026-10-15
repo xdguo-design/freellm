@@ -78,6 +78,16 @@ class PublicApiDirectoryTests(unittest.TestCase):
         self.assertIn("不要提交完整 Key", community)
         self.assertIn("Bearer Token", submit)
 
+    def test_hcnsec_gateway_separated_from_directory(self):
+        page = (ROOT / "public-api/reviews/hcnsec/index.html").read_text(encoding="utf-8")
+        self.assertIn("link.hcnsec.cn", page)
+        self.assertIn("https://api.hcnsec.cn/v1", page)
+        self.assertIn("DeepSeek-V4-Pro", page)
+        self.assertIn("站方自述", page)
+        self.assertIn("401", page)
+        self.assertIn("403", page)
+        self.assertIn("429", page)
+
     def test_page_is_linked_and_css_and_scripts_exist(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         links = (ROOT / "links/index.html").read_text(encoding="utf-8")

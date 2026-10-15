@@ -47,3 +47,7 @@
 - `scripts/build_seo_pages.py` 的 `public_api_review_urls()` 从审核登记 JSON 动态获取合法 slug，防止下次 SEO build 抹去详情页的 sitemap 条目。
 - `/community/` 和 `/submit/` 采用共享的 Aurora 二级页面主题，加入自主评测纠错入口、证据等级及脱敏说明。
 - 静态 `sitemap-pages.xml` 已包含 6 个实际存在的详细评测页；新增资源经人工验收后运行 `node scripts/build_public_api_reviews.cjs` 和原有 sitemap 生成脚本。
+
+## HCNSEC 自营网关故障排查
+- 本站 `link.hcnsec.cn` 与运营方的 `api.hcnsec.cn` 分开描述。仅依据运营方公开文档，记录 Base URL `https://api.hcnsec.cn/v1`、POST 路径、auto 分组、模型别名以及 401/403/429 的优先排查方向。
+- 网关公开宣称的上游数量、模型名称、长期免费和不用于训练等均是站方声明，不是独立审计结论。不要将用户 API Key 交给我们。

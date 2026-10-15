@@ -144,3 +144,11 @@ body.public-api-page :focus-visible{outline:3px solid #5c9aef;outline-offset:3px
 .pub-detail-next a{font-size:13px;color:#1b68b6;font-weight:800}
 @media(max-width:930px){.pub-opinion-grid{grid-template-columns:1fr}.pub-opinion-grid p{min-height:0}.pub-detail-columns{grid-template-columns:1fr}.pub-detail-aside{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.pub-detail-aside>section{min-width:0}.pub-detail-summary{grid-template-columns:1fr}}
 @media(max-width:640px){.pub-detail-head{flex-direction:column}.pub-score-panel{flex:none;align-items:flex-start;min-width:200px}.pub-detail-aside{grid-template-columns:1fr}.pub-detail-section,.pub-detail-aside>section{padding:23px 19px}.pub-opinion-section{margin:45px 0}}
+
+.pub-gateway-guide h3{margin:20px 0 10px;font-size:17px}
+.pub-gateway-guide code{display:inline-block;padding:2px 5px;background:#edf5ff;border-radius:5px;color:#225883;font-size:12px;overflow-wrap:anywhere;max-width:100%}
+.pub-gateway-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
+.pub-gateway-fields>div{min-width:0;display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid #dce8f5;border-radius:10px;background:#f6faff;color:#50708c;font-size:12px}
+.pub-gateway-fields b{color:#315776;font-size:11px}
+.pub-gateway-guide .pub-footnote a{color:#1c6ec2}
+@media(max-width:520px){.pub-gateway-fields{grid-template-columns:1fr}}
