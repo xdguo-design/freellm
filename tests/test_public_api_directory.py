@@ -60,6 +60,24 @@ class PublicApiDirectoryTests(unittest.TestCase):
             for source in review["sources"]:
                 self.assertIn(source["url"], page)
 
+    def test_all_review_pages_are_in_generated_sitemap(self):
+        data = json.loads((ROOT / "data/public-api-directory.json").read_text(encoding="utf-8"))
+        sitemap = (ROOT / "sitemap-pages.xml").read_text(encoding="utf-8")
+        generator = (ROOT / "scripts/build_seo_pages.py").read_text(encoding="utf-8")
+        self.assertIn("def public_api_review_urls()", generator)
+        for resource in data["resources"]:
+            self.assertIn(f"https://freellm.top/public-api/reviews/{resource['id']}/", sitemap)
+
+    def test_public_api_feedback_routes_are_reachable(self):
+        community = (ROOT / "community/index.html").read_text(encoding="utf-8")
+        submit = (ROOT / "submit/index.html").read_text(encoding="utf-8")
+        self.assertIn('href="/public-api/"', community)
+        self.assertIn('href="/public-api/"', submit)
+        self.assertIn("aurora-secondary-hub.css", community)
+        self.assertIn("aurora-secondary-hub.css", submit)
+        self.assertIn("不要提交完整 Key", community)
+        self.assertIn("Bearer Token", submit)
+
     def test_page_is_linked_and_css_and_scripts_exist(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         links = (ROOT / "links/index.html").read_text(encoding="utf-8")

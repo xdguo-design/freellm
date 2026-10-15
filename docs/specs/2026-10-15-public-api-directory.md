@@ -42,3 +42,8 @@
 - HCNSEC 和 qiaoliang 两家导航站的编辑分仅反映可公开核对的资料质量，不能等同于被收录每家中转的可靠性。社区星级仅为外部信号，不进入 FreeLLM 分数。
 - 单个用户真实密钥不能发给本站或提交到 GitHub。没有执行带密钥的 API 探针；未测数据必须保留 UNKNOWN。
 - 更新数据后运行 `node scripts/build_public_api_reviews.cjs`，再运行 `node scripts/build_public_api_reviews.cjs --check`，保证卡片和详情页同步。最后跑 `python scripts/check_internal_links.py` 和 `pytest -q tests/test_public_api_directory.py`。
+
+## 2026-10-15 二级页面治理追加
+- `scripts/build_seo_pages.py` 的 `public_api_review_urls()` 从审核登记 JSON 动态获取合法 slug，防止下次 SEO build 抹去详情页的 sitemap 条目。
+- `/community/` 和 `/submit/` 采用共享的 Aurora 二级页面主题，加入自主评测纠错入口、证据等级及脱敏说明。
+- 静态 `sitemap-pages.xml` 已包含 6 个实际存在的详细评测页；新增资源经人工验收后运行 `node scripts/build_public_api_reviews.cjs` 和原有 sitemap 生成脚本。

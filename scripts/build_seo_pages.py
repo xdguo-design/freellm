@@ -6297,6 +6297,22 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
 SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models", "english")
 
 
+def public_api_review_urls() -> list[str]:
+    """Register reviewed public API pages from the local, curated source only."""
+    registry = Path(__file__).resolve().parents[1] / "data" / "public-api-directory.json"
+    if not registry.is_file():
+        return []
+    resources = json.loads(registry.read_text(encoding="utf-8")).get("resources", [])
+    return [
+        f"/public-api/reviews/{resource['id']}/"
+        for resource in resources
+        if isinstance(resource, dict)
+        and isinstance(resource.get("id"), str)
+        and re.fullmatch(r"[a-z0-9-]+", resource["id"])
+        and isinstance(resource.get("review"), dict)
+    ]
+
+
 def sitemap_section_paths(
     offers: list[dict],
     categories: list[str],
@@ -6315,6 +6331,7 @@ def sitemap_section_paths(
         "/contact/",
         "/links/",
         "/public-api/",
+        *public_api_review_urls(),
         "/terms/",
         "/privacy/",
         "/submit/",
