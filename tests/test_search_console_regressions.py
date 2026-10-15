@@ -159,9 +159,23 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         (Qwen3.8-Flash promotion officially extended) and the new verified
         /offers/claude-max-team-api-credits/ page.
         """
+        # The production sitemap index, not filesystem glob, is the canonical
+        # list of published sections. The unsubmitted Skill snapshot holds 99
+        # separate URLs and must not inflate this crawl budget.
+        sitemap_index = ET.parse(ROOT / "sitemap.xml").getroot()
+        published_sections = [
+            (loc.text or "").strip().rsplit("/", 1)[-1]
+            for loc in sitemap_index.findall("sm:sitemap/sm:loc", SITEMAP_NS)
+            if (loc.text or "").strip()
+        ]
+        self.assertEqual(
+            set(published_sections),
+            {"sitemap-pages.xml", "sitemap-offers.xml",
+             "sitemap-providers.xml", "sitemap-models.xml", "sitemap-english.xml"},
+        )
         all_urls: list[str] = []
-        for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
-            root = ET.parse(sitemap).getroot()
+        for section in published_sections:
+            root = ET.parse(ROOT / section).getroot()
             all_urls.extend(
                 (loc.text or "").strip()
                 for loc in root.findall("sm:url/sm:loc", SITEMAP_NS)
@@ -184,7 +198,7 @@ class SearchConsoleRegressionTests(unittest.TestCase):
         self.assertLessEqual(
             len(all_urls),
             230,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 225); review SEO scope before publishing",
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230); review SEO scope before publishing",
         )
         self.assertLessEqual(
             len(model_urls),

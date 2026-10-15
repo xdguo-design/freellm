@@ -38,3 +38,8 @@ python scripts/probe_public_api.py --mode authenticated_chat --output .tmp/publi
 - GitHub Actions 以 `public-api-evidence-<run id>` 留存 90 天产物，不写入 dev/main。最近最多 40 份 artifact 的脱敏鉴权结果通过 `scripts/restore_public_api_history.py` 读取后交由 evaluator 合并。
 - GitHub REST 访问令牌只发送给 api.github.com；归档重定向会切换为无 Authorization 的独立 HTTPS 请求。归档中只提取 reports/auth.json 的白名单字段，不写原始 ZIP 和其他文件。
 - 定时 workflow 仅在合并到 GitHub 仓库默认分支后自动按计划运行；目前 dev 上新配置不等于定时任务已经启用。
+
+## 2026-10-15 AdSense / GSC 门禁修正
+- 公益目录与 7 个索引内的原创评测页面挂载与现有 `ads.txt` 匹配的 AdSense loader，不填虚构广告位 ID。
+- GSC 预算以根 `sitemap.xml` 实际引用的五个已发布子站点地图计算，而不是 glob 误包含 `sitemap-skills.xml`（99 个不在根 sitemap 索引中的候选快照）。
+- 当前批准的总量 230（pages=58, offers=78, providers=50, models=35, english=9）。新增页面须再次审核，不能绕过预算阈值。
