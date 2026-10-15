@@ -315,7 +315,11 @@
     // unstyled, which looks like the menu itself is reloading on every click.
     await Promise.all(styleLoads);
 
-    return function commitStyles() {
+    return function commitStyles(activate) {
+      if (activate === false) {
+        nextStyles.forEach(function (node) { node.remove(); });
+        return;
+      }
       nextStyles.forEach(function (node) {
         if (node.tagName === 'LINK') {
           var media = node.dataset.flNavigationMedia;
@@ -528,6 +532,10 @@
       }
       var scripts = collectScripts(parsed, responseUrl);
 
+      // Load target styles without unmounting the old route. Rapid clicks
+      // must not commit stale metadata/history or leave orphan stylesheets.
+      var commitStyles = await replaceStyles(parsed, responseUrl);
+      if (epoch !== navigationEpoch) { commitStyles(false); return false; }
       if (settings.history !== false) {
         var previousState = Object.assign({}, history.state || {}, { freellmScrollY: window.scrollY });
         history.replaceState(previousState, '', window.location.href);
@@ -535,13 +543,8 @@
       } else if (settings.replaceHistory) {
         history.replaceState({ freellmNavigation: true }, '', url.href);
       }
-
-      // Reflect the selected route as soon as its document is available; the
-      // shared rail stays mounted while page styles finish loading.
       activateMenu(parsed);
       replaceMetadata(parsed);
-      var commitStyles = await replaceStyles(parsed, responseUrl);
-      if (epoch !== navigationEpoch) return false;
       if (!replacePageChrome(parsed)) throw new Error('Current page is missing the shared site shell');
       commitStyles();
       for (var index = 0; index < scripts.length; index += 1) {
