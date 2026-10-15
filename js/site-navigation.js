@@ -285,52 +285,86 @@
   }
 
   async function replaceStyles(parsed, responseUrl) {
+    // Keep the public rail and all shared styles alive across route changes.
+    // Reloading every stylesheet on each click caused visible flashes even
+    // though the rail DOM was preserved. Reuse identical, already-loaded links.
     var previousStyles = Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style')).filter(function (node) {
       return !node.hasAttribute('data-fl-shared-navigation-styles');
     });
     var nextStyles = [];
+    var addedStyles = [];
     var styleLoads = [];
     Array.from(parsed.head.querySelectorAll('link[rel="stylesheet"], style')).forEach(function (node) {
       var copy = node.cloneNode(true);
       copy.setAttribute('data-fl-navigation-style', '');
       if (copy.tagName === 'LINK') {
-        copy.href = new URL(node.getAttribute('href'), responseUrl).href;
-        copy.dataset.flNavigationMedia = copy.getAttribute('media') || '';
+        var href = new URL(node.getAttribute('href'), responseUrl).href;
+        var printLoader = /this\.media\s*=\s*['"]all['"]/.test(node.getAttribute('onload') || '');
+        var desiredMedia = printLoader ? 'all' : (node.getAttribute('media') || '');
+        var reused = previousStyles.find(function (existing) {
+          return existing.tagName === 'LINK' && existing.href === href &&
+            !nextStyles.includes(existing) &&
+            ((existing.getAttribute('media') || '') === desiredMedia ||
+             (desiredMedia === 'all' && !existing.getAttribute('media')));
+        });
+        if (reused) {
+          nextStyles.push(reused);
+          return;
+        }
+        copy.href = href;
+        // A print/onload stylesheet is a lazy loader for screen CSS, not a
+        // print-only stylesheet. Cloning its inline onload would reset it to
+        // print after mount, which breaks the returning homepage.
+        if (printLoader) copy.removeAttribute('onload');
+        copy.dataset.flNavigationMedia = desiredMedia;
         copy.setAttribute('media', 'not all');
+        if (new URL(href).origin === window.location.origin) {
+          styleLoads.push(new Promise(function (resolve) {
+            copy.addEventListener('load', resolve, { once: true });
+            copy.addEventListener('error', resolve, { once: true });
+          }));
+        }
       } else {
         copy.disabled = true;
       }
-      if (copy.tagName === 'LINK' && new URL(copy.href, window.location.href).origin === window.location.origin && !copy.sheet) {
-        styleLoads.push(new Promise(function (resolve) {
-          copy.addEventListener('load', resolve, { once: true });
-          copy.addEventListener('error', resolve, { once: true });
-        }));
-      }
       document.head.appendChild(copy);
       nextStyles.push(copy);
+      addedStyles.push(copy);
     });
 
-    // Keep the current page styled until every incoming stylesheet is ready.
-    // Removing the old sheets first briefly leaves the persistent sidebar
-    // unstyled, which looks like the menu itself is reloading on every click.
-    await Promise.all(styleLoads);
+    // A blocked or low-priority stylesheet must never freeze navigation.
+    // It can finish loading after activation; the previous page stays styled
+    // while we await a bounded amount of time for the new stylesheets.
+    if (styleLoads.length) {
+      var timeoutId;
+      await Promise.race([
+        Promise.all(styleLoads),
+        new Promise(function (resolve) { timeoutId = setTimeout(resolve, 2500); })
+      ]);
+      clearTimeout(timeoutId);
+    }
 
     return function commitStyles(activate) {
       if (activate === false) {
-        nextStyles.forEach(function (node) { node.remove(); });
+        addedStyles.forEach(function (node) { node.remove(); });
         return;
       }
       nextStyles.forEach(function (node) {
-        if (node.tagName === 'LINK') {
+        if (node.tagName === 'LINK' && node.hasAttribute('data-fl-navigation-style')) {
           var media = node.dataset.flNavigationMedia;
           if (media) node.setAttribute('media', media);
           else node.removeAttribute('media');
           delete node.dataset.flNavigationMedia;
-        } else {
+        } else if (node.tagName === 'STYLE' && node.hasAttribute('data-fl-navigation-style')) {
           node.disabled = false;
         }
+        // Respect the destination page's cascade while retaining DOM/style
+        // identity for shared assets (no second download, no sidebar flash).
+        document.head.appendChild(node);
       });
-      previousStyles.forEach(function (node) { node.remove(); });
+      previousStyles.forEach(function (node) {
+        if (!nextStyles.includes(node)) node.remove();
+      });
       ensureSharedNavigationStyles();
     };
   }
@@ -584,8 +618,8 @@
 
   window.addEventListener('click', function (clickEvent) {
     if (clickEvent.defaultPrevented || clickEvent.button !== 0 || clickEvent.metaKey || clickEvent.ctrlKey || clickEvent.shiftKey || clickEvent.altKey) return;
-    var link = clickEvent.target.closest('.fl-site-rail a[data-site-nav]');
-    if (!link || !navigationKeys.has(link.dataset.siteNav) || link.target || link.hasAttribute('download')) return;
+    var link = clickEvent.target.closest('.fl-site-rail a[data-site-nav], .fl-site-rail .fl-site-brand');
+    if (!link || (link.dataset.siteNav && !navigationKeys.has(link.dataset.siteNav)) || link.target || link.hasAttribute('download')) return;
     var url = new URL(link.href, window.location.href);
     if (!navigationPaths.has(url.pathname) || url.origin !== window.location.origin) return;
     clickEvent.preventDefault();
