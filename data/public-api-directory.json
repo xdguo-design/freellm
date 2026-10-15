@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "reviewedOn": "2026-10-15",
+  "reviewScope": "页面公开资料检查，不等于注册、API调用或服务可用性验证",
+  "notice": "Third-party submissions are discovery candidates only; never automatically publish or present quotas as verified.",
+  "resources": [
+    {
+      "id": "hcnsec",
+      "name": "HCNSEC 公益 API 导航",
+      "kind": "directory",
+      "status": "第三方导航 · 内容待核验",
+      "label": "公益站 / 中转站发现",
+      "description": "汇集大厂、普通中转和公益 API 入口，包含投稿、评分与部分运行状态。适合发现候选，不代表 FreeLLM 已核实每一家站点。",
+      "free": "免费 / 试用 / 签到 / 邀请混合",
+      "requirement": "各目标站点要求不同；注意实名与充值条件",
+      "url": "https://link.hcnsec.cn/",
+      "source": "https://link.hcnsec.cn/",
+      "sourceLabel": "原始导航",
+      "signal": "发现来源",
+      "authority": "third-party-directory",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "unknown"
+    },
+    {
+      "id": "qiaoliang",
+      "name": "俏亮拆除公益 API 导航",
+      "kind": "directory",
+      "status": "第三方导航 · 待核验",
+      "label": "社区公益站导航",
+      "description": "另一处社区流传的公益 API 站点导航入口；仅作为进一步调查线索，不自动接受其中的免费、稳定或模型真实性描述。",
+      "free": "按具体收录站点核实",
+      "requirement": "先查看站点政策，避免上传敏感数据",
+      "url": "https://link.qiaoliangchaichu.top/",
+      "source": "https://www.nodeloc.com/t/topic/95645?tl=en",
+      "sourceLabel": "社区来源",
+      "signal": "发现来源",
+      "authority": "third-party-directory",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "unknown"
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter 免费模型集合",
+      "kind": "official",
+      "status": "官方目录 · 免费模型",
+      "label": "官方 API 入口",
+      "description": "官方提供免费模型集合与模型级价格信息。可从免费模型开始探索，但仍须遵守不同模型的速率及使用限制。",
+      "free": "官方标注 free 的模型；额度随政策变动",
+      "requirement": "注册账号；核对目标模型当前限额",
+      "url": "https://openrouter.ai/collections/free-models",
+      "source": "https://openrouter.ai/collections/free-models",
+      "sourceLabel": "官方模型集合",
+      "signal": "官方规则",
+      "authority": "official-site",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "official_page_only"
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare Workers AI",
+      "kind": "official",
+      "status": "官方文档 · 每日免费量",
+      "label": "开发者 API",
+      "description": "官方定价文档列出每日 10,000 Neurons 免费配额；部分高性能模型另需付费计划。它不是按固定 token 数免费的套餐。",
+      "free": "10,000 Neurons / 日；以当前官方文档为准",
+      "requirement": "Cloudflare 账号；先检查模型是否可用",
+      "url": "https://developers.cloudflare.com/workers-ai/",
+      "source": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "sourceLabel": "官方定价依据",
+      "signal": "官方规则",
+      "authority": "official-site",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "official_page_only"
+    },
+    {
+      "id": "modelscope",
+      "name": "ModelScope 魔搭社区",
+      "kind": "official",
+      "status": "官方入口 · 条件待复核",
+      "label": "模型与推理平台",
+      "description": "可浏览模型、推理体验与相关工具；不同服务可能分别计费或限量，不能把平台整体理解为永久免费 API。",
+      "free": "按模型与具体服务核实",
+      "requirement": "可能需要登录；查看接口说明和限制",
+      "url": "https://modelscope.cn/",
+      "source": "https://modelscope.cn/",
+      "sourceLabel": "平台入口",
+      "signal": "官方入口",
+      "authority": "official-site",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "unknown"
+    },
+    {
+      "id": "siliconflow",
+      "name": "硅基流动 SiliconFlow",
+      "kind": "official",
+      "status": "官方入口 · 条件待复核",
+      "label": "模型 API 平台",
+      "description": "提供多模型 API 接入。免费模型、赠额、实名认证和调用限制应以平台当前官方页面及控制台为准。",
+      "free": "免费模型和赠额需独立确认",
+      "requirement": "账号与身份验证要求可能变化",
+      "url": "https://cloud.siliconflow.cn/",
+      "source": "https://cloud.siliconflow.cn/",
+      "sourceLabel": "平台入口",
+      "signal": "官方入口",
+      "authority": "official-site",
+      "apiProbe": "not_performed",
+      "eligibilityVerified": "unknown"
+    }
+  ],
+  "watchlist": [
+    {
+      "name": "Cancri",
+      "referrer": "hcnsec",
+      "status": "unverified"
+    },
+    {
+      "name": "NaraRouter",
+      "referrer": "hcnsec",
+      "status": "unverified"
+    },
+    {
+      "name": "YxmAgent",
+      "referrer": "hcnsec",
+      "status": "unverified"
+    }
+  ]
+}
