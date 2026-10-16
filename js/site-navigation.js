@@ -572,6 +572,7 @@
 
   window.addEventListener('popstate', function (popEvent) {
     var url = new URL(window.location.href);
+    if (document.body.dataset.flSection === 'skills' && popEvent.state && popEvent.state.skillsView) return;
     if (!navigationPaths.has(url.pathname)) {
       window.location.assign(url.href);
       return;

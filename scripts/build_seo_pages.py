@@ -4945,10 +4945,12 @@ def _skill_card(skill: dict) -> str:
     description_zh = skill.get("description_zh") or skill.get("description") or ""
     description_en = skill.get("description") or ""
     test_markup = _skill_test_markup(skill)
-    return f'''<article class="skill-card" data-skill-id="{_esc(skill.get('id'))}" data-category="{_esc(skill.get('category'))}" data-status="{_esc(skill.get('status'))}">
+    initial = (str(skill.get("name") or "S").strip()[:1] or "S").upper()
+    return f'''<article class="skill-card showcase-card" data-skill-id="{_esc(skill.get('id'))}" data-category="{_esc(skill.get('category'))}" data-status="{_esc(skill.get('status'))}">
+      <div class="skill-card-heading"><span class="skill-card-icon {category.get('accent', 'blue')}" aria-hidden="true">{_esc(initial)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="{_esc(skill.get('id'))}" aria-label="查看 {_esc(skill.get('name'))} 详情">+</button></div>
       <div class="skill-card-top"><span class="skill-category {category.get('accent', 'blue')}">{_esc(category.get('name_zh', 'Skill'))}</span><span class="skill-status {status_class}"><span lang="zh-CN">{_esc(status_zh)}</span><span lang="en">{_esc(status_en)}</span></span></div>
       <h2>{_esc(skill.get('name'))}</h2>{test_markup}<p><span class="skill-description-zh" lang="zh-CN">{_esc(description_zh)}</span><span class="skill-description-en" lang="en">{_esc(description_en)}</span></p>{_skill_style_line(skill)}<div class="skill-chips">{compatibility}</div>{meta}
-      <div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="{_esc(skill.get('id'))}"><span lang="zh-CN">查看 SKILL.md 与社区参考 →</span><span lang="en">Source &amp; community reference →</span></button>{source}</div>
+      <div class="skill-card-bottom">{source}</div>
     </article>'''
 def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
     path = SKILLS_PAGE_PATH
@@ -5025,7 +5027,7 @@ def _legacy_render_skills_page(skills: list[dict], site_url: str) -> str:
       const styleEntry = skill => (skill.styles && typeof skill.styles === 'object') ? skill.styles : null; const styleItems = entry => Array.isArray(entry.items) ? entry.items : []; const stylePreview = entry => { const items = styleItems(entry); const total = typeof entry.total === 'number' && entry.total >= items.length ? entry.total : items.length; let text = entry.summary || ''; if (items.length) { text += (text ? ' · ' : '') + items.slice(0, 3).join(' / ') + (total > 3 ? ` +${total - 3}` : ''); } return text; };
       const styleLine = skill => { const entry = styleEntry(skill); if (!entry || !entry.hasStyles) return ''; const text = stylePreview(entry); return text ? `<div class="skill-style"><span class="skill-style-label">样式</span><span class="skill-style-text">${escapeHtml(text)}</span></div>` : ''; };
        const filtered = () => { const keyword = search.value.trim().toLowerCase(); return skills.filter(skill => (category === 'all' || skill.category === category) && (status.value === 'all' || skill.status === status.value) && (!keyword || [skill.name, skill.description_zh, skill.description, skill.githubUrl, ...(skill.compatibility || []), ...reviewsOf(skill).map(review => `${review.source || ''} ${review.quote || ''}`), ...(entry => entry ? [entry.format || '', entry.summary || '', ...styleItems(entry)] : [])(styleEntry(skill))].join(' ').toLowerCase().includes(keyword))); };
-       const card = skill => `<article class="skill-card"><div class="skill-card-top"><span class="skill-category blue">${escapeHtml(categoryLabel(skill.category))}</span><span class="skill-status review">${escapeHtml(statusLabel(skill.status))}</span></div><h2>${escapeHtml(skill.name)}</h2><p><span class="skill-description-zh" lang="zh-CN">${escapeHtml(skill.description_zh)}</span><span class="skill-description-en" lang="en">${escapeHtml(skill.description)}</span></p>${styleLine(skill)}<div class="skill-chips">${(skill.compatibility || []).map(item => `<span class="skill-chip">${escapeHtml(item)}</span>`).join('')}</div>${metaHtml(skill)}<div class="skill-card-bottom"><button class="skill-details" type="button" data-skill-id="${escapeHtml(skill.id)}"><span lang="zh-CN">查看内容与评价 →</span><span lang="en">Content &amp; reviews →</span></button>${skill.githubUrl ? `<a class="skill-source-link" href="${escapeHtml(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
+       const card = skill => `<article class="skill-card showcase-card"><div class="skill-card-heading"><span class="skill-card-icon blue" aria-hidden="true">${escapeHtml(Array.from(String(skill.name || 'S').trim())[0] || 'S')}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${escapeHtml(skill.id)}" aria-label="查看 ${escapeHtml(skill.name)} 详情">+</button></div><div class="skill-card-top"><span class="skill-category blue">${escapeHtml(categoryLabel(skill.category))}</span><span class="skill-status ${skill.status === 'verified' ? 'verified' : 'review'}">${escapeHtml(statusLabel(skill.status))}</span></div><h2>${escapeHtml(skill.name)}</h2><p><span class="skill-description-zh" lang="zh-CN">${escapeHtml(skill.description_zh)}</span><span class="skill-description-en" lang="en">${escapeHtml(skill.description)}</span></p>${styleLine(skill)}<div class="skill-chips">${(skill.compatibility || []).map(item => `<span class="skill-chip">${escapeHtml(item)}</span>`).join('')}</div>${metaHtml(skill)}<div class="skill-card-bottom">${skill.githubUrl ? `<a class="skill-source-link" href="${escapeHtml(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开 GitHub ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
       const render = () => { const visible = filtered(); grid.innerHTML = visible.map(card).join(''); empty.hidden = visible.length > 0; count.textContent = `显示 ${visible.length} / ${skills.length}`; };
       document.querySelectorAll('.skill-category-tab').forEach(button => button.addEventListener('click', () => { category = button.dataset.category; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item === button)); render(); })); search.addEventListener('input', render); status.addEventListener('change', render);
       document.getElementById('skill-clear').addEventListener('click', () => { search.value = ''; status.value = 'all'; category = 'all'; document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item.dataset.category === 'all')); render(); });
@@ -5121,7 +5123,8 @@ def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
     for index, skill in enumerate(recently_updated):
         stats = skill.get("repoStats") or {}
         stars = _format_star_count(stats.get("stars")) or "—"
-        rating = (skill.get("freeLLMTest") or {}).get("score") or f"{4.8 - index * 0.1:.1f}"
+        score = (skill.get("freeLLMTest") or {}).get("score")
+        score_label = f' · 实测 {score}/10' if isinstance(score, (int, float)) else ""
         compatibility = skill.get("compatibility") or []
         tags = "".join(f'<span>{_esc(tag)}</span>' for tag in compatibility[:2])
         description = skill.get("description_zh") or skill.get("description") or "查看技能说明与来源。"
@@ -5133,7 +5136,7 @@ def _render_skills_below_fold(skills: list[dict], recipes: list[dict]) -> str:
               <div class="skills-latest-copy"><strong>{_esc(skill.get("name") or "Skill")}</strong><small>{_esc(description)}</small></div>
               <div class="skills-latest-tags">{tags}</div>
               <span class="skills-latest-owner"><i>{_esc(owner[:1].upper())}</i>{_esc(owner)}</span>
-              <span class="skills-latest-stars">🔥 {stars}　★ {rating}</span>
+              <span class="skills-latest-stars">★ {stars}{score_label}</span>
               <a class="skills-latest-link" href="{_esc(href)}" target="_blank" rel="nofollow noopener">查看来源 →</a>
             </article>'''
         )
@@ -5392,7 +5395,6 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
       <div class="skills-hero-copy"><div class="eyebrow">AGENT SKILLS / WORKFLOWS</div>
         <h1 id="skills-title"><span>Skills</span><strong>发现和使用可复用的 <em>AI 技能</em></strong></h1>
         <p class="hero-copy">由社区和专业创作者打造的高质量 AI 技能<br>让灵感一键变成生产力。</p>
-        <div class="skills-hero-actions"><a class="skills-primary-action" id="skills-browse-all" href="#skill-grid" aria-expanded="false">探索全部 Skills <span aria-hidden="true">→</span></a><button class="skills-intro-action" type="button" data-skills-intro><span aria-hidden="true">▶</span> 观看介绍</button></div>
       </div>
     </section>'''
     page = re.sub(r'<section class="skills-hero">.*?</section>', hero, page, count=1, flags=re.S)
@@ -5420,39 +5422,29 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     </section>'''
     page = re.sub(r'<section class="skills-toolbar".*?</section><div class="skill-category-tabs">.*?</div>', filter_markup, page, count=1, flags=re.S)
 
-    workspace_open = '''<div class="skills-workspace"><div class="skills-main-column">
-      <section class="skills-stats" aria-label="Skills 市集数据">
-        <div class="skills-stat"><span class="skills-stat-icon blue">▧</span><div><strong>10,000+</strong><small>精选 AI 技能</small></div></div>
-        <div class="skills-stat"><span class="skills-stat-icon violet">♙</span><div><strong>50万+</strong><small>开发者与创作者</small></div></div>
-        <div class="skills-stat"><span class="skills-stat-icon green">◷</span><div><strong>300万+</strong><small>累计使用次数</small></div></div>
-        <div class="skills-stat"><span class="skills-stat-icon orange">☆</span><div><strong>4.9/5</strong><small>用户满意度</small></div></div>
-      </section>
-      <section class="skills-collections" aria-labelledby="collection-title"><h2 id="collection-title">精选合集</h2><div class="skills-collection-grid">
-        <a class="skills-collection collection-work" href="#skill-grid"><strong>工作效率提升包</strong><span>10 个精选 Skills</span><small>让工作更快更好</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
-        <a class="skills-collection collection-study" href="#skill-grid"><strong>学习与研究合集</strong><span>12 个精选 Skills</span><small>探索知识的边界</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
-        <a class="skills-collection collection-office" href="#skill-grid"><strong>办公提效合集</strong><span>8 个精选 Skills</span><small>从想法到结果</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
-        <a class="skills-collection collection-create" href="#skill-grid"><strong>内容创作合集</strong><span>14 个精选 Skills</span><small>激发无限创意</small><i aria-hidden="true">›</i><b aria-hidden="true"></b></a>
-      </div></section>
+    lower_sections = _render_skills_below_fold(skills, recipes or []).replace('href="#skill-grid"', 'href="#skillhub"')
+    recipe_cards = "".join(
+        f'''<article class="skills-suite-card"><div class="skills-suite-kicker">{_esc(recipe.get("kicker") or "WORKFLOW")}</div>
+          <h3>{_esc(recipe.get("title") or "工作流配方")}</h3><p>{_esc(recipe.get("description") or "")}</p>
+          <div class="skills-suite-io"><div><small>输入</small><span>{_esc(recipe.get("input") or "")}</span></div><div><small>产出</small><span>{_esc(recipe.get("output") or "")}</span></div></div>
+          <div class="skills-suite-foot"><span>{len(recipe.get("steps") or [])} 个步骤</span><a href="/workflow/">查看完整配方 →</a></div></article>'''
+        for recipe in recipes or []
+    ) or '<p class="skills-suite-empty">暂无已发布的工作流配方。</p>'
+    view_tabs = '''<nav class="skills-view-tabs" role="tablist" aria-label="Skills 页面视图">
+      <button class="skills-view-tab is-active" type="button" role="tab" id="skills-tab-recommend" aria-controls="skills-view-recommended" aria-selected="true" data-skills-view="recommend">推荐</button>
+      <button class="skills-view-tab" type="button" role="tab" id="skills-tab-skillhub" aria-controls="skills-view-hub" aria-selected="false" data-skills-view="skillhub">SkillHub</button>
+      <button class="skills-view-tab" type="button" role="tab" id="skills-tab-suites" aria-controls="skills-view-suites" aria-selected="false" data-skills-view="suites">套件</button>
+    </nav>'''
+    workspace_open = view_tabs + f'''<section class="skills-view-panel skills-recommend-view" id="skills-view-recommended" role="tabpanel" aria-labelledby="skills-tab-recommend">
+      {lower_sections}
+    </section><div class="skills-workspace"><div class="skills-main-column"><section class="skills-view-panel" id="skills-view-hub" role="tabpanel" aria-labelledby="skills-tab-skillhub" hidden>
       <div class="skills-directory-wrap">'''
     page = page.replace(filter_markup, workspace_open + filter_markup, 1)
 
-    intro_dialog = '''<dialog class="skills-intro-dialog" id="skills-intro-notice" aria-labelledby="skills-intro-title">
-      <h2 id="skills-intro-title">FreeLLM Skills</h2>
-      <p>探索社区创建的 AI 技能，查看来源、安装方式和验证记录，再将适合的 Skill 用于你的工作流。</p>
-      <button type="button" data-close-skills-intro>知道了</button>
-    </dialog>'''
-    detail_panel = '''</div></div><aside class="skills-detail-panel" id="selected-skill-panel" aria-live="polite" aria-label="所选 Skill 详情">
-      <button class="skills-detail-close" type="button" aria-label="收起详情">×</button>
-      <div class="skills-detail-heading"><span class="skills-detail-icon" id="detail-icon">▤</span><div><h2 id="detail-title">论文写作助手</h2><span class="skills-official"><i aria-hidden="true">◆</i> FreeLLM 官方</span></div></div>
-      <p class="skills-detail-summary" id="detail-summary">从选题到初稿，助你高效完成学术论文写作。</p>
-      <div class="skills-detail-metrics"><div><strong><span>★</span> <b id="detail-rating">4.9</b></strong><small id="detail-reviews">(1.2k 评价)</small></div><div><strong><span class="fire">♨</span> <b id="detail-usage">12.4k</b></strong><small>使用次数</small></div></div>
-      <div class="skills-detail-actions"><button type="button" class="skills-use-button" id="detail-use">立即使用 <span aria-hidden="true">→</span></button><button type="button" class="skills-favorite-button" id="detail-favorite" aria-label="收藏 Skill">♡</button></div>
-      <section><h3>支持的模型 <a href="#skill-grid">查看更多 →</a></h3><div class="skills-model-chips" id="detail-models"><span>◉ GPT-4o</span><span>▣ Claude 3.5</span><span>✦ Gemini 1.5</span></div></section>
-      <section><h3>标签</h3><div class="skills-detail-tags" id="detail-tags"><span>写作</span><span>学术</span><span>研究</span><span>论文</span><span>文献分析</span><span>学术规范</span></div></section>
-      <section><h3>技能介绍</h3><p id="detail-description">专为学术研究者和学生设计的论文写作助手。支持选题建议、文献检索、论文大纲生成、内容润色与降重，帮助你更高效地完成高质量的学术论文。</p></section>
-      <div class="skills-detail-features"><div><i>◇</i><div><strong>智能选题与大纲生成</strong><small>基于研究领域，提供选题建议和论文结构</small></div></div><div><i>⌕</i><div><strong>文献检索与综述</strong><small>快速查找相关文献并生成综述内容</small></div></div><div><i>✎</i><div><strong>内容润色与降重</strong><small>提升语言质量，降低重复率</small></div></div><div><i>▤</i><div><strong>引用格式规范</strong><small>支持多种学术引用格式（APA / MLA 等）</small></div></div></div>
-    </aside></div>'''
-    lower_sections = _render_skills_below_fold(skills, recipes or [])
+    detail_panel = f'''</div></section><section class="skills-view-panel skills-suites-view" id="skills-view-suites" role="tabpanel" aria-labelledby="skills-tab-suites" hidden>
+      <div class="skills-suites-heading"><span class="eyebrow">WORKFLOW RECIPES</span><h2>从结果出发，选择一套工作流</h2><p>每套配方都来自现有工作流数据，展示真实输入、产出和步骤。</p></div>
+      <div class="skills-suites-grid">{recipe_cards}</div><a class="skills-suites-all" href="/workflow/">浏览工作流配方与组件库 →</a>
+    </section></div></div>'''
     footer_bottom = f'''<footer class="skills-footer skills-footer-bottom">
       <p>© 2026 FreeLLM. All rights reserved.</p>
       <div class="skills-footer-social" aria-label="Social links">
@@ -5465,12 +5457,11 @@ def render_skills_page(skills: list[dict], site_url: str, recipes: list[dict] | 
     </footer>'''
     page = re.sub(
         r'<footer class="skills-footer">.*?</footer>',
-        detail_panel + lower_sections + footer_bottom,
+        detail_panel + footer_bottom,
         page,
         count=1,
         flags=re.S,
     )
-    page = page.replace('<dialog id="skill-dialog">', intro_dialog + '<dialog id="skill-dialog">', 1)
     return page
 
 
@@ -6497,7 +6488,7 @@ AURORA_PAGE_STYLES = {
 
 AURORA_PAGE_STYLE_VERSIONS = {
     Path("models/index.html"): "20260929b",
-    Path("skills/index.html"): "20260930o",
+    Path("skills/index.html"): "20261016a",
 }
 
 
@@ -6518,9 +6509,9 @@ def _ensure_aurora_page_style(content: str, path: Path) -> str:
     core_tag = '<link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">'
     page_version = AURORA_PAGE_STYLE_VERSIONS.get(path, "20260924a")
     page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v={page_version}">'
-    old_page_tag = f'<link rel="stylesheet" href="/css/{page_css}?v=20260924a">'
-    if old_page_tag in updated and page_tag != old_page_tag:
-        updated = updated.replace(old_page_tag, page_tag, 1)
+    old_page_pattern = re.compile(rf'<link rel="stylesheet" href="/css/{re.escape(page_css)}\?v=[^"]+">')
+    if old_page_pattern.search(updated):
+        updated = old_page_pattern.sub(page_tag, updated, count=1)
     if core_tag not in updated and "</head>" in updated:
         updated = updated.replace("</head>", core_tag + "\n" + page_tag + "</head>", 1)
     elif page_tag not in updated and "</head>" in updated:
@@ -6558,11 +6549,11 @@ def _ensure_reference_ui(content: str, path: Path) -> str:
         if rail_tag not in updated and "</head>" in updated:
             updated = updated.replace("</head>", rail_tag + "\n</head>", 1)
 
-    script_version = "20260930d" if path == Path("skills/index.html") else "20261001-updates3" if path == Path("logs/index.html") else "20260924a"
+    script_version = "20261016-skills-views" if path == Path("skills/index.html") else "20261001-updates3" if path == Path("logs/index.html") else "20260924a"
     script_tag = f'<script src="/js/reference-shell.js?v={script_version}"></script>'
-    old_script_tag = '<script src="/js/reference-shell.js?v=20260924a"></script>'
-    if path == Path("skills/index.html") and old_script_tag in updated:
-        updated = updated.replace(old_script_tag, script_tag, 1)
+    old_script_pattern = re.compile(r'<script src="/js/reference-shell\.js\?v=[^"]+"></script>')
+    if path == Path("skills/index.html") and old_script_pattern.search(updated):
+        updated = old_script_pattern.sub(script_tag, updated, count=1)
     if path == Path("logs/index.html"):
         old_logs_script = '<script src="/js/reference-shell.js?v=20261001-rail-align"></script>'
         if old_logs_script in updated:
@@ -6654,7 +6645,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261016-public-api-menu"></script>'
+        '<script src="/js/site-navigation.js?v=20261016-skills-view-history"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'
